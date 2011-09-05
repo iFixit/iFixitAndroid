@@ -49,12 +49,10 @@ public class GuidePagerAdapter extends PagerAdapter {
       // inflate GuideIntroView or GuideStepView (respectively) to the page.
       
       if (position == 0) {
-         Log.w("InstantiateItem Intro", position + "");
          introView = new GuideIntroView(mContext, mGuide);    
          ((ViewPager) collection).addView(introView);
          return introView;
       } else {
-         Log.w("InstantiateItem Step", position + ", " + mGuide.getStep(position-1).getTitle());
          stepView = new GuideStepView(mContext, mGuide.getStep(position - 1));
          ((ViewPager) collection).addView(stepView);
          

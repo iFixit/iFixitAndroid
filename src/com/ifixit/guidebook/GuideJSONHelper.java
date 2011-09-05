@@ -53,7 +53,6 @@ public class GuideJSONHelper {
    }
 
    public static StepImage parseImage(JSONObject jImage) throws JSONException {
-      Log.w("iFixit", jImage.toString());
       StepImage image = new StepImage(jImage.getInt("imageid"));
 
       //last image doesn't have orderby so this is necessary. Could be a bug?
