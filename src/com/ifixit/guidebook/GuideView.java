@@ -50,7 +50,19 @@ public class GuideView extends Activity implements OnPageChangeListener {
       mSpeechCommander.destroy();
    }
 
-   
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      mSpeechCommander.stopListening();
+   }
+
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      mSpeechCommander.startListening();
+   }
 
    public void setGuide(Guide guide) {
       guideAdapter = new GuidePagerAdapter(this, mGuide);
