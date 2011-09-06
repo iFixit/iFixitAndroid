@@ -54,7 +54,7 @@ public class GuidePagerAdapter extends PagerAdapter {
       } else {
          stepView = new GuideStepView(mContext, mGuide.getStep(position - 1));
          ((ViewPager) collection).addView(stepView);
-         mImageManager.displayImage(mGuide.getStep(position -1).mImages.get(0).mText, (Activity)mContext, stepView.getImageView());
+         mImageManager.displayImage(mGuide.getStep(position -1).mImages.get(0).mText + ".large", (Activity)mContext, stepView.getImageView());
          
          return stepView;
       }

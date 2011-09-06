@@ -10,7 +10,7 @@ public class GuidebookActivity extends Activity {
       super.onCreate(savedInstanceState);
       
       Intent intent = new Intent(this, GuideView.class);
-      intent.putExtra("guideid", 1552);
+      intent.putExtra("guideid", 3550);
       startActivity(intent);
    }
 }

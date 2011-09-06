@@ -4,6 +4,8 @@ import org.apache.http.client.ResponseHandler;
 
 import android.app.Activity;
 
+import android.content.pm.ActivityInfo;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -41,6 +43,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
       extras = getIntent().getExtras();
       getGuide(extras.getInt("guideid"));
       initSpeechRecognizer();
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
    }
 
    @Override

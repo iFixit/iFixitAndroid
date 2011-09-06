@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 
 import java.net.URL;
+import java.net.URLConnection;
 
 import java.util.HashMap;
 import java.util.Stack;
@@ -82,14 +83,16 @@ public class ImageManager {
    private Bitmap getBitmap(String url) {
       String filename = String.valueOf(url.hashCode());
       File file = new File(mCacheDir, filename);
+      URLConnection connection;
       Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
 
       if (bitmap != null)
          return bitmap;
 
       try {
-         bitmap = BitmapFactory.decodeStream(new URL(url).openConnection()
-          .getInputStream());
+         connection = new URL(url).openConnection();
+         connection.setUseCaches(true);
+         bitmap = BitmapFactory.decodeStream(connection.getInputStream());
          writeFile(bitmap, file);
 
          return bitmap;
@@ -147,7 +150,6 @@ public class ImageManager {
       public void run() {
          ImageRef imageToLoad;
          Bitmap bitmap;
-         Object tag;
          BitmapDisplayer bitmapDisplayer;
          Activity activity;
 
@@ -165,14 +167,11 @@ public class ImageManager {
 
                   bitmap = getBitmap(imageToLoad.url);
                   mImageMap.put(imageToLoad.url, bitmap);
-                  tag = imageToLoad.imageView.getTag();
 
-                  if (tag != null && ((String)tag).equals(imageToLoad.url)) {
-                     bitmapDisplayer = new BitmapDisplayer(bitmap,
-                      imageToLoad.imageView);
-                     activity = (Activity)imageToLoad.imageView.getContext();
-                     activity.runOnUiThread(bitmapDisplayer);
-                  }
+                  bitmapDisplayer = new BitmapDisplayer(bitmap,
+                   imageToLoad.imageView);
+                  activity = (Activity)imageToLoad.imageView.getContext();
+                  activity.runOnUiThread(bitmapDisplayer);
                }
             }
          }
