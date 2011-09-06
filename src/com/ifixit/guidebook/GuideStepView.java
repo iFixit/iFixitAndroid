@@ -1,11 +1,8 @@
 package com.ifixit.guidebook;
 
 import android.content.Context;
-import android.os.Bundle;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -14,6 +11,7 @@ public class GuideStepView extends LinearLayout {
    private Context mContext;
    private TextView mTitle;
    private TextView mText;
+   private ImageView mImage;
    
    public GuideStepView(Context context, GuideStep step) {
       super(context);      
@@ -29,6 +27,12 @@ public class GuideStepView extends LinearLayout {
       
       mText = (TextView) findViewById(R.id.step_text);
       mText.setText(step.getText());
-      
+
+      mImage = (ImageView)findViewById(R.id.image);
    }
+
+   public ImageView getImageView() {
+      return mImage;
+   }
+
 }

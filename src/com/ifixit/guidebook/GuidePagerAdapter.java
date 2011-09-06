@@ -1,23 +1,23 @@
 package com.ifixit.guidebook;
 
+import android.app.Activity;
+
 import android.content.Context;
-import android.graphics.Color;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.View;
-
 
 public class GuidePagerAdapter extends PagerAdapter {
 
    private Context mContext;
    private Guide mGuide;
+   private ImageManager mImageManager;
    
    public GuidePagerAdapter(Context context, Guide guide) {
       mContext = context;
       mGuide = guide;
-
+      mImageManager = new ImageManager(mContext);
    }
    
    @Override
@@ -43,18 +43,18 @@ public class GuidePagerAdapter extends PagerAdapter {
       
       GuideIntroView introView;
       GuideStepView stepView;
-
-      
-      // TODO: Figure out what view we want (Intro or Guide Step) and 
-      // inflate GuideIntroView or GuideStepView (respectively) to the page.
       
       if (position == 0) {
          introView = new GuideIntroView(mContext, mGuide);    
+
+         mImageManager.displayImage("http://guide-images.ifixit.net/igi/jpSRuNYPcGo6fkiD.large", (Activity)mContext, introView.getImageView());
          ((ViewPager) collection).addView(introView);
+
          return introView;
       } else {
          stepView = new GuideStepView(mContext, mGuide.getStep(position - 1));
          ((ViewPager) collection).addView(stepView);
+         mImageManager.displayImage(mGuide.getStep(position -1).mImages.get(0).mText, (Activity)mContext, stepView.getImageView());
          
          return stepView;
       }

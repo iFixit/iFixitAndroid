@@ -4,11 +4,13 @@
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
       android:background="#0000FF">
-	<TextView android:id="@+id/guide_title" xmlns:android="http://schemas.android.com/apk/res/android"
+	<TextView android:id="@+id/guide_title"
 	    android:layout_weight="4"
 	    android:layout_width="0dp"
 	    android:layout_height="wrap_content"
 	    android:textSize="18px"
 	    android:textColor="#FFFFFF" />
-		
+   <ImageView android:id="@+id/introImage"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content" />
 </LinearLayout>

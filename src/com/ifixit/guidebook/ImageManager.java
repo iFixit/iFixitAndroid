@@ -50,8 +50,9 @@ public class ImageManager {
       else
          mCacheDir = context.getCacheDir();
 
-      if (!mCacheDir.exists())
-         mCacheDir.mkdirs();
+      if (!mCacheDir.exists()) {
+         mCacheDir.mkdirs(); 
+      }
    }
 
    public void displayImage(String url, Activity activity, ImageView imageView) {
@@ -94,7 +95,7 @@ public class ImageManager {
          return bitmap;
       }
       catch (Exception e) {
-         Log.e("ImageManager", e.getMessage());
+         Log.e("ImageManager", "getBitmap: " + e.getMessage());
          return null;
       }
    }
@@ -107,7 +108,7 @@ public class ImageManager {
          bitmap.compress(Bitmap.CompressFormat.PNG, 80, out);
       }
       catch (Exception e) {
-         Log.e("ImageManager", e.getMessage());
+         Log.e("ImageManager", "writeFile: " + e.getMessage());
       }
       finally {
          try {
