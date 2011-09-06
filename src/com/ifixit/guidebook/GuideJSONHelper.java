@@ -12,11 +12,12 @@ public class GuideJSONHelper {
          JSONObject jGuideInfo = new JSONObject(json);
          JSONObject jGuide = jGuideInfo.getJSONObject("guide");
          JSONArray jSteps = jGuide.getJSONArray("steps");
+         JSONObject jAuthor = jGuide.getJSONObject("author");
          Guide guide = new Guide(jGuideInfo.getInt("guideid"));
 
          guide.setTitle(jGuide.getString("title"));
          guide.setDevice(jGuideInfo.getString("device"));
-         guide.setAuthor(jGuide.getString("author"));
+         guide.setAuthor(jAuthor.getString("text"));
          guide.setTimeRequired(jGuide.getString("time_required"));
          guide.setDifficulty(jGuide.getString("difficulty"));
          guide.setIntroduction(jGuide.getString("introduction"));

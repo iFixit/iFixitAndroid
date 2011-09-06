@@ -1,9 +1,12 @@
 package com.ifixit.guidebook;
 
+import java.util.ArrayList;
+
 import org.apache.http.client.ResponseHandler;
 
 import android.app.Activity;
 
+import android.content.Context;
 import android.content.pm.ActivityInfo;
 
 import android.os.Bundle;
@@ -13,6 +16,9 @@ import android.os.Message;
 import android.support.v4.view.ViewPager;
 
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Display;
+import android.view.View.OnTouchListener;
+import android.widget.Gallery;
 
 public class GuideView extends Activity implements OnPageChangeListener {
    private static final String RESPONSE = "RESPONSE";
@@ -66,12 +72,23 @@ public class GuideView extends Activity implements OnPageChangeListener {
 
       mSpeechCommander.startListening();
    }*/
+   
+   public int getScreenHeight() {
+      Display display = getWindowManager().getDefaultDisplay(); 
+      return display.getHeight();
+   }
+
+   public int getScreenWidth() {
+      Display display = getWindowManager().getDefaultDisplay(); 
+      return display.getWidth();
+   }
 
    public void setGuide(Guide guide) {
       guideAdapter = new GuidePagerAdapter(this, mGuide);
       guidePager = (ViewPager) findViewById(R.id.guide_pager);
       guidePager.setAdapter(guideAdapter);
       guidePager.setOnPageChangeListener(this);
+      
    }
 
    public void getGuide(final int guideid) {
@@ -89,11 +106,20 @@ public class GuideView extends Activity implements OnPageChangeListener {
 
    private void nextStep() {
       guidePager.setCurrentItem(mCurrentPage + 1);
+      //setStep();
    }
 
    private void previousStep() {
       guidePager.setCurrentItem(mCurrentPage - 1);
+      //setStep();
    }
+   
+  /* private void setStep() {
+      imageAdapter = new GuideImagePagerAdapter(this, mGuide.getStep(mCurrentPage));
+      imagePager = (ViewPager) findViewById(R.id.image_pager);
+      imagePager.setAdapter(imageAdapter);
+      imagePager.setOnPageChangeListener(this);
+   }*/
 
    private void guideHome() {
       guidePager.setCurrentItem(0);
@@ -132,4 +158,5 @@ public class GuideView extends Activity implements OnPageChangeListener {
    public void onPageSelected(int page) {
       mCurrentPage = page;
    }
+
 }

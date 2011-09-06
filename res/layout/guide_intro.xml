@@ -1,16 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
-      android:background="#0000FF">
-	<TextView android:id="@+id/guide_title"
-	    android:layout_weight="4"
-	    android:layout_width="0dp"
-	    android:layout_height="wrap_content"
-	    android:textSize="18px"
-	    android:textColor="#FFFFFF" />
-   <ImageView android:id="@+id/introImage"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content" />
-</LinearLayout>
+      android:background="@drawable/bg_img">
+    <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_centerVertical="true"     
+      android:layout_margin="8dip"
+      android:layout_gravity="left">
+	 	<ImageView android:id="@+id/intro_image" 
+	 	    android:layout_width="wrap_content" 
+	 	    android:layout_height="wrap_content" 
+	 	    android:gravity="fill"
+	 	    android:background="@drawable/intro_image_border" />
+	</RelativeLayout>
+   	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="412dip"
+      android:layout_height="fill_parent"
+      android:layout_marginTop="28dip"
+      android:layout_marginRight="16dip"
+      android:layout_marginBottom="28dip"
+      android:layout_marginLeft="16dip" 
+      android:layout_alignParentRight="true">
+      	<TextView android:id="@+id/guide_title"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="left|top"
+		    android:textSize="48dip"
+		    android:textColor="#444444" />
+     	<TextView android:id="@+id/guide_intro_text"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:layout_gravity="right"
+		    android:textSize="12dip"
+		    android:textColor="#444444" />
+	    <TextView android:id="@+id/guide_difficulty"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="12dip"
+		    android:textColor="#444444" />
+	    <TextView android:id="@+id/guide_author"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="12dip"
+		    android:textColor="#444444" />
+		<TextView android:id="@+id/guide_date"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="12dip"
+		    android:textColor="#444444" />      
+    </LinearLayout>
+</RelativeLayout>

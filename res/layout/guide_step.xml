@@ -1,22 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="fill_parent"
       android:layout_height="fill_parent"
-      android:background="#000000">
-	<TextView android:id="@+id/step_title" xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="18px"
-	    android:textColor="#FFFFFF" />
-	<TextView android:id="@+id/step_text" xmlns:android="http://schemas.android.com/apk/res/android"
-	    android:layout_width="wrap_content"
-	    android:layout_height="wrap_content"
-	    android:textSize="12px"
-	    android:textColor="#FFFFFF" />
-   <ImageView android:id="@+id/image"
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content" />
-		
-		
-</LinearLayout>
+      android:background="@drawable/bg_img">
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_margin="8dip"
+      android:layout_gravity="left"
+      android:orientation="vertical">
+		<ImageView android:id="@+id/image"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:background="@drawable/image_border" />
+        <Gallery xmlns:android="http://schemas.android.com/apk/res/android" 
+		    android:id="@+id/thumbnail_gallery"
+		    android:layout_width="fill_parent"
+		    android:layout_height="wrap_content"
+		    android:gravity="center_horizontal" 
+		    android:background="@drawable/image_border" />
+	</LinearLayout>
+   	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="440dip"
+      android:layout_height="fill_parent"
+      android:layout_marginTop="8dip"
+      android:layout_marginRight="16dip"
+      android:layout_marginBottom="28dip"
+      android:layout_marginLeft="16dip" 
+      android:layout_alignParentRight="true"
+      android:orientation="vertical">
+
+		<TextView android:id="@+id/step_title" xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="48dip"
+		    android:textColor="#444444" />
+   		<TextView android:id="@+id/step_text" xmlns:android="http://schemas.android.com/apk/res/android"
+		    android:layout_width="wrap_content"
+		    android:layout_height="wrap_content"
+		    android:textSize="28dip"
+		    android:textColor="#555555" />
+		    
+    </LinearLayout>
+</RelativeLayout>

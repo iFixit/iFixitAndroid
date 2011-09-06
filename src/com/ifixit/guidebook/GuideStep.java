@@ -2,6 +2,8 @@ package com.ifixit.guidebook;
 
 import java.util.ArrayList;
 
+import android.util.Log;
+
 public class GuideStep {
    protected int mStepNum;
    protected String mTitle;
@@ -20,7 +22,7 @@ public class GuideStep {
 
    public String getTitle() {
       return mTitle;
-   }
+   } 
    
    public int getStepNum() {
       return mStepNum;
@@ -29,13 +31,34 @@ public class GuideStep {
    public void addImage(StepImage image) {
       mImages.add(image);
    }
+   
+   public ArrayList<StepImage> getImages() {
+      return mImages;
+   }
+   
+   public ArrayList<StepLine> getLines() {
+      return mLines;
+   }
 
    public void addLine(StepLine line) {
       mLines.add(line);
    }
    
    public String getText() {
-      return mLines.get(0).mText;
+      String lineText = new String();
+      Log.w("Step Line Count", "" + mLines.size());
+      
+      int prevLevel = 0;
+      
+      for (StepLine line : mLines) {
+         if (line.getLevel() > prevLevel) {
+            lineText = lineText +"<p><b>" + line.getText() +"</b></p>";
+         } else {
+            lineText = lineText +"<p>" + line.getText() +"</p>";
+         }
+         Log.w("Step Line", "" + lineText);
+      }
+      return lineText;
    }
 
    public String toString() {

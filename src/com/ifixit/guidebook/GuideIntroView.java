@@ -9,6 +9,11 @@ import android.widget.TextView;
 public class GuideIntroView extends LinearLayout {
    private Context mContext;
    private TextView mTitle;
+   private TextView mIntro;
+   private TextView mDifficulty;
+   private TextView mAuthor;
+   private TextView mDate;
+
    private ImageView mImage;
 
    public GuideIntroView(Context context, Guide guide) {
@@ -22,8 +27,17 @@ public class GuideIntroView extends LinearLayout {
 
       mTitle = (TextView) findViewById(R.id.guide_title);
       mTitle.setText(guide.getTitle());
-      mImage = (ImageView)findViewById(R.id.introImage);
+      
+      mIntro = (TextView) findViewById(R.id.guide_intro_text);
+      mIntro.setText(guide.getIntroduction());
 
+      mDifficulty = (TextView) findViewById(R.id.guide_difficulty);
+      mDifficulty.setText("Difficulty: " + guide.getDifficulty());
+
+      mAuthor = (TextView) findViewById(R.id.guide_author);
+      mAuthor.setText("Author: " + guide.getAuthor());
+
+      mImage = (ImageView)findViewById(R.id.intro_image);
 
    }
 
