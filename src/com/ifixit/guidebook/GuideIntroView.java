@@ -13,12 +13,13 @@ public class GuideIntroView extends LinearLayout {
    private TextView mDifficulty;
    private TextView mAuthor;
    private TextView mDate;
-
    private ImageView mImage;
+   private ImageManager mImageManager;
 
-   public GuideIntroView(Context context, Guide guide) {
+   public GuideIntroView(Context context, Guide guide, ImageManager imageManager) {
       super(context);      
       this.mContext = context;
+      mImageManager = imageManager;
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(
             Context.LAYOUT_INFLATER_SERVICE);

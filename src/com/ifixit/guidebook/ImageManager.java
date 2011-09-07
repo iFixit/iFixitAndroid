@@ -7,6 +7,7 @@ import java.net.URL;
 import java.net.URLConnection;
 
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Stack;
 
 import android.app.Activity;
@@ -27,29 +28,22 @@ import android.widget.ImageView;
  */
 public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
+   private static final int MAX_STORED_IMAGES = 20;
 
    private HashMap<String, Bitmap> mImageMap;
+   private LinkedList<String> mRecentBitmaps;
    private File mCacheDir;
    private ImageQueue mImageQueue;
    private Thread mImageLoaderThread;
 
    public ImageManager(Context context) {
-      String sdState;
-
       mImageMap = new HashMap<String, Bitmap>();
+      mRecentBitmaps = new LinkedList<String>();
       mImageQueue = new ImageQueue();
       mImageLoaderThread = new Thread(new ImageQueueManager());
 
       mImageLoaderThread.setPriority(IMAGE_THREAD_PRIORITY);
-
-      sdState = android.os.Environment.getExternalStorageState();
-
-      if (sdState.equals(android.os.Environment.MEDIA_MOUNTED)) {
-         mCacheDir = new File(android.os.Environment.
-          getExternalStorageDirectory(), "data/guidebook");
-      }
-      else
-         mCacheDir = context.getCacheDir();
+      mCacheDir = context.getCacheDir();
 
       if (!mCacheDir.exists()) {
          mCacheDir.mkdirs(); 
@@ -89,6 +83,8 @@ public class ImageManager {
       if (bitmap != null)
          return bitmap;
 
+      Log.w("ImageManager", "cache miss =( " + url);
+
       try {
          connection = new URL(url).openConnection();
          connection.setUseCaches(true);
@@ -120,6 +116,14 @@ public class ImageManager {
          }
          catch (Exception ex) {}
       }
+   }
+
+   private void storeImage(String url, Bitmap bitmap) {
+      if (mRecentBitmaps.size() >= MAX_STORED_IMAGES)
+         mImageMap.remove(mRecentBitmaps.removeFirst());
+
+      if (mImageMap.put(url, bitmap) == null)
+         mRecentBitmaps.addLast(url);
    }
 
    private class ImageRef {
@@ -166,7 +170,7 @@ public class ImageManager {
                   }
 
                   bitmap = getBitmap(imageToLoad.url);
-                  mImageMap.put(imageToLoad.url, bitmap);
+                  storeImage(imageToLoad.url, bitmap);
 
                   bitmapDisplayer = new BitmapDisplayer(bitmap,
                    imageToLoad.imageView);

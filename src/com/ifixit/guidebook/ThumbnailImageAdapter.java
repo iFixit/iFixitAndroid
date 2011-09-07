@@ -1,11 +1,8 @@
 package com.ifixit.guidebook;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.TypedArray;
-import android.database.DataSetObserver;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -20,7 +17,7 @@ public class ThumbnailImageAdapter extends BaseAdapter {
 
    private ImageManager mImageManager;
 
-   public ThumbnailImageAdapter(Context context, GuideStep step) {
+   public ThumbnailImageAdapter(Context context, GuideStep step, ImageManager imageManager) {
        
       mContext = context;
       mStep = step;
@@ -30,7 +27,7 @@ public class ThumbnailImageAdapter extends BaseAdapter {
               R.styleable.thumbnail_gallery_android_galleryItemBackground, 0);
       attr.recycle();
       
-      mImageManager = new ImageManager(mContext);
+      mImageManager = imageManager;
    }
 
    public int getCount() {

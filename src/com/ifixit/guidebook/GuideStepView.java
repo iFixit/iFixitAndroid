@@ -1,9 +1,7 @@
 package com.ifixit.guidebook;
 
-
 import android.app.Activity;
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,7 +11,6 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.ifixit.guidebook.GuideView;
 
 public class GuideStepView extends LinearLayout {
 
@@ -27,12 +24,11 @@ public class GuideStepView extends LinearLayout {
    private GuideStep mStep;
    private ImageManager mImageManager;
    
-   public GuideStepView(Context context, GuideStep step) {
+   public GuideStepView(Context context, GuideStep step, ImageManager imageManager) {
       super(context);      
       this.mContext = context;
       this.mStep = step;
-      
-      this.mImageManager = new ImageManager(mContext);
+      mImageManager = imageManager;
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(
             Context.LAYOUT_INFLATER_SERVICE);
@@ -63,7 +59,7 @@ public class GuideStepView extends LinearLayout {
        (Activity)mContext, mImage);
 
       mThumbs = (Gallery) findViewById(R.id.thumbnail_gallery);
-      mThumbs.setAdapter(new ThumbnailImageAdapter((Activity)mContext, step));
+      mThumbs.setAdapter(new ThumbnailImageAdapter((Activity)mContext, step, mImageManager));
       
       mThumbs.setSpacing(30);
       mThumbs.setOnItemClickListener(new OnItemClickListener() {

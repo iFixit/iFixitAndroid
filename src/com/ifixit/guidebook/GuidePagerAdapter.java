@@ -45,7 +45,7 @@ public class GuidePagerAdapter extends PagerAdapter {
       GuideStepView stepView;
       
       if (position == 0) {
-         introView = new GuideIntroView(mContext, mGuide);    
+         introView = new GuideIntroView(mContext, mGuide, mImageManager);
 
          mImageManager.displayImage(
           "http://guide-images.ifixit.net/igi/jpSRuNYPcGo6fkiD.large",
@@ -54,7 +54,7 @@ public class GuidePagerAdapter extends PagerAdapter {
 
          return introView;
       } else {
-         stepView = new GuideStepView(mContext, mGuide.getStep(position - 1));
+         stepView = new GuideStepView(mContext, mGuide.getStep(position - 1), mImageManager);
          ((ViewPager) collection).addView(stepView);
          
          return stepView;

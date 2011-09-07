@@ -10,7 +10,11 @@ public class GuidebookActivity extends Activity {
       super.onCreate(savedInstanceState);
       
       Intent intent = new Intent(this, GuideView.class);
-      intent.putExtra("guideid", 3550);
+
+      //intent.putExtra("guideid", 4531);
+
+       intent.putExtra("guideid", 3550);
+      // xbox RROD
       startActivity(intent);
    }
 }

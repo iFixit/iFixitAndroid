@@ -1,24 +1,15 @@
 package com.ifixit.guidebook;
 
-import java.util.ArrayList;
-
 import org.apache.http.client.ResponseHandler;
 
 import android.app.Activity;
-
-import android.content.Context;
 import android.content.pm.ActivityInfo;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import android.support.v4.view.ViewPager;
-
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Display;
-import android.view.View.OnTouchListener;
-import android.widget.Gallery;
 
 public class GuideView extends Activity implements OnPageChangeListener {
    private static final String RESPONSE = "RESPONSE";
@@ -128,25 +119,25 @@ public class GuideView extends Activity implements OnPageChangeListener {
    public void initSpeechRecognizer() {
       mSpeechCommander = new SpeechCommander(this, "com.ifixit.guidebook");
 
-      mSpeechCommander.addCommand("step next", new SpeechCommander.SpeechCommand() {
+      mSpeechCommander.addCommand("next", new SpeechCommander.SpeechCommand() {
          public void performCommand() {
             nextStep();
          }
       });
 
-      mSpeechCommander.addCommand("step previous", new SpeechCommander.SpeechCommand() {
+      mSpeechCommander.addCommand("previous", new SpeechCommander.SpeechCommand() {
          public void performCommand() {
             previousStep();
          }
       });
 
-      mSpeechCommander.addCommand("guide home", new SpeechCommander.SpeechCommand() {
+      mSpeechCommander.addCommand("home", new SpeechCommander.SpeechCommand() {
          public void performCommand() {
             guideHome();
          }
       });
 
-      //mSpeechCommander.startListening();
+      mSpeechCommander.startListening();
    }
 
    @Override
