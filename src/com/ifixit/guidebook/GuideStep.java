@@ -44,6 +44,10 @@ public class GuideStep {
       mLines.add(line);
    }
    
+   public StepLine getLine(int pos) {
+      return mLines.get(pos);
+   }
+   
    public String getText() {
       String lineText = new String();
       Log.w("Step Line Count", "" + mLines.size());

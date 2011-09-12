@@ -9,23 +9,24 @@ import android.widget.BaseAdapter;
 import android.widget.Gallery;
 import android.widget.ImageView;
 
-public class ThumbnailImageAdapter extends BaseAdapter {
+public class MainImageAdapter extends BaseAdapter {
 
-   private int mGalleryItemBackground;   
+   private int mMainGalleryItemBackground;
    private Context mContext;
    private GuideStep mStep;
 
    private ImageManager mImageManager;
 
-   public ThumbnailImageAdapter(Context context, GuideStep step, ImageManager imageManager) {
+   public MainImageAdapter(Context context, GuideStep step, 
+    ImageManager imageManager) {
        
       mContext = context;
       mStep = step;
        
-      TypedArray attr = mContext.obtainStyledAttributes(R.styleable.thumbnail_gallery);
+      TypedArray attr = mContext.obtainStyledAttributes(R.styleable.main_gallery);
 
-      mGalleryItemBackground = attr.getResourceId(
-       R.styleable.thumbnail_gallery_android_galleryItemBackground, 0);
+      mMainGalleryItemBackground = attr.getResourceId(
+            R.styleable.thumbnail_gallery_android_galleryItemBackground, 0);
 
       attr.recycle();
       
@@ -37,11 +38,11 @@ public class ThumbnailImageAdapter extends BaseAdapter {
    }
 
    public Object getItem(int position) {
-       return position;
+       return mStep.mImages.get(position).mText + ".large";
    }
 
    public long getItemId(int position) {
-       return position;
+       return mStep.mImages.get(position).mImageid;
    }
 
    public View getView(int position, View convertView, ViewGroup parent) {
@@ -52,10 +53,10 @@ public class ThumbnailImageAdapter extends BaseAdapter {
          imageView = (ImageView) convertView;
       
       imageView.setLayoutParams(new Gallery.LayoutParams(
-       GuideStepView.THUMBNAIL_WIDTH, GuideStepView.THUMBNAIL_HEIGHT));
+       GuideStepView.MAIN_WIDTH, GuideStepView.MAIN_HEIGHT));
       imageView.setScaleType(ImageView.ScaleType.FIT_XY);
       
-      mImageManager.displayImage(mStep.mImages.get(position).mText + ".thumbnail",
+      mImageManager.displayImage(mStep.mImages.get(position).mText + ".large",
        (Activity)mContext, imageView);             
         
       return (View)imageView;

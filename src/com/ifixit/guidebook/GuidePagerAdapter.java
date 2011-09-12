@@ -46,12 +46,11 @@ public class GuidePagerAdapter extends PagerAdapter {
       
       if (position == 0) {
          introView = new GuideIntroView(mContext, mGuide, mImageManager);
-
-         mImageManager.displayImage(
-          "http://guide-images.ifixit.net/igi/jpSRuNYPcGo6fkiD.large",
-          (Activity)mContext, introView.getImageView());
-         ((ViewPager) collection).addView(introView);
-
+         
+         mImageManager.displayImage(mGuide.getIntroImage()+".large",
+               (Activity)mContext, introView.getImageView());
+              ((ViewPager) collection).addView(introView);
+ 
          return introView;
       } else {
          stepView = new GuideStepView(mContext, mGuide.getStep(position - 1), mImageManager);

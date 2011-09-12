@@ -3,4 +3,8 @@
     <declare-styleable name="thumbnail_gallery">
         <attr name="android:galleryItemBackground" />
     </declare-styleable>
+        <declare-styleable name="main_gallery">
+        <attr name="android:galleryItemBackground" />
+    </declare-styleable>
+    
 </resources>

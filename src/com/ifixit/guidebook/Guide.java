@@ -10,6 +10,7 @@ public class Guide {
    protected String mTimeRequired;
    protected String mDifficulty;
    protected String mIntroduction;
+   protected String mIntroImage;
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
 
@@ -83,6 +84,14 @@ public class Guide {
 
    public String getIntroduction() {
       return mIntroduction;
+   }
+   
+   public void setIntroImage(String url) {
+      mIntroImage = url;
+   }
+   
+   public String getIntroImage() {
+      return mIntroImage;
    }
 
    public void setSummary(String summary) {

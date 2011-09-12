@@ -13,6 +13,7 @@ public class GuideJSONHelper {
          JSONObject jGuide = jGuideInfo.getJSONObject("guide");
          JSONArray jSteps = jGuide.getJSONArray("steps");
          JSONObject jAuthor = jGuide.getJSONObject("author");
+         JSONObject jImage = jGuide.getJSONObject("image");
          Guide guide = new Guide(jGuideInfo.getInt("guideid"));
 
          guide.setTitle(jGuide.getString("title"));
@@ -21,6 +22,7 @@ public class GuideJSONHelper {
          guide.setTimeRequired(jGuide.getString("time_required"));
          guide.setDifficulty(jGuide.getString("difficulty"));
          guide.setIntroduction(jGuide.getString("introduction"));
+         guide.setIntroImage(jImage.getString("text"));
          guide.setSummary(jGuide.getString("summary"));
 
          for (int i = 0; i < jSteps.length(); i++) {

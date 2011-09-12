@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:id="@+id/step_row"
+  android:orientation="horizontal"
+  android:layout_width="fill_parent"
+  android:layout_height="wrap_content">
+    <com.ifixit.guidebook.BulletView
+	   android:layout_width="28dip"
+	   android:layout_height="28dip"
+	   android:layout_marginTop="6dip"
+	   android:id="@+id/bullet" />
+    <TextView android:id="@+id/step_text" xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textSize="26dip"
+       android:textColor="#555555" />
+</LinearLayout>

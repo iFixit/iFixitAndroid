@@ -1,6 +1,9 @@
 package com.ifixit.guidebook;
 
+import android.app.Activity;
 import android.content.Context;
+import android.support.v4.view.ViewPager;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -27,19 +30,19 @@ public class GuideIntroView extends LinearLayout {
       inflater.inflate(R.layout.guide_intro, this, true);        
 
       mTitle = (TextView) findViewById(R.id.guide_title);
-      mTitle.setText(guide.getTitle());
+      mTitle.setText(Html.fromHtml(guide.getTitle().toString()));
       
       mIntro = (TextView) findViewById(R.id.guide_intro_text);
-      mIntro.setText(guide.getIntroduction());
+      mIntro.setText(Html.fromHtml(guide.getIntroduction().toString()));
 
       mDifficulty = (TextView) findViewById(R.id.guide_difficulty);
-      mDifficulty.setText("Difficulty: " + guide.getDifficulty());
+      mDifficulty.setText("Difficulty: " + Html.fromHtml(guide.getDifficulty().toString()));
 
       mAuthor = (TextView) findViewById(R.id.guide_author);
-      mAuthor.setText("Author: " + guide.getAuthor());
+      mAuthor.setText("Author: " + Html.fromHtml(guide.getAuthor().toString()));
 
       mImage = (ImageView)findViewById(R.id.intro_image);
-
+      
    }
 
    public ImageView getImageView() {
