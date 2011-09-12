@@ -2,7 +2,10 @@ package com.ifixit.guidebook;
 
 import android.app.Activity;
 import android.content.Intent;
+
 import android.os.Bundle;
+
+import android.view.KeyEvent;
 
 import android.webkit.WebView;
 
@@ -27,5 +30,14 @@ public class GuidebookActivity extends Activity {
 
       intent.putExtra(GUIDEID, guideid);
       startActivity(intent);
+   }
+
+   @Override
+   public boolean onKeyDown(int keyCode, KeyEvent event) {
+       if ((keyCode == KeyEvent.KEYCODE_BACK) && mWebView.canGoBack()) {
+           mWebView.goBack();
+           return true;
+       }
+       return super.onKeyDown(keyCode, event);
    }
 }
