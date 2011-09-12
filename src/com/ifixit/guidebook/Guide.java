@@ -1,8 +1,11 @@
 package com.ifixit.guidebook;
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 
-public class Guide {
+public class Guide implements Serializable {
+   private static final long serialVersionUID = -1965203088124961695L;
    protected int mGuideid;
    protected String mTitle;
    protected String mDevice;
@@ -26,6 +29,7 @@ public class Guide {
    public int getNumSteps() {
       return mSteps.size();
    }
+
    public GuideStep getStep(int position) {
       return mSteps.get(position);
    }

@@ -1,8 +1,6 @@
 package com.ifixit.guidebook;
 
-import android.app.Activity;
 import android.content.Context;
-import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
@@ -10,19 +8,14 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GuideIntroView extends LinearLayout {
-   private Context mContext;
    private TextView mTitle;
    private TextView mIntro;
    private TextView mDifficulty;
    private TextView mAuthor;
-   private TextView mDate;
    private ImageView mImage;
-   private ImageManager mImageManager;
 
-   public GuideIntroView(Context context, Guide guide, ImageManager imageManager) {
+   public GuideIntroView(Context context, Guide guide) {
       super(context);      
-      this.mContext = context;
-      mImageManager = imageManager;
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(
             Context.LAYOUT_INFLATER_SERVICE);
@@ -42,11 +35,9 @@ public class GuideIntroView extends LinearLayout {
       mAuthor.setText("Author: " + Html.fromHtml(guide.getAuthor().toString()));
 
       mImage = (ImageView)findViewById(R.id.intro_image);
-      
    }
 
    public ImageView getImageView() {
       return mImage;
    }
-
 }

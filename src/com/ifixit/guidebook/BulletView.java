@@ -10,9 +10,6 @@ import android.view.View;
 public class BulletView extends View {
    private static final int BULLET_RADIUS = 6;
    
-   private float x;
-   private float y;
-   private int r;
    private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
    
    public BulletView(Context context) {
@@ -31,10 +28,12 @@ public class BulletView extends View {
       int colorConverted;
       try {  
          colorConverted = Color.parseColor(color);
-         mPaint.setColor(colorConverted);
-      } catch(IllegalArgumentException e) {
-         return;
       }
+      catch(IllegalArgumentException e) {
+         colorConverted = 0;
+      }
+
+      mPaint.setColor(colorConverted);
    }
 
    @Override

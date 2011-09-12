@@ -10,22 +10,17 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 
 public class ThumbnailImageAdapter extends BaseAdapter {
-
-   private int mGalleryItemBackground;   
    private Context mContext;
    private GuideStep mStep;
 
    private ImageManager mImageManager;
 
-   public ThumbnailImageAdapter(Context context, GuideStep step, ImageManager imageManager) {
-       
+   public ThumbnailImageAdapter(Context context, GuideStep step,
+    ImageManager imageManager) {
       mContext = context;
       mStep = step;
        
       TypedArray attr = mContext.obtainStyledAttributes(R.styleable.thumbnail_gallery);
-
-      mGalleryItemBackground = attr.getResourceId(
-       R.styleable.thumbnail_gallery_android_galleryItemBackground, 0);
 
       attr.recycle();
       
@@ -60,5 +55,4 @@ public class ThumbnailImageAdapter extends BaseAdapter {
         
       return (View)imageView;
    }
-
 }

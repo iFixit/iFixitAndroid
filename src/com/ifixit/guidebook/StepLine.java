@@ -1,11 +1,9 @@
 package com.ifixit.guidebook;
 
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.view.View;
+import java.io.Serializable;
 
-public class StepLine {
+public class StepLine implements Serializable {
+   private static final long serialVersionUID = 8535265363779393297L;
    protected String mColor;
    protected int mLevel;
    protected String mText;
@@ -37,6 +35,4 @@ public class StepLine {
    public String toString() {
       return "{StepLine: " + mColor + ", " + mLevel + ", " + mText + "}";
    }
-   
- 
 }

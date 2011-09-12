@@ -10,8 +10,6 @@ import android.widget.Gallery;
 import android.widget.ImageView;
 
 public class MainImageAdapter extends BaseAdapter {
-
-   private int mMainGalleryItemBackground;
    private Context mContext;
    private GuideStep mStep;
 
@@ -19,14 +17,10 @@ public class MainImageAdapter extends BaseAdapter {
 
    public MainImageAdapter(Context context, GuideStep step, 
     ImageManager imageManager) {
-       
       mContext = context;
       mStep = step;
        
       TypedArray attr = mContext.obtainStyledAttributes(R.styleable.main_gallery);
-
-      mMainGalleryItemBackground = attr.getResourceId(
-            R.styleable.thumbnail_gallery_android_galleryItemBackground, 0);
 
       attr.recycle();
       
@@ -47,10 +41,11 @@ public class MainImageAdapter extends BaseAdapter {
 
    public View getView(int position, View convertView, ViewGroup parent) {
       ImageView imageView;
+
       if (convertView == null) 
          imageView = new ImageView(mContext);
       else 
-         imageView = (ImageView) convertView;
+         imageView = (ImageView)convertView;
       
       imageView.setLayoutParams(new Gallery.LayoutParams(
        GuideStepView.MAIN_WIDTH, GuideStepView.MAIN_HEIGHT));
@@ -61,5 +56,4 @@ public class MainImageAdapter extends BaseAdapter {
         
       return (View)imageView;
    }
-
 }

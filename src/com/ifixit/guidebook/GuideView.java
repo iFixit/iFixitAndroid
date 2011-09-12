@@ -7,8 +7,11 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+
+import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+
 import android.view.Display;
 
 public class GuideView extends Activity implements OnPageChangeListener {
@@ -38,7 +41,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
 
       setContentView(R.layout.guide_main);
       extras = getIntent().getExtras();
-      getGuide(extras.getInt("guideid"));
+      getGuide(extras.getInt(GuidebookActivity.GUIDEID));
       initSpeechRecognizer();
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
    }
@@ -47,22 +50,27 @@ public class GuideView extends Activity implements OnPageChangeListener {
    public void onDestroy() {
       super.onDestroy();
 
-      mSpeechCommander.destroy();
+      if (mSpeechCommander != null)
+         mSpeechCommander.destroy();
    }
 
-   /*@Override
+   @Override
    public void onPause() {
       super.onPause();
 
-      mSpeechCommander.stopListening();
+      if (mSpeechCommander != null) {
+         mSpeechCommander.stopListening();
+         mSpeechCommander.cancel();
+      }
    }
 
    @Override
    public void onResume() {
       super.onResume();
 
-      mSpeechCommander.startListening();
-   }*/
+      if (mSpeechCommander != null)
+         mSpeechCommander.startListening();
+   }
    
    public int getScreenHeight() {
       Display display = getWindowManager().getDefaultDisplay(); 
@@ -79,7 +87,6 @@ public class GuideView extends Activity implements OnPageChangeListener {
       guidePager = (ViewPager) findViewById(R.id.guide_pager);
       guidePager.setAdapter(guideAdapter);
       guidePager.setOnPageChangeListener(this);
-      
    }
 
    public void getGuide(final int guideid) {
@@ -117,6 +124,9 @@ public class GuideView extends Activity implements OnPageChangeListener {
    }
 
    public void initSpeechRecognizer() {
+      if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext()))
+         return;
+      
       mSpeechCommander = new SpeechCommander(this, "com.ifixit.guidebook");
 
       mSpeechCommander.addCommand("next", new SpeechCommander.SpeechCommand() {
@@ -149,5 +159,4 @@ public class GuideView extends Activity implements OnPageChangeListener {
    public void onPageSelected(int page) {
       mCurrentPage = page;
    }
-
 }

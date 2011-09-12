@@ -51,8 +51,9 @@ public class ImageManager {
    }
 
    public void displayImage(String url, Activity activity, ImageView imageView) {
-      if (mImageMap.containsKey(url))
+      if (mImageMap.containsKey(url)) {
          imageView.setImageBitmap(mImageMap.get(url));
+      }
       else {
          queueImage(url, activity, imageView);
          imageView.setImageResource(R.drawable.icon);
@@ -83,8 +84,6 @@ public class ImageManager {
       if (bitmap != null)
          return bitmap;
 
-      Log.w("ImageManager", "cache miss =( " + url);
-
       try {
          connection = new URL(url).openConnection();
          connection.setUseCaches(true);
@@ -94,7 +93,6 @@ public class ImageManager {
          return bitmap;
       }
       catch (Exception e) {
-         Log.e("ImageManager", "getBitmap: " + e.getMessage());
          return null;
       }
    }

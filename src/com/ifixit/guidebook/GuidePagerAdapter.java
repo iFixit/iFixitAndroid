@@ -22,39 +22,36 @@ public class GuidePagerAdapter extends PagerAdapter {
    
    @Override
    public void destroyItem(View collection, int position, Object view) {
-
-      ((ViewPager) collection).removeView((View) view);
-      
+      ((ViewPager)collection).removeView((View)view);
    }
 
    @Override
    public void finishUpdate(View arg0) {
-      // TODO Auto-generated method stub
-      
    }
 
    @Override
    public int getCount() {
-      return mGuide.getNumSteps()+1;
+      return mGuide.getNumSteps() + 1;
    }
 
    @Override
    public Object instantiateItem(View collection, int position) {
-      
       GuideIntroView introView;
       GuideStepView stepView;
       
       if (position == 0) {
-         introView = new GuideIntroView(mContext, mGuide, mImageManager);
+         introView = new GuideIntroView(mContext, mGuide);
          
-         mImageManager.displayImage(mGuide.getIntroImage()+".large",
-               (Activity)mContext, introView.getImageView());
-              ((ViewPager) collection).addView(introView);
+         mImageManager.displayImage(mGuide.getIntroImage() + ".large",
+          (Activity)mContext, introView.getImageView());
+          ((ViewPager) collection).addView(introView);
  
          return introView;
-      } else {
-         stepView = new GuideStepView(mContext, mGuide.getStep(position - 1), mImageManager);
-         ((ViewPager) collection).addView(stepView);
+      }
+      else {
+         stepView = new GuideStepView(mContext, mGuide.getStep(position - 1),
+          mImageManager);
+         ((ViewPager)collection).addView(stepView);
          
          return stepView;
       }
@@ -62,25 +59,19 @@ public class GuidePagerAdapter extends PagerAdapter {
 
    @Override
    public boolean isViewFromObject(View view, Object object) {
-      return view==((View)object);
+      return view == ((View)object);
    }
 
    @Override
    public void restoreState(Parcelable arg0, ClassLoader arg1) {
-      // TODO Auto-generated method stub
-      
    }
 
    @Override
    public Parcelable saveState() {
-      // TODO Auto-generated method stub
       return null;
    }
 
    @Override
    public void startUpdate(View arg0) {
-      // TODO Auto-generated method stub
-      
    }
-
 }

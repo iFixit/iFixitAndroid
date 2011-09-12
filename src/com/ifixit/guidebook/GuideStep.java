@@ -1,10 +1,13 @@
 package com.ifixit.guidebook;
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 
 import android.util.Log;
 
-public class GuideStep {
+public class GuideStep implements Serializable {
+   private static final long serialVersionUID = 2884598684003517264L;
    protected int mStepNum;
    protected String mTitle;
    protected ArrayList<StepImage> mImages;

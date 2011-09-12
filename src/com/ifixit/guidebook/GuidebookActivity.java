@@ -7,6 +7,8 @@ import android.os.Bundle;
 import android.webkit.WebView;
 
 public class GuidebookActivity extends Activity {
+   protected static final String GUIDEID = "guideid";
+
    protected WebView mWebView;
 
    @Override
@@ -23,7 +25,7 @@ public class GuidebookActivity extends Activity {
    public void viewGuide(int guideid) {
       Intent intent = new Intent(this, GuideView.class);
 
-      intent.putExtra("guideid", guideid);
+      intent.putExtra(GUIDEID, guideid);
       startActivity(intent);
    }
 }

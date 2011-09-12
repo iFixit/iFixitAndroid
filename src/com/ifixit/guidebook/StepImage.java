@@ -1,6 +1,9 @@
 package com.ifixit.guidebook;
 
-public class StepImage {
+import java.io.Serializable;
+
+public class StepImage implements Serializable {
+   private static final long serialVersionUID = 6728708938023120624L;
    protected int mImageid;
    protected int mOrderby;
    protected String mText;

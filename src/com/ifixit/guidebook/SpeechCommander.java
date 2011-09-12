@@ -89,13 +89,17 @@ public class SpeechCommander {
    }
 
    public void startListening() {
-      mSpeechRecognizer.startListening(mRecognizerIntent);
-      mListening = true;
+      if (!mListening) {
+         mSpeechRecognizer.startListening(mRecognizerIntent);
+         mListening = true;
+      }
    }
 
    public void stopListening() {
-      mSpeechRecognizer.stopListening();
-      mListening = false;
+      if (mListening) {
+         mSpeechRecognizer.stopListening();
+         mListening = false;
+      }
    }
 
    public void destroy() {
