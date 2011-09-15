@@ -1,15 +1,17 @@
 package com.ifixit.guidebook;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class GuideStepLineView extends LinearLayout {
-   private static final int LINE_INDENT = 40;
-   private static final int MARGIN = 8;
+   private static final int LINE_INDENT = 50;
+   private static final int MARGIN = 10;
    
    private TextView mStepText;
+   private BulletView mBulletView;
    private LinearLayout mRow;
    
    public GuideStepLineView(Context context) {
@@ -23,10 +25,8 @@ public class GuideStepLineView extends LinearLayout {
    }   
 
    public void setLine(StepLine line) {
-      BulletView bulletView;
-
       mStepText = (TextView)findViewById(R.id.step_text);
-      mStepText.setText(line.getText());
+      mStepText.setText(Html.fromHtml(line.getText()));
 
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
        LinearLayout.LayoutParams.FILL_PARENT, 
@@ -35,7 +35,7 @@ public class GuideStepLineView extends LinearLayout {
       layoutParams.setMargins(LINE_INDENT*line.getLevel(), MARGIN, 0, MARGIN);    
       mRow.setLayoutParams(layoutParams);
       
-      bulletView = (BulletView)findViewById(R.id.bullet);
-      bulletView.setBullet(line.getColor());
+      mBulletView = (BulletView)findViewById(R.id.bullet);
+      mBulletView.setBullet(line.getColor());
    }
 }

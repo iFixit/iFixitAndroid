@@ -5,6 +5,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class GuideIntroView extends LinearLayout {
@@ -13,6 +14,7 @@ public class GuideIntroView extends LinearLayout {
    private TextView mDifficulty;
    private TextView mAuthor;
    private ImageView mImage;
+   private ProgressBar mImageLoader;
 
    public GuideIntroView(Context context, Guide guide) {
       super(context);      
@@ -35,9 +37,15 @@ public class GuideIntroView extends LinearLayout {
       mAuthor.setText("Author: " + Html.fromHtml(guide.getAuthor().toString()));
 
       mImage = (ImageView)findViewById(R.id.intro_image);
+      //mImageLoader = (ProgressBar) findViewById(R.id.image_loader);
+
    }
 
    public ImageView getImageView() {
       return mImage;
+   }
+   
+   public ProgressBar getProgressBar() {
+      return mImageLoader;
    }
 }

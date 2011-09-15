@@ -1,12 +1,11 @@
 package com.ifixit.guidebook;
 
+import android.app.ActionBar.Tab;
 import android.app.Activity;
+import android.app.FragmentTransaction;
 import android.content.Intent;
-
 import android.os.Bundle;
-
 import android.view.KeyEvent;
-
 import android.webkit.WebView;
 
 public class GuidebookActivity extends Activity {
@@ -40,4 +39,5 @@ public class GuidebookActivity extends Activity {
        }
        return super.onKeyDown(keyCode, event);
    }
+
 }

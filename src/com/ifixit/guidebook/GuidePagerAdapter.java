@@ -42,6 +42,7 @@ public class GuidePagerAdapter extends PagerAdapter {
       if (position == 0) {
          introView = new GuideIntroView(mContext, mGuide);
          
+         
          mImageManager.displayImage(mGuide.getIntroImage() + ".large",
           (Activity)mContext, introView.getImageView());
           ((ViewPager) collection).addView(introView);

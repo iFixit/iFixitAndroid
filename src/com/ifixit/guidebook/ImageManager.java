@@ -2,24 +2,20 @@ package com.ifixit.guidebook;
 
 import java.io.File;
 import java.io.FileOutputStream;
-
 import java.net.URL;
 import java.net.URLConnection;
-
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Stack;
 
 import android.app.Activity;
-
 import android.content.Context;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-
 import android.util.Log;
-
+import android.view.View;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 /**
  * Based largely on cacois's example:
@@ -49,14 +45,25 @@ public class ImageManager {
          mCacheDir.mkdirs(); 
       }
    }
-
+   
    public void displayImage(String url, Activity activity, ImageView imageView) {
       if (mImageMap.containsKey(url)) {
          imageView.setImageBitmap(mImageMap.get(url));
       }
       else {
          queueImage(url, activity, imageView);
-         imageView.setImageResource(R.drawable.icon);
+      }
+   }
+
+   public void displayImage(String url, Activity activity, ImageView imageView, ProgressBar progress) {
+      if (mImageMap.containsKey(url)) {
+         imageView.setImageBitmap(mImageMap.get(url));
+         progress.setVisibility(View.GONE);
+      }
+      else {
+         queueImage(url, activity, imageView);
+         imageView.setImageResource(R.drawable.loading);
+
       }
    }
 
@@ -193,8 +200,8 @@ public class ImageManager {
       public void run() {
          if (mBitmap != null)
             mImageView.setImageBitmap(mBitmap);
-         else
-            mImageView.setImageResource(R.drawable.icon);
+         else 
+            mImageView.setImageResource(R.drawable.loading);
       }
    }
 }

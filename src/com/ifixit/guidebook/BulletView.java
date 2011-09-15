@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.View;
 
 public class BulletView extends View {
@@ -26,8 +27,14 @@ public class BulletView extends View {
    
    public void setBullet(String color) {
       int colorConverted;
-      try {  
-         colorConverted = Color.parseColor(color);
+      try {
+         Log.w("setBullet Color Check: ", ""+color);
+
+         if (color.compareTo("black") == 0) {
+            colorConverted = Color.WHITE;
+         } else { 
+            colorConverted = Color.parseColor(color);
+         }
       }
       catch(IllegalArgumentException e) {
          colorConverted = 0;

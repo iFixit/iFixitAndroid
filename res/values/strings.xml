@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Guidebook</string>
+    <string name="guide_item">Guides</string>
+    <string name="cart_item">Parts Store</string>
 </resources>

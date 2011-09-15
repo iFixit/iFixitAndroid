@@ -3,16 +3,18 @@ package com.ifixit.guidebook;
 import org.apache.http.client.ResponseHandler;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
-
 import android.view.Display;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 public class GuideView extends Activity implements OnPageChangeListener {
    private static final String RESPONSE = "RESPONSE";
@@ -42,7 +44,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
       setContentView(R.layout.guide_main);
       extras = getIntent().getExtras();
       getGuide(extras.getInt(GuidebookActivity.GUIDEID));
-      initSpeechRecognizer();
+      //initSpeechRecognizer();
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
    }
 
@@ -149,7 +151,32 @@ public class GuideView extends Activity implements OnPageChangeListener {
 
       mSpeechCommander.startListening();
    }
+   
+   public void viewGuideHome() {
+      Intent intent = new Intent(this, GuidebookActivity.class);
 
+      startActivity(intent);
+   }
+   
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+       MenuInflater inflater = getMenuInflater();
+       inflater.inflate(R.menu.guide_menu, menu);
+       return true;
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+       // Handle item selection
+       switch (item.getItemId()) {
+       case R.id.guide_item:
+           viewGuideHome();
+           return true;
+       default:
+           return super.onOptionsItemSelected(item);
+       }
+   }
+   
    @Override
    public void onPageScrollStateChanged(int arg0) {}
    @Override

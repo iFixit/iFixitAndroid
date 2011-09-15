@@ -10,7 +10,6 @@
 	    android:textSize="36dip"
 	    android:textColor="#FFFFFF" 
 	    android:background="#000000" />
-
  	<ImageView android:id="@+id/intro_image" 
 	    android:layout_width="wrap_content" 
 	    android:layout_height="wrap_content"

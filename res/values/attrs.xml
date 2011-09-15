@@ -1,10 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <declare-styleable name="thumbnail_gallery">
+    <declare-styleable name="main_gallery">
         <attr name="android:galleryItemBackground" />
     </declare-styleable>
-        <declare-styleable name="main_gallery">
-        <attr name="android:galleryItemBackground" />
-    </declare-styleable>
-    
 </resources>
