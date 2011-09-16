@@ -2,15 +2,11 @@ package com.ifixit.guidebook;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.res.TypedArray;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.Gallery;
 import android.widget.GridView;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 public class ThumbnailImageAdapter extends BaseAdapter {
    private Context mContext;
@@ -37,12 +33,12 @@ public class ThumbnailImageAdapter extends BaseAdapter {
    }
 
    public View getView(int position, View convertView, ViewGroup parent) {
-      ImageView imageView;
+      LoaderImage imageView;
 
       if (convertView == null)
-         imageView = new ImageView(mContext);
+         imageView = new LoaderImage(mContext);
       else 
-         imageView = (ImageView)convertView;
+         imageView = (LoaderImage)convertView;
   
       imageView.setLayoutParams(new GridView.LayoutParams(
        GuideStepView.THUMBNAIL_WIDTH, GuideStepView.THUMBNAIL_HEIGHT));

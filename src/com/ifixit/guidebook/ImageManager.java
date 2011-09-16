@@ -13,9 +13,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
-import android.view.View;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 /**
  * Based largely on cacois's example:
@@ -46,7 +43,7 @@ public class ImageManager {
       }
    }
    
-   public void displayImage(String url, Activity activity, ImageView imageView) {
+   public void displayImage(String url, Activity activity, LoaderImage imageView) {
       if (mImageMap.containsKey(url)) {
          imageView.setImageBitmap(mImageMap.get(url));
       }
@@ -55,19 +52,7 @@ public class ImageManager {
       }
    }
 
-   public void displayImage(String url, Activity activity, ImageView imageView, ProgressBar progress) {
-      if (mImageMap.containsKey(url)) {
-         imageView.setImageBitmap(mImageMap.get(url));
-         progress.setVisibility(View.GONE);
-      }
-      else {
-         queueImage(url, activity, imageView);
-         imageView.setImageResource(R.drawable.loading);
-
-      }
-   }
-
-   private void queueImage(String url, Activity activity, ImageView imageView) {
+   private void queueImage(String url, Activity activity, LoaderImage imageView) {
       ImageRef imageRef;
 
       mImageQueue.clean(imageView);
@@ -133,9 +118,9 @@ public class ImageManager {
 
    private class ImageRef {
       public String url;
-      public ImageView imageView;
+      public LoaderImage imageView;
 
-      public ImageRef(String url, ImageView imageView) {
+      public ImageRef(String url, LoaderImage imageView) {
          this.url = url;
          this.imageView = imageView;
       }
@@ -144,7 +129,7 @@ public class ImageManager {
    private class ImageQueue {
       public Stack<ImageRef> imageRefs = new Stack<ImageRef>();
 
-      public void clean(ImageView view) {
+      public void clean(LoaderImage view) {
          for (int i = 0; i < imageRefs.size();) {
             if (imageRefs.get(i).imageView == view)
                imageRefs.remove(i);
@@ -190,9 +175,9 @@ public class ImageManager {
 
    private class BitmapDisplayer implements Runnable {
       Bitmap mBitmap;
-      ImageView mImageView;
+      LoaderImage mImageView;
 
-      public BitmapDisplayer(Bitmap bitmap, ImageView imageView) {
+      public BitmapDisplayer(Bitmap bitmap, LoaderImage imageView) {
          mBitmap = bitmap;
          mImageView = imageView;
       }

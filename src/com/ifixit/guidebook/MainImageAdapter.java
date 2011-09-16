@@ -40,12 +40,12 @@ public class MainImageAdapter extends BaseAdapter {
    }
 
    public View getView(int position, View convertView, ViewGroup parent) {
-      ImageView imageView;
+      LoaderImage imageView;
 
       if (convertView == null) 
-         imageView = new ImageView(mContext);
+         imageView = new LoaderImage(mContext);
       else 
-         imageView = (ImageView)convertView;
+         imageView = (LoaderImage)convertView;
       
       imageView.setLayoutParams(new Gallery.LayoutParams(
        GuideStepView.MAIN_WIDTH, GuideStepView.MAIN_HEIGHT));

@@ -3,9 +3,7 @@ package com.ifixit.guidebook;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 public class GuideIntroView extends LinearLayout {
@@ -13,8 +11,7 @@ public class GuideIntroView extends LinearLayout {
    private TextView mIntro;
    private TextView mDifficulty;
    private TextView mAuthor;
-   private ImageView mImage;
-   private ProgressBar mImageLoader;
+   private LoaderImage mImage;
 
    public GuideIntroView(Context context, Guide guide) {
       super(context);      
@@ -36,16 +33,10 @@ public class GuideIntroView extends LinearLayout {
       mAuthor = (TextView) findViewById(R.id.guide_author);
       mAuthor.setText("Author: " + Html.fromHtml(guide.getAuthor().toString()));
 
-      mImage = (ImageView)findViewById(R.id.intro_image);
-      //mImageLoader = (ProgressBar) findViewById(R.id.image_loader);
-
+      mImage = (LoaderImage)findViewById(R.id.intro_image);
    }
 
-   public ImageView getImageView() {
+   public LoaderImage getImageView() {
       return mImage;
-   }
-   
-   public ProgressBar getProgressBar() {
-      return mImageLoader;
    }
 }
