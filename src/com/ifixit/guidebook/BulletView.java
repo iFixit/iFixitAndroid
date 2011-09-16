@@ -1,6 +1,10 @@
 package com.ifixit.guidebook;
 
 import android.content.Context;
+
+import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -11,7 +15,8 @@ import android.view.View;
 public class BulletView extends View {
    private static final int BULLET_RADIUS = 6;
    
-   private final Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+   private Paint mPaint;
+   private int mResourceId;
    
    public BulletView(Context context) {
       super(context);
@@ -35,18 +40,24 @@ public class BulletView extends View {
          } else { 
             colorConverted = Color.parseColor(color);
          }
+         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+         mPaint.setColor(colorConverted);
       }
       catch(IllegalArgumentException e) {
-         colorConverted = 0;
+         mResourceId = R.drawable.icon;
       }
-
-      mPaint.setColor(colorConverted);
    }
 
    @Override
    protected void onDraw(Canvas canvas) {
        super.onDraw(canvas);
        
-       canvas.drawCircle(BULLET_RADIUS, BULLET_RADIUS+8, BULLET_RADIUS, mPaint);
+       if (mPaint != null)
+          canvas.drawCircle(BULLET_RADIUS, BULLET_RADIUS+8, BULLET_RADIUS, mPaint);
+       else {
+          Resources resources = getResources();
+          Bitmap bitmap = BitmapFactory.decodeResource(resources, mResourceId);
+          canvas.drawBitmap(bitmap, 0, 0, null);
+       }
    }
 }
