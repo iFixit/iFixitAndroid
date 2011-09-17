@@ -15,4 +15,9 @@
        android:textSize="24dip"
        android:textColor="#FFFFFF" 
        android:typeface="sans" />
+    <com.ifixit.guidebook.BulletView
+	   android:layout_width="28dip"
+	   android:layout_height="28dip"
+	   android:layout_marginTop="6dip"
+	   android:id="@+id/bullet_icon" />
 </LinearLayout>

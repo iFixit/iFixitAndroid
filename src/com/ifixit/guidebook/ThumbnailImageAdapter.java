@@ -25,7 +25,7 @@ public class ThumbnailImageAdapter extends BaseAdapter {
    }
 
    public Object getItem(int position) {
-       return mStep.mImages.get(position).mText + ".thumbnail";
+       return mStep.mImages.get(position).mText + ".medium";
    }
 
    public long getItemId(int position) {
@@ -44,7 +44,7 @@ public class ThumbnailImageAdapter extends BaseAdapter {
        GuideStepView.THUMBNAIL_WIDTH, GuideStepView.THUMBNAIL_HEIGHT));
       imageView.setScaleType(ImageView.ScaleType.FIT_XY);
     
-      mImageManager.displayImage(mStep.mImages.get(position).mText + ".thumbnail",
+      mImageManager.displayImage(mStep.mImages.get(position).mText + ".medium",
        (Activity)mContext, imageView);             
 
       return (View)imageView;

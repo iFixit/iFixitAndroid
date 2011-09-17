@@ -31,8 +31,8 @@ public class MainImageAdapter extends BaseAdapter {
        return mStep.getImages().size();
    }
 
-   public Object getItem(int position) {
-       return mStep.mImages.get(position).mText + ".large";
+   public String getItem(int position) {
+       return mStep.mImages.get(position).mText;
    }
 
    public long getItemId(int position) {

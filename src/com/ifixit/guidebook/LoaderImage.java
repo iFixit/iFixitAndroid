@@ -12,8 +12,9 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
-public class LoaderImage extends LinearLayout {
+public class LoaderImage extends RelativeLayout {
    protected ImageView mImage;
    protected ProgressBar mProgressBar;
 

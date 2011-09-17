@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +27,8 @@ public class GuideStepView extends LinearLayout {
    public static final int MAIN_HEIGHT = 540;
    public static final int THUMB_MARGIN = 10;
    public static final int MAIN_MARGIN = 30;
+   protected static final String IMAGEID = "imageid";
+   protected static final String IMAGE_MANAGER = "image_manager";
 
    private Context mContext;
    private TextView mTitle;
@@ -36,7 +39,6 @@ public class GuideStepView extends LinearLayout {
    private GuideStep mStep;
    private ImageManager mImageManager;
    private ArrayAdapter<StepLine> mAdapter;
-   private ArrayAdapter<StepImage> mThumbAdapter;
    private ListView mLineList;
    
    public GuideStepView(Context context, GuideStep step, ImageManager imageManager) {
@@ -57,7 +59,6 @@ public class GuideStepView extends LinearLayout {
       else {
          mTitle.setText(step.getTitle());
       }
-      //mImageLoader = (ProgressBar) findViewById(R.id.image_loader);
 
       mAdapter = new StepTextArrayAdapter((Activity)mContext, R.id.step_text_list, mStep.getLines());
       mAdapter.notifyDataSetChanged();
@@ -78,8 +79,10 @@ public class GuideStepView extends LinearLayout {
          @Override
          public void onItemClick(AdapterView<?> parent, View v, int position,
           long id) {            
-           
+            Intent intent = new Intent((Activity)mContext, FullImageView.class);
+            intent.putExtra(IMAGEID, (String)mMainGal.getAdapter().getItem(position));
             
+            ((Activity)mContext).startActivity(intent);
          }
       });
       
@@ -90,7 +93,6 @@ public class GuideStepView extends LinearLayout {
             mMainGal.setSelection(position);
          }
       });
-      
    }
 
    public ImageView getImageView() {
@@ -101,31 +103,9 @@ public class GuideStepView extends LinearLayout {
       return mImageLoader;
    }
    
-  /* public class ThumbnailArrayAdapter extends ArrayAdapter<StepImage> {
-      private ArrayList<StepImage> mThumbs;
-      private Context mContext;
-      
-      public ThumbnailArrayAdapter(Context context, int viewResourceId, 
-       ArrayList<StepImage> thumbs) {
-         super(context, viewResourceId, thumbs);
-         
-         mThumbs = thumbs;
-         mContext = context;
-      }
-   
-      @Override
-      public View getView(int position, View convertView, ViewGroup parent) {
-         ThumbnailImageView imageView;
-         if (convertView == null) 
-            imageView = new ThumbnailImageView(mContext, mImageManager);
-         else 
-            imageView = (ThumbnailImageView) convertView;
-         
-         imageView.setView(mThumbs.get(position));
-         
-         return (View)imageView;
-      }
-   }*/
+   public ImageManager getImageManager() {
+      return mImageManager;
+   }
    
    public class StepTextArrayAdapter extends ArrayAdapter<StepLine> {
       private ArrayList<StepLine> mLines;
