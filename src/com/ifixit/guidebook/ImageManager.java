@@ -22,20 +22,26 @@ import android.util.Log;
 public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
    private static final int MAX_STORED_IMAGES = 20;
+   private static final int NUM_THREADS = 5;
 
    private HashMap<String, Bitmap> mImageMap;
    private LinkedList<String> mRecentBitmaps;
    private File mCacheDir;
    private ImageQueue mImageQueue;
-   private Thread mImageLoaderThread;
+   private Thread[] mThreads;
 
    public ImageManager(Context context) {
       mImageMap = new HashMap<String, Bitmap>();
       mRecentBitmaps = new LinkedList<String>();
       mImageQueue = new ImageQueue();
-      mImageLoaderThread = new Thread(new ImageQueueManager());
+      mThreads = new Thread[NUM_THREADS];
 
-      mImageLoaderThread.setPriority(IMAGE_THREAD_PRIORITY);
+      for (int i = 0; i < NUM_THREADS; i++) {
+         mThreads[i] = new Thread(new ImageQueueManager());
+         mThreads[i].setPriority(IMAGE_THREAD_PRIORITY);
+         mThreads[i].start();
+      }
+
       mCacheDir = context.getCacheDir();
 
       if (!mCacheDir.exists()) {
@@ -60,11 +66,8 @@ public class ImageManager {
 
       synchronized(mImageQueue.imageRefs) {
          mImageQueue.imageRefs.push(imageRef);
-         mImageQueue.imageRefs.notifyAll();
+         mImageQueue.imageRefs.notify();
       }
-
-      if (mImageLoaderThread.getState() == Thread.State.NEW)
-         mImageLoaderThread.start();
    }
 
    private Bitmap getBitmap(String url) {
