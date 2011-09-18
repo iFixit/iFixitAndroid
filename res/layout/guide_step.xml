@@ -11,15 +11,15 @@
          android:layout_alignParentLeft="true"
          android:orientation="vertical">
       <Gallery android:id="@+id/main_gallery"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
       <GridView android:id="@+id/thumbnail_gallery"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:numColumns="4"
-         android:columnWidth="160dp"
-         android:gravity="left" 
-         android:layout_marginTop="16dip" />	
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="4"
+            android:columnWidth="160dp"
+            android:gravity="left" 
+            android:layout_marginTop="16dip" />	
    </LinearLayout>
    <LinearLayout
          android:layout_width="520dip"
