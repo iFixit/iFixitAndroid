@@ -20,6 +20,14 @@ public class StepImage implements Serializable {
       mText = text;
    }
 
+   public String getText() {
+      return mText;
+   }
+
+   public int getImageid() {
+      return mImageid;
+   }
+
    public String toString() {
       return "{StepImage: " + mImageid + ", " + mOrderby + ", " + mText + "}";
    }

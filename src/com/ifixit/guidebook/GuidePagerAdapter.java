@@ -9,12 +9,15 @@ import android.support.v4.view.ViewPager;
 import android.view.View;
 
 public class GuidePagerAdapter extends PagerAdapter {
+   private static final int GUIDE_INTRO_POSITION = 0;
+   private static final int STEP_OFFSET = 1;
 
    private Context mContext;
    private Guide mGuide;
    private final ImageManager mImageManager;
    
-   public GuidePagerAdapter(Context context, Guide guide, ImageManager imageManager) {
+   public GuidePagerAdapter(Context context, Guide guide,
+    ImageManager imageManager) {
       mContext = context;
       mGuide = guide;
       mImageManager = imageManager;
@@ -23,10 +26,6 @@ public class GuidePagerAdapter extends PagerAdapter {
    @Override
    public void destroyItem(View collection, int position, Object view) {
       ((ViewPager)collection).removeView((View)view);
-   }
-
-   @Override
-   public void finishUpdate(View arg0) {
    }
 
    @Override
@@ -39,9 +38,8 @@ public class GuidePagerAdapter extends PagerAdapter {
       GuideIntroView introView;
       GuideStepView stepView;
       
-      if (position == 0) {
+      if (position == GUIDE_INTRO_POSITION) {
          introView = new GuideIntroView(mContext, mGuide);
-         
          
          mImageManager.displayImage(mGuide.getIntroImage() + ".large",
           (Activity)mContext, introView.getImageView());
@@ -50,7 +48,8 @@ public class GuidePagerAdapter extends PagerAdapter {
          return introView;
       }
       else {
-         stepView = new GuideStepView(mContext, mGuide.getStep(position - 1),
+         stepView = new GuideStepView(mContext, mGuide.getStep(position -
+          STEP_OFFSET),
           mImageManager);
          ((ViewPager)collection).addView(stepView);
          
@@ -60,12 +59,14 @@ public class GuidePagerAdapter extends PagerAdapter {
 
    @Override
    public boolean isViewFromObject(View view, Object object) {
-      return view == ((View)object);
+      return view == object;
    }
 
    @Override
-   public void restoreState(Parcelable arg0, ClassLoader arg1) {
-   }
+   public void restoreState(Parcelable arg0, ClassLoader arg1) {}
+
+   @Override
+   public void finishUpdate(View arg0) {}
 
    @Override
    public Parcelable saveState() {
@@ -73,6 +74,5 @@ public class GuidePagerAdapter extends PagerAdapter {
    }
 
    @Override
-   public void startUpdate(View arg0) {
-   }
+   public void startUpdate(View arg0) {}
 }

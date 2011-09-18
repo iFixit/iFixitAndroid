@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Guide implements Serializable {
    private static final long serialVersionUID = -1965203088124961695L;
+
    protected int mGuideid;
    protected String mTitle;
    protected String mDevice;

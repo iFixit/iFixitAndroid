@@ -11,25 +11,25 @@ import android.widget.ImageView;
 public class ThumbnailImageAdapter extends BaseAdapter {
    private Context mContext;
    private GuideStep mStep;
-
    private ImageManager mImageManager;
 
-   public ThumbnailImageAdapter(Context context, GuideStep step, ImageManager imageManager) {
+   public ThumbnailImageAdapter(Context context, GuideStep step,
+    ImageManager imageManager) {
       mContext = context;
       mImageManager = imageManager;
       mStep = step;
    }
 
    public int getCount() {
-       return mStep.getImages().size();
+      return mStep.getImages().size();
    }
 
    public Object getItem(int position) {
-       return mStep.mImages.get(position).mText + ".medium";
+      return mStep.mImages.get(position).mText + ".medium";
    }
 
    public long getItemId(int position) {
-       return mStep.mImages.get(position).mImageid;
+      return mStep.mImages.get(position).mImageid;
    }
 
    public View getView(int position, View convertView, ViewGroup parent) {
@@ -39,11 +39,11 @@ public class ThumbnailImageAdapter extends BaseAdapter {
          imageView = new LoaderImage(mContext);
       else 
          imageView = (LoaderImage)convertView;
-  
+
       imageView.setLayoutParams(new GridView.LayoutParams(
        GuideStepView.THUMBNAIL_WIDTH, GuideStepView.THUMBNAIL_HEIGHT));
       imageView.setScaleType(ImageView.ScaleType.FIT_XY);
-    
+
       mImageManager.displayImage(mStep.mImages.get(position).mText + ".medium",
        (Activity)mContext, imageView);             
 

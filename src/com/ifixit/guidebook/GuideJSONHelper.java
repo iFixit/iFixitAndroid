@@ -58,7 +58,7 @@ public class GuideJSONHelper {
    public static StepImage parseImage(JSONObject jImage) throws JSONException {
       StepImage image = new StepImage(jImage.getInt("imageid"));
 
-      //last image doesn't have orderby so this is necessary. Could be a bug?
+      // last image doesn't have orderby so this is necessary. API bug?
       try {
          image.setOrderby(jImage.getInt("orderby"));
       }

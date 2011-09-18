@@ -18,22 +18,21 @@ public class GuideIntroView extends LinearLayout {
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(
             Context.LAYOUT_INFLATER_SERVICE);
-
       inflater.inflate(R.layout.guide_intro, this, true);        
 
-      mTitle = (TextView) findViewById(R.id.guide_title);
-      mTitle.setText(Html.fromHtml(guide.getTitle().toString()));
-      
-      mIntro = (TextView) findViewById(R.id.guide_intro_text);
-      mIntro.setText(Html.fromHtml(guide.getIntroduction().toString()));
-
-      mDifficulty = (TextView) findViewById(R.id.guide_difficulty);
-      mDifficulty.setText("Difficulty: " + Html.fromHtml(guide.getDifficulty().toString()));
-
-      mAuthor = (TextView) findViewById(R.id.guide_author);
-      mAuthor.setText("Author: " + Html.fromHtml(guide.getAuthor().toString()));
-
+      mTitle = (TextView)findViewById(R.id.guide_title);
+      mIntro = (TextView)findViewById(R.id.guide_intro_text);
+      mDifficulty = (TextView)findViewById(R.id.guide_difficulty);
+      mAuthor = (TextView)findViewById(R.id.guide_author);
       mImage = (LoaderImage)findViewById(R.id.intro_image);
+      
+      mTitle.setText(Html.fromHtml(guide.getTitle()));
+      mIntro.setText(Html.fromHtml(guide.getIntroduction()));
+      mDifficulty.setText(context.getString(R.string.difficulty) + ": " +
+       Html.fromHtml(guide.getDifficulty()));
+
+      mAuthor.setText(context.getString(R.string.author) + ": " +
+       Html.fromHtml(guide.getAuthor()));
    }
 
    public LoaderImage getImageView() {

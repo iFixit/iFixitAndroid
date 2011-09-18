@@ -20,6 +20,11 @@ import android.widget.ProgressBar;
 
 public class GuideView extends Activity implements OnPageChangeListener {
    private static final String RESPONSE = "RESPONSE";
+   private static final String API_URL = "http://www.ifixit.com/api/guide/";
+   private static final String NEXT_COMMAND = "next";
+   private static final String PREVIOUS_COMMAND = "previous";
+   private static final String HOME_COMMAND = "home";
+   private static final String PACKAGE_NAME = "com.ifixit.guidebook";
    
    private ViewPager mGuidePager;
    private ProgressBar mProgressBar;
@@ -43,6 +48,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       Bundle extras;
+
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_main);
 
@@ -112,7 +118,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
          public void run() {
             HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
 
-            helper.performGet("http://www.ifixit.com/api/guide/" + guideid);
+            helper.performGet(API_URL + guideid);
          }
       }.start();
    }
@@ -133,21 +139,22 @@ public class GuideView extends Activity implements OnPageChangeListener {
       if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext()))
          return;
       
-      mSpeechCommander = new SpeechCommander(this, "com.ifixit.guidebook");
+      mSpeechCommander = new SpeechCommander(this, PACKAGE_NAME);
 
-      mSpeechCommander.addCommand("next", new SpeechCommander.SpeechCommand() {
+      mSpeechCommander.addCommand(NEXT_COMMAND, new SpeechCommander.Command() {
          public void performCommand() {
             nextStep();
          }
       });
 
-      mSpeechCommander.addCommand("previous", new SpeechCommander.SpeechCommand() {
+      mSpeechCommander.addCommand(PREVIOUS_COMMAND,
+       new SpeechCommander.Command() {
          public void performCommand() {
             previousStep();
          }
       });
 
-      mSpeechCommander.addCommand("home", new SpeechCommander.SpeechCommand() {
+      mSpeechCommander.addCommand(HOME_COMMAND, new SpeechCommander.Command() {
          public void performCommand() {
             guideHome();
          }
@@ -168,8 +175,8 @@ public class GuideView extends Activity implements OnPageChangeListener {
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
       menu.findItem(R.id.previous_step).setEnabled(mCurrentPage > 0);
-      if (mGuide != null)
-         menu.findItem(R.id.next_step).setEnabled(mCurrentPage < mGuide.getNumSteps());
+      menu.findItem(R.id.next_step).setEnabled(mGuide == null ||
+       mCurrentPage < mGuide.getNumSteps());
 
       return super.onPrepareOptionsMenu(menu);
    }

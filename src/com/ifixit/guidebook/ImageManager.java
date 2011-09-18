@@ -55,7 +55,8 @@ public class ImageManager {
       }
    }
    
-   public void displayImage(String url, Activity activity, LoaderImage imageView) {
+   public void displayImage(String url, Activity activity,
+    LoaderImage imageView) {
       if (mImageMap.containsKey(url)) {
          imageView.setImageBitmap(mImageMap.get(url));
       }
@@ -64,18 +65,14 @@ public class ImageManager {
       }
    }
 
-   private void queueImage(String url, Activity activity, LoaderImage imageView) {
+   private void queueImage(String url, Activity activity,
+    LoaderImage imageView) {
       ImageRef imageRef;
-
-      Log.w("marcus", "queueing image: " + url);
 
       synchronized (mImageQueue.imageRefs) {
          mImageQueue.clean(imageView);
-      }
+         imageRef = new ImageRef(url, imageView);
 
-      imageRef = new ImageRef(url, imageView);
-
-      synchronized(mImageQueue.imageRefs) {
          if (mImageQueue.imageRefs.size() > MAX_LOADING_IMAGES)
             mImageQueue.imageRefs.removeLast();
 

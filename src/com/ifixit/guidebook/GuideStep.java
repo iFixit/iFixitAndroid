@@ -4,10 +4,9 @@ import java.io.Serializable;
 
 import java.util.ArrayList;
 
-import android.util.Log;
-
 public class GuideStep implements Serializable {
    private static final long serialVersionUID = 2884598684003517264L;
+
    protected int mStepNum;
    protected String mTitle;
    protected ArrayList<StepImage> mImages;
@@ -51,23 +50,6 @@ public class GuideStep implements Serializable {
       return mLines.get(pos);
    }
    
-   public String getText() {
-      String lineText = new String();
-      Log.w("Step Line Count", "" + mLines.size());
-      
-      int prevLevel = 0;
-      
-      for (StepLine line : mLines) {
-         if (line.getLevel() > prevLevel) {
-            lineText = lineText +"<p><b>" + line.getText() +"</b></p>";
-         } else {
-            lineText = lineText +"<p>" + line.getText() +"</p>";
-         }
-         Log.w("Step Line", "" + lineText);
-      }
-      return lineText;
-   }
-
    public String toString() {
       return "{GuideStep: " + mStepNum + ", " + mTitle +  ", " + mLines +
        ", " + mImages + "}";

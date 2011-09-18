@@ -10,6 +10,7 @@ import android.view.View;
 
 public class BulletView extends View {
    private static final int BULLET_RADIUS = 6;
+   private static final int Y_OFFSET = 8;
    private static final int ORANGE = 0xFFFF7F00;
    
    private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -48,14 +49,7 @@ public class BulletView extends View {
    protected void onDraw(Canvas canvas) {
        super.onDraw(canvas);
        
-       if (mPaint != null)
-          canvas.drawCircle(BULLET_RADIUS, BULLET_RADIUS+8, BULLET_RADIUS, mPaint);
-       //else {
-         // Resources resources = getResources();
-          //Bitmap bitmap = BitmapFactory.decodeResource(resources, mResourceId);
-          //Rect r = new Rect(0, 0, 0, 0);
-          //Rect source = new Rect(0,-111, 50, -161);
-        //  canvas.drawBitmap(bitmap, 0,0, null);
-       //}
+       canvas.drawCircle(BULLET_RADIUS, BULLET_RADIUS + Y_OFFSET,
+        BULLET_RADIUS, mPaint);
    }
 }

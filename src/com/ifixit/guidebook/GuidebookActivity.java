@@ -8,6 +8,7 @@ import android.webkit.WebView;
 
 public class GuidebookActivity extends Activity {
    protected static final String GUIDEID = "guideid";
+   protected static final String SPLASH_URL = "http://www.ifixit.com";
 
    protected WebView mWebView;
 
@@ -18,7 +19,7 @@ public class GuidebookActivity extends Activity {
       setContentView(R.layout.webview);
       mWebView = (WebView)findViewById(R.id.webView);
       mWebView.getSettings().setJavaScriptEnabled(true);
-      mWebView.loadUrl("http://www.ifixit.com");
+      mWebView.loadUrl(SPLASH_URL);
       mWebView.setWebViewClient(new GuideWebView(this));
    }
 
