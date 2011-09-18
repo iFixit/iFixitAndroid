@@ -15,12 +15,16 @@ import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+
+import android.widget.ProgressBar;
 
 public class GuideView extends Activity implements OnPageChangeListener {
    private static final String RESPONSE = "RESPONSE";
    
-   private ViewPager guidePager;
-   private GuidePagerAdapter guideAdapter;
+   private ViewPager mGuidePager;
+   private ProgressBar mProgressBar;
+   private GuidePagerAdapter mGuideAdapter;
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage;
@@ -28,10 +32,10 @@ public class GuideView extends Activity implements OnPageChangeListener {
    private final Handler mGuideHandler = new Handler() {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
-         mGuide = GuideJSONHelper.parseGuide(response);
+         Guide guide = GuideJSONHelper.parseGuide(response);
          
-         if (mGuide != null) {
-            setGuide(mGuide);
+         if (guide != null) {
+            setGuide(guide);
          }
       }
    };
@@ -40,8 +44,13 @@ public class GuideView extends Activity implements OnPageChangeListener {
    public void onCreate(Bundle savedInstanceState) {
       Bundle extras;
       super.onCreate(savedInstanceState);
-
       setContentView(R.layout.guide_main);
+
+      mGuidePager = (ViewPager)findViewById(R.id.guide_pager);
+      mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
+      mGuidePager.setVisibility(View.GONE);
+      mProgressBar.setVisibility(View.VISIBLE);
+
       extras = getIntent().getExtras();
       getGuide(extras.getInt(GuidebookActivity.GUIDEID));
       //initSpeechRecognizer();
@@ -85,10 +94,13 @@ public class GuideView extends Activity implements OnPageChangeListener {
    }
 
    public void setGuide(Guide guide) {
-      guideAdapter = new GuidePagerAdapter(this, mGuide);
-      guidePager = (ViewPager) findViewById(R.id.guide_pager);
-      guidePager.setAdapter(guideAdapter);
-      guidePager.setOnPageChangeListener(this);
+      mGuide = guide;
+      mGuideAdapter = new GuidePagerAdapter(this, mGuide);
+      mGuidePager.setAdapter(mGuideAdapter);
+      mGuidePager.setOnPageChangeListener(this);
+
+      mProgressBar.setVisibility(View.GONE);
+      mGuidePager.setVisibility(View.VISIBLE);
    }
 
    public void getGuide(final int guideid) {
@@ -105,12 +117,12 @@ public class GuideView extends Activity implements OnPageChangeListener {
    }
 
    private void nextStep() {
-      guidePager.setCurrentItem(mCurrentPage + 1);
+      mGuidePager.setCurrentItem(mCurrentPage + 1);
       //setStep();
    }
 
    private void previousStep() {
-      guidePager.setCurrentItem(mCurrentPage - 1);
+      mGuidePager.setCurrentItem(mCurrentPage - 1);
       //setStep();
    }
    
@@ -122,7 +134,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
    }*/
 
    private void guideHome() {
-      guidePager.setCurrentItem(0);
+      mGuidePager.setCurrentItem(0);
    }
 
    public void initSpeechRecognizer() {

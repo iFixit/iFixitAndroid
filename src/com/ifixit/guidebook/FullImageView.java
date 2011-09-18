@@ -3,7 +3,6 @@ package com.ifixit.guidebook;
 import android.app.Activity;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.widget.ImageView;
 
 public class FullImageView extends Activity {
    private LoaderImage mImage;
@@ -19,7 +18,7 @@ public class FullImageView extends Activity {
       setContentView(R.layout.full_screen_image);
       extras = getIntent().getExtras();
 
-      String image = (String)extras.get(GuideStepView.IMAGEID); 
+      String image = (String)extras.get(GuideStepView.IMAGEID);
        
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
       

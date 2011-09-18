@@ -2,23 +2,17 @@ package com.ifixit.guidebook;
 
 import android.content.Context;
 
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.View;
 
 public class BulletView extends View {
    private static final int BULLET_RADIUS = 6;
+   private static final int ORANGE = 0xFFFF7F00;
    
-   private Paint mPaint;
-   private int mResourceId;
+   private Paint mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
    
    public BulletView(Context context) {
       super(context);
@@ -35,21 +29,19 @@ public class BulletView extends View {
    public void setBullet(String color) {
       int colorConverted;
       try {
-         Log.w("setBullet Color Check: ", ""+color);
-
-         if (color.compareTo("black") == 0) {
+         if (color.equals("black")) {
             colorConverted = Color.WHITE;
-         } else if (color.compareTo("orange") == 0) {
-            colorConverted = Color.parseColor("ffa500");
+         } else if (color.equals("orange")) {
+            colorConverted = ORANGE;
          } else { 
             colorConverted = Color.parseColor(color);
          }
-         mPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-         mPaint.setColor(colorConverted);
       }
       catch(IllegalArgumentException e) {
-         mResourceId = R.drawable.bullets_black;
+         colorConverted = Color.WHITE;
       }
+
+      mPaint.setColor(colorConverted);
    }
 
    @Override
