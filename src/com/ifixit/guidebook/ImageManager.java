@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.Stack;
 
 import android.app.Activity;
 import android.content.Context;
@@ -22,21 +21,28 @@ import android.util.Log;
 public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
    private static final int MAX_STORED_IMAGES = 20;
-   private static final int NUM_THREADS = 5;
+   private static final int MAX_LOADING_IMAGES = 15;
+   private static final int DEFAULT_NUM_THREADS = 5;
 
    private HashMap<String, Bitmap> mImageMap;
    private LinkedList<String> mRecentBitmaps;
    private File mCacheDir;
    private ImageQueue mImageQueue;
    private Thread[] mThreads;
+   private final int mNumThreads;
 
    public ImageManager(Context context) {
+      this(context, DEFAULT_NUM_THREADS);
+   }
+
+   public ImageManager(Context context, int numThreads) {
+      mNumThreads = numThreads;
       mImageMap = new HashMap<String, Bitmap>();
       mRecentBitmaps = new LinkedList<String>();
       mImageQueue = new ImageQueue();
-      mThreads = new Thread[NUM_THREADS];
+      mThreads = new Thread[mNumThreads];
 
-      for (int i = 0; i < NUM_THREADS; i++) {
+      for (int i = 0; i < mNumThreads; i++) {
          mThreads[i] = new Thread(new ImageQueueManager());
          mThreads[i].setPriority(IMAGE_THREAD_PRIORITY);
          mThreads[i].start();
@@ -61,10 +67,18 @@ public class ImageManager {
    private void queueImage(String url, Activity activity, LoaderImage imageView) {
       ImageRef imageRef;
 
-      mImageQueue.clean(imageView);
+      Log.w("marcus", "queueing image: " + url);
+
+      synchronized (mImageQueue.imageRefs) {
+         mImageQueue.clean(imageView);
+      }
+
       imageRef = new ImageRef(url, imageView);
 
       synchronized(mImageQueue.imageRefs) {
+         if (mImageQueue.imageRefs.size() > MAX_LOADING_IMAGES)
+            mImageQueue.imageRefs.removeLast();
+
          mImageQueue.imageRefs.push(imageRef);
          mImageQueue.imageRefs.notify();
       }
@@ -81,7 +95,6 @@ public class ImageManager {
 
       try {
          connection = new URL(url).openConnection();
-         connection.setUseCaches(true);
          bitmap = BitmapFactory.decodeStream(connection.getInputStream());
          writeFile(bitmap, file);
 
@@ -130,7 +143,7 @@ public class ImageManager {
    }
 
    private class ImageQueue {
-      public Stack<ImageRef> imageRefs = new Stack<ImageRef>();
+      public LinkedList<ImageRef> imageRefs = new LinkedList<ImageRef>();
 
       public void clean(LoaderImage view) {
          for (int i = 0; i < imageRefs.size();) {
@@ -152,24 +165,30 @@ public class ImageManager {
 
          try {
             while (true) {
-               if (mImageQueue.imageRefs.size() == 0)
-                  synchronized(mImageQueue.imageRefs) {
+               synchronized(mImageQueue.imageRefs) {
+                  if (mImageQueue.imageRefs.size() == 0)
                      mImageQueue.imageRefs.wait();
-                  }
-
-               if (mImageQueue.imageRefs.size() != 0) {
-                  synchronized(mImageQueue.imageRefs) {
-                     imageToLoad = mImageQueue.imageRefs.pop();
-                  }
-
-                  bitmap = getBitmap(imageToLoad.url);
-                  storeImage(imageToLoad.url, bitmap);
-
-                  bitmapDisplayer = new BitmapDisplayer(bitmap,
-                   imageToLoad.imageView);
-                  activity = (Activity)imageToLoad.imageView.getContext();
-                  activity.runOnUiThread(bitmapDisplayer);
                }
+
+               synchronized(mImageQueue.imageRefs) {
+                  if (mImageQueue.imageRefs.size() == 0)
+                     continue;
+
+                  imageToLoad = mImageQueue.imageRefs.pop();
+               }
+
+               bitmap = getBitmap(imageToLoad.url);
+               storeImage(imageToLoad.url, bitmap);
+
+               bitmapDisplayer = new BitmapDisplayer(bitmap,
+                imageToLoad.imageView);
+               activity = (Activity)imageToLoad.imageView.getContext();
+               activity.runOnUiThread(bitmapDisplayer);
+
+               imageToLoad = null;
+               bitmap = null;
+               activity = null;
+               bitmapDisplayer = null;
             }
          }
          catch (InterruptedException e) {}

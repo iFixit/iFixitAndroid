@@ -47,6 +47,6 @@ public class ThumbnailImageAdapter extends BaseAdapter {
       mImageManager.displayImage(mStep.mImages.get(position).mText + ".medium",
        (Activity)mContext, imageView);             
 
-      return (View)imageView;
+      return imageView;
    }
 }

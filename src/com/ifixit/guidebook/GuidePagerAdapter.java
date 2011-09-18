@@ -12,12 +12,12 @@ public class GuidePagerAdapter extends PagerAdapter {
 
    private Context mContext;
    private Guide mGuide;
-   private ImageManager mImageManager;
+   private final ImageManager mImageManager;
    
-   public GuidePagerAdapter(Context context, Guide guide) {
+   public GuidePagerAdapter(Context context, Guide guide, ImageManager imageManager) {
       mContext = context;
       mGuide = guide;
-      mImageManager = new ImageManager(mContext);
+      mImageManager = imageManager;
    }
    
    @Override

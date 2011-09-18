@@ -3,7 +3,6 @@ package com.ifixit.guidebook;
 import org.apache.http.client.ResponseHandler;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +27,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage;
+   protected ImageManager mImageManager;
    
    private final Handler mGuideHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -53,8 +53,9 @@ public class GuideView extends Activity implements OnPageChangeListener {
 
       extras = getIntent().getExtras();
       getGuide(extras.getInt(GuidebookActivity.GUIDEID));
-      //initSpeechRecognizer();
+      initSpeechRecognizer();
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+      mImageManager = ((GuideApplication)getApplication()).getImageManager();
    }
 
    @Override
@@ -95,7 +96,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
 
    public void setGuide(Guide guide) {
       mGuide = guide;
-      mGuideAdapter = new GuidePagerAdapter(this, mGuide);
+      mGuideAdapter = new GuidePagerAdapter(this, mGuide, mImageManager);
       mGuidePager.setAdapter(mGuideAdapter);
       mGuidePager.setOnPageChangeListener(this);
 
@@ -118,21 +119,12 @@ public class GuideView extends Activity implements OnPageChangeListener {
 
    private void nextStep() {
       mGuidePager.setCurrentItem(mCurrentPage + 1);
-      //setStep();
    }
 
    private void previousStep() {
       mGuidePager.setCurrentItem(mCurrentPage - 1);
-      //setStep();
    }
    
-  /* private void setStep() {
-      imageAdapter = new GuideImagePagerAdapter(this, mGuide.getStep(mCurrentPage));
-      imagePager = (ViewPager) findViewById(R.id.image_pager);
-      imagePager.setAdapter(imageAdapter);
-      imagePager.setOnPageChangeListener(this);
-   }*/
-
    private void guideHome() {
       mGuidePager.setCurrentItem(0);
    }
@@ -164,29 +156,42 @@ public class GuideView extends Activity implements OnPageChangeListener {
       mSpeechCommander.startListening();
    }
    
-   public void viewGuideHome() {
-      Intent intent = new Intent(this, GuidebookActivity.class);
-
-      startActivity(intent);
-   }
-   
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-       MenuInflater inflater = getMenuInflater();
-       inflater.inflate(R.menu.guide_menu, menu);
-       return true;
+      MenuInflater inflater = getMenuInflater();
+
+      inflater.inflate(R.menu.guide_menu, menu);
+
+      return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      menu.findItem(R.id.previous_step).setEnabled(mCurrentPage > 0);
+      if (mGuide != null)
+         menu.findItem(R.id.next_step).setEnabled(mCurrentPage < mGuide.getNumSteps());
+
+      return super.onPrepareOptionsMenu(menu);
    }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
-       // Handle item selection
-       switch (item.getItemId()) {
-       case R.id.guide_item:
-           viewGuideHome();
-           return true;
-       default:
-           return super.onOptionsItemSelected(item);
-       }
+      switch (item.getItemId()) {
+         case R.id.more_guides:
+            finish();
+            return true;
+         case R.id.guide_home:
+            guideHome();
+            return true;
+         case R.id.previous_step:
+            previousStep();
+            return true;
+         case R.id.next_step:
+            nextStep();
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
    }
    
    @Override
@@ -197,5 +202,6 @@ public class GuideView extends Activity implements OnPageChangeListener {
    @Override
    public void onPageSelected(int page) {
       mCurrentPage = page;
+      invalidateOptionsMenu();
    }
 }

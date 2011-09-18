@@ -1,7 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu
-  xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:id="@+id/guide_item"
-          android:title="@string/guide_item"
-          android:showAsAction="ifRoom|withText"  />
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+   <item android:id="@+id/guide_home"
+         android:title="@string/guide_home"
+         android:showAsAction="ifRoom|withText" />
+   <item android:id="@+id/previous_step"
+         android:title="@string/previous_step"
+         android:showAsAction="ifRoom|withText" />
+   <item android:id="@+id/next_step"
+         android:title="@string/next_step"
+         android:showAsAction="ifRoom|withText" />
+   <item android:id="@+id/more_guides"
+         android:title="@string/more_guides"
+         android:showAsAction="ifRoom|withText" />
 </menu>
