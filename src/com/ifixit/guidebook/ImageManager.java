@@ -25,6 +25,7 @@ public class ImageManager {
    private static final int DEFAULT_NUM_THREADS = 5;
 
    private HashMap<String, Bitmap> mImageMap;
+   private HashMap<String, ImageRef> mLoadingImages;
    private LinkedList<String> mRecentBitmaps;
    private File mCacheDir;
    private ImageQueue mImageQueue;
@@ -41,6 +42,7 @@ public class ImageManager {
       mRecentBitmaps = new LinkedList<String>();
       mImageQueue = new ImageQueue();
       mThreads = new Thread[mNumThreads];
+      mLoadingImages = new HashMap<String, ImageRef>();
 
       for (int i = 0; i < mNumThreads; i++) {
          mThreads[i] = new Thread(new ImageQueueManager());
@@ -69,8 +71,22 @@ public class ImageManager {
     LoaderImage imageView) {
       ImageRef imageRef;
 
+      synchronized (mLoadingImages) {
+         imageRef = mLoadingImages.get(url);
+         if (imageRef != null) {
+            imageRef.addImage(imageView);
+            return;
+         }
+      }
+
       synchronized (mImageQueue.imageRefs) {
-         mImageQueue.clean(imageView);
+         for (ImageRef image : mImageQueue.imageRefs) {
+            if (image.getUrl().equals(url)) {
+               image.addImage(imageView);
+               return;
+            }
+         }
+
          imageRef = new ImageRef(url, imageView);
 
          if (mImageQueue.imageRefs.size() > MAX_LOADING_IMAGES)
@@ -130,26 +146,30 @@ public class ImageManager {
    }
 
    private class ImageRef {
-      public String url;
-      public LoaderImage imageView;
+      protected String mUrl;
+      protected LinkedList<LoaderImage> mImageViews;
 
       public ImageRef(String url, LoaderImage imageView) {
-         this.url = url;
-         this.imageView = imageView;
+         mUrl = url;
+         mImageViews = new LinkedList<LoaderImage>();
+         addImage(imageView);
+      }
+
+      public void addImage(LoaderImage imageView) {
+         mImageViews.push(imageView);
+      }
+
+      public LinkedList<LoaderImage> getImageViews() {
+         return mImageViews;
+      }
+
+      public String getUrl() {
+         return mUrl;
       }
    }
 
    private class ImageQueue {
       public LinkedList<ImageRef> imageRefs = new LinkedList<ImageRef>();
-
-      public void clean(LoaderImage view) {
-         for (int i = 0; i < imageRefs.size();) {
-            if (imageRefs.get(i).imageView == view)
-               imageRefs.remove(i);
-            else
-               i++;
-         }
-      }
    }
 
    private class ImageQueueManager implements Runnable {
@@ -172,14 +192,18 @@ public class ImageManager {
                      continue;
 
                   imageToLoad = mImageQueue.imageRefs.pop();
+                  synchronized (mLoadingImages) {
+                     mLoadingImages.put(imageToLoad.getUrl(), imageToLoad);
+                  }
                }
 
-               bitmap = getBitmap(imageToLoad.url);
-               storeImage(imageToLoad.url, bitmap);
+               bitmap = getBitmap(imageToLoad.getUrl());
+               storeImage(imageToLoad.getUrl(), bitmap);
 
                bitmapDisplayer = new BitmapDisplayer(bitmap,
-                imageToLoad.imageView);
-               activity = (Activity)imageToLoad.imageView.getContext();
+                imageToLoad.getImageViews(), imageToLoad.getUrl());
+               activity = (Activity)imageToLoad.getImageViews().get(0).
+                getContext();
                activity.runOnUiThread(bitmapDisplayer);
 
                imageToLoad = null;
@@ -194,18 +218,27 @@ public class ImageManager {
 
    private class BitmapDisplayer implements Runnable {
       Bitmap mBitmap;
-      LoaderImage mImageView;
+      LinkedList<LoaderImage> mImageViews;
+      String mUrl;
 
-      public BitmapDisplayer(Bitmap bitmap, LoaderImage imageView) {
+      public BitmapDisplayer(Bitmap bitmap, LinkedList<LoaderImage> imageViews,
+       String url) {
          mBitmap = bitmap;
-         mImageView = imageView;
+         mImageViews = imageViews;
+         mUrl = url;
       }
 
       public void run() {
          if (mBitmap != null)
-            mImageView.setImageBitmap(mBitmap);
+            for (LoaderImage image : mImageViews)
+               image.setImageBitmap(mBitmap);
          else 
-            mImageView.setImageResource(R.drawable.loading);
+            for (LoaderImage image : mImageViews)
+               image.setImageResource(R.drawable.loading);
+
+         synchronized (mLoadingImages) {
+            mLoadingImages.remove(mUrl);
+         }
       }
    }
 }
