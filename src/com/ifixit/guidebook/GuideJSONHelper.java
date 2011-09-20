@@ -12,6 +12,8 @@ public class GuideJSONHelper {
          JSONObject jGuideInfo = new JSONObject(json);
          JSONObject jGuide = jGuideInfo.getJSONObject("guide");
          JSONArray jSteps = jGuide.getJSONArray("steps");
+         JSONArray jTools = jGuide.getJSONArray("tools");
+         JSONArray jParts = jGuide.getJSONArray("parts");
          JSONObject jAuthor = jGuide.getJSONObject("author");
          JSONObject jImage = jGuide.getJSONObject("image");
          Guide guide = new Guide(jGuideInfo.getInt("guideid"));
@@ -28,6 +30,14 @@ public class GuideJSONHelper {
          for (int i = 0; i < jSteps.length(); i++) {
             guide.addStep(parseStep(jSteps.getJSONObject(i)));
          }
+         
+         for (int i = 0; i < jTools.length(); i++) {
+            guide.addTool(parseTool(jTools.getJSONObject(i)));
+         }
+         
+         for (int i = 0; i < jParts.length(); i++) {
+            guide.addPart(parsePart(jParts.getJSONObject(i)));
+         }
 
          return guide;
       }
@@ -36,7 +46,17 @@ public class GuideJSONHelper {
          return null;
       }
    }
+   
+   public static GuidePart parsePart(JSONObject jPart) throws JSONException {
+      return new GuidePart(jPart.getString("text"), jPart.getString("url"),
+       jPart.getString("thumbnail"), jPart.getString("notes"));
+   }
 
+   public static GuideTool parseTool(JSONObject jTool) throws JSONException {
+      return new GuideTool(jTool.getString("text"), jTool.getString("url"),
+       jTool.getString("thumbnail"), jTool.getString("notes"));
+   }
+   
    public static GuideStep parseStep(JSONObject jStep) throws JSONException {
       JSONArray jImages = jStep.getJSONArray("images");
       JSONArray jLines = jStep.getJSONArray("lines");

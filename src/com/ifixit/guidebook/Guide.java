@@ -17,12 +17,58 @@ public class Guide implements Serializable {
    protected String mIntroImage;
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
+   protected ArrayList<GuideTool> mTools;
+   protected ArrayList<GuidePart> mParts;
+
 
    public Guide(int guideid) {
       mGuideid = guideid;
       mSteps = new ArrayList<GuideStep>();
+      mTools = new ArrayList<GuideTool>();
+      mParts = new ArrayList<GuidePart>();
    }
 
+   public void addTool(GuideTool tool) {
+      mTools.add(tool);
+   }
+   
+   public int getNumTools() {
+      return mTools.size();
+   }
+
+   public GuideTool getTool(int position) {
+      return mTools.get(position);
+   }
+   
+   public String getToolsFormatted() {
+      String formattedTools = "Required Tools: <br />";
+      for (GuideTool t : mTools) 
+         formattedTools += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() + "</a><br />";
+      
+      return formattedTools;
+   }
+   
+   public void addPart(GuidePart part) {
+      mParts.add(part);
+   }
+   
+   public int getNumParts() {
+      return mParts.size();
+   }
+
+   public GuidePart getPart(int position) {
+      return mParts.get(position);
+   }
+   
+   public String getPartsFormatted() {
+      String formattedPart = "Required Parts: <br />";
+      for (GuidePart t : mParts) 
+         formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() + "</a><br />";
+      
+      return formattedPart;
+   }
+
+   
    public void addStep(GuideStep step) {
       mSteps.add(step);
    }

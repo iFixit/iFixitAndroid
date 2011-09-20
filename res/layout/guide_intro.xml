@@ -22,25 +22,54 @@
          android:layout_alignParentRight="true"
          android:orientation="vertical">
       <TextView android:id="@+id/guide_intro_text"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:textSize="18dip"
-            android:textColor="#f3f3f3" />
-      <TextView android:id="@+id/guide_difficulty"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_gravity="right"
+         android:textSize="24dip"
+         android:textColor="#f3f3f3" />
+      <LinearLayout android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:orientation="horizontal"
+         android:weightSum="2">
+	      <TextView android:id="@+id/guide_difficulty"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dip"
-            android:textColor="#f3f3f3" />
-      <TextView android:id="@+id/guide_author"
+            android:textColor="#f3f3f3"
+            android:layout_weight="1" />
+	      <TextView android:id="@+id/guide_author"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="18dip"
-            android:textColor="#f3f3f3" />
+            android:textColor="#f3f3f3"
+            android:layout_weight="1" />
+      </LinearLayout>
+      
+      <TextView android:id="@+id/num_steps"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="16dip"
+         android:textSize="18dip"
+         android:textColor="#f3f3f3" />            
+      
+      <TextView android:id="@+id/guide_tools"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="16dip"
+         android:textSize="18dip"
+         android:textColor="#f3f3f3" />            
+      
+      <TextView android:id="@+id/guide_parts"
+         android:layout_width="fill_parent"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="16dip"
+         android:textSize="18dip"
+         android:textColor="#f3f3f3" />                  
+      
       <TextView android:id="@+id/guide_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="18dip"
-            android:textColor="#f3f3f3" />      
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:textSize="24dip"
+         android:textColor="#f3f3f3" />      
    </LinearLayout>
 </RelativeLayout>
