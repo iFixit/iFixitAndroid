@@ -29,7 +29,7 @@ public class BulletView extends View {
    
    public void setBullet(String color) {
       int colorConverted;
-      try {
+      try {       
          if (color.equals("black")) {
             colorConverted = Color.WHITE;
          } else if (color.equals("orange")) {
@@ -50,6 +50,7 @@ public class BulletView extends View {
        super.onDraw(canvas);
        
        canvas.drawCircle(BULLET_RADIUS, BULLET_RADIUS + Y_OFFSET,
-        BULLET_RADIUS, mPaint);
+        BULLET_RADIUS, mPaint);       
+       
    }
 }

@@ -92,12 +92,6 @@ public class GuideJSONHelper {
    }
 
    public static StepLine parseLine(JSONObject jLine) throws JSONException {
-      StepLine line = new StepLine();
-
-      line.setColor(jLine.getString("bullet"));
-      line.setLevel(jLine.getInt("level"));
-      line.setText(jLine.getString("text"));
-
-      return line;
+      return new StepLine(jLine.getString("bullet"), jLine.getInt("level"), jLine.getString("text"));
    }
 }
