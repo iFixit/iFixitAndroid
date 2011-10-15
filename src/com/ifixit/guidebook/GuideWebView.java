@@ -7,6 +7,8 @@ public class GuideWebView extends WebViewClient {
    private static final int GUIDE_POSITION = 3;
    private static final int GUIDEID_POSITION = 5;
    private static final String GUIDE_URL = "Guide";
+   private static final String TEARDOWN_URL = "Teardown";
+
 
    protected GuidebookActivity mGuideActivity;
 
@@ -20,7 +22,8 @@ public class GuideWebView extends WebViewClient {
       int guideid;
 
       try {
-         if (pieces[GUIDE_POSITION].equals(GUIDE_URL)) {
+         if (pieces[GUIDE_POSITION].equals(GUIDE_URL) ||
+          pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
             guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
             mGuideActivity.viewGuide(guideid);
             return true;
