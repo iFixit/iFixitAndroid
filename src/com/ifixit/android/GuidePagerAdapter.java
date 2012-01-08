@@ -30,7 +30,10 @@ public class GuidePagerAdapter extends PagerAdapter {
 
    @Override
    public int getCount() {
-      return mGuide.getNumSteps() + 1;
+      if (mGuide != null)
+         return mGuide.getNumSteps() + 1;
+      else
+         return 0;
    }
 
    @Override

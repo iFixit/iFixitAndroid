@@ -10,12 +10,12 @@ import android.os.Message;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.Display;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-
 import android.widget.ProgressBar;
 
 public class GuideView extends Activity implements OnPageChangeListener {
@@ -24,7 +24,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
-   private static final String PACKAGE_NAME = "com.ifixit.guidebook";
+   private static final String PACKAGE_NAME = "com.ifixit.android";
    
    private ViewPager mGuidePager;
    private ProgressBar mProgressBar;
@@ -38,9 +38,12 @@ public class GuideView extends Activity implements OnPageChangeListener {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
          Guide guide = GuideJSONHelper.parseGuide(response);
-         
+
          if (guide != null) {
             setGuide(guide);
+         }
+         else {
+            Log.e("iFixit", "Guide is null (response: " + response + ")");
          }
       }
    };
@@ -52,7 +55,10 @@ public class GuideView extends Activity implements OnPageChangeListener {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_main);
 
+      mImageManager = ((MainApplication)getApplication()).getImageManager();
       mGuidePager = (ViewPager)findViewById(R.id.guide_pager);
+      mGuideAdapter = new GuidePagerAdapter(this, null, mImageManager);
+      mGuidePager.setAdapter(mGuideAdapter);
       mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
       mGuidePager.setVisibility(View.GONE);
       mProgressBar.setVisibility(View.VISIBLE);
@@ -61,7 +67,6 @@ public class GuideView extends Activity implements OnPageChangeListener {
       getGuide(extras.getInt(MainActivity.GUIDEID));
       initSpeechRecognizer();
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-      mImageManager = ((MainApplication)getApplication()).getImageManager();
    }
 
    @Override
