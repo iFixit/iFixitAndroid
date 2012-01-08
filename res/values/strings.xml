@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Guidebook</string>
+    <string name="app_name">iFixit</string>
     <string name="more_guides">More Guides</string>
     <string name="next_step">Next Step</string>
     <string name="previous_step">Previous Step</string>
