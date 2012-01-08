@@ -1,4 +1,4 @@
-package com.ifixit.guidebook;
+package com.ifixit.android;
 
 import org.json.JSONArray;
 import org.json.JSONException;

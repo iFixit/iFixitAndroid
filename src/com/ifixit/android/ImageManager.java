@@ -1,4 +1,4 @@
-package com.ifixit.guidebook;
+package com.ifixit.android;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -6,7 +6,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
 import java.util.LinkedList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;

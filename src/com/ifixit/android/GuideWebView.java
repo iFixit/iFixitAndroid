@@ -1,4 +1,4 @@
-package com.ifixit.guidebook;
+package com.ifixit.android;
 
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -10,9 +10,9 @@ public class GuideWebView extends WebViewClient {
    private static final String TEARDOWN_URL = "Teardown";
 
 
-   protected GuidebookActivity mGuideActivity;
+   protected MainActivity mGuideActivity;
 
-   public GuideWebView(GuidebookActivity guideActivity) {
+   public GuideWebView(MainActivity guideActivity) {
       mGuideActivity = guideActivity;
    }
 

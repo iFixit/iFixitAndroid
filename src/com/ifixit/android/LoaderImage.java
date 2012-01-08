@@ -1,4 +1,4 @@
-package com.ifixit.guidebook;
+package com.ifixit.android;
 
 import android.content.Context;
 import android.graphics.Bitmap;

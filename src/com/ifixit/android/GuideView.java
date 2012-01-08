@@ -1,4 +1,4 @@
-package com.ifixit.guidebook;
+package com.ifixit.android;
 
 import org.apache.http.client.ResponseHandler;
 
@@ -58,7 +58,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
       mProgressBar.setVisibility(View.VISIBLE);
 
       extras = getIntent().getExtras();
-      getGuide(extras.getInt(GuidebookActivity.GUIDEID));
+      getGuide(extras.getInt(MainActivity.GUIDEID));
       initSpeechRecognizer();
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
       mImageManager = ((GuideApplication)getApplication()).getImageManager();

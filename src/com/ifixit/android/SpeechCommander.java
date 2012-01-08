@@ -1,4 +1,4 @@
-package com.ifixit.guidebook;
+package com.ifixit.android;
 
 import java.util.ArrayList;
 import java.util.Hashtable;
