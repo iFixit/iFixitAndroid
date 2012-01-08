@@ -61,7 +61,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
       getGuide(extras.getInt(MainActivity.GUIDEID));
       initSpeechRecognizer();
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
-      mImageManager = ((GuideApplication)getApplication()).getImageManager();
+      mImageManager = ((MainApplication)getApplication()).getImageManager();
    }
 
    @Override

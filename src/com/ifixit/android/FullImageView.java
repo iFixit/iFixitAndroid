@@ -23,7 +23,7 @@ public class FullImageView extends Activity {
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
       
       mImage = (LoaderImage)findViewById(R.id.full_image_view);
-      mImageManager = ((GuideApplication)getApplication()).getImageManager();
+      mImageManager = ((MainApplication)getApplication()).getImageManager();
       mImageManager.displayImage(mUrl, this, mImage);
    }  
 }
