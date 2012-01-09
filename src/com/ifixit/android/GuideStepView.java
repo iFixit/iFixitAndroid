@@ -53,7 +53,7 @@ public class GuideStepView extends LinearLayout {
       mStep = step;
       mImageManager = imageManager;
 
-      if (step.getTitle().isEmpty())
+      if (step.getTitle().length() == 0)
          mTitle.setText("Step " + step.getStepNum());
       else
          mTitle.setText(step.getTitle());

@@ -172,7 +172,10 @@ public class GuideView extends Activity implements OnPageChangeListener {
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuInflater inflater = getMenuInflater();
 
-      inflater.inflate(R.menu.guide_menu, menu);
+      if (APICompatibility.hasActionBar())
+         inflater.inflate(R.menu.guide_menu, menu);
+      else
+         inflater.inflate(R.menu.guide_menu_no_action_bar, menu);
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -214,6 +217,8 @@ public class GuideView extends Activity implements OnPageChangeListener {
    @Override
    public void onPageSelected(int page) {
       mCurrentPage = page;
-      invalidateOptionsMenu();
+
+      if (APICompatibility.hasActionBar())
+         invalidateOptionsMenu();
    }
 }

@@ -91,7 +91,7 @@ public class ImageManager {
          if (mImageQueue.imageRefs.size() > MAX_LOADING_IMAGES)
             mImageQueue.imageRefs.removeLast();
 
-         mImageQueue.imageRefs.push(imageRef);
+         mImageQueue.imageRefs.addFirst(imageRef);
          mImageQueue.imageRefs.notify();
       }
    }
@@ -155,7 +155,7 @@ public class ImageManager {
       }
 
       public void addImage(LoaderImage imageView) {
-         mImageViews.push(imageView);
+         mImageViews.addFirst(imageView);
       }
 
       public LinkedList<LoaderImage> getImageViews() {
@@ -190,7 +190,7 @@ public class ImageManager {
                   if (mImageQueue.imageRefs.size() == 0)
                      continue;
 
-                  imageToLoad = mImageQueue.imageRefs.pop();
+                  imageToLoad = mImageQueue.imageRefs.removeFirst();
                   synchronized (mLoadingImages) {
                      mLoadingImages.put(imageToLoad.getUrl(), imageToLoad);
                   }
