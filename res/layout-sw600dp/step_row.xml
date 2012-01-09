@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:id="@+id/step_row"
+      android:orientation="horizontal"
+      android:layout_width="fill_parent"
+      android:layout_height="wrap_content"
+      android:weightSum="100">
+   <com.ifixit.android.BulletView
+         android:layout_width="28dp"
+         android:layout_height="28dp"
+         android:layout_marginTop="6dip"
+         android:id="@+id/bullet"
+         android:layout_weight="5" />
+   <TextView android:id="@+id/step_text"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:textSize="24dip"
+         android:textColor="#FFFFFF" 
+         android:typeface="sans"
+         android:layout_weight="95" />
+   <ImageView android:visibility="invisible"
+         android:layout_width="0dp"
+         android:layout_height="wrap_content"
+         android:layout_marginLeft="10dp"
+         android:id="@+id/bullet_icon" 
+         android:layout_gravity="right"
+         android:layout_marginTop="6dip"
+         android:layout_weight="0" />
+</LinearLayout>
