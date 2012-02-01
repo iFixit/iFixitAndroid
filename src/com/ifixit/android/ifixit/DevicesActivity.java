@@ -8,6 +8,7 @@ public class DevicesActivity extends FragmentActivity implements
  DeviceListFragment.DeviceSelectedListener {
    private boolean mDualPane;
    private DeviceViewFragment mDeviceView;
+   private DeviceListFragment mDeviceList;
    private Device mDevice;
 
    @Override
@@ -15,6 +16,8 @@ public class DevicesActivity extends FragmentActivity implements
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.devices);
+      mDeviceList = (DeviceListFragment)getSupportFragmentManager()
+       .findFragmentById(R.id.device_list_fragment);
       mDeviceView = (DeviceViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.device_view_fragment);
       mDualPane = mDeviceView != null && mDeviceView.isInLayout();
@@ -24,17 +27,21 @@ public class DevicesActivity extends FragmentActivity implements
    @Override
    public void onDeviceSelected(Device device) {
       mDevice = device;
+      if (mDevice.isLeaf()) {
+         if (mDualPane) {
+            mDeviceView.setDevice(mDevice.getName());
+         }
+         else {
+            Intent intent = new Intent(this, DeviceViewActivity.class);
+            Bundle bundle = new Bundle();
 
-      if (mDualPane) {
-         mDeviceView.setDevice(mDevice.getName());
+            bundle.putString("device", mDevice.getName());
+            intent.putExtras(bundle);
+            startActivity(intent);
+         }
       }
       else {
-         Intent intent = new Intent(this, DeviceViewActivity.class);
-         Bundle bundle = new Bundle();
-
-         bundle.putString("device", mDevice.getName());
-         intent.putExtras(bundle);
-         startActivity(intent);
+         mDeviceList.setDevices(mDevice.getChildren());
       }
    }
 }

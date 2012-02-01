@@ -83,7 +83,7 @@ public class DeviceListFragment extends ListFragment {
       }.start();
    }
 
-   private void setDevices(ArrayList<Device> devices) {
+   public void setDevices(ArrayList<Device> devices) {
       mDevices = devices;
       mDeviceAdapter.setDevices(mDevices);
       setListAdapter(mDeviceAdapter);
