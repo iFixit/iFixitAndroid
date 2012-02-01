@@ -1,4 +1,4 @@
-package com.ifixit.android;
+package com.ifixit.android.ifixit;
 
 import org.apache.http.client.ResponseHandler;
 
@@ -24,7 +24,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
-   private static final String PACKAGE_NAME = "com.ifixit.android";
+   private static final String PACKAGE_NAME = "com.ifixit.android.ifixit";
    
    private ViewPager mGuidePager;
    private ProgressBar mProgressBar;

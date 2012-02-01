@@ -1,8 +1,8 @@
-package com.ifixit.android;
+package com.ifixit.android.ifixit;
 
 import java.io.Serializable;
 
-public class GuideTool implements Serializable {
+public class GuidePart implements Serializable {
    private static final long serialVersionUID = 2884598684003517264L;
 
    protected String mNote;
@@ -10,18 +10,18 @@ public class GuideTool implements Serializable {
    protected String mUrl;
    protected String mThumb;
 
-   public GuideTool() {
+   public GuidePart() {
       mNote = mThumb = mUrl = mTitle = "";
    }
    
-   public GuideTool(String title, String url) {
+   public GuidePart(String title, String url) {
       mNote = mThumb = "";
       
       mTitle = title;
       mUrl = url;
    }   
    
-   public GuideTool(String title, String url, String thumb) {
+   public GuidePart(String title, String url, String thumb) {
       mNote = "";
       
       mTitle = title;
@@ -29,7 +29,7 @@ public class GuideTool implements Serializable {
       mThumb = thumb;
    }
    
-   public GuideTool(String title, String url, String thumb, String notes) {
+   public GuidePart(String title, String url, String thumb, String notes) {
       mNote = notes;
       mTitle = title;
       mUrl = url;
@@ -67,7 +67,7 @@ public class GuideTool implements Serializable {
    } 
       
    public String toString() {
-      return "{GuideTools: " + mTitle + ", " + mThumb +  ", " + mUrl +
+      return "{GuidePart: " + mTitle + ", " + mThumb +  ", " + mUrl +
        ", " + mNote + "}";
    }
 }

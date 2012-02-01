@@ -1,4 +1,4 @@
-package com.ifixit.android;
+package com.ifixit.android.ifixit;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
