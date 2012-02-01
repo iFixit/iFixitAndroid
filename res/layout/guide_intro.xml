@@ -10,7 +10,7 @@
          android:textSize="36dp"
          android:textColor="#FFFFFF" 
          android:background="#000000" />
-   <com.ifixit.android.LoaderImage android:id="@+id/intro_image" 
+   <com.ifixit.android.ifixit.LoaderImage android:id="@+id/intro_image" 
          android:layout_width="wrap_content" 
          android:layout_height="wrap_content"
          android:layout_alignParentBottom="true"

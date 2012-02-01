@@ -1,4 +1,4 @@
-package com.ifixit.android;
+package com.ifixit.android.ifixit;
 
 /**
  * Simple class used to determine when certain actions are allowed based on

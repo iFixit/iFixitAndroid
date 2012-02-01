@@ -1,4 +1,4 @@
-package com.ifixit.android;
+package com.ifixit.android.ifixit;
 
 import java.io.File;
 import java.io.FileOutputStream;

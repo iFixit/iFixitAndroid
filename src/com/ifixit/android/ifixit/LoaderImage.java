@@ -1,4 +1,4 @@
-package com.ifixit.android;
+package com.ifixit.android.ifixit;
 
 import android.content.Context;
 import android.graphics.Bitmap;

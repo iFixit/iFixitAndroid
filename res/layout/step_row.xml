@@ -5,7 +5,7 @@
       android:layout_width="fill_parent"
       android:layout_height="wrap_content"
       android:weightSum="100">
-   <com.ifixit.android.BulletView
+   <com.ifixit.android.ifixit.BulletView
          android:layout_width="28dp"
          android:layout_height="28dp"
          android:layout_marginTop="6dip"
