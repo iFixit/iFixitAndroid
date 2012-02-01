@@ -1,23 +1,20 @@
 package com.ifixit.android.ifixit;
 
 import java.util.ArrayList;
-
 import org.apache.http.client.ResponseHandler;
-
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.ListFragment;
-
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 
 public class DeviceListFragment extends ListFragment {
    public interface DeviceSelectedListener {
-      public void onDeviceSelected(String device);
+      public void onDeviceSelected(Device device);
    }
 
    private static final String DEVICES_API_URL =
@@ -25,8 +22,9 @@ public class DeviceListFragment extends ListFragment {
    private static final String RESPONSE = "RESPONSE";
 
    private DeviceSelectedListener deviceSelectedListener;
-   private String[] deviceStrings;
    private ArrayList<Device> mDevices;
+   private DeviceListAdapter mDeviceAdapter;
+   private Context mContext;
 
    private final Handler mDevicesHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -46,19 +44,17 @@ public class DeviceListFragment extends ListFragment {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      // Make empty list for now
+      mDevices = new ArrayList<Device>();
+
       // TODO: conditionalize this based on savedInstanceState
       getDeviceHierarchy();
-
-      deviceStrings = getResources().getStringArray(R.array.devices);
-
-      setListAdapter(ArrayAdapter.createFromResource(getActivity()
-       .getApplicationContext(), R.array.devices,
-       R.layout.device_list_fragment));
+      mDeviceAdapter = new DeviceListAdapter(mContext);
    }
 
    @Override
    public void onListItemClick(ListView l, View v, int position, long id) {
-      deviceSelectedListener.onDeviceSelected(deviceStrings[position]);
+      deviceSelectedListener.onDeviceSelected(mDevices.get(position));
    }
 
    @Override
@@ -67,6 +63,7 @@ public class DeviceListFragment extends ListFragment {
 
       try {
          deviceSelectedListener = (DeviceSelectedListener)activity;
+         mContext = (Context)activity;
       } catch (ClassCastException e) {
          throw new ClassCastException(activity.toString() +
           " must implement DeviceSelectedListener");
@@ -88,5 +85,7 @@ public class DeviceListFragment extends ListFragment {
 
    private void setDevices(ArrayList<Device> devices) {
       mDevices = devices;
+      mDeviceAdapter.setDevices(mDevices);
+      setListAdapter(mDeviceAdapter);
    }
 }

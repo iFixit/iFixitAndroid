@@ -8,6 +8,7 @@ public class DevicesActivity extends FragmentActivity implements
  DeviceListFragment.DeviceSelectedListener {
    private boolean mDualPane;
    private DeviceViewFragment mDeviceView;
+   private Device mDevice;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -19,15 +20,19 @@ public class DevicesActivity extends FragmentActivity implements
       mDualPane = mDeviceView != null && mDeviceView.isInLayout();
    }
 
-   public void onDeviceSelected(String device) {
+   // TODO update to pass in device object (maybe)
+   @Override
+   public void onDeviceSelected(Device device) {
+      mDevice = device;
+
       if (mDualPane) {
-         mDeviceView.setDevice(device);
+         mDeviceView.setDevice(mDevice.getName());
       }
       else {
          Intent intent = new Intent(this, DeviceViewActivity.class);
          Bundle bundle = new Bundle();
 
-         bundle.putString("device", device);
+         bundle.putString("device", mDevice.getName());
          intent.putExtras(bundle);
          startActivity(intent);
       }
