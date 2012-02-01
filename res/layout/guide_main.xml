@@ -3,13 +3,15 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:layout_centerInParent="true">
+      android:layout_centerInParent="true"
+      android:background="@drawable/bg_img">
    <android.support.v4.view.ViewPager
          android:layout_width="match_parent" 
          android:layout_height="match_parent" 
-         android:id="@+id/guide_pager"/>      
-   <ProgressBar android:layout_width="wrap_content"
+         android:id="@+id/guide_pager"
+         android:layout_margin="4dp"/>      
+   <!-- <ProgressBar android:layout_width="wrap_content"
          android:layout_height="wrap_content"
          android:layout_gravity="center_vertical|center_horizontal"
-         android:id="@+id/progressBar" />
+         android:id="@+id/progressBar" /> -->
 </RelativeLayout>

@@ -1,80 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:background="#000000">
-   <TextView android:id="@+id/guide_title"
-         android:layout_width="fill_parent"
-         android:layout_height="wrap_content"
-         android:layout_gravity="top"
-         android:textSize="36dip"
-         android:textColor="#FFFFFF" 
-         android:background="#000000" />
-   <com.ifixit.android.ifixit.LoaderImage android:id="@+id/intro_image" 
-         android:layout_width="wrap_content" 
-         android:layout_height="wrap_content"
-         android:layout_alignParentBottom="true"
-         android:layout_gravity="left" />
-   <ScrollView android:layout_width="wrap_content"
-		 android:layout_height="wrap_content"
-	     android:layout_alignParentRight="true" >
-         
-	   <LinearLayout android:layout_width="fill_parent"
-	         android:layout_height="fill_parent"
-	         android:layout_marginTop="96dip"
-	         android:layout_marginRight="16dip"
-	         android:layout_alignParentRight="true"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+	   <!-- <com.ifixit.android.ifixit.LoaderImage android:id="@+id/intro_image" 
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" /> -->
+	        
+   <ScrollView android:layout_width="match_parent"
+		 android:layout_height="wrap_content" >
+    
+	   <LinearLayout android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
 	         android:orientation="vertical">
+	      <TextView android:id="@+id/guide_title"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="top"
+	         android:textSize="24sp"
+	         android:textColor="#FFFFFF" />
+	         
 	      <TextView android:id="@+id/guide_intro_text"
 	         android:layout_width="fill_parent"
-	         android:layout_height="wrap_content"
-	         android:layout_gravity="right"
-	         android:textSize="18dip"
-	         android:textColor="#f3f3f3" />
-	      <LinearLayout android:layout_width="fill_parent"
+		     style="@style/intro_text" />
+	      <LinearLayout android:layout_width="match_parent"
 	         android:layout_height="wrap_content"
 	         android:orientation="horizontal"
 	         android:weightSum="2">
 		      <TextView android:id="@+id/guide_difficulty"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textSize="18dip"
-	            android:textColor="#f3f3f3"
+				style="@style/intro_text"
 	            android:layout_weight="1" />
 		      <TextView android:id="@+id/guide_author"
-	            android:layout_width="wrap_content"
-	            android:layout_height="wrap_content"
-	            android:textSize="18dip"
-	            android:textColor="#f3f3f3"
+				style="@style/intro_text"
 	            android:layout_weight="1" />
 	      </LinearLayout>
 	      
 	      <TextView android:id="@+id/num_steps"
+		     style="@style/intro_text"
 	         android:layout_width="fill_parent"
-	         android:layout_height="wrap_content"
-	         android:layout_marginTop="16dip"
-	         android:textSize="18dip"
-	         android:textColor="#f3f3f3" />            
+	         android:layout_marginTop="16dp" />            
 	      
 	      <TextView android:id="@+id/guide_tools"
 	         android:layout_width="fill_parent"
-	         android:layout_height="wrap_content"
-	         android:layout_marginTop="16dip"
-	         android:textSize="18dip"
-	         android:textColor="#f3f3f3" />            
+	         style="@style/intro_text" />            
 	      
 	      <TextView android:id="@+id/guide_parts"
 	         android:layout_width="fill_parent"
-	         android:layout_height="wrap_content"
-	         android:layout_marginTop="16dip"
-	         android:textSize="18dip"
-	         android:textColor="#f3f3f3" />                  
+	         android:layout_marginTop="16dp"
+		     style="@style/intro_text" />                  
 	      
 	      <TextView android:id="@+id/guide_date"
-	         android:layout_width="wrap_content"
-	         android:layout_height="wrap_content"
-	         android:textSize="24dip"
-	         android:textColor="#f3f3f3" />      
+		     style="@style/intro_text" />      
 	   </LinearLayout>
    </ScrollView>
 </RelativeLayout>

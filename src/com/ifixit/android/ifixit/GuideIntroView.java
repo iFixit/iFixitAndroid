@@ -15,7 +15,7 @@ public class GuideIntroView extends LinearLayout {
    private TextView mParts;
    private TextView mNumSteps;
 
-   private LoaderImage mImage;
+   //private LoaderImage mImage;
 
    public GuideIntroView(Context context, Guide guide) {
       super(context);      
@@ -28,7 +28,7 @@ public class GuideIntroView extends LinearLayout {
       mIntro = (TextView)findViewById(R.id.guide_intro_text);
       mDifficulty = (TextView)findViewById(R.id.guide_difficulty);
       mAuthor = (TextView)findViewById(R.id.guide_author);
-      mImage = (LoaderImage)findViewById(R.id.intro_image);
+      //mImage = (LoaderImage)findViewById(R.id.intro_image);
       
       mTitle.setText(Html.fromHtml(guide.getTitle()));
       mIntro.setText(Html.fromHtml(guide.getIntroduction()));
@@ -50,7 +50,7 @@ public class GuideIntroView extends LinearLayout {
       mNumSteps.setText("Number of steps: " + guide.getNumSteps());
    }
 
-   public LoaderImage getImageView() {
-      return mImage;
-   }
+   //public LoaderImage getImageView() {
+   //   return mImage;
+   //}
 }

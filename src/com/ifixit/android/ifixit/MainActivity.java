@@ -16,11 +16,13 @@ public class MainActivity extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      setContentView(R.layout.webview);
+      /*setContentView(R.layout.webview);
       mWebView = (WebView)findViewById(R.id.webView);
       mWebView.getSettings().setJavaScriptEnabled(true);
       mWebView.loadUrl(SPLASH_URL);
       mWebView.setWebViewClient(new GuideWebView(this));
+   */
+      this.viewGuide(3540);
    }
 
    public void viewGuide(int guideid) {

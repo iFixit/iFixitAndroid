@@ -35,11 +35,11 @@ public class LoaderImage extends RelativeLayout {
       inflater.inflate(R.layout.loader_image, this, true);        
 
       mImage = (ImageView)findViewById(R.id.imageView);
-      mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
+      //mProgressBar = (ProgressBar)findViewById(R.id.loaderProgressBar);
       mImage.setVisibility(View.GONE);
-      mProgressBar.setVisibility(View.VISIBLE);
+      //mProgressBar.setVisibility(View.VISIBLE);
    }
-
+   
    public void setScaleType(ImageView.ScaleType scaleType) {
       mImage.setScaleType(scaleType);
    }
@@ -47,12 +47,12 @@ public class LoaderImage extends RelativeLayout {
    public void setImageResource(int resource) {
       mImage.setImageResource(resource);
       mImage.setVisibility(View.VISIBLE);
-      mProgressBar.setVisibility(View.GONE);
+      //mProgressBar.setVisibility(View.GONE);
    }
 
    public void setImageBitmap(Bitmap bitmap) {
       mImage.setImageBitmap(bitmap);
       mImage.setVisibility(View.VISIBLE);
-      mProgressBar.setVisibility(View.GONE);
+      //mProgressBar.setVisibility(View.GONE);
    }
 }

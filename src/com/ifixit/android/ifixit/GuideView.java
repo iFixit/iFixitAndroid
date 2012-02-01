@@ -59,14 +59,13 @@ public class GuideView extends Activity implements OnPageChangeListener {
       mGuidePager = (ViewPager)findViewById(R.id.guide_pager);
       mGuideAdapter = new GuidePagerAdapter(this, null, mImageManager);
       mGuidePager.setAdapter(mGuideAdapter);
-      mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
+      //mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
       mGuidePager.setVisibility(View.GONE);
-      mProgressBar.setVisibility(View.VISIBLE);
+      //mProgressBar.setVisibility(View.VISIBLE);
 
       extras = getIntent().getExtras();
       getGuide(extras.getInt(MainActivity.GUIDEID));
       initSpeechRecognizer();
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
    }
 
    @Override
@@ -111,7 +110,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
       mGuidePager.setAdapter(mGuideAdapter);
       mGuidePager.setOnPageChangeListener(this);
 
-      mProgressBar.setVisibility(View.GONE);
+      //mProgressBar.setVisibility(View.GONE);
       mGuidePager.setVisibility(View.VISIBLE);
    }
 

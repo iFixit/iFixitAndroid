@@ -14,7 +14,7 @@
    <TextView android:id="@+id/step_text"
          android:layout_width="0dp"
          android:layout_height="wrap_content"
-         android:textSize="24dip"
+         android:textSize="16sp"
          android:textColor="#FFFFFF" 
          android:typeface="sans"
          android:layout_weight="95" />

@@ -44,13 +44,12 @@ public class GuidePagerAdapter extends PagerAdapter {
       if (position == GUIDE_INTRO_POSITION) {
          introView = new GuideIntroView(mContext, mGuide);
          
-         mImageManager.displayImage(mGuide.getIntroImage() + ".large",
-          (Activity)mContext, introView.getImageView());
-          ((ViewPager) collection).addView(introView);
+         /*mImageManager.displayImage(mGuide.getIntroImage() + ".large",
+          (Activity)mContext, introView.getImageView());*/
+         ((ViewPager) collection).addView(introView);
  
          return introView;
-      }
-      else {
+      } else {
          stepView = new GuideStepView(mContext, mGuide.getStep(position -
           STEP_OFFSET),
           mImageManager);
