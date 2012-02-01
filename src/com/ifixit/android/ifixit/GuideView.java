@@ -20,7 +20,7 @@ import android.widget.ProgressBar;
 
 public class GuideView extends Activity implements OnPageChangeListener {
    private static final String RESPONSE = "RESPONSE";
-   private static final String API_URL = "http://www.ifixit.com/api/guide/";
+   private static final String API_URL = "http://www.ifixit.com/api/0.1/guide/";
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";

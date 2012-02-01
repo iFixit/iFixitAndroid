@@ -14,10 +14,8 @@ public class DevicesActivity extends FragmentActivity implements
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.devices);
-
       mDeviceView = (DeviceViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.device_view_fragment);
-      
       mDualPane = mDeviceView != null && mDeviceView.isInLayout();
    }
 

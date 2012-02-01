@@ -1,5 +1,8 @@
 package com.ifixit.android.ifixit;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -7,6 +10,11 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class GuideJSONHelper {
+   private static final String LEAF_INDICATOR = "DEVICES";
+
+   /**
+    * Guide parsing
+    */
    public static Guide parseGuide(String json) {
       try {
          JSONObject jGuideInfo = new JSONObject(json);
@@ -92,6 +100,68 @@ public class GuideJSONHelper {
    }
 
    public static StepLine parseLine(JSONObject jLine) throws JSONException {
-      return new StepLine(jLine.getString("bullet"), jLine.getInt("level"), jLine.getString("text"));
+      return new StepLine(jLine.getString("bullet"), jLine.getInt("level"),
+       jLine.getString("text"));
+   }
+
+   /**
+    * Device hierarchy parsing
+    */
+   public static ArrayList<Device> parseDevices(String json) {
+      try {
+         JSONObject jDevices = new JSONObject(json);
+
+         return parseDeviceChildren(jDevices);
+      }
+      catch (Exception e) {
+         Log.w("iFixit", "Error parsing devices: " + e.getMessage());
+         return null;
+      }
+   }
+
+   /**
+    * Reads through the given JSONObject and adds any devices to the given
+    * device
+    */
+   public static ArrayList<Device> parseDeviceChildren(JSONObject jDevice) {
+      Iterator<String> iterator = jDevice.keys();
+      String deviceName;
+      ArrayList<Device> devices = new ArrayList<Device>();
+      Device currentDevice;
+
+      try {
+         while (iterator.hasNext()) {
+            deviceName = iterator.next();
+
+            if (deviceName.equals(LEAF_INDICATOR)) {
+               devices.addAll(parseDeviceLeaves(
+                jDevice.getJSONArray(LEAF_INDICATOR)));
+            }
+            else {
+               currentDevice = new Device(deviceName);
+               currentDevice.addAllDevices(parseDeviceChildren(
+                jDevice.getJSONObject(deviceName)));
+               devices.add(currentDevice);
+            }
+         }
+      } catch (Exception e) {
+         Log.w("iFixit", "Error parsing device children: " + e.getMessage());
+      }
+
+      return devices;
+   }
+
+   public static ArrayList<Device> parseDeviceLeaves(JSONArray jLeaves) {
+      ArrayList<Device> devices = new ArrayList<Device>();
+
+      try {
+         for (int i = 0; i < jLeaves.length(); i++) {
+            devices.add(new Device(jLeaves.getString(i)));
+         }
+      } catch (Exception e) {
+         Log.w("iFixit", "Error parsing device leaves: " + e.getMessage());
+      }
+
+      return devices;
    }
 }
