@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content">
+	   <!-- <com.ifixit.android.ifixit.LoaderImage android:id="@+id/intro_image" 
+	        android:layout_width="wrap_content" 
+	        android:layout_height="wrap_content" /> -->
+	        
+   <ScrollView android:layout_width="match_parent"
+		 android:layout_height="wrap_content" >
+    
+	   <LinearLayout android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:orientation="vertical">
+	         
+	      <TextView android:id="@+id/guide_title"
+	         android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:layout_gravity="top"
+	         android:textSize="32sp"
+	         android:textColor="#FFFFFF" />
+	         
+	      <TextView android:id="@+id/guide_intro_text"
+	         android:layout_width="fill_parent"
+		     style="@style/intro_text_720" />
+		     
+	      <LinearLayout android:layout_width="match_parent"
+	         android:layout_height="wrap_content"
+	         android:orientation="horizontal"
+	         android:weightSum="2">
+	         
+		      <TextView android:id="@+id/guide_difficulty"
+				style="@style/intro_text_720"
+	            android:layout_weight="1" />
+	            
+		      <TextView android:id="@+id/guide_author"
+				style="@style/intro_text_720"
+	            android:layout_weight="1" />
+	            
+	      </LinearLayout>
+	      
+	      <TextView android:id="@+id/num_steps"
+			 android:layout_width="fill_parent"
+	         android:layout_marginTop="16dp"
+		     style="@style/intro_text_720" />            
+	      
+	      <TextView android:id="@+id/guide_tools"
+	         android:layout_width="fill_parent"
+		     style="@style/intro_text_720" />            
+	      
+	      <TextView android:id="@+id/guide_parts"
+	         android:layout_width="fill_parent"
+	         android:layout_marginTop="16dp"
+		     style="@style/intro_text_720" />                  
+	      
+	      <TextView android:id="@+id/guide_date"
+		     style="@style/intro_text_720" /> 
+		          
+	   </LinearLayout>
+   </ScrollView>
+</RelativeLayout>

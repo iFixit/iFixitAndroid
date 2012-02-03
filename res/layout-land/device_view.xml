@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+      xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:orientation="horizontal">
+   <fragment
+         android:name="com.ifixit.android.ifixit.DeviceViewFragment"
+         android:layout_width="0dp"
+         android:layout_height="match_parent"
+         android:id="@+id/device_view_fragment"
+         android:layout_weight="55">
+   </fragment>
+</LinearLayout>

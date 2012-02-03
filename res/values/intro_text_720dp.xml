@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="intro_text_720">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">#f3f3f3</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:layout_marginTop">16dp</item>
+    </style> 
+</resources>

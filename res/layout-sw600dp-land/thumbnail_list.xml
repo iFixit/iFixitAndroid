@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="wrap_content">
+    <com.ifixit.android.ifixit.LoaderImage android:id="@+id/thumbnail_1"
+            style="@style/thumbnail"
+            android:layout_marginBottom="8dp" />
+    <com.ifixit.android.ifixit.LoaderImage android:id="@+id/thumbnail_2"
+            style="@style/thumbnail"
+            android:layout_marginBottom="8dp"/>
+    <com.ifixit.android.ifixit.LoaderImage android:id="@+id/thumbnail_3"
+    		style="@style/thumbnail"/>
+</LinearLayout>

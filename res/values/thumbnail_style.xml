@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="thumbnail">
+        <item name="android:layout_width">74dp</item>
+        <item name="android:layout_height">54.33dp</item>
+        <item name="android:background">@drawable/img_background</item>
+        <item name="android:visibility">invisible</item>
+        <item name="android:padding">1dp</item>
+    </style> 
+</resources>
