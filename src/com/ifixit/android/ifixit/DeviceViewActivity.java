@@ -5,7 +5,9 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
 public class DeviceViewActivity extends FragmentActivity {
-   private String mDevice;
+   public static final String DEVICE_KEY = "DEVICE";
+
+   private Device mDevice;
    private DeviceViewFragment mDeviceView;
 
    @Override
@@ -21,7 +23,7 @@ public class DeviceViewActivity extends FragmentActivity {
       setContentView(R.layout.device_view);
       mDeviceView = (DeviceViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.device_view_fragment);
-      mDevice = getIntent().getStringExtra("device");
+      mDevice = (Device)getIntent().getSerializableExtra(DEVICE_KEY);
 
       mDeviceView.setDevice(mDevice);
    }

@@ -67,13 +67,13 @@ public class DevicesActivity extends FragmentActivity implements
    public void onDeviceSelected(Device device) {
       if (device.isLeaf()) {
          if (mDualPane) {
-            mDeviceView.setDevice(device.getName());
+            mDeviceView.setDevice(device);
          }
          else {
             Intent intent = new Intent(this, DeviceViewActivity.class);
             Bundle bundle = new Bundle();
 
-            bundle.putString("device", device.getName());
+            bundle.putSerializable(DeviceViewActivity.DEVICE_KEY, device);
             intent.putExtras(bundle);
             startActivity(intent);
          }

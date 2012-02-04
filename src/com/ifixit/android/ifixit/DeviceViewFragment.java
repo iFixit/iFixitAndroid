@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class DeviceViewFragment extends Fragment {
-   private String mDevice;
+   private Device mDevice;
    private TextView mDeviceText;
 
    @Override
@@ -27,10 +27,10 @@ public class DeviceViewFragment extends Fragment {
       return view;
    }
 
-   public void setDevice(String device) {
+   public void setDevice(Device device) {
       mDevice = device;
 
-      mDeviceText.setText(mDevice);
+      mDeviceText.setText(mDevice.getName());
    }
 }
 
