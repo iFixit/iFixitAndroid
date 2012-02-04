@@ -1,8 +1,9 @@
 package com.ifixit.android.ifixit;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Device {
+public class Device implements Serializable {
    private String mName;
    private ArrayList<Device> mChildren;
 

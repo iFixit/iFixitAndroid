@@ -1,6 +1,5 @@
 package com.ifixit.android.ifixit;
 
-import java.util.ArrayList;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,22 +7,22 @@ import android.widget.BaseAdapter;
 
 public class DeviceListAdapter extends BaseAdapter {
    private Context mContext;
-   private ArrayList<Device> mDevices;
+   private Device mDevice;
 
    public DeviceListAdapter(Context context) {
       mContext = context;
    }
 
-   public void setDevices(ArrayList<Device> devices) {
-      mDevices = devices;
+   public void setDevice(Device device) {
+      mDevice = device;
    }
 
    public int getCount() {
-      return mDevices.size();
+      return mDevice.getChildren().size();
    }
 
    public Object getItem(int position) {
-      return mDevices.get(position);
+      return mDevice.getChildren().get(position);
    }
 
    public long getItemId(int position) {
@@ -40,7 +39,7 @@ public class DeviceListAdapter extends BaseAdapter {
          deviceRow = (DeviceListRow)convertView;
       }
 
-      deviceRow.setDevice(mDevices.get(position));
+      deviceRow.setDevice(mDevice.getChildren().get(position));
 
       return deviceRow;
    }

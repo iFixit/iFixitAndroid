@@ -15,22 +15,23 @@ public class DevicesActivity extends FragmentActivity implements
    private static final String DEVICES_API_URL =
     "http://www.ifixit.com/api/0.1/areas/";
    private static final String RESPONSE = "RESPONSE";
+   private static final String ROOT_DEVICE = "ROOT_DEVICE";
 
    private boolean mDualPane;
    private DeviceViewFragment mDeviceView;
-   private ArrayList<Device> mDevices;
+   private Device mDevice;
    private boolean mFirstFragment = true;
 
    private final Handler mDevicesHandler = new Handler() {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
-         mDevices = GuideJSONHelper.parseDevices(response);
+         ArrayList<Device> devices = GuideJSONHelper.parseDevices(response);
 
-         if (mDevices != null) {
+         if (devices != null) {
             mFirstFragment = true;
-            Device device = new Device("");
-            device.addAllDevices(mDevices);
-            onDeviceSelected(device);
+            mDevice = new Device("ROOT");
+            mDevice.addAllDevices(devices);
+            onDeviceSelected(mDevice);
          }
          else {
             Log.e("iFixit", "Devices is null (response: " + response + ")");
@@ -47,10 +48,21 @@ public class DevicesActivity extends FragmentActivity implements
        .findFragmentById(R.id.device_view_fragment);
       mDualPane = mDeviceView != null && mDeviceView.isInLayout();
 
-      getDeviceHierarchy();
+      if (savedInstanceState != null) {
+         mDevice = (Device)savedInstanceState.getSerializable(ROOT_DEVICE);
+         //onDeviceSelected(device);
+      } else {
+         getDeviceHierarchy();
+      }
    }
 
-   // TODO update to pass in device object (maybe)
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      outState.putSerializable(ROOT_DEVICE, mDevice);
+   }
+
    @Override
    public void onDeviceSelected(Device device) {
       if (device.isLeaf()) {
@@ -65,11 +77,9 @@ public class DevicesActivity extends FragmentActivity implements
             intent.putExtras(bundle);
             startActivity(intent);
          }
-      }
-      else {
+      } else {
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-         DeviceListFragment newFragment = new DeviceListFragment(
-          device.getChildren());
+         DeviceListFragment newFragment = new DeviceListFragment(device);
          
          ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
          ft.replace(R.id.device_list_fragment, newFragment);

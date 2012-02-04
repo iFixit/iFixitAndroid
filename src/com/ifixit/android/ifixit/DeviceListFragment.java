@@ -1,6 +1,5 @@
 package com.ifixit.android.ifixit;
 
-import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -13,8 +12,10 @@ public class DeviceListFragment extends ListFragment {
       public void onDeviceSelected(Device device);
    }
 
+   private static final String CURRENT_DEVICE = "CURRENT_DEVICE";
+
    private DeviceSelectedListener deviceSelectedListener;
-   private ArrayList<Device> mDevices;
+   private Device mDevice;
    private DeviceListAdapter mDeviceAdapter;
    private Context mContext;
 
@@ -22,24 +23,34 @@ public class DeviceListFragment extends ListFragment {
 
    }
 
-   public DeviceListFragment(ArrayList<Device> devices) {
-      mDevices = devices;
+   public DeviceListFragment(Device device) {
+      mDevice = device;
    }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      // TODO: conditionalize this based on savedInstanceState
-      mDeviceAdapter = new DeviceListAdapter(mContext);
-      if (mDevices != null) {
-         setDevices(mDevices);
+      if (savedInstanceState != null) {
+         mDevice = (Device)savedInstanceState.getSerializable(
+          CURRENT_DEVICE);
       }
+
+      mDeviceAdapter = new DeviceListAdapter(mContext);
+      setDevice(mDevice);
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      outState.putSerializable(CURRENT_DEVICE, mDevice);
    }
 
    @Override
    public void onListItemClick(ListView l, View v, int position, long id) {
-      deviceSelectedListener.onDeviceSelected(mDevices.get(position));
+      deviceSelectedListener.onDeviceSelected(
+       mDevice.getChildren().get(position));
    }
 
    @Override
@@ -55,14 +66,9 @@ public class DeviceListFragment extends ListFragment {
       }
    }
 
-   /**
-    * Avoid calling this...
-    * It's really only used for the first fragment that is already created and
-    * just needs to be updated. The rest are updated through the constructor
-    */
-   public void setDevices(ArrayList<Device> devices) {
-      mDevices = devices;
-      mDeviceAdapter.setDevices(mDevices);
+   private void setDevice(Device device) {
+      mDevice = device;
+      mDeviceAdapter.setDevice(mDevice);
       setListAdapter(mDeviceAdapter);
    }
 }
