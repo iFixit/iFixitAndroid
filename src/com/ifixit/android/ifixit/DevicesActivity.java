@@ -81,7 +81,8 @@ public class DevicesActivity extends FragmentActivity implements
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
          DeviceListFragment newFragment = new DeviceListFragment(device);
          
-         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left);
+         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+          R.anim.slide_in_left, R.anim.slide_out_right);
          ft.replace(R.id.device_list_fragment, newFragment);
 
          if (!mFirstFragment) {
