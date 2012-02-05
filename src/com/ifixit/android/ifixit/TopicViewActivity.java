@@ -7,7 +7,6 @@ import android.support.v4.app.FragmentActivity;
 public class TopicViewActivity extends FragmentActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
-   private TopicNode mTopic;
    private TopicViewFragment mTopicView;
 
    @Override
@@ -21,10 +20,10 @@ public class TopicViewActivity extends FragmentActivity {
       }
 
       setContentView(R.layout.topic_view);
+
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
-      mTopic = (TopicNode)getIntent().getSerializableExtra(TOPIC_KEY);
-
-      mTopicView.setTopic(mTopic);
+      mTopicView.setTopicNode((TopicNode)getIntent().
+       getSerializableExtra(TOPIC_KEY));
    }
 }

@@ -1,18 +1,38 @@
 package com.ifixit.android.ifixit;
 
+import java.net.URLEncoder;
+
+import org.apache.http.client.ResponseHandler;
+
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class TopicViewFragment extends Fragment {
+   private static final String RESPONSE = "RESPONSE";
    private static final String TOPIC_API_URL =
-    "http://www.ifixit.com/api/0.1/topic/";
+    "http://www.ifixit.com/api/0.1/device/";
 
-   private TopicNode mTopic;
+   private TopicNode mTopicNode;
+   private TopicLeaf mTopicLeaf;
    private TextView mTopicText;
+
+   private final Handler mTopicHandler = new Handler() {
+      public void handleMessage(Message message) {
+         String response = message.getData().getString(RESPONSE);
+
+         mTopicText.setText(response);
+
+         setTopicLeaf(JSONHelper.parseTopicLeaf(response));
+      }
+   };
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -29,9 +49,32 @@ public class TopicViewFragment extends Fragment {
       return view;
    }
 
-   public void setTopic(TopicNode topic) {
-      mTopic = topic;
+   public void setTopicNode(TopicNode topicNode) {
+      mTopicNode = topicNode;
 
-      mTopicText.setText(mTopic.getName());
+      mTopicText.setText(mTopicNode.getName());
+      getTopicLeaf(mTopicNode.getName());
+   }
+
+   public void setTopicLeaf(TopicLeaf topicLeaf) {
+      mTopicLeaf = topicLeaf;
+   }
+
+   private void getTopicLeaf(final String topicName) {
+      final ResponseHandler<String> responseHandler =
+       HTTPRequestHelper.getResponseHandlerInstance(mTopicHandler);
+
+      new Thread() {
+         public void run() {
+            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
+
+            try {
+               helper.performGet(TOPIC_API_URL + URLEncoder.encode(topicName,
+                "UTF-8"));
+            } catch (Exception e) {
+               Log.w("iFixit", "Encoding error: " + e.getMessage());
+            }
+         }
+      }.start();
    }
 }

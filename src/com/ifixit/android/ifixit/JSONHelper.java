@@ -164,4 +164,14 @@ public class JSONHelper {
 
       return topics;
    }
+
+   /**
+    * Topic leaf parsing
+    * TODO: Implement
+    */
+   public static TopicLeaf parseTopicLeaf(String json) {
+      TopicLeaf topicLeaf = null;
+
+      return topicLeaf;
+   }
 }

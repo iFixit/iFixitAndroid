@@ -66,7 +66,7 @@ public class TopicsActivity extends FragmentActivity implements
    public void onTopicSelected(TopicNode topic) {
       if (topic.isLeaf()) {
          if (mDualPane) {
-            mTopicView.setTopic(topic);
+            mTopicView.setTopicNode(topic);
          }
          else {
             Intent intent = new Intent(this, TopicViewActivity.class);
