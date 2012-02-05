@@ -9,7 +9,7 @@ public class Guide implements Serializable {
 
    protected int mGuideid;
    protected String mTitle;
-   protected String mDevice;
+   protected String mTopic;
    protected String mAuthor;
    protected String mTimeRequired;
    protected String mDifficulty;
@@ -97,12 +97,12 @@ public class Guide implements Serializable {
       return mTitle;
    }
 
-   public void setDevice(String device) {
-      mDevice = device;
+   public void setTopic(String topic) {
+      mTopic = topic;
    }
 
-   public String getDevice() {
-      return mDevice;
+   public String getTopic() {
+      return mTopic;
    }
 
    public void setAuthor(String author) {
@@ -154,7 +154,7 @@ public class Guide implements Serializable {
    }
 
    public String toString() {
-      return "{" + mGuideid + "\n" + mTitle + "\n" + mDevice + "\n" + mAuthor +
+      return "{" + mGuideid + "\n" + mTitle + "\n" + mTopic + "\n" + mAuthor +
        "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroduction + "\n"
        + mSummary + "\n\n" + mSteps + "}";
    }

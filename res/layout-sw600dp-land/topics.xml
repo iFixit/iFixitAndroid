@@ -5,10 +5,10 @@
       android:layout_height="match_parent"
       android:orientation="horizontal">
    <fragment
-         android:name="com.ifixit.android.ifixit.DeviceViewFragment"
+         android:name="com.ifixit.android.ifixit.TopicListFragment"
          android:layout_width="0dp"
          android:layout_height="match_parent"
-         android:id="@+id/device_view_fragment"
-         android:layout_weight="55">
+         android:id="@+id/topic_list_fragment"
+         android:layout_weight="45">
    </fragment>
 </LinearLayout>

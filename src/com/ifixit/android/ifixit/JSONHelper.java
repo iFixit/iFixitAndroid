@@ -27,7 +27,7 @@ public class JSONHelper {
          Guide guide = new Guide(jGuideInfo.getInt("guideid"));
 
          guide.setTitle(jGuide.getString("title"));
-         guide.setDevice(jGuideInfo.getString("device"));
+         guide.setTopic(jGuideInfo.getString("device"));
          guide.setAuthor(jAuthor.getString("text"));
          guide.setTimeRequired(jGuide.getString("time_required"));
          guide.setDifficulty(jGuide.getString("difficulty"));
@@ -105,63 +105,63 @@ public class JSONHelper {
    }
 
    /**
-    * Device hierarchy parsing
+    * Topic hierarchy parsing
     */
-   public static ArrayList<Device> parseDevices(String json) {
+   public static ArrayList<Topic> parseTopics(String json) {
       try {
-         JSONObject jDevices = new JSONObject(json);
+         JSONObject jTopics = new JSONObject(json);
 
-         return parseDeviceChildren(jDevices);
+         return parseTopicChildren(jTopics);
       }
       catch (Exception e) {
-         Log.w("iFixit", "Error parsing devices: " + e.getMessage());
+         Log.w("iFixit", "Error parsing topics: " + e.getMessage());
          return null;
       }
    }
 
    /**
-    * Reads through the given JSONObject and adds any devices to the given
-    * device
+    * Reads through the given JSONObject and adds any topics to the given
+    * topic
     */
-   public static ArrayList<Device> parseDeviceChildren(JSONObject jDevice) {
-      Iterator<String> iterator = jDevice.keys();
-      String deviceName;
-      ArrayList<Device> devices = new ArrayList<Device>();
-      Device currentDevice;
+   public static ArrayList<Topic> parseTopicChildren(JSONObject jTopic) {
+      Iterator<String> iterator = jTopic.keys();
+      String topicName;
+      ArrayList<Topic> topics = new ArrayList<Topic>();
+      Topic currentTopic;
 
       try {
          while (iterator.hasNext()) {
-            deviceName = iterator.next();
+            topicName = iterator.next();
 
-            if (deviceName.equals(LEAF_INDICATOR)) {
-               devices.addAll(parseDeviceLeaves(
-                jDevice.getJSONArray(LEAF_INDICATOR)));
+            if (topicName.equals(LEAF_INDICATOR)) {
+               topics.addAll(parseTopicLeaves(
+                jTopic.getJSONArray(LEAF_INDICATOR)));
             }
             else {
-               currentDevice = new Device(deviceName);
-               currentDevice.addAllDevices(parseDeviceChildren(
-                jDevice.getJSONObject(deviceName)));
-               devices.add(currentDevice);
+               currentTopic = new Topic(topicName);
+               currentTopic.addAllTopics(parseTopicChildren(
+                jTopic.getJSONObject(topicName)));
+               topics.add(currentTopic);
             }
          }
       } catch (Exception e) {
-         Log.w("iFixit", "Error parsing device children: " + e.getMessage());
+         Log.w("iFixit", "Error parsing topic children: " + e.getMessage());
       }
 
-      return devices;
+      return topics;
    }
 
-   public static ArrayList<Device> parseDeviceLeaves(JSONArray jLeaves) {
-      ArrayList<Device> devices = new ArrayList<Device>();
+   public static ArrayList<Topic> parseTopicLeaves(JSONArray jLeaves) {
+      ArrayList<Topic> topics = new ArrayList<Topic>();
 
       try {
          for (int i = 0; i < jLeaves.length(); i++) {
-            devices.add(new Device(jLeaves.getString(i)));
+            topics.add(new Topic(jLeaves.getString(i)));
          }
       } catch (Exception e) {
-         Log.w("iFixit", "Error parsing device leaves: " + e.getMessage());
+         Log.w("iFixit", "Error parsing topic leaves: " + e.getMessage());
       }
 
-      return devices;
+      return topics;
    }
 }

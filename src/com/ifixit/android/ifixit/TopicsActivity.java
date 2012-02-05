@@ -10,31 +10,31 @@ import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-public class DevicesActivity extends FragmentActivity implements
- DeviceListFragment.DeviceSelectedListener {
-   private static final String DEVICES_API_URL =
+public class TopicsActivity extends FragmentActivity implements
+ TopicListFragment.TopicSelectedListener {
+   private static final String TOPICS_API_URL =
     "http://www.ifixit.com/api/0.1/areas/";
    private static final String RESPONSE = "RESPONSE";
-   private static final String ROOT_DEVICE = "ROOT_DEVICE";
+   private static final String ROOT_TOPIC = "ROOT_TOPIC";
 
    private boolean mDualPane;
-   private DeviceViewFragment mDeviceView;
-   private Device mDevice;
+   private TopicViewFragment mTopicView;
+   private Topic mTopic;
    private boolean mFirstFragment = true;
 
-   private final Handler mDevicesHandler = new Handler() {
+   private final Handler mTopicsHandler = new Handler() {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
-         ArrayList<Device> devices = JSONHelper.parseDevices(response);
+         ArrayList<Topic> topics = JSONHelper.parseTopics(response);
 
-         if (devices != null) {
+         if (topics != null) {
             mFirstFragment = true;
-            mDevice = new Device("ROOT");
-            mDevice.addAllDevices(devices);
-            onDeviceSelected(mDevice);
+            mTopic = new Topic("ROOT");
+            mTopic.addAllTopics(topics);
+            onTopicSelected(mTopic);
          }
          else {
-            Log.e("iFixit", "Devices is null (response: " + response + ")");
+            Log.e("iFixit", "Topics is null (response: " + response + ")");
          }
       }
    };
@@ -43,16 +43,15 @@ public class DevicesActivity extends FragmentActivity implements
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      setContentView(R.layout.devices);
-      mDeviceView = (DeviceViewFragment)getSupportFragmentManager()
-       .findFragmentById(R.id.device_view_fragment);
-      mDualPane = mDeviceView != null && mDeviceView.isInLayout();
+      setContentView(R.layout.topics);
+      mTopicView = (TopicViewFragment)getSupportFragmentManager()
+       .findFragmentById(R.id.topic_view_fragment);
+      mDualPane = mTopicView != null && mTopicView.isInLayout();
 
       if (savedInstanceState != null) {
-         mDevice = (Device)savedInstanceState.getSerializable(ROOT_DEVICE);
-         //onDeviceSelected(device);
+         mTopic = (Topic)savedInstanceState.getSerializable(ROOT_TOPIC);
       } else {
-         getDeviceHierarchy();
+         getTopicHierarchy();
       }
    }
 
@@ -60,30 +59,31 @@ public class DevicesActivity extends FragmentActivity implements
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
-      outState.putSerializable(ROOT_DEVICE, mDevice);
+      outState.putSerializable(ROOT_TOPIC, mTopic);
    }
 
    @Override
-   public void onDeviceSelected(Device device) {
-      if (device.isLeaf()) {
+   public void onTopicSelected(Topic topic) {
+      Log.w("iFixit", "onTopicSelected: " + mDualPane);
+      if (topic.isLeaf()) {
          if (mDualPane) {
-            mDeviceView.setDevice(device);
+            mTopicView.setTopic(topic);
          }
          else {
-            Intent intent = new Intent(this, DeviceViewActivity.class);
+            Intent intent = new Intent(this, TopicViewActivity.class);
             Bundle bundle = new Bundle();
 
-            bundle.putSerializable(DeviceViewActivity.DEVICE_KEY, device);
+            bundle.putSerializable(TopicViewActivity.TOPIC_KEY, topic);
             intent.putExtras(bundle);
             startActivity(intent);
          }
       } else {
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-         DeviceListFragment newFragment = new DeviceListFragment(device);
+         TopicListFragment newFragment = new TopicListFragment(topic);
          
          ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
           R.anim.slide_in_left, R.anim.slide_out_right);
-         ft.replace(R.id.device_list_fragment, newFragment);
+         ft.replace(R.id.topic_list_fragment, newFragment);
 
          if (!mFirstFragment) {
             ft.addToBackStack(null);
@@ -95,15 +95,15 @@ public class DevicesActivity extends FragmentActivity implements
       }
    }
 
-   private void getDeviceHierarchy() {
+   private void getTopicHierarchy() {
       final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(mDevicesHandler);
+       HTTPRequestHelper.getResponseHandlerInstance(mTopicsHandler);
 
       new Thread() {
          public void run() {
             HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
 
-            helper.performGet(DEVICES_API_URL);
+            helper.performGet(TOPICS_API_URL);
          }
       }.start();
    }

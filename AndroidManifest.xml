@@ -13,14 +13,14 @@
          android:icon="@drawable/icon" 
          android:label="@string/app_name" 
          android:logo="@drawable/logo">
-      <activity android:name="com.ifixit.android.ifixit.DevicesActivity"
+      <activity android:name=".TopicsActivity"
             android:label="@string/app_name">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
       </activity>
-      <activity android:name="com.ifixit.android.ifixit.DeviceViewActivity"
+      <activity android:name=".TopicViewActivity"
             android:label="@string/app_name">
       </activity>
       <activity android:name="com.ifixit.android.ifixit.GuideView"

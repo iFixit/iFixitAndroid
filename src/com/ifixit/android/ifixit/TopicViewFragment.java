@@ -5,12 +5,14 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import android.widget.TextView;
 
-public class DeviceViewFragment extends Fragment {
-   private Device mDevice;
-   private TextView mDeviceText;
+public class TopicViewFragment extends Fragment {
+   private static final String TOPIC_API_URL =
+    "http://www.ifixit.com/api/0.1/topic/";
+
+   private Topic mTopic;
+   private TextView mTopicText;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -20,17 +22,16 @@ public class DeviceViewFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.device_view_fragment, container, false);
+      View view = inflater.inflate(R.layout.topic_view_fragment, container, false);
 
-      mDeviceText = (TextView)view.findViewById(R.id.deviceName);
+      mTopicText = (TextView)view.findViewById(R.id.topicName);
 
       return view;
    }
 
-   public void setDevice(Device device) {
-      mDevice = device;
+   public void setTopic(Topic topic) {
+      mTopic = topic;
 
-      mDeviceText.setText(mDevice.getName());
+      mTopicText.setText(mTopic.getName());
    }
 }
-

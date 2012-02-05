@@ -4,17 +4,11 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="horizontal">
-   <FrameLayout
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:id="@+id/device_list_fragment"
-         android:layout_weight="45">
-   </FrameLayout>
    <fragment
-         android:name="com.ifixit.android.ifixit.DeviceViewFragment"
+         android:name="com.ifixit.android.ifixit.TopicViewFragment"
          android:layout_width="0dp"
          android:layout_height="match_parent"
-         android:id="@+id/device_view_fragment"
+         android:id="@+id/topic_view_fragment"
          android:layout_weight="55">
    </fragment>
 </LinearLayout>

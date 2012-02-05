@@ -5,24 +5,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class DeviceListAdapter extends BaseAdapter {
+public class TopicListAdapter extends BaseAdapter {
    private Context mContext;
-   private Device mDevice;
+   private Topic mTopic;
 
-   public DeviceListAdapter(Context context) {
+   public TopicListAdapter(Context context) {
       mContext = context;
    }
 
-   public void setDevice(Device device) {
-      mDevice = device;
+   public void setTopic(Topic topic) {
+      mTopic = topic;
    }
 
    public int getCount() {
-      return mDevice.getChildren().size();
+      return mTopic.getChildren().size();
    }
 
    public Object getItem(int position) {
-      return mDevice.getChildren().get(position);
+      return mTopic.getChildren().get(position);
    }
 
    public long getItemId(int position) {
@@ -30,17 +30,17 @@ public class DeviceListAdapter extends BaseAdapter {
    }
 
    public View getView(int position, View convertView, ViewGroup parent) {
-      DeviceListRow deviceRow;
+      TopicListRow topicRow;
 
       if (convertView == null) {
-         deviceRow = new DeviceListRow(mContext);
+         topicRow = new TopicListRow(mContext);
       }
       else {
-         deviceRow = (DeviceListRow)convertView;
+         topicRow = (TopicListRow)convertView;
       }
 
-      deviceRow.setDevice(mDevice.getChildren().get(position));
+      topicRow.setTopic(mTopic.getChildren().get(position));
 
-      return deviceRow;
+      return topicRow;
    }
 }
