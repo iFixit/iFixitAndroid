@@ -19,17 +19,17 @@ public class TopicsActivity extends FragmentActivity implements
 
    private boolean mDualPane;
    private TopicViewFragment mTopicView;
-   private Topic mTopic;
+   private TopicNode mTopic;
    private boolean mFirstFragment = true;
 
    private final Handler mTopicsHandler = new Handler() {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
-         ArrayList<Topic> topics = JSONHelper.parseTopics(response);
+         ArrayList<TopicNode> topics = JSONHelper.parseTopics(response);
 
          if (topics != null) {
             mFirstFragment = true;
-            mTopic = new Topic("ROOT");
+            mTopic = new TopicNode("ROOT");
             mTopic.addAllTopics(topics);
             onTopicSelected(mTopic);
          }
@@ -49,7 +49,7 @@ public class TopicsActivity extends FragmentActivity implements
       mDualPane = mTopicView != null && mTopicView.isInLayout();
 
       if (savedInstanceState != null) {
-         mTopic = (Topic)savedInstanceState.getSerializable(ROOT_TOPIC);
+         mTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
       } else {
          getTopicHierarchy();
       }
@@ -63,8 +63,7 @@ public class TopicsActivity extends FragmentActivity implements
    }
 
    @Override
-   public void onTopicSelected(Topic topic) {
-      Log.w("iFixit", "onTopicSelected: " + mDualPane);
+   public void onTopicSelected(TopicNode topic) {
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopic(topic);

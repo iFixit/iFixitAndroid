@@ -7,13 +7,13 @@ import android.widget.BaseAdapter;
 
 public class TopicListAdapter extends BaseAdapter {
    private Context mContext;
-   private Topic mTopic;
+   private TopicNode mTopic;
 
    public TopicListAdapter(Context context) {
       mContext = context;
    }
 
-   public void setTopic(Topic topic) {
+   public void setTopic(TopicNode topic) {
       mTopic = topic;
    }
 

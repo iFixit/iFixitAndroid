@@ -11,7 +11,7 @@ public class TopicViewFragment extends Fragment {
    private static final String TOPIC_API_URL =
     "http://www.ifixit.com/api/0.1/topic/";
 
-   private Topic mTopic;
+   private TopicNode mTopic;
    private TextView mTopicText;
 
    @Override
@@ -29,7 +29,7 @@ public class TopicViewFragment extends Fragment {
       return view;
    }
 
-   public void setTopic(Topic topic) {
+   public void setTopic(TopicNode topic) {
       mTopic = topic;
 
       mTopicText.setText(mTopic.getName());

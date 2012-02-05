@@ -3,24 +3,26 @@ package com.ifixit.android.ifixit;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Topic implements Serializable {
-   private String mName;
-   private ArrayList<Topic> mChildren;
+public class TopicNode implements Serializable {
+   private static final long serialVersionUID = 1L;
 
-   public Topic(String name) {
+   private String mName;
+   private ArrayList<TopicNode> mChildren;
+
+   public TopicNode(String name) {
       mName = name;
-      mChildren = new ArrayList<Topic>();
+      mChildren = new ArrayList<TopicNode>();
    }
 
    public String getName() {
       return mName;
    }
 
-   public ArrayList<Topic> getChildren() {
+   public ArrayList<TopicNode> getChildren() {
       return mChildren;
    }
 
-   public void addAllTopics(ArrayList<Topic> topics) {
+   public void addAllTopics(ArrayList<TopicNode> topics) {
       mChildren.addAll(topics);
    }
 

@@ -107,7 +107,7 @@ public class JSONHelper {
    /**
     * Topic hierarchy parsing
     */
-   public static ArrayList<Topic> parseTopics(String json) {
+   public static ArrayList<TopicNode> parseTopics(String json) {
       try {
          JSONObject jTopics = new JSONObject(json);
 
@@ -123,11 +123,11 @@ public class JSONHelper {
     * Reads through the given JSONObject and adds any topics to the given
     * topic
     */
-   public static ArrayList<Topic> parseTopicChildren(JSONObject jTopic) {
+   public static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic) {
       Iterator<String> iterator = jTopic.keys();
       String topicName;
-      ArrayList<Topic> topics = new ArrayList<Topic>();
-      Topic currentTopic;
+      ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
+      TopicNode currentTopic;
 
       try {
          while (iterator.hasNext()) {
@@ -138,7 +138,7 @@ public class JSONHelper {
                 jTopic.getJSONArray(LEAF_INDICATOR)));
             }
             else {
-               currentTopic = new Topic(topicName);
+               currentTopic = new TopicNode(topicName);
                currentTopic.addAllTopics(parseTopicChildren(
                 jTopic.getJSONObject(topicName)));
                topics.add(currentTopic);
@@ -151,12 +151,12 @@ public class JSONHelper {
       return topics;
    }
 
-   public static ArrayList<Topic> parseTopicLeaves(JSONArray jLeaves) {
-      ArrayList<Topic> topics = new ArrayList<Topic>();
+   public static ArrayList<TopicNode> parseTopicLeaves(JSONArray jLeaves) {
+      ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
 
       try {
          for (int i = 0; i < jLeaves.length(); i++) {
-            topics.add(new Topic(jLeaves.getString(i)));
+            topics.add(new TopicNode(jLeaves.getString(i)));
          }
       } catch (Exception e) {
          Log.w("iFixit", "Error parsing topic leaves: " + e.getMessage());

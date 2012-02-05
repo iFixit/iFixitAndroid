@@ -7,7 +7,7 @@ import android.widget.TextView;
 
 public class TopicListRow extends LinearLayout {
    private TextView mTopicName;
-   private Topic mTopic;
+   private TopicNode mTopic;
 
    public TopicListRow(Context context) {
       super(context);      
@@ -19,7 +19,7 @@ public class TopicListRow extends LinearLayout {
       mTopicName = (TextView)findViewById(R.id.topic_title);
    }
 
-   public void setTopic(Topic topic) {
+   public void setTopic(TopicNode topic) {
       mTopic = topic;
       mTopicName.setText(mTopic.getName());
    }

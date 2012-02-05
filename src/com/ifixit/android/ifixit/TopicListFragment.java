@@ -9,13 +9,13 @@ import android.widget.ListView;
 
 public class TopicListFragment extends ListFragment {
    public interface TopicSelectedListener {
-      public void onTopicSelected(Topic topic);
+      public void onTopicSelected(TopicNode topic);
    }
 
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
 
    private TopicSelectedListener topicSelectedListener;
-   private Topic mTopic;
+   private TopicNode mTopic;
    private TopicListAdapter mTopicAdapter;
    private Context mContext;
 
@@ -24,7 +24,7 @@ public class TopicListFragment extends ListFragment {
     */
    public TopicListFragment() {}
 
-   public TopicListFragment(Topic topic) {
+   public TopicListFragment(TopicNode topic) {
       mTopic = topic;
    }
 
@@ -33,7 +33,7 @@ public class TopicListFragment extends ListFragment {
       super.onCreate(savedInstanceState);
 
       if (savedInstanceState != null) {
-         mTopic = (Topic)savedInstanceState.getSerializable(
+         mTopic = (TopicNode)savedInstanceState.getSerializable(
           CURRENT_TOPIC);
       }
 
@@ -67,7 +67,7 @@ public class TopicListFragment extends ListFragment {
       }
    }
 
-   private void setTopic(Topic topic) {
+   private void setTopic(TopicNode topic) {
       mTopic = topic;
       mTopicAdapter.setTopic(mTopic);
       setListAdapter(mTopicAdapter);
