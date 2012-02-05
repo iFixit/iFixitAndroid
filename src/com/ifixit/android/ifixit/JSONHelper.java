@@ -9,7 +9,7 @@ import org.json.JSONObject;
 
 import android.util.Log;
 
-public class GuideJSONHelper {
+public class JSONHelper {
    private static final String LEAF_INDICATOR = "DEVICES";
 
    /**

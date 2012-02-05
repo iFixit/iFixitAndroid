@@ -37,7 +37,7 @@ public class GuideView extends Activity implements OnPageChangeListener {
    private final Handler mGuideHandler = new Handler() {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
-         Guide guide = GuideJSONHelper.parseGuide(response);
+         Guide guide = JSONHelper.parseGuide(response);
 
          if (guide != null) {
             setGuide(guide);

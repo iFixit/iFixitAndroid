@@ -19,9 +19,10 @@ public class DeviceListFragment extends ListFragment {
    private DeviceListAdapter mDeviceAdapter;
    private Context mContext;
 
-   public DeviceListFragment() {
-
-   }
+   /**
+    * Required for restoring fragments
+    */
+   public DeviceListFragment() {}
 
    public DeviceListFragment(Device device) {
       mDevice = device;

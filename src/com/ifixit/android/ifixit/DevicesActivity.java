@@ -25,7 +25,7 @@ public class DevicesActivity extends FragmentActivity implements
    private final Handler mDevicesHandler = new Handler() {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
-         ArrayList<Device> devices = GuideJSONHelper.parseDevices(response);
+         ArrayList<Device> devices = JSONHelper.parseDevices(response);
 
          if (devices != null) {
             mFirstFragment = true;
