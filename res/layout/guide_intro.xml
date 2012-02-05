@@ -20,8 +20,7 @@
 	         android:textColor="#FFFFFF" />
 	         
 	      <TextView android:id="@+id/guide_intro_text"
-	         android:layout_width="fill_parent"
-		     style="@style/intro_text" />
+		     style="@style/intro_text_full" />
 	      <LinearLayout android:layout_width="match_parent"
 	         android:layout_height="wrap_content"
 	         android:orientation="horizontal"
@@ -35,21 +34,16 @@
 	      </LinearLayout>
 	      
 	      <TextView android:id="@+id/num_steps"
-		     style="@style/intro_text"
-	         android:layout_width="fill_parent"
+		     style="@style/intro_text_full"
 	         android:layout_marginTop="16dp" />            
 	      
 	      <TextView android:id="@+id/guide_tools"
-	         android:layout_width="fill_parent"
-	         style="@style/intro_text" />            
+	         style="@style/intro_text_full" />            
 	      
 	      <TextView android:id="@+id/guide_parts"
-	         android:layout_width="fill_parent"
 	         android:layout_marginTop="16dp"
-		     style="@style/intro_text" />                  
-	      
-	      <TextView android:id="@+id/guide_date"
-		     style="@style/intro_text" />      
+		     style="@style/intro_text_full" />                  
+		       
 	   </LinearLayout>
    </ScrollView>
 </RelativeLayout>

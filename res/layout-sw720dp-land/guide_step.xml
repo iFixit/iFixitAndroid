@@ -33,9 +33,6 @@
             android:typeface="serif" 
             android:gravity="right"/>		
       <ListView android:id="@+id/step_text_list"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="16dip"
-            android:divider="#00000000" />
+            style="@style/step_list" />
    </LinearLayout>
 </LinearLayout>
