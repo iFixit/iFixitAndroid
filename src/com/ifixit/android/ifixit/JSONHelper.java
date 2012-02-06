@@ -48,8 +48,7 @@ public class JSONHelper {
          }
 
          return guide;
-      }
-      catch (JSONException e) {
+      } catch (JSONException e) {
          Log.e("iFixit", "Error parsing guide: " + e);
          return null;
       }
@@ -167,11 +166,38 @@ public class JSONHelper {
 
    /**
     * Topic leaf parsing
-    * TODO: Implement
     */
    public static TopicLeaf parseTopicLeaf(String json) {
-      TopicLeaf topicLeaf = null;
+      try {
+         JSONObject jTopicInfo = new JSONObject(json);
+         JSONArray jGuides = jTopicInfo.getJSONArray("guides");
+         TopicLeaf topicLeaf = new TopicLeaf(jTopicInfo.getString("title"));
 
-      return topicLeaf;
+         for (int i = 0; i < jGuides.length(); i++) {
+            topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
+         }
+
+         return topicLeaf;
+      } catch (JSONException e) {
+         Log.e("iFixit", "Error parsing topic leaf: " + e);
+         return null;
+      }
+   }
+
+   public static GuideInfo parseGuideInfo(JSONObject jGuide) {
+      try {
+         GuideInfo guideInfo = new GuideInfo(jGuide.getInt("guideid"));
+
+         guideInfo.setSubject(jGuide.getString("subject"));
+         guideInfo.setThumbnail(jGuide.getString("thumbnail"));
+         guideInfo.setTitle(jGuide.getString("title"));
+         guideInfo.setType(jGuide.getString("type"));
+         guideInfo.setUrl(jGuide.getString("url"));
+
+         return guideInfo;
+      } catch (JSONException e) {
+         Log.e("iFixit", "Error parsing guide info: " + e);
+         return null;
+      }
    }
 }

@@ -28,8 +28,6 @@ public class TopicViewFragment extends Fragment {
       public void handleMessage(Message message) {
          String response = message.getData().getString(RESPONSE);
 
-         mTopicText.setText(response);
-
          setTopicLeaf(JSONHelper.parseTopicLeaf(response));
       }
    };
@@ -58,6 +56,7 @@ public class TopicViewFragment extends Fragment {
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
+      mTopicText.setText(mTopicLeaf.toString());
    }
 
    private void getTopicLeaf(final String topicName) {
