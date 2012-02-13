@@ -20,7 +20,6 @@ public class TopicsActivity extends FragmentActivity implements
    private boolean mDualPane;
    private TopicViewFragment mTopicView;
    private TopicNode mTopic;
-   private boolean mFirstFragment = true;
 
    private final Handler mTopicsHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -28,8 +27,7 @@ public class TopicsActivity extends FragmentActivity implements
          ArrayList<TopicNode> topics = JSONHelper.parseTopics(response);
 
          if (topics != null) {
-            mFirstFragment = true;
-            mTopic = new TopicNode("ROOT");
+            mTopic = new TopicNode();
             mTopic.addAllTopics(topics);
             onTopicSelected(mTopic);
          }
@@ -84,11 +82,9 @@ public class TopicsActivity extends FragmentActivity implements
           R.anim.slide_in_left, R.anim.slide_out_right);
          ft.replace(R.id.topic_list_fragment, newFragment);
 
-         if (!mFirstFragment) {
+         if (!topic.isRoot()) {
             ft.addToBackStack(null);
          }
-
-         mFirstFragment = false;
 
          ft.commit();
       }

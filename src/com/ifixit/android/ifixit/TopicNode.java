@@ -5,9 +5,14 @@ import java.util.ArrayList;
 
 public class TopicNode implements Serializable {
    private static final long serialVersionUID = 1L;
+   private static final String ROOT_NAME = "ROOT";
 
    private String mName;
    private ArrayList<TopicNode> mChildren;
+
+   public TopicNode() {
+      this(ROOT_NAME);
+   }
 
    public TopicNode(String name) {
       mName = name;
@@ -28,6 +33,10 @@ public class TopicNode implements Serializable {
 
    public boolean isLeaf() {
       return mChildren.size() == 0;
+   }
+
+   public boolean isRoot() {
+      return mName.equals(ROOT_NAME);
    }
 
    public String toString() {
