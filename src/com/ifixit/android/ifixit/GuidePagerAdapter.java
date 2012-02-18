@@ -1,7 +1,5 @@
 package com.ifixit.android.ifixit;
 
-import android.app.Activity;
-
 import android.content.Context;
 import android.os.Parcelable;
 import android.support.v4.view.PagerAdapter;

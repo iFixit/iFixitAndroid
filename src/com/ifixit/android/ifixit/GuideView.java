@@ -3,7 +3,6 @@ package com.ifixit.android.ifixit;
 import org.apache.http.client.ResponseHandler;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
