@@ -29,7 +29,7 @@ public class TopicViewFragment extends Fragment {
    private TopicLeaf mTopicLeaf;
    private ViewPager mPager;
    private TabPageIndicator mTabIndicator;
-   private TestFragmentAdapter mAdapter;
+   private TopicViewAdapter mAdapter;
 
    private final Handler mTopicHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -51,8 +51,7 @@ public class TopicViewFragment extends Fragment {
 
       mTabIndicator = (TabPageIndicator)view.findViewById(R.id.indicator);
       mPager = (ViewPager)view.findViewById(R.id.pager);
-
-      mAdapter = new TestFragmentAdapter(getActivity().
+      mAdapter = new TopicViewAdapter(getActivity().
        getSupportFragmentManager());
       mPager.setAdapter(mAdapter);
       mTabIndicator.setViewPager(mPager);
@@ -68,6 +67,10 @@ public class TopicViewFragment extends Fragment {
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
+
+      mAdapter.setTopicLeaf(mTopicLeaf);
+      mPager.setAdapter(mAdapter);
+      mTabIndicator.notifyDataSetChanged();
    }
 
    private void getTopicLeaf(final String topicName) {
@@ -88,24 +91,40 @@ public class TopicViewFragment extends Fragment {
       }.start();
    }
 
-   private class TestFragmentAdapter extends FragmentPagerAdapter
+   private class TopicViewAdapter extends FragmentPagerAdapter
     implements TitleProvider {
-      public TestFragmentAdapter(FragmentManager fm) {
+      private TopicLeaf mTopicLeaf;
+
+      public TopicViewAdapter(FragmentManager fm) {
          super(fm);
+      }
+
+      public void setTopicLeaf(TopicLeaf topicLeaf) {
+         mTopicLeaf = topicLeaf;
       }
 
       @Override
       public Fragment getItem(int position) {
+         if (mTopicLeaf == null) {
+            Log.w("iFixit", "RuhRoh!");
+            return null;
+         }
+
          WebViewFragment webView = new WebViewFragment();
 
-         webView.loadUrl("http://www.ifixit.com/Answers/view/" + position);
+         webView.loadUrl("http://www.ifixit.com/Wiki/" + mTopicLeaf.getName() +
+          position);
 
          return webView;
       }
 
       @Override
       public int getCount() {
-         return 3;
+         if (mTopicLeaf == null) {
+            return 0;
+         } else {
+            return 9;
+         }
       }
 
       @Override

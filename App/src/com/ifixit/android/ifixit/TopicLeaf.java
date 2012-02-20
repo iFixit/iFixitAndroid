@@ -15,6 +15,10 @@ public class TopicLeaf {
       mGuides.add(guideInfo);
    }
 
+   public String getName() {
+      return mName;
+   }
+
    public String toString() {
       return mName + ", " + mGuides;
    }

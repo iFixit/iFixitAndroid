@@ -21,7 +21,8 @@
          </intent-filter>
       </activity>
       <activity android:name=".TopicViewActivity"
-            android:label="@string/app_name">
+            android:label="@string/app_name"
+            android:theme="@style/Theme.PageIndicatorDefaults" >
       </activity>
       <activity android:name="com.ifixit.android.ifixit.GuideView"
             android:label="@string/app_name">
