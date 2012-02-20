@@ -171,11 +171,16 @@ public class JSONHelper {
       try {
          JSONObject jTopicInfo = new JSONObject(json);
          JSONArray jGuides = jTopicInfo.getJSONArray("guides");
+         JSONObject jSolutions = jTopicInfo.getJSONObject("solutions");
          TopicLeaf topicLeaf = new TopicLeaf(jTopicInfo.getString("title"));
 
          for (int i = 0; i < jGuides.length(); i++) {
             topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
          }
+
+         topicLeaf.setNumSolutions(Integer.parseInt(
+          jSolutions.getString("count")));
+         topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
 
          return topicLeaf;
       } catch (JSONException e) {

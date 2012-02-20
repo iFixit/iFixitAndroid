@@ -101,21 +101,39 @@ public class TopicViewFragment extends Fragment {
 
       public void setTopicLeaf(TopicLeaf topicLeaf) {
          mTopicLeaf = topicLeaf;
+         notifyDataSetChanged();
       }
 
       @Override
       public Fragment getItem(int position) {
          if (mTopicLeaf == null) {
-            Log.w("iFixit", "RuhRoh!");
+            Log.w("iFixit", "Trying to get Fragment at bad position");
             return null;
          }
 
-         WebViewFragment webView = new WebViewFragment();
+         if (position == 0) {
+            return new TopicGuideListFragment(mTopicLeaf);
+         } else if (position == 1) {
+            WebViewFragment webView = new WebViewFragment();
 
-         webView.loadUrl("http://www.ifixit.com/Wiki/" + mTopicLeaf.getName() +
-          position);
+            webView.loadUrl(mTopicLeaf.getSolutionsUrl());
 
-         return webView;
+            return webView;
+         } else if (position == 2) {
+            WebViewFragment webView = new WebViewFragment();
+
+            try {
+               webView.loadUrl("http://www.ifixit.com/c/" +
+                URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
+            } catch (Exception e) {
+               Log.w("iFixit", "Encoding error: " + e.getMessage());
+            }
+            
+            return webView;
+         } else {
+            Log.w("iFixit", "Too many tabs!");
+            return null;
+         }
       }
 
       @Override
@@ -123,13 +141,22 @@ public class TopicViewFragment extends Fragment {
          if (mTopicLeaf == null) {
             return 0;
          } else {
-            return 9;
+            return 3;
          }
       }
 
       @Override
       public String getTitle(int position) {
-         return "Pos: " + position;
+         if (position == 0) {
+            return "Guides";
+         } else if (position == 1) {
+            return "Answers";
+         } else if (position == 2) {
+            return "More Info";
+         } else {
+            Log.w("iFixit", "Too many tabs!");
+            return null;
+         }
       }
    }
 }

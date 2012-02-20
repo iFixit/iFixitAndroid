@@ -36,23 +36,23 @@ public class GuideInfo {
       return mGuideid;
    }
 
-   public String getSubject(String subject) {
+   public String getSubject() {
       return mSubject;
    }
 
-   public String getThumbnail(String thumbnail) {
+   public String getThumbnail() {
       return mThumbnail;
    }
 
-   public String getTitle(String title) {
+   public String getTitle() {
       return mTitle;
    }
 
-   public String getType(String type) {
+   public String getType() {
       return mType;
    }
 
-   public String getUrl(String url) {
+   public String getUrl() {
       return mUrl;
    }
 
