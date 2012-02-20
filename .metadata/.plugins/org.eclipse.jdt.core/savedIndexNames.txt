@@ -1,8 +1,6 @@
 INDEX VERSION 1.126+/Users/mzych/Documents/iFixitAndroid/.metadata/.plugins/org.eclipse.jdt.core
 1925241789.index
-2040064081.index
 2598595895.index
-3614936905.index
 1717276877.index
 3597351961.index
 1938249176.index
