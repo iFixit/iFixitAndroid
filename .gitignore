@@ -17,3 +17,5 @@ local.properties
 
 *.swp
 *.swo
+
+.metadata
