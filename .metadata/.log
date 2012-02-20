@@ -1,0 +1,42 @@
+!SESSION 2012-02-19 18:40:49.524 -----------------------------------------------
+eclipse.buildId=I20110613-1736
+java.version=1.6.0_29
+java.vendor=Apple Inc.
+BootLoader constants: OS=macosx, ARCH=x86, WS=cocoa, NL=en_US
+Framework arguments:  -keyring /Users/mzych/.eclipse_keyring -showlocation
+Command-line arguments:  -os macosx -ws cocoa -arch x86 -keyring /Users/mzych/.eclipse_keyring -showlocation
+
+!ENTRY org.eclipse.core.net 1 0 2012-02-19 18:42:23.360
+!MESSAGE System property http.nonProxyHosts has been set to local|*.local|169.254/16|*.169.254/16 by an external source. This value will be overwritten using the values from the preferences
+
+!ENTRY com.android.ide.eclipse.ddms 4 0 2012-02-19 18:42:23.820
+!MESSAGE DDMS files not found: /Applications/eclipse/Eclipse.app/Contents/MacOS/platform-tools/adb /Applications/eclipse/Eclipse.app/Contents/MacOS/tools/hprof-conv /Applications/eclipse/Eclipse.app/Contents/MacOS/tools/traceview 
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2012-02-19 18:44:46.645
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/App/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1196)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2012-02-19 18:44:46.646
+!MESSAGE Resource '/App/res' does not exist.
+
+!ENTRY com.android.ide.eclipse.adt 4 0 2012-02-19 18:45:12.322
+!MESSAGE 
+!STACK 1
+org.eclipse.core.internal.resources.ResourceException: Resource '/library/res' does not exist.
+	at org.eclipse.core.internal.resources.Resource.checkExists(Resource.java:320)
+	at org.eclipse.core.internal.resources.Resource.checkAccessible(Resource.java:194)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:266)
+	at org.eclipse.core.internal.resources.Container.members(Container.java:249)
+	at com.android.ide.eclipse.adt.internal.sdk.Sdk$6.run(Sdk.java:1196)
+	at org.eclipse.core.internal.jobs.Worker.run(Worker.java:54)
+!SUBENTRY 1 org.eclipse.core.resources 4 368 2012-02-19 18:45:12.323
+!MESSAGE Resource '/library/res' does not exist.
+
+!ENTRY org.eclipse.ui 4 4 2012-02-19 18:45:16.859
+!MESSAGE Invalid preference page path: XML Syntax
