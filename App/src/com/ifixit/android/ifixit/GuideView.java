@@ -2,11 +2,13 @@ package com.ifixit.android.ifixit;
 
 import org.apache.http.client.ResponseHandler;
 
-import android.app.Activity;
+import com.viewpagerindicator.CirclePageIndicator;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.SpeechRecognizer;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -15,9 +17,8 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ProgressBar;
 
-public class GuideView extends Activity implements OnPageChangeListener {
+public class GuideView extends FragmentActivity implements OnPageChangeListener {
    private static final String RESPONSE = "RESPONSE";
    private static final String API_URL = "http://www.ifixit.com/api/0.1/guide/";
    private static final String NEXT_COMMAND = "next";
@@ -25,13 +26,14 @@ public class GuideView extends Activity implements OnPageChangeListener {
    private static final String HOME_COMMAND = "home";
    private static final String PACKAGE_NAME = "com.ifixit.android.ifixit";
    
-   private ViewPager mGuidePager;
-   private ProgressBar mProgressBar;
-   private GuidePagerAdapter mGuideAdapter;
+   private GuideViewAdapter mGuideAdapter;
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage;
    protected ImageManager mImageManager;
+   private ViewPager mPager;
+   private CirclePageIndicator mIndicator;
+
    
    private final Handler mGuideHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -55,17 +57,29 @@ public class GuideView extends Activity implements OnPageChangeListener {
       setContentView(R.layout.guide_main);
 
       mImageManager = ((MainApplication)getApplication()).getImageManager();
-      mGuidePager = (ViewPager)findViewById(R.id.guide_pager);
-      mGuideAdapter = new GuidePagerAdapter(this, null, mImageManager);
-      mGuidePager.setAdapter(mGuideAdapter);
-      //mProgressBar = (ProgressBar)findViewById(R.id.progressBar);
-      mGuidePager.setVisibility(View.GONE);
-      //mProgressBar.setVisibility(View.VISIBLE);
+      
+      mPager = (ViewPager)findViewById(R.id.guide_pager);
 
+      mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
+      
       extras = getIntent().getExtras();
       getGuide(extras.getInt(MainActivity.GUIDEID));
-      initSpeechRecognizer();
+      //initSpeechRecognizer();
    }
+   
+   public void setGuide(Guide guide) {
+      mGuide = guide;
+
+      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mImageManager, mGuide);
+
+      mPager.setAdapter(mGuideAdapter);
+      mPager.setOnPageChangeListener(this);
+      
+      mIndicator.setViewPager(mPager);      
+
+      mPager.setVisibility(View.VISIBLE);
+   }
+
 
    @Override
    public void onDestroy() {
@@ -103,15 +117,6 @@ public class GuideView extends Activity implements OnPageChangeListener {
       return display.getWidth();
    }
 
-   public void setGuide(Guide guide) {
-      mGuide = guide;
-      mGuideAdapter = new GuidePagerAdapter(this, mGuide, mImageManager);
-      mGuidePager.setAdapter(mGuideAdapter);
-      mGuidePager.setOnPageChangeListener(this);
-
-      //mProgressBar.setVisibility(View.GONE);
-      mGuidePager.setVisibility(View.VISIBLE);
-   }
 
    public void getGuide(final int guideid) {
       final ResponseHandler<String> responseHandler =
@@ -127,15 +132,15 @@ public class GuideView extends Activity implements OnPageChangeListener {
    }
 
    private void nextStep() {
-      mGuidePager.setCurrentItem(mCurrentPage + 1);
+      mPager.setCurrentItem(mCurrentPage + 1);
    }
 
    private void previousStep() {
-      mGuidePager.setCurrentItem(mCurrentPage - 1);
+      mPager.setCurrentItem(mCurrentPage - 1);
    }
    
    private void guideHome() {
-      mGuidePager.setCurrentItem(0);
+      mPager.setCurrentItem(0);
    }
 
    public void initSpeechRecognizer() {

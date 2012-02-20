@@ -1,6 +1,7 @@
 package com.ifixit.android.ifixit;
 
 import android.content.Context;
+import android.content.DialogInterface.OnClickListener;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
@@ -55,4 +56,5 @@ public class LoaderImage extends RelativeLayout {
       mImage.setVisibility(View.VISIBLE);
       //mProgressBar.setVisibility(View.GONE);
    }
+
 }

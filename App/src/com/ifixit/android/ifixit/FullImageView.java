@@ -18,7 +18,7 @@ public class FullImageView extends Activity {
             
       setContentView(R.layout.full_screen_image);
       extras = getIntent().getExtras();
-      mUrl = (String)extras.get(GuideStepView.IMAGEID) + IMAGE_SIZE;
+      mUrl = (String)extras.get(GuideStepViewFragment.IMAGEID) + IMAGE_SIZE;
        
       setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
       
