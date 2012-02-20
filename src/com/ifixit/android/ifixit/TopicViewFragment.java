@@ -4,16 +4,21 @@ import java.net.URLEncoder;
 
 import org.apache.http.client.ResponseHandler;
 
+import com.viewpagerindicator.TabPageIndicator;
+
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
+
+import com.viewpagerindicator.TitleProvider;
 
 public class TopicViewFragment extends Fragment {
    private static final String RESPONSE = "RESPONSE";
@@ -22,7 +27,9 @@ public class TopicViewFragment extends Fragment {
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
-   private TextView mTopicText;
+   private ViewPager mPager;
+   private TabPageIndicator mTabIndicator;
+   private TestFragmentAdapter mAdapter;
 
    private final Handler mTopicHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -42,7 +49,13 @@ public class TopicViewFragment extends Fragment {
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_view_fragment, container, false);
 
-      mTopicText = (TextView)view.findViewById(R.id.topicName);
+      mTabIndicator = (TabPageIndicator)view.findViewById(R.id.indicator);
+      mPager = (ViewPager)view.findViewById(R.id.pager);
+
+      mAdapter = new TestFragmentAdapter(getActivity().
+       getSupportFragmentManager());
+      mPager.setAdapter(mAdapter);
+      mTabIndicator.setViewPager(mPager);
 
       return view;
    }
@@ -50,13 +63,11 @@ public class TopicViewFragment extends Fragment {
    public void setTopicNode(TopicNode topicNode) {
       mTopicNode = topicNode;
 
-      mTopicText.setText(mTopicNode.getName());
       getTopicLeaf(mTopicNode.getName());
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
-      mTopicText.setText(mTopicLeaf.toString());
    }
 
    private void getTopicLeaf(final String topicName) {
@@ -75,5 +86,31 @@ public class TopicViewFragment extends Fragment {
             }
          }
       }.start();
+   }
+
+   private class TestFragmentAdapter extends FragmentPagerAdapter
+    implements TitleProvider {
+      public TestFragmentAdapter(FragmentManager fm) {
+         super(fm);
+      }
+
+      @Override
+      public Fragment getItem(int position) {
+         WebViewFragment webView = new WebViewFragment();
+
+         webView.loadUrl("http://www.ifixit.com/Answers/view/" + position);
+
+         return webView;
+      }
+
+      @Override
+      public int getCount() {
+         return 3;
+      }
+
+      @Override
+      public String getTitle(int position) {
+         return "Pos: " + position;
+      }
    }
 }
