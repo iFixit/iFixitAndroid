@@ -1,6 +1,6 @@
 package com.ifixit.android.ifixit;
 
-import android.content.Context;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Html;
@@ -19,6 +19,9 @@ public class GuideIntroViewFragment extends Fragment {
    private TextView mNumSteps;
    private ImageManager mImageManager;
    private Guide mGuide;
+   private Typeface mBoldFont;
+   private Typeface mRegularFont;
+
 
    
    public GuideIntroViewFragment(ImageManager im, Guide guide) {
@@ -35,19 +38,27 @@ public class GuideIntroViewFragment extends Fragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       
-      View view = inflater.inflate(R.layout.guide_intro, container, false);        
+      View view = inflater.inflate(R.layout.guide_intro, container, false);     
+      mBoldFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Ubuntu-B.ttf");  
+      mRegularFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Ubuntu-R.ttf");  
 
-      mTitle = (TextView)view.findViewById(R.id.guide_title);
-      mIntro = (TextView)view.findViewById(R.id.guide_intro_text);
+
+      mTitle      = (TextView)view.findViewById(R.id.guide_title);
+      mIntro      = (TextView)view.findViewById(R.id.guide_intro_text);
       mDifficulty = (TextView)view.findViewById(R.id.guide_difficulty);
-      mAuthor = (TextView)view.findViewById(R.id.guide_author);
-      //mImage = (LoaderImage)findViewById(R.id.intro_image);
-      
-      mTools = (TextView)view.findViewById(R.id.guide_tools);
-      
-      mParts = (TextView)view.findViewById(R.id.guide_parts);
-      
-      mNumSteps = (TextView)view.findViewById(R.id.num_steps);
+      mAuthor     = (TextView)view.findViewById(R.id.guide_author);
+      mTools      = (TextView)view.findViewById(R.id.guide_tools);     
+      mParts      = (TextView)view.findViewById(R.id.guide_parts);     
+      mNumSteps   = (TextView)view.findViewById(R.id.num_steps);
+   
+   
+      mTitle.setTypeface(mBoldFont);
+      mIntro.setTypeface(mRegularFont);
+      mDifficulty.setTypeface(mRegularFont);
+      mAuthor.setTypeface(mRegularFont);
+      mTools.setTypeface(mRegularFont);
+      mParts.setTypeface(mRegularFont);
+      mNumSteps.setTypeface(mRegularFont);
       
       if (mGuide != null)
          setGuide();

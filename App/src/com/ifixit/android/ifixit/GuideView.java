@@ -55,7 +55,7 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
 
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_main);
-
+      
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       
       mPager = (ViewPager)findViewById(R.id.guide_pager);

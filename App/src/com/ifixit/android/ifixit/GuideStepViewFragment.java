@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
@@ -30,6 +31,7 @@ public class GuideStepViewFragment extends Fragment {
    private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
    private ListView mLineList;
+   private Typeface mFont;
 
    
    public GuideStepViewFragment(ImageManager im, GuideStep step) {   
@@ -40,6 +42,8 @@ public class GuideStepViewFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
 	   super.onCreate(savedInstanceState);
+	   
+	   
    }
    
    @Override
@@ -47,11 +51,12 @@ public class GuideStepViewFragment extends Fragment {
 	 Bundle savedInstanceState) {
 	   
 	   View view = inflater.inflate(R.layout.guide_step, container, false);
-
+      mFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Ubuntu-B.ttf");  
 	      
       mLineList = (ListView)view.findViewById(R.id.step_text_list);
       mTitle = (TextView)view.findViewById(R.id.step_title);
-
+      mTitle.setTypeface(mFont);
+      
       mMainImage = (LoaderImage)view.findViewById(R.id.main_image);
 
       mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);

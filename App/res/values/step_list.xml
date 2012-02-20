@@ -2,8 +2,9 @@
 <resources>
     <style name="step_list">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginTop">16dip</item>
+        <item name="android:layout_marginBottom">16dip</item>
         <item name="android:divider">#00000000</item>
     </style> 
 </resources>

@@ -9,7 +9,7 @@ import android.util.AttributeSet;
 import android.view.View;
 
 public class BulletView extends View {
-   private static final int BULLET_RADIUS = 6;
+   private static final int BULLET_RADIUS = 12;
    private static final int Y_OFFSET = 8;
    private static final int ORANGE = 0xFFFF7F00;
    
