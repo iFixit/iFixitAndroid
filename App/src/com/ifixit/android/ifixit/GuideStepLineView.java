@@ -1,6 +1,7 @@
 package com.ifixit.android.ifixit;
 
 import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -16,6 +17,8 @@ public class GuideStepLineView extends LinearLayout {
    private BulletView mBulletView;
    private ImageView mIconView;
    private LinearLayout mRow;
+   private Typeface mBoldFont;
+   private Typeface mRegularFont;
    
    public GuideStepLineView(Context context) {
       super(context);
@@ -25,6 +28,10 @@ public class GuideStepLineView extends LinearLayout {
       inflater.inflate(R.layout.step_row, this, true);  
       
       mRow = (LinearLayout)findViewById(R.id.step_row);
+      
+      mBoldFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-B.ttf");  
+      mRegularFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-R.ttf");  
+
    }   
 
    public void setLine(StepLine line) {

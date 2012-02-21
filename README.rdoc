@@ -1,18 +1,20 @@
-Official iFixit Android App
+= Official iFixit Android App
 
-This is a native Android guide viewer built using iFixit's public APIs at
-http://www.ifixit.com/api
+This is a native Android guide viewer built using iFixit's public APIs (http://ifixit.com/api/0.1/doc)
 
 APIs used:
- * /api/guide
+   http://ifixit.com/api/0.1/guide
+   http://ifixit.com/api/0.1/areas
+   http://ifixit.com/api/0.1/guide/{name}
  
 ----------
 
-CONTRIBUTING
+== CONTRIBUTING
 
-This app is just the beginning. It only implements a small subset of iFixit's
-functionality: the native view of a repair guide. We'd love to do all sorts of other
-things, too.
+This app is a native android version of the iFixit website.  We offer native
+browsing of our guides as well as integrated web views of our site with Answers
+and our Cart.  We've got some fun experimental features we're playing around
+with like Voice Command for navigating through guides. 
  
 We have a small development team, and don't have the resources to do all of these
 ourselves. We'd love help! If any of those problems looks interesting to you, fork our
@@ -23,7 +25,7 @@ meta.ifixit.com and we'll add it to our to-do list.
 
 ----------
 
-TRADEMARK NOTES
+== TRADEMARK NOTES
 
 All iFixit trademarks contained herein are NOT licensed for use by any third-parties.
 Their inclusion in this open source software is only for their eventual replacement if
@@ -32,11 +34,11 @@ you distribute the application.
 That is, the trademarks are protected, but the code itself is under an open license. You
 can use the trademarks individually, but not for any sort of distribution.
 
-Copyright (c) 2010 iFixit
+Copyright (c) 2012 iFixit
 
 ----------
 
-LICENSING
+== LICENSING
 
 This source code is dual-licensed under the GPLv3 and the CDDL.
 
