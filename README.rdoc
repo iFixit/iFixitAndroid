@@ -1,6 +1,6 @@
 = Official iFixit Android App
 
-This is a native Android guide viewer built using iFixit's public APIs (http://ifixit.com/api/0.1/doc)
+This is a native Android guide viewer built using iFixit's public APIs (http://www.ifixit.com/api/0.1/doc)
 
 APIs used:
    http://ifixit.com/api/0.1/guide
@@ -22,6 +22,18 @@ code and hack away!
 
 Got an awesome feature idea that we don't have an API to support yet? Post the request on
 meta.ifixit.com and we'll add it to our to-do list.
+
+=== INSTALLATION
+
+To start working on the app follow these instructions to get it into Eclipse:
+
+1) Git clone the repository
+2) Checkout the correct branch (master or develop)
+3) git submodule init
+4) git submodule update
+5) Start a new workspace at the base of the repository in Eclipse
+6) Import... Existing Projects into Workspace and select the base of the repository
+7) Clean all projects if there are any issues
 
 ----------
 
