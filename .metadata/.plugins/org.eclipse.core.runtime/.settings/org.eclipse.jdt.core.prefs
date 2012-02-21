@@ -1,5 +1,6 @@
-#Sun Feb 19 18:45:56 PST 2012
+#Sun Feb 19 20:04:50 PST 2012
 org.eclipse.jdt.core.classpathVariable.JRE_SRCROOT=
+org.eclipse.jdt.core.classpathVariable.USER_HOME=/Users/mzych
 org.eclipse.jdt.core.compiler.compliance=1.6
 org.eclipse.jdt.core.classpathVariable.JRE_LIB=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Classes/classes.jar
 org.eclipse.jdt.core.compiler.codegen.targetPlatform=1.6
