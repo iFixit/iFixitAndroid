@@ -27,13 +27,13 @@ meta.ifixit.com and we'll add it to our to-do list.
 
 To start working on the app follow these instructions to get it into Eclipse:
 
-1) Git clone the repository
-2) Checkout the correct branch (master or develop)
-3) git submodule init
-4) git submodule update
-5) Start a new workspace at the base of the repository in Eclipse
-6) Import... Existing Projects into Workspace and select the base of the repository
-7) Clean all projects if there are any issues
+(1) Git clone the repository
+(2) Checkout the correct branch (master or develop)
+(3) git submodule init
+(4) git submodule update
+(5) Start a new workspace at the base of the repository in Eclipse
+(6) Import... Existing Projects into Workspace and select the base of the repository
+(7) Clean all projects if there are any issues
 
 ----------
 
