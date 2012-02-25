@@ -108,7 +108,12 @@ public class ImageManager {
 
       try {
          connection = new URL(url).openConnection();
-         bitmap = BitmapFactory.decodeStream(connection.getInputStream());
+         BitmapFactory.Options options = new BitmapFactory.Options();
+         // We might want to set this based on the size of the screen to
+         // reduce the memory footprint
+         options.inSampleSize = 1;
+         bitmap = BitmapFactory.decodeStream(connection.getInputStream(),
+          null, options);
          writeFile(bitmap, file);
 
          return bitmap;
