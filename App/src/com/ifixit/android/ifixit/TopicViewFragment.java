@@ -11,7 +11,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -91,7 +91,9 @@ public class TopicViewFragment extends Fragment {
       }.start();
    }
 
-   private class TopicViewAdapter extends FragmentPagerAdapter
+   // TODO switch it to FragmentPagerAdapter and find a way to update the
+   // underlying fragments
+   private class TopicViewAdapter extends FragmentStatePagerAdapter
     implements TitleProvider {
       private TopicLeaf mTopicLeaf;
 

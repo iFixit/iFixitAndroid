@@ -1,8 +1,12 @@
 package com.ifixit.android.ifixit;
 
+import java.io.Serializable;
+
 import java.util.ArrayList;
 
-public class TopicLeaf {
+public class TopicLeaf implements Serializable {
+   private static final long serialVersionUID = 1L;
+
    private String mName;
    private ArrayList<GuideInfo> mGuides;
    private int mSolutions;

@@ -1,6 +1,10 @@
 package com.ifixit.android.ifixit;
 
-public class GuideInfo {
+import java.io.Serializable;
+
+public class GuideInfo implements Serializable {
+   private static final long serialVersionUID = 1L;
+
    private int mGuideid;
    private String mSubject;
    private String mThumbnail;

@@ -1,9 +1,9 @@
 package com.ifixit.android.ifixit;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -12,10 +12,10 @@ import android.widget.TextView;
 
 public class TopicGuideListFragment extends ListFragment {
    protected static final String GUIDEID = "guideid";
+   protected static final String SAVED_TOPIC = "SAVED_TOPIC";
 
    private TopicGuideListAdapter mGuideAdapter;
    private TopicLeaf mTopicLeaf;
-   private Context mContext;
 
    /**
     * Required for restoring fragments
@@ -27,17 +27,26 @@ public class TopicGuideListFragment extends ListFragment {
    }
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle savedState) {
+      super.onCreate(savedState);
+
+      if (savedState != null && mTopicLeaf == null) {
+         mTopicLeaf = (TopicLeaf)savedState.getSerializable(SAVED_TOPIC);
+      }
 
       mGuideAdapter = new TopicGuideListAdapter();
       setTopicLeaf(mTopicLeaf);
    }
 
-   private void setTopicLeaf(TopicLeaf topicLeaf) {
+   public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
       mGuideAdapter.setTopic(mTopicLeaf);
       setListAdapter(mGuideAdapter);
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle state) {
+      state.putSerializable(SAVED_TOPIC, mTopicLeaf);
    }
 
    @Override
