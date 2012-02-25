@@ -6,6 +6,7 @@ import android.content.Context;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +15,6 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 public class GuideStepViewFragment extends Fragment {
-   private static final String SAVED_STEP = "SAVED_STEP";
    protected static final String IMAGEID = "imageid";
 
    private TextView mTitle;
@@ -36,22 +36,13 @@ public class GuideStepViewFragment extends Fragment {
    }
    
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-	   super.onCreate(savedInstanceState);
-
-      if (savedInstanceState != null && mStep == null) {
-         mStep = (GuideStep)savedInstanceState.getSerializable(SAVED_STEP);
-      }
+   public void onCreate(Bundle savedState) {
+	   super.onCreate(savedState);
 
       if (mImageManager == null) {
          mImageManager = ((MainApplication)getActivity().getApplication()).
           getImageManager();
       }
-   }
-
-   @Override
-   public void onSaveInstanceState(Bundle state) {
-      state.putSerializable(SAVED_STEP, mStep);
    }
    
    @Override

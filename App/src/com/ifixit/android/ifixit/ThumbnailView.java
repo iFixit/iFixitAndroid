@@ -15,6 +15,7 @@ public class ThumbnailView extends LinearLayout {
    private LoaderImage mMainImage;
    private ImageManager mImageManager;
    private Context mContext;
+   private String mCurrentURL;
    
    public ThumbnailView(Context context) {
       super(context);
@@ -61,8 +62,7 @@ public class ThumbnailView extends LinearLayout {
 
                @Override
                public void onClick(View v) {
-                  String url = (String)v.getTag();
-                  mImageManager.displayImage(url+".large", (Activity)mContext, mMainImage);
+                  setCurrentThumb((String)v.getTag());
                }            
             });
             
@@ -70,6 +70,12 @@ public class ThumbnailView extends LinearLayout {
              (Activity)mContext, thumb);
          }
       }
+   }
+
+   private void setCurrentThumb(String url) {
+      mCurrentURL = url;
+      mImageManager.displayImage(mCurrentURL + ".large",
+       (Activity)mContext, mMainImage);
    }
    
    public void setMainImage(LoaderImage mainImg) {
@@ -86,5 +92,9 @@ public class ThumbnailView extends LinearLayout {
    
    public ArrayList<LoaderImage> getThumbViews() {
       return mThumbs;
+   }
+
+   public String getCurrentURL() {
+      return mCurrentURL;
    }
 }
