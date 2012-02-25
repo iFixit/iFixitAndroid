@@ -169,10 +169,11 @@ public class JSONHelper {
     */
    public static TopicLeaf parseTopicLeaf(String json) {
       try {
-         JSONObject jTopicInfo = new JSONObject(json);
-         JSONArray jGuides = jTopicInfo.getJSONArray("guides");
-         JSONObject jSolutions = jTopicInfo.getJSONObject("solutions");
-         TopicLeaf topicLeaf = new TopicLeaf(jTopicInfo.getString("title"));
+         JSONObject jTopic = new JSONObject(json);
+         JSONArray jGuides = jTopic.getJSONArray("guides");
+         JSONObject jSolutions = jTopic.getJSONObject("solutions");
+         JSONObject jInfo = jTopic.getJSONObject("device_info");
+         TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
 
          for (int i = 0; i < jGuides.length(); i++) {
             topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
