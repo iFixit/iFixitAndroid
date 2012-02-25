@@ -16,6 +16,8 @@ import android.view.Display;
 import android.view.View;
 
 public class GuideView extends FragmentActivity implements OnPageChangeListener {
+   private static final String CURRENT_PAGE = "CURRENT_PAGE";
+   private static final String SAVED_GUIDE = "SAVED_GUIDE";
    private static final String RESPONSE = "RESPONSE";
    private static final String API_URL = "http://www.ifixit.com/api/0.1/guide/";
    private static final String NEXT_COMMAND = "next";
@@ -54,14 +56,24 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
       setContentView(R.layout.guide_main);
       
       mImageManager = ((MainApplication)getApplication()).getImageManager();
-      
       mPager = (ViewPager)findViewById(R.id.guide_pager);
-
       mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
       
-      extras = getIntent().getExtras();
-      getGuide(extras.getInt(MainActivity.GUIDEID));
+      if (savedInstanceState != null) {
+         setGuide((Guide)savedInstanceState.getSerializable(SAVED_GUIDE));
+         mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
+      } else {
+         extras = getIntent().getExtras();
+         getGuide(extras.getInt(MainActivity.GUIDEID));
+      }
+
       //initSpeechRecognizer();
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle state) {
+      state.putSerializable(SAVED_GUIDE, mGuide);
+      state.putInt(CURRENT_PAGE, mCurrentPage);
    }
    
    public void setGuide(Guide guide) {
@@ -71,10 +83,8 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
        mImageManager, mGuide);
 
       mPager.setAdapter(mGuideAdapter);
-      mPager.setOnPageChangeListener(this);
-      
+      mIndicator.setOnPageChangeListener(this);
       mIndicator.setViewPager(mPager);      
-
       mPager.setVisibility(View.VISIBLE);
    }
 
@@ -105,16 +115,17 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
          mSpeechCommander.startListening();
    }
    
+   // TODO: Remove this?
    public int getScreenHeight() {
       Display display = getWindowManager().getDefaultDisplay(); 
       return display.getHeight();
    }
 
+   // TODO: Remove this?
    public int getScreenWidth() {
       Display display = getWindowManager().getDefaultDisplay(); 
       return display.getWidth();
    }
-
 
    public void getGuide(final int guideid) {
       final ResponseHandler<String> responseHandler =
@@ -130,15 +141,15 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
    }
 
    private void nextStep() {
-      mPager.setCurrentItem(mCurrentPage + 1);
+      mIndicator.setCurrentItem(mCurrentPage + 1);
    }
 
    private void previousStep() {
-      mPager.setCurrentItem(mCurrentPage - 1);
+      mIndicator.setCurrentItem(mCurrentPage - 1);
    }
    
    private void guideHome() {
-      mPager.setCurrentItem(0);
+      mIndicator.setCurrentItem(0);
    }
 
    public void initSpeechRecognizer() {
@@ -167,6 +178,16 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
       });
 
       mSpeechCommander.startListening();
+   }
+   
+   @Override
+   public void onPageScrollStateChanged(int arg0) {}
+   @Override
+   public void onPageScrolled(int arg0, float arg1, int arg2) {}
+
+   @Override
+   public void onPageSelected(int page) {
+      mCurrentPage = page;
    }
 
    /*
@@ -211,17 +232,4 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
       }
    }
    */
-   
-   @Override
-   public void onPageScrollStateChanged(int arg0) {}
-   @Override
-   public void onPageScrolled(int arg0, float arg1, int arg2) {}
-
-   @Override
-   public void onPageSelected(int page) {
-      mCurrentPage = page;
-
-      if (APICompatibility.hasActionBar())
-         invalidateOptionsMenu();
-   }
 }
