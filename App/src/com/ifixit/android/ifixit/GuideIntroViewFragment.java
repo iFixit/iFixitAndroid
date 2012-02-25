@@ -10,6 +10,8 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 public class GuideIntroViewFragment extends Fragment {
+   private static final String SAVED_GUIDE = "SAVED_GUIDE";
+
    private TextView mTitle;
    private TextView mIntro;
    private TextView mDifficulty;
@@ -22,7 +24,9 @@ public class GuideIntroViewFragment extends Fragment {
    private Typeface mBoldFont;
    private Typeface mRegularFont;
 
+   public GuideIntroViewFragment() {
 
+   }
    
    public GuideIntroViewFragment(ImageManager im, Guide guide) {
       mGuide = guide;
@@ -32,6 +36,15 @@ public class GuideIntroViewFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      if (savedInstanceState != null && mGuide == null) {
+         mGuide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
+      }
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle state) {
+      state.putSerializable(SAVED_GUIDE, mGuide);
    }
    
    @Override

@@ -13,9 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 public class GuideView extends FragmentActivity implements OnPageChangeListener {
@@ -70,7 +67,8 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
    public void setGuide(Guide guide) {
       mGuide = guide;
 
-      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mImageManager, mGuide);
+      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(),
+       mImageManager, mGuide);
 
       mPager.setAdapter(mGuideAdapter);
       mPager.setOnPageChangeListener(this);
@@ -170,7 +168,8 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
 
       mSpeechCommander.startListening();
    }
-   
+
+   /*
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuInflater inflater = getMenuInflater();
@@ -211,6 +210,7 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
             return super.onOptionsItemSelected(item);
       }
    }
+   */
    
    @Override
    public void onPageScrollStateChanged(int arg0) {}

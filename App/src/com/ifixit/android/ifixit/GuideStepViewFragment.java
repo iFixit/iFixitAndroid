@@ -2,14 +2,10 @@ package com.ifixit.android.ifixit;
 
 import java.util.ArrayList;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.DialogInterface.OnClickListener;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,11 +13,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.viewpagerindicator.CirclePageIndicator;
-import com.viewpagerindicator.TabPageIndicator;
-
 public class GuideStepViewFragment extends Fragment {
-   
+   private static final String SAVED_STEP = "SAVED_STEP";
    protected static final String IMAGEID = "imageid";
 
    private TextView mTitle;
@@ -33,6 +26,9 @@ public class GuideStepViewFragment extends Fragment {
    private ListView mLineList;
    private Typeface mFont;
 
+   public GuideStepViewFragment() {
+
+   }
    
    public GuideStepViewFragment(ImageManager im, GuideStep step) {   
       mStep = step;
@@ -42,8 +38,20 @@ public class GuideStepViewFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
 	   super.onCreate(savedInstanceState);
-	   
-	   
+
+      if (savedInstanceState != null && mStep == null) {
+         mStep = (GuideStep)savedInstanceState.getSerializable(SAVED_STEP);
+      }
+
+      if (mImageManager == null) {
+         mImageManager = ((MainApplication)getActivity().getApplication()).
+          getImageManager();
+      }
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle state) {
+      state.putSerializable(SAVED_STEP, mStep);
    }
    
    @Override
@@ -51,7 +59,8 @@ public class GuideStepViewFragment extends Fragment {
 	 Bundle savedInstanceState) {
 	   
 	   View view = inflater.inflate(R.layout.guide_step, container, false);
-      mFont = Typeface.createFromAsset(getActivity().getAssets(), "fonts/Ubuntu-B.ttf");  
+      mFont = Typeface.createFromAsset(getActivity().getAssets(),
+       "fonts/Ubuntu-B.ttf");  
 	      
       mLineList = (ListView)view.findViewById(R.id.step_text_list);
       mTitle = (TextView)view.findViewById(R.id.step_title);
@@ -78,7 +87,6 @@ public class GuideStepViewFragment extends Fragment {
    }
    
    public void setStep() {
-
       if (mStep.getTitle().length() == 0)
          mTitle.setText("Step " + mStep.getStepNum());
       else
@@ -91,7 +99,7 @@ public class GuideStepViewFragment extends Fragment {
       mThumbs.setThumbs(mStep.mImages, mImageManager, getActivity());
 
       // Might be a problem if there are no images for a step...
-      mImageManager.displayImage(mStep.mImages.get(0).getText() +".large",
+      mImageManager.displayImage(mStep.mImages.get(0).getText() + ".large",
        getActivity(), mMainImage);         
    }
   
