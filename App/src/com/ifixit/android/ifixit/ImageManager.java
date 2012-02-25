@@ -19,8 +19,8 @@ import android.util.Log;
  */
 public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
-   private static final int MAX_STORED_IMAGES = 20;
-   private static final int MAX_LOADING_IMAGES = 15;
+   private static final int MAX_STORED_IMAGES = 9;
+   private static final int MAX_LOADING_IMAGES = 9;
    private static final int DEFAULT_NUM_THREADS = 5;
 
    private HashMap<String, Bitmap> mImageMap;
@@ -58,8 +58,9 @@ public class ImageManager {
    
    public void displayImage(String url, Activity activity,
     LoaderImage imageView) {
-      if (mImageMap.containsKey(url)) {
-         imageView.setImageBitmap(mImageMap.get(url));
+      Bitmap bitmap = mImageMap.get(url);
+      if (bitmap != null) {
+         imageView.setImageBitmap(bitmap);
       }
       else {
          queueImage(url, activity, imageView);
@@ -137,11 +138,13 @@ public class ImageManager {
    }
 
    private void storeImage(String url, Bitmap bitmap) {
-      if (mRecentBitmaps.size() >= MAX_STORED_IMAGES)
+      if (mRecentBitmaps.size() >= MAX_STORED_IMAGES) {
          mImageMap.remove(mRecentBitmaps.removeFirst());
+      }
 
-      if (mImageMap.put(url, bitmap) == null)
+      if (mImageMap.put(url, bitmap) == null) {
          mRecentBitmaps.addLast(url);
+      }
    }
 
    private class ImageRef {

@@ -2,9 +2,9 @@ package com.ifixit.android.ifixit;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 
-public class GuideViewAdapter extends FragmentPagerAdapter {
+public class GuideViewAdapter extends FragmentStatePagerAdapter {
    private static final int GUIDE_INTRO_POSITION = 0;
    private static final int STEP_OFFSET = 1;
 
@@ -19,10 +19,11 @@ public class GuideViewAdapter extends FragmentPagerAdapter {
       
    @Override
    public int getCount() {
-      if (mGuide != null)
-         return mGuide.getNumSteps() + 1;
-      else
+      if (mGuide != null) {
+         return mGuide.getNumSteps() + STEP_OFFSET;
+      } else {
          return 0;
+      }
    }
 
    @Override

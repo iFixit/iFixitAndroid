@@ -44,7 +44,7 @@ public class GuideStepViewFragment extends Fragment {
           getImageManager();
       }
    }
-   
+
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	 Bundle savedInstanceState) {
