@@ -80,11 +80,12 @@ public class GuideIntroViewFragment extends Fragment {
    }
    
    public void setGuide() {
-
       mTitle.setText(Html.fromHtml(mGuide.getTitle()));
       mIntro.setText(Html.fromHtml(mGuide.getIntroduction()));
-      mDifficulty.setText(getActivity().getString(R.string.difficulty) + ": " +
-       Html.fromHtml(mGuide.getDifficulty()));
+      if (!mGuide.getDifficulty().equals("false")) {
+         mDifficulty.setText(getActivity().getString(R.string.difficulty) + ": " +
+          Html.fromHtml(mGuide.getDifficulty()));
+      }
       
       mAuthor.setText(getActivity().getString(R.string.author) + ": " +
        Html.fromHtml(mGuide.getAuthor()));

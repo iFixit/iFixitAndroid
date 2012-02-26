@@ -2,55 +2,45 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_width="match_parent"
       android:layout_height="match_parent">
-	   <!-- <com.ifixit.android.ifixit.LoaderImage android:id="@+id/intro_image" 
-	        android:layout_width="wrap_content" 
-	        android:layout_height="wrap_content" /> -->
-	        
    <ScrollView android:layout_width="match_parent"
-		 android:layout_height="wrap_content"
-		 android:id="@+id/guide_intro_scroll" >
-    
-	   <LinearLayout android:layout_width="match_parent"
-	         android:layout_height="wrap_content"
-	         android:orientation="vertical">
-	      <TextView android:id="@+id/guide_title"
-	         android:layout_width="match_parent"
-	         android:layout_height="wrap_content"
-	         android:layout_gravity="top"
-	         android:textSize="24sp"
-	         android:textColor="#FFFFFF" />
-	         
-	      <TextView android:id="@+id/guide_intro_text"
-		     style="@style/intro_text_full" />
-	      <LinearLayout android:layout_width="match_parent"
-	         android:layout_height="wrap_content"
-	         android:orientation="horizontal"
-	         android:weightSum="2">
-		      <TextView android:id="@+id/guide_difficulty"
-				style="@style/intro_text"
-	            android:layout_weight="1" />
-		      <TextView android:id="@+id/guide_author"
-				style="@style/intro_text"
-	            android:layout_weight="1" />
-	      </LinearLayout>
-	      
-	      <TextView android:id="@+id/num_steps"
-		     style="@style/intro_text_full"
-	         android:layout_marginTop="16dp" />            
-	      
-	      <TextView android:id="@+id/guide_tools"
-	         style="@style/intro_text_full" />            
-	      
-	      <TextView android:id="@+id/guide_parts"
-	         android:layout_marginTop="16dp"
-		     style="@style/intro_text_full" />                  
-		       
-	   </LinearLayout>
+         android:layout_height="wrap_content"
+         android:id="@+id/guide_intro_scroll" >
+      <LinearLayout android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+         <TextView android:id="@+id/guide_title"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:layout_gravity="top"
+               android:textSize="24sp"
+               android:textColor="#FFFFFF" />
+         <TextView android:id="@+id/guide_intro_text"
+               style="@style/intro_text_full" />
+         <LinearLayout android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:weightSum="2">
+            <TextView android:id="@+id/guide_author"
+                  style="@style/intro_text"
+                  android:layout_weight="1" />
+            <TextView android:id="@+id/guide_difficulty"
+                  style="@style/intro_text"
+                  android:layout_weight="1" />
+         </LinearLayout>
+         <TextView android:id="@+id/num_steps"
+               style="@style/intro_text_full"
+               android:layout_marginTop="16dp" />            
+         <TextView android:id="@+id/guide_tools"
+               style="@style/intro_text_full" />            
+         <TextView android:id="@+id/guide_parts"
+               android:layout_marginTop="16dp"
+               style="@style/intro_text_full" />                  
+      </LinearLayout>
    </ScrollView>
    <ImageView android:layout_width="match_parent"
-       android:layout_height="wrap_content"
-       android:src="@drawable/swipe_to_begin"
-       android:contentDescription="@string/swipe_to_begin"
-       android:layout_alignParentBottom="true"
-       android:layout_below="@+id/guide_intro_scroll"/>
+         android:layout_height="wrap_content"
+         android:src="@drawable/swipe_to_begin"
+         android:contentDescription="@string/swipe_to_begin"
+         android:layout_alignParentBottom="true"
+         android:layout_below="@+id/guide_intro_scroll"/>
 </RelativeLayout>
