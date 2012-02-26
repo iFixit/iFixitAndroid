@@ -29,12 +29,12 @@
          </LinearLayout>
          <TextView android:id="@+id/num_steps"
                style="@style/intro_text_full"
-               android:layout_marginTop="16dp" />            
+               android:layout_marginTop="16dp" />
          <TextView android:id="@+id/guide_tools"
-               style="@style/intro_text_full" />            
+               style="@style/intro_text_full" />
          <TextView android:id="@+id/guide_parts"
                android:layout_marginTop="16dp"
-               style="@style/intro_text_full" />                  
+               style="@style/intro_text_full" />
       </LinearLayout>
    </ScrollView>
    <ImageView android:layout_width="match_parent"
