@@ -1,8 +1,12 @@
 package com.ifixit.android.ifixit;
 
+import java.util.List;
+
 import org.apache.http.client.ResponseHandler;
 
 import com.viewpagerindicator.CirclePageIndicator;
+
+import android.content.Intent;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -50,8 +54,6 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
    
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      Bundle extras;
-
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_main);
       
@@ -63,8 +65,24 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
          setGuide((Guide)savedInstanceState.getSerializable(SAVED_GUIDE));
          mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
       } else {
-         extras = getIntent().getExtras();
-         getGuide(extras.getInt(MainActivity.GUIDEID));
+         Intent intent = getIntent();
+         int guideid = -1;
+
+         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
+            List<String> segments = intent.getData().getPathSegments();
+
+            try {
+               guideid = Integer.parseInt(segments.get(2));
+            } catch (Exception e) {
+               Log.e("iFixit", "Problem parsing guide");
+               finish();
+            }
+         } else {
+            Bundle extras = intent.getExtras();
+            guideid = extras.getInt(MainActivity.GUIDEID);
+         }
+
+         getGuide(guideid);
       }
 
       //initSpeechRecognizer();
