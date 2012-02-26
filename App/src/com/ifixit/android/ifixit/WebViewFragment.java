@@ -21,12 +21,16 @@ public class WebViewFragment extends Fragment {
     Bundle savedInstanceState) {
       mWebView = (WebView)inflater.inflate(R.layout.web_view, container, false);
 
+      WebSettings settings = mWebView.getSettings();
+      settings.setJavaScriptEnabled(true);
+      settings.setBuiltInZoomControls(true);
+      settings.setSupportZoom(true);
+      settings.setLoadWithOverviewMode(true);
+      settings.setUseWideViewPort(true);
+
       mWebView.setWebViewClient(new WebViewClient() {
       
       });
-
-      WebSettings settings = mWebView.getSettings();
-      settings.setJavaScriptEnabled(true);
 
       if (mUrl != null) {
          mWebView.loadUrl(mUrl);
@@ -42,15 +46,4 @@ public class WebViewFragment extends Fragment {
          mWebView.loadUrl(mUrl);
       }
    }
-
-   /*
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
-      TextView text = new TextView(getActivity());
-
-      text.setText("hi");
-
-      return text;
-   }
-   */
 }
