@@ -4,6 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 
+import android.text.Html;
+
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -86,7 +88,8 @@ public class TopicGuideListFragment extends ListFragment {
             textView = (TextView)convertView;
          }
 
-         textView.setText(mTopic.getGuides().get(position).getTitle());
+         textView.setText(Html.fromHtml(
+          mTopic.getGuides().get(position).getTitle()));
 
          return textView;
       }
