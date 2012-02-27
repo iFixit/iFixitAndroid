@@ -12,6 +12,7 @@
    <application android:name="com.ifixit.android.ifixit.MainApplication" 
          android:icon="@drawable/icon" 
          android:label="@string/app_name" 
+         android:background="@drawable/default_landscape_tablet"
          android:logo="@drawable/logo">
       <activity android:name=".TopicsActivity"
             android:label="@string/app_name">

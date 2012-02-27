@@ -26,10 +26,10 @@
 	         android:orientation="horizontal"
 	         android:weightSum="2">
 		      <TextView android:id="@+id/guide_difficulty"
-				style="@style/intro_text"
+				style="@style/intro_text.720"
 	            android:layout_weight="1" />
 		      <TextView android:id="@+id/guide_author"
-				style="@style/intro_text"
+				style="@style/intro_text.720"
 	            android:layout_weight="1" />
 	      </LinearLayout>
 	      

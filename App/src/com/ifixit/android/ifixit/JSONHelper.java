@@ -28,6 +28,7 @@ public class JSONHelper {
 
          guide.setTitle(jGuide.getString("title"));
          guide.setTopic(jGuideInfo.getString("device"));
+         guide.setSubject(jGuide.getString("subject"));
          guide.setAuthor(jAuthor.getString("text"));
          guide.setTimeRequired(jGuide.getString("time_required"));
          guide.setDifficulty(jGuide.getString("difficulty"));

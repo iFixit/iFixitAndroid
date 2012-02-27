@@ -14,6 +14,7 @@ public class Guide implements Serializable {
    protected String mTimeRequired;
    protected String mDifficulty;
    protected String mIntroduction;
+   protected String mSubject;
    protected String mIntroImage;
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
@@ -151,6 +152,14 @@ public class Guide implements Serializable {
 
    public String getSummary() {
       return mSummary;
+   }
+   
+   public String getSubject() {
+	  return mSubject;
+   }
+   
+   public void setSubject(String subject) {
+	  mSubject = subject;
    }
 
    public String toString() {

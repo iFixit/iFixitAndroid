@@ -3,7 +3,6 @@
       android:orientation="vertical"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
-      android:padding="12dip"
       android:background="@drawable/bg_img">
    <android.support.v4.view.ViewPager
         android:id="@+id/guide_pager"
@@ -12,7 +11,8 @@
         android:layout_weight="1" />      
    <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/indicator"
-        android:padding="20dip"
+        android:padding="10dp"
+        android:paddingBottom="0dp"
         android:layout_height="wrap_content"
         android:layout_width="fill_parent" /> 
    

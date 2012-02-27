@@ -3,10 +3,15 @@ package com.ifixit.android.ifixit;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
+import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +61,7 @@ public class GuideStepViewFragment extends Fragment {
       mLineList = (ListView)view.findViewById(R.id.step_text_list);
       mTitle = (TextView)view.findViewById(R.id.step_title);
       mTitle.setTypeface(mFont);
+      mTitle.setTextColor(ColorStateList.valueOf(Color.WHITE));
       
       mMainImage = (LoaderImage)view.findViewById(R.id.main_image);
 
@@ -75,6 +81,16 @@ public class GuideStepViewFragment extends Fragment {
 			
 		}
       });*/
+   }
+   
+   public int getScreenHeight() {
+      Display display = getActivity().getWindowManager().getDefaultDisplay(); 
+      return display.getHeight();
+   }
+
+   public int getScreenWidth() {
+      Display display = getActivity().getWindowManager().getDefaultDisplay(); 
+      return display.getWidth();
    }
    
    public void setStep() {

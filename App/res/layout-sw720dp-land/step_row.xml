@@ -4,9 +4,9 @@
       style="@style/step_row_layout">
    <com.ifixit.android.ifixit.BulletView
          android:id="@+id/bullet"
-         style="@style/bullets" />
+ 		 style="@style/bullets_720" />
    <TextView android:id="@+id/step_text"
-         style="@style/step_row_text" />
-   <ImageView android:id="@+id/bullet_icon"
+         style="@style/step_row_text_720" />
+   <ImageView android:id="@+id/bullet_icon"  
          style="@style/step_row_icon" />
 </LinearLayout>

@@ -66,7 +66,7 @@ public class ThumbnailView extends LinearLayout {
                }            
             });
             
-            mImageManager.displayImage(images.get(thumbId).mText+".large", 
+            mImageManager.displayImage(images.get(thumbId).mText+".thumbnails", 
              (Activity)mContext, thumb);
          }
       }
