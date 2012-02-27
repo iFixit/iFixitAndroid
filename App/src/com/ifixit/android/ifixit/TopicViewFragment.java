@@ -39,6 +39,10 @@ public class TopicViewFragment extends Fragment {
       }
    };
 
+   public TopicLeaf getTopicLeaf() {
+      return mTopicLeaf;
+   }
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);

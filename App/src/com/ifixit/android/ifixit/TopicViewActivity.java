@@ -10,8 +10,8 @@ public class TopicViewActivity extends FragmentActivity {
    private TopicViewFragment mTopicView;
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onCreate(Bundle savedState) {
+      super.onCreate(savedState);
 
       setContentView(R.layout.topic_view);
 
@@ -27,7 +27,24 @@ public class TopicViewActivity extends FragmentActivity {
          return;
       }
 
-      mTopicView.setTopicNode((TopicNode)getIntent().
-       getSerializableExtra(TOPIC_KEY));
+      TopicLeaf topicLeaf = null;
+      if (savedState != null) {
+         topicLeaf = (TopicLeaf)savedState.getSerializable(
+          TOPIC_KEY);
+      }
+
+      if (topicLeaf != null) {
+         mTopicView.setTopicLeaf(topicLeaf);
+      } else {
+         mTopicView.setTopicNode((TopicNode)getIntent().
+          getSerializableExtra(TOPIC_KEY));
+      }
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle state) {
+      super.onSaveInstanceState(state);
+
+      state.putSerializable(TOPIC_KEY, mTopicView.getTopicLeaf());
    }
 }
