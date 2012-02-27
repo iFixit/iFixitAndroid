@@ -1,15 +1,13 @@
 package com.ifixit.android.ifixit;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 public class FullImageView extends Activity {
-   private static final String IMAGE_SIZE = ".large";
-
    private LoaderImage mImage;
    private ImageManager mImageManager;
    private String mUrl;
+   private ImageSizes mImageSizes;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -18,12 +16,14 @@ public class FullImageView extends Activity {
             
       setContentView(R.layout.full_screen_image);
       extras = getIntent().getExtras();
-      mUrl = (String)extras.get(GuideStepViewFragment.IMAGEID) + IMAGE_SIZE;
-       
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+      MainApplication application = (MainApplication)getApplication();
       
+      mImageSizes = application.getImageSizes();
+      mUrl = (String)extras.get(GuideStepViewFragment.IMAGEID) +
+       mImageSizes.getFull();
+
       mImage = (LoaderImage)findViewById(R.id.full_image_view);
-      mImageManager = ((MainApplication)getApplication()).getImageManager();
+      mImageManager = application.getImageManager();
       mImageManager.displayImage(mUrl, this, mImage);
    }  
 }

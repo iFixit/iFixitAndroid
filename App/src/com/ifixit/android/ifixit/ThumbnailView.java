@@ -16,6 +16,7 @@ public class ThumbnailView extends LinearLayout {
    private ImageManager mImageManager;
    private Context mContext;
    private String mCurrentURL;
+   private ImageSizes mImageSizes;
    
    public ThumbnailView(Context context) {
       super(context);
@@ -45,6 +46,10 @@ public class ThumbnailView extends LinearLayout {
       mThumbs.add((LoaderImage)findViewById(R.id.thumbnail_3));
       
    }
+
+   public void setImageSizes(ImageSizes imageSizes) {
+      mImageSizes = imageSizes;
+   }
    
    public void setThumbs(ArrayList<StepImage> images, 
       ImageManager imageManager, Context context) {
@@ -63,18 +68,18 @@ public class ThumbnailView extends LinearLayout {
                @Override
                public void onClick(View v) {
                   setCurrentThumb((String)v.getTag());
-               }            
+               }
             });
             
-            mImageManager.displayImage(images.get(thumbId).mText+".thumbnails", 
-             (Activity)mContext, thumb);
+            mImageManager.displayImage(images.get(thumbId).mText +
+             mImageSizes.getThumb(), (Activity)mContext, thumb);
          }
       }
    }
 
    private void setCurrentThumb(String url) {
       mCurrentURL = url;
-      mImageManager.displayImage(mCurrentURL + ".large",
+      mImageManager.displayImage(mCurrentURL + mImageSizes.getMain(),
        (Activity)mContext, mMainImage);
    }
    

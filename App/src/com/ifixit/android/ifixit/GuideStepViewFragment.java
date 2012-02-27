@@ -30,6 +30,7 @@ public class GuideStepViewFragment extends Fragment {
    private StepTextArrayAdapter mTextAdapter;
    private ListView mLineList;
    private Typeface mFont;
+   private ImageSizes mImageSizes;
 
    public GuideStepViewFragment() {
 
@@ -48,6 +49,9 @@ public class GuideStepViewFragment extends Fragment {
          mImageManager = ((MainApplication)getActivity().getApplication()).
           getImageManager();
       }
+
+      mImageSizes = ((MainApplication)getActivity().getApplication()).
+       getImageSizes();
    }
 
    @Override
@@ -103,11 +107,12 @@ public class GuideStepViewFragment extends Fragment {
        R.id.step_text_list, mStep.getLines());
       mLineList.setAdapter(mTextAdapter);
       
+      mThumbs.setImageSizes(mImageSizes);
       mThumbs.setThumbs(mStep.mImages, mImageManager, getActivity());
 
       // Might be a problem if there are no images for a step...
-      mImageManager.displayImage(mStep.mImages.get(0).getText() + ".large",
-       getActivity(), mMainImage);         
+      mImageManager.displayImage(mStep.mImages.get(0).getText() + 
+       mImageSizes.getMain(), getActivity(), mMainImage);         
    }
   
    public void setImageManager(ImageManager im) {
