@@ -16,10 +16,15 @@ public class TopicsActivity extends FragmentActivity implements
     "http://www.ifixit.com/api/0.1/areas/";
    private static final String RESPONSE = "RESPONSE";
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
+   private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
+   protected static final int REQUEST_RETURN_TOPIC = 1;
+   protected static final int TOPIC_RESULT = 2;
+   protected static final int NO_TOPIC_RESULT = 3;
 
    private boolean mDualPane;
    private TopicViewFragment mTopicView;
-   private TopicNode mTopic;
+   private TopicNode mRootTopic;
+   private TopicNode mCurrentTopic;
 
    private final Handler mTopicsHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -27,9 +32,9 @@ public class TopicsActivity extends FragmentActivity implements
          ArrayList<TopicNode> topics = JSONHelper.parseTopics(response);
 
          if (topics != null) {
-            mTopic = new TopicNode();
-            mTopic.addAllTopics(topics);
-            onTopicSelected(mTopic);
+            mRootTopic = new TopicNode();
+            mRootTopic.addAllTopics(topics);
+            onTopicSelected(mRootTopic);
          }
          else {
             Log.e("iFixit", "Topics is null (response: " + response + ")");
@@ -47,7 +52,9 @@ public class TopicsActivity extends FragmentActivity implements
       mDualPane = mTopicView != null && mTopicView.isInLayout();
 
       if (savedInstanceState != null) {
-         mTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
+         mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
+         mCurrentTopic = (TopicNode)savedInstanceState.
+          getSerializable(CURRENT_TOPIC);
       } else {
          getTopicHierarchy();
       }
@@ -57,11 +64,14 @@ public class TopicsActivity extends FragmentActivity implements
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
-      outState.putSerializable(ROOT_TOPIC, mTopic);
+      outState.putSerializable(ROOT_TOPIC, mRootTopic);
+      outState.putSerializable(CURRENT_TOPIC, mCurrentTopic);
    }
 
    @Override
    public void onTopicSelected(TopicNode topic) {
+      mCurrentTopic = topic;
+
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
@@ -72,7 +82,7 @@ public class TopicsActivity extends FragmentActivity implements
 
             bundle.putSerializable(TopicViewActivity.TOPIC_KEY, topic);
             intent.putExtras(bundle);
-            startActivity(intent);
+            startActivityForResult(intent, REQUEST_RETURN_TOPIC);
          }
       } else {
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -87,6 +97,23 @@ public class TopicsActivity extends FragmentActivity implements
          }
 
          ft.commit();
+      }
+   }
+
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+
+      if (requestCode == REQUEST_RETURN_TOPIC) {
+         TopicLeaf topicLeaf;
+         if (resultCode == TOPIC_RESULT && data != null &&
+          (topicLeaf = (TopicLeaf)data.getExtras().getSerializable(
+          TopicViewActivity.TOPIC_KEY)) != null) {
+
+            mTopicView.setTopicLeaf(topicLeaf);
+         } else if (mCurrentTopic != null && mDualPane) {
+            mTopicView.setTopicNode(mCurrentTopic);
+         }
       }
    }
 
