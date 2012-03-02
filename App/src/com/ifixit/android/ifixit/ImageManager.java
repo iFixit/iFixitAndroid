@@ -97,8 +97,22 @@ public class ImageManager {
       }
    }
 
+   public String getFilePath(String url) {
+      File file = new File(mCacheDir, getFileName(url));
+
+      if (file.exists()) {
+         return file.getAbsolutePath();
+      } else {
+         return null;
+      }
+   }
+
+   private String getFileName(String url) {
+      return String.valueOf(url.hashCode()) + ".png";
+   }
+
    private Bitmap getBitmap(String url) {
-      String filename = String.valueOf(url.hashCode());
+      String filename = getFileName(url);
       File file = new File(mCacheDir, filename);
       URLConnection connection;
       Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
@@ -108,12 +122,7 @@ public class ImageManager {
 
       try {
          connection = new URL(url).openConnection();
-         BitmapFactory.Options options = new BitmapFactory.Options();
-         // We might want to set this based on the size of the screen to
-         // reduce the memory footprint
-         options.inSampleSize = 1;
-         bitmap = BitmapFactory.decodeStream(connection.getInputStream(),
-          null, options);
+         bitmap = BitmapFactory.decodeStream(connection.getInputStream());
          writeFile(bitmap, file);
 
          return bitmap;

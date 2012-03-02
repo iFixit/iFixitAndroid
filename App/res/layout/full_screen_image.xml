@@ -1,11 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<fragment
       xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
+      android:name="com.ifixit.android.ifixit.WebViewFragment"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
-   <com.ifixit.android.ifixit.LoaderImage android:id="@+id/full_image_view" 
-         android:layout_width="match_parent" 
-         android:layout_height="match_parent"
-         android:layout_gravity="fill" />
-</LinearLayout>
+      android:layout_height="match_parent"
+      android:id="@+id/web_view_fragment" />

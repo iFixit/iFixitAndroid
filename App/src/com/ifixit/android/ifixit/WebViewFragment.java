@@ -29,7 +29,7 @@ public class WebViewFragment extends Fragment {
       settings.setUseWideViewPort(true);
 
       mWebView.setWebViewClient(new WebViewClient() {
-      
+
       });
 
       if (mUrl != null) {
