@@ -1,11 +1,15 @@
 package com.ifixit.android.ifixit;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.view.View;
 import android.widget.ListView;
+
+import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
 
 public class TopicListFragment extends ListFragment {
    public interface TopicSelectedListener {
@@ -16,7 +20,7 @@ public class TopicListFragment extends ListFragment {
 
    private TopicSelectedListener topicSelectedListener;
    private TopicNode mTopic;
-   private TopicListAdapter mTopicAdapter;
+   private SectionHeadersAdapter mTopicAdapter;
    private Context mContext;
 
    /**
@@ -37,8 +41,44 @@ public class TopicListFragment extends ListFragment {
           CURRENT_TOPIC);
       }
 
-      mTopicAdapter = new TopicListAdapter(mContext);
       setTopic(mTopic);
+   }
+
+   private void setupTopicAdapter() {
+      mTopicAdapter = new SectionHeadersAdapter();
+      ArrayList<TopicNode> generalInfo = new ArrayList<TopicNode>();
+      ArrayList<TopicNode> nonLeaves = new ArrayList<TopicNode>();
+      ArrayList<TopicNode> leaves = new ArrayList<TopicNode>();
+
+      for (TopicNode topic : mTopic.getChildren()) {
+         if (topic.isLeaf()) {
+            leaves.add(topic);
+         } else {
+            nonLeaves.add(topic);
+         }
+      }
+
+      // TODO add these to strings.xml
+
+      if (!mTopic.isRoot()) {
+         generalInfo.add(makeTopicLeaf(mTopic));
+         mTopicAdapter.addSection(new TopicListAdapter(mContext,
+          "General Information", generalInfo));
+      }
+
+      if (nonLeaves.size() > 0) {
+         mTopicAdapter.addSection(new TopicListAdapter(mContext,
+          "Categories", nonLeaves));
+      }
+
+      if (leaves.size() > 0) {
+         mTopicAdapter.addSection(new TopicListAdapter(mContext,
+          "Devices", leaves));
+      }
+   }
+
+   private TopicNode makeTopicLeaf(TopicNode topic) {
+      return new TopicNode(topic.getName());
    }
 
    @Override
@@ -50,8 +90,10 @@ public class TopicListFragment extends ListFragment {
 
    @Override
    public void onListItemClick(ListView l, View v, int position, long id) {
+      /*
       topicSelectedListener.onTopicSelected(
        mTopic.getChildren().get(position));
+       */
    }
 
    @Override
@@ -69,7 +111,7 @@ public class TopicListFragment extends ListFragment {
 
    private void setTopic(TopicNode topic) {
       mTopic = topic;
-      mTopicAdapter.setTopic(mTopic);
+      setupTopicAdapter();
       setListAdapter(mTopicAdapter);
    }
 }

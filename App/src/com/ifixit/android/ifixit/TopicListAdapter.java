@@ -1,28 +1,35 @@
 package com.ifixit.android.ifixit;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
 
-public class TopicListAdapter extends BaseAdapter {
+import com.ifixit.android.sectionheaders.Section;
+
+public class TopicListAdapter extends Section {
    private Context mContext;
-   private TopicNode mTopic;
+   private ArrayList<TopicNode> mTopicList;
+   private String mHeader;
 
-   public TopicListAdapter(Context context) {
+   public TopicListAdapter(Context context, String header,
+    ArrayList<TopicNode> topicList) {
       mContext = context;
+      mHeader = header;
+      mTopicList = topicList;
    }
 
-   public void setTopic(TopicNode topic) {
-      mTopic = topic;
+   public void setTopicList(ArrayList<TopicNode> topicList) {
+      mTopicList = topicList;
    }
 
    public int getCount() {
-      return mTopic.getChildren().size();
+      return mTopicList.size();
    }
 
    public Object getItem(int position) {
-      return mTopic.getChildren().get(position);
+      return mTopicList.get(position);
    }
 
    public long getItemId(int position) {
@@ -34,13 +41,30 @@ public class TopicListAdapter extends BaseAdapter {
 
       if (convertView == null) {
          topicRow = new TopicListRow(mContext);
-      }
-      else {
+      } else {
          topicRow = (TopicListRow)convertView;
       }
 
-      topicRow.setTopic(mTopic.getChildren().get(position));
+      topicRow.setTopic(mTopicList.get(position));
 
       return topicRow;
+   }
+
+   @Override
+   public Object getHeaderItem() {
+      return mHeader;
+   }
+
+   @Override
+   public View getHeaderView(View convertView, ViewGroup parent) {
+      TopicHeaderRow header = (TopicHeaderRow)convertView;
+
+      if (header == null) {
+         header = new TopicHeaderRow(mContext);
+      }
+
+      header.setHeader(mHeader);
+
+      return header;
    }
 }
