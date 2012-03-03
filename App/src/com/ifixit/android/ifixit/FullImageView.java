@@ -1,29 +1,24 @@
 package com.ifixit.android.ifixit;
 
-import android.app.Activity;
 import android.os.Bundle;
 
-public class FullImageView extends Activity {
-   private LoaderImage mImage;
-   private ImageManager mImageManager;
-   private String mUrl;
-   private ImageSizes mImageSizes;
+import android.support.v4.app.FragmentActivity;
+
+public class FullImageView extends FragmentActivity {
+   private String mFilePath;
+   private WebViewFragment mWebView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       Bundle extras;
       super.onCreate(savedInstanceState);
+
+      extras = getIntent().getExtras();
+      mFilePath = (String)extras.get(GuideStepViewFragment.IMAGE_FILE_PATH);
             
       setContentView(R.layout.full_screen_image);
-      extras = getIntent().getExtras();
-      MainApplication application = (MainApplication)getApplication();
-      
-      mImageSizes = application.getImageSizes();
-      mUrl = (String)extras.get(GuideStepViewFragment.IMAGEID) +
-       mImageSizes.getFull();
-
-      mImage = (LoaderImage)findViewById(R.id.full_image_view);
-      mImageManager = application.getImageManager();
-      mImageManager.displayImage(mUrl, this, mImage);
+      mWebView = (WebViewFragment)getSupportFragmentManager()
+       .findFragmentById(R.id.web_view_fragment);
+      mWebView.loadUrl("file://" + mFilePath);
    }  
 }

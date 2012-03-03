@@ -77,10 +77,11 @@ public class ThumbnailView extends LinearLayout {
       }
    }
 
-   private void setCurrentThumb(String url) {
+   public void setCurrentThumb(String url) {
       mCurrentURL = url;
       mImageManager.displayImage(mCurrentURL + mImageSizes.getMain(),
        (Activity)mContext, mMainImage);
+      mMainImage.setTag(url);
    }
    
    public void setMainImage(LoaderImage mainImg) {
