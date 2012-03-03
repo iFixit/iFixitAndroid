@@ -1,3 +1,6 @@
 [submodule "Android-ViewPagerIndicator"]
 	path = Android-ViewPagerIndicator
 	url = git@github.com:iFixit/Android-ViewPagerIndicator.git
+[submodule "AndroidSectionHeaders"]
+	path = AndroidSectionHeaders
+	url = git@github.com:iFixit/AndroidSectionHeaders.git
