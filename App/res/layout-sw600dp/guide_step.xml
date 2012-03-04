@@ -1,21 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
-      android:textColor="#FFFFFF" 
-      android:orientation="vertical">
-   <RelativeLayout 
-       style="@style/image_wrap.600">
-      <com.ifixit.android.ifixit.LoaderImage android:id="@+id/main_image"
-      		style="@style/main_image.600"/>
-      <com.ifixit.android.ifixit.ThumbnailView android:id="@+id/thumbnails"
-      		style="@style/thumbnail_view.600" />
-   </RelativeLayout>
-   <RelativeLayout 
-       style="@style/step_text_wrap">
-      <TextView android:id="@+id/step_title"
-            style="@style/step_title.600" />		
-      <ListView android:id="@+id/step_text_list"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical"
+    android:textColor="#FFFFFF" >
+
+    <RelativeLayout style="@style/image_wrap.600" >
+
+        <com.ifixit.android.ifixit.LoaderImage
+            android:id="@+id/main_image"
+            style="@style/main_image.600" />
+
+        <com.ifixit.android.ifixit.ThumbnailView
+            android:id="@+id/thumbnails"
+            style="@style/thumbnail_view.600" />
+    </RelativeLayout>
+
+    <RelativeLayout style="@style/step_text_wrap" >
+
+        <TextView
+            android:id="@+id/step_title"
+            style="@style/text.title.600.full" />
+
+        <ListView
+            android:id="@+id/step_text_list"
             style="@style/step_list" />
-   </RelativeLayout>
+    </RelativeLayout>
+
 </LinearLayout>

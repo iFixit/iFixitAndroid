@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string name="app_name">iFixit</string>
     <string name="more_guides">More Guides</string>
     <string name="next_step">Next Step</string>
@@ -8,4 +9,5 @@
     <string name="difficulty">Difficulty</string>
     <string name="author">Author</string>
     <string name="swipe_to_begin">Swipe to begin</string>
+
 </resources>

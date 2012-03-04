@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-   <item android:id="@+id/guide_home"
-         android:title="@string/guide_home" />
-   <item android:id="@+id/previous_step"
-         android:title="@string/previous_step" />
-   <item android:id="@+id/next_step"
-         android:title="@string/next_step" />
-   <item android:id="@+id/more_guides"
-         android:title="@string/more_guides" />
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/guide_home"
+        android:title="@string/guide_home"/>
+    <item
+        android:id="@+id/previous_step"
+        android:title="@string/previous_step"/>
+    <item
+        android:id="@+id/next_step"
+        android:title="@string/next_step"/>
+    <item
+        android:id="@+id/more_guides"
+        android:title="@string/more_guides"/>
+
 </menu>

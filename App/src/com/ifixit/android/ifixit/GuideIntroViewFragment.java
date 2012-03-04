@@ -56,8 +56,6 @@ public class GuideIntroViewFragment extends Fragment {
       View view = inflater.inflate(R.layout.guide_intro, container, false);
       mBoldFont = Typeface.createFromAsset(getActivity().getAssets(),
        "fonts/Ubuntu-B.ttf");
-      mRegularFont = Typeface.createFromAsset(getActivity().getAssets(),
-       "fonts/Ubuntu-R.ttf");
 
       mTitle      = (TextView)view.findViewById(R.id.guide_title);
       mIntro      = (TextView)view.findViewById(R.id.guide_intro_text);
@@ -73,11 +71,6 @@ public class GuideIntroViewFragment extends Fragment {
       mParts.setMovementMethod(method);
 
       mTitle.setTypeface(mBoldFont);
-      mIntro.setTypeface(mRegularFont);
-      mDifficulty.setTypeface(mRegularFont);
-      mAuthor.setTypeface(mRegularFont);
-      mTools.setTypeface(mRegularFont);
-      mParts.setTypeface(mRegularFont);
 
       if (mGuide != null) {
          setGuide();
@@ -87,8 +80,11 @@ public class GuideIntroViewFragment extends Fragment {
    }
 
    public void setGuide() {
-      mTitle.setText(Html.fromHtml(mGuide.getTitle()));
-      mTitle.setText(Html.fromHtml(mGuide.getSubject()));
+      if (!mGuide.mSubject.isEmpty()) {
+    	  mTitle.setText(Html.fromHtml(mGuide.getSubject()));
+      } else {
+          mTitle.setText(Html.fromHtml(mGuide.getTitle()));
+      }
       mIntro.setText(Html.fromHtml(mGuide.getIntroduction()));
 
       if (!mGuide.getDifficulty().equals("false")) {

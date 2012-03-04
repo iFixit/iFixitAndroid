@@ -1,39 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="step_row_layout">
         <item name="android:orientation">horizontal</item>
-    	<item name="android:layout_width">fill_parent</item>
-    	<item name="android:layout_height">wrap_content</item>
-    	<item name="android:weightSum">100</item>
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:weightSum">100</item>
     </style>
+
     <style name="bullets">
-    	<item name="android:layout_width">12dp</item>
-    	<item name="android:layout_height">12dp</item>
-    	<item name="android:layout_marginTop">5dp</item>
-    	<item name="android:layout_weight">3</item>
+        <item name="android:layout_width">12dp</item>
+        <item name="android:layout_height">12dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_weight">3</item>
     </style>
-    <style name="bullets_720">
+
+    <style name="bullets.720">
         <item name="android:layout_width">20dp</item>
-    	<item name="android:layout_height">20dp</item>
-    	<item name="android:layout_weight">3</item>
-    	<item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_height">20dp</item>
+        <item name="android:layout_marginTop">5dp</item>
     </style>
-    <style name="step_row_text">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">14sp</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:typeface">sans</item>
-        <item name="android:layout_weight">97</item>
-    </style> 
-    <style name="step_row_text_720">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">#FFFFFF</item>
-        <item name="android:typeface">sans</item>
-        <item name="android:layout_weight">97</item>
-    </style> 
+
     <style name="step_row_icon">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
@@ -42,14 +29,14 @@
         <item name="android:layout_gravity">right</item>
         <item name="android:layout_weight">0</item>
         <item name="android:visibility">invisible</item>
-    </style> 
+        <item name="android:contentDescription">Guide Step notice, important step</item>
+    </style>
+
     <style name="step_row_icon.720">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginTop">6dp</item>
-        <item name="android:layout_gravity">right</item>
-        <item name="android:layout_weight">0</item>
-        <item name="android:visibility">invisible</item>
-    </style> 
+    </style>
+
 </resources>

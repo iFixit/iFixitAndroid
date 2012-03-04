@@ -1,94 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <style name="guide_wrap">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:paddingTop">8dp</item>
-        <item name="android:paddingBottom">8dp</item>        
+        <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingRight">6dp</item>
         <item name="android:paddingLeft">6dp</item>
     </style>
+
     <style name="guide_wrap.720">
-        <item name="android:padding">16dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:paddingRight">12dp</item>
+        <item name="android:paddingLeft">12dp</item>
     </style>
+
     <style name="image_wrap">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">200dp</item>
     </style>
+
     <style name="image_wrap.600">
         <item name="android:layout_width">540dp</item>
         <item name="android:layout_height">fill_parent</item>
         <item name="android:layout_marginRight">12dp</item>
     </style>
+
     <style name="image_wrap.720">
         <item name="android:layout_width">640dp</item>
         <item name="android:layout_height">fill_parent</item>
-        <item name="android:layout_marginRight">12dp</item>        
+        <item name="android:layout_marginRight">12dp</item>
     </style>
-    	
-    	<style name="main_image">
-	        <item name="android:layout_width">270dp</item>
-	        <item name="android:layout_height">180dp</item>
-	        <item name="android:layout_marginRight">4dp</item>
-	        <item name="android:layout_marginBottom">8dp</item>
-	        <item name="android:background">@drawable/img_background</item>
-	        <item name="android:padding">1dp</item>
-	    </style>
-	    <style name="main_image.600">
-	        <item name="android:layout_width">540dp</item>
-	        
-	        <item name="android:layout_height">320dp</item>
-	        <item name="android:layout_marginBottom">16dp</item>
-	        <item name="android:layout_marginRight">8dp</item>
-	        <item name="android:padding">2dp</item>
-	    </style>
-	    <style name="main_image.720">
-	        <item name="android:layout_width">720dp</item>
-	        <item name="android:layout_height">480dp</item>
-	        <item name="android:layout_marginRight">16dp</item>
-	        <item name="android:padding">2dp</item>
-	    </style>
-	    
-	    <style name="thumbnail_view">
-	        <item name="android:layout_width">wrap_content</item>
-	        <item name="android:layout_height">wrap_content</item>
-	        <item name="android:layout_toRightOf">@id/main_image</item>
-	    </style>
-	    
-	    <style name="thumbnail_view.600">
-	        <item name="android:layout_toRightOf">@id/main_image</item>
-	    </style>
-	    
-	    <style name="thumbnail_view.720">
-	        <item name="android:layout_below">@id/main_image</item>
-	    </style>
-	    
-	    	    
-	<style name="step_text_wrap">
-	    <item name="android:layout_width">match_parent</item>
+
+    <style name="main_image">
+        <item name="android:layout_width">270dp</item>
+        <item name="android:layout_height">180dp</item>
+        <item name="android:layout_marginRight">4dp</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:background">@drawable/img_background</item>
+        <item name="android:padding">1dp</item>
+    </style>
+
+    <style name="main_image.600">
+        <item name="android:layout_width">540dp</item>
+        <item name="android:layout_height">320dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="main_image.720">
+        <item name="android:layout_width">720dp</item>
+        <item name="android:layout_height">480dp</item>
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:padding">2dp</item>
+    </style>
+
+    <style name="thumbnail_view">
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-	</style>
-		
-		<style name="step_title">
-		    <item name="android:layout_width">fill_parent</item>
-	        <item name="android:layout_height">wrap_content</item>
-	        <item name="android:textSize">24sp</item>
-	        <item name="android:typeface">serif</item>
-		</style>
-		<style name="step_title.600">
-	        <item name="android:textSize">32sp</item>
-	        <item name="android:layout_alignParentRight">true</item>
-		</style>
-		<style name="step_title.720">
-	        <item name="android:textSize">48sp</item>
-	        <item name="android:layout_marginBottom">12dp</item>
-		</style>
-	    
-	    <style name="step_list">
-	        <item name="android:layout_width">match_parent</item>
-	        <item name="android:layout_height">match_parent</item>
-	        <item name="android:layout_below">@id/step_title</item>
-	        <item name="android:layout_marginBottom">8dp</item>
-	        <item name="android:divider">#00000000</item>
-	    </style> 
+        <item name="android:layout_toRightOf">@id/main_image</item>
+    </style>
+
+    <style name="thumbnail_view.600">
+        <item name="android:layout_toRightOf">@id/main_image</item>
+    </style>
+
+    <style name="thumbnail_view.720">
+        <item name="android:layout_below">@id/main_image</item>
+    </style>
+
+    <style name="step_text_wrap">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="step_list">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_below">@id/step_title</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:divider">#00000000</item>
+    </style>
+
 </resources>

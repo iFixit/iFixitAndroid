@@ -1,11 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-  xmlns:android="http://schemas.android.com/apk/res/android"
-  style="@style/thumbnail_wrap.vertical">
-    <com.ifixit.android.ifixit.LoaderImage android:id="@+id/thumbnail_1"
-            style="@style/thumbnail" />
-    <com.ifixit.android.ifixit.LoaderImage android:id="@+id/thumbnail_2"
-            style="@style/thumbnail" />
-    <com.ifixit.android.ifixit.LoaderImage android:id="@+id/thumbnail_3"
-    		style="@style/thumbnail.last"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/thumbnail_wrap.vertical" >
+
+    <com.ifixit.android.ifixit.LoaderImage
+        android:id="@+id/thumbnail_1"
+        style="@style/thumbnail" />
+
+    <com.ifixit.android.ifixit.LoaderImage
+        android:id="@+id/thumbnail_2"
+        style="@style/thumbnail" />
+
+    <com.ifixit.android.ifixit.LoaderImage
+        android:id="@+id/thumbnail_3"
+        style="@style/thumbnail.last" />
+
 </LinearLayout>

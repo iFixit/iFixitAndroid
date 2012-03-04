@@ -1,19 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:orientation="vertical"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:background="@drawable/bg_img">
-   <android.support.v4.view.ViewPager
+    style="@style/guide_main_layout" >
+
+    <android.support.v4.view.ViewPager
         android:id="@+id/guide_pager"
-        android:layout_width="match_parent" 
-        android:layout_height="0dp" 
-        android:layout_weight="1" />      
-   <com.viewpagerindicator.CirclePageIndicator
+        style="@style/pager" />
+
+    <com.viewpagerindicator.CirclePageIndicator
         android:id="@+id/indicator"
-        android:padding="10dp"
-        android:paddingBottom="0dp"
-        android:layout_height="wrap_content"
-        android:layout_width="fill_parent" /> 
-   
+        style="@style/guide_pager_indicator"/>
+
 </LinearLayout>

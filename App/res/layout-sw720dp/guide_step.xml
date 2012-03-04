@@ -1,19 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	  style="@style/guide_wrap"
-      android:orientation="horizontal">
-   <RelativeLayout 
-       style="@style/image_wrap.720">
-      <com.ifixit.android.ifixit.LoaderImage android:id="@+id/main_image"
+    style="@style/guide_wrap"
+    android:orientation="horizontal" >
+
+    <RelativeLayout style="@style/image_wrap.720" >
+
+        <com.ifixit.android.ifixit.LoaderImage
+            android:id="@+id/main_image"
             style="@style/main_image.720" />
-      <com.ifixit.android.ifixit.ThumbnailView android:id="@+id/thumbnails"
-      		style="@style/thumbnail_view.720" />
-   </RelativeLayout>
-   <RelativeLayout 
-       style="@style/step_text_wrap">
-      <TextView android:id="@+id/step_title"
-            style="@style/step_title.720" />		
-      <ListView android:id="@+id/step_text_list"
+
+        <com.ifixit.android.ifixit.ThumbnailView
+            android:id="@+id/thumbnails"
+            style="@style/thumbnail_view.720" />
+    </RelativeLayout>
+
+    <RelativeLayout style="@style/step_text_wrap" >
+
+        <TextView
+            android:id="@+id/step_title"
+            style="@style/text.title.720" />
+
+        <ListView
+            android:id="@+id/step_text_list"
             style="@style/step_list" />
-   </RelativeLayout>
+    </RelativeLayout>
+
 </LinearLayout>
