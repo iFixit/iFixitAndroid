@@ -8,10 +8,13 @@ import android.view.ViewGroup;
 
 import com.ifixit.android.sectionheaders.Section;
 
+import android.widget.AdapterView;
+
 public class TopicListAdapter extends Section {
    private Context mContext;
    private ArrayList<TopicNode> mTopicList;
    private String mHeader;
+   private TopicSelectedListener mTopicListener;
 
    public TopicListAdapter(Context context, String header,
     ArrayList<TopicNode> topicList) {
@@ -22,6 +25,10 @@ public class TopicListAdapter extends Section {
 
    public void setTopicList(ArrayList<TopicNode> topicList) {
       mTopicList = topicList;
+   }
+
+   public void setTopicSelectedListener(TopicSelectedListener topicListener) {
+      mTopicListener = topicListener;
    }
 
    public int getCount() {
@@ -66,5 +73,13 @@ public class TopicListAdapter extends Section {
       header.setHeader(mHeader);
 
       return header;
+   }
+
+   @Override
+   public void onItemClick(AdapterView<?> adapterView, View view,
+    int position, long id) {
+      if (mTopicListener != null) {
+         mTopicListener.onTopicSelected(mTopicList.get(position));
+      }
    }
 }

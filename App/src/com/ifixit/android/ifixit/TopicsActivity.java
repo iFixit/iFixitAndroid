@@ -11,7 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 public class TopicsActivity extends FragmentActivity implements
- TopicListFragment.TopicSelectedListener {
+ TopicSelectedListener {
    private static final String TOPICS_API_URL =
     "http://www.ifixit.com/api/0.1/areas/";
    private static final String RESPONSE = "RESPONSE";
