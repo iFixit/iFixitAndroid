@@ -9,6 +9,7 @@
     <style name="bullets">
     	<item name="android:layout_width">12dp</item>
     	<item name="android:layout_height">12dp</item>
+    	<item name="android:layout_marginTop">5dp</item>
     	<item name="android:layout_weight">3</item>
     </style>
     <style name="bullets_720">
@@ -34,6 +35,15 @@
         <item name="android:layout_weight">97</item>
     </style> 
     <style name="step_row_icon">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:layout_gravity">right</item>
+        <item name="android:layout_weight">0</item>
+        <item name="android:visibility">invisible</item>
+    </style> 
+    <style name="step_row_icon.720">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginLeft">10dp</item>
