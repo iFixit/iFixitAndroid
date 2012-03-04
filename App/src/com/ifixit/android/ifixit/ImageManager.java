@@ -25,10 +25,12 @@ public class ImageManager {
 
    private HashMap<String, Bitmap> mImageMap;
    private HashMap<String, ImageRef> mLoadingImages;
+   private LinkedList<BitmapFile> mWriteQueue;
    private LinkedList<String> mRecentBitmaps;
    private File mCacheDir;
    private ImageQueue mImageQueue;
    private Thread[] mThreads;
+   private Thread mWriteThread;
    private final int mNumThreads;
 
    public ImageManager(Context context) {
@@ -38,6 +40,7 @@ public class ImageManager {
    public ImageManager(Context context, int numThreads) {
       mNumThreads = numThreads;
       mImageMap = new HashMap<String, Bitmap>();
+      mWriteQueue = new LinkedList<BitmapFile>();
       mRecentBitmaps = new LinkedList<String>();
       mImageQueue = new ImageQueue();
       mThreads = new Thread[mNumThreads];
@@ -48,6 +51,10 @@ public class ImageManager {
          mThreads[i].setPriority(IMAGE_THREAD_PRIORITY);
          mThreads[i].start();
       }
+
+      mWriteThread = new Thread(new BitmapWriter());
+      mWriteThread.setPriority(IMAGE_THREAD_PRIORITY);
+      mWriteThread.start();
 
       mCacheDir = context.getCacheDir();
 
@@ -123,12 +130,19 @@ public class ImageManager {
       try {
          connection = new URL(url).openConnection();
          bitmap = BitmapFactory.decodeStream(connection.getInputStream());
-         writeFile(bitmap, file);
+         addToWriteQueue(bitmap, file);
 
          return bitmap;
       }
       catch (Exception e) {
          return null;
+      }
+   }
+
+   private void addToWriteQueue(Bitmap bitmap, File file) {
+      synchronized (mWriteQueue) {
+         mWriteQueue.add(new BitmapFile(bitmap, file));
+         mWriteQueue.notify();
       }
    }
 
@@ -158,6 +172,16 @@ public class ImageManager {
 
       if (mImageMap.put(url, bitmap) == null) {
          mRecentBitmaps.addLast(url);
+      }
+   }
+
+   private class BitmapFile {
+      protected Bitmap mBitmap;
+      protected File mFile;
+
+      public BitmapFile(Bitmap bitmap, File file) {
+         mBitmap = bitmap;
+         mFile = file;
       }
    }
 
@@ -198,12 +222,12 @@ public class ImageManager {
 
          try {
             while (true) {
-               synchronized(mImageQueue.imageRefs) {
+               synchronized (mImageQueue.imageRefs) {
                   if (mImageQueue.imageRefs.size() == 0)
                      mImageQueue.imageRefs.wait();
                }
 
-               synchronized(mImageQueue.imageRefs) {
+               synchronized (mImageQueue.imageRefs) {
                   if (mImageQueue.imageRefs.size() == 0)
                      continue;
 
@@ -229,6 +253,34 @@ public class ImageManager {
             }
          }
          catch (InterruptedException e) {}
+      }
+   }
+
+   private class BitmapWriter implements Runnable {
+      @Override
+      public void run() {
+         BitmapFile bitmapFile;
+
+         try {
+            while (true) {
+               synchronized (mWriteQueue) {
+                  if (mWriteQueue.size() == 0) {
+                     mWriteQueue.wait();
+                  }
+               }
+
+               synchronized (mWriteQueue) {
+                  if (mWriteQueue.size() == 0) {
+                     continue;
+                  }
+               }
+
+               bitmapFile = mWriteQueue.pop();
+
+               writeFile(bitmapFile.mBitmap, bitmapFile.mFile);
+               bitmapFile = null;
+            }
+         } catch (InterruptedException e) {}
       }
    }
 
