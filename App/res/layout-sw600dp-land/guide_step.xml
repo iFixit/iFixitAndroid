@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical"
-    android:textColor="#FFFFFF" >
+    style="@style/guide_wrap.land" >
 
-    <RelativeLayout style="@style/image_wrap.600" >
+    <RelativeLayout style="@style/image_wrap.600.land" >
 
         <com.ifixit.android.ifixit.LoaderImage
             android:id="@+id/main_image"
-            style="@style/main_image.600" />
+            style="@style/main_image.600.land" />
 
         <com.ifixit.android.ifixit.ThumbnailView
             android:id="@+id/thumbnails"
-            style="@style/thumbnail_view.600" />
+            style="@style/thumbnail_view.land" />
     </RelativeLayout>
 
     <RelativeLayout style="@style/step_text_wrap" >

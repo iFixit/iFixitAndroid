@@ -26,6 +26,8 @@
     </style>
 
     <style name="thumbnail.land">
+        <item name="android:layout_width">84dp</item>
+        <item name="android:layout_height">63dp</item>
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginRight">8dp</item>
     </style>
@@ -33,6 +35,11 @@
     <style name="thumbnail.last">
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
+    </style>
+    
+    <style name="thumbnail.land.last">
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginRight">0dp</item> 
     </style>
 
     <style name="thumbnail.600">
@@ -42,6 +49,8 @@
     </style>
 
     <style name="thumbnail.600.land">
+        <item name="android:layout_width">150dp</item>
+        <item name="android:layout_height">112.5dp</item>
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginRight">8dp</item>
     </style>
@@ -50,6 +59,11 @@
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
     </style>
+    
+    <style name="thumbnail.600.land.last">
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+    </style>    
 
     <style name="thumbnail.720">
         <item name="android:layout_width">160dp</item>
@@ -58,6 +72,8 @@
     </style>
 
     <style name="thumbnail.720.land">
+        <item name="android:layout_width">230dp</item>
+        <item name="android:layout_height">172.5dp</item>        
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginRight">8dp</item>
     </style>
@@ -66,5 +82,11 @@
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
     </style>
+    
+    <style name="thumbnail.720.land.last">
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginRight">0dp</item>
+    </style>
+    
 
 </resources>

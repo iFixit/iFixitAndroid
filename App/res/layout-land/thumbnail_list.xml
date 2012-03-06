@@ -12,6 +12,6 @@
 
     <com.ifixit.android.ifixit.LoaderImage
         android:id="@+id/thumbnail_3"
-        style="@style/thumbnail.last" />
+        style="@style/thumbnail.land.last" />
 
 </LinearLayout>

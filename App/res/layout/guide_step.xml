@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/guide_wrap"
-    android:orientation="vertical" >
+    style="@style/guide_wrap.vertical" >
 
     <RelativeLayout style="@style/image_wrap" >
 
@@ -11,7 +10,7 @@
 
         <com.ifixit.android.ifixit.ThumbnailView
             android:id="@+id/thumbnails"
-            style="@style/thumbnail_view" />
+            style="@style/thumbnail_view.vertical" />
     </RelativeLayout>
 
     <RelativeLayout style="@style/step_text_wrap" >

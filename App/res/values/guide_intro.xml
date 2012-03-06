@@ -1,19 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="intro_scroll">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
+    <style name="guide_wrap.intro">
+        <item name="android:weightSum">100</item>
     </style>
+    
+    <style name="intro_scroll">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">0dp</item>      
+        <item name="android:layout_weight">85</item>
+    </style>
+    
     <style name="intro_scroll.layout">
         <item name="android:orientation">vertical</item>
     </style>
+
+    <style name="swipe_layout">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">15</item>
+    </style>
+    
     <style name="swipe_to_begin">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_alignParentBottom">true</item>
-        <item name="android:layout_below">@+id/guide_intro_scroll</item>
+        <item name="android:layout_alignParentRight">true</item>
         <item name="android:src">@drawable/swipe_to_begin</item>
         <item name="android:contentDescription">@string/swipe_to_begin</item>
     </style>
+
 </resources>
