@@ -12,7 +12,8 @@
    <application android:name="com.ifixit.android.ifixit.MainApplication" 
          android:icon="@drawable/icon" 
          android:label="@string/app_name" 
-         android:background="@drawable/default_landscape_tablet"
+         android:theme="@android:style/Theme.Holo"
+         android:background="@drawable/default_background"
          android:logo="@drawable/logo">
       <activity android:name=".TopicsActivity"
             android:label="@string/app_name">
@@ -23,7 +24,7 @@
       </activity>
       <activity android:name=".TopicViewActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme.PageIndicatorDefaults" >
+            android:theme="@style/Theme.PageIndicatorDefaults">
       </activity>
       <activity android:name="com.ifixit.android.ifixit.GuideView"
             android:label="@string/app_name">
