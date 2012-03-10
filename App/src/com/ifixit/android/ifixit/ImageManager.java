@@ -22,7 +22,7 @@ public class ImageManager {
    private static final int MAX_STORED_IMAGES = 9;
    private static final int MAX_LOADING_IMAGES = 9;
    private static final int DEFAULT_NUM_DOWNLOAD_THREADS = 5;
-   private static final int DEFAULT_NUM_WRITE_THREADS = 5;
+   private static final int DEFAULT_NUM_WRITE_THREADS = 2;
 
    private HashMap<String, Bitmap> mImageMap;
    private HashMap<String, ImageRef> mLoadingImages;
@@ -263,7 +263,6 @@ public class ImageManager {
    }
 
    private class BitmapWriter implements Runnable {
-
       @Override
       public void run() {
          BitmapFile bitmapFile;
