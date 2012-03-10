@@ -1,7 +1,10 @@
 package com.ifixit.android.ifixit;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import org.apache.http.client.ResponseHandler;
+
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,12 +14,12 @@ import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 public class TopicsActivity extends FragmentActivity implements
- TopicSelectedListener {
+ TopicSelectedListener, OnBackStackChangedListener {
    private static final String TOPICS_API_URL =
     "http://www.ifixit.com/api/0.1/areas/";
    private static final String RESPONSE = "RESPONSE";
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
-   private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
+   private static final String TOPIC_HISTORY = "TOPIC_HISTORY";
    protected static final int REQUEST_RETURN_TOPIC = 1;
    protected static final int TOPIC_RESULT = 2;
    protected static final int NO_TOPIC_RESULT = 3;
@@ -24,7 +27,8 @@ public class TopicsActivity extends FragmentActivity implements
    private boolean mDualPane;
    private TopicViewFragment mTopicView;
    private TopicNode mRootTopic;
-   private TopicNode mCurrentTopic;
+   private LinkedList<TopicNode> mTopicHistory;
+   private int mBackStackSize = 0;
 
    private final Handler mTopicsHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -50,14 +54,18 @@ public class TopicsActivity extends FragmentActivity implements
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
       mDualPane = mTopicView != null && mTopicView.isInLayout();
+      mTopicHistory = new LinkedList<TopicNode>();
 
       if (savedInstanceState != null) {
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
-         mCurrentTopic = (TopicNode)savedInstanceState.
-          getSerializable(CURRENT_TOPIC);
+         mTopicHistory = (LinkedList<TopicNode>)savedInstanceState.
+          getSerializable(TOPIC_HISTORY);
       } else {
          getTopicHierarchy();
       }
+
+      getSupportFragmentManager().addOnBackStackChangedListener(this);
+      mBackStackSize = getSupportFragmentManager().getBackStackEntryCount();
    }
 
    @Override
@@ -65,13 +73,21 @@ public class TopicsActivity extends FragmentActivity implements
       super.onSaveInstanceState(outState);
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
-      outState.putSerializable(CURRENT_TOPIC, mCurrentTopic);
+      outState.putSerializable(TOPIC_HISTORY, mTopicHistory);
+   }
+
+   public void onBackStackChanged() {
+      int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
+
+      if (mBackStackSize > backStackSize) {
+         mTopicHistory.pop();
+      }
+
+      mBackStackSize = backStackSize;
    }
 
    @Override
    public void onTopicSelected(TopicNode topic) {
-      mCurrentTopic = topic;
-
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
@@ -85,8 +101,11 @@ public class TopicsActivity extends FragmentActivity implements
             startActivityForResult(intent, REQUEST_RETURN_TOPIC);
          }
       } else {
+         TopicNode currentTopic = mTopicHistory.size() == 0 ? null :
+          mTopicHistory.getFirst();
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-         TopicListFragment newFragment = new TopicListFragment(topic);
+         TopicListFragment newFragment = new TopicListFragment(topic,
+          currentTopic == null ? null : currentTopic.getName());
          
          ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
           R.anim.slide_in_left, R.anim.slide_out_right);
@@ -95,6 +114,8 @@ public class TopicsActivity extends FragmentActivity implements
          if (!topic.isRoot()) {
             ft.addToBackStack(null);
          }
+
+         mTopicHistory.push(topic);
 
          ft.commit();
       }
@@ -111,8 +132,8 @@ public class TopicsActivity extends FragmentActivity implements
           TopicViewActivity.TOPIC_KEY)) != null) {
 
             mTopicView.setTopicLeaf(topicLeaf);
-         } else if (mCurrentTopic != null && mDualPane) {
-            mTopicView.setTopicNode(mCurrentTopic);
+         } else if (mTopicHistory.size() != 0 && mDualPane) {
+            mTopicView.setTopicNode(mTopicHistory.getFirst());
          }
       }
    }

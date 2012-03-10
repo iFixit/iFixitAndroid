@@ -44,7 +44,7 @@ public class GuideStepViewFragment extends Fragment {
 
    @Override
    public void onCreate(Bundle savedState) {
-	   super.onCreate(savedState);
+      super.onCreate(savedState);
 
       if (mImageManager == null) {
          mImageManager = ((MainApplication)getActivity().getApplication()).
@@ -58,8 +58,7 @@ public class GuideStepViewFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	 Bundle savedInstanceState) {
-
-	   View view = inflater.inflate(R.layout.guide_step, container, false);
+      View view = inflater.inflate(R.layout.guide_step, container, false);
       mFont = Typeface.createFromAsset(getActivity().getAssets(),
        "fonts/Ubuntu-B.ttf");
 

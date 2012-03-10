@@ -5,7 +5,7 @@ import java.util.ArrayList;
 
 public class TopicNode implements Serializable {
    private static final long serialVersionUID = 1L;
-   private static final String ROOT_NAME = "ROOT";
+   protected static final String ROOT_NAME = "ROOT";
 
    private String mName;
    private ArrayList<TopicNode> mChildren;
