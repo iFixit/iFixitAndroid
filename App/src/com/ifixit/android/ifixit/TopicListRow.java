@@ -10,11 +10,11 @@ public class TopicListRow extends LinearLayout {
    private TopicNode mTopic;
 
    public TopicListRow(Context context) {
-      super(context);      
+      super(context);
 
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(
        Context.LAYOUT_INFLATER_SERVICE);
-      inflater.inflate(R.layout.topic_list_row, this, true);        
+      inflater.inflate(R.layout.topic_list_row, this, true);
 
       mTopicName = (TextView)findViewById(R.id.topic_title);
    }

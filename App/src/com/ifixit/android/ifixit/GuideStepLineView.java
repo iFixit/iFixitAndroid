@@ -12,47 +12,47 @@ import android.widget.TextView;
 public class GuideStepLineView extends LinearLayout {
    private static final int LINE_INDENT = 50;
    private static final int MARGIN = 10;
-   
+
    private TextView mStepText;
    private BulletView mBulletView;
    private ImageView mIconView;
    private LinearLayout mRow;
    private Typeface mBoldFont;
    private Typeface mRegularFont;
-   
+
    public GuideStepLineView(Context context) {
       super(context);
-      
+
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(
        Context.LAYOUT_INFLATER_SERVICE);
-      inflater.inflate(R.layout.step_row, this, true);  
-      
-      mRow = (LinearLayout)findViewById(R.id.step_row);
-      
-      mBoldFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-B.ttf");  
-      mRegularFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-R.ttf");  
+      inflater.inflate(R.layout.step_row, this, true);
 
-   }   
+      mRow = (LinearLayout)findViewById(R.id.step_row);
+
+      mBoldFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-B.ttf");
+      mRegularFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-R.ttf");
+
+   }
 
    public void setLine(StepLine line) {
       int iconRes;
-      
+
       mStepText = (TextView)findViewById(R.id.step_text);
       mStepText.setText(Html.fromHtml(line.getText()));
 
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-       LinearLayout.LayoutParams.FILL_PARENT, 
+       LinearLayout.LayoutParams.FILL_PARENT,
        LinearLayout.LayoutParams.WRAP_CONTENT);
-      
-      layoutParams.setMargins(LINE_INDENT*line.getLevel(), MARGIN, 0, MARGIN);    
+
+      layoutParams.setMargins(LINE_INDENT*line.getLevel(), MARGIN, 0, MARGIN);
       mRow.setLayoutParams(layoutParams);
-      
+
       mBulletView = (BulletView)findViewById(R.id.bullet);
       mBulletView.setBullet(line.getColor());
       mIconView = (ImageView)findViewById(R.id.bullet_icon);
 
       if (line.hasIcon) {
-         
+
          if (line.mColor.compareTo("icon_reminder") == 0) {
             iconRes = R.drawable.icon_reminder;
          } else if (line.mColor.compareTo("icon_caution") == 0) {

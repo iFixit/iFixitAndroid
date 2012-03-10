@@ -65,10 +65,10 @@ public class ImageManager {
       mCacheDir = context.getCacheDir();
 
       if (!mCacheDir.exists()) {
-         mCacheDir.mkdirs(); 
+         mCacheDir.mkdirs();
       }
    }
-   
+
    public void displayImage(String url, Activity activity,
     LoaderImage imageView) {
       Bitmap bitmap = mImageMap.get(url);
@@ -304,12 +304,16 @@ public class ImageManager {
       }
 
       public void run() {
-         if (mBitmap != null)
-            for (LoaderImage image : mImageViews)
+         if (mBitmap != null) {
+            for (LoaderImage image : mImageViews) {
                image.setImageBitmap(mBitmap);
-         else 
-            for (LoaderImage image : mImageViews)
+            }
+         }
+         else {
+            for (LoaderImage image : mImageViews) {
                image.setImageResource(R.drawable.loading);
+            }
+         }
 
          synchronized (mLoadingImages) {
             mLoadingImages.remove(mUrl);

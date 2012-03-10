@@ -39,11 +39,11 @@ public class JSONHelper {
          for (int i = 0; i < jSteps.length(); i++) {
             guide.addStep(parseStep(jSteps.getJSONObject(i)));
          }
-         
+
          for (int i = 0; i < jTools.length(); i++) {
             guide.addTool(parseTool(jTools.getJSONObject(i)));
          }
-         
+
          for (int i = 0; i < jParts.length(); i++) {
             guide.addPart(parsePart(jParts.getJSONObject(i)));
          }
@@ -54,7 +54,7 @@ public class JSONHelper {
          return null;
       }
    }
-   
+
    public static GuidePart parsePart(JSONObject jPart) throws JSONException {
       return new GuidePart(jPart.getString("text"), jPart.getString("url"),
        jPart.getString("thumbnail"), jPart.getString("notes"));
@@ -64,7 +64,7 @@ public class JSONHelper {
       return new GuideTool(jTool.getString("text"), jTool.getString("url"),
        jTool.getString("thumbnail"), jTool.getString("notes"));
    }
-   
+
    public static GuideStep parseStep(JSONObject jStep) throws JSONException {
       JSONArray jImages = jStep.getJSONArray("images");
       JSONArray jLines = jStep.getJSONArray("lines");

@@ -1,55 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/guide_wrap.vertical" >
+      style="@style/guide_wrap.vertical" >
 
-    <ScrollView
-        android:id="@+id/guide_intro_scroll"
-        style="@style/intro_scroll" >
+   <ScrollView
+         android:id="@+id/guide_intro_scroll"
+         style="@style/intro_scroll" >
 
-        <LinearLayout
+      <LinearLayout
             style="@style/intro_scroll.layout">
 
-            <TextView
-                android:id="@+id/guide_title"
-                style="@style/text.title.full"
-                android:layout_gravity="top" />
+         <TextView
+               android:id="@+id/guide_title"
+               style="@style/text.title.full"
+               android:layout_gravity="top" />
+
+         <TextView
+               android:id="@+id/guide_intro_text"
+               style="@style/text.body.full" />
+
+         <LinearLayout
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:orientation="horizontal"
+               android:weightSum="2" >
 
             <TextView
-                android:id="@+id/guide_intro_text"
-                style="@style/text.body.full" />
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="2" >
-
-                <TextView
-                    android:id="@+id/guide_difficulty"
-                    style="@style/text.body.half" />
-
-                <TextView
-                    android:id="@+id/guide_author"
-                    style="@style/text.body.half" />
-            </LinearLayout>
+                  android:id="@+id/guide_difficulty"
+                  style="@style/text.body.half" />
 
             <TextView
-                android:id="@+id/num_steps"
-                style="@style/text.body.full" />
+                  android:id="@+id/guide_author"
+                  style="@style/text.body.half" />
+         </LinearLayout>
 
-            <TextView
-                android:id="@+id/guide_tools"
-                style="@style/text.body.full" />
+         <TextView
+               android:id="@+id/num_steps"
+               style="@style/text.body.full" />
 
-            <TextView
-                android:id="@+id/guide_parts"
-                style="@style/text.body.full" />
-            
-        </LinearLayout>
-        
-    </ScrollView>
-    <RelativeLayout style="@style/swipe_layout">
-        <ImageView 
+         <TextView
+               android:id="@+id/guide_tools"
+               style="@style/text.body.full" />
+
+         <TextView
+               android:id="@+id/guide_parts"
+               style="@style/text.body.full" />
+      </LinearLayout>
+   </ScrollView>
+   <RelativeLayout style="@style/swipe_layout">
+      <ImageView
             style="@style/swipe_to_begin" />
-    </RelativeLayout>
+   </RelativeLayout>
 </LinearLayout>

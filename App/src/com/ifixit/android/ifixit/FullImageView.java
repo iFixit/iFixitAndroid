@@ -15,10 +15,10 @@ public class FullImageView extends FragmentActivity {
 
       extras = getIntent().getExtras();
       mFilePath = (String)extras.get(GuideStepViewFragment.IMAGE_FILE_PATH);
-            
+
       setContentView(R.layout.full_screen_image);
       mWebView = (WebViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.web_view_fragment);
       mWebView.loadUrl("file://" + mFilePath);
-   }  
+   }
 }

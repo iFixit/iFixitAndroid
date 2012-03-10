@@ -32,7 +32,7 @@ public class Guide implements Serializable {
    public void addTool(GuideTool tool) {
       mTools.add(tool);
    }
-   
+
    public int getNumTools() {
       return mTools.size();
    }
@@ -40,19 +40,21 @@ public class Guide implements Serializable {
    public GuideTool getTool(int position) {
       return mTools.get(position);
    }
-   
+
    public String getToolsFormatted() {
       String formattedTools = "Required Tools: <br />";
-      for (GuideTool t : mTools) 
-         formattedTools += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() + "</a><br />";
-      
+      for (GuideTool t : mTools) {
+         formattedTools += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
+          "</a><br />";
+      }
+
       return formattedTools;
    }
-   
+
    public void addPart(GuidePart part) {
       mParts.add(part);
    }
-   
+
    public int getNumParts() {
       return mParts.size();
    }
@@ -60,20 +62,19 @@ public class Guide implements Serializable {
    public GuidePart getPart(int position) {
       return mParts.get(position);
    }
-   
+
    public String getPartsFormatted() {
       String formattedPart = "Required Parts: <br />";
-      for (GuidePart t : mParts) 
+      for (GuidePart t : mParts)
          formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() + "</a><br />";
-      
+
       return formattedPart;
    }
 
-   
    public void addStep(GuideStep step) {
       mSteps.add(step);
    }
-   
+
    public int getNumSteps() {
       return mSteps.size();
    }
@@ -137,11 +138,11 @@ public class Guide implements Serializable {
    public String getIntroduction() {
       return mIntroduction;
    }
-   
+
    public void setIntroImage(String url) {
       mIntroImage = url;
    }
-   
+
    public String getIntroImage() {
       return mIntroImage;
    }
@@ -153,11 +154,11 @@ public class Guide implements Serializable {
    public String getSummary() {
       return mSummary;
    }
-   
+
    public String getSubject() {
 	  return mSubject;
    }
-   
+
    public void setSubject(String subject) {
 	  mSubject = subject;
    }

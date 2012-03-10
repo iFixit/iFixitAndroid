@@ -134,7 +134,7 @@ public class TopicViewFragment extends Fragment {
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
             }
-            
+
             return webView;
          } else {
             Log.w("iFixit", "Too many tabs!");

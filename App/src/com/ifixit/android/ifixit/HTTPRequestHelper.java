@@ -50,10 +50,10 @@ import android.util.Log;
 /**
  * Wrapper to help make HTTP requests easier - after all, we want to make it
  * nice for the people.
- * 
- * 
+ *
+ *
  * @author charliecollins
- * 
+ *
  */
 public class HTTPRequestHelper {
 
@@ -63,14 +63,14 @@ public class HTTPRequestHelper {
    private static final int POST_TYPE = 1;
    private static final int GET_TYPE = 2;
    private static final String CONTENT_TYPE = "Content-Type";
-   
+
    public static final String MIME_FORM_ENCODED =
     "application/x-www-form-urlencoded";
    public static final String MIME_TEXT_PLAIN = "text/plain";
    private static final DefaultHttpClient client;
 
-   static {      
-      HttpParams params = new BasicHttpParams();      
+   static {
+      HttpParams params = new BasicHttpParams();
       SchemeRegistry schemeRegistry = new SchemeRegistry();
       ThreadSafeClientConnManager cm;
 
@@ -79,26 +79,26 @@ public class HTTPRequestHelper {
       params.setParameter(CoreProtocolPNames.HTTP_CONTENT_CHARSET, HTTP.UTF_8);
       params.setParameter(CoreConnectionPNames.CONNECTION_TIMEOUT, 15000);
       params.setParameter(CoreConnectionPNames.STALE_CONNECTION_CHECK, false);
-      
+
       schemeRegistry.register(new Scheme("http",
        PlainSocketFactory.getSocketFactory(), 80));
       schemeRegistry.register(new Scheme("https",
        SSLSocketFactory.getSocketFactory(), 443));
 
       cm = new ThreadSafeClientConnManager(params, schemeRegistry);
-      client = new DefaultHttpClient(cm, params);      
+      client = new DefaultHttpClient(cm, params);
    }
 
    private final ResponseHandler<String> responseHandler;
 
    /**
-    * Constructor that accepts ResponseHandler parameter, 
-    * you can define your own ResponseHandler and do whatever you need with it. 
-    * 
-    * Note: you can also use the default String based response handler 
+    * Constructor that accepts ResponseHandler parameter,
+    * you can define your own ResponseHandler and do whatever you need with it.
+    *
+    * Note: you can also use the default String based response handler
     * with the static <code>HTTPRequestHelper.getResponseHandlerInstance()
-    * </code> method. 
-    * 
+    * </code> method.
+    *
     * @param responseHandler
     */
    public HTTPRequestHelper(final ResponseHandler<String> responseHandler) {
@@ -112,7 +112,7 @@ public class HTTPRequestHelper {
 
    /**
     * Perform a simple HTTP GET operation.
-    * 
+    *
     */
    public void performGet(final String url) {
       performRequest(null, url, null, null, null, null,
@@ -121,7 +121,7 @@ public class HTTPRequestHelper {
 
    /**
     * Perform an HTTP GET operation with user/pass and headers.
-    * 
+    *
     */
    public void performGet(final String url, final String user,
     final String pass, final Map<String, String> additionalHeaders) {
@@ -131,7 +131,7 @@ public class HTTPRequestHelper {
 
    /**
     * Perform an HTTP POST operation with specified content type.
-    * 
+    *
     */
    public void performPost(final String contentType, final String url,
     final String user, final String pass, final Map<String,
@@ -143,7 +143,7 @@ public class HTTPRequestHelper {
    /**
     * Perform an HTTP POST operation with a default conent-type of
     * "application/x-www-form-urlencoded."
-    * 
+    *
     */
    public void performPost(final String url, final String user,
     final String pass, final Map<String, String> additionalHeaders,
@@ -155,7 +155,7 @@ public class HTTPRequestHelper {
    /**
     * Private heavy lifting method that performs GET or POST with supplied
     * url, user, pass, data, and headers.
-    * 
+    *
     * @param contentType
     * @param url
     * @param user
@@ -236,8 +236,8 @@ public class HTTPRequestHelper {
    }
 
    /**
-    * Once the client and method are established, execute the request. 
-    * 
+    * Once the client and method are established, execute the request.
+    *
     * @param client
     * @param method
     */
@@ -267,7 +267,7 @@ public class HTTPRequestHelper {
     * Static utility method to create a default ResponseHandler that sends a
     * Message to the passed * in Handler with the response as a String, after
     * the request completes.
-    * 
+    *
     * @param handler
     * @return
     */

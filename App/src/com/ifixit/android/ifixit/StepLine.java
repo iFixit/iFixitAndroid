@@ -8,22 +8,21 @@ public class StepLine implements Serializable {
    protected int mLevel;
    protected String mText;
    protected boolean hasIcon = false;
-   
+
    public StepLine(String color, int level, String text) {
       if (color.compareTo("icon_reminder") == 0 ||
-         color.compareTo("icon_caution") == 0 || 
-         color.compareTo("icon_note") == 0) 
-      { 
+       color.compareTo("icon_caution") == 0 ||
+       color.compareTo("icon_note") == 0) {
          hasIcon = true;
       } else {
          hasIcon = false;
       }
-      
+
       mColor = color;
       mLevel = level;
       mText = text;
    }
-   
+
    public void setColor(String color) {
       mColor = color;
    }
@@ -35,7 +34,7 @@ public class StepLine implements Serializable {
    public void setText(String text) {
       mText = text;
    }
-   
+
    public String getText() {
       return mText;
    }
@@ -43,11 +42,11 @@ public class StepLine implements Serializable {
    public int getLevel() {
       return mLevel;
    }
-   
+
    public String getColor() {
       return mColor;
    }
-   
+
    public String toString() {
       return "{StepLine: " + mColor + ", " + mLevel + ", " + mText + "}";
    }

@@ -10,13 +10,13 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
 
    private Guide mGuide;
    private ImageManager mImageManager;
-   
+
    public GuideViewAdapter(FragmentManager fm, ImageManager im, Guide guide) {
       super(fm);
       mImageManager = im;
       mGuide = guide;
    }
-      
+
    @Override
    public int getCount() {
       if (mGuide != null) {
@@ -30,15 +30,15 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
    public Fragment getItem(int position) {
 	   GuideIntroViewFragment introView;
       GuideStepViewFragment stepView;
-      
+
       if (position == GUIDE_INTRO_POSITION) {
          introView = new GuideIntroViewFragment(mImageManager, mGuide);
-         
+
          return introView;
       } else {
          stepView = new GuideStepViewFragment(mImageManager,
           mGuide.getStep(position-STEP_OFFSET));
-         
+
          return stepView;
       }
    }

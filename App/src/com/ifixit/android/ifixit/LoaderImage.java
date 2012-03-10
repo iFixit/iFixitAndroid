@@ -33,14 +33,14 @@ public class LoaderImage extends RelativeLayout {
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(
        Context.LAYOUT_INFLATER_SERVICE);
 
-      inflater.inflate(R.layout.loader_image, this, true);        
+      inflater.inflate(R.layout.loader_image, this, true);
 
       mImage = (ImageView)findViewById(R.id.imageView);
       //mProgressBar = (ProgressBar)findViewById(R.id.loaderProgressBar);
       mImage.setVisibility(View.GONE);
       //mProgressBar.setVisibility(View.VISIBLE);
    }
-   
+
    public void setScaleType(ImageView.ScaleType scaleType) {
       mImage.setScaleType(scaleType);
    }

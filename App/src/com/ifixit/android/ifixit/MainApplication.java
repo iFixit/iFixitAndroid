@@ -10,11 +10,12 @@ public class MainApplication extends Application {
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
-	
+
 	public ImageManager getImageManager() {
-		if (mImageManager == null)
+		if (mImageManager == null) {
 		   mImageManager = new ImageManager(this);
-		
+      }
+
 		return mImageManager;
 	}
 

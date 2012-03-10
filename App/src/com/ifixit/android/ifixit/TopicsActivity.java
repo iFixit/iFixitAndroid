@@ -106,7 +106,7 @@ public class TopicsActivity extends FragmentActivity implements
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
          TopicListFragment newFragment = new TopicListFragment(topic,
           currentTopic == null ? null : currentTopic.getName());
-         
+
          ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
           R.anim.slide_in_left, R.anim.slide_out_right);
          ft.replace(R.id.topic_list_fragment, newFragment);

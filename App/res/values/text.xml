@@ -6,9 +6,9 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
-        
+
     <style name="text.title">
-        <item name="android:typeface">serif</item>        
+        <item name="android:typeface">serif</item>
         <item name="android:textSize">24sp</item>
     </style>
     <style name="text.title.full">
@@ -23,12 +23,12 @@
     </style>
     <style name="text.title.720">
         <item name="android:textSize">42sp</item>
-        <item name="android:layout_marginBottom">12dp</item>        
+        <item name="android:layout_marginBottom">12dp</item>
     </style>
     <style name="text.title.720.full">
         <item name="android:layout_width">fill_parent</item>
     </style>
-    
+
     <style name="text.body">
         <item name="android:textSize">14sp</item>
     </style>
@@ -38,7 +38,7 @@
     <style name="text.body.half">
         <item name="android:layout_weight">1</item>
     </style>
-    
+
     <style name="text.body.720">
         <item name="android:textSize">18sp</item>
         <item name="android:layout_marginTop">16dp</item>
@@ -49,23 +49,23 @@
         <style name="text.body.720.half">
         <item name="android:layout_weight">1</item>
     </style>
-    
+
     <style name="text.body.step_row">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">97</item>
     </style>
-    
+
     <style name="text.body.step_row.720">
         <item name="android:textSize">18sp</item>
     </style>
-        
+
     <style name="text.list">
         <item name="android:padding">8dp</item>
-        <item name="android:textSize">18sp</item>        
+        <item name="android:textSize">18sp</item>
     </style>
-    
+
     <style name="text.list.full">
         <item name="android:layout_width">fill_parent</item>
     </style>
-    
+
 </resources>

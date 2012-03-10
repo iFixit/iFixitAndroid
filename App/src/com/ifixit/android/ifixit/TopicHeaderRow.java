@@ -10,11 +10,11 @@ public class TopicHeaderRow extends LinearLayout {
    private String mHeader;
 
    public TopicHeaderRow(Context context) {
-      super(context);      
+      super(context);
 
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(
        Context.LAYOUT_INFLATER_SERVICE);
-      inflater.inflate(R.layout.topic_header_row, this, true);        
+      inflater.inflate(R.layout.topic_header_row, this, true);
 
       mTopicName = (TextView)findViewById(R.id.topic_header);
    }

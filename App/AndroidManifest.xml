@@ -9,9 +9,9 @@
    <uses-permission android:name="android.permission.RECORD_AUDIO" />
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
-   <application android:name="com.ifixit.android.ifixit.MainApplication" 
-         android:icon="@drawable/icon" 
-         android:label="@string/app_name" 
+   <application android:name="com.ifixit.android.ifixit.MainApplication"
+         android:icon="@drawable/icon"
+         android:label="@string/app_name"
          android:theme="@android:style/Theme.Holo"
          android:background="@drawable/default_background"
          android:logo="@drawable/logo">

@@ -87,7 +87,7 @@ public class GuideStepViewFragment extends Fragment {
 
       mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);
       mThumbs.setMainImage(mMainImage);
-	
+
       if (mStep != null)
          setStep();
 
@@ -143,7 +143,7 @@ public class GuideStepViewFragment extends Fragment {
 
          if (stepLine == null) {
             stepLine = new GuideStepLineView(mContext);
-         } 
+         }
 
          stepLine.setLine(mLines.get(position));
          return stepLine;

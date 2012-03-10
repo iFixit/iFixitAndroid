@@ -6,7 +6,7 @@ APIs used:
    http://ifixit.com/api/0.1/guide
    http://ifixit.com/api/0.1/areas
    http://ifixit.com/api/0.1/guide/{name}
- 
+
 ----------
 
 == CONTRIBUTING
@@ -14,8 +14,8 @@ APIs used:
 This app is a native android version of the iFixit website.  We offer native
 browsing of our guides as well as integrated web views of our site with Answers
 and our Cart.  We've got some fun experimental features we're playing around
-with like Voice Command for navigating through guides. 
- 
+with like Voice Command for navigating through guides.
+
 We have a small development team, and don't have the resources to do all of these
 ourselves. We'd love help! If any of those problems looks interesting to you, fork our
 code and hack away!
