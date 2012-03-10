@@ -97,8 +97,11 @@ public class TopicListFragment extends Fragment
       // TODO add these to strings.xml
 
       if (!mTopic.isRoot()) {
-         generalInfo.add(new TopicNode("General Information"));
-         adapter = new TopicListAdapter(mContext, mTopic.getName(),
+         // TODO: This is wrong. "General Information" and mTopic.getName()
+         // need to be switched. However, this takes the user to the
+         // "General Info" device which doesn't exist
+         generalInfo.add(new TopicNode(mTopic.getName()));
+         adapter = new TopicListAdapter(mContext, "General Information",
           generalInfo);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
