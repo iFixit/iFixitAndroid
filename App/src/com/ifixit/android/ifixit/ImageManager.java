@@ -21,7 +21,8 @@ public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
    private static final int MAX_STORED_IMAGES = 9;
    private static final int MAX_LOADING_IMAGES = 9;
-   private static final int DEFAULT_NUM_THREADS = 5;
+   private static final int DEFAULT_NUM_DOWNLOAD_THREADS = 5;
+   private static final int DEFAULT_NUM_WRITE_THREADS = 5;
 
    private HashMap<String, Bitmap> mImageMap;
    private HashMap<String, ImageRef> mLoadingImages;
@@ -29,32 +30,37 @@ public class ImageManager {
    private LinkedList<String> mRecentBitmaps;
    private File mCacheDir;
    private ImageQueue mImageQueue;
-   private Thread[] mThreads;
-   private Thread mWriteThread;
-   private final int mNumThreads;
+   private Thread[] mDownloadThreads;
+   private Thread[] mWriteThreads;
+   private final int mNumDownloadThreads;
+   private final int mNumWriteThreads;
 
    public ImageManager(Context context) {
-      this(context, DEFAULT_NUM_THREADS);
+      this(context, DEFAULT_NUM_DOWNLOAD_THREADS, DEFAULT_NUM_WRITE_THREADS);
    }
 
-   public ImageManager(Context context, int numThreads) {
-      mNumThreads = numThreads;
+   public ImageManager(Context context, int downloadThreads, int writeThreads) {
+      mNumDownloadThreads = downloadThreads;
+      mNumWriteThreads = writeThreads;
       mImageMap = new HashMap<String, Bitmap>();
       mWriteQueue = new LinkedList<BitmapFile>();
       mRecentBitmaps = new LinkedList<String>();
       mImageQueue = new ImageQueue();
-      mThreads = new Thread[mNumThreads];
+      mDownloadThreads = new Thread[mNumDownloadThreads];
+      mWriteThreads = new Thread[mNumWriteThreads];
       mLoadingImages = new HashMap<String, ImageRef>();
 
-      for (int i = 0; i < mNumThreads; i++) {
-         mThreads[i] = new Thread(new ImageQueueManager());
-         mThreads[i].setPriority(IMAGE_THREAD_PRIORITY);
-         mThreads[i].start();
+      for (int i = 0; i < mDownloadThreads.length; i++) {
+         mDownloadThreads[i] = new Thread(new ImageQueueManager());
+         mDownloadThreads[i].setPriority(IMAGE_THREAD_PRIORITY);
+         mDownloadThreads[i].start();
       }
 
-      mWriteThread = new Thread(new BitmapWriter());
-      mWriteThread.setPriority(IMAGE_THREAD_PRIORITY);
-      mWriteThread.start();
+      for (int i = 0; i < mWriteThreads.length; i ++) {
+         mWriteThreads[i] = new Thread(new BitmapWriter());
+         mWriteThreads[i].setPriority(IMAGE_THREAD_PRIORITY);
+         mWriteThreads[i].start();
+      }
 
       mCacheDir = context.getCacheDir();
 
@@ -99,7 +105,7 @@ public class ImageManager {
          if (mImageQueue.imageRefs.size() > MAX_LOADING_IMAGES)
             mImageQueue.imageRefs.removeLast();
 
-         mImageQueue.imageRefs.addFirst(imageRef);
+         mImageQueue.imageRefs.push(imageRef);
          mImageQueue.imageRefs.notify();
       }
    }
@@ -141,7 +147,7 @@ public class ImageManager {
 
    private void addToWriteQueue(Bitmap bitmap, File file) {
       synchronized (mWriteQueue) {
-         mWriteQueue.add(new BitmapFile(bitmap, file));
+         mWriteQueue.push(new BitmapFile(bitmap, file));
          mWriteQueue.notify();
       }
    }
@@ -231,7 +237,7 @@ public class ImageManager {
                   if (mImageQueue.imageRefs.size() == 0)
                      continue;
 
-                  imageToLoad = mImageQueue.imageRefs.removeFirst();
+                  imageToLoad = mImageQueue.imageRefs.pop();
                   synchronized (mLoadingImages) {
                      mLoadingImages.put(imageToLoad.getUrl(), imageToLoad);
                   }
@@ -257,6 +263,7 @@ public class ImageManager {
    }
 
    private class BitmapWriter implements Runnable {
+
       @Override
       public void run() {
          BitmapFile bitmapFile;
@@ -273,11 +280,12 @@ public class ImageManager {
                   if (mWriteQueue.size() == 0) {
                      continue;
                   }
+
+                  bitmapFile = mWriteQueue.pop();
                }
 
-               bitmapFile = mWriteQueue.pop();
-
                writeFile(bitmapFile.mBitmap, bitmapFile.mFile);
+
                bitmapFile = null;
             }
          } catch (InterruptedException e) {}
