@@ -30,6 +30,7 @@ public class TopicViewFragment extends Fragment {
    private ViewPager mPager;
    private TabPageIndicator mTabIndicator;
    private TopicViewAdapter mAdapter;
+   private ImageManager mImageManager;
 
    private final Handler mTopicHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -46,6 +47,7 @@ public class TopicViewFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      mImageManager = ((TopicViewActivity)getActivity()).getImageManager();
    }
 
    @Override
@@ -118,7 +120,7 @@ public class TopicViewFragment extends Fragment {
          }
 
          if (position == 0) {
-            return new TopicGuideListFragment(mTopicLeaf);
+            return new TopicGuideListFragment(mImageManager, mTopicLeaf);
          } else if (position == 1) {
             WebViewFragment webView = new WebViewFragment();
 

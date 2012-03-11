@@ -87,5 +87,12 @@
         <item name="android:layout_marginBottom">0dp</item>
         <item name="android:layout_marginRight">0dp</item>
     </style>
+    
+    <style name="topic_guide_thumbnail">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@drawable/img_background</item>
+        <item name="android:padding">1dp</item>      
+    </style>
 
 </resources>

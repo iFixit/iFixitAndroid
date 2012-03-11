@@ -10,12 +10,15 @@ public class TopicViewActivity extends FragmentActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;
+   protected ImageManager mImageManager;
 
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
       setContentView(R.layout.topic_view);
+
+      mImageManager = ((MainApplication)getApplication()).getImageManager();
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -52,6 +55,10 @@ public class TopicViewActivity extends FragmentActivity {
          mTopicView.setTopicNode((TopicNode)getIntent().
           getSerializableExtra(TOPIC_KEY));
       }
+   }
+   
+   public ImageManager getImageManager() {
+	   return mImageManager;
    }
 
    @Override

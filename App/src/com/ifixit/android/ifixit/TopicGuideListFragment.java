@@ -18,30 +18,36 @@ import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-public class TopicGuideListFragment extends Fragment
- implements OnItemClickListener {
+public class TopicGuideListFragment extends Fragment {
    protected static final String GUIDEID = "guideid";
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
 
    private TopicGuideListAdapter mGuideAdapter;
    private TopicLeaf mTopicLeaf;
    private GridView mGridView;
+   private ImageManager mImageManager;
 
    /**
     * Required for restoring fragments
     */
    public TopicGuideListFragment() {}
 
-   public TopicGuideListFragment(TopicLeaf topicLeaf) {
+   public TopicGuideListFragment(ImageManager imageManager, TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
+      mImageManager = imageManager;
    }
 
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
-
+      
       if (savedState != null && mTopicLeaf == null) {
          mTopicLeaf = (TopicLeaf)savedState.getSerializable(SAVED_TOPIC);
+      }
+     
+      if (mImageManager == null) {
+          mImageManager = ((MainApplication)getActivity().getApplication()).
+           getImageManager();
       }
    }
    
@@ -56,6 +62,19 @@ public class TopicGuideListFragment extends Fragment
       mGuideAdapter.setTopic(mTopicLeaf);
 
       mGridView.setAdapter(mGuideAdapter);
+      mGridView.setOnItemClickListener(new OnItemClickListener() {
+
+		@Override
+		public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+		   Log.w("Item Click", mTopicLeaf.getGuides().get(position).toString());
+	       GuideInfo guide = mTopicLeaf.getGuides().get(position);
+	       Intent intent = new Intent(getActivity(), GuideView.class);
+	
+	       intent.putExtra(GUIDEID, guide.getGuideid());
+	       startActivity(intent);		   	
+		}
+    	  
+      });
 
 	  return view;
    }
@@ -63,16 +82,6 @@ public class TopicGuideListFragment extends Fragment
    @Override
    public void onSaveInstanceState(Bundle state) {
       state.putSerializable(SAVED_TOPIC, mTopicLeaf);
-   }
-
-   @Override
-   public void onItemClick(AdapterView<?> l, View v, int position, long id) {
-       GuideInfo guide = mTopicLeaf.getGuides().get(position);
-       Intent intent = new Intent(getActivity(), GuideView.class);
-
-       intent.putExtra(GUIDEID, guide.getGuideid());
-       startActivity(intent);
-   	
    }
 
    private class TopicGuideListAdapter extends BaseAdapter {
@@ -98,11 +107,12 @@ public class TopicGuideListFragment extends Fragment
          TopicGuideItemView itemView;
 
          if (convertView == null) {
-        	itemView = new TopicGuideItemView(getActivity());
+        	itemView = new TopicGuideItemView(getActivity(), mImageManager);
         	
             String title = mTopic.getGuides().get(position).getTitle();
-            Log.w("Topic Guide List Title: ", title);
-            itemView.setGuideItem(title);
+            String thumbUrl = mTopic.getGuides().get(position).getThumbnail();
+            Log.w("Topic Guide info", mTopic.getGuides().get(position).toString());
+            itemView.setGuideItem(title, thumbUrl, getActivity());
          } else {
         	itemView = (TopicGuideItemView)convertView;
          }
