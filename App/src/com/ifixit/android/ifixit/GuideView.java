@@ -207,47 +207,4 @@ public class GuideView extends FragmentActivity implements OnPageChangeListener 
    public void onPageSelected(int page) {
       mCurrentPage = page;
    }
-
-   /*
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getMenuInflater();
-
-      if (APICompatibility.hasActionBar())
-         inflater.inflate(R.menu.guide_menu, menu);
-      else
-         inflater.inflate(R.menu.guide_menu_no_action_bar, menu);
-
-      return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onPrepareOptionsMenu(Menu menu) {
-      menu.findItem(R.id.previous_step).setEnabled(mCurrentPage > 0);
-      menu.findItem(R.id.next_step).setEnabled(mGuide == null ||
-       mCurrentPage < mGuide.getNumSteps());
-
-      return super.onPrepareOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case R.id.more_guides:
-            finish();
-            return true;
-         case R.id.guide_home:
-            guideHome();
-            return true;
-         case R.id.previous_step:
-            previousStep();
-            return true;
-         case R.id.next_step:
-            nextStep();
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
-   */
 }
