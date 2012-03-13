@@ -80,7 +80,7 @@ public class TopicsActivity extends FragmentActivity implements
       int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
 
       if (mBackStackSize > backStackSize) {
-         mTopicHistory.pop();
+         mTopicHistory.removeFirst();
       }
 
       mBackStackSize = backStackSize;
@@ -115,7 +115,7 @@ public class TopicsActivity extends FragmentActivity implements
             ft.addToBackStack(null);
          }
 
-         mTopicHistory.push(topic);
+         mTopicHistory.addFirst(topic);
 
          ft.commit();
       }

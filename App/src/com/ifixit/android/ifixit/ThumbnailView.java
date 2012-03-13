@@ -28,11 +28,6 @@ public class ThumbnailView extends LinearLayout {
       init(context);
    }
 
-   public ThumbnailView(Context context, AttributeSet attrs, int def) {
-      super(context, attrs, def);
-      init(context);
-   }
-
    private void init(Context context) {
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(
        Context.LAYOUT_INFLATER_SERVICE);

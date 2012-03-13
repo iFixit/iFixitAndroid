@@ -105,7 +105,7 @@ public class ImageManager {
          if (mImageQueue.imageRefs.size() > MAX_LOADING_IMAGES)
             mImageQueue.imageRefs.removeLast();
 
-         mImageQueue.imageRefs.push(imageRef);
+         mImageQueue.imageRefs.addFirst(imageRef);
          mImageQueue.imageRefs.notify();
       }
    }
@@ -147,7 +147,7 @@ public class ImageManager {
 
    private void addToWriteQueue(Bitmap bitmap, File file) {
       synchronized (mWriteQueue) {
-         mWriteQueue.push(new BitmapFile(bitmap, file));
+         mWriteQueue.addFirst(new BitmapFile(bitmap, file));
          mWriteQueue.notify();
       }
    }
@@ -237,7 +237,7 @@ public class ImageManager {
                   if (mImageQueue.imageRefs.size() == 0)
                      continue;
 
-                  imageToLoad = mImageQueue.imageRefs.pop();
+                  imageToLoad = mImageQueue.imageRefs.removeFirst();
                   synchronized (mLoadingImages) {
                      mLoadingImages.put(imageToLoad.getUrl(), imageToLoad);
                   }
@@ -280,7 +280,7 @@ public class ImageManager {
                      continue;
                   }
 
-                  bitmapFile = mWriteQueue.pop();
+                  bitmapFile = mWriteQueue.removeFirst();
                }
 
                writeFile(bitmapFile.mBitmap, bitmapFile.mFile);

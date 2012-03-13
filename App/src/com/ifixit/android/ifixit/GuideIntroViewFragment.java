@@ -80,10 +80,10 @@ public class GuideIntroViewFragment extends Fragment {
    }
 
    public void setGuide() {
-      if (!mGuide.mSubject.isEmpty()) {
-    	  mTitle.setText(Html.fromHtml(mGuide.getSubject()));
+      if (mGuide.mSubject.length() != 0) {
+         mTitle.setText(Html.fromHtml(mGuide.getSubject()));
       } else {
-          mTitle.setText(Html.fromHtml(mGuide.getTitle()));
+         mTitle.setText(Html.fromHtml(mGuide.getTitle()));
       }
       mIntro.setText(Html.fromHtml(mGuide.getIntroduction()));
 
