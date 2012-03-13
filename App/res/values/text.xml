@@ -62,6 +62,7 @@
     <style name="text.list">
         <item name="android:padding">8dp</item>
         <item name="android:textSize">18sp</item>
+        <item name="android:textColor">#444444</item>
     </style>
 
     <style name="text.list.full">
@@ -69,8 +70,9 @@
     </style>
     
     <style name="text.list.full.header">
-        <item name="android:paddingTop">4dp</item>
-        <item name="android:paddingBottom">4dp</item>                
+        <item name="android:paddingTop">2dp</item>
+        <item name="android:paddingBottom">2dp</item> 
+        <item name="android:textColor">#ffffff</item>               
     </style>
 
 </resources>

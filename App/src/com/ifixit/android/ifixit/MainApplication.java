@@ -28,9 +28,9 @@ public class MainApplication extends Application {
 
          // Larger screen = larger images
          if ((maxDimension / metrics.density) > 800) {
-            mImageSizes = new ImageSizes(".large", ".large", ".huge");
+            mImageSizes = new ImageSizes(".large", ".large", ".huge", ".standard");
          } else {
-            mImageSizes = new ImageSizes(".medium", ".medium", ".large");
+            mImageSizes = new ImageSizes(".medium", ".medium", ".large", ".standard");
          }
       }
 

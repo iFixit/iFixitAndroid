@@ -21,7 +21,7 @@ public class GuideInfo implements Serializable {
    }
 
    public void setThumbnail(String thumbnail) {
-      mThumbnail = thumbnail;
+      mThumbnail = thumbnail+".standard";
    }
 
    public void setTitle(String title) {

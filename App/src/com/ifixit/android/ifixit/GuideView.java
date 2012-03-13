@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.apache.http.client.ResponseHandler;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.CirclePageIndicator;
 
 import android.content.Intent;
@@ -19,7 +20,8 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 
-public class GuideView extends FragmentActivity implements OnPageChangeListener {
+public class GuideView extends SherlockFragmentActivity 
+ implements OnPageChangeListener {
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
    private static final String RESPONSE = "RESPONSE";

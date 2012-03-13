@@ -1,12 +1,14 @@
 package com.ifixit.android.ifixit;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.content.Intent;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-public class TopicViewActivity extends FragmentActivity {
+public class TopicViewActivity extends SherlockFragmentActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;
@@ -17,6 +19,8 @@ public class TopicViewActivity extends FragmentActivity {
       super.onCreate(savedState);
 
       setContentView(R.layout.topic_view);
+      
+      
 
       mImageManager = ((MainApplication)getApplication()).getImageManager();
 

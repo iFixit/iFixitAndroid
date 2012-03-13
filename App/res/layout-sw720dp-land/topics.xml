@@ -15,7 +15,7 @@
         android:id="@+id/topic_list_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="45" >
+        android:layout_weight="25" >
     </FrameLayout>
 
     <fragment
@@ -23,7 +23,7 @@
         android:name="com.ifixit.android.ifixit.TopicViewFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="55" >
+        android:layout_weight="75" >
     </fragment>
 
 </LinearLayout>

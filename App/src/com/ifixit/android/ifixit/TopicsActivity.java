@@ -4,16 +4,19 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import org.apache.http.client.ResponseHandler;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
-public class TopicsActivity extends FragmentActivity implements
+public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String TOPICS_API_URL =
     "http://www.ifixit.com/api/0.1/areas/";
@@ -49,7 +52,7 @@ public class TopicsActivity extends FragmentActivity implements
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
+      
       setContentView(R.layout.topics);
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);

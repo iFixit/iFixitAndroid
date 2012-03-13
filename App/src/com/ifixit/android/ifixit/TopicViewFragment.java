@@ -47,7 +47,11 @@ public class TopicViewFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      mImageManager = ((TopicViewActivity)getActivity()).getImageManager();
+      
+      if (mImageManager == null) {
+          mImageManager = ((MainApplication)getActivity().getApplication()).
+           getImageManager();
+      }
    }
 
    @Override

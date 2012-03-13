@@ -4,3 +4,6 @@
 [submodule "AndroidSectionHeaders"]
 	path = AndroidSectionHeaders
 	url = git@github.com:iFixit/AndroidSectionHeaders.git
+[submodule "ActionBarSherlock"]
+	path = ActionBarSherlock
+	url = git@github.com:iFixit/ActionBarSherlock.git
