@@ -30,7 +30,7 @@ public class TopicViewFragment extends SherlockFragment {
    private static final int MORE_INFO_TAB = 2;
    private static final String RESPONSE = "RESPONSE";
    private static final String TOPIC_API_URL =
-    "http://www.ifixit.com/api/0.1/device/";
+    "http://www.ifixit.com/api/1.0/topic/";
    private TabHost mTabHost;
 
    private TopicNode mTopicNode;

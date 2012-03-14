@@ -24,7 +24,7 @@ public class GuideView extends SherlockFragmentActivity
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
    private static final String RESPONSE = "RESPONSE";
-   private static final String API_URL = "http://www.ifixit.com/api/0.1/guide/";
+   private static final String API_URL = "http://www.ifixit.com/api/1.0/guide/";
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";

@@ -10,7 +10,7 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class JSONHelper {
-   private static final String LEAF_INDICATOR = "DEVICES";
+   private static final String LEAF_INDICATOR = "TOPICS";
 
    /**
     * Guide parsing
@@ -27,7 +27,7 @@ public class JSONHelper {
          Guide guide = new Guide(jGuideInfo.getInt("guideid"));
 
          guide.setTitle(jGuide.getString("title"));
-         guide.setTopic(jGuideInfo.getString("device"));
+         guide.setTopic(jGuideInfo.getString("topic"));
          guide.setSubject(jGuide.getString("subject"));
          guide.setAuthor(jAuthor.getString("text"));
          guide.setTimeRequired(jGuide.getString("time_required"));
@@ -66,7 +66,8 @@ public class JSONHelper {
    }
 
    public static GuideStep parseStep(JSONObject jStep) throws JSONException {
-      JSONArray jImages = jStep.getJSONArray("images");
+      JSONObject jMedia = jStep.getJSONObject("media");
+      JSONArray jImages = jMedia.getJSONArray("image");
       JSONArray jLines = jStep.getJSONArray("lines");
       GuideStep step = new GuideStep(jStep.getInt("number"));
 
@@ -173,7 +174,7 @@ public class JSONHelper {
          JSONObject jTopic = new JSONObject(json);
          JSONArray jGuides = jTopic.getJSONArray("guides");
          JSONObject jSolutions = jTopic.getJSONObject("solutions");
-         JSONObject jInfo = jTopic.getJSONObject("device_info");
+         JSONObject jInfo = jTopic.getJSONObject("topic_info");
          TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
 
          for (int i = 0; i < jGuides.length(); i++) {

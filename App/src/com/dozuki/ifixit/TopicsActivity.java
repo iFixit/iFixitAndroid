@@ -20,7 +20,7 @@ import com.actionbarsherlock.view.MenuInflater;
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String TOPICS_API_URL =
-    "http://www.ifixit.com/api/0.1/areas/";
+    "http://www.ifixit.com/api/1.0/categories/";
    private static final String RESPONSE = "RESPONSE";
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_HISTORY = "TOPIC_HISTORY";
