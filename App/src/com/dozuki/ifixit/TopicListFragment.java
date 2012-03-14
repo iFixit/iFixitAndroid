@@ -1,6 +1,8 @@
 package com.dozuki.ifixit;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 import android.app.Activity;
 import android.content.Context;
@@ -93,6 +95,15 @@ public class TopicListFragment extends Fragment
             nonLeaves.add(topic);
          }
       }
+
+      Comparator<TopicNode> comparator = new Comparator<TopicNode>() {
+         public int compare(TopicNode first, TopicNode second) {
+            return first.getName().compareTo(second.getName());
+         }
+      };
+
+      Collections.sort(nonLeaves, comparator);
+      Collections.sort(leaves, comparator);
 
       if (!mTopic.isRoot()) {
          // TODO: This is wrong. "General Information" and mTopic.getName()
