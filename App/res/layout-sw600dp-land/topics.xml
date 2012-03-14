@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/topic_view_fragment"
-        android:name="com.ifixit.android.ifixit.TopicViewFragment"
+        android:name="com.dozuki.ifixit.TopicViewFragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="55" >

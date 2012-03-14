@@ -2,15 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     style="@style/thumbnail_wrap.vertical" >
 
-    <com.ifixit.android.ifixit.LoaderImage
+    <com.dozuki.ifixit.LoaderImage
         android:id="@+id/thumbnail_1"
         style="@style/thumbnail.720" />
 
-    <com.ifixit.android.ifixit.LoaderImage
+    <com.dozuki.ifixit.LoaderImage
         android:id="@+id/thumbnail_2"
         style="@style/thumbnail.720" />
 
-    <com.ifixit.android.ifixit.LoaderImage
+    <com.dozuki.ifixit.LoaderImage
         android:id="@+id/thumbnail_3"
         style="@style/thumbnail.720.last" />
 

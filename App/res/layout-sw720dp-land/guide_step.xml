@@ -4,11 +4,11 @@
 
     <RelativeLayout style="@style/image_wrap.720.land" >
 
-        <com.ifixit.android.ifixit.LoaderImage
+        <com.dozuki.ifixit.LoaderImage
             android:id="@+id/main_image"
             style="@style/main_image.720.land" />
 
-        <com.ifixit.android.ifixit.ThumbnailView
+        <com.dozuki.ifixit.ThumbnailView
             android:id="@+id/thumbnails"
             style="@style/thumbnail_view.land" />
     </RelativeLayout>

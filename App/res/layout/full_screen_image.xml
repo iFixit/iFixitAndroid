@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <fragment xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/web_view_fragment"
-    android:name="com.ifixit.android.ifixit.WebViewFragment"
+    android:name="com.dozuki.ifixit.WebViewFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent" />
