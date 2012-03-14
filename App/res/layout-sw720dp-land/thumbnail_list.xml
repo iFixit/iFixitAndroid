@@ -4,11 +4,11 @@
 
     <com.dozuki.ifixit.LoaderImage
         android:id="@+id/thumbnail_1"
-        style="@style/thumbnail.720" />
+        style="@style/thumbnail.720.land" />
 
     <com.dozuki.ifixit.LoaderImage
         android:id="@+id/thumbnail_2"
-        style="@style/thumbnail.720" />
+        style="@style/thumbnail.720.land" />
 
     <com.dozuki.ifixit.LoaderImage
         android:id="@+id/thumbnail_3"

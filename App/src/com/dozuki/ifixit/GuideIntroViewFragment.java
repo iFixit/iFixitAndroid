@@ -2,18 +2,17 @@ package com.dozuki.ifixit;
 
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.text.Html;
-
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class GuideIntroViewFragment extends Fragment {
+import com.actionbarsherlock.app.SherlockFragment;
+
+public class GuideIntroViewFragment extends SherlockFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
 
    private TextView mTitle;
@@ -22,6 +21,8 @@ public class GuideIntroViewFragment extends Fragment {
    private TextView mAuthor;
    private TextView mTools;
    private TextView mParts;
+   private LoaderImage mIntroImage;
+   private ImageManager mImageManager;
    private Guide mGuide;
    private Typeface mBoldFont;
 
@@ -39,6 +40,11 @@ public class GuideIntroViewFragment extends Fragment {
 
       if (savedInstanceState != null && mGuide == null) {
          mGuide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
+      }
+
+      if (mImageManager == null) {
+         mImageManager = ((MainApplication)getActivity().getApplication()).
+          getImageManager();
       }
    }
 
@@ -60,6 +66,7 @@ public class GuideIntroViewFragment extends Fragment {
       mAuthor     = (TextView)view.findViewById(R.id.guide_author);
       mTools      = (TextView)view.findViewById(R.id.guide_tools);
       mParts      = (TextView)view.findViewById(R.id.guide_parts);
+      //mIntroImage = (LoaderImage)view.findViewById(R.id.intro_image);
 
       MovementMethod method = LinkMovementMethod.getInstance();
 
@@ -92,6 +99,8 @@ public class GuideIntroViewFragment extends Fragment {
       mAuthor.setText(getActivity().getString(R.string.author) + ": " +
        Html.fromHtml(mGuide.getAuthor()));
 
+      //mImageManager.displayImage(mGuide.mIntroImage, getActivity(), mIntroImage);
+      
       if (mGuide.getNumTools() != 0) {
          mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(
           getActivity().getString(R.string.requiredTools))));

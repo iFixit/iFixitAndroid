@@ -56,7 +56,8 @@
     </style>
 
     <style name="text.body.step_row.720">
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
     <style name="text.list">

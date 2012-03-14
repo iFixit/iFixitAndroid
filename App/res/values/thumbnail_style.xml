@@ -69,13 +69,15 @@
         <item name="android:layout_width">160dp</item>
         <item name="android:layout_height">120dp</item>
         <item name="android:padding">2dp</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:layout_marginRight">12dp</item>
     </style>
 
     <style name="thumbnail.720.land">
-        <item name="android:layout_width">230dp</item>
-        <item name="android:layout_height">172.5dp</item>
+        <item name="android:layout_width">160dp</item>
+        <item name="android:layout_height">120dp</item>
         <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginRight">12dp</item>
     </style>
 
     <style name="thumbnail.720.last">

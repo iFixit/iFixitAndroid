@@ -1,6 +1,7 @@
 package com.dozuki.ifixit;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 
 import android.content.Intent;
 
@@ -57,6 +58,7 @@ public class TopicViewActivity extends SherlockFragmentActivity {
           getSerializableExtra(TOPIC_KEY));
       }
    }
+
    
    public ImageManager getImageManager() {
 	   return mImageManager;

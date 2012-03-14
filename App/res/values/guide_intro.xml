@@ -6,13 +6,20 @@
     </style>
 
     <style name="intro_scroll">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">0dp</item>
         <item name="android:layout_weight">85</item>
+    </style>
+    <style name="intro_scroll.land">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="intro_scroll.layout">
         <item name="android:orientation">vertical</item>
+    </style>
+    
+    <style name="intro_scroll.land.layout" parent="intro_scroll.layout">
     </style>
 
     <style name="swipe_layout">

@@ -35,7 +35,7 @@
     <style name="step_row_icon.720">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginLeft">20dp</item>
         <item name="android:layout_marginTop">6dp</item>
     </style>
 

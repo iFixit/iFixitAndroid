@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
       style="@style/guide_wrap.vertical" >
-
+    <!-- <RelativeLayout 
+        style="@style/image_wrap">
+        <com.dozuki.ifixit.LoaderImage
+            android:id="@+id/intro_image"
+            style="@style/main_image" />
+    </RelativeLayout>
+    -->
    <ScrollView
          android:id="@+id/guide_intro_scroll"
          style="@style/intro_scroll" >

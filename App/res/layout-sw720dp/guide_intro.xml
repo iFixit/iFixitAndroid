@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/guide_wrap" >
-
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent">
+       <!--  <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true">
+        <com.dozuki.ifixit.LoaderImage
+            android:id="@+id/intro_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>-->
     <ScrollView
         android:id="@+id/guide_intro_scroll"
-        style="@style/intro_scroll" >
+        android:layout_alignParentRight="true"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent" >
 
         <LinearLayout
-            style="@style/intro_scroll.layout">
+            style="@style/intro_scroll.land.layout">
 
             <TextView
                 android:id="@+id/guide_title"
@@ -46,8 +57,10 @@
                 style="@style/text.body.720.full" />
         </LinearLayout>
     </ScrollView>
-
-    <ImageView
-        style="@style/swipe_to_begin" />
-
+   <RelativeLayout style="@style/swipe_layout"
+       android:layout_below="@+id/guide_intro_scroll"
+       android:layout_alignParentRight="true">
+      <ImageView
+            style="@style/swipe_to_begin" />
+   </RelativeLayout>
 </RelativeLayout>

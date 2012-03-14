@@ -2,17 +2,20 @@ package com.dozuki.ifixit;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
+
 import org.apache.http.client.ResponseHandler;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
-import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
@@ -69,6 +72,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       mBackStackSize = getSupportFragmentManager().getBackStackEntryCount();
    }
 
+  
+   
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
@@ -122,6 +127,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
    }
 
+
+   
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
