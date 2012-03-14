@@ -76,6 +76,7 @@ public class ImageManager {
          imageView.setImageBitmap(bitmap);
       }
       else {
+         imageView.setImageBitmap(null);
          queueImage(url, activity, imageView);
       }
    }
