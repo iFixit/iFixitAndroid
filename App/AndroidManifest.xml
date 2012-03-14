@@ -15,7 +15,7 @@
          android:theme="@style/Theme.iFixit"
          android:background="@drawable/default_background"
          android:logo="@drawable/logo">
-      <activity android:name="com.dozuki.ifixit.MainActivity"
+      <activity android:name="com.dozuki.ifixit.TopicsActivity"
             android:theme="@style/Theme.iFixit">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
