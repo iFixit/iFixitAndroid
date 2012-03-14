@@ -13,7 +13,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.speech.SpeechRecognizer;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
@@ -135,13 +134,11 @@ public class GuideView extends SherlockFragmentActivity
          mSpeechCommander.startListening();
    }
 
-   // TODO: Remove this?
    public int getScreenHeight() {
       Display display = getWindowManager().getDefaultDisplay();
       return display.getHeight();
    }
 
-   // TODO: Remove this?
    public int getScreenWidth() {
       Display display = getWindowManager().getDefaultDisplay();
       return display.getWidth();

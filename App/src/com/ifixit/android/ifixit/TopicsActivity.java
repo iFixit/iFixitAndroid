@@ -9,11 +9,9 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.content.Intent;
-import android.content.res.Resources.Theme;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 
 public class TopicsActivity extends SherlockFragmentActivity implements

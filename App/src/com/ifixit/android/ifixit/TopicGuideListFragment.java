@@ -3,9 +3,7 @@ package com.ifixit.android.ifixit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.ListFragment;
 
-import android.text.Html;
 import android.util.Log;
 
 import android.view.LayoutInflater;
@@ -15,8 +13,6 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.ListView;
-import android.widget.TextView;
 
 public class TopicGuideListFragment extends Fragment {
    protected static final String GUIDEID = "guideid";
