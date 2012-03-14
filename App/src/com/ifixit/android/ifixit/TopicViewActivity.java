@@ -19,8 +19,6 @@ public class TopicViewActivity extends SherlockFragmentActivity {
 
       setContentView(R.layout.topic_view);
       
-      
-
       mImageManager = ((MainApplication)getApplication()).getImageManager();
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()

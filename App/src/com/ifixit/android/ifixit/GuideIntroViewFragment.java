@@ -22,18 +22,15 @@ public class GuideIntroViewFragment extends Fragment {
    private TextView mAuthor;
    private TextView mTools;
    private TextView mParts;
-   private ImageManager mImageManager;
    private Guide mGuide;
    private Typeface mBoldFont;
-   private Typeface mRegularFont;
 
    public GuideIntroViewFragment() {
 
    }
 
-   public GuideIntroViewFragment(ImageManager im, Guide guide) {
+   public GuideIntroViewFragment(Guide guide) {
       mGuide = guide;
-      mImageManager = im;
    }
 
    @Override
@@ -96,11 +93,13 @@ public class GuideIntroViewFragment extends Fragment {
        Html.fromHtml(mGuide.getAuthor()));
 
       if (mGuide.getNumTools() != 0) {
-         mTools.setText(Html.fromHtml(mGuide.getToolsFormatted()));
+         mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(
+          getActivity().getString(R.string.requiredTools))));
       }
 
       if (mGuide.getNumParts() != 0) {
-         mParts.setText(Html.fromHtml(mGuide.getPartsFormatted()));
+         mParts.setText(Html.fromHtml(mGuide.getPartsFormatted(
+          getActivity().getString(R.string.requiredParts))));
       }
    }
 }

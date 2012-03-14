@@ -88,8 +88,9 @@ public class GuideStepViewFragment extends Fragment {
       mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);
       mThumbs.setMainImage(mMainImage);
 
-      if (mStep != null)
+      if (mStep != null) {
          setStep();
+      }
 
       return view;
    }
@@ -105,10 +106,12 @@ public class GuideStepViewFragment extends Fragment {
    }
 
    public void setStep() {
-      if (mStep.getTitle().length() == 0)
-         mTitle.setText("Step " + mStep.getStepNum());
-      else
+      if (mStep.getTitle().length() == 0) {
+         mTitle.setText(getActivity().getString(R.string.step) + " " +
+          mStep.getStepNum());
+      } else {
          mTitle.setText(mStep.getTitle());
+      }
 
       mTextAdapter = new StepTextArrayAdapter(getActivity(),
        R.id.step_text_list, mStep.getLines());

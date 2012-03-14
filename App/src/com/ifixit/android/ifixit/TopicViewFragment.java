@@ -160,11 +160,11 @@ public class TopicViewFragment extends Fragment {
       @Override
       public String getTitle(int position) {
          if (position == 0) {
-            return "Guides";
+            return getActivity().getString(R.string.guides);
          } else if (position == 1) {
-            return "Answers";
+            return getActivity().getString(R.string.answers);
          } else if (position == 2) {
-            return "More Info";
+            return getActivity().getString(R.string.moreInfo);
          } else {
             Log.w("iFixit", "Too many tabs!");
             return null;

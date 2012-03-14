@@ -21,16 +21,20 @@ public class MainApplication extends Application {
 
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {
-         WindowManager wm = (WindowManager)getSystemService(Context.WINDOW_SERVICE);
+         WindowManager wm = (WindowManager)getSystemService(
+          Context.WINDOW_SERVICE);
          DisplayMetrics metrics = new DisplayMetrics();
          wm.getDefaultDisplay().getMetrics(metrics);
-         int maxDimension = Math.max(metrics.heightPixels, metrics.widthPixels);
+         int maxDimension = Math.max(metrics.heightPixels,
+          metrics.widthPixels);
 
          // Larger screen = larger images
          if ((maxDimension / metrics.density) > 800) {
-            mImageSizes = new ImageSizes(".large", ".large", ".huge", ".standard");
+            mImageSizes = new ImageSizes(".large", ".large", ".large",
+             ".standard");
          } else {
-            mImageSizes = new ImageSizes(".medium", ".medium", ".large", ".standard");
+            mImageSizes = new ImageSizes(".medium", ".medium", ".medium",
+             ".standard");
          }
       }
 

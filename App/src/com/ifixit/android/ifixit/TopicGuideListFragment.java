@@ -22,6 +22,7 @@ public class TopicGuideListFragment extends Fragment {
    private TopicLeaf mTopicLeaf;
    private GridView mGridView;
    private ImageManager mImageManager;
+   private ImageSizes mImageSizes;
 
    /**
     * Required for restoring fragments
@@ -45,6 +46,9 @@ public class TopicGuideListFragment extends Fragment {
           mImageManager = ((MainApplication)getActivity().getApplication()).
            getImageManager();
       }
+
+      mImageSizes = ((MainApplication)getActivity().getApplication()).
+       getImageSizes();
    }
    
    @Override
@@ -100,18 +104,17 @@ public class TopicGuideListFragment extends Fragment {
       }
 
       public View getView(int position, View convertView, ViewGroup parent) {
-         TopicGuideItemView itemView;
+         TopicGuideItemView itemView = (TopicGuideItemView)convertView;
 
          if (convertView == null) {
-        	itemView = new TopicGuideItemView(getActivity(), mImageManager);
-        	
-            String title = mTopic.getGuides().get(position).getTitle();
-            String thumbUrl = mTopic.getGuides().get(position).getThumbnail();
-            Log.w("Topic Guide info", mTopic.getGuides().get(position).toString());
-            itemView.setGuideItem(title, thumbUrl, getActivity());
-         } else {
-        	itemView = (TopicGuideItemView)convertView;
+            itemView = new TopicGuideItemView(getActivity(), mImageManager);
          }
+
+         String title = mTopic.getGuides().get(position).getTitle();
+         String image = mTopic.getGuides().get(position).getImage() +
+          mImageSizes.getGrid();
+         Log.w("Topic Guide info", mTopic.getGuides().get(position).toString());
+         itemView.setGuideItem(title, image, getActivity());
 
          return itemView;
       }

@@ -7,7 +7,6 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 public class TopicGuideItemView extends LinearLayout {
-
    private LinearLayout mBox; 
    private TextView mTitleView;	
    private LoaderImage mThumbnail;
@@ -28,10 +27,10 @@ public class TopicGuideItemView extends LinearLayout {
       mThumbnail = (LoaderImage)findViewById(R.id.topic_guide_thumbnail);
    }
 
-   public void setGuideItem(String title, String thumbUrl, Context context) {
+   public void setGuideItem(String title, String image, Context context) {
       mContext = context;
 
       mTitleView.setText(title);
-      mImageManager.displayImage(thumbUrl, (Activity)mContext, mThumbnail);
+      mImageManager.displayImage(image, (Activity)mContext, mThumbnail);
    }
 }

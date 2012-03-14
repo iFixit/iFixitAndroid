@@ -94,27 +94,27 @@ public class TopicListFragment extends Fragment
          }
       }
 
-      // TODO add these to strings.xml
-
       if (!mTopic.isRoot()) {
          // TODO: This is wrong. "General Information" and mTopic.getName()
          // need to be switched. However, this takes the user to the
          // "General Info" device which doesn't exist
          generalInfo.add(new TopicNode(mTopic.getName()));
-         adapter = new TopicListAdapter(mContext, "General Information",
-          generalInfo);
+         adapter = new TopicListAdapter(mContext,
+          mContext.getString(R.string.generalInformation), generalInfo);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
 
       if (nonLeaves.size() > 0) {
-         adapter = new TopicListAdapter(mContext, "Categories", nonLeaves);
+         adapter = new TopicListAdapter(mContext,
+          mContext.getString(R.string.categories), nonLeaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
 
       if (leaves.size() > 0) {
-         adapter = new TopicListAdapter(mContext, "Devices", leaves);
+         adapter = new TopicListAdapter(mContext,
+          mContext.getString(R.string.devices), leaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
@@ -159,8 +159,7 @@ public class TopicListFragment extends Fragment
       if (mPreviousTopic == null) {
          mBackButton.setVisibility(View.GONE);
       } else if (mPreviousTopic.equals(TopicNode.ROOT_NAME)) {
-         // TODO: Add to strings.xml
-         mBackButton.setText("Categories");
+         mBackButton.setText(mContext.getString(R.string.categories));
       } else {
          mBackButton.setText(mPreviousTopic);
       }

@@ -7,7 +7,7 @@ public class GuideInfo implements Serializable {
 
    private int mGuideid;
    private String mSubject;
-   private String mThumbnail;
+   private String mImage;
    private String mTitle;
    private String mType;
    private String mUrl;
@@ -20,8 +20,8 @@ public class GuideInfo implements Serializable {
       mSubject = subject;
    }
 
-   public void setThumbnail(String thumbnail) {
-      mThumbnail = thumbnail+".standard";
+   public void setImage(String image) {
+      mImage = image;
    }
 
    public void setTitle(String title) {
@@ -44,8 +44,8 @@ public class GuideInfo implements Serializable {
       return mSubject;
    }
 
-   public String getThumbnail() {
-      return mThumbnail;
+   public String getImage() {
+      return mImage;
    }
 
    public String getTitle() {
@@ -61,7 +61,7 @@ public class GuideInfo implements Serializable {
    }
 
    public String toString() {
-      return mGuideid + ", " + mSubject + ", " + mThumbnail + ", " + mTitle +
+      return mGuideid + ", " + mSubject + ", " + mImage + ", " + mTitle +
        ", " + mType + ", " + mUrl;
    }
 }

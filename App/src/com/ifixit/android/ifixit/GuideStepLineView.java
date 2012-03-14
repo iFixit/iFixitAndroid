@@ -31,7 +31,6 @@ public class GuideStepLineView extends LinearLayout {
 
       mBoldFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-B.ttf");
       mRegularFont = Typeface.createFromAsset(context.getAssets(), "fonts/Ubuntu-R.ttf");
-
    }
 
    public void setLine(StepLine line) {

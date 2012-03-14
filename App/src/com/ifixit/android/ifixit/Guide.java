@@ -41,8 +41,8 @@ public class Guide implements Serializable {
       return mTools.get(position);
    }
 
-   public String getToolsFormatted() {
-      String formattedTools = "Required Tools: <br />";
+   public String getToolsFormatted(String title) {
+      String formattedTools = title + ": <br />";
       for (GuideTool t : mTools) {
          formattedTools += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
           "</a><br />";
@@ -63,8 +63,8 @@ public class Guide implements Serializable {
       return mParts.get(position);
    }
 
-   public String getPartsFormatted() {
-      String formattedPart = "Required Parts: <br />";
+   public String getPartsFormatted(String title) {
+      String formattedPart = title + ": <br />";
       for (GuidePart t : mParts)
          formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() + "</a><br />";
 

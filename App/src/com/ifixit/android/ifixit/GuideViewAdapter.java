@@ -32,7 +32,7 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
       GuideStepViewFragment stepView;
 
       if (position == GUIDE_INTRO_POSITION) {
-         introView = new GuideIntroViewFragment(mImageManager, mGuide);
+         introView = new GuideIntroViewFragment(mGuide);
 
          return introView;
       } else {

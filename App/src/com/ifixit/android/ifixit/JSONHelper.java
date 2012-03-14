@@ -196,7 +196,7 @@ public class JSONHelper {
          GuideInfo guideInfo = new GuideInfo(jGuide.getInt("guideid"));
 
          guideInfo.setSubject(jGuide.getString("subject"));
-         guideInfo.setThumbnail(jGuide.getString("image_url"));
+         guideInfo.setImage(jGuide.getString("image_url"));
          guideInfo.setTitle(jGuide.getString("title"));
          guideInfo.setType(jGuide.getString("type"));
          guideInfo.setUrl(jGuide.getString("url"));
