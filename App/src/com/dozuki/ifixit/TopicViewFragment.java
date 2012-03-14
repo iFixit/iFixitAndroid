@@ -21,11 +21,13 @@ import android.widget.TabHost;
 import android.widget.TabWidget;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.viewpagerindicator.TabPageIndicator;
 import com.viewpagerindicator.TitleProvider;
 
 
 public class TopicViewFragment extends SherlockFragment {
+   private static final int GUIDES_TAB = 0;
+   private static final int ANSWERS_TAB = 1;
+   private static final int MORE_INFO_TAB = 2;
    private static final String RESPONSE = "RESPONSE";
    private static final String TOPIC_API_URL =
     "http://www.ifixit.com/api/0.1/device/";
@@ -52,37 +54,35 @@ public class TopicViewFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
-      if (mImageManager == null) {
-          mImageManager = ((MainApplication)getActivity().getApplication()).
-           getImageManager();
-      }
-      
 
+      if (mImageManager == null) {
+         mImageManager = ((MainApplication)getActivity().getApplication()).
+          getImageManager();
+      }
    }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.topic_view_fragment, container, false);
+      View view = inflater.inflate(R.layout.topic_view_fragment, container,
+       false);
 
       mTabHost = (TabHost)view.findViewById(android.R.id.tabhost);
       mTabHost.setup();
 
       mPager = (ViewPager)view.findViewById(R.id.pager);
+      mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mPager,
+       mImageManager);
 
-      mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mPager, mImageManager);
-
-      mTabsAdapter.addTab(mTabHost.newTabSpec("simple").setIndicator(getActivity().getString(R.string.guides)),
-              TopicGuideItemView.class, null);
-      mTabsAdapter.addTab(mTabHost.newTabSpec("contacts").setIndicator(getActivity().getString(R.string.answers)),
-              WebViewFragment.class, null);
-      mTabsAdapter.addTab(mTabHost.newTabSpec("custom").setIndicator(getActivity().getString(R.string.moreInfo)),
-    		  WebViewFragment.class, null);
-
-      if (savedInstanceState != null) {
-          mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
-      }
+      mTabsAdapter.addTab(mTabHost.newTabSpec("guides").setIndicator(
+       getActivity().getString(R.string.guides)), TopicGuideItemView.class,
+       null);
+      mTabsAdapter.addTab(mTabHost.newTabSpec("answers").setIndicator(
+       getActivity().getString(R.string.answers)), WebViewFragment.class,
+       null);
+      mTabsAdapter.addTab(mTabHost.newTabSpec("moreInfo").setIndicator(
+       getActivity().getString(R.string.moreInfo)), WebViewFragment.class,
+       null);
 
       return view;
    }
@@ -98,6 +98,10 @@ public class TopicViewFragment extends SherlockFragment {
 
       mTabsAdapter.setTopicLeaf(mTopicLeaf);
       mPager.setAdapter(mTabsAdapter);
+
+      if (mTopicLeaf.getGuides().size() == 0) {
+         mTabHost.setCurrentTab(MORE_INFO_TAB);
+      }
    }
 
    private void getTopicLeaf(final String topicName) {
@@ -119,9 +123,9 @@ public class TopicViewFragment extends SherlockFragment {
    }
 
    public static class TabsAdapter extends FragmentStatePagerAdapter
-    implements TitleProvider, TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
+    implements TitleProvider, TabHost.OnTabChangeListener,
+    ViewPager.OnPageChangeListener {
       private TopicLeaf mTopicLeaf;
-      
       private final Context mContext;
       private final TabHost mTabHost;
       private final ViewPager mViewPager;
@@ -129,52 +133,53 @@ public class TopicViewFragment extends SherlockFragment {
       private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
       static final class TabInfo {
-          private final String tag;
-          private final Class<?> clss;
-          private final Bundle args;
+         private final String tag;
+         private final Class<?> clss;
+         private final Bundle args;
 
-          TabInfo(String _tag, Class<?> _class, Bundle _args) {
-              tag = _tag;
-              clss = _class;
-              args = _args;
-          }
+         TabInfo(String _tag, Class<?> _class, Bundle _args) {
+            tag = _tag;
+            clss = _class;
+            args = _args;
+         }
       }
 
       static class DummyTabFactory implements TabHost.TabContentFactory {
-          private final Context mContext;
+         private final Context mContext;
 
-          public DummyTabFactory(Context context) {
-              mContext = context;
-          }
+         public DummyTabFactory(Context context) {
+            mContext = context;
+         }
 
-          @Override
-          public View createTabContent(String tag) {
-              View v = new View(mContext);
-              v.setMinimumWidth(0);
-              v.setMinimumHeight(0);
-              return v;
-          }
+         @Override
+         public View createTabContent(String tag) {
+            View v = new View(mContext);
+            v.setMinimumWidth(0);
+            v.setMinimumHeight(0);
+            return v;
+         }
       }
-      
-      public TabsAdapter(FragmentActivity activity, TabHost tabHost, ViewPager pager, ImageManager imageManager) {
-          super(activity.getSupportFragmentManager());
-          mContext = activity;
-          mTabHost = tabHost;
-          mViewPager = pager;
-          mTabHost.setOnTabChangedListener(this);
-          mViewPager.setAdapter(this);
-          mViewPager.setOnPageChangeListener(this);
-          mImageManager = imageManager;
+
+      public TabsAdapter(FragmentActivity activity, TabHost tabHost,
+       ViewPager pager, ImageManager imageManager) {
+         super(activity.getSupportFragmentManager());
+         mContext = activity;
+         mTabHost = tabHost;
+         mViewPager = pager;
+         mTabHost.setOnTabChangedListener(this);
+         mViewPager.setAdapter(this);
+         mViewPager.setOnPageChangeListener(this);
+         mImageManager = imageManager;
       }
-      
+
       public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
-          tabSpec.setContent(new DummyTabFactory(mContext));
-          String tag = tabSpec.getTag();
+         tabSpec.setContent(new DummyTabFactory(mContext));
+         String tag = tabSpec.getTag();
 
-          TabInfo info = new TabInfo(tag, clss, args);
-          mTabs.add(info);
-          mTabHost.addTab(tabSpec);
-          notifyDataSetChanged();
+         TabInfo info = new TabInfo(tag, clss, args);
+         mTabs.add(info);
+         mTabHost.addTab(tabSpec);
+         notifyDataSetChanged();
       }
 
       @Override
@@ -188,58 +193,59 @@ public class TopicViewFragment extends SherlockFragment {
 
       @Override
       public Fragment getItem(int position) {
-          if (mTopicLeaf == null) {
-              Log.w("iFixit", "Trying to get Fragment at bad position");
-              return null;
-           }
+         if (mTopicLeaf == null) {
+            Log.w("iFixit", "Trying to get Fragment at bad position");
+            return null;
+         }
 
-           if (position == 0) {
-              return new TopicGuideListFragment(mImageManager, mTopicLeaf);
-           } else if (position == 1) {
-              WebViewFragment webView = new WebViewFragment();
+         if (position == GUIDES_TAB) {
+            return new TopicGuideListFragment(mImageManager, mTopicLeaf);
+         } else if (position == ANSWERS_TAB) {
+            WebViewFragment webView = new WebViewFragment();
 
-              webView.loadUrl(mTopicLeaf.getSolutionsUrl());
+            webView.loadUrl(mTopicLeaf.getSolutionsUrl());
 
-              return webView;
-           } else if (position == 2) {
-              WebViewFragment webView = new WebViewFragment();
+            return webView;
+         } else if (position == MORE_INFO_TAB) {
+            WebViewFragment webView = new WebViewFragment();
 
-              try {
-                 webView.loadUrl("http://www.ifixit.com/c/" +
-                  URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
-              } catch (Exception e) {
-                 Log.w("iFixit", "Encoding error: " + e.getMessage());
-              }
+            try {
+               webView.loadUrl("http://www.ifixit.com/c/" +
+                URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
+            } catch (Exception e) {
+               Log.w("iFixit", "Encoding error: " + e.getMessage());
+            }
 
-              return webView;
-           } else {
-              Log.w("iFixit", "Too many tabs!");
-              return null;
-           }
+            return webView;
+         } else {
+            Log.w("iFixit", "Too many tabs!");
+            return null;
+         }
       }
 
       @Override
       public void onTabChanged(String tabId) {
-          int position = mTabHost.getCurrentTab();
-          mViewPager.setCurrentItem(position);
+         int position = mTabHost.getCurrentTab();
+         mViewPager.setCurrentItem(position);
       }
 
       @Override
-      public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+      public void onPageScrolled(int position, float positionOffset,
+       int positionOffsetPixels) {
       }
 
       @Override
       public void onPageSelected(int position) {
-          // Unfortunately when TabHost changes the current tab, it kindly
-          // also takes care of putting focus on it when not in touch mode.
-          // The jerk.
-          // This hack tries to prevent this from pulling focus out of our
-          // ViewPager.
-          TabWidget widget = mTabHost.getTabWidget();
-          int oldFocusability = widget.getDescendantFocusability();
-          widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-          mTabHost.setCurrentTab(position);
-          widget.setDescendantFocusability(oldFocusability);
+         // Unfortunately when TabHost changes the current tab, it kindly
+         // also takes care of putting focus on it when not in touch mode.
+         // The jerk.
+         // This hack tries to prevent this from pulling focus out of our
+         // ViewPager.
+         TabWidget widget = mTabHost.getTabWidget();
+         int oldFocusability = widget.getDescendantFocusability();
+         widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
+         mTabHost.setCurrentTab(position);
+         widget.setDescendantFocusability(oldFocusability);
       }
 
       @Override
@@ -253,11 +259,11 @@ public class TopicViewFragment extends SherlockFragment {
 
       @Override
       public String getTitle(int position) {
-         if (position == 0) {
+         if (position == GUIDES_TAB) {
             return mContext.getString(R.string.guides);
-         } else if (position == 1) {
+         } else if (position == ANSWERS_TAB) {
             return mContext.getString(R.string.answers);
-         } else if (position == 2) {
+         } else if (position == MORE_INFO_TAB) {
             return mContext.getString(R.string.moreInfo);
          } else {
             Log.w("iFixit", "Too many tabs!");
