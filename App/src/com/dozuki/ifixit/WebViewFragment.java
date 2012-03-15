@@ -1,5 +1,9 @@
 package com.dozuki.ifixit;
 
+import com.dozuki.ifixit.WebViewFragment;
+
+import android.content.Intent;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -9,7 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-public class WebViewFragment extends Fragment {
+public class WebViewFragment extends Fragment implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;
 
@@ -28,9 +32,7 @@ public class WebViewFragment extends Fragment {
       settings.setLoadWithOverviewMode(true);
       settings.setUseWideViewPort(true);
 
-      mWebView.setWebViewClient(new WebViewClient() {
-
-      });
+      mWebView.setWebViewClient(new GuideWebView(this));
 
       if (savedInstanceState != null) {
          mWebView.restoreState(savedInstanceState);
@@ -74,6 +76,47 @@ public class WebViewFragment extends Fragment {
 
       if (mWebView != null) {
          mWebView.loadUrl(mUrl);
+      }
+   }
+
+   public void onViewGuide(int guideid) {
+      Intent intent = new Intent(getActivity(), GuideView.class);
+
+      intent.putExtra(TopicGuideListFragment.GUIDEID, guideid);
+      getActivity().startActivity(intent);
+   }
+
+   private class GuideWebView extends WebViewClient {
+      private static final int GUIDE_POSITION = 3;
+      private static final int GUIDEID_POSITION = 5;
+      private static final String GUIDE_URL = "Guide";
+      private static final String TEARDOWN_URL = "Teardown";
+
+      private OnViewGuideListener mGuideListener;
+
+      public GuideWebView(OnViewGuideListener guideListener) {
+         mGuideListener = guideListener;
+      }
+
+      @Override
+      public boolean shouldOverrideUrlLoading(WebView view, String url) {
+         String[] pieces = url.split("/");
+         int guideid;
+
+         try {
+            if (pieces[GUIDE_POSITION].equals(GUIDE_URL) ||
+             pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
+               guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
+               mGuideListener.onViewGuide(guideid);
+               return true;
+            }
+         }
+         catch (ArrayIndexOutOfBoundsException e) {}
+         catch (NumberFormatException e) {}
+
+         view.loadUrl(url);
+
+         return true;
       }
    }
 }
