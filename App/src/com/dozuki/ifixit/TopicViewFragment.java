@@ -1,43 +1,41 @@
 package com.dozuki.ifixit;
 
 import java.net.URLEncoder;
-import java.util.ArrayList;
 
 import org.apache.http.client.ResponseHandler;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.viewpagerindicator.TitleProvider;
-
 
 public class TopicViewFragment extends SherlockFragment {
    private static final int GUIDES_TAB = 0;
    private static final int ANSWERS_TAB = 1;
    private static final int MORE_INFO_TAB = 2;
+   private static final int TAB_COUNT = 3;
    private static final String RESPONSE = "RESPONSE";
    private static final String TOPIC_API_URL =
     "http://www.ifixit.com/api/1.0/topic/";
-   private TabHost mTabHost;
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
    private ViewPager mPager;
-   private TabsAdapter mTabsAdapter;
+   private TopicAdapter mTabsAdapter;
    private ImageManager mImageManager;
+   private ActionBar mActionBar;
 
    private final Handler mTopicHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -46,6 +44,10 @@ public class TopicViewFragment extends SherlockFragment {
          setTopicLeaf(JSONHelper.parseTopicLeaf(response));
       }
    };
+
+   public void setActionBar(ActionBar actionBar) {
+      mActionBar = actionBar;
+   }
 
    public TopicLeaf getTopicLeaf() {
       return mTopicLeaf;
@@ -67,22 +69,8 @@ public class TopicViewFragment extends SherlockFragment {
       View view = inflater.inflate(R.layout.topic_view_fragment, container,
        false);
 
-      mTabHost = (TabHost)view.findViewById(android.R.id.tabhost);
-      mTabHost.setup();
-
       mPager = (ViewPager)view.findViewById(R.id.pager);
-      mTabsAdapter = new TabsAdapter(getActivity(), mTabHost, mPager,
-       mImageManager);
-
-      mTabsAdapter.addTab(mTabHost.newTabSpec("guides").setIndicator(
-       getActivity().getString(R.string.guides)), TopicGuideItemView.class,
-       null);
-      mTabsAdapter.addTab(mTabHost.newTabSpec("answers").setIndicator(
-       getActivity().getString(R.string.answers)), WebViewFragment.class,
-       null);
-      mTabsAdapter.addTab(mTabHost.newTabSpec("moreInfo").setIndicator(
-       getActivity().getString(R.string.moreInfo)), WebViewFragment.class,
-       null);
+      mTabsAdapter = new TopicAdapter(getActivity(), mPager, mImageManager);
 
       return view;
    }
@@ -99,8 +87,24 @@ public class TopicViewFragment extends SherlockFragment {
       mTabsAdapter.setTopicLeaf(mTopicLeaf);
       mPager.setAdapter(mTabsAdapter);
 
+      mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+      ActionBar.Tab tab = mActionBar.newTab();
+      tab.setText(getActivity().getString(R.string.guides));
+      tab.setTabListener(mTabsAdapter);
+      mActionBar.addTab(tab);
+
+      tab = mActionBar.newTab();
+      tab.setText(getActivity().getString(R.string.answers));
+      tab.setTabListener(mTabsAdapter);
+      mActionBar.addTab(tab);
+
+      tab = mActionBar.newTab();
+      tab.setText(getActivity().getString(R.string.moreInfo));
+      tab.setTabListener(mTabsAdapter);
+      mActionBar.addTab(tab);
+
       if (mTopicLeaf.getGuides().size() == 0) {
-         mTabHost.setCurrentTab(MORE_INFO_TAB);
+         mActionBar.setSelectedNavigationItem(MORE_INFO_TAB);
       }
    }
 
@@ -122,64 +126,19 @@ public class TopicViewFragment extends SherlockFragment {
       }.start();
    }
 
-   public static class TabsAdapter extends FragmentStatePagerAdapter
-    implements TitleProvider, TabHost.OnTabChangeListener,
-    ViewPager.OnPageChangeListener {
+   public class TopicAdapter extends FragmentPagerAdapter
+    implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
       private TopicLeaf mTopicLeaf;
-      private final Context mContext;
-      private final TabHost mTabHost;
       private final ViewPager mViewPager;
       private final ImageManager mImageManager;
-      private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 
-      static final class TabInfo {
-         private final String tag;
-         private final Class<?> clss;
-         private final Bundle args;
-
-         TabInfo(String _tag, Class<?> _class, Bundle _args) {
-            tag = _tag;
-            clss = _class;
-            args = _args;
-         }
-      }
-
-      static class DummyTabFactory implements TabHost.TabContentFactory {
-         private final Context mContext;
-
-         public DummyTabFactory(Context context) {
-            mContext = context;
-         }
-
-         @Override
-         public View createTabContent(String tag) {
-            View v = new View(mContext);
-            v.setMinimumWidth(0);
-            v.setMinimumHeight(0);
-            return v;
-         }
-      }
-
-      public TabsAdapter(FragmentActivity activity, TabHost tabHost,
+      public TopicAdapter(FragmentActivity activity,
        ViewPager pager, ImageManager imageManager) {
          super(activity.getSupportFragmentManager());
-         mContext = activity;
-         mTabHost = tabHost;
          mViewPager = pager;
-         mTabHost.setOnTabChangedListener(this);
          mViewPager.setAdapter(this);
          mViewPager.setOnPageChangeListener(this);
          mImageManager = imageManager;
-      }
-
-      public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
-         tabSpec.setContent(new DummyTabFactory(mContext));
-         String tag = tabSpec.getTag();
-
-         TabInfo info = new TabInfo(tag, clss, args);
-         mTabs.add(info);
-         mTabHost.addTab(tabSpec);
-         notifyDataSetChanged();
       }
 
       @Override
@@ -187,7 +146,7 @@ public class TopicViewFragment extends SherlockFragment {
          if (mTopicLeaf == null) {
             return 0;
          } else {
-            return mTabs.size();
+            return TAB_COUNT;
          }
       }
 
@@ -224,28 +183,13 @@ public class TopicViewFragment extends SherlockFragment {
       }
 
       @Override
-      public void onTabChanged(String tabId) {
-         int position = mTabHost.getCurrentTab();
-         mViewPager.setCurrentItem(position);
-      }
-
-      @Override
       public void onPageScrolled(int position, float positionOffset,
        int positionOffsetPixels) {
       }
 
       @Override
       public void onPageSelected(int position) {
-         // Unfortunately when TabHost changes the current tab, it kindly
-         // also takes care of putting focus on it when not in touch mode.
-         // The jerk.
-         // This hack tries to prevent this from pulling focus out of our
-         // ViewPager.
-         TabWidget widget = mTabHost.getTabWidget();
-         int oldFocusability = widget.getDescendantFocusability();
-         widget.setDescendantFocusability(ViewGroup.FOCUS_BLOCK_DESCENDANTS);
-         mTabHost.setCurrentTab(position);
-         widget.setDescendantFocusability(oldFocusability);
+         mActionBar.setSelectedNavigationItem(position);
       }
 
       @Override
@@ -258,17 +202,16 @@ public class TopicViewFragment extends SherlockFragment {
       }
 
       @Override
-      public String getTitle(int position) {
-         if (position == GUIDES_TAB) {
-            return mContext.getString(R.string.guides);
-         } else if (position == ANSWERS_TAB) {
-            return mContext.getString(R.string.answers);
-         } else if (position == MORE_INFO_TAB) {
-            return mContext.getString(R.string.moreInfo);
-         } else {
-            Log.w("iFixit", "Too many tabs!");
-            return null;
-         }
+      public void onTabSelected(Tab tab, FragmentTransaction ft) {
+         mViewPager.setCurrentItem(tab.getPosition());
+      }
+
+      @Override
+      public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+      }
+
+      @Override
+      public void onTabReselected(Tab tab, FragmentTransaction ft) {
       }
    }
 }

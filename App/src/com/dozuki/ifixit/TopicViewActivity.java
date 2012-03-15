@@ -1,7 +1,6 @@
 package com.dozuki.ifixit;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 
 import android.content.Intent;
 
@@ -51,6 +50,8 @@ public class TopicViewActivity extends SherlockFragmentActivity {
          return;
       }
 
+      mTopicView.setActionBar(getSupportActionBar());
+
       if (topicLeaf != null) {
          mTopicView.setTopicLeaf(topicLeaf);
       } else {
@@ -59,7 +60,6 @@ public class TopicViewActivity extends SherlockFragmentActivity {
       }
    }
 
-   
    public ImageManager getImageManager() {
 	   return mImageManager;
    }

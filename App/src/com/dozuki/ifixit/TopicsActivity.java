@@ -12,10 +12,7 @@ import android.os.Message;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
@@ -68,11 +65,13 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          getTopicHierarchy();
       }
 
+      if (mDualPane) {
+         mTopicView.setActionBar(getSupportActionBar());
+      }
+
       getSupportFragmentManager().addOnBackStackChangedListener(this);
       mBackStackSize = getSupportFragmentManager().getBackStackEntryCount();
    }
-
-  
    
    @Override
    public void onSaveInstanceState(Bundle outState) {
