@@ -23,6 +23,7 @@ public class TopicViewFragment extends SherlockFragment
    private static final int GUIDES_TAB = 0;
    private static final int ANSWERS_TAB = 1;
    private static final int MORE_INFO_TAB = 2;
+   private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String RESPONSE = "RESPONSE";
    private static final String TOPIC_API_URL =
     "http://www.ifixit.com/api/1.0/topic/";
@@ -31,6 +32,7 @@ public class TopicViewFragment extends SherlockFragment
    private TopicLeaf mTopicLeaf;
    private ImageManager mImageManager;
    private ActionBar mActionBar;
+   private int mSelectedTab = -1;
 
    private final Handler mTopicHandler = new Handler() {
       public void handleMessage(Message message) {
@@ -56,6 +58,10 @@ public class TopicViewFragment extends SherlockFragment
          mImageManager = ((MainApplication)getActivity().getApplication()).
           getImageManager();
       }
+
+      if (savedInstanceState != null) {
+         mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
+      }
    }
 
    @Override
@@ -65,6 +71,13 @@ public class TopicViewFragment extends SherlockFragment
        false);
 
       return view;
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      outState.putInt(CURRENT_PAGE, mActionBar.getSelectedNavigationIndex());
    }
 
    public void setTopicNode(TopicNode topicNode) {
@@ -103,7 +116,9 @@ public class TopicViewFragment extends SherlockFragment
       tab.setTabListener(this);
       mActionBar.addTab(tab);
 
-      if (mTopicLeaf.getGuides().size() == 0) {
+      if (mSelectedTab != -1) {
+         mActionBar.setSelectedNavigationItem(mSelectedTab);
+      } else if (mTopicLeaf.getGuides().size() == 0) {
          mActionBar.setSelectedNavigationItem(MORE_INFO_TAB);
       }
    }
