@@ -61,6 +61,7 @@ public class TopicViewFragment extends SherlockFragment {
          mImageManager = ((MainApplication)getActivity().getApplication()).
           getImageManager();
       }
+      
    }
 
    @Override
@@ -79,6 +80,7 @@ public class TopicViewFragment extends SherlockFragment {
       mTopicNode = topicNode;
 
       getTopicLeaf(mTopicNode.getName());
+      
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {

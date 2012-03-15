@@ -7,25 +7,21 @@ import java.util.Comparator;
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
-
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-
 import android.widget.AdapterView;
-
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
-
-import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
-
 import android.widget.TextView;
 
-public class TopicListFragment extends Fragment
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
+import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
+
+public class TopicListFragment extends SherlockFragment
  implements TopicSelectedListener, OnItemClickListener {
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
    private static final String PREVIOUS_TOPIC = "PREVIOUS_TOPIC";
@@ -58,6 +54,7 @@ public class TopicListFragment extends Fragment
           CURRENT_TOPIC);
          mPreviousTopic = savedInstanceState.getString(PREVIOUS_TOPIC);
       }
+      
    }
 
    @Override
@@ -130,7 +127,7 @@ public class TopicListFragment extends Fragment
          mTopicAdapter.addSection(adapter);
       }
    }
-
+   
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
@@ -166,7 +163,7 @@ public class TopicListFragment extends Fragment
       mPreviousTopic = previousTopic;
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);
-
+    	  
       if (mPreviousTopic == null) {
          mBackButton.setVisibility(View.GONE);
       } else if (mPreviousTopic.equals(TopicNode.ROOT_NAME)) {

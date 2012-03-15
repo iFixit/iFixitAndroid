@@ -52,6 +52,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       super.onCreate(savedInstanceState);
       
       setContentView(R.layout.topics);
+      
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
       mDualPane = mTopicView != null && mTopicView.isInLayout();
@@ -61,6 +62,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
          mTopicHistory = (LinkedList<TopicNode>)savedInstanceState.
           getSerializable(TOPIC_HISTORY);
+         
+         if (mTopicHistory.size() != 0) {
+        	this.setActionBarTitle(mTopicHistory.getFirst());
+         }
       } else {
          getTopicHierarchy();
       }
@@ -86,13 +91,29 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       if (mBackStackSize > backStackSize) {
          mTopicHistory.removeFirst();
+         if (mTopicHistory.size() != 0) {
+        	 this.setActionBarTitle(mTopicHistory.getFirst());
+         }
       }
 
       mBackStackSize = backStackSize;
    }
 
+   public void setActionBarTitle(TopicNode topic) {
+	     
+      if (!topic.isRoot()) {
+    	  getSupportActionBar().setTitle(topic.getName());
+      } else {
+    	  getSupportActionBar().setTitle("");
+      }	  
+	   
+   }
+   
    @Override
    public void onTopicSelected(TopicNode topic) {
+
+	  this.setActionBarTitle(topic);
+      
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
@@ -111,7 +132,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
          TopicListFragment newFragment = new TopicListFragment(topic,
           currentTopic == null ? null : currentTopic.getName());
-
+         
          ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
           R.anim.slide_in_left, R.anim.slide_out_right);
          ft.replace(R.id.topic_list_fragment, newFragment);
