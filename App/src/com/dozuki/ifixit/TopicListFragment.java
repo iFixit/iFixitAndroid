@@ -9,30 +9,22 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
 import android.widget.ListView;
-import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
 
 public class TopicListFragment extends SherlockFragment
  implements TopicSelectedListener, OnItemClickListener {
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
-   private static final String PREVIOUS_TOPIC = "PREVIOUS_TOPIC";
 
    private TopicSelectedListener topicSelectedListener;
    private TopicNode mTopic;
-   private String mPreviousTopic;
    private SectionHeadersAdapter mTopicAdapter;
    private Context mContext;
-   private TextView mTopicText;
-   private Button mBackButton;
    private ListView mListView;
 
    /**
@@ -40,9 +32,8 @@ public class TopicListFragment extends SherlockFragment
     */
    public TopicListFragment() {}
 
-   public TopicListFragment(TopicNode topic, String previousTopic) {
+   public TopicListFragment(TopicNode topic) {
       mTopic = topic;
-      mPreviousTopic = previousTopic;
    }
 
    @Override
@@ -52,7 +43,6 @@ public class TopicListFragment extends SherlockFragment
       if (savedInstanceState != null) {
          mTopic = (TopicNode)savedInstanceState.getSerializable(
           CURRENT_TOPIC);
-         mPreviousTopic = savedInstanceState.getString(PREVIOUS_TOPIC);
       }
       
    }
@@ -63,17 +53,10 @@ public class TopicListFragment extends SherlockFragment
       View view = inflater.inflate(R.layout.topic_list_fragment, container,
        false);
 
-      mBackButton = (Button)view.findViewById(R.id.backButton);
-      mBackButton.setOnClickListener(new OnClickListener() {
-         public void onClick(View view) {
-            getActivity().getSupportFragmentManager().popBackStack();
-         }
-      });
-      mTopicText = (TextView)view.findViewById(R.id.currentTopic);
       mListView = (ListView)view.findViewById(R.id.topicList);
       mListView.setOnItemClickListener(this);
 
-      setTopic(mTopic, mPreviousTopic);
+      setTopic(mTopic);
 
       return view;
    }
@@ -133,7 +116,6 @@ public class TopicListFragment extends SherlockFragment
       super.onSaveInstanceState(outState);
 
       outState.putSerializable(CURRENT_TOPIC, mTopic);
-      outState.putString(PREVIOUS_TOPIC, mPreviousTopic);
    }
 
    public void onItemClick(AdapterView<?> adapterView, View view,
@@ -158,20 +140,9 @@ public class TopicListFragment extends SherlockFragment
       }
    }
 
-   private void setTopic(TopicNode topic, String previousTopic) {
+   private void setTopic(TopicNode topic) {
       mTopic = topic;
-      mPreviousTopic = previousTopic;
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);
-    	  
-      if (mPreviousTopic == null) {
-         mBackButton.setVisibility(View.GONE);
-      } else if (mPreviousTopic.equals(TopicNode.ROOT_NAME)) {
-         mBackButton.setText(mContext.getString(R.string.categories));
-      } else {
-         mBackButton.setText(mPreviousTopic);
-      }
-
-      mTopicText.setText(mTopic.getName());
    }
 }

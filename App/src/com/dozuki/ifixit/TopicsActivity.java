@@ -127,11 +127,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             startActivityForResult(intent, REQUEST_RETURN_TOPIC);
          }
       } else {
-         TopicNode currentTopic = mTopicHistory.size() == 0 ? null :
-          mTopicHistory.getFirst();
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-         TopicListFragment newFragment = new TopicListFragment(topic,
-          currentTopic == null ? null : currentTopic.getName());
+         TopicListFragment newFragment = new TopicListFragment(topic);
          
          ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
           R.anim.slide_in_left, R.anim.slide_out_right);
