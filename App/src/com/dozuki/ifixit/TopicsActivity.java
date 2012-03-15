@@ -64,7 +64,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
           getSerializable(TOPIC_HISTORY);
          
          if (mTopicHistory.size() != 0) {
-        	this.setActionBarTitle(mTopicHistory.getFirst());
+            setActionBarTitle(mTopicHistory.getFirst());
          }
       } else {
          getTopicHierarchy();
@@ -92,27 +92,24 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       if (mBackStackSize > backStackSize) {
          mTopicHistory.removeFirst();
          if (mTopicHistory.size() != 0) {
-        	 this.setActionBarTitle(mTopicHistory.getFirst());
+            setActionBarTitle(mTopicHistory.getFirst());
          }
       }
 
       mBackStackSize = backStackSize;
    }
 
-   public void setActionBarTitle(TopicNode topic) {
-	     
+   private void setActionBarTitle(TopicNode topic) {
       if (!topic.isRoot()) {
     	  getSupportActionBar().setTitle(topic.getName());
       } else {
     	  getSupportActionBar().setTitle("");
       }	  
-	   
    }
    
    @Override
    public void onTopicSelected(TopicNode topic) {
-
-	  this.setActionBarTitle(topic);
+	  setActionBarTitle(topic);
       
       if (topic.isLeaf()) {
          if (mDualPane) {
