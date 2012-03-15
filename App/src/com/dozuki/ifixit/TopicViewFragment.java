@@ -8,10 +8,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -21,19 +18,17 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
 
-public class TopicViewFragment extends SherlockFragment {
+public class TopicViewFragment extends SherlockFragment
+ implements ActionBar.TabListener {
    private static final int GUIDES_TAB = 0;
    private static final int ANSWERS_TAB = 1;
    private static final int MORE_INFO_TAB = 2;
-   private static final int TAB_COUNT = 3;
    private static final String RESPONSE = "RESPONSE";
    private static final String TOPIC_API_URL =
     "http://www.ifixit.com/api/1.0/topic/";
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
-   private ViewPager mPager;
-   private TopicAdapter mTopicAdapter;
    private ImageManager mImageManager;
    private ActionBar mActionBar;
 
@@ -69,9 +64,6 @@ public class TopicViewFragment extends SherlockFragment {
       View view = inflater.inflate(R.layout.topic_view_fragment, container,
        false);
 
-      mPager = (ViewPager)view.findViewById(R.id.pager);
-      mTopicAdapter = new TopicAdapter(getActivity(), mPager, mImageManager);
-
       return view;
    }
 
@@ -83,8 +75,6 @@ public class TopicViewFragment extends SherlockFragment {
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
-      mTopicAdapter.setTopicLeaf(mTopicLeaf);
-      mPager.setAdapter(mTopicAdapter);
 
       if (mTopicLeaf == null) {
          mActionBar.removeAllTabs();
@@ -96,17 +86,17 @@ public class TopicViewFragment extends SherlockFragment {
       mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
       ActionBar.Tab tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.guides));
-      tab.setTabListener(mTopicAdapter);
+      tab.setTabListener(this);
       mActionBar.addTab(tab);
 
       tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.answers));
-      tab.setTabListener(mTopicAdapter);
+      tab.setTabListener(this);
       mActionBar.addTab(tab);
 
       tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.moreInfo));
-      tab.setTabListener(mTopicAdapter);
+      tab.setTabListener(this);
       mActionBar.addTab(tab);
 
       if (mTopicLeaf.getGuides().size() == 0) {
@@ -135,92 +125,50 @@ public class TopicViewFragment extends SherlockFragment {
       }.start();
    }
 
-   public class TopicAdapter extends FragmentPagerAdapter
-    implements ActionBar.TabListener, ViewPager.OnPageChangeListener {
-      private TopicLeaf mTopicLeaf;
-      private final ViewPager mViewPager;
-      private final ImageManager mImageManager;
+   @Override
+   public void onTabSelected(Tab tab, FragmentTransaction ft) {
+      int position = tab.getPosition();
+      Fragment selectedFragment;
+      ft = getActivity().getSupportFragmentManager().beginTransaction();
 
-      public TopicAdapter(FragmentActivity activity,
-       ViewPager pager, ImageManager imageManager) {
-         super(activity.getSupportFragmentManager());
-         mViewPager = pager;
-         mViewPager.setAdapter(this);
-         mViewPager.setOnPageChangeListener(this);
-         mImageManager = imageManager;
+      if (mTopicLeaf == null) {
+         Log.w("iFixit", "Trying to get Fragment at bad position");
+         return;
       }
 
-      @Override
-      public int getCount() {
-         if (mTopicLeaf == null) {
-            return 0;
-         } else {
-            return TAB_COUNT;
-         }
-      }
+      if (position == GUIDES_TAB) {
+         selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
+      } else if (position == ANSWERS_TAB) {
+         WebViewFragment webView = new WebViewFragment();
 
-      @Override
-      public Fragment getItem(int position) {
-         if (mTopicLeaf == null) {
-            Log.w("iFixit", "Trying to get Fragment at bad position");
-            return null;
+         webView.loadUrl(mTopicLeaf.getSolutionsUrl());
+
+         selectedFragment = webView;
+      } else if (position == MORE_INFO_TAB) {
+         WebViewFragment webView = new WebViewFragment();
+
+         try {
+            webView.loadUrl("http://www.ifixit.com/c/" +
+             URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
+         } catch (Exception e) {
+            Log.w("iFixit", "Encoding error: " + e.getMessage());
          }
 
-         if (position == GUIDES_TAB) {
-            return new TopicGuideListFragment(mImageManager, mTopicLeaf);
-         } else if (position == ANSWERS_TAB) {
-            WebViewFragment webView = new WebViewFragment();
-
-            webView.loadUrl(mTopicLeaf.getSolutionsUrl());
-
-            return webView;
-         } else if (position == MORE_INFO_TAB) {
-            WebViewFragment webView = new WebViewFragment();
-
-            try {
-               webView.loadUrl("http://www.ifixit.com/c/" +
-                URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
-            }
-
-            return webView;
-         } else {
-            Log.w("iFixit", "Too many tabs!");
-            return null;
-         }
+         selectedFragment = webView;
+      } else {
+         Log.w("iFixit", "Too many tabs!");
+         return;
       }
 
-      @Override
-      public void onPageScrolled(int position, float positionOffset,
-       int positionOffsetPixels) {
-      }
+      ft.replace(R.id.topic_view_page_fragment, selectedFragment);
+      ft.commit();
+   }
 
-      @Override
-      public void onPageSelected(int position) {
-         mActionBar.setSelectedNavigationItem(position);
-      }
+   @Override
+   public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+   }
 
-      @Override
-      public void onPageScrollStateChanged(int state) {
-      }
-
-      public void setTopicLeaf(TopicLeaf topicLeaf) {
-         mTopicLeaf = topicLeaf;
-         notifyDataSetChanged();
-      }
-
-      @Override
-      public void onTabSelected(Tab tab, FragmentTransaction ft) {
-         mViewPager.setCurrentItem(tab.getPosition());
-      }
-
-      @Override
-      public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-      }
-
-      @Override
-      public void onTabReselected(Tab tab, FragmentTransaction ft) {
-      }
+   @Override
+   public void onTabReselected(Tab tab, FragmentTransaction ft) {
    }
 }
