@@ -19,8 +19,8 @@ import android.util.Log;
  */
 public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
-   private static final int MAX_STORED_IMAGES = 9;
-   private static final int MAX_LOADING_IMAGES = 9;
+   private static final int MAX_STORED_IMAGES = 10;
+   private static final int DEFAULT_MAX_LOADING_IMAGES = 9;
    private static final int DEFAULT_NUM_DOWNLOAD_THREADS = 5;
    private static final int DEFAULT_NUM_WRITE_THREADS = 2;
 
@@ -32,6 +32,7 @@ public class ImageManager {
    private ImageQueue mImageQueue;
    private Thread[] mDownloadThreads;
    private Thread[] mWriteThreads;
+   private int mMaxLoadingImages;
    private final int mNumDownloadThreads;
    private final int mNumWriteThreads;
 
@@ -49,6 +50,7 @@ public class ImageManager {
       mDownloadThreads = new Thread[mNumDownloadThreads];
       mWriteThreads = new Thread[mNumWriteThreads];
       mLoadingImages = new HashMap<String, ImageRef>();
+      mMaxLoadingImages = DEFAULT_MAX_LOADING_IMAGES;
 
       for (int i = 0; i < mDownloadThreads.length; i++) {
          mDownloadThreads[i] = new Thread(new ImageQueueManager());
@@ -103,12 +105,17 @@ public class ImageManager {
 
          imageRef = new ImageRef(url, imageView);
 
-         if (mImageQueue.imageRefs.size() > MAX_LOADING_IMAGES)
+         if (mImageQueue.imageRefs.size() > mMaxLoadingImages) {
             mImageQueue.imageRefs.removeLast();
+         }
 
          mImageQueue.imageRefs.addFirst(imageRef);
          mImageQueue.imageRefs.notify();
       }
+   }
+
+   public void setMaxLoadingImages(int max) {
+      mMaxLoadingImages = max;
    }
 
    public String getFilePath(String url) {

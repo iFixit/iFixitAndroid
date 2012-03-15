@@ -21,6 +21,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 
 public class GuideView extends SherlockFragmentActivity 
  implements OnPageChangeListener {
+   private static final int MAX_LOADING_IMAGES = 10;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
    private static final String RESPONSE = "RESPONSE";
@@ -59,6 +60,7 @@ public class GuideView extends SherlockFragmentActivity
       setContentView(R.layout.guide_main);
       
       mImageManager = ((MainApplication)getApplication()).getImageManager();
+      mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       mPager = (ViewPager)findViewById(R.id.guide_pager);
       mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
 

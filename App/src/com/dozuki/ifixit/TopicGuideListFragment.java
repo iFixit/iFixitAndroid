@@ -4,8 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 
-import android.util.Log;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +13,7 @@ import android.widget.BaseAdapter;
 import android.widget.GridView;
 
 public class TopicGuideListFragment extends Fragment {
+   private static final int MAX_LOADING_IMAGES = 20;
    protected static final String GUIDEID = "guideid";
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
 
@@ -32,6 +31,7 @@ public class TopicGuideListFragment extends Fragment {
    public TopicGuideListFragment(ImageManager imageManager, TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
       mImageManager = imageManager;
+      mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
    }
 
    @Override
@@ -43,8 +43,9 @@ public class TopicGuideListFragment extends Fragment {
       }
      
       if (mImageManager == null) {
-          mImageManager = ((MainApplication)getActivity().getApplication()).
-           getImageManager();
+         mImageManager = ((MainApplication)getActivity().getApplication()).
+          getImageManager();
+         mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       }
 
       mImageSizes = ((MainApplication)getActivity().getApplication()).
