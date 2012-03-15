@@ -108,10 +108,10 @@ public class TopicGuideListFragment extends Fragment {
             itemView = new TopicGuideItemView(getActivity(), mImageManager);
          }
 
-         String title = mTopic.getGuides().get(position).getTitle();
+         String subject = mTopic.getGuides().get(position).getSubject();
          String image = mTopic.getGuides().get(position).getImage() +
           mImageSizes.getGrid();
-         itemView.setGuideItem(title, image, getActivity());
+         itemView.setGuideItem(subject, image, getActivity());
 
          return itemView;
       }
