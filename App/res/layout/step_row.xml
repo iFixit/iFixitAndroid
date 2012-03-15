@@ -3,7 +3,7 @@
     android:id="@+id/step_row"
     style="@style/step_row_layout" >
 
-    <com.dozuki.ifixit.BulletView
+    <ImageView
         android:id="@+id/bullet"
         style="@style/bullets" />
 
