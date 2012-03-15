@@ -54,7 +54,7 @@ public class TopicGuideListFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-	  View view = inflater.inflate(R.layout.topic_guide_list, container, false);
+      View view = inflater.inflate(R.layout.topic_guide_list, container, false);
 
       mGridView = (GridView)view.findViewById(R.id.gridview);
 
@@ -63,20 +63,17 @@ public class TopicGuideListFragment extends Fragment {
 
       mGridView.setAdapter(mGuideAdapter);
       mGridView.setOnItemClickListener(new OnItemClickListener() {
+         @Override
+         public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+            GuideInfo guide = mTopicLeaf.getGuides().get(position);
+            Intent intent = new Intent(getActivity(), GuideView.class);
 
-		@Override
-		public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
-		   Log.w("Item Click", mTopicLeaf.getGuides().get(position).toString());
-	       GuideInfo guide = mTopicLeaf.getGuides().get(position);
-	       Intent intent = new Intent(getActivity(), GuideView.class);
-	
-	       intent.putExtra(GUIDEID, guide.getGuideid());
-	       startActivity(intent);		   	
-		}
-    	  
+            intent.putExtra(GUIDEID, guide.getGuideid());
+            startActivity(intent);		   	
+         }
       });
 
-	  return view;
+      return view;
    }
 
    @Override
@@ -113,7 +110,6 @@ public class TopicGuideListFragment extends Fragment {
          String title = mTopic.getGuides().get(position).getTitle();
          String image = mTopic.getGuides().get(position).getImage() +
           mImageSizes.getGrid();
-         Log.w("Topic Guide info", mTopic.getGuides().get(position).toString());
          itemView.setGuideItem(title, image, getActivity());
 
          return itemView;

@@ -5,10 +5,8 @@ import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 
 public class TopicGuideItemView extends RelativeLayout {
-   private RelativeLayout mBox; 
    private AutoResizeTextView mTitleView;	
    private LoaderImage mThumbnail;
    private ImageManager mImageManager;
@@ -23,7 +21,6 @@ public class TopicGuideItemView extends RelativeLayout {
        Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.topic_guide_item, this, true);
 
-      mBox = (RelativeLayout)findViewById(R.id.topic_grid_box);
       mTitleView = (AutoResizeTextView)findViewById(R.id.topic_guide_title);
       mThumbnail = (LoaderImage)findViewById(R.id.topic_guide_thumbnail);
    }
