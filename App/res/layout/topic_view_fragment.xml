@@ -1,7 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.v4.view.ViewPager
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/pager"
-      android:layout_width="match_parent"
-      android:layout_height="0dp"
-      android:layout_weight="1"/>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal" >
+
+    <FrameLayout
+        android:id="@+id/topic_view_page_fragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="25"  >
+    </FrameLayout>
+
+</LinearLayout>
