@@ -11,6 +11,7 @@
         style="@style/text.list.full" />
     
     <ImageView 
+        android:id="@+id/next_icon"
         android:paddingTop="4dp"
         android:layout_width="wrap_content" 
         android:layout_height="wrap_content"
