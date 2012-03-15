@@ -1,7 +1,6 @@
 package com.dozuki.ifixit;
 
 import android.os.Bundle;
-
 import android.support.v4.app.FragmentActivity;
 
 public class FullImageView extends FragmentActivity {
