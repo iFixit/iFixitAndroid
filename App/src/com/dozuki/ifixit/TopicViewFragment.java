@@ -33,7 +33,7 @@ public class TopicViewFragment extends SherlockFragment {
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
    private ViewPager mPager;
-   private TopicAdapter mTabsAdapter;
+   private TopicAdapter mTopicAdapter;
    private ImageManager mImageManager;
    private ActionBar mActionBar;
 
@@ -70,7 +70,7 @@ public class TopicViewFragment extends SherlockFragment {
        false);
 
       mPager = (ViewPager)view.findViewById(R.id.pager);
-      mTabsAdapter = new TopicAdapter(getActivity(), mPager, mImageManager);
+      mTopicAdapter = new TopicAdapter(getActivity(), mPager, mImageManager);
 
       return view;
    }
@@ -83,26 +83,30 @@ public class TopicViewFragment extends SherlockFragment {
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
+      mTopicAdapter.setTopicLeaf(mTopicLeaf);
+      mPager.setAdapter(mTopicAdapter);
+
+      if (mTopicLeaf == null) {
+         mActionBar.removeAllTabs();
+         return;
+      }
 
       mActionBar.setTitle(mTopicLeaf.getName());
-
-      mTabsAdapter.setTopicLeaf(mTopicLeaf);
-      mPager.setAdapter(mTabsAdapter);
 
       mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
       ActionBar.Tab tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.guides));
-      tab.setTabListener(mTabsAdapter);
+      tab.setTabListener(mTopicAdapter);
       mActionBar.addTab(tab);
 
       tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.answers));
-      tab.setTabListener(mTabsAdapter);
+      tab.setTabListener(mTopicAdapter);
       mActionBar.addTab(tab);
 
       tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.moreInfo));
-      tab.setTabListener(mTabsAdapter);
+      tab.setTabListener(mTopicAdapter);
       mActionBar.addTab(tab);
 
       if (mTopicLeaf.getGuides().size() == 0) {
@@ -113,6 +117,9 @@ public class TopicViewFragment extends SherlockFragment {
    private void getTopicLeaf(final String topicName) {
       final ResponseHandler<String> responseHandler =
        HTTPRequestHelper.getResponseHandlerInstance(mTopicHandler);
+
+      // remove current info
+      setTopicLeaf(null);
 
       new Thread() {
          public void run() {

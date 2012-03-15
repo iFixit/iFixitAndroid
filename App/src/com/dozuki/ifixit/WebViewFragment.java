@@ -46,7 +46,10 @@ public class WebViewFragment extends Fragment implements OnViewGuideListener {
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-      mWebView.saveState(outState);
+
+      if (mWebView != null) {
+         mWebView.saveState(outState);
+      }
    }
 
    @Override
