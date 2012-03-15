@@ -1,6 +1,7 @@
 package com.dozuki.ifixit;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
 
@@ -50,6 +51,7 @@ public class TopicViewActivity extends SherlockFragmentActivity {
          return;
       }
 
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       mTopicView.setActionBar(getSupportActionBar());
 
       if (topicLeaf != null) {
@@ -69,5 +71,16 @@ public class TopicViewActivity extends SherlockFragmentActivity {
       super.onSaveInstanceState(state);
 
       state.putSerializable(TOPIC_KEY, mTopicView.getTopicLeaf());
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case android.R.id.home:
+            finish();
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
    }
 }

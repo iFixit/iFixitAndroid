@@ -12,7 +12,9 @@ import android.os.Message;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
@@ -100,11 +102,17 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
 
    private void setActionBarTitle(TopicNode topic) {
+      boolean setBack;
+
       if (!topic.isRoot()) {
-    	  getSupportActionBar().setTitle(topic.getName());
+         getSupportActionBar().setTitle(topic.getName());
+         setBack = true;
       } else {
-    	  getSupportActionBar().setTitle("");
-      }	  
+         getSupportActionBar().setTitle("");
+         setBack = false;
+      }
+
+      getSupportActionBar().setDisplayHomeAsUpEnabled(setBack);
    }
    
    @Override
@@ -114,8 +122,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
-         }
-         else {
+         } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
             Bundle bundle = new Bundle();
 
@@ -141,6 +148,17 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
    }
 
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case android.R.id.home:
+            getSupportFragmentManager().popBackStack();
+
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
+   }
 
    
    @Override
