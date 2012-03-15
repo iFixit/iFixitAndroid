@@ -2,13 +2,14 @@ package com.dozuki.ifixit;
 
 import android.app.Activity;
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
-import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class TopicGuideItemView extends LinearLayout {
-   private LinearLayout mBox; 
-   private TextView mTitleView;	
+public class TopicGuideItemView extends RelativeLayout {
+   private RelativeLayout mBox; 
+   private AutoResizeTextView mTitleView;	
    private LoaderImage mThumbnail;
    private ImageManager mImageManager;
    private Context mContext;
@@ -22,15 +23,15 @@ public class TopicGuideItemView extends LinearLayout {
        Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.topic_guide_item, this, true);
 
-      mBox = (LinearLayout)findViewById(R.id.topic_grid_box);
-      mTitleView = (TextView)findViewById(R.id.topic_guide_title);
+      mBox = (RelativeLayout)findViewById(R.id.topic_grid_box);
+      mTitleView = (AutoResizeTextView)findViewById(R.id.topic_guide_title);
       mThumbnail = (LoaderImage)findViewById(R.id.topic_guide_thumbnail);
    }
 
    public void setGuideItem(String title, String image, Context context) {
       mContext = context;
 
-      mTitleView.setText(title);
+      mTitleView.setText(Html.fromHtml(title));
       mImageManager.displayImage(image, (Activity)mContext, mThumbnail);
    }
 }

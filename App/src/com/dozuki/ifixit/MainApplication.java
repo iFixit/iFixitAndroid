@@ -34,7 +34,7 @@ public class MainApplication extends Application {
              ".standard");
          } else {
             mImageSizes = new ImageSizes(".medium", ".medium", ".medium",
-             ".standard");
+             ".thumbnail");
          }
       }
 
