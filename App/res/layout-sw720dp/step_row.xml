@@ -5,14 +5,14 @@
 
     <ImageView
         android:id="@+id/bullet"
-        style="@style/bullets" />
+        style="@style/bullets.720" />
 
     <TextView
         android:id="@+id/step_text"
-        style="@style/text.body.step_row" />
+        style="@style/text.body.step_row.720" />
 
     <ImageView
         android:id="@+id/bullet_icon"
-        style="@style/step_row_icon" />
+        style="@style/step_row_icon.720" />
 
 </LinearLayout>

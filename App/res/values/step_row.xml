@@ -8,15 +8,21 @@
         <item name="android:weightSum">100</item>
     </style>
 
+
     <style name="bullets">
-        <item name="android:layout_width">22dp</item>
-        <item name="android:layout_height">22dp</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:paddingTop">4dp</item>
+        <item name="android:paddingRight">4dp</item>
+        <item name="android:layout_weight">5</item>       
     </style>
 
     <style name="bullets.720">
-        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">5dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:layout_weight">5</item>
     </style>
 
     <style name="step_row_icon">
