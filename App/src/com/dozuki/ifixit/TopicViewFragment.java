@@ -84,6 +84,8 @@ public class TopicViewFragment extends SherlockFragment {
    public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
 
+      mActionBar.setTitle(mTopicLeaf.getName());
+
       mTabsAdapter.setTopicLeaf(mTopicLeaf);
       mPager.setAdapter(mTabsAdapter);
 
