@@ -6,6 +6,7 @@
     android:columnWidth="270dp"
     android:numColumns="auto_fit"
     android:verticalSpacing="4dp"
+    android:horizontalSpacing="2dp"
     android:stretchMode="columnWidth"
     android:gravity="center"
 />

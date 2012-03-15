@@ -4,11 +4,7 @@ import java.util.List;
 
 import org.apache.http.client.ResponseHandler;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.viewpagerindicator.CirclePageIndicator;
-
 import android.content.Intent;
-
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +14,10 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.viewpagerindicator.CirclePageIndicator;
 
 public class GuideView extends SherlockFragmentActivity 
  implements OnPageChangeListener {
@@ -57,7 +57,7 @@ public class GuideView extends SherlockFragmentActivity
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_main);
-
+      
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       mPager = (ViewPager)findViewById(R.id.guide_pager);
       mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
@@ -98,6 +98,9 @@ public class GuideView extends SherlockFragmentActivity
    public void setGuide(Guide guide) {
       mGuide = guide;
 
+      ActionBar actionBar = getSupportActionBar();
+      actionBar.setTitle(mGuide.mTitle);
+      
       mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(),
        mImageManager, mGuide);
 
