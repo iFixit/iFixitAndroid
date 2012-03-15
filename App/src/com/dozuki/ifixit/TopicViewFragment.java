@@ -78,6 +78,10 @@ public class TopicViewFragment extends SherlockFragment
 
       if (mTopicLeaf == null) {
          mActionBar.removeAllTabs();
+         FragmentTransaction ft = getActivity().getSupportFragmentManager().
+          beginTransaction();
+         ft.replace(R.id.topic_view_page_fragment, new LoadingFragment());
+         ft.commit();
          return;
       }
 
