@@ -25,8 +25,6 @@ public class TopicViewFragment extends SherlockFragment
    private static final int MORE_INFO_TAB = 2;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String RESPONSE = "RESPONSE";
-   private static final String TOPIC_API_URL =
-    "http://www.ifixit.com/api/1.0/topic/";
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
@@ -124,24 +122,20 @@ public class TopicViewFragment extends SherlockFragment
    }
 
    private void getTopicLeaf(final String topicName) {
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(mTopicHandler);
-
       // remove current info
       setTopicLeaf(null);
 
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-
-            try {
-               helper.performGet(TOPIC_API_URL + URLEncoder.encode(topicName,
-                "UTF-8"));
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
+      APIHelper.getTopic(topicName, new APIHelper.APIResponder<TopicLeaf>() {
+         public void setResult(TopicLeaf result) {
+            /*
+            if (result == null) {
+               // Display error
             }
+            */
+
+            setTopicLeaf(result);
          }
-      }.start();
+      });
    }
 
    @Override
