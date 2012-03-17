@@ -1,26 +1,17 @@
 package com.dozuki.ifixit;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
-
-import org.apache.http.client.ResponseHandler;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
-   private static final String TOPICS_API_URL =
-    "http://www.ifixit.com/api/1.0/categories/";
-   private static final String RESPONSE = "RESPONSE";
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_HISTORY = "TOPIC_HISTORY";
    protected static final int REQUEST_RETURN_TOPIC = 1;
@@ -32,22 +23,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private TopicNode mRootTopic;
    private LinkedList<TopicNode> mTopicHistory;
    private int mBackStackSize = 0;
-
-   private final Handler mTopicsHandler = new Handler() {
-      public void handleMessage(Message message) {
-         String response = message.getData().getString(RESPONSE);
-         ArrayList<TopicNode> topics = JSONHelper.parseTopics(response);
-
-         if (topics != null) {
-            mRootTopic = new TopicNode();
-            mRootTopic.addAllTopics(topics);
-            onTopicSelected(mRootTopic);
-         }
-         else {
-            Log.e("iFixit", "Topics is null (response: " + response + ")");
-         }
-      }
-   };
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -69,7 +44,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             setActionBarTitle(mTopicHistory.getFirst());
          }
       } else {
-         getTopicHierarchy();
+         APIHelper.getCategories(new APIHelper.APIResponder<TopicNode>() {
+            public void setResult(TopicNode result) {
+               mRootTopic = result;
+               onTopicSelected(mRootTopic);
+            }
+         });
       }
 
       if (mDualPane) {
@@ -176,18 +156,5 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             mTopicView.setTopicNode(mTopicHistory.getFirst());
          }
       }
-   }
-
-   private void getTopicHierarchy() {
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(mTopicsHandler);
-
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-
-            helper.performGet(TOPICS_API_URL);
-         }
-      }.start();
    }
 }

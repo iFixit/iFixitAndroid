@@ -108,11 +108,20 @@ public class JSONHelper {
    /**
     * Topic hierarchy parsing
     */
-   public static ArrayList<TopicNode> parseTopics(String json) {
+   public static TopicNode parseTopics(String json) {
       try {
          JSONObject jTopics = new JSONObject(json);
+         ArrayList<TopicNode> topics = parseTopicChildren(jTopics);
+         TopicNode root = null;
 
-         return parseTopicChildren(jTopics);
+         if (topics != null) {
+            root = new TopicNode();
+            root.addAllTopics(topics);
+         } else {
+            Log.e("iFixit", "Topics is null (response: " + json + ")");
+         }
+
+         return root;
       }
       catch (Exception e) {
          Log.w("iFixit", "Error parsing topics: " + e.getMessage());

@@ -9,12 +9,6 @@ import android.os.Message;
 import android.util.Log;
 
 public class APIHelper {
-   private static final String RESPONSE = "RESPONSE";
-   private static final String TOPIC_API_URL =
-    "http://www.ifixit.com/api/1.0/topic/";
-   private static final String GUIDE_API_URL =
-    "http://www.ifixit.com/api/1.0/guide/";
-
    public interface APIResponder<T> {
       public void setResult(T result);
    }
@@ -22,6 +16,14 @@ public class APIHelper {
    private interface StringHandler {
       public void handleString(String string);
    }
+
+   private static final String RESPONSE = "RESPONSE";
+   private static final String TOPIC_API_URL =
+    "http://www.ifixit.com/api/1.0/topic/";
+   private static final String GUIDE_API_URL =
+    "http://www.ifixit.com/api/1.0/guide/";
+   private static final String CATEGORIES_API_URL =
+    "http://www.ifixit.com/api/1.0/categories/";
 
    public static void getTopic(String topic,
     final APIResponder<TopicLeaf> responder) {
@@ -47,6 +49,14 @@ public class APIHelper {
       performRequest(url, new StringHandler() {
          public void handleString(String response) {
             responder.setResult(JSONHelper.parseGuide(response));
+         }
+      });
+   }
+
+   public static void getCategories(final APIResponder<TopicNode> responder) {
+      performRequest(CATEGORIES_API_URL, new StringHandler() {
+         public void handleString(String response) {
+            responder.setResult(JSONHelper.parseTopics(response));
          }
       });
    }

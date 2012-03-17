@@ -2,11 +2,7 @@ package com.dozuki.ifixit;
 
 import java.net.URLEncoder;
 
-import org.apache.http.client.ResponseHandler;
-
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
