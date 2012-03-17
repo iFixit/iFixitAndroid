@@ -12,6 +12,8 @@ public class APIHelper {
    private static final String RESPONSE = "RESPONSE";
    private static final String TOPIC_API_URL =
     "http://www.ifixit.com/api/1.0/topic/";
+   private static final String GUIDE_API_URL =
+    "http://www.ifixit.com/api/1.0/guide/";
 
    public interface APIResponder<T> {
       public void setResult(T result);
@@ -36,6 +38,17 @@ public class APIHelper {
          Log.w("iFixit", "Encoding error: " + e.getMessage());
          responder.setResult(null);
       }
+   }
+
+   public static void getGuide(int guideid,
+    final APIResponder<Guide> responder) {
+      String url = GUIDE_API_URL + guideid;
+
+      performRequest(url, new StringHandler() {
+         public void handleString(String response) {
+            responder.setResult(JSONHelper.parseGuide(response));
+         }
+      });
    }
 
    private static void performRequest(final String url,

@@ -24,21 +24,12 @@ public class TopicViewFragment extends SherlockFragment
    private static final int ANSWERS_TAB = 1;
    private static final int MORE_INFO_TAB = 2;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
-   private static final String RESPONSE = "RESPONSE";
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
    private ImageManager mImageManager;
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
-
-   private final Handler mTopicHandler = new Handler() {
-      public void handleMessage(Message message) {
-         String response = message.getData().getString(RESPONSE);
-
-         setTopicLeaf(JSONHelper.parseTopicLeaf(response));
-      }
-   };
 
    public void setActionBar(ActionBar actionBar) {
       mActionBar = actionBar;

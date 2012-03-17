@@ -2,12 +2,8 @@ package com.dozuki.ifixit;
 
 import java.util.List;
 
-import org.apache.http.client.ResponseHandler;
-
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -24,8 +20,6 @@ public class GuideView extends SherlockFragmentActivity
    private static final int MAX_LOADING_IMAGES = 10;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
-   private static final String RESPONSE = "RESPONSE";
-   private static final String API_URL = "http://www.ifixit.com/api/1.0/guide/";
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
@@ -38,21 +32,6 @@ public class GuideView extends SherlockFragmentActivity
    protected ImageManager mImageManager;
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
-
-
-   private final Handler mGuideHandler = new Handler() {
-      public void handleMessage(Message message) {
-         String response = message.getData().getString(RESPONSE);
-         Guide guide = JSONHelper.parseGuide(response);
-
-         if (guide != null) {
-            setGuide(guide);
-         }
-         else {
-            Log.e("iFixit", "Guide is null (response: " + response + ")");
-         }
-      }
-   };
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -150,16 +129,11 @@ public class GuideView extends SherlockFragmentActivity
    }
 
    public void getGuide(final int guideid) {
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(mGuideHandler);
-
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-
-            helper.performGet(API_URL + guideid);
+      APIHelper.getGuide(guideid, new APIHelper.APIResponder<Guide>() {
+         public void setResult(Guide guide) {
+            setGuide(guide);
          }
-      }.start();
+      });
    }
 
    private void nextStep() {
