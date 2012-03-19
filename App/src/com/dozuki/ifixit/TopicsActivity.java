@@ -75,7 +75,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                if (mTopicListVisible) {
-                  hideTopicList(true);
+                  hideTopicList();
                   return true;
                } else {
                   return false;
@@ -124,12 +124,14 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    @Override
    public void onTopicSelected(TopicNode topic) {
       setActionBarTitle(topic.getName());
-      mTopicHistory.addFirst(topic.getName());
 
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
-            hideTopicList(false);
+
+            if (mHideTopicList) {
+               hideTopicList();
+            }
          } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
             Bundle bundle = new Bundle();
@@ -140,21 +142,22 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          }
       } else {
          changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
+         mTopicHistory.addFirst(topic.getName());
       }
    }
 
-   private void hideTopicList(boolean addHistory) {
+   private void hideTopicList() {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      if (addHistory) {
-         mTopicHistory.addFirst("");
-      }
+      mTopicHistory.addFirst("");
       mTopicViewOverlay.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
       changeTopicListView(new Fragment(), true);
    }
 
    private void setTopicListVisible() {
-      mTopicViewOverlay.setVisibility(View.VISIBLE);
+      if (mTopicViewOverlay != null) {
+         mTopicViewOverlay.setVisibility(View.VISIBLE);
+      }
       mTopicListVisible = true;
    }
 
