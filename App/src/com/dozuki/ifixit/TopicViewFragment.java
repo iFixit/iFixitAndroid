@@ -2,6 +2,8 @@ package com.dozuki.ifixit;
 
 import java.net.URLEncoder;
 
+import android.app.Activity;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -13,6 +15,7 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 
 public class TopicViewFragment extends SherlockFragment
  implements ActionBar.TabListener {
@@ -32,10 +35,6 @@ public class TopicViewFragment extends SherlockFragment
       return mTopicLeaf != null;
    }
 
-   public void setActionBar(ActionBar actionBar) {
-      mActionBar = actionBar;
-   }
-
    public TopicLeaf getTopicLeaf() {
       return mTopicLeaf;
    }
@@ -51,8 +50,8 @@ public class TopicViewFragment extends SherlockFragment
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
-         mTopicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
-          CURRENT_TOPIC_LEAF);
+         setTopicLeaf((TopicLeaf)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_LEAF));
       }
    }
 
@@ -63,6 +62,12 @@ public class TopicViewFragment extends SherlockFragment
        false);
 
       return view;
+   }
+
+   @Override
+   public void onAttach(Activity activity) {
+      super.onAttach(activity);
+      mActionBar = ((SherlockFragmentActivity)activity).getSupportActionBar();
    }
 
    @Override
@@ -81,9 +86,9 @@ public class TopicViewFragment extends SherlockFragment
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
+      mActionBar.removeAllTabs();
 
       if (mTopicLeaf == null) {
-         mActionBar.removeAllTabs();
          FragmentTransaction ft = getActivity().getSupportFragmentManager().
           beginTransaction();
          ft.replace(R.id.topic_view_page_fragment, new LoadingFragment());

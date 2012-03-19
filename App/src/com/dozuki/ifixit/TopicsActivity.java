@@ -67,10 +67,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          });
       }
 
-      if (mDualPane) {
-         mTopicView.setActionBar(getSupportActionBar());
-      }
-
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
       }

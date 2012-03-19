@@ -52,7 +52,6 @@ public class TopicViewActivity extends SherlockFragmentActivity {
       }
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      mTopicView.setActionBar(getSupportActionBar());
 
       if (topicLeaf != null) {
          mTopicView.setTopicLeaf(topicLeaf);
