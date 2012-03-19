@@ -42,4 +42,8 @@ public class TopicNode implements Serializable {
    public String toString() {
       return "{Name: " + mName + ", Topics: " + mChildren + "}";
    }
+
+   public static boolean isRootName(String name) {
+      return ROOT_NAME.equals(name);
+   }
 }

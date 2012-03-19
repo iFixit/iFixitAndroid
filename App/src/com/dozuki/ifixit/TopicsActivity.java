@@ -86,7 +86,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private void setActionBarTitle(String topic) {
       boolean setBack;
 
-      if (!topic.equals("ROOT")) {
+      if (!TopicNode.isRootName(topic)) {
          getSupportActionBar().setTitle(topic);
          setBack = true;
       } else {
