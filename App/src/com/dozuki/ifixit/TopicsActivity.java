@@ -4,6 +4,8 @@ import java.util.LinkedList;
 
 import android.content.Intent;
 import android.os.Bundle;
+
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 
@@ -21,7 +23,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mDualPane;
    private TopicViewFragment mTopicView;
    private TopicNode mRootTopic;
-   private LinkedList<TopicNode> mTopicHistory;
+   private LinkedList<String> mTopicHistory;
    private int mBackStackSize = 0;
 
    @Override
@@ -33,11 +35,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
       mDualPane = mTopicView != null && mTopicView.isInLayout();
-      mTopicHistory = new LinkedList<TopicNode>();
+      mTopicHistory = new LinkedList<String>();
 
       if (savedInstanceState != null) {
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
-         mTopicHistory = (LinkedList<TopicNode>)savedInstanceState.
+         mTopicHistory = (LinkedList<String>)savedInstanceState.
           getSerializable(TOPIC_HISTORY);
          
          if (mTopicHistory.size() != 0) {
@@ -81,11 +83,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       mBackStackSize = backStackSize;
    }
 
-   private void setActionBarTitle(TopicNode topic) {
+   private void setActionBarTitle(String topic) {
       boolean setBack;
 
-      if (!topic.isRoot()) {
-         getSupportActionBar().setTitle(topic.getName());
+      if (!topic.equals("ROOT")) {
+         getSupportActionBar().setTitle(topic);
          setBack = true;
       } else {
          getSupportActionBar().setTitle("");
@@ -97,11 +99,13 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    
    @Override
    public void onTopicSelected(TopicNode topic) {
-	  setActionBarTitle(topic);
-      
+      setActionBarTitle(topic.getName());
+      mTopicHistory.addFirst(topic.getName());
+
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
+            changeTopicListView(new Fragment(), true);
          } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
             Bundle bundle = new Bundle();
@@ -111,21 +115,22 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             startActivityForResult(intent, REQUEST_RETURN_TOPIC);
          }
       } else {
-         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-         TopicListFragment newFragment = new TopicListFragment(topic);
-         
-         ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
-          R.anim.slide_in_left, R.anim.slide_out_right);
-         ft.replace(R.id.topic_list_fragment, newFragment);
-
-         if (!topic.isRoot()) {
-            ft.addToBackStack(null);
-         }
-
-         mTopicHistory.addFirst(topic);
-
-         ft.commit();
+         changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
       }
+   }
+
+   private void changeTopicListView(Fragment fragment, boolean addToBack) {
+      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+      ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
+            R.anim.slide_in_left, R.anim.slide_out_right);
+      ft.replace(R.id.topic_list_fragment, fragment);
+
+      if (addToBack) {
+         ft.addToBackStack(null);
+      }
+
+      ft.commit();
    }
 
    @Override
@@ -137,24 +142,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             return true;
          default:
             return super.onOptionsItemSelected(item);
-      }
-   }
-
-   
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      super.onActivityResult(requestCode, resultCode, data);
-
-      if (requestCode == REQUEST_RETURN_TOPIC) {
-         TopicLeaf topicLeaf;
-         if (resultCode == TOPIC_RESULT && data != null &&
-          (topicLeaf = (TopicLeaf)data.getExtras().getSerializable(
-          TopicViewActivity.TOPIC_KEY)) != null) {
-
-            mTopicView.setTopicLeaf(topicLeaf);
-         } else if (mTopicHistory.size() != 0 && mDualPane) {
-            mTopicView.setTopicNode(mTopicHistory.getFirst());
-         }
       }
    }
 }
