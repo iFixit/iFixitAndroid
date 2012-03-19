@@ -111,6 +111,7 @@ public class TopicViewFragment extends SherlockFragment
    private void getTopicLeaf(final String topicName) {
       // remove current info
       setTopicLeaf(null);
+      mSelectedTab = -1;
 
       APIHelper.getTopic(topicName, new APIHelper.APIResponder<TopicLeaf>() {
          public void setResult(TopicLeaf result) {

@@ -21,6 +21,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_HISTORY = "TOPIC_HISTORY";
+   private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final int REQUEST_RETURN_TOPIC = 1;
    protected static final int TOPIC_RESULT = 2;
    protected static final int NO_TOPIC_RESULT = 3;
@@ -50,11 +51,13 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
          mTopicHistory = (LinkedList<String>)savedInstanceState.
           getSerializable(TOPIC_HISTORY);
+         mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
          
          if (mTopicHistory.size() != 0) {
             setActionBarTitle(mTopicHistory.getFirst());
          }
       } else {
+         mTopicListVisible = true;
          mTopicHistory = new LinkedList<String>();
          APIHelper.getCategories(new APIHelper.APIResponder<TopicNode>() {
             public void setResult(TopicNode result) {
@@ -66,6 +69,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       if (mDualPane) {
          mTopicView.setActionBar(getSupportActionBar());
+      }
+
+      if (!mTopicListVisible && !mHideTopicList) {
+         getSupportFragmentManager().popBackStack();
       }
 
       getSupportFragmentManager().addOnBackStackChangedListener(this);
@@ -91,6 +98,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putSerializable(TOPIC_HISTORY, mTopicHistory);
+      outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
    }
 
    public void onBackStackChanged() {
