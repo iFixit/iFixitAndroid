@@ -4,6 +4,8 @@ import java.util.LinkedList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.SystemClock;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
@@ -25,6 +27,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    protected static final int REQUEST_RETURN_TOPIC = 1;
    protected static final int TOPIC_RESULT = 2;
    protected static final int NO_TOPIC_RESULT = 3;
+   protected static final long TOPIC_LIST_HIDE_DELAY = 700;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -69,6 +72,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
+      }
+
+      if (mTopicListVisible && mHideTopicList &&
+       mTopicView.isDisplayingTopic()) {
+         hideTopicListWithDelay();
       }
 
       getSupportFragmentManager().addOnBackStackChangedListener(this);
@@ -156,6 +164,14 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       mTopicViewOverlay.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
       changeTopicListView(new Fragment(), true);
+   }
+
+   private void hideTopicListWithDelay() {
+      new Handler().postAtTime(new Runnable() {
+         public void run() {
+            hideTopicList();
+         }
+      }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
 
    private void setTopicListVisible() {
