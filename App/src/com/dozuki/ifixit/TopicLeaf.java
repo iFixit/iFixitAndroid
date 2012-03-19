@@ -48,4 +48,9 @@ public class TopicLeaf implements Serializable {
    public String toString() {
       return mName + ", " + mGuides;
    }
+
+   public boolean equals(Object other) {
+      return other instanceof TopicLeaf &&
+       ((TopicLeaf)other).getName().equals(mName);
+   }
 }

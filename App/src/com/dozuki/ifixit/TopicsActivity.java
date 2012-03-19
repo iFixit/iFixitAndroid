@@ -24,9 +24,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_HISTORY = "TOPIC_HISTORY";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
-   protected static final int REQUEST_RETURN_TOPIC = 1;
-   protected static final int TOPIC_RESULT = 2;
-   protected static final int NO_TOPIC_RESULT = 3;
    protected static final long TOPIC_LIST_HIDE_DELAY = 700;
 
    private TopicViewFragment mTopicView;
@@ -150,7 +147,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
             bundle.putSerializable(TopicViewActivity.TOPIC_KEY, topic);
             intent.putExtras(bundle);
-            startActivityForResult(intent, REQUEST_RETURN_TOPIC);
+            startActivity(intent);
          }
       } else {
          changeTopicListView(new TopicListFragment(topic), !topic.isRoot());

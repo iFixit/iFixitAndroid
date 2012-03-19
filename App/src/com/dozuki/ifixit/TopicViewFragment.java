@@ -24,6 +24,7 @@ public class TopicViewFragment extends SherlockFragment
    private static final int MORE_INFO_TAB = 2;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String CURRENT_TOPIC_LEAF = "CURRENT_TOPIC_LEAF";
+   private static final String CURRENT_TOPIC_NODE = "CURRENT_TOPIC_NODE";
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
@@ -50,8 +51,10 @@ public class TopicViewFragment extends SherlockFragment
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
-         mTopicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
-          CURRENT_TOPIC_LEAF);
+         setTopicLeaf((TopicLeaf)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_LEAF));
+         setTopicNode((TopicNode)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_NODE));
       }
    }
 
@@ -76,15 +79,24 @@ public class TopicViewFragment extends SherlockFragment
 
       outState.putInt(CURRENT_PAGE, mActionBar.getSelectedNavigationIndex());
       outState.putSerializable(CURRENT_TOPIC_LEAF, mTopicLeaf);
+      outState.putSerializable(CURRENT_TOPIC_NODE, mTopicNode);
    }
 
    public void setTopicNode(TopicNode topicNode) {
+      if (mTopicLeaf == null || (mTopicNode != null &&
+       !mTopicNode.equals(topicNode))) {
+         getTopicLeaf(topicNode.getName());
+      }
       mTopicNode = topicNode;
-
-      getTopicLeaf(mTopicNode.getName());
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
+      if (!(mTopicLeaf == null || topicLeaf == null) &&
+       mTopicLeaf.equals(topicLeaf)) {
+         mTopicLeaf = topicLeaf;
+         return;
+      }
+
       mTopicLeaf = topicLeaf;
       mActionBar.removeAllTabs();
 

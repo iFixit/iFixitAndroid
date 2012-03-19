@@ -43,6 +43,11 @@ public class TopicNode implements Serializable {
       return "{Name: " + mName + ", Topics: " + mChildren + "}";
    }
 
+   public boolean equals(Object other) {
+      return other instanceof TopicNode &&
+       ((TopicNode)other).getName().equals(mName);
+   }
+
    public static boolean isRootName(String name) {
       return ROOT_NAME.equals(name);
    }
