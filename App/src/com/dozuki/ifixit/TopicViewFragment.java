@@ -20,12 +20,17 @@ public class TopicViewFragment extends SherlockFragment
    private static final int ANSWERS_TAB = 1;
    private static final int MORE_INFO_TAB = 2;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
+   private static final String CURRENT_TOPIC_LEAF = "CURRENT_TOPIC_LEAF";
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
    private ImageManager mImageManager;
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
+
+   public boolean isDisplayingTopic() {
+      return mTopicLeaf != null;
+   }
 
    public void setActionBar(ActionBar actionBar) {
       mActionBar = actionBar;
@@ -46,6 +51,8 @@ public class TopicViewFragment extends SherlockFragment
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
+         mTopicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_LEAF);
       }
    }
 
@@ -63,6 +70,7 @@ public class TopicViewFragment extends SherlockFragment
       super.onSaveInstanceState(outState);
 
       outState.putInt(CURRENT_PAGE, mActionBar.getSelectedNavigationIndex());
+      outState.putSerializable(CURRENT_TOPIC_LEAF, mTopicLeaf);
    }
 
    public void setTopicNode(TopicNode topicNode) {

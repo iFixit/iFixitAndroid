@@ -81,7 +81,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       if (mTopicViewOverlay != null) {
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-               if (mTopicListVisible) {
+               if (mTopicListVisible && mTopicView.isDisplayingTopic()) {
                   hideTopicList();
                   return true;
                } else {
