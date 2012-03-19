@@ -12,6 +12,11 @@ import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import android.view.MotionEvent;
+import android.view.View;
+
+import android.widget.FrameLayout;
+
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
@@ -20,11 +25,14 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    protected static final int TOPIC_RESULT = 2;
    protected static final int NO_TOPIC_RESULT = 3;
 
-   private boolean mDualPane;
    private TopicViewFragment mTopicView;
+   private FrameLayout mTopicViewOverlay;
    private TopicNode mRootTopic;
    private LinkedList<String> mTopicHistory;
    private int mBackStackSize = 0;
+   private boolean mDualPane;
+   private boolean mHideTopicList;
+   private boolean mTopicListVisible;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -34,8 +42,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
+      mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
+      mHideTopicList = mTopicViewOverlay != null;
       mDualPane = mTopicView != null && mTopicView.isInLayout();
-      mTopicHistory = new LinkedList<String>();
 
       if (savedInstanceState != null) {
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
@@ -46,6 +55,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             setActionBarTitle(mTopicHistory.getFirst());
          }
       } else {
+         mTopicHistory = new LinkedList<String>();
          APIHelper.getCategories(new APIHelper.APIResponder<TopicNode>() {
             public void setResult(TopicNode result) {
                mRootTopic = result;
@@ -60,6 +70,19 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       getSupportFragmentManager().addOnBackStackChangedListener(this);
       mBackStackSize = getSupportFragmentManager().getBackStackEntryCount();
+
+      if (mTopicViewOverlay != null) {
+         mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
+            public boolean onTouch(View v, MotionEvent event) {
+               if (mTopicListVisible) {
+                  hideTopicList(true);
+                  return true;
+               } else {
+                  return false;
+               }
+            }
+         });
+      }
    }
    
    @Override
@@ -74,6 +97,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
 
       if (mBackStackSize > backStackSize) {
+         setTopicListVisible();
          mTopicHistory.removeFirst();
          if (mTopicHistory.size() != 0) {
             setActionBarTitle(mTopicHistory.getFirst());
@@ -105,7 +129,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
-            changeTopicListView(new Fragment(), true);
+            hideTopicList(false);
          } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
             Bundle bundle = new Bundle();
@@ -117,6 +141,21 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       } else {
          changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
       }
+   }
+
+   private void hideTopicList(boolean addHistory) {
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      if (addHistory) {
+         mTopicHistory.addFirst("");
+      }
+      mTopicViewOverlay.setVisibility(View.INVISIBLE);
+      mTopicListVisible = false;
+      changeTopicListView(new Fragment(), true);
+   }
+
+   private void setTopicListVisible() {
+      mTopicViewOverlay.setVisibility(View.VISIBLE);
+      mTopicListVisible = true;
    }
 
    private void changeTopicListView(Fragment fragment, boolean addToBack) {
