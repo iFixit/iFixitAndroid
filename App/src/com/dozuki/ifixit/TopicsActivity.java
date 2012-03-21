@@ -67,7 +67,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
 
       getSupportFragmentManager().addOnBackStackChangedListener(this);
-      mBackStackSize = getSupportFragmentManager().getBackStackEntryCount();
+
+      // Reset backstack size
+      mBackStackSize = -1;
+      onBackStackChanged();
 
       if (mTopicViewOverlay != null) {
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {

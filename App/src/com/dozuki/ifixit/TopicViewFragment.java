@@ -36,10 +36,6 @@ public class TopicViewFragment extends SherlockFragment
       return mTopicLeaf != null;
    }
 
-   public TopicLeaf getTopicLeaf() {
-      return mTopicLeaf;
-   }
-
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -53,8 +49,8 @@ public class TopicViewFragment extends SherlockFragment
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
          setTopicLeaf((TopicLeaf)savedInstanceState.getSerializable(
           CURRENT_TOPIC_LEAF));
-         setTopicNode((TopicNode)savedInstanceState.getSerializable(
-          CURRENT_TOPIC_NODE));
+         mTopicNode = (TopicNode)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_NODE);
       }
    }
 
@@ -83,17 +79,25 @@ public class TopicViewFragment extends SherlockFragment
    }
 
    public void setTopicNode(TopicNode topicNode) {
-      if (mTopicLeaf == null || (mTopicNode != null &&
-       !mTopicNode.equals(topicNode))) {
-         getTopicLeaf(topicNode.getName());
+      if (topicNode == null) {
+         mTopicNode = null;
+         mTopicLeaf = null;
+         return;
       }
+
+      if (mTopicNode == null || !mTopicNode.equals(topicNode)) {
+         getTopicLeaf(topicNode.getName());
+      } else {
+         selectDefaultTab();
+      }
+
       mTopicNode = topicNode;
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
-      if (!(mTopicLeaf == null || topicLeaf == null) &&
+      if (mTopicLeaf != null && topicLeaf != null &&
        mTopicLeaf.equals(topicLeaf)) {
-         mTopicLeaf = topicLeaf;
+         selectDefaultTab();
          return;
       }
 
@@ -101,10 +105,7 @@ public class TopicViewFragment extends SherlockFragment
       mActionBar.removeAllTabs();
 
       if (mTopicLeaf == null) {
-         FragmentTransaction ft = getActivity().getSupportFragmentManager().
-          beginTransaction();
-         ft.replace(R.id.topic_view_page_fragment, new LoadingFragment());
-         ft.commit();
+         // display error message
          return;
       }
 
@@ -128,27 +129,53 @@ public class TopicViewFragment extends SherlockFragment
 
       if (mSelectedTab != -1) {
          mActionBar.setSelectedNavigationItem(mSelectedTab);
-      } else if (mTopicLeaf.getGuides().size() == 0) {
-         mActionBar.setSelectedNavigationItem(MORE_INFO_TAB);
+      } else {
+         selectDefaultTab();
       }
    }
 
+   private void displayLoading() {
+      mActionBar.removeAllTabs();
+      FragmentTransaction ft = getActivity().getSupportFragmentManager().
+         beginTransaction();
+      ft.replace(R.id.topic_view_page_fragment, new LoadingFragment());
+      ft.commit();
+   }
+
+   private void selectDefaultTab() {
+      int tab;
+
+      if (mTopicLeaf == null) {
+         return;
+      }
+
+      if (mTopicLeaf.getGuides().size() == 0) {
+         tab = MORE_INFO_TAB;
+      } else {
+         tab = GUIDES_TAB;
+      }
+
+      mActionBar.setSelectedNavigationItem(tab);
+   }
+
    private void getTopicLeaf(final String topicName) {
-      // remove current info
-      setTopicLeaf(null);
+      displayLoading();
+      mTopicLeaf = null;
       mSelectedTab = -1;
 
       APIHelper.getTopic(topicName, new APIHelper.APIResponder<TopicLeaf>() {
          public void setResult(TopicLeaf result) {
-            /*
-            if (result == null) {
-               // Display error
-            }
-            */
-
             setTopicLeaf(result);
          }
       });
+   }
+
+   public TopicLeaf getTopicLeaf() {
+      return mTopicLeaf;
+   }
+
+   public TopicNode getTopicNode() {
+      return mTopicNode;
    }
 
    @Override

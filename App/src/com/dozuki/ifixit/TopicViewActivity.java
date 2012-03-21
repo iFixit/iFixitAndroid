@@ -22,8 +22,10 @@ public class TopicViewActivity extends SherlockFragmentActivity {
        .findFragmentById(R.id.topic_view_fragment);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-      mTopicView.setTopicNode((TopicNode)getIntent().
-       getSerializableExtra(TOPIC_KEY));
+      if (mTopicView.getTopicNode() == null) {
+         mTopicView.setTopicNode((TopicNode)getIntent().
+          getSerializableExtra(TOPIC_KEY));
+      }
    }
 
    @Override
