@@ -1,7 +1,5 @@
 package com.dozuki.ifixit;
 
-import java.util.LinkedList;
-
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -22,14 +20,12 @@ import android.widget.FrameLayout;
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
-   private static final String TOPIC_HISTORY = "TOPIC_HISTORY";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 700;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
    private TopicNode mRootTopic;
-   private LinkedList<String> mTopicHistory;
    private int mBackStackSize = 0;
    private boolean mDualPane;
    private boolean mHideTopicList;
@@ -39,6 +35,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       
+      getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
       
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
@@ -49,16 +46,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       if (savedInstanceState != null) {
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
-         mTopicHistory = (LinkedList<String>)savedInstanceState.
-          getSerializable(TOPIC_HISTORY);
          mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
-         
-         if (mTopicHistory.size() != 0) {
-            setActionBarTitle(mTopicHistory.getFirst());
-         }
       } else {
          mTopicListVisible = true;
-         mTopicHistory = new LinkedList<String>();
          APIHelper.getCategories(new APIHelper.APIResponder<TopicNode>() {
             public void setResult(TopicNode result) {
                mRootTopic = result;
@@ -98,7 +88,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       super.onSaveInstanceState(outState);
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
-      outState.putSerializable(TOPIC_HISTORY, mTopicHistory);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
    }
 
@@ -107,33 +96,15 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       if (mBackStackSize > backStackSize) {
          setTopicListVisible();
-         mTopicHistory.removeFirst();
-         if (mTopicHistory.size() != 0) {
-            setActionBarTitle(mTopicHistory.getFirst());
-         }
       }
 
       mBackStackSize = backStackSize;
+
+      getSupportActionBar().setDisplayHomeAsUpEnabled(mBackStackSize != 0);
    }
 
-   private void setActionBarTitle(String topic) {
-      boolean setBack;
-
-      if (!TopicNode.isRootName(topic)) {
-         getSupportActionBar().setTitle(topic);
-         setBack = true;
-      } else {
-         getSupportActionBar().setTitle("");
-         setBack = false;
-      }
-
-      getSupportActionBar().setDisplayHomeAsUpEnabled(setBack);
-   }
-   
    @Override
    public void onTopicSelected(TopicNode topic) {
-      setActionBarTitle(topic.getName());
-
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
@@ -151,13 +122,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          }
       } else {
          changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
-         mTopicHistory.addFirst(topic.getName());
       }
    }
 
    private void hideTopicList() {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      mTopicHistory.addFirst("");
       mTopicViewOverlay.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
       changeTopicListView(new Fragment(), true);
