@@ -12,10 +12,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
+import com.ifixit.android.sectionheaders.*;
 
 public class TopicListFragment extends SherlockFragment
  implements TopicSelectedListener, OnItemClickListener {
@@ -25,7 +24,7 @@ public class TopicListFragment extends SherlockFragment
    private TopicNode mTopic;
    private SectionHeadersAdapter mTopicAdapter;
    private Context mContext;
-   private ListView mListView;
+   private SectionListView mListView;
 
    /**
     * Required for restoring fragments
@@ -53,8 +52,8 @@ public class TopicListFragment extends SherlockFragment
       View view = inflater.inflate(R.layout.topic_list_fragment, container,
        false);
 
-      mListView = (ListView)view.findViewById(R.id.topicList);
-      mListView.setOnItemClickListener(this);
+      mListView = (SectionListView)view.findViewById(R.id.topicList);
+      mListView.getListView().setOnItemClickListener(this);
 
       setTopic(mTopic);
 
@@ -86,9 +85,6 @@ public class TopicListFragment extends SherlockFragment
       Collections.sort(leaves, comparator);
 
       if (!mTopic.isRoot()) {
-         // TODO: This is wrong. "General Information" and mTopic.getName()
-         // need to be switched. However, this takes the user to the
-         // "General Info" device which doesn't exist
          generalInfo.add(new TopicNode(mTopic.getName()));
          adapter = new TopicListAdapter(mContext,
           mContext.getString(R.string.generalInformation), generalInfo);
