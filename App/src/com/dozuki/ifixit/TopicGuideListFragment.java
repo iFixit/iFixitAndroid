@@ -15,6 +15,7 @@ import android.widget.GridView;
 public class TopicGuideListFragment extends Fragment {
    private static final int MAX_LOADING_IMAGES = 20;
    private static final int MAX_STORED_IMAGES = 20;
+   private static final int MAX_WRITING_IMAGES = 20;
    protected static final String GUIDEID = "guideid";
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
 
@@ -34,6 +35,7 @@ public class TopicGuideListFragment extends Fragment {
       mImageManager = imageManager;
       mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
+      mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
    }
 
    @Override

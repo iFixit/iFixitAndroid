@@ -2,6 +2,9 @@ package com.dozuki.ifixit;
 
 import java.io.File;
 import java.io.FileOutputStream;
+
+import java.lang.ref.SoftReference;
+
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
@@ -21,11 +24,12 @@ public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
    private static final int DEFAULT_MAX_STORED_IMAGES = 10;
    private static final int DEFAULT_MAX_LOADING_IMAGES = 9;
+   private static final int DEFAULT_MAX_WRITING_IMAGES = 10;
    private static final int DEFAULT_NUM_DOWNLOAD_THREADS = 5;
    private static final int DEFAULT_NUM_WRITE_THREADS = 2;
 
    private HashMap<String, ImageRef> mLoadingImages;
-   private LinkedList<StoredBitmap> mWriteQueue;
+   private LinkedList<SoftReference<StoredBitmap>> mWriteQueue;
    private LinkedList<StoredBitmap> mRecentImages;
    private File mCacheDir;
    private ImageQueue mImageQueue;
@@ -33,6 +37,7 @@ public class ImageManager {
    private Thread[] mWriteThreads;
    private int mMaxLoadingImages;
    private int mMaxStoredImages;
+   private int mMaxWritingImages;
    private final int mNumDownloadThreads;
    private final int mNumWriteThreads;
 
@@ -43,7 +48,7 @@ public class ImageManager {
    public ImageManager(Context context, int downloadThreads, int writeThreads) {
       mNumDownloadThreads = downloadThreads;
       mNumWriteThreads = writeThreads;
-      mWriteQueue = new LinkedList<StoredBitmap>();
+      mWriteQueue = new LinkedList<SoftReference<StoredBitmap>>();
       mRecentImages = new LinkedList<StoredBitmap>();
       mImageQueue = new ImageQueue();
       mDownloadThreads = new Thread[mNumDownloadThreads];
@@ -51,6 +56,7 @@ public class ImageManager {
       mLoadingImages = new HashMap<String, ImageRef>();
       mMaxLoadingImages = DEFAULT_MAX_LOADING_IMAGES;
       mMaxStoredImages = DEFAULT_MAX_STORED_IMAGES;
+      mMaxWritingImages = DEFAULT_MAX_WRITING_IMAGES;
 
       for (int i = 0; i < mDownloadThreads.length; i++) {
          mDownloadThreads[i] = new Thread(new ImageQueueManager());
@@ -77,18 +83,10 @@ public class ImageManager {
       int index = mRecentImages.indexOf(storedBitmap);
 
       if (index != -1) {
-         // Found in recent bitmaps
          imageView.setImageBitmap(mRecentImages.get(index).mBitmap);
       } else {
-         index = mWriteQueue.indexOf(storedBitmap);
-
-         if (index != -1) {
-            // Found in the write queue
-            imageView.setImageBitmap(mWriteQueue.get(index).mBitmap);
-         } else {
-            imageView.setImageBitmap(null);
-            queueImage(url, activity, imageView);
-         }
+         imageView.setImageBitmap(null);
+         queueImage(url, activity, imageView);
       }
    }
 
@@ -123,19 +121,33 @@ public class ImageManager {
       }
    }
 
+   public void setMaxWritingImages(int max) {
+      mMaxWritingImages = max;
+
+      synchronized (mWriteQueue) {
+         while (mWriteQueue.size() >= mMaxWritingImages) {
+            mWriteQueue.removeLast();
+         }
+      }
+   }
+
    public void setMaxStoredImages(int max) {
       mMaxStoredImages = max;
 
-      while (mRecentImages.size() >= mMaxStoredImages) {
-         mRecentImages.removeLast();
+      synchronized (mRecentImages) {
+         while (mRecentImages.size() >= mMaxStoredImages) {
+            mRecentImages.removeLast();
+         }
       }
    }
 
    public void setMaxLoadingImages(int max) {
       mMaxLoadingImages = max;
 
-      while (mImageQueue.imageRefs.size() >= mMaxLoadingImages) {
-         mImageQueue.imageRefs.removeLast();
+      synchronized (mImageQueue.imageRefs) {
+         while (mImageQueue.imageRefs.size() >= mMaxLoadingImages) {
+            mImageQueue.imageRefs.removeLast();
+         }
       }
    }
 
@@ -166,7 +178,7 @@ public class ImageManager {
       try {
          connection = new URL(url).openConnection();
          bitmap = BitmapFactory.decodeStream(connection.getInputStream());
-         addToWriteQueue(bitmap, url);
+         addToWriteQueue(new StoredBitmap(bitmap, url));
 
          return bitmap;
       }
@@ -175,9 +187,13 @@ public class ImageManager {
       }
    }
 
-   private void addToWriteQueue(Bitmap bitmap, String url) {
+   private void addToWriteQueue(StoredBitmap storedBitmap) {
       synchronized (mWriteQueue) {
-         mWriteQueue.addFirst(new StoredBitmap(bitmap, url));
+         while (mWriteQueue.size() >= mMaxWritingImages) {
+            mWriteQueue.removeLast();
+         }
+
+         mWriteQueue.addFirst(new SoftReference<StoredBitmap>(storedBitmap));
          mWriteQueue.notify();
       }
    }
@@ -328,7 +344,11 @@ public class ImageManager {
                      continue;
                   }
 
-                  bitmapFile = mWriteQueue.removeFirst();
+                  bitmapFile = mWriteQueue.removeFirst().get();
+               }
+
+               if (bitmapFile == null) {
+                  continue;
                }
 
                writeFile(bitmapFile.mBitmap, bitmapFile.mUrl);
