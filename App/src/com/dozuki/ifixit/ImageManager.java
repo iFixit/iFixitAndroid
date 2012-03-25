@@ -19,20 +19,20 @@ import android.util.Log;
  */
 public class ImageManager {
    private static final int IMAGE_THREAD_PRIORITY = Thread.NORM_PRIORITY - 1;
-   private static final int MAX_STORED_IMAGES = 10;
+   private static final int DEFAULT_MAX_STORED_IMAGES = 10;
    private static final int DEFAULT_MAX_LOADING_IMAGES = 9;
    private static final int DEFAULT_NUM_DOWNLOAD_THREADS = 5;
    private static final int DEFAULT_NUM_WRITE_THREADS = 2;
 
-   private HashMap<String, Bitmap> mImageMap;
    private HashMap<String, ImageRef> mLoadingImages;
-   private LinkedList<BitmapFile> mWriteQueue;
-   private LinkedList<String> mRecentBitmaps;
+   private LinkedList<StoredBitmap> mWriteQueue;
+   private LinkedList<StoredBitmap> mRecentImages;
    private File mCacheDir;
    private ImageQueue mImageQueue;
    private Thread[] mDownloadThreads;
    private Thread[] mWriteThreads;
    private int mMaxLoadingImages;
+   private int mMaxStoredImages;
    private final int mNumDownloadThreads;
    private final int mNumWriteThreads;
 
@@ -43,14 +43,14 @@ public class ImageManager {
    public ImageManager(Context context, int downloadThreads, int writeThreads) {
       mNumDownloadThreads = downloadThreads;
       mNumWriteThreads = writeThreads;
-      mImageMap = new HashMap<String, Bitmap>();
-      mWriteQueue = new LinkedList<BitmapFile>();
-      mRecentBitmaps = new LinkedList<String>();
+      mWriteQueue = new LinkedList<StoredBitmap>();
+      mRecentImages = new LinkedList<StoredBitmap>();
       mImageQueue = new ImageQueue();
       mDownloadThreads = new Thread[mNumDownloadThreads];
       mWriteThreads = new Thread[mNumWriteThreads];
       mLoadingImages = new HashMap<String, ImageRef>();
       mMaxLoadingImages = DEFAULT_MAX_LOADING_IMAGES;
+      mMaxStoredImages = DEFAULT_MAX_STORED_IMAGES;
 
       for (int i = 0; i < mDownloadThreads.length; i++) {
          mDownloadThreads[i] = new Thread(new ImageQueueManager());
@@ -73,13 +73,22 @@ public class ImageManager {
 
    public void displayImage(String url, Activity activity,
     LoaderImage imageView) {
-      Bitmap bitmap = mImageMap.get(url);
-      if (bitmap != null) {
-         imageView.setImageBitmap(bitmap);
-      }
-      else {
-         imageView.setImageBitmap(null);
-         queueImage(url, activity, imageView);
+      StoredBitmap storedBitmap = new StoredBitmap(null, url);
+      int index = mRecentImages.indexOf(storedBitmap);
+
+      if (index != -1) {
+         // Found in recent bitmaps
+         imageView.setImageBitmap(mRecentImages.get(index).mBitmap);
+      } else {
+         index = mWriteQueue.indexOf(storedBitmap);
+
+         if (index != -1) {
+            // Found in the write queue
+            imageView.setImageBitmap(mWriteQueue.get(index).mBitmap);
+         } else {
+            imageView.setImageBitmap(null);
+            queueImage(url, activity, imageView);
+         }
       }
    }
 
@@ -105,7 +114,7 @@ public class ImageManager {
 
          imageRef = new ImageRef(url, imageView);
 
-         if (mImageQueue.imageRefs.size() > mMaxLoadingImages) {
+         while (mImageQueue.imageRefs.size() >= mMaxLoadingImages) {
             mImageQueue.imageRefs.removeLast();
          }
 
@@ -114,8 +123,20 @@ public class ImageManager {
       }
    }
 
+   public void setMaxStoredImages(int max) {
+      mMaxStoredImages = max;
+
+      while (mRecentImages.size() >= mMaxStoredImages) {
+         mRecentImages.removeLast();
+      }
+   }
+
    public void setMaxLoadingImages(int max) {
       mMaxLoadingImages = max;
+
+      while (mImageQueue.imageRefs.size() >= mMaxLoadingImages) {
+         mImageQueue.imageRefs.removeLast();
+      }
    }
 
    public String getFilePath(String url) {
@@ -138,13 +159,14 @@ public class ImageManager {
       URLConnection connection;
       Bitmap bitmap = BitmapFactory.decodeFile(file.getPath());
 
-      if (bitmap != null)
+      if (bitmap != null) {
          return bitmap;
+      }
 
       try {
          connection = new URL(url).openConnection();
          bitmap = BitmapFactory.decodeStream(connection.getInputStream());
-         addToWriteQueue(bitmap, file);
+         addToWriteQueue(bitmap, url);
 
          return bitmap;
       }
@@ -153,15 +175,16 @@ public class ImageManager {
       }
    }
 
-   private void addToWriteQueue(Bitmap bitmap, File file) {
+   private void addToWriteQueue(Bitmap bitmap, String url) {
       synchronized (mWriteQueue) {
-         mWriteQueue.addFirst(new BitmapFile(bitmap, file));
+         mWriteQueue.addFirst(new StoredBitmap(bitmap, url));
          mWriteQueue.notify();
       }
    }
 
-   private void writeFile(Bitmap bitmap, File file) {
+   private void writeFile(Bitmap bitmap, String url) {
       FileOutputStream out = null;
+      File file = new File(mCacheDir, getFileName(url));
 
       try {
          out = new FileOutputStream(file);
@@ -180,22 +203,39 @@ public class ImageManager {
    }
 
    private void storeImage(String url, Bitmap bitmap) {
-      if (mRecentBitmaps.size() >= MAX_STORED_IMAGES) {
-         mImageMap.remove(mRecentBitmaps.removeFirst());
+      StoredBitmap storedBitmap = new StoredBitmap(null, url);
+      int index = mRecentImages.indexOf(storedBitmap);
+
+      // Already in list, lets move it to the front
+      if (index != -1) {
+         storedBitmap = mRecentImages.get(index);
+         mRecentImages.remove(index);
+      } else {
+         storedBitmap.mBitmap = bitmap;
       }
 
-      if (mImageMap.put(url, bitmap) == null) {
-         mRecentBitmaps.addLast(url);
+      while (mRecentImages.size() >= mMaxStoredImages) {
+         mRecentImages.removeLast();
       }
+
+      mRecentImages.addFirst(new StoredBitmap(bitmap, url));
    }
 
-   private class BitmapFile {
+   private class StoredBitmap {
       protected Bitmap mBitmap;
-      protected File mFile;
+      protected String mUrl;
 
-      public BitmapFile(Bitmap bitmap, File file) {
+      public StoredBitmap(Bitmap bitmap, String url) {
          mBitmap = bitmap;
-         mFile = file;
+         mUrl = url;
+      }
+
+      public boolean equals(Object other) {
+         if (other instanceof StoredBitmap) {
+            return ((StoredBitmap)other).mUrl.equals(mUrl);
+         } else {
+            return false;
+         }
       }
    }
 
@@ -273,7 +313,7 @@ public class ImageManager {
    private class BitmapWriter implements Runnable {
       @Override
       public void run() {
-         BitmapFile bitmapFile;
+         StoredBitmap bitmapFile;
 
          try {
             while (true) {
@@ -291,7 +331,7 @@ public class ImageManager {
                   bitmapFile = mWriteQueue.removeFirst();
                }
 
-               writeFile(bitmapFile.mBitmap, bitmapFile.mFile);
+               writeFile(bitmapFile.mBitmap, bitmapFile.mUrl);
 
                bitmapFile = null;
             }
