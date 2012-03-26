@@ -29,7 +29,7 @@ public class LoaderImage extends RelativeLayout {
       init(context);
    }
 
-   private void init(Context context) {
+   protected void init(Context context) {
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(
        Context.LAYOUT_INFLATER_SERVICE);
 

@@ -3,12 +3,11 @@ package com.dozuki.ifixit;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-
 public class FullImageView extends FragmentActivity {
    private String mImageUrl;
-   private ImageViewTouch mImageZoom;
+   private LoaderImageZoom mImageZoom;
    private ImageManager mImageManager;
+   private ImageSizes mImageSizes;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -17,11 +16,14 @@ public class FullImageView extends FragmentActivity {
 
       extras = getIntent().getExtras();
       mImageUrl = (String)extras.get(GuideStepViewFragment.IMAGE_URL);
-      mImageManager = ((MainApplication)getApplication()).getImageManager();
+      MainApplication application = ((MainApplication)getApplication());
+      mImageManager = application.getImageManager();
+      mImageSizes = application.getImageSizes();
 
       setContentView(R.layout.full_screen_image);
 
-      mImageZoom = (ImageViewTouch)findViewById(R.id.imageZoom);
-      //mImageManager.displayImage(mImageUrl, this, mImageZoom);
+      mImageZoom = (LoaderImageZoom)findViewById(R.id.imageZoom);
+      mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,
+       mImageZoom);
    }
 }
