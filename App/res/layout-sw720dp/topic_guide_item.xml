@@ -4,21 +4,21 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:padding="1dp"
-    android:background="#aaaaaa">
+    android:background="#DDDDDD">
 
     <RelativeLayout 
         android:background="@drawable/border"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="fill_parent"
         android:padding="4dp">
         
         <com.dozuki.ifixit.LoaderImage
             android:id="@+id/topic_guide_thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:layout_height="200dp"
             android:layout_margin="4dp"
             android:padding="1dp"
-            android:background="#dddddd"/>
+            android:background="#AAAAAA"/>
         
         <com.dozuki.ifixit.AutoResizeTextView 
             android:id="@+id/topic_guide_title"

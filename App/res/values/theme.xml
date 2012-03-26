@@ -6,15 +6,25 @@
         <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
         <item name="android:actionBarStyle">@style/Widget.iFixit.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.iFixit.ActionBar</item>
-        
     </style>
 
     <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <!-- <item name="background">@color/ifixit_blue</item>
         <item name="android:background">@color/ifixit_blue</item>-->
+        <item name="titleTextStyle">@style/TextAppearance.iFixit.ActionBar.Title</item>
+        <item name="android:titleTextStyle">@style/TextAppearance.iFixit.ActionBar.Title</item>      
+        
     </style>
     <style name="Widget.iFixit.ActionBar.TabText" parent="Widget.Sherlock.Light.ActionBar.TabText.Inverse">
         <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">18sp</item>
+        
+    </style>
+    <style name="Widget.iFixit.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse">
+    </style>
+    
+    <style name="TextAppearance.iFixit.ActionBar.Title" parent="TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">18sp</item>
     </style>
     
     
