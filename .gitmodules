@@ -7,3 +7,6 @@
 [submodule "ActionBarSherlock"]
 	path = ActionBarSherlock
 	url = git@github.com:iFixit/ActionBarSherlock.git
+[submodule "ImageZoomLibrary"]
+	path = ImageZoomLibrary
+	url = git@github.com:iFixit/ImageZoomLibrary.git

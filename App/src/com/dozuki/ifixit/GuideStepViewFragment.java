@@ -20,7 +20,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 
 public class GuideStepViewFragment extends SherlockFragment {
-   protected static final String IMAGE_FILE_PATH = "IMAGE_FILE_PATH";
+   protected static final String IMAGE_URL = "IMAGE_URL";
 
    private TextView mTitle;
    private ThumbnailView mThumbs;
@@ -71,16 +71,10 @@ public class GuideStepViewFragment extends SherlockFragment {
          @Override
          public void onClick(View v) {
             String url = (String)v.getTag();
-            String filePath = mImageManager.getFilePath(url +
-             mImageSizes.getMain());
+            Intent intent = new Intent(getActivity(), FullImageView.class);
+            intent.putExtra(IMAGE_URL, url);
 
-            // Make sure that the image has been loaded
-            if (filePath != null) {
-               Intent intent = new Intent(getActivity(), FullImageView.class);
-               intent.putExtra(IMAGE_FILE_PATH, filePath);
-
-               startActivity(intent);
-            }
+            startActivity(intent);
          }
       });
 
