@@ -15,6 +15,7 @@ public class TopicListAdapter extends Section {
    private ArrayList<TopicNode> mTopicList;
    private String mHeader;
    private TopicSelectedListener mTopicListener;
+   private TopicListRow prevSelected = null;
 
    public TopicListAdapter(Context context, String header,
     ArrayList<TopicNode> topicList) {
@@ -79,7 +80,14 @@ public class TopicListAdapter extends Section {
    public void onItemClick(AdapterView<?> adapterView, View view,
     int position, long id) {
       if (mTopicListener != null) {
-         mTopicListener.onTopicSelected(mTopicList.get(position));
+    	 mTopicListener.onTopicSelected(mTopicList.get(position));
+    	    	 
+    	 if (prevSelected != null) {
+    		 ((TopicListRow) prevSelected).clearCurrentTopicStyle(); 
+    	 }
+    	 
+         ((TopicListRow)view).setCurrentTopicStyle();
+    	 prevSelected = (TopicListRow) view;
       }
    }
 }

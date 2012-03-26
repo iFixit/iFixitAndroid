@@ -1,10 +1,12 @@
 package com.dozuki.ifixit;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import com.dozuki.ifixit.R.color;
 
 public class TopicListRow extends LinearLayout {
    private TextView mTopicName;
@@ -31,5 +33,14 @@ public class TopicListRow extends LinearLayout {
       } else {
     	 mNextIcon.setVisibility(GONE);
       }*/
+   }
+   
+   public void setCurrentTopicStyle() {
+	  if (mTopic.isLeaf()) {
+	      this.setBackgroundColor(Color.parseColor("#CCCCCC"));		  
+	  }
+   }
+   public void clearCurrentTopicStyle() {
+	  this.setBackgroundColor(Color.WHITE);
    }
 }
