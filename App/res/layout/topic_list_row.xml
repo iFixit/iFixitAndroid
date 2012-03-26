@@ -10,7 +10,7 @@
         android:layout_weight="95"
         style="@style/text.list.full" />
     
-    <ImageView 
+  <!--  <ImageView 
         android:id="@+id/next_icon"
         android:paddingTop="4dp"
         android:layout_width="wrap_content" 
@@ -18,5 +18,5 @@
         android:scaleType="fitXY"
         android:src="@drawable/nav_next_item"
         android:layout_weight="5"
-        android:visibility="invisible" />
+        android:visibility="invisible" /> -->
 </LinearLayout>
