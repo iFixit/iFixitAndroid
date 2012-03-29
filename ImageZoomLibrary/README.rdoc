@@ -1,7 +1,0 @@
-= ImageZoomLibrary
-
-This library provides pan and multi-touch zoom functionality to ImageViews.
-This is not my project, but there wasn't a git repository for it on GitHub
-when I wanted to use it so I created one!
-
-The original can be found here: http://blog.sephiroth.it/2011/04/04/imageview-zoom-and-scroll/
