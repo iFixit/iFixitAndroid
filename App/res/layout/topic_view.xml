@@ -4,12 +4,11 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <fragment
+    <FrameLayout
         android:id="@+id/topic_view_fragment"
         android:name="com.dozuki.ifixit.TopicViewFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="75">
-    </fragment>
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    </FrameLayout>
 
 </LinearLayout>

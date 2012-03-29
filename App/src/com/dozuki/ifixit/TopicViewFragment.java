@@ -4,6 +4,8 @@ import java.net.URLEncoder;
 
 import android.app.Activity;
 
+import android.content.pm.ActivityInfo;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -95,6 +97,14 @@ public class TopicViewFragment extends SherlockFragment
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
+      if (getActivity() == null) {
+         return;
+      }
+
+      // Allow orientation changes once we have a topic loaded
+      getActivity().setRequestedOrientation(
+       ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+
       if (mTopicLeaf != null && topicLeaf != null &&
        mTopicLeaf.equals(topicLeaf)) {
          selectDefaultTab();
@@ -137,7 +147,7 @@ public class TopicViewFragment extends SherlockFragment
    private void displayLoading() {
       mActionBar.removeAllTabs();
       FragmentTransaction ft = getActivity().getSupportFragmentManager().
-         beginTransaction();
+       beginTransaction();
       ft.replace(R.id.topic_view_page_fragment, new LoadingFragment());
       ft.commit();
    }
@@ -162,6 +172,10 @@ public class TopicViewFragment extends SherlockFragment
       displayLoading();
       mTopicLeaf = null;
       mSelectedTab = -1;
+
+      // Lock the screen orientation while we load the topic
+      getActivity().setRequestedOrientation(
+       ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
       APIHelper.getTopic(topicName, new APIHelper.APIResponder<TopicLeaf>() {
          public void setResult(TopicLeaf result) {
