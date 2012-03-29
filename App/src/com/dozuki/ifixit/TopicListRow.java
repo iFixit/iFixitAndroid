@@ -6,8 +6,6 @@ import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.dozuki.ifixit.R.color;
-
 public class TopicListRow extends LinearLayout {
    private TextView mTopicName;
    private TopicNode mTopic;
@@ -36,11 +34,12 @@ public class TopicListRow extends LinearLayout {
    }
    
    public void setCurrentTopicStyle() {
-	  if (mTopic.isLeaf()) {
-	      this.setBackgroundColor(Color.parseColor("#CCCCCC"));		  
-	  }
+      if (mTopic.isLeaf()) {
+         setBackgroundColor(Color.parseColor("#CCCCCC"));
+      }
    }
+
    public void clearCurrentTopicStyle() {
-	  this.setBackgroundColor(Color.WHITE);
+      setBackgroundColor(Color.WHITE);
    }
 }
