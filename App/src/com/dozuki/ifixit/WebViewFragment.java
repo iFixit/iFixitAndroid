@@ -4,6 +4,8 @@ import com.dozuki.ifixit.WebViewFragment;
 
 import android.content.Intent;
 
+import android.graphics.Bitmap;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -13,9 +15,12 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import android.widget.ProgressBar;
+
 public class WebViewFragment extends Fragment implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;
+   protected ProgressBar mProgressBar;
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -24,7 +29,10 @@ public class WebViewFragment extends Fragment implements OnViewGuideListener {
          mWebView.destroy();
       }
 
-      mWebView = new WebView(getActivity());
+      View view = inflater.inflate(R.layout.web_view_fragment, container, false);
+      mProgressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
+      mWebView = (WebView)view.findViewById(R.id.web_view);
+
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
       settings.setBuiltInZoomControls(true);
@@ -40,7 +48,7 @@ public class WebViewFragment extends Fragment implements OnViewGuideListener {
          mWebView.loadUrl(mUrl);
       }
 
-      return mWebView;
+      return view;
    }
 
    @Override
@@ -120,6 +128,16 @@ public class WebViewFragment extends Fragment implements OnViewGuideListener {
          view.loadUrl(url);
 
          return true;
+      }
+
+      @Override
+      public void onPageStarted(WebView view, String url, Bitmap favicon) {
+         mProgressBar.setVisibility(View.VISIBLE);
+      }
+
+      @Override
+      public void onPageFinished(WebView view, String url) {
+         mProgressBar.setVisibility(View.GONE);
       }
    }
 }
