@@ -37,6 +37,7 @@
     </style>
     <style name="text.body.half">
         <item name="android:layout_weight">1</item>
+        <item name="android:layout_marginRight">8dp</item>
     </style>
 
     <style name="text.body.720">
