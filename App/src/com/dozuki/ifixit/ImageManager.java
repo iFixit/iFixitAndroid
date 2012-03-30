@@ -86,6 +86,7 @@ public class ImageManager {
          imageView.setImageBitmap(mRecentImages.get(index).mBitmap);
       } else {
          imageView.setImageBitmap(null);
+         imageView.setTag(url);
          queueImage(url, activity, imageView);
       }
    }
@@ -374,7 +375,9 @@ public class ImageManager {
       public void run() {
          if (mBitmap != null) {
             for (LoaderImage image : mImageViews) {
-               image.setImageBitmap(mBitmap);
+               if (image.getTag().equals(mUrl)) {
+                  image.setImageBitmap(mBitmap);
+               }
             }
          }
          else {
