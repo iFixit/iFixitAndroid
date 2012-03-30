@@ -21,7 +21,6 @@ public class GuideIntroViewFragment extends SherlockFragment {
    private TextView mAuthor;
    private TextView mTools;
    private TextView mParts;
-   private LoaderImage mIntroImage;
    private ImageManager mImageManager;
    private Guide mGuide;
    private Typeface mBoldFont;
@@ -66,7 +65,6 @@ public class GuideIntroViewFragment extends SherlockFragment {
       mAuthor     = (TextView)view.findViewById(R.id.guide_author);
       mTools      = (TextView)view.findViewById(R.id.guide_tools);
       mParts      = (TextView)view.findViewById(R.id.guide_parts);
-      //mIntroImage = (LoaderImage)view.findViewById(R.id.intro_image);
 
       MovementMethod method = LinkMovementMethod.getInstance();
 
@@ -98,8 +96,6 @@ public class GuideIntroViewFragment extends SherlockFragment {
 
       mAuthor.setText(getActivity().getString(R.string.author) + ": " +
        Html.fromHtml(mGuide.getAuthor()));
-
-      //mImageManager.displayImage(mGuide.mIntroImage, getActivity(), mIntroImage);
       
       if (mGuide.getNumTools() != 0) {
          mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(
