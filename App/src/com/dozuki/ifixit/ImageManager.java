@@ -379,7 +379,7 @@ public class ImageManager {
          }
          else {
             for (LoaderImage image : mImageViews) {
-               image.setImageResource(R.drawable.loading);
+               image.setImageResource(R.drawable.no_image);
             }
          }
 
