@@ -2,12 +2,13 @@
 <resources>
 
     <style name="guide_wrap">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingRight">6dp</item>
         <item name="android:paddingLeft">6dp</item>
+        <item name="android:background">@drawable/bg_img</item>
     </style>
 
     <style name="guide_wrap.land">
@@ -31,37 +32,37 @@
     </style>
 
     <style name="image_wrap">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="image_wrap.land">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginRight">8dp</item>
     </style>
 
     <style name="image_wrap.600">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">12dp</item>
     </style>
 
     <style name="image_wrap.600.land">
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginRight">12dp</item>
     </style>
 
     <style name="image_wrap.720">
-        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">16dp</item>
     </style>
 
     <style name="image_wrap.720.land">
         <item name="android:layout_width">640dp</item>
-        <item name="android:layout_height">fill_parent</item>
+        <item name="android:layout_height">match_parent</item>
         <item name="android:layout_marginRight">16dp</item>
     </style>
 
@@ -121,15 +122,21 @@
 
     <style name="step_text_wrap">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_marginTop">8dp</item>        
     </style>
 
     <style name="step_list">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:layout_below">@id/step_title</item>
+        <item name="android:layout_weight">1.0</item>
         <item name="android:divider">#00000000</item>
+        <item name="android:listSelector">@android:color/transparent</item>
+        <item name="android:scrollingCache">false</item>
+        <item name="android:cacheColorHint">@android:color/transparent</item>
+        <item name="android:layout_below">@id/step_title</item>
+        <item name="android:background">@drawable/bg_img</item>
+        <item name="android:overScrollFooter">@null</item>
     </style>
 
 </resources>
