@@ -5,7 +5,7 @@
       android:layout_height="wrap_content"
       android:paddingBottom="1dp"
       android:paddingTop="1dp"
-      android:background="#aaaaaa">
+      android:background="#dddddd">
    <RelativeLayout 
          android:background="@drawable/border"
          android:layout_width="fill_parent"
@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:padding="1dp"
-            android:background="#dddddd"/>
+            android:background="#aaaaaa"/>
 
       <com.dozuki.ifixit.AutoResizeTextView 
             android:id="@+id/topic_guide_title"
