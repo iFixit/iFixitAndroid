@@ -2,6 +2,8 @@ package com.dozuki.ifixit;
 
 import java.util.List;
 
+import com.actionbarsherlock.view.MenuItem;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
@@ -70,6 +72,8 @@ public class GuideView extends SherlockFragmentActivity
 
          getGuide(guideid);
       }
+
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       //initSpeechRecognizer();
    }
@@ -188,5 +192,17 @@ public class GuideView extends SherlockFragmentActivity
    @Override
    public void onPageSelected(int page) {
       mCurrentPage = page;
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case android.R.id.home:
+            finish();
+
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
    }
 }
