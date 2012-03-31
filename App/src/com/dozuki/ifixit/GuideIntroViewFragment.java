@@ -87,15 +87,16 @@ public class GuideIntroViewFragment extends SherlockFragment {
       } else {
          mTitle.setText(Html.fromHtml(mGuide.getTitle()));
       }
-      mIntro.setText(Html.fromHtml(mGuide.getIntroduction()));
+      mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
+       mGuide.getIntroduction())));
 
       if (!mGuide.getDifficulty().equals("false")) {
          mDifficulty.setText(getActivity().getString(R.string.difficulty) + ": " +
-          Html.fromHtml(mGuide.getDifficulty()));
+          JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getDifficulty())));
       }
 
       mAuthor.setText(getActivity().getString(R.string.author) + ": " +
-       Html.fromHtml(mGuide.getAuthor()));
+       JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
       
       if (mGuide.getNumTools() != 0) {
          mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(

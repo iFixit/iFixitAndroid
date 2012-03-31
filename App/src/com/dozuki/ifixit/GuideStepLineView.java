@@ -33,7 +33,7 @@ public class GuideStepLineView extends LinearLayout {
       int iconRes, bulletRes;
 
       mStepText = (TextView) findViewById(R.id.step_text);
-      mStepText.setText(Html.fromHtml(line.getText()));
+      mStepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(line.getText())));
       mStepText.setMovementMethod(LinkMovementMethod.getInstance());
 
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

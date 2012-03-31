@@ -7,6 +7,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.text.Spannable;
+import android.text.Spanned;
+
+import android.text.style.URLSpan;
+
 import android.util.Log;
 
 public class JSONHelper {
@@ -216,5 +221,35 @@ public class JSONHelper {
          Log.e("iFixit", "Error parsing guide info: " + e);
          return null;
       }
+   }
+
+   /**
+    * Removes relative a hrefs
+    * @param spantext (from Html.fromhtml())
+    * @return spanned with fixed links
+    */
+   public static Spanned correctLinkPaths(Spanned spantext) {
+      Object[] spans = spantext.getSpans(0, spantext.length(), Object.class);
+      for (Object span : spans) {
+         int start = spantext.getSpanStart(span);
+         int end = spantext.getSpanEnd(span);
+         int flags = spantext.getSpanFlags(span);
+         if (span instanceof URLSpan) {
+            URLSpan urlSpan = (URLSpan) span;
+            if (!urlSpan.getURL().startsWith("http")) {
+               if (urlSpan.getURL().startsWith("/")) {
+                  urlSpan = new URLSpan("http://www.ifixit.com" +
+                   urlSpan.getURL());
+               } else {
+                  urlSpan = new URLSpan("http://www.ifixit.com/" +
+                   urlSpan.getURL());
+               }
+            }
+            ((Spannable)spantext).removeSpan(span);
+            ((Spannable)spantext).setSpan(urlSpan, start, end, flags);
+         }
+      }
+
+      return spantext;
    }
 }
