@@ -5,6 +5,8 @@ import java.util.List;
 import com.actionbarsherlock.view.MenuItem;
 
 import android.content.Intent;
+
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
@@ -16,6 +18,8 @@ import android.view.View;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.viewpagerindicator.CirclePageIndicator;
+
+import android.widget.ProgressBar;
 
 public class GuideView extends SherlockFragmentActivity 
  implements OnPageChangeListener {
@@ -36,6 +40,7 @@ public class GuideView extends SherlockFragmentActivity
    protected ImageManager mImageManager;
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
+   protected ProgressBar mProgressBar;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,7 @@ public class GuideView extends SherlockFragmentActivity
       mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
       mPager = (ViewPager)findViewById(R.id.guide_pager);
       mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
+      mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
 
       if (savedInstanceState != null) {
          setGuide((Guide)savedInstanceState.getSerializable(SAVED_GUIDE));
@@ -85,6 +91,8 @@ public class GuideView extends SherlockFragmentActivity
    }
 
    public void setGuide(Guide guide) {
+      //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+      mProgressBar.setVisibility(View.GONE);
       mGuide = guide;
 
       ActionBar actionBar = getSupportActionBar();
@@ -98,7 +106,6 @@ public class GuideView extends SherlockFragmentActivity
       mIndicator.setViewPager(mPager);
       mPager.setVisibility(View.VISIBLE);
    }
-
 
    @Override
    public void onDestroy() {
@@ -137,6 +144,8 @@ public class GuideView extends SherlockFragmentActivity
    }
 
    public void getGuide(final int guideid) {
+      //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+
       APIHelper.getGuide(guideid, new APIHelper.APIResponder<Guide>() {
          public void setResult(Guide guide) {
             setGuide(guide);

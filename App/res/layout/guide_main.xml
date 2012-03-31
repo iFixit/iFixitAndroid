@@ -1,13 +1,26 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/guide_main_layout" >
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_height="match_parent"
+      android:layout_width="match_parent">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/guide_pager"
-        style="@style/pager" />
+   <LinearLayout
+         style="@style/guide_main_layout" >
 
-    <com.viewpagerindicator.CirclePageIndicator
-        android:id="@+id/indicator"
-        style="@style/guide_pager_indicator"/>
+      <android.support.v4.view.ViewPager
+            android:id="@+id/guide_pager"
+            style="@style/pager" />
 
-</LinearLayout>
+      <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            style="@style/guide_pager_indicator"/>
+
+   </LinearLayout>
+
+   <ProgressBar
+         android:id="@+id/progress_bar"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:minHeight="80dip"
+         android:minWidth="80dip"
+         android:layout_centerInParent="true" />
+</RelativeLayout>
