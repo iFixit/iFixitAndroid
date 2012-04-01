@@ -39,7 +39,6 @@ public class ThumbnailView extends LinearLayout {
       mThumbs.add((LoaderImage)findViewById(R.id.thumbnail_1));
       mThumbs.add((LoaderImage)findViewById(R.id.thumbnail_2));
       mThumbs.add((LoaderImage)findViewById(R.id.thumbnail_3));
-
    }
 
    public void setImageSizes(ImageSizes imageSizes) {
@@ -47,7 +46,10 @@ public class ThumbnailView extends LinearLayout {
    }
 
    public void setThumbs(ArrayList<StepImage> images,
-      ImageManager imageManager, Context context) {
+    ImageManager imageManager, Context context) {
+      if (images.size() <= 1) {
+         setVisibility(INVISIBLE);
+      }
 
       mImageManager = imageManager;
       mContext = context;
