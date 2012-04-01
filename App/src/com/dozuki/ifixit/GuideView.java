@@ -56,8 +56,11 @@ public class GuideView extends SherlockFragmentActivity
       mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
 
       if (savedInstanceState != null) {
-         setGuide((Guide)savedInstanceState.getSerializable(SAVED_GUIDE));
-         mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
+         Guide guide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
+         if (guide != null) {
+            setGuide(guide);
+            mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
+         }
       } else {
          Intent intent = getIntent();
          int guideid = -1;
@@ -86,12 +89,18 @@ public class GuideView extends SherlockFragmentActivity
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      super.onSaveInstanceState(state);
+
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }
 
    public void setGuide(Guide guide) {
-      //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
+      if (guide == null) {
+         return;
+      }
+
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
       mProgressBar.setVisibility(View.GONE);
       mGuide = guide;
 
@@ -144,7 +153,7 @@ public class GuideView extends SherlockFragmentActivity
    }
 
    public void getGuide(final int guideid) {
-      //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
       APIHelper.getGuide(this, guideid, new APIHelper.APIResponder<Guide>() {
          public void setResult(Guide guide) {
