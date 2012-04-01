@@ -71,15 +71,23 @@ public class JSONHelper {
    }
 
    public static GuideStep parseStep(JSONObject jStep) throws JSONException {
-      JSONObject jMedia = jStep.getJSONObject("media");
-      JSONArray jImages = jMedia.getJSONArray("image");
       JSONArray jLines = jStep.getJSONArray("lines");
       GuideStep step = new GuideStep(jStep.getInt("number"));
 
       step.setTitle(jStep.getString("title"));
 
-      for (int i = 0; i < jImages.length(); i++) {
-         step.addImage(parseImage(jImages.getJSONObject(i)));
+      try {
+         JSONObject jMedia = jStep.getJSONObject("media");
+         JSONArray jImages = jMedia.getJSONArray("image");
+
+         for (int i = 0; i < jImages.length(); i++) {
+            step.addImage(parseImage(jImages.getJSONObject(i)));
+         }
+      } catch (JSONException e) {
+         StepImage image = new StepImage(0);
+         image.setOrderby(1);
+         image.setText("");
+         step.addImage(image);
       }
 
       for (int i = 0; i < jLines.length(); i++) {
