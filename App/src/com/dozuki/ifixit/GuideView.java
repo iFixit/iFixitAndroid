@@ -89,8 +89,6 @@ public class GuideView extends SherlockFragmentActivity
 
    @Override
    public void onSaveInstanceState(Bundle state) {
-      super.onSaveInstanceState(state);
-
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }
