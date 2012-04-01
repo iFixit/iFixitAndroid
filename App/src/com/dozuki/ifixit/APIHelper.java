@@ -4,6 +4,11 @@ import java.net.URLEncoder;
 
 import org.apache.http.client.ResponseHandler;
 
+import android.content.Context;
+
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
@@ -11,6 +16,8 @@ import android.util.Log;
 public class APIHelper {
    public interface APIResponder<T> {
       public void setResult(T result);
+
+      public void error();
    }
 
    private interface StringHandler {
@@ -25,12 +32,14 @@ public class APIHelper {
    private static final String CATEGORIES_API_URL =
     "http://www.ifixit.com/api/1.0/categories/";
 
-   public static void getTopic(String topic,
+   public static void getTopic(Context context, String topic,
     final APIResponder<TopicLeaf> responder) {
-      String url;
+      if (!checkConnectivity(context, responder)) {
+         return;
+      }
 
       try {
-         url = TOPIC_API_URL + URLEncoder.encode(topic, "UTF-8");
+         String url = TOPIC_API_URL + URLEncoder.encode(topic, "UTF-8");
          performRequest(url, new StringHandler() {
             public void handleString(String response) {
                responder.setResult(JSONHelper.parseTopicLeaf(response));
@@ -42,8 +51,12 @@ public class APIHelper {
       }
    }
 
-   public static void getGuide(int guideid,
+   public static void getGuide(Context context, int guideid,
     final APIResponder<Guide> responder) {
+      if (!checkConnectivity(context, responder)) {
+         return;
+      }
+
       String url = GUIDE_API_URL + guideid;
 
       performRequest(url, new StringHandler() {
@@ -53,7 +66,12 @@ public class APIHelper {
       });
    }
 
-   public static void getCategories(final APIResponder<TopicNode> responder) {
+   public static void getCategories(Context context,
+    final APIResponder<TopicNode> responder) {
+      if (!checkConnectivity(context, responder)) {
+         return;
+      }
+
       performRequest(CATEGORIES_API_URL, new StringHandler() {
          public void handleString(String response) {
             responder.setResult(JSONHelper.parseTopics(response));
@@ -84,5 +102,19 @@ public class APIHelper {
             }
          }
       }.start();
+   }
+
+   private static boolean checkConnectivity(Context context,
+    APIResponder<?> responder) {
+      ConnectivityManager cm = (ConnectivityManager)context.
+       getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+      if (netInfo == null || !netInfo.isConnected()) {
+         responder.error();
+         return false;
+      }
+
+      return true;
    }
 }

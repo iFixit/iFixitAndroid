@@ -146,9 +146,13 @@ public class GuideView extends SherlockFragmentActivity
    public void getGuide(final int guideid) {
       //setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
-      APIHelper.getGuide(guideid, new APIHelper.APIResponder<Guide>() {
+      APIHelper.getGuide(this, guideid, new APIHelper.APIResponder<Guide>() {
          public void setResult(Guide guide) {
             setGuide(guide);
+         }
+
+         public void error() {
+            //TODO
          }
       });
    }

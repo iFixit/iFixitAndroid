@@ -177,9 +177,14 @@ public class TopicViewFragment extends SherlockFragment
       getActivity().setRequestedOrientation(
        ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
-      APIHelper.getTopic(topicName, new APIHelper.APIResponder<TopicLeaf>() {
+      APIHelper.getTopic(getActivity(), topicName,
+       new APIHelper.APIResponder<TopicLeaf>() {
          public void setResult(TopicLeaf result) {
             setTopicLeaf(result);
+         }
+
+         public void error() {
+            //TODO
          }
       });
    }
