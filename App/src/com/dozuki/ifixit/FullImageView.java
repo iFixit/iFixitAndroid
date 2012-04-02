@@ -1,15 +1,16 @@
 package com.dozuki.ifixit;
 
-import com.actionbarsherlock.view.Window;
-
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-
 import android.view.WindowManager;
+import android.widget.ImageView;
+
+import com.actionbarsherlock.view.Window;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class FullImageView extends FragmentActivity {
    private String mImageUrl;
-   private LoaderImageZoom mImageZoom;
+   private ImageView mImageZoom;
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
 
@@ -29,7 +30,7 @@ public class FullImageView extends FragmentActivity {
 
       setContentView(R.layout.full_screen_image);
 
-      mImageZoom = (LoaderImageZoom)findViewById(R.id.imageZoom);
+      mImageZoom = (ImageView)findViewById(R.id.imageZoom);
       mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,
        mImageZoom);
    }

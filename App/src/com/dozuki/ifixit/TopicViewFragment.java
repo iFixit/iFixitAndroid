@@ -3,9 +3,7 @@ package com.dozuki.ifixit;
 import java.net.URLEncoder;
 
 import android.app.Activity;
-
 import android.content.pm.ActivityInfo;
-
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -18,6 +16,7 @@ import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class TopicViewFragment extends SherlockFragment
  implements ActionBar.TabListener {

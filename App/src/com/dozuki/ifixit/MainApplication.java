@@ -5,19 +5,21 @@ import android.content.Context;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 
+import com.ifixit.android.imagemanager.ImageManager;
+
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
 
-	public ImageManager getImageManager() {
-		if (mImageManager == null) {
-		   mImageManager = new ImageManager(this);
+   public ImageManager getImageManager() {
+      if (mImageManager == null) {
+         mImageManager = new ImageManager(this);
       }
 
-		return mImageManager;
-	}
+      return mImageManager;
+   }
 
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {

@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideIntroViewFragment extends SherlockFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";

@@ -12,7 +12,7 @@
          android:layout_height="wrap_content"
          android:padding="4dp">
 
-      <com.dozuki.ifixit.LoaderImage
+      <ImageView
             android:id="@+id/topic_guide_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

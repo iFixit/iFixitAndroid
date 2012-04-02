@@ -6,7 +6,7 @@
       android:orientation="vertical"
       android:background="#444444" >
 
-   <com.dozuki.ifixit.LoaderImage
+   <ImageView
          android:id="@+id/topic_guide_thumbnail"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"

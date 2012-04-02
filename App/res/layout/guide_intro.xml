@@ -3,7 +3,7 @@
       style="@style/guide_wrap.vertical" >
     <!-- <RelativeLayout 
         style="@style/image_wrap">
-        <com.dozuki.ifixit.LoaderImage
+        <ImageView
             android:id="@+id/intro_image"
             style="@style/main_image" />
     </RelativeLayout>

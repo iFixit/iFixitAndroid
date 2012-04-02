@@ -14,17 +14,19 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideStepViewFragment extends SherlockFragment {
    protected static final String IMAGE_URL = "IMAGE_URL";
 
    private TextView mTitle;
    private ThumbnailView mThumbs;
-   private LoaderImage mMainImage;
+   private ImageView mMainImage;
    private GuideStep mStep;
    private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
@@ -66,7 +68,7 @@ public class GuideStepViewFragment extends SherlockFragment {
       mTitle.setTypeface(mFont);
       mTitle.setTextColor(ColorStateList.valueOf(Color.WHITE));
 
-      mMainImage = (LoaderImage)view.findViewById(R.id.main_image);
+      mMainImage = (ImageView)view.findViewById(R.id.main_image);
       mMainImage.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {

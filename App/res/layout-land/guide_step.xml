@@ -4,7 +4,7 @@
 
     <RelativeLayout style="@style/image_wrap.land" >
 
-        <com.dozuki.ifixit.LoaderImage
+        <ImageView
             android:id="@+id/main_image"
             style="@style/main_image.land" />
 

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<com.dozuki.ifixit.LoaderImageZoom
+<it.sephiroth.android.library.imagezoom.ImageViewTouch
       xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/imageZoom"
       android:scaleType="fitCenter"

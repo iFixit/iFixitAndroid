@@ -4,7 +4,7 @@
     android:layout_height="fill_parent"
     android:padding="16dp">
 <!--
-    <com.dozuki.ifixit.LoaderImage
+    <ImageView
         android:id="@+id/intro_image"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" 

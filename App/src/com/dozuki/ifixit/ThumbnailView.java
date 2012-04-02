@@ -7,12 +7,15 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
+
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class ThumbnailView extends LinearLayout {
 
-   private ArrayList<LoaderImage> mThumbs;
-   private LoaderImage mMainImage;
+   private ArrayList<ImageView> mThumbs;
+   private ImageView mMainImage;
    private ImageManager mImageManager;
    private Context mContext;
    private String mCurrentURL;
@@ -34,11 +37,11 @@ public class ThumbnailView extends LinearLayout {
 
       inflater.inflate(R.layout.thumbnail_list, this, true);
 
-      mThumbs = new ArrayList<LoaderImage>();
+      mThumbs = new ArrayList<ImageView>();
 
-      mThumbs.add((LoaderImage)findViewById(R.id.thumbnail_1));
-      mThumbs.add((LoaderImage)findViewById(R.id.thumbnail_2));
-      mThumbs.add((LoaderImage)findViewById(R.id.thumbnail_3));
+      mThumbs.add((ImageView)findViewById(R.id.thumbnail_1));
+      mThumbs.add((ImageView)findViewById(R.id.thumbnail_2));
+      mThumbs.add((ImageView)findViewById(R.id.thumbnail_3));
    }
 
    public void setImageSizes(ImageSizes imageSizes) {
@@ -56,12 +59,11 @@ public class ThumbnailView extends LinearLayout {
 
       if (!images.isEmpty()) {
          for (int thumbId = 0; thumbId < images.size(); thumbId++) {
-            LoaderImage thumb = mThumbs.get(thumbId);
+            ImageView thumb = mThumbs.get(thumbId);
             thumb.setVisibility(VISIBLE);
             thumb.setTag(images.get(thumbId).mText);
 
             thumb.setOnClickListener(new OnClickListener() {
-
                @Override
                public void onClick(View v) {
                   setCurrentThumb((String)v.getTag());
@@ -81,7 +83,7 @@ public class ThumbnailView extends LinearLayout {
       mMainImage.setTag(url);
    }
 
-   public void setMainImage(LoaderImage mainImg) {
+   public void setMainImage(ImageView mainImg) {
       mMainImage = mainImg;
    }
 
@@ -93,7 +95,7 @@ public class ThumbnailView extends LinearLayout {
       mImageManager = imageManager;
    }
 
-   public ArrayList<LoaderImage> getThumbViews() {
+   public ArrayList<ImageView> getThumbViews() {
       return mThumbs;
    }
 

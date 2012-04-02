@@ -3,7 +3,6 @@ package com.dozuki.ifixit;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +10,8 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class TopicGuideListFragment extends Fragment {
    private static final int MAX_LOADING_IMAGES = 20;

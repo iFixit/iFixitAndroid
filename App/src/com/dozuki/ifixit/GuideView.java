@@ -2,10 +2,7 @@ package com.dozuki.ifixit;
 
 import java.util.List;
 
-import com.actionbarsherlock.view.MenuItem;
-
 import android.content.Intent;
-
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
@@ -14,12 +11,13 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
+import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
-
-import android.widget.ProgressBar;
 
 public class GuideView extends SherlockFragmentActivity 
  implements OnPageChangeListener {
