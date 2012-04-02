@@ -10,3 +10,6 @@
 [submodule "ImageZoomLibrary"]
 	path = ImageZoomLibrary
 	url = git@github.com:iFixit/ImageZoomLibrary.git
+[submodule "AndroidImageManager"]
+	path = AndroidImageManager
+	url = git@github.com:/iFixit/AndroidImageManager.git
