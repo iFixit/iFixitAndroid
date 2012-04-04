@@ -23,10 +23,17 @@ public class MainApplication extends Application {
 
          mImageManager.setController(new ImageManager.Controller() {
             public boolean overrideDisplay(String url, ImageView imageView) {
+               if (url.equals("") || url.indexOf(".") == 0) {
+                  fail(imageView);
+
+                  return true;
+               }
+
                return false;
             }
 
             public void loading(ImageView imageView) {
+               imageView.setImageBitmap(null);
             }
 
             public boolean displayImage(ImageView imageView, Bitmap bitmap,
@@ -40,6 +47,7 @@ public class MainApplication extends Application {
             }
 
             public void fail(ImageView imageView) {
+               imageView.setImageResource(R.drawable.no_image);
             }
          });
       }
@@ -57,7 +65,7 @@ public class MainApplication extends Application {
           metrics.widthPixels);
 
          // Larger screen = larger images
-         if ((maxDimension / metrics.density) > 800) {
+         if ((maxDimension / metrics.density) > SIZE_CUTOFF) {
             mImageSizes = new ImageSizes(".large", ".large", ".large",
              ".standard");
          } else {
