@@ -58,21 +58,9 @@ Copyright (c) 2012 iFixit
 
 == LICENSING
 
-This source code is dual-licensed under the GPLv3 and the CDDL.
-
-Why two licenses? The GPL does not allow additional restrictions to the license, and
-Apple's App Store Terms of Service are incompatible. So to make sure that you can modify
-this source code and submit new apps to Apple, we're also releasing it under the Common
-Development and Distribution License (CDDL), which *is* compatible with Apple's Terms of
-Service.
-
-Any submissions to this project must also be licensed under both GPL and CDDL.
-
-The contents of this software are subject to the terms of the Common Development and
-Distribution License and the GNU General Public License (the "License"). You may not use
-this software except in compliance with the Licenses. You can obtain a copy of the
-licenses at http://www.sun.com/cddl/cddl.html and http://www.gnu.org/licenses/gpl-3.0.txt
-
-See the License for the specific language governing permissions and limitations under the
-License.
-
+This source code is licensed under the GPLv3.
+Any submissions to this project must also be licensed under GPLv3.
+The contents of this software are subject to the terms of the GNU General Public License (the "License").
+You may not use this software except in compliance with this License.
+You can obtain a copy of the license at http://www.gnu.org/licenses/gpl-3.0.txt.
+See the License for the specific language governing permissions and limitations under the License.
