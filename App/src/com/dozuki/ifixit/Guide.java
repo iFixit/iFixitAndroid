@@ -99,6 +99,14 @@ public class Guide implements Serializable {
       return mTitle;
    }
 
+   public String getDisplayTitle() {
+      if (!(mSubject.equals("null") || mSubject.length() == 0)) {
+         return mSubject;
+      } else {
+         return mTitle;
+      }
+   }
+
    public void setTopic(String topic) {
       mTopic = topic;
    }
@@ -166,6 +174,6 @@ public class Guide implements Serializable {
    public String toString() {
       return "{" + mGuideid + "\n" + mTitle + "\n" + mTopic + "\n" + mAuthor +
        "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroduction + "\n"
-       + mSummary + "\n\n" + mSteps + "}";
+       + mSummary + "\n\n" + mSteps + "\n" + mSummary + "}";
    }
 }

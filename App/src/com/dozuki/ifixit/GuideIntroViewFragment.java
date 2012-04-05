@@ -83,11 +83,7 @@ public class GuideIntroViewFragment extends SherlockFragment {
    }
 
    public void setGuide() {
-      if (mGuide.mSubject.length() != 0) {
-         mTitle.setText(Html.fromHtml(mGuide.getSubject()));
-      } else {
-         mTitle.setText(Html.fromHtml(mGuide.getTitle()));
-      }
+      mTitle.setText(Html.fromHtml(mGuide.getDisplayTitle()));
       mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
        mGuide.getIntroduction())));
 
