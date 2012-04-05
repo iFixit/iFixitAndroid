@@ -3,7 +3,6 @@ package com.dozuki.ifixit;
 import java.net.URLEncoder;
 
 import android.app.Activity;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -100,10 +99,6 @@ public class TopicViewFragment extends SherlockFragment
          return;
       }
 
-      // Allow orientation changes once we have a topic loaded
-      getActivity().setRequestedOrientation(
-       ActivityInfo.SCREEN_ORIENTATION_SENSOR);
-
       if (mTopicLeaf != null && topicLeaf != null &&
        mTopicLeaf.equals(topicLeaf)) {
          selectDefaultTab();
@@ -171,10 +166,6 @@ public class TopicViewFragment extends SherlockFragment
       displayLoading();
       mTopicLeaf = null;
       mSelectedTab = -1;
-
-      // Lock the screen orientation while we load the topic
-      getActivity().setRequestedOrientation(
-       ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
 
       APIHelper.getTopic(getActivity(), topicName,
        new APIHelper.APIResponder<TopicLeaf>() {

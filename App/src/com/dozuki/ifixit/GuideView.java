@@ -3,7 +3,6 @@ package com.dozuki.ifixit;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
@@ -96,7 +95,6 @@ public class GuideView extends SherlockFragmentActivity
          return;
       }
 
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR);
       mProgressBar.setVisibility(View.GONE);
       mGuide = guide;
 
@@ -149,8 +147,6 @@ public class GuideView extends SherlockFragmentActivity
    }
 
    public void getGuide(final int guideid) {
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_NOSENSOR);
-
       APIHelper.getGuide(this, guideid, new APIHelper.APIResponder<Guide>() {
          public void setResult(Guide guide) {
             setGuide(guide);
