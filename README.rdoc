@@ -1,11 +1,11 @@
 = Official iFixit Android App
 
-This is a native Android guide viewer built using iFixit's public APIs (http://www.ifixit.com/api/0.1/doc)
+This is a native Android guide viewer built using iFixit's public APIs (http://www.ifixit.com/api/1.0/doc)
 
 APIs used:
-   http://ifixit.com/api/0.1/guide
-   http://ifixit.com/api/0.1/areas
-   http://ifixit.com/api/0.1/guide/{name}
+   http://ifixit.com/api/1.0/categories
+   http://ifixit.com/api/1.0/topic/{name}
+   http://ifixit.com/api/1.0/guide/{name}
 
 ----------
 
