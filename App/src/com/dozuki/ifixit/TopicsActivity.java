@@ -49,6 +49,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
       } else {
          mTopicListVisible = true;
+      }
+
+      if (mRootTopic == null) {
          APIHelper.getCategories(this, new APIHelper.APIResponder<TopicNode>() {
             public void setResult(TopicNode result) {
                mRootTopic = result;

@@ -47,10 +47,16 @@ public class TopicViewFragment extends SherlockFragment
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
-         setTopicLeaf((TopicLeaf)savedInstanceState.getSerializable(
-          CURRENT_TOPIC_LEAF));
          mTopicNode = (TopicNode)savedInstanceState.getSerializable(
           CURRENT_TOPIC_NODE);
+         TopicLeaf topicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_LEAF);
+
+         if (topicLeaf != null) {
+            setTopicLeaf(topicLeaf);
+         } else {
+            getTopicLeaf(mTopicNode.getName());
+         }
       }
    }
 

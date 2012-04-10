@@ -25,12 +25,14 @@ public class GuideView extends SherlockFragmentActivity
    private static final int MAX_WRITING_IMAGES = 10;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
+   private static final String SAVED_GUIDEID = "SAVED_GUIDEID";
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
    private static final String PACKAGE_NAME = "com.dozuki.ifixit";
 
    private GuideViewAdapter mGuideAdapter;
+   private int mGuideid;
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage;
@@ -53,30 +55,33 @@ public class GuideView extends SherlockFragmentActivity
       mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
 
       if (savedInstanceState != null) {
+         mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
          Guide guide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
          if (guide != null) {
             setGuide(guide);
             mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
+         } else {
+            getGuide(mGuideid);
          }
       } else {
          Intent intent = getIntent();
-         int guideid = -1;
+         mGuideid = -1;
 
          if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             List<String> segments = intent.getData().getPathSegments();
 
             try {
-               guideid = Integer.parseInt(segments.get(2));
+               mGuideid = Integer.parseInt(segments.get(2));
             } catch (Exception e) {
                Log.e("iFixit", "Problem parsing guide");
                finish();
             }
          } else {
             Bundle extras = intent.getExtras();
-            guideid = extras.getInt(MainActivity.GUIDEID);
+            mGuideid = extras.getInt(MainActivity.GUIDEID);
          }
 
-         getGuide(guideid);
+         getGuide(mGuideid);
       }
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -86,6 +91,7 @@ public class GuideView extends SherlockFragmentActivity
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      state.putSerializable(SAVED_GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }
