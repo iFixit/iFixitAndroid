@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      style="@style/guide_wrap.vertical" >
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="8dp" >
     <!-- <RelativeLayout 
         style="@style/image_wrap">
         <ImageView
@@ -10,19 +12,28 @@
     -->
    <ScrollView
          android:id="@+id/guide_intro_scroll"
-         style="@style/intro_scroll" >
+         android:layout_width="wrap_content"
+         android:layout_height="0dp"
+         android:layout_weight="85">
 
       <LinearLayout
-            style="@style/intro_scroll.layout">
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="85"
+            android:orientation="vertical">
 
          <TextView
                android:id="@+id/guide_title"
-               style="@style/text.title.full"
-               android:layout_gravity="top" />
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               android:layout_gravity="top"
+               style="@style/text.title" />
 
          <TextView
                android:id="@+id/guide_intro_text"
-               style="@style/text.body.full" />
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               style="@style/text.body"/>
 
          <LinearLayout
                android:layout_width="match_parent"
@@ -32,28 +43,47 @@
 
             <TextView
                   android:id="@+id/guide_difficulty"
-                  style="@style/text.body.half" />
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  style="@style/text.body" />
 
             <TextView
                   android:id="@+id/guide_author"
-                  style="@style/text.body.half" />
+                  android:layout_width="0dp"
+                  android:layout_height="wrap_content"
+                  android:layout_weight="1"
+                  style="@style/text.body" />
          </LinearLayout>
 
          <TextView
                android:id="@+id/num_steps"
-               style="@style/text.body.full" />
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               style="@style/text.body" />
 
          <TextView
                android:id="@+id/guide_tools"
-               style="@style/text.body.full" />
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               style="@style/text.body" />
 
          <TextView
                android:id="@+id/guide_parts"
-               style="@style/text.body.full" />
+               android:layout_width="fill_parent"
+               android:layout_height="wrap_content"
+               style="@style/text.body" />
       </LinearLayout>
    </ScrollView>
-   <RelativeLayout style="@style/swipe_layout">
+   <RelativeLayout 
+       android:layout_width="wrap_content"
+       android:layout_height="0dp"
+       android:layout_weight="15">
       <ImageView
-            style="@style/swipe_to_begin" />
+      		android:layout_width="wrap_content"
+      		android:layout_height="wrap_content"
+      		android:layout_alignParentRight="true"
+      		android:src="@drawable/swipe_to_begin"   
+      		android:contentDescription="@string/swipe_to_begin" />
    </RelativeLayout>
 </LinearLayout>

@@ -42,29 +42,6 @@
         <item name="android:layout_marginRight">0dp</item>
     </style>
 
-    <style name="thumbnail.600">
-        <item name="android:layout_width">120dp</item>
-        <item name="android:layout_height">90dp</item>
-        <item name="android:padding">2dp</item>
-    </style>
-
-    <style name="thumbnail.600.land">
-        <item name="android:layout_width">150dp</item>
-        <item name="android:layout_height">112.5dp</item>
-        <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:layout_marginRight">8dp</item>
-    </style>
-
-    <style name="thumbnail.600.last">
-        <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:layout_marginRight">0dp</item>
-    </style>
-
-    <style name="thumbnail.600.land.last">
-        <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:layout_marginRight">0dp</item>
-    </style>
-
     <style name="thumbnail.720">
         <item name="android:layout_width">160dp</item>
         <item name="android:layout_height">120dp</item>

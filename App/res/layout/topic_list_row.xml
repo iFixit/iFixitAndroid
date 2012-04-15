@@ -8,8 +8,9 @@
 
     <TextView
         android:id="@+id/topic_title"
-        android:layout_weight="95"
-        style="@style/text.list.full" />
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/text.list" />
     
   <!--  <ImageView 
         android:id="@+id/next_icon"

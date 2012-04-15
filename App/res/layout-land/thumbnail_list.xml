@@ -4,14 +4,32 @@
 
     <ImageView
         android:id="@+id/thumbnail_1"
-        style="@style/thumbnail.land" />
+        android:layout_width="84dp"
+        android:layout_height="63dp"
+        android:background="@drawable/img_background"
+        android:visibility="invisible"
+        android:padding="1dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="8dp" />
 
     <ImageView
-        android:id="@+id/thumbnail_2"
-        style="@style/thumbnail.land" />
+        android:id="@+id/thumbnail_2"        
+        android:layout_width="84dp"
+        android:layout_height="63dp"
+        android:background="@drawable/img_background"
+        android:visibility="invisible"
+        android:padding="1dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="8dp" />
 
     <ImageView
-        android:id="@+id/thumbnail_3"
-        style="@style/thumbnail.land.last" />
+        android:id="@+id/thumbnail_3"        
+        android:layout_width="84dp"
+        android:layout_height="63dp"
+        android:background="@drawable/img_background"
+        android:visibility="invisible"
+        android:padding="1dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginRight="0dp" />
 
 </LinearLayout>

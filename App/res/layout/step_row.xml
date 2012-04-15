@@ -1,18 +1,35 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/step_row"
-    style="@style/step_row_layout" >
+	android:layout_width="match_parent"
+	android:layout_height="wrap_content"
+	android:orientation="horizontal"
+	android:weightSum="100">
 
     <ImageView
         android:id="@+id/bullet"
-        style="@style/bullets" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content" 
+        android:layout_weight="5"
+        android:paddingTop="4dp"
+        android:paddingRight="4dp" />
 
     <TextView
         android:id="@+id/step_text"
-        style="@style/text.body.step_row" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="97"
+        android:textColor="#ffffff"/>
 
     <ImageView
         android:id="@+id/bullet_icon"
-        style="@style/step_row_icon" />
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="5dp"
+        android:layout_gravity="right"
+        android:layout_weight="0"
+        android:visibility="invisible"
+        android:contentDescription="@string/bullet_icon_desc"/>
 
 </LinearLayout>

@@ -3,16 +3,11 @@
 
     <style name="text">
         <item name="android:textColor">#FFFFFF</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
     </style>
 
     <style name="text.title">
         <item name="android:typeface">serif</item>
         <item name="android:textSize">24sp</item>
-    </style>
-    <style name="text.title.full">
-        <item name="android:layout_width">fill_parent</item>
     </style>
     <style name="text.title.600">
         <item name="android:textSize">32sp</item>
@@ -65,13 +60,9 @@
         <item name="android:padding">8dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">#444444</item>
-    </style>
-
-    <style name="text.list.full">
-        <item name="android:layout_width">fill_parent</item>
-    </style>
+	</style>
     
-    <style name="text.list.full.header">
+    <style name="text.list.header">
         <item name="android:padding">4dp</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:textColor">#ffffff</item>               
