@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingTop="16dp"
+    android:paddingBottom="16dp"
+    android:paddingRight="12dp"
+    android:paddingLeft="12dp"
+    android:background="@drawable/bg_img"
+    android:orientation="horizontal">
+
+    <RelativeLayout 
+        android:layout_width="640dp"
+        android:layout_height="match_parent"
+        android:layout_marginRight="16dp">
+
+        <ImageView
+            android:id="@+id/main_image"
+            android:layout_width="640dp"
+    		android:layout_height="480dp"
+    		android:layout_marginRight="0dp"
+    		android:layout_marginBottom="12dp"
+    		android:background="@drawable/img_background"
+    		android:padding="2dp" />
+
+        <com.dozuki.ifixit.ThumbnailView
+            android:id="@+id/thumbnails"
+            android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:layout_below="@id/main_image" />
+    </RelativeLayout>
+
+    <RelativeLayout 
+			android:layout_width="wrap_content"
+    		android:layout_height="wrap_content"
+    		android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/step_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/text.title.720" />
+
+        <ListView
+            android:id="@+id/step_text_list"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			android:layout_weight="1.0"
+			android:divider="#00000000"
+			android:listSelector="@android:color/transparent"
+			android:scrollingCache="false"
+			android:cacheColorHint="@android:color/transparent"
+			android:layout_below="@id/step_title"
+			android:background="@drawable/bg_img"
+			android:overScrollFooter="@null" />
+    </RelativeLayout>
+
+</LinearLayout>
