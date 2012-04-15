@@ -73,8 +73,8 @@ public class GuideView extends SherlockFragmentActivity
             try {
                mGuideid = Integer.parseInt(segments.get(2));
             } catch (Exception e) {
+               displayError();
                Log.e("iFixit", "Problem parsing guide");
-               finish();
             }
          } else {
             Bundle extras = intent.getExtras();
@@ -98,6 +98,7 @@ public class GuideView extends SherlockFragmentActivity
 
    public void setGuide(Guide guide) {
       if (guide == null) {
+         displayError();
          return;
       }
 
@@ -159,9 +160,14 @@ public class GuideView extends SherlockFragmentActivity
          }
 
          public void error() {
-            //TODO
+            displayError();
          }
       });
+   }
+
+   private void displayError() {
+      mProgressBar.setVisibility(View.GONE);
+      // TODO Display error
    }
 
    private void nextStep() {
