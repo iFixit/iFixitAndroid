@@ -9,19 +9,19 @@
          android:layout_height="match_parent">
    </fragment>
    <LinearLayout
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
          android:orientation="horizontal">
       <FrameLayout
             android:id="@+id/topic_list_fragment"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_weight="50">
       </FrameLayout>
       <FrameLayout
             android:id="@+id/topic_view_overlay"
             android:layout_width="0dp"
-            android:layout_height="fill_parent"
+            android:layout_height="match_parent"
             android:layout_weight="50">
       </FrameLayout>
    </LinearLayout>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>    
+    <dimen name="guide_image_width">640dp</dimen>
+    <dimen name="guide_image_height">480dp</dimen>       
+    <dimen name="guide_image_spacing_right">0dp</dimen>
+    <dimen name="guide_image_spacing_bottom">12dp</dimen>    
+    
+    <dimen name="guide_thumbnail_width">160dp</dimen>
+    <dimen name="guide_thumbnail_height">120dp</dimen>   
+    <dimen name="guide_thumbnail_spacing">12dp</dimen> 
+    <dimen name="guide_thumbnail_padding">2dp</dimen>    
+</resources>

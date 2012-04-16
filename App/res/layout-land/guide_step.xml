@@ -1,43 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:paddingRight="6dp"
-    android:paddingLeft="6dp"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:padding="@dimen/page_padding"
     android:background="@drawable/bg_img"
-    android:orientation="horizontal">
+    style="@style/step_wrap">
 
-    <RelativeLayout    	
-        android:layout_width="wrap_content"
+    <RelativeLayout 
+    	android:layout_width="wrap_content"
     	android:layout_height="match_parent"
-    	android:layout_marginRight="8dp">
-
+    	style="@style/seperator">
 
         <ImageView
-            android:id="@+id/main_image"            
-            android:layout_width="270dp"
-    		android:layout_height="180dp"
-    		android:layout_marginRight="0dp"
-    		android:layout_marginBottom="0dp"
+            android:id="@+id/main_image"
+            android:layout_width="@dimen/guide_image_width"
+    		android:layout_height="@dimen/guide_image_height"
+    		android:layout_marginRight="@dimen/guide_image_spacing_right"
+    		android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
     		android:background="@drawable/img_background"
-    		android:padding="1dp"/>
+    		android:padding="@dimen/guide_image_padding" />
 
         <com.dozuki.ifixit.ThumbnailView
             android:id="@+id/thumbnails"    
             android:layout_width="wrap_content"
     		android:layout_height="wrap_content"
-    		android:layout_below="@id/main_image" />
+    		style="@style/thumbnail_position" />
     </RelativeLayout>
 
-    <RelativeLayout        
-        android:layout_width="match_parent"
-    	android:layout_height="match_parent"
-    	android:layout_marginTop="8dp">
+    <RelativeLayout 
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent">
 
         <TextView
-            android:id="@+id/step_title"            
+            android:id="@+id/step_title"
             android:layout_width="match_parent"
     	    android:layout_height="wrap_content"
             style="@style/text.title"/>

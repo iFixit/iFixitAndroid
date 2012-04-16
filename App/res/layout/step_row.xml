@@ -10,23 +10,23 @@
         android:id="@+id/bullet"
         android:layout_width="0dp"
         android:layout_height="wrap_content" 
-        android:layout_weight="5"
-        android:paddingTop="4dp"
-        android:paddingRight="4dp" />
+        android:layout_weight="3"
+        android:paddingTop="@dimen/step_bullet_padding"
+        android:paddingRight="@dimen/step_bullet_padding" />
 
     <TextView
         android:id="@+id/step_text"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="97"
-        android:textColor="#ffffff"/>
+        style="@style/text.body.no_spacing" />
 
     <ImageView
         android:id="@+id/bullet_icon"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="5dp"
+        android:layout_marginLeft="@dimen/step_icon_left_spacing"
+        android:layout_marginTop="@dimen/step_icon_top_spacing"
         android:layout_gravity="right"
         android:layout_weight="0"
         android:visibility="invisible"

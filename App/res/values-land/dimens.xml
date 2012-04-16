@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="guide_image_spacing_right">0dp</dimen>
+    <dimen name="guide_image_spacing_bottom">8dp</dimen>        
+</resources>
