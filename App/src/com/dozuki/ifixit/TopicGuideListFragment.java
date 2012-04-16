@@ -15,7 +15,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 public class TopicGuideListFragment extends Fragment {
    private static final int MAX_LOADING_IMAGES = 20;
-   private static final int MAX_STORED_IMAGES = 20;
+   private static final int MAX_STORED_IMAGES = 30;
    private static final int MAX_WRITING_IMAGES = 20;
    protected static final String GUIDEID = "guideid";
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
