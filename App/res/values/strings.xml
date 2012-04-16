@@ -16,6 +16,6 @@
    <string name="devices">Devices</string>
    <string name="guides">Guides</string>
    <string name="answers">Answers</string>
-   <string name="moreInfo">More Info</string>
+   <string name="info">Info</string>
    <string name="bullet_icon_desc">Guide Step notice, important step</string>
 </resources>

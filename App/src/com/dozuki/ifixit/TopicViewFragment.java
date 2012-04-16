@@ -133,7 +133,7 @@ public class TopicViewFragment extends SherlockFragment
       mActionBar.addTab(tab);
 
       tab = mActionBar.newTab();
-      tab.setText(getActivity().getString(R.string.moreInfo));
+      tab.setText(getActivity().getString(R.string.info));
       tab.setTabListener(this);
       mActionBar.addTab(tab);
 
