@@ -39,6 +39,8 @@ public class WebViewFragment extends Fragment implements OnViewGuideListener {
       settings.setSupportZoom(true);
       settings.setLoadWithOverviewMode(true);
       settings.setUseWideViewPort(true);
+      settings.setAppCacheEnabled(true);
+      settings.setCacheMode(WebSettings.LOAD_NORMAL);
 
       mWebView.setWebViewClient(new GuideWebView(this));
 
