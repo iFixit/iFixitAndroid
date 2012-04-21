@@ -7,9 +7,10 @@ import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.SherlockFragment;
 
-public class LoadingFragment extends SherlockFragment {
+public class NoGuidesFragment extends SherlockFragment {
+   @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-      return inflater.inflate(R.layout.loading_fragment, container, false);
+      return inflater.inflate(R.layout.no_guides_fragment, container, false);
    }
 }

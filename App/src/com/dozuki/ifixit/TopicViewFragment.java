@@ -205,7 +205,11 @@ public class TopicViewFragment extends SherlockFragment
       }
 
       if (position == GUIDES_TAB) {
-         selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
+         if (mTopicLeaf.getGuides().size() == 0) {
+            selectedFragment = new NoGuidesFragment();
+         } else {
+            selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
+         }
       } else if (position == ANSWERS_TAB) {
          WebViewFragment webView = new WebViewFragment();
 

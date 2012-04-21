@@ -18,4 +18,5 @@
    <string name="answers">Answers</string>
    <string name="info">Info</string>
    <string name="bullet_icon_desc">Guide Step notice, important step</string>
+   <string name="no_guides">No guides</string>
 </resources>
