@@ -10,11 +10,13 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Window;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -44,6 +46,9 @@ public class GuideView extends SherlockFragmentActivity
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+       WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
       setContentView(R.layout.guide_main);
       
       mImageManager = ((MainApplication)getApplication()).getImageManager();
