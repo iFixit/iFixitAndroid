@@ -16,7 +16,6 @@ import android.widget.ProgressBar;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.Window;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 

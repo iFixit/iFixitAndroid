@@ -147,6 +147,7 @@ public class JSONHelper {
     * topic
     */
    public static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic) {
+      @SuppressWarnings("unchecked")
       Iterator<String> iterator = jTopic.keys();
       String topicName;
       ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
