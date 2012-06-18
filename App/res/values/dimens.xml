@@ -8,15 +8,15 @@
     
     <dimen name="page_padding">8dp</dimen>
     
-    <dimen name="guide_image_width">270dp</dimen>
-    <dimen name="guide_image_height">180dp</dimen>    
+    <dimen name="guide_image_width">256dp</dimen>
+    <dimen name="guide_image_height">192dp</dimen>    
     <dimen name="guide_image_padding">1dp</dimen>      
     <dimen name="guide_image_spacing_right">8dp</dimen>
     <dimen name="guide_image_spacing_bottom">0dp</dimen>        
     
-    <dimen name="guide_thumbnail_width">74dp</dimen>
-    <dimen name="guide_thumbnail_height">54.33dp</dimen>   
-    <dimen name="guide_thumbnail_spacing">8dp</dimen> 
+    <dimen name="guide_thumbnail_width">80dp</dimen>
+    <dimen name="guide_thumbnail_height">60dp</dimen>   
+    <dimen name="guide_thumbnail_spacing">6dp</dimen> 
     <dimen name="guide_thumbnail_padding">1dp</dimen>
     
     <dimen name="topic_list_column_width">270dp</dimen>
