@@ -10,7 +10,7 @@
          android:id="@+id/progress_bar"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:minHeight="80dip"
-         android:minWidth="80dip"
+         android:minHeight="@dimen/progress_bar_height"
+         android:minWidth="@dimen/progress_bar_width"
          android:layout_centerInParent="true" />
 </RelativeLayout>

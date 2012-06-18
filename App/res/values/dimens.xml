@@ -31,4 +31,7 @@
     <dimen name="step_icon_left_spacing">10dp</dimen>
     
     <dimen name="section_seperator">8dp</dimen>
+    
+    <dimen name="progress_bar_height">80dp</dimen>
+    <dimen name="progress_bar_width">80dp</dimen>    
 </resources>
