@@ -4,20 +4,24 @@ import java.net.URLEncoder;
 
 import org.apache.http.client.ResponseHandler;
 
+import android.app.AlertDialog;
 import android.content.Context;
-
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
+
 public class APIHelper {
    public interface APIResponder<T> {
+      public void execute();
+
       public void setResult(T result);
 
-      public void error();
+      public void error(AlertDialog dialog);
    }
 
    private interface StringHandler {
@@ -79,6 +83,23 @@ public class APIHelper {
       });
    }
 
+   private static AlertDialog getErrorDialog(final Context context,
+    final APIResponder<?> responder) {
+      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+      builder.setTitle(context.getString(R.string.no_connection_title))
+             .setMessage(context.getString(R.string.no_connection))
+             .setPositiveButton(context.getString(R.string.try_again),
+              new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                   // Try performing the request again.
+                   responder.execute();
+                   dialog.cancel();
+                }
+             });
+
+      return builder.create();
+   }
+
    private static void performRequest(final String url,
     final StringHandler stringHandler) {
       final Handler handler = new Handler() {
@@ -111,7 +132,7 @@ public class APIHelper {
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.error();
+         responder.error(getErrorDialog(context, responder));
          return false;
       }
 

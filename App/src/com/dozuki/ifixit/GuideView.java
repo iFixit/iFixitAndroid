@@ -2,6 +2,7 @@ package com.dozuki.ifixit;
 
 import java.util.List;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
@@ -158,15 +159,19 @@ public class GuideView extends SherlockFragmentActivity
    }
 
    public void getGuide(final int guideid) {
-      APIHelper.getGuide(this, guideid, new APIHelper.APIResponder<Guide>() {
+      new APIHelper.APIResponder<Guide>() {
+         public void execute() {
+            APIHelper.getGuide(GuideView.this, guideid, this);
+         }
+
          public void setResult(Guide guide) {
             setGuide(guide);
          }
 
-         public void error() {
-            displayError();
+         public void error(AlertDialog dialog) {
+            dialog.show();
          }
-      });
+      }.execute();
    }
 
    private void displayError() {

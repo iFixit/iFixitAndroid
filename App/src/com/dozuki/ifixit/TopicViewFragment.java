@@ -3,6 +3,7 @@ package com.dozuki.ifixit;
 import java.net.URLEncoder;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -173,16 +174,20 @@ public class TopicViewFragment extends SherlockFragment
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      APIHelper.getTopic(getActivity(), topicName,
-       new APIHelper.APIResponder<TopicLeaf>() {
+      new APIHelper.APIResponder<TopicLeaf>() {
+         public void execute() {
+            APIHelper.getTopic(getActivity(), topicName, this);
+         }
+
          public void setResult(TopicLeaf result) {
             setTopicLeaf(result);
          }
 
-         public void error() {
+         public void error(AlertDialog dialog) {
+            dialog.show();
             //TODO
          }
-      });
+      }.execute();
    }
 
    public TopicLeaf getTopicLeaf() {

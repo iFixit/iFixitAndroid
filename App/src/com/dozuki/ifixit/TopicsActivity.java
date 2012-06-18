@@ -1,21 +1,19 @@
 package com.dozuki.ifixit;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-
-import android.view.MotionEvent;
-import android.view.View;
-
-import android.widget.FrameLayout;
 
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
@@ -52,16 +50,20 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
 
       if (mRootTopic == null) {
-         APIHelper.getCategories(this, new APIHelper.APIResponder<TopicNode>() {
+         new APIHelper.APIResponder<TopicNode>() {
+            public void execute() {
+               APIHelper.getCategories(TopicsActivity.this, this);
+            }
+
             public void setResult(TopicNode result) {
                mRootTopic = result;
                onTopicSelected(mRootTopic);
             }
 
-            public void error() {
-               //TODO
+            public void error(AlertDialog dialog) {
+               dialog.show();
             }
-         });
+         }.execute();
       }
 
       if (!mTopicListVisible && !mHideTopicList) {

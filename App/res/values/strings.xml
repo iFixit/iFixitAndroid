@@ -21,4 +21,7 @@
    <string name="no_guides">No guides</string>
    <string name="topic_guide_thumbnail">Guide section thumbnail</string>
    <string name="main_guide_img_description">Guide main image</string>
+   <string name="no_connection">No connection</string>
+   <string name="no_connection_title">Connection error</string>
+   <string name="try_again">Try again</string>
 </resources>
