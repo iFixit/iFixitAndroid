@@ -2,13 +2,13 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#DDDDDD">
+    android:background="@color/gray">
     <FrameLayout
       android:id="@+id/topic_list_fr"      
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
-      android:background="#FFFFFFFF"
-      android:layout_marginRight="2dp">
+      android:background="@color/translucent_white"
+      android:layout_marginRight="0dp">
        <com.ifixit.android.sectionheaders.SectionListView
              android:id="@+id/topicList"
              android:layout_width="match_parent"

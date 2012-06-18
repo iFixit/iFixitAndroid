@@ -9,6 +9,10 @@
         <item name="android:typeface">serif</item>
         <item name="android:textSize">@dimen/title_text_size</item>
     </style>
+    
+    <style name="text.title.black">
+        <item name="android:textColor">@color/black</item>
+    </style>
 
     <style name="text.body">
         <item name="android:textSize">@dimen/body_text_size</item>

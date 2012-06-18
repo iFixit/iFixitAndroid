@@ -20,4 +20,5 @@
    <string name="bullet_icon_desc">Guide Step notice, important step</string>
    <string name="no_guides">No guides</string>
    <string name="topic_guide_thumbnail">Guide section thumbnail</string>
+   <string name="main_guide_img_description">Guide main image</string>
 </resources>
