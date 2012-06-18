@@ -2,9 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:id="@+id/topic_grid_box"
       android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:paddingBottom="1dp"
-      android:paddingTop="1dp"
+      android:layout_height="wrap_content"   
+      android:layout_marginRight="4dp"
+      android:layout_marginLeft="4dp"
+      android:padding="1dp"
       android:background="#dddddd">
    <RelativeLayout 
          android:background="@drawable/border"
@@ -16,14 +17,14 @@
             android:id="@+id/topic_guide_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="4dp"
             android:padding="1dp"
-            android:background="#aaaaaa"/>
+            android:layout_marginRight="8dp"
+            android:background="#aaaaaa" 
+            android:contentDescription="@string/topic_guide_thumbnail"/>
 
       <com.dozuki.ifixit.AutoResizeTextView 
             android:id="@+id/topic_guide_title"
             android:layout_toRightOf="@+id/topic_guide_thumbnail"
-            android:layout_margin="4dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true" />    

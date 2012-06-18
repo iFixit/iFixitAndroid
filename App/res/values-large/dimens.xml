@@ -18,7 +18,8 @@
     <dimen name="guide_thumbnail_padding">1dp</dimen>
     
     <dimen name="topic_list_vertical_spacing">12dp</dimen>
-    <dimen name="topic_list_horizontal_spacing">12dp</dimen>    
+    <dimen name="topic_list_horizontal_spacing">12dp</dimen> 
+    <dimen name="topic_list_top_margin">8dp</dimen>
     
     <dimen name="page_padding">8dp</dimen>
     
