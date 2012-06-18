@@ -55,7 +55,7 @@ public class TopicViewFragment extends SherlockFragment
 
          if (topicLeaf != null) {
             setTopicLeaf(topicLeaf);
-         } else {
+         } else if (mTopicNode != null) {
             getTopicLeaf(mTopicNode.getName());
          }
       }
