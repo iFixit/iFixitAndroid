@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-   <style name="Theme.iFixit" parent="Theme.Sherlock.Light.DarkActionBar">
+   <style name="Theme.iFixit" parent="Theme.HoloEverywhereLight">
         <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
        
         <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
