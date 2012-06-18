@@ -13,3 +13,6 @@
 [submodule "AndroidImageManager"]
 	path = AndroidImageManager
 	url = git@github.com:iFixit/AndroidImageManager.git
+[submodule "HoloEverywhere"]
+	path = HoloEverywhere
+	url = https://github.com/iFixit/HoloEverywhere.git
