@@ -1,7 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<it.sephiroth.android.library.imagezoom.ImageViewTouch
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/imageZoom"
-      android:scaleType="fitCenter"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent" />
+<FrameLayout
+   xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="@color/gray"> 
+	<it.sephiroth.android.library.imagezoom.ImageViewTouch
+	      android:id="@+id/imageZoom"
+	      android:scaleType="fitCenter"
+	      android:layout_width="match_parent"
+	      android:layout_height="match_parent" />
+	<ImageView 
+	    android:id="@+id/fullScreenClose"
+	    android:src="@drawable/x_icon"
+	    android:layout_height="wrap_content"
+	    android:layout_width="wrap_content" />
+</FrameLayout>

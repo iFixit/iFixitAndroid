@@ -2,7 +2,10 @@ package com.dozuki.ifixit;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import com.actionbarsherlock.view.Window;
@@ -11,6 +14,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 public class FullImageView extends FragmentActivity {
    private String mImageUrl;
    private ImageView mImageZoom;
+   private ImageView mCloseFullScreen;
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
 
@@ -33,5 +37,14 @@ public class FullImageView extends FragmentActivity {
       mImageZoom = (ImageView)findViewById(R.id.imageZoom);
       mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,
        mImageZoom);
+      
+      mCloseFullScreen = (ImageView)findViewById(R.id.fullScreenClose);
+      mCloseFullScreen.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            finish();
+         }
+         
+      });
    }
 }
