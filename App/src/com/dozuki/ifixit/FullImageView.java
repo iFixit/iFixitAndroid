@@ -44,7 +44,6 @@ public class FullImageView extends FragmentActivity {
          public void onClick(View v) {
             finish();
          }
-         
       });
    }
 }
