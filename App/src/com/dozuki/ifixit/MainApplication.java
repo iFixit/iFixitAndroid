@@ -48,6 +48,7 @@ public class MainApplication extends Application {
 
             public void fail(ImageView imageView) {
                imageView.setImageResource(R.drawable.no_image);
+               imageView.setTag("");
             }
          });
       }

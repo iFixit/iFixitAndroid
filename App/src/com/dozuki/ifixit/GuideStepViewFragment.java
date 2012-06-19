@@ -73,6 +73,11 @@ public class GuideStepViewFragment extends SherlockFragment {
          @Override
          public void onClick(View v) {
             String url = (String)v.getTag();
+
+            if (url.equals("") || url.indexOf(".") == 0) {
+               return;
+            }
+
             Intent intent = new Intent(getActivity(), FullImageView.class);
             intent.putExtra(IMAGE_URL, url);
 
