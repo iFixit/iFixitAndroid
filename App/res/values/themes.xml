@@ -2,10 +2,11 @@
 <resources>
    <style name="Theme.iFixit" parent="Theme.HoloEverywhereLight.DarkActionBar.Sherlock">
         <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
-       
         <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
         <item name="android:actionBarStyle">@style/Widget.iFixit.ActionBar</item>
         <item name="actionBarStyle">@style/Widget.iFixit.ActionBar</item>
+        <item name="actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
+        <item name="android:actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
     </style>
 
     <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -21,9 +22,12 @@
         <item name="android:textColor">@color/white</item>
         
     </style>
-    <style name="Widget.iFixit.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse">
-    </style>
     
+    <style name="Widget.iFixit.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse">
+        <item name="android:background">@drawable/ifixit_tab_indicator</item>    
+        <item name="background">@drawable/ifixit_tab_indicator</item>            
+    </style>
+        
     <style name="TextAppearance.iFixit.ActionBar.Title" parent="TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse">
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item> 
