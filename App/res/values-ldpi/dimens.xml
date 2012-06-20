@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     
-    <dimen name="guide_image_width">220dp</dimen>
-    <dimen name="guide_image_height">165dp</dimen>       
+    <dimen name="guide_image_width">188dp</dimen>
+    <dimen name="guide_image_height">141dp</dimen>       
     <dimen name="guide_image_padding">1dp</dimen>    
     <dimen name="guide_image_spacing_right">4dp</dimen>
     <dimen name="guide_image_spacing_bottom">0dp</dimen>        
     
-    <dimen name="guide_thumbnail_width">68dp</dimen>
-    <dimen name="guide_thumbnail_height">51dp</dimen>   
+    <dimen name="guide_thumbnail_width">54dp</dimen>
+    <dimen name="guide_thumbnail_height">40.5dp</dimen>   
     <dimen name="guide_thumbnail_spacing">4dp</dimen> 
     <dimen name="guide_thumbnail_padding">1dp</dimen>
     
