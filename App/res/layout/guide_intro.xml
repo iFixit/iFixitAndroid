@@ -4,13 +4,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="@dimen/page_padding">
-    <!-- <RelativeLayout 
-        style="@style/image_wrap">
-        <ImageView
-            android:id="@+id/intro_image"
-            style="@style/main_image" />
-    </RelativeLayout>
-    -->
    <ScrollView
          android:id="@+id/guide_intro_scroll"
          android:layout_width="match_parent"
