@@ -9,7 +9,7 @@
         android:id="@+id/topic_view_page_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="25"  >
+        android:layout_weight="25">
     </FrameLayout>
 
 </LinearLayout>

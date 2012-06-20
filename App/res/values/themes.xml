@@ -11,7 +11,7 @@
 
     <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
         <!--  <item name="background">@color/ifixit_blue</item>
-        <item name="android:background">@color/ifixit_blue</item>-->
+        <item name="android:background">@color/ifixit_blue</item> -->
         <item name="titleTextStyle">@style/TextAppearance.iFixit.ActionBar.Title</item>
         <item name="android:titleTextStyle">@style/TextAppearance.iFixit.ActionBar.Title</item>      
         

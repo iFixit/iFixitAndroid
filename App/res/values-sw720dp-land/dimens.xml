@@ -3,8 +3,8 @@
     <dimen name="guide_image_width">640dp</dimen>
     <dimen name="guide_image_height">480dp</dimen>       
     
-    <dimen name="guide_thumbnail_width">120dp</dimen>
-    <dimen name="guide_thumbnail_height">90dp</dimen>   
+    <dimen name="guide_thumbnail_width">160dp</dimen>
+    <dimen name="guide_thumbnail_height">120dp</dimen>   
     <dimen name="guide_thumbnail_spacing">8dp</dimen> 
     <dimen name="guide_thumbnail_padding">1dp</dimen>    
     

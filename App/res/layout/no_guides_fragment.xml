@@ -3,10 +3,15 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:orientation="vertical" >
-   <TextView android:layout_width="wrap_content"
+   <ImageView android:layout_width="wrap_content" 
          android:layout_height="wrap_content"
-         android:layout_gravity="center"
-         android:layout_marginTop="8dp"
-         android:text="@string/no_guides"
-         style="@style/text.title.black" />
+         android:layout_gravity="center_vertical" 
+         android:src="@drawable/no_guides"
+         android:clipToPadding="true"
+         android:paddingLeft="20dp"
+         android:paddingRight="20dp"
+         android:paddingTop="40dp"
+         android:contentDescription="@string/no_guides"
+         />
+
 </LinearLayout>
