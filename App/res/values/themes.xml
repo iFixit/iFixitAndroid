@@ -32,6 +32,5 @@
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/white</item> 
     </style>
-    
-    
+
 </resources>

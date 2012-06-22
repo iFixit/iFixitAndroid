@@ -32,6 +32,7 @@ public class TopicViewFragment extends SherlockFragment
    private TopicLeaf mTopicLeaf;
    private ImageManager mImageManager;
    private ActionBar mActionBar;
+   private ImageView mFistBackground;
    private int mSelectedTab = -1;
 
    public boolean isDisplayingTopic() {
@@ -46,14 +47,14 @@ public class TopicViewFragment extends SherlockFragment
          mImageManager = ((MainApplication)getActivity().getApplication()).
           getImageManager();
       }
-
+      
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
          mTopicNode = (TopicNode)savedInstanceState.getSerializable(
           CURRENT_TOPIC_NODE);
          TopicLeaf topicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
           CURRENT_TOPIC_LEAF);
-
+     
          if (topicLeaf != null) {
             setTopicLeaf(topicLeaf);
          } else if (mTopicNode != null) {
@@ -67,7 +68,9 @@ public class TopicViewFragment extends SherlockFragment
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_view_fragment, container,
        false);
-
+      
+      
+      
       return view;
    }
 
@@ -144,12 +147,14 @@ public class TopicViewFragment extends SherlockFragment
       } else {
          selectDefaultTab();
       }
-      
-      ImageView fistBackground = (ImageView)getActivity().findViewById(
+      mFistBackground = (ImageView)getActivity().findViewById(
        R.id.fist_background);
-      
-      if (fistBackground != null) {
-         fistBackground.setVisibility(View.INVISIBLE);
+              
+      if (mFistBackground != null) {
+         Log.w("DEBUG", "fist background is not null");
+         mFistBackground.setVisibility(View.INVISIBLE);
+      } else {
+         Log.w("DEBUG", "fist background is null");
       }
    }
 
