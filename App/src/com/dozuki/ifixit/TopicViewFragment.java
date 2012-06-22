@@ -11,7 +11,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -152,7 +151,6 @@ public class TopicViewFragment extends SherlockFragment
       if (fistBackground != null) {
          fistBackground.setVisibility(View.INVISIBLE);
       }
-
    }
 
    private void displayLoading() {
