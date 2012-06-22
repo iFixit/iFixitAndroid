@@ -11,4 +11,5 @@
     android:padding="8dp"
     android:stretchMode="columnWidth"
     android:gravity="center"
+    android:background="@color/white"
 />

@@ -32,7 +32,6 @@ public class TopicViewFragment extends SherlockFragment
    private TopicLeaf mTopicLeaf;
    private ImageManager mImageManager;
    private ActionBar mActionBar;
-   private ImageView mFistBackground;
    private int mSelectedTab = -1;
 
    public boolean isDisplayingTopic() {
@@ -68,8 +67,6 @@ public class TopicViewFragment extends SherlockFragment
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_view_fragment, container,
        false);
-      
-      
       
       return view;
    }
@@ -146,15 +143,6 @@ public class TopicViewFragment extends SherlockFragment
          mActionBar.setSelectedNavigationItem(mSelectedTab);
       } else {
          selectDefaultTab();
-      }
-      mFistBackground = (ImageView)getActivity().findViewById(
-       R.id.fist_background);
-              
-      if (mFistBackground != null) {
-         Log.w("DEBUG", "fist background is not null");
-         mFistBackground.setVisibility(View.INVISIBLE);
-      } else {
-         Log.w("DEBUG", "fist background is null");
       }
    }
 

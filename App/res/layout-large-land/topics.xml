@@ -18,22 +18,29 @@
         android:layout_weight="25" >
     </FrameLayout>
 
-    <fragment
-        android:id="@+id/topic_view_fragment"
-        android:name="com.dozuki.ifixit.TopicViewFragment"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="75">
-        <ImageView
-            android:id="@+id/fist_background"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/fist_default"
-            android:layout_gravity="bottom"
-            android:paddingTop="20dp"
-            android:scaleType="fitXY"
-            android:clipToPadding="true"
-            android:contentDescription="@string/fist_background_desc" />
-    </fragment>
+    <FrameLayout
+       android:layout_width="0dp"
+       android:layout_height="match_parent"
+       android:layout_weight="75">
+
+       <ImageView
+          android:id="@+id/fist_background"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:src="@drawable/fist_default"
+          android:layout_gravity="bottom"
+          android:paddingTop="20dp"
+          android:scaleType="fitXY"
+          android:clipToPadding="true"
+          android:contentDescription="@string/fist_background_desc" />
+
+       <fragment
+          android:id="@+id/topic_view_fragment"
+          android:name="com.dozuki.ifixit.TopicViewFragment"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent">
+       </fragment>
+
+    </FrameLayout>
 
 </LinearLayout>
