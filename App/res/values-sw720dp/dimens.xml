@@ -13,4 +13,6 @@
     
     <dimen name="guide_thumbnail_spacing">8dp</dimen> 
     
+    <dimen name="topic_list_image_height">277dp</dimen>    
+        
 </resources>

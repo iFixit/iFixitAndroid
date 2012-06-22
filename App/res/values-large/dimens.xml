@@ -31,4 +31,6 @@
     <dimen name="step_icon_left_spacing">20dp</dimen>
     
     <dimen name="section_seperator">16dp</dimen>    
+    
+    <dimen name="topic_list_image_height">270dp</dimen>    
 </resources>

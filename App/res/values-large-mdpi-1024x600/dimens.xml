@@ -9,5 +9,7 @@
     <dimen name="guide_thumbnail_height">72dp</dimen>   
     <dimen name="guide_thumbnail_spacing">8dp</dimen> 
     <dimen name="guide_thumbnail_padding">1dp</dimen>
-
+    
+    <dimen name="topic_list_image_height">200dp</dimen>
+    
 </resources>
