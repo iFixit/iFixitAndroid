@@ -67,10 +67,10 @@ public class MainApplication extends Application {
 
          // Larger screen = larger images
          if ((maxDimension / metrics.density) > SIZE_CUTOFF) {
-            mImageSizes = new ImageSizes(".large", ".large", ".large",
+            mImageSizes = new ImageSizes(".medium", ".medium", ".large",
              ".standard");
          } else {
-            mImageSizes = new ImageSizes(".medium", ".medium", ".medium",
+            mImageSizes = new ImageSizes(".standard", ".standard", ".large",
              ".thumbnail");
          }
       }
