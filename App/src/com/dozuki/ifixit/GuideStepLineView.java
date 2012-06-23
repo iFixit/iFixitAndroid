@@ -24,7 +24,7 @@ public class GuideStepLineView extends LinearLayout {
 
       LayoutInflater inflater = (LayoutInflater) context
        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      inflater.inflate(R.layout.step_row, this, true);
+      inflater.inflate(R.layout.guide_step_row, this, true);
 
       mRow = (LinearLayout) findViewById(R.id.step_row);
    }
