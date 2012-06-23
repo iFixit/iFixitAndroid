@@ -24,5 +24,5 @@
    <string name="fist_background_desc">Fist background image</string>
    <string name="thumbnail_desc">Thumbnail image</string>
    <string name="topic_img_desc">Topic image</string>
-   <string name="next_page_image_desc">Swipe to next page</string>
+   <string name="next_page_image_desc">Next page</string>
 </resources>
