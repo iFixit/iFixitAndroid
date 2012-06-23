@@ -30,6 +30,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:src="@drawable/next_page"   
+           android:visibility="gone"
 	        android:contentDescription="@string/next_page_image_desc" />
    </FrameLayout>
    <ProgressBar

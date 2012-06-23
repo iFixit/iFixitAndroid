@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Display;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
@@ -41,7 +42,7 @@ public class GuideView extends SherlockFragmentActivity
    private int mGuideid;
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
-   private int mCurrentPage;
+   private int mCurrentPage = -1;
    protected ImageManager mImageManager;
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
@@ -69,7 +70,7 @@ public class GuideView extends SherlockFragmentActivity
          mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
          Guide guide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
          if (guide != null) {
-            setGuide(guide);
+            setGuide(guide, savedInstanceState.getInt(CURRENT_PAGE));
             mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
          } else {
             getGuide(mGuideid);
@@ -95,6 +96,18 @@ public class GuideView extends SherlockFragmentActivity
          getGuide(mGuideid);
       }
 
+      mNextPageImage.setOnTouchListener(new View.OnTouchListener() {
+         public boolean onTouch(View v, MotionEvent event) {
+            if (mCurrentPage == 0) {
+               nextStep();
+
+               return true;
+            }
+
+            return false;
+         }
+      });
+
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       //initSpeechRecognizer();
@@ -107,7 +120,7 @@ public class GuideView extends SherlockFragmentActivity
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }
 
-   public void setGuide(Guide guide) {
+   public void setGuide(Guide guide, int page) {
       if (guide == null) {
          displayError();
          return;
@@ -126,6 +139,8 @@ public class GuideView extends SherlockFragmentActivity
       mIndicator.setOnPageChangeListener(this);
       mIndicator.setViewPager(mPager);
       mPager.setVisibility(View.VISIBLE);
+
+      onPageSelected(page);
    }
 
    @Override
@@ -165,13 +180,14 @@ public class GuideView extends SherlockFragmentActivity
    }
 
    public void getGuide(final int guideid) {
+      mNextPageImage.setVisibility(View.GONE);
       new APIHelper.APIResponder<Guide>() {
          public void execute() {
             APIHelper.getGuide(GuideView.this, guideid, this);
          }
 
          public void setResult(Guide guide) {
-            setGuide(guide);
+            setGuide(guide, 0);
          }
 
          public void error(AlertDialog dialog) {
@@ -232,16 +248,23 @@ public class GuideView extends SherlockFragmentActivity
 
    @Override
    public void onPageSelected(int page) {
+      if (mCurrentPage == page) {
+         return;
+      }
+
       mCurrentPage = page;
       final int visibility;
       Animation anim;
-      
+
       if (mCurrentPage == 0) {
          anim = new AlphaAnimation(0.00f, 1.00f);
          visibility = View.VISIBLE;
-      } else {
+      } else if (mCurrentPage == 1) {
          anim = new AlphaAnimation(1.00f, 0.00f);
          visibility = View.GONE;
+      } else {
+         mNextPageImage.setVisibility(View.GONE);
+         return;
       }
 
       if (anim != null && mNextPageImage.getVisibility() != visibility) {
