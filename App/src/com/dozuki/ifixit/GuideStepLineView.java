@@ -77,7 +77,7 @@ public class GuideStepLineView extends LinearLayout {
       int iconRes;
 
       if (color.equals("black"))
-         iconRes = R.drawable.bullet_white;
+         iconRes = R.drawable.bullet_black;
       else if (color.equals("orange"))
          iconRes = R.drawable.bullet_orange;
       else if (color.equals("blue"))
@@ -93,7 +93,7 @@ public class GuideStepLineView extends LinearLayout {
       else if (color.equals("yellow"))
          iconRes = R.drawable.bullet_yellow;
       else
-         iconRes = R.drawable.bullet_white;
+         iconRes = R.drawable.bullet_black;
 
       return iconRes;
    }

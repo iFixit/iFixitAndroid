@@ -27,7 +27,7 @@
     
     <dimen name="circle_page_indicator_padding">6dp</dimen>
     
-    <dimen name="step_bullet_padding">4dp</dimen>
+    <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>
     <dimen name="step_icon_left_spacing">10dp</dimen>
     

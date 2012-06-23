@@ -138,6 +138,15 @@ public class GuideView extends SherlockFragmentActivity
       mPager.setAdapter(mGuideAdapter);
       mIndicator.setOnPageChangeListener(this);
       mIndicator.setViewPager(mPager);
+      
+      final float density = getResources().getDisplayMetrics().density;
+      mIndicator.setBackgroundColor(0x00FFFFFF);
+      mIndicator.setRadius(6 * density);
+      mIndicator.setPageColor(0xFFFFFFFF);
+      mIndicator.setFillColor(0xFF444444);
+      mIndicator.setStrokeColor(0xFF000000);
+      mIndicator.setStrokeWidth((int)(1.5 * density));
+
       mPager.setVisibility(View.VISIBLE);
 
       onPageSelected(page);

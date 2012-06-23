@@ -14,18 +14,18 @@
         <ImageView
             android:id="@+id/main_image"
             android:layout_width="@dimen/guide_image_width"
-    		android:layout_height="@dimen/guide_image_height"
-    		android:layout_marginRight="@dimen/guide_image_spacing_right"
-    		android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
-    		android:background="@drawable/img_background"
-    		android:padding="@dimen/guide_image_padding"
-    		android:contentDescription="@string/thumbnail_desc" />
+    		   android:layout_height="@dimen/guide_image_height"
+    		   android:layout_marginRight="@dimen/guide_image_spacing_right"
+	    		android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+	    		android:background="@drawable/img_background"
+	    		android:padding="@dimen/guide_image_padding"
+	    		android:contentDescription="@string/thumbnail_desc" />
 
         <com.dozuki.ifixit.ThumbnailView
             android:id="@+id/thumbnails"    
             android:layout_width="wrap_content"
-    		android:layout_height="wrap_content"
-    		style="@style/thumbnail_position" />
+    		   android:layout_height="wrap_content"
+    		   style="@style/thumbnail_position" />
     </RelativeLayout>
 
     <RelativeLayout 
@@ -35,21 +35,20 @@
         <TextView
             android:id="@+id/step_title"
             android:layout_width="match_parent"
-    	    android:layout_height="wrap_content"
+    	      android:layout_height="wrap_content"
             style="@style/text.title"/>
 
         <ListView
             android:id="@+id/step_text_list"
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
-			android:layout_weight="1"
-			android:divider="#00000000"
-			android:listSelector="@android:color/transparent"
-			android:scrollingCache="false"
-			android:cacheColorHint="@android:color/transparent"
-			android:layout_below="@id/step_title"
-			android:background="@drawable/bg_img"
-			android:overScrollFooter="@null" />
+			   android:layout_width="match_parent"
+				android:layout_height="match_parent"
+				android:divider="@color/invisible"
+				android:listSelector="@android:color/transparent"
+				android:scrollingCache="false"
+				android:cacheColorHint="@android:color/transparent"
+				android:layout_below="@id/step_title"
+				android:background="@drawable/bg_img"
+				android:overScrollFooter="@null" />
     </RelativeLayout>
 
 </LinearLayout>

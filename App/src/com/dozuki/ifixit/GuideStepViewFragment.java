@@ -66,7 +66,6 @@ public class GuideStepViewFragment extends SherlockFragment {
       mLineList = (ListView)view.findViewById(R.id.step_text_list);
       mTitle = (TextView)view.findViewById(R.id.step_title);
       mTitle.setTypeface(mFont);
-      mTitle.setTextColor(ColorStateList.valueOf(Color.WHITE));
 
       mMainImage = (ImageView)view.findViewById(R.id.main_image);
       mMainImage.setOnClickListener(new OnClickListener() {

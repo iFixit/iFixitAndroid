@@ -32,6 +32,6 @@
         android:layout_gravity="right"
         android:layout_weight="0"
         android:visibility="invisible"
-        android:contentDescription="@string/bullet_icon_desc"/>
+        android:contentDescription="@string/bullet_icon_desc" />
 
 </LinearLayout>

@@ -19,7 +19,7 @@
             android:layout_margin="4dp"
             android:padding="1dp"
             android:contentDescription="@string/topic_img_desc"
-            android:background="#AAAAAA"/>
+            android:background="#AAAAAA" />
         
         <com.dozuki.ifixit.AutoResizeTextView 
             android:id="@+id/topic_guide_title"

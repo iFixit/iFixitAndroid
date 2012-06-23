@@ -21,7 +21,8 @@
 		            android:layout_width="match_parent"
 		            android:layout_height="wrap_content" 
 		            android:padding="@dimen/circle_page_indicator_padding"
-		            android:paddingTop="0dp" />
+		            android:paddingTop="0dp"
+		            android:layout_marginTop="0dp" />
 		      
 	   </LinearLayout>
 	   <ImageView

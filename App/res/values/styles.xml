@@ -2,18 +2,15 @@
 <resources>
 
     <style name="text">
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/black</item>
     </style>
 
     <style name="text.title">
         <item name="android:typeface">serif</item>
         <item name="android:textSize">@dimen/title_text_size</item>
+        <item name="android:textColor">@color/black</item>        
     </style>
     
-    <style name="text.title.black">
-        <item name="android:textColor">@color/black</item>
-    </style>
-
     <style name="text.body">
         <item name="android:textSize">@dimen/body_text_size</item>
         <item name="android:layout_marginTop">@dimen/body_text_top_spacing</item>
