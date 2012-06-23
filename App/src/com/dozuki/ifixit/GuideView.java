@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -42,6 +43,7 @@ public class GuideView extends SherlockFragmentActivity
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
    protected ProgressBar mProgressBar;
+   private ImageView mNextPageImage;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -58,6 +60,7 @@ public class GuideView extends SherlockFragmentActivity
       mPager = (ViewPager)findViewById(R.id.guide_pager);
       mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
       mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
+      mNextPageImage = (ImageView)findViewById(R.id.next_page_image);
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
@@ -227,6 +230,12 @@ public class GuideView extends SherlockFragmentActivity
    @Override
    public void onPageSelected(int page) {
       mCurrentPage = page;
+      
+      if (mCurrentPage == 0) {
+         mNextPageImage.setVisibility(View.VISIBLE);
+      } else {
+         mNextPageImage.setVisibility(View.INVISIBLE);
+      }
    }
 
    @Override

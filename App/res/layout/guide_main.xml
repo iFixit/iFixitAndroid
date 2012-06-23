@@ -2,28 +2,36 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
       android:layout_height="match_parent"
       android:layout_width="match_parent">
-
-   <LinearLayout      
-		android:layout_height="match_parent"
-		android:layout_width="match_parent"
-		android:orientation="vertical"
-		android:background="@drawable/bg_img">
-
-      <android.support.v4.view.ViewPager
-            android:id="@+id/guide_pager"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-      <com.viewpagerindicator.CirclePageIndicator
-            android:id="@+id/indicator"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" 
-            android:padding="@dimen/circle_page_indicator_padding"
-            android:paddingTop="0dp" />
-
-   </LinearLayout>
-
+   <FrameLayout
+      android:layout_height="match_parent"
+      android:layout_width="match_parent">
+	   <LinearLayout      
+			android:layout_height="match_parent"
+			android:layout_width="match_parent"
+			android:orientation="vertical"
+			android:background="@drawable/bg_img">
+		      <android.support.v4.view.ViewPager
+		            android:id="@+id/guide_pager"
+		            android:layout_width="match_parent"
+		            android:layout_height="0dp"
+		            android:layout_weight="1" />
+		
+		      <com.viewpagerindicator.CirclePageIndicator
+		            android:id="@+id/indicator"
+		            android:layout_width="match_parent"
+		            android:layout_height="wrap_content" 
+		            android:padding="@dimen/circle_page_indicator_padding"
+		            android:paddingTop="0dp" />
+		      
+	   </LinearLayout>
+	   <ImageView
+	        android:id="@+id/next_page_image"
+	        android:layout_gravity="bottom|right"
+	        android:layout_width="wrap_content"
+	        android:layout_height="wrap_content"
+	        android:src="@drawable/next_page"   
+	        android:contentDescription="@string/swipe_to_begin" />
+   </FrameLayout>
    <ProgressBar
          android:id="@+id/progress_bar"
          android:layout_width="wrap_content"
