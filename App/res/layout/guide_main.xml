@@ -30,7 +30,7 @@
 	        android:layout_width="wrap_content"
 	        android:layout_height="wrap_content"
 	        android:src="@drawable/next_page"   
-	        android:contentDescription="@string/swipe_to_begin" />
+	        android:contentDescription="@string/next_page_image_desc" />
    </FrameLayout>
    <ProgressBar
          android:id="@+id/progress_bar"
