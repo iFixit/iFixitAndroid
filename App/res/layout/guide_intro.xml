@@ -49,12 +49,6 @@
          </LinearLayout>
 
          <TextView
-               android:id="@+id/num_steps"
-               android:layout_width="match_parent"
-               android:layout_height="wrap_content"
-               style="@style/text.body" />
-
-         <TextView
                android:id="@+id/guide_tools"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"

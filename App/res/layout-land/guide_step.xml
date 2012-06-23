@@ -18,7 +18,8 @@
     		android:layout_marginRight="@dimen/guide_image_spacing_right"
     		android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
     		android:background="@drawable/img_background"
-    		android:padding="@dimen/guide_image_padding" />
+    		android:padding="@dimen/guide_image_padding"
+    		android:contentDescription="@string/thumbnail_desc" />
 
         <com.dozuki.ifixit.ThumbnailView
             android:id="@+id/thumbnails"    
@@ -41,7 +42,7 @@
             android:id="@+id/step_text_list"
 			android:layout_width="match_parent"
 			android:layout_height="match_parent"
-			android:layout_weight="1.0"
+			android:layout_weight="1"
 			android:divider="#00000000"
 			android:listSelector="@android:color/transparent"
 			android:scrollingCache="false"

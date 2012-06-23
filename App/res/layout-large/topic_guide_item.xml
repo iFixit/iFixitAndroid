@@ -18,6 +18,7 @@
             android:layout_height="@dimen/topic_list_image_height"
             android:layout_margin="4dp"
             android:padding="1dp"
+            android:contentDescription="@string/topic_img_desc"
             android:background="#AAAAAA"/>
         
         <com.dozuki.ifixit.AutoResizeTextView 

@@ -1,13 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
    <string name="app_name">iFixit</string>
-   <string name="more_guides">More Guides</string>
-   <string name="next_step">Next Step</string>
-   <string name="previous_step">Previous Step</string>
-   <string name="guide_home">Guide Home</string>
    <string name="difficulty">Difficulty</string>
    <string name="author">Author</string>
-   <string name="swipe_to_begin">Swipe to begin</string>
    <string name="requiredTools">Required Tools</string>
    <string name="requiredParts">Required Parts</string>
    <string name="step">Step</string>
@@ -27,4 +22,6 @@
    <string name="no_connection_title">Connection error</string>
    <string name="try_again">Try again</string>
    <string name="fist_background_desc">Fist background image</string>
+   <string name="thumbnail_desc">Thumbnail image</string>
+   <string name="topic_img_desc">Topic image</string>
 </resources>
