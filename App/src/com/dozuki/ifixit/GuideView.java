@@ -12,6 +12,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
@@ -230,11 +233,30 @@ public class GuideView extends SherlockFragmentActivity
    @Override
    public void onPageSelected(int page) {
       mCurrentPage = page;
+      final int visibility;
+      Animation anim;
       
       if (mCurrentPage == 0) {
-         mNextPageImage.setVisibility(View.VISIBLE);
+         anim = new AlphaAnimation(0.00f, 1.00f);
+         visibility = View.VISIBLE;
       } else {
-         mNextPageImage.setVisibility(View.INVISIBLE);
+         anim = new AlphaAnimation(1.00f, 0.00f);
+         visibility = View.GONE;
+      }
+
+      if (anim != null && mNextPageImage.getVisibility() != visibility) {
+         anim.setDuration(400);
+         anim.setAnimationListener(new AnimationListener() {
+            public void onAnimationStart(Animation animation) {}
+
+            public void onAnimationRepeat(Animation animation) {}
+
+            public void onAnimationEnd(Animation animation) {
+               mNextPageImage.setVisibility(visibility);
+            }
+         });
+
+         mNextPageImage.startAnimation(anim);
       }
    }
 
