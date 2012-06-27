@@ -17,6 +17,36 @@ import android.util.Log;
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
 
+   public static ArrayList<Site> parseSites(String json) {
+      ArrayList<Site> sites = new ArrayList<Site>();
+
+      try {
+         JSONArray jSites = new JSONArray(json);
+
+         for (int i = 0; i < jSites.length(); i++) {
+            sites.add(parseSite(jSites.getJSONObject(i)));
+         }
+
+      } catch (JSONException e) {
+         Log.e("iFixit", "Error parsing sites: " + e);
+      }
+
+      return sites;
+   }
+
+   private static Site parseSite(JSONObject jSite) throws JSONException {
+      Site site = new Site(jSite.getInt("siteid"));
+
+      site.mName = jSite.getString("name");
+      site.mDomain = jSite.getString("domain");
+      site.mTitle = jSite.getString("title");
+      site.mTheme = jSite.getString("theme");
+      site.mPublic = !jSite.getBoolean("private");
+      site.mDescription = jSite.getString("description");
+
+      return site;
+   }
+
    /**
     * Guide parsing
     */

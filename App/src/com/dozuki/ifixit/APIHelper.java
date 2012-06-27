@@ -1,6 +1,7 @@
 package com.dozuki.ifixit;
 
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import org.apache.http.client.ResponseHandler;
 
@@ -29,12 +30,27 @@ public class APIHelper {
    }
 
    private static final String RESPONSE = "RESPONSE";
+   private static final String SITES_API_URL =
+    "http://www.ifixit.com/api/1.0/sites?limit=1000";
    private static final String TOPIC_API_URL =
     "http://www.ifixit.com/api/1.0/topic/";
    private static final String GUIDE_API_URL =
     "http://www.ifixit.com/api/1.0/guide/";
    private static final String CATEGORIES_API_URL =
     "http://www.ifixit.com/api/1.0/categories/";
+
+   public static void getSites(Context context,
+    final APIResponder<ArrayList<Site>> responder) {
+      if (!checkConnectivity(context, responder)) {
+         return;
+      }
+
+      performRequest(SITES_API_URL, new StringHandler() {
+         public void handleString(String response) {
+            responder.setResult(JSONHelper.parseSites(response));
+         }
+      });
+   }
 
    public static void getTopic(Context context, String topic,
     final APIResponder<TopicLeaf> responder) {

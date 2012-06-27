@@ -15,12 +15,15 @@
          android:theme="@style/Theme.iFixit"
          android:background="@drawable/default_background"
          android:logo="@drawable/logo">
-      <activity android:name="com.dozuki.ifixit.TopicsActivity"
+      <activity android:name="com.dozuki.ifixit.SiteListActivity"
             android:theme="@style/Theme.iFixit">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
+      </activity>
+      <activity android:name="com.dozuki.ifixit.TopicsActivity"
+            android:theme="@style/Theme.iFixit">
       </activity>
       <activity android:name="com.dozuki.ifixit.TopicViewActivity"
             android:theme="@style/Theme.iFixit">
