@@ -4,6 +4,15 @@
    android:layout_height="match_parent" >
    <TextView
       android:id="@+id/site_name"
+      android:textSize="25sp"
+      android:textStyle="bold"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content" />
+   <TextView
+      android:id="@+id/site_description"
+      android:ellipsize="end"
+      android:singleLine="true"
+      android:layout_below="@id/site_name"
       android:layout_height="wrap_content"
       android:layout_width="wrap_content" />
 </RelativeLayout>

@@ -8,6 +8,7 @@ import android.widget.TextView;
 public class SiteRowView extends RelativeLayout {
    protected Site mSite;
    protected TextView mSiteName;
+   protected TextView mSiteDescription;
 
    public SiteRowView(Context context) {
       super(context);
@@ -17,11 +18,13 @@ public class SiteRowView extends RelativeLayout {
       inflater.inflate(R.layout.site_row, this, true);
 
       mSiteName = (TextView)findViewById(R.id.site_name);
+      mSiteDescription = (TextView)findViewById(R.id.site_description);
    }
 
    public void setSite(Site site) {
       mSite = site;
 
-      mSiteName.setText(mSite.toString());
+      mSiteName.setText(mSite.mTitle);
+      mSiteDescription.setText(mSite.mDescription);
    }
 }
