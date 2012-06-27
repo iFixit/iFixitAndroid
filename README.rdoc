@@ -25,21 +25,21 @@ meta.ifixit.com and we'll add it to our to-do list.
 
 === INSTALLATION
 
-To start working on the app follow these instructions to get it into Eclipse:
+To start working on the app follow these instructions to download and update
+the latest version of our code:
 
-1) Git clone the repository
+   git clone https://github.com/iFixit/iFixitAndroid.git 
+   cd ./iFixitAndroid
+   git submodule init
+   git submodule update
 
-2) Checkout the correct branch (master or develop)
+Then, to bring it into eclipse:
 
-3) git submodule init
+1) Start a new workspace at the base of the repository in Eclipse
 
-4) git submodule update
+2) Import... Existing Projects into Workspace and select the base of the repository
 
-5) Start a new workspace at the base of the repository in Eclipse
-
-6) Import... Existing Projects into Workspace and select the base of the repository
-
-7) Clean all projects if there are any issues
+3) Clean all projects if there are any issues
 
 ----------
 
