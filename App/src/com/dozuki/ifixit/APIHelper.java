@@ -30,14 +30,28 @@ public class APIHelper {
    }
 
    private static final String RESPONSE = "RESPONSE";
-   private static final String SITES_API_URL =
-    "http://www.ifixit.com/api/1.0/sites?limit=1000";
-   private static final String TOPIC_API_URL =
-    "http://www.ifixit.com/api/1.0/topic/";
-   private static final String GUIDE_API_URL =
-    "http://www.ifixit.com/api/1.0/guide/";
-   private static final String CATEGORIES_API_URL =
-    "http://www.ifixit.com/api/1.0/categories/";
+   private static final String SITES_API_URL = "/api/1.0/sites?limit=1000";
+   private static final String TOPIC_API_URL = "/api/1.0/topic/";
+   private static final String GUIDE_API_URL = "/api/1.0/guide/";
+   private static final String CATEGORIES_API_URL = "/api/1.0/categories/";
+
+   private static Site mSite;
+
+   public static void setSite(Site site) {
+      mSite = site;
+   }
+
+   private static String getUrl(String endPoint) {
+      String domain;
+
+      if (mSite != null) {
+         domain = mSite.mDomain;
+      } else {
+         domain = "www.ifixit.com";
+      }
+
+      return "http://" + domain + endPoint;
+   }
 
    public static void getSites(Context context,
     final APIResponder<ArrayList<Site>> responder) {
@@ -45,7 +59,7 @@ public class APIHelper {
          return;
       }
 
-      performRequest(SITES_API_URL, new StringHandler() {
+      performRequest(getUrl(SITES_API_URL), new StringHandler() {
          public void handleString(String response) {
             responder.setResult(JSONHelper.parseSites(response));
          }
@@ -59,7 +73,7 @@ public class APIHelper {
       }
 
       try {
-         String url = TOPIC_API_URL + URLEncoder.encode(topic, "UTF-8");
+         String url = getUrl(TOPIC_API_URL) + URLEncoder.encode(topic, "UTF-8");
          performRequest(url, new StringHandler() {
             public void handleString(String response) {
                responder.setResult(JSONHelper.parseTopicLeaf(response));
@@ -77,7 +91,7 @@ public class APIHelper {
          return;
       }
 
-      String url = GUIDE_API_URL + guideid;
+      String url = getUrl(GUIDE_API_URL) + guideid;
 
       performRequest(url, new StringHandler() {
          public void handleString(String response) {
@@ -92,7 +106,7 @@ public class APIHelper {
          return;
       }
 
-      performRequest(CATEGORIES_API_URL, new StringHandler() {
+      performRequest(getUrl(CATEGORIES_API_URL), new StringHandler() {
          public void handleString(String response) {
             responder.setResult(JSONHelper.parseTopics(response));
          }

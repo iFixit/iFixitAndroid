@@ -16,6 +16,16 @@ public class MainApplication extends Application {
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
+   private Site mSite;
+
+   public Site getSite() {
+      return mSite;
+   }
+
+   public void setSite(Site site) {
+      mSite = site;
+      APIHelper.setSite(site);
+   }
 
    public ImageManager getImageManager() {
       if (mImageManager == null) {
