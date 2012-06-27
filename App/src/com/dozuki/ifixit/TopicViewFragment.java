@@ -21,8 +21,8 @@ import com.ifixit.android.imagemanager.ImageManager;
 public class TopicViewFragment extends SherlockFragment
  implements ActionBar.TabListener {
    private static final int GUIDES_TAB = 0;
-   private static final int ANSWERS_TAB = 1;
-   private static final int MORE_INFO_TAB = 2;
+   private static final int MORE_INFO_TAB = 1;
+   private static final int ANSWERS_TAB = 2;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String CURRENT_TOPIC_LEAF = "CURRENT_TOPIC_LEAF";
    private static final String CURRENT_TOPIC_NODE = "CURRENT_TOPIC_NODE";
@@ -30,6 +30,7 @@ public class TopicViewFragment extends SherlockFragment
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
    private ImageManager mImageManager;
+   private Site mSite;
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
 
@@ -44,6 +45,11 @@ public class TopicViewFragment extends SherlockFragment
       if (mImageManager == null) {
          mImageManager = ((MainApplication)getActivity().getApplication()).
           getImageManager();
+      }
+
+      if (mSite == null) {
+         mSite = ((MainApplication)getActivity().getApplication()).
+          getSite();
       }
       
       if (savedInstanceState != null) {
@@ -129,14 +135,16 @@ public class TopicViewFragment extends SherlockFragment
       mActionBar.addTab(tab);
 
       tab = mActionBar.newTab();
-      tab.setText(getActivity().getString(R.string.answers));
-      tab.setTabListener(this);
-      mActionBar.addTab(tab);
-
-      tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.info));
       tab.setTabListener(this);
       mActionBar.addTab(tab);
+
+      if (mSite.mAnswers) {
+         tab = mActionBar.newTab();
+         tab.setText(getActivity().getString(R.string.answers));
+         tab.setTabListener(this);
+         mActionBar.addTab(tab);
+      }
 
       if (mSelectedTab != -1) {
          mActionBar.setSelectedNavigationItem(mSelectedTab);
@@ -215,7 +223,7 @@ public class TopicViewFragment extends SherlockFragment
          } else {
             selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
          }
-      } else if (position == ANSWERS_TAB) {
+      } else if (position == ANSWERS_TAB && mSite.mAnswers) {
          WebViewFragment webView = new WebViewFragment();
 
          webView.loadUrl(mTopicLeaf.getSolutionsUrl());
@@ -225,7 +233,7 @@ public class TopicViewFragment extends SherlockFragment
          WebViewFragment webView = new WebViewFragment();
 
          try {
-            webView.loadUrl("http://www.ifixit.com/c/" +
+            webView.loadUrl("http://" + mSite.mDomain + "/c/" +
              URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
          } catch (Exception e) {
             Log.w("iFixit", "Encoding error: " + e.getMessage());

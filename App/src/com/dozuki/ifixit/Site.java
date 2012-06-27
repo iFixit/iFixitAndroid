@@ -11,6 +11,7 @@ public class Site implements Serializable {
    protected String mTitle;
    protected String mTheme; // change to enum?
    protected boolean mPublic;
+   protected boolean mAnswers;
    protected String mDescription;
 
    public Site(int siteid) {
@@ -19,6 +20,7 @@ public class Site implements Serializable {
 
    public String toString() {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
-       " | " + mTheme + " | " + mPublic + " | " + mDescription + "}";
+       " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
+       mAnswers + "}";
    }
 }

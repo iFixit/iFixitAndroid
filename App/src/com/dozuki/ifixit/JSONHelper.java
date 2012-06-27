@@ -43,6 +43,7 @@ public class JSONHelper {
       site.mTheme = jSite.getString("theme");
       site.mPublic = !jSite.getBoolean("private");
       site.mDescription = jSite.getString("description");
+      site.mAnswers = jSite.getInt("answers") != 0;
 
       return site;
    }
