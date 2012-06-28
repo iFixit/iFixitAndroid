@@ -13,10 +13,16 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
+   // The current version of the app (this is replaced by dozukify.sh).
+   public static final String CURRENT_SITE = "SITE_ifixit";
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
    private Site mSite;
+
+   public MainApplication() {
+      setSite(getDefaultSite());
+   }
 
    public Site getSite() {
       return mSite;
@@ -86,5 +92,39 @@ public class MainApplication extends Application {
       }
 
       return mImageSizes;
+   }
+
+   /**
+    * Should only be used to get the current site for a "custom" app
+    * (iFixit/Crucial etc.).
+    */
+   private Site getDefaultSite() {
+      Site site = null;
+      String siteName = CURRENT_SITE.replace("SITE_", "");
+
+      if (siteName.equals("ifixit")) {
+         site = new Site(2);
+         site.mName = "ifixit";
+         site.mDomain = "www.ifixit.com";
+         site.mTitle = "iFixit";
+         site.mTheme = "custom";
+         site.mPublic = true;
+         site.mAnswers = true;
+         site.mDescription = "iFixit is the free repair manual you can edit." +
+          " We sell tools, parts and upgrades for Apple Mac, iPod, iPhone," +
+          " iPad, and MacBook as well as game consoles.";
+      } else if (siteName.equals("crucial")) {
+         site = new Site(549);
+         site.mName = "crucial";
+         site.mDomain = "crucial.dozuki.com";
+         site.mTitle = "Crucial";
+         site.mTheme = "white";
+         site.mPublic = true;
+         site.mAnswers = true;
+         site.mDescription = "Free installation guides for Crucial RAM and" +
+          " SSD products.";
+      }
+
+      return site;
    }
 }

@@ -17,6 +17,9 @@ then
    mv src/com/dozuki/ifixit src/com/dozuki/$siteName
 fi
 
+# Update the default site
+sed -i "" -e "s/SITE_ifixit/SITE_$siteName/" `find ./src -name "MainApplication.java"`
+
 # Update logo and app name
 sed -i "" -e "s/_ifixit/_$siteName/" ./AndroidManifest.xml
 
