@@ -45,15 +45,24 @@
         <item name="android:logo">@drawable/logo_dozuki</item>
         
         <!-- Action Bar Sherlock overrides -->
-        <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
-        <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
-        <item name="android:actionBarStyle">@style/Widget.iFixit.ActionBar</item>
-        <item name="actionBarStyle">@style/Widget.iFixit.ActionBar</item>
-        <item name="actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
-        <item name="android:actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
+        <item name="actionBarTabTextStyle">@style/Widget.Dozuki.ActionBar.TabText</item>
+        <item name="android:actionBarTabTextStyle">@style/Widget.Dozuki.ActionBar.TabText</item>
+        <item name="android:actionBarStyle">@style/Widget.Dozuki.ActionBar</item>
+        <item name="actionBarStyle">@style/Widget.Dozuki.ActionBar</item>
+        <item name="actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView</item>
+        <item name="android:actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView</item>
         
         <!-- Custom Attributes / Styles for Dozuki -->
         <item name="topicHeaderColor">@color/dozuki_green</item>
+    </style>
+
+    <style name="Widget.Dozuki.ActionBar" parent="Widget.iFixit.ActionBar"></style>   
+    <style name="Widget.Dozuki.ActionBar.TabText" parent="Widget.iFixit.ActionBar.TabText"></style>
+    <style name="TextAppearance.Dozuki.ActionBar.Title" parent="TextAppearance.iFixit.ActionBar.Title"></style>
+    
+    <style name="Widget.Dozuki.ActionBar.TabView" parent="Widget.iFixit.ActionBar.TabView">
+        <item name="android:background">@drawable/dozuki_tab_indicator</item>    
+        <item name="background">@drawable/dozuki_tab_indicator</item>            
     </style>
 
 </resources>
