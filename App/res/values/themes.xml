@@ -61,8 +61,33 @@
     <style name="TextAppearance.Dozuki.ActionBar.Title" parent="TextAppearance.iFixit.ActionBar.Title"></style>
     
     <style name="Widget.Dozuki.ActionBar.TabView" parent="Widget.iFixit.ActionBar.TabView">
-        <item name="android:background">@drawable/dozuki_tab_indicator</item>    
-        <item name="background">@drawable/dozuki_tab_indicator</item>            
+        <item name="android:background">@drawable/green_tab_indicator</item>    
+        <item name="background">@drawable/green_tab_indicator</item>            
+    </style>
+    
+    <style name="Theme.Dozuki.Green"  parent="Theme.Dozuki">
+        <!-- Custom Attributes / Styles for Dozuki -->
+        <item name="topicHeaderColor">@color/dozuki_green</item>
+    </style>
+    
+    <style name="Theme.Dozuki.Blue"   parent="Theme.Dozuki">
+        <!-- Custom Attributes / Styles for Dozuki -->
+        <item name="topicHeaderColor">@color/ifixit_blue</item>    
+    </style>
+    
+    <style name="Theme.Dozuki.White"  parent="Theme.Dozuki">
+        <!-- Custom Attributes / Styles for Dozuki -->
+        <item name="topicHeaderColor">@color/dozuki_white</item>    
+    </style>
+    
+    <style name="Theme.Dozuki.Orange" parent="Theme.Dozuki">        
+        <!-- Custom Attributes / Styles for Dozuki -->
+        <item name="topicHeaderColor">@color/dozuki_orange</item>
+    </style>
+    
+    <style name="Theme.Dozuki.Black" parent="Theme.Dozuki">        
+        <!-- Custom Attributes / Styles for Dozuki -->
+        <item name="topicHeaderColor">@color/dozuki_black</item>
     </style>
 
 </resources>

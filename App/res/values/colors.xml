@@ -12,4 +12,7 @@
     <color name="ifixit_blue">#336DA8</color>
     <color name="invisible">#00000000</color>
     <color name="dozuki_green">#FFAFC400</color>
+    <color name="dozuki_orange">#FFF25D07</color>
+    <color name="dozuki_white">#FFCCCCCC</color>
+    <color name="dozuki_black">#F7777777</color>
 </resources>
