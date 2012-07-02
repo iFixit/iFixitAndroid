@@ -1,15 +1,15 @@
 package com.dozuki.ifixit;
 
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.ifixit.android.imagemanager.ImageManager;
-
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
@@ -47,7 +47,15 @@ public class MainApplication extends Application {
             }
 
             public void fail(ImageView imageView) {
-               imageView.setImageResource(R.drawable.no_image);
+               if (imageView instanceof ImageViewTouch) {
+                  Bitmap noImage = BitmapFactory.decodeResource(getResources(),
+                   R.drawable.no_image);
+
+                  ((ImageViewTouch)imageView).setImageBitmapReset(noImage, true);
+               } else {
+                  imageView.setImageResource(R.drawable.no_image);
+               }
+
                imageView.setTag("");
             }
          });
