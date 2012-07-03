@@ -7,7 +7,7 @@
 
     <color name="white">#FFFFFF</color>
     <color name="translucent_white">#FFFFFFFF</color>
-    <color name="gray">#DDDDDD</color>
+    <color name="gray">#FFDDDDDD</color>
     <color name="black">#444444</color>
     <color name="image_border">#AAAAAA</color>
     <color name="ifixit_blue">#336DA8</color>

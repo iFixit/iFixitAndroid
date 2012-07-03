@@ -6,11 +6,12 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class TopicGuideItemView extends RelativeLayout {
-   private AutoResizeTextView mTitleView;	
+   private TextView mTitleView;	
    private ImageView mThumbnail;
    private ImageManager mImageManager;
    private Context mContext;
@@ -24,7 +25,7 @@ public class TopicGuideItemView extends RelativeLayout {
        Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.topic_guide_item, this, true);
 
-      mTitleView = (AutoResizeTextView)findViewById(R.id.topic_guide_title);
+      mTitleView = (TextView)findViewById(R.id.topic_guide_title);
       mThumbnail = (ImageView)findViewById(R.id.topic_guide_thumbnail);
    }
 
