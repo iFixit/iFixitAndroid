@@ -19,7 +19,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
-   protected static final long TOPIC_LIST_HIDE_DELAY = 700;
+   protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -138,16 +138,21 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
 
    private void hideTopicList() {
+      hideTopicList(false);
+   }
+
+   private void hideTopicList(boolean delay) {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       mTopicViewOverlay.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
-      changeTopicListView(new Fragment(), true);
+      changeTopicListView(new Fragment(), true, delay);
    }
 
    private void hideTopicListWithDelay() {
+      // Delay this slightly to make sure the animation is played.
       new Handler().postAtTime(new Runnable() {
          public void run() {
-            hideTopicList();
+            hideTopicList(true);
          }
       }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
@@ -160,10 +165,24 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
 
    private void changeTopicListView(Fragment fragment, boolean addToBack) {
-      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      changeTopicListView(fragment, addToBack, false);
+   }
 
-      ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
-            R.anim.slide_in_left, R.anim.slide_out_right);
+   private void changeTopicListView(Fragment fragment, boolean addToBack,
+    boolean delay) {
+      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      int inAnim, outAnim;
+
+      if (delay) {
+         inAnim = R.anim.slide_in_right_delay;
+         outAnim = R.anim.slide_out_left_delay;
+      } else {
+         inAnim = R.anim.slide_in_right;
+         outAnim = R.anim.slide_out_left;
+      }
+
+      ft.setCustomAnimations(inAnim, outAnim,
+       R.anim.slide_in_left, R.anim.slide_out_right);
       ft.replace(R.id.topic_list_fragment, fragment);
 
       if (addToBack) {
