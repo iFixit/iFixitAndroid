@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideIntroViewFragment extends SherlockFragment {
@@ -25,7 +26,7 @@ public class GuideIntroViewFragment extends SherlockFragment {
    private ImageManager mImageManager;
    private Guide mGuide;
    private Typeface mBoldFont;
-
+   
    public GuideIntroViewFragment() {
 
    }
@@ -78,7 +79,7 @@ public class GuideIntroViewFragment extends SherlockFragment {
       if (mGuide != null) {
          setGuide();
       }
-
+      
       return view;
    }
 

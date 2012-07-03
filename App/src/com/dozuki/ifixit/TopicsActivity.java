@@ -15,6 +15,9 @@ import android.widget.FrameLayout;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
+
+
 public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
@@ -28,13 +31,18 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
-
+   
+   private GoogleAnalyticsTracker mTracker;
+   
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
+     
       getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
+     
+      mTracker = ((MainApplication)getApplication()).getAnalyticsTracker();
+      mTracker.trackPageView("/Topics");
       
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -184,4 +192,13 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             return super.onOptionsItemSelected(item);
       }
    }
+   
+   @Override
+   protected void onDestroy() {
+     super.onDestroy();
+
+     // Stop Google Analytics tracker
+     if (mTracker != null)
+        mTracker.stopSession();
+   }   
 }

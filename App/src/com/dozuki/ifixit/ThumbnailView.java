@@ -82,6 +82,13 @@ public class ThumbnailView extends LinearLayout {
        (Activity)mContext, mMainImage);
       mMainImage.setTag(url);
    }
+   
+   public void setThumbnailDimensions(float height, float width) {
+      for (int i = 0; i < mThumbs.size(); i++) {
+         mThumbs.get(i).getLayoutParams().height = (int) (height + .5f);
+         mThumbs.get(i).getLayoutParams().width = (int) (width + .5f);
+      }
+   }
 
    public void setMainImage(ImageView mainImg) {
       mMainImage = mainImg;
