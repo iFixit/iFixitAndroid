@@ -1,6 +1,10 @@
 package com.dozuki.ifixit;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
+
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -11,11 +15,18 @@ import android.widget.ImageView;
 
 import com.ifixit.android.imagemanager.ImageManager;
 
+@ReportsCrashes(formKey = "dFRlbjlVamRObWhBLW5Ib3c0QlozdWc6MQ")
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
+
+   @Override
+   public void onCreate() {
+      ACRA.init(this);
+      super.onCreate();
+   }
 
    public ImageManager getImageManager() {
       if (mImageManager == null) {
