@@ -4,5 +4,5 @@
     <dimen name="guide_image_spacing_bottom">8dp</dimen> 
     
     <dimen name="guide_thumbnail_spacing">8dp</dimen> 
-    <dimen name="topic_list_horizontal_spacing">8dp</dimen>
+    <dimen name="topic_list_horizontal_spacing">0dp</dimen>
 </resources>
