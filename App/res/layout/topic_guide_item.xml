@@ -22,7 +22,7 @@
             android:background="@color/image_border" 
             android:contentDescription="@string/topic_guide_thumbnail"/>
 
-      <com.dozuki.ifixit.AutoResizeTextView 
+      <TextView 
             android:id="@+id/topic_guide_title"
             android:layout_toRightOf="@+id/topic_guide_thumbnail"
             android:layout_width="wrap_content"
