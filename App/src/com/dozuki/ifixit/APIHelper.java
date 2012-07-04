@@ -2,7 +2,9 @@ package com.dozuki.ifixit;
 
 import java.net.URLEncoder;
 
+import org.acra.ErrorReporter;
 import org.apache.http.client.ResponseHandler;
+import org.json.JSONException;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -25,7 +27,7 @@ public class APIHelper {
    }
 
    private interface StringHandler {
-      public void handleString(String string);
+      public void handleString(String string) throws JSONException;
    }
 
    private static final String RESPONSE = "RESPONSE";
@@ -45,10 +47,10 @@ public class APIHelper {
       try {
          String url = TOPIC_API_URL + URLEncoder.encode(topic, "UTF-8");
          performRequest(url, new StringHandler() {
-            public void handleString(String response) {
+            public void handleString(String response) throws JSONException {
                responder.setResult(JSONHelper.parseTopicLeaf(response));
             }
-         });
+         }, context, responder);
       } catch (Exception e) {
          Log.w("iFixit", "Encoding error: " + e.getMessage());
          responder.setResult(null);
@@ -64,10 +66,10 @@ public class APIHelper {
       String url = GUIDE_API_URL + guideid;
 
       performRequest(url, new StringHandler() {
-         public void handleString(String response) {
+         public void handleString(String response) throws JSONException {
             responder.setResult(JSONHelper.parseGuide(response));
          }
-      });
+      }, context, responder);
    }
 
    public static void getCategories(Context context,
@@ -77,18 +79,31 @@ public class APIHelper {
       }
 
       performRequest(CATEGORIES_API_URL, new StringHandler() {
-         public void handleString(String response) {
+         public void handleString(String response) throws JSONException {
             responder.setResult(JSONHelper.parseTopics(response));
          }
-      });
+      }, context, responder);
+   }
+
+   private static AlertDialog getParseErrorDialog(final Context context,
+    final APIResponder<?> responder) {
+      return getErrorDialog(context, responder, R.string.parse_error_title,
+       R.string.parse_error_message, R.string.try_again);
+   }
+
+   private static AlertDialog getConnectionErrorDialog(final Context context,
+    final APIResponder<?> responder) {
+      return getErrorDialog(context, responder, R.string.no_connection_title,
+       R.string.no_connection, R.string.try_again);
    }
 
    private static AlertDialog getErrorDialog(final Context context,
-    final APIResponder<?> responder) {
+    final APIResponder<?> responder, int titleRes, int messageRes,
+    int buttonRes) {
       HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
-      builder.setTitle(context.getString(R.string.no_connection_title))
-             .setMessage(context.getString(R.string.no_connection))
-             .setPositiveButton(context.getString(R.string.try_again),
+      builder.setTitle(context.getString(titleRes))
+             .setMessage(context.getString(messageRes))
+             .setPositiveButton(context.getString(buttonRes),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                    // Try performing the request again.
@@ -101,11 +116,22 @@ public class APIHelper {
    }
 
    private static void performRequest(final String url,
-    final StringHandler stringHandler) {
+    final StringHandler stringHandler, final Context context,
+    final APIResponder<?> responder) {
       final Handler handler = new Handler() {
          public void handleMessage(Message message) {
             String response = message.getData().getString(RESPONSE);
-            stringHandler.handleString(response);
+
+            try {
+               stringHandler.handleString(response);
+            } catch (JSONException e) {
+               // Send detailed error reports.
+               ErrorReporter.getInstance().handleSilentException(e);
+               ErrorReporter.getInstance().handleSilentException(
+                new Exception("Parse error, json: " + response, e));
+
+                responder.error(getParseErrorDialog(context, responder));
+            }
          }
       };
 
@@ -132,7 +158,7 @@ public class APIHelper {
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.error(getErrorDialog(context, responder));
+         responder.error(getConnectionErrorDialog(context, responder));
          return false;
       }
 

@@ -20,57 +20,52 @@ public class JSONHelper {
    /**
     * Guide parsing
     */
-   public static Guide parseGuide(String json) {
-      try {
-         JSONObject jGuideInfo = new JSONObject(json);
-         JSONObject jGuide = jGuideInfo.getJSONObject("guide");
-         JSONArray jSteps = jGuide.getJSONArray("steps");
-         JSONArray jTools = jGuide.getJSONArray("tools");
-         JSONArray jParts = jGuide.getJSONArray("parts");
-         JSONObject jAuthor = jGuide.getJSONObject("author");
-         JSONObject jImage = jGuide.getJSONObject("image");
-         Guide guide = new Guide(jGuideInfo.getInt("guideid"));
+   public static Guide parseGuide(String json) throws JSONException {
+      JSONObject jGuideInfo = new JSONObject(json);
+      JSONObject jGuide = jGuideInfo.getJSONObject("guide");
+      JSONArray jSteps = jGuide.getJSONArray("steps");
+      JSONArray jTools = jGuide.getJSONArray("tools");
+      JSONArray jParts = jGuide.getJSONArray("parts");
+      JSONObject jAuthor = jGuide.getJSONObject("author");
+      JSONObject jImage = jGuide.getJSONObject("image");
+      Guide guide = new Guide(jGuideInfo.getInt("guideid"));
 
-         guide.setTitle(jGuide.getString("title"));
-         guide.setTopic(jGuideInfo.getString("topic"));
-         guide.setSubject(jGuide.getString("subject"));
-         guide.setAuthor(jAuthor.getString("text"));
-         guide.setTimeRequired(jGuide.getString("time_required"));
-         guide.setDifficulty(jGuide.getString("difficulty"));
-         guide.setIntroduction(jGuide.getString("introduction"));
-         guide.setIntroImage(jImage.getString("text"));
-         guide.setSummary(jGuide.getString("summary"));
+      guide.setTitle(jGuide.getString("title"));
+      guide.setTopic(jGuideInfo.getString("topic"));
+      guide.setSubject(jGuide.getString("subject"));
+      guide.setAuthor(jAuthor.getString("text"));
+      guide.setTimeRequired(jGuide.getString("time_required"));
+      guide.setDifficulty(jGuide.getString("difficulty"));
+      guide.setIntroduction(jGuide.getString("introduction"));
+      guide.setIntroImage(jImage.getString("text"));
+      guide.setSummary(jGuide.getString("summary"));
 
-         for (int i = 0; i < jSteps.length(); i++) {
-            guide.addStep(parseStep(jSteps.getJSONObject(i)));
-         }
-
-         for (int i = 0; i < jTools.length(); i++) {
-            guide.addTool(parseTool(jTools.getJSONObject(i)));
-         }
-
-         for (int i = 0; i < jParts.length(); i++) {
-            guide.addPart(parsePart(jParts.getJSONObject(i)));
-         }
-
-         return guide;
-      } catch (JSONException e) {
-         Log.e("iFixit", "Error parsing guide: " + e);
-         return null;
+      for (int i = 0; i < jSteps.length(); i++) {
+         guide.addStep(parseStep(jSteps.getJSONObject(i)));
       }
+
+      for (int i = 0; i < jTools.length(); i++) {
+         guide.addTool(parseTool(jTools.getJSONObject(i)));
+      }
+
+      for (int i = 0; i < jParts.length(); i++) {
+         guide.addPart(parsePart(jParts.getJSONObject(i)));
+      }
+
+      return guide;
    }
 
-   public static GuidePart parsePart(JSONObject jPart) throws JSONException {
+   private static GuidePart parsePart(JSONObject jPart) throws JSONException {
       return new GuidePart(jPart.getString("text"), jPart.getString("url"),
        jPart.getString("thumbnail"), jPart.getString("notes"));
    }
 
-   public static GuideTool parseTool(JSONObject jTool) throws JSONException {
+   private static GuideTool parseTool(JSONObject jTool) throws JSONException {
       return new GuideTool(jTool.getString("text"), jTool.getString("url"),
        jTool.getString("thumbnail"), jTool.getString("notes"));
    }
 
-   public static GuideStep parseStep(JSONObject jStep) throws JSONException {
+   private static GuideStep parseStep(JSONObject jStep) throws JSONException {
       JSONArray jLines = jStep.getJSONArray("lines");
       GuideStep step = new GuideStep(jStep.getInt("number"));
 
@@ -97,7 +92,7 @@ public class JSONHelper {
       return step;
    }
 
-   public static StepImage parseImage(JSONObject jImage) throws JSONException {
+   private static StepImage parseImage(JSONObject jImage) throws JSONException {
       StepImage image = new StepImage(jImage.getInt("imageid"));
 
       // last image doesn't have orderby so this is necessary. API bug?
@@ -113,7 +108,7 @@ public class JSONHelper {
       return image;
    }
 
-   public static StepLine parseLine(JSONObject jLine) throws JSONException {
+   private static StepLine parseLine(JSONObject jLine) throws JSONException {
       return new StepLine(jLine.getString("bullet"), jLine.getInt("level"),
        jLine.getString("text"));
    }
@@ -121,69 +116,53 @@ public class JSONHelper {
    /**
     * Topic hierarchy parsing
     */
-   public static TopicNode parseTopics(String json) {
-      try {
-         JSONObject jTopics = new JSONObject(json);
-         ArrayList<TopicNode> topics = parseTopicChildren(jTopics);
-         TopicNode root = null;
+   public static TopicNode parseTopics(String json) throws JSONException {
+      JSONObject jTopics = new JSONObject(json);
+      ArrayList<TopicNode> topics = parseTopicChildren(jTopics);
+      TopicNode root = null;
 
-         if (topics != null) {
-            root = new TopicNode();
-            root.addAllTopics(topics);
-         } else {
-            Log.e("iFixit", "Topics is null (response: " + json + ")");
-         }
+      root = new TopicNode();
+      root.addAllTopics(topics);
 
-         return root;
-      }
-      catch (Exception e) {
-         Log.w("iFixit", "Error parsing topics: " + e.getMessage());
-         return null;
-      }
+      return root;
    }
 
    /**
     * Reads through the given JSONObject and adds any topics to the given
     * topic
     */
-   public static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic) {
+   private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic)
+    throws JSONException {
       @SuppressWarnings("unchecked")
       Iterator<String> iterator = jTopic.keys();
       String topicName;
       ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
       TopicNode currentTopic;
 
-      try {
-         while (iterator.hasNext()) {
-            topicName = iterator.next();
+      while (iterator.hasNext()) {
+         topicName = iterator.next();
 
-            if (topicName.equals(LEAF_INDICATOR)) {
-               topics.addAll(parseTopicLeaves(
-                jTopic.getJSONArray(LEAF_INDICATOR)));
-            }
-            else {
-               currentTopic = new TopicNode(topicName);
-               currentTopic.addAllTopics(parseTopicChildren(
-                jTopic.getJSONObject(topicName)));
-               topics.add(currentTopic);
-            }
+         if (topicName.equals(LEAF_INDICATOR)) {
+            topics.addAll(parseTopicLeaves(
+             jTopic.getJSONArray(LEAF_INDICATOR)));
          }
-      } catch (Exception e) {
-         Log.w("iFixit", "Error parsing topic children: " + e.getMessage());
+         else {
+            currentTopic = new TopicNode(topicName);
+            currentTopic.addAllTopics(parseTopicChildren(
+             jTopic.getJSONObject(topicName)));
+            topics.add(currentTopic);
+         }
       }
 
       return topics;
    }
 
-   public static ArrayList<TopicNode> parseTopicLeaves(JSONArray jLeaves) {
+   private static ArrayList<TopicNode> parseTopicLeaves(JSONArray jLeaves)
+    throws JSONException {
       ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
 
-      try {
-         for (int i = 0; i < jLeaves.length(); i++) {
-            topics.add(new TopicNode(jLeaves.getString(i)));
-         }
-      } catch (Exception e) {
-         Log.w("iFixit", "Error parsing topic leaves: " + e.getMessage());
+      for (int i = 0; i < jLeaves.length(); i++) {
+         topics.add(new TopicNode(jLeaves.getString(i)));
       }
 
       return topics;
@@ -192,30 +171,25 @@ public class JSONHelper {
    /**
     * Topic leaf parsing
     */
-   public static TopicLeaf parseTopicLeaf(String json) {
-      try {
-         JSONObject jTopic = new JSONObject(json);
-         JSONArray jGuides = jTopic.getJSONArray("guides");
-         JSONObject jSolutions = jTopic.getJSONObject("solutions");
-         JSONObject jInfo = jTopic.getJSONObject("topic_info");
-         TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
+   public static TopicLeaf parseTopicLeaf(String json) throws JSONException {
+      JSONObject jTopic = new JSONObject(json);
+      JSONArray jGuides = jTopic.getJSONArray("guides");
+      JSONObject jSolutions = jTopic.getJSONObject("solutions");
+      JSONObject jInfo = jTopic.getJSONObject("topic_info");
+      TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
 
-         for (int i = 0; i < jGuides.length(); i++) {
-            topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
-         }
-
-         topicLeaf.setNumSolutions(Integer.parseInt(
-          jSolutions.getString("count")));
-         topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
-
-         return topicLeaf;
-      } catch (JSONException e) {
-         Log.e("iFixit", "Error parsing topic leaf: " + e);
-         return null;
+      for (int i = 0; i < jGuides.length(); i++) {
+         topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
       }
+
+      topicLeaf.setNumSolutions(Integer.parseInt(
+       jSolutions.getString("count")));
+      topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
+
+      return topicLeaf;
    }
 
-   public static GuideInfo parseGuideInfo(JSONObject jGuide) {
+   private static GuideInfo parseGuideInfo(JSONObject jGuide) {
       try {
          GuideInfo guideInfo = new GuideInfo(jGuide.getInt("guideid"));
 
