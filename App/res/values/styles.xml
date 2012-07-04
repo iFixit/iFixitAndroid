@@ -53,7 +53,7 @@
     <style name="guide_thumbnail">
         <item name="android:layout_width">@dimen/guide_thumbnail_width</item>
         <item name="android:layout_height">@dimen/guide_thumbnail_height</item>
-        <item name="android:background">@drawable/img_background</item>
+        <item name="android:background">@color/image_border</item>
         <item name="android:visibility">invisible</item>
         <item name="android:padding">@dimen/guide_thumbnail_padding</item>
     </style>

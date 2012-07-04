@@ -17,7 +17,7 @@
     		   android:layout_height="@dimen/guide_image_height"
     		   android:layout_marginRight="@dimen/guide_image_spacing_right"
 	    		android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
-	    		android:background="@drawable/img_background"
+	    		android:background="@color/image_border"
 	    		android:padding="@dimen/guide_image_padding"
 	    		android:contentDescription="@string/thumbnail_desc" />
 
