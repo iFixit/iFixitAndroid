@@ -10,6 +10,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -66,6 +67,8 @@ public class MainApplication extends Application {
                } else {
                   imageView.setImageResource(R.drawable.no_image);
                }
+               
+               imageView.getLayoutParams().height = (int)(imageView.getWidth() * (3f/4f) + 0.5f);
 
                imageView.setTag("");
             }
