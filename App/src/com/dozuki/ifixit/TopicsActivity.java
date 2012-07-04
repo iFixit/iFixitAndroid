@@ -189,7 +189,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          ft.addToBackStack(null);
       }
 
-      ft.commit();
+      // ft.commit();
+      
+      // commitAllowingStateLoss doesn't throw an exception if commit() is 
+      // run after the fragments parent already saved its state.  Possibly
+      // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
+      ft.commitAllowingStateLoss();
    }
 
    @Override
