@@ -145,15 +145,14 @@ public class GuideStepViewFragment extends SherlockFragment {
           com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
          padding += dpToPixel(resources.getDimension(
           R.dimen.guide_image_spacing_bottom), context);
-         height = (((screenHeight - padding - indicatorHeight - actionBarHeight)
-          / 5f) * 4f);
+         height = (((screenHeight - actionBarHeight - padding - thumbPadding)
+          / 4f) * 3f);
          width = height * (4f/3f);
       
          Log.w("Main Image Height", height+"");
          Log.w("Main Image Width", width+"");
 
-         thumbnailHeight = (screenHeight - height - actionBarHeight - 
-          indicatorHeight - thumbPadding);
+         thumbnailHeight = (height / 4f);
          thumbnailWidth = (thumbnailHeight * (4f/3f));
       }
 
