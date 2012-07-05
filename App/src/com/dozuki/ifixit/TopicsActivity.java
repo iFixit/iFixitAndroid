@@ -28,6 +28,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
+   private boolean mFinished;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +36,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       
       getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
-      
+
+      mFinished = false;
+
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
       mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
@@ -56,11 +59,21 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             }
 
             public void setResult(TopicNode result) {
+               // Don't do anything if the Activity has finished.
+               if (mFinished) {
+                  return;
+               }
+
                mRootTopic = result;
                onTopicSelected(mRootTopic);
             }
 
             public void error(AlertDialog dialog) {
+               // Don't do anything if the Activity has finished.
+               if (mFinished) {
+                  return;
+               }
+
                dialog.show();
             }
          }.execute();
@@ -98,6 +111,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
+
+      mFinished = true;
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);

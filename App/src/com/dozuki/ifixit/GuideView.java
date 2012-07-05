@@ -48,6 +48,7 @@ public class GuideView extends SherlockFragmentActivity
    private CirclePageIndicator mIndicator;
    protected ProgressBar mProgressBar;
    private ImageView mNextPageImage;
+   private boolean mFinished;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -56,6 +57,8 @@ public class GuideView extends SherlockFragmentActivity
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       setContentView(R.layout.guide_main);
+
+      mFinished = false;
       
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
@@ -115,6 +118,8 @@ public class GuideView extends SherlockFragmentActivity
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      mFinished = true;
+
       state.putSerializable(SAVED_GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
@@ -196,10 +201,20 @@ public class GuideView extends SherlockFragmentActivity
          }
 
          public void setResult(Guide guide) {
+            // Don't do anything if the Activity has finished.
+            if (mFinished) {
+               return;
+            }
+
             setGuide(guide, 0);
          }
 
          public void error(AlertDialog dialog) {
+            // Don't do anything if the Activity has finished.
+            if (mFinished) {
+               return;
+            }
+
             dialog.show();
          }
       }.execute();
