@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
@@ -52,6 +53,7 @@ public class MainApplication extends Application {
              String url) {
                if (imageView instanceof ImageViewTouch) {
                   ((ImageViewTouch)imageView).setImageBitmapReset(bitmap, true);
+                  ((ImageViewTouch)imageView).setVisibility(View.VISIBLE);
                   return true;
                }
 
