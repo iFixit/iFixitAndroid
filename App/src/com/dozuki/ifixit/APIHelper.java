@@ -126,7 +126,6 @@ public class APIHelper {
                stringHandler.handleString(response);
             } catch (JSONException e) {
                // Send detailed error reports.
-               ErrorReporter.getInstance().handleSilentException(e);
                ErrorReporter.getInstance().handleSilentException(
                 new Exception("Parse error, json: " + response, e));
 
