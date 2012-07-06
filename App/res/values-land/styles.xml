@@ -10,6 +10,8 @@
     </style>
     
     <style name="guide_thumbnail">
+        <item name="android:background">@color/img_border</item>
+        <item name="android:visibility">invisible</item>
         <item name="android:padding">@dimen/guide_thumbnail_padding</item>
         <item name="android:layout_gravity">bottom</item>
     </style>
