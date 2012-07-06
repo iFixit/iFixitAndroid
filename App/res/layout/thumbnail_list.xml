@@ -8,6 +8,8 @@
         android:id="@+id/thumbnail_1"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
+        android:background="@color/image_border"
+        android:visibility="invisible"
         android:contentDescription="@string/thumbnail_desc" 
         style="@style/guide_thumbnail_w_spacing" />
 
@@ -15,6 +17,8 @@
         android:id="@+id/thumbnail_2"        
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
+        android:background="@color/image_border"
+        android:visibility="invisible"
         android:contentDescription="@string/thumbnail_desc" 
         style="@style/guide_thumbnail_w_spacing" />
 
@@ -22,6 +26,8 @@
         android:id="@+id/thumbnail_3"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
+        android:background="@color/image_border"
+        android:visibility="invisible"
         android:contentDescription="@string/thumbnail_desc" 
         style="@style/guide_thumbnail" />
 
