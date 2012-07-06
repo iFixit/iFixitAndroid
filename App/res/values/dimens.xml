@@ -11,7 +11,7 @@
     <dimen name="guide_image_width">256dp</dimen>
     <dimen name="guide_image_height">192dp</dimen>    
     <dimen name="guide_image_padding">1dp</dimen>      
-    <dimen name="guide_image_spacing_right">8dp</dimen>
+    <dimen name="guide_image_spacing_right">6dp</dimen>
     <dimen name="guide_image_spacing_bottom">0dp</dimen>        
     
     <dimen name="guide_thumbnail_width">80dp</dimen>
@@ -25,7 +25,7 @@
     <dimen name="topic_list_top_margin">4dp</dimen>
     <dimen name="topic_list_right_divider">0dp</dimen>
     
-    <dimen name="circle_page_indicator_padding">6dp</dimen>
+    <dimen name="circle_page_indicator_padding">6dp</dimen>    
     
     <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>

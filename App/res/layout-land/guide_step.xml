@@ -2,14 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:padding="@dimen/page_padding"
-    android:background="@drawable/bg_img"
+    android:paddingTop="@dimen/page_padding"
+    android:paddingRight="@dimen/page_padding"
+    android:paddingLeft="@dimen/page_padding"
     style="@style/step_wrap">
 
     <RelativeLayout 
     	android:layout_width="wrap_content"
-    	android:layout_height="match_parent"
-    	style="@style/seperator">
+    	android:layout_height="fill_parent"
+    	android:layout_marginRight="@dimen/section_seperator">
 
         <ImageView
             android:id="@+id/main_image"
@@ -47,7 +48,7 @@
 				android:scrollingCache="false"
 				android:cacheColorHint="@android:color/transparent"
 				android:layout_below="@id/step_title"
-				android:background="@drawable/bg_img"
+				android:background="@android:color/transparent"
 				android:overScrollFooter="@null" />
     </RelativeLayout>
 

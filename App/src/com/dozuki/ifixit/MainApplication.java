@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 
 @ReportsCrashes(formKey = "dFRlbjlVamRObWhBLW5Ib3c0QlozdWc6MQ")
@@ -28,7 +29,18 @@ public class MainApplication extends Application {
       ACRA.init(this);
       super.onCreate();
    }
+   
+   private GoogleAnalyticsTracker mTracker;
 
+   public GoogleAnalyticsTracker getAnalyticsTracker() {
+      if (mTracker == null) {
+         mTracker = GoogleAnalyticsTracker.getInstance();
+         mTracker.startNewSession("UA-30506-14", this);
+      } 
+      
+      return mTracker;
+   }
+   
    public ImageManager getImageManager() {
       if (mImageManager == null) {
          mImageManager = new ImageManager(this);
