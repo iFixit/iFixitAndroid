@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class TopicViewActivity extends SherlockFragmentActivity {
@@ -15,8 +14,6 @@ public class TopicViewActivity extends SherlockFragmentActivity {
    private TopicViewFragment mTopicView;
    private TopicNode mTopicNode;
    protected ImageManager mImageManager;
-   
-   private GoogleAnalyticsTracker mTracker;
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -38,10 +35,6 @@ public class TopicViewActivity extends SherlockFragmentActivity {
       }
 
       mTopicNode = (TopicNode)getIntent().getSerializableExtra(TOPIC_KEY);
-
-      // Analytics Tracking
-      mTracker = ((MainApplication)getApplication()).getAnalyticsTracker();
-      mTracker.trackPageView("/Topic/"+mTopicNode.getName());
    }
 
    @Override

@@ -11,7 +11,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideIntroViewFragment extends SherlockFragment {

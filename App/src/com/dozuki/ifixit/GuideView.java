@@ -22,7 +22,6 @@ import android.widget.ProgressBar;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.google.android.apps.analytics.GoogleAnalyticsTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -50,8 +49,6 @@ public class GuideView extends SherlockFragmentActivity
    protected ProgressBar mProgressBar;
    private ImageView mNextPageImage;
    private boolean mFinished;
-
-   private GoogleAnalyticsTracker mTracker;
    
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -158,9 +155,6 @@ public class GuideView extends SherlockFragmentActivity
 
       mPager.setVisibility(View.VISIBLE);
 
-      mTracker = ((MainApplication)getApplication()).getAnalyticsTracker();
-      mTracker.trackPageView("/Guide/"+mGuide.mGuideid);
-      
       onPageSelected(page);
    }
 
@@ -171,8 +165,6 @@ public class GuideView extends SherlockFragmentActivity
       if (mSpeechCommander != null)
          mSpeechCommander.destroy();
       
-      if (mTracker != null)
-         mTracker.stopSession();
    }
 
    @Override
