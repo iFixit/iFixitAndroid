@@ -10,7 +10,7 @@
     <RelativeLayout 
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	style="@style/seperator">
+    	android:layout_marginBottom="@dimen/section_seperator">
 
         <ImageView
             android:id="@+id/main_image"
@@ -24,7 +24,7 @@
 
         <com.dozuki.ifixit.ThumbnailView
             android:id="@+id/thumbnails"    
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
     		   android:layout_height="wrap_content"
     		   style="@style/thumbnail_position" />
     </RelativeLayout>

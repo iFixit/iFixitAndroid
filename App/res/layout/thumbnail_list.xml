@@ -6,17 +6,23 @@
 
     <ImageView
         android:id="@+id/thumbnail_1"
-        style="@style/guide_thumbnail_w_spacing"
-        android:contentDescription="@string/thumbnail_desc" />
+        android:layout_width="@dimen/guide_thumbnail_width"
+        android:layout_height="@dimen/guide_thumbnail_height"
+        android:contentDescription="@string/thumbnail_desc" 
+        style="@style/guide_thumbnail_w_spacing" />
 
     <ImageView
         android:id="@+id/thumbnail_2"        
-        style="@style/guide_thumbnail_w_spacing"
-        android:contentDescription="@string/thumbnail_desc" />
+        android:layout_width="@dimen/guide_thumbnail_width"
+        android:layout_height="@dimen/guide_thumbnail_height"
+        android:contentDescription="@string/thumbnail_desc" 
+        style="@style/guide_thumbnail_w_spacing" />
 
     <ImageView
         android:id="@+id/thumbnail_3"
-        style="@style/guide_thumbnail"
-        android:contentDescription="@string/thumbnail_desc" />
+        android:layout_width="@dimen/guide_thumbnail_width"
+        android:layout_height="@dimen/guide_thumbnail_height"
+        android:contentDescription="@string/thumbnail_desc" 
+        style="@style/guide_thumbnail" />
 
 </LinearLayout>
