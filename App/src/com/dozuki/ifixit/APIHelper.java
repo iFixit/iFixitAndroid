@@ -60,9 +60,8 @@ public class APIHelper {
       if (!checkConnectivity(context, responder)) {
          return;
       }
-      String url = getUrl(SITES_API_URL);
 
-      performRequest(url, new StringHandler() {
+      performRequest(getUrl(SITES_API_URL), new StringHandler() {
          public void handleString(String response) {
             responder.setResult(JSONHelper.parseSites(response));
          }
@@ -109,7 +108,7 @@ public class APIHelper {
          return;
       }
 
-      performRequest(CATEGORIES_API_URL, new StringHandler() {
+      performRequest(getUrl(CATEGORIES_API_URL), new StringHandler() {
          public void handleString(String response) throws JSONException {
             responder.setResult(JSONHelper.parseTopics(response));
          }
