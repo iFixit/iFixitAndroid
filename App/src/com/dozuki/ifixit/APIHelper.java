@@ -60,12 +60,13 @@ public class APIHelper {
       if (!checkConnectivity(context, responder)) {
          return;
       }
+      String url = getUrl(SITES_API_URL);
 
-      performRequest(getUrl(SITES_API_URL), new StringHandler() {
+      performRequest(url, new StringHandler() {
          public void handleString(String response) {
             responder.setResult(JSONHelper.parseSites(response));
          }
-      });
+      }, context, responder);
    }
 
    public static void getTopic(Context context, String topic,
