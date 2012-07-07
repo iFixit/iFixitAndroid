@@ -16,7 +16,7 @@ import android.widget.ImageView;
 
 import com.ifixit.android.imagemanager.ImageManager;
 
-@ReportsCrashes(formKey = "dFRlbjlVamRObWhBLW5Ib3c0QlozdWc6MQ")
+//@ReportsCrashes(formKey = "dFRlbjlVamRObWhBLW5Ib3c0QlozdWc6MQ")
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
@@ -41,7 +41,7 @@ public class MainApplication extends Application {
 
    @Override
    public void onCreate() {
-      ACRA.init(this);
+      //ACRA.init(this);
       super.onCreate();
    }
       
