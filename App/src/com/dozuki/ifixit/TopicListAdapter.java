@@ -86,7 +86,7 @@ public class TopicListAdapter extends Section {
     		 ((TopicListRow) prevSelected).clearCurrentTopicStyle(); 
     	 }
     	 
-         ((TopicListRow)view).setCurrentTopicStyle();
+       ((TopicListRow)view).setCurrentTopicStyle();
     	 prevSelected = (TopicListRow) view;
       }
    }

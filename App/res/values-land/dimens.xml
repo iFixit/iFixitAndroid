@@ -2,6 +2,4 @@
 <resources>
     <dimen name="guide_image_spacing_right">0dp</dimen>
     <dimen name="guide_image_spacing_bottom">8dp</dimen> 
-    
-    <dimen name="guide_thumbnail_spacing">8dp</dimen> 
 </resources>

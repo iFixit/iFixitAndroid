@@ -19,7 +19,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
-   protected static final long TOPIC_LIST_HIDE_DELAY = 700;
+   protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -28,13 +28,16 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
-
+   private boolean mFinished;
+   
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      
+     
       getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
+
+      mFinished = false;
       
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -56,11 +59,21 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             }
 
             public void setResult(TopicNode result) {
+               // Don't do anything if the Activity has finished.
+               if (mFinished) {
+                  return;
+               }
+
                mRootTopic = result;
                onTopicSelected(mRootTopic);
             }
 
             public void error(AlertDialog dialog) {
+               // Don't do anything if the Activity has finished.
+               if (mFinished) {
+                  return;
+               }
+
                dialog.show();
             }
          }.execute();
@@ -98,6 +111,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
+
+      mFinished = true;
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
@@ -138,16 +153,21 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
 
    private void hideTopicList() {
+      hideTopicList(false);
+   }
+
+   private void hideTopicList(boolean delay) {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       mTopicViewOverlay.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
-      changeTopicListView(new Fragment(), true);
+      changeTopicListView(new Fragment(), true, delay);
    }
 
    private void hideTopicListWithDelay() {
+      // Delay this slightly to make sure the animation is played.
       new Handler().postAtTime(new Runnable() {
          public void run() {
-            hideTopicList();
+            hideTopicList(true);
          }
       }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
@@ -160,17 +180,36 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
 
    private void changeTopicListView(Fragment fragment, boolean addToBack) {
-      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      changeTopicListView(fragment, addToBack, false);
+   }
 
-      ft.setCustomAnimations(R.anim.slide_in_right, R.anim.slide_out_left,
-            R.anim.slide_in_left, R.anim.slide_out_right);
+   private void changeTopicListView(Fragment fragment, boolean addToBack,
+    boolean delay) {
+      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      int inAnim, outAnim;
+
+      if (delay) {
+         inAnim = R.anim.slide_in_right_delay;
+         outAnim = R.anim.slide_out_left_delay;
+      } else {
+         inAnim = R.anim.slide_in_right;
+         outAnim = R.anim.slide_out_left;
+      }
+
+      ft.setCustomAnimations(inAnim, outAnim,
+       R.anim.slide_in_left, R.anim.slide_out_right);
       ft.replace(R.id.topic_list_fragment, fragment);
 
       if (addToBack) {
          ft.addToBackStack(null);
       }
 
-      ft.commit();
+      // ft.commit();
+      
+      // commitAllowingStateLoss doesn't throw an exception if commit() is 
+      // run after the fragments parent already saved its state.  Possibly
+      // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
+      ft.commitAllowingStateLoss();
    }
 
    @Override
@@ -184,4 +223,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             return super.onOptionsItemSelected(item);
       }
    }
+   
+   @Override
+   protected void onDestroy() {
+     super.onDestroy();
+   }   
 }

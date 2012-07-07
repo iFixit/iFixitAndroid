@@ -2,11 +2,14 @@ package com.dozuki.ifixit;
 
 import java.util.ArrayList;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.view.Display;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -82,24 +85,108 @@ public class GuideStepViewFragment extends SherlockFragment {
          }
       });
 
+      // MUST BE BEFORE fitImagesToSpace(), DONT MOVE
       mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);
+      
+      // Resize and fit thumbnails and main image to available screen space
+      this.fitImagesToSpace();
+    
       mThumbs.setMainImage(mMainImage);
-
+      
       if (mStep != null) {
          setStep();
       }
 
       return view;
    }
+   
+   public void fitImagesToSpace() {
+      Activity context = getActivity();
+      Resources resources = context.getResources();
+      DisplayMetrics metrics = new DisplayMetrics();
+      context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+      
+      float screenHeight = metrics.heightPixels;
+      float screenWidth = metrics.widthPixels;
+      float thumbnailHeight = 0f;
+      float thumbnailWidth = 0f;
+      float height = 0f;
+      float width = 0f;
+      
+      float thumbPadding =
+       resources.getDimensionPixelSize(R.dimen.guide_thumbnail_padding) * 2f;
+      float mainPadding = 
+       resources.getDimensionPixelSize(R.dimen.guide_image_padding) * 2f;
+      float pagePadding = 
+       resources.getDimensionPixelSize(R.dimen.page_padding) * 2f;
 
-   public int getScreenHeight() {
-      Display display = getActivity().getWindowManager().getDefaultDisplay();
-      return display.getHeight();
+      // padding that's included on every page 
+      float padding = pagePadding + mainPadding + thumbPadding;
+
+      // Portrait orientation
+      if (resources.getConfiguration().orientation == 
+       Configuration.ORIENTATION_PORTRAIT) {
+         padding += resources.getDimensionPixelSize(
+          R.dimen.guide_image_spacing_right);
+         
+         // Main image is 4/5ths of the available screen height
+         width = (((screenWidth - padding) / 5f) * 4f);
+         height = width *  (3f/4f);
+         
+         // Screen height minus everything else that occupies horizontal space
+         thumbnailWidth = (screenWidth - width - padding);
+         thumbnailHeight = thumbnailWidth * (3f/4f);
+
+      } else {
+         
+         int actionBarHeight = resources.getDimensionPixelSize(
+          com.actionbarsherlock.R.dimen.abs__action_bar_default_height);         
+         int indicatorHeight = ((GuideView)context).getIndicatorHeight();
+         
+         // Unbelievably horrible hack that fixes a problem when 
+         // getIndicatorHeight() returns 0 after a orientation change, causing the 
+         // Main image view to calculate to large and the thumbnails are hidden by 
+         // the CircleIndicator.
+         // TODO: Figure out why this is actually happening and the right way to do
+         //       this.
+         if (indicatorHeight == 0) {
+            indicatorHeight = 49;
+         }
+         
+         padding += resources.getDimensionPixelSize(
+          R.dimen.guide_image_spacing_bottom);
+         
+         // Main image is 4/5ths of the available screen height
+         height = (((screenHeight - actionBarHeight - indicatorHeight - padding)
+          / 5f) * 4f);
+         width = height * (4f/3f);
+
+         // Screen height minus everything else that occupies vertical space
+         thumbnailHeight = (screenHeight - height - actionBarHeight - padding 
+          - indicatorHeight);
+         thumbnailWidth = (thumbnailHeight * (4f/3f));
+      }
+
+      // Set the width and height of the main image
+      mMainImage.getLayoutParams().height = (int) (height + .5f);
+      mMainImage.getLayoutParams().width = (int) (width + .5f);
+
+      mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
+   }
+   
+
+   public static float dpToPixel(float dp,Context context){
+       Resources resources = context.getResources();
+       DisplayMetrics metrics = resources.getDisplayMetrics();
+       float px = dp * (metrics.densityDpi/160f);
+       return px;
    }
 
-   public int getScreenWidth() {
-      Display display = getActivity().getWindowManager().getDefaultDisplay();
-      return display.getWidth();
+   public static float pixelToDp(float px,Context context){
+       Resources resources = context.getResources();
+       DisplayMetrics metrics = resources.getDisplayMetrics();
+       float dp = px / (metrics.densityDpi / 160f);
+       return dp;
    }
 
    public void setStep() {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="text">
         <item name="android:textColor">@color/black</item>
@@ -51,11 +51,10 @@
     </style>
     
     <style name="guide_thumbnail">
-        <item name="android:layout_width">@dimen/guide_thumbnail_width</item>
-        <item name="android:layout_height">@dimen/guide_thumbnail_height</item>
-        <item name="android:background">@drawable/img_background</item>
+        <item name="android:background">@color/image_border</item>
         <item name="android:visibility">invisible</item>
         <item name="android:padding">@dimen/guide_thumbnail_padding</item>
+        <item name="android:layout_gravity">right</item>
     </style>
     
     <style name="guide_thumbnail_w_spacing" parent="guide_thumbnail">
@@ -68,6 +67,7 @@
     
     <style name="thumbnail_position">
        	<item name="android:layout_toRightOf">@id/main_image</item>
+       	<item name="android:layout_gravity">right</item>
     </style>
     
 </resources>

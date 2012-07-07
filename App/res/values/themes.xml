@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
    <style name="Theme.iFixit" parent="Theme.HoloEverywhereLight.DarkActionBar.Sherlock">
         <!-- Android styles -->
         <item name="android:logo">@drawable/logo_ifixit</item>
@@ -14,6 +14,12 @@
        
         <!-- Custom Attributes / Styles -->
         <item name="topicHeaderColor">@color/ifixit_blue</item>        
+        
+        <item name="android:listSelector">@style/Widget.iFixit.ListViewStyle</item>
+    </style>
+    
+    <style name="Widget.iFixit.ListViewStyle" parent="android:Widget.ListView">
+        <item name="android:cacheColorHint">#00000000</item>
     </style>
 
     <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">

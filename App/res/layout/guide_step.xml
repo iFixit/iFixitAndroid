@@ -1,15 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     android:padding="@dimen/page_padding"
     android:background="@drawable/bg_img"
+    android:paddingBottom="0dp"
     style="@style/step_wrap">
 
     <RelativeLayout 
     	android:layout_width="match_parent"
     	android:layout_height="wrap_content"
-    	style="@style/seperator">
+    	android:layout_marginBottom="@dimen/section_seperator">
 
         <ImageView
             android:id="@+id/main_image"
@@ -17,13 +18,13 @@
     		   android:layout_height="@dimen/guide_image_height"
     		   android:layout_marginRight="@dimen/guide_image_spacing_right"
     		   android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
-    		   android:background="@drawable/img_background"
+    		   android:background="@color/image_border"
     		   android:contentDescription="@string/main_guide_img_description"
     		   android:padding="@dimen/guide_image_padding" />
 
         <com.dozuki.ifixit.ThumbnailView
             android:id="@+id/thumbnails"    
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
     		   android:layout_height="wrap_content"
     		   style="@style/thumbnail_position" />
     </RelativeLayout>

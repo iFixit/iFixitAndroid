@@ -1,16 +1,22 @@
 package com.dozuki.ifixit;
 
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+
+import org.acra.ACRA;
+import org.acra.annotation.ReportsCrashes;
+
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.ifixit.android.imagemanager.ImageManager;
 
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-
+@ReportsCrashes(formKey = "dFRlbjlVamRObWhBLW5Ib3c0QlozdWc6MQ")
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
@@ -33,6 +39,12 @@ public class MainApplication extends Application {
       APIHelper.setSite(site);
    }
 
+   @Override
+   public void onCreate() {
+      ACRA.init(this);
+      super.onCreate();
+   }
+      
    public ImageManager getImageManager() {
       if (mImageManager == null) {
          mImageManager = new ImageManager(this);
@@ -56,6 +68,7 @@ public class MainApplication extends Application {
              String url) {
                if (imageView instanceof ImageViewTouch) {
                   ((ImageViewTouch)imageView).setImageBitmapReset(bitmap, true);
+                  ((ImageViewTouch)imageView).setVisibility(View.VISIBLE);
                   return true;
                }
 
@@ -63,7 +76,17 @@ public class MainApplication extends Application {
             }
 
             public void fail(ImageView imageView) {
-               imageView.setImageResource(R.drawable.no_image);
+               if (imageView instanceof ImageViewTouch) {
+                  Bitmap noImage = BitmapFactory.decodeResource(getResources(),
+                   R.drawable.no_image);
+
+                  ((ImageViewTouch)imageView).setImageBitmapReset(noImage, true);
+               } else {
+                  imageView.setImageResource(R.drawable.no_image);
+               }
+               
+               imageView.getLayoutParams().height = (int)(imageView.getWidth() * (3f/4f) + 0.5f);
+
                imageView.setTag("");
             }
          });

@@ -33,6 +33,7 @@ public class TopicViewFragment extends SherlockFragment
    private Site mSite;
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
+   private boolean mFinished;
 
    public boolean isDisplayingTopic() {
       return mTopicLeaf != null;
@@ -41,6 +42,8 @@ public class TopicViewFragment extends SherlockFragment
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      mFinished = false;
 
       if (mImageManager == null) {
          mImageManager = ((MainApplication)getActivity().getApplication()).
@@ -85,6 +88,8 @@ public class TopicViewFragment extends SherlockFragment
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
+
+      mFinished = true;
 
       outState.putInt(CURRENT_PAGE, mActionBar.getSelectedNavigationIndex());
       outState.putSerializable(CURRENT_TOPIC_LEAF, mTopicLeaf);
@@ -188,12 +193,21 @@ public class TopicViewFragment extends SherlockFragment
          }
 
          public void setResult(TopicLeaf result) {
+            // Don't do anything if the Activity has finished.
+            if (mFinished) {
+               return;
+            }
+
             setTopicLeaf(result);
          }
 
          public void error(AlertDialog dialog) {
+            // Don't do anything if the Activity has finished.
+            if (mFinished) {
+               return;
+            }
+
             dialog.show();
-            //TODO
          }
       }.execute();
    }

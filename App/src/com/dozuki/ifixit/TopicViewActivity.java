@@ -20,7 +20,7 @@ public class TopicViewActivity extends SherlockFragmentActivity {
       super.onCreate(savedState);
 
       setContentView(R.layout.topic_view);
-      
+            
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

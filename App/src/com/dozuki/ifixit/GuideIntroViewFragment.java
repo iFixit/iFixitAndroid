@@ -25,7 +25,7 @@ public class GuideIntroViewFragment extends SherlockFragment {
    private ImageManager mImageManager;
    private Guide mGuide;
    private Typeface mBoldFont;
-
+   
    public GuideIntroViewFragment() {
 
    }
@@ -78,7 +78,7 @@ public class GuideIntroViewFragment extends SherlockFragment {
       if (mGuide != null) {
          setGuide();
       }
-
+      
       return view;
    }
 
