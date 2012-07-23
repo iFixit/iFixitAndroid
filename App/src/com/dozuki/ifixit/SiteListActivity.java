@@ -3,18 +3,25 @@ package com.dozuki.ifixit;
 import java.util.ArrayList;
 
 import android.app.AlertDialog;
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+import android.widget.SearchView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 
-public class SiteListActivity extends SherlockFragmentActivity {
+public class SiteListActivity extends SherlockFragmentActivity
+ implements SearchView.OnQueryTextListener {
    private static final String SITE_LIST = "SITE_LIST";
 
    private ListView mSiteListView;
@@ -40,6 +47,29 @@ public class SiteListActivity extends SherlockFragmentActivity {
       } else {
          getSiteList();
       }
+
+      handleIntent(getIntent());
+   }
+
+   @Override
+   protected void onNewIntent(Intent intent) {
+      setIntent(intent);
+      handleIntent(intent);
+   }
+
+   private void handleIntent(Intent intent) {
+      if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+         String query = intent.getStringExtra(SearchManager.QUERY);
+         search(query);
+      }
+   }
+
+   private void search(String query) {
+      Log.w("iFixit", "search: " + query);
+   }
+
+   private void cancelSearch() {
+      Log.w("iFixit", "cancel search");
    }
 
    @Override
@@ -67,6 +97,47 @@ public class SiteListActivity extends SherlockFragmentActivity {
          }
       });
    }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      super.onCreateOptionsMenu(menu);
+
+      MenuInflater inflater = getSupportMenuInflater();
+      inflater.inflate(R.menu.site_search_menu, menu);
+
+      SearchManager searchManager = (SearchManager)getSystemService(
+       Context.SEARCH_SERVICE);
+      SearchView searchView = (SearchView)menu.findItem(R.id.site_search)
+       .getActionView();
+      searchView.setSearchableInfo(searchManager.getSearchableInfo(
+       getComponentName()));
+      searchView.setIconifiedByDefault(false);
+
+      searchView.setOnQueryTextListener(this);
+
+      return true;
+   }
+
+   public boolean onQueryTextChange(String newText) {
+      if (newText.length() == 0) {
+         cancelSearch();
+      }
+
+      return false;
+   }
+
+   public boolean onQueryTextSubmit(String query) {
+      return false;
+   }
+
+   public boolean onClose() {
+      return false;
+   }
+
+   protected boolean isAlwaysExpanded() {
+      return false;
+   }
+
 
    private void getSiteList() {
       new APIHelper.APIResponder<ArrayList<Site>>() {
