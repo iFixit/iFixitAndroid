@@ -18,6 +18,10 @@ public class Site implements Serializable {
       mSiteid = siteid;
    }
 
+   public boolean search(String query) {
+      return mName.indexOf(query) != -1;
+   }
+
    public String toString() {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +

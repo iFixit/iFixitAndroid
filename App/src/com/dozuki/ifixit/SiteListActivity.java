@@ -65,11 +65,19 @@ public class SiteListActivity extends SherlockFragmentActivity
    }
 
    private void search(String query) {
-      Log.w("iFixit", "search: " + query);
+      ArrayList<Site> matchedSites = new ArrayList<Site>();
+
+      for (Site site : mSiteList) {
+         if (site.search(query)) {
+            matchedSites.add(site);
+         }
+      }
+
+      setSiteList(matchedSites);
    }
 
    private void cancelSearch() {
-      Log.w("iFixit", "cancel search");
+      setSiteList(mSiteList);
    }
 
    @Override
@@ -80,7 +88,6 @@ public class SiteListActivity extends SherlockFragmentActivity
    }
 
    public void setSiteList(ArrayList<Site> sites) {
-      mSiteList = sites;
       mSiteListAdapter = new SiteListAdapter(sites);
       mSiteListView.setAdapter(mSiteListAdapter);
 
@@ -146,6 +153,8 @@ public class SiteListActivity extends SherlockFragmentActivity
          }
 
          public void setResult(ArrayList<Site> result) {
+            mSiteList = result;
+
             setSiteList(result);
          }
 
