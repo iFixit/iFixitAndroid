@@ -1,7 +1,9 @@
 package com.dozuki.ifixit;
 
-import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -28,17 +30,30 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
-   private boolean mFinished;
-   
+
+   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         APIHelper.Result result = (APIHelper.Result)
+          intent.getExtras().getSerializable(APIService.RESULT);
+
+         if (result.getResult() != null) {
+            mRootTopic = (TopicNode)result.getResult();
+            onTopicSelected(mRootTopic);
+         } else {
+            APIHelper.getErrorDialog(TopicsActivity.this, result.getError(),
+             APIService.getCategoriesIntent(TopicsActivity.this)).show();
+         }
+      }
+   };
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-     
+
       getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
 
-      mFinished = false;
-      
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
       mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
@@ -53,30 +68,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
 
       if (mRootTopic == null) {
-         new APIHelper.APIResponder<TopicNode>() {
-            public void execute() {
-               APIHelper.getCategories(TopicsActivity.this, this);
-            }
-
-            public void setResult(TopicNode result) {
-               // Don't do anything if the Activity has finished.
-               if (mFinished) {
-                  return;
-               }
-
-               mRootTopic = result;
-               onTopicSelected(mRootTopic);
-            }
-
-            public void error(AlertDialog dialog) {
-               // Don't do anything if the Activity has finished.
-               if (mFinished) {
-                  return;
-               }
-
-               dialog.show();
-            }
-         }.execute();
+         fetchCategories();
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
@@ -107,15 +99,34 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          });
       }
    }
-   
+
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(APIService.ACTION_CATEGORIES);
+      registerReceiver(mApiReceiver, filter);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      unregisterReceiver(mApiReceiver);
+   }
+
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
-      mFinished = true;
-
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
+   }
+
+   // Load categories from the API.
+   private void fetchCategories() {
+      startService(APIService.getCategoriesIntent(this));
    }
 
    public void onBackStackChanged() {
