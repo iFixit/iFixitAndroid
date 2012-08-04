@@ -45,9 +45,9 @@ public class TopicViewFragment extends SherlockFragment
          if (result.getResult() != null) {
             setTopicLeaf((TopicLeaf)result.getResult());
          } else {
-            APIHelper.getErrorDialog(getActivity().getApplicationContext(),
+            APIHelper.getErrorDialog(getActivity(),
              result.getError(),
-             APIService.getTopicIntent(getActivity().getApplicationContext(),
+             APIService.getTopicIntent(getActivity(),
              mTopicNode.getName())).show();
          }
       }
@@ -96,15 +96,14 @@ public class TopicViewFragment extends SherlockFragment
 
       IntentFilter filter = new IntentFilter();
       filter.addAction(APIService.ACTION_TOPIC);
-      getActivity().getApplicationContext().registerReceiver(mApiReceiver,
-       filter);
+      getActivity().registerReceiver(mApiReceiver, filter);
    }
 
    @Override
    public void onPause() {
       super.onPause();
 
-      getActivity().getApplicationContext().unregisterReceiver(mApiReceiver);
+      getActivity().unregisterReceiver(mApiReceiver);
    }
 
    @Override
@@ -211,8 +210,8 @@ public class TopicViewFragment extends SherlockFragment
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      getActivity().getApplicationContext().startService(
-       APIService.getTopicIntent(getActivity().getApplicationContext(),
+      getActivity().startService(
+       APIService.getTopicIntent(getActivity(),
        topicName));
    }
 
