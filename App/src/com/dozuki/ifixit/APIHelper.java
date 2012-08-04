@@ -2,7 +2,6 @@ package com.dozuki.ifixit;
 
 import java.net.URLEncoder;
 
-import org.acra.ErrorReporter;
 import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
 
@@ -125,10 +124,6 @@ public class APIHelper {
             try {
                stringHandler.handleString(response);
             } catch (JSONException e) {
-               // Send detailed error reports.
-               ErrorReporter.getInstance().handleSilentException(
-                new Exception("Parse error, json: " + response, e));
-
                 responder.error(getParseErrorDialog(context, responder));
             }
          }
