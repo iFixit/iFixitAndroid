@@ -38,8 +38,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
           intent.getExtras().getSerializable(APIService.RESULT);
 
          if (result.getResult() != null) {
-            mRootTopic = (TopicNode)result.getResult();
-            onTopicSelected(mRootTopic);
+            if (mRootTopic == null) {
+               mRootTopic = (TopicNode)result.getResult();
+               onTopicSelected(mRootTopic);
+            }
          } else {
             APIHelper.getErrorDialog(TopicsActivity.this, result.getError(),
              APIService.getCategoriesIntent(TopicsActivity.this)).show();

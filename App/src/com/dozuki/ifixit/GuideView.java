@@ -58,7 +58,9 @@ public class GuideView extends SherlockFragmentActivity
           intent.getExtras().getSerializable(APIService.RESULT);
 
          if (result.getResult() != null) {
-            setGuide((Guide)result.getResult(), 0);
+            if (mGuide == null) {
+               setGuide((Guide)result.getResult(), 0);
+            }
          } else {
             APIHelper.getErrorDialog(GuideView.this, result.getError(),
              APIService.getGuideIntent(GuideView.this, mGuideid)).show();
