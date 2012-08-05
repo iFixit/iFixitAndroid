@@ -15,6 +15,7 @@
          android:theme="@style/Theme.iFixit"
          android:background="@drawable/default_background"
          android:logo="@drawable/logo">
+      <service android:name=".APIService"/>
       <activity android:name=".TopicsActivity"
             android:theme="@style/Theme.iFixit">
          <intent-filter>

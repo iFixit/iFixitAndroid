@@ -2,8 +2,10 @@ package com.dozuki.ifixit;
 
 import java.util.List;
 
-import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
@@ -48,7 +50,24 @@ public class GuideView extends SherlockFragmentActivity
    private CirclePageIndicator mIndicator;
    protected ProgressBar mProgressBar;
    private ImageView mNextPageImage;
-   private boolean mFinished;
+
+   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         APIHelper.Result result = (APIHelper.Result)
+          intent.getExtras().getSerializable(APIService.RESULT);
+
+         if (result.getResult() != null) {
+            if (mGuide == null) {
+               setGuide((Guide)result.getResult(), 0);
+            }
+         } else {
+            APIHelper.getErrorDialog(GuideView.this, result.getError(),
+             APIService.getGuideIntent(GuideView.this, mGuideid)).show();
+         }
+      }
+   };
+
    
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +76,6 @@ public class GuideView extends SherlockFragmentActivity
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       setContentView(R.layout.guide_main);
-
-      mFinished = false;
       
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
@@ -119,8 +136,6 @@ public class GuideView extends SherlockFragmentActivity
 
    @Override
    public void onSaveInstanceState(Bundle state) {
-      mFinished = true;
-
       state.putSerializable(SAVED_GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
@@ -171,6 +186,8 @@ public class GuideView extends SherlockFragmentActivity
    public void onPause() {
       super.onPause();
 
+      unregisterReceiver(mApiReceiver);
+
       if (mSpeechCommander != null) {
          mSpeechCommander.stopListening();
          mSpeechCommander.cancel();
@@ -180,6 +197,10 @@ public class GuideView extends SherlockFragmentActivity
    @Override
    public void onResume() {
       super.onResume();
+
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(APIService.ACTION_GUIDE);
+      registerReceiver(mApiReceiver, filter);
 
       if (mSpeechCommander != null)
          mSpeechCommander.startListening();
@@ -197,29 +218,8 @@ public class GuideView extends SherlockFragmentActivity
 
    public void getGuide(final int guideid) {
       mNextPageImage.setVisibility(View.GONE);
-      new APIHelper.APIResponder<Guide>() {
-         public void execute() {
-            APIHelper.getGuide(GuideView.this, guideid, this);
-         }
 
-         public void setResult(Guide guide) {
-            // Don't do anything if the Activity has finished.
-            if (mFinished) {
-               return;
-            }
-
-            setGuide(guide, 0);
-         }
-
-         public void error(AlertDialog dialog) {
-            // Don't do anything if the Activity has finished.
-            if (mFinished) {
-               return;
-            }
-
-            dialog.show();
-         }
-      }.execute();
+      startService(APIService.getGuideIntent(this, guideid));
    }
 
    private void displayError() {

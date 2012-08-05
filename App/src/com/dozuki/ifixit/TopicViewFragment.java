@@ -3,7 +3,10 @@ package com.dozuki.ifixit;
 import java.net.URLEncoder;
 
 import android.app.Activity;
-import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -32,7 +35,23 @@ public class TopicViewFragment extends SherlockFragment
    private ImageManager mImageManager;
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
-   private boolean mFinished;
+
+   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         APIHelper.Result result = (APIHelper.Result)
+          intent.getExtras().getSerializable(APIService.RESULT);
+
+         if (result.getResult() != null) {
+            setTopicLeaf((TopicLeaf)result.getResult());
+         } else {
+            APIHelper.getErrorDialog(getActivity(),
+             result.getError(),
+             APIService.getTopicIntent(getActivity(),
+             mTopicNode.getName())).show();
+         }
+      }
+   };
 
    public boolean isDisplayingTopic() {
       return mTopicLeaf != null;
@@ -41,8 +60,6 @@ public class TopicViewFragment extends SherlockFragment
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
-      mFinished = false;
 
       if (mImageManager == null) {
          mImageManager = ((MainApplication)getActivity().getApplication()).
@@ -74,6 +91,22 @@ public class TopicViewFragment extends SherlockFragment
    }
 
    @Override
+   public void onResume() {
+      super.onResume();
+
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(APIService.ACTION_TOPIC);
+      getActivity().registerReceiver(mApiReceiver, filter);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      getActivity().unregisterReceiver(mApiReceiver);
+   }
+
+   @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
       mActionBar = ((SherlockFragmentActivity)activity).getSupportActionBar();
@@ -82,8 +115,6 @@ public class TopicViewFragment extends SherlockFragment
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-
-      mFinished = true;
 
       outState.putInt(CURRENT_PAGE, mActionBar.getSelectedNavigationIndex());
       outState.putSerializable(CURRENT_TOPIC_LEAF, mTopicLeaf);
@@ -174,34 +205,14 @@ public class TopicViewFragment extends SherlockFragment
       mActionBar.setSelectedNavigationItem(tab);
    }
 
-   private void getTopicLeaf(final String topicName) {
+   private void getTopicLeaf(String topicName) {
       displayLoading();
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      new APIHelper.APIResponder<TopicLeaf>() {
-         public void execute() {
-            APIHelper.getTopic(getActivity(), topicName, this);
-         }
-
-         public void setResult(TopicLeaf result) {
-            // Don't do anything if the Activity has finished.
-            if (mFinished) {
-               return;
-            }
-
-            setTopicLeaf(result);
-         }
-
-         public void error(AlertDialog dialog) {
-            // Don't do anything if the Activity has finished.
-            if (mFinished) {
-               return;
-            }
-
-            dialog.show();
-         }
-      }.execute();
+      getActivity().startService(
+       APIService.getTopicIntent(getActivity(),
+       topicName));
    }
 
    public TopicLeaf getTopicLeaf() {
