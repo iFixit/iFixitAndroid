@@ -39,6 +39,11 @@ public class APIService extends Service {
          mResponse = response;
       }
 
+      public Result(String response, Object result) {
+         this(response);
+         setResult(result);
+      }
+
       public Result(Error error) {
          setError(error);
       }
@@ -87,9 +92,9 @@ public class APIService extends Service {
    private static final String REQUEST_BROADCAST_ACTION =
     "REQUEST_BROADCAST_ACTION";
 
-   private static final int TARGET_CATEGORIES = 0;
-   private static final int TARGET_GUIDE = 1;
-   private static final int TARGET_TOPIC = 2;
+   public static final int TARGET_CATEGORIES = 0;
+   public static final int TARGET_GUIDE = 1;
+   public static final int TARGET_TOPIC = 2;
 
    private static final String NO_QUERY = "";
 
@@ -114,17 +119,32 @@ public class APIService extends Service {
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
 
+      APIDatabase db = new APIDatabase(this);
+      String fetchedResult = db.fetchResult(requestTarget, requestQuery);
+      db.close();
+
+      if (fetchedResult != null) {
+         Result result = parseResult(fetchedResult, requestTarget,
+          broadcastAction);
+
+         if (!result.hasError()) {
+            broadcastResult(result, broadcastAction);
+
+            return START_NOT_STICKY;
+         }
+      }
+
       performRequestHelper(this, requestTarget, requestQuery, new Responder() {
          public void setResult(Result result) {
             // Don't parse if we've errored already.
             if (!result.hasError()) {
-               parseResult(result, requestTarget, broadcastAction);
+               result = parseResult(result.getResponse(), requestTarget,
+                broadcastAction);
             }
 
             // Don't save if there a parse error.
             if (!result.hasError()) {
-               saveResult(result, requestTarget, requestQuery,
-                broadcastAction);
+               saveResult(result, requestTarget, requestQuery);
             }
 
             // Always broadcast the result despite any errors.
@@ -137,13 +157,10 @@ public class APIService extends Service {
 
    /**
     * Parse the response in the given result with the given requestTarget.
-    *
-    * Either a parse error or a parsed object will be set in the given result.
     */
-   private void parseResult(Result result, int requestTarget,
+   private Result parseResult(String response, int requestTarget,
     String broadcastAction) {
       Object parsedResult = null;
-      String response = result.getResponse();
 
       try {
          switch (requestTarget) {
@@ -160,17 +177,17 @@ public class APIService extends Service {
             Log.w("iFixit", "Invalid request target: " + requestTarget);
          }
 
-         result.setResult(parsedResult);
+         return new Result(response, parsedResult);
       } catch (JSONException e) {
-         result.setError(Error.PARSE);
+         return new Result(Error.PARSE);
       }
    }
 
-   /**
-    * TODO
-    */
    private void saveResult(Result result, int requestTarget,
-    String requestQuery, String broadcastAction) {
+    String requestQuery) {
+      APIDatabase db = new APIDatabase(this);
+      db.insertResult(result.getResponse(), requestTarget, requestQuery);
+      db.close();
    }
 
    private void broadcastResult(Result result, String broadcastAction) {
