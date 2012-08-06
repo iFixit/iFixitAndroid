@@ -39,13 +39,13 @@ public class TopicViewFragment extends SherlockFragment
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-         APIHelper.Result result = (APIHelper.Result)
+         APIService.Result result = (APIService.Result)
           intent.getExtras().getSerializable(APIService.RESULT);
 
-         if (result.getResult() != null) {
+         if (!result.hasError()) {
             setTopicLeaf((TopicLeaf)result.getResult());
          } else {
-            APIHelper.getErrorDialog(getActivity(),
+            APIService.getErrorDialog(getActivity(),
              result.getError(),
              APIService.getTopicIntent(getActivity(),
              mTopicNode.getName())).show();

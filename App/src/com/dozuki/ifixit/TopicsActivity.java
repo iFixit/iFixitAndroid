@@ -34,16 +34,16 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-         APIHelper.Result result = (APIHelper.Result)
+         APIService.Result result = (APIService.Result)
           intent.getExtras().getSerializable(APIService.RESULT);
 
-         if (result.getResult() != null) {
+         if (!result.hasError()) {
             if (mRootTopic == null) {
                mRootTopic = (TopicNode)result.getResult();
                onTopicSelected(mRootTopic);
             }
          } else {
-            APIHelper.getErrorDialog(TopicsActivity.this, result.getError(),
+            APIService.getErrorDialog(TopicsActivity.this, result.getError(),
              APIService.getCategoriesIntent(TopicsActivity.this)).show();
          }
       }

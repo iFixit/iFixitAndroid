@@ -54,15 +54,15 @@ public class GuideView extends SherlockFragmentActivity
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-         APIHelper.Result result = (APIHelper.Result)
+         APIService.Result result = (APIService.Result)
           intent.getExtras().getSerializable(APIService.RESULT);
 
-         if (result.getResult() != null) {
+         if (!result.hasError()) {
             if (mGuide == null) {
                setGuide((Guide)result.getResult(), 0);
             }
          } else {
-            APIHelper.getErrorDialog(GuideView.this, result.getError(),
+            APIService.getErrorDialog(GuideView.this, result.getError(),
              APIService.getGuideIntent(GuideView.this, mGuideid)).show();
          }
       }
