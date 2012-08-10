@@ -176,6 +176,7 @@ public class APIService extends Service {
             break;
          default:
             Log.w("iFixit", "Invalid request target: " + requestTarget);
+            return new Result(Error.PARSE);
          }
 
          return new Result(response, parsedResult);
@@ -297,6 +298,8 @@ public class APIService extends Service {
          break;
       default:
          Log.w("iFixit", "Invalid request target: " + requestTarget);
+         responder.setResult(new Result(Error.PARSE));
+         return;
       }
 
       performRequest(url, responder);
