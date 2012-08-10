@@ -26,8 +26,9 @@ public class APIDatabase extends SQLiteOpenHelper {
     KEY_RESULT + " TEXT, " +
     KEY_DATE + " INTEGER" + ")";
 
-   public APIDatabase(Context context) {
+   public APIDatabase(Context context) throws Exception {
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
+      throw new Exception("Database not implemented yet");
    }
 
    @Override

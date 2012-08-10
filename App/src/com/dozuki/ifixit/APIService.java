@@ -92,9 +92,9 @@ public class APIService extends Service {
    private static final String REQUEST_BROADCAST_ACTION =
     "REQUEST_BROADCAST_ACTION";
 
-   public static final int TARGET_CATEGORIES = 0;
-   public static final int TARGET_GUIDE = 1;
-   public static final int TARGET_TOPIC = 2;
+   private static final int TARGET_CATEGORIES = 0;
+   private static final int TARGET_GUIDE = 1;
+   private static final int TARGET_TOPIC = 2;
 
    private static final String NO_QUERY = "";
 
@@ -119,20 +119,21 @@ public class APIService extends Service {
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
 
-      APIDatabase db = new APIDatabase(this);
-      String fetchedResult = db.fetchResult(requestTarget, requestQuery);
-      db.close();
+      // Commented out because the DB code isn't ready yet.
+      // APIDatabase db = new APIDatabase(this);
+      // String fetchedResult = db.fetchResult(requestTarget, requestQuery);
+      // db.close();
 
-      if (fetchedResult != null) {
-         Result result = parseResult(fetchedResult, requestTarget,
-          broadcastAction);
+      // if (fetchedResult != null) {
+      //    Result result = parseResult(fetchedResult, requestTarget,
+      //     broadcastAction);
 
-         if (!result.hasError()) {
-            broadcastResult(result, broadcastAction);
+      //    if (!result.hasError()) {
+      //       broadcastResult(result, broadcastAction);
 
-            return START_NOT_STICKY;
-         }
-      }
+      //       return START_NOT_STICKY;
+      //    }
+      // }
 
       performRequestHelper(this, requestTarget, requestQuery, new Responder() {
          public void setResult(Result result) {
@@ -185,9 +186,10 @@ public class APIService extends Service {
 
    private void saveResult(Result result, int requestTarget,
     String requestQuery) {
-      APIDatabase db = new APIDatabase(this);
-      db.insertResult(result.getResponse(), requestTarget, requestQuery);
-      db.close();
+      // Commented out because the DB code isn't ready yet.
+      // APIDatabase db = new APIDatabase(this);
+      // db.insertResult(result.getResponse(), requestTarget, requestQuery);
+      // db.close();
    }
 
    private void broadcastResult(Result result, String broadcastAction) {
