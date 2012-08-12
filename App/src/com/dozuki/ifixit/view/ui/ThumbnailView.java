@@ -10,8 +10,8 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.dozuki.ifixit.ImageSizes;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.StepImage;
 import com.ifixit.android.imagemanager.ImageManager;
 

@@ -8,9 +8,9 @@ import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
-import com.dozuki.ifixit.ImageSizes;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class FullImageViewActivity extends SherlockFragmentActivity {

@@ -20,9 +20,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.ImageSizes;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.GuideStep;
 import com.dozuki.ifixit.view.model.StepLine;
 import com.ifixit.android.imagemanager.ImageManager;

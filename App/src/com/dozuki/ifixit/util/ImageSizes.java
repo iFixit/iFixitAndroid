@@ -1,4 +1,4 @@
-package com.dozuki.ifixit;
+package com.dozuki.ifixit.util;
 
 public class ImageSizes {
    private String mThumb;
