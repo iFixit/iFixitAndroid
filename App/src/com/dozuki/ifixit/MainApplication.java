@@ -1,7 +1,6 @@
 package com.dozuki.ifixit;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
