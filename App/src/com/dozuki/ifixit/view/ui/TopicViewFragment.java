@@ -151,7 +151,7 @@ public class TopicViewFragment extends SherlockFragment
          if (mTopicLeaf.equals(topicLeaf)) {
             selectDefaultTab();
             return;
-         } else if (!mTopicLeaf.getName().equals(mTopicNode.getName())) {
+         } else if (!topicLeaf.getName().equals(mTopicNode.getName())) {
             // Not the most recently selected topic... wait for another.
             return;
          }
