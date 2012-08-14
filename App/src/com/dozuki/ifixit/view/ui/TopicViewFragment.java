@@ -108,7 +108,12 @@ public class TopicViewFragment extends SherlockFragment
    public void onPause() {
       super.onPause();
 
-      getActivity().unregisterReceiver(mApiReceiver);
+      try {
+         getActivity().unregisterReceiver(mApiReceiver);
+      } catch (IllegalArgumentException e) {
+         // Do nothing. This happens in the unlikely event that
+         // unregisterReceiver has been called already.
+      }
    }
 
    @Override

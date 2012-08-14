@@ -119,7 +119,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    public void onPause() {
       super.onPause();
 
-      unregisterReceiver(mApiReceiver);
+      try {
+         unregisterReceiver(mApiReceiver);
+      } catch (IllegalArgumentException e) {
+         // Do nothing. This happens in the unlikely event that
+         // unregisterReceiver has been called already.
+      }
    }
 
    @Override

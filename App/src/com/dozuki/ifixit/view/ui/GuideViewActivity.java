@@ -191,7 +191,12 @@ public class GuideViewActivity extends SherlockFragmentActivity
    public void onPause() {
       super.onPause();
 
-      unregisterReceiver(mApiReceiver);
+      try {
+         unregisterReceiver(mApiReceiver);
+      } catch (IllegalArgumentException e) {
+         // Do nothing. This happens in the unlikely event that
+         // unregisterReceiver has been called already.
+      }
 
       if (mSpeechCommander != null) {
          mSpeechCommander.stopListening();
