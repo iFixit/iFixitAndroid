@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -34,6 +35,18 @@ public class TopicGuideItemView extends RelativeLayout {
       mContext = context;
 
       mTitleView.setText(Html.fromHtml(title));
+     
+      ViewTreeObserver vto = mThumbnail.getViewTreeObserver();
+      vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+          public boolean onPreDraw() {
+             int imageWidth = mThumbnail.getMeasuredWidth();
+             
+             mThumbnail.getLayoutParams().height = (int)(imageWidth * (3f/4f) + 0.5f);
+             
+             return true;
+          }
+      });
+      
       mImageManager.displayImage(image, (Activity)mContext, mThumbnail);
    }
 }

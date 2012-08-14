@@ -6,9 +6,12 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import android.widget.ImageView.ScaleType;
 
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
@@ -49,18 +52,28 @@ public class MainApplication extends Application {
                return false;
             }
 
-            public void fail(ImageView imageView) {
-               if (imageView instanceof ImageViewTouch) {
-                  Bitmap noImage = BitmapFactory.decodeResource(getResources(),
-                   R.drawable.no_image);
+            public void fail(final ImageView imageView) {
+               Bitmap noImage = BitmapFactory.decodeResource(getResources(),
+                R.drawable.no_image);
 
+               if (imageView instanceof ImageViewTouch) 
                   ((ImageViewTouch)imageView).setImageBitmapReset(noImage, true);
-               } else {
-                  imageView.setImageResource(R.drawable.no_image);
-               }
+               else 
+                  imageView.setImageBitmap(noImage);
+                     
+               ViewTreeObserver vto = imageView.getViewTreeObserver();
+               vto.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+                   public boolean onPreDraw() {
+                      int imageWidth = imageView.getMeasuredWidth();
+                      
+                      imageView.getLayoutParams().height = (int)(imageWidth * (3f/4f) + 0.5f);
+                      
+                      return true;
+                   }
+               });
                
-               imageView.getLayoutParams().height = (int)(imageView.getWidth() * (3f/4f) + 0.5f);
-
+               Log.w("No Image Height", imageView.getLayoutParams().height+"");
+               
                imageView.setTag("");
             }
          });

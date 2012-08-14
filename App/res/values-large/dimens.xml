@@ -28,5 +28,6 @@
     
     <dimen name="section_seperator">16dp</dimen>    
     
-    <dimen name="topic_list_image_height">270dp</dimen>    
+    <dimen name="topic_list_image_height">270dp</dimen>
+    <dimen name="topic_list_column_width">270dp</dimen>
 </resources>

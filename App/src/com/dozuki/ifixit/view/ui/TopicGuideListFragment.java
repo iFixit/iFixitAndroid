@@ -122,6 +122,7 @@ public class TopicGuideListFragment extends SherlockFragment {
          String image = mTopic.getGuides().get(position).getImage() +
           mImageSizes.getGrid();
          itemView.setGuideItem(subject, image, getActivity());
+         
 
          return itemView;
       }
