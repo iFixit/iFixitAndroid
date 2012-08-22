@@ -1,19 +1,19 @@
 package com.dozuki.ifixit.view.ui;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class FullImageViewActivity extends SherlockFragmentActivity {
+public class FullImageViewActivity extends Activity {
    private String mImageUrl;
    private ImageView mImageZoom;
    private ImageView mCloseFullScreen;
