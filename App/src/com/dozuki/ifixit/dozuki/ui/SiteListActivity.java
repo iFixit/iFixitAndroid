@@ -35,9 +35,8 @@ public class SiteListActivity extends SherlockFragmentActivity {
           intent.getExtras().getSerializable(APIService.RESULT);
 
          if (!result.hasError()) {
-            @SuppressWarnings("unchecked")
-            ArrayList<Site> sites = (ArrayList<Site>)result.getResult();
-            setSiteList(sites);
+            mSiteList = (ArrayList<Site>)result.getResult();
+            setSiteList(mSiteList);
          } else {
             APIService.getErrorDialog(SiteListActivity.this, result.getError(),
              APIService.getSitesIntent(SiteListActivity.this)).show();
