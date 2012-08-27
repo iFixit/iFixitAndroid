@@ -19,7 +19,7 @@
             android:minHeight="@dimen/topic_list_image_height"
             android:layout_margin="4dp"
             android:padding="1dp"
-            android:scaleType="fitXY"
+            android:scaleType="centerCrop"
             android:cropToPadding="true"
             android:contentDescription="@string/topic_img_desc"
             android:background="@color/gray" />
