@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.dozuki.ifixit"
-      android:versionCode="6"
-      android:versionName="1.1">
+      android:versionCode="7"
+      android:versionName="1.1.1">
    <uses-sdk android:minSdkVersion="8"
          android:targetSdkVersion="15" />
    <uses-permission android:name="android.permission.INTERNET" />
@@ -13,15 +13,16 @@
             android:icon="@drawable/icon_dozuki"
             android:label="@string/app_name_dozuki"
             android:theme="@style/Theme.Dozuki.Green">
-      <activity android:name=".SiteListActivity">
+      <service android:name=".util.APIService"/>
+      <activity android:name=".view.ui.TopicsActivity"></activity>
+      <activity android:name=".dozuki.ui.SiteListActivity">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
       </activity>
-      <activity android:name=".TopicsActivity"></activity>
-      <activity android:name=".TopicViewActivity"></activity>
-      <activity android:name=".GuideView">
+      <activity android:name=".view.ui.TopicViewActivity"></activity>
+      <activity android:name=".view.ui.GuideViewActivity">
          <intent-filter>
             <action android:name="android.intent.action.VIEW" />
             <category android:name="android.intent.category.DEFAULT" />
@@ -34,7 +35,7 @@
                   android:pathPrefix="/Teardown/" />
          </intent-filter>
       </activity>
-      <activity android:name=".FullImageView"
+      <activity android:name=".view.ui.FullImageViewActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar">
       </activity>
    </application>

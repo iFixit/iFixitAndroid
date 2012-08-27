@@ -1,10 +1,6 @@
 package com.dozuki.ifixit;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-
-import org.acra.ACRA;
-import org.acra.annotation.ReportsCrashes;
-
 import android.app.Application;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -14,9 +10,11 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
-//@ReportsCrashes(formKey = "dFRlbjlVamRObWhBLW5Ib3c0QlozdWc6MQ")
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
@@ -36,7 +34,7 @@ public class MainApplication extends Application {
 
    public void setSite(Site site) {
       mSite = site;
-      APIHelper.setSite(site);
+      APIService.setSite(site);
    }
 
    @Override
@@ -44,7 +42,7 @@ public class MainApplication extends Application {
       //ACRA.init(this);
       super.onCreate();
    }
-      
+
    public ImageManager getImageManager() {
       if (mImageManager == null) {
          mImageManager = new ImageManager(this);
@@ -75,7 +73,7 @@ public class MainApplication extends Application {
                return false;
             }
 
-            public void fail(ImageView imageView) {
+            public void fail(final ImageView imageView) {
                if (imageView instanceof ImageViewTouch) {
                   Bitmap noImage = BitmapFactory.decodeResource(getResources(),
                    R.drawable.no_image);
@@ -84,8 +82,6 @@ public class MainApplication extends Application {
                } else {
                   imageView.setImageResource(R.drawable.no_image);
                }
-               
-               imageView.getLayoutParams().height = (int)(imageView.getWidth() * (3f/4f) + 0.5f);
 
                imageView.setTag("");
             }
