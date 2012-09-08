@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.view.ui;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -10,12 +11,17 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
+import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.*;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicNode;
@@ -59,6 +65,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
+      
+      com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -104,6 +112,14 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             }
          });
       }
+   }
+   
+   @Override
+   public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu)
+   {
+	 com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
+	 inflater.inflate(R.menu.menu_bar, menu);
+	  return super.onCreateOptionsMenu(menu);
    }
 
    @Override
@@ -239,13 +255,16 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       switch (item.getItemId()) {
          case android.R.id.home:
             getSupportFragmentManager().popBackStack();
-
             return true;
+         case R.id.gallery_button:
+        	 Intent i = new Intent(this,LoginActivity.class);
+        	 startActivity(i);
+        	 return true;
          default:
             return super.onOptionsItemSelected(item);
       }
    }
-   
+    
    @Override
    protected void onDestroy() {
      super.onDestroy();

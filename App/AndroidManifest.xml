@@ -23,6 +23,12 @@
             <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
       </activity>
+      <activity android:name=".view.ui.LoginActivity"
+          android:theme="@style/Theme.iFixit">
+      </activity>
+      <activity android:name=".view.ui.MediaActivity"
+          android:theme="@style/Theme.iFixit">
+      </activity>
       <activity android:name=".view.ui.TopicViewActivity"
             android:theme="@style/Theme.iFixit">
       </activity>

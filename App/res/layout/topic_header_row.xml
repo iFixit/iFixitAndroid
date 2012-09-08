@@ -6,6 +6,7 @@
     android:orientation="vertical"
     android:background="@color/ifixit_blue">
 
+    
     <TextView
         android:id="@+id/topic_header"
         android:layout_width="match_parent"
