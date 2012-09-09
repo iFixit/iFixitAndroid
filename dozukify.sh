@@ -42,6 +42,9 @@ then
    sed -i "" -e "s/dozuki\.ui\.SiteListActivity/view.ui.TopicsActivity/" ./AndroidManifest.xml
    sed -i "" -e "s/view\.ui\.TopicsActivityTmp/dozuki.ui.SiteListActivity/" ./AndroidManifest.xml
 
+   # Turn on flags for Dozuki.
+   sed -i "" -e "s/UP_NAVIGATION_FINISH_ACTIVITY = false/UP_NAVIGATION_FINISH_ACTIVITY = true/" `find ./src -name "TopicsActivity.java"`
+
    # Update the theme
    sed -i "" -e "s/Theme\.iFixit/Theme.Dozuki/" ./AndroidManifest.xml
 fi
