@@ -1,0 +1,15 @@
+<?xml version = "1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/gallery_button"
+        android:icon="@drawable/gallery"
+        android:showAsAction="always|withText"
+        android:title="title"/>
+    <item
+        android:id="@+id/guides_button"
+        android:icon="@drawable/guides"
+        android:showAsAction="always|withText"
+        android:title="title"/>
+
+</menu>
