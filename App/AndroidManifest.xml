@@ -49,5 +49,7 @@
       <activity android:name=".view.ui.FullImageViewActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar">
       </activity>
+      <activity android:name=".view.ui.OpenIDActivity">
+      </activity>
    </application>
 </manifest>

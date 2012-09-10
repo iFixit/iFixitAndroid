@@ -97,6 +97,7 @@ public class APIService extends Service {
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
    private static final String REQUEST_LOGIN = "REQUEST_LOGIN";
    private static final String REQUEST_PASSWORD= "REQUEST_PASSWORD";
+   private static final String REQUEST_SESSION= "REQUEST_SESSION";
    private static final String REQUEST_BROADCAST_ACTION =
     "REQUEST_BROADCAST_ACTION";
 
@@ -130,12 +131,13 @@ public class APIService extends Service {
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
       String userName =extras.getString(REQUEST_LOGIN);
+      String session =extras.getString(REQUEST_SESSION);
       final String password =extras.getString(REQUEST_PASSWORD);
       
       
       if(TARGET_LOGIN == requestTarget)
       {
-    	  performLoginRequestHelper(this, requestTarget, userName, password, new Responder() {
+    	  performLoginRequestHelper(this, requestTarget, userName, password, session, new Responder() {
     	         public void setResult(Result result) {
 
     	            if (!result.hasError()) {
@@ -198,7 +200,7 @@ public class APIService extends Service {
    private Result parseResult(String response, int requestTarget,
     String broadcastAction) {
       Object parsedResult = null;
-
+     Log.e("IN PASE", response);
       try {
          switch (requestTarget) {
          case TARGET_CATEGORIES:
@@ -256,8 +258,8 @@ public class APIService extends Service {
       return createIntent(context, TARGET_TOPIC, topicName, ACTION_TOPIC);
    }
    
-   public static Intent getLoginIntent(Context context, String login, String password) {
-	      return createLoginIntent(context, TARGET_LOGIN, login, password, ACTION_LOGIN);
+   public static Intent getLoginIntent(Context context, String login, String password, String session) {
+	      return createLoginIntent(context, TARGET_LOGIN, login, password, session , ACTION_LOGIN);
 	   }
 
    private static Intent createIntent(Context context, int target,
@@ -274,7 +276,7 @@ public class APIService extends Service {
    }
    
    private static Intent createLoginIntent(Context context, int target,
-		    String login, String password, String action) {
+		    String login, String password, String session, String action) {
 	   
 		      Intent intent = new Intent(context, APIService.class);
 		      Bundle extras = new Bundle();
@@ -282,6 +284,7 @@ public class APIService extends Service {
 		      extras.putInt(REQUEST_TARGET, target);
 		      extras.putString(REQUEST_LOGIN, login);
 		      extras.putString(REQUEST_PASSWORD, password);
+		      extras.putString(REQUEST_SESSION, session);
 		      extras.putString(REQUEST_BROADCAST_ACTION, action);
 		      intent.putExtras(extras);
 
@@ -364,17 +367,17 @@ public class APIService extends Service {
    }
    
 	private static void performLoginRequestHelper(Context context, int requestTarget,
-			String userName, String password, Responder responder) {
+			String userName, String password,String session, Responder responder) {
 		if (!checkConnectivity(context, responder)) {
 			return;
 		}
 
 		String url = LOGIN_API_URL;
-		performLoginRequest(url, userName, password, responder);
+		performLoginRequest(url, userName, password, session, responder);
 	}
    
    private static void performLoginRequest(final String url, final String userName, 
-		   final String password, final Responder responder) {
+		   final String password,final String session,  final Responder responder) {
 		      final Handler handler = new Handler() {
 		         public void handleMessage(Message message) {
 		            String response = message.getData().getString(RESPONSE);
@@ -390,8 +393,16 @@ public class APIService extends Service {
 		         public void run() {
 		            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
 		            HashMap<String,String> params = new HashMap<String,String>();
-		            params.put("login", userName);
-		            params.put("password", password);
+		            if(session != null)
+		            {
+		            	
+		            params.put("sessionid", session);
+
+		            }else
+		            {
+		            	 params.put("login", userName);
+				         params.put("password", password);
+		            }
 		            try {
 		               helper.performPost(url, userName, password, null, params);
 		            } catch (Exception e) {

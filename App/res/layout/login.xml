@@ -46,5 +46,19 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:text="Register" />
+      <Button
+        android:id="@+id/use_google_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Sign in with Google" />
+      
+      <Button
+        android:id="@+id/use_yahoo_login_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="Sign in with Yahoo" />
+      
 
 </LinearLayout>
