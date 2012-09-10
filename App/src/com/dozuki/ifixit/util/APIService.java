@@ -3,9 +3,14 @@ package com.dozuki.ifixit.util;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Date;
 import java.util.HashMap;
 
+import org.apache.http.client.CookieStore;
 import org.apache.http.client.ResponseHandler;
+import org.apache.http.cookie.ClientCookie;
+import org.apache.http.impl.cookie.BasicClientCookie;
+import org.apache.http.protocol.BasicHttpContext;
 import org.json.JSONException;
 
 import android.app.AlertDialog;
@@ -393,18 +398,26 @@ public class APIService extends Service {
 		         public void run() {
 		            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
 		            HashMap<String,String> params = new HashMap<String,String>();
+		            HashMap<String,String> header = new HashMap<String,String>();
+		    		final BasicClientCookie cookie = new BasicClientCookie("session",
+		    				session);
+		    
+		            
 		            if(session != null)
 		            {
-		            	
-		            params.put("sessionid", session);
-
+		            	cookie.setExpiryDate(new Date(System.currentTimeMillis() + 120000));
+			    		cookie.setDomain(".ifixit.com");
+			    		cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
+			    		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, ".ifixit.com");
+			    		cookie.setPath("/");
+		           
 		            }else
 		            {
 		            	 params.put("login", userName);
 				         params.put("password", password);
 		            }
 		            try {
-		               helper.performPost(url, userName, password, null, params);
+		               helper.performPost(url, userName, password, header, params, cookie);
 		            } catch (Exception e) {
 		               Log.w("iFixit", "Encoding error: " + e.getMessage());
 		            }

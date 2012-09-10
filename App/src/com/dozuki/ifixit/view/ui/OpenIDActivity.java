@@ -17,14 +17,13 @@ import com.dozuki.ifixit.R;
 public class OpenIDActivity extends Activity {
 	
 	
-	public static String BASE_OPENID_URL = "http://www.ifixit.com/Guide/login/openid?host=";
+	public static String BASE_OPENID_URL = "https://www.ifixit.com/Guide/login/openid?host=";
 
 	public static String LOGIN_METHOD = "LOGIN_METHOD";
 
 	
 	public static String YAHOO_LOGIN = "yahoo";
 	public static String GOOGLE_LOGIN = "google";
-	private int _loaded;
 		
 	WebView _webView;
 	
@@ -33,16 +32,13 @@ public class OpenIDActivity extends Activity {
 	      super.onCreate(savedInstanceState);
 	      setContentView(R.layout.open_id_view);
 	      
-	      CookieManager.getInstance().removeAllCookie();
-	      _loaded = 0;
 	      
 	      Bundle extras = this.getIntent().getExtras();
 	      
-	      String method  = extras.getString(LOGIN_METHOD);
+	      final String method  = extras.getString(LOGIN_METHOD);
 	      
 	      _webView = (WebView)findViewById(R.id.open_id_web_view);
 	      
-
 	      
 	      _webView.loadUrl(BASE_OPENID_URL+method);
 	      _webView.getSettings().setJavaScriptEnabled(true);
@@ -63,23 +59,24 @@ public class OpenIDActivity extends Activity {
 	    	      }
 	    	    });
 	      
+	      CookieSyncManager.getInstance().sync();
+	      CookieManager.getInstance().setCookie(BASE_OPENID_URL+method, "sso-origin=SHOW_SUCCESS;");
+	      
+	      
 	      _webView.setWebViewClient(new WebViewClient() {
 	          @Override
 	          public void onPageFinished(WebView view, String url) {
-	        	  
-	        	_loaded++;
-	        	if(_loaded <= 1)
-	        	{
-	        		return;
-	        	}
 	            CookieSyncManager.getInstance().sync();
 	            // Get the cookie from cookie jar.
+	            if(!url.contains("www.ifixit.com"))
+	            {
+	            	return;
+	            }
 	            String cookie = CookieManager.getInstance().getCookie(url);
 	            if (cookie == null) {
 	              return;
 	            }
-	            
-	            Log.e("COOKIE", cookie);
+	            Log.e("cookie", cookie);
 	            // Cookie is a string like NAME=VALUE [; NAME=VALUE]
 	            String[] pairs = cookie.split(";");
 	            for (int i = 0; i < pairs.length; ++i) {
@@ -95,8 +92,6 @@ public class OpenIDActivity extends Activity {
 	            }
 	          }
 	        });
-	      
-	     
 	   }
 	
 }

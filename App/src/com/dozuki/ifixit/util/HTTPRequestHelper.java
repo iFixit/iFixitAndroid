@@ -33,12 +33,14 @@ import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
+import org.apache.http.impl.cookie.BasicClientCookie;
 import org.apache.http.message.BasicHttpResponse;
 import org.apache.http.message.BasicNameValuePair;
 import org.apache.http.params.BasicHttpParams;
 import org.apache.http.params.CoreConnectionPNames;
 import org.apache.http.params.CoreProtocolPNames;
 import org.apache.http.params.HttpParams;
+import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
@@ -139,6 +141,17 @@ public class HTTPRequestHelper {
       performRequest(contentType, url, user, pass, additionalHeaders, params,
        HTTPRequestHelper.POST_TYPE);
    }
+   
+   /**
+    * Perform an HTTP POST operation with specified content type.
+    *
+    */
+   public void performPost(final String url,
+    final String user, final String pass, final Map<String,
+    String> additionalHeaders, final Map<String, String> params, final BasicClientCookie sessionCookie) {
+      performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass, additionalHeaders, params,
+       HTTPRequestHelper.POST_TYPE, sessionCookie);
+   }
 
    /**
     * Perform an HTTP POST operation with a default conent-type of
@@ -150,6 +163,93 @@ public class HTTPRequestHelper {
     final Map<String, String> params) {
       performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass,
        additionalHeaders, params, HTTPRequestHelper.POST_TYPE);
+   }
+   
+   /**
+    * Private heavy lifting method that performs GET or POST with supplied
+    * url, user, pass, data, and headers.
+    *
+    * @param contentType
+    * @param url
+    * @param user
+    * @param pass
+    * @param headers
+    * @param params
+    * @param requestType
+    */
+   private void performRequest(final String contentType, final String url,
+    final String user, final String pass, final Map<String, String> headers,
+    final Map<String, String> params, final int requestType, BasicClientCookie sessionCookie) {
+      final Map<String, String> sendHeaders = new HashMap<String, String>();
+
+      Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
+       " making HTTP request to url - " + url);
+      
+     
+        client.getCookieStore().addCookie(sessionCookie);
+
+
+      // add user and pass to client credentials if present
+      if ((user != null) && (pass != null)) {
+         Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
+          " user and pass present, adding credentials to request");
+         client.getCredentialsProvider().setCredentials(AuthScope.ANY,
+          new UsernamePasswordCredentials(user, pass));
+      }
+
+      // process headers using request interceptor
+      if ((headers != null) && (headers.size() > 0)) {
+         sendHeaders.putAll(headers);
+      }
+      if (requestType == HTTPRequestHelper.POST_TYPE) {
+         sendHeaders.put(HTTPRequestHelper.CONTENT_TYPE, contentType);
+      }
+      if (sendHeaders.size() > 0) {
+         client.addRequestInterceptor(new HttpRequestInterceptor() {
+            public void process(final HttpRequest request,
+             final HttpContext context) throws HttpException, IOException {
+               for (String key : sendHeaders.keySet()) {
+                  if (!request.containsHeader(key)) {
+                     Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
+                      " adding header: " + key + " | " + sendHeaders.get(key));
+                     request.addHeader(key, sendHeaders.get(key));
+                  }
+               }
+               sendHeaders.clear();
+            }
+         });
+      }
+
+      // handle POST or GET request respectively
+      if (requestType == HTTPRequestHelper.POST_TYPE) {
+         HttpPost method = new HttpPost(url);
+
+         Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
+          " performRequest POST");
+
+         // data - name/value params
+         List<NameValuePair> nvps = null;
+         if ((params != null) && (params.size() > 0)) {
+            nvps = new ArrayList<NameValuePair>();
+            for (String key : params.keySet()) {
+               Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
+                " adding param: " + key + " | " + params.get(key));
+               nvps.add(new BasicNameValuePair(key, params.get(key)));
+            }
+         }
+         if (nvps != null) {
+            try {
+               method.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
+            } catch (UnsupportedEncodingException e) {
+               Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, e);
+            }
+         }
+         execute(client, method);
+      } else if (requestType == HTTPRequestHelper.GET_TYPE) {
+         Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
+          " performRequest GET");
+         execute(client, new HttpGet(url));
+      }
    }
 
    /**
