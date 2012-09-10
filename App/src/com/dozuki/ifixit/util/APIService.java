@@ -1,7 +1,9 @@
 package com.dozuki.ifixit.util;
 
 import java.io.Serializable;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.HashMap;
 
 import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
@@ -87,15 +89,21 @@ public class APIService extends Service {
     "http://www.ifixit.com/api/1.0/guide/";
    private static final String CATEGORIES_API_URL =
     "http://www.ifixit.com/api/1.0/categories/";
+   private static final String LOGIN_API_URL =
+	    "https://www.ifixit.com/api/0.1/login";
+   
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
+   private static final String REQUEST_LOGIN = "REQUEST_LOGIN";
+   private static final String REQUEST_PASSWORD= "REQUEST_PASSWORD";
    private static final String REQUEST_BROADCAST_ACTION =
     "REQUEST_BROADCAST_ACTION";
 
    private static final int TARGET_CATEGORIES = 0;
    private static final int TARGET_GUIDE = 1;
    private static final int TARGET_TOPIC = 2;
+   private static final int TARGET_LOGIN = 3;
 
    private static final String NO_QUERY = "";
 
@@ -105,6 +113,8 @@ public class APIService extends Service {
     "com.dozuki.ifixit.api.guide";
    public static final String ACTION_TOPIC =
     "com.dozuki.ifixit.api.topic";
+   public static final String ACTION_LOGIN =
+	    "com.dozuki.ifixit.api.login";
 
    public static final String RESULT = "RESULT";
 
@@ -119,6 +129,31 @@ public class APIService extends Service {
       final int requestTarget = extras.getInt(REQUEST_TARGET);
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
+      String userName =extras.getString(REQUEST_LOGIN);
+      final String password =extras.getString(REQUEST_PASSWORD);
+      
+      
+      if(TARGET_LOGIN == requestTarget)
+      {
+    	  performLoginRequestHelper(this, requestTarget, userName, password, new Responder() {
+    	         public void setResult(Result result) {
+
+    	            if (!result.hasError()) {
+    	               result = parseResult(result.getResponse(), requestTarget,
+    	                broadcastAction);
+    	            }
+
+    	            // Don't save if there a parse error.
+    	            if (!result.hasError()) {
+    	               saveResult(result, requestTarget, requestQuery);
+    	            }
+
+    	            // Always broadcast the result despite any errors.
+    	            broadcastResult(result, broadcastAction);
+    	         }
+    	      });
+    	  return START_NOT_STICKY;
+      }
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -175,6 +210,9 @@ public class APIService extends Service {
          case TARGET_TOPIC:
             parsedResult = JSONHelper.parseTopicLeaf(response);
             break;
+         case TARGET_LOGIN:
+            parsedResult = JSONHelper.parseLoginInfo(response);
+             break;
          default:
             Log.w("iFixit", "Invalid request target: " + requestTarget);
             return new Result(Error.PARSE);
@@ -217,6 +255,10 @@ public class APIService extends Service {
    public static Intent getTopicIntent(Context context, String topicName) {
       return createIntent(context, TARGET_TOPIC, topicName, ACTION_TOPIC);
    }
+   
+   public static Intent getLoginIntent(Context context, String login, String password) {
+	      return createLoginIntent(context, TARGET_LOGIN, login, password, ACTION_LOGIN);
+	   }
 
    private static Intent createIntent(Context context, int target,
     String query, String action) {
@@ -230,6 +272,21 @@ public class APIService extends Service {
 
       return intent;
    }
+   
+   private static Intent createLoginIntent(Context context, int target,
+		    String login, String password, String action) {
+	   
+		      Intent intent = new Intent(context, APIService.class);
+		      Bundle extras = new Bundle();
+
+		      extras.putInt(REQUEST_TARGET, target);
+		      extras.putString(REQUEST_LOGIN, login);
+		      extras.putString(REQUEST_PASSWORD, password);
+		      extras.putString(REQUEST_BROADCAST_ACTION, action);
+		      intent.putExtras(extras);
+
+		      return intent;
+		   }
 
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
@@ -305,6 +362,46 @@ public class APIService extends Service {
 
       performRequest(url, responder);
    }
+   
+	private static void performLoginRequestHelper(Context context, int requestTarget,
+			String userName, String password, Responder responder) {
+		if (!checkConnectivity(context, responder)) {
+			return;
+		}
+
+		String url = LOGIN_API_URL;
+		performLoginRequest(url, userName, password, responder);
+	}
+   
+   private static void performLoginRequest(final String url, final String userName, 
+		   final String password, final Responder responder) {
+		      final Handler handler = new Handler() {
+		         public void handleMessage(Message message) {
+		            String response = message.getData().getString(RESPONSE);
+
+		            responder.setResult(new Result(response));
+		         }
+		      };
+
+		      final ResponseHandler<String> responseHandler =
+		       HTTPRequestHelper.getResponseHandlerInstance(handler);
+
+		      new Thread() {
+		         public void run() {
+		            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
+		            HashMap<String,String> params = new HashMap<String,String>();
+		            params.put("login", userName);
+		            params.put("password", password);
+		            try {
+		               helper.performPost(url, userName, password, null, params);
+		            } catch (Exception e) {
+		               Log.w("iFixit", "Encoding error: " + e.getMessage());
+		            }
+		         }
+		      }.start();
+		   }
+   
+   
 
    private static void performRequest(final String url,
     final Responder responder) {

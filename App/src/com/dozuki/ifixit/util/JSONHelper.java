@@ -21,6 +21,7 @@ import com.dozuki.ifixit.view.model.StepImage;
 import com.dozuki.ifixit.view.model.StepLine;
 import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.TopicNode;
+import com.dozuki.ifixit.view.model.User;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
@@ -195,6 +196,22 @@ public class JSONHelper {
       topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
 
       return topicLeaf;
+   }
+   
+   /**
+    * Login parsing info
+    */
+   public static User parseLoginInfo(String json) throws JSONException {
+      JSONObject jUser = new JSONObject(json);
+    
+      User user = new User();
+      user.setUserId(jUser.getString("userid"));
+      user.setUsername(jUser.getString("username"));
+      user.setImageId(jUser.getString("imageid"));
+      user.setSession(jUser.getString("session"));
+
+
+      return user;
    }
 
    private static GuideInfo parseGuideInfo(JSONObject jGuide) {
