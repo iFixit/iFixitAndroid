@@ -43,13 +43,18 @@ public class MainApplication extends Application {
    public int getSiteTheme() {
       if (mSite == null) {
          return R.style.Theme_Dozuki;
+
+      // Put custom site themes here.
       } else if (mSite.mName.equals("ifixit")) {
          return R.style.Theme_iFixit;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          String theme = mSite.mTheme;
 
-         if (theme.equals("green")) {
+         if (theme.equals("custom")) {
+            // Site has a custom theme but we don't have one implemented yet.
+            return R.style.Theme_Dozuki;
+         } else if (theme.equals("green")) {
             return R.style.Theme_Dozuki_Green;
          } else if (theme.equals("blue")) {
             return R.style.Theme_Dozuki_Blue;
