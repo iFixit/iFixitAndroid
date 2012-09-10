@@ -62,6 +62,8 @@ public class MainApplication extends Application {
             return R.style.Theme_Dozuki_White;
          } else if (theme.equals("orange")) {
             return R.style.Theme_Dozuki_Orange;
+         } else if (theme.equals("black")) {
+            return R.style.Theme_Dozuki_Grey;
          }
       }
 
