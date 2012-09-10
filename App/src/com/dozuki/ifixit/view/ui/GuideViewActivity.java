@@ -76,7 +76,9 @@ public class GuideViewActivity extends SherlockFragmentActivity
    
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      setTheme(((MainApplication)getApplication()).getSiteTheme());
       super.onCreate(savedInstanceState);
+
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

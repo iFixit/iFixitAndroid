@@ -20,10 +20,11 @@ public class TopicViewActivity extends SherlockFragmentActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
+      setTheme(((MainApplication)getApplication()).getSiteTheme());
       super.onCreate(savedState);
 
       setContentView(R.layout.topic_view);
-            
+
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

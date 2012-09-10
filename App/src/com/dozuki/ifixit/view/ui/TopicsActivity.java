@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicNode;
@@ -61,6 +62,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      setTheme(((MainApplication)getApplication()).getSiteTheme());
       super.onCreate(savedInstanceState);
 
       getSupportActionBar().setTitle("");

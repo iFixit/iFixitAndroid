@@ -29,6 +29,10 @@ public class JSONHelper {
    public static ArrayList<Site> parseSites(String json) {
       ArrayList<Site> sites = new ArrayList<Site>();
 
+      // Include ifixit in the site list (at the top) despite the sites API
+      // not returning it.
+      sites.add(Site.getSite("ifixit"));
+
       try {
          JSONArray jSites = new JSONArray(json);
          Site site;
