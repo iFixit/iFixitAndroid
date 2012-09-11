@@ -1,11 +1,15 @@
 package com.dozuki.ifixit.view.ui;
 
+import java.net.URI;
+import java.util.ArrayList;
+
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
@@ -23,16 +27,22 @@ public class MediaActivity extends SherlockFragmentActivity {
 	private static final int CAMERA_PIC_REQUEST = 2;
 	private String selectedImagePath;
 	private String filemanagerstring;
+	GridView mGridView;
+	MediaAdapter galleryAdapter;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		setContentView(R.layout.media);
 
-		GridView gridview = (GridView) findViewById(R.id.gridview);
-		gridview.setAdapter(new MediaAdapter(this));
-
-		gridview.setOnItemClickListener(new OnItemClickListener() {
+		Log.i("mediaact", "oncreate!");
+		mGridView = (GridView) findViewById(R.id.gridview);
+		if (galleryAdapter == null) {
+			galleryAdapter = new MediaAdapter(this, mGridView);
+		}
+		mGridView.setAdapter(galleryAdapter);
+		mGridView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View v,
@@ -53,14 +63,15 @@ public class MediaActivity extends SherlockFragmentActivity {
 								SELECT_PICTURE);
 					}
 				});
-		
-		((Button) findViewById(R.id.camera_button)).setOnClickListener(new OnClickListener(){
-			public void onClick(View arg0)
-			{
-				Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE); 
-				startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);  
-			}
-		});
+
+		((Button) findViewById(R.id.camera_button))
+				.setOnClickListener(new OnClickListener() {
+					public void onClick(View arg0) {
+						Intent cameraIntent = new Intent(
+								android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+						startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+					}
+				});
 	}
 
 	@Override
@@ -75,34 +86,35 @@ public class MediaActivity extends SherlockFragmentActivity {
 			if (requestCode == SELECT_PICTURE) {
 				Uri selectedImageUri = data.getData();
 
-				// OI FILE Manager
-				filemanagerstring = selectedImageUri.getPath();
+				galleryAdapter.addUri(selectedImageUri);
+				/*
+				 * // OI FILE Manager filemanagerstring =
+				 * selectedImageUri.getPath();
+				 * 
+				 * // MEDIA GALLERY selectedImagePath =
+				 * getPath(selectedImageUri);
+				 * 
+				 * // DEBUG PURPOSE - you can delete this if you want if
+				 * (selectedImagePath != null)
+				 * System.out.println(selectedImagePath); else
+				 * System.out.println("selectedImagePath is null"); if
+				 * (filemanagerstring != null)
+				 * System.out.println(filemanagerstring); else
+				 * System.out.println("filemanagerstring is null");
+				 * 
+				 * // NOW WE HAVE OUR WANTED STRING if (selectedImagePath !=
+				 * null) System.out
+				 * .println("selectedImagePath is the right one for you!"); else
+				 * System.out
+				 * .println("filemanagerstring is the right one for you!");
+				 */
+			} else if (requestCode == CAMERA_PIC_REQUEST) {
+				// store returned image
+				Log.i("mediact", "ret from camera");
+				Uri selectedImageUri = data.getData();
+				galleryAdapter.addUri(selectedImageUri);
 
-				// MEDIA GALLERY
-				selectedImagePath = getPath(selectedImageUri);
-
-				// DEBUG PURPOSE - you can delete this if you want
-				if (selectedImagePath != null)
-					System.out.println(selectedImagePath);
-				else
-					System.out.println("selectedImagePath is null");
-				if (filemanagerstring != null)
-					System.out.println(filemanagerstring);
-				else
-					System.out.println("filemanagerstring is null");
-
-				// NOW WE HAVE OUR WANTED STRING
-				if (selectedImagePath != null)
-					System.out
-							.println("selectedImagePath is the right one for you!");
-				else
-					System.out
-							.println("filemanagerstring is the right one for you!");
-			}
-			else if(requestCode == CAMERA_PIC_REQUEST)
-			{
-				//store returned image
-				Bitmap thumbnail = (Bitmap) data.getExtras().get("data");  
+				// Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
 			}
 		}
 	}
