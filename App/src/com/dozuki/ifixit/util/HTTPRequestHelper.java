@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,6 +32,7 @@ import org.apache.http.conn.scheme.PlainSocketFactory;
 import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
+import org.apache.http.cookie.ClientCookie;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -142,15 +144,30 @@ public class HTTPRequestHelper {
        HTTPRequestHelper.POST_TYPE);
    }
    
+
+   
+   
+   
    /**
     * Perform an HTTP POST operation with specified content type.
     *
     */
-   public void performPost(final String url,
-    final String user, final String pass, final Map<String,
-    String> additionalHeaders, final Map<String, String> params, final BasicClientCookie sessionCookie) {
+   public void performPostWithSessionCookie(final String url,
+    final String user, final String pass, final String session, final String domain, final Map<String,
+    String> additionalHeaders, final Map<String, String> params) {
+	   
+		final BasicClientCookie cookie = new BasicClientCookie("session",
+				session);
+
+		cookie.setExpiryDate(new Date(System.currentTimeMillis() + 120000));
+		cookie.setDomain(domain);
+		cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
+		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, domain);
+		cookie.setPath("/");
+		
+		 client.getCookieStore().addCookie(cookie);
       performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass, additionalHeaders, params,
-       HTTPRequestHelper.POST_TYPE, sessionCookie);
+       HTTPRequestHelper.POST_TYPE);
    }
 
    /**
@@ -165,92 +182,7 @@ public class HTTPRequestHelper {
        additionalHeaders, params, HTTPRequestHelper.POST_TYPE);
    }
    
-   /**
-    * Private heavy lifting method that performs GET or POST with supplied
-    * url, user, pass, data, and headers.
-    *
-    * @param contentType
-    * @param url
-    * @param user
-    * @param pass
-    * @param headers
-    * @param params
-    * @param requestType
-    */
-   private void performRequest(final String contentType, final String url,
-    final String user, final String pass, final Map<String, String> headers,
-    final Map<String, String> params, final int requestType, BasicClientCookie sessionCookie) {
-      final Map<String, String> sendHeaders = new HashMap<String, String>();
-
-      Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
-       " making HTTP request to url - " + url);
-      
-     
-        client.getCookieStore().addCookie(sessionCookie);
-
-
-      // add user and pass to client credentials if present
-      if ((user != null) && (pass != null)) {
-         Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
-          " user and pass present, adding credentials to request");
-         client.getCredentialsProvider().setCredentials(AuthScope.ANY,
-          new UsernamePasswordCredentials(user, pass));
-      }
-
-      // process headers using request interceptor
-      if ((headers != null) && (headers.size() > 0)) {
-         sendHeaders.putAll(headers);
-      }
-      if (requestType == HTTPRequestHelper.POST_TYPE) {
-         sendHeaders.put(HTTPRequestHelper.CONTENT_TYPE, contentType);
-      }
-      if (sendHeaders.size() > 0) {
-         client.addRequestInterceptor(new HttpRequestInterceptor() {
-            public void process(final HttpRequest request,
-             final HttpContext context) throws HttpException, IOException {
-               for (String key : sendHeaders.keySet()) {
-                  if (!request.containsHeader(key)) {
-                     Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
-                      " adding header: " + key + " | " + sendHeaders.get(key));
-                     request.addHeader(key, sendHeaders.get(key));
-                  }
-               }
-               sendHeaders.clear();
-            }
-         });
-      }
-
-      // handle POST or GET request respectively
-      if (requestType == HTTPRequestHelper.POST_TYPE) {
-         HttpPost method = new HttpPost(url);
-
-         Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
-          " performRequest POST");
-
-         // data - name/value params
-         List<NameValuePair> nvps = null;
-         if ((params != null) && (params.size() > 0)) {
-            nvps = new ArrayList<NameValuePair>();
-            for (String key : params.keySet()) {
-               Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
-                " adding param: " + key + " | " + params.get(key));
-               nvps.add(new BasicNameValuePair(key, params.get(key)));
-            }
-         }
-         if (nvps != null) {
-            try {
-               method.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
-            } catch (UnsupportedEncodingException e) {
-               Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, e);
-            }
-         }
-         execute(client, method);
-      } else if (requestType == HTTPRequestHelper.GET_TYPE) {
-         Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
-          " performRequest GET");
-         execute(client, new HttpGet(url));
-      }
-   }
+  
 
    /**
     * Private heavy lifting method that performs GET or POST with supplied

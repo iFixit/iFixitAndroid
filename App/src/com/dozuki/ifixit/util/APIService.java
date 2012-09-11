@@ -97,6 +97,8 @@ public class APIService extends Service {
    private static final String LOGIN_API_URL =
 	    "https://www.ifixit.com/api/0.1/login";
    
+   
+   private static final String API_DOMAIN =  ".ifixit.com";
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
@@ -122,6 +124,8 @@ public class APIService extends Service {
    public static final String ACTION_LOGIN =
 	    "com.dozuki.ifixit.api.login";
 
+   
+ 
    public static final String RESULT = "RESULT";
 
    @Override
@@ -142,7 +146,7 @@ public class APIService extends Service {
       
       if(TARGET_LOGIN == requestTarget)
       {
-    	  performLoginRequestHelper(this, requestTarget, userName, password, session, new Responder() {
+    	  perfromAuthenicatedRequestHelper(this, requestTarget, userName, password, session, new Responder() {
     	         public void setResult(Result result) {
 
     	            if (!result.hasError()) {
@@ -371,59 +375,59 @@ public class APIService extends Service {
       performRequest(url, responder);
    }
    
-	private static void performLoginRequestHelper(Context context, int requestTarget,
-			String userName, String password,String session, Responder responder) {
+	private static void perfromAuthenicatedRequestHelper(Context context,
+			int requestTarget, String userName, String password,
+			String session, Responder responder) {
 		if (!checkConnectivity(context, responder)) {
 			return;
 		}
 
-		String url = LOGIN_API_URL;
-		performLoginRequest(url, userName, password, session, responder);
+		String url;
+
+		switch (requestTarget) {
+		case TARGET_LOGIN:
+			url = LOGIN_API_URL;
+			break;
+		default:
+			Log.w("iFixit", "Invalid request target: " + requestTarget);
+			responder.setResult(new Result(Error.PARSE));
+			return;
+		}
+		performAuthenicatedRequest(url, userName, password, session, responder);
 	}
-   
-   private static void performLoginRequest(final String url, final String userName, 
+
+ 
+   private static void  performAuthenicatedRequest(final String url, final String userName, 
 		   final String password,final String session,  final Responder responder) {
-		      final Handler handler = new Handler() {
-		         public void handleMessage(Message message) {
-		            String response = message.getData().getString(RESPONSE);
+	   final Handler handler = new Handler() {
+	         public void handleMessage(Message message) {
+	            String response = message.getData().getString(RESPONSE);
 
-		            responder.setResult(new Result(response));
-		         }
-		      };
+	            responder.setResult(new Result(response));
+	         }
+	      };
 
-		      final ResponseHandler<String> responseHandler =
-		       HTTPRequestHelper.getResponseHandlerInstance(handler);
+	      final ResponseHandler<String> responseHandler =
+	       HTTPRequestHelper.getResponseHandlerInstance(handler);
 
-		      new Thread() {
-		         public void run() {
-		            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-		            HashMap<String,String> params = new HashMap<String,String>();
-		            HashMap<String,String> header = new HashMap<String,String>();
-		    		final BasicClientCookie cookie = new BasicClientCookie("session",
-		    				session);
-		    
-		            
-		            if(session != null)
-		            {
-		            	cookie.setExpiryDate(new Date(System.currentTimeMillis() + 120000));
-			    		cookie.setDomain(".ifixit.com");
-			    		cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
-			    		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, ".ifixit.com");
-			    		cookie.setPath("/");
-		           
-		            }else
-		            {
-		            	 params.put("login", userName);
-				         params.put("password", password);
-		            }
-		            try {
-		               helper.performPost(url, userName, password, header, params, cookie);
-		            } catch (Exception e) {
-		               Log.w("iFixit", "Encoding error: " + e.getMessage());
-		            }
-		         }
-		      }.start();
-		   }
+	      new Thread() {
+	         public void run() {
+	            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
+	            HashMap<String,String> params = new HashMap<String,String>();
+	            HashMap<String,String> header = new HashMap<String,String>();
+ 
+	            params.put("login", userName);
+			    params.put("password", password);
+	          
+	            try {
+	               helper.performPostWithSessionCookie(url, userName, password, session, API_DOMAIN, header, params );
+	            } catch (Exception e) {
+	               Log.w("iFixit", "Encoding error: " + e.getMessage());
+	            }
+	         }
+	      }.start();
+   
+   }
    
    
 
