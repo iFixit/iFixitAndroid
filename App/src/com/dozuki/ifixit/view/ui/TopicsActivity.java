@@ -20,6 +20,7 @@ import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
 import com.dozuki.ifixit.R;
@@ -31,6 +32,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
  TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
+   private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 
    private TopicViewFragment mTopicView;
@@ -40,6 +42,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
+   private boolean mLoginVisible;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @Override
@@ -77,8 +80,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       if (savedInstanceState != null) {
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
          mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
+         mLoginVisible = savedInstanceState.getBoolean(LOGIN_VISIBLE);
       } else {
          mTopicListVisible = true;
+         mLoginVisible= false;
       }
 
       if (mRootTopic == null) {
@@ -149,6 +154,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
+      outState.putBoolean(LOGIN_VISIBLE, mLoginVisible);
    }
 
    // Load categories from the API.
@@ -157,10 +163,15 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
 
    public void onBackStackChanged() {
+	   
+	 
       int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
 
       if (mBackStackSize > backStackSize) {
          setTopicListVisible();
+	     if (mLoginVisible) {
+	        mLoginVisible = false;
+		 }
       }
 
       mBackStackSize = backStackSize;
@@ -226,16 +237,25 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
       int inAnim, outAnim;
 
-      if (delay) {
+  
+     if (delay) {
          inAnim = R.anim.slide_in_right_delay;
          outAnim = R.anim.slide_out_left_delay;
       } else {
          inAnim = R.anim.slide_in_right;
          outAnim = R.anim.slide_out_left;
       }
-
-      ft.setCustomAnimations(inAnim, outAnim,
-       R.anim.slide_in_left, R.anim.slide_out_right);
+      
+      
+      if(mLoginVisible)
+      {
+         ft.setCustomAnimations(R.anim.slide_in_bottom, R.anim.slide_out_left,
+        		 R.anim.slide_in_left, R.anim.slide_out_bottom);
+      }else
+      {
+         ft.setCustomAnimations(inAnim, outAnim,
+            R.anim.slide_in_left, R.anim.slide_out_right);
+      }
       ft.replace(R.id.topic_list_fragment, fragment);
 
       if (addToBack) {
@@ -257,8 +277,19 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             getSupportFragmentManager().popBackStack();
             return true;
          case R.id.gallery_button:
-        	 Intent i = new Intent(this,LoginActivity.class);
-        	 startActivity(i);
+        	 
+			if (mDualPane) {
+				if (!mLoginVisible) {
+					SherlockFragment fg = LoginFragment.newInstance();
+					mLoginVisible = true;
+					changeTopicListView(fg, true);
+				}
+			}    		 
+        	 else
+        	 {
+        	    Intent i = new Intent(this,LoginActivity.class);
+        	    startActivity(i);
+        	 }
         	 return true;
          default:
             return super.onOptionsItemSelected(item);
