@@ -112,7 +112,11 @@ public class LoginFragment extends SherlockFragment
    
 
 	private void login() {
-		mContext.startService(APIService.getLoginIntent(mContext, _username.getText().toString(), _password.getText().toString(), null));
+		
+		if( _username.getText().toString().length() > 1 &&  _password.getText().toString().length() > 1)
+		{
+		   mContext.startService(APIService.getLoginIntent(mContext, _username.getText().toString(), _password.getText().toString(), null));
+		}
 	}
 
 
@@ -177,10 +181,13 @@ public void onClick(View v) {
 @Override
 public void onActivityResult (int requestCode, int resultCode, Intent data)
 {
-	Log.e("LOGIN", requestCode+"");
-	Log.e("Login Activity", "Welcome " + requestCode);
-	String session = data.getStringExtra("session");
-	mContext.startService(APIService.getLoginIntent(mContext, null, null, session));
+	if(data != null)
+	{
+	   Log.e("LOGIN", requestCode+"");
+	   Log.e("Login Activity", "Welcome " + requestCode);
+	   String session = data.getStringExtra("session");
+	   mContext.startService(APIService.getLoginIntent(mContext, null, null, session));
+	}
 }
 
 @Override

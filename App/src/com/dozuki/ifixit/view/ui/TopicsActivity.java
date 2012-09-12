@@ -26,6 +26,7 @@ import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.LoginListener;
@@ -84,7 +85,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       setContentView(R.layout.topics);
       
       com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
-
+      
+      
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
       mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
@@ -334,7 +336,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             getSupportFragmentManager().popBackStack();
             return true;
          case R.id.gallery_button:
-        	 
+        	 MainApplication mainApp = (MainApplication) getApplication();
+        	 if(mainApp.getUser() == null)
+        	 {
 			if (mDualPane) {
 				if (!mLoginVisible) {
 					LoginFragment fg = LoginFragment.newInstance();
@@ -345,8 +349,29 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			}    		 
         	 else
         	 {
-        	    Intent i = new Intent(this,LoginActivity.class);
-        	    startActivity(i);
+        	   // Intent i = new Intent(this,LoginActivity.class);
+        	  //  startActivity(i);
+        		 if (!mLoginVisible) {
+        		 LoginFragment fg = LoginFragment.newInstance();
+					fg.registerOnLoginListener(this);
+					mLoginVisible = true;
+					changeTopicListView(fg, true);
+        		 }
+        	 }
+        	 }else
+        	 {
+        		 if (mMediaView == null) {
+        				mMediaView = MediaFragment.newInstance();
+
+        			}
+        			if (mDualPane) {
+
+        				changeMainView(mMediaView, true, false);
+        				mTopicViewOverlay.setVisibility(View.INVISIBLE);
+        				hideTopicList();
+        			} else {
+        				this.changeTopicListView(mMediaView, true, false);
+        			}
         	 }
         	 return true;
          default:
@@ -360,25 +385,25 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
 
 	@Override
-   public void onLogin(User user) {
-	if(mLoginVisible)
-	{
-		getSupportFragmentManager().popBackStack();
-	}
-	
+	public void onLogin(User user) {
 
-	if(mMediaView==null)
-	{
-		mMediaView = MediaFragment.newInstance();
-		
-     }
-	
-    changeMainView(mMediaView, true, false);
-		Log.e("changed mentu", "OOO");
-		 mTopicViewOverlay.setVisibility(View.INVISIBLE);
-	Toast.makeText(this, "Welcome " + user.getUsername(), Toast.LENGTH_LONG).show();
-	hideTopicList();
-	// Intent i = new Intent(this, MediaActivity.class);
-	// startActivity(i);
-}   
+		if (mLoginVisible) {
+			getSupportFragmentManager().popBackStack();
+		}
+
+		if (mMediaView == null) {
+			mMediaView = MediaFragment.newInstance();
+
+		}
+		if (mDualPane) {
+
+			changeMainView(mMediaView, true, false);
+			mTopicViewOverlay.setVisibility(View.INVISIBLE);
+			hideTopicList();
+		} else {
+			this.changeTopicListView(mMediaView, true, false);
+		}
+		// Intent i = new Intent(this, MediaActivity.class);
+		// startActivity(i);
+	}
 }

@@ -147,15 +147,17 @@ public class HTTPRequestHelper {
 
    
    
-   
-   /**
-    * Perform an HTTP POST operation with specified content type.
-    *
-    */
-   public void performPostWithSessionCookie(final String url,
-    final String user, final String pass, final String session, final String domain, final Map<String,
-    String> additionalHeaders, final Map<String, String> params) {
-	   
+	/**
+	 * Perform an HTTP POST operation with specified content type.
+	 * 
+	 */
+	public void performPostWithSessionCookie(final String url,
+			final String user, final String pass, final String session,
+			final String domain, final Map<String, String> additionalHeaders,
+			final Map<String, String> params) {
+
+		// clearing all old cookies. we want full control
+		client.getCookieStore().getCookies().clear();
 		final BasicClientCookie cookie = new BasicClientCookie("session",
 				session);
 
@@ -164,11 +166,11 @@ public class HTTPRequestHelper {
 		cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
 		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, domain);
 		cookie.setPath("/");
-		
-		 client.getCookieStore().addCookie(cookie);
-      performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass, additionalHeaders, params,
-       HTTPRequestHelper.POST_TYPE);
-   }
+
+		client.getCookieStore().addCookie(cookie);
+		performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass,
+				additionalHeaders, params, HTTPRequestHelper.POST_TYPE);
+	}
 
    /**
     * Perform an HTTP POST operation with a default conent-type of
