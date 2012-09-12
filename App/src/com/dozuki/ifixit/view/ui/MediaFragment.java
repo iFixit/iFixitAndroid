@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.view.ui;
 
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -25,8 +26,9 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 
-public class MediaFragment extends SherlockFragment implements OnItemClickListener, OnClickListener{
-	  
+public class MediaFragment extends SherlockFragment implements
+		OnItemClickListener, OnClickListener {
+
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
@@ -35,128 +37,117 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 	GridView mGridView;
 	MediaAdapter galleryAdapter;
 
-		
-		private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-			@Override
-			public void onReceive(Context context, Intent intent) {
-				APIService.Result result = (APIService.Result) intent.getExtras()
-						.getSerializable(APIService.RESULT);
+	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			APIService.Result result = (APIService.Result) intent.getExtras()
+					.getSerializable(APIService.RESULT);
 
-				if (!result.hasError()) {
-					
-					//Log.e("Login Activity", "Welcome " + user.getUsername());
-				}
+			if (!result.hasError()) {
+
+				// Log.e("Login Activity", "Welcome " + user.getUsername());
 			}
-		};
+		}
+	};
+
+	public static MediaFragment newInstance() {
+		MediaFragment mFrgment = new MediaFragment();
+		return mFrgment;
+	}
+
+	/**
+	 * Required for restoring fragments
+	 */
+	public MediaFragment() {
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		View view = inflater.inflate(R.layout.media, container, false);
+
+		mGridView = (GridView) view.findViewById(R.id.gridview);
+		galleryAdapter = new MediaAdapter(mContext, mGridView);
+		mGridView.setAdapter(galleryAdapter);
+		mGridView.setOnItemClickListener(this);
 		
-		
-		 public static MediaFragment newInstance() {
-			 MediaFragment mFrgment = new MediaFragment();
-		       return mFrgment;
-		   }
-
-
-
-
-	   /**
-	    * Required for restoring fragments
-	    */
-	   public MediaFragment() {}
-
-
-	   @Override
-	   public void onCreate(Bundle savedInstanceState) {
-	      super.onCreate(savedInstanceState);
-
-	      if (savedInstanceState != null) {
-	       
-	      }
-	      
-	   }
-
-	   @Override
-	   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-		 Bundle savedInstanceState) {
-	      View view = inflater.inflate(R.layout.media, container,
-	       false);
-	      
-	      mGridView = (GridView) view.findViewById(R.id.gridview);
-			if (galleryAdapter == null) {
-				galleryAdapter = new MediaAdapter(mContext, mGridView);
+		if (savedInstanceState != null) {
+			String arr[] = savedInstanceState.getStringArray("URIs");
+			ArrayList<Uri> uriArr = new ArrayList<Uri>();
+			for (int i = 0; i < arr.length; i++) {
+				uriArr.add(Uri.parse(arr[i]));
 			}
-			mGridView.setAdapter(galleryAdapter);
-			mGridView.setOnItemClickListener(this);
-			
-			((Button) view.findViewById(R.id.gallery_button))
-			.setOnClickListener(this);
-			
+			galleryAdapter.setMediaList(uriArr);
+		}
 
-	       ((Button) view.findViewById(R.id.camera_button))
-			.setOnClickListener(this);
+		((Button) view.findViewById(R.id.gallery_button))
+				.setOnClickListener(this);
 
-	  
-	      return view;
-	   }
-	   
-	   
-	   @Override
-	   public void onSaveInstanceState(Bundle outState) {
-	      super.onSaveInstanceState(outState);
+		((Button) view.findViewById(R.id.camera_button))
+				.setOnClickListener(this);
 
-	      //outState.putSerializable(CURRENT_TOPIC, mTopic);
-	   }
+		return view;
+	}
 
-	   public void onItemClick(AdapterView<?> adapterView, View view,
-	    int position, long id) {
-			Toast.makeText(mContext, "" + position,
-					Toast.LENGTH_SHORT).show();
-	   }
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		ArrayList<Uri> mArr = galleryAdapter.getMediaList();
+		String arr[] = new String[mArr.size()];
+		for (int i = 0; i < arr.length; i++) {
+			arr[i] = mArr.get(i).getEncodedPath();
+		}
+		savedInstanceState.putStringArray("URIs", arr);
+	}
 
+	public void onItemClick(AdapterView<?> adapterView, View view,
+			int position, long id) {
+		Toast.makeText(mContext, "" + position, Toast.LENGTH_SHORT).show();
+	}
 
-	   @Override
-	   public void onAttach(Activity activity) {
-	      super.onAttach(activity);
+	@Override
+	public void onAttach(Activity activity) {
+		super.onAttach(activity);
 
-	      try {
-	        // topicSelectedListener = (TopicSelectedListener)activity;
-	         mContext = (Context)activity;
-	      } catch (ClassCastException e) {
-	         throw new ClassCastException(activity.toString() +
-	          " must implement TopicSelectedListener");
-	      }
-	   }
-
-
-
+		try {
+			// topicSelectedListener = (TopicSelectedListener)activity;
+			mContext = (Context) activity;
+		} catch (ClassCastException e) {
+			throw new ClassCastException(activity.toString()
+					+ " must implement TopicSelectedListener");
+		}
+	}
 
 	@Override
 	public void onResume() {
-	   super.onResume();
+		super.onResume();
 
-	   IntentFilter filter = new IntentFilter();
-	   filter.addAction(APIService.ACTION_LOGIN);
-	   mContext.registerReceiver(mApiReceiver, filter);
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(APIService.ACTION_LOGIN);
+		mContext.registerReceiver(mApiReceiver, filter);
 	}
-
 
 	@Override
 	public void onPause() {
-	   super.onPause();
+		super.onPause();
 
-	   try {
-		   mContext.unregisterReceiver(mApiReceiver);
-	   } catch (IllegalArgumentException e) {
-	      // Do nothing. This happens in the unlikely event that
-	      // unregisterReceiver has been called already.
-	   }
+		try {
+			mContext.unregisterReceiver(mApiReceiver);
+		} catch (IllegalArgumentException e) {
+			// Do nothing. This happens in the unlikely event that
+			// unregisterReceiver has been called already.
+		}
 	}
-
 
 	@Override
 	public void onClick(View arg0) {
 		// TODO Auto-generated method stub
-		switch(arg0.getId())
-		{
+		switch (arg0.getId()) {
 		case R.id.gallery_button:
 			Intent intent = new Intent();
 			intent.setType("image/*");
@@ -165,7 +156,7 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 					Intent.createChooser(intent, "Select Picture"),
 					SELECT_PICTURE);
 			break;
-			
+
 		case R.id.camera_button:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
@@ -174,10 +165,10 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 		}
 	}
 
-	
 	public String getPath(Uri uri) {
 		String[] projection = { MediaStore.Images.Media.DATA };
-		Cursor cursor = ((Activity) mContext).managedQuery(uri, projection, null, null, null);
+		Cursor cursor = ((Activity) mContext).managedQuery(uri, projection,
+				null, null, null);
 		if (cursor != null) {
 			// HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
 			// THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
@@ -188,15 +179,14 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 		} else
 			return null;
 	}
-	
+
 	@Override
-	public void onActivityResult (int requestCode, int resultCode, Intent data)
-	{
-	    if(resultCode == Activity.RESULT_OK)
-	    {
-       if (requestCode == MediaFragment.SELECT_PICTURE) {
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (resultCode == Activity.RESULT_OK) {
+			if (requestCode == MediaFragment.SELECT_PICTURE) {
+				Log.i("","in media frag");
 				Uri selectedImageUri = data.getData();
-                 
+
 				galleryAdapter.addUri(selectedImageUri);
 				/*
 				 * // OI FILE Manager filemanagerstring =
@@ -227,7 +217,7 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
 				// Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
 			}
-	    }
+		}
 	}
 
 }

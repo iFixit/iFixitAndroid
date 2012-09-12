@@ -106,7 +106,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
 
       if (mRootTopic == null) {
-         fetchCategories();
+//         fetchCategories();
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
@@ -136,6 +136,15 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             }
          });
       }
+      
+      if (mMediaView == null) 
+			mMediaView = MediaFragment.newInstance();
+			
+    changeMainView(mMediaView, true, false);
+		mTopicViewOverlay.setVisibility(View.INVISIBLE);
+		
+		mGalleryVisible = true;
+   
    }
    
    @Override

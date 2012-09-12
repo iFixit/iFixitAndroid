@@ -2,12 +2,13 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:weightSum="1.0" >
 
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="0dp"
-        android:layout_weight="2"
+        android:layout_weight="0.95"
         android:fillViewport="true" >
 
         <GridView
@@ -15,7 +16,7 @@
             android:id="@+id/gridview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnWidth="90dp"
+            android:columnWidth="150dp"
             android:gravity="center"
             android:horizontalSpacing="10dp"
             android:numColumns="auto_fit"
@@ -27,33 +28,39 @@
 
     <LinearLayout
         android:layout_width="fill_parent"
-        android:layout_height="39dp"
+        android:layout_height="0dp"
+         android:layout_weight="0.05"
         android:fillViewport="true"
-        android:orientation="horizontal" >
+        android:orientation="horizontal" 
+        android:weightSum="1.0">
 
         <Button
             android:id="@+id/img_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="img" />
+            android:text="img"
+            android:layout_weight="0.25" />
 
         <Button
             android:id="@+id/camera_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="camera" />
+            android:text="camera"
+            android:layout_weight="0.25"  />
 
         <Button
             android:id="@+id/gallery_button"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="gallery" />
+            android:text="gallery" 
+            android:layout_weight="0.25" />
 
         <Button
             android:id="@+id/delete_button"
-            android:layout_width="wrap_content"
+             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="delete" />
+            android:text="delete"
+            android:layout_weight="0.25"  />
     </LinearLayout>
 
 </LinearLayout>

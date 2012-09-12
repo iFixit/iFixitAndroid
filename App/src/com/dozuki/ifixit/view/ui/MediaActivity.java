@@ -2,6 +2,7 @@ package com.dozuki.ifixit.view.ui;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import android.content.Intent;
 import android.database.Cursor;
@@ -10,7 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.View;
+import android.view.View;  
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -35,12 +36,11 @@ public class MediaActivity extends SherlockFragmentActivity {
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.media);
+	
 
 		Log.i("mediaact", "oncreate!");
 		mGridView = (GridView) findViewById(R.id.gridview);
-		if (galleryAdapter == null) {
-			galleryAdapter = new MediaAdapter(this, mGridView);
-		}
+		galleryAdapter = new MediaAdapter(this, mGridView);
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(new OnItemClickListener() {
 
@@ -72,6 +72,30 @@ public class MediaActivity extends SherlockFragmentActivity {
 						startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
 					}
 				});
+	}
+	
+	@Override
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+	  super.onSaveInstanceState(savedInstanceState);
+	  ArrayList<Uri> mArr = galleryAdapter.getMediaList();
+	  String arr[] = new String[mArr.size()];
+	  for(int i = 0 ; i < arr.length ; i++)
+	  {
+		  arr[i] = mArr.get(i).getEncodedPath();
+	  }
+	  savedInstanceState.putStringArray("URIs", arr);
+	}
+	
+	@Override
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+	  super.onRestoreInstanceState(savedInstanceState);
+	  String arr[] = savedInstanceState.getStringArray("URIs");
+	  ArrayList<Uri> uriArr = new ArrayList<Uri>();
+	  for(int i = 0 ; i < arr.length ; i++)
+	  {
+		  uriArr.add(Uri.parse(arr[i]));
+	  }
+	  galleryAdapter.setMediaList(uriArr);
 	}
 
 	@Override

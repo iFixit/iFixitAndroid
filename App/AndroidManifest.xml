@@ -19,17 +19,13 @@
       <service android:name=".util.APIService"/>
       <activity android:name=".view.ui.TopicsActivity"
             android:theme="@style/Theme.iFixit">
-         
-      </activity>
-      <activity android:name=".view.ui.LoginActivity"
-          android:theme="@style/Theme.iFixit">
-      </activity>
-      <activity android:name=".view.ui.MediaActivity"
-          android:theme="@style/Theme.iFixit">
           <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
+      </activity>
+      <activity android:name=".view.ui.LoginActivity"
+          android:theme="@style/Theme.iFixit">
       </activity>
       <activity android:name=".view.ui.TopicViewActivity"
             android:theme="@style/Theme.iFixit">

@@ -9,6 +9,8 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.view.View;
 import android.view.ViewGroup;
@@ -27,6 +29,17 @@ public class MediaAdapter extends BaseAdapter {
 		_context = c;
 		_viewRef = viewRef;
 		mediaList = new ArrayList<Uri>();
+	}
+	
+	public void setMediaList(ArrayList<Uri> medList)
+	{
+		mediaList = medList;
+		_viewRef.invalidateViews();
+	}
+	
+	public ArrayList<Uri> getMediaList()
+	{
+		return mediaList;
 	}
 
 	public void addUri(Uri uri) {
@@ -57,16 +70,16 @@ public class MediaAdapter extends BaseAdapter {
 		ImageView thumb;
 		if (convertView == null) {
 			thumb = new ImageView(_context);
-			thumb.setLayoutParams(new GridView.LayoutParams(85, 85));
+			thumb.setLayoutParams(new GridView.LayoutParams(256, 256));
 			thumb.setPadding(8, 8, 8, 8);
 		} else {
 			thumb = (ImageView) convertView;
 		}
 		Uri temp = mediaList.get(position);
 		Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(
-               _context.getContentResolver(), ContentUris.parseId(temp),
-                MediaStore.Images.Thumbnails.MINI_KIND,
-                (BitmapFactory.Options) null );
+				_context.getContentResolver(), ContentUris.parseId(temp),
+				MediaStore.Images.Thumbnails.MINI_KIND,
+				(BitmapFactory.Options) null);
 		thumb.setImageBitmap(bitmap);
 		return thumb;
 	}
