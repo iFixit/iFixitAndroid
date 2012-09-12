@@ -11,6 +11,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.view.model.User;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MainApplication extends Application {
@@ -18,6 +19,7 @@ public class MainApplication extends Application {
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
+   private User user;
       
    public ImageManager getImageManager() {
       if (mImageManager == null) {
@@ -88,4 +90,12 @@ public class MainApplication extends Application {
 
       return mImageSizes;
    }
+
+public void setUser(User user) {
+	this.user = user;
+}
+
+public User getUser() {
+	return user;
+}
 }

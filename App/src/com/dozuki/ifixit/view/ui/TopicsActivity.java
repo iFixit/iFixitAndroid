@@ -1,10 +1,12 @@
 package com.dozuki.ifixit.view.ui;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -18,6 +20,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -25,17 +28,20 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.dozuki.ifixit.view.model.TopicSelectedListener;
+import com.dozuki.ifixit.view.model.User;
 
 public class TopicsActivity extends SherlockFragmentActivity implements
- TopicSelectedListener, OnBackStackChangedListener {
+ TopicSelectedListener, OnBackStackChangedListener, LoginListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 
    private TopicViewFragment mTopicView;
+   private MediaFragment mMediaView;
    private FrameLayout mTopicViewOverlay;
    private TopicNode mRootTopic;
    private int mBackStackSize = 0;
@@ -52,8 +58,16 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
          if (!result.hasError()) {
             if (mRootTopic == null) {
-               mRootTopic = (TopicNode)result.getResult();
-               onTopicSelected(mRootTopic);
+            	
+            	if(result.getResult() instanceof User)
+            	{
+            		Log.e("logged in ", ((User)result.getResult()).getUsername());
+            	
+            	}else
+            	{
+                  mRootTopic = (TopicNode)result.getResult();   
+                  onTopicSelected(mRootTopic);
+            	}
             }
          } else {
             APIService.getErrorDialog(TopicsActivity.this, result.getError(),
@@ -269,6 +283,49 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
    }
+   
+   private void changeMainView(Fragment fragment, boolean addToBack,
+		    boolean delay) {
+		      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		      int inAnim, outAnim;
+
+		  
+		     if (delay) {
+		         inAnim = R.anim.slide_in_right_delay;
+		         outAnim = R.anim.slide_out_left_delay;
+		      } else {
+		         inAnim = R.anim.slide_in_right;
+		         outAnim = R.anim.slide_out_left;
+		      }
+		      
+		      
+		    
+		         ft.setCustomAnimations(inAnim, outAnim,
+		            R.anim.slide_in_left, R.anim.slide_out_right);
+		      
+		      ft.replace(R.id.topic_view_fragment, fragment);
+
+		      if (addToBack) {
+		         ft.addToBackStack(null);
+		      }
+
+		      // ft.commit();
+		      
+		      // commitAllowingStateLoss doesn't throw an exception if commit() is 
+		      // run after the fragments parent already saved its state.  Possibly
+		      // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
+		      ft.commitAllowingStateLoss();
+		   }
+   
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data)
+	{
+		
+		super.onActivityResult(requestCode, resultCode, data);
+	   
+		
+
+	}
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
@@ -280,7 +337,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
         	 
 			if (mDualPane) {
 				if (!mLoginVisible) {
-					SherlockFragment fg = LoginFragment.newInstance();
+					LoginFragment fg = LoginFragment.newInstance();
+					fg.registerOnLoginListener(this);
 					mLoginVisible = true;
 					changeTopicListView(fg, true);
 				}
@@ -299,5 +357,28 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    @Override
    protected void onDestroy() {
      super.onDestroy();
-   }   
+   }
+
+	@Override
+   public void onLogin(User user) {
+	if(mLoginVisible)
+	{
+		getSupportFragmentManager().popBackStack();
+	}
+	
+
+	if(mMediaView==null)
+	{
+		mMediaView = MediaFragment.newInstance();
+		
+     }
+	
+    changeMainView(mMediaView, true, false);
+		Log.e("changed mentu", "OOO");
+		 mTopicViewOverlay.setVisibility(View.INVISIBLE);
+	Toast.makeText(this, "Welcome " + user.getUsername(), Toast.LENGTH_LONG).show();
+	hideTopicList();
+	// Intent i = new Intent(this, MediaActivity.class);
+	// startActivity(i);
+}   
 }

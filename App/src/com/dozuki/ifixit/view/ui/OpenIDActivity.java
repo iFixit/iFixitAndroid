@@ -31,14 +31,15 @@ public class OpenIDActivity extends Activity {
 	   public void onCreate(Bundle savedInstanceState) {
 	      super.onCreate(savedInstanceState);
 	      setContentView(R.layout.open_id_view);
-	      
-	      
+	      overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
 	      Bundle extras = this.getIntent().getExtras();
 	      
 	      final String method  = extras.getString(LOGIN_METHOD);
 	      
 	      _webView = (WebView)findViewById(R.id.open_id_web_view);
 	      
+	      CookieSyncManager.getInstance().sync();
+	      CookieManager.getInstance().removeAllCookie();
 	      
 	      _webView.loadUrl(BASE_OPENID_URL+method);
 	      _webView.getSettings().setJavaScriptEnabled(true);
@@ -59,19 +60,27 @@ public class OpenIDActivity extends Activity {
 	    	      }
 	    	    });
 	      
-	      CookieSyncManager.getInstance().sync();
-	      CookieManager.getInstance().setCookie(BASE_OPENID_URL+method, "sso-origin=SHOW_SUCCESS;");
-	      
+	     // CookieSyncManager.getInstance().sync();
+	     // CookieManager.getInstance().setCookie(BASE_OPENID_URL+method, "sso-origin=SHOW_SUCCESS;");
+	      //CookieSyncManager.getInstance().sync();
+	    //  CookieManager.getInstance().removeAllCookie();
 	      
 	      _webView.setWebViewClient(new WebViewClient() {
 	          @Override
 	          public void onPageFinished(WebView view, String url) {
 	            CookieSyncManager.getInstance().sync();
 	            // Get the cookie from cookie jar.
-	            if(!url.contains("www.ifixit.com"))
+	            Log.e("URL", url);
+	            if(!url.contains("ifixit"))
 	            {
 	            	return;
 	            }
+	            if(url.contains(BASE_OPENID_URL))
+	            {
+	            	return;
+	            }
+	            
+	          
 	            String cookie = CookieManager.getInstance().getCookie(url);
 	            if (cookie == null) {
 	              return;

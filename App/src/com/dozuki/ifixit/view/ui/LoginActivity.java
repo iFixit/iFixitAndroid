@@ -72,7 +72,6 @@ public class LoginActivity extends SherlockFragmentActivity implements OnClickLi
 
 	private void login() {
 		startService(APIService.getLoginIntent(this, _username.getText().toString(), _password.getText().toString(), null));
-		startService(APIService.getLoginIntent(this,null, null, null));	
 	}
 	
 	   @Override
