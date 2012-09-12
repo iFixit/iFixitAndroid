@@ -181,6 +181,8 @@ public void onClick(View v) {
 @Override
 public void onActivityResult (int requestCode, int resultCode, Intent data)
 {
+	
+	if(resultCode == Activity.RESULT_OK)
 	if(data != null)
 	{
 	   Log.e("LOGIN", requestCode+"");

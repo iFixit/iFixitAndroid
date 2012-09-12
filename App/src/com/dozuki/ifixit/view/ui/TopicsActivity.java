@@ -39,6 +39,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
+   private static final String GALLERY_VISIBLE = "LOGIN_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 
    private TopicViewFragment mTopicView;
@@ -50,6 +51,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
    private boolean mLoginVisible;
+   private boolean mGalleryVisible;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @Override
@@ -97,6 +99,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
          mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
          mLoginVisible = savedInstanceState.getBoolean(LOGIN_VISIBLE);
+         mGalleryVisible = savedInstanceState.getBoolean(GALLERY_VISIBLE);
       } else {
          mTopicListVisible = true;
          mLoginVisible= false;
@@ -171,6 +174,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
       outState.putBoolean(LOGIN_VISIBLE, mLoginVisible);
+      outState.putBoolean(GALLERY_VISIBLE, mGalleryVisible);
    }
 
    // Load categories from the API.
@@ -329,56 +333,69 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
 	}
 
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            getSupportFragmentManager().popBackStack();
-            return true;
-         case R.id.gallery_button:
-        	 MainApplication mainApp = (MainApplication) getApplication();
-        	 if(mainApp.getUser() == null)
-        	 {
-			if (mDualPane) {
-				if (!mLoginVisible) {
-					LoginFragment fg = LoginFragment.newInstance();
-					fg.registerOnLoginListener(this);
-					mLoginVisible = true;
-					changeTopicListView(fg, true);
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			getSupportFragmentManager().popBackStack();
+			return true;
+		case R.id.gallery_button:
+			MainApplication mainApp = (MainApplication) getApplication();
+			if (mainApp.getUser() == null) {
+				if (mDualPane) {
+					if (!mLoginVisible) {
+						LoginFragment fg = LoginFragment.newInstance();
+						fg.registerOnLoginListener(this);
+						mLoginVisible = true;
+						changeTopicListView(fg, true);
+					}
+				} else {
+					// Intent i = new Intent(this,LoginActivity.class);
+					// startActivity(i);
+					if (!mLoginVisible) {
+						LoginFragment fg = LoginFragment.newInstance();
+						fg.registerOnLoginListener(this);
+						mLoginVisible = true;
+						changeTopicListView(fg, true);
+					}
 				}
-			}    		 
-        	 else
-        	 {
-        	   // Intent i = new Intent(this,LoginActivity.class);
-        	  //  startActivity(i);
-        		 if (!mLoginVisible) {
-        		 LoginFragment fg = LoginFragment.newInstance();
-					fg.registerOnLoginListener(this);
-					mLoginVisible = true;
-					changeTopicListView(fg, true);
-        		 }
-        	 }
-        	 }else
-        	 {
-        		 if (mMediaView == null) {
-        				mMediaView = MediaFragment.newInstance();
+			} else if(mGalleryVisible == false){
+				if (mMediaView == null) {
+					mMediaView = MediaFragment.newInstance();
 
-        			}
-        			if (mDualPane) {
+				}
+				if (mDualPane) {
 
-        				changeMainView(mMediaView, true, false);
-        				mTopicViewOverlay.setVisibility(View.INVISIBLE);
-        				hideTopicList();
-        			} else {
-        				this.changeTopicListView(mMediaView, true, false);
-        			}
-        	 }
-        	 return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
-    
+					changeMainView(mMediaView, true, false);
+					mTopicViewOverlay.setVisibility(View.INVISIBLE);
+					hideTopicList();
+				} else {
+					this.changeTopicListView(mMediaView, true, false);
+				}
+				mGalleryVisible=true;
+			}
+			return true;
+
+		case R.id.guides_button:
+			if (mGalleryVisible && mMediaView != null) {
+				
+				if (mDualPane) {
+				   getSupportFragmentManager().popBackStack();
+				   mGalleryVisible = false;
+				}else
+				{
+					getSupportFragmentManager().popBackStack();
+					mGalleryVisible = false;
+				}
+
+			}
+
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
    @Override
    protected void onDestroy() {
      super.onDestroy();
@@ -403,6 +420,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		} else {
 			this.changeTopicListView(mMediaView, true, false);
 		}
+		mGalleryVisible = true;
 		// Intent i = new Intent(this, MediaActivity.class);
 		// startActivity(i);
 	}

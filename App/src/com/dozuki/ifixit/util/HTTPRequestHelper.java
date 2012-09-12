@@ -157,7 +157,6 @@ public class HTTPRequestHelper {
 			final Map<String, String> params) {
 
 		// clearing all old cookies. we want full control
-		client.getCookieStore().getCookies().clear();
 		final BasicClientCookie cookie = new BasicClientCookie("session",
 				session);
 
