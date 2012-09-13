@@ -227,10 +227,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	     if (mLoginVisible) {
 	        mLoginVisible = false;
 		 }
-	     if (mGalleryVisible) {
-	    	 mGalleryVisible = false;
-	    	 getSupportFragmentManager().popBackStack();
-		 }
+	    
       }
 
       mBackStackSize = backStackSize;
@@ -346,12 +343,14 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			ft.replace(R.id.topic_view_fragment, mMediaView, "galleryFragment");
 			ft.addToBackStack(null);
 			ft.commitAllowingStateLoss();
+			 mGalleryVisible=true;
 			Log.e("just added gallery view", "");
 		} else {
 			//remove gallery
 			getSupportFragmentManager().popBackStack();
 			//show tpics
-			//getSupportFragmentManager().popBackStack();
+			getSupportFragmentManager().popBackStack();
+			 mGalleryVisible=false;
 		}
 
 		// ft.commit();
@@ -404,8 +403,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 					//mTopicViewOverlay.setVisibility(View.INVISIBLE);
 				} else {
 					this.changeTopicListView(mMediaView, true, false);
+					mGalleryVisible=true;
 				}
-				mGalleryVisible=true;
 			}
 			return true;
 
@@ -414,11 +413,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				
 				if (mDualPane) {
 					 toggleGalleryView(false);
-
 				}else
 				{
 					 toggleGalleryView(false);
 				}
+			    	
 
 			}
 
@@ -436,21 +435,33 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onLogin(User user) {
 
-		Log.e("ONLOGIN", "WOO");
 		if (mLoginVisible) {
 			getSupportFragmentManager().popBackStack();
 		}
 
 		if (mDualPane) {
-			Log.e("ONLOGIN", "WOO");
+		
 			hideTopicList(false);
 			toggleGalleryView(true);
+			
 		} else {
 			this.changeTopicListView(mMediaView, true, false);
+			mGalleryVisible = true;
 		}
-		mGalleryVisible = true;
 
 	}
 	
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	       if(mGalleryVisible)
+	       {
+	    	   toggleGalleryView(false);;
+	    	   return true;
+	       }
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
 
 }
