@@ -28,7 +28,8 @@ import com.dozuki.ifixit.util.APIService;
 
 public class MediaFragment extends SherlockFragment implements
 		OnItemClickListener, OnClickListener {
-
+	protected static final String IMAGE_URL = "IMAGE_URL";
+	protected static final String LOCAL_URL = "LOCAL_URL";
 	private static MediaFragment thisInstance;
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
@@ -61,18 +62,18 @@ public class MediaFragment extends SherlockFragment implements
 	 */
 	public MediaFragment() {
 	}
-	   
-	   public static MediaFragment getInstance()
-	   {
-		   if(thisInstance == null)
-		   thisInstance = new MediaFragment();
-		   
-		   return thisInstance;
-	   }
+
+	public static MediaFragment getInstance() {
+		if (thisInstance == null)
+			thisInstance = new MediaFragment();
+
+		return thisInstance;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		setRetainInstance(true);
 	}
 
 	@Override
@@ -84,7 +85,7 @@ public class MediaFragment extends SherlockFragment implements
 		galleryAdapter = new MediaAdapter(mContext, mGridView);
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(this);
-		
+
 		if (savedInstanceState != null) {
 			String arr[] = savedInstanceState.getStringArray("URIs");
 			ArrayList<Uri> uriArr = new ArrayList<Uri>();
@@ -116,7 +117,13 @@ public class MediaFragment extends SherlockFragment implements
 
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-		Toast.makeText(mContext, "" + position, Toast.LENGTH_SHORT).show();
+		Uri uri = galleryAdapter.getImageAt(position);
+		String url = getPath(uri);
+		Intent intent = new Intent(mContext, FullImageViewActivity.class);
+		intent.putExtra(IMAGE_URL, url);
+		intent.putExtra(LOCAL_URL, true);
+
+		startActivity(intent);
 	}
 
 	@Override
@@ -193,7 +200,7 @@ public class MediaFragment extends SherlockFragment implements
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == MediaFragment.SELECT_PICTURE) {
-				Log.i("","in media frag");
+				Log.i("", "in media frag");
 				Uri selectedImageUri = data.getData();
 
 				galleryAdapter.addUri(selectedImageUri);

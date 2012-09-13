@@ -30,16 +30,18 @@ public class MediaAdapter extends BaseAdapter {
 		_viewRef = viewRef;
 		mediaList = new ArrayList<Uri>();
 	}
-	
-	public void setMediaList(ArrayList<Uri> medList)
-	{
+
+	public void setMediaList(ArrayList<Uri> medList) {
 		mediaList = medList;
 		_viewRef.invalidateViews();
 	}
-	
-	public ArrayList<Uri> getMediaList()
-	{
+
+	public ArrayList<Uri> getMediaList() {
 		return mediaList;
+	}
+
+	public Uri getImageAt(int i) {
+		return mediaList.get(i);
 	}
 
 	public void addUri(Uri uri) {
