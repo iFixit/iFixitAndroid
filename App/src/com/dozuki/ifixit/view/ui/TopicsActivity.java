@@ -1,12 +1,10 @@
 package com.dozuki.ifixit.view.ui;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
+
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -425,6 +423,19 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			}
 
 			return true;
+			
+		case R.id.tardis_button:
+			if (mDualPane) {
+				if(mTopicListVisible && mHideTopicList)
+					   hideTopicList(false);
+				toggleGalleryView(true);
+				
+			} else {
+				this.changeTopicListView(mMediaView, true, false);
+				mGalleryVisible = true;
+			}
+		return true;
+			
 		default:
 			return super.onOptionsItemSelected(item);
 		}
