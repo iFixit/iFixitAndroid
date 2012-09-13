@@ -29,6 +29,7 @@ import com.dozuki.ifixit.util.APIService;
 public class MediaFragment extends SherlockFragment implements
 		OnItemClickListener, OnClickListener {
 
+	private static MediaFragment thisInstance;
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
@@ -60,6 +61,14 @@ public class MediaFragment extends SherlockFragment implements
 	 */
 	public MediaFragment() {
 	}
+	   
+	   public static MediaFragment getInstance()
+	   {
+		   if(thisInstance == null)
+		   thisInstance = new MediaFragment();
+		   
+		   return thisInstance;
+	   }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

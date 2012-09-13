@@ -14,6 +14,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MotionEvent;
@@ -79,6 +80,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
    };
 
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -87,26 +89,38 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       setContentView(R.layout.topics);
       
       com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
+      mTopicView =  TopicViewFragment.getInstance();
+      mMediaView =  MediaFragment.getInstance();
       
-      
-      mTopicView = (TopicViewFragment)getSupportFragmentManager()
-       .findFragmentById(R.id.topic_view_fragment);
+
+     View galleryTopicView = (View)findViewById(R.id.topic_view_fragment);
+       //.findFragmentById(R.id.topic_view_fragment);
       mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
       mHideTopicList = mTopicViewOverlay != null;
-      mDualPane = mTopicView != null && mTopicView.isInLayout();
+      mDualPane = galleryTopicView != null; //&& mTopicView.isInLayout();
 
       if (savedInstanceState != null) {
          mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
          mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
          mLoginVisible = savedInstanceState.getBoolean(LOGIN_VISIBLE);
          mGalleryVisible = savedInstanceState.getBoolean(GALLERY_VISIBLE);
+         mTopicView = (TopicViewFragment) getSupportFragmentManager().findFragmentByTag("topicView");
+         if(mGalleryVisible)
+         {
+            mMediaView = (MediaFragment) getSupportFragmentManager().findFragmentByTag("galleryFragment");
+         }
       } else {
          mTopicListVisible = true;
          mLoginVisible= false;
+         mGalleryVisible=false;
+         if(mDualPane)
+         {
+        	 addTopicView();	 
+         }
       }
 
       if (mRootTopic == null) {
-//         fetchCategories();
+         fetchCategories();
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
@@ -137,17 +151,29 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          });
       }
       
-      if (mMediaView == null) 
-			mMediaView = MediaFragment.newInstance();
-			
-    changeMainView(mMediaView, true, false);
-		mTopicViewOverlay.setVisibility(View.INVISIBLE);
-		
-		mGalleryVisible = true;
+    
    
    }
    
-   @Override
+   private void addTopicView() 
+   {
+	   FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+	  
+	      ft.add(R.id.topic_view_fragment, mTopicView, "topicView");
+
+	 
+
+	      // ft.commit();
+	      
+	      // commitAllowingStateLoss doesn't throw an exception if commit() is 
+	      // run after the fragments parent already saved its state.  Possibly
+	      // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
+	      ft.commitAllowingStateLoss();
+	
+   }
+
+@Override
    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu)
    {
 	 com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
@@ -201,6 +227,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	     if (mLoginVisible) {
 	        mLoginVisible = false;
 		 }
+	     if (mGalleryVisible) {
+	    	 mGalleryVisible = false;
+	    	 getSupportFragmentManager().popBackStack();
+		 }
       }
 
       mBackStackSize = backStackSize;
@@ -240,6 +270,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       mTopicListVisible = false;
       changeTopicListView(new Fragment(), true, delay);
    }
+
 
    private void hideTopicListWithDelay() {
       // Delay this slightly to make sure the animation is played.
@@ -299,46 +330,43 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       ft.commitAllowingStateLoss();
    }
    
-   private void changeMainView(Fragment fragment, boolean addToBack,
-		    boolean delay) {
-		      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		      int inAnim, outAnim;
+	private void toggleGalleryView(boolean showGallery) {
+		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		int inAnim, outAnim;
 
-		  
-		     if (delay) {
-		         inAnim = R.anim.slide_in_right_delay;
-		         outAnim = R.anim.slide_out_left_delay;
-		      } else {
-		         inAnim = R.anim.slide_in_right;
-		         outAnim = R.anim.slide_out_left;
-		      }
-		      
-		      
-		    
-		         ft.setCustomAnimations(inAnim, outAnim,
-		            R.anim.slide_in_left, R.anim.slide_out_right);
-		      
-		      ft.replace(R.id.topic_view_fragment, fragment);
+		inAnim = R.anim.slide_in_right;
+		outAnim = R.anim.slide_out_left;
+		Log.e("just added gallery view", ""+ showGallery);
 
-		      if (addToBack) {
-		         ft.addToBackStack(null);
-		      }
+		if (showGallery) {
+			Log.e("just added gallery view", "");
+			ft.setCustomAnimations(inAnim, outAnim, R.anim.slide_in_left,
+					R.anim.slide_out_right);
 
-		      // ft.commit();
-		      
-		      // commitAllowingStateLoss doesn't throw an exception if commit() is 
-		      // run after the fragments parent already saved its state.  Possibly
-		      // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
-		      ft.commitAllowingStateLoss();
-		   }
-   
+			ft.replace(R.id.topic_view_fragment, mMediaView, "galleryFragment");
+			ft.addToBackStack(null);
+			ft.commitAllowingStateLoss();
+			Log.e("just added gallery view", "");
+		} else {
+			//remove gallery
+			getSupportFragmentManager().popBackStack();
+			//show tpics
+			//getSupportFragmentManager().popBackStack();
+		}
+
+		// ft.commit();
+
+		// commitAllowingStateLoss doesn't throw an exception if commit() is
+		// run after the fragments parent already saved its state. Possibly
+		// fixes the IllegalStateException crash in
+		// FragmentManagerImpl.checkStateLoss()
+	}
+
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data)
 	{
 		
 		super.onActivityResult(requestCode, resultCode, data);
-	   
-		
 
 	}
 
@@ -369,15 +397,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 					}
 				}
 			} else if(mGalleryVisible == false){
-				if (mMediaView == null) {
-					mMediaView = MediaFragment.newInstance();
-
-				}
+			
 				if (mDualPane) {
-
-					changeMainView(mMediaView, true, false);
-					mTopicViewOverlay.setVisibility(View.INVISIBLE);
-					hideTopicList();
+					hideTopicList(false);
+					 toggleGalleryView(true);
+					//mTopicViewOverlay.setVisibility(View.INVISIBLE);
 				} else {
 					this.changeTopicListView(mMediaView, true, false);
 				}
@@ -386,15 +410,14 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			return true;
 
 		case R.id.guides_button:
-			if (mGalleryVisible && mMediaView != null) {
+			if (mGalleryVisible) {
 				
 				if (mDualPane) {
-				   getSupportFragmentManager().popBackStack();
-				   mGalleryVisible = false;
+					 toggleGalleryView(false);
+
 				}else
 				{
-					getSupportFragmentManager().popBackStack();
-					mGalleryVisible = false;
+					 toggleGalleryView(false);
 				}
 
 			}
@@ -413,24 +436,21 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onLogin(User user) {
 
+		Log.e("ONLOGIN", "WOO");
 		if (mLoginVisible) {
 			getSupportFragmentManager().popBackStack();
 		}
 
-		if (mMediaView == null) {
-			mMediaView = MediaFragment.newInstance();
-
-		}
 		if (mDualPane) {
-
-			changeMainView(mMediaView, true, false);
-			mTopicViewOverlay.setVisibility(View.INVISIBLE);
-			hideTopicList();
+			Log.e("ONLOGIN", "WOO");
+			hideTopicList(false);
+			toggleGalleryView(true);
 		} else {
 			this.changeTopicListView(mMediaView, true, false);
 		}
 		mGalleryVisible = true;
-		// Intent i = new Intent(this, MediaActivity.class);
-		// startActivity(i);
+
 	}
+	
+
 }

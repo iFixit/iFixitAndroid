@@ -34,6 +34,7 @@ public class TopicViewFragment extends SherlockFragment
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String CURRENT_TOPIC_LEAF = "CURRENT_TOPIC_LEAF";
    private static final String CURRENT_TOPIC_NODE = "CURRENT_TOPIC_NODE";
+   static TopicViewFragment thisInstance;
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
@@ -60,6 +61,15 @@ public class TopicViewFragment extends SherlockFragment
 
    public boolean isDisplayingTopic() {
       return mTopicLeaf != null;
+   }
+   
+   
+   public static TopicViewFragment getInstance()
+   {
+	   if(thisInstance == null)
+	   thisInstance = new TopicViewFragment();
+	   
+	   return thisInstance;
    }
 
    @Override

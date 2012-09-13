@@ -34,12 +34,11 @@
           android:clipToPadding="true"
           android:contentDescription="@string/fist_background_desc" />
 
-       <fragment
-          android:id="@+id/topic_view_fragment"
-          android:name="com.dozuki.ifixit.view.ui.TopicViewFragment"
-          android:layout_width="match_parent"
-          android:layout_height="match_parent">
-       </fragment>
+   <FrameLayout
+         android:id="@+id/topic_view_fragment"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+   </FrameLayout>
 
     </FrameLayout>
 
