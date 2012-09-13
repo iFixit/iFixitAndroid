@@ -349,7 +349,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			//remove gallery
 			getSupportFragmentManager().popBackStack();
 			//show tpics
-			getSupportFragmentManager().popBackStack();
+			if(mTopicListVisible && mHideTopicList)
+			   getSupportFragmentManager().popBackStack();
+			
 			 mGalleryVisible=false;
 		}
 
@@ -398,7 +400,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			} else if(mGalleryVisible == false){
 			
 				if (mDualPane) {
-					hideTopicList(false);
+					if(mTopicListVisible && mHideTopicList)
+					   hideTopicList(false);
 					 toggleGalleryView(true);
 					//mTopicViewOverlay.setVisibility(View.INVISIBLE);
 				} else {
@@ -440,8 +443,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		}
 
 		if (mDualPane) {
-		
-			hideTopicList(false);
+			if(mTopicListVisible && mHideTopicList)
+				   hideTopicList(false);
 			toggleGalleryView(true);
 			
 		} else {
