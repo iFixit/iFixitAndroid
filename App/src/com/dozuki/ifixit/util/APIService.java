@@ -28,6 +28,7 @@ import android.util.Log;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.view.model.AuthenicationPackage;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -96,6 +97,8 @@ public class APIService extends Service {
     "http://www.ifixit.com/api/1.0/categories/";
    private static final String LOGIN_API_URL =
 	    "https://www.ifixit.com/api/0.1/login";
+   private static final String REGISTER_API_URL =
+	    "https://www.ifixit.com/api/0.1/register";
    
    
    private static final String API_DOMAIN =  ".ifixit.com";
@@ -107,11 +110,13 @@ public class APIService extends Service {
    private static final String REQUEST_SESSION= "REQUEST_SESSION";
    private static final String REQUEST_BROADCAST_ACTION =
     "REQUEST_BROADCAST_ACTION";
+   private static final String REQUEST_AUTHENICATION_PACKAGE = "AUTHENICATION_PACKAGE";
 
    private static final int TARGET_CATEGORIES = 0;
    private static final int TARGET_GUIDE = 1;
    private static final int TARGET_TOPIC = 2;
    private static final int TARGET_LOGIN = 3;
+   private static final int TARGET_REGISTER = 4;
 
    private static final String NO_QUERY = "";
 
@@ -123,6 +128,9 @@ public class APIService extends Service {
     "com.dozuki.ifixit.api.topic";
    public static final String ACTION_LOGIN =
 	    "com.dozuki.ifixit.api.login";
+   
+   public static final String ACTION_REGISTER =
+	    "com.dozuki.ifixit.api.resgister";
 
    
  
@@ -139,14 +147,12 @@ public class APIService extends Service {
       final int requestTarget = extras.getInt(REQUEST_TARGET);
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
-      String userName =extras.getString(REQUEST_LOGIN);
-      String session =extras.getString(REQUEST_SESSION);
-      final String password =extras.getString(REQUEST_PASSWORD);
+      final AuthenicationPackage authenicationPackage = (AuthenicationPackage) extras.getSerializable(REQUEST_AUTHENICATION_PACKAGE);
       
       
-      if(TARGET_LOGIN == requestTarget)
+      if(authenicationPackage != null)
       {
-    	  perfromAuthenicatedRequestHelper(this, requestTarget, userName, password, session, new Responder() {
+    	  perfromAuthenicatedRequestHelper(this, requestTarget, authenicationPackage, new Responder() {
     	         public void setResult(Result result) {
 
     	            if (!result.hasError()) {
@@ -267,8 +273,8 @@ public class APIService extends Service {
       return createIntent(context, TARGET_TOPIC, topicName, ACTION_TOPIC);
    }
    
-   public static Intent getLoginIntent(Context context, String login, String password, String session) {
-	      return createLoginIntent(context, TARGET_LOGIN, login, password, session , ACTION_LOGIN);
+   public static Intent getLoginIntent(Context context, AuthenicationPackage authenicationPackage) {
+	      return createLoginIntent(context, TARGET_LOGIN, authenicationPackage , ACTION_LOGIN);
 	   }
 
    private static Intent createIntent(Context context, int target,
@@ -284,16 +290,15 @@ public class APIService extends Service {
       return intent;
    }
    
-   private static Intent createLoginIntent(Context context, int target,
-		    String login, String password, String session, String action) {
+   private static Intent createLoginIntent(Context context, int target,AuthenicationPackage authenicationPackage, String action) {
 	   
 		      Intent intent = new Intent(context, APIService.class);
 		      Bundle extras = new Bundle();
 
 		      extras.putInt(REQUEST_TARGET, target);
-		      extras.putString(REQUEST_LOGIN, login);
-		      extras.putString(REQUEST_PASSWORD, password);
-		      extras.putString(REQUEST_SESSION, session);
+		     // extras.putString(REQUEST_LOGIN, login);
+		     // extras.putString(REQUEST_PASSWORD, password);
+		      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
 		      extras.putString(REQUEST_BROADCAST_ACTION, action);
 		      intent.putExtras(extras);
 
@@ -375,9 +380,7 @@ public class APIService extends Service {
       performRequest(url, responder);
    }
    
-	private static void perfromAuthenicatedRequestHelper(Context context,
-			int requestTarget, String userName, String password,
-			String session, Responder responder) {
+	private static void perfromAuthenicatedRequestHelper(Context context, int requestTarget, AuthenicationPackage authenicationPackage, Responder responder) {
 		if (!checkConnectivity(context, responder)) {
 			return;
 		}
@@ -388,17 +391,19 @@ public class APIService extends Service {
 		case TARGET_LOGIN:
 			url = LOGIN_API_URL;
 			break;
+		case TARGET_REGISTER:
+			url = REGISTER_API_URL;
+			break;
 		default:
 			Log.w("iFixit", "Invalid request target: " + requestTarget);
 			responder.setResult(new Result(Error.PARSE));
 			return;
 		}
-		performAuthenicatedRequest(url, userName, password, session, responder);
+		performAuthenicatedRequest(url, authenicationPackage, responder);
 	}
 
  
-   private static void  performAuthenicatedRequest(final String url, final String userName, 
-		   final String password,final String session,  final Responder responder) {
+   private static void  performAuthenicatedRequest(final String url, final AuthenicationPackage authenicationPackage,  final Responder responder) {
 	   final Handler handler = new Handler() {
 	         public void handleMessage(Message message) {
 	            String response = message.getData().getString(RESPONSE);
@@ -416,11 +421,11 @@ public class APIService extends Service {
 	            HashMap<String,String> params = new HashMap<String,String>();
 	            HashMap<String,String> header = new HashMap<String,String>();
  
-	            params.put("login", userName);
-			    params.put("password", password);
+	            params.put("login", authenicationPackage.login);
+			    params.put("password", authenicationPackage.password);
 	          
 	            try {
-	               helper.performPostWithSessionCookie(url, userName, password, session, API_DOMAIN, header, params );
+	               helper.performPostWithSessionCookie(url, null, null, authenicationPackage.session, API_DOMAIN, header, params );
 	            } catch (Exception e) {
 	               Log.w("iFixit", "Encoding error: " + e.getMessage());
 	            }
