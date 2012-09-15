@@ -276,6 +276,11 @@ public class APIService extends Service {
    public static Intent getLoginIntent(Context context, AuthenicationPackage authenicationPackage) {
 	      return createLoginIntent(context, TARGET_LOGIN, authenicationPackage , ACTION_LOGIN);
 	   }
+   
+   public static Intent getRegisterIntent(Context mContext,
+			AuthenicationPackage authenicationPackage) {
+	   return createRegisterIntent(mContext, TARGET_REGISTER, authenicationPackage , ACTION_REGISTER);
+	}
 
    private static Intent createIntent(Context context, int target,
     String query, String action) {
@@ -304,6 +309,19 @@ public class APIService extends Service {
 
 		      return intent;
 		   }
+   
+   private static Intent createRegisterIntent(Context context, int target,AuthenicationPackage authenicationPackage, String action) {
+	   
+	      Intent intent = new Intent(context, APIService.class);
+	      Bundle extras = new Bundle();
+
+	      extras.putInt(REQUEST_TARGET, target);
+	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
+	      extras.putString(REQUEST_BROADCAST_ACTION, action);
+	      intent.putExtras(extras);
+
+	      return intent;
+	   }
 
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
@@ -423,6 +441,8 @@ public class APIService extends Service {
  
 	            params.put("login", authenicationPackage.login);
 			    params.put("password", authenicationPackage.password);
+			    params.put("username", authenicationPackage.login);
+			   // params.put("password", authenicationPackage.password);
 	          
 	            try {
 	               helper.performPostWithSessionCookie(url, null, null, authenicationPackage.session, API_DOMAIN, header, params );

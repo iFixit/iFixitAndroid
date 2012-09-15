@@ -248,9 +248,19 @@ public void onClick(View v) {
     		readyForRegisterState=true;
     		setState();
     	  }else
-    	  {//
-    		  //start service for register
-    	  }
+ {//
+				if (_password.getText().toString()
+						.equals(_confirmPassword.getText().toString())) {
+					// start service for register
+					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+					authenicationPackage.login = _loginId.getText().toString();
+					authenicationPackage.password = _password.getText()
+							.toString();
+					authenicationPackage.username = _name.getText().toString();
+					mContext.startService(APIService.getRegisterIntent(mContext, authenicationPackage));
+					
+				}
+			}
    	   break;
       case R.id.cancel_register_button:
     	  readyForRegisterState=false;
