@@ -242,7 +242,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       ft.commitAllowingStateLoss();
    }
 
-   @SuppressWarnings("unused")
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
