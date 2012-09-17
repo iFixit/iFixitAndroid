@@ -7,9 +7,9 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:src="@drawable/dozuki_workbench"
-       android:scaleType="matrix" />
+       android:scaleType="centerCrop" />
    <LinearLayout 
-       android:layout_width="400dp"
+       android:layout_width="500dp"
        android:layout_height="wrap_content"
        android:orientation="vertical"
        android:layout_gravity="center">
@@ -18,11 +18,14 @@
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
 	       android:src="@drawable/dozuki_splash_logo"
-	       android:scaleType="fitXY" />
+	       android:scaleType="fitCenter" />
 	   <ListView
 	       android:id="@+id/siteListView"
 	       android:layout_width="match_parent"
 	       android:layout_height="match_parent" 
+	       android:layout_marginTop="20dp"
+	       android:layout_marginBottom="40dp"
+	       android:background="@drawable/site_list_background"
 	       style="?attr/listViewStyle" /> 
    </LinearLayout>
 </FrameLayout>
