@@ -29,6 +29,7 @@ public class SiteListActivity extends SherlockFragmentActivity {
    private ArrayList<Site> mSiteList;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+      @SuppressWarnings("unchecked")
       @Override
       public void onReceive(Context context, Intent intent) {
          APIService.Result result = (APIService.Result)
@@ -44,6 +45,7 @@ public class SiteListActivity extends SherlockFragmentActivity {
       }
    };
 
+   @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication)getApplication()).getSiteTheme());
