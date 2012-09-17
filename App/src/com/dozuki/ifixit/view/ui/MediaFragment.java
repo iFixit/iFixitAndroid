@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.view.ui;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -8,6 +10,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.Bitmap.Config;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -25,6 +29,7 @@ import android.widget.Toast;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.view.ui.MediaAdapter.ViewHolder;
 
 public class MediaFragment extends SherlockFragment implements
 		OnItemClickListener, OnClickListener {
@@ -73,7 +78,6 @@ public class MediaFragment extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setRetainInstance(true);
 	}
 
 	@Override
@@ -82,17 +86,22 @@ public class MediaFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.media, container, false);
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
-		galleryAdapter = new MediaAdapter(mContext, mGridView);
+		galleryAdapter = new MediaAdapter(mContext, mGridView, this);
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(this);
 
 		if (savedInstanceState != null) {
+			Log.i("MediaFrag", "rebuilding view");
 			String arr[] = savedInstanceState.getStringArray("URIs");
+			boolean c_arr[] = savedInstanceState.getBooleanArray("checked");
 			ArrayList<Uri> uriArr = new ArrayList<Uri>();
+			ArrayList<Boolean> cList = new ArrayList<Boolean>();
 			for (int i = 0; i < arr.length; i++) {
 				uriArr.add(Uri.parse(arr[i]));
+				cList.add(c_arr[i]);
 			}
-			galleryAdapter.setMediaList(uriArr);
+			galleryAdapter.setMediaList(uriArr);	
+			galleryAdapter.setCheckedList(cList);
 		}
 
 		((Button) view.findViewById(R.id.gallery_button))
@@ -100,6 +109,9 @@ public class MediaFragment extends SherlockFragment implements
 
 		((Button) view.findViewById(R.id.camera_button))
 				.setOnClickListener(this);
+		
+		((Button) view.findViewById(R.id.delete_button))
+		.setOnClickListener(this);
 
 		return view;
 	}
@@ -109,20 +121,36 @@ public class MediaFragment extends SherlockFragment implements
 		super.onSaveInstanceState(savedInstanceState);
 		ArrayList<Uri> mArr = galleryAdapter.getMediaList();
 		String arr[] = new String[mArr.size()];
+		boolean checked_arr[] = new boolean[galleryAdapter.getCheckedList().size()];
 		for (int i = 0; i < arr.length; i++) {
 			arr[i] = mArr.get(i).getEncodedPath();
+			checked_arr[i] = galleryAdapter.getCheckedList().get(i);
 		}
 		savedInstanceState.putStringArray("URIs", arr);
+		savedInstanceState.putBooleanArray("checked", checked_arr);
+		Log.i("MediaFragment", "on save instance state");
 	}
 
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
+		ViewHolder cell = (ViewHolder) view.getTag();
+		
 		Uri uri = galleryAdapter.getImageAt(position);
 		String url = getPath(uri);
 		Intent intent = new Intent(mContext, FullImageViewActivity.class);
 		intent.putExtra(IMAGE_URL, url);
 		intent.putExtra(LOCAL_URL, true);
-
+		startActivity(intent);
+	}
+	
+	public void expandImage(int position)
+	{
+		Log.i("MediaFragment", "On item Click num: " + position);
+		Uri uri = galleryAdapter.getImageAt(position);
+		String url = getPath(uri);
+		Intent intent = new Intent(mContext, FullImageViewActivity.class);
+		intent.putExtra(IMAGE_URL, url);
+		intent.putExtra(LOCAL_URL, true);
 		startActivity(intent);
 	}
 
@@ -176,7 +204,40 @@ public class MediaFragment extends SherlockFragment implements
 		case R.id.camera_button:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+			//TODO: This is fucked
+			try {
+				File outFile = mContext.getFileStreamPath("test");
+				outFile.createNewFile();
+				outFile.setWritable(true, false);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 			startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+			break;
+		case R.id.delete_button:
+			ArrayList<Uri> deleteList = new ArrayList<Uri>();
+			for(int i = 0; i < galleryAdapter.getCount() ; i++)
+			{
+				if(galleryAdapter.isChecked(i))
+				{
+					deleteList.add(galleryAdapter.getImageAt(i));
+				}
+			}
+			for(Uri uri : deleteList)
+			{
+				galleryAdapter.getMediaList().remove(uri);
+			}
+
+			galleryAdapter.checkedList = new ArrayList<Boolean>(galleryAdapter.getMediaList().size());
+			for(int i = 0 ; i < galleryAdapter.getCount() ; i++)
+			{
+				galleryAdapter.checkedList.add(false);
+			}
+			galleryAdapter.invalidatedView();
+			
 			break;
 		}
 	}
@@ -226,9 +287,9 @@ public class MediaFragment extends SherlockFragment implements
 				 * .println("filemanagerstring is the right one for you!");
 				 */
 			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
-				// store returned image
-				Log.i("mediact", "ret from camera");
+				Log.i("mediact", "ret from camera image: ");
 				Uri selectedImageUri = data.getData();
+				
 				galleryAdapter.addUri(selectedImageUri);
 
 				// Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
