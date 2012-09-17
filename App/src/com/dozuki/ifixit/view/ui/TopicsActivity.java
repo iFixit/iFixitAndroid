@@ -64,7 +64,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication)getApplication()).getSiteTheme());
       getSupportActionBar().setTitle(((MainApplication)getApplication())
-       .getSite().mName);
+       .getSite().mTitle);
 
       super.onCreate(savedInstanceState);
 
