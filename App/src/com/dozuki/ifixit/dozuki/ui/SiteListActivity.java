@@ -6,6 +6,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
@@ -48,8 +49,18 @@ public class SiteListActivity extends SherlockFragmentActivity {
    @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setTheme(((MainApplication)getApplication()).getSiteTheme());
       setTitle("");
+      boolean isLarge = ((getResources().getConfiguration().screenLayout & 
+            Configuration.SCREENLAYOUT_SIZE_LARGE) == 
+             Configuration.SCREENLAYOUT_SIZE_LARGE);
+      boolean isXLarge = ((getResources().getConfiguration().screenLayout & 
+            Configuration.SCREENLAYOUT_SIZE_XLARGE) == 
+            Configuration.SCREENLAYOUT_SIZE_XLARGE);
+     
+      if (isLarge || isXLarge) {
+         getSupportActionBar().hide();
+      }      
+      
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.site_list);
