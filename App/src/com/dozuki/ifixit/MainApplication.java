@@ -70,6 +70,17 @@ public class MainApplication extends Application {
       return R.style.Theme_Dozuki;
    }
 
+   /**
+    * Returns the current site's object name.
+    */
+   public String getSiteObjectName() {
+      if (mSite.mName.equals("ifixit")) {
+         return getString(R.string.devices);
+      } else {
+         return getString(R.string.topics);
+      }
+   }
+
    public ImageManager getImageManager() {
       if (mImageManager == null) {
          mImageManager = new ImageManager(this);
