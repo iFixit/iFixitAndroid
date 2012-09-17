@@ -35,6 +35,7 @@
         
         <!-- Custom Attributes / Styles for Dozuki -->
         <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle</item>  
+        
         <!-- Override for SectionHeader ListView style -->
         <item name="sectionListViewStyle">@style/Widget.Dozuki.ListViewStyle</item>      
         <item name="topicHeaderColor">@color/dozuki_green</item>
@@ -58,6 +59,14 @@
     
     <style name="Theme.Dozuki.White"  parent="Theme.Dozuki">
         <item name="topicHeaderColor">@color/dozuki_white</item>    
+        
+        <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item> 
+        <item name="sectionListViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item>
+        
+        <item name="actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>
+        <item name="android:actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>   
+        
+        <item name="topicGuideList">@style/Widget.Dozuki.ListViewStyle.Grey</item>
     </style>
     
     <style name="Theme.Dozuki.Orange" parent="Theme.Dozuki">        
@@ -72,10 +81,13 @@
     
     <style name="Theme.Dozuki.Grey" parent="Theme.Dozuki">        
         <item name="topicHeaderColor">@color/dozuki_grey</item>
+        
         <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item> 
         <item name="sectionListViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item>
+        
         <item name="actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>
         <item name="android:actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>   
+        
         <item name="topicGuideList">@style/Widget.Dozuki.ListViewStyle.Grey</item>
     </style>    
 

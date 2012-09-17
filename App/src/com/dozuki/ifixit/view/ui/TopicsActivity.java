@@ -63,9 +63,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication)getApplication()).getSiteTheme());
+      getSupportActionBar().setTitle(((MainApplication)getApplication())
+       .getSite().mName);
+
       super.onCreate(savedInstanceState);
 
-      getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()

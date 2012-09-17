@@ -46,9 +46,10 @@ public class SiteListActivity extends SherlockFragmentActivity {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      setTheme(((MainApplication)getApplication()).getSiteTheme());
+      setTitle("");
       super.onCreate(savedInstanceState);
 
-      getSupportActionBar().setTitle("");
       setContentView(R.layout.site_list);
 
       mSiteListView = (ListView)findViewById(R.id.siteListView);
