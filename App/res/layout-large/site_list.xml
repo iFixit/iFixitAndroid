@@ -23,7 +23,7 @@
 	       android:id="@+id/siteListView"
 	       android:layout_width="match_parent"
 	       android:layout_height="match_parent" 
-	       android:layout_marginTop="20dp"
+	       android:layout_marginTop="40dp"
 	       android:layout_marginBottom="40dp"
 	       android:background="@drawable/site_list_background"
 	       style="?attr/listViewStyle" /> 
