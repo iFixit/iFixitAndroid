@@ -17,6 +17,7 @@
         <item name="listViewStyle">@style/Widget.iFixit.ListViewStyle</item>        
         <!-- Override for SectionHeader ListView style -->
         <item name="sectionListViewStyle">@style/Widget.iFixit.ListViewStyle</item>
+        <item name="topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
     </style>
      
     <style name="Theme.Dozuki" parent="Theme.iFixit">
@@ -40,6 +41,7 @@
         <item name="sectionListViewStyle">@style/Widget.Dozuki.ListViewStyle</item>      
         <item name="topicHeaderColor">@color/dozuki_green</item>
         <item name="topicGuideList">@style/Widget.Dozuki.ListViewStyle</item>
+        <item name="topicDefaultBackground">@style/Widget.Dozuki.TopicBackground</item>
     </style>
     
     <!-- Custom Attributes / Styles for Dozuki -->

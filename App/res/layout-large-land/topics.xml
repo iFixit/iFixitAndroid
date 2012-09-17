@@ -27,12 +27,11 @@
           android:id="@+id/fist_background"
           android:layout_width="wrap_content"
           android:layout_height="wrap_content"
-          android:src="@drawable/fist_default"
           android:layout_gravity="bottom"
           android:paddingTop="20dp"
           android:scaleType="fitXY"
           android:clipToPadding="true"
-          android:contentDescription="@string/fist_background_desc" />
+          style="?attr/topicDefaultBackground" />
 
        <fragment
           android:id="@+id/topic_view_fragment"
