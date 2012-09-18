@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -40,6 +41,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
    private static final String GALLERY_VISIBLE = "LOGIN_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
+private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
    private TopicViewFragment mTopicView;
    private MediaFragment mMediaView;
@@ -87,39 +89,40 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       setContentView(R.layout.topics);
       
       com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
-      mTopicView =  TopicViewFragment.getInstance();
-  //   mMediaView =  MediaFragment.getInstance();
-      
+   
 
      View galleryTopicView = (View)findViewById(R.id.topic_view_fragment);
-       //.findFragmentById(R.id.topic_view_fragment);
+
       mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
       mHideTopicList = mTopicViewOverlay != null;
       mDualPane = galleryTopicView != null; //&& mTopicView.isInLayout();
 
-      if (savedInstanceState != null) {
-         mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
-         mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
-         mLoginVisible = savedInstanceState.getBoolean(LOGIN_VISIBLE);
-         mGalleryVisible = savedInstanceState.getBoolean(GALLERY_VISIBLE);
-         mTopicView = (TopicViewFragment) getSupportFragmentManager().findFragmentByTag("topicView");
-         if(mGalleryVisible)
-         {
-            mMediaView = (MediaFragment) getSupportFragmentManager().findFragmentByTag("galleryFragment");
-         }else
-         {
-        	 mMediaView =  new MediaFragment(((MainApplication)getApplication()).getImageManager());
-         }
-      } else {
-         mTopicListVisible = true;
-         mLoginVisible= false;
-         mGalleryVisible=false;
-         mMediaView =  new MediaFragment(((MainApplication)getApplication()).getImageManager());
-         if(mDualPane)
-         {
-        	 addTopicView();	 
-         }
-      }
+		if (savedInstanceState != null) {
+			mRootTopic = (TopicNode) savedInstanceState
+					.getSerializable(ROOT_TOPIC);
+			mTopicListVisible = savedInstanceState
+					.getBoolean(TOPIC_LIST_VISIBLE);
+			mLoginVisible = savedInstanceState.getBoolean(LOGIN_VISIBLE);
+			mGalleryVisible = savedInstanceState.getBoolean(GALLERY_VISIBLE);
+			mMediaView = (MediaFragment) getSupportFragmentManager()
+			.findFragmentByTag("galleryFragment");
+			mTopicView = (TopicViewFragment) getSupportFragmentManager()
+			.findFragmentByTag("topicView");
+			//toggleGalleryView(mGalleryVisible);
+
+		} else {
+			mTopicListVisible = true;
+			mLoginVisible = false;
+			mGalleryVisible = false;
+			mTopicView = new TopicViewFragment();
+			mMediaView = new MediaFragment();
+			mTopicView.setRetainInstance(true);
+			mMediaView.setRetainInstance(true);
+			if (mDualPane) {
+				setUpMainView();
+			}
+		}
+
 
       if (mRootTopic == null) {
          fetchCategories();
@@ -130,7 +133,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
 
       if (mTopicListVisible && mHideTopicList &&
-       mTopicView.isDisplayingTopic()) {
+       (mTopicView.isDisplayingTopic() || mGalleryVisible)) {
          hideTopicListWithDelay();
       }
 
@@ -144,7 +147,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                if (mTopicListVisible && mTopicView.isDisplayingTopic()) {
-                  hideTopicList();
+                  hideTopicList(null);
                   return true;
                } else {
                   return false;
@@ -157,21 +160,21 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    
    }
    
-   private void addTopicView() 
+   private void setUpMainView() 
    {
+	   //add gallery and topic fragment
 	   FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
 	  
+	      ft.add(R.id.topic_view_fragment, mMediaView, "galleryFragment");
+	      ft.hide(mMediaView);
 	      ft.add(R.id.topic_view_fragment, mTopicView, "topicView");
-
-	 
-
-	      // ft.commit();
-	      
-	      // commitAllowingStateLoss doesn't throw an exception if commit() is 
-	      // run after the fragments parent already saved its state.  Possibly
-	      // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
 	      ft.commitAllowingStateLoss();
+	      
+	      //hide gallery fragment
+	    //  ft = getSupportFragmentManager().beginTransaction();
+	 //    ft.hide(getSupportFragmentManager().findFragmentByTag("galleryFragment"));
+	   //   ft.commitAllowingStateLoss();
 	
    }
 
@@ -239,12 +242,15 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
    @Override
    public void onTopicSelected(TopicNode topic) {
+		if (mGalleryVisible) {
+			this.toggleGalleryView(false);
+		}
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
 
             if (mHideTopicList) {
-               hideTopicList();
+               hideTopicList(null);
             }
          } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
@@ -255,19 +261,19 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             startActivity(intent);
          }
       } else {
-         changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
+         changeTopicListView(new TopicListFragment(topic), !topic.isRoot(), null);
       }
    }
 
-   private void hideTopicList() {
-      hideTopicList(false);
+   private void hideTopicList(String state) {
+      hideTopicList(false, state);
    }
 
-   private void hideTopicList(boolean delay) {
+   private void hideTopicList(boolean delay, String state) {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       mTopicViewOverlay.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
-      changeTopicListView(new Fragment(), true, delay);
+      changeTopicListView(new Fragment(), true, delay,  state);
    }
 
 
@@ -275,7 +281,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       // Delay this slightly to make sure the animation is played.
       new Handler().postAtTime(new Runnable() {
          public void run() {
-            hideTopicList(true);
+            hideTopicList(true, null);
          }
       }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
@@ -287,12 +293,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       mTopicListVisible = true;
    }
 
-   private void changeTopicListView(Fragment fragment, boolean addToBack) {
-      changeTopicListView(fragment, addToBack, false);
+   private void changeTopicListView(Fragment fragment, boolean addToBack, String state) {
+      changeTopicListView(fragment, addToBack, false, state);
    }
 
    private void changeTopicListView(Fragment fragment, boolean addToBack,
-    boolean delay) {
+    boolean delay, String state) {
       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
       int inAnim, outAnim;
 
@@ -318,7 +324,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       ft.replace(R.id.topic_list_fragment, fragment);
 
       if (addToBack) {
-         ft.addToBackStack(null);
+         ft.addToBackStack(state);
       }
 
       // ft.commit();
@@ -330,39 +336,45 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    }
    
 	private void toggleGalleryView(boolean showGallery) {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		int inAnim, outAnim;
-
-		inAnim = R.anim.slide_in_right;
-		outAnim = R.anim.slide_out_left;
-		Log.e("just added gallery view", ""+ showGallery);
+		
+		
 
 		if (showGallery) {
-			Log.e("just added gallery view", "");
-			ft.setCustomAnimations(inAnim, outAnim, R.anim.slide_in_left,
-					R.anim.slide_out_right);
-
-			ft.replace(R.id.topic_view_fragment, mMediaView, "galleryFragment");
+			//save state
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			ft.addToBackStack(BACK_STACK_STATE);
+			ft.commitAllowingStateLoss();
+			//show gallery
+			ft = getSupportFragmentManager().beginTransaction();
+	
+			ft.setCustomAnimations( R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
+			//ft.add(R.id.topic_view_fragment, mMediaView, "galleryFragment");
+			ft.show((MediaFragment) getSupportFragmentManager()
+					.findFragmentByTag("galleryFragment"));
+			ft.hide((TopicViewFragment) getSupportFragmentManager()
+					.findFragmentByTag("topicView"));
 			ft.addToBackStack(null);
 			ft.commitAllowingStateLoss();
-			 mGalleryVisible=true;
-			Log.e("just added gallery view", "");
-		} else {
-			//remove gallery
-			getSupportFragmentManager().popBackStack();
-			//show tpics
-			if(mTopicViewOverlay != null)
-			   getSupportFragmentManager().popBackStack();
 			
+			//ft = getSupportFragmentManager().beginTransaction();
+			if(mTopicListVisible && mHideTopicList)
+				   hideTopicList(false, null);
+			//ft.addToBackStack(null);
+			//ft.commitAllowingStateLoss();
+			 mGalleryVisible=true;
+		} else {
+
+			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		//	ft.setCustomAnimations(R.anim.slide_in_left,  R.anim.slide_out_right);
+			getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			//ft.replace(R.id.topic_view_fragment, mTopicView, "topicView");
+		//	ft.hide((MediaFragment) getSupportFragmentManager()
+			//		.findFragmentByTag("galleryFragment"));
+			//ft.show((TopicViewFragment) getSupportFragmentManager()
+			//		.findFragmentByTag("topicView"));
+			ft.commitAllowingStateLoss();
 			 mGalleryVisible=false;
 		}
-
-		// ft.commit();
-
-		// commitAllowingStateLoss doesn't throw an exception if commit() is
-		// run after the fragments parent already saved its state. Possibly
-		// fixes the IllegalStateException crash in
-		// FragmentManagerImpl.checkStateLoss()
 	}
 
 	@Override
@@ -379,12 +391,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		case android.R.id.home:
 			 if(mGalleryVisible)
 		       {
-		    	   toggleGalleryView(false);;
+		    	   toggleGalleryView(false);
 		    	   return true;
-		       }else
-		       {
-			      getSupportFragmentManager().popBackStack();
 		       }
+			 getSupportFragmentManager().popBackStack();
 			return true;
 		case R.id.gallery_button:
 			MainApplication mainApp = (MainApplication) getApplication();
@@ -393,8 +403,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 					if (!mLoginVisible) {
 						LoginFragment fg = LoginFragment.newInstance();
 						fg.registerOnLoginListener(this);
+						fg.registerOnLoginListener(mMediaView);
 						mLoginVisible = true;
-						changeTopicListView(fg, true);
+						changeTopicListView(fg, true, null);
 					}
 				} else {
 					// Intent i = new Intent(this,LoginActivity.class);
@@ -403,18 +414,18 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 						LoginFragment fg = LoginFragment.newInstance();
 						fg.registerOnLoginListener(this);
 						mLoginVisible = true;
-						changeTopicListView(fg, true);
+						changeTopicListView(fg, true, null);
 					}
 				}
 			} else if(mGalleryVisible == false){
 			
 				if (mDualPane) {
-					if(mTopicListVisible && mHideTopicList)
-					   hideTopicList(false);
-					 toggleGalleryView(true);
+					//if(mTopicListVisible && mHideTopicList)
+					 //  hideTopicList(false);
+					   toggleGalleryView(true);
 					//mTopicViewOverlay.setVisibility(View.INVISIBLE);
 				} else {
-					this.changeTopicListView(mMediaView, true, false);
+					this.changeTopicListView(mMediaView, true, false, null);
 					mGalleryVisible=true;
 				}
 			}
@@ -429,20 +440,18 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				{
 					 toggleGalleryView(false);
 				}
-			    	
-
 			}
 
 			return true;
 			
 		case R.id.tardis_button:
 			if (mDualPane) {
-				if(mTopicListVisible && mHideTopicList)
-					   hideTopicList(false);
+				//if(mTopicListVisible && mHideTopicList)
+					 //  hideTopicList(false);
 				toggleGalleryView(true);
 				
 			} else {
-				this.changeTopicListView(mMediaView, true, false);
+				this.changeTopicListView(mMediaView, true, false, null);
 				mGalleryVisible = true;
 			}
 		return true;
@@ -465,12 +474,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		}
 
 		if (mDualPane) {
-			if(mTopicListVisible && mHideTopicList)
-				   hideTopicList(false);
+			//if(mTopicListVisible && mHideTopicList)
+				//   hideTopicList(false);
 			toggleGalleryView(true);
 			
 		} else {
-			this.changeTopicListView(mMediaView, true, false);
+			this.changeTopicListView(mMediaView, true, false, null);
 			mGalleryVisible = true;
 		}
 
@@ -482,7 +491,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	    if (keyCode == KeyEvent.KEYCODE_BACK) {
 	       if(mGalleryVisible)
 	       {
-	    	   toggleGalleryView(false);;
+	    	   toggleGalleryView(false);
 	    	   return true;
 	       }
 	    }

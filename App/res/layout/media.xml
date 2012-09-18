@@ -10,19 +10,20 @@
         android:layout_height="0dp"
         android:layout_weight="0.85"
         android:fillViewport="true" >
-
+
         <GridView
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/gridview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnWidth="150dp"
+            android:layout_marginTop="@dimen/topic_list_top_margin"
+            android:columnWidth="@dimen/topic_list_column_width"
             android:gravity="center"
-            android:horizontalSpacing="10dp"
+            android:horizontalSpacing="@dimen/topic_list_horizontal_spacing"
             android:numColumns="auto_fit"
             android:orientation="vertical"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" >
+            android:verticalSpacing="@dimen/topic_list_vertical_spacing">
         </GridView>
     </LinearLayout>
 

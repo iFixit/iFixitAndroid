@@ -33,6 +33,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.User;
 import com.dozuki.ifixit.view.model.UserImageInfo;
@@ -40,13 +41,14 @@ import com.dozuki.ifixit.view.model.UserImageList;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MediaFragment extends SherlockFragment implements
-		OnItemClickListener, OnClickListener {
+		OnItemClickListener, OnClickListener, LoginListener {
 	
 	 private static final int MAX_LOADING_IMAGES = 20;
 	   private static final int MAX_STORED_IMAGES = 30;
 	   private static final int MAX_WRITING_IMAGES = 20;
 	protected static final String IMAGE_URL = "IMAGE_URL";
 	protected static final String LOCAL_URL = "LOCAL_URL";
+	private static MediaFragment thisInstance;
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
@@ -74,19 +76,25 @@ public class MediaFragment extends SherlockFragment implements
 
 	
 
-	 public MediaFragment() {};
-	
-	/**
-	 * Required for restoring fragments
-	 */
+
 	public MediaFragment(ImageManager imageManager) {
-		 mImageManager = imageManager;
-	      mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
-	      mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
-	      mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
+		// mImageManager = imageManager;
+	     
 	}
 
+	public MediaFragment()
+	{
+		
+	}
 
+	
+	  public static MediaFragment getInstance()
+	   {
+		   if(thisInstance == null)
+		   thisInstance = new MediaFragment();
+		   
+		   return thisInstance;
+	   }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -96,6 +104,8 @@ public class MediaFragment extends SherlockFragment implements
 	          mImageManager = ((MainApplication)getActivity().getApplication()).
 	           getImageManager();
 	          mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
+		      mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
+		      mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
 	       }
 
 	       mImageSizes = ((MainApplication)getActivity().getApplication()).
@@ -109,7 +119,7 @@ public class MediaFragment extends SherlockFragment implements
 	       {
 	    	   mImageList = new UserImageList();
 	    	   galleryAdapter = new MediaAdapter();
-	    	   retrieveUserImages();
+	    	  // retrieveUserImages();
 	       }
 	}
 
@@ -454,5 +464,11 @@ public class MediaFragment extends SherlockFragment implements
 	         return itemView;
 	      }
 	   }
+
+
+	@Override
+	public void onLogin(User user) {
+		retrieveUserImages();
+	}
 
 }
