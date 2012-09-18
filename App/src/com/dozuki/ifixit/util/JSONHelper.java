@@ -220,6 +220,7 @@ public class JSONHelper {
    {
 	   try {
 	   UserImageInfo userImageInfo = new UserImageInfo();
+	   userImageInfo.setmImageId(jImage.getString("imageid"));
 	   userImageInfo.setmGuid(jImage.getString("guid"));
 	   userImageInfo.setmHeight(jImage.getString("height"));
 	   userImageInfo.setmWidth(jImage.getString("width"));

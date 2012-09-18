@@ -6,10 +6,13 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -30,7 +33,9 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.User;
+import com.dozuki.ifixit.view.model.UserImageInfo;
 import com.dozuki.ifixit.view.model.UserImageList;
 import com.ifixit.android.imagemanager.ImageManager;
 
@@ -45,12 +50,14 @@ public class MediaFragment extends SherlockFragment implements
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
+	private static final String USER_IMAGE_LIST = "USER_IMAGE_LIST";
 	private String selectedImagePath;
 	private String filemanagerstring;
 	GridView mGridView;
 	MediaAdapter galleryAdapter;
 	private ImageManager mImageManager;
 	private ImageSizes mImageSizes;
+	UserImageList mImageList;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -59,9 +66,8 @@ public class MediaFragment extends SherlockFragment implements
 					.getSerializable(APIService.RESULT);
 
 			if (!result.hasError()) {
-				Log.e("PARSED IMAGE OBJECT", "" + "CEDE");
-				UserImageList lUserImageList =  (UserImageList)result.getResult();
-				galleryAdapter.setImageList(lUserImageList);
+				mImageList =  (UserImageList)result.getResult();
+				galleryAdapter.invalidatedView();
 			}
 		}
 	};
@@ -95,7 +101,16 @@ public class MediaFragment extends SherlockFragment implements
 	       mImageSizes = ((MainApplication)getActivity().getApplication()).
 	        getImageSizes();
 	       
-	       retrieveUserImages();
+	       if( savedInstanceState != null )
+	       {
+	    	   mImageList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
+	    	   galleryAdapter = new MediaAdapter();
+	       }else
+	       {
+	    	   mImageList = new UserImageList();
+	    	   galleryAdapter = new MediaAdapter();
+	    	   retrieveUserImages();
+	       }
 	}
 
 	@Override
@@ -104,11 +119,10 @@ public class MediaFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.media, container, false);
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
-		galleryAdapter = new MediaAdapter(mContext);
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(this);
 
-		if (savedInstanceState != null) {
+	/*	if (savedInstanceState != null) {
 			Log.i("MediaFrag", "rebuilding view");
 			String arr[] = savedInstanceState.getStringArray("URIs");
 			boolean c_arr[] = savedInstanceState.getBooleanArray("checked");
@@ -120,7 +134,7 @@ public class MediaFragment extends SherlockFragment implements
 			}
 			galleryAdapter.setMediaList(uriArr);	
 			galleryAdapter.setCheckedList(cList);
-		}
+		}*/
 
 		((Button) view.findViewById(R.id.gallery_button))
 				.setOnClickListener(this);
@@ -136,8 +150,8 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-		ArrayList<Uri> mArr = galleryAdapter.getMediaList();
+		//super.onSaveInstanceState(savedInstanceState);
+		/*ArrayList<Uri> mArr = galleryAdapter.getMediaList();
 		String arr[] = new String[mArr.size()];
 		boolean checked_arr[] = new boolean[galleryAdapter.getCheckedList().size()];
 		for (int i = 0; i < arr.length; i++) {
@@ -146,7 +160,10 @@ public class MediaFragment extends SherlockFragment implements
 		}
 		savedInstanceState.putStringArray("URIs", arr);
 		savedInstanceState.putBooleanArray("checked", checked_arr);
-		Log.i("MediaFragment", "on save instance state");
+		Log.i("MediaFragment", "on save instance state");*/
+		
+		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
+		 
 	}
 	
 	public void retrieveUserImages()
@@ -326,19 +343,18 @@ public class MediaFragment extends SherlockFragment implements
 	
 
 	   private class MediaAdapter extends BaseAdapter {
-	      private UserImageList mUserImages;
+	      
 	      
 	      ArrayList<Uri> mediaList;
 	  	ArrayList<Boolean> checkedList;
 	  	
-	  	
-	      public MediaAdapter(Context c) {
-	  		mediaList = new ArrayList<Uri>();
-	  		checkedList = new ArrayList<Boolean>();
-	  		mUserImages = new UserImageList();
-	  	}
 
-	  	public void setMediaList(ArrayList<Uri> medList) {
+
+		public MediaAdapter() {
+			// TODO Auto-generated constructor stub
+		}
+
+		public void setMediaList(ArrayList<Uri> medList) {
 	  		mediaList = medList;
 	  		checkedList = new ArrayList<Boolean>(mediaList.size());
 	  		for(int i = 0 ; i < mediaList.size() ; i++)
@@ -348,8 +364,8 @@ public class MediaFragment extends SherlockFragment implements
 	  	}
 	  	
 		public void setImageList(UserImageList userImages) {
-			mUserImages = userImages;
-			invalidatedView();
+			//m = userImages;
+			//invalidatedView();
 	  	}
 
 	  	public void setCheckedList(ArrayList<Boolean> checkedList) {
@@ -381,8 +397,14 @@ public class MediaFragment extends SherlockFragment implements
 	  	}
 
 	  	public void addUri(Uri uri) {
-	  		mediaList.add(uri);
-	  		checkedList.add(new Boolean(false));
+	  		//mediaList.add(uri);
+	  		UserImageInfo userImageInfo = new UserImageInfo();
+	  		String url =uri.toString();
+	  		userImageInfo.setmGuid(url);
+	  		userImageInfo.setmImageId(null);
+	  		mImageList.getmImages().add(userImageInfo);
+	  		//checkedList.add(new Boolean(false));
+	  		invalidatedView();
 	  	}
 	  	
 	  	public void invalidatedView()
@@ -393,7 +415,7 @@ public class MediaFragment extends SherlockFragment implements
 	  	@Override
 	  	public int getCount() {
 	  		// TODO Auto-generated method stub
-	  		return mUserImages.getmImages().size();
+	  		return mImageList.getmImages().size();
 	  	}
 
 	  	@Override
@@ -411,11 +433,22 @@ public class MediaFragment extends SherlockFragment implements
 	            itemView = new MediaViewItem(getActivity(), mImageManager);
 	         }
 
-	        if(mUserImages != null)
+	        if(mImageList != null)
 	        {
-	         String image = mUserImages.getmImages().get(position).getmGuid() +
-	          mImageSizes.getGrid();
-	         itemView.setImageItem(image, getActivity());
+	        	if(mImageList.getmImages().get(position).getmImageId() != null)
+	        	{
+	               String image = mImageList.getmImages().get(position).getmGuid() +
+	               mImageSizes.getGrid();
+	               itemView.setImageItem(image, getActivity());
+	            }else
+	            {
+	            	Uri temp = Uri.parse(mImageList.getmImages().get(position).getmGuid()); //mediaList.get(position);
+	        		Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(
+	        				mContext.getContentResolver(), ContentUris.parseId(temp),
+	        				MediaStore.Images.Thumbnails.MINI_KIND,
+	        				(BitmapFactory.Options) null);
+	        		itemView.imageview.setImageBitmap(bitmap);
+	            }
 	        }
 	         
 	         return itemView;
