@@ -88,7 +88,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       
       com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
       mTopicView =  TopicViewFragment.getInstance();
-      mMediaView =  MediaFragment.getInstance();
+  //   mMediaView =  MediaFragment.getInstance();
       
 
      View galleryTopicView = (View)findViewById(R.id.topic_view_fragment);
@@ -106,11 +106,15 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          if(mGalleryVisible)
          {
             mMediaView = (MediaFragment) getSupportFragmentManager().findFragmentByTag("galleryFragment");
+         }else
+         {
+        	 mMediaView =  new MediaFragment(((MainApplication)getApplication()).getImageManager());
          }
       } else {
          mTopicListVisible = true;
          mLoginVisible= false;
          mGalleryVisible=false;
+         mMediaView =  new MediaFragment(((MainApplication)getApplication()).getImageManager());
          if(mDualPane)
          {
         	 addTopicView();	 

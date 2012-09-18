@@ -100,14 +100,14 @@ public class APIService extends Service {
    private static final String REGISTER_API_URL =
 	    "https://www.ifixit.com/api/0.1/register";
    
+   private static final String USER_IMAGES_API_URL =
+	    "http://www.ifixit.com/api/1.0/image/user";
+   
    
    private static final String API_DOMAIN =  ".ifixit.com";
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
-   private static final String REQUEST_LOGIN = "REQUEST_LOGIN";
-   private static final String REQUEST_PASSWORD= "REQUEST_PASSWORD";
-   private static final String REQUEST_SESSION= "REQUEST_SESSION";
    private static final String REQUEST_BROADCAST_ACTION =
     "REQUEST_BROADCAST_ACTION";
    private static final String REQUEST_AUTHENICATION_PACKAGE = "AUTHENICATION_PACKAGE";
@@ -117,6 +117,7 @@ public class APIService extends Service {
    private static final int TARGET_TOPIC = 2;
    private static final int TARGET_LOGIN = 3;
    private static final int TARGET_REGISTER = 4;
+   private static final int TARGET_MEDIA_LIST= 5;
 
    private static final String NO_QUERY = "";
 
@@ -131,6 +132,8 @@ public class APIService extends Service {
    
    public static final String ACTION_REGISTER =
 	    "com.dozuki.ifixit.api.resgister";
+   public static final String ACTION_USER_MEDIA =
+	    "com.dozuki.ifixit.api.images";
 
    
  
@@ -230,6 +233,10 @@ public class APIService extends Service {
          case TARGET_LOGIN:
             parsedResult = JSONHelper.parseLoginInfo(response);
              break;
+             
+         case TARGET_MEDIA_LIST:
+        	 parsedResult = JSONHelper.parseUserImages(response);
+        	 break;
          default:
             Log.w("iFixit", "Invalid request target: " + requestTarget);
             return new Result(Error.PARSE);
@@ -277,6 +284,10 @@ public class APIService extends Service {
 	      return createLoginIntent(context, TARGET_LOGIN, authenicationPackage , ACTION_LOGIN);
 	   }
    
+   public static Intent userMediaIntent(Context context, AuthenicationPackage authenicationPackage) {
+	      return createUserMediaIntent(context, TARGET_MEDIA_LIST, authenicationPackage , ACTION_USER_MEDIA);
+	   }
+   
    public static Intent getRegisterIntent(Context mContext,
 			AuthenicationPackage authenicationPackage) {
 	   return createRegisterIntent(mContext, TARGET_REGISTER, authenicationPackage , ACTION_REGISTER);
@@ -309,6 +320,19 @@ public class APIService extends Service {
 
 		      return intent;
 		   }
+   
+   private static Intent createUserMediaIntent(Context context, int target,AuthenicationPackage authenicationPackage, String action) {
+	   
+	      Intent intent = new Intent(context, APIService.class);
+	      Bundle extras = new Bundle();
+	      extras.putInt(REQUEST_TARGET, target);
+	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
+	      extras.putString(REQUEST_BROADCAST_ACTION, action);
+	      intent.putExtras(extras);
+
+	      return intent;
+	   }
+
    
    private static Intent createRegisterIntent(Context context, int target,AuthenicationPackage authenicationPackage, String action) {
 	   
@@ -411,6 +435,8 @@ public class APIService extends Service {
 			break;
 		case TARGET_REGISTER:
 			url = REGISTER_API_URL;
+		case TARGET_MEDIA_LIST:
+			url = USER_IMAGES_API_URL;
 			break;
 		default:
 			Log.w("iFixit", "Invalid request target: " + requestTarget);

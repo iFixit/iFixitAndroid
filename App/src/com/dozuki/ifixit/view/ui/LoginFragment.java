@@ -139,41 +139,42 @@ public class LoginFragment extends SherlockFragment
    }
    
 
-	private void setState() 
-	{
-		if(readyForRegisterState)
-		{
-			  _confirmPasswordTag.setVisibility(View.VISIBLE);
-	    		_usernameTag.setVisibility(View.VISIBLE);
-	    		_confirmPassword.setVisibility(View.VISIBLE);
-	    		_name.setVisibility(View.VISIBLE);
-	    		_cancelRegister.setVisibility(View.VISIBLE);
-	    		
-	    		_googleLogin.setVisibility(View.GONE);
-	    		_yahooLogin.setVisibility(View.GONE);
-	    		_login.setVisibility(View.GONE);
-	    		
-	    		_usernameTag.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-	    		_name.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-	    		_confirmPasswordTag.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-	    		_confirmPassword.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-		}else
-		{
+	private void setState() {
+		if (readyForRegisterState) {
+			_confirmPasswordTag.setVisibility(View.VISIBLE);
+			_usernameTag.setVisibility(View.VISIBLE);
+			_confirmPassword.setVisibility(View.VISIBLE);
+			_name.setVisibility(View.VISIBLE);
+			_cancelRegister.setVisibility(View.VISIBLE);
+
+			_googleLogin.setVisibility(View.GONE);
+			_yahooLogin.setVisibility(View.GONE);
+			_login.setVisibility(View.GONE);
+
+			_usernameTag.startAnimation(AnimationUtils.loadAnimation(mContext,
+					R.anim.fade_in));
+			_name.startAnimation(AnimationUtils.loadAnimation(mContext,
+					R.anim.fade_in));
+			_confirmPasswordTag.startAnimation(AnimationUtils.loadAnimation(
+					mContext, R.anim.fade_in));
+			_confirmPassword.startAnimation(AnimationUtils.loadAnimation(
+					mContext, R.anim.fade_in));
+		} else {
 			_confirmPasswordTag.clearAnimation();
-		_confirmPasswordTag.setVisibility(View.GONE);
-		_usernameTag.clearAnimation();
-  		_usernameTag.setVisibility(View.GONE);
-  		_confirmPassword.clearAnimation();
-  		_confirmPassword.setVisibility(View.GONE);
-  		_name.clearAnimation();
-  		_name.setVisibility(View.GONE);
-  		_cancelRegister.clearAnimation();
-  		_cancelRegister.setVisibility(View.GONE);
-  		_googleLogin.setVisibility(View.VISIBLE);
-		_yahooLogin.setVisibility(View.VISIBLE);
-		_login.setVisibility(View.VISIBLE);
+			_confirmPasswordTag.setVisibility(View.GONE);
+			_usernameTag.clearAnimation();
+			_usernameTag.setVisibility(View.GONE);
+			_confirmPassword.clearAnimation();
+			_confirmPassword.setVisibility(View.GONE);
+			_name.clearAnimation();
+			_name.setVisibility(View.GONE);
+			_cancelRegister.clearAnimation();
+			_cancelRegister.setVisibility(View.GONE);
+			_googleLogin.setVisibility(View.VISIBLE);
+			_yahooLogin.setVisibility(View.VISIBLE);
+			_login.setVisibility(View.VISIBLE);
 		}
-	
+
     }
 
 

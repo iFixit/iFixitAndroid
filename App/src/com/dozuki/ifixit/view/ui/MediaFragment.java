@@ -10,8 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
-import android.graphics.Bitmap;
-import android.graphics.Bitmap.Config;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -22,20 +20,28 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.view.ui.MediaAdapter.ViewHolder;
+import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.dozuki.ifixit.view.model.User;
+import com.dozuki.ifixit.view.model.UserImageList;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class MediaFragment extends SherlockFragment implements
 		OnItemClickListener, OnClickListener {
+	
+	 private static final int MAX_LOADING_IMAGES = 20;
+	   private static final int MAX_STORED_IMAGES = 30;
+	   private static final int MAX_WRITING_IMAGES = 20;
 	protected static final String IMAGE_URL = "IMAGE_URL";
 	protected static final String LOCAL_URL = "LOCAL_URL";
-	private static MediaFragment thisInstance;
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
@@ -43,6 +49,8 @@ public class MediaFragment extends SherlockFragment implements
 	private String filemanagerstring;
 	GridView mGridView;
 	MediaAdapter galleryAdapter;
+	private ImageManager mImageManager;
+	private ImageSizes mImageSizes;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -51,33 +59,43 @@ public class MediaFragment extends SherlockFragment implements
 					.getSerializable(APIService.RESULT);
 
 			if (!result.hasError()) {
-
-				// Log.e("Login Activity", "Welcome " + user.getUsername());
+				Log.e("PARSED IMAGE OBJECT", "" + "CEDE");
+				UserImageList lUserImageList =  (UserImageList)result.getResult();
+				galleryAdapter.setImageList(lUserImageList);
 			}
 		}
 	};
 
-	public static MediaFragment newInstance() {
-		MediaFragment mFrgment = new MediaFragment();
-		return mFrgment;
-	}
+	
 
+	 public MediaFragment() {};
+	
 	/**
 	 * Required for restoring fragments
 	 */
-	public MediaFragment() {
+	public MediaFragment(ImageManager imageManager) {
+		 mImageManager = imageManager;
+	      mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
+	      mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
+	      mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
 	}
 
-	public static MediaFragment getInstance() {
-		if (thisInstance == null)
-			thisInstance = new MediaFragment();
 
-		return thisInstance;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+	      if (mImageManager == null) {
+	          mImageManager = ((MainApplication)getActivity().getApplication()).
+	           getImageManager();
+	          mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
+	       }
+
+	       mImageSizes = ((MainApplication)getActivity().getApplication()).
+	        getImageSizes();
+	       
+	       retrieveUserImages();
 	}
 
 	@Override
@@ -86,7 +104,7 @@ public class MediaFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.media, container, false);
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
-		galleryAdapter = new MediaAdapter(mContext, mGridView, this);
+		galleryAdapter = new MediaAdapter(mContext);
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(this);
 
@@ -130,17 +148,26 @@ public class MediaFragment extends SherlockFragment implements
 		savedInstanceState.putBooleanArray("checked", checked_arr);
 		Log.i("MediaFragment", "on save instance state");
 	}
+	
+	public void retrieveUserImages()
+	{
+		AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+		authenicationPackage.session = 	((MainApplication)((Activity)mContext).getApplication()).getUser().getSession();
+	     mContext.startService(APIService.userMediaIntent(mContext, authenicationPackage));
+	}
+	
+	
 
 	public void onItemClick(AdapterView<?> adapterView, View view,
 			int position, long id) {
-		ViewHolder cell = (ViewHolder) view.getTag();
+		/*ViewHolder cell = (ViewHolder) view.getTag();
 		
 		Uri uri = galleryAdapter.getImageAt(position);
 		String url = getPath(uri);
 		Intent intent = new Intent(mContext, FullImageViewActivity.class);
 		intent.putExtra(IMAGE_URL, url);
 		intent.putExtra(LOCAL_URL, true);
-		startActivity(intent);
+		startActivity(intent);*/
 	}
 	
 	public void expandImage(int position)
@@ -172,7 +199,7 @@ public class MediaFragment extends SherlockFragment implements
 		super.onResume();
 
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(APIService.ACTION_LOGIN);
+		filter.addAction(APIService.ACTION_USER_MEDIA);
 		mContext.registerReceiver(mApiReceiver, filter);
 	}
 
@@ -208,8 +235,8 @@ public class MediaFragment extends SherlockFragment implements
 			try {
 				File outFile = mContext.getFileStreamPath("test");
 				outFile.createNewFile();
-				outFile.setWritable(true, false);
-			} catch (IOException e) {
+				//outFile.setWritable(true, false);
+			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
@@ -296,5 +323,103 @@ public class MediaFragment extends SherlockFragment implements
 			}
 		}
 	}
+	
+
+	   private class MediaAdapter extends BaseAdapter {
+	      private UserImageList mUserImages;
+	      
+	      ArrayList<Uri> mediaList;
+	  	ArrayList<Boolean> checkedList;
+	  	
+	  	
+	      public MediaAdapter(Context c) {
+	  		mediaList = new ArrayList<Uri>();
+	  		checkedList = new ArrayList<Boolean>();
+	  		mUserImages = new UserImageList();
+	  	}
+
+	  	public void setMediaList(ArrayList<Uri> medList) {
+	  		mediaList = medList;
+	  		checkedList = new ArrayList<Boolean>(mediaList.size());
+	  		for(int i = 0 ; i < mediaList.size() ; i++)
+	  		{
+	  			checkedList.add(false);
+	  		}
+	  	}
+	  	
+		public void setImageList(UserImageList userImages) {
+			mUserImages = userImages;
+			invalidatedView();
+	  	}
+
+	  	public void setCheckedList(ArrayList<Boolean> checkedList) {
+	  		this.checkedList = checkedList;
+	  	}
+	  	
+		@Override
+		public long getItemId(int arg0) {
+			// TODO Auto-generated method stub
+			return 0;
+		}
+	  	
+	  	public ArrayList<Boolean> getCheckedList()
+	  	{
+	  		return checkedList;
+	  	}
+	  	
+	  	public boolean isChecked(int position)
+	  	{
+	  		return checkedList.get(position);
+	  	}
+
+	  	public ArrayList<Uri> getMediaList() {
+	  		return mediaList;
+	  	}
+
+	  	public Uri getImageAt(int i) {
+	  		return mediaList.get(i);
+	  	}
+
+	  	public void addUri(Uri uri) {
+	  		mediaList.add(uri);
+	  		checkedList.add(new Boolean(false));
+	  	}
+	  	
+	  	public void invalidatedView()
+	  	{
+	  		mGridView.invalidateViews();
+	  	}
+
+	  	@Override
+	  	public int getCount() {
+	  		// TODO Auto-generated method stub
+	  		return mUserImages.getmImages().size();
+	  	}
+
+	  	@Override
+	  	public Object getItem(int arg0) {
+	  		// TODO Auto-generated method stub
+	  		return null;
+	  	}
+
+
+
+	      public View getView(int position, View convertView, ViewGroup parent) {
+	         MediaViewItem itemView = (MediaViewItem)convertView;
+
+	         if (convertView == null) {
+	            itemView = new MediaViewItem(getActivity(), mImageManager);
+	         }
+
+	        if(mUserImages != null)
+	        {
+	         String image = mUserImages.getmImages().get(position).getmGuid() +
+	          mImageSizes.getGrid();
+	         itemView.setImageItem(image, getActivity());
+	        }
+	         
+	         return itemView;
+	      }
+	   }
 
 }

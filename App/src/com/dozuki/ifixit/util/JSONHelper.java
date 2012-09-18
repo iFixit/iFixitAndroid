@@ -22,6 +22,8 @@ import com.dozuki.ifixit.view.model.StepLine;
 import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.dozuki.ifixit.view.model.User;
+import com.dozuki.ifixit.view.model.UserImageInfo;
+import com.dozuki.ifixit.view.model.UserImageList;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
@@ -199,9 +201,44 @@ public class JSONHelper {
    }
    
    /**
+    * pasing list of userimag info
+    */
+   public static UserImageList parseUserImages(String json) throws JSONException {
+	   JSONArray jImages = new JSONArray(json);
+	   
+	   UserImageList userImageList = new UserImageList();
+    
+	   for (int i = 0; i < jImages.length(); i++) {
+		   userImageList.addImage((parseUserImageInfo(jImages.getJSONObject(i))));
+	      }
+
+      return userImageList;
+   }
+   
+   
+   public static UserImageInfo parseUserImageInfo(JSONObject jImage)
+   {
+	   try {
+	   UserImageInfo userImageInfo = new UserImageInfo();
+	   userImageInfo.setmGuid(jImage.getString("guid"));
+	   userImageInfo.setmHeight(jImage.getString("height"));
+	   userImageInfo.setmWidth(jImage.getString("width"));
+	   userImageInfo.setmRatio(jImage.getString("ratio"));
+
+
+       return userImageInfo;
+   } catch (JSONException e) {
+       Log.e("iFixit", "Error parsing guide info: " + e);
+       return null;
+    }
+	   
+   }
+   
+   /**
     * Login parsing info
     */
    public static User parseLoginInfo(String json) throws JSONException {
+	   
       JSONObject jUser = new JSONObject(json);
     
       User user = new User();

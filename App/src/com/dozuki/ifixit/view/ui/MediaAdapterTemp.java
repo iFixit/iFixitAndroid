@@ -26,7 +26,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MediaAdapter extends BaseAdapter {
+public class MediaAdapterTemp extends BaseAdapter {
 
 	ArrayList<Uri> mediaList;
 	ArrayList<Boolean> checkedList;
@@ -35,7 +35,7 @@ public class MediaAdapter extends BaseAdapter {
 	private Context _context;
 	private LayoutInflater _mInflater;
 
-	public MediaAdapter(Context c, GridView viewRef, MediaFragment mediaFrag) {
+	public MediaAdapterTemp(Context c, GridView viewRef, MediaFragment mediaFrag) {
 		_context = c;
 		_viewRef = viewRef;
 		mediaList = new ArrayList<Uri>();
