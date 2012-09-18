@@ -112,6 +112,8 @@ public class LoginFragment extends SherlockFragment
 	_googleLogin = (Button) view.findViewById(R.id.use_google_login_button);
 	_yahooLogin = (Button) view.findViewById(R.id.use_yahoo_login_button);
 	
+	_loginId.setText("aaron@fireswing.com");
+	_password.setText("LN8-7bT2");
 	
 	_confirmPasswordTag =  (TextView) view.findViewById(R.id.confirm_password);
 	_usernameTag = (TextView) view.findViewById(R.id.login_username);
