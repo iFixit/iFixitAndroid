@@ -57,6 +57,13 @@
     <style name="Theme.Dozuki.Blue"   parent="Theme.Dozuki">
         <item name="topicHeaderColor">@color/ifixit_blue</item>   
         <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle</item> 
+        <item name="sectionListViewStyle">@style/Widget.iFixit.ListViewStyle</item>
+        <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
+        <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
+        <item name="android:actionBarStyle">@style/Widget.iFixit.ActionBar</item>
+        <item name="actionBarStyle">@style/Widget.iFixit.ActionBar</item>
+        <item name="actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
+        <item name="android:actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>        
     </style>
     
     <style name="Theme.Dozuki.White"  parent="Theme.Dozuki">
