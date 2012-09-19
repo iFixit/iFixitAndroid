@@ -53,6 +53,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
    private boolean mTopicListVisible;
    private boolean mLoginVisible;
    private boolean mGalleryVisible;
+   View mTopicListView;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @Override
@@ -90,7 +91,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
       
       com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
    
-
+      mTopicListView = (View)findViewById( R.id.topic_list_fragment);
      View galleryTopicView = (View)findViewById(R.id.topic_view_fragment);
 
       mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
@@ -108,7 +109,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			.findFragmentByTag("galleryFragment");
 			mTopicView = (TopicViewFragment) getSupportFragmentManager()
 			.findFragmentByTag("topicView");
-			//toggleGalleryView(mGalleryVisible);
+		
 
 		} else {
 			mTopicListVisible = true;
@@ -130,6 +131,10 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
+      }
+      if(mGalleryVisible)
+      {
+    	  mTopicListView.setVisibility(View.GONE);
       }
 
       if (mTopicListVisible && mHideTopicList &&
@@ -242,9 +247,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
    @Override
    public void onTopicSelected(TopicNode topic) {
-		if (mGalleryVisible) {
-			this.toggleGalleryView(false);
-		}
+	 
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);
@@ -340,39 +343,44 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		
 
 		if (showGallery) {
-			//save state
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			// save state
+			if (mGalleryVisible) {
+				return;
+			}
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
 			ft.addToBackStack(BACK_STACK_STATE);
 			ft.commitAllowingStateLoss();
-			//show gallery
+			// show gallery
 			ft = getSupportFragmentManager().beginTransaction();
-	
-			ft.setCustomAnimations( R.anim.slide_in_right, R.anim.slide_out_left, R.anim.slide_in_left, R.anim.slide_out_right);
-			//ft.add(R.id.topic_view_fragment, mMediaView, "galleryFragment");
+			ft.setCustomAnimations(R.anim.slide_in_right,
+					R.anim.slide_out_left, R.anim.slide_in_left,
+					R.anim.slide_out_right);
 			ft.show((MediaFragment) getSupportFragmentManager()
 					.findFragmentByTag("galleryFragment"));
 			ft.hide((TopicViewFragment) getSupportFragmentManager()
 					.findFragmentByTag("topicView"));
 			ft.addToBackStack(null);
 			ft.commitAllowingStateLoss();
-			
-			//ft = getSupportFragmentManager().beginTransaction();
-			if(mTopicListVisible && mHideTopicList)
-				   hideTopicList(false, null);
-			//ft.addToBackStack(null);
-			//ft.commitAllowingStateLoss();
-			 mGalleryVisible=true;
+			if (mTopicListVisible && mHideTopicList) {
+				hideTopicList(false, null);
+			} else {
+				ft = getSupportFragmentManager().beginTransaction();
+				ft.addToBackStack(null);
+				ft.commitAllowingStateLoss();
+			}
+
+			if(!mHideTopicList)
+			   mTopicListView.setVisibility(View.GONE);
+			mGalleryVisible = true;
 		} else {
 
 			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		//	ft.setCustomAnimations(R.anim.slide_in_left,  R.anim.slide_out_right);
 			getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			//ft.replace(R.id.topic_view_fragment, mTopicView, "topicView");
-		//	ft.hide((MediaFragment) getSupportFragmentManager()
-			//		.findFragmentByTag("galleryFragment"));
-			//ft.show((TopicViewFragment) getSupportFragmentManager()
-			//		.findFragmentByTag("topicView"));
 			ft.commitAllowingStateLoss();
+			if(mTopicListView.getVisibility() == View.GONE)
+			    mTopicListView.setVisibility(View.VISIBLE);
+			
 			 mGalleryVisible=false;
 		}
 	}
@@ -474,8 +482,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		}
 
 		if (mDualPane) {
-			//if(mTopicListVisible && mHideTopicList)
-				//   hideTopicList(false);
 			toggleGalleryView(true);
 			
 		} else {
