@@ -319,6 +319,10 @@ public class MediaFragment extends SherlockFragment implements
 				Uri selectedImageUri = data.getData();
 
 				galleryAdapter.addUri(selectedImageUri);
+				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+				authenicationPackage.session = ((MainApplication)((Activity)mContext).getApplication()).getUser().getSession();
+				
+				 mContext.startService(APIService.getUploadImageIntent(mContext, authenicationPackage, getPath(selectedImageUri)));
 				/*
 				 * // OI FILE Manager filemanagerstring =
 				 * selectedImageUri.getPath();

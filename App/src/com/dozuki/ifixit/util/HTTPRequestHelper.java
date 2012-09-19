@@ -1,10 +1,17 @@
 package com.dozuki.ifixit.util;
 
 import java.io.BufferedReader;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -33,6 +40,10 @@ import org.apache.http.conn.scheme.Scheme;
 import org.apache.http.conn.scheme.SchemeRegistry;
 import org.apache.http.conn.ssl.SSLSocketFactory;
 import org.apache.http.cookie.ClientCookie;
+import org.apache.http.entity.BufferedHttpEntity;
+import org.apache.http.entity.FileEntity;
+import org.apache.http.entity.InputStreamEntity;
+import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.http.impl.conn.tsccm.ThreadSafeClientConnManager;
 import org.apache.http.impl.cookie.BasicClientCookie;
@@ -119,8 +130,8 @@ public class HTTPRequestHelper {
     *
     */
    public void performGet(final String url) {
-      performRequest(null, url, null, null, null, null,
-       HTTPRequestHelper.GET_TYPE);
+      performRequest(null, url, null, null, null, null, null, 
+    		  HTTPRequestHelper.GET_TYPE);
    }
 
    /**
@@ -130,7 +141,7 @@ public class HTTPRequestHelper {
    public void performGet(final String url, final String user,
     final String pass, final Map<String, String> additionalHeaders) {
       performRequest(null, url, user, pass, additionalHeaders, null,
-       HTTPRequestHelper.GET_TYPE);
+       null, HTTPRequestHelper.GET_TYPE);
    }
 
    /**
@@ -139,8 +150,8 @@ public class HTTPRequestHelper {
     */
    public void performPost(final String contentType, final String url,
     final String user, final String pass, final Map<String,
-    String> additionalHeaders, final Map<String, String> params) {
-      performRequest(contentType, url, user, pass, additionalHeaders, params,
+    String> additionalHeaders, final Map<String, String> params, final File file) {
+      performRequest(contentType, url, user, pass, additionalHeaders, params, file,
        HTTPRequestHelper.POST_TYPE);
    }
    
@@ -154,7 +165,7 @@ public class HTTPRequestHelper {
 	public void performPostWithSessionCookie(final String url,
 			final String user, final String pass, final String session,
 			final String domain, final Map<String, String> additionalHeaders,
-			final Map<String, String> params) {
+			final Map<String, String> params, File file) {
 
 		// clearing all old cookies. we want full control
 		final BasicClientCookie cookie = new BasicClientCookie("session",
@@ -167,8 +178,12 @@ public class HTTPRequestHelper {
 		cookie.setPath("/");
 
 		client.getCookieStore().addCookie(cookie);
+		
+		if(file == null)
 		performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass,
-				additionalHeaders, params, HTTPRequestHelper.POST_TYPE);
+				additionalHeaders, params, file, HTTPRequestHelper.POST_TYPE);
+		else
+			 fileUpload(url, file, "session=" + session + ";" + ClientCookie.VERSION_ATTR);
 	}
 
    /**
@@ -180,7 +195,7 @@ public class HTTPRequestHelper {
     final String pass, final Map<String, String> additionalHeaders,
     final Map<String, String> params) {
       performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass,
-       additionalHeaders, params, HTTPRequestHelper.POST_TYPE);
+       additionalHeaders, params, null, HTTPRequestHelper.POST_TYPE);
    }
    
   
@@ -199,7 +214,7 @@ public class HTTPRequestHelper {
     */
    private void performRequest(final String contentType, final String url,
     final String user, final String pass, final Map<String, String> headers,
-    final Map<String, String> params, final int requestType) {
+    final Map<String, String> params,final File file, final int requestType) {
       final Map<String, String> sendHeaders = new HashMap<String, String>();
 
       Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
@@ -253,13 +268,44 @@ public class HTTPRequestHelper {
                nvps.add(new BasicNameValuePair(key, params.get(key)));
             }
          }
-         if (nvps != null) {
+         if (nvps != null && file == null) {
             try {
                method.setEntity(new UrlEncodedFormEntity(nvps, HTTP.UTF_8));
             } catch (UnsupportedEncodingException e) {
                Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, e);
             }
          }
+         if(file != null)
+         {/*
+        	    //File file = new File(fileName); 
+                FileEntity entity; 
+                client.getParams().setParameter("http.socket.timeout", new 
+                		Integer(90000));
+              //  Log.e("file exists", file.canRead()+"");
+               entity = new FileEntity(file, "binary/octet-stream");
+                entity.setChunked(false); 
+               // FileInputStream fileInputStream;
+				try {
+				//	fileInputStream = new FileInputStream(file);
+				//	  InputStreamEntity reqEntity = new InputStreamEntity(fileInputStream, file.length());
+				//	     method.setEntity(new BufferedHttpEntity (reqEntity));
+				//	     reqEntity.setContentType("binary/octet-stream");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+                //entity.setChunked(false);*/
+
+              //  method.addHeader("Content-Type", "binary/octet-stream");
+                
+              //  method.addHeader("Content-Length", (file.length()+ "\r\n".length()) + "");
+              //  method.setEntity(entity);
+              //  entity.se
+              //  method.
+              //  Log.e("THE POST", method.getMethod() + "" + file.length() );
+        	//
+         }
+         
          execute(client, method);
       } else if (requestType == HTTPRequestHelper.GET_TYPE) {
          Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
@@ -267,6 +313,99 @@ public class HTTPRequestHelper {
          execute(client, new HttpGet(url));
       }
    }
+
+
+   	
+   	
+   
+   	
+ 
+   	    protected void fileUpload(String sURL, File file, String cookie) {
+
+   	    		HttpURLConnection connection = null;
+   	    		DataOutputStream outputStream = null;
+   	    		DataInputStream inputStream = null;
+
+   	    		//String pathToOurFile = Environment
+   				//.getExternalStorageDirectory().getAbsolutePath()
+   				//+ "/Make It Rain Levels/"+sUrl[1];
+   	    		String lineEnd = "\r\n";
+   	    		String twoHyphens = "--";
+   	    		String boundary =  "*****";
+
+   	    		int bytesRead, bytesAvailable, bufferSize;
+   	    		byte[] buffer;
+   	    		int maxBufferSize = 1*1024*1024;
+   	    		try
+   	    		{
+   	    			Log.e("file PATH", file.getAbsolutePath());
+   	    		FileInputStream fileInputStream = new FileInputStream(file );
+
+   	    		URL url = new URL(sURL);
+   	    		connection = (HttpURLConnection) url.openConnection();
+   	    		Log.e("OPENINTG CONNECTION", ""+sURL);
+   	    		// Allow Inputs & Outputs
+   	    		///connection.connect();
+   	    		connection.setDoInput(true);
+   	    		connection.setDoOutput(true);
+   	    		connection.setUseCaches(false);
+
+   	    		int length;
+   	    		length = ((int) (file.length()));
+   	    	
+   	    		connection.setRequestMethod("POST");
+   	    		connection.setRequestProperty("Cookie", cookie);
+   	    		connection.setRequestProperty("Connection", "Keep-Alive");
+   	    		connection.setRequestProperty("Content-Length", length +"");
+   	    		connection.setRequestProperty("Content-Type", "binary/octet-stream;boundary="+boundary);
+
+   	    		outputStream = new DataOutputStream( connection.getOutputStream() );
+   	    	
+   	    		bytesAvailable = fileInputStream.available();
+   	    		bufferSize = Math.min(bytesAvailable, maxBufferSize);
+   	    		buffer = new byte[bufferSize];
+
+   	    		// Read file
+   	    		bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+
+   	    		while (bytesRead > 0)
+   	    		{
+   	    		outputStream.write(buffer, 0, bufferSize);
+   	    		bytesAvailable = fileInputStream.available();
+   	    		bufferSize = Math.min(bytesAvailable, maxBufferSize);
+   	    		bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+   	    		}
+
+   	    	
+   	    		int serverResponseCode = connection.getResponseCode();
+   	    		
+   	    		String serverResponseMessage = connection.getResponseMessage();
+   	    		StringBuilder sb = new StringBuilder();
+   	    		
+   	    		 BufferedReader br = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+                 sb = new StringBuilder();
+                 String line;
+                 while ((line = br.readLine()) != null) {
+                     sb.append(line+"\n");
+                 }
+                 br.close();
+   	    		
+                 BasicHttpResponse responseObj =  new BasicHttpResponse(new ProtocolVersion("HTTP", 1, 1) , serverResponseCode, serverResponseMessage);
+
+   	    		 String response = sb.toString();
+   	    		 StringEntity entity = new StringEntity(response); 
+   	    		responseObj.setEntity(entity);
+   	    		responseHandler.handleResponse(responseObj);
+   	    		fileInputStream.close();
+   	    		outputStream.flush();
+   	    		outputStream.close();
+   	    		}
+   	    		catch (Exception ex)
+   	    		{
+   	    			return;
+   	    		}
+   	        return;
+   	    }
 
    /**
     * Once the client and method are established, execute the request.
@@ -295,6 +434,8 @@ public class HTTPRequestHelper {
          }
       }
    }
+   
+
 
    /**
     * Static utility method to create a default ResponseHandler that sends a
@@ -343,9 +484,13 @@ public class HTTPRequestHelper {
             }
             return result;
          }
+
       };
       return responseHandler;
    }
+   
+   
+
 
    private static String inputStreamToString(final InputStream stream)
     throws IOException {

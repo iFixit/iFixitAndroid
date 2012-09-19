@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util;
 
+import java.io.File;
 import java.io.Serializable;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
@@ -103,14 +104,18 @@ public class APIService extends Service {
    private static final String USER_IMAGES_API_URL =
 	    "http://www.ifixit.com/api/1.0/image/user";
    
+   private static final String UPLOAD_MEDIA_API_URL =
+	    "http://www.ifixit.com/api/1.0/image/upload";
+   
    
    private static final String API_DOMAIN =  ".ifixit.com";
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
    private static final String REQUEST_BROADCAST_ACTION =
-    "REQUEST_BROADCAST_ACTION";
-   private static final String REQUEST_AUTHENICATION_PACKAGE = "AUTHENICATION_PACKAGE";
+	    "REQUEST_BROADCAST_ACTION";
+   private static final String REQUEST_AUTHENICATION_PACKAGE = 
+	   "AUTHENICATION_PACKAGE";
 
    private static final int TARGET_CATEGORIES = 0;
    private static final int TARGET_GUIDE = 1;
@@ -118,6 +123,7 @@ public class APIService extends Service {
    private static final int TARGET_LOGIN = 3;
    private static final int TARGET_REGISTER = 4;
    private static final int TARGET_MEDIA_LIST= 5;
+   private static final int TARGET_UPLOAD_MEDIA= 6;
 
    private static final String NO_QUERY = "";
 
@@ -134,6 +140,9 @@ public class APIService extends Service {
 	    "com.dozuki.ifixit.api.resgister";
    public static final String ACTION_USER_MEDIA =
 	    "com.dozuki.ifixit.api.images";
+   
+   public static final String ACTION_UPLOAD_MEDIA =
+	    "com.dozuki.ifixit.api.upload";
 
    
  
@@ -155,7 +164,7 @@ public class APIService extends Service {
       
       if(authenicationPackage != null)
       {
-    	  perfromAuthenicatedRequestHelper(this, requestTarget, authenicationPackage, new Responder() {
+    	  perfromAuthenicatedRequestHelper(this, requestTarget, authenicationPackage, requestQuery,  new Responder() {
     	         public void setResult(Result result) {
 
     	            if (!result.hasError()) {
@@ -284,7 +293,12 @@ public class APIService extends Service {
 	      return createLoginIntent(context, TARGET_LOGIN, authenicationPackage , ACTION_LOGIN);
 	   }
    
-   public static Intent userMediaIntent(Context context, AuthenicationPackage authenicationPackage) {
+   
+   public static Intent getUploadImageIntent(Context context, AuthenicationPackage authenicationPackage, String filePath) {
+	      return createUploadImageIntent(context, TARGET_UPLOAD_MEDIA, authenicationPackage , ACTION_UPLOAD_MEDIA, filePath);
+	   }
+   
+public static Intent userMediaIntent(Context context, AuthenicationPackage authenicationPackage) {
 	      return createUserMediaIntent(context, TARGET_MEDIA_LIST, authenicationPackage , ACTION_USER_MEDIA);
 	   }
    
@@ -346,6 +360,22 @@ public class APIService extends Service {
 
 	      return intent;
 	   }
+   
+   private static Intent createUploadImageIntent(Context context,
+			int target, AuthenicationPackage authenicationPackage,
+			String action,String filePath) {
+	      Intent intent = new Intent(context, APIService.class);
+	      Bundle extras = new Bundle();
+
+	      extras.putInt(REQUEST_TARGET, target);
+	      extras.putString(REQUEST_QUERY, filePath);
+	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
+	      extras.putString(REQUEST_BROADCAST_ACTION, action);
+	      intent.putExtras(extras);
+
+	      return intent;
+	}
+
 
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
@@ -422,13 +452,14 @@ public class APIService extends Service {
       performRequest(url, responder);
    }
    
-	private static void perfromAuthenicatedRequestHelper(Context context, int requestTarget, AuthenicationPackage authenicationPackage, Responder responder) {
+	private static void perfromAuthenicatedRequestHelper(Context context, int requestTarget, AuthenicationPackage authenicationPackage, String requestQuery, Responder responder) {
 		if (!checkConnectivity(context, responder)) {
 			return;
 		}
 
 		String url;
 
+		File file = null;
 		switch (requestTarget) {
 		case TARGET_LOGIN:
 			url = LOGIN_API_URL;
@@ -437,17 +468,27 @@ public class APIService extends Service {
 			url = REGISTER_API_URL;
 		case TARGET_MEDIA_LIST:
 			url = USER_IMAGES_API_URL;
+			authenicationPackage.login = null;
+			authenicationPackage.password = null;
+			authenicationPackage.username = null;
+			break;
+		case TARGET_UPLOAD_MEDIA:
+			
+			file = new File(requestQuery);
+			url = UPLOAD_MEDIA_API_URL+"?file="+file.getName();
+			
+		//	Log.w("iFixit sdrfre",  URLEncoder.encode(file.getName(),"UTF-8" ));
 			break;
 		default:
 			Log.w("iFixit", "Invalid request target: " + requestTarget);
 			responder.setResult(new Result(Error.PARSE));
 			return;
 		}
-		performAuthenicatedRequest(url, authenicationPackage, responder);
+		performAuthenicatedRequest(url, authenicationPackage, file, responder);
 	}
 
  
-   private static void  performAuthenicatedRequest(final String url, final AuthenicationPackage authenicationPackage,  final Responder responder) {
+   private static void  performAuthenicatedRequest(final String url, final AuthenicationPackage authenicationPackage, final File file,  final Responder responder) {
 	   final Handler handler = new Handler() {
 	         public void handleMessage(Message message) {
 	            String response = message.getData().getString(RESPONSE);
@@ -467,11 +508,15 @@ public class APIService extends Service {
  
 	            params.put("login", authenicationPackage.login);
 			    params.put("password", authenicationPackage.password);
-			    params.put("username", authenicationPackage.login);
+			    params.put("username", authenicationPackage.username);
+			    if(file != null)
+			    {
+			    	params.put("file", file.getName());
+			    }
 			   // params.put("password", authenicationPackage.password);
-	          
+
 	            try {
-	               helper.performPostWithSessionCookie(url, null, null, authenicationPackage.session, API_DOMAIN, header, params );
+	               helper.performPostWithSessionCookie(url, null, null, authenicationPackage.session, API_DOMAIN, header, params, file);
 	            } catch (Exception e) {
 	               Log.w("iFixit", "Encoding error: " + e.getMessage());
 	            }
