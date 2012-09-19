@@ -117,7 +117,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			mGalleryVisible = false;
 			mTopicView = new TopicViewFragment();
 			mMediaView = new MediaFragment();
-			mTopicView.setRetainInstance(true);
+			//mTopicView.setRetainInstance(true);
 			mMediaView.setRetainInstance(true);
 			if (mDualPane) {
 				setUpMainView();
