@@ -2,8 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
    <style name="Theme.iFixit" parent="Theme.HoloEverywhereLight.DarkActionBar.Sherlock">
         <!-- Action Bar Logo -->
+        <item name="logo">@drawable/logo_ifixit</item>
         <item name="android:logo">@drawable/logo_ifixit</item>
-       
+        
         <!-- Action Bar Sherlock overrides -->
         <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
         <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
@@ -22,6 +23,7 @@
      
     <style name="Theme.Dozuki" parent="Theme.iFixit">
         <!-- Action Bar Logo -->
+        <item name="logo">@drawable/logo_dozuki</item>
         <item name="android:logo">@drawable/logo_dozuki</item>
         
         <!-- Action Bar Sherlock overrides -->
