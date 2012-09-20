@@ -139,7 +139,7 @@ public class MediaAdapterTemp extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				ImageView img = (ImageView) v;
-				_mediaFragRef.expandImage(img.getId());
+				//_mediaFragRef.expandImage(img.getId());
 			}
 		});
 		Uri temp = mediaList.get(position);
