@@ -86,16 +86,13 @@ public class MediaFragment extends SherlockFragment implements
 
 	}
 
-	public MediaFragment(Context con)
-	{
+	public MediaFragment(Context con) {
 		mContext = con;
 	}
 
-	public MediaFragment()
-	{
-	
-	}
+	public MediaFragment() {
 
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -175,18 +172,20 @@ public class MediaFragment extends SherlockFragment implements
 
 	public void retrieveUserImages() {
 		AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-		authenicationPackage.session = 	((MainApplication)((Activity)mContext).getApplication()).getUser().getSession();
-	     mContext.startService(APIService.userMediaIntent(mContext, authenicationPackage));
+		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
+				.getApplication()).getUser().getSession();
+		mContext.startService(APIService.userMediaIntent(mContext,
+				authenicationPackage));
 	}
 
 	public void expandImage(int position) {
-		/*Log.i("MediaFragment", "On item Click num: " + position);
-		Uri uri = galleryAdapter.getImageAt(position);
-		String url = getPath(uri);
-		Intent intent = new Intent(mContext, FullImageViewActivity.class);
-		intent.putExtra(IMAGE_URL, url);
-		intent.putExtra(LOCAL_URL, true);
-		startActivity(intent);*/
+		/*
+		 * Log.i("MediaFragment", "On item Click num: " + position); Uri uri =
+		 * galleryAdapter.getImageAt(position); String url = getPath(uri);
+		 * Intent intent = new Intent(mContext, FullImageViewActivity.class);
+		 * intent.putExtra(IMAGE_URL, url); intent.putExtra(LOCAL_URL, true);
+		 * startActivity(intent);
+		 */
 	}
 
 	@Override
@@ -196,7 +195,7 @@ public class MediaFragment extends SherlockFragment implements
 		try {
 			// topicSelectedListener = (TopicSelectedListener)activity;
 			mContext = (Context) activity;
-			//retrieveUserImages();
+			// retrieveUserImages();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement TopicSelectedListener");
@@ -236,45 +235,12 @@ public class MediaFragment extends SherlockFragment implements
 					Intent.createChooser(intent, "Select Picture"),
 					SELECT_PICTURE);
 			break;
-
 		case R.id.camera_button:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-			// TODO: This is fucked
-			try {
-				File outFile = mContext.getFileStreamPath("test");
-				outFile.createNewFile();
-				// outFile.setWritable(true, false);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 
-			cameraIntent
-					.putExtra(
-							android.provider.MediaStore.EXTRA_OUTPUT,
-							android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 			startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
 			break;
-		/*case R.id.delete_button:
-			ArrayList<Uri> deleteList = new ArrayList<Uri>();
-			for (int i = 0; i < galleryAdapter.getCount(); i++) {
-				if (galleryAdapter.isChecked(i)) {
-					deleteList.add(galleryAdapter.getImageAt(i));
-				}
-			}
-			for (Uri uri : deleteList) {
-				galleryAdapter.getMediaList().remove(uri);
-			}
-
-			galleryAdapter.checkedList = new ArrayList<Boolean>(galleryAdapter
-					.getMediaList().size());
-			for (int i = 0; i < galleryAdapter.getCount(); i++) {
-				galleryAdapter.checkedList.add(false);
-			}
-			galleryAdapter.invalidatedView();
-
-			break;*/
 		}
 	}
 
@@ -297,42 +263,23 @@ public class MediaFragment extends SherlockFragment implements
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == MediaFragment.SELECT_PICTURE) {
-				Log.i("", "in media frag");
+				Log.i("MediaFragment", "Adding gallery pic...");
 				Uri selectedImageUri = data.getData();
-
 				galleryAdapter.addUri(selectedImageUri);
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-				authenicationPackage.session = ((MainApplication)((Activity)mContext).getApplication()).getUser().getSession();
-				
-				 mContext.startService(APIService.getUploadImageIntent(mContext, authenicationPackage, getPath(selectedImageUri)));
-				/*
-				 * // OI FILE Manager filemanagerstring =
-				 * selectedImageUri.getPath();
-				 * 
-				 * // MEDIA GALLERY selectedImagePath =
-				 * getPath(selectedImageUri);
-				 * 
-				 * // DEBUG PURPOSE - you can delete this if you want if
-				 * (selectedImagePath != null)
-				 * System.out.println(selectedImagePath); else
-				 * System.out.println("selectedImagePath is null"); if
-				 * (filemanagerstring != null)
-				 * System.out.println(filemanagerstring); else
-				 * System.out.println("filemanagerstring is null");
-				 * 
-				 * // NOW WE HAVE OUR WANTED STRING if (selectedImagePath !=
-				 * null) System.out
-				 * .println("selectedImagePath is the right one for you!"); else
-				 * System.out
-				 * .println("filemanagerstring is the right one for you!");
-				 */
+				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
+						.getApplication()).getUser().getSession();
+				mContext.startService(APIService.getUploadImageIntent(mContext,
+						authenicationPackage, getPath(selectedImageUri)));
 			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
-				Log.i("mediact", "ret from camera image: ");
+				Log.i("MediaFragment", "Adding camera pic...");
 				Uri selectedImageUri = data.getData();
-
 				galleryAdapter.addUri(selectedImageUri);
-
-				// Bitmap thumbnail = (Bitmap) data.getExtras().get("data");
+				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
+						.getApplication()).getUser().getSession();
+				mContext.startService(APIService.getUploadImageIntent(mContext,
+						authenicationPackage, getPath(selectedImageUri)));
 			}
 		}
 	}
@@ -342,7 +289,6 @@ public class MediaFragment extends SherlockFragment implements
 		public MediaAdapter() {
 			// TODO Auto-generated constructor stub
 		}
-
 
 		@Override
 		public long getItemId(int arg0) {
@@ -401,7 +347,8 @@ public class MediaFragment extends SherlockFragment implements
 							(BitmapFactory.Options) null);
 					itemView.imageview.setImageBitmap(bitmap);
 				}
-
+				itemView.setTag(mImageList.getmImages().get(position)
+						.getmGuid());
 			}
 			return itemView;
 		}
@@ -426,31 +373,37 @@ public class MediaFragment extends SherlockFragment implements
 
 		@Override
 		public void onDestroyActionMode(ActionMode mode) {
-
 			if (mode == mMode) {
 				mMode = null;
+			}
+			for (int i = 0; i < mGridView.getChildCount(); i++) {
+				MediaViewItem cell = (MediaViewItem) mGridView.getChildAt(i);
+				if (cell.selected) {
+					cell.unselect();
+				}
 			}
 		}
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if(mImageList == null) return true;
+			if (mImageList == null)
+				return true;
 			int deleteCount = 0;
 			for (int i = 0; i < mGridView.getChildCount(); i++) {
 				MediaViewItem cell = (MediaViewItem) mGridView.getChildAt(i);
 				if (cell.selected) {
 					cell.unselect();
 					// TODO delete me!
-					if(cell.listRef != null)
+					if (cell.listRef != null)
 						mImageList.getmImages().remove(cell.listRef);
-					
+
 					deleteCount++;
 				}
 			}
 			galleryAdapter.invalidatedView();
 			Log.i("MediaFrag", "Delete: " + deleteCount + " items...");
 			mode.finish();
-			
+
 			return true;
 		}
 
@@ -494,12 +447,22 @@ public class MediaFragment extends SherlockFragment implements
 			view.invalidate();
 		} else {
 			// normal view, zoom on image
-			/*Uri uri = galleryAdapter.getImageAt(position);
-			String url = getPath(uri);
-			Intent intent = new Intent(mContext, FullImageViewActivity.class);
+			// Uri uri = galleryAdapter.getImageAt(position);
+			if (view.getTag() != null) {
+				Log.i("MediaFragment", (String) view.getTag());
+			} else
+				return;
+
+			String url = (String) view.getTag();
+			if (url.equals("") || url.indexOf(".") == 0) {
+				return;
+			}
+
+			Intent intent = new Intent(getActivity(),
+					FullImageViewActivity.class);
 			intent.putExtra(IMAGE_URL, url);
-			intent.putExtra(LOCAL_URL, true);
-			startActivity(intent);*/
+
+			startActivity(intent);
 		}
 
 	}
