@@ -65,7 +65,7 @@ public class MediaFragment extends SherlockFragment implements
 	MediaAdapter galleryAdapter;
 	private ImageManager mImageManager;
 	private ImageSizes mImageSizes;
-	UserImageList mImageList;
+	static UserImageList mImageList;
 	private ActionMode mMode;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
@@ -86,16 +86,12 @@ public class MediaFragment extends SherlockFragment implements
 
 	}
 
-	public MediaFragment() {
-
+	public MediaFragment(Context con)
+	{
+		mContext = con;
 	}
 
-	public static MediaFragment getInstance() {
-		if (thisInstance == null)
-			thisInstance = new MediaFragment();
 
-		return thisInstance;
-	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -175,10 +171,8 @@ public class MediaFragment extends SherlockFragment implements
 
 	public void retrieveUserImages() {
 		AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
-				.getApplication()).getUser().getSession();
-		mContext.startService(APIService.userMediaIntent(mContext,
-				authenicationPackage));
+		authenicationPackage.session = 	((MainApplication)((Activity)mContext).getApplication()).getUser().getSession();
+	     mContext.startService(APIService.userMediaIntent(mContext, authenicationPackage));
 	}
 
 	public void expandImage(int position) {
@@ -198,6 +192,7 @@ public class MediaFragment extends SherlockFragment implements
 		try {
 			// topicSelectedListener = (TopicSelectedListener)activity;
 			mContext = (Context) activity;
+			//retrieveUserImages();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement TopicSelectedListener");

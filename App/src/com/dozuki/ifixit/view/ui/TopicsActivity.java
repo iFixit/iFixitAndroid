@@ -92,7 +92,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
       com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
    
       mTopicListView = (View)findViewById( R.id.topic_list_fragment);
-     View galleryTopicView = (View)findViewById(R.id.topic_view_fragment);
+      View galleryTopicView = (View)findViewById(R.id.topic_view_fragment);
 
       mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
       mHideTopicList = mTopicViewOverlay != null;
@@ -116,12 +116,10 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			mLoginVisible = false;
 			mGalleryVisible = false;
 			mTopicView = new TopicViewFragment();
-			mMediaView = new MediaFragment();
+			mMediaView = new MediaFragment((Context)this);
 			//mTopicView.setRetainInstance(true);
 			mMediaView.setRetainInstance(true);
-			if (mDualPane) {
-				setUpMainView();
-			}
+			setUpMainView();
 		}
 
 
@@ -132,7 +130,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
       }
-      if(mGalleryVisible)
+      if(mGalleryVisible && mDualPane)
       {
     	  mTopicListView.setVisibility(View.GONE);
       }
@@ -168,13 +166,19 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
    private void setUpMainView() 
    {
 	   //add gallery and topic fragment
-	   FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-
-	  
+	   if (mDualPane) {
+	      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 	      ft.add(R.id.topic_view_fragment, mMediaView, "galleryFragment");
 	      ft.hide(mMediaView);
 	      ft.add(R.id.topic_view_fragment, mTopicView, "topicView");
 	      ft.commitAllowingStateLoss();
+	   }else
+	   {
+		   FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		  ft.add(R.id.topic_media_fragment, mMediaView, "galleryFragment");
+		  ft.hide(mMediaView);
+		  ft.commitAllowingStateLoss();
+	   }
 	      
 	      //hide gallery fragment
 	    //  ft = getSupportFragmentManager().beginTransaction();
@@ -347,39 +351,72 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			if (mGalleryVisible) {
 				return;
 			}
+			
+
+		//	FragmentTransaction ft = getSupportFragmentManager()
+		//			.beginTransaction();
+		//	ft.addToBackStack(BACK_STACK_STATE);
+		//	ft.commitAllowingStateLoss();
 			FragmentTransaction ft = getSupportFragmentManager()
-					.beginTransaction();
-			ft.addToBackStack(BACK_STACK_STATE);
-			ft.commitAllowingStateLoss();
-			// show gallery
-			ft = getSupportFragmentManager().beginTransaction();
-			ft.setCustomAnimations(R.anim.slide_in_right,
-					R.anim.slide_out_left, R.anim.slide_in_left,
-					R.anim.slide_out_right);
-			ft.show((MediaFragment) getSupportFragmentManager()
-					.findFragmentByTag("galleryFragment"));
-			ft.hide((TopicViewFragment) getSupportFragmentManager()
-					.findFragmentByTag("topicView"));
-			ft.addToBackStack(null);
-			ft.commitAllowingStateLoss();
-			if (mTopicListVisible && mHideTopicList) {
-				hideTopicList(false, null);
-			} else {
+			.beginTransaction();
+	ft.addToBackStack(BACK_STACK_STATE);
+	ft.commitAllowingStateLoss();
+			if(mDualPane)
+			{
+			
+				// show gallery
 				ft = getSupportFragmentManager().beginTransaction();
+				ft.setCustomAnimations(R.anim.slide_in_right,
+						R.anim.slide_out_left, R.anim.slide_in_left,
+						R.anim.slide_out_right);
+				ft.show((MediaFragment) getSupportFragmentManager()
+						.findFragmentByTag("galleryFragment"));
+				ft.hide((TopicViewFragment) getSupportFragmentManager()
+						.findFragmentByTag("topicView"));
+				ft.addToBackStack(null);
+				ft.commitAllowingStateLoss();
+				if (mTopicListVisible && mHideTopicList) {
+					hideTopicList(false, null);
+				} else {
+					ft = getSupportFragmentManager().beginTransaction();
+					ft.addToBackStack(null);
+					ft.commitAllowingStateLoss();
+				}
+				if(!mHideTopicList)
+					   mTopicListView.setVisibility(View.GONE);
+			} else {			
+				//this.changeTopicListView(mMediaView, true, false, null);
+				ft = getSupportFragmentManager()
+				.beginTransaction();
+				ft.setCustomAnimations(R.anim.slide_in_right,
+						R.anim.slide_out_left, R.anim.slide_in_left,
+						R.anim.slide_out_right);
+				ft.show((MediaFragment) getSupportFragmentManager()
+						.findFragmentByTag("galleryFragment"));
+			//	ft.hide((TopicViewFragment) getSupportFragmentManager()
+					//	.findFragmentByTag("topicView"));
 				ft.addToBackStack(null);
 				ft.commitAllowingStateLoss();
 			}
 
-			if(!mHideTopicList)
-			   mTopicListView.setVisibility(View.GONE);
+			
 			mGalleryVisible = true;
 		} else {
 
-			FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+			if(mDualPane)
+			{
+			//FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 			getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
-			ft.commitAllowingStateLoss();
+		//	ft.commitAllowingStateLoss();
 			if(mTopicListView.getVisibility() == View.GONE)
 			    mTopicListView.setVisibility(View.VISIBLE);
+			}else
+			{
+				//FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				//ft.commitAllowingStateLoss();
+				//getSupportFragmentManager().popBackStack();
+			}
 			
 			 mGalleryVisible=false;
 		}
@@ -407,62 +444,35 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		case R.id.gallery_button:
 			MainApplication mainApp = (MainApplication) getApplication();
 			if (mainApp.getUser() == null) {
-				if (mDualPane) {
-					if (!mLoginVisible) {
-						LoginFragment fg = LoginFragment.newInstance();
-						fg.registerOnLoginListener(this);
-						fg.registerOnLoginListener(mMediaView);
-						mLoginVisible = true;
-						changeTopicListView(fg, true, null);
-					}
-				} else {
-					// Intent i = new Intent(this,LoginActivity.class);
-					// startActivity(i);
-					if (!mLoginVisible) {
-						LoginFragment fg = LoginFragment.newInstance();
-						fg.registerOnLoginListener(this);
-						mLoginVisible = true;
-						changeTopicListView(fg, true, null);
-					}
+				if (!mLoginVisible) {
+					LoginFragment fg = LoginFragment.newInstance();
+					fg.registerOnLoginListener(this);
+					fg.registerOnLoginListener(mMediaView);
+					mLoginVisible = true;
+					changeTopicListView(fg, true, null);
+					/*
+					 * if (mDualPane) { //if (!mLoginVisible) { mLoginVisible =
+					 * true; changeTopicListView(fg, true, null); //} } else {
+					 * // Intent i = new Intent(this,LoginActivity.class); //
+					 * startActivity(i); //if (!mLoginVisible) { mLoginVisible =
+					 * true; changeTopicListView(fg, true, null); } }
+					 */
 				}
-			} else if(mGalleryVisible == false){
-			
-				if (mDualPane) {
-					//if(mTopicListVisible && mHideTopicList)
-					 //  hideTopicList(false);
-					   toggleGalleryView(true);
-					//mTopicViewOverlay.setVisibility(View.INVISIBLE);
-				} else {
-					this.changeTopicListView(mMediaView, true, false, null);
-					mGalleryVisible=true;
-				}
+
+			} else if (mGalleryVisible == false) {
+
+				toggleGalleryView(true);
+
 			}
 			return true;
 
 		case R.id.guides_button:
 			if (mGalleryVisible) {
-				
-				if (mDualPane) {
-					 toggleGalleryView(false);
-				}else
-				{
-					 toggleGalleryView(false);
-				}
-			}
 
-			return true;
-			
-	/*	case R.id.tardis_button:
-			if (mDualPane) {
-				//if(mTopicListVisible && mHideTopicList)
-					 //  hideTopicList(false);
-				toggleGalleryView(true);
-				
-			} else {
-				this.changeTopicListView(mMediaView, true, false, null);
-				mGalleryVisible = true;
+				toggleGalleryView(false);
+
 			}
-		return true;*/
+			return true;
 			
 		default:
 			return super.onOptionsItemSelected(item);
@@ -481,13 +491,9 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			getSupportFragmentManager().popBackStack();
 		}
 
-		if (mDualPane) {
-			toggleGalleryView(true);
+	   toggleGalleryView(true);
 			
-		} else {
-			this.changeTopicListView(mMediaView, true, false, null);
-			mGalleryVisible = true;
-		}
+		
 
 	}
 	
