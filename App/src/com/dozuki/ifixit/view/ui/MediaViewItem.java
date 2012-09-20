@@ -24,14 +24,12 @@ public class MediaViewItem extends RelativeLayout {
 	private Context mContext;
 	int id;
 	private ImageManager mImageManager;
-	public boolean selected;
 
 
 	public MediaViewItem(Context context, ImageManager imageManager) {
 		super(context);
 		mContext = context;
 		mImageManager = imageManager;
-		selected = false;
 		listRef = null;
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -42,17 +40,6 @@ public class MediaViewItem extends RelativeLayout {
 		selectImage.setVisibility(View.INVISIBLE);
 	}
 	
-	public void select()
-	{
-		selected = true;
-		selectImage.setVisibility(View.VISIBLE);
-	}
-	
-	public void unselect()
-	{
-		selected = false;
-		selectImage.setVisibility(View.INVISIBLE);
-	}
 
 	public void setImageItem(String image, Context context) {
 		mContext = context;

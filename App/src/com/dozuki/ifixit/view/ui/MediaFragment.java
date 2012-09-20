@@ -3,6 +3,7 @@ package com.dozuki.ifixit.view.ui;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
@@ -58,9 +59,11 @@ public class MediaFragment extends SherlockFragment implements
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
 	private static final String USER_IMAGE_LIST = "USER_IMAGE_LIST";
+	private static final String USER_SELECTED_LIST = "USER_SELECTED_LIST";
 	GridView mGridView;
 	MediaAdapter galleryAdapter;
 	private ImageManager mImageManager;
+	private ArrayList<Boolean> selectedList;
 	private ImageSizes mImageSizes;
 	static UserImageList mImageList;
 	private ActionMode mMode;
@@ -73,6 +76,9 @@ public class MediaFragment extends SherlockFragment implements
 
 			if (!result.hasError()) {
 				mImageList = (UserImageList) result.getResult();
+				for (int i = 0; i < mImageList.getmImages().size(); i++) {
+					selectedList.add(false);
+				}
 				galleryAdapter.invalidatedView();
 			}
 		}
@@ -106,10 +112,14 @@ public class MediaFragment extends SherlockFragment implements
 		mImageSizes = ((MainApplication) getActivity().getApplication())
 				.getImageSizes();
 		mMode = null;
-
+		selectedList = new ArrayList<Boolean>();
 		if (savedInstanceState != null) {
 			mImageList = (UserImageList) savedInstanceState
 					.getSerializable(USER_IMAGE_LIST);
+			boolean[] selected = savedInstanceState
+					.getBooleanArray(USER_SELECTED_LIST);
+			for (boolean b : selected)
+				selectedList.add(b);
 			galleryAdapter = new MediaAdapter();
 		} else {
 			mImageList = new UserImageList();
@@ -128,18 +138,6 @@ public class MediaFragment extends SherlockFragment implements
 		mGridView.setOnItemClickListener(this);
 		mGridView.setOnItemLongClickListener(this);
 
-		/*
-		 * if (savedInstanceState != null) { Log.i("MediaFrag",
-		 * "rebuilding view"); String arr[] =
-		 * savedInstanceState.getStringArray("URIs"); boolean c_arr[] =
-		 * savedInstanceState.getBooleanArray("checked"); ArrayList<Uri> uriArr
-		 * = new ArrayList<Uri>(); ArrayList<Boolean> cList = new
-		 * ArrayList<Boolean>(); for (int i = 0; i < arr.length; i++) {
-		 * uriArr.add(Uri.parse(arr[i])); cList.add(c_arr[i]); }
-		 * galleryAdapter.setMediaList(uriArr);
-		 * galleryAdapter.setCheckedList(cList); }
-		 */
-
 		((Button) view.findViewById(R.id.gallery_button))
 				.setOnClickListener(this);
 
@@ -151,20 +149,9 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		// super.onSaveInstanceState(savedInstanceState);
-		/*
-		 * ArrayList<Uri> mArr = galleryAdapter.getMediaList(); String arr[] =
-		 * new String[mArr.size()]; boolean checked_arr[] = new
-		 * boolean[galleryAdapter.getCheckedList().size()]; for (int i = 0; i <
-		 * arr.length; i++) { arr[i] = mArr.get(i).getEncodedPath();
-		 * checked_arr[i] = galleryAdapter.getCheckedList().get(i); }
-		 * savedInstanceState.putStringArray("URIs", arr);
-		 * savedInstanceState.putBooleanArray("checked", checked_arr);
-		 * Log.i("MediaFragment", "on save instance state");
-		 */
-
+		savedInstanceState.putBooleanArray(USER_SELECTED_LIST,
+				toPrimitiveArray(selectedList));
 		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
-
 	}
 
 	public void retrieveUserImages() {
@@ -173,16 +160,6 @@ public class MediaFragment extends SherlockFragment implements
 				.getApplication()).getUser().getSession();
 		mContext.startService(APIService.userMediaIntent(mContext,
 				authenicationPackage));
-	}
-
-	public void expandImage(int position) {
-		/*
-		 * Log.i("MediaFragment", "On item Click num: " + position); Uri uri =
-		 * galleryAdapter.getImageAt(position); String url = getPath(uri);
-		 * Intent intent = new Intent(mContext, FullImageViewActivity.class);
-		 * intent.putExtra(IMAGE_URL, url); intent.putExtra(LOCAL_URL, true);
-		 * startActivity(intent);
-		 */
 	}
 
 	@Override
@@ -300,7 +277,7 @@ public class MediaFragment extends SherlockFragment implements
 			userImageInfo.setmGuid(url);
 			userImageInfo.setmImageId(null);
 			mImageList.getmImages().add(userImageInfo);
-			// checkedList.add(new Boolean(false));
+			selectedList.add(false);
 			invalidatedView();
 		}
 
@@ -343,10 +320,14 @@ public class MediaFragment extends SherlockFragment implements
 							MediaStore.Images.Thumbnails.MINI_KIND,
 							(BitmapFactory.Options) null);
 					itemView.imageview.setImageBitmap(bitmap);
+					itemView.listRef = mImageList.getmImages().get(position);
 				}
-				itemView.setTag(mImageList.getmImages().get(position)
-						.getmGuid());
 			}
+			if (selectedList.get(position))
+				itemView.selectImage.setVisibility(View.VISIBLE);
+			else
+				itemView.selectImage.setVisibility(View.INVISIBLE);
+			itemView.setTag(mImageList.getmImages().get(position).getmGuid());
 			return itemView;
 		}
 	}
@@ -373,50 +354,44 @@ public class MediaFragment extends SherlockFragment implements
 			if (mode == mMode) {
 				mMode = null;
 			}
-			for (int i = 0; i < mGridView.getChildCount(); i++) {
-				MediaViewItem cell = (MediaViewItem) mGridView.getChildAt(i);
-				if (cell.selected) {
-					cell.unselect();
+			for (int i = selectedList.size() - 1; i > -1; i--) {
+				if (selectedList.get(i)) {
+					selectedList.set(i, false);
 				}
 			}
+			galleryAdapter.invalidatedView();
 		}
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if(mImageList == null) return true;
-						if (mImageList == null)
-							return true;
-			String deleteQuery="?";
-				
-			int deleteCount = 0;
-			for (int i = 0; i < mGridView.getChildCount(); i++) {
-				MediaViewItem cell = (MediaViewItem) mGridView.getChildAt(i);
-				if (cell.selected) {
-					cell.unselect();
-					// TODO delete me!
-					if (cell.listRef != null)
-					{
-						mImageList.getmImages().remove(cell.listRef);
-					    deleteQuery+="imageids[]="+cell.listRef.getmImageId()+"&";
-					}
+			if (mImageList == null)
+				return true;
+			if (mImageList == null)
+				return true;
+			String deleteQuery = "?";
 
-					deleteCount++;
+			for (int i = selectedList.size() - 1; i > -1; i--) {
+				if (selectedList.get(i)) {		
+					selectedList.remove(i);
+					deleteQuery += "imageids[]="
+							+ mImageList.getmImages().get(i).getmImageId()
+							+ "&";
+					mImageList.getmImages().remove(i);
 				}
 			}
-			
-			if(deleteQuery.length()> 1)
-			{
-			   deleteQuery = deleteQuery.substring(0, deleteQuery.length()-1);
-			}
-			
-			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-			authenicationPackage.session = 	((MainApplication)((Activity)mContext).getApplication()).getUser().getSession();
-		     mContext.startService(APIService.getDeleteMediaIntent(mContext, authenicationPackage, deleteQuery));
-		     
-			galleryAdapter.invalidatedView();
-			Log.i("MediaFrag", "Delete: " + deleteCount + " items...");
-			mode.finish();
 
+			if (deleteQuery.length() > 1) {
+				deleteQuery = deleteQuery
+						.substring(0, deleteQuery.length() - 1);
+			}
+
+			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+			authenicationPackage.session = ((MainApplication) ((Activity) mContext)
+					.getApplication()).getUser().getSession();
+			mContext.startService(APIService.getDeleteMediaIntent(mContext,
+					authenicationPackage, deleteQuery));
+
+			mode.finish();
 			return true;
 		}
 
@@ -452,15 +427,13 @@ public class MediaFragment extends SherlockFragment implements
 				Log.e("MediaFragment", "cell null!");
 				return;
 			}
-			if (cell.selected)
-				cell.unselect();
-			else
-				cell.select();
 
-			view.invalidate();
+			selectedList.set(position, (selectedList.get(position)) ? false
+					: true);
+			galleryAdapter.invalidatedView();
+
 		} else {
-			// normal view, zoom on image
-			// Uri uri = galleryAdapter.getImageAt(position);
+
 			if (view.getTag() != null) {
 				Log.i("MediaFragment", (String) view.getTag());
 			} else
@@ -478,6 +451,15 @@ public class MediaFragment extends SherlockFragment implements
 			startActivity(intent);
 		}
 
+	}
+
+	private boolean[] toPrimitiveArray(final List<Boolean> booleanList) {
+		final boolean[] primitives = new boolean[booleanList.size()];
+		int index = 0;
+		for (Boolean object : booleanList) {
+			primitives[index++] = object;
+		}
+		return primitives;
 	}
 
 }
