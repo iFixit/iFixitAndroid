@@ -130,6 +130,16 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
       }
       if(mGalleryVisible)
           toggleGalleryView(mGalleryVisible);
+      else
+      {
+    	  if(!mMediaView.isHidden())
+    	  {
+    	  FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		 // ft.add(R.id.topic_media_fragment, mMediaView, "galleryFragment");
+		  ft.hide(mMediaView);
+		  ft.commitAllowingStateLoss();
+    	  }
+      }
       
       if(mGalleryVisible && mDualPane)
       {

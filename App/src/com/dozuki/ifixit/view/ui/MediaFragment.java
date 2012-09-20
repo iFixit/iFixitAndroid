@@ -54,13 +54,10 @@ public class MediaFragment extends SherlockFragment implements
 	private static final int MAX_WRITING_IMAGES = 20;
 	protected static final String IMAGE_URL = "IMAGE_URL";
 	protected static final String LOCAL_URL = "LOCAL_URL";
-	private static MediaFragment thisInstance;
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
 	private static final String USER_IMAGE_LIST = "USER_IMAGE_LIST";
-	private String selectedImagePath;
-	private String filemanagerstring;
 	GridView mGridView;
 	MediaAdapter galleryAdapter;
 	private ImageManager mImageManager;
@@ -386,8 +383,11 @@ public class MediaFragment extends SherlockFragment implements
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if (mImageList == null)
-				return true;
+			if(mImageList == null) return true;
+						if (mImageList == null)
+							return true;
+			String deleteQuery="?";
+				
 			int deleteCount = 0;
 			for (int i = 0; i < mGridView.getChildCount(); i++) {
 				MediaViewItem cell = (MediaViewItem) mGridView.getChildAt(i);
@@ -395,11 +395,24 @@ public class MediaFragment extends SherlockFragment implements
 					cell.unselect();
 					// TODO delete me!
 					if (cell.listRef != null)
+					{
 						mImageList.getmImages().remove(cell.listRef);
+					    deleteQuery+="imageids[]="+cell.listRef.getmImageId()+"&";
+					}
 
 					deleteCount++;
 				}
 			}
+			
+			if(deleteQuery.length()> 1)
+			{
+			   deleteQuery = deleteQuery.substring(0, deleteQuery.length()-2);
+			}
+			
+			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+			authenicationPackage.session = 	((MainApplication)((Activity)mContext).getApplication()).getUser().getSession();
+		     mContext.startService(APIService.getDeleteMediaIntent(mContext, authenicationPackage, deleteQuery));
+		     
 			galleryAdapter.invalidatedView();
 			Log.i("MediaFrag", "Delete: " + deleteCount + " items...");
 			mode.finish();

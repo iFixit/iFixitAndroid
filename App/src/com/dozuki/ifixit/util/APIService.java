@@ -107,6 +107,9 @@ public class APIService extends Service {
    private static final String UPLOAD_MEDIA_API_URL =
 	    "http://www.ifixit.com/api/1.0/image/upload";
    
+   private static final String DELETE_MEDIA_API_URL =
+	    "http://www.ifixit.com/api/1.0/image/delete";
+   
    
    private static final String API_DOMAIN =  ".ifixit.com";
 
@@ -124,6 +127,7 @@ public class APIService extends Service {
    private static final int TARGET_REGISTER = 4;
    private static final int TARGET_MEDIA_LIST= 5;
    private static final int TARGET_UPLOAD_MEDIA= 6;
+   private static final int TARGET_DELETE_MEDIA= 7;
 
    private static final String NO_QUERY = "";
 
@@ -135,14 +139,14 @@ public class APIService extends Service {
     "com.dozuki.ifixit.api.topic";
    public static final String ACTION_LOGIN =
 	    "com.dozuki.ifixit.api.login";
-   
    public static final String ACTION_REGISTER =
 	    "com.dozuki.ifixit.api.resgister";
    public static final String ACTION_USER_MEDIA =
 	    "com.dozuki.ifixit.api.images";
-   
    public static final String ACTION_UPLOAD_MEDIA =
 	    "com.dozuki.ifixit.api.upload";
+   public static final String ACTION_DELETE_MEDIA =
+	    "com.dozuki.ifixit.api.delete";
 
    
  
@@ -293,15 +297,24 @@ public class APIService extends Service {
 	      return createLoginIntent(context, TARGET_LOGIN, authenicationPackage , ACTION_LOGIN);
 	   }
    
-   
-   public static Intent getUploadImageIntent(Context context, AuthenicationPackage authenicationPackage, String filePath) {
-	      return createUploadImageIntent(context, TARGET_UPLOAD_MEDIA, authenicationPackage , ACTION_UPLOAD_MEDIA, filePath);
-	   }
-   
-public static Intent userMediaIntent(Context context, AuthenicationPackage authenicationPackage) {
-	      return createUserMediaIntent(context, TARGET_MEDIA_LIST, authenicationPackage , ACTION_USER_MEDIA);
-	   }
-   
+	public static Intent getUploadImageIntent(Context context,
+			AuthenicationPackage authenicationPackage, String filePath) {
+		return createUploadImageIntent(context, TARGET_UPLOAD_MEDIA,
+				authenicationPackage, ACTION_UPLOAD_MEDIA, filePath);
+	}
+
+	public static Intent getDeleteMediaIntent(Context context,
+			AuthenicationPackage authenicationPackage, String requestQuery) {
+		return createDeleteMediaIntent(context, TARGET_DELETE_MEDIA,
+				authenicationPackage, requestQuery, ACTION_DELETE_MEDIA);
+	}
+
+	public static Intent userMediaIntent(Context context,
+			AuthenicationPackage authenicationPackage) {
+		return createUserMediaIntent(context, TARGET_MEDIA_LIST,
+				authenicationPackage, ACTION_USER_MEDIA);
+	}
+
    public static Intent getRegisterIntent(Context mContext,
 			AuthenicationPackage authenicationPackage) {
 	   return createRegisterIntent(mContext, TARGET_REGISTER, authenicationPackage , ACTION_REGISTER);
@@ -369,6 +382,22 @@ public static Intent userMediaIntent(Context context, AuthenicationPackage authe
 
 	      extras.putInt(REQUEST_TARGET, target);
 	      extras.putString(REQUEST_QUERY, filePath);
+	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
+	      extras.putString(REQUEST_BROADCAST_ACTION, action);
+	      intent.putExtras(extras);
+
+	      return intent;
+	}
+   
+   
+   private static Intent createDeleteMediaIntent(Context context,
+			int target, AuthenicationPackage authenicationPackage, String query,
+			String action) {
+	      Intent intent = new Intent(context, APIService.class);
+	      Bundle extras = new Bundle();
+
+	      extras.putInt(REQUEST_TARGET, target);
+	      extras.putString(REQUEST_QUERY, query);
 	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
 	      extras.putString(REQUEST_BROADCAST_ACTION, action);
 	      intent.putExtras(extras);
@@ -473,17 +502,31 @@ public static Intent userMediaIntent(Context context, AuthenicationPackage authe
 			authenicationPackage.username = null;
 			break;
 		case TARGET_UPLOAD_MEDIA:
-			
+
 			file = new File(requestQuery);
-			url = UPLOAD_MEDIA_API_URL+"?file="+file.getName();
+			url = UPLOAD_MEDIA_API_URL + "?file=" + file.getName();//URLEncoder.encode(file.getName(),
+         //   "UTF-8");
+		
+			authenicationPackage.login = null;
+			authenicationPackage.password = null;
+			authenicationPackage.username = null;
+			break;
 			
-		//	Log.w("iFixit sdrfre",  URLEncoder.encode(file.getName(),"UTF-8" ));
+		case TARGET_DELETE_MEDIA:
+		
+			url = DELETE_MEDIA_API_URL + requestQuery;//URLEncoder.encode(requestQuery,
+           // "UTF-8");
+			
+			  authenicationPackage.login = null;
+			  authenicationPackage.password = null;
+		      authenicationPackage.username = null;
 			break;
 		default:
 			Log.w("iFixit", "Invalid request target: " + requestTarget);
 			responder.setResult(new Result(Error.PARSE));
 			return;
 		}
+		Log.e("URL", url);
 		performAuthenicatedRequest(url, authenicationPackage, file, responder);
 	}
 
