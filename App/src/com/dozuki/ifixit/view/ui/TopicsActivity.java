@@ -14,16 +14,11 @@ import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
 import com.dozuki.ifixit.MainApplication;
@@ -109,7 +104,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			.findFragmentByTag("galleryFragment");
 			mTopicView = (TopicViewFragment) getSupportFragmentManager()
 			.findFragmentByTag("topicView");
-		
 
 		} else {
 			mTopicListVisible = true;
@@ -118,7 +112,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			mTopicView = new TopicViewFragment();
 			mMediaView = new MediaFragment((Context)this);
 			//mTopicView.setRetainInstance(true);
-			mMediaView.setRetainInstance(true);
+			//mMediaView.setRetainInstance(true);
 			setUpMainView();
 		}
 
@@ -127,9 +121,16 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
          fetchCategories();
       }
 
+      
+      if(mGalleryVisible)
+          toggleGalleryView(mGalleryVisible);
+      
       if (!mTopicListVisible && !mHideTopicList) {
-         getSupportFragmentManager().popBackStack();
+         getSupportFragmentManager().popBackStack("HIDDEN", FragmentManager.POP_BACK_STACK_INCLUSIVE);
       }
+      if(mGalleryVisible)
+          toggleGalleryView(mGalleryVisible);
+      
       if(mGalleryVisible && mDualPane)
       {
     	  mTopicListView.setVisibility(View.GONE);
@@ -236,8 +237,11 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 	 
       int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
 
+    
       if (mBackStackSize > backStackSize) {
-         setTopicListVisible();
+    	  
+             setTopicListVisible();
+             
 	     if (mLoginVisible) {
 	        mLoginVisible = false;
 		 }
@@ -257,7 +261,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
             mTopicView.setTopicNode(topic);
 
             if (mHideTopicList) {
-               hideTopicList(null);
+               hideTopicList("HIDDEN");
             }
          } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
@@ -285,10 +289,11 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
 
    private void hideTopicListWithDelay() {
+	   mTopicListVisible = false;
       // Delay this slightly to make sure the animation is played.
       new Handler().postAtTime(new Runnable() {
          public void run() {
-            hideTopicList(true, null);
+            hideTopicList(true, "HIDDEN");
          }
       }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
@@ -349,7 +354,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		if (showGallery) {
 			// save state
 			if (mGalleryVisible) {
-				return;
+				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			}
 			
 
@@ -359,8 +365,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		//	ft.commitAllowingStateLoss();
 			FragmentTransaction ft = getSupportFragmentManager()
 			.beginTransaction();
-	ft.addToBackStack(BACK_STACK_STATE);
-	ft.commitAllowingStateLoss();
+	        ft.addToBackStack(BACK_STACK_STATE);
+      	    ft.commitAllowingStateLoss();
 			if(mDualPane)
 			{
 			
@@ -399,7 +405,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 				ft.commitAllowingStateLoss();
 			}
 
-			
 			mGalleryVisible = true;
 		} else {
 
@@ -412,10 +417,9 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			    mTopicListView.setVisibility(View.VISIBLE);
 			}else
 			{
-				//FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				
 				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
-				//ft.commitAllowingStateLoss();
-				//getSupportFragmentManager().popBackStack();
+				
 			}
 			
 			 mGalleryVisible=false;

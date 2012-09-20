@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -281,8 +282,7 @@ public void onActivityResult (int requestCode, int resultCode, Intent data)
 	if(resultCode == Activity.RESULT_OK)
 	if(data != null)
 	{
-	   Log.e("LOGIN", requestCode+"");
-	   Log.e("Login Activity", "Welcome " + requestCode);
+		displayLoading();
 	   
 	   String session = data.getStringExtra("session");
 	   AuthenicationPackage authenicationPackage = new AuthenicationPackage();
@@ -317,5 +317,12 @@ public void onPause() {
  {
 	 LoginFragment.loginListeners.add(l);
  }
+ 
+ private void displayLoading() {
+     FragmentTransaction ft = getActivity().getSupportFragmentManager().
+      beginTransaction();
+     ft.replace(R.id.login_overlay, new LoadingFragment());
+     ft.commit();
+  }
 
 }

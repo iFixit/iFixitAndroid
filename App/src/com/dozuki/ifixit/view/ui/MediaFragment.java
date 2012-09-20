@@ -91,6 +91,10 @@ public class MediaFragment extends SherlockFragment implements
 		mContext = con;
 	}
 
+	public MediaFragment()
+	{
+	
+	}
 
 
 	@Override
