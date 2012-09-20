@@ -19,7 +19,7 @@ import android.widget.TextView;
 
 public class MediaViewItem extends RelativeLayout {
 	ImageView imageview;
-	ImageView selectImage;
+	RelativeLayout selectImage;
 	public UserImageInfo listRef;
 	private Context mContext;
 	int id;
@@ -36,7 +36,8 @@ public class MediaViewItem extends RelativeLayout {
 		inflater.inflate(com.dozuki.ifixit.R.layout.media_cell, this, true);
 		
 		imageview = (ImageView) findViewById(com.dozuki.ifixit.R.id.media_image);
-		selectImage =  (ImageView) findViewById(com.dozuki.ifixit.R.id.selected_image);
+		selectImage =  (RelativeLayout) findViewById(com.dozuki.ifixit.R.id.selected_image);
+		
 		selectImage.setVisibility(View.INVISIBLE);
 	}
 	
