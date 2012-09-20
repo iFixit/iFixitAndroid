@@ -16,6 +16,7 @@ import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicNode;
@@ -26,6 +27,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
+
+   /**
+    * Used for Dozuki app. Enables the up navigation button to finish the
+    * activity and go back to the sites list.
+    */
+   private static final boolean UP_NAVIGATION_FINISH_ACTIVITY = false;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -55,9 +62,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      setTheme(((MainApplication)getApplication()).getSiteTheme());
+      getSupportActionBar().setTitle(((MainApplication)getApplication())
+       .getSite().mTitle);
+
       super.onCreate(savedInstanceState);
 
-      getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
@@ -149,7 +159,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       mBackStackSize = backStackSize;
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(mBackStackSize != 0);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(mBackStackSize != 0 ||
+       UP_NAVIGATION_FINISH_ACTIVITY);
    }
 
    @Override
@@ -227,8 +238,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       }
 
       // ft.commit();
-      
-      // commitAllowingStateLoss doesn't throw an exception if commit() is 
+      // commitAllowingStateLoss doesn't throw an exception if commit() is
       // run after the fragments parent already saved its state.  Possibly
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
@@ -238,16 +248,25 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
-            getSupportFragmentManager().popBackStack();
+            // Go up in the hierarchy by popping the back stack.
+            boolean poppedStack =
+             getSupportFragmentManager().popBackStackImmediate();
+
+            // If there is not a previous category to go to and the up
+            // navigation button should finish the activity, finish
+            // the activity.
+            if (!poppedStack && UP_NAVIGATION_FINISH_ACTIVITY) {
+               finish();
+            }
 
             return true;
          default:
             return super.onOptionsItemSelected(item);
       }
    }
-   
+
    @Override
    protected void onDestroy() {
      super.onDestroy();
-   }   
+   }
 }
