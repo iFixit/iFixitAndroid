@@ -452,7 +452,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
 			return true;
 			
-		case R.id.tardis_button:
+	/*	case R.id.tardis_button:
 			if (mDualPane) {
 				//if(mTopicListVisible && mHideTopicList)
 					 //  hideTopicList(false);
@@ -462,7 +462,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 				this.changeTopicListView(mMediaView, true, false, null);
 				mGalleryVisible = true;
 			}
-		return true;
+		return true;*/
 			
 		default:
 			return super.onOptionsItemSelected(item);

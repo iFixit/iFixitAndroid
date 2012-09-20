@@ -121,8 +121,8 @@ public class MediaAdapterTemp extends BaseAdapter {
 					com.dozuki.ifixit.R.layout.media_cell, null);
 			cell.imageview = (ImageView) convertView
 					.findViewById(com.dozuki.ifixit.R.id.media_image);
-			cell.checkbox = (CheckBox) convertView
-					.findViewById(com.dozuki.ifixit.R.id.del_box);
+			//cell.checkbox = (CheckBox) convertView
+				//	.findViewById(com.dozuki.ifixit.R.id.del_box);
 			convertView.setTag(cell);
 		} else {
 			cell = (ViewHolder) convertView.getTag();

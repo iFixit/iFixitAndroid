@@ -22,7 +22,8 @@
             android:numColumns="auto_fit"
             android:orientation="vertical"
             android:stretchMode="columnWidth"
-            android:verticalSpacing="10dp" >
+            android:verticalSpacing="10dp"
+            android:drawSelectorOnTop="false" >
         </GridView>
     </LinearLayout>
 
@@ -33,34 +34,19 @@
         android:fillViewport="true"
         android:orientation="horizontal" 
         android:weightSum="1.0">
-
-        <Button
-            android:id="@+id/img_button"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="img"
-            android:layout_weight="0.25" />
-
         <Button
             android:id="@+id/camera_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="camera"
-            android:layout_weight="0.25"  />
+            android:layout_weight="0.5"  />
 
         <Button
             android:id="@+id/gallery_button"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:text="gallery" 
-            android:layout_weight="0.25" />
-
-        <Button
-            android:id="@+id/delete_button"
-             android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:text="delete"
-            android:layout_weight="0.25"  />
+            android:layout_weight="0.5" />
     </LinearLayout>
 
 </LinearLayout>
