@@ -22,12 +22,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
+import android.widget.LinearLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -61,6 +65,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String USER_IMAGE_LIST = "USER_IMAGE_LIST";
 	private static final String USER_SELECTED_LIST = "USER_SELECTED_LIST";
 	GridView mGridView;
+	LinearLayout mButtons;
 	MediaAdapter galleryAdapter;
 	private ImageManager mImageManager;
 	private ArrayList<Boolean> selectedList;
@@ -137,6 +142,8 @@ public class MediaFragment extends SherlockFragment implements
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(this);
 		mGridView.setOnItemLongClickListener(this);
+
+		mButtons = (LinearLayout) view.findViewById(R.id.button_holder);
 
 		((Button) view.findViewById(R.id.gallery_button))
 				.setOnClickListener(this);
@@ -360,6 +367,7 @@ public class MediaFragment extends SherlockFragment implements
 				}
 			}
 			galleryAdapter.invalidatedView();
+			mButtons.setVisibility(View.VISIBLE);
 		}
 
 		@Override
@@ -371,7 +379,7 @@ public class MediaFragment extends SherlockFragment implements
 			String deleteQuery = "?";
 
 			for (int i = selectedList.size() - 1; i > -1; i--) {
-				if (selectedList.get(i)) {		
+				if (selectedList.get(i)) {
 					selectedList.remove(i);
 					deleteQuery += "imageids[]="
 							+ mImageList.getmImages().get(i).getmImageId()
@@ -411,6 +419,32 @@ public class MediaFragment extends SherlockFragment implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		if (mMode == null) {
+			// mButtons.setVisibility(View.GONE);
+
+			Animation animHide = AnimationUtils.loadAnimation(mContext,
+					R.anim.slide_out_bottom_slow);
+			animHide.setAnimationListener(new AnimationListener() {
+
+				@Override
+				public void onAnimationEnd(Animation arg0) {
+					// TODO Auto-generated method stub
+					mButtons.setVisibility(View.GONE);
+				}
+
+				@Override
+				public void onAnimationRepeat(Animation arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+				@Override
+				public void onAnimationStart(Animation arg0) {
+					// TODO Auto-generated method stub
+
+				}
+
+			});
+			mButtons.startAnimation(animHide);
 			mMode = this.getSherlockActivity().startActionMode(
 					new ModeCallback());
 		}
