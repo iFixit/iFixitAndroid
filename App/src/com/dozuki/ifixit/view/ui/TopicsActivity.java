@@ -37,6 +37,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private static final String GALLERY_VISIBLE = "LOGIN_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
+  private static final String BACK_STACK_HIDDEN_STATE = "BACK_STACK_HIDDEN_STATE";
 
    private TopicViewFragment mTopicView;
    private MediaFragment mMediaView;
@@ -58,16 +59,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
          if (!result.hasError()) {
             if (mRootTopic == null) {
-            	
-            	if(result.getResult() instanceof User)
-            	{
-            		Log.e("logged in ", ((User)result.getResult()).getUsername());
-            	
-            	}else
-            	{
                   mRootTopic = (TopicNode)result.getResult();   
                   onTopicSelected(mRootTopic);
-            	}
             }
          } else {
             APIService.getErrorDialog(TopicsActivity.this, result.getError(),
@@ -111,8 +104,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			mGalleryVisible = false;
 			mTopicView = new TopicViewFragment();
 			mMediaView = new MediaFragment((Context)this);
-			//mTopicView.setRetainInstance(true);
-			//mMediaView.setRetainInstance(true);
 			setUpMainView();
 		}
 
@@ -122,11 +113,9 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
       }
 
       
-      if(mGalleryVisible)
-          toggleGalleryView(mGalleryVisible);
       
       if (!mTopicListVisible && !mHideTopicList) {
-         getSupportFragmentManager().popBackStack("HIDDEN", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+         getSupportFragmentManager().popBackStack(BACK_STACK_HIDDEN_STATE, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       }
       if(mGalleryVisible)
           toggleGalleryView(mGalleryVisible);
@@ -135,7 +124,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
     	  if(!mMediaView.isHidden())
     	  {
     	  FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		 // ft.add(R.id.topic_media_fragment, mMediaView, "galleryFragment");
 		  ft.hide(mMediaView);
 		  ft.commitAllowingStateLoss();
     	  }
@@ -191,11 +179,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		  ft.commitAllowingStateLoss();
 	   }
 	      
-	      //hide gallery fragment
-	    //  ft = getSupportFragmentManager().beginTransaction();
-	 //    ft.hide(getSupportFragmentManager().findFragmentByTag("galleryFragment"));
-	   //   ft.commitAllowingStateLoss();
-	
    }
 
 @Override
@@ -271,7 +254,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
             mTopicView.setTopicNode(topic);
 
             if (mHideTopicList) {
-               hideTopicList("HIDDEN");
+               hideTopicList(BACK_STACK_HIDDEN_STATE);
             }
          } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
@@ -303,7 +286,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
       // Delay this slightly to make sure the animation is played.
       new Handler().postAtTime(new Runnable() {
          public void run() {
-            hideTopicList(true, "HIDDEN");
+            hideTopicList(true, BACK_STACK_HIDDEN_STATE);
          }
       }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
@@ -464,13 +447,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 					fg.registerOnLoginListener(mMediaView);
 					mLoginVisible = true;
 					changeTopicListView(fg, true, null);
-					/*
-					 * if (mDualPane) { //if (!mLoginVisible) { mLoginVisible =
-					 * true; changeTopicListView(fg, true, null); //} } else {
-					 * // Intent i = new Intent(this,LoginActivity.class); //
-					 * startActivity(i); //if (!mLoginVisible) { mLoginVisible =
-					 * true; changeTopicListView(fg, true, null); } }
-					 */
 				}
 
 			} else if (mGalleryVisible == false) {
@@ -504,11 +480,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		if (mLoginVisible) {
 			getSupportFragmentManager().popBackStack();
 		}
-
-	   toggleGalleryView(true);
-			
 		
-
+	   toggleGalleryView(true);
 	}
 	
 	

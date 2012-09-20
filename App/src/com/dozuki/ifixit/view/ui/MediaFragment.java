@@ -406,7 +406,7 @@ public class MediaFragment extends SherlockFragment implements
 			
 			if(deleteQuery.length()> 1)
 			{
-			   deleteQuery = deleteQuery.substring(0, deleteQuery.length()-2);
+			   deleteQuery = deleteQuery.substring(0, deleteQuery.length()-1);
 			}
 			
 			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
