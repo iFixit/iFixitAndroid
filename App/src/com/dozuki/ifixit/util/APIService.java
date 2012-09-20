@@ -21,6 +21,7 @@ import android.util.Log;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.dozuki.model.Site;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -81,12 +82,11 @@ public class APIService extends Service {
    }
 
    private static final String RESPONSE = "RESPONSE";
-   private static final String TOPIC_API_URL =
-    "http://www.ifixit.com/api/1.0/topic/";
-   private static final String GUIDE_API_URL =
-    "http://www.ifixit.com/api/1.0/guide/";
-   private static final String CATEGORIES_API_URL =
-    "http://www.ifixit.com/api/1.0/categories/";
+
+   private static final String SITES_API_URL = "/api/1.0/sites?limit=1000";
+   private static final String TOPIC_API_URL = "/api/1.0/topic/";
+   private static final String GUIDE_API_URL = "/api/1.0/guide/";
+   private static final String CATEGORIES_API_URL = "/api/1.0/categories/";
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
@@ -96,6 +96,7 @@ public class APIService extends Service {
    private static final int TARGET_CATEGORIES = 0;
    private static final int TARGET_GUIDE = 1;
    private static final int TARGET_TOPIC = 2;
+   private static final int TARGET_SITES = 3;
 
    private static final String NO_QUERY = "";
 
@@ -105,8 +106,16 @@ public class APIService extends Service {
     "com.dozuki.ifixit.api.guide";
    public static final String ACTION_TOPIC =
     "com.dozuki.ifixit.api.topic";
+   public static final String ACTION_SITES =
+    "com.dozuki.ifixit.api.sites";
 
    public static final String RESULT = "RESULT";
+
+   private static Site mSite;
+
+   public static void setSite(Site site) {
+      mSite = site;
+   }
 
    @Override
    public IBinder onBind(Intent intent) {
@@ -175,6 +184,9 @@ public class APIService extends Service {
          case TARGET_TOPIC:
             parsedResult = JSONHelper.parseTopicLeaf(response);
             break;
+         case TARGET_SITES:
+            parsedResult = JSONHelper.parseSites(response);
+            break;
          default:
             Log.w("iFixit", "Invalid request target: " + requestTarget);
             return new Result(Error.PARSE);
@@ -216,6 +228,11 @@ public class APIService extends Service {
 
    public static Intent getTopicIntent(Context context, String topicName) {
       return createIntent(context, TARGET_TOPIC, topicName, ACTION_TOPIC);
+   }
+
+   public static Intent getSitesIntent(Context context) {
+      return createIntent(context, TARGET_SITES, NO_QUERY,
+       ACTION_SITES);
    }
 
    private static Intent createIntent(Context context, int target,
@@ -278,18 +295,18 @@ public class APIService extends Service {
          return;
       }
 
-      String url = null;
+      String relativeUrl = null;
 
       switch (requestTarget) {
       case TARGET_CATEGORIES:
-         url = CATEGORIES_API_URL;
+         relativeUrl = CATEGORIES_API_URL;
          break;
       case TARGET_GUIDE:
-         url = GUIDE_API_URL + requestQuery;
+         relativeUrl = GUIDE_API_URL + requestQuery;
          break;
       case TARGET_TOPIC:
          try {
-            url = TOPIC_API_URL + URLEncoder.encode(requestQuery,
+            relativeUrl = TOPIC_API_URL + URLEncoder.encode(requestQuery,
              "UTF-8");
          } catch (Exception e) {
             Log.w("iFixit", "Encoding error: " + e.getMessage());
@@ -297,13 +314,30 @@ public class APIService extends Service {
             return;
          }
          break;
+      case TARGET_SITES:
+         relativeUrl = SITES_API_URL;
+         break;
       default:
          Log.w("iFixit", "Invalid request target: " + requestTarget);
          responder.setResult(new Result(Error.PARSE));
          return;
       }
 
-      performRequest(url, responder);
+      String absoluteUrl = getUrl(relativeUrl);
+
+      performRequest(absoluteUrl, responder);
+   }
+
+   private static String getUrl(String endPoint) {
+      String domain;
+
+      if (mSite != null) {
+         domain = mSite.mDomain;
+      } else {
+         domain = "www.ifixit.com";
+      }
+
+      return "http://" + domain + endPoint;
    }
 
    private static void performRequest(final String url,
