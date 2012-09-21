@@ -2,6 +2,7 @@ package com.dozuki.ifixit.view.ui;
 
 
 import android.content.BroadcastReceiver;
+import android.content.ClipData.Item;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -14,16 +15,11 @@ import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.widget.FrameLayout;
-import android.widget.Toast;
 
-import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
 import com.dozuki.ifixit.MainApplication;
@@ -42,6 +38,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private static final String GALLERY_VISIBLE = "LOGIN_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
+  private static final String BACK_STACK_HIDDEN_STATE = "BACK_STACK_HIDDEN_STATE";
 
    private TopicViewFragment mTopicView;
    private MediaFragment mMediaView;
@@ -53,6 +50,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
    private boolean mTopicListVisible;
    private boolean mLoginVisible;
    private boolean mGalleryVisible;
+   private com.actionbarsherlock.view.Menu mMenu;
    View mTopicListView;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
@@ -63,16 +61,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
          if (!result.hasError()) {
             if (mRootTopic == null) {
-            	
-            	if(result.getResult() instanceof User)
-            	{
-            		Log.e("logged in ", ((User)result.getResult()).getUsername());
-            	
-            	}else
-            	{
                   mRootTopic = (TopicNode)result.getResult();   
                   onTopicSelected(mRootTopic);
-            	}
             }
          } else {
             APIService.getErrorDialog(TopicsActivity.this, result.getError(),
@@ -109,7 +99,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			.findFragmentByTag("galleryFragment");
 			mTopicView = (TopicViewFragment) getSupportFragmentManager()
 			.findFragmentByTag("topicView");
-		
 
 		} else {
 			mTopicListVisible = true;
@@ -117,8 +106,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			mGalleryVisible = false;
 			mTopicView = new TopicViewFragment();
 			mMediaView = new MediaFragment((Context)this);
-			//mTopicView.setRetainInstance(true);
-			mMediaView.setRetainInstance(true);
 			setUpMainView();
 		}
 
@@ -127,9 +114,23 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
          fetchCategories();
       }
 
+      
+      
       if (!mTopicListVisible && !mHideTopicList) {
-         getSupportFragmentManager().popBackStack();
+         getSupportFragmentManager().popBackStack(BACK_STACK_HIDDEN_STATE, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       }
+      if(mGalleryVisible)
+          toggleGalleryView(mGalleryVisible);
+      else
+      {
+    	  if(!mMediaView.isHidden())
+    	  {
+    	  FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+		  ft.hide(mMediaView);
+		  ft.commitAllowingStateLoss();
+    	  }
+      }
+      
       if(mGalleryVisible && mDualPane)
       {
     	  mTopicListView.setVisibility(View.GONE);
@@ -180,17 +181,13 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		  ft.commitAllowingStateLoss();
 	   }
 	      
-	      //hide gallery fragment
-	    //  ft = getSupportFragmentManager().beginTransaction();
-	 //    ft.hide(getSupportFragmentManager().findFragmentByTag("galleryFragment"));
-	   //   ft.commitAllowingStateLoss();
-	
    }
 
 @Override
    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu)
    {
 	 com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
+	 mMenu = menu;
 	 inflater.inflate(R.menu.menu_bar, menu);
 	  return super.onCreateOptionsMenu(menu);
    }
@@ -236,8 +233,11 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 	 
       int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
 
+    
       if (mBackStackSize > backStackSize) {
-         setTopicListVisible();
+    	  
+             setTopicListVisible();
+             
 	     if (mLoginVisible) {
 	        mLoginVisible = false;
 		 }
@@ -257,7 +257,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
             mTopicView.setTopicNode(topic);
 
             if (mHideTopicList) {
-               hideTopicList(null);
+               hideTopicList(BACK_STACK_HIDDEN_STATE);
             }
          } else {
             Intent intent = new Intent(this, TopicViewActivity.class);
@@ -285,10 +285,11 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
 
    private void hideTopicListWithDelay() {
+	   mTopicListVisible = false;
       // Delay this slightly to make sure the animation is played.
       new Handler().postAtTime(new Runnable() {
          public void run() {
-            hideTopicList(true, null);
+            hideTopicList(true, BACK_STACK_HIDDEN_STATE);
          }
       }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
@@ -349,7 +350,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		if (showGallery) {
 			// save state
 			if (mGalleryVisible) {
-				return;
+				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
+			
 			}
 			
 
@@ -359,8 +361,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		//	ft.commitAllowingStateLoss();
 			FragmentTransaction ft = getSupportFragmentManager()
 			.beginTransaction();
-	ft.addToBackStack(BACK_STACK_STATE);
-	ft.commitAllowingStateLoss();
+	        ft.addToBackStack(BACK_STACK_STATE);
+      	    ft.commitAllowingStateLoss();
 			if(mDualPane)
 			{
 			
@@ -399,7 +401,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 				ft.commitAllowingStateLoss();
 			}
 
-			
 			mGalleryVisible = true;
 		} else {
 
@@ -412,10 +413,9 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			    mTopicListView.setVisibility(View.VISIBLE);
 			}else
 			{
-				//FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+				
 				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,  FragmentManager.POP_BACK_STACK_INCLUSIVE);
-				//ft.commitAllowingStateLoss();
-				//getSupportFragmentManager().popBackStack();
+				
 			}
 			
 			 mGalleryVisible=false;
@@ -442,6 +442,9 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			 getSupportFragmentManager().popBackStack();
 			return true;
 		case R.id.gallery_button:
+			item.setIcon(R.drawable.ic_menu_gallery_active);
+			MenuItem guideIcon = mMenu.findItem(R.id.guides_button);
+			guideIcon.setIcon(R.drawable.ic_menu_guides_inactive);
 			MainApplication mainApp = (MainApplication) getApplication();
 			if (mainApp.getUser() == null) {
 				if (!mLoginVisible) {
@@ -450,13 +453,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 					fg.registerOnLoginListener(mMediaView);
 					mLoginVisible = true;
 					changeTopicListView(fg, true, null);
-					/*
-					 * if (mDualPane) { //if (!mLoginVisible) { mLoginVisible =
-					 * true; changeTopicListView(fg, true, null); //} } else {
-					 * // Intent i = new Intent(this,LoginActivity.class); //
-					 * startActivity(i); //if (!mLoginVisible) { mLoginVisible =
-					 * true; changeTopicListView(fg, true, null); } }
-					 */
 				}
 
 			} else if (mGalleryVisible == false) {
@@ -467,6 +463,9 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 			return true;
 
 		case R.id.guides_button:
+			item.setIcon(R.drawable.ic_menu_guides_active);
+			MenuItem galleryIcon = mMenu.findItem(R.id.gallery_button);
+			galleryIcon.setIcon(R.drawable.ic_menu_gallery_inactive);
 			if (mGalleryVisible) {
 
 				toggleGalleryView(false);
@@ -490,11 +489,8 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 		if (mLoginVisible) {
 			getSupportFragmentManager().popBackStack();
 		}
-
-	   toggleGalleryView(true);
-			
 		
-
+	   toggleGalleryView(true);
 	}
 	
 	

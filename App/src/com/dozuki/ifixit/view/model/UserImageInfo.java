@@ -10,11 +10,19 @@ public class UserImageInfo implements Serializable{
 	private static final long serialVersionUID = -6957010569324490644L;
 	String mImageId;
 	String mGuid;
+	String mLocalPath;
 	public String getmImageId() {
 		return mImageId;
 	}
 	public void setmImageId(String mImageId) {
 		this.mImageId = mImageId;
+	}
+	public String getlocalmGuide(){
+		return mLocalPath;
+	}
+	public void setlocalmGuide(String mLocal)
+	{
+		mLocalPath = mLocal;
 	}
 	public String getmGuid() {
 		return mGuid;

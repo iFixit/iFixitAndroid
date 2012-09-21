@@ -2,10 +2,11 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@+id/guides_button"
-        android:icon="@drawable/guides"
+        android:icon="@drawable/ic_menu_guides_active"
         android:showAsAction="always|withText"/>
     <item
         android:id="@+id/gallery_button"
-        android:icon="@drawable/gallery"
+        android:icon="@drawable/ic_menu_gallery_inactive"
         android:showAsAction="always|withText"/>
+    
 </menu>

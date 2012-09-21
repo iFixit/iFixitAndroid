@@ -3,6 +3,7 @@ package com.dozuki.ifixit.view.ui;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
@@ -14,9 +15,11 @@ import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +73,7 @@ public class MediaFragment extends SherlockFragment implements
 	MediaAdapter galleryAdapter;
 	private ImageManager mImageManager;
 	private ArrayList<Boolean> selectedList;
+	private HashMap<String, String> localURL;
 	private ImageSizes mImageSizes;
 	static UserImageList mImageList;
 	private ActionMode mMode;
@@ -121,6 +125,7 @@ public class MediaFragment extends SherlockFragment implements
 				.getImageSizes();
 		mMode = null;
 		selectedList = new ArrayList<Boolean>();
+		localURL = new HashMap<String, String>();
 		if (savedInstanceState != null) {
 			mImageList = (UserImageList) savedInstanceState
 					.getSerializable(USER_IMAGE_LIST);
@@ -309,12 +314,14 @@ public class MediaFragment extends SherlockFragment implements
 
 		public void addUri(Uri uri) {
 			// mediaList.add(uri);
+
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = uri.toString();
 			userImageInfo.setmGuid(url);
 			userImageInfo.setmImageId(null);
 			mImageList.getmImages().add(userImageInfo);
 			selectedList.add(false);
+			localURL.put(url, getPath(uri));
 			invalidatedView();
 		}
 
@@ -508,11 +515,18 @@ public class MediaFragment extends SherlockFragment implements
 				return;
 			}
 
-			Intent intent = new Intent(getActivity(),
-					FullImageViewActivity.class);
-			intent.putExtra(IMAGE_URL, url);
-
-			startActivity(intent);
+			if (localURL.get(url) != null) {
+				Intent intent = new Intent(getActivity(),
+						FullImageViewActivity.class);
+				intent.putExtra(IMAGE_URL, localURL.get(url));
+				intent.putExtra(LOCAL_URL, true);
+				startActivity(intent);
+			} else {
+				Intent intent = new Intent(getActivity(),
+						FullImageViewActivity.class);
+				intent.putExtra(IMAGE_URL, url);
+				startActivity(intent);
+			}
 		}
 
 	}
@@ -524,6 +538,17 @@ public class MediaFragment extends SherlockFragment implements
 			primitives[index++] = object;
 		}
 		return primitives;
+	}
+
+	private static float exifOrientationToDegrees(int exifOrientation) {
+		if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_90) {
+			return 90;
+		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_180) {
+			return 180;
+		} else if (exifOrientation == ExifInterface.ORIENTATION_ROTATE_270) {
+			return 270;
+		}
+		return 0;
 	}
 
 }

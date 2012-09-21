@@ -11,18 +11,18 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:alwaysDrawnWithCache="true"
-        android:clipChildren="true"
+        android:clipChildren="true" 
         android:columnWidth="150dp"
         android:drawSelectorOnTop="false"
         android:gravity="center_horizontal"
-        android:horizontalSpacing="2dp"
+        android:horizontalSpacing="4dp"
         android:numColumns="auto_fit"
         android:orientation="vertical"
-        android:padding="0dp"
+        android:padding="4dp"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
             android:stretchMode="columnWidth"
-        android:verticalSpacing="2dp" >
+        android:verticalSpacing="4dp" >
             
     </GridView>
     

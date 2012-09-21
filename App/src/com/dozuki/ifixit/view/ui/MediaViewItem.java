@@ -24,6 +24,7 @@ public class MediaViewItem extends RelativeLayout {
 	private Context mContext;
 	int id;
 	private ImageManager mImageManager;
+	public String localPath;
 
 
 	public MediaViewItem(Context context, ImageManager imageManager) {
@@ -31,6 +32,7 @@ public class MediaViewItem extends RelativeLayout {
 		mContext = context;
 		mImageManager = imageManager;
 		listRef = null;
+		localPath = null;
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(com.dozuki.ifixit.R.layout.media_cell, this, true);
