@@ -31,10 +31,8 @@
     <RelativeLayout
         android:id="@+id/button_holder"
         android:layout_width="fill_parent"
-        android:layout_height="40dp"
+        android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:weightSum="1.0" 
         android:background="#222222">
         
         <LinearLayout 
@@ -55,13 +53,7 @@
              android:background="@drawable/upload_from_gallery_selector" />
         
         </LinearLayout >
-    </RelativeLayout>
-    
-
-  
-
-  
-   <ProgressBar
+           <ProgressBar
        android:id="@+id/gallery_loading_bar"
 style="@style/ProgressBarHolo.Horizontal"
                 android:layout_width="fill_parent"
@@ -69,7 +61,14 @@ style="@style/ProgressBarHolo.Horizontal"
                 android:indeterminateOnly="true"
                 android:indeterminate="true"
                 android:progress="25"
-android:layout_above="@+id/button_holder"></ProgressBar>
+android:layout_above="@+id/camera_button"></ProgressBar>
+    </RelativeLayout>
+    
+
+  
+
+  
+
       
       
 
