@@ -442,6 +442,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (mGalleryVisible) {
+				MenuItem galleryIcon = mMenu.findItem(R.id.gallery_button);
+				MenuItem guideIcon = mMenu.findItem(R.id.guides_button);
+				galleryIcon.setIcon(R.drawable.ic_menu_gallery_inactive);
+				guideIcon.setIcon(R.drawable.ic_menu_guides_active);
 				toggleGalleryView(false);
 				return true;
 			}
