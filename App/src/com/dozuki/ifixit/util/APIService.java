@@ -251,6 +251,12 @@ public class APIService extends Service {
          case TARGET_MEDIA_LIST:
         	 parsedResult = JSONHelper.parseUserImages(response);
         	 break;
+         case TARGET_UPLOAD_MEDIA:
+        	 parsedResult="";
+        	 break;
+         case TARGET_DELETE_MEDIA:
+        	 parsedResult="";
+        	 break;
          default:
             Log.w("iFixit", "Invalid request target: " + requestTarget);
             return new Result(Error.PARSE);

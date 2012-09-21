@@ -74,6 +74,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      
+
 
       getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
@@ -169,6 +171,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				mMediaView.retrieveUserImages();
 			}
 		}
+		
+		
    }
    
    private void setUpMainView() 

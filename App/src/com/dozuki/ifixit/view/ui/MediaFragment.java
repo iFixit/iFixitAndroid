@@ -32,6 +32,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -72,6 +73,7 @@ public class MediaFragment extends SherlockFragment implements
 	private ImageSizes mImageSizes;
 	static UserImageList mImageList;
 	private ActionMode mMode;
+	private ProgressBar mProgressBar;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -79,13 +81,14 @@ public class MediaFragment extends SherlockFragment implements
 			APIService.Result result = (APIService.Result) intent.getExtras()
 					.getSerializable(APIService.RESULT);
 
-			if (!result.hasError()) {
+			if (!result.hasError() && result.getResult() instanceof UserImageList) {
 				mImageList = (UserImageList) result.getResult();
 				for (int i = 0; i < mImageList.getmImages().size(); i++) {
 					selectedList.add(false);
 				}
 				galleryAdapter.invalidatedView();
 			}
+			hideLoading();
 		}
 	};
 
@@ -139,6 +142,8 @@ public class MediaFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.media, container, false);
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
+		mProgressBar =  (ProgressBar) view.findViewById(R.id.gallery_loading_bar);
+
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(this);
 		mGridView.setOnItemLongClickListener(this);
@@ -150,6 +155,7 @@ public class MediaFragment extends SherlockFragment implements
 
 		((Button) view.findViewById(R.id.camera_button))
 				.setOnClickListener(this);
+		hideLoading();
 
 		return view;
 	}
@@ -162,6 +168,7 @@ public class MediaFragment extends SherlockFragment implements
 	}
 
 	public void retrieveUserImages() {
+		showLoading();
 		AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 				.getApplication()).getUser().getSession();
@@ -182,6 +189,25 @@ public class MediaFragment extends SherlockFragment implements
 					+ " must implement TopicSelectedListener");
 		}
 	}
+	
+	public void showLoading()
+	{
+		if(!(mProgressBar == null))
+		{
+			mProgressBar.startAnimation(AnimationUtils.makeInAnimation(mContext, true));
+		mProgressBar.setVisibility(View.VISIBLE);
+		}
+	}
+	
+	public void hideLoading()
+	{
+		if(!(mProgressBar == null))
+		{
+			mProgressBar.startAnimation(AnimationUtils.makeOutAnimation(mContext, true));
+		   mProgressBar.setVisibility(View.GONE);
+		}
+	}
+
 
 	@Override
 	public void onResume() {
@@ -189,6 +215,8 @@ public class MediaFragment extends SherlockFragment implements
 
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(APIService.ACTION_USER_MEDIA);
+		filter.addAction(APIService.ACTION_UPLOAD_MEDIA);
+		filter.addAction(APIService.ACTION_DELETE_MEDIA);
 		mContext.registerReceiver(mApiReceiver, filter);
 	}
 
@@ -252,6 +280,7 @@ public class MediaFragment extends SherlockFragment implements
 						.getApplication()).getUser().getSession();
 				mContext.startService(APIService.getUploadImageIntent(mContext,
 						authenicationPackage, getPath(selectedImageUri)));
+				showLoading();
 			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
 				Log.i("MediaFragment", "Adding camera pic...");
 				Uri selectedImageUri = data.getData();
@@ -261,6 +290,7 @@ public class MediaFragment extends SherlockFragment implements
 						.getApplication()).getUser().getSession();
 				mContext.startService(APIService.getUploadImageIntent(mContext,
 						authenicationPackage, getPath(selectedImageUri)));
+				showLoading();
 			}
 		}
 	}
