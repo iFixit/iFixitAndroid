@@ -2,7 +2,9 @@ package com.dozuki.ifixit.view.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -18,6 +20,7 @@ import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.provider.MediaStore.Images;
 import android.util.Log;
@@ -87,6 +90,7 @@ public class MediaFragment extends SherlockFragment implements
 	int mCurrentPage;
 	int mImageTransactionsInProgress;
 	int mCurScrollState;
+	String cameraTempFileName;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -94,8 +98,9 @@ public class MediaFragment extends SherlockFragment implements
 			APIService.Result result = (APIService.Result) intent.getExtras()
 					.getSerializable(APIService.RESULT);
 
-			///
-			if (!result.hasError() && result.getResult() instanceof UserImageList) {
+			// /
+			if (!result.hasError()
+					&& result.getResult() instanceof UserImageList) {
 				UserImageList imageList = (UserImageList) result.getResult();
 				for (int i = 0; i < imageList.getmImages().size(); i++) {
 					selectedList.add(false);
@@ -105,11 +110,10 @@ public class MediaFragment extends SherlockFragment implements
 				mCurrentPage++;
 			}
 			mImageTransactionsInProgress--;
-			Log.e("CURRENT TRANSACTIONS",""+ mImageTransactionsInProgress);
-			if(mImageTransactionsInProgress <= 0)
-			{
-			   hideLoading();
-			   mImageTransactionsInProgress=0;
+			Log.e("CURRENT TRANSACTIONS", "" + mImageTransactionsInProgress);
+			if (mImageTransactionsInProgress <= 0) {
+				hideLoading();
+				mImageTransactionsInProgress = 0;
 			}
 		}
 	};
@@ -145,8 +149,7 @@ public class MediaFragment extends SherlockFragment implements
 		selectedList = new ArrayList<Boolean>();
 		localURL = new HashMap<String, String>();
 		if (savedInstanceState != null) {
-			mCurrentPage = savedInstanceState
-			.getInt(CURRENT_PAGE);
+			mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
 			mImageList = (UserImageList) savedInstanceState
 					.getSerializable(USER_IMAGE_LIST);
 			boolean[] selected = savedInstanceState
@@ -159,7 +162,7 @@ public class MediaFragment extends SherlockFragment implements
 			galleryAdapter = new MediaAdapter();
 			// retrieveUserImages();
 		}
-		mImageTransactionsInProgress=0;
+		mImageTransactionsInProgress = 0;
 	}
 
 	@Override
@@ -168,7 +171,8 @@ public class MediaFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.media, container, false);
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
-		mProgressBar =  (ProgressBar) view.findViewById(R.id.gallery_loading_bar);
+		mProgressBar = (ProgressBar) view
+				.findViewById(R.id.gallery_loading_bar);
 		mGridView.setOnScrollListener(this);
 
 		mGridView.setAdapter(galleryAdapter);
@@ -202,7 +206,8 @@ public class MediaFragment extends SherlockFragment implements
 				.getApplication()).getUser().getSession();
 		mImageTransactionsInProgress++;
 		mContext.startService(APIService.userMediaIntent(mContext,
-				authenicationPackage, "?limit="+IMAGE_PAGE_SIZE+"&offset="+(IMAGE_PAGE_SIZE*mCurrentPage)));
+				authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset="
+						+ (IMAGE_PAGE_SIZE * mCurrentPage)));
 	}
 
 	@Override
@@ -218,25 +223,22 @@ public class MediaFragment extends SherlockFragment implements
 					+ " must implement TopicSelectedListener");
 		}
 	}
-	
-	public void showLoading()
-	{
-		if(!(mProgressBar == null))
-		{
-			mProgressBar.startAnimation(AnimationUtils.makeInAnimation(mContext, true));
-		mProgressBar.setVisibility(View.VISIBLE);
-		}
-	}
-	
-	public void hideLoading()
-	{
-		if(!(mProgressBar == null))
-		{
-			mProgressBar.startAnimation(AnimationUtils.makeOutAnimation(mContext, true));
-		   mProgressBar.setVisibility(View.INVISIBLE);
+
+	public void showLoading() {
+		if (!(mProgressBar == null)) {
+			mProgressBar.startAnimation(AnimationUtils.makeInAnimation(
+					mContext, true));
+			mProgressBar.setVisibility(View.VISIBLE);
 		}
 	}
 
+	public void hideLoading() {
+		if (!(mProgressBar == null)) {
+			mProgressBar.startAnimation(AnimationUtils.makeOutAnimation(
+					mContext, true));
+			mProgressBar.setVisibility(View.INVISIBLE);
+		}
+	}
 
 	@Override
 	public void onResume() {
@@ -266,7 +268,7 @@ public class MediaFragment extends SherlockFragment implements
 		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
 		case R.id.gallery_button:
-			Intent intent = new Intent();
+			Intent intent = new Intent(); 
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
 			startActivityForResult(
@@ -276,11 +278,53 @@ public class MediaFragment extends SherlockFragment implements
 		case R.id.camera_button:
 			Intent cameraIntent = new Intent(
 					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-
-			startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+			File f;
+			try {
+				f = createImageFile();
+				cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+						Uri.fromFile(f));
+				startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			break;
 		}
 	}
+
+	private File createImageFile() throws IOException {
+		// Create an image file name
+		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
+				.format(new Date());
+		String imageFileName = "IFIXITCAMERAIMAGE" + timeStamp + "_";
+		File image = File.createTempFile(imageFileName, ".jpg",
+				getAlbumDir());
+		cameraTempFileName = image.getAbsolutePath();
+		return image;
+	}
+
+	private File getAlbumDir() {
+		File storageDir = null;
+		if (Environment.MEDIA_MOUNTED.equals(Environment
+				.getExternalStorageState())) {
+			storageDir = new File(
+					Environment
+							.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
+					"iFixitImages/");
+			if (storageDir != null) {
+				if (!storageDir.mkdirs()) {
+					if (!storageDir.exists()) {
+						Log.d("MediaFrag", "failed to create directory iFixitImages");
+						return null;
+					}
+				}
+			}
+		} else {
+			Log.v(getString(R.string.app_name),
+					"External storage is not mounted READ/WRITE.");
+		}
+		return storageDir;
+	} // end getAlbumDir()
 
 	public String getPath(Uri uri) {
 		String[] projection = { MediaStore.Images.Media.DATA };
@@ -311,18 +355,27 @@ public class MediaFragment extends SherlockFragment implements
 				mContext.startService(APIService.getUploadImageIntent(mContext,
 						authenicationPackage, getPath(selectedImageUri)));
 				showLoading();
-			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
+			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST
+					&& cameraTempFileName != null) {
 				Log.i("MediaFragment", "Adding camera pic...");
-				Uri selectedImageUri = data.getData();
-				galleryAdapter.addUri(selectedImageUri);
+				BitmapFactory.Options opt = new BitmapFactory.Options();
+				opt.inSampleSize = 2;
+				opt.inDither = true;
+				opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+				Bitmap img = BitmapFactory.decodeFile(cameraTempFileName, opt);
+				Log.i("MediaFrag", "img path: " + cameraTempFileName + " img width: " + img.getWidth()
+						+ " img height: " + img.getHeight());
+
+				// Uri selectedImageUri = data.getData();
+				galleryAdapter.addFile(cameraTempFileName);
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
 				mImageTransactionsInProgress++;
 				mContext.startService(APIService.getUploadImageIntent(mContext,
-						authenicationPackage, getPath(selectedImageUri)));
+						authenicationPackage, cameraTempFileName));
 				showLoading();
-				
+
 			}
 		}
 	}
@@ -341,7 +394,6 @@ public class MediaFragment extends SherlockFragment implements
 
 		public void addUri(Uri uri) {
 			// mediaList.add(uri);
-
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = uri.toString();
 			userImageInfo.setmGuid(url);
@@ -349,6 +401,17 @@ public class MediaFragment extends SherlockFragment implements
 			mImageList.getmImages().add(userImageInfo);
 			selectedList.add(false);
 			localURL.put(url, getPath(uri));
+			invalidatedView();
+		}
+
+		public void addFile(String path) {
+			UserImageInfo userImageInfo = new UserImageInfo();
+			String url = path;
+			userImageInfo.setmGuid(url);
+			userImageInfo.setmImageId(null);
+			mImageList.getmImages().add(userImageInfo);
+			selectedList.add(false);
+			localURL.put(url, path);
 			invalidatedView();
 		}
 
@@ -383,7 +446,7 @@ public class MediaFragment extends SherlockFragment implements
 					itemView.setImageItem(image, getActivity());
 					itemView.listRef = mImageList.getmImages().get(position);
 				} else {
-					Uri temp = Uri.parse(mImageList.getmImages().get(position)
+					/*Uri temp = Uri.parse(mImageList.getmImages().get(position)
 							.getmGuid()); // mediaList.get(position);
 					Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(
 							mContext.getContentResolver(),
@@ -391,7 +454,8 @@ public class MediaFragment extends SherlockFragment implements
 							MediaStore.Images.Thumbnails.MINI_KIND,
 							(BitmapFactory.Options) null);
 					itemView.imageview.setImageBitmap(bitmap);
-					itemView.listRef = mImageList.getmImages().get(position);
+					itemView.listRef = mImageList.getmImages().get(position);*/
+					itemView.imageview.setImageDrawable(getResources().getDrawable(R.drawable.no_image));					
 				}
 			}
 			if (selectedList.get(position))
@@ -569,9 +633,10 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-		//scroll end
-		if((arg1 + arg2) >=arg3 && arg2<arg3 && mImageTransactionsInProgress == 0 && mCurScrollState ==  SCROLL_STATE_FLING) 		
-		{
+		// scroll end
+		if ((arg1 + arg2) >= arg3 && arg2 < arg3
+				&& mImageTransactionsInProgress == 0
+				&& mCurScrollState == SCROLL_STATE_FLING) {
 			Log.e("SCROLLING", "REACHED END");
 			showLoading();
 			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
@@ -579,13 +644,13 @@ public class MediaFragment extends SherlockFragment implements
 					.getApplication()).getUser().getSession();
 			mImageTransactionsInProgress++;
 			mContext.startService(APIService.userMediaIntent(mContext,
-					authenicationPackage, "?limit="+IMAGE_PAGE_SIZE+"&offset="+(IMAGE_PAGE_SIZE+mCurrentPage)));
+					authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE
+							+ "&offset=" + (IMAGE_PAGE_SIZE + mCurrentPage)));
 		}
 	}
 
 	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) 
-	{
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		mCurScrollState = scrollState;
 	}
 
