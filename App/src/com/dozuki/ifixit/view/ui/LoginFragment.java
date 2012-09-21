@@ -8,6 +8,8 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -47,6 +49,8 @@ public class LoginFragment extends SherlockFragment
 	
 	static final int OPEN_ID_RESULT_CODE = 4;
 	static final String LOGIN_STATE = "LOGIN_STATE";
+	static final String PREFERENCE_FILE = "PREFERENCE_FILE";
+	static final String SESSION_KEY = "SESSION_KEY";
    
 	private EditText _loginId;
 	private EditText _password;
@@ -70,6 +74,10 @@ public class LoginFragment extends SherlockFragment
 				User lUser =  (User)result.getResult();
 				((MainApplication)((Activity)mContext).getApplication()).setUser(lUser);
 				
+				final SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
+				Editor editor = prefs.edit();
+				editor.putString(SESSION_KEY, lUser.getSession());
+				editor.commit();
 				for(LoginListener l : loginListeners)
 				{
 					l.onLogin(lUser);

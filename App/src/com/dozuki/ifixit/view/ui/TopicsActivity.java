@@ -5,6 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
@@ -30,14 +31,14 @@ import com.dozuki.ifixit.view.model.TopicSelectedListener;
 import com.dozuki.ifixit.view.model.User;
 
 public class TopicsActivity extends SherlockFragmentActivity implements
- TopicSelectedListener, OnBackStackChangedListener, LoginListener {
-   private static final String ROOT_TOPIC = "ROOT_TOPIC";
-   private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
-   private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
-   private static final String GALLERY_VISIBLE = "LOGIN_VISIBLE";
-   protected static final long TOPIC_LIST_HIDE_DELAY = 1;
-private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
-  private static final String BACK_STACK_HIDDEN_STATE = "BACK_STACK_HIDDEN_STATE";
+		TopicSelectedListener, OnBackStackChangedListener, LoginListener {
+	private static final String ROOT_TOPIC = "ROOT_TOPIC";
+	private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
+	private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
+	private static final String GALLERY_VISIBLE = "LOGIN_VISIBLE";
+	protected static final long TOPIC_LIST_HIDE_DELAY = 1;
+	private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
+	private static final String BACK_STACK_HIDDEN_STATE = "BACK_STACK_HIDDEN_STATE";
 
    private TopicViewFragment mTopicView;
    private MediaFragment mMediaView;
@@ -64,7 +65,7 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
             }
          } else {
             APIService.getErrorDialog(TopicsActivity.this, result.getError(),
-             APIService.getCategoriesIntent(TopicsActivity.this)).show();
+            APIService.getCategoriesIntent(TopicsActivity.this)).show();
          }
       }
    };
@@ -76,8 +77,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 
       getSupportActionBar().setTitle("");
       setContentView(R.layout.topics);
-      
-      com.actionbarsherlock.app.ActionBar actionBar =  getSupportActionBar();
    
       mTopicListView = (View)findViewById( R.id.topic_list_fragment);
       View galleryTopicView = (View)findViewById(R.id.topic_view_fragment);
@@ -112,8 +111,6 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
          fetchCategories();
       }
 
-      
-      
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack(BACK_STACK_HIDDEN_STATE, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       }
@@ -149,8 +146,9 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
                if (mTopicListVisible && mTopicView.isDisplayingTopic()) {
-                  hideTopicList(null);
+                  hideTopicList(BACK_STACK_HIDDEN_STATE);
                   return true;
+                  
                } else {
                   return false;
                }
@@ -158,8 +156,19 @@ private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
          });
       }
       
-    
-   
+		// login information
+		if (((MainApplication) this.getApplication()).getUser() == null) {
+			SharedPreferences preferenceFile = this.getSharedPreferences(
+					LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
+			User user = new User();
+			String session = preferenceFile.getString(
+					LoginFragment.SESSION_KEY, null);
+			if (session != null) {
+				user.setSession(session);
+				((MainApplication) this.getApplication()).setUser(user);
+				mMediaView.retrieveUserImages();
+			}
+		}
    }
    
    private void setUpMainView() 

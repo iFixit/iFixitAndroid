@@ -21,8 +21,9 @@
         android:padding="0dp"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
-        android:stretchMode="columnWidth"
+            android:stretchMode="columnWidth"
         android:verticalSpacing="2dp" >
+            
     </GridView>
 
     <LinearLayout

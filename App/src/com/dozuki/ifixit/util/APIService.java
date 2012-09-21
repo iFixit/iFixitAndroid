@@ -55,6 +55,7 @@ public class APIService extends Service {
       }
 
       public Result(Error error) {
+    	  
          setError(error);
       }
 
