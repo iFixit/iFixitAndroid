@@ -317,9 +317,9 @@ public class APIService extends Service {
 	}
 
 	public static Intent userMediaIntent(Context context,
-			AuthenicationPackage authenicationPackage) {
+			AuthenicationPackage authenicationPackage, String query) {
 		return createUserMediaIntent(context, TARGET_MEDIA_LIST,
-				authenicationPackage, ACTION_USER_MEDIA);
+				authenicationPackage, query,ACTION_USER_MEDIA);
 	}
 
    public static Intent getRegisterIntent(Context mContext,
@@ -355,11 +355,12 @@ public class APIService extends Service {
 		      return intent;
 		   }
    
-   private static Intent createUserMediaIntent(Context context, int target,AuthenicationPackage authenicationPackage, String action) {
+   private static Intent createUserMediaIntent(Context context, int target,AuthenicationPackage authenicationPackage, String query, String action) {
 	   
 	      Intent intent = new Intent(context, APIService.class);
 	      Bundle extras = new Bundle();
 	      extras.putInt(REQUEST_TARGET, target);
+	      extras.putString(REQUEST_QUERY, query);
 	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
 	      extras.putString(REQUEST_BROADCAST_ACTION, action);
 	      intent.putExtras(extras);
@@ -503,7 +504,7 @@ public class APIService extends Service {
 		case TARGET_REGISTER:
 			url = REGISTER_API_URL;
 		case TARGET_MEDIA_LIST:
-			url = USER_IMAGES_API_URL;
+			url = USER_IMAGES_API_URL+requestQuery;
 			authenicationPackage.login = null;
 			authenicationPackage.password = null;
 			authenicationPackage.username = null;

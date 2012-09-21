@@ -28,28 +28,34 @@
     
   
 
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/button_holder"
         android:layout_width="fill_parent"
-        android:layout_height="35dp"
+        android:layout_height="40dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
-        android:weightSum="1.0" >
+        android:weightSum="1.0" 
+        android:background="#222222">
+        
+        <LinearLayout 
+            android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+                android:layout_centerInParent="true">
 
-        <Button
+        <ImageButton
             android:id="@+id/camera_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Camera" />
+            android:background="@drawable/upload_from_camera" />
 
-        <Button
+        <ImageButton
             android:id="@+id/gallery_button"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="Gallery" />
-    </LinearLayout>
+             android:background="@drawable/upload_from_gallery_selector" />
+        
+        </LinearLayout >
+    </RelativeLayout>
     
 
   
