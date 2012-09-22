@@ -19,7 +19,7 @@ public class UserImageList  implements Serializable {
 		mImages = new ArrayList<UserImageInfo> ();
 	}
 	
-	public User getmUser() {
+	public User getUser() {
 		return mUser;
 	}
 	
@@ -29,22 +29,18 @@ public class UserImageList  implements Serializable {
 
 
 
-	public void setmUser(User mUser) {
+	public void setUser(User mUser) {
 		this.mUser = mUser;
 	}
 
 
-	public ArrayList<UserImageInfo> getmImages() {
+	public ArrayList<UserImageInfo> getImages() {
 		return mImages;
 	}
 
 
-	public void setmImages(ArrayList<UserImageInfo> mImages) {
+	public void setImages(ArrayList<UserImageInfo> mImages) {
 		this.mImages = mImages;
 	}
-
-
-
-
 
 }

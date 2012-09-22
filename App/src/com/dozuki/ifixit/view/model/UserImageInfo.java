@@ -17,40 +17,38 @@ public class UserImageInfo implements Serializable{
 	public void setmImageId(String mImageId) {
 		this.mImageId = mImageId;
 	}
-	public String getlocalmGuide(){
+	public String getlocalPath(){
 		return mLocalPath;
 	}
-	public void setlocalmGuide(String mLocal)
+	public void setlocalPath(String mLocal)
 	{
 		mLocalPath = mLocal;
 	}
 	public String getmGuid() {
 		return mGuid;
 	}
-	public void setmGuid(String mGuid) {
+	public void setGuid(String mGuid) {
 		this.mGuid = mGuid;
 	}
-	public String getmWidth() {
+	public String getWidth() {
 		return mWidth;
 	}
-	public void setmWidth(String mWidth) {
+	public void setWidth(String mWidth) {
 		this.mWidth = mWidth;
 	}
-	public String getmHeight() {
+	public String getHeight() {
 		return mHeight;
 	}
-	public void setmHeight(String mHeight) {
+	public void setHeight(String mHeight) {
 		this.mHeight = mHeight;
 	}
-	public String getmRatio() {
+	public String getRatio() {
 		return mRatio;
 	}
-	public void setmRatio(String mRatio) {
+	public void setRatio(String mRatio) {
 		this.mRatio = mRatio;
 	}
-	public static long getSerialversionuid() {
-		return serialVersionUID;
-	}
+
 	String mWidth;
 	String mHeight;
 	String mRatio;

@@ -104,10 +104,10 @@ public class MediaFragment extends SherlockFragment implements
 				if (intent.getAction() == APIService.ACTION_USER_MEDIA) {
 					UserImageList imageList = (UserImageList) result
 							.getResult();
-					if (imageList.getmImages().size() > 0) {
-						for (int i = 0; i < imageList.getmImages().size(); i++) {
+					if (imageList.getImages().size() > 0) {
+						for (int i = 0; i < imageList.getImages().size(); i++) {
 							selectedList.add(false);
-							mImageList.addImage(imageList.getmImages().get(i));
+							mImageList.addImage(imageList.getImages().get(i));
 						}
 						galleryAdapter.invalidatedView();
 						mCurrentPage++;
@@ -400,9 +400,9 @@ public class MediaFragment extends SherlockFragment implements
 			// mediaList.add(uri);
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = uri.toString();
-			userImageInfo.setmGuid(url);
+			userImageInfo.setGuid(url);
 			userImageInfo.setmImageId(null);
-			mImageList.getmImages().add(userImageInfo);
+			mImageList.getImages().add(userImageInfo);
 			selectedList.add(false);
 			localURL.put(url, getPath(uri));
 			invalidatedView();
@@ -411,9 +411,9 @@ public class MediaFragment extends SherlockFragment implements
 		public void addFile(String path) {
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = path;
-			userImageInfo.setmGuid(url);
+			userImageInfo.setGuid(url);
 			userImageInfo.setmImageId(null);
-			mImageList.getmImages().add(userImageInfo);
+			mImageList.getImages().add(userImageInfo);
 			selectedList.add(false);
 			localURL.put(url, path);
 			invalidatedView();
@@ -426,7 +426,7 @@ public class MediaFragment extends SherlockFragment implements
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
-			return mImageList.getmImages().size();
+			return mImageList.getImages().size();
 		}
 
 		@Override
@@ -443,12 +443,12 @@ public class MediaFragment extends SherlockFragment implements
 			}
 
 			if (mImageList != null) {
-				if (mImageList.getmImages().get(position).getmImageId() != null) {
-					String image = mImageList.getmImages().get(position)
+				if (mImageList.getImages().get(position).getmImageId() != null) {
+					String image = mImageList.getImages().get(position)
 							.getmGuid()
 							+ mImageSizes.getThumb();
 					itemView.setImageItem(image, getActivity());
-					itemView.listRef = mImageList.getmImages().get(position);
+					itemView.listRef = mImageList.getImages().get(position);
 				} else {
 					/*Uri temp = Uri.parse(mImageList.getmImages().get(position)
 							.getmGuid()); // mediaList.get(position);
@@ -467,7 +467,7 @@ public class MediaFragment extends SherlockFragment implements
 				itemView.selectImage.setVisibility(View.VISIBLE);
 			else
 				itemView.selectImage.setVisibility(View.INVISIBLE);
-			itemView.setTag(mImageList.getmImages().get(position).getmGuid());
+			itemView.setTag(mImageList.getImages().get(position).getmGuid());
 			return itemView;
 		}
 	}
@@ -515,9 +515,9 @@ public class MediaFragment extends SherlockFragment implements
 				if (selectedList.get(i)) {
 					selectedList.remove(i);
 					deleteQuery += "imageids[]="
-							+ mImageList.getmImages().get(i).getmImageId()
+							+ mImageList.getImages().get(i).getmImageId()
 							+ "&";
-					mImageList.getmImages().remove(i);
+					mImageList.getImages().remove(i);
 				}
 			}
 
