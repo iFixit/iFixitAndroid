@@ -63,7 +63,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 public class MediaFragment extends SherlockFragment implements
 		OnItemClickListener, OnClickListener, OnItemLongClickListener,
-		LoginListener, OnScrollListener {
+		LoginListener {
 
 	private static final int MAX_LOADING_IMAGES = 20;
 	private static final int MAX_STORED_IMAGES = 30;
@@ -89,8 +89,8 @@ public class MediaFragment extends SherlockFragment implements
 	private ActionMode mMode;
 	private ProgressBar mProgressBar;
 	int mCurrentPage;
+	boolean mLastPage;
 	int mImageTransactionsInProgress;
-	int mCurScrollState;
 	String cameraTempFileName;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
@@ -100,16 +100,30 @@ public class MediaFragment extends SherlockFragment implements
 					.getSerializable(APIService.RESULT);
 			if (!result.hasError()
 					&& result.getResult() instanceof UserImageList) {
-				UserImageList imageList = (UserImageList) result.getResult();
-				for (int i = 0; i < imageList.getmImages().size(); i++) {
-					selectedList.add(false);
-					mImageList.addImage(imageList.getmImages().get(i));
+
+				if (intent.getAction() == APIService.ACTION_USER_MEDIA) {
+					UserImageList imageList = (UserImageList) result
+							.getResult();
+					if (imageList.getmImages().size() > 0) {
+						for (int i = 0; i < imageList.getmImages().size(); i++) {
+							selectedList.add(false);
+							mImageList.addImage(imageList.getmImages().get(i));
+						}
+						galleryAdapter.invalidatedView();
+						mCurrentPage++;
+						mLastPage = false;
+					} else {
+						mLastPage = true;
+					}
+				} else if (intent.getAction() == APIService.ACTION_UPLOAD_MEDIA) {
+
+				} else if (intent.getAction() == APIService.ACTION_DELETE_MEDIA) {
+
 				}
-				galleryAdapter.invalidatedView();
-				mCurrentPage++;
+
 			}
+			// a transaction is complete
 			mImageTransactionsInProgress--;
-			Log.e("CURRENT TRANSACTIONS", "" + mImageTransactionsInProgress);
 			if (mImageTransactionsInProgress <= 0) {
 				hideLoading();
 				mImageTransactionsInProgress = 0;
@@ -170,7 +184,7 @@ public class MediaFragment extends SherlockFragment implements
 		mGridView = (GridView) view.findViewById(R.id.gridview);
 		mProgressBar = (ProgressBar) view
 				.findViewById(R.id.gallery_loading_bar);
-		mGridView.setOnScrollListener(this);
+		mGridView.setOnScrollListener(new GalleryOnScrollListener());
 
 		mGridView.setAdapter(galleryAdapter);
 		mGridView.setOnItemClickListener(this);
@@ -432,7 +446,7 @@ public class MediaFragment extends SherlockFragment implements
 				if (mImageList.getmImages().get(position).getmImageId() != null) {
 					String image = mImageList.getmImages().get(position)
 							.getmGuid()
-							+ mImageSizes.getGrid();
+							+ mImageSizes.getThumb();
 					itemView.setImageItem(image, getActivity());
 					itemView.listRef = mImageList.getmImages().get(position);
 				} else {
@@ -621,27 +635,34 @@ public class MediaFragment extends SherlockFragment implements
 		return primitives;
 	}
 
-	@Override
-	public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-		// scroll end
-		if ((arg1 + arg2) >= arg3 && arg2 < arg3
-				&& mImageTransactionsInProgress == 0
-				&& mCurScrollState == SCROLL_STATE_FLING) {
-			Log.e("SCROLLING", "REACHED END");
-			showLoading();
-			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-			authenicationPackage.session = ((MainApplication) ((Activity) mContext)
-					.getApplication()).getUser().getSession();
-			mImageTransactionsInProgress++;
-			mContext.startService(APIService.userMediaIntent(mContext,
-					authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE
-							+ "&offset=" + (IMAGE_PAGE_SIZE + mCurrentPage)));
+	public final class GalleryOnScrollListener implements AbsListView.OnScrollListener
+	{
+		int mCurScrollState;
+		
+		
+		//used to determine when to load more images
+		@Override
+		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
+			if ((arg1 + arg2) >= arg3 && arg2 < arg3
+					&& mImageTransactionsInProgress == 0
+					&& !mLastPage
+				) {
+				showLoading();
+				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
+						.getApplication()).getUser().getSession();
+				mImageTransactionsInProgress++;
+				mContext.startService(APIService.userMediaIntent(mContext,
+						authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE
+								+ "&offset=" + (IMAGE_PAGE_SIZE + mCurrentPage)));
+			}
 		}
-	}
 
-	@Override
-	public void onScrollStateChanged(AbsListView view, int scrollState) {
-		mCurScrollState = scrollState;
+		@Override
+		public void onScrollStateChanged(AbsListView view, int scrollState) {
+			mCurScrollState = scrollState;
+		}
+	
 	}
 
 }
