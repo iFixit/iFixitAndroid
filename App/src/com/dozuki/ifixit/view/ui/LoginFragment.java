@@ -29,8 +29,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
-import com.dozuki.ifixit.view.model.TopicNode;
-import com.dozuki.ifixit.view.model.TopicSelectedListener;
 import com.dozuki.ifixit.view.model.User;
 import com.dozuki.ifixit.view.model.LoginListener;
 

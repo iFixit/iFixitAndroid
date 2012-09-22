@@ -78,6 +78,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String USER_SELECTED_LIST = "USER_SELECTED_LIST";
 	private static final String CURRENT_PAGE = "CURRENT_PAGE";
 	private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
+	private static final String FILE_URI_KEY = "FILE_URI_KEY";
 	GridView mGridView;
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
@@ -98,8 +99,9 @@ public class MediaFragment extends SherlockFragment implements
 		public void onReceive(Context context, Intent intent) {
 			APIService.Result result = (APIService.Result) intent.getExtras()
 					.getSerializable(APIService.RESULT);
-			if (!result.hasError()
-					&& result.getResult() instanceof UserImageList) {
+			
+			
+			if (!result.hasError()) {
 
 				if (intent.getAction() == APIService.ACTION_USER_MEDIA) {
 					UserImageList imageList = (UserImageList) result
@@ -115,9 +117,10 @@ public class MediaFragment extends SherlockFragment implements
 					} else {
 						mLastPage = true;
 					}
-				} else if (intent.getAction() == APIService.ACTION_UPLOAD_MEDIA) {
-
-				} else if (intent.getAction() == APIService.ACTION_DELETE_MEDIA) {
+				} else if (intent.getAction()   == APIService.ACTION_UPLOAD_MEDIA) {
+					Log.e("IMAGE UPLOADED", intent.getExtras().getString(APIService.REQUEST_RESULT_INFORMATION));
+				    
+				} else if (intent.getAction()  == APIService.ACTION_DELETE_MEDIA) {
 
 				}
 
@@ -356,8 +359,9 @@ public class MediaFragment extends SherlockFragment implements
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
 				mImageTransactionsInProgress++;
-				mContext.startService(APIService.getUploadImageIntent(mContext,
-						authenicationPackage, getPath(selectedImageUri)));
+				
+				mContext.startService( APIService.getUploadImageIntent(mContext,
+						authenicationPackage, getPath(selectedImageUri),  selectedImageUri.toString()));
 				showLoading();
 			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST
 					&& cameraTempFileName != null) {
@@ -378,7 +382,7 @@ public class MediaFragment extends SherlockFragment implements
 						.getApplication()).getUser().getSession();
 				mImageTransactionsInProgress++;
 				mContext.startService(APIService.getUploadImageIntent(mContext,
-						authenicationPackage, cameraTempFileName));
+						authenicationPackage, cameraTempFileName, cameraTempFileName));
 				showLoading();
 
 			}
@@ -406,7 +410,7 @@ public class MediaFragment extends SherlockFragment implements
 			mImageList.getImages().add(userImageInfo);
 			selectedList.add(false);
 			localURL.put(url, getPath(uri));
-			Log.i("MEdiaFrag", "KEY: " + url + " Path: " + getPath(uri));
+			//Log.i("MEdiaFrag", "KEY: " + url + " Path: " + getPath(uri));
 			invalidatedView();
 		}
 

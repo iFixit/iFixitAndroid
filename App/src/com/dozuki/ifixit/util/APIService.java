@@ -106,6 +106,7 @@ public class APIService extends Service {
 	private static final String REQUEST_QUERY = "REQUEST_QUERY";
 	private static final String REQUEST_BROADCAST_ACTION = "REQUEST_BROADCAST_ACTION";
 	private static final String REQUEST_AUTHENICATION_PACKAGE = "AUTHENICATION_PACKAGE";
+	public static final String REQUEST_RESULT_INFORMATION = "REQUEST_RESULT_INFORMATION";
 
 	private static final int TARGET_CATEGORIES = 0;
 	private static final int TARGET_GUIDE = 1;
@@ -140,6 +141,7 @@ public class APIService extends Service {
       final int requestTarget = extras.getInt(REQUEST_TARGET);
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
+      final String resultInformation = extras.getString(REQUEST_RESULT_INFORMATION);
       final AuthenicationPackage authenicationPackage = (AuthenicationPackage) extras.getSerializable(REQUEST_AUTHENICATION_PACKAGE);
       
       
@@ -159,7 +161,7 @@ public class APIService extends Service {
 							}
 
 							// Always broadcast the result despite any errors.
-							broadcastResult(result, broadcastAction);
+							broadcastResult(result, broadcastAction, requestTarget, resultInformation);
 						}
 					});
 			return START_NOT_STICKY;
@@ -195,7 +197,7 @@ public class APIService extends Service {
             }
 
             // Always broadcast the result despite any errors.
-            broadcastResult(result, broadcastAction);
+            broadcastResult(result, broadcastAction, requestTarget, resultInformation);
          }
       });
 
@@ -250,11 +252,13 @@ public class APIService extends Service {
       // db.close();
    }
 
-   private void broadcastResult(Result result, String broadcastAction) {
+   private void broadcastResult(Result result, String broadcastAction, int initialAction, String extraResultInfo) {
       Intent broadcast = new Intent();
       Bundle extras = new Bundle();
 
       extras.putSerializable(RESULT, result);
+      extras.putInt(REQUEST_TARGET, initialAction);
+      extras.putString(REQUEST_RESULT_INFORMATION, extraResultInfo);
       broadcast.putExtras(extras);
 
       broadcast.setAction(broadcastAction);
@@ -279,9 +283,9 @@ public class APIService extends Service {
 	   }
    
 	public static Intent getUploadImageIntent(Context context,
-			AuthenicationPackage authenicationPackage, String filePath) {
+			AuthenicationPackage authenicationPackage, String filePath, String extraInformation) {
 		return createUploadImageIntent(context, TARGET_UPLOAD_MEDIA,
-				authenicationPackage, ACTION_UPLOAD_MEDIA, filePath);
+				authenicationPackage, ACTION_UPLOAD_MEDIA, filePath, extraInformation);
 	}
 
 	public static Intent getDeleteMediaIntent(Context context,
@@ -335,6 +339,7 @@ public class APIService extends Service {
 	      extras.putString(REQUEST_QUERY, query);
 	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
 	      extras.putString(REQUEST_BROADCAST_ACTION, action);
+	     
 	      intent.putExtras(extras);
 
 	      return intent;
@@ -356,7 +361,7 @@ public class APIService extends Service {
    
    private static Intent createUploadImageIntent(Context context,
 			int target, AuthenicationPackage authenicationPackage,
-			String action,String filePath) {
+			String action,String filePath, String extraInformation) {
 	      Intent intent = new Intent(context, APIService.class);
 	      Bundle extras = new Bundle();
 
@@ -364,6 +369,7 @@ public class APIService extends Service {
 	      extras.putString(REQUEST_QUERY, filePath);
 	      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
 	      extras.putString(REQUEST_BROADCAST_ACTION, action);
+	      extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
 	      intent.putExtras(extras);
 
 	      return intent;
