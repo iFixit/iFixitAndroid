@@ -28,4 +28,6 @@
    <string name="topic_img_desc">Topic image</string>
    <string name="next_page_image_desc">Next page</string>
    <string name="action_delete">Delete</string>
+   <string name="use_camera">Use Camera</string>
+   <string name="use_gallery">Use Gallery</string>
 </resources>

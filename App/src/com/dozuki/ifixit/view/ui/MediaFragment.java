@@ -77,6 +77,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String USER_IMAGE_LIST = "USER_IMAGE_LIST";
 	private static final String USER_SELECTED_LIST = "USER_SELECTED_LIST";
 	private static final String CURRENT_PAGE = "CURRENT_PAGE";
+	private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
 	GridView mGridView;
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
@@ -97,8 +98,6 @@ public class MediaFragment extends SherlockFragment implements
 		public void onReceive(Context context, Intent intent) {
 			APIService.Result result = (APIService.Result) intent.getExtras()
 					.getSerializable(APIService.RESULT);
-
-			// /
 			if (!result.hasError()
 					&& result.getResult() instanceof UserImageList) {
 				UserImageList imageList = (UserImageList) result.getResult();
@@ -119,8 +118,7 @@ public class MediaFragment extends SherlockFragment implements
 	};
 
 	public MediaFragment(ImageManager imageManager) {
-		// mImageManager = imageManager;
-
+		
 	}
 
 	public MediaFragment(Context con) {
@@ -160,7 +158,6 @@ public class MediaFragment extends SherlockFragment implements
 		} else {
 			mImageList = new UserImageList();
 			galleryAdapter = new MediaAdapter();
-			// retrieveUserImages();
 		}
 		mImageTransactionsInProgress = 0;
 	}
@@ -168,7 +165,7 @@ public class MediaFragment extends SherlockFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.media, container, false);
+		View view = inflater.inflate(R.layout.gallery_view, container, false);
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
 		mProgressBar = (ProgressBar) view
@@ -213,11 +210,8 @@ public class MediaFragment extends SherlockFragment implements
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-
 		try {
-			// topicSelectedListener = (TopicSelectedListener)activity;
 			mContext = (Context) activity;
-			// retrieveUserImages();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement TopicSelectedListener");
@@ -265,7 +259,6 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onClick(View arg0) {
-		// TODO Auto-generated method stub
 		switch (arg0.getId()) {
 		case R.id.gallery_button:
 			Intent intent = new Intent(); 
@@ -285,7 +278,6 @@ public class MediaFragment extends SherlockFragment implements
 						Uri.fromFile(f));
 				startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			break;
@@ -296,7 +288,7 @@ public class MediaFragment extends SherlockFragment implements
 		// Create an image file name
 		String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss")
 				.format(new Date());
-		String imageFileName = "IFIXITCAMERAIMAGE" + timeStamp + "_";
+		String imageFileName = IMAGE_PREFIX + timeStamp + "_";
 		File image = File.createTempFile(imageFileName, ".jpg",
 				getAlbumDir());
 		cameraTempFileName = image.getAbsolutePath();
@@ -331,8 +323,6 @@ public class MediaFragment extends SherlockFragment implements
 		Cursor cursor = ((Activity) mContext).managedQuery(uri, projection,
 				null, null, null);
 		if (cursor != null) {
-			// HERE YOU WILL GET A NULLPOINTER IF CURSOR IS NULL
-			// THIS CAN BE, IF YOU USED OI FILE MANAGER FOR PICKING THE MEDIA
 			int column_index = cursor
 					.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
 			cursor.moveToFirst();

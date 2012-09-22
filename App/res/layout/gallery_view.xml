@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#FFFFFF"
+    android:background="@color/white"
     android:orientation="vertical" >
 
     <GridView
@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:alwaysDrawnWithCache="true"
-        android:clipChildren="true" 
+        android:clipChildren="true"
         android:columnWidth="150dp"
         android:drawSelectorOnTop="false"
         android:gravity="center_horizontal"
@@ -21,55 +21,45 @@
         android:padding="4dp"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
-            android:stretchMode="columnWidth"
+        android:stretchMode="columnWidth"
         android:verticalSpacing="4dp" >
-            
     </GridView>
-    
-  
 
     <RelativeLayout
         android:id="@+id/button_holder"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
-        android:background="#222222">
-        
-        <LinearLayout 
-            android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-                android:layout_centerInParent="true">
+        android:background="@color/dark" >
 
-        <ImageButton
-            android:id="@+id/camera_button"
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/upload_from_camera" />
-
-        <ImageButton
-            android:id="@+id/gallery_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             android:background="@drawable/upload_from_gallery_selector" />
-        
-        </LinearLayout >
-           <ProgressBar
-       android:id="@+id/gallery_loading_bar"
-style="@style/ProgressBarHolo.Horizontal"
-                android:layout_width="fill_parent"
+            android:layout_centerInParent="true" >
+            <ImageButton
+                android:id="@+id/camera_button"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:indeterminateOnly="true"
-                android:indeterminate="true"
-                android:progress="25"
-android:layout_above="@+id/camera_button"></ProgressBar>
+                android:background="@drawable/upload_from_camera"
+                android:contentDescription="@string/use_camera" />
+            <ImageButton
+                android:id="@+id/gallery_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/upload_from_gallery_selector"
+                android:contentDescription="@string/use_gallery" />
+        </LinearLayout>
+
+        <ProgressBar
+            android:id="@+id/gallery_loading_bar"
+            style="@style/ProgressBarHolo.Horizontal"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/camera_button"
+            android:indeterminate="true"
+            android:indeterminateOnly="true"
+            android:progress="25" >
+        </ProgressBar>
     </RelativeLayout>
-    
-
-  
-
-  
-
-      
-      
 
 </RelativeLayout>

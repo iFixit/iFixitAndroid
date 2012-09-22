@@ -35,7 +35,7 @@ public class MediaViewItem extends RelativeLayout {
 		localPath = null;
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		inflater.inflate(com.dozuki.ifixit.R.layout.media_cell, this, true);
+		inflater.inflate(com.dozuki.ifixit.R.layout.gallery_cell, this, true);
 		
 		imageview = (ImageView) findViewById(com.dozuki.ifixit.R.id.media_image);
 		selectImage =  (RelativeLayout) findViewById(com.dozuki.ifixit.R.id.selected_image);
