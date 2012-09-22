@@ -40,13 +40,13 @@
                 android:id="@+id/camera_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/upload_from_camera"
+                android:background="@drawable/button_selector_upload_from_camera"
                 android:contentDescription="@string/use_camera" />
             <ImageButton
                 android:id="@+id/gallery_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/upload_from_gallery_selector"
+                android:background="@drawable/button_selector_upload_from_gallery"
                 android:contentDescription="@string/use_gallery" />
         </LinearLayout>
 
