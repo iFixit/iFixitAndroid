@@ -1,18 +1,18 @@
 [submodule "Android-ViewPagerIndicator"]
 	path = Android-ViewPagerIndicator
-	url = git@github.com:iFixit/Android-ViewPagerIndicator.git
+	url = http://github.com/iFixit/Android-ViewPagerIndicator.git
 [submodule "AndroidSectionHeaders"]
 	path = AndroidSectionHeaders
-	url = git@github.com:iFixit/AndroidSectionHeaders.git
+	url = http://github.com/iFixit/AndroidSectionHeaders.git
 [submodule "ActionBarSherlock"]
 	path = ActionBarSherlock
-	url = git@github.com:iFixit/ActionBarSherlock.git
+	url = http://github.com/iFixit/ActionBarSherlock.git
 [submodule "ImageZoomLibrary"]
 	path = ImageZoomLibrary
-	url = git@github.com:iFixit/ImageZoomLibrary.git
+	url = http://github.com/iFixit/ImageZoomLibrary.git
 [submodule "AndroidImageManager"]
 	path = AndroidImageManager
-	url = git@github.com:iFixit/AndroidImageManager.git
+	url = http://github.com/iFixit/AndroidImageManager.git
 [submodule "HoloEverywhere"]
 	path = HoloEverywhere
-	url = https://github.com/iFixit/HoloEverywhere.git
+	url = http://github.com/iFixit/HoloEverywhere.git
