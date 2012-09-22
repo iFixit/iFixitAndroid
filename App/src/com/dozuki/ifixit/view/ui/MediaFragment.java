@@ -105,7 +105,6 @@ public class MediaFragment extends SherlockFragment implements
 				if (intent.getAction().equals(APIService.ACTION_USER_MEDIA)) {
 					UserImageList imageList = (UserImageList) result
 							.getResult();
-					
 					if (imageList.getImages().size() > 0) {
 						for (int i = 0; i < imageList.getImages().size(); i++) {
 							selectedList.add(false);
@@ -462,8 +461,9 @@ public class MediaFragment extends SherlockFragment implements
 					String image = mImageList.getImages().get(position)
 							.getmGuid()
 							+ mImageSizes.getThumb();
-					itemView.setImageItem(image, getActivity());
+					itemView.setImageItem(image, getActivity(), !mImageList.getImages().get(position).getLoaded());
 					itemView.listRef = mImageList.getImages().get(position);
+					mImageList.getImages().get(position).setLoaded(true);
 				} else {
 					Uri temp = Uri.parse(mImageList.getImages().get(position)
 							.getmGuid()); // mediaList.get(position);

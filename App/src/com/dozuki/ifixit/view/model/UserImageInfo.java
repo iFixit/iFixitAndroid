@@ -11,6 +11,13 @@ public class UserImageInfo implements Serializable{
 	String mImageId;
 	String mGuid;
 	String mLocalPath;
+	boolean mLoaded;
+	
+	
+	public void setLoaded(boolean loaded)
+	{
+		mLoaded = loaded;
+	}
 	public String getmImageId() {
 		return mImageId;
 	}
@@ -52,5 +59,11 @@ public class UserImageInfo implements Serializable{
 	String mWidth;
 	String mHeight;
 	String mRatio;
+
+
+	public boolean getLoaded() {
+		// TODO Auto-generated method stub
+		return mLoaded;
+	}
 
 }
