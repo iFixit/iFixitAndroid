@@ -38,6 +38,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 	private static final String BACK_STACK_STATE = "BACK_STACK_STATE";
 	private static final String BACK_STACK_HIDDEN_STATE = "BACK_STACK_HIDDEN_STATE";
+	private static final String GALLERY_FRAGMENT_ID = "GALLERY_FRAGMENT_ID";
+	private static final String TOPIC_VIEW_FRAGMENT_ID = "TOPIC_VIEW_FRAGMENT_ID";
+	
 
 	private TopicViewFragment mTopicView;
 	private MediaFragment mMediaView;
@@ -94,9 +97,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			mLoginVisible = savedInstanceState.getBoolean(LOGIN_VISIBLE);
 			mGalleryVisible = savedInstanceState.getBoolean(GALLERY_VISIBLE);
 			mMediaView = (MediaFragment) getSupportFragmentManager()
-					.findFragmentByTag("galleryFragment");
+					.findFragmentByTag(GALLERY_FRAGMENT_ID);
 			mTopicView = (TopicViewFragment) getSupportFragmentManager()
-					.findFragmentByTag("topicView");
+					.findFragmentByTag(TOPIC_VIEW_FRAGMENT_ID);
 
 		} else {
 			mTopicListVisible = true;
@@ -104,7 +107,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			mGalleryVisible = false;
 			mTopicView = new TopicViewFragment();
 			mMediaView = new MediaFragment((Context) this);
-			setUpMainView();
+			setUpGalleryAndTopicFragments();
 		}
 
 		if (mRootTopic == null) {
@@ -115,6 +118,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			getSupportFragmentManager().popBackStack(BACK_STACK_HIDDEN_STATE,
 					FragmentManager.POP_BACK_STACK_INCLUSIVE);
 		}
+
+		// this brings back the gallery state on an orientation change or when
+		// the
 		if (mGalleryVisible)
 			toggleGalleryView(mGalleryVisible);
 		else {
@@ -125,7 +131,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				ft.commitAllowingStateLoss();
 			}
 		}
-
+		// hide topic list so the allery get the entire screen
 		if (mGalleryVisible && mDualPane) {
 			mTopicListView.setVisibility(View.GONE);
 		}
@@ -155,7 +161,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			});
 		}
 
-		// login information
+		// retrieves login information from user preferences
 		if (((MainApplication) this.getApplication()).getUser() == null) {
 			SharedPreferences preferenceFile = this.getSharedPreferences(
 					LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
@@ -171,19 +177,19 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
 	}
 
-	private void setUpMainView() {
+	private void setUpGalleryAndTopicFragments() {
 		// add gallery and topic fragment
 		if (mDualPane) {
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
-			ft.add(R.id.topic_view_fragment, mMediaView, "galleryFragment");
+			ft.add(R.id.topic_view_fragment, mMediaView, GALLERY_FRAGMENT_ID);
 			ft.hide(mMediaView);
-			ft.add(R.id.topic_view_fragment, mTopicView, "topicView");
+			ft.add(R.id.topic_view_fragment, mTopicView, TOPIC_VIEW_FRAGMENT_ID);
 			ft.commitAllowingStateLoss();
 		} else {
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
-			ft.add(R.id.topic_media_fragment, mMediaView, "galleryFragment");
+			ft.add(R.id.topic_media_fragment, mMediaView, GALLERY_FRAGMENT_ID);
 			ft.hide(mMediaView);
 			ft.commitAllowingStateLoss();
 		}
@@ -197,8 +203,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		inflater.inflate(R.menu.menu_bar, menu);
 		MenuItem galleryIcon = mMenu.findItem(R.id.gallery_button);
 		MenuItem guideIcon = mMenu.findItem(R.id.guides_button);
-		if(mGalleryVisible || mLoginVisible)
-		{
+		if (mGalleryVisible) {
 			galleryIcon.setIcon(R.drawable.ic_menu_gallery_active);
 			guideIcon.setIcon(R.drawable.ic_menu_guides_inactive);
 		}
@@ -208,7 +213,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onResume() {
 		super.onResume();
-
 		IntentFilter filter = new IntentFilter();
 		filter.addAction(APIService.ACTION_CATEGORIES);
 		registerReceiver(mApiReceiver, filter);
@@ -251,6 +255,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			setTopicListVisible();
 
 			if (mLoginVisible) {
+				//login popped off
 				mLoginVisible = false;
 			}
 
@@ -332,6 +337,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		}
 
 		if (mLoginVisible) {
+			//login fragment is being put on the stack
 			ft.setCustomAnimations(R.anim.slide_in_bottom,
 					R.anim.slide_out_left, R.anim.slide_in_left,
 					R.anim.slide_out_bottom);
@@ -357,32 +363,37 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	private void toggleGalleryView(boolean showGallery) {
 
 		if (showGallery) {
-			// save state
+			//if some how the gallery is visible we
+			//pop the stack so it wont put on the 
+		    //stack twice
+			if(mMenu != null)
+			{
+			   MenuItem galleryIcon = mMenu.findItem(R.id.gallery_button);
+			   MenuItem guideIcon = mMenu.findItem(R.id.guides_button);
+			   galleryIcon.setIcon(R.drawable.ic_menu_gallery_active);
+			   guideIcon.setIcon(R.drawable.ic_menu_guides_inactive);
+			}
 			if (mGalleryVisible) {
 				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,
 						FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
 			}
-
-			// FragmentTransaction ft = getSupportFragmentManager()
-			// .beginTransaction();
-			// ft.addToBackStack(BACK_STACK_STATE);
-			// ft.commitAllowingStateLoss();
+             //save state right before we add the gallery
 			FragmentTransaction ft = getSupportFragmentManager()
 					.beginTransaction();
 			ft.addToBackStack(BACK_STACK_STATE);
 			ft.commitAllowingStateLoss();
 			if (mDualPane) {
 
-				// show gallery
+				// swap out the topic fragment
 				ft = getSupportFragmentManager().beginTransaction();
 				ft.setCustomAnimations(R.anim.slide_in_right,
 						R.anim.slide_out_left, R.anim.slide_in_left,
 						R.anim.slide_out_right);
 				ft.show((MediaFragment) getSupportFragmentManager()
-						.findFragmentByTag("galleryFragment"));
+						.findFragmentByTag(GALLERY_FRAGMENT_ID));
 				ft.hide((TopicViewFragment) getSupportFragmentManager()
-						.findFragmentByTag("topicView"));
+						.findFragmentByTag(TOPIC_VIEW_FRAGMENT_ID));
 				ft.addToBackStack(null);
 				ft.commitAllowingStateLoss();
 				if (mTopicListVisible && mHideTopicList) {
@@ -395,15 +406,13 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				if (!mHideTopicList)
 					mTopicListView.setVisibility(View.GONE);
 			} else {
-				// this.changeTopicListView(mMediaView, true, false, null);
+				//pop in the media fragment
 				ft = getSupportFragmentManager().beginTransaction();
 				ft.setCustomAnimations(R.anim.slide_in_right,
 						R.anim.slide_out_left, R.anim.slide_in_left,
 						R.anim.slide_out_right);
 				ft.show((MediaFragment) getSupportFragmentManager()
-						.findFragmentByTag("galleryFragment"));
-				// ft.hide((TopicViewFragment) getSupportFragmentManager()
-				// .findFragmentByTag("topicView"));
+						.findFragmentByTag(GALLERY_FRAGMENT_ID));
 				ft.addToBackStack(null);
 				ft.commitAllowingStateLoss();
 			}
@@ -412,11 +421,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		} else {
 
 			if (mDualPane) {
-				// FragmentTransaction ft =
-				// getSupportFragmentManager().beginTransaction();
 				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,
 						FragmentManager.POP_BACK_STACK_INCLUSIVE);
-				// ft.commitAllowingStateLoss();
 				if (mTopicListView.getVisibility() == View.GONE)
 					mTopicListView.setVisibility(View.VISIBLE);
 			} else {
@@ -425,16 +431,20 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 						FragmentManager.POP_BACK_STACK_INCLUSIVE);
 
 			}
-
-			mGalleryVisible = false;
+			if(mMenu != null)
+			{
+			   MenuItem galleryIcon = mMenu.findItem(R.id.gallery_button);
+			   MenuItem guideIcon = mMenu.findItem(R.id.guides_button);
+			   galleryIcon.setIcon(R.drawable.ic_menu_gallery_inactive);
+			   guideIcon.setIcon(R.drawable.ic_menu_guides_active);
+			   mGalleryVisible = false;
+			}
 		}
 	}
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-
 		super.onActivityResult(requestCode, resultCode, data);
-
 	}
 
 	@Override
@@ -442,19 +452,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			if (mGalleryVisible) {
-				MenuItem galleryIcon = mMenu.findItem(R.id.gallery_button);
-				MenuItem guideIcon = mMenu.findItem(R.id.guides_button);
-				galleryIcon.setIcon(R.drawable.ic_menu_gallery_inactive);
-				guideIcon.setIcon(R.drawable.ic_menu_guides_active);
 				toggleGalleryView(false);
 				return true;
 			}
 			getSupportFragmentManager().popBackStack();
 			return true;
 		case R.id.gallery_button:
-			item.setIcon(R.drawable.ic_menu_gallery_active);
-			MenuItem guideIcon = mMenu.findItem(R.id.guides_button);
-			guideIcon.setIcon(R.drawable.ic_menu_guides_inactive);
 			MainApplication mainApp = (MainApplication) getApplication();
 			if (mainApp.getUser() == null) {
 				if (!mLoginVisible) {
@@ -466,20 +469,13 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				}
 
 			} else if (mGalleryVisible == false) {
-
 				toggleGalleryView(true);
-
 			}
 			return true;
 
 		case R.id.guides_button:
-			item.setIcon(R.drawable.ic_menu_guides_active);
-			MenuItem galleryIcon = mMenu.findItem(R.id.gallery_button);
-			galleryIcon.setIcon(R.drawable.ic_menu_gallery_inactive);
 			if (mGalleryVisible) {
-
 				toggleGalleryView(false);
-
 			}
 			return true;
 
