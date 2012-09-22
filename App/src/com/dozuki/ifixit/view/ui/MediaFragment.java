@@ -459,7 +459,8 @@ public class MediaFragment extends SherlockFragment implements
 							(BitmapFactory.Options) null);
 					itemView.imageview.setImageBitmap(bitmap);
 					itemView.listRef = mImageList.getmImages().get(position);*/
-					itemView.imageview.setImageDrawable(getResources().getDrawable(R.drawable.no_image));					
+					//itemView.imageview.setImageDrawable(getResources().getDrawable(R.drawable.progress_small_holo));	
+					itemView.setLoading(true);
 				}
 			}
 			if (selectedList.get(position))

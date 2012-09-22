@@ -10,11 +10,22 @@
         android:scaleType="centerCrop" >
     </ImageView>
 
-    <RelativeLayout
+   <RelativeLayout
         android:id="@+id/selected_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/frame_gallery_thumb_selected" >
+
+   
     </RelativeLayout>
+       <ProgressBar
+            android:id="@+id/gallery_cell_progress_bar"
+            style="?android:attr/progressBarStyle"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:indeterminateOnly="true" />
+   
 
 </FrameLayout>
