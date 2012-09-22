@@ -2,16 +2,11 @@ package com.dozuki.ifixit.util;
 
 import java.io.File;
 import java.io.Serializable;
-import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-import java.util.Date;
 import java.util.HashMap;
 
-import org.apache.http.client.CookieStore;
+
 import org.apache.http.client.ResponseHandler;
-import org.apache.http.cookie.ClientCookie;
-import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.http.protocol.BasicHttpContext;
 import org.json.JSONException;
 
 import android.app.AlertDialog;
@@ -229,7 +224,7 @@ public class APIService extends Service {
 				parsedResult = JSONHelper.parseUserImages(response);
 				break;
 			case TARGET_UPLOAD_MEDIA:
-				parsedResult = "";
+				parsedResult = JSONHelper.parseUploadedImageInfo(response);
 				break;
 			case TARGET_DELETE_MEDIA:
 				parsedResult = "";

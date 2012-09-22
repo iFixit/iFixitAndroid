@@ -1,25 +1,20 @@
 package com.dozuki.ifixit.view.ui;
 
-import com.actionbarsherlock.view.ActionMode;
-import com.dozuki.ifixit.R;
+
 import com.dozuki.ifixit.view.model.UserImageInfo;
 import com.ifixit.android.imagemanager.ImageManager;
-import com.actionbarsherlock.view.*;
 
 import android.app.Activity;
 import android.content.Context;
-import android.text.Html;
-import android.util.Log;
+
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.CheckBox;
-import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 
 public class MediaViewItem extends RelativeLayout {
-	ImageView imageview;
+	FadeInImageView imageview;
 	RelativeLayout selectImage;
 	ProgressBar loadingBar;
 	public UserImageInfo listRef;
@@ -39,7 +34,7 @@ public class MediaViewItem extends RelativeLayout {
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(com.dozuki.ifixit.R.layout.gallery_cell, this, true);
 		
-		imageview = (ImageView) findViewById(com.dozuki.ifixit.R.id.media_image);
+		imageview = (FadeInImageView) findViewById(com.dozuki.ifixit.R.id.media_image);
 		selectImage =  (RelativeLayout) findViewById(com.dozuki.ifixit.R.id.selected_image);
 		selectImage.setVisibility(View.INVISIBLE);
 		loadingBar = (ProgressBar) findViewById(com.dozuki.ifixit.R.id.gallery_cell_progress_bar);
@@ -50,6 +45,7 @@ public class MediaViewItem extends RelativeLayout {
 	public void setImageItem(String image, Context context) {
 		mContext = context;
 		mImageManager.displayImage(image, (Activity) mContext, imageview);
+		//imageview.on
 	}
 	
 	public void setLoading(boolean loading) {

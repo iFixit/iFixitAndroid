@@ -56,6 +56,7 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.TopicLeaf;
+import com.dozuki.ifixit.view.model.UploadedImageInfo;
 import com.dozuki.ifixit.view.model.User;
 import com.dozuki.ifixit.view.model.UserImageInfo;
 import com.dozuki.ifixit.view.model.UserImageList;
@@ -101,7 +102,7 @@ public class MediaFragment extends SherlockFragment implements
 			APIService.Result result = (APIService.Result) intent.getExtras()
 					.getSerializable(APIService.RESULT);
 			if (!result.hasError()) {
-				if (intent.getAction() == APIService.ACTION_USER_MEDIA) {
+				if (intent.getAction().equals(APIService.ACTION_USER_MEDIA)) {
 					UserImageList imageList = (UserImageList) result
 							.getResult();
 					
@@ -116,12 +117,13 @@ public class MediaFragment extends SherlockFragment implements
 					} else {
 						mLastPage = true;
 					}
-				} else if (intent.getAction()   == APIService.ACTION_UPLOAD_MEDIA) {
+				} else if (intent.getAction().equals(APIService.ACTION_UPLOAD_MEDIA)) {
+					UploadedImageInfo imageinfo = (UploadedImageInfo) result.getResult();;
 					String url = intent.getExtras().getString(APIService.REQUEST_RESULT_INFORMATION);
-					Log.e("IMAGE UPLOADED", "KEY: " + url + " Path: " + localURL.get(url));
+					Log.e("IMAGE UPLOADED", "KEY: " + imageinfo.getmImageid());
 					localURL.put(url, IMAGE_UP);
 					galleryAdapter.invalidatedView();
-				} else if (intent.getAction()  == APIService.ACTION_DELETE_MEDIA) {
+				} else if (intent.getAction().equals(APIService.ACTION_DELETE_MEDIA)) {
 
 				}
 

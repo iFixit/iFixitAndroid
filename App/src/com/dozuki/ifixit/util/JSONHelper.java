@@ -21,6 +21,7 @@ import com.dozuki.ifixit.view.model.StepImage;
 import com.dozuki.ifixit.view.model.StepLine;
 import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.TopicNode;
+import com.dozuki.ifixit.view.model.UploadedImageInfo;
 import com.dozuki.ifixit.view.model.User;
 import com.dozuki.ifixit.view.model.UserImageInfo;
 import com.dozuki.ifixit.view.model.UserImageList;
@@ -225,6 +226,25 @@ public class JSONHelper {
 	   userImageInfo.setHeight(jImage.getString("height"));
 	   userImageInfo.setWidth(jImage.getString("width"));
 	   userImageInfo.setRatio(jImage.getString("ratio"));
+
+
+       return userImageInfo;
+   } catch (JSONException e) {
+       Log.e("iFixit", "Error parsing guide info: " + e);
+       return null;
+    }
+	   
+   }
+   
+   public static UploadedImageInfo parseUploadedImageInfo(String image)
+   {
+	   try {
+		    JSONObject jImage = new JSONObject(image);
+		    
+	   UploadedImageInfo userImageInfo = new UploadedImageInfo();
+	   userImageInfo.setmImageid(jImage.getString("imageid"));
+	   userImageInfo.setmGuid(jImage.getString("guid"));
+	   
 
 
        return userImageInfo;
