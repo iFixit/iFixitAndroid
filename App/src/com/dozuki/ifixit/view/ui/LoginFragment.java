@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.view.ui;
+package com.dozuki.ifixit.view.ui; 
 
 
 import java.util.ArrayList;

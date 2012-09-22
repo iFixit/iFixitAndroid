@@ -64,7 +64,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 public class MediaFragment extends SherlockFragment implements
 		OnItemClickListener, OnClickListener, OnItemLongClickListener,
 		LoginListener {
-
+	private static final String TAG = "MediaFragment";
 	private static final int MAX_LOADING_IMAGES = 20;
 	private static final int MAX_STORED_IMAGES = 30;
 	private static final int MAX_WRITING_IMAGES = 20;
@@ -79,6 +79,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String CURRENT_PAGE = "CURRENT_PAGE";
 	private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
 	private static final String FILE_URI_KEY = "FILE_URI_KEY";
+	private static final String IMAGE_UP = "IMAGE_UPLOADED";
 	GridView mGridView;
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
@@ -99,31 +100,35 @@ public class MediaFragment extends SherlockFragment implements
 		public void onReceive(Context context, Intent intent) {
 			APIService.Result result = (APIService.Result) intent.getExtras()
 					.getSerializable(APIService.RESULT);
-			
-			
 			if (!result.hasError()) {
-
 				if (intent.getAction() == APIService.ACTION_USER_MEDIA) {
 					UserImageList imageList = (UserImageList) result
 							.getResult();
+					
 					if (imageList.getImages().size() > 0) {
 						for (int i = 0; i < imageList.getImages().size(); i++) {
 							selectedList.add(false);
 							mImageList.addImage(imageList.getImages().get(i));
 						}
 						galleryAdapter.invalidatedView();
-						mCurrentPage++;
+						mCurrentPage++; 
 						mLastPage = false;
 					} else {
 						mLastPage = true;
 					}
 				} else if (intent.getAction()   == APIService.ACTION_UPLOAD_MEDIA) {
-					Log.e("IMAGE UPLOADED", intent.getExtras().getString(APIService.REQUEST_RESULT_INFORMATION));
-				    
+					String url = intent.getExtras().getString(APIService.REQUEST_RESULT_INFORMATION);
+					Log.e("IMAGE UPLOADED", "KEY: " + url + " Path: " + localURL.get(url));
+					localURL.put(url, IMAGE_UP);
+					galleryAdapter.invalidatedView();
 				} else if (intent.getAction()  == APIService.ACTION_DELETE_MEDIA) {
 
 				}
 
+			}
+			else
+			{
+				Log.e(TAG, "Error fetching stuff!");
 			}
 			// a transaction is complete
 			mImageTransactionsInProgress--;
@@ -470,7 +475,15 @@ public class MediaFragment extends SherlockFragment implements
 					// itemView.imageview.setImageDrawable(getResources().getDrawable(R.drawable.progress_small_holo));
 					if (localURL.containsKey(mImageList.getImages().get(position)
 							.getmGuid()))
-						itemView.setLoading(true);
+					{
+						if(localURL.get(mImageList.getImages().get(position)
+							.getmGuid()).equals(IMAGE_UP))
+						{
+							itemView.setLoading(false);
+						}
+						else
+							itemView.setLoading(true);
+					}
 				}
 
 				
@@ -622,18 +635,18 @@ public class MediaFragment extends SherlockFragment implements
 				return;
 			}
 
-			if (localURL.get(url) != null) {
+			/*if (localURL.get(url) != null) {
 				Intent intent = new Intent(getActivity(),
 						FullImageViewActivity.class);
 				intent.putExtra(IMAGE_URL, localURL.get(url));
 				intent.putExtra(LOCAL_URL, true);
 				startActivity(intent);
-			} else {
+			} else {*/
 				Intent intent = new Intent(getActivity(),
 						FullImageViewActivity.class);
 				intent.putExtra(IMAGE_URL, url);
 				startActivity(intent);
-			}
+			//}
 		}
 
 	}
