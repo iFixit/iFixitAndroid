@@ -90,68 +90,44 @@ public class APIService extends Service {
       public void setResult(Result result);
    }
 
-   private static final String RESPONSE = "RESPONSE";
-   private static final String TOPIC_API_URL =
-    "http://www.ifixit.com/api/1.0/topic/";
-   private static final String GUIDE_API_URL =
-    "http://www.ifixit.com/api/1.0/guide/";
-   private static final String CATEGORIES_API_URL =
-    "http://www.ifixit.com/api/1.0/categories/";
-   private static final String LOGIN_API_URL =
-	    "https://www.ifixit.com/api/0.1/login";
-   private static final String REGISTER_API_URL =
-	    "https://www.ifixit.com/api/0.1/register";
-   
-   private static final String USER_IMAGES_API_URL =
-	    "http://www.ifixit.com/api/1.0/image/user";
-   
-   private static final String UPLOAD_MEDIA_API_URL =
-	    "http://www.ifixit.com/api/1.0/image/upload";
-   
-   private static final String DELETE_MEDIA_API_URL =
-	    "http://www.ifixit.com/api/1.0/image/delete";
+	private static final String RESPONSE = "RESPONSE";
+	private static final String TOPIC_API_URL = "http://www.ifixit.com/api/1.0/topic/";
+	private static final String GUIDE_API_URL = "http://www.ifixit.com/api/1.0/guide/";
+	private static final String CATEGORIES_API_URL = "http://www.ifixit.com/api/1.0/categories/";
+	private static final String LOGIN_API_URL = "https://www.ifixit.com/api/0.1/login";
+	private static final String REGISTER_API_URL = "https://www.ifixit.com/api/0.1/register";
+	private static final String USER_IMAGES_API_URL = "http://www.ifixit.com/api/1.0/image/user";
+	private static final String UPLOAD_MEDIA_API_URL = "http://www.ifixit.com/api/1.0/image/upload";
+	private static final String DELETE_MEDIA_API_URL = "http://www.ifixit.com/api/1.0/image/delete";
    
    
-   private static final String API_DOMAIN =  ".ifixit.com";
+	private static final String API_DOMAIN = ".ifixit.com";
+	private static final String REQUEST_TARGET = "REQUEST_TARGET";
+	private static final String REQUEST_QUERY = "REQUEST_QUERY";
+	private static final String REQUEST_BROADCAST_ACTION = "REQUEST_BROADCAST_ACTION";
+	private static final String REQUEST_AUTHENICATION_PACKAGE = "AUTHENICATION_PACKAGE";
 
-   private static final String REQUEST_TARGET = "REQUEST_TARGET";
-   private static final String REQUEST_QUERY = "REQUEST_QUERY";
-   private static final String REQUEST_BROADCAST_ACTION =
-	    "REQUEST_BROADCAST_ACTION";
-   private static final String REQUEST_AUTHENICATION_PACKAGE = 
-	   "AUTHENICATION_PACKAGE";
-
-   private static final int TARGET_CATEGORIES = 0;
-   private static final int TARGET_GUIDE = 1;
-   private static final int TARGET_TOPIC = 2;
-   private static final int TARGET_LOGIN = 3;
-   private static final int TARGET_REGISTER = 4;
-   private static final int TARGET_MEDIA_LIST= 5;
-   private static final int TARGET_UPLOAD_MEDIA= 6;
-   private static final int TARGET_DELETE_MEDIA= 7;
+	private static final int TARGET_CATEGORIES = 0;
+	private static final int TARGET_GUIDE = 1;
+	private static final int TARGET_TOPIC = 2;
+	private static final int TARGET_LOGIN = 3;
+	private static final int TARGET_REGISTER = 4;
+	private static final int TARGET_MEDIA_LIST = 5;
+	private static final int TARGET_UPLOAD_MEDIA = 6;
+	private static final int TARGET_DELETE_MEDIA = 7;
 
    private static final String NO_QUERY = "";
 
-   public static final String ACTION_CATEGORIES =
-    "com.dozuki.ifixit.api.categories";
-   public static final String ACTION_GUIDE =
-    "com.dozuki.ifixit.api.guide";
-   public static final String ACTION_TOPIC =
-    "com.dozuki.ifixit.api.topic";
-   public static final String ACTION_LOGIN =
-	    "com.dozuki.ifixit.api.login";
-   public static final String ACTION_REGISTER =
-	    "com.dozuki.ifixit.api.resgister";
-   public static final String ACTION_USER_MEDIA =
-	    "com.dozuki.ifixit.api.images";
-   public static final String ACTION_UPLOAD_MEDIA =
-	    "com.dozuki.ifixit.api.upload";
-   public static final String ACTION_DELETE_MEDIA =
-	    "com.dozuki.ifixit.api.delete";
+	public static final String ACTION_CATEGORIES = "com.dozuki.ifixit.api.categories";
+	public static final String ACTION_GUIDE = "com.dozuki.ifixit.api.guide";
+	public static final String ACTION_TOPIC = "com.dozuki.ifixit.api.topic";
+	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
+	public static final String ACTION_REGISTER = "com.dozuki.ifixit.api.resgister";
+	public static final String ACTION_USER_MEDIA = "com.dozuki.ifixit.api.images";
+	public static final String ACTION_UPLOAD_MEDIA = "com.dozuki.ifixit.api.upload";
+	public static final String ACTION_DELETE_MEDIA = "com.dozuki.ifixit.api.delete";
 
-   
- 
-   public static final String RESULT = "RESULT";
+	public static final String RESULT = "RESULT";
 
    @Override
    public IBinder onBind(Intent intent) {
@@ -167,27 +143,27 @@ public class APIService extends Service {
       final AuthenicationPackage authenicationPackage = (AuthenicationPackage) extras.getSerializable(REQUEST_AUTHENICATION_PACKAGE);
       
       
-      if(authenicationPackage != null)
-      {
-    	  perfromAuthenicatedRequestHelper(this, requestTarget, authenicationPackage, requestQuery,  new Responder() {
-    	         public void setResult(Result result) {
+		if (authenicationPackage != null) {
+			perfromAuthenicatedRequestHelper(this, requestTarget,
+					authenicationPackage, requestQuery, new Responder() {
+						public void setResult(Result result) {
 
-    	            if (!result.hasError()) {
-    	               result = parseResult(result.getResponse(), requestTarget,
-    	                broadcastAction);
-    	            }
+							if (!result.hasError()) {
+								result = parseResult(result.getResponse(),
+										requestTarget, broadcastAction);
+							}
 
-    	            // Don't save if there a parse error.
-    	            if (!result.hasError()) {
-    	               saveResult(result, requestTarget, requestQuery);
-    	            }
+							// Don't save if there a parse error.
+							if (!result.hasError()) {
+								saveResult(result, requestTarget, requestQuery);
+							}
 
-    	            // Always broadcast the result despite any errors.
-    	            broadcastResult(result, broadcastAction);
-    	         }
-    	      });
-    	  return START_NOT_STICKY;
-      }
+							// Always broadcast the result despite any errors.
+							broadcastResult(result, broadcastAction);
+						}
+					});
+			return START_NOT_STICKY;
+		}
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -241,27 +217,25 @@ public class APIService extends Service {
          case TARGET_GUIDE:
             parsedResult = JSONHelper.parseGuide(response);
             break;
-         case TARGET_TOPIC:
-            parsedResult = JSONHelper.parseTopicLeaf(response);
-            break;
-         case TARGET_LOGIN:
-            parsedResult = JSONHelper.parseLoginInfo(response);
-             break;
-             
-         case TARGET_MEDIA_LIST:
-        	 parsedResult = JSONHelper.parseUserImages(response);
-        	 break;
-         case TARGET_UPLOAD_MEDIA:
-        	 parsedResult="";
-        	 break;
-         case TARGET_DELETE_MEDIA:
-        	 parsedResult="";
+			case TARGET_TOPIC:
+				parsedResult = JSONHelper.parseTopicLeaf(response);
+				break;
+			case TARGET_LOGIN:
+				parsedResult = JSONHelper.parseLoginInfo(response);
+				break;
+			case TARGET_MEDIA_LIST:
+				parsedResult = JSONHelper.parseUserImages(response);
+				break;
+			case TARGET_UPLOAD_MEDIA:
+				parsedResult = "";
+				break;
+			case TARGET_DELETE_MEDIA:
+				parsedResult = "";
         	 break;
          default:
             Log.w("iFixit", "Invalid request target: " + requestTarget);
             return new Result(Error.PARSE);
          }
-
          return new Result(response, parsedResult);
       } catch (JSONException e) {
          return new Result(Error.PARSE);
@@ -346,8 +320,6 @@ public class APIService extends Service {
 		      Bundle extras = new Bundle();
 
 		      extras.putInt(REQUEST_TARGET, target);
-		     // extras.putString(REQUEST_LOGIN, login);
-		     // extras.putString(REQUEST_PASSWORD, password);
 		      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE, authenicationPackage);
 		      extras.putString(REQUEST_BROADCAST_ACTION, action);
 		      intent.putExtras(extras);
@@ -504,7 +476,7 @@ public class APIService extends Service {
 		case TARGET_REGISTER:
 			url = REGISTER_API_URL;
 		case TARGET_MEDIA_LIST:
-			url = USER_IMAGES_API_URL+requestQuery;
+			url = USER_IMAGES_API_URL + requestQuery;
 			authenicationPackage.login = null;
 			authenicationPackage.password = null;
 			authenicationPackage.username = null;
@@ -512,22 +484,18 @@ public class APIService extends Service {
 		case TARGET_UPLOAD_MEDIA:
 
 			file = new File(requestQuery);
-			url = UPLOAD_MEDIA_API_URL + "?file=" + file.getName();//URLEncoder.encode(file.getName(),
-         //   "UTF-8");
-		
+			url = UPLOAD_MEDIA_API_URL + "?file=" + file.getName();
 			authenicationPackage.login = null;
 			authenicationPackage.password = null;
 			authenicationPackage.username = null;
 			break;
-			
+
 		case TARGET_DELETE_MEDIA:
-		
-			url = DELETE_MEDIA_API_URL + requestQuery;//URLEncoder.encode(requestQuery,
-           // "UTF-8");
-			
-			  authenicationPackage.login = null;
-			  authenicationPackage.password = null;
-		      authenicationPackage.username = null;
+
+			url = DELETE_MEDIA_API_URL + requestQuery;
+			authenicationPackage.login = null;
+			authenicationPackage.password = null;
+			authenicationPackage.username = null;
 			break;
 		default:
 			Log.w("iFixit", "Invalid request target: " + requestTarget);
@@ -564,7 +532,6 @@ public class APIService extends Service {
 			    {
 			    	params.put("file", file.getName());
 			    }
-			   // params.put("password", authenicationPackage.password);
 
 	            try {
 	               helper.performPostWithSessionCookie(url, null, null, authenicationPackage.session, API_DOMAIN, header, params, file);
@@ -573,11 +540,8 @@ public class APIService extends Service {
 	            }
 	         }
 	      }.start();
-   
    }
    
-   
-
    private static void performRequest(final String url,
     final Responder responder) {
       final Handler handler = new Handler() {
