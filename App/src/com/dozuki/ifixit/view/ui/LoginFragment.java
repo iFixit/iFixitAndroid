@@ -110,7 +110,7 @@ public class LoginFragment extends SherlockFragment
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
 	 Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.login, container,
+      View view = inflater.inflate(R.layout.login_fragment, container,
        false);
 
   	_loginId = (EditText) view.findViewById(R.id.edit_login_id);
