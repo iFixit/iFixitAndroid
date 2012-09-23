@@ -24,10 +24,9 @@ public class UserImageList  implements Serializable {
 	}
 	
 	public void addImage(UserImageInfo userImageInfo) {
+		if(mImages.contains(userImageInfo)) return;
 		mImages.add(userImageInfo);
 	}
-
-
 
 	public void setUser(User mUser) {
 		this.mUser = mUser;

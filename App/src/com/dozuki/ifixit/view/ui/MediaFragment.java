@@ -81,7 +81,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String CURRENT_PAGE = "CURRENT_PAGE";
 	private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
 	private static final String FILE_URI_KEY = "FILE_URI_KEY";
-	private static final String IMAGE_UP = "IMAGE_UPLOADED";
+	private static final String IN_DELETE_MODE = "IN_DELETE_MODE";
 	private static final String HASH_MAP = "HASH_MAP";
 	GridView mGridView;
 	RelativeLayout mButtons;
@@ -97,6 +97,7 @@ public class MediaFragment extends SherlockFragment implements
 	boolean mLastPage;
 	int mImageTransactionsInProgress;
 	String cameraTempFileName;
+	boolean inDeleteMode;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -177,6 +178,7 @@ public class MediaFragment extends SherlockFragment implements
 		mMode = null;
 		selectedList = new ArrayList<Boolean>();
 		localURL = new HashMap<String, LocalImage>();
+		inDeleteMode = false;
 		if (savedInstanceState != null) {
 			mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
 			mImageList = (UserImageList) savedInstanceState
@@ -188,6 +190,7 @@ public class MediaFragment extends SherlockFragment implements
 			galleryAdapter = new MediaAdapter();
 			localURL = (HashMap<String, LocalImage>) savedInstanceState
 					.getSerializable(HASH_MAP);
+			inDeleteMode = savedInstanceState.getBoolean(IN_DELETE_MODE);
 		} else {
 			mImageList = new UserImageList();
 			galleryAdapter = new MediaAdapter();
@@ -218,6 +221,8 @@ public class MediaFragment extends SherlockFragment implements
 				.setOnClickListener(this);
 		hideLoading();
 
+		if(inDeleteMode)
+			startDeleteMode();
 		return view;
 	}
 
@@ -228,6 +233,12 @@ public class MediaFragment extends SherlockFragment implements
 		savedInstanceState.putInt(CURRENT_PAGE, mCurrentPage);
 		savedInstanceState.putSerializable(HASH_MAP, localURL);
 		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
+		if (mMode != null) {
+			savedInstanceState.putBoolean(IN_DELETE_MODE, true);
+		} else {
+			savedInstanceState.putBoolean(IN_DELETE_MODE, false);
+		}
+
 	}
 
 	public void retrieveUserImages() {
@@ -526,6 +537,7 @@ public class MediaFragment extends SherlockFragment implements
 			MenuInflater inflater = getSherlockActivity()
 					.getSupportMenuInflater();
 			inflater.inflate(R.menu.contextual_delete, menu);
+			mode.setTitle("Cancel");
 			return true;
 		}
 
@@ -597,36 +609,39 @@ public class MediaFragment extends SherlockFragment implements
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
 		if (mMode == null) {
-			// mButtons.setVisibility(View.GONE);
-
-			Animation animHide = AnimationUtils.loadAnimation(mContext,
-					R.anim.slide_out_bottom_slow);
-			animHide.setAnimationListener(new AnimationListener() {
-
-				@Override
-				public void onAnimationEnd(Animation arg0) {
-					// TODO Auto-generated method stub
-					mButtons.setVisibility(View.GONE);
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation arg0) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void onAnimationStart(Animation arg0) {
-					// TODO Auto-generated method stub
-
-				}
-
-			});
-			mButtons.startAnimation(animHide);
-			mMode = this.getSherlockActivity().startActionMode(
-					new ModeCallback());
+			startDeleteMode();
 		}
 		return false;
+	}
+
+	private void startDeleteMode() {
+		// mButtons.setVisibility(View.GONE);
+
+		Animation animHide = AnimationUtils.loadAnimation(mContext,
+				R.anim.slide_out_bottom_slow);
+		animHide.setAnimationListener(new AnimationListener() {
+
+			@Override
+			public void onAnimationEnd(Animation arg0) {
+				// TODO Auto-generated method stub
+				mButtons.setVisibility(View.GONE);
+			}
+
+			@Override
+			public void onAnimationRepeat(Animation arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+			@Override
+			public void onAnimationStart(Animation arg0) {
+				// TODO Auto-generated method stub
+
+			}
+
+		});
+		mButtons.startAnimation(animHide);
+		mMode = this.getSherlockActivity().startActionMode(new ModeCallback());
 	}
 
 	public void onItemClick(AdapterView<?> adapterView, View view,
