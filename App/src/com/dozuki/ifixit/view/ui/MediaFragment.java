@@ -2,6 +2,7 @@ package com.dozuki.ifixit.view.ui;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
@@ -81,12 +82,13 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
 	private static final String FILE_URI_KEY = "FILE_URI_KEY";
 	private static final String IMAGE_UP = "IMAGE_UPLOADED";
+	private static final String HASH_MAP = "HASH_MAP";
 	GridView mGridView;
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
 	private ImageManager mImageManager;
 	private ArrayList<Boolean> selectedList;
-	private HashMap<String, String> localURL;
+	private HashMap<String, LocalImage> localURL;
 	private ImageSizes mImageSizes;
 	static UserImageList mImageList;
 	private ActionMode mMode;
@@ -111,24 +113,30 @@ public class MediaFragment extends SherlockFragment implements
 							mImageList.addImage(imageList.getImages().get(i));
 						}
 						galleryAdapter.invalidatedView();
-						mCurrentPage++; 
+						mCurrentPage++;
 						mLastPage = false;
 					} else {
 						mLastPage = true;
 					}
-				} else if (intent.getAction().equals(APIService.ACTION_UPLOAD_MEDIA)) {
-					UploadedImageInfo imageinfo = (UploadedImageInfo) result.getResult();;
-					String url = intent.getExtras().getString(APIService.REQUEST_RESULT_INFORMATION);
+				} else if (intent.getAction().equals(
+						APIService.ACTION_UPLOAD_MEDIA)) {
+					UploadedImageInfo imageinfo = (UploadedImageInfo) result
+							.getResult();
+					String url = intent.getExtras().getString(
+							APIService.REQUEST_RESULT_INFORMATION);
 					Log.e("IMAGE UPLOADED", "KEY: " + imageinfo.getmImageid());
-					localURL.put(url, IMAGE_UP);
+					LocalImage cur = localURL.get(url);
+					if (cur == null)
+						return;
+					cur.imgId = imageinfo.getmImageid();
+					localURL.put(url, cur);
 					galleryAdapter.invalidatedView();
-				} else if (intent.getAction().equals(APIService.ACTION_DELETE_MEDIA)) {
+				} else if (intent.getAction().equals(
+						APIService.ACTION_DELETE_MEDIA)) {
 
 				}
 
-			}
-			else
-			{
+			} else {
 				Log.e(TAG, "Error fetching stuff!");
 			}
 			// a transaction is complete
@@ -168,7 +176,7 @@ public class MediaFragment extends SherlockFragment implements
 				.getImageSizes();
 		mMode = null;
 		selectedList = new ArrayList<Boolean>();
-		localURL = new HashMap<String, String>();
+		localURL = new HashMap<String, LocalImage>();
 		if (savedInstanceState != null) {
 			mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
 			mImageList = (UserImageList) savedInstanceState
@@ -178,6 +186,8 @@ public class MediaFragment extends SherlockFragment implements
 			for (boolean b : selected)
 				selectedList.add(b);
 			galleryAdapter = new MediaAdapter();
+			localURL = (HashMap<String, LocalImage>) savedInstanceState
+					.getSerializable(HASH_MAP);
 		} else {
 			mImageList = new UserImageList();
 			galleryAdapter = new MediaAdapter();
@@ -216,6 +226,7 @@ public class MediaFragment extends SherlockFragment implements
 		savedInstanceState.putBooleanArray(USER_SELECTED_LIST,
 				toPrimitiveArray(selectedList));
 		savedInstanceState.putInt(CURRENT_PAGE, mCurrentPage);
+		savedInstanceState.putSerializable(HASH_MAP, localURL);
 		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
 	}
 
@@ -365,9 +376,10 @@ public class MediaFragment extends SherlockFragment implements
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
 				mImageTransactionsInProgress++;
-				
-				mContext.startService( APIService.getUploadImageIntent(mContext,
-						authenicationPackage, getPath(selectedImageUri),  selectedImageUri.toString()));
+
+				mContext.startService(APIService.getUploadImageIntent(mContext,
+						authenicationPackage, getPath(selectedImageUri),
+						selectedImageUri.toString()));
 				showLoading();
 			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST
 					&& cameraTempFileName != null) {
@@ -388,7 +400,8 @@ public class MediaFragment extends SherlockFragment implements
 						.getApplication()).getUser().getSession();
 				mImageTransactionsInProgress++;
 				mContext.startService(APIService.getUploadImageIntent(mContext,
-						authenicationPackage, cameraTempFileName, cameraTempFileName));
+						authenicationPackage, cameraTempFileName,
+						cameraTempFileName));
 				showLoading();
 
 			}
@@ -415,8 +428,8 @@ public class MediaFragment extends SherlockFragment implements
 			userImageInfo.setmImageId(null);
 			mImageList.getImages().add(userImageInfo);
 			selectedList.add(false);
-			localURL.put(url, getPath(uri));
-			//Log.i("MEdiaFrag", "KEY: " + url + " Path: " + getPath(uri));
+			localURL.put(url, new LocalImage(getPath(uri)));
+			// Log.i("MEdiaFrag", "KEY: " + url + " Path: " + getPath(uri));
 			invalidatedView();
 		}
 
@@ -427,7 +440,7 @@ public class MediaFragment extends SherlockFragment implements
 			userImageInfo.setmImageId(null);
 			mImageList.getImages().add(userImageInfo);
 			selectedList.add(false);
-			localURL.put(url, path);
+			localURL.put(url, new LocalImage(path));
 			invalidatedView();
 		}
 
@@ -453,15 +466,18 @@ public class MediaFragment extends SherlockFragment implements
 			if (convertView == null) {
 				itemView = new MediaViewItem(getActivity(), mImageManager);
 			}
-			
+
 			itemView.setLoading(false);
-			
+
 			if (mImageList != null) {
-				if (mImageList.getImages().get(position).getmImageId() != null) {
+				if (mImageList.getImages().get(position).getmImageId() != null
+						&& localURL.containsKey(mImageList.getImages()
+								.get(position).getmGuid()) == false) {
 					String image = mImageList.getImages().get(position)
 							.getmGuid()
 							+ mImageSizes.getThumb();
-					itemView.setImageItem(image, getActivity(), !mImageList.getImages().get(position).getLoaded());
+					itemView.setImageItem(image, getActivity(), !mImageList
+							.getImages().get(position).getLoaded());
 					itemView.listRef = mImageList.getImages().get(position);
 					mImageList.getImages().get(position).setLoaded(true);
 				} else {
@@ -475,20 +491,23 @@ public class MediaFragment extends SherlockFragment implements
 					itemView.imageview.setImageBitmap(bitmap);
 					itemView.listRef = mImageList.getImages().get(position);
 					// itemView.imageview.setImageDrawable(getResources().getDrawable(R.drawable.progress_small_holo));
-					if (localURL.containsKey(mImageList.getImages().get(position)
-							.getmGuid()))
-					{
-						if(localURL.get(mImageList.getImages().get(position)
-							.getmGuid()).equals(IMAGE_UP))
-						{
+					if (localURL.containsKey(mImageList.getImages()
+							.get(position).getmGuid())) {
+						if (localURL.get(mImageList.getImages().get(position)
+								.getmGuid()).imgId == null) {
+							itemView.setLoading(true);
+						} else {
+							mImageList
+									.getImages()
+									.get(position)
+									.setmImageId(
+											localURL.get(mImageList.getImages()
+													.get(position).getmGuid()).imgId);
 							itemView.setLoading(false);
 						}
-						else
-							itemView.setLoading(true);
 					}
 				}
 
-				
 			}
 			if (selectedList.get(position))
 				itemView.selectImage.setVisibility(View.VISIBLE);
@@ -626,31 +645,27 @@ public class MediaFragment extends SherlockFragment implements
 			galleryAdapter.invalidatedView();
 
 		} else {
-
 			if (view.getTag() != null) {
 				Log.i("MediaFragment", (String) view.getTag());
 			} else
 				return;
-
 			String url = (String) view.getTag();
 			if (url.equals("") || url.indexOf(".") == 0) {
 				return;
 			}
-
-			/*if (localURL.get(url) != null) {
+			if (localURL.get(url) != null) {
 				Intent intent = new Intent(getActivity(),
 						FullImageViewActivity.class);
-				intent.putExtra(IMAGE_URL, localURL.get(url));
+				intent.putExtra(IMAGE_URL, localURL.get(url).path);
 				intent.putExtra(LOCAL_URL, true);
 				startActivity(intent);
-			} else {*/
+			} else {
 				Intent intent = new Intent(getActivity(),
 						FullImageViewActivity.class);
 				intent.putExtra(IMAGE_URL, url);
 				startActivity(intent);
-			//}
+			}
 		}
-
 	}
 
 	private boolean[] toPrimitiveArray(final List<Boolean> booleanList) {
