@@ -22,7 +22,8 @@
         android:scrollingCache="true"
         android:smoothScrollbar="true"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="4dp" >
+        android:verticalSpacing="4dp"
+        android:layout_above="@+id/button_holder" >
     </GridView>
 
     <RelativeLayout
