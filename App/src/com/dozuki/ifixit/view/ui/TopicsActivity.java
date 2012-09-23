@@ -459,6 +459,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			return true;
 		case R.id.gallery_button:
 			MainApplication mainApp = (MainApplication) getApplication();
+			///don't allow the anything to happin if topics havent loaded
+			if(mRootTopic == null)
+				   return true;
 			if (mainApp.getUser() == null) {
 				if (!mLoginVisible) {
 					LoginFragment fg = LoginFragment.newInstance();
