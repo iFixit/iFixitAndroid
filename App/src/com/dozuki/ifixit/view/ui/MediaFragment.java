@@ -435,6 +435,11 @@ public class MediaFragment extends SherlockFragment implements
 			// mediaList.add(uri);
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = uri.toString();
+			if(localURL.containsKey(url))
+			{
+				Log.e(TAG, "Duplicate image found: " + getPath(uri));
+				return;
+			}
 			userImageInfo.setGuid(url);
 			userImageInfo.setmImageId(null);
 			mImageList.getImages().add(userImageInfo);
