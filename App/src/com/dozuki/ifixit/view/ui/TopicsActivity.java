@@ -172,8 +172,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			User user = new User();
 			String session = preferenceFile.getString(
 					LoginFragment.SESSION_KEY, null);
+			String username = preferenceFile.getString(
+					LoginFragment.USERNAME_KEY, null);
 			if (session != null) {
 				user.setSession(session);
+				user.setUsername(username);
 				((MainApplication) this.getApplication()).setUser(user);
 				mMediaView.retrieveUserImages();
 			}
@@ -423,7 +426,6 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			//managing the bar
 			mActionBar.setTitle(MediaFragment.GALLERY_TITLE);
 			mActionBar.removeAllTabs();
-			
 			mGalleryVisible = true;
 		} else {
 

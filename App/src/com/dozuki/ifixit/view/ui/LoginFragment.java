@@ -49,6 +49,7 @@ public class LoginFragment extends SherlockFragment
 	static final String LOGIN_STATE = "LOGIN_STATE";
 	static final String PREFERENCE_FILE = "PREFERENCE_FILE";
 	static final String SESSION_KEY = "SESSION_KEY";
+	static final String USERNAME_KEY = "USERNAME_KEY";
    
 	private EditText _loginId;
 	private EditText _password;
@@ -58,9 +59,6 @@ public class LoginFragment extends SherlockFragment
 	private TextView _usernameTag;
 	
 	boolean readyForRegisterState;
-	
-	
-
 	
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -75,12 +73,12 @@ public class LoginFragment extends SherlockFragment
 				final SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
 				Editor editor = prefs.edit();
 				editor.putString(SESSION_KEY, lUser.getSession());
+				editor.putString(USERNAME_KEY, lUser.getUsername());
 				editor.commit();
 				for(LoginListener l : loginListeners)
 				{
 					l.onLogin(lUser);
 				}
-				Log.e("Login Activity", "Welcome " + lUser.getUsername());
 			}
 		}
 	};

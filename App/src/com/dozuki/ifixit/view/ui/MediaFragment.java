@@ -139,7 +139,17 @@ public class MediaFragment extends SherlockFragment implements
 						APIService.ACTION_DELETE_MEDIA)) {
 				}
 			} else {
-				Log.e(TAG, "Error fetching stuff!");
+				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
+						.getApplication()).getUser().getSession();
+				if (intent.getAction().equals(APIService.ACTION_USER_MEDIA)) 
+				{
+				   APIService.getErrorDialog(mContext,
+						  result.getError(),APIService.userMediaIntent(mContext,
+								authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset="
+								+ (IMAGE_PAGE_SIZE * mCurrentPage)) )
+						.show();
+				}
 			}
 			// a transaction is complete
 			mImageTransactionsInProgress--;
