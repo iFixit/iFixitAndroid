@@ -44,6 +44,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -86,10 +87,12 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String IMAGE_UP = "IMAGE_UPLOADED";
 	private static final String HASH_MAP = "HASH_MAP";
 	static final String GALLERY_TITLE = "Gallery";
-	
+
 	GridView mGridView;
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
+	TextView loginText;
+	String userName;
 	private ImageManager mImageManager;
 	private ArrayList<Boolean> selectedList;
 	private HashMap<String, LocalImage> localURL;
@@ -142,13 +145,20 @@ public class MediaFragment extends SherlockFragment implements
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
-				if (intent.getAction().equals(APIService.ACTION_USER_MEDIA)) 
-				{
-				   APIService.getErrorDialog(mContext,
-						  result.getError(),APIService.userMediaIntent(mContext,
-								authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset="
-								+ (IMAGE_PAGE_SIZE * mCurrentPage)) )
-						.show();
+				if (intent.getAction().equals(APIService.ACTION_USER_MEDIA)) {
+					APIService
+							.getErrorDialog(
+									mContext,
+									result.getError(),
+									APIService
+											.userMediaIntent(
+													mContext,
+													authenicationPackage,
+													"?limit="
+															+ IMAGE_PAGE_SIZE
+															+ "&offset="
+															+ (IMAGE_PAGE_SIZE * mCurrentPage)))
+							.show();
 				}
 			}
 			// a transaction is complete
@@ -229,8 +239,14 @@ public class MediaFragment extends SherlockFragment implements
 
 		((ImageButton) view.findViewById(R.id.camera_button))
 				.setOnClickListener(this);
-		hideLoading();
 
+		loginText = ((TextView) view.findViewById(R.id.login_text));
+		if (((MainApplication) ((Activity) mContext).getApplication()) != null) {
+			userName = ((MainApplication) ((Activity) mContext).getApplication()).getUser().getUsername();
+		}
+		if (userName != null) {
+			loginText.setText("Welcome, " + userName);
+		}
 		return view;
 	}
 
@@ -252,6 +268,8 @@ public class MediaFragment extends SherlockFragment implements
 		mContext.startService(APIService.userMediaIntent(mContext,
 				authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset="
 						+ (IMAGE_PAGE_SIZE * mCurrentPage)));
+		userName = ((MainApplication) ((Activity) mContext).getApplication())
+				.getUser().getUsername();
 	}
 
 	@Override
@@ -259,7 +277,8 @@ public class MediaFragment extends SherlockFragment implements
 		super.onAttach(activity);
 		try {
 			mContext = (Context) activity;
-			mActionBar = ((SherlockFragmentActivity)activity).getSupportActionBar();
+			mActionBar = ((SherlockFragmentActivity) activity)
+					.getSupportActionBar();
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement TopicSelectedListener");
@@ -328,6 +347,7 @@ public class MediaFragment extends SherlockFragment implements
 				e.printStackTrace();
 			}
 			break;
+		
 		}
 	}
 
@@ -437,8 +457,7 @@ public class MediaFragment extends SherlockFragment implements
 			// mediaList.add(uri);
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = uri.toString();
-			if(localURL.containsKey(url))
-			{
+			if (localURL.containsKey(url)) {
 				Log.e(TAG, "Duplicate image found: " + getPath(uri));
 				return;
 			}

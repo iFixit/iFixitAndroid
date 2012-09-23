@@ -5,11 +5,35 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
+    <RelativeLayout
+        android:id="@+id/subBar"
+        android:layout_width="fill_parent"
+        android:layout_height="35dp"
+        android:layout_alignParentTop="true"
+        android:background="@color/ifixit_blue" >
+
+        <TextView
+            android:id="@+id/login_text"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:clickable="true"
+            android:ems="10"
+            android:onClick="onClick"
+            android:text="@string/welcome"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+
+    </RelativeLayout>
+
     <GridView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/button_holder"
+        android:layout_below="@id/subBar"
         android:alwaysDrawnWithCache="true"
         android:clipChildren="true"
         android:columnWidth="150dp"
@@ -22,8 +46,7 @@
         android:scrollingCache="true"
         android:smoothScrollbar="true"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="4dp"
-        android:layout_above="@+id/button_holder" >
+        android:verticalSpacing="4dp" >
     </GridView>
 
     <RelativeLayout
@@ -37,12 +60,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true" >
+
             <ImageButton
                 android:id="@+id/camera_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/button_selector_upload_from_camera"
                 android:contentDescription="@string/use_camera" />
+
             <ImageButton
                 android:id="@+id/gallery_button"
                 android:layout_width="wrap_content"
