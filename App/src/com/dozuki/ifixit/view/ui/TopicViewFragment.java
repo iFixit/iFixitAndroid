@@ -196,6 +196,41 @@ public class TopicViewFragment extends SherlockFragment
          selectDefaultTab();
       }
    }
+   
+   
+   public void reDisplayActionBar()
+   {
+	   if(mTopicLeaf != null)
+	   {
+		  int i = mSelectedTab;
+	      mActionBar.setTitle(mTopicLeaf.getName());
+	      mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+	      ActionBar.Tab tab = mActionBar.newTab();
+	      tab.setText(getActivity().getString(R.string.guides));
+	      tab.setTabListener(this);
+	      mActionBar.addTab(tab);
+
+	      tab = mActionBar.newTab();
+	      tab.setText(getActivity().getString(R.string.answers));
+	      tab.setTabListener(this);
+	      mActionBar.addTab(tab);
+
+	      tab = mActionBar.newTab();
+	      tab.setText(getActivity().getString(R.string.info));
+	      tab.setTabListener(this);
+	      mActionBar.addTab(tab);
+
+	      if (i != -1) {
+	         mActionBar.setSelectedNavigationItem(i);
+	     } else {
+	         selectDefaultTab();
+	      }
+	   }else if(mActionBar !=null)
+	   {
+		   mActionBar.setTitle("");
+	   }
+
+   }
 
    private void displayLoading() {
       mActionBar.removeAllTabs();
@@ -256,12 +291,14 @@ public class TopicViewFragment extends SherlockFragment
          } else {
             selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
          }
+         mSelectedTab=GUIDES_TAB;
       } else if (position == ANSWERS_TAB) {
          WebViewFragment webView = new WebViewFragment();
 
          webView.loadUrl(mTopicLeaf.getSolutionsUrl());
 
          selectedFragment = webView;
+         mSelectedTab=ANSWERS_TAB;
       } else if (position == MORE_INFO_TAB) {
          WebViewFragment webView = new WebViewFragment();
 
@@ -273,6 +310,7 @@ public class TopicViewFragment extends SherlockFragment
          }
 
          selectedFragment = webView;
+         mSelectedTab=MORE_INFO_TAB;
       } else {
          Log.w("iFixit", "Too many tabs!");
          return;

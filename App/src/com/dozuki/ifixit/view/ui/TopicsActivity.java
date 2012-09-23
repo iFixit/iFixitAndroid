@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.*;
 import com.dozuki.ifixit.MainApplication;
@@ -44,6 +45,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
 	private TopicViewFragment mTopicView;
 	private MediaFragment mMediaView;
+	private ActionBar mActionBar;
 	private FrameLayout mTopicViewOverlay;
 	private TopicNode mRootTopic;
 	private int mBackStackSize = 0;
@@ -81,6 +83,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
 		getSupportActionBar().setTitle("");
 		setContentView(R.layout.topics);
+		
+		mActionBar = getSupportActionBar();
 
 		mTopicListView = (View) findViewById(R.id.topic_list_fragment);
 		View galleryTopicView = (View) findViewById(R.id.topic_view_fragment);
@@ -416,7 +420,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				ft.addToBackStack(null);
 				ft.commitAllowingStateLoss();
 			}
-
+			//managing the bar
+			mActionBar.setTitle(MediaFragment.GALLERY_TITLE);
+			mActionBar.removeAllTabs();
+			
 			mGalleryVisible = true;
 		} else {
 
@@ -425,10 +432,12 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 						FragmentManager.POP_BACK_STACK_INCLUSIVE);
 				if (mTopicListView.getVisibility() == View.GONE)
 					mTopicListView.setVisibility(View.VISIBLE);
+				mTopicView.reDisplayActionBar();
 			} else {
 
 				getSupportFragmentManager().popBackStack(BACK_STACK_STATE,
 						FragmentManager.POP_BACK_STACK_INCLUSIVE);
+					mActionBar.setTitle("");
 
 			}
 			if(mMenu != null)
@@ -439,6 +448,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			   guideIcon.setIcon(R.drawable.ic_menu_guides_active);
 			   mGalleryVisible = false;
 			}
+			//managing the bar
 		}
 	}
 
