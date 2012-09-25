@@ -10,19 +10,25 @@
         android:scaleType="centerCrop" >
     </com.dozuki.ifixit.view.ui.FadeInImageView>
 
-   <RelativeLayout
+    <RelativeLayout
         android:id="@+id/selected_image"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:background="@drawable/frame_gallery_thumb_selected" >
-
-   
     </RelativeLayout>
-       <ProgressBar
+
+    <RelativeLayout
+        android:id="@+id/loading_image"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" >
+
+        <ProgressBar
             android:id="@+id/gallery_cell_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
             android:indeterminateOnly="true" />
-   
+    </RelativeLayout>
 
 </FrameLayout>

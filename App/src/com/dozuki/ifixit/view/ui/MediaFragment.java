@@ -540,6 +540,7 @@ public class MediaFragment extends SherlockFragment implements
 						if (localURL.get(mImageList.getImages().get(position)
 								.getmGuid()).imgId == null) {
 							itemView.setLoading(true);
+							Log.e(TAG, "image loading!");
 						} else {
 							mImageList
 									.getImages()
@@ -548,6 +549,7 @@ public class MediaFragment extends SherlockFragment implements
 											localURL.get(mImageList.getImages()
 													.get(position).getmGuid()).imgId);
 							itemView.setLoading(false);
+							Log.e(TAG, "image stoped loading!");
 						}
 					}
 				}
