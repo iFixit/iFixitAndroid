@@ -242,8 +242,9 @@ public class MediaFragment extends SherlockFragment implements
 			retrieveUserImages();
 		}
 		
-		if(selectedList.size() > 0)
+		if(selectedList.contains(true))
 		{
+			Log.i(TAG, "selected count: " + selectedList.size());
 			setDeleteMode();
 		}
 
@@ -421,7 +422,7 @@ public class MediaFragment extends SherlockFragment implements
 				opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
 				Bitmap img = BitmapFactory.decodeFile(cameraTempFileName, opt);
 
-				Log.i("MediaFrag", "img path: " + cameraTempFileName
+				Log.i("MediaFrag", "img path: " + cameraTempFileName 
 						+ " img width: " + img.getWidth() + " img height: "
 						+ img.getHeight());
 
