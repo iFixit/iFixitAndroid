@@ -22,6 +22,10 @@
    <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
    <string name="no_connection">No connection</string>
    <string name="no_connection_title">Connection error</string>
+   <string name="logout_title">Logout</string>
+   <string name="logout_messege">Are you sure you want to logout?</string>
+   <string name="logout_confirm">yes</string>
+   <string name="logout_cancel">no</string>
    <string name="try_again">Try again</string>
    <string name="fist_background_desc">Fist background image</string>
    <string name="thumbnail_desc">Thumbnail image</string>

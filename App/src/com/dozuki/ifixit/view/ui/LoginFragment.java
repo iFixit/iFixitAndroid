@@ -4,8 +4,10 @@ package com.dozuki.ifixit.view.ui;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
@@ -24,6 +26,7 @@ import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
+import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.MainApplication;
@@ -317,7 +320,7 @@ public void onPause() {
    }
 }
 
- public void registerOnLoginListener(LoginListener l)
+ public static void registerOnLoginListener(LoginListener l)
  {
 	 LoginFragment.loginListeners.add(l);
  }
@@ -328,5 +331,42 @@ public void onPause() {
      ft.replace(R.id.login_overlay, new LoadingFragment());
      ft.commit();
   }
+ 
+ 
+ 
+ static AlertDialog getLogoutDialog(final Context context) {
+		      return createLogoutDialog(context, R.string.logout_title,
+		       R.string.logout_messege, R.string.logout_confirm, R.string.logout_cancel);
+		   }
+
+ 
+ private static AlertDialog createLogoutDialog(final Context context, int titleRes, int messageRes,
+		    int buttonConfirm,  int buttonCancel) {
+		      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+		      builder.setTitle(context.getString(titleRes))
+		             .setMessage(context.getString(messageRes))
+		             .setPositiveButton(context.getString(buttonConfirm),
+		              new DialogInterface.OnClickListener() {
+		                public void onClick(DialogInterface dialog, int id) {
+		                  
+		                //	Log.e("WDWD", loginListeners.size()+"");
+		                	for(LoginListener l : loginListeners)
+		    				{
+		    					l.onLogout();
+		    				}
+		    
+		                   dialog.cancel();
+		                }
+		             }).setNegativeButton(context.getString(buttonCancel),
+		              new DialogInterface.OnClickListener() {
+		                public void onClick(DialogInterface dialog, int id) {
+		            
+
+		                   dialog.cancel();
+		                }
+		             });
+
+		      return builder.create();
+		   }
 
 }

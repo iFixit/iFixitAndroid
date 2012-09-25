@@ -2,6 +2,7 @@ package com.dozuki.ifixit.view.ui;
 
 import android.content.BroadcastReceiver;
 import android.content.ClipData.Item;
+import android.content.SharedPreferences.Editor;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -471,11 +472,14 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			// /don't allow the anything to happin if topics havent loaded
 			if (mRootTopic == null)
 				return true;
+			
+			LoginFragment.registerOnLoginListener(this);
+			LoginFragment.registerOnLoginListener(mMediaView);
 			if (mainApp.getUser() == null) {
 				if (!mLoginVisible) {
 					LoginFragment fg = LoginFragment.newInstance();
-					fg.registerOnLoginListener(this);
-					fg.registerOnLoginListener(mMediaView);
+				//	fg.registerOnLoginListener(this);
+				//	fg.registerOnLoginListener(mMediaView);
 					mLoginVisible = true;
 					changeTopicListView(fg, true, null);
 				}
@@ -527,6 +531,22 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 		case R.id.login_text:
 			Log.i("TopicsActivity", "Clicked logout!");
 			break;
+		}
+	}
+
+	@Override
+	public void onLogout() {
+		if (mGalleryVisible) {
+			toggleGalleryView(false);
+
+		
+				final SharedPreferences prefs = this.getSharedPreferences(LoginFragment.PREFERENCE_FILE, Context.MODE_PRIVATE);
+				Editor editor = prefs.edit();
+				editor.remove(LoginFragment.SESSION_KEY);
+				editor.remove(LoginFragment.USERNAME_KEY);
+				editor.commit();
+				((MainApplication) this.getApplication()).setUser(null);
+			//we will let topics activity deal with the logging out 
 		}
 	}
 

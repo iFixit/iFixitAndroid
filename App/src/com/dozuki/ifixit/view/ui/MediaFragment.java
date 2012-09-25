@@ -37,7 +37,6 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -45,7 +44,6 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
-import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -93,7 +91,7 @@ public class MediaFragment extends SherlockFragment implements
 	GridView mGridView;
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
-	Spinner loginText;
+	TextView loginText;
 	String userName;
 	private ImageManager mImageManager;
 	private ArrayList<Boolean> selectedList;
@@ -231,20 +229,13 @@ public class MediaFragment extends SherlockFragment implements
 		((ImageButton) view.findViewById(R.id.camera_button))
 				.setOnClickListener(this);
 
-		loginText = ((Spinner) view.findViewById(R.id.login_text));
-		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
-		        R.array.user_settings, android.R.layout.simple_spinner_item);
-		// Specify the layout to use when the list of choices appears
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		// Apply the adapter to the spinner
-		loginText.setAdapter(adapter);
-		
-		
+		loginText = ((TextView) view.findViewById(R.id.login_text));
 		if (((MainApplication) ((Activity) mContext).getApplication()) != null && ((MainApplication) ((Activity) mContext).getApplication()).getUser() != null) {
 			userName = ((MainApplication) ((Activity) mContext).getApplication()).getUser().getUsername();
 		}
 		if (userName != null) {
-		//	loginText.setText("Welcome, " + userName);
+			loginText.setText("Logged in as " + userName);
+			loginText.setOnClickListener(this);
 		}
 		return view;
 	}
@@ -320,6 +311,7 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onClick(View arg0) {
+		
 		switch (arg0.getId()) {
 		case R.id.gallery_button:
 			Intent intent = new Intent();
@@ -341,6 +333,10 @@ public class MediaFragment extends SherlockFragment implements
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			break;
+			
+		case R.id.login_text:
+			LoginFragment.getLogoutDialog(mContext).show();
 			break;
 		
 		}
@@ -727,6 +723,12 @@ public class MediaFragment extends SherlockFragment implements
 			mCurScrollState = scrollState;
 		}
 
+	}
+
+	@Override
+	public void onLogout() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

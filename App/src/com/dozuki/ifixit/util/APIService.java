@@ -408,7 +408,7 @@ public class APIService extends Service {
       return createErrorDialog(context, apiIntent, R.string.no_connection_title,
        R.string.no_connection, R.string.try_again);
    }
-
+   
    private static AlertDialog createErrorDialog(final Context context,
     final Intent apiIntent, int titleRes, int messageRes,
     int buttonRes) {
@@ -426,6 +426,8 @@ public class APIService extends Service {
 
       return builder.create();
    }
+   
+  
 
    private static void performRequestHelper(Context context, int requestTarget,
     String requestQuery, Responder responder) {
