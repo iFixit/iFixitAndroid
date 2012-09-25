@@ -369,4 +369,10 @@ public void onPause() {
 		      return builder.create();
 		   }
 
+
+   public static void clearLoginListeners() {
+	   loginListeners.clear();
+	
+   }
+
 }

@@ -181,6 +181,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 				mMediaView.retrieveUserImages();
 			}
 		}
+		
+		LoginFragment.clearLoginListeners();
+		LoginFragment.registerOnLoginListener(this);
+		LoginFragment.registerOnLoginListener(mMediaView);
 
 	}
 
@@ -402,7 +406,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 						.findFragmentByTag(TOPIC_VIEW_FRAGMENT_ID));
 				ft.addToBackStack(null);
 				ft.commitAllowingStateLoss();
-				if (mTopicListVisible && mHideTopicList) {
+				if (mHideTopicList) {
 					hideTopicList(false, null);
 				} else {
 					ft = getSupportFragmentManager().beginTransaction();
@@ -473,13 +477,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 			if (mRootTopic == null)
 				return true;
 			
-			LoginFragment.registerOnLoginListener(this);
-			LoginFragment.registerOnLoginListener(mMediaView);
 			if (mainApp.getUser() == null) {
 				if (!mLoginVisible) {
 					LoginFragment fg = LoginFragment.newInstance();
-				//	fg.registerOnLoginListener(this);
-				//	fg.registerOnLoginListener(mMediaView);
 					mLoginVisible = true;
 					changeTopicListView(fg, true, null);
 				}
