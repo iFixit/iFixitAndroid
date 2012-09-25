@@ -349,7 +349,7 @@ public void onPause() {
 		              new DialogInterface.OnClickListener() {
 		                public void onClick(DialogInterface dialog, int id) {
 		                  
-		                //	Log.e("WDWD", loginListeners.size()+"");
+		               
 		                	for(LoginListener l : loginListeners)
 		    				{
 		    					l.onLogout();

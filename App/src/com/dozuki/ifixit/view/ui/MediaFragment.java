@@ -707,7 +707,7 @@ public class MediaFragment extends SherlockFragment implements
 		// used to determine when to load more images
 		@Override
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-			if ((arg1 + arg2) >= arg3 && arg2 < arg3 && !mLastPage) {
+			if ((arg1 + arg2) >= arg3  && !mLastPage) {
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
