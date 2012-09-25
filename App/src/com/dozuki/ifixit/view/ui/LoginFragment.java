@@ -19,7 +19,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -50,7 +52,7 @@ public class LoginFragment extends SherlockFragment
 	
 	static final int OPEN_ID_RESULT_CODE = 4;
 	static final String LOGIN_STATE = "LOGIN_STATE";
-	static final String PREFERENCE_FILE = "PREFERENCE_FILE";
+	static final String PREFERENCE_FILE = "PREFERENCE_FILES";
 	static final String SESSION_KEY = "SESSION_KEY";
 	static final String USERNAME_KEY = "USERNAME_KEY";
    
@@ -73,7 +75,7 @@ public class LoginFragment extends SherlockFragment
 				User lUser =  (User)result.getResult();
 				((MainApplication)((Activity)mContext).getApplication()).setUser(lUser);
 				
-				final SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_FILE, Context.MODE_PRIVATE);
+				final SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_FILE, Context.MODE_WORLD_READABLE );
 				Editor editor = prefs.edit();
 				editor.putString(SESSION_KEY, lUser.getSession());
 				editor.putString(USERNAME_KEY, lUser.getUsername());
@@ -135,6 +137,12 @@ public class LoginFragment extends SherlockFragment
 
 		@Override
 		public void onClick(View v) {
+			InputMethodManager in = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+           
+            in.hideSoftInputFromWindow(_loginId
+                    .getApplicationWindowToken(),
+                    InputMethodManager.HIDE_NOT_ALWAYS);
 			login();
 		}
 

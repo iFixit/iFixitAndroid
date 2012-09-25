@@ -30,4 +30,6 @@
     
     <dimen name="topic_list_image_height">270dp</dimen>
     <dimen name="topic_list_column_width">270dp</dimen>
+    
+    <dimen name="gallery_bottom_bar_height">50dp</dimen>
 </resources>

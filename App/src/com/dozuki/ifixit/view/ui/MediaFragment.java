@@ -102,6 +102,7 @@ public class MediaFragment extends SherlockFragment implements
 	int mCurrentPage;
 	boolean mLastPage;
 	String cameraTempFileName;
+	boolean nextPageRequestInProgress;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -120,9 +121,11 @@ public class MediaFragment extends SherlockFragment implements
 						galleryAdapter.invalidatedView();
 						mCurrentPage++;
 						mLastPage = false;
+						
 					} else {
 						mLastPage = true;
 					}
+					nextPageRequestInProgress = false;
 				} else if (intent.getAction().equals(
 						APIService.ACTION_UPLOAD_MEDIA)) {
 					UploadedImageInfo imageinfo = (UploadedImageInfo) result
@@ -157,15 +160,13 @@ public class MediaFragment extends SherlockFragment implements
 															+ "&offset="
 															+ (IMAGE_PAGE_SIZE * mCurrentPage)))
 							.show();
+					nextPageRequestInProgress = false;
 				}
 			}
 			
 		}
 	};
 
-	public MediaFragment(ImageManager imageManager) {
-
-	}
 
 	public MediaFragment(Context con) {
 		mContext = con;
@@ -223,20 +224,27 @@ public class MediaFragment extends SherlockFragment implements
 
 		mButtons = (RelativeLayout) view.findViewById(R.id.button_holder);
 
-		((ImageButton) view.findViewById(R.id.gallery_button))
+		((ImageButton) view.findViewById(R.id.add_from_gallery_button))
 				.setOnClickListener(this);
 
 		((ImageButton) view.findViewById(R.id.camera_button))
 				.setOnClickListener(this);
 
 		loginText = ((TextView) view.findViewById(R.id.login_text));
-		if (((MainApplication) ((Activity) mContext).getApplication()) != null && ((MainApplication) ((Activity) mContext).getApplication()).getUser() != null) {
-			userName = ((MainApplication) ((Activity) mContext).getApplication()).getUser().getUsername();
-		}
-		if (userName != null) {
+		
+		if(!((MainApplication)((Activity) mContext).
+				getApplication()).isUserLoggedIn())
+		{	
+			mButtons.setVisibility(View.GONE);
+		}else
+		{
+			userName = ((MainApplication) ((Activity) mContext).
+					getApplication()).getUser().getUsername();
 			loginText.setText("Logged in as " + userName);
-			loginText.setOnClickListener(this);
+			loginText.setOnClickListener(this);		
+			retrieveUserImages(); 
 		}
+		
 		return view;
 	}
 
@@ -254,6 +262,7 @@ public class MediaFragment extends SherlockFragment implements
 		AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 				.getApplication()).getUser().getSession();
+		nextPageRequestInProgress=true;
 		mContext.startService(APIService.userMediaIntent(mContext,
 				authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset="
 						+ (IMAGE_PAGE_SIZE * mCurrentPage)));
@@ -313,7 +322,7 @@ public class MediaFragment extends SherlockFragment implements
 	public void onClick(View arg0) {
 		
 		switch (arg0.getId()) {
-		case R.id.gallery_button:
+		case R.id.add_from_gallery_button:
 			Intent intent = new Intent();
 			intent.setType("image/*");
 			intent.setAction(Intent.ACTION_GET_CONTENT);
@@ -608,7 +617,12 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onLogin(User user) {
+		userName = ((MainApplication) ((Activity) mContext).getApplication()).getUser().getUsername();
+		loginText.setText("Logged in as " + userName);
+		loginText.setOnClickListener(this);		
 		retrieveUserImages();
+		mButtons.setVisibility(View.VISIBLE);
+		mButtons.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_bottom));
 	}
 
 	public MenuInflater getSupportMenuInflater() {
@@ -708,13 +722,20 @@ public class MediaFragment extends SherlockFragment implements
 		@Override
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
 			if ((arg1 + arg2) >= arg3  && !mLastPage) {
+				if(((MainApplication)((Activity) mContext)
+						.getApplication()).isUserLoggedIn() &&
+						mCurScrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
+						&& !nextPageRequestInProgress)
+						{
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
+				nextPageRequestInProgress=true;
 				mContext.startService(APIService
 						.userMediaIntent(mContext, authenicationPackage,
 								"?limit=" + IMAGE_PAGE_SIZE + "&offset="
-										+ (IMAGE_PAGE_SIZE + mCurrentPage)));
+										+ (IMAGE_PAGE_SIZE*mCurrentPage)));
+						}
 			}
 		}
 

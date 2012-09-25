@@ -1,24 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     Layout for list of topics, opening the device in a new Activity
-     Note: the FrameLayout is replaced with a TopicListFragment
--->
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:baselineAligned="false" >
-
-    <FrameLayout
-        android:id="@+id/topic_list_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </FrameLayout>
-    
-      <RelativeLayout
-        android:id="@+id/topic_media_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-          >
-    </RelativeLayout>
-        
-</RelativeLayout>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+   <fragment
+         android:id="@+id/topic_view_fragment"
+         android:name="com.dozuki.ifixit.view.ui.TopicViewFragment"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+   </fragment>
+   <LinearLayout
+         android:baselineAligned="false"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:orientation="horizontal">
+      <FrameLayout
+            android:id="@+id/topic_list_fragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50">
+      </FrameLayout>
+      <FrameLayout
+            android:id="@+id/topic_view_overlay"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50">
+      </FrameLayout>
+   </LinearLayout>
+</FrameLayout>

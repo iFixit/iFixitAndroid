@@ -98,4 +98,11 @@ public void setUser(User user) {
 public User getUser() {
 	return user;
 }
+
+public boolean isUserLoggedIn() {
+	// TODO Auto-generated method stub
+	return user != null;
+}
+
+
 }
