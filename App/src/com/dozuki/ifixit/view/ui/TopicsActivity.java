@@ -81,10 +81,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
-		getSupportActionBar().setTitle("");
 		setContentView(R.layout.topics);
 
 		mActionBar = getSupportActionBar();
+		mActionBar.setTitle("");
 
 		mTopicListView = (View) findViewById(R.id.topic_list_fragment);
 		View galleryTopicView = (View) findViewById(R.id.topic_view_fragment);

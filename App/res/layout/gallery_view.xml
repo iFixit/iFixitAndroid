@@ -31,7 +31,7 @@
     <RelativeLayout
         android:id="@+id/button_holder"
         android:layout_width="fill_parent"
-        android:layout_height="45dp"
+        android:layout_height="30dp"
         android:layout_alignParentBottom="true"
         android:background="@color/dark" >
     
@@ -41,6 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
+            android:paddingLeft="8dp"
             android:clickable="true"
             android:onClick="onClick"
             android:text="@string/welcome"

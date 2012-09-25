@@ -78,6 +78,7 @@ public class UserImageInfo implements Serializable {
 		if (obj.getClass() != getClass())
 			return false;
 		UserImageInfo inf = (UserImageInfo) obj;
+		//if(inf.mImageId == null) return false;
 		return (inf.mImageId.equals(this.mImageId));
 	}
 
