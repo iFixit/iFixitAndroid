@@ -205,7 +205,6 @@ public class APIService extends Service {
    private Result parseResult(String response, int requestTarget,
     String broadcastAction) {
       Object parsedResult = null;
-     Log.e("IN PASE", response);
       try {
          switch (requestTarget) {
          case TARGET_CATEGORIES:

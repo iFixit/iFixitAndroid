@@ -4,9 +4,9 @@
     <item
         android:state_pressed="true"
         android:state_enabled="true"
-        android:drawable="@drawable/ic_menu_addimage_active" />
+        android:drawable="@drawable/ic_menu_add_image_active" />
    
     <item
         android:state_enabled="true"
-        android:drawable="@drawable/ic_menu_addimage_inactive" />
+        android:drawable="@drawable/ic_menu_add_image_inactive" />
     </selector>

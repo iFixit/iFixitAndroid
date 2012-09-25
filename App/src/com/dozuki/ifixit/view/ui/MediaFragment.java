@@ -37,6 +37,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
+import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -44,6 +45,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -70,10 +72,10 @@ public class MediaFragment extends SherlockFragment implements
 		OnItemClickListener, OnClickListener, OnItemLongClickListener,
 		LoginListener {
 	private static final String TAG = "MediaFragment";
-	private static final int MAX_LOADING_IMAGES = 20;
-	private static final int MAX_STORED_IMAGES = 30;
-	private static final int MAX_WRITING_IMAGES = 20;
-	private static final int IMAGE_PAGE_SIZE = 40;
+	private static final int MAX_LOADING_IMAGES = 15;
+	private static final int MAX_STORED_IMAGES = 20;
+	private static final int MAX_WRITING_IMAGES = 15;
+	private static final int IMAGE_PAGE_SIZE = 6;
 	protected static final String IMAGE_URL = "IMAGE_URL";
 	protected static final String LOCAL_URL = "LOCAL_URL";
 	private Context mContext;
@@ -91,7 +93,7 @@ public class MediaFragment extends SherlockFragment implements
 	GridView mGridView;
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
-	TextView loginText;
+	Spinner loginText;
 	String userName;
 	private ImageManager mImageManager;
 	private ArrayList<Boolean> selectedList;
@@ -99,10 +101,8 @@ public class MediaFragment extends SherlockFragment implements
 	private ImageSizes mImageSizes;
 	static UserImageList mImageList;
 	private ActionMode mMode;
-	private ProgressBar mProgressBar;
 	int mCurrentPage;
 	boolean mLastPage;
-	int mImageTransactionsInProgress;
 	String cameraTempFileName;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
@@ -161,15 +161,9 @@ public class MediaFragment extends SherlockFragment implements
 							.show();
 				}
 			}
-			// a transaction is complete
-			mImageTransactionsInProgress--;
-			if (mImageTransactionsInProgress <= 0) {
-				hideLoading();
-				mImageTransactionsInProgress = 0;
-			}
+			
 		}
 	};
-	private ActionBar mActionBar;
 
 	public MediaFragment(ImageManager imageManager) {
 
@@ -215,7 +209,6 @@ public class MediaFragment extends SherlockFragment implements
 			mImageList = new UserImageList();
 			galleryAdapter = new MediaAdapter();
 		}
-		mImageTransactionsInProgress = 0;
 	}
 
 	@Override
@@ -224,8 +217,6 @@ public class MediaFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.gallery_view, container, false);
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
-		mProgressBar = (ProgressBar) view
-				.findViewById(R.id.gallery_loading_bar);
 		mGridView.setOnScrollListener(new GalleryOnScrollListener());
 
 		mGridView.setAdapter(galleryAdapter);
@@ -240,12 +231,20 @@ public class MediaFragment extends SherlockFragment implements
 		((ImageButton) view.findViewById(R.id.camera_button))
 				.setOnClickListener(this);
 
-		loginText = ((TextView) view.findViewById(R.id.login_text));
-		if (((MainApplication) ((Activity) mContext).getApplication()) != null) {
+		loginText = ((Spinner) view.findViewById(R.id.login_text));
+		ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(mContext,
+		        R.array.user_settings, android.R.layout.simple_spinner_item);
+		// Specify the layout to use when the list of choices appears
+		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		// Apply the adapter to the spinner
+		loginText.setAdapter(adapter);
+		
+		
+		if (((MainApplication) ((Activity) mContext).getApplication()) != null && ((MainApplication) ((Activity) mContext).getApplication()).getUser() != null) {
 			userName = ((MainApplication) ((Activity) mContext).getApplication()).getUser().getUsername();
 		}
 		if (userName != null) {
-			loginText.setText("Welcome, " + userName);
+		//	loginText.setText("Welcome, " + userName);
 		}
 		return view;
 	}
@@ -260,11 +259,10 @@ public class MediaFragment extends SherlockFragment implements
 	}
 
 	public void retrieveUserImages() {
-		showLoading();
+
 		AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 				.getApplication()).getUser().getSession();
-		mImageTransactionsInProgress++;
 		mContext.startService(APIService.userMediaIntent(mContext,
 				authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset="
 						+ (IMAGE_PAGE_SIZE * mCurrentPage)));
@@ -277,29 +275,14 @@ public class MediaFragment extends SherlockFragment implements
 		super.onAttach(activity);
 		try {
 			mContext = (Context) activity;
-			mActionBar = ((SherlockFragmentActivity) activity)
-					.getSupportActionBar();
+			
 		} catch (ClassCastException e) {
 			throw new ClassCastException(activity.toString()
 					+ " must implement TopicSelectedListener");
 		}
 	}
 
-	public void showLoading() {
-		if (!(mProgressBar == null)) {
-			mProgressBar.startAnimation(AnimationUtils.makeInAnimation(
-					mContext, true));
-			mProgressBar.setVisibility(View.VISIBLE);
-		}
-	}
 
-	public void hideLoading() {
-		if (!(mProgressBar == null)) {
-			mProgressBar.startAnimation(AnimationUtils.makeOutAnimation(
-					mContext, true));
-			mProgressBar.setVisibility(View.INVISIBLE);
-		}
-	}
 
 	@Override
 	public void onResume() {
@@ -321,6 +304,18 @@ public class MediaFragment extends SherlockFragment implements
 			// Do nothing. This happens in the unlikely event that
 			// unregisterReceiver has been called already.
 		}
+		
+		//this helps out with manageing memory on context changes
+	    int count = mGridView.getCount();
+	    for (int i = 0; i < count; i++) {
+	        MediaViewItem v = (MediaViewItem) mGridView.getChildAt(i);
+	        if (v != null) {
+	            if (v.imageview.getDrawable() != null) {
+	            	v.imageview.getDrawable().setCallback(null);
+	            }
+	        }
+	    }    
+	    System.gc();
 	}
 
 	@Override
@@ -408,12 +403,10 @@ public class MediaFragment extends SherlockFragment implements
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
-				mImageTransactionsInProgress++;
-
 				mContext.startService(APIService.getUploadImageIntent(mContext,
 						authenicationPackage, getPath(selectedImageUri),
 						selectedImageUri.toString()));
-				showLoading();
+
 			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST
 					&& cameraTempFileName != null) {
 				Log.i("MediaFragment", "Adding camera pic...");
@@ -431,12 +424,9 @@ public class MediaFragment extends SherlockFragment implements
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
-				mImageTransactionsInProgress++;
 				mContext.startService(APIService.getUploadImageIntent(mContext,
 						authenicationPackage, cameraTempFileName,
 						cameraTempFileName));
-				showLoading();
-
 			}
 		}
 	}
@@ -721,13 +711,10 @@ public class MediaFragment extends SherlockFragment implements
 		// used to determine when to load more images
 		@Override
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-			if ((arg1 + arg2) >= arg3 && arg2 < arg3
-					&& mImageTransactionsInProgress == 0 && !mLastPage) {
-				showLoading();
+			if ((arg1 + arg2) >= arg3 && arg2 < arg3 && !mLastPage) {
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
-				mImageTransactionsInProgress++;
 				mContext.startService(APIService
 						.userMediaIntent(mContext, authenicationPackage,
 								"?limit=" + IMAGE_PAGE_SIZE + "&offset="

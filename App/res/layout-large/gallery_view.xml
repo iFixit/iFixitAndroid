@@ -5,34 +5,12 @@
     android:background="@color/white"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        android:id="@+id/subBar"
-        android:layout_width="fill_parent"
-        android:layout_height="35dp"
-        android:layout_alignParentTop="true"
-        android:background="@color/ifixit_blue" >
-
-        <TextView
-            android:id="@+id/login_text"
-            android:layout_width="wrap_content"
-            android:layout_height="fill_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:ems="10"
-            android:text="@string/welcome"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            android:onClick="onClick"
-            android:clickable="true" />
-       
-    </RelativeLayout>
-
+ 
     <GridView
         xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/gridview"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@id/subBar"
         android:layout_above="@+id/button_holder"
         android:alwaysDrawnWithCache="true"
         android:clipChildren="true"
@@ -55,11 +33,21 @@
         android:layout_height="45dp"
         android:layout_alignParentBottom="true"
         android:background="@color/dark" >
+        
+          <Spinner
+            android:id="@+id/login_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+             />
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true" >
+            android:layout_alignParentRight="true"
+        
+            >
 
             <ImageButton
                 android:id="@+id/camera_button"
@@ -76,16 +64,7 @@
                 android:contentDescription="@string/use_gallery" />
         </LinearLayout>
 
-        <ProgressBar
-            android:id="@+id/gallery_loading_bar"
-            style="@style/ProgressBarHolo.Horizontal"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_above="@+id/camera_button"
-            android:indeterminate="true"
-            android:indeterminateOnly="true"
-            android:progress="25" >
-        </ProgressBar>
+     
     </RelativeLayout>
 
 </RelativeLayout>

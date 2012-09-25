@@ -30,4 +30,9 @@
    <string name="action_delete">Delete</string>
    <string name="use_camera">Use Camera</string>
    <string name="use_gallery">Use Gallery</string>
+   <string name="welcome">Welcome, iFixit</string>
+
+   <string-array name="user_settings">
+      <item>Log out</item>
+   </string-array>
 </resources>

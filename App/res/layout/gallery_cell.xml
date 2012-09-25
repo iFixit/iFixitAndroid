@@ -20,11 +20,8 @@
     </RelativeLayout>
        <ProgressBar
             android:id="@+id/gallery_cell_progress_bar"
-            style="?android:attr/progressBarStyle"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:indeterminateOnly="true" />
    
 
