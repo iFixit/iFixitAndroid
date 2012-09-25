@@ -1,20 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-     Layout for list of topics, opening the device in a new Activity
-     Note: the FrameLayout is replaced with a TopicListFragment
--->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:baselineAligned="false" >
 
-    <FrameLayout
-        android:id="@+id/gallery_fragment"
-        android:layout_width="0dp"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent">
+
+        <fragment
+         android:id="@+id/gallery_view_fragment"
+         android:name="com.dozuki.ifixit.view.ui.MediaFragment"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent">
+   </fragment>
+   
+      <RelativeLayout
+        android:id="@+id/login_fragment"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="25"  >
-    </FrameLayout>
+        >
+    </RelativeLayout>
+ 
+   
+
         
 
-</LinearLayout>
+</FrameLayout>

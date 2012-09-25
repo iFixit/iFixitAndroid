@@ -40,6 +40,8 @@ public class GalleryActivity extends SherlockFragmentActivity  implements LoginL
 	private boolean mDualPane;
 	private ActionBar mActionBar;
 	private boolean mLoginVisible;
+	private View mLoginView;
+	private View mGalleryView;
 	
 	
 	   @Override
@@ -57,24 +59,13 @@ public class GalleryActivity extends SherlockFragmentActivity  implements LoginL
 
 	      mMediaView = (MediaFragment)getSupportFragmentManager()
 	       .findFragmentById(R.id.gallery_view_fragment);
+	      mLoginView = findViewById(R.id.login_fragment);
 	      LoginFragment mLogin = (LoginFragment)getSupportFragmentManager()
 	       .findFragmentByTag(LOGIN_FRAGMENT);
 	      mTopicViewOverlay = (FrameLayout)findViewById(R.id.gallery_view_overlay);
 	      mHideTopicList = mTopicViewOverlay != null;
-	      mDualPane = mMediaView != null && mMediaView.isInLayout();
+	      mDualPane = mTopicViewOverlay != null;
 
-	      if (savedInstanceState != null) {
-	       //  mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
-	         mLoginVisible = savedInstanceState.getBoolean(LOGIN_VISIBLE);
-	      } else {
-	         //mTopicListVisible = true;
-	      }
-
-	      if(mMediaView == null)
-	      {
-	    	  mMediaView = (MediaFragment)getSupportFragmentManager()
-		       .findFragmentByTag(GALLERY_FRAGMENT);
-	      }
 
 	      if(((MainApplication) this.getApplication()).getUser() == null)
 	      {
@@ -88,22 +79,24 @@ public class GalleryActivity extends SherlockFragmentActivity  implements LoginL
 				if (session != null) {
 					user.setSession(session);
 					user.setUsername(username);
+					mLoginView.setVisibility(View.INVISIBLE);
 					((MainApplication) this.getApplication()).setUser(user);
-					mMediaView.onLogin(user);
+						mMediaView.onLogin(user);
 				}else
 			      {
 					if (mLogin == null) {
 						displayLogin();
-					}else
-					{
-						
 					}
 			      }
+	      }else
+	      {
+	    	  mMediaView.onLogin(((MainApplication) this.getApplication()).getUser());
 	      }
 
-	      LoginFragment.clearLoginListeners();
+	        LoginFragment.clearLoginListeners();
 	  		LoginFragment.registerOnLoginListener(this);
 	  		LoginFragment.registerOnLoginListener(mMediaView);
+	  		
 	  		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	   }
 	   
@@ -119,9 +112,9 @@ public class GalleryActivity extends SherlockFragmentActivity  implements LoginL
 
 		ft.setCustomAnimations(inAnim, outAnim);
 		if(mDualPane){
-		ft.replace(R.id.login_fragment, fg, LOGIN_FRAGMENT);
+		ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
 		}else{
-			ft.replace(R.id.gallery_fragment, fg, LOGIN_FRAGMENT);
+		ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
 		}
 		ft.addToBackStack(null);
 		ft.commitAllowingStateLoss();
@@ -184,29 +177,11 @@ public class GalleryActivity extends SherlockFragmentActivity  implements LoginL
 	public void onLogin(User user) {
 		
 		getSupportFragmentManager().popBackStack();
-		if(!mDualPane)
-		{
-			displayGallery();
-		}
+		mLoginView.setVisibility(View.INVISIBLE);
 		
 	}
 	
-	private void displayGallery() {
-		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-		int inAnim, outAnim;
-		MediaFragment fg = new MediaFragment();
-		// mLoginVisible = true;
 
-		inAnim = R.anim.slide_in_left;
-		outAnim = R.anim.slide_out_left;
-
-		ft.setCustomAnimations(inAnim, outAnim);
-
-		ft.replace(R.id.gallery_fragment, fg, GALLERY_FRAGMENT);
-
-		ft.commitAllowingStateLoss();
-
-	}
 
 	@Override
 	public void onLogout() {
