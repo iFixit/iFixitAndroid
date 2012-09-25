@@ -241,6 +241,11 @@ public class MediaFragment extends SherlockFragment implements
 			loginText.setOnClickListener(this);
 			retrieveUserImages();
 		}
+		
+		if(selectedList.size() > 0)
+		{
+			setDeleteMode();
+		}
 
 		return view;
 	}
@@ -641,6 +646,12 @@ public class MediaFragment extends SherlockFragment implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
+		setDeleteMode();
+		return false;
+	}
+	
+	public void setDeleteMode()
+	{
 		if (mMode == null) {
 			// mButtons.setVisibility(View.GONE);
 
@@ -671,7 +682,6 @@ public class MediaFragment extends SherlockFragment implements
 			mMode = this.getSherlockActivity().startActionMode(
 					new ModeCallback());
 		}
-		return false;
 	}
 
 	public void onItemClick(AdapterView<?> adapterView, View view,
