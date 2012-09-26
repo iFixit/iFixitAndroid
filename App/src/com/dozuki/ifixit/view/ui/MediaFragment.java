@@ -86,7 +86,7 @@ public class MediaFragment extends SherlockFragment implements
 	static final int CAMERA_PIC_REQUEST = 2;
 	private static final String USER_IMAGE_LIST = "USER_IMAGE_LIST";
 	private static final String USER_SELECTED_LIST = "USER_SELECTED_LIST";
-	private static final String CURRENT_PAGE = "CURRENT_PAGE";
+	private static final String IMAGES_DOWNLOADED = "IMAGES_DOWNLOADED";
 	private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
 	private static final String FILE_URI_KEY = "FILE_URI_KEY";
 	private static final String IMAGE_UP = "IMAGE_UPLOADED";
@@ -104,7 +104,7 @@ public class MediaFragment extends SherlockFragment implements
 	private ImageSizes mImageSizes;
 	static UserImageList mImageList;
 	private ActionMode mMode;
-	int mCurrentPage;
+	int mImagesDownloaded;
 	boolean mLastPage;
 	String cameraTempFileName;
 	boolean nextPageRequestInProgress;
@@ -119,12 +119,13 @@ public class MediaFragment extends SherlockFragment implements
 					UserImageList imageList = (UserImageList) result
 							.getResult();
 					if (imageList.getImages().size() > 0) {
+						int oldImageSize = mImageList.getImages().size();
 						for (int i = 0; i < imageList.getImages().size(); i++) {
 							selectedList.add(false);
 							mImageList.addImage(imageList.getImages().get(i));
 						}
+						mImagesDownloaded +=(mImageList.getImages().size() - oldImageSize);
 						galleryAdapter.invalidatedView();
-						mCurrentPage++;
 						mLastPage = false;
 
 					} else {
@@ -150,6 +151,7 @@ public class MediaFragment extends SherlockFragment implements
 				}
 			} else {
 				APIService.getListMediaErrorDialog(mContext).show();
+				nextPageRequestInProgress = false;
 			}
 
 		}
@@ -181,7 +183,7 @@ public class MediaFragment extends SherlockFragment implements
 		selectedList = new ArrayList<Boolean>();
 		localURL = new HashMap<String, LocalImage>();
 		if (savedInstanceState != null) {
-			mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
+			mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
 			mImageList = (UserImageList) savedInstanceState
 					.getSerializable(USER_IMAGE_LIST);
 			boolean[] selected = savedInstanceState
@@ -239,7 +241,7 @@ public class MediaFragment extends SherlockFragment implements
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putBooleanArray(USER_SELECTED_LIST,
 				toPrimitiveArray(selectedList));
-		savedInstanceState.putInt(CURRENT_PAGE, mCurrentPage);
+		savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
 		savedInstanceState.putSerializable(HASH_MAP, localURL);
 		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
 		if (cameraTempFileName != null)
@@ -252,9 +254,10 @@ public class MediaFragment extends SherlockFragment implements
 		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 				.getApplication()).getUser().getSession();
 		nextPageRequestInProgress = true;
+		int initialPageSize=5;
 		mContext.startService(APIService.userMediaIntent(mContext,
-				authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset="
-						+ (IMAGE_PAGE_SIZE * mCurrentPage)));
+				authenicationPackage, "?limit=" + (IMAGE_PAGE_SIZE+initialPageSize) + "&offset="
+						+ (mImagesDownloaded)));
 		userName = ((MainApplication) ((Activity) mContext).getApplication())
 				.getUser().getUsername();
 	}
@@ -737,15 +740,16 @@ public class MediaFragment extends SherlockFragment implements
 			if ((arg1 + arg2) >= arg3 && !mLastPage) {
 				if (((MainApplication) ((Activity) mContext).getApplication())
 						.isUserLoggedIn()
-						&& !nextPageRequestInProgress) {
+						&& !nextPageRequestInProgress &&
+						mCurScrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+					nextPageRequestInProgress = true;
 					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 					authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 							.getApplication()).getUser().getSession();
-					nextPageRequestInProgress = true;
 					mContext.startService(APIService.userMediaIntent(mContext,
 							authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE
 									+ "&offset="
-									+ (IMAGE_PAGE_SIZE * mCurrentPage)));
+									+ (mImagesDownloaded)));
 				}
 			}
 		}
