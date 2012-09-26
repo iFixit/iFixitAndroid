@@ -96,21 +96,9 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		LoginFragment.registerOnLoginListener(mMediaView);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	
 		
-		//desides weather to show help dialog
-		preferenceFile = this.getSharedPreferences(
-				LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
-		
-		boolean firstTieUser = preferenceFile.getBoolean(
-				FIRST_TIME_USER, true);
-		
-		if(firstTieUser)
-		{
-			mMediaView.createHelpDialog(this).show();
-			Editor e = preferenceFile.edit();
-			e.putBoolean(FIRST_TIME_USER, false);
-			e.commit();
-		}
+
 	}
 
 	private void displayLogin() {
@@ -193,6 +181,20 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 		getSupportFragmentManager().popBackStack();
 		mLoginView.setVisibility(View.INVISIBLE);
+		
+		
+		SharedPreferences preferenceFile = this.getSharedPreferences(
+				LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
+		boolean firstTimeUser = preferenceFile.getBoolean(
+				FIRST_TIME_USER, true);
+		
+		if(firstTimeUser)
+		{
+			mMediaView.createHelpDialog(this).show();
+			Editor e = preferenceFile.edit();
+			e.putBoolean(FIRST_TIME_USER, false);
+			e.commit();
+		}
 
 	}
 

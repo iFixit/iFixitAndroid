@@ -77,7 +77,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final int MAX_LOADING_IMAGES = 15;
 	private static final int MAX_STORED_IMAGES = 20;
 	private static final int MAX_WRITING_IMAGES = 15;
-	private static final int IMAGE_PAGE_SIZE = 6;
+	private static final int IMAGE_PAGE_SIZE = 2;
 	protected static final String IMAGE_URL = "IMAGE_URL";
 	protected static final String LOCAL_URL = "LOCAL_URL";
 	protected static final String CAMERA_PATH = "CAMERA_PATH";
@@ -223,7 +223,8 @@ public class MediaFragment extends SherlockFragment implements
 					.getApplication()).getUser().getUsername();
 			loginText.setText("Logged in as " + userName);
 			loginText.setOnClickListener(this);
-			retrieveUserImages();
+			if(mImageList.getImages().size() == 0)
+			   retrieveUserImages();
 		}
 
 		if (selectedList.contains(true)) {
@@ -620,6 +621,8 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onLogin(User user) {
+		if(mImageList.getImages().size() == 0)
+		{
 		userName = ((MainApplication) ((Activity) mContext).getApplication())
 				.getUser().getUsername();
 		loginText.setText("Logged in as " + userName);
@@ -628,6 +631,7 @@ public class MediaFragment extends SherlockFragment implements
 		mButtons.setVisibility(View.VISIBLE);
 		mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,
 				R.anim.slide_in_bottom));
+		}
 	}
 
 	public MenuInflater getSupportMenuInflater() {
@@ -733,7 +737,6 @@ public class MediaFragment extends SherlockFragment implements
 			if ((arg1 + arg2) >= arg3 && !mLastPage) {
 				if (((MainApplication) ((Activity) mContext).getApplication())
 						.isUserLoggedIn()
-						&& mCurScrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL
 						&& !nextPageRequestInProgress) {
 					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 					authenicationPackage.session = ((MainApplication) ((Activity) mContext)

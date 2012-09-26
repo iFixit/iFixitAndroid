@@ -32,7 +32,7 @@
    <string name="logout_messege">Are you sure you want to logout?</string>
    <string name="logout_confirm">Yes</string>
    <string name="logout_cancel">No</string>
-   <string name="login_error">Whoops, Looks like we had an trying to log you in!</string>
+   <string name="login_error">Error logging in. Try different credentials.</string>
    <string name="try_again">Try again</string>
    <string name="fist_background_desc">Fist background image</string>
    <string name="thumbnail_desc">Thumbnail image</string>

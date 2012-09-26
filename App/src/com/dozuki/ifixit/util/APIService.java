@@ -209,7 +209,6 @@ public class APIService extends Service {
     */
    private Result parseResult(String response, int requestTarget,
     String broadcastAction) {
-	   Log.e("PARSED: ", response);
       Object parsedResult = null;
       try {
          switch (requestTarget) {
