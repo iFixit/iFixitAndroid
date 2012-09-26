@@ -76,6 +76,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final int IMAGE_PAGE_SIZE = 6;
 	protected static final String IMAGE_URL = "IMAGE_URL";
 	protected static final String LOCAL_URL = "LOCAL_URL";
+	protected static final String CAMERA_PATH = "CAMERA_PATH";
 	private Context mContext;
 	static final int SELECT_PICTURE = 1;
 	static final int CAMERA_PIC_REQUEST = 2;
@@ -184,6 +185,8 @@ public class MediaFragment extends SherlockFragment implements
 			for (boolean b : selected)
 				selectedList.add(b);
 			galleryAdapter = new MediaAdapter();
+			if(savedInstanceState.getString(CAMERA_PATH) != null)
+				cameraTempFileName = savedInstanceState.getString(CAMERA_PATH);
 			localURL = (HashMap<String, LocalImage>) savedInstanceState
 					.getSerializable(HASH_MAP);
 		} else {
@@ -218,9 +221,8 @@ public class MediaFragment extends SherlockFragment implements
 			loginText.setOnClickListener(this);
 			retrieveUserImages();
 		}
-		
-		if(selectedList.contains(true))
-		{
+
+		if (selectedList.contains(true)) {
 			Log.i(TAG, "selected count: " + selectedList.size());
 			setDeleteMode();
 		}
@@ -235,6 +237,8 @@ public class MediaFragment extends SherlockFragment implements
 		savedInstanceState.putInt(CURRENT_PAGE, mCurrentPage);
 		savedInstanceState.putSerializable(HASH_MAP, localURL);
 		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
+		if (cameraTempFileName != null)
+			savedInstanceState.putString(CAMERA_PATH, cameraTempFileName);
 	}
 
 	public void retrieveUserImages() {
@@ -306,19 +310,16 @@ public class MediaFragment extends SherlockFragment implements
 
 		}
 	}
-	
-	public void launchGallery()
-	{
+
+	public void launchGallery() {
 		Intent intent = new Intent();
 		intent.setType("image/*");
 		intent.setAction(Intent.ACTION_GET_CONTENT);
-		startActivityForResult(
-				Intent.createChooser(intent, "Select Picture"),
+		startActivityForResult(Intent.createChooser(intent, "Select Picture"),
 				SELECT_PICTURE);
 	}
-	
-	public void launchCamera()
-	{
+
+	public void launchCamera() {
 		Intent cameraIntent = new Intent(
 				android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
 		File f;
@@ -393,28 +394,32 @@ public class MediaFragment extends SherlockFragment implements
 						authenicationPackage, getPath(selectedImageUri),
 						selectedImageUri.toString()));
 
-			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST
-					&& cameraTempFileName != null) {
-				Log.i("MediaFragment", "Adding camera pic...");
+			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
+				if (cameraTempFileName == null) {
+					Log.e(TAG, "Error cameraTempFile is null!");
+					return;
+				}
+				Log.i(TAG, "Adding camera pic...");
 				BitmapFactory.Options opt = new BitmapFactory.Options();
 				opt.inSampleSize = 2;
 				opt.inDither = true;
 				opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-				Bitmap img = BitmapFactory.decodeFile(cameraTempFileName, opt);
+				String fPath = new String(cameraTempFileName);
+				Bitmap img = BitmapFactory.decodeFile(fPath, opt);
 
-				Log.i("MediaFrag", "img path: " + cameraTempFileName 
+				Log.i("MediaFrag", "img path: " + cameraTempFileName
 						+ " img width: " + img.getWidth() + " img height: "
 						+ img.getHeight());
 
 				// Uri selectedImageUri = data.getData();
 				// galleryAdapter.addFile(cameraTempFileName);
-				galleryAdapter.addFile(cameraTempFileName);
+				galleryAdapter.addFile(new String(fPath));
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
 				mContext.startService(APIService.getUploadImageIntent(mContext,
-						authenicationPackage, cameraTempFileName,
-						cameraTempFileName));
+						authenicationPackage, fPath,
+						fPath));
 			}
 		}
 	}
@@ -504,7 +509,7 @@ public class MediaFragment extends SherlockFragment implements
 						opt.inSampleSize = 4;
 						opt.inDither = true;
 						opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-						bitmap = BitmapFactory.decodeFile(cameraTempFileName,
+						bitmap = BitmapFactory.decodeFile(localURL.get(mImageList.getImages().get(position).getmGuid()).path,
 								opt);
 					} else {
 						bitmap = MediaStore.Images.Thumbnails.getThumbnail(
@@ -632,9 +637,8 @@ public class MediaFragment extends SherlockFragment implements
 		setDeleteMode();
 		return false;
 	}
-	
-	public void setDeleteMode()
-	{
+
+	public void setDeleteMode() {
 		if (mMode == null) {
 			// mButtons.setVisibility(View.GONE);
 
