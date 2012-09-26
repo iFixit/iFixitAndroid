@@ -2,10 +2,14 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
     <item
         android:id="@+id/top_camera_button"
-        android:icon="@drawable/ic_menu_camera_inactive"
+        android:icon="@drawable/ic_menu_camera"
         android:showAsAction="always|withText"/>
     <item
         android:id="@+id/top_gallery_button"
-        android:icon="@drawable/ic_menu_addimage_inactive"
+        android:icon="@drawable/ic_menu_add_image"
+        android:showAsAction="always|withText"/>
+     <item
+        android:id="@+id/top_question_button"
+        android:icon="@drawable/ic_menu_help"
         android:showAsAction="always|withText"/>
 </menu>

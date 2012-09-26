@@ -200,6 +200,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		
 		MenuItem galleryIcon = menu.findItem(R.id.top_gallery_button);
 		MenuItem cameraIcon = menu.findItem(R.id.top_camera_button);
+		//MenuItem helpIcon = menu.findItem(R.id.top_);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
