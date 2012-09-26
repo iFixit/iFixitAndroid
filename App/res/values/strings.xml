@@ -24,7 +24,7 @@
    <string name="no_connection_title">Connection error</string>
    <string name="media_error_title">Something went wrong. Try again later.</string>
    <string name="media_error_confirm">OK</string>
-   <string name="media_help_title">Whats this?</string>
+   <string name="media_help_title">What\'s this?</string>
    <string name="media_help_messege">This gallery is linked directly to your iFixit account. Any pictures you load into here will be available to you in your guide creation
       endeavors. Stay tuned and you will be able to create guides on the go!</string>
    <string name="media_help_confirm">Good to know!</string>
@@ -32,7 +32,7 @@
    <string name="logout_messege">Are you sure you want to logout?</string>
    <string name="logout_confirm">Yes</string>
    <string name="logout_cancel">No</string>
-   <string name="login_error">Error logging in. Try different credentials.</string>
+   <string name="login_error">Uh oh! Invalid login info, try again please.</string>
    <string name="try_again">Try again</string>
    <string name="fist_background_desc">Fist background image</string>
    <string name="thumbnail_desc">Thumbnail image</string>
@@ -45,6 +45,9 @@
    <string name="user_name">Enter a username</string>
    <string name="email">What is your email?</string>
    <string name="password">What is your password?</string>
+   <string name="help_tool_tip">About</string>
+   <string name="gallery_tool_tip">Gallery</string>
+   <string name="camera_tool_tip">Camera</string>
 
    <string-array name="user_settings">
       <item>Log out</item>

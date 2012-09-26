@@ -30,13 +30,16 @@
                     android:layout_height="wrap_content"
                     android:text="@string/login_error"
                     android:textAppearance="?android:attr/textAppearanceSmall"
-                    android:textColor="@color/red" />
+                    android:textColor="@color/red"
+                    android:layout_marginBottom="5dp" />
 
                 <ProgressBar
                     android:id="@+id/login_loading_bar"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:visibility="gone" />
+                    android:layout_gravity="center"
+                    android:visibility="gone"
+                    android:layout_marginBottom="5dp" />
 
                 <TextView
                     android:id="@+id/login_id"
@@ -101,9 +104,8 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:background="@drawable/ic_btn_login_oj"
-                    android:padding="16dp"
                     android:layout_gravity="right"
-                     android:layout_margin="5dp" />
+                    android:layout_margin="5dp" />
             </LinearLayout>
 
             <ImageButton
@@ -112,6 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/login_text"
                 android:layout_gravity="center"
+                android:layout_centerInParent="true"
                 android:background="@drawable/ic_btn_register_oj"
              	android:layout_margin="1dp" />
 
@@ -121,6 +124,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/register_button"
                 android:layout_gravity="center"
+                android:layout_centerInParent="true"
                 android:background="@drawable/ic_btn_cancel"
                 android:layout_margin="1dp"  />
 
@@ -130,6 +134,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@id/register_button"
                 android:layout_gravity="center"
+                android:layout_centerInParent="true"
                 android:background="@drawable/ic_btn_sign_in_google"
                android:layout_margin="1dp" />
 
@@ -137,6 +142,7 @@
                 android:id="@+id/use_yahoo_login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
                 android:layout_below="@id/use_google_login_button"
                 android:background="@drawable/ic_btn_sign_in_yahoo"
                 android:layout_margin="1dp" />
