@@ -28,13 +28,16 @@
         android:verticalSpacing="4dp" >
     </GridView>
 
-    <RelativeLayout
+   <RelativeLayout
         android:id="@+id/button_holder"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/gallery_bottom_bar_height"
         android:layout_alignParentBottom="true"
+            android:clickable="true"
+            android:onClick="onClick"
         android:background="@color/dark" >
-    
+        
+        
         <TextView
             android:id="@+id/login_text"
             android:layout_width="wrap_content"
@@ -42,20 +45,18 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/gallery_login_text_padding"
-            android:clickable="true"
-            android:onClick="onClick"
             android:text="@string/welcome"
             android:textColor="@color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium" 
             android:textStyle="bold" />
+
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBottom="@+id/login_text"
-
             android:layout_toRightOf="@+id/login_text"
             android:src="@drawable/dropdown_ic_arrow_normal_holo_light" />
-
-
+     
     </RelativeLayout>
 
 </RelativeLayout>

@@ -232,7 +232,7 @@ public class MediaFragment extends SherlockFragment implements
 			userName = ((MainApplication) ((Activity) mContext)
 					.getApplication()).getUser().getUsername();
 			loginText.setText("Logged in as " + userName);
-			loginText.setOnClickListener(this);
+			mButtons.setOnClickListener(this);
 			if (mImageList.getImages().size() == 0)
 				retrieveUserImages();
 		}
@@ -321,7 +321,7 @@ public class MediaFragment extends SherlockFragment implements
 	public void onClick(View arg0) {
 
 		switch (arg0.getId()) {
-		case R.id.login_text:
+		case R.id.button_holder:
 			LoginFragment.getLogoutDialog(mContext).show();
 			break;
 
@@ -633,7 +633,7 @@ public class MediaFragment extends SherlockFragment implements
 			userName = ((MainApplication) ((Activity) mContext)
 					.getApplication()).getUser().getUsername();
 			loginText.setText("Logged in as " + userName);
-			loginText.setOnClickListener(this);
+			mButtons.setOnClickListener(this);
 			retrieveUserImages();
 			mButtons.setVisibility(View.VISIBLE);
 			mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,

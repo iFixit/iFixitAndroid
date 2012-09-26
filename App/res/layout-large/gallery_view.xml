@@ -32,6 +32,8 @@
         android:layout_width="fill_parent"
         android:layout_height="@dimen/gallery_bottom_bar_height"
         android:layout_alignParentBottom="true"
+            android:clickable="true"
+            android:onClick="onClick"
         android:background="@color/dark" >
         
         
@@ -41,11 +43,10 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:clickable="true"
-            android:onClick="onClick"
             android:layout_marginLeft="@dimen/gallery_login_text_padding"
             android:text="@string/welcome"
             android:textColor="@color/white"
+            android:textAppearance="?android:attr/textAppearanceMedium" 
             android:textStyle="bold" />
 
         <ImageView
