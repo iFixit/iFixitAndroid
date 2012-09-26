@@ -12,6 +12,7 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -37,13 +38,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private MediaFragment mMediaView;
 	private FrameLayout mTopicViewOverlay;
 
-	private boolean mHideTopicList;
-	private boolean mTopicListVisible;
 	private boolean mDualPane;
 	private ActionBar mActionBar;
 	private boolean mLoginVisible;
 	private View mLoginView;
-	private View mGalleryView;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +62,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		LoginFragment mLogin = (LoginFragment) getSupportFragmentManager()
 				.findFragmentByTag(LOGIN_FRAGMENT);
 		mTopicViewOverlay = (FrameLayout) findViewById(R.id.gallery_view_overlay);
-		mHideTopicList = mTopicViewOverlay != null;
+		//mHideTopicList = mTopicViewOverlay != null;
 		mDualPane = mTopicViewOverlay != null;
 
 		if (((MainApplication) this.getApplication()).getUser() == null) {
@@ -204,5 +202,15 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		MenuItem cameraIcon = menu.findItem(R.id.top_camera_button);
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+	    if (keyCode == KeyEvent.KEYCODE_BACK) {
+	        this.finish();
+	        return true;
+	    }
+	    return super.onKeyDown(keyCode, event);
+	}
+	
 
 }

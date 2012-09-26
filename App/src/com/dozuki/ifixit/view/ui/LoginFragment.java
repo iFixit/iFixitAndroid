@@ -33,6 +33,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.HTTPRequestHelper;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.User;
 import com.dozuki.ifixit.view.model.LoginListener;
@@ -62,6 +63,7 @@ public class LoginFragment extends SherlockFragment
 	private EditText _name;
 	private TextView _confirmPasswordTag;
 	private TextView _usernameTag;
+	private TextView _errorText;
 	
 	boolean readyForRegisterState;
 	
@@ -71,10 +73,11 @@ public class LoginFragment extends SherlockFragment
 			APIService.Result result = (APIService.Result) intent.getExtras()
 					.getSerializable(APIService.RESULT);
 
+			Log.e("SESSION",  "IN SESSION ");
 			if (!result.hasError()) {
+				Log.e("SESSION",  "NO ERROR");
 				User lUser =  (User)result.getResult();
 				((MainApplication)((Activity)mContext).getApplication()).setUser(lUser);
-				
 				final SharedPreferences prefs = mContext.getSharedPreferences(PREFERENCE_FILE, Context.MODE_WORLD_READABLE );
 				Editor editor = prefs.edit();
 				editor.putString(SESSION_KEY, lUser.getSession());
@@ -84,9 +87,13 @@ public class LoginFragment extends SherlockFragment
 				{
 					l.onLogin(lUser);
 				}
+			}else
+			{
+				_errorText.setVisibility(View.VISIBLE);
 			}
 		}
 	};
+
 
    /**
     * Required for restoring fragments
@@ -122,13 +129,13 @@ public class LoginFragment extends SherlockFragment
 	_googleLogin = (Button) view.findViewById(R.id.use_google_login_button);
 	_yahooLogin = (Button) view.findViewById(R.id.use_yahoo_login_button);
 	
-	_loginId.setText("aaron@fireswing.com");
-	_password.setText("LN8-7bT2");
 	
 	_confirmPasswordTag =  (TextView) view.findViewById(R.id.confirm_password);
 	_usernameTag = (TextView) view.findViewById(R.id.login_username);
 	_confirmPassword = (EditText) view.findViewById(R.id.edit_confirm_password);	
 	_name = (EditText) view.findViewById(R.id.edit_login_username); 
+	_errorText = (TextView) view.findViewById(R.id.login_error_text);
+	_errorText.setVisibility(View.GONE);
 	
 	 setState();
 
@@ -297,8 +304,7 @@ public void onActivityResult (int requestCode, int resultCode, Intent data)
 	if(resultCode == Activity.RESULT_OK)
 	if(data != null)
 	{
-		displayLoading();
-	   
+
 	   String session = data.getStringExtra("session");
 	   AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 	   authenicationPackage.session = session;
@@ -332,16 +338,7 @@ public void onPause() {
  {
 	 LoginFragment.loginListeners.add(l);
  }
- 
- private void displayLoading() {
-     FragmentTransaction ft = getActivity().getSupportFragmentManager().
-      beginTransaction();
-     ft.replace(R.id.login_overlay, new LoadingFragment());
-     ft.commit();
-  }
- 
- 
- 
+
  static AlertDialog getLogoutDialog(final Context context) {
 		      return createLogoutDialog(context, R.string.logout_title,
 		       R.string.logout_messege, R.string.logout_confirm, R.string.logout_cancel);
@@ -358,10 +355,12 @@ public void onPause() {
 		                public void onClick(DialogInterface dialog, int id) {
 		                  
 		               
+		                	HTTPRequestHelper.clearCookies(context);
 		                	for(LoginListener l : loginListeners)
 		    				{
 		    					l.onLogout();
 		    				}
+
 		    
 		                   dialog.cancel();
 		                }

@@ -23,8 +23,13 @@ import android.os.Message;
 import android.util.Log;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.APIService.Error;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.dozuki.ifixit.view.ui.GalleryActivity;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -204,6 +209,7 @@ public class APIService extends Service {
     */
    private Result parseResult(String response, int requestTarget,
     String broadcastAction) {
+	   Log.e("PARSED: ", response);
       Object parsedResult = null;
       try {
          switch (requestTarget) {
@@ -396,8 +402,13 @@ public class APIService extends Service {
          return getParseErrorDialog(context, apiIntent);
       }
    }
+   
+   public static AlertDialog getListMediaErrorDialog(Context mContext) {
+	   
+		return createMediaErrorDialog(mContext);
+	}
 
-   private static AlertDialog getParseErrorDialog(final Context context,
+private static AlertDialog getParseErrorDialog(final Context context,
     Intent apiIntent) {
       return createErrorDialog(context, apiIntent, R.string.parse_error_title,
        R.string.parse_error_message, R.string.try_again);
@@ -427,7 +438,22 @@ public class APIService extends Service {
       return builder.create();
    }
    
-  
+   private static AlertDialog createMediaErrorDialog(final Context mContext) {
+	   HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
+	      builder.setTitle(mContext.getString(R.string.media_error_title))
+	             .setPositiveButton(mContext.getString(R.string.media_error_confirm),
+	              new DialogInterface.OnClickListener() {
+	                public void onClick(DialogInterface dialog, int id) {
+	                	//kill the media activity, and have them try again later
+	                	//incase the server needs some rest
+	                	((SherlockFragmentActivity)mContext).finish();
+	                   dialog.cancel();
+	                }
+	             });
+
+	      return builder.create();
+		
+	}
 
    private static void performRequestHelper(Context context, int requestTarget,
     String requestQuery, Responder responder) {
@@ -583,4 +609,6 @@ public class APIService extends Service {
 
       return true;
    }
+
+
 }

@@ -13,6 +13,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -57,10 +58,13 @@ import org.apache.http.protocol.BasicHttpContext;
 import org.apache.http.protocol.HTTP;
 import org.apache.http.protocol.HttpContext;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 
 /**
  * Wrapper to help make HTTP requests easier - after all, we want to make it
@@ -124,6 +128,21 @@ public class HTTPRequestHelper {
    public HTTPRequestHelper(final Handler handler) {
       this(HTTPRequestHelper.getResponseHandlerInstance(handler));
    }
+   
+   public static void clearCookies(Context c)
+   {
+	 //  client.getCookieStore().getCookies().clear();
+	  //client.getCookieStore().clear();
+	   //client.setCookieStore(null);
+	   //CookieSyncManager.createInstance(c).sync();
+	   //CookieManager.getInstance().removeSessionCookie();
+	   //CookieManager.getInstance().removeAllCookie();
+	   //CookieSyncManager.getInstance().sync();
+	  // clearExpired(new Date(System.currentTimeMillis() + 120000))
+	   client.getCookieStore().clearExpired(new Date(System.currentTimeMillis() + 120000));
+	 
+	  
+   }
 
    /**
     * Perform a simple HTTP GET operation.
@@ -169,17 +188,22 @@ public class HTTPRequestHelper {
 
 		// clearing all old cookies
 		client.getCookieStore().clear();
-		// create and addd sessionCookie
-		final BasicClientCookie cookie = new BasicClientCookie("session",
-				session);
+		
+	
 
-		cookie.setExpiryDate(new Date(System.currentTimeMillis() + 120000));
-		cookie.setDomain(domain);
-		cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
-		cookie.setAttribute(ClientCookie.DOMAIN_ATTR, domain);
-		cookie.setPath("/");
+		if(session != null && !session.equals(""))
+		{
+			// create and add sessionCookie
+			final BasicClientCookie cookie = new BasicClientCookie("session",
+					session);
+		   cookie.setExpiryDate(new Date(System.currentTimeMillis() + 120000));
+		   cookie.setDomain(domain);
+		   cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
+		   cookie.setAttribute(ClientCookie.DOMAIN_ATTR, domain);
+		   cookie.setPath("/");
 
-		client.getCookieStore().addCookie(cookie);
+		   client.getCookieStore().addCookie(cookie);
+		}
 		
 		//URLConnection used for file uploads
 		if (file == null)
@@ -226,12 +250,12 @@ public class HTTPRequestHelper {
        " making HTTP request to url - " + url);
 
       // add user and pass to client credentials if present
-      if ((user != null) && (pass != null)) {
+     /* if ((user != null) && (pass != null)) {
          Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
           " user and pass present, adding credentials to request");
          client.getCredentialsProvider().setCredentials(AuthScope.ANY,
           new UsernamePasswordCredentials(user, pass));
-      }
+      }*/
 
       // process headers using request interceptor
       if ((headers != null) && (headers.size() > 0)) {

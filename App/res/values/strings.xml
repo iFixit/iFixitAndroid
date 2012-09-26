@@ -22,10 +22,13 @@
    <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
    <string name="no_connection">No connection</string>
    <string name="no_connection_title">Connection error</string>
+   <string name="media_error_title">Something went wrong. Try again later.</string>
+   <string name="media_error_confirm">OK</string>
    <string name="logout_title">Logout</string>
    <string name="logout_messege">Are you sure you want to logout?</string>
    <string name="logout_confirm">Yes</string>
    <string name="logout_cancel">No</string>
+   <string name="login_error">Whoops, Looks like we had an trying to log you in!</string>
    <string name="try_again">Try again</string>
    <string name="fist_background_desc">Fist background image</string>
    <string name="thumbnail_desc">Thumbnail image</string>

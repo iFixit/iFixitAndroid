@@ -141,27 +141,10 @@ public class MediaFragment extends SherlockFragment implements
 					galleryAdapter.invalidatedView();
 				} else if (intent.getAction().equals(
 						APIService.ACTION_DELETE_MEDIA)) {
+					
 				}
 			} else {
-				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
-						.getApplication()).getUser().getSession();
-				if (intent.getAction().equals(APIService.ACTION_USER_MEDIA)) {
-					APIService
-							.getErrorDialog(
-									mContext,
-									result.getError(),
-									APIService
-											.userMediaIntent(
-													mContext,
-													authenicationPackage,
-													"?limit="
-															+ IMAGE_PAGE_SIZE
-															+ "&offset="
-															+ (IMAGE_PAGE_SIZE * mCurrentPage)))
-							.show();
-					nextPageRequestInProgress = false;
-				}
+				APIService.getListMediaErrorDialog(mContext).show();
 			}
 
 		}
@@ -769,4 +752,6 @@ public class MediaFragment extends SherlockFragment implements
 
 	}
 
+	
+	
 }
