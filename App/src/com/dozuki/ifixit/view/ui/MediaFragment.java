@@ -146,6 +146,7 @@ public class MediaFragment extends SherlockFragment implements
 						return;
 					cur.imgId = imageinfo.getmImageid();
 					localURL.put(url, cur);
+					mImagesDownloaded++;
 					galleryAdapter.invalidatedView();
 				} else if (intent.getAction().equals(
 						APIService.ACTION_DELETE_MEDIA)) {
