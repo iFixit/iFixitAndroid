@@ -9,6 +9,7 @@ import android.content.Context;
 
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AlphaAnimation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
@@ -52,11 +53,14 @@ public class MediaViewItem extends RelativeLayout {
 		if(loading)
 		{
 	    	loadingBar.setVisibility(View.VISIBLE);
-	    	imageview.setAlpha(.5f);
+	    	AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
+	    	alpha.setDuration(0); // Make animation instant
+	    	alpha.setFillAfter(true); // Tell it to persist after the animation ends
+	    	imageview.startAnimation(alpha);
 		}else
 		{
 			loadingBar.setVisibility(View.INVISIBLE);
-			imageview.setAlpha(1f);
+			imageview.clearAnimation();
 		}
 	}
 
