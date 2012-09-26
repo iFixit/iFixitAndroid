@@ -21,6 +21,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.ExifInterface;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -101,6 +102,7 @@ public class MediaFragment extends SherlockFragment implements
 	private ImageManager mImageManager;
 	private ArrayList<Boolean> selectedList;
 	private HashMap<String, LocalImage> localURL;
+	private HashMap<String, Bitmap> limages;
 	private ImageSizes mImageSizes;
 	static UserImageList mImageList;
 	private ActionMode mMode;
@@ -124,7 +126,7 @@ public class MediaFragment extends SherlockFragment implements
 							selectedList.add(false);
 							mImageList.addImage(imageList.getImages().get(i));
 						}
-						mImagesDownloaded +=(mImageList.getImages().size() - oldImageSize);
+						mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
 						galleryAdapter.invalidatedView();
 						mLastPage = false;
 
@@ -147,7 +149,7 @@ public class MediaFragment extends SherlockFragment implements
 					galleryAdapter.invalidatedView();
 				} else if (intent.getAction().equals(
 						APIService.ACTION_DELETE_MEDIA)) {
-					
+
 				}
 			} else {
 				APIService.getListMediaErrorDialog(mContext).show();
@@ -182,6 +184,7 @@ public class MediaFragment extends SherlockFragment implements
 		mMode = null;
 		selectedList = new ArrayList<Boolean>();
 		localURL = new HashMap<String, LocalImage>();
+		limages = new HashMap<String, Bitmap>();
 		if (savedInstanceState != null) {
 			mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
 			mImageList = (UserImageList) savedInstanceState
@@ -191,10 +194,14 @@ public class MediaFragment extends SherlockFragment implements
 			for (boolean b : selected)
 				selectedList.add(b);
 			galleryAdapter = new MediaAdapter();
-			if(savedInstanceState.getString(CAMERA_PATH) != null)
+			if (savedInstanceState.getString(CAMERA_PATH) != null)
 				cameraTempFileName = savedInstanceState.getString(CAMERA_PATH);
 			localURL = (HashMap<String, LocalImage>) savedInstanceState
 					.getSerializable(HASH_MAP);
+			for (LocalImage li : localURL.values()) {
+				if (li.path.contains(".jpg"))
+					limages.put(li.path, buildBitmap(li.path));
+			}
 		} else {
 			mImageList = new UserImageList();
 			galleryAdapter = new MediaAdapter();
@@ -225,8 +232,8 @@ public class MediaFragment extends SherlockFragment implements
 					.getApplication()).getUser().getUsername();
 			loginText.setText("Logged in as " + userName);
 			loginText.setOnClickListener(this);
-			if(mImageList.getImages().size() == 0)
-			   retrieveUserImages();
+			if (mImageList.getImages().size() == 0)
+				retrieveUserImages();
 		}
 
 		if (selectedList.contains(true)) {
@@ -254,9 +261,10 @@ public class MediaFragment extends SherlockFragment implements
 		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 				.getApplication()).getUser().getSession();
 		nextPageRequestInProgress = true;
-		int initialPageSize=5;
+		int initialPageSize = 5;
 		mContext.startService(APIService.userMediaIntent(mContext,
-				authenicationPackage, "?limit=" + (IMAGE_PAGE_SIZE+initialPageSize) + "&offset="
+				authenicationPackage, "?limit="
+						+ (IMAGE_PAGE_SIZE + initialPageSize) + "&offset="
 						+ (mImagesDownloaded)));
 		userName = ((MainApplication) ((Activity) mContext).getApplication())
 				.getUser().getUsername();
@@ -426,8 +434,7 @@ public class MediaFragment extends SherlockFragment implements
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
 				mContext.startService(APIService.getUploadImageIntent(mContext,
-						authenicationPackage, fPath,
-						fPath));
+						authenicationPackage, fPath, fPath));
 			}
 		}
 	}
@@ -469,6 +476,7 @@ public class MediaFragment extends SherlockFragment implements
 			mImageList.addImage(userImageInfo);
 			selectedList.add(false);
 			localURL.put(url, new LocalImage(path));
+			limages.put(url, buildBitmap(url));
 			invalidatedView();
 		}
 
@@ -513,12 +521,8 @@ public class MediaFragment extends SherlockFragment implements
 							.getmGuid());
 					Bitmap bitmap;
 					if (temp.toString().contains(".jpg")) {
-						BitmapFactory.Options opt = new BitmapFactory.Options();
-						opt.inSampleSize = 4;
-						opt.inDither = true;
-						opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-						bitmap = BitmapFactory.decodeFile(localURL.get(mImageList.getImages().get(position).getmGuid()).path,
-								opt);
+						bitmap = limages.get(mImageList.getImages()
+								.get(position).getmGuid());
 					} else {
 						bitmap = MediaStore.Images.Thumbnails.getThumbnail(
 								mContext.getContentResolver(),
@@ -624,16 +628,15 @@ public class MediaFragment extends SherlockFragment implements
 
 	@Override
 	public void onLogin(User user) {
-		if(mImageList.getImages().size() == 0)
-		{
-		userName = ((MainApplication) ((Activity) mContext).getApplication())
-				.getUser().getUsername();
-		loginText.setText("Logged in as " + userName);
-		loginText.setOnClickListener(this);
-		retrieveUserImages();
-		mButtons.setVisibility(View.VISIBLE);
-		mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,
-				R.anim.slide_in_bottom));
+		if (mImageList.getImages().size() == 0) {
+			userName = ((MainApplication) ((Activity) mContext)
+					.getApplication()).getUser().getUsername();
+			loginText.setText("Logged in as " + userName);
+			loginText.setOnClickListener(this);
+			retrieveUserImages();
+			mButtons.setVisibility(View.VISIBLE);
+			mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,
+					R.anim.slide_in_bottom));
 		}
 	}
 
@@ -740,16 +743,15 @@ public class MediaFragment extends SherlockFragment implements
 			if ((arg1 + arg2) >= arg3 && !mLastPage) {
 				if (((MainApplication) ((Activity) mContext).getApplication())
 						.isUserLoggedIn()
-						&& !nextPageRequestInProgress &&
-						mCurScrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+						&& !nextPageRequestInProgress
+						&& mCurScrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
 					nextPageRequestInProgress = true;
 					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 					authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 							.getApplication()).getUser().getSession();
 					mContext.startService(APIService.userMediaIntent(mContext,
 							authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE
-									+ "&offset="
-									+ (mImagesDownloaded)));
+									+ "&offset=" + (mImagesDownloaded)));
 				}
 			}
 		}
@@ -766,24 +768,31 @@ public class MediaFragment extends SherlockFragment implements
 		// TODO Auto-generated method stub
 
 	}
-	
 
-	 static AlertDialog createHelpDialog(final Context context) {
-			      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
-			      builder.setTitle(context.getString(R.string.media_help_title))
-			             .setMessage(context.getString(R.string.media_help_messege))
-			             .setPositiveButton(context.getString(R.string.media_help_confirm),
-			              new DialogInterface.OnClickListener() {
-			                public void onClick(DialogInterface dialog, int id) {
-			                  
-			               
-			                   dialog.cancel();
-			                }
-			             });
+	static AlertDialog createHelpDialog(final Context context) {
+		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+		builder.setTitle(context.getString(R.string.media_help_title))
+				.setMessage(context.getString(R.string.media_help_messege))
+				.setPositiveButton(
+						context.getString(R.string.media_help_confirm),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
 
-			      return builder.create();
-			   }
+								dialog.cancel();
+							}
+						});
 
+		return builder.create();
+	}
 	
-	
+	private Bitmap buildBitmap(String url) {
+		BitmapFactory.Options opt = new BitmapFactory.Options();
+		opt.inSampleSize = 4;
+		opt.inDither = false;
+		opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+		Bitmap b;
+		b = BitmapFactory.decodeFile(url, opt);
+		return b;
+	}
+
 }

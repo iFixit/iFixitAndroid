@@ -46,7 +46,6 @@ public class MediaViewItem extends RelativeLayout {
 		mContext = context;
 		imageview.setFadeIn(fade);
 		mImageManager.displayImage(image, (Activity) mContext, imageview);
-		//imageview.on
 	}
 	
 	public void setLoading(boolean loading) {
