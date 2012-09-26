@@ -52,14 +52,14 @@ public class UserImageList  implements Serializable {
 	    {
 	    	
 	    	if(e1.getmImageId() == null && e2.getmImageId() == null)
-	    	 return 0;
+	    	   return 0;
 	    	
 	    	if(e1.getmImageId()  == null)
-	    	    return -1;
+	    	    return 1;
 	    
 	    	
 	    	if(e2.getmImageId() == null)
-	    		return 1;
+	    		return -1;
 	    	
 
 	       return (int)(Long.parseLong(e1.getmImageId()) - Long.parseLong(e2.getmImageId()));
