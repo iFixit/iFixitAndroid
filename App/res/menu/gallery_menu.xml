@@ -6,6 +6,6 @@
         android:showAsAction="always|withText"/>
     <item
         android:id="@+id/top_gallery_button"
-        android:icon="@drawable/ic_menu_gallery_inactive"
+        android:icon="@drawable/ic_menu_addimage_inactive"
         android:showAsAction="always|withText"/>
 </menu>

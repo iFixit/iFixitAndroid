@@ -11,6 +11,8 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -19,6 +21,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.LoginListener;
@@ -151,6 +154,12 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		case android.R.id.home:
 			finish();
 			return true;
+		case R.id.top_camera_button:
+			mMediaView.launchCamera();
+			return true;
+		case R.id.top_gallery_button:
+			mMediaView.launchGallery();
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -187,6 +196,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.gallery_menu, menu);
+		
+		//SubMenu subMenu = menu.addSubMenu(0,Menu.NONE,1,"Test!").setIcon(R.drawable.gallery);
+		//subMenu.add("Test 1").setIcon(R.drawable.ic_menu_add_image_active);
+		
 		MenuItem galleryIcon = menu.findItem(R.id.top_gallery_button);
 		MenuItem cameraIcon = menu.findItem(R.id.top_camera_button);
 		return super.onCreateOptionsMenu(menu);

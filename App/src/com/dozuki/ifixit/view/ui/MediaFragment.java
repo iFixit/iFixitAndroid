@@ -223,12 +223,6 @@ public class MediaFragment extends SherlockFragment implements
 
 		mButtons = (RelativeLayout) view.findViewById(R.id.button_holder);
 
-		((ImageButton) view.findViewById(R.id.add_from_gallery_button))
-				.setOnClickListener(this);
-
-		((ImageButton) view.findViewById(R.id.camera_button))
-				.setOnClickListener(this);
-
 		loginText = ((TextView) view.findViewById(R.id.login_text));
 
 		if (!((MainApplication) ((Activity) mContext).getApplication())
@@ -323,32 +317,35 @@ public class MediaFragment extends SherlockFragment implements
 	public void onClick(View arg0) {
 
 		switch (arg0.getId()) {
-		case R.id.add_from_gallery_button:
-			Intent intent = new Intent();
-			intent.setType("image/*");
-			intent.setAction(Intent.ACTION_GET_CONTENT);
-			startActivityForResult(
-					Intent.createChooser(intent, "Select Picture"),
-					SELECT_PICTURE);
-			break;
-		case R.id.camera_button:
-			Intent cameraIntent = new Intent(
-					android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-			File f;
-			try {
-				f = createImageFile();
-				cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-						Uri.fromFile(f));
-				startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-			break;
-
 		case R.id.login_text:
 			LoginFragment.getLogoutDialog(mContext).show();
 			break;
 
+		}
+	}
+	
+	public void launchGallery()
+	{
+		Intent intent = new Intent();
+		intent.setType("image/*");
+		intent.setAction(Intent.ACTION_GET_CONTENT);
+		startActivityForResult(
+				Intent.createChooser(intent, "Select Picture"),
+				SELECT_PICTURE);
+	}
+	
+	public void launchCamera()
+	{
+		Intent cameraIntent = new Intent(
+				android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		File f;
+		try {
+			f = createImageFile();
+			cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+					Uri.fromFile(f));
+			startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+		} catch (IOException e) {
+			e.printStackTrace();
 		}
 	}
 
