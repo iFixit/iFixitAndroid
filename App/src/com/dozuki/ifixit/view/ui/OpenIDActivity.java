@@ -38,6 +38,7 @@ public class OpenIDActivity extends Activity {
 	      
 	      _webView = (WebView)findViewById(R.id.open_id_web_view);
 	      
+	      CookieSyncManager.createInstance(this);
 	      CookieSyncManager.getInstance().sync();
 	      CookieManager.getInstance().removeAllCookie();
 	      
