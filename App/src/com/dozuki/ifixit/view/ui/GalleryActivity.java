@@ -43,7 +43,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private ActionBar mActionBar;
 	private boolean mLoginVisible;
 	private View mLoginView;
-	
+
 	private MenuItem galleryIcon;
 	private MenuItem cameraIcon;
 	private MenuItem helpIcon;
@@ -67,7 +67,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		LoginFragment mLogin = (LoginFragment) getSupportFragmentManager()
 				.findFragmentByTag(LOGIN_FRAGMENT);
 		mTopicViewOverlay = (FrameLayout) findViewById(R.id.gallery_view_overlay);
-		//mHideTopicList = mTopicViewOverlay != null;
+		// mHideTopicList = mTopicViewOverlay != null;
 		mDualPane = mTopicViewOverlay != null;
 
 		SharedPreferences preferenceFile;
@@ -80,12 +80,12 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			String username = preferenceFile.getString(
 					LoginFragment.USERNAME_KEY, null);
 			if (session != null) {
-				showMenuBarIcons();
 				user.setSession(session);
 				user.setUsername(username);
 				mLoginView.setVisibility(View.INVISIBLE);
 				((MainApplication) this.getApplication()).setUser(user);
 				mMediaView.onLogin(user);
+				showMenuBarIcons();
 			} else {
 				if (mLogin == null) {
 					displayLogin();
@@ -101,8 +101,6 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		LoginFragment.registerOnLoginListener(mMediaView);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-	
-		
 
 	}
 
@@ -129,6 +127,8 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onResume() {
+		if(((MainApplication) this.getApplication()).getUser() == null)
+			hideMenuBarIcons();
 		super.onResume();
 
 	}
@@ -163,12 +163,18 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			finish();
 			return true;
 		case R.id.top_camera_button:
+			if(((MainApplication) this.getApplication()).getUser() == null)
+				return false;
 			mMediaView.launchCamera();
 			return true;
 		case R.id.top_gallery_button:
+			if(((MainApplication) this.getApplication()).getUser() == null)
+				return false;
 			mMediaView.launchGallery();
 			return true;
 		case R.id.top_question_button:
+			if(((MainApplication) this.getApplication()).getUser() == null)
+				return false;
 			mMediaView.createHelpDialog(this).show();
 			return true;
 		default:
@@ -186,15 +192,13 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		showMenuBarIcons();
 		getSupportFragmentManager().popBackStack();
 		mLoginView.setVisibility(View.INVISIBLE);
-		
-		
+
 		SharedPreferences preferenceFile = this.getSharedPreferences(
 				LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
-		boolean firstTimeUser = preferenceFile.getBoolean(
-				FIRST_TIME_USER, true);
-		
-		if(firstTimeUser)
-		{
+		boolean firstTimeUser = preferenceFile
+				.getBoolean(FIRST_TIME_USER, true);
+
+		if (firstTimeUser) {
 			mMediaView.createHelpDialog(this).show();
 			Editor e = preferenceFile.edit();
 			e.putBoolean(FIRST_TIME_USER, false);
@@ -225,37 +229,36 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		galleryIcon = menu.findItem(R.id.top_gallery_button);
 		cameraIcon = menu.findItem(R.id.top_camera_button);
 		helpIcon = menu.findItem(R.id.top_question_button);
+		
 		return super.onCreateOptionsMenu(menu);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
-	    if (keyCode == KeyEvent.KEYCODE_BACK) {
-	        this.finish();
-	        return true;
-	    }
-	    return super.onKeyDown(keyCode, event);
+		if (keyCode == KeyEvent.KEYCODE_BACK) {
+			this.finish();
+			return true;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
-	
-	public void hideMenuBarIcons()
-	{
-		if(galleryIcon != null)
+
+	public void hideMenuBarIcons() {
+		if (galleryIcon != null)
 			galleryIcon.setVisible(false);
-		if(cameraIcon != null)
+		if (cameraIcon != null)
 			cameraIcon.setVisible(false);
-		if(helpIcon != null)
+		if (helpIcon != null)
 			helpIcon.setVisible(false);
 	}
-	
-	public void showMenuBarIcons()
-	{
-		if(galleryIcon != null)
+
+	public void showMenuBarIcons() {
+		Log.i("","Show me!");
+		if (galleryIcon != null)
 			galleryIcon.setVisible(true);
-		if(cameraIcon != null)
+		if (cameraIcon != null)
 			cameraIcon.setVisible(true);
-		if(helpIcon != null)
+		if (helpIcon != null)
 			helpIcon.setVisible(true);
 	}
-	
 
 }

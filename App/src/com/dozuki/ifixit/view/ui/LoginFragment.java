@@ -91,8 +91,10 @@ public class LoginFragment extends SherlockFragment
 				{
 					l.onLogin(lUser);
 				}
+				
 			}else
 			{
+				_loadingSpinner.setVisibility(View.GONE);
 				_errorText.setVisibility(View.VISIBLE);
 			}
 		}
@@ -151,7 +153,6 @@ public class LoginFragment extends SherlockFragment
 
 		@Override
 		public void onClick(View v) {
-			_loadingSpinner.setVisibility(View.VISIBLE);
 			InputMethodManager in = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
            
             in.hideSoftInputFromWindow(_loginId
@@ -214,6 +215,7 @@ public class LoginFragment extends SherlockFragment
 		
 		if( _loginId.getText().toString().length() > 1 &&  _password.getText().toString().length() > 1)
 		{
+			_loadingSpinner.setVisibility(View.VISIBLE);
 			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 			authenicationPackage.login = _loginId.getText().toString();
 			authenicationPackage.password =  _password.getText().toString();
@@ -311,7 +313,7 @@ public void onActivityResult (int requestCode, int resultCode, Intent data)
 	if(resultCode == Activity.RESULT_OK)
 	if(data != null)
 	{
-
+		_loadingSpinner.setVisibility(View.VISIBLE);
 	   String session = data.getStringExtra("session");
 	   AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 	   authenicationPackage.session = session;
