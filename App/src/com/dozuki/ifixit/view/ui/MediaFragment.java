@@ -78,7 +78,7 @@ public class MediaFragment extends SherlockFragment implements
 	private static final int MAX_LOADING_IMAGES = 15;
 	private static final int MAX_STORED_IMAGES = 20;
 	private static final int MAX_WRITING_IMAGES = 15;
-	private static final int IMAGE_PAGE_SIZE = 2;
+	private static final int IMAGE_PAGE_SIZE = 40;
 	protected static final String IMAGE_URL = "IMAGE_URL";
 	protected static final String LOCAL_URL = "LOCAL_URL";
 	protected static final String CAMERA_PATH = "CAMERA_PATH";
@@ -741,7 +741,7 @@ public class MediaFragment extends SherlockFragment implements
 		// used to determine when to load more images
 		@Override
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-			if ((arg1 + arg2) >= arg3 && !mLastPage) {
+			if ((arg1 + arg2) >= arg3/2 && !mLastPage) {
 				if (((MainApplication) ((Activity) mContext).getApplication())
 						.isUserLoggedIn()
 						&& !nextPageRequestInProgress
