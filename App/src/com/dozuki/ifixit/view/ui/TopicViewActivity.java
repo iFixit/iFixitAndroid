@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.view.ui;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -50,12 +51,24 @@ public class TopicViewActivity extends SherlockFragmentActivity {
          }
       }
    }
+   
+   @Override
+	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+		com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.menu_bar, menu);
+		MenuItem galleryIcon = menu.findItem(R.id.gallery_button);
+		return super.onCreateOptionsMenu(menu);
+	}
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
             finish();
+            return true;
+         case R.id.gallery_button:
+        	 Intent intent = new Intent(this, GalleryActivity.class);
+        	 startActivity(intent);
             return true;
          default:
             return super.onOptionsItemSelected(item);

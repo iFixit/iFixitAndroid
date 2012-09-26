@@ -131,17 +131,7 @@ public class HTTPRequestHelper {
    
    public static void clearCookies(Context c)
    {
-	 //  client.getCookieStore().getCookies().clear();
-	  //client.getCookieStore().clear();
-	   //client.setCookieStore(null);
-	   //CookieSyncManager.createInstance(c).sync();
-	   //CookieManager.getInstance().removeSessionCookie();
-	   //CookieManager.getInstance().removeAllCookie();
-	   //CookieSyncManager.getInstance().sync();
-	  // clearExpired(new Date(System.currentTimeMillis() + 120000))
 	   client.getCookieStore().clearExpired(new Date(System.currentTimeMillis() + 120000));
-	 
-	  
    }
 
    /**
@@ -188,8 +178,6 @@ public class HTTPRequestHelper {
 
 		// clearing all old cookies
 		client.getCookieStore().clear();
-		
-	
 
 		if(session != null && !session.equals(""))
 		{

@@ -24,6 +24,10 @@
    <string name="no_connection_title">Connection error</string>
    <string name="media_error_title">Something went wrong. Try again later.</string>
    <string name="media_error_confirm">OK</string>
+   <string name="media_help_title">Whats this?</string>
+    <string name="media_help_messege">This gallery is linked directly to your iFixit account. Any pictures you load into here will be available to you in your guide creation
+         endeavors. Stay tuned and you will be able to create guides on the go!</string>
+   <string name="media_help_confirm">Good to know!</string>
    <string name="logout_title">Logout</string>
    <string name="logout_messege">Are you sure you want to logout?</string>
    <string name="logout_confirm">Yes</string>

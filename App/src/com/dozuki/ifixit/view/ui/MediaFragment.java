@@ -10,9 +10,11 @@ import java.util.HashMap;
 import java.util.List;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.database.Cursor;
@@ -46,6 +48,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -56,6 +59,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.HTTPRequestHelper;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.LoginListener;
@@ -755,6 +759,23 @@ public class MediaFragment extends SherlockFragment implements
 		// TODO Auto-generated method stub
 
 	}
+	
+
+	 static AlertDialog createHelpDialog(final Context context) {
+			      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+			      builder.setTitle(context.getString(R.string.media_help_title))
+			             .setMessage(context.getString(R.string.media_help_messege))
+			             .setPositiveButton(context.getString(R.string.media_help_confirm),
+			              new DialogInterface.OnClickListener() {
+			                public void onClick(DialogInterface dialog, int id) {
+			                  
+			               
+			                   dialog.cancel();
+			                }
+			             });
+
+			      return builder.create();
+			   }
 
 	
 	

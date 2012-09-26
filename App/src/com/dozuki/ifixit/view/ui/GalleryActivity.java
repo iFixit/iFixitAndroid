@@ -34,6 +34,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 	private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
 	private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
+	private static final String FIRST_TIME_USER = "FIRST_TIME_USER";
 	private String GALLERY_FRAGMENT = "GALLERY_FRAGMENT";
 	private MediaFragment mMediaView;
 	private FrameLayout mTopicViewOverlay;
@@ -65,8 +66,9 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		//mHideTopicList = mTopicViewOverlay != null;
 		mDualPane = mTopicViewOverlay != null;
 
+		SharedPreferences preferenceFile;
 		if (((MainApplication) this.getApplication()).getUser() == null) {
-			SharedPreferences preferenceFile = this.getSharedPreferences(
+			preferenceFile = this.getSharedPreferences(
 					LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
 			User user = new User();
 			String session = preferenceFile.getString(
@@ -94,6 +96,21 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		LoginFragment.registerOnLoginListener(mMediaView);
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		
+		//desides weather to show help dialog
+		preferenceFile = this.getSharedPreferences(
+				LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
+		
+		boolean firstTieUser = preferenceFile.getBoolean(
+				FIRST_TIME_USER, true);
+		
+		if(firstTieUser)
+		{
+			mMediaView.createHelpDialog(this).show();
+			Editor e = preferenceFile.edit();
+			e.putBoolean(FIRST_TIME_USER, false);
+			e.commit();
+		}
 	}
 
 	private void displayLogin() {
@@ -157,6 +174,9 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			return true;
 		case R.id.top_gallery_button:
 			mMediaView.launchGallery();
+			return true;
+		case R.id.top_question_button:
+			mMediaView.createHelpDialog(this).show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
