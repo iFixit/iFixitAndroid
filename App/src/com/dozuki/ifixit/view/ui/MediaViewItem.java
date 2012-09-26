@@ -53,9 +53,11 @@ public class MediaViewItem extends RelativeLayout {
 		if(loading)
 		{
 	    	loadingBar.setVisibility(View.VISIBLE);
+	    	imageview.setAlpha(.5f);
 		}else
 		{
 			loadingBar.setVisibility(View.INVISIBLE);
+			imageview.setAlpha(1f);
 		}
 	}
 
