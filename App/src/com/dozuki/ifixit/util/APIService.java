@@ -123,7 +123,7 @@ public class APIService extends Service {
 	public static final String ACTION_GUIDE = "com.dozuki.ifixit.api.guide";
 	public static final String ACTION_TOPIC = "com.dozuki.ifixit.api.topic";
 	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
-	public static final String ACTION_REGISTER = "com.dozuki.ifixit.api.resgister";
+	public static final String ACTION_REGISTER = "com.dozuki.ifixit.api.register";
 	public static final String ACTION_USER_MEDIA = "com.dozuki.ifixit.api.images";
 	public static final String ACTION_UPLOAD_MEDIA = "com.dozuki.ifixit.api.upload";
 	public static final String ACTION_DELETE_MEDIA = "com.dozuki.ifixit.api.delete";
@@ -232,6 +232,9 @@ public class APIService extends Service {
 				break;
 			case TARGET_DELETE_MEDIA:
 				parsedResult = "";
+        	 break;
+			case TARGET_REGISTER:
+				parsedResult = JSONHelper.parseLoginInfo(response);
         	 break;
          default:
             Log.w("iFixit", "Invalid request target: " + requestTarget);
@@ -494,7 +497,6 @@ private static AlertDialog getParseErrorDialog(final Context context,
 		}
 
 		String url;
-
 		File file = null;
 		switch (requestTarget) {
 		case TARGET_LOGIN:
@@ -502,6 +504,8 @@ private static AlertDialog getParseErrorDialog(final Context context,
 			break;
 		case TARGET_REGISTER:
 			url = REGISTER_API_URL;
+			Log.e("REGUSTER", url);
+			break;
 		case TARGET_MEDIA_LIST:
 			url = USER_IMAGES_API_URL + requestQuery;
 			authenicationPackage.login = null;
@@ -529,7 +533,6 @@ private static AlertDialog getParseErrorDialog(final Context context,
 			responder.setResult(new Result(Error.PARSE));
 			return;
 		}
-		Log.e("URL", url);
 		performAuthenicatedRequest(url, authenicationPackage, file, responder);
 	}
 

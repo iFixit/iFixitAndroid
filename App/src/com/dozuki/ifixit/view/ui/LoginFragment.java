@@ -213,13 +213,16 @@ public class LoginFragment extends SherlockFragment
 
 	private void login() {
 		
-		if( _loginId.getText().toString().length() > 1 &&  _password.getText().toString().length() > 1)
+		if( _loginId.getText().toString().length() > 1 &&  _password.getText().toString().length() > 1 &&  _loginId.getText().toString().contains("@"))
 		{
 			_loadingSpinner.setVisibility(View.VISIBLE);
 			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 			authenicationPackage.login = _loginId.getText().toString();
 			authenicationPackage.password =  _password.getText().toString();
 		   mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
+		}else
+		{
+			_errorText.setVisibility(View.VISIBLE);
 		}
 	}
 
@@ -285,7 +288,7 @@ public void onClick(View v) {
     	  }else
  {//
 				if (_password.getText().toString()
-						.equals(_confirmPassword.getText().toString())) {
+						.equals(_confirmPassword.getText().toString()) && _loginId.getText().length() > 1 && _loginId.getText().toString().contains("@")) {
 					// start service for register
 					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 					authenicationPackage.login = _loginId.getText().toString();
@@ -294,6 +297,9 @@ public void onClick(View v) {
 					authenicationPackage.username = _name.getText().toString();
 					mContext.startService(APIService.getRegisterIntent(mContext, authenicationPackage));
 					
+				}else
+				{
+					_errorText.setVisibility(View.VISIBLE);
 				}
 			}
    	   break;
@@ -327,6 +333,7 @@ public void onResume() {
 
    IntentFilter filter = new IntentFilter();
    filter.addAction(APIService.ACTION_LOGIN);
+   filter.addAction(APIService.ACTION_REGISTER);
    mContext.registerReceiver(mApiReceiver, filter);
 }
 
