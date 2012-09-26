@@ -26,6 +26,8 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
@@ -45,11 +47,11 @@ public class LoginFragment extends SherlockFragment
    static ArrayList<LoginListener> loginListeners = new ArrayList<LoginListener>();
 
     private Context mContext;
-	private Button _login;
-	private Button _register;
-	private Button _cancelRegister;
-	private Button _googleLogin;
-	private Button _yahooLogin;
+	private ImageButton _login;
+	private ImageButton _register;
+	private ImageButton _cancelRegister;
+	private ImageButton _googleLogin;
+	private ImageButton _yahooLogin;
 	
 	static final int OPEN_ID_RESULT_CODE = 4;
 	static final String LOGIN_STATE = "LOGIN_STATE";
@@ -64,6 +66,8 @@ public class LoginFragment extends SherlockFragment
 	private TextView _confirmPasswordTag;
 	private TextView _usernameTag;
 	private TextView _errorText;
+	
+	private ProgressBar _loadingSpinner;
 	
 	boolean readyForRegisterState;
 	
@@ -123,11 +127,11 @@ public class LoginFragment extends SherlockFragment
 
   	_loginId = (EditText) view.findViewById(R.id.edit_login_id);
 	_password = (EditText) view.findViewById(R.id.edit_password);
-	_login = (Button) view.findViewById(R.id.signin_button);
-	_register = (Button) view.findViewById(R.id.register_button);
-	_cancelRegister = (Button) view.findViewById(R.id.cancel_register_button);
-	_googleLogin = (Button) view.findViewById(R.id.use_google_login_button);
-	_yahooLogin = (Button) view.findViewById(R.id.use_yahoo_login_button);
+	_login = (ImageButton) view.findViewById(R.id.signin_button);
+	_register = (ImageButton) view.findViewById(R.id.register_button);
+	_cancelRegister = (ImageButton) view.findViewById(R.id.cancel_register_button);
+	_googleLogin = (ImageButton) view.findViewById(R.id.use_google_login_button);
+	_yahooLogin = (ImageButton) view.findViewById(R.id.use_yahoo_login_button);
 	
 	
 	_confirmPasswordTag =  (TextView) view.findViewById(R.id.confirm_password);
@@ -137,6 +141,9 @@ public class LoginFragment extends SherlockFragment
 	_errorText = (TextView) view.findViewById(R.id.login_error_text);
 	_errorText.setVisibility(View.GONE);
 	
+	_loadingSpinner = (ProgressBar) view.findViewById(R.id.login_loading_bar);
+	_loadingSpinner.setVisibility(View.GONE);
+	
 	 setState();
 
 	
@@ -144,8 +151,8 @@ public class LoginFragment extends SherlockFragment
 
 		@Override
 		public void onClick(View v) {
+			_loadingSpinner.setVisibility(View.VISIBLE);
 			InputMethodManager in = (InputMethodManager) mContext.getSystemService(Context.INPUT_METHOD_SERVICE);
-
            
             in.hideSoftInputFromWindow(_loginId
                     .getApplicationWindowToken(),

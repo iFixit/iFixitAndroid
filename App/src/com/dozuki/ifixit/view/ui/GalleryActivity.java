@@ -43,6 +43,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private ActionBar mActionBar;
 	private boolean mLoginVisible;
 	private View mLoginView;
+	
+	private MenuItem galleryIcon;
+	private MenuItem cameraIcon;
+	private MenuItem helpIcon;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +80,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			String username = preferenceFile.getString(
 					LoginFragment.USERNAME_KEY, null);
 			if (session != null) {
+				showMenuBarIcons();
 				user.setSession(session);
 				user.setUsername(username);
 				mLoginView.setVisibility(View.INVISIBLE);
@@ -178,7 +183,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onLogin(User user) {
-
+		showMenuBarIcons();
 		getSupportFragmentManager().popBackStack();
 		mLoginView.setVisibility(View.INVISIBLE);
 		
@@ -216,13 +221,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
 		com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.gallery_menu, menu);
-		
-		//SubMenu subMenu = menu.addSubMenu(0,Menu.NONE,1,"Test!").setIcon(R.drawable.gallery);
-		//subMenu.add("Test 1").setIcon(R.drawable.ic_menu_add_image_active);
-		
-		MenuItem galleryIcon = menu.findItem(R.id.top_gallery_button);
-		MenuItem cameraIcon = menu.findItem(R.id.top_camera_button);
-		//MenuItem helpIcon = menu.findItem(R.id.top_);
+
+		galleryIcon = menu.findItem(R.id.top_gallery_button);
+		cameraIcon = menu.findItem(R.id.top_camera_button);
+		helpIcon = menu.findItem(R.id.top_question_button);
 		return super.onCreateOptionsMenu(menu);
 	}
 	
@@ -233,6 +235,26 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	        return true;
 	    }
 	    return super.onKeyDown(keyCode, event);
+	}
+	
+	public void hideMenuBarIcons()
+	{
+		if(galleryIcon != null)
+			galleryIcon.setVisible(false);
+		if(cameraIcon != null)
+			cameraIcon.setVisible(false);
+		if(helpIcon != null)
+			helpIcon.setVisible(false);
+	}
+	
+	public void showMenuBarIcons()
+	{
+		if(galleryIcon != null)
+			galleryIcon.setVisible(true);
+		if(cameraIcon != null)
+			cameraIcon.setVisible(true);
+		if(helpIcon != null)
+			helpIcon.setVisible(true);
 	}
 	
 
