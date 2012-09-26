@@ -47,7 +47,6 @@
             android:layout_marginLeft="@dimen/gallery_login_text_padding"
             android:text="@string/welcome"
             android:textColor="@color/white"
-            android:textAppearance="?android:attr/textAppearanceMedium" 
             android:textStyle="bold" />
 
         <ImageView
