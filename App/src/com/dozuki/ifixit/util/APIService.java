@@ -87,22 +87,33 @@ public class APIService extends Service {
    }
 
 	private static final String RESPONSE = "RESPONSE";
-	private static final String TOPIC_API_URL = "http://www.ifixit.com/api/1.0/topic/";
-	private static final String GUIDE_API_URL = "http://www.ifixit.com/api/1.0/guide/";
-	private static final String CATEGORIES_API_URL = "http://www.ifixit.com/api/1.0/categories/";
-	private static final String LOGIN_API_URL = "https://www.ifixit.com/api/0.1/login";
-	private static final String REGISTER_API_URL = "https://www.ifixit.com/api/0.1/register";
-	private static final String USER_IMAGES_API_URL = "http://www.ifixit.com/api/1.0/image/user";
-	private static final String UPLOAD_MEDIA_API_URL = "http://www.ifixit.com/api/1.0/image/upload";
-	private static final String DELETE_MEDIA_API_URL = "http://www.ifixit.com/api/1.0/image/delete";
+	private static final String TOPIC_API_URL 
+	   = "http://www.ifixit.com/api/1.0/topic/";
+	private static final String GUIDE_API_URL 
+	   = "http://www.ifixit.com/api/1.0/guide/";
+	private static final String CATEGORIES_API_URL 
+	   = "http://www.ifixit.com/api/1.0/categories/";
+	private static final String LOGIN_API_URL 
+	   = "https://www.ifixit.com/api/0.1/login";
+	private static final String REGISTER_API_URL
+	   = "https://www.ifixit.com/api/0.1/register";
+	private static final String USER_IMAGES_API_URL 
+	   = "http://www.ifixit.com/api/1.0/image/user";
+	private static final String UPLOAD_MEDIA_API_URL 
+	   = "http://www.ifixit.com/api/1.0/image/upload";
+	private static final String DELETE_MEDIA_API_URL 
+	   = "http://www.ifixit.com/api/1.0/image/delete";
    
    
 	private static final String API_DOMAIN = ".ifixit.com";
 	private static final String REQUEST_TARGET = "REQUEST_TARGET";
 	private static final String REQUEST_QUERY = "REQUEST_QUERY";
-	private static final String REQUEST_BROADCAST_ACTION = "REQUEST_BROADCAST_ACTION";
-	private static final String REQUEST_AUTHENICATION_PACKAGE = "AUTHENICATION_PACKAGE";
-	public static final String REQUEST_RESULT_INFORMATION = "REQUEST_RESULT_INFORMATION";
+	private static final String REQUEST_BROADCAST_ACTION 
+	   = "REQUEST_BROADCAST_ACTION";
+	private static final String REQUEST_AUTHENICATION_PACKAGE
+	   = "AUTHENICATION_PACKAGE";
+	public static final String REQUEST_RESULT_INFORMATION 
+	   = "REQUEST_RESULT_INFORMATION";
 
 	private static final int TARGET_CATEGORIES = 0;
 	private static final int TARGET_GUIDE = 1;
@@ -115,14 +126,22 @@ public class APIService extends Service {
 
    private static final String NO_QUERY = "";
 
-	public static final String ACTION_CATEGORIES = "com.dozuki.ifixit.api.categories";
-	public static final String ACTION_GUIDE = "com.dozuki.ifixit.api.guide";
-	public static final String ACTION_TOPIC = "com.dozuki.ifixit.api.topic";
-	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
-	public static final String ACTION_REGISTER = "com.dozuki.ifixit.api.register";
-	public static final String ACTION_USER_MEDIA = "com.dozuki.ifixit.api.images";
-	public static final String ACTION_UPLOAD_MEDIA = "com.dozuki.ifixit.api.upload";
-	public static final String ACTION_DELETE_MEDIA = "com.dozuki.ifixit.api.delete";
+	public static final String ACTION_CATEGORIES
+	   = "com.dozuki.ifixit.api.categories";
+	public static final String ACTION_GUIDE 
+	   = "com.dozuki.ifixit.api.guide";
+	public static final String ACTION_TOPIC 
+	   = "com.dozuki.ifixit.api.topic";
+	public static final String ACTION_LOGIN 
+	   = "com.dozuki.ifixit.api.login";
+	public static final String ACTION_REGISTER 
+	   = "com.dozuki.ifixit.api.register";
+	public static final String ACTION_USER_MEDIA 
+	   = "com.dozuki.ifixit.api.images";
+	public static final String ACTION_UPLOAD_MEDIA 
+	   = "com.dozuki.ifixit.api.upload";
+	public static final String ACTION_DELETE_MEDIA 
+	   = "com.dozuki.ifixit.api.delete";
 
 	public static final String RESULT = "RESULT";
 
@@ -134,12 +153,17 @@ public class APIService extends Service {
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
-      final int requestTarget = extras.getInt(REQUEST_TARGET);
-      final String requestQuery = extras.getString(REQUEST_QUERY);
-      final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
-      final String resultInformation = extras.getString(REQUEST_RESULT_INFORMATION);
+      final int requestTarget = 
+    	     extras.getInt(REQUEST_TARGET);
+      final String requestQuery = 
+    	     extras.getString(REQUEST_QUERY);
+      final String broadcastAction = 
+    	     extras.getString(REQUEST_BROADCAST_ACTION);
+      final String resultInformation = 
+    	     extras.getString(REQUEST_RESULT_INFORMATION);
       final AuthenicationPackage authenicationPackage = 
-    	  (AuthenicationPackage) extras.getSerializable(REQUEST_AUTHENICATION_PACKAGE);
+    	  (AuthenicationPackage) 
+    	     extras.getSerializable(REQUEST_AUTHENICATION_PACKAGE);
       
       
 		if (authenicationPackage != null) {
@@ -158,7 +182,8 @@ public class APIService extends Service {
 							}
 
 							// Always broadcast the result despite any errors.
-							broadcastResult(result, broadcastAction, requestTarget, resultInformation);
+							broadcastResult(result, broadcastAction, 
+									   requestTarget, resultInformation);
 						}
 					});
 			return START_NOT_STICKY;
@@ -194,7 +219,8 @@ public class APIService extends Service {
             }
 
             // Always broadcast the result despite any errors.
-            broadcastResult(result, broadcastAction, requestTarget, resultInformation);
+            broadcastResult(result, broadcastAction, 
+            		   requestTarget, resultInformation);
          }
       });
 
@@ -213,19 +239,24 @@ public class APIService extends Service {
             parsedResult = JSONHelper.parseTopics(response);
             break;
          case TARGET_GUIDE:
-            parsedResult = JSONHelper.parseGuide(response);
+            parsedResult = 
+            	   JSONHelper.parseGuide(response);
             break;
 			case TARGET_TOPIC:
-				parsedResult = JSONHelper.parseTopicLeaf(response);
+				parsedResult = 
+					JSONHelper.parseTopicLeaf(response);
 				break;
 			case TARGET_LOGIN:
-				parsedResult = JSONHelper.parseLoginInfo(response);
+				parsedResult = 
+					JSONHelper.parseLoginInfo(response);
 				break;
 			case TARGET_MEDIA_LIST:
-				parsedResult = JSONHelper.parseUserImages(response);
+				parsedResult = 
+					JSONHelper.parseUserImages(response);
 				break;
 			case TARGET_UPLOAD_MEDIA:
-				parsedResult = JSONHelper.parseUploadedImageInfo(response);
+				parsedResult = 
+					JSONHelper.parseUploadedImageInfo(response);
 				break;
 			case TARGET_DELETE_MEDIA:
 				parsedResult = "";
@@ -283,9 +314,11 @@ public class APIService extends Service {
 	   }
    
 	public static Intent getUploadImageIntent(Context context,
-			AuthenicationPackage authenicationPackage, String filePath, String extraInformation) {
+			AuthenicationPackage authenicationPackage, 
+			String filePath, String extraInformation) {
 		return createUploadImageIntent(context, TARGET_UPLOAD_MEDIA,
-				authenicationPackage, ACTION_UPLOAD_MEDIA, filePath, extraInformation);
+				authenicationPackage, ACTION_UPLOAD_MEDIA, 
+				   filePath, extraInformation);
 	}
 
 	public static Intent getDeleteMediaIntent(Context context,
@@ -302,7 +335,8 @@ public class APIService extends Service {
 
    public static Intent getRegisterIntent(Context mContext,
 			AuthenicationPackage authenicationPackage) {
-	   return createRegisterIntent(mContext, TARGET_REGISTER, authenicationPackage , ACTION_REGISTER);
+	   return createRegisterIntent(mContext, TARGET_REGISTER, 
+			   authenicationPackage , ACTION_REGISTER);
 	}
 
    private static Intent createIntent(Context context, int target,
@@ -318,7 +352,8 @@ public class APIService extends Service {
       return intent;
    }
    
-   private static Intent createLoginIntent(Context context, int target,AuthenicationPackage authenicationPackage, String action) {
+   private static Intent createLoginIntent(Context context, 
+		   int target,AuthenicationPackage authenicationPackage, String action) {
 	   
 		      Intent intent = new Intent(context, APIService.class);
 		      Bundle extras = new Bundle();
@@ -331,7 +366,8 @@ public class APIService extends Service {
 		      return intent;
 		   }
    
-   private static Intent createUserMediaIntent(Context context, int target,AuthenicationPackage authenicationPackage, String query, String action) {
+   private static Intent createUserMediaIntent(Context context, 
+		   int target,AuthenicationPackage authenicationPackage, String query, String action) {
 	   
 	      Intent intent = new Intent(context, APIService.class);
 	      Bundle extras = new Bundle();
@@ -346,7 +382,8 @@ public class APIService extends Service {
 	   }
 
    
-   private static Intent createRegisterIntent(Context context, int target,AuthenicationPackage authenicationPackage, String action) {
+   private static Intent createRegisterIntent(Context context, 
+		   int target,AuthenicationPackage authenicationPackage, String action) {
 	   
 	      Intent intent = new Intent(context, APIService.class);
 	      Bundle extras = new Bundle();
@@ -489,7 +526,8 @@ private static AlertDialog getParseErrorDialog(final Context context,
       performRequest(url, responder);
    }
    
-	private static void perfromAuthenicatedRequestHelper(Context context, int requestTarget, AuthenicationPackage authenicationPackage, String requestQuery, Responder responder) {
+	private static void perfromAuthenicatedRequestHelper(Context context, 
+			int requestTarget, AuthenicationPackage authenicationPackage, String requestQuery, Responder responder) {
 		if (!checkConnectivity(context, responder)) {
 			return;
 		}
@@ -535,7 +573,8 @@ private static AlertDialog getParseErrorDialog(final Context context,
 	}
 
  
-   private static void  performAuthenicatedRequest(final String url, final AuthenicationPackage authenicationPackage, final File file,  final Responder responder) {
+   private static void  performAuthenicatedRequest(final String url, 
+		   final AuthenicationPackage authenicationPackage, final File file,  final Responder responder) {
 	   final Handler handler = new Handler() {
 	         public void handleMessage(Message message) {
 	            String response = message.getData().getString(RESPONSE);
