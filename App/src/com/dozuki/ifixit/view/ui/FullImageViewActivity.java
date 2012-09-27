@@ -5,6 +5,7 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import java.io.File;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,7 +50,11 @@ public class FullImageViewActivity extends Activity {
 
 		if (localUri != null) {
 			Log.i("file" , mImageUrl);
-			mImageZoom.setImageBitmapReset(BitmapFactory.decodeFile(mImageUrl), true);
+			BitmapFactory.Options opt = new BitmapFactory.Options();
+			opt.inSampleSize = 2;
+			opt.inDither = false;
+			opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+			mImageZoom.setImageBitmapReset(BitmapFactory.decodeFile(mImageUrl, opt), true);
 			mImageZoom.setVisibility(View.VISIBLE);
 		} else {
 			mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,
