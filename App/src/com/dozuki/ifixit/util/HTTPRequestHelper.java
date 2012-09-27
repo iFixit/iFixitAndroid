@@ -373,7 +373,14 @@ public class HTTPRequestHelper {
 			outputStream.flush();
 			outputStream.close();
 		} catch (Exception e) {
-			 Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, e);
+			BasicHttpResponse errorResponse = new BasicHttpResponse(
+				       new ProtocolVersion("HTTP_ERROR", 1, 1), 500, "ERROR");
+			 errorResponse.setReasonPhrase("Unable to upload");
+	         try {
+	            this.responseHandler.handleResponse(errorResponse);
+	         } catch (Exception ex) {
+	            Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, ex);
+	         }
 			return;
 		}
 		return;

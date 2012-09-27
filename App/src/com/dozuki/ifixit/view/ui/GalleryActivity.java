@@ -105,6 +105,9 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	}
 
 	private void displayLogin() {
+
+			hideMenuBarIcons();
+
 		FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 		int inAnim, outAnim;
 		LoginFragment fg = new LoginFragment();
@@ -127,8 +130,6 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 	@Override
 	public void onResume() {
-		if(((MainApplication) this.getApplication()).getUser() == null)
-			hideMenuBarIcons();
 		super.onResume();
 
 	}
@@ -230,6 +231,13 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		cameraIcon = menu.findItem(R.id.top_camera_button);
 		helpIcon = menu.findItem(R.id.top_question_button);
 		
+		helpIcon.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		cameraIcon.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		galleryIcon.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+		
+		if(((MainApplication) this.getApplication()).getUser() == null)
+			hideMenuBarIcons();
+
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -252,13 +260,21 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	}
 
 	public void showMenuBarIcons() {
-		Log.i("","Show me!");
+
 		if (galleryIcon != null)
+		{
 			galleryIcon.setVisible(true);
+			//galleryIcon.invalidate();
+		}
 		if (cameraIcon != null)
+		{
 			cameraIcon.setVisible(true);
+		}
 		if (helpIcon != null)
+		{
 			helpIcon.setVisible(true);
+		}
+		supportInvalidateOptionsMenu();
 	}
 
 }
