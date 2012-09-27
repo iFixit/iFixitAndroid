@@ -433,13 +433,13 @@ public class MediaFragment extends SherlockFragment implements
 			if (requestCode == MediaFragment.SELECT_PICTURE) {
 				Log.i("MediaFragment", "Adding gallery pic...");
 				Uri selectedImageUri = data.getData();
-				galleryAdapter.addUri(selectedImageUri);
+				String key = galleryAdapter.addUri(selectedImageUri);
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
 				mContext.startService(APIService.getUploadImageIntent(mContext,
 						authenicationPackage, getPath(selectedImageUri),
-						selectedImageUri.toString()));
+						key));
 
 			} else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
 				if (cameraTempFileName == null) {
@@ -460,12 +460,12 @@ public class MediaFragment extends SherlockFragment implements
 
 				// Uri selectedImageUri = data.getData();
 				// galleryAdapter.addFile(cameraTempFileName);
-				galleryAdapter.addFile(new String(fPath));
+				String key = galleryAdapter.addFile(new String(fPath));
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = ((MainApplication) ((Activity) mContext)
 						.getApplication()).getUser().getSession();
 				mContext.startService(APIService.getUploadImageIntent(mContext,
-						authenicationPackage, fPath, fPath));
+						authenicationPackage, fPath, key));
 			}
 		}
 	}
@@ -482,33 +482,43 @@ public class MediaFragment extends SherlockFragment implements
 			return 0;
 		}
 
-		public void addUri(Uri uri) {
+		public String addUri(Uri uri) {
 			// mediaList.add(uri);
+			String key = new SimpleDateFormat("yyyyMMdd_HHmmss")
+			.format(new Date());
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = uri.toString();
-			if (localURL.containsKey(url)) {
-				Log.e(TAG, "Duplicate image found: " + getPath(uri));
-				return;
-			}
+			//if (localURL.containsKey(url)) {
+			//	Log.e(TAG, "Duplicate image found: " + getPath(uri));
+			//	return;
+			//}
 			userImageInfo.setGuid(url);
 			userImageInfo.setmImageId(null);
+			userImageInfo.setKey(key);
 			mImageList.addImage(userImageInfo);
 			selectedList.add(false);
-			localURL.put(url, new LocalImage(getPath(uri)));
+			
+			localURL.put(key, new LocalImage(getPath(uri)));
 			// Log.i("MEdiaFrag", "KEY: " + url + " Path: " + getPath(uri));
 			invalidatedView();
+			return key;
 		}
 
-		public void addFile(String path) {
+		public String addFile(String path) {
+			String key = new SimpleDateFormat("yyyyMMdd_HHmmss")
+			.format(new Date());
 			UserImageInfo userImageInfo = new UserImageInfo();
 			String url = path;
 			userImageInfo.setGuid(path);
 			userImageInfo.setmImageId(null);
+			userImageInfo.setKey(key);
 			mImageList.addImage(userImageInfo);
 			selectedList.add(false);
-			localURL.put(url, new LocalImage(path));
+			
+			localURL.put(key, new LocalImage(path));
 			limages.put(url, buildBitmap(url));
 			invalidatedView();
+			return key;
 		}
 
 		public void invalidatedView() {
@@ -538,8 +548,7 @@ public class MediaFragment extends SherlockFragment implements
 
 			if (mImageList != null) {
 				if (mImageList.getImages().get(position).getmImageId() != null
-						&& localURL.containsKey(mImageList.getImages()
-								.get(position).getmGuid()) == false) {
+						&& mImageList.getImages().get(position).getKey() == null) {
 					String image = mImageList.getImages().get(position)
 							.getmGuid()
 							+ mImageSizes.getThumb();
@@ -547,6 +556,7 @@ public class MediaFragment extends SherlockFragment implements
 							.getImages().get(position).getLoaded());
 					itemView.listRef = mImageList.getImages().get(position);
 					mImageList.getImages().get(position).setLoaded(true);
+					itemView.setTag(mImageList.getImages().get(position).getmGuid());
 				} else {
 					Uri temp = Uri.parse(mImageList.getImages().get(position)
 							.getmGuid());
@@ -563,10 +573,8 @@ public class MediaFragment extends SherlockFragment implements
 					}
 					itemView.imageview.setImageBitmap(bitmap);
 					itemView.listRef = mImageList.getImages().get(position);
-					if (localURL.containsKey(mImageList.getImages()
-							.get(position).getmGuid())) {
-						if (localURL.get(mImageList.getImages().get(position)
-								.getmGuid()).imgId == null) {
+					if (mImageList.getImages().get(position).getKey() != null) {
+						if (localURL.get(mImageList.getImages().get(position).getKey()).imgId == null) {
 							itemView.setLoading(true);
 							Log.e(TAG, "image loading!");
 						} else {
@@ -574,20 +582,19 @@ public class MediaFragment extends SherlockFragment implements
 									.getImages()
 									.get(position)
 									.setmImageId(
-											localURL.get(mImageList.getImages()
-													.get(position).getmGuid()).imgId);
+											localURL.get(mImageList.getImages().get(position).getKey()).imgId);
 							itemView.setLoading(false);
 							Log.e(TAG, "image stoped loading!");
 						}
 					}
+					itemView.setTag(mImageList.getImages().get(position).getKey());
 				}
-
 			}
 			if (selectedList.get(position))
 				itemView.selectImage.setVisibility(View.VISIBLE);
 			else
 				itemView.selectImage.setVisibility(View.INVISIBLE);
-			itemView.setTag(mImageList.getImages().get(position).getmGuid());
+			
 			return itemView;
 		}
 	}
@@ -696,7 +703,9 @@ public class MediaFragment extends SherlockFragment implements
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
 			int position, long id) {
+		//selectedList.add(position, true);
 		setDeleteMode();
+		//galleryAdapter.invalidatedView();
 		return false;
 	}
 

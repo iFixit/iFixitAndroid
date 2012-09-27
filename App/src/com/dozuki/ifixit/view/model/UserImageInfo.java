@@ -11,8 +11,19 @@ public class UserImageInfo implements Serializable {
 	String mImageId;
 	String mGuid;
 	String mLocalPath;
+	String mLocalKey;
 	boolean mLoaded;
 
+	public String getKey()
+	{
+		return mLocalKey;
+	}
+	
+	public void setKey(String key)
+	{
+		mLocalKey = key;
+	}
+	
 	public void setLoaded(boolean loaded) {
 		mLoaded = loaded;
 	}

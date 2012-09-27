@@ -2,6 +2,8 @@ package com.dozuki.ifixit.view.ui;
 
 import java.io.Serializable;
 
+import com.dozuki.ifixit.view.model.UserImageInfo;
+
 public class LocalImage implements Serializable {
 	/**
 	 * 
@@ -18,5 +20,18 @@ public class LocalImage implements Serializable {
 	public LocalImage(String p) {
 		path = p;
 		imgId = null;
+	}
+	
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null)
+			return false;
+		if (obj == this)
+			return true;
+		if (obj.getClass() != getClass())
+			return false;
+		LocalImage inf = (LocalImage) obj;
+		
+		return (inf.path.equals(this.path));
 	}
 }
