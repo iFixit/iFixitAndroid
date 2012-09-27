@@ -95,6 +95,7 @@ public class MediaFragment extends SherlockFragment implements
 	static final String GALLERY_TITLE = "Gallery";
 	private static final String SHOWING_HELP = "SHOWING_HELP";
 	private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
+	private static final String SHOWING_DELETE = "SHOWING_DELETE";
 
 	GridView mGridView;
 	RelativeLayout mButtons;
@@ -102,7 +103,7 @@ public class MediaFragment extends SherlockFragment implements
 	TextView loginText;
 	String userName;
 	private ImageManager mImageManager;
-	private ArrayList<Boolean> selectedList;
+	private static ArrayList<Boolean> selectedList;
 	private HashMap<String, LocalImage> localURL;
 	private HashMap<String, Bitmap> limages;
 	private ImageSizes mImageSizes;
@@ -114,6 +115,7 @@ public class MediaFragment extends SherlockFragment implements
 	boolean nextPageRequestInProgress;
 	static boolean showingHelp;
 	static boolean showingLogout;
+	static boolean showingDelete;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -189,16 +191,19 @@ public class MediaFragment extends SherlockFragment implements
 		mMode = null;
 		showingHelp = false;
 		showingLogout = false;
+		showingDelete = false;
 		selectedList = new ArrayList<Boolean>();
 		localURL = new HashMap<String, LocalImage>();
 		limages = new HashMap<String, Bitmap>();
 		if (savedInstanceState != null) {
 			showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-			if(showingHelp)
+			if (showingHelp)
 				createHelpDialog(mContext).show();
 			showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
-			if(showingLogout)
+			if (showingLogout)
 				LoginFragment.getLogoutDialog(mContext).show();
+			showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
+			
 			mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
 			mImageList = (UserImageList) savedInstanceState
 					.getSerializable(USER_IMAGE_LIST);
@@ -206,6 +211,8 @@ public class MediaFragment extends SherlockFragment implements
 					.getBooleanArray(USER_SELECTED_LIST);
 			for (boolean b : selected)
 				selectedList.add(b);
+			if (showingDelete)
+				createDeleteConfirmDialog(mContext).show();
 			galleryAdapter = new MediaAdapter();
 			if (savedInstanceState.getString(CAMERA_PATH) != null)
 				cameraTempFileName = savedInstanceState.getString(CAMERA_PATH);
@@ -266,6 +273,7 @@ public class MediaFragment extends SherlockFragment implements
 		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
 		savedInstanceState.putBoolean(SHOWING_HELP, showingHelp);
 		savedInstanceState.putBoolean(SHOWING_LOGOUT, showingLogout);
+		savedInstanceState.putBoolean(SHOWING_DELETE, showingDelete);
 		if (cameraTempFileName != null)
 			savedInstanceState.putString(CAMERA_PATH, cameraTempFileName);
 	}
@@ -579,6 +587,13 @@ public class MediaFragment extends SherlockFragment implements
 
 	public final class ModeCallback implements ActionMode.Callback {
 
+		Context _pContext;
+		
+		public ModeCallback(Context parentContext)
+		{
+			_pContext = parentContext;
+		}
+		
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// Create the menu from the xml file
@@ -610,37 +625,47 @@ public class MediaFragment extends SherlockFragment implements
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			if (mImageList == null)
+			
+			if(!selectedList.contains(true))
+			{
+				mode.finish();
 				return true;
-			if (mImageList == null)
-				return true;
-			String deleteQuery = "?";
-
-			for (int i = selectedList.size() - 1; i > -1; i--) {
-				if (selectedList.get(i)) {
-					selectedList.remove(i);
-					deleteQuery += "imageids[]="
-							+ mImageList.getImages().get(i).getmImageId() + "&";
-					mImageList.getImages().remove(i);
-				}
 			}
 
-			if (deleteQuery.length() > 1) {
-				deleteQuery = deleteQuery
-						.substring(0, deleteQuery.length() - 1);
-			}
-
-			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-			authenicationPackage.session = ((MainApplication) ((Activity) mContext)
-					.getApplication()).getUser().getSession();
-			mContext.startService(APIService.getDeleteMediaIntent(mContext,
-					authenicationPackage, deleteQuery));
-
-			mode.finish();
+			createDeleteConfirmDialog(_pContext).show();
+			
+			//mode.finish();
 			return true;
 		}
 
 	};
+
+	private void deleteSelectedPhotos() {
+		if (mImageList == null)
+			return;
+		
+		String deleteQuery = "?";
+
+		for (int i = selectedList.size() - 1; i > -1; i--) {
+			if (selectedList.get(i)) {
+				selectedList.remove(i);
+				deleteQuery += "imageids[]="
+						+ mImageList.getImages().get(i).getmImageId() + "&";
+				mImageList.getImages().remove(i);
+			}
+		}
+
+		if (deleteQuery.length() > 1) {
+			deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 1);
+		}
+
+		AuthenicationPackage authenicationPackage = new AuthenicationPackage();
+		authenicationPackage.session = ((MainApplication) ((Activity) mContext)
+				.getApplication()).getUser().getSession();
+		mContext.startService(APIService.getDeleteMediaIntent(mContext,
+				authenicationPackage, deleteQuery));
+		mMode.finish();
+	}
 
 	@Override
 	public void onLogin(User user) {
@@ -697,7 +722,7 @@ public class MediaFragment extends SherlockFragment implements
 			});
 			mButtons.startAnimation(animHide);
 			mMode = this.getSherlockActivity().startActionMode(
-					new ModeCallback());
+					new ModeCallback(mContext));
 		}
 	}
 
@@ -756,7 +781,7 @@ public class MediaFragment extends SherlockFragment implements
 		// used to determine when to load more images
 		@Override
 		public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-			if ((arg1 + arg2) >= arg3/2 && !mLastPage) {
+			if ((arg1 + arg2) >= arg3 / 2 && !mLastPage) {
 				if (((MainApplication) ((Activity) mContext).getApplication())
 						.isUserLoggedIn()
 						&& !nextPageRequestInProgress
@@ -801,7 +826,40 @@ public class MediaFragment extends SherlockFragment implements
 
 		return builder.create();
 	}
-	
+
+	AlertDialog createDeleteConfirmDialog(final Context context) {
+		showingDelete = true;
+		int selectedCount = 0;
+		for(boolean b : selectedList)
+		{
+			if(b)
+				selectedCount++;
+		}
+		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+		builder.setTitle(context.getString(R.string.confirm_delete))
+				.setMessage("Are you sure you want to delete these " + selectedCount +  " images?")
+				.setPositiveButton(context.getString(R.string.logout_confirm),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								showingDelete = false;
+								deleteSelectedPhotos();
+								dialog.cancel();
+							}
+						})
+				.setNegativeButton(R.string.logout_cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								showingDelete = false;
+								dialog.cancel();
+							}
+						});
+
+		return builder.create();
+	}
+
 	private Bitmap buildBitmap(String url) {
 		BitmapFactory.Options opt = new BitmapFactory.Options();
 		opt.inSampleSize = 4;
