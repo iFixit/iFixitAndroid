@@ -991,9 +991,20 @@ public class MediaFragment extends SherlockFragment
 								showingHelp = false;
 								dialog.cancel();
 							}
-						}).setCancelable(false);
+						});
 
-		return builder.create();
+		AlertDialog d = builder.create();
+		d.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+	        @Override
+	        public void onDismiss(DialogInterface dialog) {
+	        	showingHelp = false;
+	           // Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " + attributes.selectedIndexes.get(1) + " " + attributes.selectedIndexes.get(2) + " " + attributes.selectedIndexes.get(3) + " " + attributes.selectedIndexes.get(5) + " ");
+	    }
+
+	});
+		
+		return d;
 	}
 
 	AlertDialog createDeleteConfirmDialog(
@@ -1044,9 +1055,20 @@ public class MediaFragment extends SherlockFragment
 								showingDelete = false;
 								dialog.cancel();
 							}
-						}).setCancelable(false);
+						});
 
-		return builder.create();
+		AlertDialog d = builder.create();
+		d.setOnDismissListener(new DialogInterface.OnDismissListener() {
+
+	        @Override
+	        public void onDismiss(DialogInterface dialog) {
+	        	showingDelete = false;
+	           // Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " + attributes.selectedIndexes.get(1) + " " + attributes.selectedIndexes.get(2) + " " + attributes.selectedIndexes.get(3) + " " + attributes.selectedIndexes.get(5) + " ");
+	    }
+
+	});
+		
+		return d;
 	}
 
 	private Bitmap buildBitmap(String url) {

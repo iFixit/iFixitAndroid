@@ -401,7 +401,7 @@ public class LoginFragment extends SherlockFragment
 							.getText().toString();
 					enable(false);
 					mContext.startService(APIService
-							.getLoginIntent(mContext,
+							.getRegisterIntent(mContext,
 									authenicationPackage));
 
 				} else {

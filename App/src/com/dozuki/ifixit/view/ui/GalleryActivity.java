@@ -47,6 +47,7 @@ public class GalleryActivity extends
 	private MenuItem galleryIcon;
 	private MenuItem cameraIcon;
 	private MenuItem helpIcon;
+	boolean iconsHidden;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -90,8 +91,10 @@ public class GalleryActivity extends
 				((MainApplication) this.getApplication())
 						.setUser(user);
 				mMediaView.onLogin(user);
-				showMenuBarIcons();
+				iconsHidden = false;
+				supportInvalidateOptionsMenu();
 			} else {
+				iconsHidden = true;
 				if (mLogin == null) {
 					displayLogin();
 				}
@@ -112,7 +115,9 @@ public class GalleryActivity extends
 
 	private void displayLogin() {
 
-		hideMenuBarIcons();
+		//hideMenuBarIcons();
+		iconsHidden = true;
+		supportInvalidateOptionsMenu();
 
 		FragmentTransaction ft = getSupportFragmentManager()
 				.beginTransaction();
@@ -138,7 +143,9 @@ public class GalleryActivity extends
 	@Override
 	public void onResume() {
 		super.onResume();
-
+		if (((MainApplication) this.getApplication())
+				.getUser() == null)
+			hideMenuBarIcons();
 	}
 
 	@Override
@@ -200,7 +207,9 @@ public class GalleryActivity extends
 
 	@Override
 	public void onLogin(User user) {
-		showMenuBarIcons();
+		iconsHidden = false;
+		supportInvalidateOptionsMenu();
+		
 		getSupportFragmentManager().popBackStack();
 		mLoginView.setVisibility(View.INVISIBLE);
 
@@ -240,18 +249,24 @@ public class GalleryActivity extends
 	@Override
 	public boolean onCreateOptionsMenu(
 			com.actionbarsherlock.view.Menu menu) {
+		 if(!iconsHidden)
+		 {
 		com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.gallery_menu, menu);
+		 }//else
+		// {
 
-		galleryIcon = menu
-				.findItem(R.id.top_gallery_button);
-		cameraIcon = menu.findItem(R.id.top_camera_button);
-		helpIcon = menu.findItem(R.id.top_question_button);
+		//galleryIcon = menu
+		///		.findItem(R.id.top_gallery_button);
+		//cameraIcon = menu.findItem(R.id.top_camera_button);
+		//helpIcon = menu.findItem(R.id.top_question_button);
 
-		if (((MainApplication) this.getApplication())
-				.getUser() == null)
-			hideMenuBarIcons();
-
+        //if(iconsHidden)
+		 //  supportInvalidateOptionsMenu();
+        //else*/
+        	
+        	
+        	
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -272,7 +287,6 @@ public class GalleryActivity extends
 		if (helpIcon != null)
 			helpIcon.setVisible(false);
 
-		supportInvalidateOptionsMenu();
 	}
 
 	public void showMenuBarIcons() {
@@ -287,7 +301,7 @@ public class GalleryActivity extends
 		if (helpIcon != null) {
 			helpIcon.setVisible(true);
 		}
-		supportInvalidateOptionsMenu();
+		
 	}
 
 }
