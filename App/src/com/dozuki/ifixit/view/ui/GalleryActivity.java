@@ -66,7 +66,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		mLoginView = findViewById(R.id.login_fragment);
 		LoginFragment mLogin = (LoginFragment) getSupportFragmentManager()
 				.findFragmentByTag(LOGIN_FRAGMENT);
-		mTopicViewOverlay = (FrameLayout) findViewById(R.id.gallery_view_overlay);
+		//mTopicViewOverlay = (FrameLayout) findViewById(R.id.gallery_view_overlay);
 		// mHideTopicList = mTopicViewOverlay != null;
 		mDualPane = mTopicViewOverlay != null;
 
@@ -111,8 +111,8 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		;
 		// mLoginVisible = true;
 
-		inAnim = R.anim.slide_in_left;
-		outAnim = R.anim.slide_out_left;
+		inAnim = R.anim.fade_in;
+		outAnim = R.anim.fade_out;
 
 		ft.setCustomAnimations(inAnim, outAnim);
 		if (mDualPane) {

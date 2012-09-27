@@ -30,7 +30,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="@string/login_error"
-                    android:textAppearance="?android:attr/textAppearanceSmall"
+                    
                     android:textColor="@color/red" />
 
                 <ProgressBar
@@ -56,12 +56,13 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/email"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                />
 
                 <EditText
                     android:id="@+id/edit_login_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:inputType="textEmailAddress" 
                     android:ems="10" >
 
                     <requestFocus />
@@ -72,7 +73,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/user_name"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                    />
 
                 <EditText
                     android:id="@+id/edit_login_username"
@@ -86,7 +87,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/password"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                  />
 
                 <EditText
                     android:id="@+id/edit_password"
@@ -100,7 +101,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Confirm Password"
-                    android:textAppearance="?android:attr/textAppearanceSmall" />
+                     />
 
                 <EditText
                     android:id="@+id/edit_confirm_password"

@@ -92,6 +92,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 				}
 
 			} else {
+				enable(true);
 				_loadingSpinner.setVisibility(View.GONE);
 				_errorText.setVisibility(View.VISIBLE);
 			}
@@ -175,6 +176,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 	}
 
 	private void setState() {
+		_errorText.setVisibility(View.GONE);
 		if (readyForRegisterState) {
 			_errorText.setVisibility(View.GONE);
 			_createAccountText.setVisibility(View.VISIBLE);
@@ -226,14 +228,26 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 			authenicationPackage.login = _loginId.getText().toString();
 			authenicationPackage.password = _password.getText().toString();
-			mContext.startService(APIService.getLoginIntent(mContext,
-					authenicationPackage));
+			enable(false);
+			mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
 		} else {
 			_errorText.setVisibility(View.VISIBLE);
 		}
 	}
 
-	@Override
+   private void enable(boolean enabled) {
+	   _loginId.setEnabled(enabled);
+		_password.setEnabled(enabled);
+		_login.setEnabled(enabled);
+		_register.setEnabled(enabled);
+		_cancelRegister.setEnabled(enabled);
+		_googleLogin.setEnabled(enabled);
+		_yahooLogin.setEnabled(enabled);	
+		_name.setEnabled(enabled);		
+	}
+
+
+@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
@@ -295,8 +309,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 					authenicationPackage.password = _password.getText()
 							.toString();
 					authenicationPackage.username = _name.getText().toString();
-					mContext.startService(APIService.getRegisterIntent(
-							mContext, authenicationPackage));
+					enable(false);
+					mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
 
 				} else {
 					_errorText.setVisibility(View.VISIBLE);
@@ -320,8 +334,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 				String session = data.getStringExtra("session");
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = session;
-				mContext.startService(APIService.getLoginIntent(mContext,
-						authenicationPackage));
+	            enable(false);
+	            mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
 			}
 	}
 
