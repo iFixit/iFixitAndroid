@@ -232,7 +232,25 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 			mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
 		} else {
 			_errorText.setVisibility(View.VISIBLE);
+			if(!_loginId.getText().toString().contains("@") || _loginId.getText().toString().length() <= 1)
+			{
+				_loginId.requestFocus();
+				showKeyboard();
+			}else
+			{		
+				_password.requestFocus();
+				showKeyboard();
+			}
 		}
+	}
+	
+	public void showKeyboard()
+	{
+		InputMethodManager in = (InputMethodManager) mContext
+		.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+       in.toggleSoftInput(InputMethodManager.SHOW_FORCED,
+    		   InputMethodManager.HIDE_IMPLICIT_ONLY);
 	}
 
    private void enable(boolean enabled) {
@@ -302,7 +320,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 				if (_password.getText().toString()
 						.equals(_confirmPassword.getText().toString())
 						&& _loginId.getText().length() > 1
-						&& _loginId.getText().toString().contains("@")) {
+						&& _loginId.getText().toString().contains("@")
+						&& _name.getText().length() > 1) {
 					// start service for register
 					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 					authenicationPackage.login = _loginId.getText().toString();
@@ -314,6 +333,19 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
 				} else {
 					_errorText.setVisibility(View.VISIBLE);
+					if(!_loginId.getText().toString().contains("@") || _loginId.getText().toString().length() <= 1)
+					{
+						_loginId.requestFocus();
+						showKeyboard();
+					}else if(_password.getText().toString().length() <= 1)
+					{		
+						_password.requestFocus();
+						showKeyboard();
+					}else if(_name.getText().toString().length() <= 1)
+					{
+						_name.requestFocus();
+						showKeyboard();
+					}
 				}
 			}
 			break;
