@@ -380,7 +380,7 @@ public class MediaFragment extends SherlockFragment implements
 		String imageFileName = IMAGE_PREFIX + timeStamp + "_";
 		File image = File.createTempFile(imageFileName, ".jpg", getAlbumDir());
 		cameraTempFileName = image.getAbsolutePath();
-		return image;
+		return image; 
 	}
 
 	private File getAlbumDir() {

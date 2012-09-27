@@ -110,7 +110,7 @@
                     android:layout_height="wrap_content"
                     android:id="@+id/login_agreement_terms_layout"
                     android:orientation="horizontal" >
-
+
                     <CheckBox
                         android:id="@+id/login_agreement_terms_checkbox"
                         android:layout_width="match_parent"
@@ -133,7 +133,7 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="right"
                     android:layout_margin="5dp"
-                    android:background="@drawable/ic_btn_login_oj" />
+                    android:background="@drawable/ic_btn_login" />
             </LinearLayout>
 
             <ImageButton
@@ -144,7 +144,7 @@
                 android:layout_centerInParent="true"
                 android:layout_gravity="center"
                 android:layout_margin="1dp"
-                android:background="@drawable/ic_btn_register_oj" />
+                android:background="@drawable/ic_btn_register" />
 
             <ImageButton
                 android:id="@+id/cancel_register_button"
@@ -160,21 +160,23 @@
                 android:id="@+id/use_google_login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/register_button"
-                android:layout_centerInParent="true"
-                android:layout_gravity="center"
+                android:layout_below="@+id/cancel_register_button"
+                android:layout_centerHorizontal="true"
                 android:layout_margin="1dp"
+                android:layout_marginTop="31dp"
                 android:background="@drawable/ic_btn_sign_in_google" />
 
             <ImageButton
                 android:id="@+id/use_yahoo_login_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/use_google_login_button"
-                android:layout_centerInParent="true"
+                android:layout_alignRight="@+id/register_button"
+                android:layout_below="@+id/use_google_login_button"
                 android:layout_margin="1dp"
                 android:background="@drawable/ic_btn_sign_in_yahoo" />
+
         </RelativeLayout>
+
     </ScrollView>
 
 </RelativeLayout>
