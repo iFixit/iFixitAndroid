@@ -231,10 +231,6 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		cameraIcon = menu.findItem(R.id.top_camera_button);
 		helpIcon = menu.findItem(R.id.top_question_button);
 		
-		helpIcon.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		cameraIcon.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		galleryIcon.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
-		
 		if(((MainApplication) this.getApplication()).getUser() == null)
 			hideMenuBarIcons();
 
@@ -257,6 +253,9 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			cameraIcon.setVisible(false);
 		if (helpIcon != null)
 			helpIcon.setVisible(false);
+		
+		
+		supportInvalidateOptionsMenu();
 	}
 
 	public void showMenuBarIcons() {
