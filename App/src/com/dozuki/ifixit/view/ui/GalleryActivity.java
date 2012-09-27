@@ -55,7 +55,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		// .getSite().mTitle);
 
 		mActionBar = getSupportActionBar();
-		//mActionBar.setTitle(MediaFragment.GALLERY_TITLE);
+		mActionBar.setTitle("");
 
 		super.onCreate(savedInstanceState);
 
