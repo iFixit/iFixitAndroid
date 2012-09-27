@@ -30,7 +30,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="@string/login_error"
-                    
                     android:textColor="@color/red" />
 
                 <ProgressBar
@@ -47,23 +46,22 @@
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:layout_marginBottom="10dp"
-                    android:visibility="gone"
-                    android:text="@string/create_account" 
-                    android:textAppearance="?android:attr/textAppearanceLarge"/>
+                    android:text="@string/create_account"
+                    android:textAppearance="?android:attr/textAppearanceLarge"
+                    android:visibility="gone" />
 
                 <TextView
                     android:id="@+id/login_id"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/email"
-                />
+                    android:text="@string/email" />
 
                 <EditText
                     android:id="@+id/edit_login_id"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress" 
-                    android:ems="10" >
+                    android:ems="10"
+                    android:inputType="textEmailAddress" >
 
                     <requestFocus />
                 </EditText>
@@ -72,8 +70,7 @@
                     android:id="@+id/login_username"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/user_name"
-                    />
+                    android:text="@string/user_name" />
 
                 <EditText
                     android:id="@+id/edit_login_username"
@@ -86,8 +83,7 @@
                     android:id="@+id/password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/password"
-                  />
+                    android:text="@string/password" />
 
                 <EditText
                     android:id="@+id/edit_password"
@@ -100,8 +96,7 @@
                     android:id="@+id/confirm_password"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Confirm Password"
-                     />
+                    android:text="Confirm Password" />
 
                 <EditText
                     android:id="@+id/edit_confirm_password"
@@ -109,6 +104,28 @@
                     android:layout_height="wrap_content"
                     android:ems="10"
                     android:inputType="textPassword" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/login_agreement_terms_layout"
+                    android:orientation="horizontal" >
+
+                    <CheckBox
+                        android:id="@+id/login_agreement_terms_checkbox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center_vertical" />
+                    
+                    <TextView
+                        android:id="@+id/login_agreement_terms_textview"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="@string/register_agreement" 
+                        android:layout_marginBottom="10dp"
+                        />
+                    
+                </LinearLayout>
 
                 <ImageButton
                     android:id="@+id/signin_button"

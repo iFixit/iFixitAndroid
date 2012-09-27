@@ -49,12 +49,7 @@
             android:textColor="@color/white"
             android:textStyle="bold" />
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/login_text"
-            android:layout_toRightOf="@+id/login_text"
-            android:src="@drawable/dropdown_ic_arrow_normal_holo_light" />
+
      
     </RelativeLayout>
 

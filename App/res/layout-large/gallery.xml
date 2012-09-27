@@ -16,18 +16,18 @@
             <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="25">
+            android:layout_weight="20">
       </FrameLayout>
       <FrameLayout
             android:id="@+id/login_fragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="50">
+            android:layout_weight="60">
       </FrameLayout>
       <FrameLayout
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="25">
+            android:layout_weight="20">
       </FrameLayout>
    </LinearLayout>
 </FrameLayout>

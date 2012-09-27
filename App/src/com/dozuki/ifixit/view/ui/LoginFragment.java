@@ -11,8 +11,14 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
+import android.text.style.StyleSpan;
+import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,9 +29,11 @@ import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -66,6 +74,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 	private TextView _createAccountText;
 
 	private ProgressBar _loadingSpinner;
+	private LinearLayout _registerAgreement;
 
 	boolean readyForRegisterState;
 
@@ -99,6 +108,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		}
 	};
 
+	private CheckBox _agreementCheckBox;
+
 	/**
 	 * Required for restoring fragments
 	 */
@@ -115,6 +126,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		} else {
 			readyForRegisterState = false;
 		}
+		
+	
 
 	}
 
@@ -142,6 +155,17 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		_name = (EditText) view.findViewById(R.id.edit_login_username);
 		_errorText = (TextView) view.findViewById(R.id.login_error_text);
 		_errorText.setVisibility(View.GONE);
+		
+		_registerAgreement = (LinearLayout) view
+				.findViewById(R.id.login_agreement_terms_layout);
+		TextView t = (TextView) view
+		.findViewById(R.id.login_agreement_terms_textview);
+
+		t.setMovementMethod(LinkMovementMethod.getInstance());
+		
+		_agreementCheckBox =  (CheckBox) view
+		.findViewById(R.id.login_agreement_terms_checkbox);
+
 
 		_loadingSpinner = (ProgressBar) view
 				.findViewById(R.id.login_loading_bar);
@@ -149,6 +173,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		
 		_createAccountText = (TextView) view.findViewById(R.id.create_account_header);
 		_createAccountText.setVisibility(View.GONE);
+		///_registerAgreement.setVisibility(View.GONE);
 
 		setState();
 
@@ -185,6 +210,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 			_confirmPassword.setVisibility(View.VISIBLE);
 			_name.setVisibility(View.VISIBLE);
 			_cancelRegister.setVisibility(View.VISIBLE);
+			_registerAgreement.setVisibility(View.VISIBLE);
 
 			_googleLogin.setVisibility(View.GONE);
 			_yahooLogin.setVisibility(View.GONE);
@@ -199,6 +225,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 					mContext, R.anim.fade_in));
 			_confirmPassword.startAnimation(AnimationUtils.loadAnimation(
 					mContext, R.anim.fade_in));
+			_registerAgreement.startAnimation(AnimationUtils.loadAnimation(
+					mContext, R.anim.fade_in));
 		} else {
 			_createAccountText.clearAnimation();
 			_createAccountText.setVisibility(View.GONE);
@@ -210,6 +238,10 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 			_confirmPassword.setVisibility(View.GONE);
 			_name.clearAnimation();
 			_name.setVisibility(View.GONE);
+			_registerAgreement.clearAnimation();
+			_registerAgreement.setVisibility(View.GONE);
+		//	_registerAgreement.clearAnimation();
+			//_registerAgreement.setVisibility(View.GONE);
 			_cancelRegister.clearAnimation();
 			_cancelRegister.setVisibility(View.GONE);
 			_googleLogin.setVisibility(View.VISIBLE);
@@ -223,7 +255,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
 		if (_loginId.getText().toString().length() > 1
 				&& _password.getText().toString().length() > 1
-				&& _loginId.getText().toString().contains("@")) {
+				&& _loginId.getText().toString().contains("@")
+				) {
 			_loadingSpinner.setVisibility(View.VISIBLE);
 			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 			authenicationPackage.login = _loginId.getText().toString();
@@ -321,7 +354,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 						.equals(_confirmPassword.getText().toString())
 						&& _loginId.getText().length() > 1
 						&& _loginId.getText().toString().contains("@")
-						&& _name.getText().length() > 1) {
+						&& _name.getText().length() > 1
+						&& _agreementCheckBox.isChecked()) {
 					// start service for register
 					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 					authenicationPackage.login = _loginId.getText().toString();
