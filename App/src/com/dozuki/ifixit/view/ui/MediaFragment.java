@@ -314,17 +314,24 @@ public class MediaFragment extends SherlockFragment implements
 		filter.addAction(APIService.ACTION_DELETE_MEDIA);
 		mContext.registerReceiver(mApiReceiver, filter);
 	}
-
+	
+	
 	@Override
-	public void onPause() {
-		super.onPause();
-
+	public void onDestroy() {
 		try {
 			mContext.unregisterReceiver(mApiReceiver);
 		} catch (IllegalArgumentException e) {
 			// Do nothing. This happens in the unlikely event that
 			// unregisterReceiver has been called already.
 		}
+		
+		super.onDestroy();
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+
 
 		// this helps out with manageing memory on context changes
 		int count = mGridView.getCount();
