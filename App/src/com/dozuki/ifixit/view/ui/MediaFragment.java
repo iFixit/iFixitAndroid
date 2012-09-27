@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -97,6 +98,7 @@ public class MediaFragment extends SherlockFragment
 	private static final String SHOWING_HELP = "SHOWING_HELP";
 	private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
 	private static final String SHOWING_DELETE = "SHOWING_DELETE";
+	private static final int MAX_UPLOAD_COUNT = 4;;
 
 	GridView mGridView;
 	RelativeLayout mButtons;
@@ -155,8 +157,7 @@ public class MediaFragment extends SherlockFragment
 							.getExtras()
 							.getString(
 									APIService.REQUEST_RESULT_INFORMATION);
-					Log.e("IMAGE UPLOADED", "KEY: "
-							+ imageinfo.getmImageid());
+					
 					LocalImage cur = localURL.get(url);
 					if (cur == null)
 						return;
@@ -481,9 +482,38 @@ public class MediaFragment extends SherlockFragment
 			int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == MediaFragment.SELECT_PICTURE) {
-				Log.i("MediaFragment",
-						"Adding gallery pic...");
+			
 				Uri selectedImageUri = data.getData();
+				
+				//check file type
+				String path = getPath(selectedImageUri);
+				if(path == null || !(path.toLowerCase().contains(".jpeg") ||  path.toLowerCase().contains(".jpg") 
+						|| path.toLowerCase().contains(".png")))
+						{
+					       Toast.makeText(mContext, mContext.getString(R.string.non_image_error), 
+					    		   Toast.LENGTH_LONG).show();
+					       
+					       return;
+						}
+				
+				//check how many images are being uploaded
+				int imagesBeingUploaded = 0;
+				for(String s : localURL.keySet())
+				{
+					if(localURL.get(s).imgId == null)
+					{
+						imagesBeingUploaded++;
+					}
+				} 
+				
+				if(imagesBeingUploaded >= MAX_UPLOAD_COUNT)
+				{
+					 Toast.makeText(mContext, mContext.getString(R.string.too_many_image_error), 
+				    		   Toast.LENGTH_LONG).show();
+					 return;
+				}
+				
+				
 				String key = galleryAdapter
 						.addUri(selectedImageUri);
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
@@ -755,10 +785,16 @@ public class MediaFragment extends SherlockFragment
 		for (int i = selectedList.size() - 1; i > -1; i--) {
 			if (selectedList.get(i)) {
 				selectedList.remove(i);
+				if(mImageList.getImages().get(i)
+								.getmImageId() != null)
 				deleteQuery += "imageids[]="
 						+ mImageList.getImages().get(i)
 								.getmImageId() + "&";
 				mImageList.getImages().remove(i);
+			}else {
+			
+					Toast.makeText(mContext, mContext.getString(R.string.delete_loading_image_error), 
+				    		   Toast.LENGTH_LONG).show();
 			}
 		}
 
@@ -968,14 +1004,24 @@ public class MediaFragment extends SherlockFragment
 			if (b)
 				selectedCount++;
 		}
+		
+		String msg = "Are you sure you want to delete "
+			+ selectedCount
+			+ " image";
+		if(selectedCount > 1)
+		{
+			msg = msg + "s?";
+		}else
+		{
+			msg = msg + "?";
+		}
+		
 		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
 				context);
 		builder.setTitle(
 				context.getString(R.string.confirm_delete))
 				.setMessage(
-						"Are you sure you want to delete these "
-								+ selectedCount
-								+ " images?")
+						msg)
 				.setPositiveButton(
 						context.getString(R.string.logout_confirm),
 						new DialogInterface.OnClickListener() {
@@ -999,7 +1045,6 @@ public class MediaFragment extends SherlockFragment
 								dialog.cancel();
 							}
 						}).setCancelable(false);
-		;
 
 		return builder.create();
 	}
