@@ -12,66 +12,76 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class TopicViewActivity extends SherlockFragmentActivity {
-   public static final String TOPIC_KEY = "TOPIC";
+public class TopicViewActivity extends
+		SherlockFragmentActivity {
+	public static final String TOPIC_KEY = "TOPIC";
 
-   private TopicViewFragment mTopicView;
-   private TopicNode mTopicNode;
-   protected ImageManager mImageManager;
+	private TopicViewFragment mTopicView;
+	private TopicNode mTopicNode;
+	protected ImageManager mImageManager;
 
-   @Override
-   public void onCreate(Bundle savedState) {
-      super.onCreate(savedState);
+	@Override
+	public void onCreate(Bundle savedState) {
+		super.onCreate(savedState);
 
-      setContentView(R.layout.topic_view);
-            
-      mImageManager = ((MainApplication)getApplication()).getImageManager();
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		setContentView(R.layout.topic_view);
 
-      if (savedState == null) {
-         mTopicView = new TopicViewFragment();
-         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-         ft.replace(R.id.topic_view_fragment, mTopicView);
-         ft.commit();
-      } else {
-         mTopicView = (TopicViewFragment)getSupportFragmentManager()
-          .findFragmentById(R.id.topic_view_fragment);
-      }
+		mImageManager = ((MainApplication) getApplication())
+				.getImageManager();
+		getSupportActionBar().setDisplayHomeAsUpEnabled(
+				true);
 
-      mTopicNode = (TopicNode)getIntent().getSerializableExtra(TOPIC_KEY);
-   }
+		if (savedState == null) {
+			mTopicView = new TopicViewFragment();
+			FragmentTransaction ft = getSupportFragmentManager()
+					.beginTransaction();
+			ft.replace(R.id.topic_view_fragment, mTopicView);
+			ft.commit();
+		} else {
+			mTopicView = (TopicViewFragment) getSupportFragmentManager()
+					.findFragmentById(
+							R.id.topic_view_fragment);
+		}
 
-   @Override
-   public void onAttachFragment(Fragment fragment) {
-      if (fragment instanceof TopicViewFragment) {
-         TopicViewFragment topicViewFragment = (TopicViewFragment)fragment;
+		mTopicNode = (TopicNode) getIntent()
+				.getSerializableExtra(TOPIC_KEY);
+	}
 
-         if (topicViewFragment.getTopicNode() == null && mTopicNode != null) {
-            topicViewFragment.setTopicNode(mTopicNode);
-         }
-      }
-   }
-   
-   @Override
-	public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+	@Override
+	public void onAttachFragment(Fragment fragment) {
+		if (fragment instanceof TopicViewFragment) {
+			TopicViewFragment topicViewFragment = (TopicViewFragment) fragment;
+
+			if (topicViewFragment.getTopicNode() == null
+					&& mTopicNode != null) {
+				topicViewFragment.setTopicNode(mTopicNode);
+			}
+		}
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(
+			com.actionbarsherlock.view.Menu menu) {
 		com.actionbarsherlock.view.MenuInflater inflater = getSupportMenuInflater();
 		inflater.inflate(R.menu.menu_bar, menu);
-		MenuItem galleryIcon = menu.findItem(R.id.gallery_button);
+		MenuItem galleryIcon = menu
+				.findItem(R.id.gallery_button);
 		return super.onCreateOptionsMenu(menu);
 	}
 
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            finish();
-            return true;
-         case R.id.gallery_button:
-        	 Intent intent = new Intent(this, GalleryActivity.class);
-        	 startActivity(intent);
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		case R.id.gallery_button:
+			Intent intent = new Intent(this,
+					GalleryActivity.class);
+			startActivity(intent);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }

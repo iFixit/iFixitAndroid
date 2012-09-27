@@ -32,306 +32,348 @@ import com.dozuki.ifixit.view.model.SpeechCommander;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class GuideViewActivity extends SherlockFragmentActivity 
- implements OnPageChangeListener {
-   private static final int MAX_LOADING_IMAGES = 9;
-   private static final int MAX_STORED_IMAGES = 9;
-   private static final int MAX_WRITING_IMAGES = 10;
-   private static final String CURRENT_PAGE = "CURRENT_PAGE";
-   private static final String SAVED_GUIDE = "SAVED_GUIDE";
-   private static final String SAVED_GUIDEID = "SAVED_GUIDEID";
-   private static final String NEXT_COMMAND = "next";
-   private static final String PREVIOUS_COMMAND = "previous";
-   private static final String HOME_COMMAND = "home";
-   private static final String PACKAGE_NAME = "com.dozuki.ifixit";
+public class GuideViewActivity extends
+		SherlockFragmentActivity implements
+		OnPageChangeListener {
+	private static final int MAX_LOADING_IMAGES = 9;
+	private static final int MAX_STORED_IMAGES = 9;
+	private static final int MAX_WRITING_IMAGES = 10;
+	private static final String CURRENT_PAGE = "CURRENT_PAGE";
+	private static final String SAVED_GUIDE = "SAVED_GUIDE";
+	private static final String SAVED_GUIDEID = "SAVED_GUIDEID";
+	private static final String NEXT_COMMAND = "next";
+	private static final String PREVIOUS_COMMAND = "previous";
+	private static final String HOME_COMMAND = "home";
+	private static final String PACKAGE_NAME = "com.dozuki.ifixit";
 
-   private GuideViewAdapter mGuideAdapter;
-   private int mGuideid;
-   private Guide mGuide;
-   private SpeechCommander mSpeechCommander;
-   private int mCurrentPage = -1;
-   protected ImageManager mImageManager;
-   private ViewPager mPager;
-   private CirclePageIndicator mIndicator;
-   protected ProgressBar mProgressBar;
-   private ImageView mNextPageImage;
+	private GuideViewAdapter mGuideAdapter;
+	private int mGuideid;
+	private Guide mGuide;
+	private SpeechCommander mSpeechCommander;
+	private int mCurrentPage = -1;
+	protected ImageManager mImageManager;
+	private ViewPager mPager;
+	private CirclePageIndicator mIndicator;
+	protected ProgressBar mProgressBar;
+	private ImageView mNextPageImage;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result = (APIService.Result)
-          intent.getExtras().getSerializable(APIService.RESULT);
+	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			APIService.Result result = (APIService.Result) intent
+					.getExtras().getSerializable(
+							APIService.RESULT);
 
-         if (!result.hasError()) {
-            if (mGuide == null) {
-               setGuide((Guide)result.getResult(), 0);
-            }
-         } else {
-            APIService.getErrorDialog(GuideViewActivity.this, result.getError(),
-             APIService.getGuideIntent(GuideViewActivity.this, mGuideid)).show();
-         }
-      }
-   };
+			if (!result.hasError()) {
+				if (mGuide == null) {
+					setGuide((Guide) result.getResult(), 0);
+				}
+			} else {
+				APIService.getErrorDialog(
+						GuideViewActivity.this,
+						result.getError(),
+						APIService.getGuideIntent(
+								GuideViewActivity.this,
+								mGuideid)).show();
+			}
+		}
+	};
 
-   
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-      getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-       WindowManager.LayoutParams.FLAG_FULLSCREEN);
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		getWindow().setFlags(
+				WindowManager.LayoutParams.FLAG_FULLSCREEN,
+				WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-      setContentView(R.layout.guide_main);
-      
-      mImageManager = ((MainApplication)getApplication()).getImageManager();
-      mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
-      mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
-      mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
-      mPager = (ViewPager)findViewById(R.id.guide_pager);
-      mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
-      mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
-      mNextPageImage = (ImageView)findViewById(R.id.next_page_image);
+		setContentView(R.layout.guide_main);
 
-      if (savedInstanceState != null) {
-         mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
-         Guide guide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
-         if (guide != null) {
-            setGuide(guide, savedInstanceState.getInt(CURRENT_PAGE));
-            mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
-         } else {
-            getGuide(mGuideid);
-         }
-      } else {
-         Intent intent = getIntent();
-         mGuideid = -1;
+		mImageManager = ((MainApplication) getApplication())
+				.getImageManager();
+		mImageManager
+				.setMaxLoadingImages(MAX_LOADING_IMAGES);
+		mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
+		mImageManager
+				.setMaxWritingImages(MAX_WRITING_IMAGES);
+		mPager = (ViewPager) findViewById(R.id.guide_pager);
+		mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+		mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+		mNextPageImage = (ImageView) findViewById(R.id.next_page_image);
 
-         if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            List<String> segments = intent.getData().getPathSegments();
+		if (savedInstanceState != null) {
+			mGuideid = savedInstanceState
+					.getInt(SAVED_GUIDEID);
+			Guide guide = (Guide) savedInstanceState
+					.getSerializable(SAVED_GUIDE);
+			if (guide != null) {
+				setGuide(guide,
+						savedInstanceState
+								.getInt(CURRENT_PAGE));
+				mIndicator
+						.setCurrentItem(savedInstanceState
+								.getInt(CURRENT_PAGE));
+			} else {
+				getGuide(mGuideid);
+			}
+		} else {
+			Intent intent = getIntent();
+			mGuideid = -1;
 
-            try {
-               mGuideid = Integer.parseInt(segments.get(2));
-            } catch (Exception e) {
-               displayError();
-               Log.e("iFixit", "Problem parsing guide");
-            }
-         } else {
-            Bundle extras = intent.getExtras();
-            mGuideid = extras.getInt(MainActivity.GUIDEID);
-         }
+			if (Intent.ACTION_VIEW.equals(intent
+					.getAction())) {
+				List<String> segments = intent.getData()
+						.getPathSegments();
 
-         getGuide(mGuideid);
-         
-      }
+				try {
+					mGuideid = Integer.parseInt(segments
+							.get(2));
+				} catch (Exception e) {
+					displayError();
+					Log.e("iFixit", "Problem parsing guide");
+				}
+			} else {
+				Bundle extras = intent.getExtras();
+				mGuideid = extras
+						.getInt(MainActivity.GUIDEID);
+			}
 
-      mNextPageImage.setOnTouchListener(new View.OnTouchListener() {
-         public boolean onTouch(View v, MotionEvent event) {
-            if (mCurrentPage == 0) {
-               nextStep();
+			getGuide(mGuideid);
 
-               return true;
-            }
+		}
 
-            return false;
-         }
-      });
+		mNextPageImage
+				.setOnTouchListener(new View.OnTouchListener() {
+					public boolean onTouch(View v,
+							MotionEvent event) {
+						if (mCurrentPage == 0) {
+							nextStep();
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+							return true;
+						}
 
-      //initSpeechRecognizer();
-   }
+						return false;
+					}
+				});
 
-   @Override
-   public void onSaveInstanceState(Bundle state) {
-      state.putSerializable(SAVED_GUIDEID, mGuideid);
-      state.putSerializable(SAVED_GUIDE, mGuide);
-      state.putInt(CURRENT_PAGE, mCurrentPage);
-   }
+		getSupportActionBar().setDisplayHomeAsUpEnabled(
+				true);
 
-   public void setGuide(Guide guide, int page) {
-      if (guide == null) {
-         displayError();
-         return;
-      }
+		// initSpeechRecognizer();
+	}
 
-      mProgressBar.setVisibility(View.GONE);
-      mGuide = guide;
+	@Override
+	public void onSaveInstanceState(Bundle state) {
+		state.putSerializable(SAVED_GUIDEID, mGuideid);
+		state.putSerializable(SAVED_GUIDE, mGuide);
+		state.putInt(CURRENT_PAGE, mCurrentPage);
+	}
 
-      ActionBar actionBar = getSupportActionBar();
-      actionBar.setTitle(mGuide.getTitle());
-      
-      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(),
-       mImageManager, mGuide);
+	public void setGuide(Guide guide, int page) {
+		if (guide == null) {
+			displayError();
+			return;
+		}
 
-      mPager.setAdapter(mGuideAdapter);
-      mIndicator.setOnPageChangeListener(this);
-      mIndicator.setViewPager(mPager);
-      
-      final float density = getResources().getDisplayMetrics().density;
-      mIndicator.setBackgroundColor(0x00FFFFFF);
-      mIndicator.setRadius(6 * density);
-      mIndicator.setPageColor(0xFFFFFFFF);
-      mIndicator.setFillColor(0xFF444444);
-      mIndicator.setStrokeColor(0xFF000000);
-      mIndicator.setStrokeWidth((int)(1.5 * density));
+		mProgressBar.setVisibility(View.GONE);
+		mGuide = guide;
 
-      mPager.setVisibility(View.VISIBLE);
+		ActionBar actionBar = getSupportActionBar();
+		actionBar.setTitle(mGuide.getTitle());
 
-      onPageSelected(page);
-   }
+		mGuideAdapter = new GuideViewAdapter(
+				this.getSupportFragmentManager(),
+				mImageManager, mGuide);
 
-   @Override
-   public void onDestroy() {
-      super.onDestroy();
+		mPager.setAdapter(mGuideAdapter);
+		mIndicator.setOnPageChangeListener(this);
+		mIndicator.setViewPager(mPager);
 
-      if (mSpeechCommander != null)
-         mSpeechCommander.destroy();
-      
-   }
+		final float density = getResources()
+				.getDisplayMetrics().density;
+		mIndicator.setBackgroundColor(0x00FFFFFF);
+		mIndicator.setRadius(6 * density);
+		mIndicator.setPageColor(0xFFFFFFFF);
+		mIndicator.setFillColor(0xFF444444);
+		mIndicator.setStrokeColor(0xFF000000);
+		mIndicator.setStrokeWidth((int) (1.5 * density));
 
-   @Override
-   public void onPause() {
-      super.onPause();
+		mPager.setVisibility(View.VISIBLE);
 
-      try {
-         unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
-      }
+		onPageSelected(page);
+	}
 
-      if (mSpeechCommander != null) {
-         mSpeechCommander.stopListening();
-         mSpeechCommander.cancel();
-      }
-   }
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
 
-   @Override
-   public void onResume() {
-      super.onResume();
+		if (mSpeechCommander != null)
+			mSpeechCommander.destroy();
 
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_GUIDE);
-      registerReceiver(mApiReceiver, filter);
+	}
 
-      if (mSpeechCommander != null)
-         mSpeechCommander.startListening();
-   }
+	@Override
+	public void onPause() {
+		super.onPause();
 
-   public int getScreenHeight() {
-      Display display = getWindowManager().getDefaultDisplay();
-      return display.getHeight();
-   }
+		try {
+			unregisterReceiver(mApiReceiver);
+		} catch (IllegalArgumentException e) {
+			// Do nothing. This happens in the unlikely event that
+			// unregisterReceiver has been called already.
+		}
 
-   public int getScreenWidth() {
-      Display display = getWindowManager().getDefaultDisplay();
-      return display.getWidth();
-   }
+		if (mSpeechCommander != null) {
+			mSpeechCommander.stopListening();
+			mSpeechCommander.cancel();
+		}
+	}
 
-   public void getGuide(final int guideid) {
-      mNextPageImage.setVisibility(View.GONE);
+	@Override
+	public void onResume() {
+		super.onResume();
 
-      startService(APIService.getGuideIntent(this, guideid));
-   }
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(APIService.ACTION_GUIDE);
+		registerReceiver(mApiReceiver, filter);
 
-   private void displayError() {
-      mProgressBar.setVisibility(View.GONE);
-      // TODO Display error
-   }
+		if (mSpeechCommander != null)
+			mSpeechCommander.startListening();
+	}
 
-   private void nextStep() {
-      mIndicator.setCurrentItem(mCurrentPage + 1);
-   }
+	public int getScreenHeight() {
+		Display display = getWindowManager()
+				.getDefaultDisplay();
+		return display.getHeight();
+	}
 
-   private void previousStep() {
-      mIndicator.setCurrentItem(mCurrentPage - 1);
-   }
+	public int getScreenWidth() {
+		Display display = getWindowManager()
+				.getDefaultDisplay();
+		return display.getWidth();
+	}
 
-   private void guideHome() {
-      mIndicator.setCurrentItem(0);
-   }
-   
-   public int getIndicatorHeight() {
-      return mIndicator.getHeight();
-   }
+	public void getGuide(final int guideid) {
+		mNextPageImage.setVisibility(View.GONE);
 
-   public void initSpeechRecognizer() {
-      if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext()))
-         return;
+		startService(APIService.getGuideIntent(this,
+				guideid));
+	}
 
-      mSpeechCommander = new SpeechCommander(this, PACKAGE_NAME);
+	private void displayError() {
+		mProgressBar.setVisibility(View.GONE);
+		// TODO Display error
+	}
 
-      mSpeechCommander.addCommand(NEXT_COMMAND, new SpeechCommander.Command() {
-         public void performCommand() {
-            nextStep();
-         }
-      });
+	private void nextStep() {
+		mIndicator.setCurrentItem(mCurrentPage + 1);
+	}
 
-      mSpeechCommander.addCommand(PREVIOUS_COMMAND,
-       new SpeechCommander.Command() {
-         public void performCommand() {
-            previousStep();
-         }
-      });
+	private void previousStep() {
+		mIndicator.setCurrentItem(mCurrentPage - 1);
+	}
 
-      mSpeechCommander.addCommand(HOME_COMMAND, new SpeechCommander.Command() {
-         public void performCommand() {
-            guideHome();
-         }
-      });
+	private void guideHome() {
+		mIndicator.setCurrentItem(0);
+	}
 
-      mSpeechCommander.startListening();
-   }
+	public int getIndicatorHeight() {
+		return mIndicator.getHeight();
+	}
 
-   @Override
-   public void onPageScrollStateChanged(int arg0) {}
-   @Override
-   public void onPageScrolled(int arg0, float arg1, int arg2) {}
+	public void initSpeechRecognizer() {
+		if (!SpeechRecognizer
+				.isRecognitionAvailable(getBaseContext()))
+			return;
 
-   @Override
-   public void onPageSelected(int page) {
-      if (mCurrentPage == page) {
-         return;
-      }
+		mSpeechCommander = new SpeechCommander(this,
+				PACKAGE_NAME);
 
-      mCurrentPage = page;
-      final int visibility;
-      Animation anim;
+		mSpeechCommander.addCommand(NEXT_COMMAND,
+				new SpeechCommander.Command() {
+					public void performCommand() {
+						nextStep();
+					}
+				});
 
-      if (mCurrentPage == 0) {
-         anim = new AlphaAnimation(0.00f, 1.00f);
-         visibility = View.VISIBLE;
-      } else if (mCurrentPage == 1) {
-         anim = new AlphaAnimation(1.00f, 0.00f);
-         visibility = View.GONE;
-      } else {
-         mNextPageImage.setVisibility(View.GONE);
-         return;
-      }
+		mSpeechCommander.addCommand(PREVIOUS_COMMAND,
+				new SpeechCommander.Command() {
+					public void performCommand() {
+						previousStep();
+					}
+				});
 
-      if (anim != null && mNextPageImage.getVisibility() != visibility) {
-         anim.setDuration(400);
-         anim.setAnimationListener(new AnimationListener() {
-            public void onAnimationStart(Animation animation) {}
+		mSpeechCommander.addCommand(HOME_COMMAND,
+				new SpeechCommander.Command() {
+					public void performCommand() {
+						guideHome();
+					}
+				});
 
-            public void onAnimationRepeat(Animation animation) {}
+		mSpeechCommander.startListening();
+	}
 
-            public void onAnimationEnd(Animation animation) {
-               mNextPageImage.setVisibility(visibility);
-            }
-         });
+	@Override
+	public void onPageScrollStateChanged(int arg0) {
+	}
 
-         mNextPageImage.startAnimation(anim);
-      }
-   }
+	@Override
+	public void onPageScrolled(int arg0, float arg1,
+			int arg2) {
+	}
 
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            finish();
+	@Override
+	public void onPageSelected(int page) {
+		if (mCurrentPage == page) {
+			return;
+		}
 
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
+		mCurrentPage = page;
+		final int visibility;
+		Animation anim;
+
+		if (mCurrentPage == 0) {
+			anim = new AlphaAnimation(0.00f, 1.00f);
+			visibility = View.VISIBLE;
+		} else if (mCurrentPage == 1) {
+			anim = new AlphaAnimation(1.00f, 0.00f);
+			visibility = View.GONE;
+		} else {
+			mNextPageImage.setVisibility(View.GONE);
+			return;
+		}
+
+		if (anim != null
+				&& mNextPageImage.getVisibility() != visibility) {
+			anim.setDuration(400);
+			anim.setAnimationListener(new AnimationListener() {
+				public void onAnimationStart(
+						Animation animation) {
+				}
+
+				public void onAnimationRepeat(
+						Animation animation) {
+				}
+
+				public void onAnimationEnd(
+						Animation animation) {
+					mNextPageImage
+							.setVisibility(visibility);
+				}
+			});
+
+			mNextPageImage.startAnimation(anim);
+		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 }

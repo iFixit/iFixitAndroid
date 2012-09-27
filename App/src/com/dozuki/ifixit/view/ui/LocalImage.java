@@ -21,7 +21,7 @@ public class LocalImage implements Serializable {
 		path = p;
 		imgId = null;
 	}
-	
+
 	@Override
 	public boolean equals(Object obj) {
 		if (obj == null)
@@ -31,7 +31,7 @@ public class LocalImage implements Serializable {
 		if (obj.getClass() != getClass())
 			return false;
 		LocalImage inf = (LocalImage) obj;
-		
+
 		return (inf.path.equals(this.path));
 	}
 }

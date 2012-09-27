@@ -14,16 +14,14 @@ public class UserImageInfo implements Serializable {
 	String mLocalKey;
 	boolean mLoaded;
 
-	public String getKey()
-	{
+	public String getKey() {
 		return mLocalKey;
 	}
-	
-	public void setKey(String key)
-	{
+
+	public void setKey(String key) {
 		mLocalKey = key;
 	}
-	
+
 	public void setLoaded(boolean loaded) {
 		mLoaded = loaded;
 	}
@@ -89,7 +87,8 @@ public class UserImageInfo implements Serializable {
 		if (obj.getClass() != getClass())
 			return false;
 		UserImageInfo inf = (UserImageInfo) obj;
-		if(this.mImageId == null || inf.mImageId == null) return false;
+		if (this.mImageId == null || inf.mImageId == null)
+			return false;
 		return (inf.mImageId.equals(this.mImageId));
 	}
 

@@ -47,7 +47,8 @@ import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.User;
 import com.dozuki.ifixit.view.model.LoginListener;
 
-public class LoginFragment extends SherlockFragment implements OnClickListener {
+public class LoginFragment extends SherlockFragment
+		implements OnClickListener {
 
 	static ArrayList<LoginListener> loginListeners = new ArrayList<LoginListener>();
 
@@ -81,20 +82,25 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			APIService.Result result = (APIService.Result) intent.getExtras()
-					.getSerializable(APIService.RESULT);
+			APIService.Result result = (APIService.Result) intent
+					.getExtras().getSerializable(
+							APIService.RESULT);
 
 			Log.e("SESSION", "IN SESSION ");
 			if (!result.hasError()) {
 				Log.e("SESSION", "NO ERROR");
 				User lUser = (User) result.getResult();
-				((MainApplication) ((Activity) mContext).getApplication())
-						.setUser(lUser);
-				final SharedPreferences prefs = mContext.getSharedPreferences(
-						PREFERENCE_FILE, Context.MODE_WORLD_READABLE);
+				((MainApplication) ((Activity) mContext)
+						.getApplication()).setUser(lUser);
+				final SharedPreferences prefs = mContext
+						.getSharedPreferences(
+								PREFERENCE_FILE,
+								Context.MODE_WORLD_READABLE);
 				Editor editor = prefs.edit();
-				editor.putString(SESSION_KEY, lUser.getSession());
-				editor.putString(USERNAME_KEY, lUser.getUsername());
+				editor.putString(SESSION_KEY,
+						lUser.getSession());
+				editor.putString(USERNAME_KEY,
+						lUser.getUsername());
 				editor.commit();
 				for (LoginListener l : loginListeners) {
 					l.onLogin(lUser);
@@ -122,24 +128,28 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
 		if (savedInstanceState != null) {
 			// readyForRegisterState
-			readyForRegisterState = savedInstanceState.getBoolean(LOGIN_STATE);
+			readyForRegisterState = savedInstanceState
+					.getBoolean(LOGIN_STATE);
 		} else {
 			readyForRegisterState = false;
 		}
-		
-	
 
 	}
 
 	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		View view = inflater.inflate(R.layout.login_fragment, container, false);
+	public View onCreateView(LayoutInflater inflater,
+			ViewGroup container, Bundle savedInstanceState) {
+		View view = inflater.inflate(
+				R.layout.login_fragment, container, false);
 
-		_loginId = (EditText) view.findViewById(R.id.edit_login_id);
-		_password = (EditText) view.findViewById(R.id.edit_password);
-		_login = (ImageButton) view.findViewById(R.id.signin_button);
-		_register = (ImageButton) view.findViewById(R.id.register_button);
+		_loginId = (EditText) view
+				.findViewById(R.id.edit_login_id);
+		_password = (EditText) view
+				.findViewById(R.id.edit_password);
+		_login = (ImageButton) view
+				.findViewById(R.id.signin_button);
+		_register = (ImageButton) view
+				.findViewById(R.id.register_button);
 		_cancelRegister = (ImageButton) view
 				.findViewById(R.id.cancel_register_button);
 		_googleLogin = (ImageButton) view
@@ -149,29 +159,35 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
 		_confirmPasswordTag = (TextView) view
 				.findViewById(R.id.confirm_password);
-		_usernameTag = (TextView) view.findViewById(R.id.login_username);
+		_usernameTag = (TextView) view
+				.findViewById(R.id.login_username);
 		_confirmPassword = (EditText) view
 				.findViewById(R.id.edit_confirm_password);
-		_name = (EditText) view.findViewById(R.id.edit_login_username);
-		_errorText = (TextView) view.findViewById(R.id.login_error_text);
+		_name = (EditText) view
+				.findViewById(R.id.edit_login_username);
+		_errorText = (TextView) view
+				.findViewById(R.id.login_error_text);
 		_errorText.setVisibility(View.GONE);
-		
+
 		_registerAgreement = (LinearLayout) view
 				.findViewById(R.id.login_agreement_terms_layout);
-		TextView t = (TextView) view.findViewById(R.id.login_agreement_terms_textview);
+		TextView t = (TextView) view
+				.findViewById(R.id.login_agreement_terms_textview);
 
-		t.setMovementMethod(LinkMovementMethod.getInstance());
-		
-		_agreementCheckBox =  (CheckBox) view.findViewById(R.id.login_agreement_terms_checkbox);
+		t.setMovementMethod(LinkMovementMethod
+				.getInstance());
 
+		_agreementCheckBox = (CheckBox) view
+				.findViewById(R.id.login_agreement_terms_checkbox);
 
 		_loadingSpinner = (ProgressBar) view
 				.findViewById(R.id.login_loading_bar);
 		_loadingSpinner.setVisibility(View.GONE);
-		
-		_createAccountText = (TextView) view.findViewById(R.id.create_account_header);
+
+		_createAccountText = (TextView) view
+				.findViewById(R.id.create_account_header);
 		_createAccountText.setVisibility(View.GONE);
-		///_registerAgreement.setVisibility(View.GONE);
+		// /_registerAgreement.setVisibility(View.GONE);
 
 		setState();
 
@@ -182,8 +198,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 				InputMethodManager in = (InputMethodManager) mContext
 						.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-				in.hideSoftInputFromWindow(
-						_loginId.getApplicationWindowToken(),
+				in.hideSoftInputFromWindow(_loginId
+						.getApplicationWindowToken(),
 						InputMethodManager.HIDE_NOT_ALWAYS);
 				login();
 			}
@@ -213,18 +229,28 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 			_googleLogin.setVisibility(View.GONE);
 			_yahooLogin.setVisibility(View.GONE);
 			_login.setVisibility(View.GONE);
-			_createAccountText.startAnimation(AnimationUtils.loadAnimation(mContext,
-					R.anim.fade_in));
-			_usernameTag.startAnimation(AnimationUtils.loadAnimation(mContext,
-					R.anim.fade_in));
-			_name.startAnimation(AnimationUtils.loadAnimation(mContext,
-					R.anim.fade_in));
-			_confirmPasswordTag.startAnimation(AnimationUtils.loadAnimation(
-					mContext, R.anim.fade_in));
-			_confirmPassword.startAnimation(AnimationUtils.loadAnimation(
-					mContext, R.anim.fade_in));
-			_registerAgreement.startAnimation(AnimationUtils.loadAnimation(
-					mContext, R.anim.fade_in));
+			_createAccountText
+					.startAnimation(AnimationUtils
+							.loadAnimation(mContext,
+									R.anim.fade_in));
+			_usernameTag
+					.startAnimation(AnimationUtils
+							.loadAnimation(mContext,
+									R.anim.fade_in));
+			_name.startAnimation(AnimationUtils
+					.loadAnimation(mContext, R.anim.fade_in));
+			_confirmPasswordTag
+					.startAnimation(AnimationUtils
+							.loadAnimation(mContext,
+									R.anim.fade_in));
+			_confirmPassword
+					.startAnimation(AnimationUtils
+							.loadAnimation(mContext,
+									R.anim.fade_in));
+			_registerAgreement
+					.startAnimation(AnimationUtils
+							.loadAnimation(mContext,
+									R.anim.fade_in));
 		} else {
 			_createAccountText.clearAnimation();
 			_createAccountText.setVisibility(View.GONE);
@@ -238,8 +264,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 			_name.setVisibility(View.GONE);
 			_registerAgreement.clearAnimation();
 			_registerAgreement.setVisibility(View.GONE);
-		//	_registerAgreement.clearAnimation();
-			//_registerAgreement.setVisibility(View.GONE);
+			// _registerAgreement.clearAnimation();
+			// _registerAgreement.setVisibility(View.GONE);
 			_cancelRegister.clearAnimation();
 			_cancelRegister.setVisibility(View.INVISIBLE);
 			_googleLogin.setVisibility(View.VISIBLE);
@@ -253,58 +279,62 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
 		if (_loginId.getText().toString().length() > 1
 				&& _password.getText().toString().length() > 1
-				&& _loginId.getText().toString().contains("@")
-				) {
+				&& _loginId.getText().toString()
+						.contains("@")) {
 			_loadingSpinner.setVisibility(View.VISIBLE);
 			AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-			authenicationPackage.login = _loginId.getText().toString();
-			authenicationPackage.password = _password.getText().toString();
+			authenicationPackage.login = _loginId.getText()
+					.toString();
+			authenicationPackage.password = _password
+					.getText().toString();
 			enable(false);
-			mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
+			mContext.startService(APIService
+					.getLoginIntent(mContext,
+							authenicationPackage));
 		} else {
 			_errorText.setVisibility(View.VISIBLE);
-			if(!_loginId.getText().toString().contains("@") || _loginId.getText().toString().length() <= 1)
-			{
+			if (!_loginId.getText().toString()
+					.contains("@")
+					|| _loginId.getText().toString()
+							.length() <= 1) {
 				_loginId.requestFocus();
 				showKeyboard();
-			}else
-			{		
+			} else {
 				_password.requestFocus();
 				showKeyboard();
 			}
 		}
 	}
-	
-	public void showKeyboard()
-	{
-		InputMethodManager in = (InputMethodManager) mContext
-		.getSystemService(Context.INPUT_METHOD_SERVICE);
 
-       in.toggleSoftInput(InputMethodManager.SHOW_FORCED,
-    		   InputMethodManager.HIDE_IMPLICIT_ONLY);
+	public void showKeyboard() {
+		InputMethodManager in = (InputMethodManager) mContext
+				.getSystemService(Context.INPUT_METHOD_SERVICE);
+
+		in.toggleSoftInput(InputMethodManager.SHOW_FORCED,
+				InputMethodManager.HIDE_IMPLICIT_ONLY);
 	}
 
-   private void enable(boolean enabled) {
-	   _loginId.setEnabled(enabled);
+	private void enable(boolean enabled) {
+		_loginId.setEnabled(enabled);
 		_password.setEnabled(enabled);
 		_login.setEnabled(enabled);
 		_register.setEnabled(enabled);
 		_cancelRegister.setEnabled(enabled);
 		_googleLogin.setEnabled(enabled);
-		_yahooLogin.setEnabled(enabled);	
-		_name.setEnabled(enabled);		
+		_yahooLogin.setEnabled(enabled);
+		_name.setEnabled(enabled);
 	}
 
-
-@Override
+	@Override
 	public void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 
-		outState.putSerializable(LOGIN_STATE, readyForRegisterState);
+		outState.putSerializable(LOGIN_STATE,
+				readyForRegisterState);
 	}
 
-	public void onItemClick(AdapterView<?> adapterView, View view,
-			int position, long id) {
+	public void onItemClick(AdapterView<?> adapterView,
+			View view, int position, long id) {
 		// mTopicAdapter.onItemClick(null, view, position, id);
 	}
 
@@ -316,8 +346,9 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 			// topicSelectedListener = (TopicSelectedListener)activity;
 			mContext = (Context) activity;
 		} catch (ClassCastException e) {
-			throw new ClassCastException(activity.toString()
-					+ " must implement TopicSelectedListener");
+			throw new ClassCastException(
+					activity.toString()
+							+ " must implement TopicSelectedListener");
 		}
 	}
 
@@ -333,48 +364,60 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.use_google_login_button:
 			i = new Intent(mContext, OpenIDActivity.class);
-			i.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.GOOGLE_LOGIN);
+			i.putExtra(OpenIDActivity.LOGIN_METHOD,
+					OpenIDActivity.GOOGLE_LOGIN);
 			startActivityForResult(i, OPEN_ID_RESULT_CODE);
 			break;
 
 		case R.id.use_yahoo_login_button:
 			i = new Intent(mContext, OpenIDActivity.class);
-			i.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.YAHOO_LOGIN);
+			i.putExtra(OpenIDActivity.LOGIN_METHOD,
+					OpenIDActivity.YAHOO_LOGIN);
 			startActivityForResult(i, OPEN_ID_RESULT_CODE);
 
 		case R.id.register_button:
 			if (!readyForRegisterState) {
 				readyForRegisterState = true;
 				setState();
-				
+
 			} else {//
-				if (_password.getText().toString()
-						.equals(_confirmPassword.getText().toString())
+				if (_password
+						.getText()
+						.toString()
+						.equals(_confirmPassword.getText()
+								.toString())
 						&& _loginId.getText().length() > 1
-						&& _loginId.getText().toString().contains("@")
+						&& _loginId.getText().toString()
+								.contains("@")
 						&& _name.getText().length() > 1
 						&& _agreementCheckBox.isChecked()) {
 					// start service for register
 					AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-					authenicationPackage.login = _loginId.getText().toString();
-					authenicationPackage.password = _password.getText()
-							.toString();
-					authenicationPackage.username = _name.getText().toString();
+					authenicationPackage.login = _loginId
+							.getText().toString();
+					authenicationPackage.password = _password
+							.getText().toString();
+					authenicationPackage.username = _name
+							.getText().toString();
 					enable(false);
-					mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
+					mContext.startService(APIService
+							.getLoginIntent(mContext,
+									authenicationPackage));
 
 				} else {
 					_errorText.setVisibility(View.VISIBLE);
-					if(!_loginId.getText().toString().contains("@") || _loginId.getText().toString().length() <= 1)
-					{
+					if (!_loginId.getText().toString()
+							.contains("@")
+							|| _loginId.getText()
+									.toString().length() <= 1) {
 						_loginId.requestFocus();
 						showKeyboard();
-					}else if(_password.getText().toString().length() <= 1)
-					{		
+					} else if (_password.getText()
+							.toString().length() <= 1) {
 						_password.requestFocus();
 						showKeyboard();
-					}else if(_name.getText().toString().length() <= 1)
-					{
+					} else if (_name.getText().toString()
+							.length() <= 1) {
 						_name.requestFocus();
 						showKeyboard();
 					}
@@ -390,16 +433,20 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 	}
 
 	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	public void onActivityResult(int requestCode,
+			int resultCode, Intent data) {
 
 		if (resultCode == Activity.RESULT_OK)
 			if (data != null) {
 				_loadingSpinner.setVisibility(View.VISIBLE);
-				String session = data.getStringExtra("session");
+				String session = data
+						.getStringExtra("session");
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
 				authenicationPackage.session = session;
-	            enable(false);
-	            mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
+				enable(false);
+				mContext.startService(APIService
+						.getLoginIntent(mContext,
+								authenicationPackage));
 			}
 	}
 
@@ -425,26 +472,36 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		}
 	}
 
-	public static void registerOnLoginListener(LoginListener l) {
+	public static void registerOnLoginListener(
+			LoginListener l) {
 		LoginFragment.loginListeners.add(l);
 	}
 
 	static AlertDialog getLogoutDialog(final Context context) {
-		return createLogoutDialog(context, R.string.logout_title,
-				R.string.logout_messege, R.string.logout_confirm,
+		return createLogoutDialog(context,
+				R.string.logout_title,
+				R.string.logout_messege,
+				R.string.logout_confirm,
 				R.string.logout_cancel);
 	}
 
-	private static AlertDialog createLogoutDialog(final Context context,
-			int titleRes, int messageRes, int buttonConfirm, int buttonCancel) {
-		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+	private static AlertDialog createLogoutDialog(
+			final Context context, int titleRes,
+			int messageRes, int buttonConfirm,
+			int buttonCancel) {
+		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
+				context);
 		builder.setTitle(context.getString(titleRes))
 				.setMessage(context.getString(messageRes))
-				.setPositiveButton(context.getString(buttonConfirm),
+				.setPositiveButton(
+						context.getString(buttonConfirm),
 						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
+							public void onClick(
+									DialogInterface dialog,
+									int id) {
 
-								HTTPRequestHelper.clearCookies(context);
+								HTTPRequestHelper
+										.clearCookies(context);
 								for (LoginListener l : loginListeners) {
 									l.onLogout();
 								}
@@ -453,9 +510,12 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 								dialog.cancel();
 							}
 						})
-				.setNegativeButton(context.getString(buttonCancel),
+				.setNegativeButton(
+						context.getString(buttonCancel),
 						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
+							public void onClick(
+									DialogInterface dialog,
+									int id) {
 
 								MediaFragment.showingLogout = false;
 								dialog.cancel();
