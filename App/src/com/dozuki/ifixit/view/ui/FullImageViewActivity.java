@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.view.ui;
 
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+
 import java.io.File;
 
 import android.app.Activity;
@@ -21,7 +23,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 public class FullImageViewActivity extends Activity {
 	private String mImageUrl;
-	private ImageView mImageZoom;
+	private ImageViewTouch mImageZoom;
 	private ImageView mCloseFullScreen;
 	private ImageManager mImageManager;
 	private ImageSizes mImageSizes;
@@ -42,12 +44,12 @@ public class FullImageViewActivity extends Activity {
 
 		setContentView(R.layout.full_screen_image);
 
-		mImageZoom = (ImageView) findViewById(R.id.imageZoom);
+		mImageZoom = (ImageViewTouch) findViewById(R.id.imageZoom);
 		Boolean localUri = (Boolean) extras.get(MediaFragment.LOCAL_URL);
 
 		if (localUri != null) {
 			Log.i("file" , mImageUrl);
-			mImageZoom.setImageBitmap(BitmapFactory.decodeFile(mImageUrl));
+			mImageZoom.setImageBitmapReset(BitmapFactory.decodeFile(mImageUrl), true);
 			mImageZoom.setVisibility(View.VISIBLE);
 		} else {
 			mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,

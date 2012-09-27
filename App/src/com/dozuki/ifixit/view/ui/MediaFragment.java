@@ -93,6 +93,8 @@ public class MediaFragment extends SherlockFragment implements
 	private static final String IMAGE_UP = "IMAGE_UPLOADED";
 	private static final String HASH_MAP = "HASH_MAP";
 	static final String GALLERY_TITLE = "Gallery";
+	private static final String SHOWING_HELP = "SHOWING_HELP";
+	private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
 
 	GridView mGridView;
 	RelativeLayout mButtons;
@@ -110,6 +112,8 @@ public class MediaFragment extends SherlockFragment implements
 	boolean mLastPage;
 	String cameraTempFileName;
 	boolean nextPageRequestInProgress;
+	static boolean showingHelp;
+	static boolean showingLogout;
 
 	private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
 		@Override
@@ -183,10 +187,18 @@ public class MediaFragment extends SherlockFragment implements
 		mImageSizes = ((MainApplication) getActivity().getApplication())
 				.getImageSizes();
 		mMode = null;
+		showingHelp = false;
+		showingLogout = false;
 		selectedList = new ArrayList<Boolean>();
 		localURL = new HashMap<String, LocalImage>();
 		limages = new HashMap<String, Bitmap>();
 		if (savedInstanceState != null) {
+			showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+			if(showingHelp)
+				createHelpDialog(mContext).show();
+			showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
+			if(showingLogout)
+				LoginFragment.getLogoutDialog(mContext).show();
 			mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
 			mImageList = (UserImageList) savedInstanceState
 					.getSerializable(USER_IMAGE_LIST);
@@ -252,6 +264,8 @@ public class MediaFragment extends SherlockFragment implements
 		savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
 		savedInstanceState.putSerializable(HASH_MAP, localURL);
 		savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
+		savedInstanceState.putBoolean(SHOWING_HELP, showingHelp);
+		savedInstanceState.putBoolean(SHOWING_LOGOUT, showingLogout);
 		if (cameraTempFileName != null)
 			savedInstanceState.putString(CAMERA_PATH, cameraTempFileName);
 	}
@@ -322,6 +336,7 @@ public class MediaFragment extends SherlockFragment implements
 
 		switch (arg0.getId()) {
 		case R.id.button_holder:
+			showingLogout = true;
 			LoginFragment.getLogoutDialog(mContext).show();
 			break;
 
@@ -771,6 +786,7 @@ public class MediaFragment extends SherlockFragment implements
 	}
 
 	static AlertDialog createHelpDialog(final Context context) {
+		showingHelp = true;
 		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
 		builder.setTitle(context.getString(R.string.media_help_title))
 				.setMessage(context.getString(R.string.media_help_messege))
@@ -778,7 +794,7 @@ public class MediaFragment extends SherlockFragment implements
 						context.getString(R.string.media_help_confirm),
 						new DialogInterface.OnClickListener() {
 							public void onClick(DialogInterface dialog, int id) {
-
+								showingHelp = false;
 								dialog.cancel();
 							}
 						});
