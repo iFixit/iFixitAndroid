@@ -22,7 +22,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:paddingBottom="40dp" >
+                android:paddingBottom="20dp" >
 
                 <TextView
                     android:id="@+id/login_error_text"
@@ -163,7 +163,6 @@
                 android:layout_below="@+id/cancel_register_button"
                 android:layout_centerHorizontal="true"
                 android:layout_margin="1dp"
-                android:layout_marginTop="31dp"
                 android:background="@drawable/ic_btn_sign_in_google" />
 
             <ImageButton

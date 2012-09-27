@@ -158,13 +158,11 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		
 		_registerAgreement = (LinearLayout) view
 				.findViewById(R.id.login_agreement_terms_layout);
-		TextView t = (TextView) view
-		.findViewById(R.id.login_agreement_terms_textview);
+		TextView t = (TextView) view.findViewById(R.id.login_agreement_terms_textview);
 
 		t.setMovementMethod(LinkMovementMethod.getInstance());
 		
-		_agreementCheckBox =  (CheckBox) view
-		.findViewById(R.id.login_agreement_terms_checkbox);
+		_agreementCheckBox =  (CheckBox) view.findViewById(R.id.login_agreement_terms_checkbox);
 
 
 		_loadingSpinner = (ProgressBar) view
@@ -243,7 +241,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 		//	_registerAgreement.clearAnimation();
 			//_registerAgreement.setVisibility(View.GONE);
 			_cancelRegister.clearAnimation();
-			_cancelRegister.setVisibility(View.GONE);
+			_cancelRegister.setVisibility(View.INVISIBLE);
 			_googleLogin.setVisibility(View.VISIBLE);
 			_yahooLogin.setVisibility(View.VISIBLE);
 			_login.setVisibility(View.VISIBLE);
