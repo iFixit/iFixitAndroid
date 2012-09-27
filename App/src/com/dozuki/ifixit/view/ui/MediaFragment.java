@@ -822,7 +822,7 @@ public class MediaFragment extends SherlockFragment implements
 								showingHelp = false;
 								dialog.cancel();
 							}
-						});
+						}).setCancelable(false);
 
 		return builder.create();
 	}
@@ -855,7 +855,7 @@ public class MediaFragment extends SherlockFragment implements
 								showingDelete = false;
 								dialog.cancel();
 							}
-						});
+						}).setCancelable(false);;
 
 		return builder.create();
 	}

@@ -23,13 +23,9 @@ import android.os.Message;
 import android.util.Log;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.util.APIService.Error;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
-import com.dozuki.ifixit.view.ui.GalleryActivity;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -142,7 +138,8 @@ public class APIService extends Service {
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
       final String resultInformation = extras.getString(REQUEST_RESULT_INFORMATION);
-      final AuthenicationPackage authenicationPackage = (AuthenicationPackage) extras.getSerializable(REQUEST_AUTHENICATION_PACKAGE);
+      final AuthenicationPackage authenicationPackage = 
+    	  (AuthenicationPackage) extras.getSerializable(REQUEST_AUTHENICATION_PACKAGE);
       
       
 		if (authenicationPackage != null) {
@@ -254,7 +251,8 @@ public class APIService extends Service {
       // db.close();
    }
 
-   private void broadcastResult(Result result, String broadcastAction, int initialAction, String extraResultInfo) {
+   private void broadcastResult(Result result, String broadcastAction, 
+		   int initialAction, String extraResultInfo) {
       Intent broadcast = new Intent();
       Bundle extras = new Bundle();
 
