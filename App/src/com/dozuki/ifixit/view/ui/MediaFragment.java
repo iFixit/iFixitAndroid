@@ -104,6 +104,7 @@ public class MediaFragment extends SherlockFragment
 	RelativeLayout mButtons;
 	MediaAdapter galleryAdapter;
 	TextView loginText;
+	TextView noImagesText;
 	String userName;
 	private ImageManager mImageManager;
 	private static ArrayList<Boolean> selectedList;
@@ -144,7 +145,8 @@ public class MediaFragment extends SherlockFragment
 								.getImages().size() - oldImageSize);
 						galleryAdapter.invalidatedView();
 						mLastPage = false;
-
+						noImagesText
+								.setVisibility(View.GONE);
 					} else {
 						mLastPage = true;
 					}
@@ -157,7 +159,7 @@ public class MediaFragment extends SherlockFragment
 							.getExtras()
 							.getString(
 									APIService.REQUEST_RESULT_INFORMATION);
-					
+
 					LocalImage cur = localURL.get(url);
 					if (cur == null)
 						return;
@@ -256,6 +258,14 @@ public class MediaFragment extends SherlockFragment
 			ViewGroup container, Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.gallery_view,
 				container, false);
+
+		noImagesText = ((TextView) view
+				.findViewById(R.id.no_images_text));
+		if (mImageList.getImages().size() < 1) {
+			noImagesText.setVisibility(View.VISIBLE);
+		} else {
+			noImagesText.setVisibility(View.GONE);
+		}
 
 		mGridView = (GridView) view
 				.findViewById(R.id.gridview);
@@ -482,38 +492,42 @@ public class MediaFragment extends SherlockFragment
 			int resultCode, Intent data) {
 		if (resultCode == Activity.RESULT_OK) {
 			if (requestCode == MediaFragment.SELECT_PICTURE) {
-			
+
 				Uri selectedImageUri = data.getData();
-				
-				//check file type
+
+				// check file type
 				String path = getPath(selectedImageUri);
-				if(path == null || !(path.toLowerCase().contains(".jpeg") ||  path.toLowerCase().contains(".jpg") 
-						|| path.toLowerCase().contains(".png")))
-						{
-					       Toast.makeText(mContext, mContext.getString(R.string.non_image_error), 
-					    		   Toast.LENGTH_LONG).show();
-					       
-					       return;
-						}
-				
-				//check how many images are being uploaded
+				if (path == null
+						|| !(path.toLowerCase().contains(
+								".jpeg")
+								|| path.toLowerCase()
+										.contains(".jpg") || path
+								.toLowerCase().contains(
+										".png"))) {
+					Toast.makeText(
+							mContext,
+							mContext.getString(R.string.non_image_error),
+							Toast.LENGTH_LONG).show();
+
+					return;
+				}
+
+				// check how many images are being uploaded
 				int imagesBeingUploaded = 0;
-				for(String s : localURL.keySet())
-				{
-					if(localURL.get(s).imgId == null)
-					{
+				for (String s : localURL.keySet()) {
+					if (localURL.get(s).imgId == null) {
 						imagesBeingUploaded++;
 					}
-				} 
-				
-				if(imagesBeingUploaded >= MAX_UPLOAD_COUNT)
-				{
-					 Toast.makeText(mContext, mContext.getString(R.string.too_many_image_error), 
-				    		   Toast.LENGTH_LONG).show();
-					 return;
 				}
-				
-				
+
+				if (imagesBeingUploaded >= MAX_UPLOAD_COUNT) {
+					Toast.makeText(
+							mContext,
+							mContext.getString(R.string.too_many_image_error),
+							Toast.LENGTH_LONG).show();
+					return;
+				}
+
 				String key = galleryAdapter
 						.addUri(selectedImageUri);
 				AuthenicationPackage authenicationPackage = new AuthenicationPackage();
@@ -621,6 +635,8 @@ public class MediaFragment extends SherlockFragment
 		@Override
 		public int getCount() {
 			// TODO Auto-generated method stub
+			if (mImageList.getImages().size() > 0)
+				noImagesText.setVisibility(View.GONE);
 			return mImageList.getImages().size();
 		}
 
@@ -788,14 +804,16 @@ public class MediaFragment extends SherlockFragment
 				deleteQuery += "imageids[]="
 						+ mImageList.getImages().get(i)
 								.getmImageId() + "&";
-				
-				if(mImageList.getImages().get(i)
-						.getmImageId() == null)
-				{
+
+				if (mImageList.getImages().get(i)
+						.getmImageId() == null) {
 					{
-						
-						Toast.makeText(mContext, mContext.getString(R.string.delete_loading_image_error), 
-					    		   Toast.LENGTH_LONG).show();
+
+						Toast.makeText(
+								mContext,
+								mContext.getString(R.string.delete_loading_image_error),
+
+								Toast.LENGTH_LONG).show();
 					}
 				}
 				mImageList.getImages().remove(i);
@@ -814,6 +832,8 @@ public class MediaFragment extends SherlockFragment
 		mContext.startService(APIService
 				.getDeleteMediaIntent(mContext,
 						authenicationPackage, deleteQuery));
+		if (mImageList.getImages().size() == 0)
+			noImagesText.setVisibility(View.VISIBLE);
 		mMode.finish();
 	}
 
@@ -1001,14 +1021,18 @@ public class MediaFragment extends SherlockFragment
 		AlertDialog d = builder.create();
 		d.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-	        @Override
-	        public void onDismiss(DialogInterface dialog) {
-	        	showingHelp = false;
-	           // Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " + attributes.selectedIndexes.get(1) + " " + attributes.selectedIndexes.get(2) + " " + attributes.selectedIndexes.get(3) + " " + attributes.selectedIndexes.get(5) + " ");
-	    }
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				showingHelp = false;
+				// Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " +
+				// attributes.selectedIndexes.get(1) + " " +
+				// attributes.selectedIndexes.get(2) + " " +
+				// attributes.selectedIndexes.get(3) + " " +
+				// attributes.selectedIndexes.get(5) + " ");
+			}
 
-	});
-		
+		});
+
 		return d;
 	}
 
@@ -1020,24 +1044,20 @@ public class MediaFragment extends SherlockFragment
 			if (b)
 				selectedCount++;
 		}
-		
+
 		String msg = "Are you sure you want to delete "
-			+ selectedCount
-			+ " image";
-		if(selectedCount > 1)
-		{
+				+ selectedCount + " image";
+		if (selectedCount > 1) {
 			msg = msg + "s?";
-		}else
-		{
+		} else {
 			msg = msg + "?";
 		}
-		
+
 		HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(
 				context);
 		builder.setTitle(
 				context.getString(R.string.confirm_delete))
-				.setMessage(
-						msg)
+				.setMessage(msg)
 				.setPositiveButton(
 						context.getString(R.string.logout_confirm),
 						new DialogInterface.OnClickListener() {
@@ -1065,14 +1085,18 @@ public class MediaFragment extends SherlockFragment
 		AlertDialog d = builder.create();
 		d.setOnDismissListener(new DialogInterface.OnDismissListener() {
 
-	        @Override
-	        public void onDismiss(DialogInterface dialog) {
-	        	showingDelete = false;
-	           // Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " + attributes.selectedIndexes.get(1) + " " + attributes.selectedIndexes.get(2) + " " + attributes.selectedIndexes.get(3) + " " + attributes.selectedIndexes.get(5) + " ");
-	    }
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				showingDelete = false;
+				// Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " +
+				// attributes.selectedIndexes.get(1) + " " +
+				// attributes.selectedIndexes.get(2) + " " +
+				// attributes.selectedIndexes.get(3) + " " +
+				// attributes.selectedIndexes.get(5) + " ");
+			}
 
-	});
-		
+		});
+
 		return d;
 	}
 
