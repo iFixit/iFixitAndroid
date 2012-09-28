@@ -128,10 +128,10 @@ public class HTTPRequestHelper {
    public HTTPRequestHelper(final Handler handler) {
       this(HTTPRequestHelper.getResponseHandlerInstance(handler));
    }
-   
-   public static void clearCookies(Context c)
-   {
-	   client.getCookieStore().clearExpired(new Date(System.currentTimeMillis() + 120000));
+
+   public static void clearCookies(Context c) {
+      client.getCookieStore().clearExpired(
+         new Date(System.currentTimeMillis() + 120000));
    }
 
    /**
@@ -139,8 +139,8 @@ public class HTTPRequestHelper {
     *
     */
    public void performGet(final String url) {
-      performRequest(null, url, null, null, null, null, 
-    		  HTTPRequestHelper.GET_TYPE);
+      performRequest(null, url, null, null, null, null,
+         HTTPRequestHelper.GET_TYPE);
    }
 
    /**
@@ -158,55 +158,51 @@ public class HTTPRequestHelper {
     *
     */
    public void performPost(final String contentType, final String url,
-    final String user, final String pass, final Map<String,
-    String> additionalHeaders, final Map<String, String> params, final File file) {
-      performRequest(contentType, url, user, pass, additionalHeaders, params, 
-       HTTPRequestHelper.POST_TYPE);
+      final String user, final String pass,
+      final Map<String, String> additionalHeaders,
+      final Map<String, String> params, final File file) {
+      performRequest(contentType, url, user, pass, additionalHeaders, params,
+         HTTPRequestHelper.POST_TYPE);
    }
-   
 
-   
-   
-	/**
-	 * Perform an HTTP POST operation with specified content type.
-	 * 
-	 */
-	public void performPostWithSessionCookie(final String url,
-			final String user, final String pass, final String session,
-			final String domain, final Map<String, String> additionalHeaders,
-			final Map<String, String> params, File file) {
+   /**
+    * Perform an HTTP POST operation with specified content type.
+    * 
+    */
+   public void performPostWithSessionCookie(final String url,
+      final String user, final String pass, final String session,
+      final String domain, final Map<String, String> additionalHeaders,
+      final Map<String, String> params, File file) {
 
-		// clearing all old cookies
-		client.getCookieStore().clear();
+      // clearing all old cookies
+      client.getCookieStore().clear();
 
-		if(session != null && !session.equals(""))
-		{
-			// create and add sessionCookie
-			final BasicClientCookie cookie = new BasicClientCookie("session",
-					session);
-		   cookie.setExpiryDate(new Date(System.currentTimeMillis() + 120000));
-		   cookie.setDomain(domain);
-		   cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
-		   cookie.setAttribute(ClientCookie.DOMAIN_ATTR, domain);
-		   cookie.setPath("/");
+      if (session != null && !session.equals("")) {
+         // create and add sessionCookie
+         final BasicClientCookie cookie =
+            new BasicClientCookie("session", session);
+         cookie.setExpiryDate(new Date(System.currentTimeMillis() + 120000));
+         cookie.setDomain(domain);
+         cookie.setAttribute(ClientCookie.VERSION_ATTR, "0");
+         cookie.setAttribute(ClientCookie.DOMAIN_ATTR, domain);
+         cookie.setPath("/");
 
-		   client.getCookieStore().addCookie(cookie);
-		}
-		
-		//URLConnection used for file uploads
-		if (file == null)
-			performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user,
-					pass, additionalHeaders, params,
-					HTTPRequestHelper.POST_TYPE);
-		else
-			fileUpload(url, file, "session=" + session + ";"
-					+ ClientCookie.VERSION_ATTR);
-	}
+         client.getCookieStore().addCookie(cookie);
+      }
+
+      // URLConnection used for file uploads
+      if (file == null)
+         performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass,
+            additionalHeaders, params, HTTPRequestHelper.POST_TYPE);
+      else
+         fileUpload(url, file, "session=" + session + ";"
+            + ClientCookie.VERSION_ATTR);
+   }
 
    /**
     * Perform an HTTP POST operation with a default conent-type of
     * "application/x-www-form-urlencoded."
-    *
+    * 
     */
    public void performPost(final String url, final String user,
     final String pass, final Map<String, String> additionalHeaders,
@@ -214,13 +210,11 @@ public class HTTPRequestHelper {
       performRequest(HTTPRequestHelper.MIME_FORM_ENCODED, url, user, pass,
        additionalHeaders, params,  HTTPRequestHelper.POST_TYPE);
    }
-   
-  
 
    /**
-    * Private heavy lifting method that performs GET or POST with supplied
-    * url, user, pass, data, and headers.
-    *
+    * Private heavy lifting method that performs GET or POST with supplied url,
+    * user, pass, data, and headers.
+    * 
     * @param contentType
     * @param url
     * @param user
@@ -292,7 +286,7 @@ public class HTTPRequestHelper {
                Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, e);
             }
          }
-         
+
          execute(client, method);
       } else if (requestType == HTTPRequestHelper.GET_TYPE) {
          Log.d(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG +
@@ -301,95 +295,97 @@ public class HTTPRequestHelper {
       }
    }
 
-	protected void fileUpload(String sURL, File file, String cookie) {
+   protected void fileUpload(String sURL, File file, String cookie) {
 
-		HttpURLConnection connection = null;
-		DataOutputStream outputStream = null;
-		
-		String boundary = "*****";
+      HttpURLConnection connection = null;
+      DataOutputStream outputStream = null;
 
-		int bytesRead, bytesAvailable, bufferSize;
-		byte[] buffer;
-		int maxBufferSize = 1 * 1024 * 1024;
-		try {
-			FileInputStream fileInputStream = new FileInputStream(file);
+      String boundary = "*****";
 
-			URL url = new URL(sURL);
-			connection = (HttpURLConnection) url.openConnection();		
-			connection.setDoInput(true);
-			connection.setDoOutput(true);
-			connection.setUseCaches(false);
+      int bytesRead, bytesAvailable, bufferSize;
+      byte[] buffer;
+      int maxBufferSize = 1 * 1024 * 1024;
+      try {
+         FileInputStream fileInputStream = new FileInputStream(file);
 
-			int length;
-			length = ((int) (file.length()));
+         URL url = new URL(sURL);
+         connection = (HttpURLConnection) url.openConnection();
+         connection.setDoInput(true);
+         connection.setDoOutput(true);
+         connection.setUseCaches(false);
 
-			//create cookie for URL connection
-			connection.setRequestMethod("POST");
-			connection.setRequestProperty("Cookie", cookie);
-			connection.setRequestProperty("Connection", "Keep-Alive");
-			connection.setRequestProperty("Content-Length", length + "");
-			connection.setRequestProperty("Content-Type",
-					"binary/octet-stream;boundary=" + boundary);
+         int length;
+         length = ((int) (file.length()));
 
-			outputStream = new DataOutputStream(connection.getOutputStream());
+         // create cookie for URL connection
+         connection.setRequestMethod("POST");
+         connection.setRequestProperty("Cookie", cookie);
+         connection.setRequestProperty("Connection", "Keep-Alive");
+         connection.setRequestProperty("Content-Length", length + "");
+         connection.setRequestProperty("Content-Type",
+            "binary/octet-stream;boundary=" + boundary);
 
-			bytesAvailable = fileInputStream.available();
-			bufferSize = Math.min(bytesAvailable, maxBufferSize);
-			buffer = new byte[bufferSize];
+         outputStream = new DataOutputStream(connection.getOutputStream());
 
-			// Read file
-			bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+         bytesAvailable = fileInputStream.available();
+         bufferSize = Math.min(bytesAvailable, maxBufferSize);
+         buffer = new byte[bufferSize];
 
-			while (bytesRead > 0) {
-				outputStream.write(buffer, 0, bufferSize);
-				bytesAvailable = fileInputStream.available();
-				bufferSize = Math.min(bytesAvailable, maxBufferSize);
-				bytesRead = fileInputStream.read(buffer, 0, bufferSize);
-			}
+         // Read file
+         bytesRead = fileInputStream.read(buffer, 0, bufferSize);
 
-			int serverResponseCode = connection.getResponseCode();
+         while (bytesRead > 0) {
+            outputStream.write(buffer, 0, bufferSize);
+            bytesAvailable = fileInputStream.available();
+            bufferSize = Math.min(bytesAvailable, maxBufferSize);
+            bytesRead = fileInputStream.read(buffer, 0, bufferSize);
+         }
 
-			String serverResponseMessage = connection.getResponseMessage();
-			StringBuilder sb = new StringBuilder();
+         int serverResponseCode = connection.getResponseCode();
 
-			BufferedReader br = new BufferedReader(new InputStreamReader(
-					connection.getInputStream()));
-			sb = new StringBuilder();
-			String line;
-			while ((line = br.readLine()) != null) {
-				sb.append(line + "\n");
-			}
-			br.close();
+         String serverResponseMessage = connection.getResponseMessage();
+         StringBuilder sb = new StringBuilder();
 
-			BasicHttpResponse responseObj = new BasicHttpResponse(
-					new ProtocolVersion("HTTP", 1, 1), serverResponseCode,
-					serverResponseMessage);
+         BufferedReader br =
+            new BufferedReader(new InputStreamReader(
+               connection.getInputStream()));
+         sb = new StringBuilder();
+         String line;
+         while ((line = br.readLine()) != null) {
+            sb.append(line + "\n");
+         }
+         br.close();
 
-			String response = sb.toString();
-			StringEntity entity = new StringEntity(response);
-			responseObj.setEntity(entity);
-			responseHandler.handleResponse(responseObj);
-			fileInputStream.close();
-			outputStream.flush();
-			outputStream.close();
-		} catch (Exception e) {
-			 Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG);
-			BasicHttpResponse errorResponse = new BasicHttpResponse(
-				       new ProtocolVersion("HTTP_ERROR", 1, 1), 500, "ERROR");
-			 errorResponse.setReasonPhrase(e.getMessage());
-	         try {
-	            this.responseHandler.handleResponse(errorResponse);
-	         } catch (Exception ex) {
-	            Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, ex);
-	         }
-			return;
-		}
-		return;
-	}
+         BasicHttpResponse responseObj =
+            new BasicHttpResponse(new ProtocolVersion("HTTP", 1, 1),
+               serverResponseCode, serverResponseMessage);
+
+         String response = sb.toString();
+         StringEntity entity = new StringEntity(response);
+         responseObj.setEntity(entity);
+         responseHandler.handleResponse(responseObj);
+         fileInputStream.close();
+         outputStream.flush();
+         outputStream.close();
+      } catch (Exception e) {
+         Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG);
+         BasicHttpResponse errorResponse =
+            new BasicHttpResponse(new ProtocolVersion("HTTP_ERROR", 1, 1), 500,
+               "ERROR");
+         errorResponse.setReasonPhrase(e.getMessage());
+         try {
+            this.responseHandler.handleResponse(errorResponse);
+         } catch (Exception ex) {
+            Log.e(CLASSTAG, " " + HTTPRequestHelper.CLASSTAG, ex);
+         }
+         return;
+      }
+      return;
+   }
 
    /**
     * Once the client and method are established, execute the request.
-    *
+    * 
     * @param client
     * @param method
     */

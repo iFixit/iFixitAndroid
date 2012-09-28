@@ -18,54 +18,61 @@ public class SpeechCommander {
    }
 
    private RecognitionListener mRecognitionListener =
-    new RecognitionListener() {
-      @Override
-      public void onBeginningOfSpeech() {}
-      @Override
-      public void onBufferReceived(byte[] arg0) {}
-      @Override
-      public void onEndOfSpeech() {}
-      @Override
-      public void onEvent(int arg0, Bundle arg1) {}
-      @Override
-      public void onPartialResults(Bundle arg0) {}
-      @Override
-      public void onReadyForSpeech(Bundle arg0) {}
-      @Override
-      public void onRmsChanged(float arg0) {}
+      new RecognitionListener() {
+         @Override
+         public void onBeginningOfSpeech() {}
 
-      @Override
-      public void onError(int error) {
-         if (error == SpeechRecognizer.ERROR_NO_MATCH ||
-          error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)
-            mSpeechRecognizer.startListening(mRecognizerIntent);
-         else {
-            Log.e("SpeechCommander", "onError: " + error);
-            restartSpeech(DEFAULT_RESTART_TIME);
-         }
-      }
+         @Override
+         public void onBufferReceived(byte[] arg0) {}
 
-      @Override
-      public void onResults(Bundle results) {
-         ArrayList<String> matches = results.getStringArrayList(
-          SpeechRecognizer.RESULTS_RECOGNITION);
-         int depth = Math.min(mDepth, matches.size());
-         Command command;
+         @Override
+         public void onEndOfSpeech() {}
 
-         Log.d("SpeechCommander", "Results: " + matches);
+         @Override
+         public void onEvent(int arg0, Bundle arg1) {}
 
-         for (int i = 0; i < depth; i ++) {
-            if ((command = getMatch(matches.get(i))) != null) {
-               Log.d("SpeechCommander", "Performing command: " + matches.get(i));
-               command.performCommand();
-               break;
+         @Override
+         public void onPartialResults(Bundle arg0) {}
+
+         @Override
+         public void onReadyForSpeech(Bundle arg0) {}
+
+         @Override
+         public void onRmsChanged(float arg0) {}
+
+         @Override
+         public void onError(int error) {
+            if (error == SpeechRecognizer.ERROR_NO_MATCH
+               || error == SpeechRecognizer.ERROR_SPEECH_TIMEOUT)
+               mSpeechRecognizer.startListening(mRecognizerIntent);
+            else {
+               Log.e("SpeechCommander", "onError: " + error);
+               restartSpeech(DEFAULT_RESTART_TIME);
             }
          }
 
-         if (mListening)
-            mSpeechRecognizer.startListening(mRecognizerIntent);
-      }
-   };
+         @Override
+         public void onResults(Bundle results) {
+            ArrayList<String> matches =
+               results.getStringArrayList(SpeechRecognizer.RESULTS_RECOGNITION);
+            int depth = Math.min(mDepth, matches.size());
+            Command command;
+
+            Log.d("SpeechCommander", "Results: " + matches);
+
+            for (int i = 0; i < depth; i++) {
+               if ((command = getMatch(matches.get(i))) != null) {
+                  Log.d("SpeechCommander",
+                     "Performing command: " + matches.get(i));
+                  command.performCommand();
+                  break;
+               }
+            }
+
+            if (mListening)
+               mSpeechRecognizer.startListening(mRecognizerIntent);
+         }
+      };
 
    private static final int DEFAULT_DEPTH = 8;
    private static final long DEFAULT_RESTART_TIME = 15000;

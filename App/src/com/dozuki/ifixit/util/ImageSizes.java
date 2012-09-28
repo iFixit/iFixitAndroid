@@ -24,8 +24,8 @@ public class ImageSizes {
    public String getFull() {
       return mFull;
    }
-   
+
    public String getGrid() {
-	  return mGrid;
+      return mGrid;
    }
 }

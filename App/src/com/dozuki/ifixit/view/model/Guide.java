@@ -20,7 +20,6 @@ public class Guide implements Serializable {
    protected ArrayList<GuideTool> mTools;
    protected ArrayList<GuidePart> mParts;
 
-
    public Guide(int guideid) {
       mGuideid = guideid;
       mSteps = new ArrayList<GuideStep>();
@@ -163,11 +162,11 @@ public class Guide implements Serializable {
    }
 
    public String getSubject() {
-	  return mSubject;
+      return mSubject;
    }
 
    public void setSubject(String subject) {
-	  mSubject = subject;
+      mSubject = subject;
    }
 
    public String toString() {

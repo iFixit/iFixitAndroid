@@ -110,8 +110,7 @@ public class JSONHelper {
       // last image doesn't have orderby so this is necessary. API bug?
       try {
          image.setOrderby(jImage.getInt("orderby"));
-      }
-      catch (JSONException e) {
+      } catch (JSONException e) {
          image.setOrderby(1);
       }
 
@@ -194,80 +193,74 @@ public class JSONHelper {
          topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
       }
 
-      topicLeaf.setNumSolutions(Integer.parseInt(
-       jSolutions.getString("count")));
+      topicLeaf
+         .setNumSolutions(Integer.parseInt(jSolutions.getString("count")));
       topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
 
       return topicLeaf;
    }
-   
+
    /**
     * pasing list of userimag info
     */
-   public static UserImageList parseUserImages(String json) throws JSONException {
-	   JSONArray jImages = new JSONArray(json);
-	   
-	   UserImageList userImageList = new UserImageList();
-    
-	   for (int i = 0; i < jImages.length(); i++) {
-		   userImageList.addImage((parseUserImageInfo(jImages.getJSONObject(i))));
-	      }
+   public static UserImageList parseUserImages(String json)
+      throws JSONException {
+      JSONArray jImages = new JSONArray(json);
+
+      UserImageList userImageList = new UserImageList();
+
+      for (int i = 0; i < jImages.length(); i++) {
+         userImageList.addImage((parseUserImageInfo(jImages.getJSONObject(i))));
+      }
 
       return userImageList;
    }
-   
-   
-   public static UserImageInfo parseUserImageInfo(JSONObject jImage)
-   {
-	   try {
-	   UserImageInfo userImageInfo = new UserImageInfo();
-	   userImageInfo.setmImageId(jImage.getString("imageid"));
-	   userImageInfo.setGuid(jImage.getString("guid"));
-	   userImageInfo.setHeight(jImage.getString("height"));
-	   userImageInfo.setWidth(jImage.getString("width"));
-	   userImageInfo.setRatio(jImage.getString("ratio"));
 
+   public static UserImageInfo parseUserImageInfo(JSONObject jImage) {
+      try {
+         UserImageInfo userImageInfo = new UserImageInfo();
+         userImageInfo.setmImageId(jImage.getString("imageid"));
+         userImageInfo.setGuid(jImage.getString("guid"));
+         userImageInfo.setHeight(jImage.getString("height"));
+         userImageInfo.setWidth(jImage.getString("width"));
+         userImageInfo.setRatio(jImage.getString("ratio"));
 
-       return userImageInfo;
-   } catch (JSONException e) {
-       Log.e("iFixit", "Error parsing guide info: " + e);
-       return null;
-    }
-	   
+         return userImageInfo;
+      } catch (JSONException e) {
+         Log.e("iFixit", "Error parsing guide info: " + e);
+         return null;
+      }
+
    }
-   
-   public static UploadedImageInfo parseUploadedImageInfo(String image)
-   {
-	   try {
-		    JSONObject jImage = new JSONObject(image);
-		    
-	   UploadedImageInfo userImageInfo = new UploadedImageInfo();
-	   userImageInfo.setmImageid(jImage.getString("imageid"));
-	   userImageInfo.setmGuid(jImage.getString("guid"));
-	   
 
+   public static UploadedImageInfo parseUploadedImageInfo(String image) {
+      try {
+         JSONObject jImage = new JSONObject(image);
 
-       return userImageInfo;
-   } catch (JSONException e) {
-       Log.e("iFixit", "Error parsing guide info: " + e);
-       return null;
-    }
-	   
+         UploadedImageInfo userImageInfo = new UploadedImageInfo();
+         userImageInfo.setmImageid(jImage.getString("imageid"));
+         userImageInfo.setmGuid(jImage.getString("guid"));
+
+         return userImageInfo;
+      } catch (JSONException e) {
+         Log.e("iFixit", "Error parsing guide info: " + e);
+         return null;
+      }
+
    }
-   
+
    /**
     * Login parsing info
     */
    public static User parseLoginInfo(String json) throws JSONException {
-	   
+
       JSONObject jUser = new JSONObject(json);
-    
+
       User user = new User();
       user.setUserId(jUser.getString("userid"));
       user.setUsername(jUser.getString("username"));
       user.setImageId(jUser.getString("imageid"));
       user.setSession(jUser.getString("session"));
-
 
       return user;
    }

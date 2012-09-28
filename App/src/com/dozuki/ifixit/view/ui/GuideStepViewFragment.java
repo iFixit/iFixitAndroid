@@ -178,20 +178,19 @@ public class GuideStepViewFragment extends SherlockFragment {
 
       mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
    }
-   
 
-   public static float dpToPixel(float dp,Context context){
-       Resources resources = context.getResources();
-       DisplayMetrics metrics = resources.getDisplayMetrics();
-       float px = dp * (metrics.densityDpi/160f);
-       return px;
+   public static float dpToPixel(float dp, Context context) {
+      Resources resources = context.getResources();
+      DisplayMetrics metrics = resources.getDisplayMetrics();
+      float px = dp * (metrics.densityDpi / 160f);
+      return px;
    }
 
-   public static float pixelToDp(float px,Context context){
-       Resources resources = context.getResources();
-       DisplayMetrics metrics = resources.getDisplayMetrics();
-       float dp = px / (metrics.densityDpi / 160f);
-       return dp;
+   public static float pixelToDp(float px, Context context) {
+      Resources resources = context.getResources();
+      DisplayMetrics metrics = resources.getDisplayMetrics();
+      float dp = px / (metrics.densityDpi / 160f);
+      return dp;
    }
 
    public void setStep() {
@@ -214,7 +213,7 @@ public class GuideStepViewFragment extends SherlockFragment {
    }
 
    public void setImageManager(ImageManager im) {
-	   mImageManager = im;
+      mImageManager = im;
    }
 
    public class StepTextArrayAdapter extends ArrayAdapter<StepLine> {
@@ -231,7 +230,7 @@ public class GuideStepViewFragment extends SherlockFragment {
 
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-         GuideStepLineView stepLine = (GuideStepLineView)convertView;
+         GuideStepLineView stepLine = (GuideStepLineView) convertView;
 
          if (stepLine == null) {
             stepLine = new GuideStepLineView(mContext);

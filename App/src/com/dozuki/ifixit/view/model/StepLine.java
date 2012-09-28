@@ -10,9 +10,9 @@ public class StepLine implements Serializable {
    protected boolean hasIcon = false;
 
    public StepLine(String color, int level, String text) {
-      if (color.compareTo("icon_reminder") == 0 ||
-       color.compareTo("icon_caution") == 0 ||
-       color.compareTo("icon_note") == 0) {
+      if (color.compareTo("icon_reminder") == 0
+         || color.compareTo("icon_caution") == 0
+         || color.compareTo("icon_note") == 0) {
          hasIcon = true;
       } else {
          hasIcon = false;
@@ -42,9 +42,9 @@ public class StepLine implements Serializable {
    public int getLevel() {
       return mLevel;
    }
-   
+
    public boolean hasIcon() {
-	   return hasIcon;
+      return hasIcon;
    }
 
    public String getColor() {

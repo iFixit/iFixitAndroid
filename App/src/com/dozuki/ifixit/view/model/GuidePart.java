@@ -51,6 +51,7 @@ public class GuidePart implements Serializable {
    public String getUrl() {
       return mUrl;
    }
+
    public void setThumb(String thumb) {
       mThumb = thumb;
    }
@@ -58,6 +59,7 @@ public class GuidePart implements Serializable {
    public String getThumb() {
       return mThumb;
    }
+
    public void setNote(String note) {
       mNote = note;
    }

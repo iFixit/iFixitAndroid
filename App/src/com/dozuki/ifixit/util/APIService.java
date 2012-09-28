@@ -229,33 +229,33 @@ public class APIService extends Service {
       Object parsedResult = null;
       try {
          switch (requestTarget) {
-         case TARGET_CATEGORIES:
-            parsedResult = JSONHelper.parseTopics(response);
-            break;
-         case TARGET_GUIDE:
-            parsedResult = JSONHelper.parseGuide(response);
-            break;
-			case TARGET_TOPIC:
-				parsedResult = JSONHelper.parseTopicLeaf(response);
-				break;
-			case TARGET_LOGIN:
-				parsedResult = JSONHelper.parseLoginInfo(response);
-				break;
-			case TARGET_MEDIA_LIST:
-				parsedResult = JSONHelper.parseUserImages(response);
-				break;
-			case TARGET_UPLOAD_MEDIA:
-				parsedResult = JSONHelper.parseUploadedImageInfo(response);
-				break;
-			case TARGET_DELETE_MEDIA:
-				parsedResult = "";
-        	 break;
-			case TARGET_REGISTER:
-				parsedResult = JSONHelper.parseLoginInfo(response);
-        	 break;
-         default:
-            Log.w("iFixit", "Invalid request target: " + requestTarget);
-            return new Result(Error.PARSE);
+            case TARGET_CATEGORIES:
+               parsedResult = JSONHelper.parseTopics(response);
+               break;
+            case TARGET_GUIDE:
+               parsedResult = JSONHelper.parseGuide(response);
+               break;
+            case TARGET_TOPIC:
+               parsedResult = JSONHelper.parseTopicLeaf(response);
+               break;
+            case TARGET_LOGIN:
+               parsedResult = JSONHelper.parseLoginInfo(response);
+               break;
+            case TARGET_MEDIA_LIST:
+               parsedResult = JSONHelper.parseUserImages(response);
+               break;
+            case TARGET_UPLOAD_MEDIA:
+               parsedResult = JSONHelper.parseUploadedImageInfo(response);
+               break;
+            case TARGET_DELETE_MEDIA:
+               parsedResult = "";
+               break;
+            case TARGET_REGISTER:
+               parsedResult = JSONHelper.parseLoginInfo(response);
+               break;
+            default:
+               Log.w("iFixit", "Invalid request target: " + requestTarget);
+               return new Result(Error.PARSE);
          }
          return new Result(response, parsedResult);
       } catch (JSONException e) {
@@ -417,15 +417,14 @@ public class APIService extends Service {
       return intent;
    }
 
-
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
       switch (error) {
-      case CONNECTION:
-         return getConnectionErrorDialog(context, apiIntent);
-      case PARSE:
-      default:
-         return getParseErrorDialog(context, apiIntent);
+         case CONNECTION:
+            return getConnectionErrorDialog(context, apiIntent);
+         case PARSE:
+         default:
+            return getParseErrorDialog(context, apiIntent);
       }
    }
 
@@ -488,75 +487,74 @@ public class APIService extends Service {
       String url = null;
 
       switch (requestTarget) {
-      case TARGET_CATEGORIES:
-         url = CATEGORIES_API_URL;
-         break;
-      case TARGET_GUIDE:
-         url = GUIDE_API_URL + requestQuery;
-         break;
-      case TARGET_TOPIC:
-         try {
-            url = TOPIC_API_URL + URLEncoder.encode(requestQuery,
-             "UTF-8");
-         } catch (Exception e) {
-            Log.w("iFixit", "Encoding error: " + e.getMessage());
+         case TARGET_CATEGORIES:
+            url = CATEGORIES_API_URL;
+            break;
+         case TARGET_GUIDE:
+            url = GUIDE_API_URL + requestQuery;
+            break;
+         case TARGET_TOPIC:
+            try {
+               url = TOPIC_API_URL + URLEncoder.encode(requestQuery, "UTF-8");
+            } catch (Exception e) {
+               Log.w("iFixit", "Encoding error: " + e.getMessage());
+               responder.setResult(new Result(Error.PARSE));
+               return;
+            }
+            break;
+         default:
+            Log.w("iFixit", "Invalid request target: " + requestTarget);
             responder.setResult(new Result(Error.PARSE));
             return;
-         }
-         break;
-      default:
-         Log.w("iFixit", "Invalid request target: " + requestTarget);
-         responder.setResult(new Result(Error.PARSE));
-         return;
       }
 
       performRequest(url, responder);
    }
 
-	private static void perfromAuthenicatedRequestHelper(Context context,
-    int requestTarget, AuthenicationPackage authenicationPackage,
-    String requestQuery, Responder responder) {
-		if (!checkConnectivity(context, responder)) {
-			return;
-		}
-
-		String url;
-		File file = null;
-		switch (requestTarget) {
-		case TARGET_LOGIN:
-			url = LOGIN_API_URL;
-			break;
-		case TARGET_REGISTER:
-			url = REGISTER_API_URL;
-			Log.e("REGUSTER", url);
-			break;
-		case TARGET_MEDIA_LIST:
-         url = USER_IMAGES_API_URL + requestQuery;
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-         break;
-		case TARGET_UPLOAD_MEDIA:
-         file = new File(requestQuery);
-         url = UPLOAD_MEDIA_API_URL + "?file=" + file.getName();
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-         break;
-
-		case TARGET_DELETE_MEDIA:
-         url = DELETE_MEDIA_API_URL + requestQuery;
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-         break;
-		default:
-         Log.w("iFixit", "Invalid request target: " + requestTarget);
-         responder.setResult(new Result(Error.PARSE));
+   private static void perfromAuthenicatedRequestHelper(Context context,
+      int requestTarget, AuthenicationPackage authenicationPackage,
+      String requestQuery, Responder responder) {
+      if (!checkConnectivity(context, responder)) {
          return;
-		}
+      }
+
+      String url;
+      File file = null;
+      switch (requestTarget) {
+         case TARGET_LOGIN:
+            url = LOGIN_API_URL;
+            break;
+         case TARGET_REGISTER:
+            url = REGISTER_API_URL;
+            Log.e("REGUSTER", url);
+            break;
+         case TARGET_MEDIA_LIST:
+            url = USER_IMAGES_API_URL + requestQuery;
+            authenicationPackage.login = null;
+            authenicationPackage.password = null;
+            authenicationPackage.username = null;
+            break;
+         case TARGET_UPLOAD_MEDIA:
+            file = new File(requestQuery);
+            url = UPLOAD_MEDIA_API_URL + "?file=" + file.getName();
+            authenicationPackage.login = null;
+            authenicationPackage.password = null;
+            authenicationPackage.username = null;
+            break;
+
+         case TARGET_DELETE_MEDIA:
+            url = DELETE_MEDIA_API_URL + requestQuery;
+            authenicationPackage.login = null;
+            authenicationPackage.password = null;
+            authenicationPackage.username = null;
+            break;
+         default:
+            Log.w("iFixit", "Invalid request target: " + requestTarget);
+            responder.setResult(new Result(Error.PARSE));
+            return;
+      }
       performAuthenicatedRequest(url, authenicationPackage, file, responder);
-	}
+   }
 
    private static void  performAuthenicatedRequest(final String url,
     final AuthenicationPackage authenicationPackage, final File file,
@@ -575,8 +573,8 @@ public class APIService extends Service {
       new Thread() {
          public void run() {
             HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-            HashMap<String,String> params = new HashMap<String,String>();
-            HashMap<String,String> header = new HashMap<String,String>();
+            HashMap<String, String> params = new HashMap<String, String>();
+            HashMap<String, String> header = new HashMap<String, String>();
 
             params.put("login", authenicationPackage.login);
             params.put("password", authenicationPackage.password);
