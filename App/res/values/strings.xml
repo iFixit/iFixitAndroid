@@ -26,7 +26,7 @@
    <string name="media_error_confirm">OK</string>
    <string name="media_help_title">What\'s this?</string>
    <string name="media_help_messege">This gallery is linked directly to your iFixit account. Any pictures you load into here will be available to you in your guide creation
-      endeavors. Stay tuned and you will be able to create guides on the go!</string>
+    endeavors. Stay tuned and you will be able to create guides on the go!</string>
    <string name="media_help_confirm">Good to know!</string>
    <string name="logout_title">Logout</string>
    <string name="logout_messege">Are you sure you want to logout?</string>
@@ -46,9 +46,9 @@
    <string name="email">What is your email?</string>
    <string name="password">What is your password?</string>
    <string name="help_tool_tip">About</string>
-   <string name="gallery_tool_tip">Gallery</string>
+   <string name="gallery_tool_tip">Add Image</string>
    <string name="camera_tool_tip">Camera</string>
-
+   <string name="cancel">Cancel</string>
    <string-array name="user_settings">
       <item>Log out</item>
    </string-array>
