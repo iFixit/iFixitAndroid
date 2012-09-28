@@ -20,13 +20,13 @@
       <service android:name=".util.APIService"/>
       <activity android:name=".view.ui.TopicsActivity"
             android:theme="@style/Theme.iFixit">
-          <intent-filter>
+         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
          </intent-filter>
       </activity>
-      
-       <activity android:name=".view.ui.GalleryActivity"
+
+      <activity android:name=".view.ui.GalleryActivity"
             android:theme="@style/Theme.iFixit">
       </activity>
       <activity android:name=".view.ui.LoginActivity"
@@ -52,7 +52,6 @@
       <activity android:name=".view.ui.FullImageViewActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar">
       </activity>
-      <activity android:name=".view.ui.OpenIDActivity">
-      </activity>
+      <activity android:name=".view.ui.OpenIDActivity"></activity>
    </application>
 </manifest>

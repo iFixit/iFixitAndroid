@@ -20,7 +20,7 @@ public class MainApplication extends Application {
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
    private User user;
-      
+
    public ImageManager getImageManager() {
       if (mImageManager == null) {
          mImageManager = new ImageManager(this);
@@ -91,20 +91,16 @@ public class MainApplication extends Application {
       return mImageSizes;
    }
 
-public void setUser(User user) {
-	this.user = user;
-}
+   public void setUser(User user) {
+      this.user = user;
+   }
 
-public User getUser() {
-	return user;
-}
+   public User getUser() {
+      return user;
+   }
 
-public boolean isUserLoggedIn() {
-	// TODO Auto-generated method stub
-	return user != null;
-}
-
-
-
-
+   public boolean isUserLoggedIn() {
+      // TODO Auto-generated method stub
+      return user != null;
+   }
 }
