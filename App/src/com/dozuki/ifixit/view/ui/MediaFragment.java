@@ -785,16 +785,21 @@ public class MediaFragment extends SherlockFragment
 		for (int i = selectedList.size() - 1; i > -1; i--) {
 			if (selectedList.get(i)) {
 				selectedList.remove(i);
-				if(mImageList.getImages().get(i)
-								.getmImageId() != null)
 				deleteQuery += "imageids[]="
 						+ mImageList.getImages().get(i)
 								.getmImageId() + "&";
+				
+				if(mImageList.getImages().get(i)
+						.getmImageId() == null)
+				{
+					{
+						
+						Toast.makeText(mContext, mContext.getString(R.string.delete_loading_image_error), 
+					    		   Toast.LENGTH_LONG).show();
+					}
+				}
 				mImageList.getImages().remove(i);
-			}else {
-			
-					Toast.makeText(mContext, mContext.getString(R.string.delete_loading_image_error), 
-				    		   Toast.LENGTH_LONG).show();
+
 			}
 		}
 
