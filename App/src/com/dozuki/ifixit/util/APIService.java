@@ -336,6 +336,7 @@ public class APIService extends Service {
     AuthenicationPackage authenicationPackage) {
       return createRegisterIntent(mContext, TARGET_REGISTER,
        authenicationPackage , ACTION_REGISTER);
+   }
 
    public static Intent getSitesIntent(Context context) {
       return createIntent(context, TARGET_SITES, NO_QUERY,

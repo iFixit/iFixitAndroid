@@ -57,4 +57,11 @@
    <string-array name="user_settings">
       <item>Log out</item>
    </string-array>
+
+   <!-- I couldn't find these strings anywhere so these are just placeholders
+        so the project will compile. Update these before release. -->
+   <string name="non_image_error">NON_IMAGE_ERROR</string>
+   <string name="too_many_image_error">TOO_MANY_IMAGE_ERRO</string>
+   <string name="delete_loading_image_error">DELETE_LOADING_IMAGE_ERRO</string>
+   <string name="confirm_delete">CONFIRM_DELETE</string>
 </resources>

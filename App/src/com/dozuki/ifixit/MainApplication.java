@@ -162,8 +162,8 @@ public class MainApplication extends Application {
    }
 
    public boolean isUserLoggedIn() {
-      // TODO Auto-generated method stub
       return user != null;
+   }
 
    /**
     * Should only be used to get the current site for a "custom" app
