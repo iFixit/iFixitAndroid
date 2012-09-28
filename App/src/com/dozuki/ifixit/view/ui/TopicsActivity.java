@@ -50,7 +50,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
          if (!result.hasError()) {
             if (mRootTopic == null) {
-               mRootTopic = (TopicNode) result.getResult();
+               mRootTopic = (TopicNode)result.getResult();
                onTopicSelected(mRootTopic);
             }
          } else {
@@ -62,9 +62,9 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      // setTheme(((MainApplication)getApplication()).getSiteTheme());
-      // getSupportActionBar().setTitle(((MainApplication)getApplication())
-      // .getSite().mTitle);
+      setTheme(((MainApplication)getApplication()).getSiteTheme());
+      getSupportActionBar().setTitle(((MainApplication)getApplication())
+       .getSite().mTitle);
 
       super.onCreate(savedInstanceState);
 
@@ -191,10 +191,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
    @Override
    public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-      com.actionbarsherlock.view.MenuInflater inflater =
-         getSupportMenuInflater();
+      MenuInflater inflater = getSupportMenuInflater();
       inflater.inflate(R.menu.menu_bar, menu);
       MenuItem galleryIcon = menu.findItem(R.id.gallery_button);
+
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -238,8 +238,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
          outAnim = R.anim.slide_out_left;
       }
 
-      ft.setCustomAnimations(inAnim, outAnim, R.anim.slide_in_left,
-         R.anim.slide_out_right);
+      ft.setCustomAnimations(inAnim, outAnim,
+       R.anim.slide_in_left, R.anim.slide_out_right);
       ft.replace(R.id.topic_list_fragment, fragment);
 
       if (addToBack) {
@@ -248,9 +248,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
 
       // ft.commit();
       // commitAllowingStateLoss doesn't throw an exception if commit() is
-      // run after the fragments parent already saved its state. Possibly
-      // fixes the IllegalStateException crash in
-      // FragmentManagerImpl.checkStateLoss()
+      // run after the fragments parent already saved its state.  Possibly
+      // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
    }
 
@@ -268,18 +267,10 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             if (!poppedStack && UP_NAVIGATION_FINISH_ACTIVITY) {
                finish();
             }
-            return true;
-         case R.id.gallery_button:
-            Intent intent = new Intent(this, GalleryActivity.class);
-            startActivity(intent);
+
             return true;
          default:
             return super.onOptionsItemSelected(item);
       }
-   }
-
-   @Override
-   protected void onDestroy() {
-      super.onDestroy();
    }
 }

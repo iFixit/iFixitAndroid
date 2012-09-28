@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.dozuki.ifixit.view.model.TopicSelectedListener;
@@ -105,9 +106,10 @@ public class TopicListFragment extends SherlockFragment implements
       }
 
       if (leaves.size() > 0) {
-         adapter =
-            new TopicListAdapter(mContext,
-               mContext.getString(R.string.devices), leaves);
+         MainApplication app = (MainApplication)getActivity().getApplication();
+
+         adapter = new TopicListAdapter(mContext,
+          app.getSiteObjectName(), leaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }

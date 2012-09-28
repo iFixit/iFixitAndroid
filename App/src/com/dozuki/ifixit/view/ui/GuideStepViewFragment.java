@@ -51,6 +51,8 @@ public class GuideStepViewFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedState) {
+      getActivity().setTheme(((MainApplication)getActivity().getApplication()).getSiteTheme());
+
       super.onCreate(savedState);
 
       if (mImageManager == null) {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources> 
+    <attr name="topicHeaderColor" format="reference|color" />
+    <attr name="listViewStyle" format="reference" />
+    <attr name="topicGuideList" format="reference" />
+    <attr name="topicDefaultBackground" format="reference|color" />
+</resources>

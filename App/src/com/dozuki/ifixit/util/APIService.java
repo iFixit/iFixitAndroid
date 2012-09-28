@@ -26,6 +26,7 @@ import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.dozuki.ifixit.dozuki.model.Site;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -85,63 +86,68 @@ public class APIService extends Service {
       public void setResult(Result result);
    }
 
-	private static final String RESPONSE = "RESPONSE";
-	private static final String TOPIC_API_URL
-	   = "http://www.ifixit.com/api/1.0/topic/";
-	private static final String GUIDE_API_URL
-	   = "http://www.ifixit.com/api/1.0/guide/";
-	private static final String CATEGORIES_API_URL
-	   = "http://www.ifixit.com/api/1.0/categories/";
-	private static final String LOGIN_API_URL
-	   = "https://www.ifixit.com/api/0.1/login";
-	private static final String REGISTER_API_URL
-	   = "https://www.ifixit.com/api/0.1/register";
-	private static final String USER_IMAGES_API_URL
-	   = "http://www.ifixit.com/api/1.0/image/user";
-	private static final String UPLOAD_MEDIA_API_URL
-	   = "http://www.ifixit.com/api/1.0/image/upload";
-	private static final String DELETE_MEDIA_API_URL
-	   = "http://www.ifixit.com/api/1.0/image/delete";
+   private static final String RESPONSE = "RESPONSE";
+
+   private static final String SITES_API_URL = "/api/1.0/sites?limit=1000";
+   private static final String TOPIC_API_URL = "/api/1.0/topic/";
+   private static final String GUIDE_API_URL = "/api/1.0/guide/";
+   private static final String CATEGORIES_API_URL = "/api/1.0/categories/";
+
+   /**
+    * TODO Use https and 1.0.
+    */
+	private static final String LOGIN_API_URL = "/api/0.1/login";
+	private static final String REGISTER_API_URL = "/api/0.1/register";
+
+	private static final String USER_IMAGES_API_URL = "/api/1.0/image/user";
+	private static final String UPLOAD_MEDIA_API_URL = "api/1.0/image/upload";
+	private static final String DELETE_MEDIA_API_URL = "/api/1.0/image/delete";
 
 	private static final String API_DOMAIN = ".ifixit.com";
-	private static final String REQUEST_TARGET = "REQUEST_TARGET";
-	private static final String REQUEST_QUERY = "REQUEST_QUERY";
-	private static final String REQUEST_BROADCAST_ACTION
-	   = "REQUEST_BROADCAST_ACTION";
-	private static final String REQUEST_AUTHENICATION_PACKAGE
-	   = "AUTHENICATION_PACKAGE";
-	public static final String REQUEST_RESULT_INFORMATION
-	   = "REQUEST_RESULT_INFORMATION";
 
-	private static final int TARGET_CATEGORIES = 0;
-	private static final int TARGET_GUIDE = 1;
-	private static final int TARGET_TOPIC = 2;
+   private static final String REQUEST_TARGET = "REQUEST_TARGET";
+   private static final String REQUEST_QUERY = "REQUEST_QUERY";
+   private static final String REQUEST_BROADCAST_ACTION =
+    "REQUEST_BROADCAST_ACTION";
+	private static final String REQUEST_AUTHENICATION_PACKAGE =
+    "AUTHENICATION_PACKAGE";
+	public static final String REQUEST_RESULT_INFORMATION =
+    "REQUEST_RESULT_INFORMATION";
+
+   private static final int TARGET_CATEGORIES = 0;
+   private static final int TARGET_GUIDE = 1;
+   private static final int TARGET_TOPIC = 2;
 	private static final int TARGET_LOGIN = 3;
 	private static final int TARGET_REGISTER = 4;
 	private static final int TARGET_MEDIA_LIST = 5;
 	private static final int TARGET_UPLOAD_MEDIA = 6;
 	private static final int TARGET_DELETE_MEDIA = 7;
+   private static final int TARGET_SITES = 8;
 
    private static final String NO_QUERY = "";
 
-	public static final String ACTION_CATEGORIES
-	   = "com.dozuki.ifixit.api.categories";
-	public static final String ACTION_GUIDE
-	   = "com.dozuki.ifixit.api.guide";
-	public static final String ACTION_TOPIC
-	   = "com.dozuki.ifixit.api.topic";
-	public static final String ACTION_LOGIN
-	   = "com.dozuki.ifixit.api.login";
-	public static final String ACTION_REGISTER
-	   = "com.dozuki.ifixit.api.register";
-	public static final String ACTION_USER_MEDIA
-	   = "com.dozuki.ifixit.api.images";
-	public static final String ACTION_UPLOAD_MEDIA
-	   = "com.dozuki.ifixit.api.upload";
-	public static final String ACTION_DELETE_MEDIA
-	   = "com.dozuki.ifixit.api.delete";
+   public static final String ACTION_CATEGORIES =
+    "com.dozuki.ifixit.api.categories";
+   public static final String ACTION_GUIDE = "com.dozuki.ifixit.api.guide";
+   public static final String ACTION_TOPIC = "com.dozuki.ifixit.api.topic";
+	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
+	public static final String ACTION_REGISTER =
+    "com.dozuki.ifixit.api.register";
+	public static final String ACTION_USER_MEDIA =
+    "com.dozuki.ifixit.api.images";
+	public static final String ACTION_UPLOAD_MEDIA =
+    "com.dozuki.ifixit.api.upload";
+	public static final String ACTION_DELETE_MEDIA =
+    "com.dozuki.ifixit.api.delete";
+   public static final String ACTION_SITES = "com.dozuki.ifixit.api.sites";
 
-	public static final String RESULT = "RESULT";
+   public static final String RESULT = "RESULT";
+
+   private static Site mSite;
+
+   public static void setSite(Site site) {
+      mSite = site;
+   }
 
    @Override
    public IBinder onBind(Intent intent) {
@@ -229,33 +235,36 @@ public class APIService extends Service {
       Object parsedResult = null;
       try {
          switch (requestTarget) {
-            case TARGET_CATEGORIES:
-               parsedResult = JSONHelper.parseTopics(response);
-               break;
-            case TARGET_GUIDE:
-               parsedResult = JSONHelper.parseGuide(response);
-               break;
-            case TARGET_TOPIC:
-               parsedResult = JSONHelper.parseTopicLeaf(response);
-               break;
-            case TARGET_LOGIN:
-               parsedResult = JSONHelper.parseLoginInfo(response);
-               break;
-            case TARGET_MEDIA_LIST:
-               parsedResult = JSONHelper.parseUserImages(response);
-               break;
-            case TARGET_UPLOAD_MEDIA:
-               parsedResult = JSONHelper.parseUploadedImageInfo(response);
-               break;
-            case TARGET_DELETE_MEDIA:
-               parsedResult = "";
-               break;
-            case TARGET_REGISTER:
-               parsedResult = JSONHelper.parseLoginInfo(response);
-               break;
-            default:
-               Log.w("iFixit", "Invalid request target: " + requestTarget);
-               return new Result(Error.PARSE);
+         case TARGET_CATEGORIES:
+            parsedResult = JSONHelper.parseTopics(response);
+            break;
+         case TARGET_GUIDE:
+            parsedResult = JSONHelper.parseGuide(response);
+            break;
+         case TARGET_TOPIC:
+            parsedResult = JSONHelper.parseTopicLeaf(response);
+            break;
+         case TARGET_LOGIN:
+            parsedResult = JSONHelper.parseLoginInfo(response);
+            break;
+         case TARGET_MEDIA_LIST:
+            parsedResult = JSONHelper.parseUserImages(response);
+            break;
+         case TARGET_UPLOAD_MEDIA:
+            parsedResult = JSONHelper.parseUploadedImageInfo(response);
+            break;
+         case TARGET_DELETE_MEDIA:
+            parsedResult = "";
+            break;
+         case TARGET_REGISTER:
+            parsedResult = JSONHelper.parseLoginInfo(response);
+            break;
+         case TARGET_SITES:
+            parsedResult = JSONHelper.parseSites(response);
+            break;
+         default:
+            Log.w("iFixit", "Invalid request target: " + requestTarget);
+            return new Result(Error.PARSE);
          }
          return new Result(response, parsedResult);
       } catch (JSONException e) {
@@ -327,6 +336,10 @@ public class APIService extends Service {
     AuthenicationPackage authenicationPackage) {
       return createRegisterIntent(mContext, TARGET_REGISTER,
        authenicationPackage , ACTION_REGISTER);
+
+   public static Intent getSitesIntent(Context context) {
+      return createIntent(context, TARGET_SITES, NO_QUERY,
+       ACTION_SITES);
    }
 
    private static Intent createIntent(Context context, int target,
@@ -484,31 +497,49 @@ public class APIService extends Service {
          return;
       }
 
-      String url = null;
+      String relativeUrl = null;
 
       switch (requestTarget) {
-         case TARGET_CATEGORIES:
-            url = CATEGORIES_API_URL;
-            break;
-         case TARGET_GUIDE:
-            url = GUIDE_API_URL + requestQuery;
-            break;
-         case TARGET_TOPIC:
-            try {
-               url = TOPIC_API_URL + URLEncoder.encode(requestQuery, "UTF-8");
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
-               responder.setResult(new Result(Error.PARSE));
-               return;
-            }
-            break;
-         default:
-            Log.w("iFixit", "Invalid request target: " + requestTarget);
+      case TARGET_CATEGORIES:
+         relativeUrl = CATEGORIES_API_URL;
+         break;
+      case TARGET_GUIDE:
+         relativeUrl = GUIDE_API_URL + requestQuery;
+         break;
+      case TARGET_TOPIC:
+         try {
+            relativeUrl = TOPIC_API_URL + URLEncoder.encode(requestQuery,
+             "UTF-8");
+         } catch (Exception e) {
+            Log.w("iFixit", "Encoding error: " + e.getMessage());
             responder.setResult(new Result(Error.PARSE));
             return;
+         }
+         break;
+      case TARGET_SITES:
+         relativeUrl = SITES_API_URL;
+         break;
+      default:
+         Log.w("iFixit", "Invalid request target: " + requestTarget);
+         responder.setResult(new Result(Error.PARSE));
+         return;
       }
 
-      performRequest(url, responder);
+      String absoluteUrl = getUrl(relativeUrl);
+
+      performRequest(absoluteUrl, responder);
+   }
+
+   private static String getUrl(String endPoint) {
+      String domain;
+
+      if (mSite != null) {
+         domain = mSite.mDomain;
+      } else {
+         domain = "www.ifixit.com";
+      }
+
+      return "http://" + domain + endPoint;
    }
 
    private static void perfromAuthenicatedRequestHelper(Context context,

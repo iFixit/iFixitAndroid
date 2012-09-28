@@ -1,7 +1,9 @@
 package com.dozuki.ifixit.view.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -46,6 +48,8 @@ public class TopicGuideListFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedState) {
+      getActivity().setTheme(((MainApplication)getActivity().getApplication()).getSiteTheme());
+
       super.onCreate(savedState);
 
       if (savedState != null && mTopicLeaf == null) {

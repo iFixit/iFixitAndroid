@@ -10,16 +10,78 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.User;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
+   // The current version of the app (this is replaced by dozukify.sh).
+   public static final String CURRENT_SITE = "SITE_ifixit";
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
    private User user;
+   private Site mSite;
+
+   public MainApplication() {
+      setSite(getDefaultSite());
+   }
+
+   public Site getSite() {
+      return mSite;
+   }
+
+   public void setSite(Site site) {
+      mSite = site;
+      APIService.setSite(site);
+   }
+
+   /**
+    * Returns the resource id for the current site's theme.
+    */
+   public int getSiteTheme() {
+      if (mSite == null) {
+         return R.style.Theme_Dozuki;
+
+      // Put custom site themes here.
+      } else if (mSite.mName.equals("ifixit")) {
+         return R.style.Theme_iFixit;
+      } else {
+         // We don't have a custom theme for the site - check for generic theme.
+         String theme = mSite.mTheme;
+
+         if (theme.equals("custom")) {
+            // Site has a custom theme but we don't have one implemented yet.
+            return R.style.Theme_Dozuki;
+         } else if (theme.equals("green")) {
+            return R.style.Theme_Dozuki_Green;
+         } else if (theme.equals("blue")) {
+            return R.style.Theme_Dozuki_Blue;
+         } else if (theme.equals("white")) {
+            return R.style.Theme_Dozuki_White;
+         } else if (theme.equals("orange")) {
+            return R.style.Theme_Dozuki_Orange;
+         } else if (theme.equals("black")) {
+            return R.style.Theme_Dozuki_Grey;
+         }
+      }
+
+      return R.style.Theme_Dozuki;
+   }
+
+   /**
+    * Returns the current site's object name.
+    */
+   public String getSiteObjectName() {
+      if (mSite.mName.equals("ifixit")) {
+         return getString(R.string.devices);
+      } else {
+         return getString(R.string.topics);
+      }
+   }
 
    public ImageManager getImageManager() {
       if (mImageManager == null) {
@@ -102,5 +164,14 @@ public class MainApplication extends Application {
    public boolean isUserLoggedIn() {
       // TODO Auto-generated method stub
       return user != null;
+
+   /**
+    * Should only be used to get the current site for a "custom" app
+    * (iFixit/Crucial etc.).
+    */
+   private Site getDefaultSite() {
+      String siteName = CURRENT_SITE.replace("SITE_", "");
+
+      return Site.getSite(siteName);
    }
 }

@@ -70,4 +70,94 @@
        	<item name="android:layout_gravity">right</item>
     </style>
     
+    
+    <!-- Theme Styles -->
+
+    <!-- iFixit -->
+    <style name="Widget.iFixit"></style>
+    <style name="Widget.iFixit.ListViewStyle" parent="android:Widget.ListView">
+        <item name="android:cacheColorHint">#00000000</item>
+    </style>
+    
+    <style name="Widget.iFixit.TopicBackground" parent="Widget.iFixit">
+        <item name="android:src">@drawable/fist_default</item>
+        <item name="android:contentDescription">@string/fist_background_desc</item>
+    </style>
+
+    <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
+        <!--  <item name="background">@color/ifixit_blue</item>
+        <item name="android:background">@color/ifixit_blue</item> -->
+        <item name="titleTextStyle">@style/TextAppearance.iFixit.ActionBar.Title</item>
+        <item name="android:titleTextStyle">@style/TextAppearance.iFixit.ActionBar.Title</item>      
+        
+    </style>
+   
+    <style name="Widget.iFixit.ActionBar.TabText" parent="Widget.Sherlock.Light.ActionBar.TabText.Inverse">
+        <item name="android:textAllCaps">false</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item>       
+    </style>
+    
+    <style name="Widget.iFixit.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse">
+        <item name="android:background">@drawable/tab_indicator_ifixit</item>    
+        <item name="background">@drawable/tab_indicator_ifixit</item>            
+    </style>
+        
+    <style name="TextAppearance.iFixit.ActionBar.Title" parent="TextAppearance.Sherlock.Widget.ActionBar.Title.Inverse">
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/white</item> 
+    </style>
+    
+    <!-- Dozuki -->
+    <style name="Widget.Dozuki"></style>
+ 
+    <style name="Widget.Dozuki.TopicBackground" parent="Widget.Dozuki">
+        <item name="android:src">@drawable/fist_default</item>
+        <item name="android:contentDescription">@string/fist_background_desc</item>
+        <item name="android:visibility">gone</item>
+    </style>
+  
+    <style name="Widget.Dozuki.ActionBar" parent="Widget.iFixit.ActionBar"></style>   
+    <style name="Widget.Dozuki.ActionBar.TabText" parent="Widget.iFixit.ActionBar.TabText"></style>
+    <style name="TextAppearance.Dozuki.ActionBar.Title" parent="TextAppearance.iFixit.ActionBar.Title"></style>
+    
+    <style name="Widget.Dozuki.ActionBar.TabView" parent="Widget.iFixit.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_green</item>    
+        <item name="background">@drawable/tab_indicator_green</item>            
+    </style>
+    
+    <style name="Widget.Dozuki.ActionBar.TabView.Green" parent="Widget.iFixit.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_green</item>    
+        <item name="background">@drawable/tab_indicator_green</item>            
+    </style>
+    
+    <style name="Widget.Dozuki.ActionBar.TabView.Orange" parent="Widget.iFixit.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_orange</item>    
+        <item name="background">@drawable/tab_indicator_orange</item>            
+    </style>
+    
+    <style name="Widget.Dozuki.ActionBar.TabView.Grey" parent="Widget.iFixit.ActionBar.TabView">
+        <item name="android:background">@drawable/tab_indicator_grey</item>    
+        <item name="background">@drawable/tab_indicator_grey</item>            
+    </style>   
+    
+    <style name="Widget.Dozuki.ListViewStyle" parent="android:Widget.ListView">
+        <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:divider">#FFDDDDDD</item>
+        <item name="android:dividerHeight">1dp</item>        
+        <item name="android:fadingEdge">none</item>
+    </style>
+
+    <style name="Widget.Dozuki.ListViewStyle.Green" parent="Widget.Dozuki.ListViewStyle">
+        <item name="android:listSelector">@drawable/list_selector_green</item>
+    </style>
+    
+    <style name="Widget.Dozuki.ListViewStyle.Orange" parent="Widget.Dozuki.ListViewStyle">
+        <item name="android:listSelector">@drawable/list_selector_orange</item>
+    </style>
+    
+    <style name="Widget.Dozuki.ListViewStyle.Grey" parent="Widget.Dozuki.ListViewStyle">
+        <item name="android:listSelector">@drawable/list_selector_grey</item>
+    </style>
+    
 </resources>

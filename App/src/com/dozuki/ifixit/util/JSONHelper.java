@@ -12,6 +12,7 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
 
+import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.view.model.Guide;
 import com.dozuki.ifixit.view.model.GuideInfo;
 import com.dozuki.ifixit.view.model.GuidePart;
@@ -28,6 +29,49 @@ import com.dozuki.ifixit.view.model.UserImageList;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
+
+   public static ArrayList<Site> parseSites(String json) {
+      ArrayList<Site> sites = new ArrayList<Site>();
+
+      try {
+         JSONArray jSites = new JSONArray(json);
+         Site site;
+
+         for (int i = 0; i < jSites.length(); i++) {
+            site = parseSite(jSites.getJSONObject(i));
+
+            if (site != null) {
+               sites.add(site);
+            }
+         }
+
+      } catch (JSONException e) {
+         Log.e("iFixit", "Error parsing sites: " + e);
+      }
+
+      return sites;
+   }
+
+   private static Site parseSite(JSONObject jSite) throws JSONException {
+      boolean isPublic = !jSite.getBoolean("private");
+
+      // We don't currently support private sites.
+      if (!isPublic) {
+         return null;
+      }
+
+      Site site = new Site(jSite.getInt("siteid"));
+
+      site.mName = jSite.getString("name");
+      site.mDomain = jSite.getString("domain");
+      site.mTitle = jSite.getString("title");
+      site.mTheme = jSite.getString("theme");
+      site.mPublic = isPublic;
+      site.mDescription = jSite.getString("description");
+      site.mAnswers = jSite.getInt("answers") != 0;
+
+      return site;
+   }
 
    /**
     * Guide parsing
