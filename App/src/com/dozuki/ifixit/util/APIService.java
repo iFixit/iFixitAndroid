@@ -232,8 +232,6 @@ public class APIService extends Service {
     */
    private Result parseResult(String response, int requestTarget,
     String broadcastAction) {
-	   
-	   Log.e("PARSING:", response);
       Object parsedResult = null;
       try {
          switch (requestTarget) {
@@ -571,7 +569,6 @@ private static AlertDialog getParseErrorDialog(final Context context,
 			responder.setResult(new Result(Error.PARSE));
 			return;
 		}
-		Log.e("URL", url);
 		performAuthenicatedRequest(url, authenicationPackage, file, responder);
 	}
 
