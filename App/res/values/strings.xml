@@ -49,6 +49,9 @@
    <string name="gallery_tool_tip">Add Image</string>
    <string name="camera_tool_tip">Camera</string>
    <string name="cancel">Cancel</string>
+   <string name="register_agreement">I agree to <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a> under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.</string>
+   <string name="create_account">Create an Account</string>
+   <string name="no_images_text">Add images with the icons above!</string>
    <string-array name="user_settings">
       <item>Log out</item>
    </string-array>
