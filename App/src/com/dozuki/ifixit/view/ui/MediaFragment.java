@@ -61,7 +61,7 @@ import com.dozuki.ifixit.view.model.UserImageList;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MediaFragment extends SherlockFragment implements
-   OnItemClickListener, OnClickListener, OnItemLongClickListener, LoginListener {
+ OnItemClickListener, OnClickListener, OnItemLongClickListener, LoginListener {
    private static final String TAG = "MediaFragment";
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;

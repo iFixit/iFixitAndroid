@@ -461,5 +461,4 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       loginListeners.clear();
 
    }
-
 }

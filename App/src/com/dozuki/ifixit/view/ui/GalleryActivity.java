@@ -18,7 +18,7 @@ import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.User;
 
 public class GalleryActivity extends SherlockFragmentActivity implements
-   LoginListener {
+ LoginListener {
 
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
    private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";

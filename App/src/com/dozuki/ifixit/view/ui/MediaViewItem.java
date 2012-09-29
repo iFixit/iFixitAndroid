@@ -61,5 +61,4 @@ public class MediaViewItem extends RelativeLayout {
          imageview.clearAnimation();
       }
    }
-
 }

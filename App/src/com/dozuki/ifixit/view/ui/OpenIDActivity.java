@@ -14,7 +14,6 @@ import android.webkit.WebViewClient;
 import com.dozuki.ifixit.R;
 
 public class OpenIDActivity extends Activity {
-
    public static String BASE_OPENID_URL =
       "https://www.ifixit.com/Guide/login/openid?host=";
 
@@ -97,5 +96,4 @@ public class OpenIDActivity extends Activity {
          }
       });
    }
-
 }

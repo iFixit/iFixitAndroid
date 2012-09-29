@@ -3,15 +3,15 @@ package com.dozuki.ifixit.view.model;
 import java.io.Serializable;
 
 public class UserImageInfo implements Serializable {
-
-   /**
-	 * 
-	 */
    private static final long serialVersionUID = -6957010569324490644L;
+
    String mImageId;
    String mGuid;
    String mLocalPath;
    String mLocalKey;
+   String mWidth;
+   String mHeight;
+   String mRatio;
    boolean mLoaded;
 
    public String getKey() {
@@ -74,10 +74,6 @@ public class UserImageInfo implements Serializable {
       this.mRatio = mRatio;
    }
 
-   String mWidth;
-   String mHeight;
-   String mRatio;
-
    @Override
    public boolean equals(Object obj) {
       if (obj == null)
@@ -93,8 +89,6 @@ public class UserImageInfo implements Serializable {
    }
 
    public boolean getLoaded() {
-      // TODO Auto-generated method stub
       return mLoaded;
    }
-
 }

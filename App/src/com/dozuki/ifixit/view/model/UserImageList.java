@@ -6,10 +6,6 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class UserImageList implements Serializable {
-
-   /**
-	 * 
-	 */
    private static final long serialVersionUID = 7067096480019401662L;
 
    private User mUser;
@@ -61,5 +57,4 @@ public class UserImageList implements Serializable {
       }
 
    }
-
 }

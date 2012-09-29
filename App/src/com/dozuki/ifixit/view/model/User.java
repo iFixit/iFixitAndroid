@@ -3,8 +3,8 @@ package com.dozuki.ifixit.view.model;
 import java.io.Serializable;
 
 public class User implements Serializable {
-
    private static final long serialVersionUID = 6209686573978334361L;
+
    String userId;
    String username;
    String imageId;

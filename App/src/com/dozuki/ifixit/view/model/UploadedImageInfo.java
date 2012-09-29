@@ -3,10 +3,6 @@ package com.dozuki.ifixit.view.model;
 import java.io.Serializable;
 
 public class UploadedImageInfo implements Serializable {
-
-   /**
-	 * 
-	 */
    private static final long serialVersionUID = -4960272337013311382L;
 
    String mGuid;
@@ -36,5 +32,4 @@ public class UploadedImageInfo implements Serializable {
    public void setStatus(String status) {
       this.status = status;
    }
-
 }
