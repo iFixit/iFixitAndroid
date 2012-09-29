@@ -270,6 +270,11 @@ public class TopicsActivity extends SherlockFragmentActivity implements
             }
 
             return true;
+
+         case R.id.gallery_button:
+            Intent intent = new Intent(this, GalleryActivity.class);
+            startActivity(intent);
+            return true;
          default:
             return super.onOptionsItemSelected(item);
       }
