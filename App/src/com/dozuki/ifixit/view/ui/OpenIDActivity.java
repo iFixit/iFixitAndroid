@@ -2,6 +2,7 @@ package com.dozuki.ifixit.view.ui;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.CookieManager;
@@ -9,7 +10,6 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.graphics.Bitmap;
 
 import com.dozuki.ifixit.R;
 

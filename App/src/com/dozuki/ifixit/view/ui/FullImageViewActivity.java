@@ -1,16 +1,10 @@
 package com.dozuki.ifixit.view.ui;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-
-import java.io.File;
-
 import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;

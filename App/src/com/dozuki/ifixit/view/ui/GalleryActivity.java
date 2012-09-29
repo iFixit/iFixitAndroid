@@ -1,32 +1,20 @@
 package com.dozuki.ifixit.view.ui;
 
-import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.dozuki.ifixit.MainApplication;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.LoginListener;
-import com.dozuki.ifixit.view.model.TopicNode;
 import com.dozuki.ifixit.view.model.User;
 
 public class GalleryActivity extends SherlockFragmentActivity implements

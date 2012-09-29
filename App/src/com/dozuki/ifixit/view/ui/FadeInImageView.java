@@ -1,12 +1,12 @@
 package com.dozuki.ifixit.view.ui;
 
-import com.dozuki.ifixit.R;
-
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
+
+import com.dozuki.ifixit.R;
 
 public class FadeInImageView extends ImageView {
 

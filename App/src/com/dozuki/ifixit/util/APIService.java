@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.net.URLEncoder;
 import java.util.HashMap;
 
-
 import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
 
@@ -25,8 +24,8 @@ import android.util.Log;
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.view.model.AuthenicationPackage;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.

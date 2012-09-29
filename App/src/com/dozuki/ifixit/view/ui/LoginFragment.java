@@ -11,27 +11,18 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentTransaction;
-import android.text.SpannableString;
-import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
-import android.text.style.StyleSpan;
-import android.text.style.URLSpan;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
@@ -39,13 +30,13 @@ import android.widget.TextView;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.HTTPRequestHelper;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
-import com.dozuki.ifixit.view.model.User;
 import com.dozuki.ifixit.view.model.LoginListener;
+import com.dozuki.ifixit.view.model.User;
 
 public class LoginFragment extends SherlockFragment implements OnClickListener {
 

@@ -1,16 +1,15 @@
 package com.dozuki.ifixit.view.ui;
 
-import com.dozuki.ifixit.view.model.UserImageInfo;
-import com.ifixit.android.imagemanager.ImageManager;
-
 import android.app.Activity;
 import android.content.Context;
-
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
+
+import com.dozuki.ifixit.view.model.UserImageInfo;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class MediaViewItem extends RelativeLayout {
    FadeInImageView imageview;

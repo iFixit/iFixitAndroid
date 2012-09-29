@@ -2,8 +2,6 @@ package com.dozuki.ifixit.view.ui;
 
 import java.io.Serializable;
 
-import com.dozuki.ifixit.view.model.UserImageInfo;
-
 public class LocalImage implements Serializable {
    /**
 	 * 
