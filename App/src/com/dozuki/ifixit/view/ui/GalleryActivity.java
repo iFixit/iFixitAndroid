@@ -23,7 +23,6 @@ public class GalleryActivity extends SherlockFragmentActivity implements
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
    private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
    private static final String FIRST_TIME_USER = "FIRST_TIME_USER";
-   private String GALLERY_FRAGMENT = "GALLERY_FRAGMENT";
    private MediaFragment mMediaView;
    private FrameLayout mTopicViewOverlay;
 
