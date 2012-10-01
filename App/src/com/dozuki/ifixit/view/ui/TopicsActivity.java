@@ -19,6 +19,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.dozuki.ifixit.view.model.TopicSelectedListener;
@@ -122,7 +123,7 @@ public class TopicsActivity extends SherlockFragmentActivity implements
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_CATEGORIES);
+      filter.addAction(APIEndpoint.CATEGORIES.mAction);
       registerReceiver(mApiReceiver, filter);
    }
 

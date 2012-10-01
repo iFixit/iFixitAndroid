@@ -90,7 +90,6 @@ public class APIService extends Service {
    private static final String SITES_API_URL = "/api/1.0/sites?limit=1000";
    private static final String TOPIC_API_URL = "/api/1.0/topic/";
    private static final String GUIDE_API_URL = "/api/1.0/guide/";
-   private static final String CATEGORIES_API_URL = "/api/1.0/categories/";
 
    /**
     * TODO Use https and 1.0.
@@ -113,7 +112,6 @@ public class APIService extends Service {
 	public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
 
-   private static final int TARGET_CATEGORIES = 0;
    private static final int TARGET_GUIDE = 1;
    private static final int TARGET_TOPIC = 2;
 	private static final int TARGET_LOGIN = 3;
@@ -125,8 +123,6 @@ public class APIService extends Service {
 
    private static final String NO_QUERY = "";
 
-   public static final String ACTION_CATEGORIES =
-    "com.dozuki.ifixit.api.categories";
    public static final String ACTION_GUIDE = "com.dozuki.ifixit.api.guide";
    public static final String ACTION_TOPIC = "com.dozuki.ifixit.api.topic";
 	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
@@ -157,6 +153,7 @@ public class APIService extends Service {
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
       final int requestTarget = extras.getInt(REQUEST_TARGET);
+      final APIEndpoint endpoint = APIEndpoint.getByTarget(requestTarget);
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
       final String resultInformation =
@@ -171,8 +168,7 @@ public class APIService extends Service {
              public void setResult(Result result) {
 
                 if (!result.hasError()) {
-                   result = parseResult(result.getResponse(),
-                    requestTarget, broadcastAction);
+                   result = parseResult(result.getResponse(), endpoint);
                 }
 
                 // Don't save if there a parse error.
@@ -208,8 +204,7 @@ public class APIService extends Service {
          public void setResult(Result result) {
             // Don't parse if we've errored already.
             if (!result.hasError()) {
-               result = parseResult(result.getResponse(), requestTarget,
-                broadcastAction);
+               result = parseResult(result.getResponse(), endpoint);
             }
 
             // Don't save if there a parse error.
@@ -229,42 +224,11 @@ public class APIService extends Service {
    /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private Result parseResult(String response, int requestTarget,
-    String broadcastAction) {
+   private Result parseResult(String response, APIEndpoint endpoint) {
       Object parsedResult = null;
       try {
-         switch (requestTarget) {
-         case TARGET_CATEGORIES:
-            parsedResult = JSONHelper.parseTopics(response);
-            break;
-         case TARGET_GUIDE:
-            parsedResult = JSONHelper.parseGuide(response);
-            break;
-         case TARGET_TOPIC:
-            parsedResult = JSONHelper.parseTopicLeaf(response);
-            break;
-         case TARGET_LOGIN:
-            parsedResult = JSONHelper.parseLoginInfo(response);
-            break;
-         case TARGET_MEDIA_LIST:
-            parsedResult = JSONHelper.parseUserImages(response);
-            break;
-         case TARGET_UPLOAD_MEDIA:
-            parsedResult = JSONHelper.parseUploadedImageInfo(response);
-            break;
-         case TARGET_DELETE_MEDIA:
-            parsedResult = "";
-            break;
-         case TARGET_REGISTER:
-            parsedResult = JSONHelper.parseLoginInfo(response);
-            break;
-         case TARGET_SITES:
-            parsedResult = JSONHelper.parseSites(response);
-            break;
-         default:
-            Log.w("iFixit", "Invalid request target: " + requestTarget);
-            return new Result(Error.PARSE);
-         }
+         parsedResult = endpoint.parseResult(response);
+
          return new Result(response, parsedResult);
       } catch (JSONException e) {
          return new Result(Error.PARSE);
@@ -294,16 +258,15 @@ public class APIService extends Service {
    }
 
    public static Intent getCategoriesIntent(Context context) {
-      return createIntent(context, TARGET_CATEGORIES, NO_QUERY,
-       ACTION_CATEGORIES);
+      return createIntent(context, APIEndpoint.SITES, NO_QUERY);
    }
 
    public static Intent getGuideIntent(Context context, int guideid) {
-      return createIntent(context, TARGET_GUIDE, "" + guideid, ACTION_GUIDE);
+      return createIntent(context, APIEndpoint.GUIDE, "" + guideid);
    }
 
    public static Intent getTopicIntent(Context context, String topicName) {
-      return createIntent(context, TARGET_TOPIC, topicName, ACTION_TOPIC);
+      return createIntent(context, APIEndpoint.TOPIC, topicName);
    }
 
    public static Intent getLoginIntent(Context context,
@@ -338,18 +301,17 @@ public class APIService extends Service {
    }
 
    public static Intent getSitesIntent(Context context) {
-      return createIntent(context, TARGET_SITES, NO_QUERY,
-       ACTION_SITES);
+      return createIntent(context, APIEndpoint.SITES, NO_QUERY);
    }
 
-   private static Intent createIntent(Context context, int target,
-    String query, String action) {
+   private static Intent createIntent(Context context, APIEndpoint endpoint,
+    String query) {
       Intent intent = new Intent(context, APIService.class);
       Bundle extras = new Bundle();
 
-      extras.putInt(REQUEST_TARGET, target);
+      extras.putInt(REQUEST_TARGET, endpoint.mTarget);
+      extras.putString(REQUEST_BROADCAST_ACTION, endpoint.mAction);
       extras.putString(REQUEST_QUERY, query);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
       intent.putExtras(extras);
 
       return intent;
@@ -499,14 +461,11 @@ public class APIService extends Service {
 
       String relativeUrl = null;
 
-      switch (requestTarget) {
-      case TARGET_CATEGORIES:
-         relativeUrl = CATEGORIES_API_URL;
-         break;
-      case TARGET_GUIDE:
-         relativeUrl = GUIDE_API_URL + requestQuery;
-         break;
-      case TARGET_TOPIC:
+      if (requestTarget == APIEndpoint.CATEGORIES.mTarget) {
+         relativeUrl = APIEndpoint.CATEGORIES.getUrl(mSite);
+      } else if (requestTarget == APIEndpoint.GUIDE.mTarget) {
+         relativeUrl = APIEndpoint.GUIDE.getUrl(mSite, requestQuery);
+      } else if (requestTarget == APIEndpoint.TOPIC.mTarget) {
          try {
             relativeUrl = TOPIC_API_URL + URLEncoder.encode(requestQuery,
              "UTF-8");
@@ -515,11 +474,9 @@ public class APIService extends Service {
             responder.setResult(new Result(Error.PARSE));
             return;
          }
-         break;
-      case TARGET_SITES:
+      } else if (requestTarget == APIEndpoint.SITES.mTarget) {
          relativeUrl = SITES_API_URL;
-         break;
-      default:
+      } else {
          Log.w("iFixit", "Invalid request target: " + requestTarget);
          responder.setResult(new Result(Error.PARSE));
          return;
@@ -530,6 +487,9 @@ public class APIService extends Service {
       performRequest(absoluteUrl, responder);
    }
 
+   /**
+    * TODO Remove since its functionality is duplicated in APIEndpoint.
+    */
    private static String getUrl(String endPoint) {
       String domain;
 
