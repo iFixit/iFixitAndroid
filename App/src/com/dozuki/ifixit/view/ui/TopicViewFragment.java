@@ -22,6 +22,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.TopicNode;
@@ -110,7 +111,7 @@ public class TopicViewFragment extends SherlockFragment implements
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_TOPIC);
+      filter.addAction(APIEndpoint.TOPIC.mAction);
       getActivity().registerReceiver(mApiReceiver, filter);
    }
 

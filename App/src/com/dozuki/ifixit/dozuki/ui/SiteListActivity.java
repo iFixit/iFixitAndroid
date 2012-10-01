@@ -19,6 +19,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.ui.TopicsActivity;
 
@@ -91,7 +92,7 @@ public class SiteListActivity extends SherlockFragmentActivity {
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_SITES);
+      filter.addAction(APIEndpoint.SITES.mAction);
       registerReceiver(mApiReceiver, filter);
    }
 

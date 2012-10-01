@@ -2,7 +2,6 @@ package com.dozuki.ifixit.util;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 import org.apache.http.client.ResponseHandler;
@@ -87,10 +86,6 @@ public class APIService extends Service {
 
    private static final String RESPONSE = "RESPONSE";
 
-   private static final String SITES_API_URL = "/api/1.0/sites?limit=1000";
-   private static final String TOPIC_API_URL = "/api/1.0/topic/";
-   private static final String GUIDE_API_URL = "/api/1.0/guide/";
-
    /**
     * TODO Use https and 1.0.
     */
@@ -112,19 +107,14 @@ public class APIService extends Service {
 	public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
 
-   private static final int TARGET_GUIDE = 1;
-   private static final int TARGET_TOPIC = 2;
 	private static final int TARGET_LOGIN = 3;
 	private static final int TARGET_REGISTER = 4;
 	private static final int TARGET_MEDIA_LIST = 5;
 	private static final int TARGET_UPLOAD_MEDIA = 6;
 	private static final int TARGET_DELETE_MEDIA = 7;
-   private static final int TARGET_SITES = 8;
 
    private static final String NO_QUERY = "";
 
-   public static final String ACTION_GUIDE = "com.dozuki.ifixit.api.guide";
-   public static final String ACTION_TOPIC = "com.dozuki.ifixit.api.topic";
 	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
 	public static final String ACTION_REGISTER =
     "com.dozuki.ifixit.api.register";
@@ -134,7 +124,6 @@ public class APIService extends Service {
     "com.dozuki.ifixit.api.upload";
 	public static final String ACTION_DELETE_MEDIA =
     "com.dozuki.ifixit.api.delete";
-   public static final String ACTION_SITES = "com.dozuki.ifixit.api.sites";
 
    public static final String RESULT = "RESULT";
 
@@ -155,7 +144,6 @@ public class APIService extends Service {
       final int requestTarget = extras.getInt(REQUEST_TARGET);
       final APIEndpoint endpoint = APIEndpoint.getByTarget(requestTarget);
       final String requestQuery = extras.getString(REQUEST_QUERY);
-      final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
       final String resultInformation =
        extras.getString(REQUEST_RESULT_INFORMATION);
       final AuthenicationPackage authenicationPackage =
@@ -199,7 +187,7 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequestHelper(this, requestTarget, requestQuery, new Responder() {
+      performRequestHelper(this, endpoint, requestQuery, new Responder() {
          public void setResult(Result result) {
             // Don't parse if we've errored already.
             if (!result.hasError()) {
@@ -451,53 +439,13 @@ public class APIService extends Service {
       return builder.create();
    }
 
-   private static void performRequestHelper(Context context, int requestTarget,
-    String requestQuery, Responder responder) {
+   private static void performRequestHelper(Context context,
+    APIEndpoint endpoint, String requestQuery, Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
 
-      String relativeUrl = null;
-
-      if (requestTarget == APIEndpoint.CATEGORIES.mTarget) {
-         relativeUrl = APIEndpoint.CATEGORIES.getUrl(mSite);
-      } else if (requestTarget == APIEndpoint.GUIDE.mTarget) {
-         relativeUrl = APIEndpoint.GUIDE.getUrl(mSite, requestQuery);
-      } else if (requestTarget == APIEndpoint.TOPIC.mTarget) {
-         try {
-            relativeUrl = TOPIC_API_URL + URLEncoder.encode(requestQuery,
-             "UTF-8");
-         } catch (Exception e) {
-            Log.w("iFixit", "Encoding error: " + e.getMessage());
-            responder.setResult(new Result(Error.PARSE));
-            return;
-         }
-      } else if (requestTarget == APIEndpoint.SITES.mTarget) {
-         relativeUrl = SITES_API_URL;
-      } else {
-         Log.w("iFixit", "Invalid request target: " + requestTarget);
-         responder.setResult(new Result(Error.PARSE));
-         return;
-      }
-
-      String absoluteUrl = getUrl(relativeUrl);
-
-      performRequest(absoluteUrl, responder);
-   }
-
-   /**
-    * TODO Remove since its functionality is duplicated in APIEndpoint.
-    */
-   private static String getUrl(String endPoint) {
-      String domain;
-
-      if (mSite != null) {
-         domain = mSite.mDomain;
-      } else {
-         domain = "www.ifixit.com";
-      }
-
-      return "http://" + domain + endPoint;
+      performRequest(endpoint.getUrl(mSite, requestQuery), responder);
    }
 
    private static void perfromAuthenicatedRequestHelper(Context context,

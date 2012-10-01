@@ -26,6 +26,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.Guide;
 import com.dozuki.ifixit.view.model.SpeechCommander;
@@ -215,7 +216,7 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_GUIDE);
+      filter.addAction(APIEndpoint.GUIDE.mAction);
       registerReceiver(mApiReceiver, filter);
 
       if (mSpeechCommander != null)
