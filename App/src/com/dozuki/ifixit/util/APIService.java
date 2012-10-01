@@ -177,8 +177,7 @@ public class APIService extends Service {
                 }
 
                 // Always broadcast the result despite any errors.
-                broadcastResult(result, broadcastAction,
-                 requestTarget, resultInformation);
+                broadcastResult(result, endpoint, resultInformation);
              }
           });
          return START_NOT_STICKY;
@@ -213,8 +212,7 @@ public class APIService extends Service {
             }
 
             // Always broadcast the result despite any errors.
-            broadcastResult(result, broadcastAction,
-             requestTarget, resultInformation);
+            broadcastResult(result, endpoint, resultInformation);
          }
       });
 
@@ -243,17 +241,17 @@ public class APIService extends Service {
       // db.close();
    }
 
-   private void broadcastResult(Result result, String broadcastAction,
-    int initialAction, String extraResultInfo) {
+   private void broadcastResult(Result result, APIEndpoint endpoint,
+    String extraResultInfo) {
       Intent broadcast = new Intent();
       Bundle extras = new Bundle();
 
       extras.putSerializable(RESULT, result);
-      extras.putInt(REQUEST_TARGET, initialAction);
+      extras.putInt(REQUEST_TARGET, endpoint.mTarget);
       extras.putString(REQUEST_RESULT_INFORMATION, extraResultInfo);
       broadcast.putExtras(extras);
 
-      broadcast.setAction(broadcastAction);
+      broadcast.setAction(endpoint.mAction);
       sendBroadcast(broadcast);
    }
 
