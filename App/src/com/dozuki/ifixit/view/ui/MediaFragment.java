@@ -288,7 +288,7 @@ public class MediaFragment extends SherlockFragment implements
             .getSession();
       nextPageRequestInProgress = true;
       int initialPageSize = 5;
-      mContext.startService(APIService.userMediaIntent(mContext,
+      mContext.startService(APIService.getUserMediaIntent(mContext,
          authenicationPackage, "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize)
             + "&offset=" + (mImagesDownloaded)));
       userName =
@@ -863,7 +863,7 @@ public class MediaFragment extends SherlockFragment implements
                authenicationPackage.session =
                   ((MainApplication) ((Activity) mContext).getApplication())
                      .getUser().getSession();
-               mContext.startService(APIService.userMediaIntent(mContext,
+               mContext.startService(APIService.getUserMediaIntent(mContext,
                   authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE
                      + "&offset=" + (mImagesDownloaded)));
             }

@@ -189,7 +189,7 @@ public class APIService extends Service {
 
       performRequestHelper(this, endpoint, requestQuery, new Responder() {
          public void setResult(Result result) {
-            // Don't parse if we've errored already.
+            // Don't parse if we've erred already.
             if (!result.hasError()) {
                result = parseResult(result.getResponse(), endpoint);
             }
@@ -257,33 +257,55 @@ public class APIService extends Service {
 
    public static Intent getLoginIntent(Context context,
     AuthenicationPackage authenicationPackage) {
-      return createLoginIntent(context, TARGET_LOGIN, authenicationPackage,
-       ACTION_LOGIN);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
    }
 
    public static Intent getUploadImageIntent(Context context,
     AuthenicationPackage authenicationPackage, String filePath,
     String extraInformation) {
-      return createUploadImageIntent(context, TARGET_UPLOAD_MEDIA,
-       authenicationPackage, ACTION_UPLOAD_MEDIA, filePath, extraInformation);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+      extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
+
+      return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
    }
 
    public static Intent getDeleteMediaIntent(Context context,
     AuthenicationPackage authenicationPackage, String requestQuery) {
-      return createDeleteMediaIntent(context, TARGET_DELETE_MEDIA,
-       authenicationPackage, requestQuery, ACTION_DELETE_MEDIA);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery,
+       extras);
    }
 
-   public static Intent userMediaIntent(Context context,
+   public static Intent getUserMediaIntent(Context context,
     AuthenicationPackage authenicationPackage, String query) {
-      return createUserMediaIntent(context, TARGET_MEDIA_LIST,
-       authenicationPackage, query,ACTION_USER_MEDIA);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.REGISTER, query, extras);
    }
 
-   public static Intent getRegisterIntent(Context mContext,
+   public static Intent getRegisterIntent(Context context,
     AuthenicationPackage authenicationPackage) {
-      return createRegisterIntent(mContext, TARGET_REGISTER,
-       authenicationPackage , ACTION_REGISTER);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
    }
 
    public static Intent getSitesIntent(Context context) {
@@ -292,87 +314,15 @@ public class APIService extends Service {
 
    private static Intent createIntent(Context context, APIEndpoint endpoint,
     String query) {
+      return createIntent(context, endpoint, query, new Bundle());
+   }
+
+   private static Intent createIntent(Context context, APIEndpoint endpoint,
+    String query, Bundle extras) {
       Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
 
       extras.putInt(REQUEST_TARGET, endpoint.mTarget);
-      extras.putString(REQUEST_BROADCAST_ACTION, endpoint.mAction);
       extras.putString(REQUEST_QUERY, query);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createLoginIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createUserMediaIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String query, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putString(REQUEST_QUERY, query);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createRegisterIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createUploadImageIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String action, String filePath,
-    String extraInformation) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putString(REQUEST_QUERY, filePath);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-      extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createDeleteMediaIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String query, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putString(REQUEST_QUERY, query);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
       intent.putExtras(extras);
 
       return intent;
