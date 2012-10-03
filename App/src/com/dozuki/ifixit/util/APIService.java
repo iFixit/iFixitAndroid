@@ -90,8 +90,6 @@ public class APIService extends Service {
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
-   private static final String REQUEST_BROADCAST_ACTION =
-    "REQUEST_BROADCAST_ACTION";
 	private static final String REQUEST_AUTHENICATION_PACKAGE =
     "AUTHENICATION_PACKAGE";
 	public static final String REQUEST_RESULT_INFORMATION =
@@ -239,6 +237,26 @@ public class APIService extends Service {
       return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
    }
 
+   public static Intent getRegisterIntent(Context context,
+    AuthenicationPackage authenicationPackage) {
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
+   }
+
+   public static Intent getUserImagesIntent(Context context,
+    AuthenicationPackage authenicationPackage, String query) {
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.REGISTER, query, extras);
+   }
+
    public static Intent getUploadImageIntent(Context context,
     AuthenicationPackage authenicationPackage, String filePath,
     String extraInformation) {
@@ -251,7 +269,7 @@ public class APIService extends Service {
       return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
    }
 
-   public static Intent getDeleteMediaIntent(Context context,
+   public static Intent getDeleteImageIntent(Context context,
     AuthenicationPackage authenicationPackage, String requestQuery) {
       Bundle extras = new Bundle();
 
@@ -260,26 +278,6 @@ public class APIService extends Service {
 
       return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery,
        extras);
-   }
-
-   public static Intent getUserMediaIntent(Context context,
-    AuthenicationPackage authenicationPackage, String query) {
-      Bundle extras = new Bundle();
-
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-
-      return createIntent(context, APIEndpoint.REGISTER, query, extras);
-   }
-
-   public static Intent getRegisterIntent(Context context,
-    AuthenicationPackage authenicationPackage) {
-      Bundle extras = new Bundle();
-
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-
-      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
    }
 
    public static Intent getSitesIntent(Context context) {
@@ -305,16 +303,28 @@ public class APIService extends Service {
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
       switch (error) {
-         case CONNECTION:
-            return getConnectionErrorDialog(context, apiIntent);
-         case PARSE:
-         default:
-            return getParseErrorDialog(context, apiIntent);
+      case CONNECTION:
+         return getConnectionErrorDialog(context, apiIntent);
+      case PARSE:
+      default:
+         return getParseErrorDialog(context, apiIntent);
       }
    }
 
-   public static AlertDialog getListMediaErrorDialog(Context mContext) {
-      return createMediaErrorDialog(mContext);
+   public static AlertDialog getListMediaErrorDialog(final Context mContext) {
+      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
+      builder.setTitle(mContext.getString(R.string.media_error_title))
+         .setPositiveButton(mContext.getString(R.string.media_error_confirm),
+         new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               //kill the media activity, and have them try again later
+               //incase the server needs some rest
+               ((SherlockFragmentActivity)mContext).finish();
+               dialog.cancel();
+            }
+         });
+
+      return builder.create();
    }
 
    private static AlertDialog getParseErrorDialog(final Context context,
@@ -347,22 +357,6 @@ public class APIService extends Service {
       return builder.create();
    }
 
-   private static AlertDialog createMediaErrorDialog(final Context mContext) {
-      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
-      builder.setTitle(mContext.getString(R.string.media_error_title))
-         .setPositiveButton(mContext.getString(R.string.media_error_confirm),
-         new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               //kill the media activity, and have them try again later
-               //incase the server needs some rest
-               ((SherlockFragmentActivity)mContext).finish();
-               dialog.cancel();
-            }
-         });
-
-      return builder.create();
-   }
-
    private static void performRequestHelper(Context context,
     APIEndpoint endpoint, String requestQuery, Responder responder) {
       if (!checkConnectivity(context, responder)) {
@@ -381,6 +375,9 @@ public class APIService extends Service {
 
       int requestTarget = endpoint.mTarget;
 
+      /**
+       * TODO: Remove these if statements and move logic into APIEndpoint.
+       */
       String url;
       File file = null;
       if (requestTarget == APIEndpoint.LOGIN.mTarget) {
@@ -394,12 +391,12 @@ public class APIService extends Service {
          authenicationPackage.username = null;
       } else if (requestTarget == APIEndpoint.UPLOAD_IMAGE.mTarget) {
          file = new File(requestQuery);
-         url = APIEndpoint.UPLOAD_IMAGE.getUrl(mSite, file.getName());
+         url = endpoint.getUrl(mSite, file.getName());
          authenicationPackage.login = null;
          authenicationPackage.password = null;
          authenicationPackage.username = null;
       } else if (requestTarget == APIEndpoint.DELETE_IMAGE.mTarget) {
-         url = APIEndpoint.DELETE_IMAGE.getUrl(mSite, requestQuery);
+         url = endpoint.getUrl(mSite, requestQuery);
          authenicationPackage.login = null;
          authenicationPackage.password = null;
          authenicationPackage.username = null;

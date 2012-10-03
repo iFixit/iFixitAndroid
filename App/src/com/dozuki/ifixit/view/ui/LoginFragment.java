@@ -32,6 +32,7 @@ import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.HTTPRequestHelper;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
@@ -399,8 +400,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_LOGIN);
-      filter.addAction(APIService.ACTION_REGISTER);
+      filter.addAction(APIEndpoint.LOGIN.mAction);
+      filter.addAction(APIEndpoint.REGISTER.mAction);
       mContext.registerReceiver(mApiReceiver, filter);
    }
 

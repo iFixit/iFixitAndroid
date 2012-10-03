@@ -105,7 +105,7 @@ public enum APIEndpoint {
    UPLOAD_IMAGE(
       new CreateUrl() {
          public String create(String query) {
-            return "/api/1.0/image/upload?file=" + query,
+            return "/api/1.0/image/upload?file=" + query;
          }
       },
       false,

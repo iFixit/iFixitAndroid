@@ -50,6 +50,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
@@ -114,7 +115,7 @@ public class MediaFragment extends SherlockFragment implements
             (APIService.Result) intent.getExtras().getSerializable(
                APIService.RESULT);
          if (!result.hasError()) {
-            if (intent.getAction().equals(APIService.ACTION_USER_MEDIA)) {
+            if (intent.getAction().equals(APIEndpoint.USER_IMAGES.mAction)) {
                UserImageList imageList = (UserImageList) result.getResult();
                if (imageList.getImages().size() > 0) {
                   int oldImageSize = mImageList.getImages().size();
@@ -132,7 +133,7 @@ public class MediaFragment extends SherlockFragment implements
                }
                nextPageRequestInProgress = false;
             } else if (intent.getAction()
-               .equals(APIService.ACTION_UPLOAD_MEDIA)) {
+               .equals(APIEndpoint.UPLOAD_IMAGE.mAction)) {
                UploadedImageInfo imageinfo =
                   (UploadedImageInfo) result.getResult();
                String url =
@@ -147,7 +148,7 @@ public class MediaFragment extends SherlockFragment implements
                mImagesDownloaded++;
                galleryAdapter.invalidatedView();
             } else if (intent.getAction()
-               .equals(APIService.ACTION_DELETE_MEDIA)) {
+               .equals(APIEndpoint.DELETE_IMAGE.mAction)) {
 
             }
          } else {
@@ -288,7 +289,7 @@ public class MediaFragment extends SherlockFragment implements
             .getSession();
       nextPageRequestInProgress = true;
       int initialPageSize = 5;
-      mContext.startService(APIService.getUserMediaIntent(mContext,
+      mContext.startService(APIService.getUserImagesIntent(mContext,
          authenicationPackage, "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize)
             + "&offset=" + (mImagesDownloaded)));
       userName =
@@ -312,9 +313,9 @@ public class MediaFragment extends SherlockFragment implements
    public void onResume() {
       super.onResume();
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_USER_MEDIA);
-      filter.addAction(APIService.ACTION_UPLOAD_MEDIA);
-      filter.addAction(APIService.ACTION_DELETE_MEDIA);
+      filter.addAction(APIEndpoint.USER_IMAGES.mAction);
+      filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
+      filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
       mContext.registerReceiver(mApiReceiver, filter);
    }
 
@@ -726,7 +727,7 @@ public class MediaFragment extends SherlockFragment implements
       authenicationPackage.session =
          ((MainApplication) ((Activity) mContext).getApplication()).getUser()
             .getSession();
-      mContext.startService(APIService.getDeleteMediaIntent(mContext,
+      mContext.startService(APIService.getDeleteImageIntent(mContext,
          authenicationPackage, deleteQuery));
       if (mImageList.getImages().size() == 0)
          noImagesText.setVisibility(View.VISIBLE);
@@ -863,7 +864,7 @@ public class MediaFragment extends SherlockFragment implements
                authenicationPackage.session =
                   ((MainApplication) ((Activity) mContext).getApplication())
                      .getUser().getSession();
-               mContext.startService(APIService.getUserMediaIntent(mContext,
+               mContext.startService(APIService.getUserImagesIntent(mContext,
                   authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE
                      + "&offset=" + (mImagesDownloaded)));
             }
