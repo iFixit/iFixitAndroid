@@ -86,16 +86,6 @@ public class APIService extends Service {
 
    private static final String RESPONSE = "RESPONSE";
 
-   /**
-    * TODO Use https and 1.0.
-    */
-	private static final String LOGIN_API_URL = "/api/0.1/login";
-	private static final String REGISTER_API_URL = "/api/0.1/register";
-
-	private static final String USER_IMAGES_API_URL = "/api/1.0/image/user";
-	private static final String UPLOAD_MEDIA_API_URL = "api/1.0/image/upload";
-	private static final String DELETE_MEDIA_API_URL = "/api/1.0/image/delete";
-
 	private static final String API_DOMAIN = ".ifixit.com";
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
@@ -107,23 +97,7 @@ public class APIService extends Service {
 	public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
 
-	private static final int TARGET_LOGIN = 3;
-	private static final int TARGET_REGISTER = 4;
-	private static final int TARGET_MEDIA_LIST = 5;
-	private static final int TARGET_UPLOAD_MEDIA = 6;
-	private static final int TARGET_DELETE_MEDIA = 7;
-
    private static final String NO_QUERY = "";
-
-	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
-	public static final String ACTION_REGISTER =
-    "com.dozuki.ifixit.api.register";
-	public static final String ACTION_USER_MEDIA =
-    "com.dozuki.ifixit.api.images";
-	public static final String ACTION_UPLOAD_MEDIA =
-    "com.dozuki.ifixit.api.upload";
-	public static final String ACTION_DELETE_MEDIA =
-    "com.dozuki.ifixit.api.delete";
 
    public static final String RESULT = "RESULT";
 
@@ -151,7 +125,7 @@ public class APIService extends Service {
        REQUEST_AUTHENICATION_PACKAGE);
 
       if (authenicationPackage != null) {
-         perfromAuthenicatedRequestHelper(this, requestTarget,
+         perfromAuthenicatedRequestHelper(this, endpoint,
           authenicationPackage, requestQuery, new Responder() {
              public void setResult(Result result) {
 
@@ -399,46 +373,40 @@ public class APIService extends Service {
    }
 
    private static void perfromAuthenicatedRequestHelper(Context context,
-      int requestTarget, AuthenicationPackage authenicationPackage,
+      APIEndpoint endpoint, AuthenicationPackage authenicationPackage,
       String requestQuery, Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
 
+      int requestTarget = endpoint.mTarget;
+
       String url;
       File file = null;
-      switch (requestTarget) {
-         case TARGET_LOGIN:
-            url = LOGIN_API_URL;
-            break;
-         case TARGET_REGISTER:
-            url = REGISTER_API_URL;
-            Log.e("REGUSTER", url);
-            break;
-         case TARGET_MEDIA_LIST:
-            url = USER_IMAGES_API_URL + requestQuery;
-            authenicationPackage.login = null;
-            authenicationPackage.password = null;
-            authenicationPackage.username = null;
-            break;
-         case TARGET_UPLOAD_MEDIA:
-            file = new File(requestQuery);
-            url = UPLOAD_MEDIA_API_URL + "?file=" + file.getName();
-            authenicationPackage.login = null;
-            authenicationPackage.password = null;
-            authenicationPackage.username = null;
-            break;
-
-         case TARGET_DELETE_MEDIA:
-            url = DELETE_MEDIA_API_URL + requestQuery;
-            authenicationPackage.login = null;
-            authenicationPackage.password = null;
-            authenicationPackage.username = null;
-            break;
-         default:
-            Log.w("iFixit", "Invalid request target: " + requestTarget);
-            responder.setResult(new Result(Error.PARSE));
-            return;
+      if (requestTarget == APIEndpoint.LOGIN.mTarget) {
+         url = endpoint.getUrl(mSite);
+      } else if (requestTarget == APIEndpoint.REGISTER.mTarget) {
+         url = endpoint.getUrl(mSite);
+      } else if (requestTarget == APIEndpoint.USER_IMAGES.mTarget) {
+         url = endpoint.getUrl(mSite, requestQuery);
+         authenicationPackage.login = null;
+         authenicationPackage.password = null;
+         authenicationPackage.username = null;
+      } else if (requestTarget == APIEndpoint.UPLOAD_IMAGE.mTarget) {
+         file = new File(requestQuery);
+         url = APIEndpoint.UPLOAD_IMAGE.getUrl(mSite, file.getName());
+         authenicationPackage.login = null;
+         authenicationPackage.password = null;
+         authenicationPackage.username = null;
+      } else if (requestTarget == APIEndpoint.DELETE_IMAGE.mTarget) {
+         url = APIEndpoint.DELETE_IMAGE.getUrl(mSite, requestQuery);
+         authenicationPackage.login = null;
+         authenicationPackage.password = null;
+         authenicationPackage.username = null;
+      } else {
+         Log.w("iFixit", "Invalid request target: " + requestTarget);
+         responder.setResult(new Result(Error.PARSE));
+         return;
       }
       performAuthenicatedRequest(url, authenicationPackage, file, responder);
    }

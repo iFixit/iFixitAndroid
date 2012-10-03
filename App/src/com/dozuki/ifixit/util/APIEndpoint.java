@@ -87,7 +87,11 @@ public enum APIEndpoint {
       }
    ),
    USER_IMAGES(
-      "/api/1.0/image/user/",
+      new CreateUrl() {
+         public String create(String query) {
+            return "/api/1.0/image/user" + query;
+         }
+      },
       false,
       true,
       5,
@@ -99,7 +103,11 @@ public enum APIEndpoint {
       }
    ),
    UPLOAD_IMAGE(
-      "/api/1.0/image/upload/",
+      new CreateUrl() {
+         public String create(String query) {
+            return "/api/1.0/image/upload?file=" + query,
+         }
+      },
       false,
       true,
       6,
