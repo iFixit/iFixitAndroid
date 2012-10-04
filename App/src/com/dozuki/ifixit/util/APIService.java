@@ -207,7 +207,7 @@ public class APIService extends Service {
       Bundle extras = new Bundle();
 
       extras.putSerializable(RESULT, result);
-      extras.putInt(REQUEST_TARGET, endpoint.mTarget);
+      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
       extras.putString(REQUEST_RESULT_INFORMATION, extraResultInfo);
       broadcast.putExtras(extras);
 
@@ -293,7 +293,7 @@ public class APIService extends Service {
     String query, Bundle extras) {
       Intent intent = new Intent(context, APIService.class);
 
-      extras.putInt(REQUEST_TARGET, endpoint.mTarget);
+      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
       extras.putString(REQUEST_QUERY, query);
       intent.putExtras(extras);
 
@@ -373,29 +373,29 @@ public class APIService extends Service {
          return;
       }
 
-      int requestTarget = endpoint.mTarget;
+      int requestTarget = endpoint.getTarget();
 
       /**
        * TODO: Remove these if statements and move logic into APIEndpoint.
        */
       String url;
       File file = null;
-      if (requestTarget == APIEndpoint.LOGIN.mTarget) {
+      if (requestTarget == APIEndpoint.LOGIN.getTarget()) {
          url = endpoint.getUrl(mSite);
-      } else if (requestTarget == APIEndpoint.REGISTER.mTarget) {
+      } else if (requestTarget == APIEndpoint.REGISTER.getTarget()) {
          url = endpoint.getUrl(mSite);
-      } else if (requestTarget == APIEndpoint.USER_IMAGES.mTarget) {
+      } else if (requestTarget == APIEndpoint.USER_IMAGES.getTarget()) {
          url = endpoint.getUrl(mSite, requestQuery);
          authenicationPackage.login = null;
          authenicationPackage.password = null;
          authenicationPackage.username = null;
-      } else if (requestTarget == APIEndpoint.UPLOAD_IMAGE.mTarget) {
+      } else if (requestTarget == APIEndpoint.UPLOAD_IMAGE.getTarget()) {
          file = new File(requestQuery);
          url = endpoint.getUrl(mSite, file.getName());
          authenicationPackage.login = null;
          authenicationPackage.password = null;
          authenicationPackage.username = null;
-      } else if (requestTarget == APIEndpoint.DELETE_IMAGE.mTarget) {
+      } else if (requestTarget == APIEndpoint.DELETE_IMAGE.getTarget()) {
          url = endpoint.getUrl(mSite, requestQuery);
          authenicationPackage.login = null;
          authenicationPackage.password = null;

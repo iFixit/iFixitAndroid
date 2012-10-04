@@ -12,14 +12,10 @@ import com.dozuki.ifixit.dozuki.model.Site;
  * Defines all APIEndpoints.
  */
 public enum APIEndpoint {
-   /**
-    * TODO: Use enum's ordinal instead of manually specifying a target.
-    */
    CATEGORIES(
       "/api/1.0/categories/",
       false,
       false,
-      0,
       "com.dozuki.ifixit.api.categories",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -35,7 +31,6 @@ public enum APIEndpoint {
       },
       false,
       false,
-      1,
       "com.dozuki.ifixit.api.guide",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -57,7 +52,6 @@ public enum APIEndpoint {
       },
       false,
       false,
-      2,
       "com.dozuki.ifixit.api.topic",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -69,7 +63,6 @@ public enum APIEndpoint {
       "/api/1.0/login/",
       true,
       false,
-      3,
       "com.dozuki.ifixit.api.login",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -81,7 +74,6 @@ public enum APIEndpoint {
       "/api/1.0/register/",
       true,
       false,
-      4,
       "com.dozuki.ifixit.api.register",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -97,7 +89,6 @@ public enum APIEndpoint {
       },
       false,
       true,
-      5,
       "com.dozuki.ifixit.api.user_images",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -113,7 +104,6 @@ public enum APIEndpoint {
       },
       false,
       true,
-      6,
       "com.dozuki.ifixit.api.upload_image",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -129,7 +119,6 @@ public enum APIEndpoint {
       },
       false,
       true,
-      7,
       "com.dozuki.ifixit.api.delete_image",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -142,7 +131,6 @@ public enum APIEndpoint {
       "/api/1.0/sites?limit=1000",
       false,
       false,
-      8,
       "com.dozuki.ifixit.api.sites",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -175,11 +163,6 @@ public enum APIEndpoint {
    public final boolean mAuthenticated;
 
    /**
-    * Integer used to uniquely identify this endpoint.
-    */
-   public final int mTarget;
-
-   /**
     * Action used for broadcast receivers.
     */
    public final String mAction;
@@ -195,26 +178,28 @@ public enum APIEndpoint {
    private final ParseResult mParseResult;
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    int target, String action, ParseResult parseResult) {
-      this(url, https, authenticated, target, action, null, parseResult);
+    String action, ParseResult parseResult) {
+      this(url, https, authenticated, action, null, parseResult);
    }
 
    private APIEndpoint(CreateUrl createUrl, boolean https, boolean authenticated,
-    int target, String action, ParseResult parseResult) {
-      this(null, https, authenticated, target, action, createUrl, parseResult);
+    String action, ParseResult parseResult) {
+      this(null, https, authenticated, action, createUrl, parseResult);
    }
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    int target, String action, CreateUrl createUrl, ParseResult parseResult) {
+    String action, CreateUrl createUrl, ParseResult parseResult) {
       mUrl = url;
       mHttps = https;
       mAuthenticated = authenticated;
-      mTarget = target;
       mAction = action;
       mCreateUrl = createUrl;
       mParseResult = parseResult;
    }
 
+   public int getTarget() {
+      return ordinal();
+   }
 
    public String getUrl(Site site) {
       return getUrl(site, null);
@@ -256,7 +241,7 @@ public enum APIEndpoint {
 
    public static APIEndpoint getByTarget(int target) {
       for (APIEndpoint endpoint : APIEndpoint.values()) {
-         if (endpoint.mTarget == target) {
+         if (endpoint.ordinal() == target) {
             return endpoint;
          }
       }
@@ -266,6 +251,6 @@ public enum APIEndpoint {
 
    public String toString() {
       return mUrl + " | " + mHttps + " | " + mAuthenticated + " | " +
-       mTarget + " | " + mAction;
+       ordinal() + " | " + mAction;
    }
 }
