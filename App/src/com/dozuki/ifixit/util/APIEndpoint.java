@@ -12,6 +12,9 @@ import com.dozuki.ifixit.dozuki.model.Site;
  * Defines all APIEndpoints.
  */
 public enum APIEndpoint {
+   /**
+    * TODO: Use enum's ordinal instead of manually specifying a target.
+    */
    CATEGORIES(
       "/api/1.0/categories/",
       false,
@@ -119,7 +122,11 @@ public enum APIEndpoint {
       }
    ),
    DELETE_IMAGE(
-      "/api/1.0/image/delete/",
+      new CreateUrl() {
+         public String create(String query) {
+            return "/api/1.0/image/delete" + query;
+         }
+      },
       false,
       true,
       7,
@@ -255,5 +262,10 @@ public enum APIEndpoint {
       }
 
       return null;
+   }
+
+   public String toString() {
+      return mUrl + " | " + mHttps + " | " + mAuthenticated + " | " +
+       mTarget + " | " + mAction;
    }
 }

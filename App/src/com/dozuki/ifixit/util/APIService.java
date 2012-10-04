@@ -216,7 +216,7 @@ public class APIService extends Service {
    }
 
    public static Intent getCategoriesIntent(Context context) {
-      return createIntent(context, APIEndpoint.SITES, NO_QUERY);
+      return createIntent(context, APIEndpoint.CATEGORIES, NO_QUERY);
    }
 
    public static Intent getGuideIntent(Context context, int guideid) {
@@ -254,7 +254,7 @@ public class APIService extends Service {
       extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
        authenicationPackage);
 
-      return createIntent(context, APIEndpoint.REGISTER, query, extras);
+      return createIntent(context, APIEndpoint.USER_IMAGES, query, extras);
    }
 
    public static Intent getUploadImageIntent(Context context,
