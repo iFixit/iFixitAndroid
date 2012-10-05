@@ -46,17 +46,20 @@ public class SiteListActivity extends SherlockFragmentActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTitle("");
-      boolean isLarge = ((getResources().getConfiguration().screenLayout & 
-            Configuration.SCREENLAYOUT_SIZE_LARGE) == 
-             Configuration.SCREENLAYOUT_SIZE_LARGE);
-      boolean isXLarge = ((getResources().getConfiguration().screenLayout & 
-            Configuration.SCREENLAYOUT_SIZE_XLARGE) == 
-            Configuration.SCREENLAYOUT_SIZE_XLARGE);
-     
+      /**
+       * TODO: Combine these into a single bitwise expression and compare > 0.
+       */
+      boolean isLarge = ((getResources().getConfiguration().screenLayout &
+       Configuration.SCREENLAYOUT_SIZE_LARGE) ==
+       Configuration.SCREENLAYOUT_SIZE_LARGE);
+      boolean isXLarge = ((getResources().getConfiguration().screenLayout &
+       Configuration.SCREENLAYOUT_SIZE_XLARGE) ==
+       Configuration.SCREENLAYOUT_SIZE_XLARGE);
+
       if (isLarge || isXLarge) {
          getSupportActionBar().hide();
-      }      
-      
+      }
+
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.site_list);
