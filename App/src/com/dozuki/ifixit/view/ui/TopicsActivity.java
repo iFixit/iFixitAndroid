@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.view.ui;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -20,6 +18,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.dozuki.ifixit.view.model.TopicSelectedListener;
@@ -44,21 +43,17 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result = (APIService.Result)
-          intent.getExtras().getSerializable(APIService.RESULT);
-
-         if (!result.hasError()) {
-            if (mRootTopic == null) {
-               mRootTopic = (TopicNode)result.getResult();
-               onTopicSelected(mRootTopic);
-            }
-         } else {
-            APIService.getErrorDialog(TopicsActivity.this, result.getError(),
-             APIService.getCategoriesIntent(TopicsActivity.this)).show();
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+         if (mRootTopic == null) {
+            mRootTopic = (TopicNode)result;
+            onTopicSelected(mRootTopic);
          }
+      }
+
+      public void onFailure(APIService.Error error, Intent intent) {
+         APIService.getErrorDialog(TopicsActivity.this, error,
+          APIService.getCategoriesIntent(TopicsActivity.this)).show();
       }
    };
 

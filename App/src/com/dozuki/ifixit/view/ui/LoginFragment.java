@@ -4,7 +4,6 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.text.method.LinkMovementMethod;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -33,6 +31,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.HTTPRequestHelper;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
@@ -71,35 +70,27 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
    boolean readyForRegisterState;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result =
-            (APIService.Result) intent.getExtras().getSerializable(
-               APIService.RESULT);
-
-         Log.e("SESSION", "IN SESSION ");
-         if (!result.hasError()) {
-            Log.e("SESSION", "NO ERROR");
-            User lUser = (User) result.getResult();
-            ((MainApplication) ((Activity) mContext).getApplication())
-               .setUser(lUser);
-            final SharedPreferences prefs =
-               mContext.getSharedPreferences(PREFERENCE_FILE,
-                  Context.MODE_WORLD_READABLE);
-            Editor editor = prefs.edit();
-            editor.putString(SESSION_KEY, lUser.getSession());
-            editor.putString(USERNAME_KEY, lUser.getUsername());
-            editor.commit();
-            for (LoginListener l : loginListeners) {
-               l.onLogin(lUser);
-            }
-
-         } else {
-            enable(true);
-            _loadingSpinner.setVisibility(View.GONE);
-            _errorText.setVisibility(View.VISIBLE);
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+         User lUser = (User)result;
+         ((MainApplication) ((Activity) mContext).getApplication())
+            .setUser(lUser);
+         final SharedPreferences prefs =
+            mContext.getSharedPreferences(PREFERENCE_FILE,
+               Context.MODE_WORLD_READABLE);
+         Editor editor = prefs.edit();
+         editor.putString(SESSION_KEY, lUser.getSession());
+         editor.putString(USERNAME_KEY, lUser.getUsername());
+         editor.commit();
+         for (LoginListener l : loginListeners) {
+            l.onLogin(lUser);
          }
+      }
+
+      public void onFailure(APIService.Error error, Intent intent) {
+         enable(true);
+         _loadingSpinner.setVisibility(View.GONE);
+         _errorText.setVisibility(View.VISIBLE);
       }
    };
 

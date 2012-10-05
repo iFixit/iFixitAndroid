@@ -2,8 +2,6 @@ package com.dozuki.ifixit.view.ui;
 
 import java.util.List;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -27,6 +25,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.Guide;
 import com.dozuki.ifixit.view.model.SpeechCommander;
@@ -57,23 +56,16 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
    protected ProgressBar mProgressBar;
    private ImageView mNextPageImage;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result =
-            (APIService.Result) intent.getExtras().getSerializable(
-               APIService.RESULT);
-
-         if (!result.hasError()) {
-            if (mGuide == null) {
-               setGuide((Guide) result.getResult(), 0);
-            }
-         } else {
-            APIService.getErrorDialog(GuideViewActivity.this,
-               result.getError(),
-               APIService.getGuideIntent(GuideViewActivity.this, mGuideid))
-               .show();
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+         if (mGuide == null) {
+            setGuide((Guide)result, 0);
          }
+      }
+
+      public void onFailure(APIService.Error error, Intent intent) {
+         APIService.getErrorDialog(GuideViewActivity.this, error,
+          APIService.getGuideIntent(GuideViewActivity.this, mGuideid)) .show();
       }
    };
 

@@ -2,8 +2,6 @@ package com.dozuki.ifixit.dozuki.ui;
 
 import java.util.ArrayList;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
@@ -20,6 +18,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.ui.TopicsActivity;
 
@@ -30,20 +29,16 @@ public class SiteListActivity extends SherlockFragmentActivity {
    private SiteListAdapter mSiteListAdapter;
    private ArrayList<Site> mSiteList;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+   private APIReceiver mApiReceiver = new APIReceiver() {
       @SuppressWarnings("unchecked")
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result = (APIService.Result)
-          intent.getExtras().getSerializable(APIService.RESULT);
+      public void onSuccess(Object result, Intent intent) {
+         mSiteList = (ArrayList<Site>)result;
+         setSiteList(mSiteList);
+      }
 
-         if (!result.hasError()) {
-            mSiteList = (ArrayList<Site>)result.getResult();
-            setSiteList(mSiteList);
-         } else {
-            APIService.getErrorDialog(SiteListActivity.this, result.getError(),
-             APIService.getSitesIntent(SiteListActivity.this)).show();
-         }
+      public void onFailure(APIService.Error error, Intent intent) {
+         APIService.getErrorDialog(SiteListActivity.this, error,
+          APIService.getSitesIntent(SiteListActivity.this)).show();
       }
    };
 

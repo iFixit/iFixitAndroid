@@ -10,7 +10,6 @@ import java.util.List;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -51,6 +50,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
@@ -108,54 +108,49 @@ public class MediaFragment extends SherlockFragment implements
    static boolean showingLogout;
    static boolean showingDelete;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result =
-            (APIService.Result) intent.getExtras().getSerializable(
-               APIService.RESULT);
-         if (!result.hasError()) {
-            if (intent.getAction().equals(APIEndpoint.USER_IMAGES.mAction)) {
-               UserImageList imageList = (UserImageList) result.getResult();
-               if (imageList.getImages().size() > 0) {
-                  int oldImageSize = mImageList.getImages().size();
-                  for (int i = 0; i < imageList.getImages().size(); i++) {
-                     selectedList.add(false);
-                     mImageList.addImage(imageList.getImages().get(i));
-                  }
-                  mImagesDownloaded +=
-                     (mImageList.getImages().size() - oldImageSize);
-                  galleryAdapter.invalidatedView();
-                  mLastPage = false;
-                  noImagesText.setVisibility(View.GONE);
-               } else {
-                  mLastPage = true;
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+         if (intent.getAction().equals(APIEndpoint.USER_IMAGES.mAction)) {
+            UserImageList imageList = (UserImageList)result;
+            if (imageList.getImages().size() > 0) {
+               int oldImageSize = mImageList.getImages().size();
+               for (int i = 0; i < imageList.getImages().size(); i++) {
+                  selectedList.add(false);
+                  mImageList.addImage(imageList.getImages().get(i));
                }
-               nextPageRequestInProgress = false;
-            } else if (intent.getAction()
-               .equals(APIEndpoint.UPLOAD_IMAGE.mAction)) {
-               UploadedImageInfo imageinfo =
-                  (UploadedImageInfo) result.getResult();
-               String url =
-                  intent.getExtras().getString(
-                     APIService.REQUEST_RESULT_INFORMATION);
-
-               LocalImage cur = localURL.get(url);
-               if (cur == null)
-                  return;
-               cur.imgId = imageinfo.getmImageid();
-               localURL.put(url, cur);
-               mImagesDownloaded++;
+               mImagesDownloaded +=
+                  (mImageList.getImages().size() - oldImageSize);
                galleryAdapter.invalidatedView();
-            } else if (intent.getAction()
-               .equals(APIEndpoint.DELETE_IMAGE.mAction)) {
-
+               mLastPage = false;
+               noImagesText.setVisibility(View.GONE);
+            } else {
+               mLastPage = true;
             }
-         } else {
-            APIService.getListMediaErrorDialog(mContext).show();
             nextPageRequestInProgress = false;
-         }
+         } else if (intent.getAction()
+            .equals(APIEndpoint.UPLOAD_IMAGE.mAction)) {
+            UploadedImageInfo imageinfo =
+               (UploadedImageInfo)result;
+            String url =
+               intent.getExtras().getString(
+                  APIService.REQUEST_RESULT_INFORMATION);
 
+            LocalImage cur = localURL.get(url);
+            if (cur == null)
+               return;
+            cur.imgId = imageinfo.getmImageid();
+            localURL.put(url, cur);
+            mImagesDownloaded++;
+            galleryAdapter.invalidatedView();
+         } else if (intent.getAction()
+            .equals(APIEndpoint.DELETE_IMAGE.mAction)) {
+
+         }
+      }
+
+      public void onFailure(APIService.Error error, Intent intent) {
+         APIService.getListMediaErrorDialog(mContext).show();
+         nextPageRequestInProgress = false;
       }
    };
 
