@@ -31,5 +31,14 @@ public abstract class APIReceiver extends BroadcastReceiver {
     */
    public abstract void onSuccess(Object result, Intent intent);
 
+   /**
+    * Method that is called on a failed API call. This can happen if the user
+    * doesn't have internet or the request fails. Usually this function creates
+    * and shows an error dialog using APIService.getErrorDialog().
+    *
+    * @param error An Error that describes the type of error that occurred.
+    * @param intent The Intent provided to onReceive that contains various
+    * information from APIService.
+    */
    public abstract void onFailure(APIService.Error error, Intent intent);
 }
