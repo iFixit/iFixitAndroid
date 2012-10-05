@@ -23,6 +23,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    GUIDE(
       new CreateUrl() {
          public String create(String query) {
@@ -38,6 +39,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    TOPIC(
       new CreateUrl() {
          public String create(String query) {
@@ -59,6 +61,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    LOGIN(
       "/api/1.0/login/",
       true,
@@ -70,6 +73,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    REGISTER(
       "/api/1.0/register/",
       true,
@@ -81,6 +85,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    USER_IMAGES(
       new CreateUrl() {
          public String create(String query) {
@@ -96,6 +101,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    UPLOAD_IMAGE(
       new CreateUrl() {
          public String create(String query) {
@@ -111,6 +117,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    DELETE_IMAGE(
       new CreateUrl() {
          public String create(String query) {
@@ -127,6 +134,7 @@ public enum APIEndpoint {
          }
       }
    ),
+
    SITES(
       "/api/1.0/sites?limit=1000",
       false,
