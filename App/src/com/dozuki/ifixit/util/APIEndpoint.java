@@ -222,6 +222,9 @@ public enum APIEndpoint {
       return getUrl(site, null);
    }
 
+   /**
+    * Returns an absolute URL for this endpoint for the given site and query.
+    */
    public String getUrl(Site site, String query) {
       String domain;
       String protocol;
