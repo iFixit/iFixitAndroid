@@ -205,7 +205,16 @@ public enum APIEndpoint {
       mParseResult = parseResult;
    }
 
+   /**
+    * Returns a unique integer for this endpoint.
+    *
+    * This value is passed around in Intents to identify what request is being
+    * made. It will also be used in the database to store results.
+    */
    protected int getTarget() {
+      /**
+       * Just use the enum's unique integer that auto increments from 0.
+       */
       return ordinal();
    }
 
