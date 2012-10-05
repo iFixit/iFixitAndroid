@@ -2,7 +2,6 @@ package com.dozuki.ifixit.util;
 
 import java.io.File;
 import java.io.Serializable;
-import java.net.URLEncoder;
 import java.util.HashMap;
 
 import org.apache.http.client.ResponseHandler;
@@ -86,59 +85,15 @@ public class APIService extends Service {
    }
 
    private static final String RESPONSE = "RESPONSE";
-
-   private static final String SITES_API_URL = "/api/1.0/sites?limit=1000";
-   private static final String TOPIC_API_URL = "/api/1.0/topic/";
-   private static final String GUIDE_API_URL = "/api/1.0/guide/";
-   private static final String CATEGORIES_API_URL = "/api/1.0/categories/";
-
-   /**
-    * TODO Use https and 1.0.
-    */
-	private static final String LOGIN_API_URL = "/api/0.1/login";
-	private static final String REGISTER_API_URL = "/api/0.1/register";
-
-	private static final String USER_IMAGES_API_URL = "/api/1.0/image/user";
-	private static final String UPLOAD_MEDIA_API_URL = "api/1.0/image/upload";
-	private static final String DELETE_MEDIA_API_URL = "/api/1.0/image/delete";
-
-	private static final String API_DOMAIN = ".ifixit.com";
-
+   private static final String API_DOMAIN = ".ifixit.com";
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
-   private static final String REQUEST_BROADCAST_ACTION =
-    "REQUEST_BROADCAST_ACTION";
 	private static final String REQUEST_AUTHENICATION_PACKAGE =
     "AUTHENICATION_PACKAGE";
 	public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
 
-   private static final int TARGET_CATEGORIES = 0;
-   private static final int TARGET_GUIDE = 1;
-   private static final int TARGET_TOPIC = 2;
-	private static final int TARGET_LOGIN = 3;
-	private static final int TARGET_REGISTER = 4;
-	private static final int TARGET_MEDIA_LIST = 5;
-	private static final int TARGET_UPLOAD_MEDIA = 6;
-	private static final int TARGET_DELETE_MEDIA = 7;
-   private static final int TARGET_SITES = 8;
-
    private static final String NO_QUERY = "";
-
-   public static final String ACTION_CATEGORIES =
-    "com.dozuki.ifixit.api.categories";
-   public static final String ACTION_GUIDE = "com.dozuki.ifixit.api.guide";
-   public static final String ACTION_TOPIC = "com.dozuki.ifixit.api.topic";
-	public static final String ACTION_LOGIN = "com.dozuki.ifixit.api.login";
-	public static final String ACTION_REGISTER =
-    "com.dozuki.ifixit.api.register";
-	public static final String ACTION_USER_MEDIA =
-    "com.dozuki.ifixit.api.images";
-	public static final String ACTION_UPLOAD_MEDIA =
-    "com.dozuki.ifixit.api.upload";
-	public static final String ACTION_DELETE_MEDIA =
-    "com.dozuki.ifixit.api.delete";
-   public static final String ACTION_SITES = "com.dozuki.ifixit.api.sites";
 
    public static final String RESULT = "RESULT";
 
@@ -157,8 +112,8 @@ public class APIService extends Service {
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
       final int requestTarget = extras.getInt(REQUEST_TARGET);
+      final APIEndpoint endpoint = APIEndpoint.getByTarget(requestTarget);
       final String requestQuery = extras.getString(REQUEST_QUERY);
-      final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
       final String resultInformation =
        extras.getString(REQUEST_RESULT_INFORMATION);
       final AuthenicationPackage authenicationPackage =
@@ -166,13 +121,12 @@ public class APIService extends Service {
        REQUEST_AUTHENICATION_PACKAGE);
 
       if (authenicationPackage != null) {
-         perfromAuthenicatedRequestHelper(this, requestTarget,
+         perfromAuthenicatedRequestHelper(this, endpoint,
           authenicationPackage, requestQuery, new Responder() {
              public void setResult(Result result) {
 
                 if (!result.hasError()) {
-                   result = parseResult(result.getResponse(),
-                    requestTarget, broadcastAction);
+                   result = parseResult(result.getResponse(), endpoint);
                 }
 
                 // Don't save if there a parse error.
@@ -181,8 +135,7 @@ public class APIService extends Service {
                 }
 
                 // Always broadcast the result despite any errors.
-                broadcastResult(result, broadcastAction,
-                 requestTarget, resultInformation);
+                broadcastResult(result, endpoint, resultInformation);
              }
           });
          return START_NOT_STICKY;
@@ -204,12 +157,11 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequestHelper(this, requestTarget, requestQuery, new Responder() {
+      performRequestHelper(this, endpoint, requestQuery, new Responder() {
          public void setResult(Result result) {
-            // Don't parse if we've errored already.
+            // Don't parse if we've erred already.
             if (!result.hasError()) {
-               result = parseResult(result.getResponse(), requestTarget,
-                broadcastAction);
+               result = parseResult(result.getResponse(), endpoint);
             }
 
             // Don't save if there a parse error.
@@ -218,8 +170,7 @@ public class APIService extends Service {
             }
 
             // Always broadcast the result despite any errors.
-            broadcastResult(result, broadcastAction,
-             requestTarget, resultInformation);
+            broadcastResult(result, endpoint, resultInformation);
          }
       });
 
@@ -229,42 +180,11 @@ public class APIService extends Service {
    /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private Result parseResult(String response, int requestTarget,
-    String broadcastAction) {
+   private Result parseResult(String response, APIEndpoint endpoint) {
       Object parsedResult = null;
       try {
-         switch (requestTarget) {
-         case TARGET_CATEGORIES:
-            parsedResult = JSONHelper.parseTopics(response);
-            break;
-         case TARGET_GUIDE:
-            parsedResult = JSONHelper.parseGuide(response);
-            break;
-         case TARGET_TOPIC:
-            parsedResult = JSONHelper.parseTopicLeaf(response);
-            break;
-         case TARGET_LOGIN:
-            parsedResult = JSONHelper.parseLoginInfo(response);
-            break;
-         case TARGET_MEDIA_LIST:
-            parsedResult = JSONHelper.parseUserImages(response);
-            break;
-         case TARGET_UPLOAD_MEDIA:
-            parsedResult = JSONHelper.parseUploadedImageInfo(response);
-            break;
-         case TARGET_DELETE_MEDIA:
-            parsedResult = "";
-            break;
-         case TARGET_REGISTER:
-            parsedResult = JSONHelper.parseLoginInfo(response);
-            break;
-         case TARGET_SITES:
-            parsedResult = JSONHelper.parseSites(response);
-            break;
-         default:
-            Log.w("iFixit", "Invalid request target: " + requestTarget);
-            return new Result(Error.PARSE);
-         }
+         parsedResult = endpoint.parseResult(response);
+
          return new Result(response, parsedResult);
       } catch (JSONException e) {
          return new Result(Error.PARSE);
@@ -279,152 +199,100 @@ public class APIService extends Service {
       // db.close();
    }
 
-   private void broadcastResult(Result result, String broadcastAction,
-    int initialAction, String extraResultInfo) {
+   private void broadcastResult(Result result, APIEndpoint endpoint,
+    String extraResultInfo) {
       Intent broadcast = new Intent();
       Bundle extras = new Bundle();
 
       extras.putSerializable(RESULT, result);
-      extras.putInt(REQUEST_TARGET, initialAction);
+      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
       extras.putString(REQUEST_RESULT_INFORMATION, extraResultInfo);
       broadcast.putExtras(extras);
 
-      broadcast.setAction(broadcastAction);
+      broadcast.setAction(endpoint.mAction);
       sendBroadcast(broadcast);
    }
 
    public static Intent getCategoriesIntent(Context context) {
-      return createIntent(context, TARGET_CATEGORIES, NO_QUERY,
-       ACTION_CATEGORIES);
+      return createIntent(context, APIEndpoint.CATEGORIES, NO_QUERY);
    }
 
    public static Intent getGuideIntent(Context context, int guideid) {
-      return createIntent(context, TARGET_GUIDE, "" + guideid, ACTION_GUIDE);
+      return createIntent(context, APIEndpoint.GUIDE, "" + guideid);
    }
 
    public static Intent getTopicIntent(Context context, String topicName) {
-      return createIntent(context, TARGET_TOPIC, topicName, ACTION_TOPIC);
+      return createIntent(context, APIEndpoint.TOPIC, topicName);
    }
 
    public static Intent getLoginIntent(Context context,
     AuthenicationPackage authenicationPackage) {
-      return createLoginIntent(context, TARGET_LOGIN, authenicationPackage,
-       ACTION_LOGIN);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
+   }
+
+   public static Intent getRegisterIntent(Context context,
+    AuthenicationPackage authenicationPackage) {
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
+   }
+
+   public static Intent getUserImagesIntent(Context context,
+    AuthenicationPackage authenicationPackage, String query) {
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+
+      return createIntent(context, APIEndpoint.USER_IMAGES, query, extras);
    }
 
    public static Intent getUploadImageIntent(Context context,
     AuthenicationPackage authenicationPackage, String filePath,
     String extraInformation) {
-      return createUploadImageIntent(context, TARGET_UPLOAD_MEDIA,
-       authenicationPackage, ACTION_UPLOAD_MEDIA, filePath, extraInformation);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
+      extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
+
+      return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
    }
 
-   public static Intent getDeleteMediaIntent(Context context,
+   public static Intent getDeleteImageIntent(Context context,
     AuthenicationPackage authenicationPackage, String requestQuery) {
-      return createDeleteMediaIntent(context, TARGET_DELETE_MEDIA,
-       authenicationPackage, requestQuery, ACTION_DELETE_MEDIA);
-   }
+      Bundle extras = new Bundle();
 
-   public static Intent userMediaIntent(Context context,
-    AuthenicationPackage authenicationPackage, String query) {
-      return createUserMediaIntent(context, TARGET_MEDIA_LIST,
-       authenicationPackage, query,ACTION_USER_MEDIA);
-   }
+      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
+       authenicationPackage);
 
-   public static Intent getRegisterIntent(Context mContext,
-    AuthenicationPackage authenicationPackage) {
-      return createRegisterIntent(mContext, TARGET_REGISTER,
-       authenicationPackage , ACTION_REGISTER);
+      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery,
+       extras);
    }
 
    public static Intent getSitesIntent(Context context) {
-      return createIntent(context, TARGET_SITES, NO_QUERY,
-       ACTION_SITES);
+      return createIntent(context, APIEndpoint.SITES, NO_QUERY);
    }
 
-   private static Intent createIntent(Context context, int target,
-    String query, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
+   private static Intent createIntent(Context context, APIEndpoint endpoint,
+    String query) {
+      return createIntent(context, endpoint, query, new Bundle());
+   }
 
-      extras.putInt(REQUEST_TARGET, target);
+   private static Intent createIntent(Context context, APIEndpoint endpoint,
+    String query, Bundle extras) {
+      Intent intent = new Intent(context, APIService.class);
+
+      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
       extras.putString(REQUEST_QUERY, query);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createLoginIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createUserMediaIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String query, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putString(REQUEST_QUERY, query);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createRegisterIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createUploadImageIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String action, String filePath,
-    String extraInformation) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putString(REQUEST_QUERY, filePath);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
-      extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   private static Intent createDeleteMediaIntent(Context context, int target,
-    AuthenicationPackage authenicationPackage, String query, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
-
-      extras.putInt(REQUEST_TARGET, target);
-      extras.putString(REQUEST_QUERY, query);
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
       intent.putExtras(extras);
 
       return intent;
@@ -433,16 +301,28 @@ public class APIService extends Service {
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
       switch (error) {
-         case CONNECTION:
-            return getConnectionErrorDialog(context, apiIntent);
-         case PARSE:
-         default:
-            return getParseErrorDialog(context, apiIntent);
+      case CONNECTION:
+         return getConnectionErrorDialog(context, apiIntent);
+      case PARSE:
+      default:
+         return getParseErrorDialog(context, apiIntent);
       }
    }
 
-   public static AlertDialog getListMediaErrorDialog(Context mContext) {
-      return createMediaErrorDialog(mContext);
+   public static AlertDialog getListMediaErrorDialog(final Context mContext) {
+      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
+      builder.setTitle(mContext.getString(R.string.media_error_title))
+         .setPositiveButton(mContext.getString(R.string.media_error_confirm),
+         new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               //kill the media activity, and have them try again later
+               //incase the server needs some rest
+               ((SherlockFragmentActivity)mContext).finish();
+               dialog.cancel();
+            }
+         });
+
+      return builder.create();
    }
 
    private static AlertDialog getParseErrorDialog(final Context context,
@@ -475,114 +355,53 @@ public class APIService extends Service {
       return builder.create();
    }
 
-   private static AlertDialog createMediaErrorDialog(final Context mContext) {
-      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
-      builder.setTitle(mContext.getString(R.string.media_error_title))
-         .setPositiveButton(mContext.getString(R.string.media_error_confirm),
-         new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               //kill the media activity, and have them try again later
-               //incase the server needs some rest
-               ((SherlockFragmentActivity)mContext).finish();
-               dialog.cancel();
-            }
-         });
-
-      return builder.create();
-   }
-
-   private static void performRequestHelper(Context context, int requestTarget,
-    String requestQuery, Responder responder) {
+   private static void performRequestHelper(Context context,
+    APIEndpoint endpoint, String requestQuery, Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
 
-      String relativeUrl = null;
-
-      switch (requestTarget) {
-      case TARGET_CATEGORIES:
-         relativeUrl = CATEGORIES_API_URL;
-         break;
-      case TARGET_GUIDE:
-         relativeUrl = GUIDE_API_URL + requestQuery;
-         break;
-      case TARGET_TOPIC:
-         try {
-            relativeUrl = TOPIC_API_URL + URLEncoder.encode(requestQuery,
-             "UTF-8");
-         } catch (Exception e) {
-            Log.w("iFixit", "Encoding error: " + e.getMessage());
-            responder.setResult(new Result(Error.PARSE));
-            return;
-         }
-         break;
-      case TARGET_SITES:
-         relativeUrl = SITES_API_URL;
-         break;
-      default:
-         Log.w("iFixit", "Invalid request target: " + requestTarget);
-         responder.setResult(new Result(Error.PARSE));
-         return;
-      }
-
-      String absoluteUrl = getUrl(relativeUrl);
-
-      performRequest(absoluteUrl, responder);
-   }
-
-   private static String getUrl(String endPoint) {
-      String domain;
-
-      if (mSite != null) {
-         domain = mSite.mDomain;
-      } else {
-         domain = "www.ifixit.com";
-      }
-
-      return "http://" + domain + endPoint;
+      performRequest(endpoint.getUrl(mSite, requestQuery), responder);
    }
 
    private static void perfromAuthenicatedRequestHelper(Context context,
-      int requestTarget, AuthenicationPackage authenicationPackage,
+      APIEndpoint endpoint, AuthenicationPackage authenicationPackage,
       String requestQuery, Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
 
+      int requestTarget = endpoint.getTarget();
+
+      /**
+       * TODO: Remove these if statements and move logic into APIEndpoint.
+       */
       String url;
       File file = null;
-      switch (requestTarget) {
-         case TARGET_LOGIN:
-            url = LOGIN_API_URL;
-            break;
-         case TARGET_REGISTER:
-            url = REGISTER_API_URL;
-            Log.e("REGUSTER", url);
-            break;
-         case TARGET_MEDIA_LIST:
-            url = USER_IMAGES_API_URL + requestQuery;
-            authenicationPackage.login = null;
-            authenicationPackage.password = null;
-            authenicationPackage.username = null;
-            break;
-         case TARGET_UPLOAD_MEDIA:
-            file = new File(requestQuery);
-            url = UPLOAD_MEDIA_API_URL + "?file=" + file.getName();
-            authenicationPackage.login = null;
-            authenicationPackage.password = null;
-            authenicationPackage.username = null;
-            break;
-
-         case TARGET_DELETE_MEDIA:
-            url = DELETE_MEDIA_API_URL + requestQuery;
-            authenicationPackage.login = null;
-            authenicationPackage.password = null;
-            authenicationPackage.username = null;
-            break;
-         default:
-            Log.w("iFixit", "Invalid request target: " + requestTarget);
-            responder.setResult(new Result(Error.PARSE));
-            return;
+      if (requestTarget == APIEndpoint.LOGIN.getTarget()) {
+         url = endpoint.getUrl(mSite);
+      } else if (requestTarget == APIEndpoint.REGISTER.getTarget()) {
+         url = endpoint.getUrl(mSite);
+      } else if (requestTarget == APIEndpoint.USER_IMAGES.getTarget()) {
+         url = endpoint.getUrl(mSite, requestQuery);
+         authenicationPackage.login = null;
+         authenicationPackage.password = null;
+         authenicationPackage.username = null;
+      } else if (requestTarget == APIEndpoint.UPLOAD_IMAGE.getTarget()) {
+         file = new File(requestQuery);
+         url = endpoint.getUrl(mSite, file.getName());
+         authenicationPackage.login = null;
+         authenicationPackage.password = null;
+         authenicationPackage.username = null;
+      } else if (requestTarget == APIEndpoint.DELETE_IMAGE.getTarget()) {
+         url = endpoint.getUrl(mSite, requestQuery);
+         authenicationPackage.login = null;
+         authenicationPackage.password = null;
+         authenicationPackage.username = null;
+      } else {
+         Log.w("iFixit", "Invalid request target: " + requestTarget);
+         responder.setResult(new Result(Error.PARSE));
+         return;
       }
       performAuthenicatedRequest(url, authenicationPackage, file, responder);
    }

@@ -3,8 +3,6 @@ package com.dozuki.ifixit.view.ui;
 import java.net.URLEncoder;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -22,6 +20,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.TopicNode;
@@ -43,20 +43,15 @@ public class TopicViewFragment extends SherlockFragment implements
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result =
-            (APIService.Result) intent.getExtras().getSerializable(
-               APIService.RESULT);
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+         setTopicLeaf((TopicLeaf)result);
+      }
 
-         if (!result.hasError()) {
-            setTopicLeaf((TopicLeaf) result.getResult());
-         } else {
-            APIService.getErrorDialog(getActivity(), result.getError(),
-               APIService.getTopicIntent(getActivity(), mTopicNode.getName()))
-               .show();
-         }
+      public void onFailure(APIService.Error error, Intent intent) {
+         APIService.getErrorDialog(getActivity(), error,
+          APIService.getTopicIntent(getActivity(), mTopicNode.getName()))
+          .show();
       }
    };
 
@@ -110,7 +105,7 @@ public class TopicViewFragment extends SherlockFragment implements
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_TOPIC);
+      filter.addAction(APIEndpoint.TOPIC.mAction);
       getActivity().registerReceiver(mApiReceiver, filter);
    }
 
