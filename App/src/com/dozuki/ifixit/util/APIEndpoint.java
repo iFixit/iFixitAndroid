@@ -197,7 +197,7 @@ public enum APIEndpoint {
       mParseResult = parseResult;
    }
 
-   public int getTarget() {
+   protected int getTarget() {
       return ordinal();
    }
 
