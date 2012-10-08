@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -32,6 +33,7 @@ public class SiteListActivity extends SherlockFragmentActivity
    private ListView mSiteListView;
    private SiteListAdapter mSiteListAdapter;
    private ArrayList<Site> mSiteList;
+   private SearchView mSearchView;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @Override
@@ -156,13 +158,13 @@ public class SiteListActivity extends SherlockFragmentActivity
 
       SearchManager searchManager = (SearchManager)getSystemService(
        Context.SEARCH_SERVICE);
-      SearchView searchView = (SearchView)menu.findItem(R.id.site_search)
+      mSearchView = (SearchView)menu.findItem(R.id.site_search)
        .getActionView();
-      searchView.setSearchableInfo(searchManager.getSearchableInfo(
+      mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
        getComponentName()));
-      searchView.setIconifiedByDefault(false);
+      mSearchView.setIconifiedByDefault(false);
 
-      searchView.setOnQueryTextListener(this);
+      mSearchView.setOnQueryTextListener(this);
 
       return true;
    }
@@ -187,6 +189,20 @@ public class SiteListActivity extends SherlockFragmentActivity
       return false;
    }
 
+   @Override
+   public boolean onKeyUp(int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+         /**
+          * Phones with a hardware search button open up the SearchDialog.
+          * This sets focus on the SearchView but unfortunately does not
+          * open the soft keyboard.
+          */
+         mSearchView.requestFocus();
+         return true;
+      } else {
+         return super.onKeyUp(keyCode, event);
+      }
+   }
 
    private void getSiteList() {
       startService(APIService.getSitesIntent(this));
