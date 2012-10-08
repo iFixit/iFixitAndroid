@@ -14,11 +14,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.SearchView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
