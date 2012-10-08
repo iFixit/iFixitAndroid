@@ -10,9 +10,9 @@
    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
    <application android:name=".MainApplication"
-            android:icon="@drawable/icon_dozuki"
-            android:label="@string/app_name_dozuki"
-            android:theme="@style/Theme.Dozuki.Green">
+            android:icon="@drawable/icon_ifixit"
+            android:label="@string/app_name_ifixit"
+            android:theme="@style/Theme.iFixit">
       <service android:name=".util.APIService"/>
       <activity android:name=".view.ui.TopicsActivity"></activity>
       <activity android:name=".dozuki.ui.SiteListActivity"
@@ -41,6 +41,9 @@
             <data android:scheme="http"
                   android:host="www.ifixit.com"
                   android:pathPrefix="/Teardown/" />
+            <data android:scheme="http"
+                  android:host="www.ifixit.com"
+                  android:pathPrefix="/Project/" />
          </intent-filter>
       </activity>
       <activity android:name=".view.ui.FullImageViewActivity"

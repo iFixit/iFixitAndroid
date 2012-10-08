@@ -2,8 +2,9 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
    <style name="Theme.iFixit" parent="Theme.HoloEverywhereLight.DarkActionBar.Sherlock">
         <!-- Action Bar Logo -->
+        <item name="logo">@drawable/logo_ifixit</item>
         <item name="android:logo">@drawable/logo_ifixit</item>
-       
+        
         <!-- Action Bar Sherlock overrides -->
         <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
         <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
@@ -17,10 +18,12 @@
         <item name="listViewStyle">@style/Widget.iFixit.ListViewStyle</item>        
         <!-- Override for SectionHeader ListView style -->
         <item name="sectionListViewStyle">@style/Widget.iFixit.ListViewStyle</item>
+        <item name="topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
     </style>
      
     <style name="Theme.Dozuki" parent="Theme.iFixit">
         <!-- Action Bar Logo -->
+        <item name="logo">@drawable/logo_dozuki</item>
         <item name="android:logo">@drawable/logo_dozuki</item>
         
         <!-- Action Bar Sherlock overrides -->
@@ -35,10 +38,12 @@
         
         <!-- Custom Attributes / Styles for Dozuki -->
         <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle</item>  
+        
         <!-- Override for SectionHeader ListView style -->
         <item name="sectionListViewStyle">@style/Widget.Dozuki.ListViewStyle</item>      
         <item name="topicHeaderColor">@color/dozuki_green</item>
         <item name="topicGuideList">@style/Widget.Dozuki.ListViewStyle</item>
+        <item name="topicDefaultBackground">@style/Widget.Dozuki.TopicBackground</item>
     </style>
     
     <!-- Custom Attributes / Styles for Dozuki -->
@@ -54,10 +59,25 @@
     <style name="Theme.Dozuki.Blue"   parent="Theme.Dozuki">
         <item name="topicHeaderColor">@color/ifixit_blue</item>   
         <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle</item> 
+        <item name="sectionListViewStyle">@style/Widget.iFixit.ListViewStyle</item>
+        <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
+        <item name="android:actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
+        <item name="android:actionBarStyle">@style/Widget.iFixit.ActionBar</item>
+        <item name="actionBarStyle">@style/Widget.iFixit.ActionBar</item>
+        <item name="actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
+        <item name="android:actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>        
     </style>
     
     <style name="Theme.Dozuki.White"  parent="Theme.Dozuki">
         <item name="topicHeaderColor">@color/dozuki_white</item>    
+        
+        <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item> 
+        <item name="sectionListViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item>
+        
+        <item name="actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>
+        <item name="android:actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>   
+        
+        <item name="topicGuideList">@style/Widget.Dozuki.ListViewStyle.Grey</item>
     </style>
     
     <style name="Theme.Dozuki.Orange" parent="Theme.Dozuki">        
@@ -72,10 +92,13 @@
     
     <style name="Theme.Dozuki.Grey" parent="Theme.Dozuki">        
         <item name="topicHeaderColor">@color/dozuki_grey</item>
+        
         <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item> 
         <item name="sectionListViewStyle">@style/Widget.Dozuki.ListViewStyle.Grey</item>
+        
         <item name="actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>
         <item name="android:actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView.Grey</item>   
+        
         <item name="topicGuideList">@style/Widget.Dozuki.ListViewStyle.Grey</item>
     </style>    
 

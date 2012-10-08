@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -66,6 +67,8 @@ public class TopicViewFragment extends SherlockFragment
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      getActivity().setTheme(((MainApplication)getActivity().getApplication()).getSiteTheme());
+      getActivity().setTitle("");
       super.onCreate(savedInstanceState);
 
       if (mImageManager == null) {

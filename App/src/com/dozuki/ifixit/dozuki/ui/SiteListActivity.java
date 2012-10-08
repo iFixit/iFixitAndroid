@@ -7,6 +7,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.KeyEvent;
 import android.view.View;
@@ -36,6 +37,7 @@ public class SiteListActivity extends SherlockFragmentActivity
    private SearchView mSearchView;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+      @SuppressWarnings("unchecked")
       @Override
       public void onReceive(Context context, Intent intent) {
          APIService.Result result = (APIService.Result)
@@ -51,11 +53,23 @@ public class SiteListActivity extends SherlockFragmentActivity
       }
    };
 
+   @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      setTitle("");
+      boolean isLarge = ((getResources().getConfiguration().screenLayout & 
+            Configuration.SCREENLAYOUT_SIZE_LARGE) == 
+             Configuration.SCREENLAYOUT_SIZE_LARGE);
+      boolean isXLarge = ((getResources().getConfiguration().screenLayout & 
+            Configuration.SCREENLAYOUT_SIZE_XLARGE) == 
+            Configuration.SCREENLAYOUT_SIZE_XLARGE);
+     
+      if (isLarge || isXLarge) {
+         getSupportActionBar().hide();
+      }      
+      
       super.onCreate(savedInstanceState);
 
-      getSupportActionBar().setTitle("");
       setContentView(R.layout.site_list);
 
       mSiteListView = (ListView)findViewById(R.id.siteListView);

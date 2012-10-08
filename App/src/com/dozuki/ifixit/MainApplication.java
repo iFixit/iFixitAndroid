@@ -37,10 +37,48 @@ public class MainApplication extends Application {
       APIService.setSite(site);
    }
 
-   @Override
-   public void onCreate() {
-      //ACRA.init(this);
-      super.onCreate();
+   /**
+    * Returns the resource id for the current site's theme.
+    */
+   public int getSiteTheme() {
+      if (mSite == null) {
+         return R.style.Theme_Dozuki;
+
+      // Put custom site themes here.
+      } else if (mSite.mName.equals("ifixit")) {
+         return R.style.Theme_iFixit;
+      } else {
+         // We don't have a custom theme for the site - check for generic theme.
+         String theme = mSite.mTheme;
+
+         if (theme.equals("custom")) {
+            // Site has a custom theme but we don't have one implemented yet.
+            return R.style.Theme_Dozuki;
+         } else if (theme.equals("green")) {
+            return R.style.Theme_Dozuki_Green;
+         } else if (theme.equals("blue")) {
+            return R.style.Theme_Dozuki_Blue;
+         } else if (theme.equals("white")) {
+            return R.style.Theme_Dozuki_White;
+         } else if (theme.equals("orange")) {
+            return R.style.Theme_Dozuki_Orange;
+         } else if (theme.equals("black")) {
+            return R.style.Theme_Dozuki_Grey;
+         }
+      }
+
+      return R.style.Theme_Dozuki;
+   }
+
+   /**
+    * Returns the current site's object name.
+    */
+   public String getSiteObjectName() {
+      if (mSite.mName.equals("ifixit")) {
+         return getString(R.string.devices);
+      } else {
+         return getString(R.string.topics);
+      }
    }
 
    public ImageManager getImageManager() {
@@ -118,32 +156,8 @@ public class MainApplication extends Application {
     * (iFixit/Crucial etc.).
     */
    private Site getDefaultSite() {
-      Site site = null;
       String siteName = CURRENT_SITE.replace("SITE_", "");
 
-      if (siteName.equals("ifixit")) {
-         site = new Site(2);
-         site.mName = "ifixit";
-         site.mDomain = "www.ifixit.com";
-         site.mTitle = "iFixit";
-         site.mTheme = "custom";
-         site.mPublic = true;
-         site.mAnswers = true;
-         site.mDescription = "iFixit is the free repair manual you can edit." +
-          " We sell tools, parts and upgrades for Apple Mac, iPod, iPhone," +
-          " iPad, and MacBook as well as game consoles.";
-      } else if (siteName.equals("crucial")) {
-         site = new Site(549);
-         site.mName = "crucial";
-         site.mDomain = "crucial.dozuki.com";
-         site.mTitle = "Crucial";
-         site.mTheme = "white";
-         site.mPublic = true;
-         site.mAnswers = true;
-         site.mDescription = "Free installation guides for Crucial RAM and" +
-          " SSD products.";
-      }
-
-      return site;
+      return Site.getSite(siteName);
    }
 }

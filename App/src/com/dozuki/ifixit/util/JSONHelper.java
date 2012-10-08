@@ -31,9 +31,14 @@ public class JSONHelper {
 
       try {
          JSONArray jSites = new JSONArray(json);
+         Site site;
 
          for (int i = 0; i < jSites.length(); i++) {
-            sites.add(parseSite(jSites.getJSONObject(i)));
+            site = parseSite(jSites.getJSONObject(i));
+
+            if (site != null) {
+               sites.add(site);
+            }
          }
 
       } catch (JSONException e) {
@@ -44,13 +49,20 @@ public class JSONHelper {
    }
 
    private static Site parseSite(JSONObject jSite) throws JSONException {
+      boolean isPublic = !jSite.getBoolean("private");
+
+      // We don't currently support private sites.
+      if (!isPublic) {
+         return null;
+      }
+
       Site site = new Site(jSite.getInt("siteid"));
 
       site.mName = jSite.getString("name");
       site.mDomain = jSite.getString("domain");
       site.mTitle = jSite.getString("title");
       site.mTheme = jSite.getString("theme");
-      site.mPublic = !jSite.getBoolean("private");
+      site.mPublic = isPublic;
       site.mDescription = jSite.getString("description");
       site.mAnswers = jSite.getInt("answers") != 0;
 

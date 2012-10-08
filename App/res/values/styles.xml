@@ -72,9 +72,16 @@
     
     
     <!-- Theme Styles -->
+
     <!-- iFixit -->
+    <style name="Widget.iFixit"></style>
     <style name="Widget.iFixit.ListViewStyle" parent="android:Widget.ListView">
         <item name="android:cacheColorHint">#00000000</item>
+    </style>
+    
+    <style name="Widget.iFixit.TopicBackground" parent="Widget.iFixit">
+        <item name="android:src">@drawable/fist_default</item>
+        <item name="android:contentDescription">@string/fist_background_desc</item>
     </style>
 
     <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid.Inverse">
@@ -102,6 +109,14 @@
     </style>
     
     <!-- Dozuki -->
+    <style name="Widget.Dozuki"></style>
+ 
+    <style name="Widget.Dozuki.TopicBackground" parent="Widget.Dozuki">
+        <item name="android:src">@drawable/fist_default</item>
+        <item name="android:contentDescription">@string/fist_background_desc</item>
+        <item name="android:visibility">gone</item>
+    </style>
+  
     <style name="Widget.Dozuki.ActionBar" parent="Widget.iFixit.ActionBar"></style>   
     <style name="Widget.Dozuki.ActionBar.TabText" parent="Widget.iFixit.ActionBar.TabText"></style>
     <style name="TextAppearance.Dozuki.ActionBar.Title" parent="TextAppearance.iFixit.ActionBar.Title"></style>
