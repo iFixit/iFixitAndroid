@@ -102,10 +102,11 @@ public class SiteListActivity extends SherlockFragmentActivity
    }
 
    private void search(String query) {
+      String lowerQuery = query.toLowerCase();
       ArrayList<Site> matchedSites = new ArrayList<Site>();
 
       for (Site site : mSiteList) {
-         if (site.search(query)) {
+         if (site.search(lowerQuery)) {
             matchedSites.add(site);
          }
       }
@@ -186,6 +187,9 @@ public class SiteListActivity extends SherlockFragmentActivity
    public boolean onQueryTextChange(String newText) {
       if (newText.length() == 0) {
          cancelSearch();
+      } else {
+         // Perform search on every key press.
+         search(newText);
       }
 
       return false;

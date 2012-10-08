@@ -2,6 +2,8 @@ package com.dozuki.ifixit.dozuki.model;
 
 import java.io.Serializable;
 
+import com.dozuki.ifixit.util.EditDistance;
+
 public class Site implements Serializable {
    private static final long serialVersionUID = -2798641261277805693L;
 
@@ -19,7 +21,18 @@ public class Site implements Serializable {
    }
 
    public boolean search(String query) {
-      return mName.indexOf(query) != -1;
+      if (mName.indexOf(query) != -1 ||
+       mTitle.toLowerCase().indexOf(query) != -1) {
+         // Query is somewhere in title or name.
+         return true;
+      }
+
+      /**
+       * Compare edit distance with the length of the string. This is kinda
+       * arbitrary but makes sense because we want more room for error the
+       * longer the string and less room for error the shorter the string.
+       */
+      return EditDistance.editDistance(mName, query) <= (mName.length() / 2);
    }
 
    public String toString() {
