@@ -211,9 +211,9 @@ public class SiteListActivity extends SherlockFragmentActivity
    public boolean onKeyUp(int keyCode, KeyEvent event) {
       if (keyCode == KeyEvent.KEYCODE_SEARCH) {
          /**
-          * Phones with a hardware search button open up the SearchDialog.
-          * This sets focus on the SearchView but unfortunately does not
-          * open the soft keyboard.
+          * Phones with a hardware search button open up the SearchDialog by
+          * default. This overrides that by setting focus on the SearchView.
+          * Unfortunately it does not open the soft keyboard as of now.
           */
          mSearchView.requestFocus();
          return true;
