@@ -57,6 +57,7 @@
    <string-array name="user_settings">
       <item>Log out</item>
    </string-array>
+   <string name="dozuki_search_hint">Search sites</string>
 
    <!-- I couldn't find these strings anywhere so these are just placeholders
         so the project will compile. Update these before release. -->

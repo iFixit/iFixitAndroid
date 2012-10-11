@@ -2,10 +2,13 @@ package com.dozuki.ifixit.dozuki.ui;
 
 import java.util.ArrayList;
 
+import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -14,6 +17,9 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
@@ -22,12 +28,14 @@ import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.ui.TopicsActivity;
 
-public class SiteListActivity extends SherlockFragmentActivity {
+public class SiteListActivity extends SherlockFragmentActivity
+ implements SearchView.OnQueryTextListener {
    private static final String SITE_LIST = "SITE_LIST";
 
    private ListView mSiteListView;
    private SiteListAdapter mSiteListAdapter;
    private ArrayList<Site> mSiteList;
+   private SearchView mSearchView;
 
    private APIReceiver mApiReceiver = new APIReceiver() {
       @SuppressWarnings("unchecked")
@@ -76,6 +84,38 @@ public class SiteListActivity extends SherlockFragmentActivity {
       } else {
          getSiteList();
       }
+
+      handleIntent(getIntent());
+   }
+
+   @Override
+   protected void onNewIntent(Intent intent) {
+      setIntent(intent);
+      handleIntent(intent);
+   }
+
+   private void handleIntent(Intent intent) {
+      if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+         String query = intent.getStringExtra(SearchManager.QUERY);
+         search(query);
+      }
+   }
+
+   private void search(String query) {
+      String lowerQuery = query.toLowerCase();
+      ArrayList<Site> matchedSites = new ArrayList<Site>();
+
+      for (Site site : mSiteList) {
+         if (site.search(lowerQuery)) {
+            matchedSites.add(site);
+         }
+      }
+
+      setSiteList(matchedSites);
+   }
+
+   private void cancelSearch() {
+      setSiteList(mSiteList);
    }
 
    @Override
@@ -107,7 +147,6 @@ public class SiteListActivity extends SherlockFragmentActivity {
    }
 
    public void setSiteList(ArrayList<Site> sites) {
-      mSiteList = sites;
       mSiteListAdapter = new SiteListAdapter(sites);
       mSiteListView.setAdapter(mSiteListAdapter);
 
@@ -119,10 +158,68 @@ public class SiteListActivity extends SherlockFragmentActivity {
             Intent intent = new Intent(SiteListActivity.this,
              TopicsActivity.class);
 
-            application.setSite(mSiteList.get(position));
+            application.setSite(mSiteListAdapter.getSiteList().get(position));
             startActivity(intent);
          }
       });
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      super.onCreateOptionsMenu(menu);
+
+      MenuInflater inflater = getSupportMenuInflater();
+      inflater.inflate(R.menu.site_search_menu, menu);
+
+      SearchManager searchManager = (SearchManager)getSystemService(
+       Context.SEARCH_SERVICE);
+      mSearchView = (SearchView)menu.findItem(R.id.site_search)
+       .getActionView();
+      mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
+       getComponentName()));
+      mSearchView.setIconifiedByDefault(false);
+
+      mSearchView.setOnQueryTextListener(this);
+
+      return true;
+   }
+
+   public boolean onQueryTextChange(String newText) {
+      if (newText.length() == 0) {
+         cancelSearch();
+      } else {
+         // Perform search on every key press.
+         search(newText);
+      }
+
+      return false;
+   }
+
+   public boolean onQueryTextSubmit(String query) {
+      return false;
+   }
+
+   public boolean onClose() {
+      return false;
+   }
+
+   protected boolean isAlwaysExpanded() {
+      return false;
+   }
+
+   @Override
+   public boolean onKeyUp(int keyCode, KeyEvent event) {
+      if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+         /**
+          * Phones with a hardware search button open up the SearchDialog by
+          * default. This overrides that by setting focus on the SearchView.
+          * Unfortunately it does not open the soft keyboard as of now.
+          */
+         mSearchView.requestFocus();
+         return true;
+      } else {
+         return super.onKeyUp(keyCode, event);
+      }
    }
 
    private void getSiteList() {
@@ -134,6 +231,10 @@ public class SiteListActivity extends SherlockFragmentActivity {
 
       public SiteListAdapter(ArrayList<Site> sites) {
          mSites = sites;
+      }
+
+      public ArrayList<Site> getSiteList() {
+         return mSites;
       }
 
       public int getCount() {
