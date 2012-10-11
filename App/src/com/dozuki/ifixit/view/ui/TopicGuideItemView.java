@@ -22,13 +22,12 @@ public class TopicGuideItemView extends RelativeLayout {
       mContext = context;
       mImageManager = imageManager;
 
-      LayoutInflater inflater =
-         (LayoutInflater) context
-            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater)context
+       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.topic_guide_item, this, true);
 
-      mTitleView = (TextView) findViewById(R.id.topic_guide_title);
-      mThumbnail = (ImageView) findViewById(R.id.topic_guide_thumbnail);
+      mTitleView = (TextView)findViewById(R.id.topic_guide_title);
+      mThumbnail = (ImageView)findViewById(R.id.topic_guide_thumbnail);
    }
 
    public void setGuideItem(String title, String image, Context context) {

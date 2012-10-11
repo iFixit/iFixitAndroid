@@ -23,8 +23,8 @@ import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.dozuki.ifixit.view.model.TopicSelectedListener;
 
-public class TopicsActivity extends SherlockFragmentActivity implements
- TopicSelectedListener, OnBackStackChangedListener {
+public class TopicsActivity extends SherlockFragmentActivity
+ implements TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;

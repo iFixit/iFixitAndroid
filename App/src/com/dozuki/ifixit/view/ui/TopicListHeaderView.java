@@ -14,12 +14,11 @@ public class TopicListHeaderView extends LinearLayout {
    public TopicListHeaderView(Context context) {
       super(context);
 
-      LayoutInflater inflater =
-         (LayoutInflater) context
-            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater)context.getSystemService(
+       Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.topic_header_row, this, true);
 
-      mTopicName = (TextView) findViewById(R.id.topic_header);
+      mTopicName = (TextView)findViewById(R.id.topic_header);
    }
 
    public void setHeader(String header) {
