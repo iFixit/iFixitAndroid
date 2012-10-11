@@ -9,7 +9,6 @@ import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -32,8 +31,8 @@ import com.dozuki.ifixit.view.model.SpeechCommander;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class GuideViewActivity extends SherlockFragmentActivity implements
-   OnPageChangeListener {
+public class GuideViewActivity extends SherlockFragmentActivity
+ implements OnPageChangeListener {
    private static final int MAX_LOADING_IMAGES = 9;
    private static final int MAX_STORED_IMAGES = 9;
    private static final int MAX_WRITING_IMAGES = 10;
@@ -50,10 +49,10 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage = -1;
-   protected ImageManager mImageManager;
+   private ImageManager mImageManager;
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
-   protected ProgressBar mProgressBar;
+   private ProgressBar mProgressBar;
    private ImageView mNextPageImage;
 
    private APIReceiver mApiReceiver = new APIReceiver() {
@@ -65,7 +64,7 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
 
       public void onFailure(APIService.Error error, Intent intent) {
          APIService.getErrorDialog(GuideViewActivity.this, error,
-          APIService.getGuideIntent(GuideViewActivity.this, mGuideid)) .show();
+          APIService.getGuideIntent(GuideViewActivity.this, mGuideid)).show();
       }
    };
 
@@ -76,22 +75,22 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
       super.onCreate(savedInstanceState);
 
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-         WindowManager.LayoutParams.FLAG_FULLSCREEN);
+       WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       setContentView(R.layout.guide_main);
 
-      mImageManager = ((MainApplication) getApplication()).getImageManager();
+      mImageManager = ((MainApplication)getApplication()).getImageManager();
       mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
       mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
-      mPager = (ViewPager) findViewById(R.id.guide_pager);
-      mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
-      mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
-      mNextPageImage = (ImageView) findViewById(R.id.next_page_image);
+      mPager = (ViewPager)findViewById(R.id.guide_pager);
+      mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
+      mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
+      mNextPageImage = (ImageView)findViewById(R.id.next_page_image);
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
-         Guide guide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+         Guide guide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
          if (guide != null) {
             setGuide(guide, savedInstanceState.getInt(CURRENT_PAGE));
             mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
@@ -117,7 +116,6 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
          }
 
          getGuide(mGuideid);
-
       }
 
       mNextPageImage.setOnTouchListener(new View.OnTouchListener() {
@@ -139,6 +137,12 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      /**
+       * TODO Figure out why we don't super.onSaveInstanceState(). I think
+       * this causes step fragments to not maintain state across orientation
+       * changes (selected thumbnail). However, I remember this failing with a
+       * call to super.onSavInstanceState(). Investigate.
+       */
       state.putSerializable(SAVED_GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
@@ -156,9 +160,8 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
       ActionBar actionBar = getSupportActionBar();
       actionBar.setTitle(mGuide.getTitle());
 
-      mGuideAdapter =
-         new GuideViewAdapter(this.getSupportFragmentManager(), mImageManager,
-            mGuide);
+      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(),
+       mImageManager, mGuide);
 
       mPager.setAdapter(mGuideAdapter);
       mIndicator.setOnPageChangeListener(this);
@@ -170,7 +173,7 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
       mIndicator.setPageColor(0xFFFFFFFF);
       mIndicator.setFillColor(0xFF444444);
       mIndicator.setStrokeColor(0xFF000000);
-      mIndicator.setStrokeWidth((int) (1.5 * density));
+      mIndicator.setStrokeWidth((int)(1.5 * density));
 
       mPager.setVisibility(View.VISIBLE);
 
@@ -183,7 +186,6 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
 
       if (mSpeechCommander != null)
          mSpeechCommander.destroy();
-
    }
 
    @Override
@@ -211,18 +213,9 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
       filter.addAction(APIEndpoint.GUIDE.mAction);
       registerReceiver(mApiReceiver, filter);
 
-      if (mSpeechCommander != null)
+      if (mSpeechCommander != null) {
          mSpeechCommander.startListening();
-   }
-
-   public int getScreenHeight() {
-      Display display = getWindowManager().getDefaultDisplay();
-      return display.getHeight();
-   }
-
-   public int getScreenWidth() {
-      Display display = getWindowManager().getDefaultDisplay();
-      return display.getWidth();
+      }
    }
 
    public void getGuide(final int guideid) {
@@ -252,9 +245,11 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
       return mIndicator.getHeight();
    }
 
-   public void initSpeechRecognizer() {
-      if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext()))
+   @SuppressWarnings("unused")
+   private void initSpeechRecognizer() {
+      if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext())) {
          return;
+      }
 
       mSpeechCommander = new SpeechCommander(this, PACKAGE_NAME);
 
@@ -265,11 +260,11 @@ public class GuideViewActivity extends SherlockFragmentActivity implements
       });
 
       mSpeechCommander.addCommand(PREVIOUS_COMMAND,
-         new SpeechCommander.Command() {
-            public void performCommand() {
-               previousStep();
-            }
-         });
+       new SpeechCommander.Command() {
+         public void performCommand() {
+            previousStep();
+         }
+      });
 
       mSpeechCommander.addCommand(HOME_COMMAND, new SpeechCommander.Command() {
          public void performCommand() {

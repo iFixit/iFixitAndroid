@@ -39,9 +39,8 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
 
          return introView;
       } else {
-         stepView =
-            new GuideStepViewFragment(mImageManager, mGuide.getStep(position
-               - STEP_OFFSET));
+         stepView = new GuideStepViewFragment(mImageManager,
+          mGuide.getStep(position - STEP_OFFSET));
 
          return stepView;
       }

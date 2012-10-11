@@ -138,7 +138,7 @@ public class MediaFragment extends SherlockFragment implements
             LocalImage cur = localURL.get(url);
             if (cur == null)
                return;
-            cur.imgId = imageinfo.getmImageid();
+            cur.mImgid = imageinfo.getmImageid();
             localURL.put(url, cur);
             mImagesDownloaded++;
             galleryAdapter.invalidatedView();
@@ -209,8 +209,8 @@ public class MediaFragment extends SherlockFragment implements
             (HashMap<String, LocalImage>) savedInstanceState
                .getSerializable(HASH_MAP);
          for (LocalImage li : localURL.values()) {
-            if (li.path.contains(".jpg"))
-               limages.put(li.path, buildBitmap(li.path));
+            if (li.mPath.contains(".jpg"))
+               limages.put(li.mPath, buildBitmap(li.mPath));
          }
       } else {
          mImageList = new UserImageList();
@@ -447,7 +447,7 @@ public class MediaFragment extends SherlockFragment implements
             // check how many images are being uploaded
             int imagesBeingUploaded = 0;
             for (String s : localURL.keySet()) {
-               if (localURL.get(s).imgId == null) {
+               if (localURL.get(s).mImgid == null) {
                   imagesBeingUploaded++;
                }
             }
@@ -609,7 +609,7 @@ public class MediaFragment extends SherlockFragment implements
                itemView.listRef = mImageList.getImages().get(position);
                if (mImageList.getImages().get(position).getKey() != null) {
                   if (localURL.get(mImageList.getImages().get(position)
-                     .getKey()).imgId == null) {
+                     .getKey()).mImgid == null) {
                      itemView.setLoading(true);
                      Log.e(TAG, "image loading!");
                   } else {
@@ -618,7 +618,7 @@ public class MediaFragment extends SherlockFragment implements
                         .get(position)
                         .setImageid(
                            localURL.get(mImageList.getImages().get(position)
-                              .getKey()).imgId);
+                              .getKey()).mImgid);
                      itemView.setLoading(false);
                      Log.e(TAG, "image stoped loading!");
                   }
@@ -820,7 +820,7 @@ public class MediaFragment extends SherlockFragment implements
          if (localURL.get(url) != null) {
             Intent intent =
                new Intent(getActivity(), FullImageViewActivity.class);
-            intent.putExtra(IMAGE_URL, localURL.get(url).path);
+            intent.putExtra(IMAGE_URL, localURL.get(url).mPath);
             intent.putExtra(LOCAL_URL, true);
             startActivity(intent);
          } else {
