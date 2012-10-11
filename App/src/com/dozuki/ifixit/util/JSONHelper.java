@@ -328,6 +328,9 @@ public class JSONHelper {
 
    /**
     * Removes relative a hrefs
+    *
+    * TODO: Update domain with the current site's domain.
+    *
     * @param spantext (from Html.fromhtml())
     * @return spanned with fixed links
     */

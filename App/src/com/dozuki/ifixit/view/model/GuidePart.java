@@ -10,25 +10,6 @@ public class GuidePart implements Serializable {
    protected String mUrl;
    protected String mThumb;
 
-   public GuidePart() {
-      mNote = mThumb = mUrl = mTitle = "";
-   }
-
-   public GuidePart(String title, String url) {
-      mNote = mThumb = "";
-
-      mTitle = title;
-      mUrl = url;
-   }
-
-   public GuidePart(String title, String url, String thumb) {
-      mNote = "";
-
-      mTitle = title;
-      mUrl = url;
-      mThumb = thumb;
-   }
-
    public GuidePart(String title, String url, String thumb, String notes) {
       mNote = notes;
       mTitle = title;

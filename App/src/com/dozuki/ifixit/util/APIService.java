@@ -181,9 +181,8 @@ public class APIService extends Service {
     * Parse the response in the given result with the given requestTarget.
     */
    private Result parseResult(String response, APIEndpoint endpoint) {
-      Object parsedResult = null;
       try {
-         parsedResult = endpoint.parseResult(response);
+         Object parsedResult = endpoint.parseResult(response);
 
          return new Result(response, parsedResult);
       } catch (JSONException e) {
@@ -406,7 +405,7 @@ public class APIService extends Service {
       performAuthenicatedRequest(url, authenicationPackage, file, responder);
    }
 
-   private static void  performAuthenicatedRequest(final String url,
+   private static void performAuthenicatedRequest(final String url,
     final AuthenicationPackage authenicationPackage, final File file,
     final Responder responder) {
       final Handler handler = new Handler() {

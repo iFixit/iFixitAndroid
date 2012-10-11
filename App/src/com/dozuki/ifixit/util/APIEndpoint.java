@@ -190,8 +190,8 @@ public enum APIEndpoint {
       this(url, https, authenticated, action, null, parseResult);
    }
 
-   private APIEndpoint(CreateUrl createUrl, boolean https, boolean authenticated,
-    String action, ParseResult parseResult) {
+   private APIEndpoint(CreateUrl createUrl, boolean https,
+    boolean authenticated, String action, ParseResult parseResult) {
       this(null, https, authenticated, action, createUrl, parseResult);
    }
 
