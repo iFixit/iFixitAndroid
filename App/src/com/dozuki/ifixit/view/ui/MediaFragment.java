@@ -523,7 +523,7 @@ public class MediaFragment extends SherlockFragment implements
          // return;
          // }
          userImageInfo.setGuid(url);
-         userImageInfo.setmImageId(null);
+         userImageInfo.setImageid(null);
          userImageInfo.setKey(key);
          mImageList.addImage(userImageInfo);
          selectedList.add(false);
@@ -540,7 +540,7 @@ public class MediaFragment extends SherlockFragment implements
          UserImageInfo userImageInfo = new UserImageInfo();
          String url = path;
          userImageInfo.setGuid(path);
-         userImageInfo.setmImageId(null);
+         userImageInfo.setImageid(null);
          userImageInfo.setKey(key);
          mImageList.addImage(userImageInfo);
          selectedList.add(false);
@@ -579,24 +579,24 @@ public class MediaFragment extends SherlockFragment implements
          itemView.setLoading(false);
 
          if (mImageList != null) {
-            if (mImageList.getImages().get(position).getmImageId() != null
+            if (mImageList.getImages().get(position).getImageid() != null
                && mImageList.getImages().get(position).getKey() == null) {
                String image =
-                  mImageList.getImages().get(position).getmGuid()
+                  mImageList.getImages().get(position).getGuid()
                      + mImageSizes.getThumb();
                itemView.setImageItem(image, getActivity(), !mImageList
                   .getImages().get(position).getLoaded());
                itemView.listRef = mImageList.getImages().get(position);
                mImageList.getImages().get(position).setLoaded(true);
-               itemView.setTag(mImageList.getImages().get(position).getmGuid());
+               itemView.setTag(mImageList.getImages().get(position).getGuid());
             } else {
                Uri temp =
-                  Uri.parse(mImageList.getImages().get(position).getmGuid());
+                  Uri.parse(mImageList.getImages().get(position).getGuid());
                Bitmap bitmap;
                if (temp.toString().contains(".jpg")) {
                   bitmap =
                      limages.get(mImageList.getImages().get(position)
-                        .getmGuid());
+                        .getGuid());
                } else {
                   bitmap =
                      MediaStore.Images.Thumbnails.getThumbnail(
@@ -616,7 +616,7 @@ public class MediaFragment extends SherlockFragment implements
                      mImageList
                         .getImages()
                         .get(position)
-                        .setmImageId(
+                        .setImageid(
                            localURL.get(mImageList.getImages().get(position)
                               .getKey()).imgId);
                      itemView.setLoading(false);
@@ -697,10 +697,10 @@ public class MediaFragment extends SherlockFragment implements
          if (selectedList.get(i)) {
             selectedList.remove(i);
             deleteQuery +=
-               "imageids[]=" + mImageList.getImages().get(i).getmImageId()
+               "imageids[]=" + mImageList.getImages().get(i).getImageid()
                   + "&";
 
-            if (mImageList.getImages().get(i).getmImageId() == null) {
+            if (mImageList.getImages().get(i).getImageid() == null) {
                {
 
                   Toast.makeText(mContext,

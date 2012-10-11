@@ -5,40 +5,40 @@ import java.io.Serializable;
 public class User implements Serializable {
    private static final long serialVersionUID = 6209686573978334361L;
 
-   String userId;
-   String username;
-   String imageId;
-   String session;
+   private String mUserid;
+   private String mUsername;
+   private String mImageid;
+   private String mSession;
 
    public String getUserId() {
-      return userId;
+      return mUserid;
    }
 
-   public void setUserId(String userId) {
-      this.userId = userId;
+   public void setUserid(String userid) {
+      mUserid = userid;
    }
 
    public String getUsername() {
-      return username;
+      return mUsername;
    }
 
    public void setUsername(String username) {
-      this.username = username;
+      mUsername = username;
    }
 
-   public String getImageId() {
-      return imageId;
+   public String getImageid() {
+      return mImageid;
    }
 
-   public void setImageId(String imageId) {
-      this.imageId = imageId;
+   public void setImageid(String imageid) {
+      mImageid = imageid;
    }
 
    public String getSession() {
-      return session;
+      return mSession;
    }
 
    public void setSession(String session) {
-      this.session = session;
+      mSession = session;
    }
 }

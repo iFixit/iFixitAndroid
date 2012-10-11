@@ -42,17 +42,17 @@ public class UserImageList implements Serializable {
 
       public int compare(UserImageInfo e1, UserImageInfo e2) {
 
-         if (e1.getmImageId() == null && e2.getmImageId() == null)
+         if (e1.getImageid() == null && e2.getImageid() == null)
             return 0;
 
-         if (e1.getmImageId() == null)
+         if (e1.getImageid() == null)
             return 1;
 
-         if (e2.getmImageId() == null)
+         if (e2.getImageid() == null)
             return -1;
 
-         return (int) (Long.parseLong(e1.getmImageId()) - Long.parseLong(e2
-            .getmImageId()));
+         return (int) (Long.parseLong(e1.getImageid()) - Long.parseLong(e2
+            .getImageid()));
 
       }
 
