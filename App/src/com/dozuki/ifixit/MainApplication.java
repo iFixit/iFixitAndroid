@@ -23,7 +23,7 @@ public class MainApplication extends Application {
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
-   private User user;
+   private User mUser;
    private Site mSite;
 
    public MainApplication() {
@@ -154,15 +154,15 @@ public class MainApplication extends Application {
    }
 
    public void setUser(User user) {
-      this.user = user;
+      mUser = user;
    }
 
    public User getUser() {
-      return user;
+      return mUser;
    }
 
    public boolean isUserLoggedIn() {
-      return user != null;
+      return mUser != null;
    }
 
    /**

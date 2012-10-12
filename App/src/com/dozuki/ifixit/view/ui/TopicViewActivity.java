@@ -6,6 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -31,14 +33,13 @@ public class TopicViewActivity extends SherlockFragmentActivity {
 
       if (savedState == null) {
          mTopicView = new TopicViewFragment();
-         FragmentTransaction ft =
-            getSupportFragmentManager().beginTransaction();
+         FragmentTransaction ft = getSupportFragmentManager()
+          .beginTransaction();
          ft.replace(R.id.topic_view_fragment, mTopicView);
          ft.commit();
       } else {
-         mTopicView =
-            (TopicViewFragment) getSupportFragmentManager().findFragmentById(
-               R.id.topic_view_fragment);
+         mTopicView = (TopicViewFragment)getSupportFragmentManager()
+          .findFragmentById(R.id.topic_view_fragment);
       }
 
       mTopicNode = (TopicNode) getIntent().getSerializableExtra(TOPIC_KEY);
@@ -56,11 +57,10 @@ public class TopicViewActivity extends SherlockFragmentActivity {
    }
 
    @Override
-   public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-      com.actionbarsherlock.view.MenuInflater inflater =
-         getSupportMenuInflater();
+   public boolean onCreateOptionsMenu(Menu menu) {
+      MenuInflater inflater = getSupportMenuInflater();
       inflater.inflate(R.menu.menu_bar, menu);
-      MenuItem galleryIcon = menu.findItem(R.id.gallery_button);
+
       return super.onCreateOptionsMenu(menu);
    }
 

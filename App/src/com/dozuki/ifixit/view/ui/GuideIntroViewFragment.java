@@ -43,13 +43,12 @@ public class GuideIntroViewFragment extends SherlockFragment {
       super.onCreate(savedInstanceState);
 
       if (savedInstanceState != null && mGuide == null) {
-         mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+         mGuide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
       }
 
       if (mImageManager == null) {
-         mImageManager =
-            ((MainApplication) getActivity().getApplication())
-               .getImageManager();
+         mImageManager = ((MainApplication)getActivity().getApplication())
+          .getImageManager();
       }
    }
 
@@ -62,16 +61,15 @@ public class GuideIntroViewFragment extends SherlockFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
       Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_intro, container, false);
-      mBoldFont =
-         Typeface.createFromAsset(getActivity().getAssets(),
-            "fonts/Ubuntu-B.ttf");
+      mBoldFont = Typeface.createFromAsset(getActivity().getAssets(),
+       "fonts/Ubuntu-B.ttf");
 
-      mTitle = (TextView) view.findViewById(R.id.guide_title);
-      mIntro = (TextView) view.findViewById(R.id.guide_intro_text);
-      mDifficulty = (TextView) view.findViewById(R.id.guide_difficulty);
-      mAuthor = (TextView) view.findViewById(R.id.guide_author);
-      mTools = (TextView) view.findViewById(R.id.guide_tools);
-      mParts = (TextView) view.findViewById(R.id.guide_parts);
+      mTitle = (TextView)view.findViewById(R.id.guide_title);
+      mIntro = (TextView)view.findViewById(R.id.guide_intro_text);
+      mDifficulty = (TextView)view.findViewById(R.id.guide_difficulty);
+      mAuthor = (TextView)view.findViewById(R.id.guide_author);
+      mTools = (TextView)view.findViewById(R.id.guide_tools);
+      mParts = (TextView)view.findViewById(R.id.guide_parts);
 
       MovementMethod method = LinkMovementMethod.getInstance();
 
@@ -91,27 +89,25 @@ public class GuideIntroViewFragment extends SherlockFragment {
    public void setGuide() {
       mTitle.setText(Html.fromHtml(mGuide.getDisplayTitle()));
       mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
-         .getIntroduction())));
+       .getIntroduction())));
 
       if (!mGuide.getDifficulty().equals("false")) {
-         mDifficulty
-            .setText(getActivity().getString(R.string.difficulty)
-               + ": "
-               + JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
-                  .getDifficulty())));
+         mDifficulty.setText(getActivity().getString(R.string.difficulty) +
+          ": " + JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
+          .getDifficulty())));
       }
 
-      mAuthor.setText(getActivity().getString(R.string.author) + ": "
-         + JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
+      mAuthor.setText(getActivity().getString(R.string.author) + ": " +
+       JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
 
       if (mGuide.getNumTools() != 0) {
          mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(getActivity()
-            .getString(R.string.requiredTools))));
+          .getString(R.string.requiredTools))));
       }
 
       if (mGuide.getNumParts() != 0) {
          mParts.setText(Html.fromHtml(mGuide.getPartsFormatted(getActivity()
-            .getString(R.string.requiredParts))));
+          .getString(R.string.requiredParts))));
       }
    }
 }

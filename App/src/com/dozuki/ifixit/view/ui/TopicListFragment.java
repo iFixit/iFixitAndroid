@@ -21,8 +21,8 @@ import com.dozuki.ifixit.view.model.TopicSelectedListener;
 import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
 import com.ifixit.android.sectionheaders.SectionListView;
 
-public class TopicListFragment extends SherlockFragment implements
-   TopicSelectedListener, OnItemClickListener {
+public class TopicListFragment extends SherlockFragment
+ implements TopicSelectedListener, OnItemClickListener {
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
 
    private TopicSelectedListener topicSelectedListener;
@@ -47,14 +47,13 @@ public class TopicListFragment extends SherlockFragment implements
       if (savedInstanceState != null) {
          mTopic = (TopicNode) savedInstanceState.getSerializable(CURRENT_TOPIC);
       }
-
    }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-      View view =
-         inflater.inflate(R.layout.topic_list_fragment, container, false);
+    Bundle savedInstanceState) {
+      View view = inflater.inflate(R.layout.topic_list_fragment, container,
+       false);
 
       mListView = (SectionListView) view.findViewById(R.id.topicList);
       mListView.getListView().setOnItemClickListener(this);
@@ -90,17 +89,15 @@ public class TopicListFragment extends SherlockFragment implements
 
       if (!mTopic.isRoot()) {
          generalInfo.add(new TopicNode(mTopic.getName()));
-         adapter =
-            new TopicListAdapter(mContext,
-               mContext.getString(R.string.generalInformation), generalInfo);
+         adapter = new TopicListAdapter(mContext, mContext.getString(
+          R.string.generalInformation), generalInfo);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
 
       if (nonLeaves.size() > 0) {
-         adapter =
-            new TopicListAdapter(mContext,
-               mContext.getString(R.string.categories), nonLeaves);
+         adapter = new TopicListAdapter(mContext, mContext.getString(
+          R.string.categories), nonLeaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
@@ -108,8 +105,8 @@ public class TopicListFragment extends SherlockFragment implements
       if (leaves.size() > 0) {
          MainApplication app = (MainApplication)getActivity().getApplication();
 
-         adapter = new TopicListAdapter(mContext,
-          app.getSiteObjectName(), leaves);
+         adapter = new TopicListAdapter(mContext, app.getSiteObjectName(),
+          leaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
@@ -123,7 +120,7 @@ public class TopicListFragment extends SherlockFragment implements
    }
 
    public void onItemClick(AdapterView<?> adapterView, View view, int position,
-      long id) {
+    long id) {
       mTopicAdapter.onItemClick(null, view, position, id);
    }
 
@@ -139,8 +136,8 @@ public class TopicListFragment extends SherlockFragment implements
          topicSelectedListener = (TopicSelectedListener) activity;
          mContext = (Context) activity;
       } catch (ClassCastException e) {
-         throw new ClassCastException(activity.toString()
-            + " must implement TopicSelectedListener");
+         throw new ClassCastException(activity.toString() +
+          " must implement TopicSelectedListener");
       }
    }
 

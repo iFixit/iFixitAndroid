@@ -35,9 +35,8 @@ public class ThumbnailView extends LinearLayout {
    }
 
    private void init(Context context) {
-      LayoutInflater inflater =
-         (LayoutInflater) context
-            .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater)context
+       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       inflater.inflate(R.layout.thumbnail_list, this, true);
 
@@ -74,8 +73,8 @@ public class ThumbnailView extends LinearLayout {
                }
             });
 
-            mImageManager.displayImage(images.get(thumbId).getText()
-               + mImageSizes.getThumb(), (Activity) mContext, thumb);
+            mImageManager.displayImage(images.get(thumbId).getText() +
+             mImageSizes.getThumb(), (Activity) mContext, thumb);
          }
       }
    }
@@ -83,14 +82,14 @@ public class ThumbnailView extends LinearLayout {
    public void setCurrentThumb(String url) {
       mCurrentURL = url;
       mImageManager.displayImage(mCurrentURL + mImageSizes.getMain(),
-         (Activity) mContext, mMainImage);
+       (Activity) mContext, mMainImage);
       mMainImage.setTag(url);
    }
 
    public void setThumbnailDimensions(float height, float width) {
       for (int i = 0; i < mThumbs.size(); i++) {
-         mThumbs.get(i).getLayoutParams().height = (int) (height + .5f);
-         mThumbs.get(i).getLayoutParams().width = (int) (width + .5f);
+         mThumbs.get(i).getLayoutParams().height = (int)(height + .5f);
+         mThumbs.get(i).getLayoutParams().width = (int)(width + .5f);
       }
    }
 

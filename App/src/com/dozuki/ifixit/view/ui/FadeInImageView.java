@@ -9,8 +9,8 @@ import android.widget.ImageView;
 import com.dozuki.ifixit.R;
 
 public class FadeInImageView extends ImageView {
-   Context mContext;
-   boolean mFadeIn;
+   private Context mContext;
+   private boolean mFadeIn;
 
    public FadeInImageView(Context context, AttributeSet attrs) {
       super(context, attrs);
@@ -27,9 +27,10 @@ public class FadeInImageView extends ImageView {
    @Override
    public void setImageBitmap(Bitmap bm) {
       super.setImageBitmap(bm);
-      if (mFadeIn)
+      if (mFadeIn) {
          this.setAnimation(AnimationUtils.loadAnimation(mContext,
-            R.anim.fade_in));
+          R.anim.fade_in));
+      }
    }
 
    public void setFadeIn(boolean fade) {

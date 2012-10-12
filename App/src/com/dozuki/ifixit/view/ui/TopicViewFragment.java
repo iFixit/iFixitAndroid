@@ -27,8 +27,8 @@ import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.TopicNode;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class TopicViewFragment extends SherlockFragment implements
-   ActionBar.TabListener {
+public class TopicViewFragment extends SherlockFragment
+ implements ActionBar.TabListener {
    private static final int GUIDES_TAB = 0;
    private static final int MORE_INFO_TAB = 1;
    private static final int ANSWERS_TAB = 2;
@@ -66,22 +66,21 @@ public class TopicViewFragment extends SherlockFragment implements
       super.onCreate(savedInstanceState);
 
       if (mImageManager == null) {
-         mImageManager =
-            ((MainApplication) getActivity().getApplication())
-               .getImageManager();
+         mImageManager = ((MainApplication)getActivity().getApplication()).
+          getImageManager();
       }
 
       if (mSite == null) {
-         mSite = ((MainApplication)getActivity().getApplication()).
-          getSite();
+         mSite = ((MainApplication)getActivity().getApplication())
+          .getSite();
       }
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
-         mTopicNode =
-            (TopicNode) savedInstanceState.getSerializable(CURRENT_TOPIC_NODE);
-         TopicLeaf topicLeaf =
-            (TopicLeaf) savedInstanceState.getSerializable(CURRENT_TOPIC_LEAF);
+         mTopicNode = (TopicNode)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_NODE);
+         TopicLeaf topicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
+          CURRENT_TOPIC_LEAF);
 
          if (topicLeaf != null) {
             setTopicLeaf(topicLeaf);
@@ -93,9 +92,9 @@ public class TopicViewFragment extends SherlockFragment implements
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
-      View view =
-         inflater.inflate(R.layout.topic_view_fragment, container, false);
+    Bundle savedInstanceState) {
+      View view = inflater.inflate(R.layout.topic_view_fragment, container,
+       false);
 
       return view;
    }
@@ -230,13 +229,12 @@ public class TopicViewFragment extends SherlockFragment implements
       } else if (mActionBar != null) {
          mActionBar.setTitle("");
       }
-
    }
 
    private void displayLoading() {
       mActionBar.removeAllTabs();
-      FragmentTransaction ft =
-         getActivity().getSupportFragmentManager().beginTransaction();
+      FragmentTransaction ft = getActivity().getSupportFragmentManager().
+       beginTransaction();
       ft.replace(R.id.topic_view_page_fragment, new LoadingFragment());
       ft.commit();
    }
@@ -262,8 +260,8 @@ public class TopicViewFragment extends SherlockFragment implements
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      getActivity().startService(
-         APIService.getTopicIntent(getActivity(), topicName));
+      getActivity().startService(APIService.getTopicIntent(getActivity(),
+       topicName));
    }
 
    public TopicLeaf getTopicLeaf() {
@@ -289,8 +287,8 @@ public class TopicViewFragment extends SherlockFragment implements
          if (mTopicLeaf.getGuides().size() == 0) {
             selectedFragment = new NoGuidesFragment();
          } else {
-            selectedFragment =
-               new TopicGuideListFragment(mImageManager, mTopicLeaf);
+            selectedFragment = new TopicGuideListFragment(mImageManager,
+             mTopicLeaf);
          }
          mSelectedTab = GUIDES_TAB;
       } else if (position == ANSWERS_TAB && mSite.mAnswers) {

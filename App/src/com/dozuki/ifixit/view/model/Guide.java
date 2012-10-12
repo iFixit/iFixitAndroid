@@ -63,8 +63,10 @@ public class Guide implements Serializable {
 
    public String getPartsFormatted(String title) {
       String formattedPart = title + ": <br />";
-      for (GuidePart t : mParts)
-         formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() + "</a><br />";
+      for (GuidePart t : mParts) {
+         formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
+          "</a><br />";
+      }
 
       return formattedPart;
    }
