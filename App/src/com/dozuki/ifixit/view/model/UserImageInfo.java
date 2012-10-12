@@ -5,14 +5,14 @@ import java.io.Serializable;
 public class UserImageInfo implements Serializable {
    private static final long serialVersionUID = -6957010569324490644L;
 
-   String mImageId;
-   String mGuid;
-   String mLocalPath;
-   String mLocalKey;
-   String mWidth;
-   String mHeight;
-   String mRatio;
-   boolean mLoaded;
+   private String mImageId;
+   private String mGuid;
+   private String mLocalPath;
+   private String mLocalKey;
+   private String mWidth;
+   private String mHeight;
+   private String mRatio;
+   private boolean mLoaded;
 
    public String getKey() {
       return mLocalKey;
@@ -26,52 +26,52 @@ public class UserImageInfo implements Serializable {
       mLoaded = loaded;
    }
 
-   public String getmImageId() {
+   public String getImageid() {
       return mImageId;
    }
 
-   public void setmImageId(String mImageId) {
-      this.mImageId = mImageId;
+   public void setImageid(String imageid) {
+      mImageId = imageid;
    }
 
    public String getlocalPath() {
       return mLocalPath;
    }
 
-   public void setlocalPath(String mLocal) {
-      mLocalPath = mLocal;
+   public void setlocalPath(String localPath) {
+      mLocalPath = localPath;
    }
 
-   public String getmGuid() {
+   public String getGuid() {
       return mGuid;
    }
 
-   public void setGuid(String mGuid) {
-      this.mGuid = mGuid;
+   public void setGuid(String guid) {
+      mGuid = guid;
    }
 
    public String getWidth() {
       return mWidth;
    }
 
-   public void setWidth(String mWidth) {
-      this.mWidth = mWidth;
+   public void setWidth(String width) {
+      mWidth = width;
    }
 
    public String getHeight() {
       return mHeight;
    }
 
-   public void setHeight(String mHeight) {
-      this.mHeight = mHeight;
+   public void setHeight(String height) {
+      mHeight = height;
    }
 
    public String getRatio() {
       return mRatio;
    }
 
-   public void setRatio(String mRatio) {
-      this.mRatio = mRatio;
+   public void setRatio(String ratio) {
+      mRatio = ratio;
    }
 
    @Override
@@ -83,9 +83,9 @@ public class UserImageInfo implements Serializable {
       if (obj.getClass() != getClass())
          return false;
       UserImageInfo inf = (UserImageInfo) obj;
-      if (this.mImageId == null || inf.mImageId == null)
+      if (mImageId == null || inf.mImageId == null)
          return false;
-      return (inf.mImageId.equals(this.mImageId));
+      return (inf.mImageId.equals(mImageId));
    }
 
    public boolean getLoaded() {

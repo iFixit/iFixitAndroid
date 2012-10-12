@@ -22,12 +22,14 @@ public class GuideWebView extends WebViewClient {
 
       try {
          if (pieces[GUIDE_POSITION].equals(GUIDE_URL)
-            || pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
+          || pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
             guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
             mGuideActivity.viewGuide(guideid);
             return true;
          }
-      } catch (ArrayIndexOutOfBoundsException e) {} catch (NumberFormatException e) {}
+      } catch (ArrayIndexOutOfBoundsException e) {
+      } catch (NumberFormatException e) {
+      }
 
       view.loadUrl(url);
 

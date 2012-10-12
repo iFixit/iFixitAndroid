@@ -7,34 +7,35 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
-import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.User;
 
-public class GalleryActivity extends SherlockFragmentActivity implements
- LoginListener {
+public class GalleryActivity extends SherlockFragmentActivity
+ implements LoginListener {
 
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
    private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
    private static final String FIRST_TIME_USER = "FIRST_TIME_USER";
    private MediaFragment mMediaView;
-   private FrameLayout mTopicViewOverlay;
 
-   private boolean mDualPane;
    private ActionBar mActionBar;
    private boolean mLoginVisible;
    private View mLoginView;
 
+   /**
+    * TODO Are these ever initialized?
+    */
    private MenuItem galleryIcon;
    private MenuItem cameraIcon;
    private MenuItem helpIcon;
-   boolean iconsHidden;
+   private boolean mIconsHidden;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -49,45 +50,38 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
       setContentView(R.layout.gallery);
 
-      mMediaView =
-         (MediaFragment) getSupportFragmentManager().findFragmentById(
-            R.id.gallery_view_fragment);
+      mMediaView = (MediaFragment)getSupportFragmentManager().findFragmentById(
+       R.id.gallery_view_fragment);
       mLoginView = findViewById(R.id.login_fragment);
-      LoginFragment mLogin =
-         (LoginFragment) getSupportFragmentManager().findFragmentByTag(
-            LOGIN_FRAGMENT);
-      // mTopicViewOverlay = (FrameLayout)
-      // findViewById(R.id.gallery_view_overlay);
-      // mHideTopicList = mTopicViewOverlay != null;
-      mDualPane = mTopicViewOverlay != null;
+      LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
+       findFragmentByTag(LOGIN_FRAGMENT);
 
       SharedPreferences preferenceFile;
-      if (((MainApplication) this.getApplication()).getUser() == null) {
-         preferenceFile =
-            this.getSharedPreferences(LoginFragment.PREFERENCE_FILE,
-               MODE_PRIVATE);
+      if (((MainApplication)this.getApplication()).getUser() == null) {
+         preferenceFile = this.getSharedPreferences(
+          LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
          User user = new User();
-         String session =
-            preferenceFile.getString(LoginFragment.SESSION_KEY, null);
-         String username =
-            preferenceFile.getString(LoginFragment.USERNAME_KEY, null);
+         String session = preferenceFile.getString(LoginFragment.SESSION_KEY,
+          null);
+         String username = preferenceFile.getString(LoginFragment.USERNAME_KEY,
+          null);
+
          if (session != null) {
             user.setSession(session);
             user.setUsername(username);
             mLoginView.setVisibility(View.INVISIBLE);
-            ((MainApplication) this.getApplication()).setUser(user);
+            ((MainApplication)getApplication()).setUser(user);
             mMediaView.onLogin(user);
-            iconsHidden = false;
+            mIconsHidden = false;
             supportInvalidateOptionsMenu();
          } else {
-            iconsHidden = true;
+            mIconsHidden = true;
             if (mLogin == null) {
                displayLogin();
             }
          }
       } else {
-         mMediaView
-            .onLogin(((MainApplication) this.getApplication()).getUser());
+         mMediaView.onLogin(((MainApplication)getApplication()).getUser());
       }
 
       LoginFragment.clearLoginListeners();
@@ -95,50 +89,31 @@ public class GalleryActivity extends SherlockFragmentActivity implements
       LoginFragment.registerOnLoginListener(mMediaView);
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
    }
 
    private void displayLogin() {
-
-      // hideMenuBarIcons();
-      iconsHidden = true;
+      mIconsHidden = true;
       supportInvalidateOptionsMenu();
 
       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
       int inAnim, outAnim;
       LoginFragment fg = new LoginFragment();;
-      // mLoginVisible = true;
 
       inAnim = R.anim.fade_in;
       outAnim = R.anim.fade_out;
 
       ft.setCustomAnimations(inAnim, outAnim);
-      if (mDualPane) {
-         ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
-      } else {
-         ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
-      }
+      ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
       ft.addToBackStack(null);
       ft.commitAllowingStateLoss();
-
    }
 
    @Override
    public void onResume() {
       super.onResume();
-      if (((MainApplication) this.getApplication()).getUser() == null)
+
+      if (((MainApplication)getApplication()).getUser() == null) {
          hideMenuBarIcons();
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      try {
-
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
       }
    }
 
@@ -146,11 +121,6 @@ public class GalleryActivity extends SherlockFragmentActivity implements
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
       outState.putBoolean(LOGIN_VISIBLE, mLoginVisible);
-
-   }
-
-   public void onBackStackChanged() {
-
    }
 
    @Override
@@ -160,19 +130,25 @@ public class GalleryActivity extends SherlockFragmentActivity implements
             finish();
             return true;
          case R.id.top_camera_button:
-            if (((MainApplication) this.getApplication()).getUser() == null)
+            if (((MainApplication)getApplication()).getUser() == null) {
                return false;
+            }
+
             mMediaView.launchCamera();
             return true;
          case R.id.top_gallery_button:
-            if (((MainApplication) this.getApplication()).getUser() == null)
+            if (((MainApplication)getApplication()).getUser() == null) {
                return false;
+            }
+
             mMediaView.launchGallery();
             return true;
          case R.id.top_question_button:
-            if (((MainApplication) this.getApplication()).getUser() == null)
+            if (((MainApplication)getApplication()).getUser() == null) {
                return false;
-            mMediaView.createHelpDialog(this).show();
+            }
+
+            MediaFragment.createHelpDialog(this).show();
             return true;
          default:
             return super.onOptionsItemSelected(item);
@@ -180,63 +156,46 @@ public class GalleryActivity extends SherlockFragmentActivity implements
    }
 
    @Override
-   protected void onDestroy() {
-      super.onDestroy();
-   }
-
-   @Override
    public void onLogin(User user) {
-      iconsHidden = false;
+      mIconsHidden = false;
       supportInvalidateOptionsMenu();
 
       getSupportFragmentManager().popBackStack();
       mLoginView.setVisibility(View.INVISIBLE);
 
-      SharedPreferences preferenceFile =
-         this.getSharedPreferences(LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
+      SharedPreferences preferenceFile = getSharedPreferences(
+       LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
       boolean firstTimeUser = preferenceFile.getBoolean(FIRST_TIME_USER, true);
 
       if (firstTimeUser) {
-         mMediaView.createHelpDialog(this).show();
-         Editor e = preferenceFile.edit();
-         e.putBoolean(FIRST_TIME_USER, false);
-         e.commit();
+         MediaFragment.createHelpDialog(this).show();
+         Editor editor = preferenceFile.edit();
+         editor.putBoolean(FIRST_TIME_USER, false);
+         editor.commit();
       }
-
    }
 
    @Override
    public void onLogout() {
+      final SharedPreferences prefs = getSharedPreferences(
+       LoginFragment.PREFERENCE_FILE, Context.MODE_WORLD_READABLE);
 
-      final SharedPreferences prefs =
-         this.getSharedPreferences(LoginFragment.PREFERENCE_FILE,
-            Context.MODE_WORLD_READABLE);
       Editor editor = prefs.edit();
       editor.remove(LoginFragment.SESSION_KEY);
       editor.remove(LoginFragment.USERNAME_KEY);
       editor.commit();
-      ((MainApplication) this.getApplication()).setUser(null);
-      finish();
+      ((MainApplication)getApplication()).setUser(null);
 
+      finish();
    }
 
    @Override
-   public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
-      if (!iconsHidden) {
+   public boolean onCreateOptionsMenu(Menu menu) {
+      if (!mIconsHidden) {
          com.actionbarsherlock.view.MenuInflater inflater =
-            getSupportMenuInflater();
+          getSupportMenuInflater();
          inflater.inflate(R.menu.gallery_menu, menu);
-      }// else
-       // {
-
-      // galleryIcon = menu
-      // / .findItem(R.id.top_gallery_button);
-      // cameraIcon = menu.findItem(R.id.top_camera_button);
-      // helpIcon = menu.findItem(R.id.top_question_button);
-
-      // if(iconsHidden)
-      // supportInvalidateOptionsMenu();
-      // else*/
+      }
 
       return super.onCreateOptionsMenu(menu);
    }

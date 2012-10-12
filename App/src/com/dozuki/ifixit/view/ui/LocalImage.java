@@ -5,17 +5,16 @@ import java.io.Serializable;
 public class LocalImage implements Serializable {
    private static final long serialVersionUID = 1L;
 
-   String imgId;
-   String path;
+   public String mImgid;
+   public String mPath;
 
-   public LocalImage(String id, String p) {
-      imgId = id;
-      path = p;
+   public LocalImage(String imgid, String path) {
+      mImgid = imgid;
+      mPath = path;
    }
 
-   public LocalImage(String p) {
-      path = p;
-      imgId = null;
+   public LocalImage(String path) {
+      this(null, path);
    }
 
    @Override
@@ -28,6 +27,6 @@ public class LocalImage implements Serializable {
          return false;
       LocalImage inf = (LocalImage) obj;
 
-      return (inf.path.equals(this.path));
+      return inf.mPath.equals(this.mPath);
    }
 }

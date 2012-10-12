@@ -263,7 +263,7 @@ public class JSONHelper {
    public static UserImageInfo parseUserImageInfo(JSONObject jImage) {
       try {
          UserImageInfo userImageInfo = new UserImageInfo();
-         userImageInfo.setmImageId(jImage.getString("imageid"));
+         userImageInfo.setImageid(jImage.getString("imageid"));
          userImageInfo.setGuid(jImage.getString("guid"));
          userImageInfo.setHeight(jImage.getString("height"));
          userImageInfo.setWidth(jImage.getString("width"));
@@ -301,9 +301,9 @@ public class JSONHelper {
       JSONObject jUser = new JSONObject(json);
 
       User user = new User();
-      user.setUserId(jUser.getString("userid"));
+      user.setUserid(jUser.getString("userid"));
       user.setUsername(jUser.getString("username"));
-      user.setImageId(jUser.getString("imageid"));
+      user.setImageid(jUser.getString("imageid"));
       user.setSession(jUser.getString("session"));
 
       return user;
@@ -328,6 +328,9 @@ public class JSONHelper {
 
    /**
     * Removes relative a hrefs
+    *
+    * TODO: Update domain with the current site's domain.
+    *
     * @param spantext (from Html.fromhtml())
     * @return spanned with fixed links
     */

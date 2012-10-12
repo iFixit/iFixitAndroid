@@ -36,7 +36,8 @@ public class GuideStepLineView extends LinearLayout {
       int iconRes, bulletRes;
 
       mStepText = (TextView) findViewById(R.id.step_text);
-      mStepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(line.getText())));
+      mStepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
+       line.getText())));
       mStepText.setMovementMethod(LinkMovementMethod.getInstance());
 
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
@@ -47,8 +48,8 @@ public class GuideStepLineView extends LinearLayout {
        MARGIN);
       mRow.setLayoutParams(layoutParams);
 
-      mBulletView = (ImageView) findViewById(R.id.bullet);
-      bulletRes = this.getBulletResource(line.getColor());
+      mBulletView = (ImageView)findViewById(R.id.bullet);
+      bulletRes = getBulletResource(line.getColor());
       mBulletView.setImageResource(bulletRes);
       mBulletView.setLayoutParams(new LinearLayout.LayoutParams(
        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
@@ -56,11 +57,11 @@ public class GuideStepLineView extends LinearLayout {
       mIconView = (ImageView) findViewById(R.id.bullet_icon);
 
       if (line.hasIcon()) {
-         if (line.getColor().compareTo("icon_reminder") == 0) {
+         if (line.getColor().equals("icon_reminder")) {
             iconRes = R.drawable.icon_reminder;
-         } else if (line.getColor().compareTo("icon_caution") == 0) {
+         } else if (line.getColor().equals("icon_caution")) {
             iconRes = R.drawable.icon_caution;
-         } else if (line.getColor().compareTo("icon_note") == 0) {
+         } else if (line.getColor().equals("icon_note")) {
             iconRes = R.drawable.icon_note;
          } else {
             Log.e("setLine", "Step icon resource not there");
@@ -79,24 +80,25 @@ public class GuideStepLineView extends LinearLayout {
    public int getBulletResource(String color) {
       int iconRes;
 
-      if (color.equals("black"))
+      if (color.equals("black")) {
          iconRes = R.drawable.bullet_black;
-      else if (color.equals("orange"))
+      } else if (color.equals("orange")) {
          iconRes = R.drawable.bullet_orange;
-      else if (color.equals("blue"))
+      } else if (color.equals("blue")) {
          iconRes = R.drawable.bullet_blue;
-      else if (color.equals("purple"))
+      } else if (color.equals("purple")) {
          iconRes = R.drawable.bullet_purple;
-      else if (color.equals("red"))
+      } else if (color.equals("red")) {
          iconRes = R.drawable.bullet_red;
-      else if (color.equals("teal"))
+      } else if (color.equals("teal")) {
          iconRes = R.drawable.bullet_teal;
-      else if (color.equals("white"))
+      } else if (color.equals("white")) {
          iconRes = R.drawable.bullet_white;
-      else if (color.equals("yellow"))
+      } else if (color.equals("yellow")) {
          iconRes = R.drawable.bullet_yellow;
-      else
+      } else {
          iconRes = R.drawable.bullet_black;
+      }
 
       return iconRes;
    }

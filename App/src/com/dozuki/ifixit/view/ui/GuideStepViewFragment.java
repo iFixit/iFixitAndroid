@@ -85,7 +85,8 @@ public class GuideStepViewFragment extends SherlockFragment {
                return;
             }
 
-            Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+            Intent intent = new Intent(getActivity(),
+             FullImageViewActivity.class);
             intent.putExtra(IMAGE_URL, url);
 
             startActivity(intent);
@@ -96,7 +97,7 @@ public class GuideStepViewFragment extends SherlockFragment {
       mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);
       
       // Resize and fit thumbnails and main image to available screen space
-      this.fitImagesToSpace();
+      fitImagesToSpace();
     
       mThumbs.setMainImage(mMainImage);
       
@@ -143,9 +144,7 @@ public class GuideStepViewFragment extends SherlockFragment {
          // Screen height minus everything else that occupies horizontal space
          thumbnailWidth = (screenWidth - width - padding);
          thumbnailHeight = thumbnailWidth * (3f/4f);
-
       } else {
-         
          int actionBarHeight = resources.getDimensionPixelSize(
           com.actionbarsherlock.R.dimen.abs__action_bar_default_height);         
          int indicatorHeight = ((GuideViewActivity)context).getIndicatorHeight();
@@ -169,14 +168,14 @@ public class GuideStepViewFragment extends SherlockFragment {
          width = height * (4f/3f);
 
          // Screen height minus everything else that occupies vertical space
-         thumbnailHeight = (screenHeight - height - actionBarHeight - padding 
-          - indicatorHeight);
+         thumbnailHeight = (screenHeight - height - actionBarHeight - padding -
+          indicatorHeight);
          thumbnailWidth = (thumbnailHeight * (4f/3f));
       }
 
       // Set the width and height of the main image
-      mMainImage.getLayoutParams().height = (int) (height + .5f);
-      mMainImage.getLayoutParams().width = (int) (width + .5f);
+      mMainImage.getLayoutParams().height = (int)(height + .5f);
+      mMainImage.getLayoutParams().width = (int)(width + .5f);
 
       mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
    }

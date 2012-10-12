@@ -43,6 +43,9 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    static ArrayList<LoginListener> loginListeners =
       new ArrayList<LoginListener>();
 
+   /**
+    * TODO: All of these need to start with 'm' e.g. 'mLogin'
+    */
    private Context mContext;
    private ImageButton _login;
    private ImageButton _register;
@@ -182,6 +185,10 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    }
 
    private void setState() {
+      /**
+       * TODO This is super ugly. Can you wrap all of these elements in a
+       * single layout that you hide/show?
+       */
       _errorText.setVisibility(View.GONE);
       if (readyForRegisterState) {
          _errorText.setVisibility(View.GONE);
