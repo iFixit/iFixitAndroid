@@ -38,6 +38,20 @@ public class MainApplication extends Application {
    }
 
    /**
+    * Returns the site title that should be displayed in the ActionBar.
+    * Returns an empty string if this isn't the Dozuki app. This is
+    * because the custom app will have a nice logo and shouldn't have a text
+    * title displayed.
+    */
+   public String getSiteDisplayTitle() {
+      if (CURRENT_SITE.equals("SITE_dozuki")) {
+         return getSite().mTitle;
+      } else {
+         return "";
+      }
+   }
+
+   /**
     * Returns the resource id for the current site's theme.
     */
    public int getSiteTheme() {

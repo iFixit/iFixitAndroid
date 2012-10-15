@@ -63,8 +63,8 @@ public class TopicsActivity extends SherlockFragmentActivity implements
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication)getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication)getApplication())
-       .getSite().mTitle);
+      getSupportActionBar().setTitle(((MainApplication)getApplication()).
+       getSiteDisplayTitle());
 
       super.onCreate(savedInstanceState);
 
