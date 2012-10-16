@@ -52,6 +52,7 @@ public class GalleryActivity extends SherlockFragmentActivity
 
       mMediaView = (MediaFragment)getSupportFragmentManager().findFragmentById(
        R.id.gallery_view_fragment);
+      mMediaView.noImagesText.setVisibility(View.GONE);
       mLoginView = findViewById(R.id.login_fragment);
       LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
        findFragmentByTag(LOGIN_FRAGMENT);

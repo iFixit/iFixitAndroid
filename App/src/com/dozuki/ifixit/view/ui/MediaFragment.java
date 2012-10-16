@@ -91,7 +91,7 @@ public class MediaFragment extends SherlockFragment implements
    RelativeLayout mButtons;
    MediaAdapter galleryAdapter;
    TextView loginText;
-   TextView noImagesText;
+   public TextView noImagesText;
    String userName;
    private ImageManager mImageManager;
    private static ArrayList<Boolean> selectedList;
@@ -125,6 +125,7 @@ public class MediaFragment extends SherlockFragment implements
                noImagesText.setVisibility(View.GONE);
             } else {
                mLastPage = true;
+               noImagesText.setVisibility(View.VISIBLE);
             }
             nextPageRequestInProgress = false;
          } else if (intent.getAction()
