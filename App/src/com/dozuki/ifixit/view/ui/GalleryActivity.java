@@ -57,32 +57,18 @@ public class GalleryActivity extends SherlockFragmentActivity
       LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
        findFragmentByTag(LOGIN_FRAGMENT);
 
-      if (((MainApplication)this.getApplication()).getUser() == null) {
-         //preferenceFile = this.getSharedPreferences(
-        //  LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
-        // User user = new User();
-        // String session = preferenceFile.getString(LoginFragment.SESSION_KEY,
-        //  null);
-       //  String username = preferenceFile.getString(LoginFragment.USERNAME_KEY,
-       //   null);
-
-         if (((MainApplication)this.getApplication()).getUserFromPreferenceFile() != null) {
-           // user.setSession(session);
-          //  user.setUsername(username);
-        	User user = ((MainApplication)this.getApplication()).getUserFromPreferenceFile();
-            mLoginView.setVisibility(View.INVISIBLE);
-            ((MainApplication)getApplication()).setUser(user);
-            mMediaView.onLogin(user);
-            mIconsHidden = false;
-            supportInvalidateOptionsMenu();
-         } else {
-            mIconsHidden = true;
-            if (mLogin == null) {
-               displayLogin();
-            }
-         }
+      if (((MainApplication)this.getApplication()).getUserFromPreferenceFile() != null) {
+      User user = ((MainApplication)this.getApplication()).getUserFromPreferenceFile();
+      mLoginView.setVisibility(View.INVISIBLE);
+      ((MainApplication)getApplication()).setUser(user);
+      mMediaView.onLogin(user);
+      mIconsHidden = false;
+      supportInvalidateOptionsMenu();
       } else {
-         mMediaView.onLogin(((MainApplication)getApplication()).getUser());
+         mIconsHidden = true;
+         if (mLogin == null) {
+            displayLogin();
+         }
       }
 
       LoginFragment.clearLoginListeners();
