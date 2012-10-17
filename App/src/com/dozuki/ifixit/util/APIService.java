@@ -183,7 +183,6 @@ public class APIService extends Service {
    private Result parseResult(String response, APIEndpoint endpoint) {
       try {
          Object parsedResult = endpoint.parseResult(response);
-
          return new Result(response, parsedResult);
       } catch (JSONException e) {
          return new Result(Error.PARSE);

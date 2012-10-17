@@ -260,8 +260,7 @@ public class JSONHelper {
       return userImageList;
    }
 
-   public static UserImageInfo parseUserImageInfo(JSONObject jImage) {
-      try {
+   public static UserImageInfo parseUserImageInfo(JSONObject jImage) throws JSONException {
          UserImageInfo userImageInfo = new UserImageInfo();
          userImageInfo.setImageid(jImage.getString("imageid"));
          userImageInfo.setGuid(jImage.getString("guid"));
@@ -270,15 +269,9 @@ public class JSONHelper {
          userImageInfo.setRatio(jImage.getString("ratio"));
 
          return userImageInfo;
-      } catch (JSONException e) {
-         Log.e("iFixit", "Error parsing guide info: " + e);
-         return null;
-      }
-
    }
 
-   public static UploadedImageInfo parseUploadedImageInfo(String image) {
-      try {
+   public static UploadedImageInfo parseUploadedImageInfo(String image) throws JSONException {
          JSONObject jImage = new JSONObject(image);
 
          UploadedImageInfo userImageInfo = new UploadedImageInfo();
@@ -286,11 +279,6 @@ public class JSONHelper {
          userImageInfo.setmGuid(jImage.getString("guid"));
 
          return userImageInfo;
-      } catch (JSONException e) {
-         Log.e("iFixit", "Error parsing guide info: " + e);
-         return null;
-      }
-
    }
 
    /**
