@@ -80,9 +80,6 @@ public class TopicsActivity extends SherlockFragmentActivity
          mTopicListVisible = true;
       }
 
-      if (mRootTopic == null) {
-         fetchCategories();
-      }
 
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
@@ -120,6 +117,11 @@ public class TopicsActivity extends SherlockFragmentActivity
       IntentFilter filter = new IntentFilter();
       filter.addAction(APIEndpoint.CATEGORIES.mAction);
       registerReceiver(mApiReceiver, filter);
+      //when this is activity is paused, before categories returned, they
+      //will never be listed on resume.
+      if (mRootTopic == null) {
+          fetchCategories();
+       }
    }
 
    @Override
