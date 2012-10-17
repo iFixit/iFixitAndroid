@@ -55,9 +55,6 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
    static final int OPEN_ID_RESULT_CODE = 4;
    static final String LOGIN_STATE = "LOGIN_STATE";
-   static final String PREFERENCE_FILE = "PREFERENCE_FILES";
-   static final String SESSION_KEY = "SESSION_KEY";
-   static final String USERNAME_KEY = "USERNAME_KEY";
 
    private EditText _loginId;
    private EditText _password;
@@ -77,14 +74,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       public void onSuccess(Object result, Intent intent) {
          User lUser = (User)result;
          ((MainApplication) ((Activity) mContext).getApplication())
-            .setUser(lUser);
-         final SharedPreferences prefs =
-            mContext.getSharedPreferences(PREFERENCE_FILE,
-               Context.MODE_WORLD_READABLE);
-         Editor editor = prefs.edit();
-         editor.putString(SESSION_KEY, lUser.getSession());
-         editor.putString(USERNAME_KEY, lUser.getUsername());
-         editor.commit();
+            .setUserToPreferenceFile(lUser);
+      
          for (LoginListener l : loginListeners) {
             l.onLogin(lUser);
          }

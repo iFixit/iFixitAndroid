@@ -3,6 +3,8 @@ package com.dozuki.ifixit;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
@@ -14,12 +16,16 @@ import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.User;
+import com.dozuki.ifixit.view.ui.LoginFragment;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
    public static final String CURRENT_SITE = "SITE_ifixit";
+   public static final String PREFERENCE_FILE = "PREFERENCE_FILES";
+   static final String SESSION_KEY = "SESSION_KEY";
+   static final String USERNAME_KEY = "USERNAME_KEY";
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
@@ -134,7 +140,7 @@ public class MainApplication extends Application {
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {
          WindowManager wm = (WindowManager)getSystemService(
-          Context.WINDOW_SERVICE);
+         Context.WINDOW_SERVICE);
          DisplayMetrics metrics = new DisplayMetrics();
          wm.getDefaultDisplay().getMetrics(metrics);
          int maxDimension = Math.max(metrics.heightPixels,
@@ -160,6 +166,19 @@ public class MainApplication extends Application {
    public User getUser() {
       return mUser;
    }
+   
+   public User getUserFromPreferenceFile() {
+      SharedPreferences preferenceFile = this.getSharedPreferences(
+				PREFERENCE_FILE, MODE_PRIVATE);
+      String session = preferenceFile.getString(SESSION_KEY +  mSite, null);
+      String username = preferenceFile.getString(USERNAME_KEY+ mSite, null);
+      if(username != null && session != null) {
+         mUser= new User();
+         mUser.setSession(session);
+         mUser.setUsername(username);
+      }
+      return mUser;
+	}
 
    public boolean isUserLoggedIn() {
       return mUser != null;
@@ -173,5 +192,25 @@ public class MainApplication extends Application {
       String siteName = CURRENT_SITE.replace("SITE_", "");
 
       return Site.getSite(siteName);
+   }
+
+   public void setUserToPreferenceFile(User user) {
+      final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
+				Context.MODE_WORLD_READABLE);
+	  Editor editor = prefs.edit();
+	  editor.putString(SESSION_KEY + mSite, user.getSession());
+      editor.putString(USERNAME_KEY + mSite, user.getUsername());
+      editor.commit();
+	  mUser = user;
+	}
+	
+   public void clearUserFromPreferenceFile() {
+      final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
+						Context.MODE_WORLD_READABLE);
+      Editor editor = prefs.edit();
+      editor.remove(SESSION_KEY + mSite);
+      editor.remove(USERNAME_KEY + mSite);
+	  editor.commit();
+      mUser = null;
    }
 }

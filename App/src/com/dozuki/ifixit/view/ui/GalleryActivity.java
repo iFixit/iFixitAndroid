@@ -57,19 +57,19 @@ public class GalleryActivity extends SherlockFragmentActivity
       LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
        findFragmentByTag(LOGIN_FRAGMENT);
 
-      SharedPreferences preferenceFile;
       if (((MainApplication)this.getApplication()).getUser() == null) {
-         preferenceFile = this.getSharedPreferences(
-          LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
-         User user = new User();
-         String session = preferenceFile.getString(LoginFragment.SESSION_KEY,
-          null);
-         String username = preferenceFile.getString(LoginFragment.USERNAME_KEY,
-          null);
+         //preferenceFile = this.getSharedPreferences(
+        //  LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
+        // User user = new User();
+        // String session = preferenceFile.getString(LoginFragment.SESSION_KEY,
+        //  null);
+       //  String username = preferenceFile.getString(LoginFragment.USERNAME_KEY,
+       //   null);
 
-         if (session != null) {
-            user.setSession(session);
-            user.setUsername(username);
+         if (((MainApplication)this.getApplication()).getUserFromPreferenceFile() != null) {
+           // user.setSession(session);
+          //  user.setUsername(username);
+        	User user = ((MainApplication)this.getApplication()).getUserFromPreferenceFile();
             mLoginView.setVisibility(View.INVISIBLE);
             ((MainApplication)getApplication()).setUser(user);
             mMediaView.onLogin(user);
@@ -165,7 +165,7 @@ public class GalleryActivity extends SherlockFragmentActivity
       mLoginView.setVisibility(View.INVISIBLE);
 
       SharedPreferences preferenceFile = getSharedPreferences(
-       LoginFragment.PREFERENCE_FILE, MODE_PRIVATE);
+    		  MainApplication.PREFERENCE_FILE, MODE_PRIVATE);
       boolean firstTimeUser = preferenceFile.getBoolean(FIRST_TIME_USER, true);
 
       if (firstTimeUser) {
@@ -178,15 +178,7 @@ public class GalleryActivity extends SherlockFragmentActivity
 
    @Override
    public void onLogout() {
-      final SharedPreferences prefs = getSharedPreferences(
-       LoginFragment.PREFERENCE_FILE, Context.MODE_WORLD_READABLE);
-
-      Editor editor = prefs.edit();
-      editor.remove(LoginFragment.SESSION_KEY);
-      editor.remove(LoginFragment.USERNAME_KEY);
-      editor.commit();
-      ((MainApplication)getApplication()).setUser(null);
-
+      ((MainApplication)getApplication()).clearUserFromPreferenceFile();
       finish();
    }
 
