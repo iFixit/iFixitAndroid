@@ -16,7 +16,6 @@ import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.view.model.User;
-import com.dozuki.ifixit.view.ui.LoginFragment;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MainApplication extends Application {
@@ -170,8 +169,9 @@ public class MainApplication extends Application {
    public User getUserFromPreferenceFile() {
       SharedPreferences preferenceFile = this.getSharedPreferences(
 				PREFERENCE_FILE, MODE_PRIVATE);
-      String session = preferenceFile.getString(SESSION_KEY +  mSite, null);
-      String username = preferenceFile.getString(USERNAME_KEY+ mSite, null);
+      String session = preferenceFile.getString(SESSION_KEY +   mSite.mName, null);
+      String username = preferenceFile.getString(USERNAME_KEY+  mSite.mName, null);
+      mUser = null;
       if(username != null && session != null) {
          mUser= new User();
          mUser.setSession(session);
@@ -198,8 +198,8 @@ public class MainApplication extends Application {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
 				Context.MODE_WORLD_READABLE);
 	  Editor editor = prefs.edit();
-	  editor.putString(SESSION_KEY + mSite, user.getSession());
-      editor.putString(USERNAME_KEY + mSite, user.getUsername());
+	  editor.putString(SESSION_KEY +  mSite.mName, user.getSession());
+      editor.putString(USERNAME_KEY +  mSite.mName, user.getUsername());
       editor.commit();
 	  mUser = user;
 	}
@@ -208,8 +208,8 @@ public class MainApplication extends Application {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
 						Context.MODE_WORLD_READABLE);
       Editor editor = prefs.edit();
-      editor.remove(SESSION_KEY + mSite);
-      editor.remove(USERNAME_KEY + mSite);
+      editor.remove(SESSION_KEY +  mSite.mName);
+      editor.remove(USERNAME_KEY +  mSite.mName);
 	  editor.commit();
       mUser = null;
    }

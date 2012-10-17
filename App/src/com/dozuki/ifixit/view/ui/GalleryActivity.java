@@ -42,6 +42,7 @@ public class GalleryActivity extends SherlockFragmentActivity
       // setTheme(((MainApplication)getApplication()).getSiteTheme());
       // getSupportActionBar().setTitle(((MainApplication)getApplication())
       // .getSite().mTitle);
+      ((MainApplication)this.getApplication()).getUserFromPreferenceFile();
 
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
