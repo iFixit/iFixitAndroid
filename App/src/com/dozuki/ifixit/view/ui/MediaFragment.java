@@ -580,6 +580,7 @@ public class MediaFragment extends SherlockFragment implements
          itemView.setLoading(false);
 
          if (mImageList != null) {
+        	 //image was pulled from the server
             if (mImageList.getImages().get(position).getImageid() != null
                && mImageList.getImages().get(position).getKey() == null) {
                String image =
@@ -590,14 +591,17 @@ public class MediaFragment extends SherlockFragment implements
                itemView.listRef = mImageList.getImages().get(position);
                mImageList.getImages().get(position).setLoaded(true);
                itemView.setTag(mImageList.getImages().get(position).getGuid());
+             //image was added locally
             } else {
                Uri temp =
                   Uri.parse(mImageList.getImages().get(position).getGuid());
                Bitmap bitmap;
+               //camera image
                if (temp.toString().contains(".jpg")) {
                   bitmap =
                      limages.get(mImageList.getImages().get(position)
                         .getGuid());
+               //gallery image
                } else {
                   bitmap =
                      MediaStore.Images.Thumbnails.getThumbnail(
@@ -611,8 +615,9 @@ public class MediaFragment extends SherlockFragment implements
                if (mImageList.getImages().get(position).getKey() != null) {
                   if (localURL.get(mImageList.getImages().get(position)
                      .getKey()).mImgid == null) {
+                	  //Has not received an imageID so is still uploading
                      itemView.setLoading(true);
-                     Log.e(TAG, "image loading!");
+                     Log.i(TAG, "image loading!");
                   } else {
                      mImageList
                         .getImages()
@@ -621,7 +626,7 @@ public class MediaFragment extends SherlockFragment implements
                            localURL.get(mImageList.getImages().get(position)
                               .getKey()).mImgid);
                      itemView.setLoading(false);
-                     Log.e(TAG, "image stoped loading!");
+                     Log.i(TAG, "image stoped loading!");
                   }
                }
                itemView.setTag(mImageList.getImages().get(position).getKey());
