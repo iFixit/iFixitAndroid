@@ -85,7 +85,6 @@ public class APIService extends Service {
    }
 
    private static final String RESPONSE = "RESPONSE";
-   private static final String API_DOMAIN = ".ifixit.com";
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
 	private static final String REQUEST_AUTHENICATION_PACKAGE =
@@ -434,7 +433,7 @@ public class APIService extends Service {
 
             try {
                helper.performPostWithSessionCookie(url, null, null,
-                authenicationPackage.session, API_DOMAIN, header, params, file);
+                authenicationPackage.session, mSite.getDomainForCookie(), header, params, file);
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
             }

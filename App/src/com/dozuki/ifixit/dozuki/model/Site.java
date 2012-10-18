@@ -35,6 +35,10 @@ public class Site implements Serializable {
       return EditDistance.editDistance(mName, query) <= (mName.length() / 2);
    }
 
+   public String getDomainForCookie() {
+      return "." + mDomain;
+   }
+
    public String toString() {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
