@@ -409,8 +409,9 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
                         dialog.cancel();
                      }
                   });
-
-      return builder.create();
+      AlertDialog d = builder.create();
+      d.setCancelable(false);
+      return d;
    }
 
    public static void clearLoginListeners() {
