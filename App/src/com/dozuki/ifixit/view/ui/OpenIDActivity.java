@@ -11,18 +11,19 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.dozuki.model.Site;
 
 public class OpenIDActivity extends Activity {
-   public static String BASE_OPENID_URL =
-      "https://www.ifixit.com/Guide/login/openid?host=";
-
    public static String LOGIN_METHOD = "LOGIN_METHOD";
 
    public static String YAHOO_LOGIN = "yahoo";
    public static String GOOGLE_LOGIN = "google";
 
-   WebView _webView;
+   private WebView _webView;
+   private String mBaseUrl;
+   private Site mSite;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -30,6 +31,9 @@ public class OpenIDActivity extends Activity {
       setContentView(R.layout.open_id_view);
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
       Bundle extras = this.getIntent().getExtras();
+
+      mSite = ((MainApplication)getApplication()).getSite();
+      mBaseUrl = mSite.getOpenIdLoginUrl();
 
       final String method = extras.getString(LOGIN_METHOD);
 
@@ -39,7 +43,7 @@ public class OpenIDActivity extends Activity {
       CookieSyncManager.getInstance().sync();
       CookieManager.getInstance().removeAllCookie();
 
-      _webView.loadUrl(BASE_OPENID_URL + method);
+      _webView.loadUrl(mBaseUrl + method);
       _webView.getSettings().setJavaScriptEnabled(true);
 
       _webView.setWebChromeClient(new WebChromeClient() {
@@ -58,7 +62,7 @@ public class OpenIDActivity extends Activity {
       });
 
       // CookieSyncManager.getInstance().sync();
-      // CookieManager.getInstance().setCookie(BASE_OPENID_URL+method,
+      // CookieManager.getInstance().setCookie(mBaseUrl+method,
       // "sso-origin=SHOW_SUCCESS;");
       // CookieSyncManager.getInstance().sync();
       // CookieManager.getInstance().removeAllCookie();
@@ -69,10 +73,10 @@ public class OpenIDActivity extends Activity {
             CookieSyncManager.getInstance().sync();
             // Get the cookie from cookie jar.
             Log.e("URL", url);
-            if (!url.contains("ifixit")) {
+            if (!url.contains(mSite.mName)) {
                return;
             }
-            if (url.contains(BASE_OPENID_URL)) {
+            if (url.contains(mBaseUrl)) {
                return;
             }
 

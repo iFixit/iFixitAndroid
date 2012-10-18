@@ -79,6 +79,8 @@ public class MainApplication extends Application {
 
    /**
     * Returns the current site's object name.
+    *
+    * TODO: Move to Site.
     */
    public String getSiteObjectName() {
       if (mSite.mName.equals("ifixit")) {

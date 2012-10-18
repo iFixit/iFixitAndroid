@@ -39,6 +39,10 @@ public class Site implements Serializable {
       return "." + mDomain;
    }
 
+   public String getOpenIdLoginUrl() {
+      return "https://" + mDomain + "/Guide/login/openid?host=";
+   }
+
    public String toString() {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
