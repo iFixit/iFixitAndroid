@@ -167,10 +167,10 @@ public class MainApplication extends Application {
    public User getUser() {
       return mUser;
    }
-   
+
    public User getUserFromPreferenceFile() {
       SharedPreferences preferenceFile = this.getSharedPreferences(
-				PREFERENCE_FILE, MODE_PRIVATE);
+            PREFERENCE_FILE, MODE_PRIVATE);
       String session = preferenceFile.getString(SESSION_KEY +   mSite.mName, null);
       String username = preferenceFile.getString(USERNAME_KEY+  mSite.mName, null);
       mUser = null;
@@ -180,7 +180,7 @@ public class MainApplication extends Application {
          mUser.setUsername(username);
       }
       return mUser;
-	}
+   }
 
    public boolean isUserLoggedIn() {
       return mUser != null;
@@ -198,21 +198,21 @@ public class MainApplication extends Application {
 
    public void setUserToPreferenceFile(User user) {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-				Context.MODE_PRIVATE);
-	  Editor editor = prefs.edit();
-	  editor.putString(SESSION_KEY +  mSite.mName, user.getSession());
+            Context.MODE_PRIVATE);
+      Editor editor = prefs.edit();
+      editor.putString(SESSION_KEY +  mSite.mName, user.getSession());
       editor.putString(USERNAME_KEY +  mSite.mName, user.getUsername());
       editor.commit();
-	  mUser = user;
-	}
-	
+      mUser = user;
+   }
+
    public void clearUserFromPreferenceFile() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-						Context.MODE_PRIVATE);
+            Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
       editor.remove(SESSION_KEY +  mSite.mName);
       editor.remove(USERNAME_KEY +  mSite.mName);
-	  editor.commit();
+      editor.commit();
       mUser = null;
    }
 }

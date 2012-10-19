@@ -6,12 +6,12 @@
     android:padding="1dp"
     android:background="@color/gray">
 
-    <RelativeLayout 
+    <RelativeLayout
         android:background="@drawable/border"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="4dp">
-        
+
         <ImageView
             android:id="@+id/topic_guide_thumbnail"
             android:layout_width="match_parent"
@@ -23,8 +23,8 @@
             android:cropToPadding="true"
             android:contentDescription="@string/topic_img_desc"
             android:background="@color/gray" />
-        
-        <TextView 
+
+        <TextView
             android:id="@+id/topic_guide_title"
             android:layout_below="@+id/topic_guide_thumbnail"
             android:layout_margin="4dp"
@@ -32,7 +32,7 @@
             android:layout_marginBottom="5dp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:lines="2" />    
-    </RelativeLayout>   
+            android:lines="2" />
+    </RelativeLayout>
 
 </RelativeLayout>

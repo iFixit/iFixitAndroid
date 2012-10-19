@@ -44,11 +44,11 @@ public class GuideStep implements Serializable {
    public void addLine(StepLine line) {
       mLines.add(line);
    }
-   
+
    public StepLine getLine(int pos) {
       return mLines.get(pos);
    }
-   
+
    public String toString() {
       return "{GuideStep: " + mStepNum + ", " + mTitle +  ", " + mLines +
        ", " + mImages + "}";

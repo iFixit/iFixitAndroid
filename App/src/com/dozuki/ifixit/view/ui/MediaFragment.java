@@ -63,14 +63,14 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 public class MediaFragment extends SherlockFragment implements OnItemClickListener,
       OnClickListener, OnItemLongClickListener, LoginListener {
-   
+
    public TextView noImagesText;
    public static boolean showingHelp;
    public static boolean showingLogout;
    public static boolean showingDelete;
-   
+
    public static final String LOCAL_URL = "LOCAL_URL";
-   
+
    private static final String TAG = "MediaFragment";
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;
@@ -95,7 +95,7 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
    private RelativeLayout mButtons;
    private MediaAdapter mGalleryAdapter;
    private TextView mLoginText;
-  
+
    private String mUserName;
    private ImageManager mImageManager;
    private static ArrayList<Boolean> mSelectedList;

@@ -153,7 +153,7 @@ public class GalleryActivity extends SherlockFragmentActivity
       mLoginView.setVisibility(View.INVISIBLE);
 
       SharedPreferences preferenceFile = getSharedPreferences(
-    		  MainApplication.PREFERENCE_FILE, MODE_PRIVATE);
+            MainApplication.PREFERENCE_FILE, MODE_PRIVATE);
       boolean firstTimeUser = preferenceFile.getBoolean(FIRST_TIME_USER, true);
 
       if (firstTimeUser) {

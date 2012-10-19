@@ -66,7 +66,7 @@ public class GuideStepViewFragment extends SherlockFragment {
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	 Bundle savedInstanceState) {
+    Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_step, container, false);
       mFont = Typeface.createFromAsset(getActivity().getAssets(),
        "fonts/Ubuntu-B.ttf");
@@ -95,73 +95,73 @@ public class GuideStepViewFragment extends SherlockFragment {
 
       // MUST BE BEFORE fitImagesToSpace(), DONT MOVE
       mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);
-      
+
       // Resize and fit thumbnails and main image to available screen space
       fitImagesToSpace();
-    
+
       mThumbs.setMainImage(mMainImage);
-      
+
       if (mStep != null) {
          setStep();
       }
 
       return view;
    }
-   
+
    public void fitImagesToSpace() {
       Activity context = getActivity();
       Resources resources = context.getResources();
       DisplayMetrics metrics = new DisplayMetrics();
       context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-      
+
       float screenHeight = metrics.heightPixels;
       float screenWidth = metrics.widthPixels;
       float thumbnailHeight = 0f;
       float thumbnailWidth = 0f;
       float height = 0f;
       float width = 0f;
-      
+
       float thumbPadding =
        resources.getDimensionPixelSize(R.dimen.guide_thumbnail_padding) * 2f;
-      float mainPadding = 
+      float mainPadding =
        resources.getDimensionPixelSize(R.dimen.guide_image_padding) * 2f;
-      float pagePadding = 
+      float pagePadding =
        resources.getDimensionPixelSize(R.dimen.page_padding) * 2f;
 
-      // padding that's included on every page 
+      // padding that's included on every page
       float padding = pagePadding + mainPadding + thumbPadding;
 
       // Portrait orientation
-      if (resources.getConfiguration().orientation == 
+      if (resources.getConfiguration().orientation ==
        Configuration.ORIENTATION_PORTRAIT) {
          padding += resources.getDimensionPixelSize(
           R.dimen.guide_image_spacing_right);
-         
+
          // Main image is 4/5ths of the available screen height
          width = (((screenWidth - padding) / 5f) * 4f);
          height = width *  (3f/4f);
-         
+
          // Screen height minus everything else that occupies horizontal space
          thumbnailWidth = (screenWidth - width - padding);
          thumbnailHeight = thumbnailWidth * (3f/4f);
       } else {
          int actionBarHeight = resources.getDimensionPixelSize(
-          com.actionbarsherlock.R.dimen.abs__action_bar_default_height);         
+          com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
          int indicatorHeight = ((GuideViewActivity)context).getIndicatorHeight();
-         
-         // Unbelievably horrible hack that fixes a problem when 
-         // getIndicatorHeight() returns 0 after a orientation change, causing the 
-         // Main image view to calculate to large and the thumbnails are hidden by 
+
+         // Unbelievably horrible hack that fixes a problem when
+         // getIndicatorHeight() returns 0 after a orientation change, causing the
+         // Main image view to calculate to large and the thumbnails are hidden by
          // the CircleIndicator.
          // TODO: Figure out why this is actually happening and the right way to do
          //       this.
          if (indicatorHeight == 0) {
             indicatorHeight = 49;
          }
-         
+
          padding += resources.getDimensionPixelSize(
           R.dimen.guide_image_spacing_bottom);
-         
+
          // Main image is 4/5ths of the available screen height
          height = (((screenHeight - actionBarHeight - indicatorHeight - padding)
           / 5f) * 4f);

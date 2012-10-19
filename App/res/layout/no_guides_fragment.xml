@@ -4,9 +4,9 @@
       android:layout_height="match_parent"
       android:orientation="vertical"
       android:background="@color/white" >
-   <ImageView android:layout_width="wrap_content" 
+   <ImageView android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:layout_gravity="center_vertical" 
+         android:layout_gravity="center_vertical"
          android:src="@drawable/no_guides"
          android:clipToPadding="true"
          android:paddingLeft="20dp"

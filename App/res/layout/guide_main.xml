@@ -1,44 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-      android:layout_height="match_parent"
-      android:layout_width="match_parent">
+   android:layout_height="match_parent"
+   android:layout_width="match_parent">
    <FrameLayout
       android:layout_height="match_parent"
       android:layout_width="match_parent">
-	   <LinearLayout      
-			android:layout_height="match_parent"
-			android:layout_width="match_parent"
-			android:orientation="vertical"
-			android:background="@drawable/bg_img">
-		      <android.support.v4.view.ViewPager
-		            android:id="@+id/guide_pager"
-		            android:layout_width="match_parent"
-		            android:layout_height="0dp"
-		            android:layout_weight="1" 
-		            android:layout_marginBottom="0dp"/>
-		
-		      <com.viewpagerindicator.CirclePageIndicator
-		            android:id="@+id/indicator"
-		            android:layout_width="match_parent"
-		            android:layout_height="wrap_content" 
-		            android:padding="@dimen/circle_page_indicator_padding"
-		            android:layout_marginTop="0dp" />
-		      
-	   </LinearLayout>
-	   <ImageView
-	        android:id="@+id/next_page_image"
-	        android:layout_gravity="bottom|right"
-	        android:layout_width="wrap_content"
-	        android:layout_height="wrap_content"
-	        android:src="@drawable/next_page"   
-           android:visibility="gone"
-	        android:contentDescription="@string/next_page_image_desc" />
-   </FrameLayout>
-   <ProgressBar
-         android:id="@+id/progress_bar"
+      <LinearLayout
+         android:layout_height="match_parent"
+         android:layout_width="match_parent"
+         android:orientation="vertical"
+         android:background="@drawable/bg_img">
+         <android.support.v4.view.ViewPager
+            android:id="@+id/guide_pager"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginBottom="0dp"/>
+
+         <com.viewpagerindicator.CirclePageIndicator
+            android:id="@+id/indicator"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="@dimen/circle_page_indicator_padding"
+            android:layout_marginTop="0dp" />
+
+      </LinearLayout>
+      <ImageView
+         android:id="@+id/next_page_image"
+         android:layout_gravity="bottom|right"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"
-         android:minHeight="@dimen/progress_bar_width_height"
-         android:minWidth="@dimen/progress_bar_width_height"
-         android:layout_centerInParent="true" />
+         android:src="@drawable/next_page"
+         android:visibility="gone"
+         android:contentDescription="@string/next_page_image_desc" />
+   </FrameLayout>
+   <ProgressBar
+      android:id="@+id/progress_bar"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minHeight="@dimen/progress_bar_width_height"
+      android:minWidth="@dimen/progress_bar_width_height"
+      android:layout_centerInParent="true" />
 </RelativeLayout>

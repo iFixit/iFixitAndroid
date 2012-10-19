@@ -8,21 +8,21 @@
         android:id="@+id/thumbnail_1"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
-        android:contentDescription="@string/thumbnail_desc" 
+        android:contentDescription="@string/thumbnail_desc"
         style="@style/guide_thumbnail_w_spacing" />
 
     <ImageView
-        android:id="@+id/thumbnail_2"        
+        android:id="@+id/thumbnail_2"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
-        android:contentDescription="@string/thumbnail_desc" 
+        android:contentDescription="@string/thumbnail_desc"
         style="@style/guide_thumbnail_w_spacing" />
 
     <ImageView
         android:id="@+id/thumbnail_3"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
-        android:contentDescription="@string/thumbnail_desc" 
+        android:contentDescription="@string/thumbnail_desc"
         style="@style/guide_thumbnail" />
 
 </LinearLayout>

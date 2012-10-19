@@ -87,9 +87,9 @@ public class APIService extends Service {
    private static final String RESPONSE = "RESPONSE";
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
-	private static final String REQUEST_AUTHENICATION_PACKAGE =
+   private static final String REQUEST_AUTHENICATION_PACKAGE =
     "AUTHENICATION_PACKAGE";
-	public static final String REQUEST_RESULT_INFORMATION =
+   public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
 
    private static final String NO_QUERY = "";

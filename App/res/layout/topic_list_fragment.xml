@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:background="@color/gray">
     <FrameLayout
-      android:id="@+id/topic_list_fr"      
+      android:id="@+id/topic_list_fr"
       android:layout_width="wrap_content"
       android:layout_height="match_parent"
       android:background="@color/translucent_white"
