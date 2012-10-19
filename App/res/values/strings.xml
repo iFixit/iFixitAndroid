@@ -61,8 +61,8 @@
 
    <!-- I couldn't find these strings anywhere so these are just placeholders
         so the project will compile. Update these before release. -->
-   <string name="non_image_error">NON_IMAGE_ERROR</string>
-   <string name="too_many_image_error">TOO_MANY_IMAGE_ERRO</string>
-   <string name="delete_loading_image_error">DELETE_LOADING_IMAGE_ERRO</string>
-   <string name="confirm_delete">CONFIRM_DELETE</string>
+   <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are .png, .jpg, .jpeg, and .gif.</string>
+   <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to finish to upload another file.</string>
+   <string name="delete_loading_image_error">One or more images is still loading and will not be deleted from the server.</string>
+   <string name="confirm_delete">Confirm Delete</string>
 </resources>
