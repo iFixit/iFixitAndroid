@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="match_parent"
    android:layout_height="match_parent">
    <ImageView 
@@ -7,6 +7,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent"
        android:src="@drawable/dozuki_workbench"
+       android:contentDescription="@string/dozuki_background_description"
        android:scaleType="centerCrop" />
    <LinearLayout 
        android:layout_width="500dp"
@@ -20,6 +21,7 @@
 	       android:layout_width="wrap_content"
 	       android:layout_height="wrap_content"
 	       android:src="@drawable/dozuki_splash_logo"
+	       android:contentDescription="@string/dozuki_logo_description"
 	       android:scaleType="fitCenter" />
 	   <ListView
 	       android:id="@+id/siteListView"
@@ -28,4 +30,4 @@
 	       android:background="@drawable/site_list_background"
 	       style="?attr/listViewStyle" /> 
    </LinearLayout>
-</FrameLayout>
+</merge>
