@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="fill_parent"
-   android:layout_height="fill_parent" >
+   android:layout_width="match_parent"
+   android:layout_height="match_parent" >
 
    <ScrollView
       android:id="@+id/scroller"
-      android:layout_width="fill_parent"
-      android:layout_height="fill_parent"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
       android:fillViewport="true" >
 
       <RelativeLayout
          android:id="@+id/login_screen"
-         android:layout_width="fill_parent"
-         android:layout_height="fill_parent"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
          android:paddingLeft="40dp"
          android:paddingRight="40dp"
          android:paddingTop="40dp" >
