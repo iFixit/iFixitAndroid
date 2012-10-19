@@ -50,7 +50,7 @@
    <string name="confirm_password">Confirm Password</string>
    <string name="cancel_register_description">Cancel</string>
    <string name="google_signin_description">Sign-in with Google</string>
-   <string name="yahoo_signin_description">Sign-in with Google</string>
+   <string name="yahoo_signin_description">Sign-in with Yahoo!</string>
    <string name="dozuki_background_description">Dozuki background</string>
    <string name="dozuki_logo_description">Dozuki</string>
    <string name="topic_background_description">Topic background</string>
