@@ -41,6 +41,7 @@
       <activity android:name=".view.ui.OpenIDActivity"></activity>
       <activity android:name=".view.ui.TopicViewActivity"></activity>
       <activity android:name=".view.ui.GuideViewActivity"
+                android:exported="false"
                 android:launchMode="singleTop" >
          <intent-filter>
             <action android:name="android.intent.action.VIEW" />
