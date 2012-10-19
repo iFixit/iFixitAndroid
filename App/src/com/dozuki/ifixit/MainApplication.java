@@ -198,7 +198,7 @@ public class MainApplication extends Application {
 
    public void setUserToPreferenceFile(User user) {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-				Context.MODE_WORLD_READABLE);
+				Context.MODE_PRIVATE);
 	  Editor editor = prefs.edit();
 	  editor.putString(SESSION_KEY +  mSite.mName, user.getSession());
       editor.putString(USERNAME_KEY +  mSite.mName, user.getUsername());
@@ -208,7 +208,7 @@ public class MainApplication extends Application {
 	
    public void clearUserFromPreferenceFile() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-						Context.MODE_WORLD_READABLE);
+						Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
       editor.remove(SESSION_KEY +  mSite.mName);
       editor.remove(USERNAME_KEY +  mSite.mName);
