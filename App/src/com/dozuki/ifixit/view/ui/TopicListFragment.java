@@ -105,8 +105,8 @@ public class TopicListFragment extends SherlockFragment
       if (leaves.size() > 0) {
          MainApplication app = (MainApplication)getActivity().getApplication();
 
-         adapter = new TopicListAdapter(mContext, app.getSiteObjectName(),
-          leaves);
+         adapter = new TopicListAdapter(mContext, mContext.getString(
+          app.getSite().getObjectName()), leaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }

@@ -2,6 +2,7 @@ package com.dozuki.ifixit.dozuki.model;
 
 import java.io.Serializable;
 
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.EditDistance;
 
 public class Site implements Serializable {
@@ -41,6 +42,17 @@ public class Site implements Serializable {
 
    public String getOpenIdLoginUrl() {
       return "https://" + mDomain + "/Guide/login/openid?host=";
+   }
+
+   /**
+    * Returns the resourceid for the current site's object name.
+    */
+   public int getObjectName() {
+      if (mName.equals("ifixit")) {
+         return R.string.devices;
+      } else {
+         return R.string.topics;
+      }
    }
 
    public String toString() {

@@ -22,9 +22,10 @@ public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
    public static final String CURRENT_SITE = "SITE_ifixit";
-   public static final String PREFERENCE_FILE = "PREFERENCE_FILES";
-   static final String SESSION_KEY = "SESSION_KEY";
-   static final String USERNAME_KEY = "USERNAME_KEY";
+
+   public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
+   private static final String SESSION_KEY = "SESSION_KEY";
+   private static final String USERNAME_KEY = "USERNAME_KEY";
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
@@ -75,19 +76,6 @@ public class MainApplication extends Application {
       }
 
       return R.style.Theme_Dozuki;
-   }
-
-   /**
-    * Returns the current site's object name.
-    *
-    * TODO: Move to Site.
-    */
-   public String getSiteObjectName() {
-      if (mSite.mName.equals("ifixit")) {
-         return getString(R.string.devices);
-      } else {
-         return getString(R.string.topics);
-      }
    }
 
    public ImageManager getImageManager() {
