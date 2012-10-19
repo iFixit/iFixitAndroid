@@ -112,7 +112,7 @@ public class GuideViewActivity extends SherlockFragmentActivity
             }
          } else {
             Bundle extras = intent.getExtras();
-            mGuideid = extras.getInt(MainActivity.GUIDEID);
+            mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
          }
 
          getGuide(mGuideid);
