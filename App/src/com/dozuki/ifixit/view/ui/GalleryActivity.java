@@ -39,9 +39,10 @@ public class GalleryActivity extends SherlockFragmentActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      // setTheme(((MainApplication)getApplication()).getSiteTheme());
-      // getSupportActionBar().setTitle(((MainApplication)getApplication())
-      // .getSite().mTitle);
+      setTheme(((MainApplication)getApplication()).getSiteTheme());
+      getSupportActionBar().setTitle(((MainApplication)getApplication())
+       .getSite().mTitle);
+
       ((MainApplication)this.getApplication()).getUserFromPreferenceFile();
 
       mActionBar = getSupportActionBar();
