@@ -76,6 +76,7 @@
                android:id="@+id/edit_login_username"
                android:layout_width="match_parent"
                android:layout_height="wrap_content"
+               android:inputType="text"
                android:ems="10" />
 
             <TextView
@@ -131,6 +132,7 @@
                android:layout_height="wrap_content"
                android:layout_gravity="right"
                android:layout_margin="5dp"
+               android:contentDescription="@string/signin_description"
                android:background="@drawable/ic_btn_login" />
          </LinearLayout>
 
@@ -142,6 +144,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_margin="1dp"
+            android:contentDescription="@string/register_description"
             android:background="@drawable/ic_btn_register" />
 
          <ImageButton
@@ -152,6 +155,7 @@
             android:layout_centerInParent="true"
             android:layout_gravity="center"
             android:layout_margin="4dp"
+            android:contentDescription="@string/cancel_register_description"
             android:background="@drawable/ic_btn_cancel" />
 
          <ImageButton
@@ -161,6 +165,7 @@
             android:layout_below="@+id/cancel_register_button"
             android:layout_centerHorizontal="true"
             android:layout_margin="1dp"
+            android:contentDescription="@string/google_signin_description"
             android:background="@drawable/ic_btn_sign_in_google" />
 
          <ImageButton
@@ -170,6 +175,7 @@
             android:layout_alignRight="@+id/register_button"
             android:layout_below="@+id/use_google_login_button"
             android:layout_margin="1dp"
+            android:contentDescription="@string/yahoo_signin_description"
             android:background="@drawable/ic_btn_sign_in_yahoo" />
 
       </RelativeLayout>
