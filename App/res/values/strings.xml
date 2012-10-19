@@ -64,6 +64,6 @@
    <string name="dozuki_search_hint">Search sites</string>
    <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are .png, .jpg, .jpeg, and .gif.</string>
    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to finish to upload another file.</string>
-   <string name="delete_loading_image_error">One or more images is still loading and will not be deleted from the server.</string>
+   <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the server.</string>
    <string name="confirm_delete">Confirm Delete</string>
 </resources>
