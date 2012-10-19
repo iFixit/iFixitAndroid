@@ -96,7 +96,7 @@
                android:id="@+id/confirm_password"
                android:layout_width="wrap_content"
                android:layout_height="wrap_content"
-               android:text="Confirm Password" />
+               android:text="@string/confirm_password" />
 
             <EditText
                android:id="@+id/edit_confirm_password"

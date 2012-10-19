@@ -41,15 +41,13 @@
    <string name="topic_img_desc">Topic image</string>
    <string name="next_page_image_desc">Next page</string>
    <string name="action_delete">Delete</string>
-   <string name="use_camera">Use Camera</string>
-   <string name="use_gallery">Use Gallery</string>
    <string name="welcome">Welcome, iFixit</string>
    <string name="user_name">Enter a username</string>
    <string name="email">What is your email?</string>
    <string name="password">What is your password?</string>
-   <string name="confirm_password">Confirm Password</string>
    <string name="signin_description">Login</string>
    <string name="register_description">Register</string>
+   <string name="confirm_password">Confirm Password</string>
    <string name="cancel_register_description">Cancel</string>
    <string name="google_signin_description">Sign-in with Google</string>
    <string name="yahoo_signin_description">Sign-in with Google</string>
@@ -63,13 +61,7 @@
    <string name="register_agreement">I agree to <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a> under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.</string>
    <string name="create_account">Create an Account</string>
    <string name="no_images_text">Add images with the icons above!</string>
-   <string-array name="user_settings">
-      <item>Log out</item>
-   </string-array>
    <string name="dozuki_search_hint">Search sites</string>
-
-   <!-- I couldn't find these strings anywhere so these are just placeholders
-        so the project will compile. Update these before release. -->
    <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are .png, .jpg, .jpeg, and .gif.</string>
    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to finish to upload another file.</string>
    <string name="delete_loading_image_error">One or more images is still loading and will not be deleted from the server.</string>
