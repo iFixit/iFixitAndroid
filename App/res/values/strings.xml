@@ -35,6 +35,7 @@
    <string name="logout_confirm">Yes</string>
    <string name="logout_cancel">No</string>
    <string name="login_error">Uh oh! Invalid login info, try again please.</string>
+   <string name="logged_in_as">Logged in as</string>
    <string name="try_again">Try again</string>
    <string name="fist_background_desc">Fist background image</string>
    <string name="thumbnail_desc">Thumbnail image</string>
@@ -65,5 +66,9 @@
    <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are .png, .jpg, .jpeg, and .gif.</string>
    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to finish to upload another file.</string>
    <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the server.</string>
-   <string name="confirm_delete">Confirm Delete</string>
+   <string name="confirm_delete_title">Confirm Delete</string>
+   <string name="confirm_delete_message">Are you sure you want to delete</string>
+   <string name="image">image</string>
+   <string name="images">images</string>
+   <string name="image_chooser_title">Select Picture</string>
 </resources>

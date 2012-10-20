@@ -61,8 +61,8 @@ import com.dozuki.ifixit.view.model.UserImageInfo;
 import com.dozuki.ifixit.view.model.UserImageList;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class MediaFragment extends SherlockFragment implements OnItemClickListener,
-      OnClickListener, OnItemLongClickListener, LoginListener {
+public class MediaFragment extends SherlockFragment implements
+ OnItemClickListener, OnClickListener, OnItemLongClickListener, LoginListener {
 
    public TextView noImagesText;
    public static boolean showingHelp;
@@ -126,7 +126,7 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
             }
             mNextPageRequestInProgress = false;
          } else if (intent.getAction().equals(APIEndpoint.UPLOAD_IMAGE.mAction)) {
-            UploadedImageInfo imageinfo = (UploadedImageInfo) result;
+            UploadedImageInfo imageinfo = (UploadedImageInfo)result;
             String url = intent.getExtras().getString(APIService.REQUEST_RESULT_INFORMATION);
 
             LocalImage cur = mLocalURL.get(url);
@@ -160,13 +160,13 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
       super.onCreate(savedInstanceState);
 
       if (mImageManager == null) {
-         mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
+         mImageManager = ((MainApplication)getActivity().getApplication()).getImageManager();
          mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
          mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
          mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
       }
 
-      mImageSizes = ((MainApplication) getActivity().getApplication()).getImageSizes();
+      mImageSizes = ((MainApplication)getActivity().getApplication()).getImageSizes();
       mMode = null;
       showingHelp = false;
       showingLogout = false;
@@ -184,16 +184,23 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
          showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 
          mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
-         mImageList = (UserImageList) savedInstanceState.getSerializable(USER_IMAGE_LIST);
-         boolean[] selected = savedInstanceState.getBooleanArray(USER_SELECTED_LIST);
-         for (boolean b : selected)
-            mSelectedList.add(b);
-         if (showingDelete)
-            createDeleteConfirmDialog(mContext).show();
+         mImageList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
          mGalleryAdapter = new MediaAdapter();
-         if (savedInstanceState.getString(CAMERA_PATH) != null)
+
+         boolean[] selected = savedInstanceState.getBooleanArray(USER_SELECTED_LIST);
+         for (boolean b : selected) {
+            mSelectedList.add(b);
+         }
+
+         if (showingDelete) {
+            createDeleteConfirmDialog(mContext).show();
+         }
+
+         if (savedInstanceState.getString(CAMERA_PATH) != null) {
             mCameraTempFileName = savedInstanceState.getString(CAMERA_PATH);
-         mLocalURL = (HashMap<String, LocalImage>) savedInstanceState.getSerializable(HASH_MAP);
+         }
+
+         mLocalURL = (HashMap<String, LocalImage>)savedInstanceState.getSerializable(HASH_MAP);
          for (LocalImage li : mLocalURL.values()) {
             if (li.mPath.contains(".jpg"))
                mLimages.put(li.mPath, buildBitmap(li.mPath));
@@ -205,40 +212,40 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
    }
 
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+   public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.gallery_view, container, false);
 
-      noImagesText = ((TextView) view.findViewById(R.id.no_images_text));
+      noImagesText = ((TextView)view.findViewById(R.id.no_images_text));
       if (mImageList.getImages().size() < 1) {
          noImagesText.setVisibility(View.VISIBLE);
       } else {
          noImagesText.setVisibility(View.GONE);
       }
 
-      mGridView = (GridView) view.findViewById(R.id.gridview);
+      mGridView = (GridView)view.findViewById(R.id.gridview);
       mGridView.setOnScrollListener(new GalleryOnScrollListener());
 
       mGridView.setAdapter(mGalleryAdapter);
       mGridView.setOnItemClickListener(this);
       mGridView.setOnItemLongClickListener(this);
 
-      mButtons = (RelativeLayout) view.findViewById(R.id.button_holder);
+      mButtons = (RelativeLayout)view.findViewById(R.id.button_holder);
+      mLoginText = ((TextView)view.findViewById(R.id.login_text));
 
-      mLoginText = ((TextView) view.findViewById(R.id.login_text));
-
-      if (!((MainApplication) ((Activity) mContext).getApplication()).isUserLoggedIn()) {
+      if (!((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn()) {
          mButtons.setVisibility(View.GONE);
       } else {
-         mUserName = ((MainApplication) ((Activity) mContext).getApplication()).getUser()
-               .getUsername();
+         mUserName = ((MainApplication)((Activity)mContext).getApplication()).
+          getUser().getUsername();
          mLoginText.setText("Logged in as " + mUserName);
          mButtons.setOnClickListener(this);
-         if (mImageList.getImages().size() == 0)
+         if (mImageList.getImages().size() == 0) {
             retrieveUserImages();
+         }
       }
 
       if (mSelectedList.contains(true)) {
-         Log.i(TAG, "selected count: " + mSelectedList.size());
          setDeleteMode();
       }
 
@@ -247,38 +254,37 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
-      savedInstanceState.putBooleanArray(USER_SELECTED_LIST, toPrimitiveArray(mSelectedList));
+      savedInstanceState.putBooleanArray(USER_SELECTED_LIST,
+       toPrimitiveArray(mSelectedList));
       savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
       savedInstanceState.putSerializable(HASH_MAP, mLocalURL);
       savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
       savedInstanceState.putBoolean(SHOWING_HELP, showingHelp);
       savedInstanceState.putBoolean(SHOWING_LOGOUT, showingLogout);
       savedInstanceState.putBoolean(SHOWING_DELETE, showingDelete);
-      if (mCameraTempFileName != null)
+
+      if (mCameraTempFileName != null) {
          savedInstanceState.putString(CAMERA_PATH, mCameraTempFileName);
+      }
    }
 
    public void retrieveUserImages() {
-
       AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-      authenicationPackage.session = ((MainApplication) ((Activity) mContext).getApplication())
-            .getUser().getSession();
+      authenicationPackage.session = ((MainApplication)((Activity)mContext).getApplication())
+       .getUser().getSession();
       mNextPageRequestInProgress = true;
       int initialPageSize = 5;
-      mContext.startService(APIService.getUserImagesIntent(mContext, authenicationPackage,
-            "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize) + "&offset=" + (mImagesDownloaded)));
-      mUserName = ((MainApplication) ((Activity) mContext).getApplication()).getUser().getUsername();
+      mContext.startService(APIService.getUserImagesIntent(mContext,
+       authenicationPackage, "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize) +
+       "&offset=" + mImagesDownloaded));
+      mUserName = ((MainApplication)((Activity)mContext).getApplication()).
+       getUser().getUsername();
    }
 
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-      try {
-         mContext = (Context) activity;
-
-      } catch (ClassCastException e) {
-         throw new ClassCastException(activity.toString() + " must implement TopicSelectedListener");
-      }
+      mContext = (Context)activity;
    }
 
    @Override
@@ -307,13 +313,13 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
    public void onPause() {
       super.onPause();
 
-      // this helps out with manageing memory on context changes
+      // This helps out with managing memory on context changes.
       int count = mGridView.getCount();
       for (int i = 0; i < count; i++) {
-         MediaViewItem v = (MediaViewItem) mGridView.getChildAt(i);
-         if (v != null) {
-            if (v.imageview.getDrawable() != null) {
-               v.imageview.getDrawable().setCallback(null);
+         MediaViewItem mediaView = (MediaViewItem)mGridView.getChildAt(i);
+         if (mediaView != null) {
+            if (mediaView.imageview.getDrawable() != null) {
+               mediaView.imageview.getDrawable().setCallback(null);
             }
          }
       }
@@ -321,30 +327,30 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
    }
 
    @Override
-   public void onClick(View arg0) {
-
-      switch (arg0.getId()) {
+   public void onClick(View view) {
+      switch (view.getId()) {
       case R.id.button_holder:
          showingLogout = true;
          LoginFragment.getLogoutDialog(mContext).show();
          break;
-
       }
    }
 
-   public void launchGallery() {
+   protected void launchGallery() {
       Intent intent = new Intent();
       intent.setType("image/*");
       intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
+      startActivityForResult(Intent.createChooser(intent,
+       getString(R.string.image_chooser_title)), SELECT_PICTURE);
    }
 
-   public void launchCamera() {
+   protected void launchCamera() {
       Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-      File f;
+      File file;
       try {
-         f = createImageFile();
-         cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(f));
+         file = createImageFile();
+         cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+          Uri.fromFile(file));
          startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
       } catch (IOException e) {
          e.printStackTrace();
@@ -363,79 +369,74 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
    private File getAlbumDir() {
       File storageDir = null;
       if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-         storageDir = new File(
-               Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES),
-               "iFixitImages/");
-         if (storageDir != null) {
-            if (!storageDir.mkdirs()) {
-               if (!storageDir.exists()) {
-                  Log.d("MediaFrag", "failed to create directory iFixitImages");
-                  return null;
-               }
-            }
+         storageDir = new File(Environment.getExternalStoragePublicDirectory(
+          Environment.DIRECTORY_PICTURES), "iFixitImages/");
+
+         if (storageDir != null && !storageDir.mkdirs() && !storageDir.exists()) {
+            Log.w("iFixit", "Failed to create directory iFixitImages");
+            return null;
          }
       } else {
-         Log.v(getString(R.string.app_name), "External storage is not mounted READ/WRITE.");
+         Log.w("iFixit", "External storage is not mounted READ/WRITE.");
       }
+
       return storageDir;
-   } // end getAlbumDir()
+   }
 
    public String getPath(Uri uri) {
       String[] projection = { MediaStore.Images.Media.DATA };
-      Cursor cursor = ((Activity) mContext).managedQuery(uri, projection, null, null, null);
+      Cursor cursor = ((Activity)mContext).managedQuery(uri, projection, null,
+       null, null);
       if (cursor != null) {
          int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
          cursor.moveToFirst();
          return cursor.getString(column_index);
-      } else
+      } else {
          return null;
+      }
    }
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (resultCode == Activity.RESULT_OK) {
          if (requestCode == MediaFragment.SELECT_PICTURE) {
-
             Uri selectedImageUri = data.getData();
 
             // check file type
             String path = getPath(selectedImageUri);
-            if (path == null
-                  || !(path.toLowerCase().contains(".jpeg") || path.toLowerCase().contains(".jpg") || path
-                        .toLowerCase().contains(".png"))) {
+            if (path == null || !(path.toLowerCase().contains(".jpeg") ||
+             path.toLowerCase().contains(".jpg") || path.toLowerCase().contains(".png"))) {
                Toast.makeText(mContext, mContext.getString(R.string.non_image_error),
-                     Toast.LENGTH_LONG).show();
+                Toast.LENGTH_LONG).show();
 
                return;
             }
 
             // check how many images are being uploaded
             int imagesBeingUploaded = 0;
-            for (String s : mLocalURL.keySet()) {
-               if (mLocalURL.get(s).mImgid == null) {
+            for (String key : mLocalURL.keySet()) {
+               if (mLocalURL.get(key).mImgid == null) {
                   imagesBeingUploaded++;
                }
             }
 
             if (imagesBeingUploaded >= MAX_UPLOAD_COUNT) {
                Toast.makeText(mContext, mContext.getString(R.string.too_many_image_error),
-                     Toast.LENGTH_LONG).show();
+                Toast.LENGTH_LONG).show();
                return;
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
             AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-            authenicationPackage.session = ((MainApplication) ((Activity) mContext)
-                  .getApplication()).getUser().getSession();
+            authenicationPackage.session = ((MainApplication)((Activity)mContext)
+             .getApplication()).getUser().getSession();
             mContext.startService(APIService.getUploadImageIntent(mContext, authenicationPackage,
-                  getPath(selectedImageUri), key));
-
+             getPath(selectedImageUri), key));
          } else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
-               Log.e(TAG, "Error cameraTempFile is null!");
+               Log.w(TAG, "Error cameraTempFile is null!");
                return;
             }
-            Log.i(TAG, "Adding camera pic...");
             BitmapFactory.Options opt = new BitmapFactory.Options();
             opt.inSampleSize = 2;
             opt.inDither = true;
@@ -443,42 +444,27 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
             String fPath = new String(mCameraTempFileName);
             Bitmap img = BitmapFactory.decodeFile(fPath, opt);
 
-            Log.i("MediaFrag", "img path: " + mCameraTempFileName + " img width: " + img.getWidth()
-                  + " img height: " + img.getHeight());
-
-            // Uri selectedImageUri = data.getData();
-            // galleryAdapter.addFile(cameraTempFileName);
             String key = mGalleryAdapter.addFile(new String(fPath));
             AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-            authenicationPackage.session = ((MainApplication) ((Activity) mContext)
-                  .getApplication()).getUser().getSession();
-            mContext.startService(APIService.getUploadImageIntent(mContext, authenicationPackage,
-                  fPath, key));
+            authenicationPackage.session = ((MainApplication)((Activity)mContext)
+             .getApplication()).getUser().getSession();
+            mContext.startService(APIService.getUploadImageIntent(mContext,
+             authenicationPackage, fPath, key));
          }
       }
    }
 
    private class MediaAdapter extends BaseAdapter {
-
-      public MediaAdapter() {
-         // TODO Auto-generated constructor stub
-      }
-
       @Override
-      public long getItemId(int arg0) {
-         // TODO Auto-generated method stub
-         return 0;
+      public long getItemId(int id) {
+         return id;
       }
 
       public String addUri(Uri uri) {
-         // mediaList.add(uri);
          String key = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
          UserImageInfo userImageInfo = new UserImageInfo();
          String url = uri.toString();
-         // if (localURL.containsKey(url)) {
-         // Log.e(TAG, "Duplicate image found: " + getPath(uri));
-         // return;
-         // }
+
          userImageInfo.setGuid(url);
          userImageInfo.setImageid(null);
          userImageInfo.setKey(key);
@@ -486,7 +472,6 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
          mSelectedList.add(false);
 
          mLocalURL.put(key, new LocalImage(getPath(uri)));
-         // Log.i("MEdiaFrag", "KEY: " + url + " Path: " + getPath(uri));
          invalidatedView();
          return key;
       }
@@ -513,7 +498,6 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
       @Override
       public int getCount() {
-         // TODO Auto-generated method stub
          if (mImageList.getImages().size() > 0)
             noImagesText.setVisibility(View.GONE);
          return mImageList.getImages().size();
@@ -521,12 +505,11 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
       @Override
       public Object getItem(int arg0) {
-         // TODO Auto-generated method stub
          return null;
       }
 
       public View getView(int position, View convertView, ViewGroup parent) {
-         MediaViewItem itemView = (MediaViewItem) convertView;
+         MediaViewItem itemView = (MediaViewItem)convertView;
 
          if (convertView == null) {
             itemView = new MediaViewItem(getActivity(), mImageManager);
@@ -535,64 +518,61 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
          itemView.setLoading(false);
 
          if (mImageList != null) {
+            UserImageInfo image = mImageList.getImages().get(position);
+
             // image was pulled from the server
-            if (mImageList.getImages().get(position).getImageid() != null
-                  && mImageList.getImages().get(position).getKey() == null) {
-               String image = mImageList.getImages().get(position).getGuid()
-                     + mImageSizes.getThumb();
-               itemView.setImageItem(image, getActivity(), !mImageList.getImages().get(position)
-                     .getLoaded());
-               itemView.listRef = mImageList.getImages().get(position);
-               mImageList.getImages().get(position).setLoaded(true);
-               itemView.setTag(mImageList.getImages().get(position).getGuid());
+            if (mImageList.getImages().get(position).getImageid() != null &&
+             mImageList.getImages().get(position).getKey() == null) {
+               String imageUrl = image.getGuid() + mImageSizes.getThumb();
+               itemView.setImageItem(imageUrl, getActivity(), !image.getLoaded());
+               itemView.listRef = image;
+               image.setLoaded(true);
+               itemView.setTag(image.getGuid());
                // image was added locally
             } else {
-               Uri temp = Uri.parse(mImageList.getImages().get(position).getGuid());
+               Uri temp = Uri.parse(image.getGuid());
                Bitmap bitmap;
-               // camera image
                if (temp.toString().contains(".jpg")) {
-                  bitmap = mLimages.get(mImageList.getImages().get(position).getGuid());
-               // gallery image
+                  // camera image
+                  bitmap = mLimages.get(image.getGuid());
                } else {
-                  bitmap = MediaStore.Images.Thumbnails.getThumbnail(mContext.getContentResolver(),
-                        ContentUris.parseId(temp), MediaStore.Images.Thumbnails.MINI_KIND,
-                        (BitmapFactory.Options) null);
+                  // gallery image
+                  bitmap = MediaStore.Images.Thumbnails.getThumbnail(
+                   mContext.getContentResolver(), ContentUris.parseId(temp),
+                   MediaStore.Images.Thumbnails.MINI_KIND, null);
                }
+
                itemView.imageview.setImageBitmap(bitmap);
-               itemView.listRef = mImageList.getImages().get(position);
-               if (mImageList.getImages().get(position).getKey() != null) {
-                  if (mLocalURL.get(mImageList.getImages().get(position).getKey()).mImgid == null) {
+               itemView.listRef = image;
+               if (image.getKey() != null) {
+                  if (mLocalURL.get(image.getKey()).mImgid == null) {
                      // Has not received an imageID so is still uploading
                      itemView.setLoading(true);
-                     Log.i(TAG, "image loading!");
                   } else {
-                     mImageList
-                           .getImages()
-                           .get(position)
-                           .setImageid(
-                                 mLocalURL.get(mImageList.getImages().get(position).getKey()).mImgid);
+                     image.setImageid(mLocalURL.get(image.getKey()).mImgid);
                      itemView.setLoading(false);
-                     Log.i(TAG, "image stoped loading!");
                   }
                }
-               itemView.setTag(mImageList.getImages().get(position).getKey());
+
+               itemView.setTag(image.getKey());
             }
          }
-         if (mSelectedList.get(position))
+
+         if (mSelectedList.get(position)) {
             itemView.selectImage.setVisibility(View.VISIBLE);
-         else
+         } else {
             itemView.selectImage.setVisibility(View.INVISIBLE);
+         }
 
          return itemView;
       }
    }
 
    public final class ModeCallback implements ActionMode.Callback {
-
-      Context _pContext;
+      private Context mParentContext;
 
       public ModeCallback(Context parentContext) {
-         _pContext = parentContext;
+         mParentContext = parentContext;
       }
 
       @Override
@@ -605,7 +585,6 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
       @Override
       public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-         // Here, you can checked selected items to adapt available actions
          return false;
       }
 
@@ -614,6 +593,7 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
          if (mode == mMode) {
             mMode = null;
          }
+
          for (int i = mSelectedList.size() - 1; i > -1; i--) {
             if (mSelectedList.get(i)) {
                mSelectedList.set(i, false);
@@ -625,18 +605,15 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
       @Override
       public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
          if (!mSelectedList.contains(true)) {
             mode.finish();
             return true;
          }
 
-         createDeleteConfirmDialog(_pContext).show();
+         createDeleteConfirmDialog(mParentContext).show();
 
-         // mode.finish();
          return true;
       }
-
    };
 
    private void deleteSelectedPhotos() {
@@ -645,21 +622,16 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
       String deleteQuery = "?";
 
-      for (int i = mSelectedList.size() - 1; i > -1; i--) {
+      for (int i = mSelectedList.size() - 1; i >= 0; i--) {
          if (mSelectedList.get(i)) {
             mSelectedList.remove(i);
             deleteQuery += "imageids[]=" + mImageList.getImages().get(i).getImageid() + "&";
 
             if (mImageList.getImages().get(i).getImageid() == null) {
-               {
-
-                  Toast.makeText(mContext, mContext.getString(R.string.delete_loading_image_error),
-
-                  Toast.LENGTH_LONG).show();
-               }
+               Toast.makeText(mContext, mContext.getString(R.string.delete_loading_image_error),
+                Toast.LENGTH_LONG).show();
             }
             mImageList.getImages().remove(i);
-
          }
       }
 
@@ -669,103 +641,97 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
 
       AuthenicationPackage authenicationPackage = new AuthenicationPackage();
       authenicationPackage.session = ((MainApplication) ((Activity) mContext).getApplication())
-            .getUser().getSession();
-      mContext.startService(APIService.getDeleteImageIntent(mContext, authenicationPackage,
-            deleteQuery));
-      if (mImageList.getImages().size() == 0)
+       .getUser().getSession();
+      mContext.startService(APIService.getDeleteImageIntent(mContext,
+       authenicationPackage, deleteQuery));
+
+      if (mImageList.getImages().size() == 0) {
          noImagesText.setVisibility(View.VISIBLE);
+      }
+
       mMode.finish();
    }
 
    @Override
    public void onLogin(User user) {
       if (mImageList.getImages().size() == 0) {
-         mUserName = ((MainApplication) ((Activity) mContext).getApplication()).getUser()
-               .getUsername();
-         mLoginText.setText("Logged in as " + mUserName);
+         mUserName = ((MainApplication)((Activity)mContext).getApplication()).
+          getUser().getUsername();
+         mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
          mButtons.setOnClickListener(this);
          retrieveUserImages();
          mButtons.setVisibility(View.VISIBLE);
-         mButtons.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_bottom));
+         mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,
+          R.anim.slide_in_bottom));
       }
    }
 
-   public MenuInflater getSupportMenuInflater() {
-      // TODO Auto-generated method stub
-      return null;
-   }
-
    @Override
-   public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-      // selectedList.add(position, true);
+   public boolean onItemLongClick(AdapterView<?> parent, View view,
+    int position, long id) {
       setDeleteMode();
-      // galleryAdapter.invalidatedView();
       return false;
    }
 
    public void setDeleteMode() {
       if (mMode == null) {
-         // mButtons.setVisibility(View.GONE);
-
-         Animation animHide = AnimationUtils.loadAnimation(mContext, R.anim.slide_out_bottom_slow);
+         Animation animHide = AnimationUtils.loadAnimation(mContext,
+          R.anim.slide_out_bottom_slow);
          animHide.setAnimationListener(new AnimationListener() {
-
             @Override
             public void onAnimationEnd(Animation arg0) {
-               // TODO Auto-generated method stub
                mButtons.setVisibility(View.GONE);
             }
 
             @Override
             public void onAnimationRepeat(Animation arg0) {
-               // TODO Auto-generated method stub
-
             }
 
             @Override
             public void onAnimationStart(Animation arg0) {
-               // TODO Auto-generated method stub
-
             }
-
          });
          mButtons.startAnimation(animHide);
-         mMode = this.getSherlockActivity().startActionMode(new ModeCallback(mContext));
+         mMode = getSherlockActivity().startActionMode(
+          new ModeCallback(mContext));
       }
    }
 
-   public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-
-      MediaViewItem cell = (MediaViewItem) view;
+   public void onItemClick(AdapterView<?> adapterView, View view, int position,
+    long id) {
+      MediaViewItem cell = (MediaViewItem)view;
       // Long-click delete mode
       if (mMode != null) {
          if (cell == null) {
-            Log.e("MediaFragment", "cell null!");
+            Log.i("iFixit", "Delete cell null!");
             return;
          }
 
-         mSelectedList.set(position, (mSelectedList.get(position)) ? false : true);
+         mSelectedList.set(position, mSelectedList.get(position) ? false : true);
          mGalleryAdapter.invalidatedView();
-
       } else {
-         if (view.getTag() != null) {
-            Log.i("MediaFragment", (String) view.getTag());
-         } else
+         String url = (String)view.getTag();
+
+         if (url == null) {
             return;
-         String url = (String) view.getTag();
-         if (url.equals("") || url.indexOf(".") == 0) {
+         } else if (url.equals("") || url.indexOf(".") == 0) {
             return;
          }
+
+         String imageUrl;
+         boolean isLocal;
          if (mLocalURL.get(url) != null) {
-            Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, mLocalURL.get(url).mPath);
-            intent.putExtra(FullImageViewActivity.LOCAL_URL, true);
-            startActivity(intent);
+            imageUrl = mLocalURL.get(url).mPath;
+            isLocal = true;
          } else {
-            Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-            startActivity(intent);
+            imageUrl = url;
+            isLocal = false;
          }
+
+         Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+         intent.putExtra(FullImageViewActivity.IMAGE_URL, imageUrl);
+         intent.putExtra(FullImageViewActivity.LOCAL_URL, isLocal);
+         startActivity(intent);
       }
    }
 
@@ -781,19 +747,19 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
    public final class GalleryOnScrollListener implements AbsListView.OnScrollListener {
       int mCurScrollState;
 
-      // used to determine when to load more images
+      // Used to determine when to load more images.
       @Override
       public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
          if ((arg1 + arg2) >= arg3 / 2 && !mLastPage) {
-            if (((MainApplication) ((Activity) mContext).getApplication()).isUserLoggedIn()
-                  && !mNextPageRequestInProgress
-                  && mCurScrollState == OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+            if (((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn() &&
+             !mNextPageRequestInProgress && mCurScrollState ==
+             OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                mNextPageRequestInProgress = true;
                AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-               authenicationPackage.session = ((MainApplication) ((Activity) mContext)
-                     .getApplication()).getUser().getSession();
-               mContext.startService(APIService.getUserImagesIntent(mContext, authenicationPackage,
-                     "?limit=" + IMAGE_PAGE_SIZE + "&offset=" + (mImagesDownloaded)));
+               authenicationPackage.session = ((MainApplication)((Activity)mContext)
+                .getApplication()).getUser().getSession();
+               mContext.startService(APIService.getUserImagesIntent(mContext,
+                authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset=" + mImagesDownloaded));
             }
          }
       }
@@ -802,75 +768,68 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
       public void onScrollStateChanged(AbsListView view, int scrollState) {
          mCurScrollState = scrollState;
       }
-
    }
 
    @Override
    public void onLogout() {
-      // TODO Auto-generated method stub
-
    }
 
-   static AlertDialog createHelpDialog(final Context context) {
+   public static AlertDialog createHelpDialog(final Context context) {
       showingHelp = true;
       HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
       builder
             .setTitle(context.getString(R.string.media_help_title))
             .setMessage(context.getString(R.string.media_help_messege))
             .setPositiveButton(context.getString(R.string.media_help_confirm),
-                  new DialogInterface.OnClickListener() {
-                     public void onClick(DialogInterface dialog, int id) {
-                        showingHelp = false;
-                        dialog.cancel();
-                     }
-                  });
+               new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int id) {
+                     showingHelp = false;
+                     dialog.cancel();
+                  }
+               });
 
-      AlertDialog d = builder.create();
-      d.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             showingHelp = false;
-            // Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " +
-            // attributes.selectedIndexes.get(1) + " " +
-            // attributes.selectedIndexes.get(2) + " " +
-            // attributes.selectedIndexes.get(3) + " " +
-            // attributes.selectedIndexes.get(5) + " ");
          }
-
       });
 
-      return d;
+      return dialog;
    }
 
-   AlertDialog createDeleteConfirmDialog(final Context context) {
+   private AlertDialog createDeleteConfirmDialog(final Context context) {
       showingDelete = true;
       int selectedCount = 0;
-      for (boolean b : mSelectedList) {
-         if (b)
+      for (boolean selected : mSelectedList) {
+         if (selected) {
             selectedCount++;
+         }
       }
 
-      String msg = "Are you sure you want to delete " + selectedCount + " image";
+      String msg = getString(R.string.confirm_delete_message) + " " +
+       selectedCount + " ";
       if (selectedCount > 1) {
-         msg = msg + "s?";
+         msg += getString(R.string.images);
       } else {
-         msg = msg + "?";
+         msg += getString(R.string.image);
       }
+      msg += "?";
 
       HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
       builder
-            .setTitle(context.getString(R.string.confirm_delete))
+            .setTitle(context.getString(R.string.confirm_delete_title))
             .setMessage(msg)
             .setPositiveButton(context.getString(R.string.logout_confirm),
-                  new DialogInterface.OnClickListener() {
-                     @Override
-                     public void onClick(DialogInterface dialog, int id) {
-                        showingDelete = false;
-                        deleteSelectedPhotos();
-                        dialog.cancel();
-                     }
-                  })
+               new DialogInterface.OnClickListener() {
+                  @Override
+                  public void onClick(DialogInterface dialog, int id) {
+                     showingDelete = false;
+                     deleteSelectedPhotos();
+                     dialog.cancel();
+                  }
+               })
             .setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int which) {
@@ -879,22 +838,15 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
                }
             });
 
-      AlertDialog d = builder.create();
-      d.setOnDismissListener(new DialogInterface.OnDismissListener() {
-
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             showingDelete = false;
-            // Log.v("LOG_CAT",attributes.selectedIndexes.get(0) + " " +
-            // attributes.selectedIndexes.get(1) + " " +
-            // attributes.selectedIndexes.get(2) + " " +
-            // attributes.selectedIndexes.get(3) + " " +
-            // attributes.selectedIndexes.get(5) + " ");
          }
-
       });
 
-      return d;
+      return dialog;
    }
 
    private Bitmap buildBitmap(String url) {
@@ -902,9 +854,8 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
       opt.inSampleSize = 4;
       opt.inDither = false;
       opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-      Bitmap b;
-      b = BitmapFactory.decodeFile(url, opt);
-      return b;
+      Bitmap bitmap;
+      bitmap = BitmapFactory.decodeFile(url, opt);
+      return bitmap;
    }
-
 }
