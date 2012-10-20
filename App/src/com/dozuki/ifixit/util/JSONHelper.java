@@ -291,8 +291,8 @@ public class JSONHelper {
       JSONObject jImage = new JSONObject(image);
 
       UploadedImageInfo userImageInfo = new UploadedImageInfo();
-      userImageInfo.setmImageid(jImage.getString("imageid"));
-      userImageInfo.setmGuid(jImage.getString("guid"));
+      userImageInfo.setImageid(jImage.getString("imageid"));
+      userImageInfo.setGuid(jImage.getString("guid"));
 
       return userImageInfo;
    }

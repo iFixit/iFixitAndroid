@@ -135,7 +135,7 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
             LocalImage cur = mLocalURL.get(url);
             if (cur == null)
                return;
-            cur.mImgid = imageinfo.getmImageid();
+            cur.mImgid = imageinfo.getImageid();
             mLocalURL.put(url, cur);
             mImagesDownloaded++;
             mGalleryAdapter.invalidatedView();

@@ -9,19 +9,19 @@ public class UploadedImageInfo implements Serializable {
    private String mImageid;
    private String mStatus;
 
-   public String getmGuid() {
+   public String getGuid() {
       return mGuid;
    }
 
-   public void setmGuid(String guid) {
+   public void setGuid(String guid) {
       mGuid = guid;
    }
 
-   public String getmImageid() {
+   public String getImageid() {
       return mImageid;
    }
 
-   public void setmImageid(String imageid) {
+   public void setImageid(String imageid) {
       mImageid = imageid;
    }
 
