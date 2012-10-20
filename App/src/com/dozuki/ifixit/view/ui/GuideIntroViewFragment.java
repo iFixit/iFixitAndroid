@@ -59,7 +59,7 @@ public class GuideIntroViewFragment extends SherlockFragment {
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
+    Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_intro, container, false);
       mBoldFont = Typeface.createFromAsset(getActivity().getAssets(),
        "fonts/Ubuntu-B.ttf");
@@ -93,21 +93,21 @@ public class GuideIntroViewFragment extends SherlockFragment {
 
       if (!mGuide.getDifficulty().equals("false")) {
          mDifficulty.setText(getActivity().getString(R.string.difficulty) +
-          ": " + JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
-          .getDifficulty())));
+          ": " + JSONHelper.correctLinkPaths(Html.fromHtml(
+          mGuide.getDifficulty())));
       }
 
       mAuthor.setText(getActivity().getString(R.string.author) + ": " +
        JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
 
       if (mGuide.getNumTools() != 0) {
-         mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(getActivity()
-          .getString(R.string.requiredTools))));
+         mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(
+          getActivity().getString(R.string.requiredTools))));
       }
 
       if (mGuide.getNumParts() != 0) {
-         mParts.setText(Html.fromHtml(mGuide.getPartsFormatted(getActivity()
-          .getString(R.string.requiredParts))));
+         mParts.setText(Html.fromHtml(mGuide.getPartsFormatted(
+          getActivity().getString(R.string.requiredParts))));
       }
    }
 }
