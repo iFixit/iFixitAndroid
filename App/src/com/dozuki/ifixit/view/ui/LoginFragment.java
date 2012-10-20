@@ -16,7 +16,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -37,21 +36,17 @@ import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.User;
 
 public class LoginFragment extends SherlockFragment implements OnClickListener {
+   private static ArrayList<LoginListener> loginListeners =
+    new ArrayList<LoginListener>();
+   private static final int OPEN_ID_RESULT_CODE = 4;
+   private static final String LOGIN_STATE = "LOGIN_STATE";
 
-   static ArrayList<LoginListener> loginListeners = new ArrayList<LoginListener>();
-
-   /**
-    * TODO: All of these need to start with 'm' e.g. 'mLogin'
-    */
    private Context mContext;
    private ImageButton mLogin;
    private ImageButton mRegister;
    private ImageButton mCancelRegister;
    private ImageButton mGoogleLogin;
    private ImageButton mYahooLogin;
-
-   static final int OPEN_ID_RESULT_CODE = 4;
-   static final String LOGIN_STATE = "LOGIN_STATE";
 
    private EditText mLoginId;
    private EditText mPassword;
@@ -61,30 +56,29 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    private TextView mUsernameTag;
    private TextView mErrorText;
    private TextView mCreateAccountText;
+   private CheckBox mTermsAgreeCheckBox;
 
-   private ProgressBar _loadingSpinner;
-   private LinearLayout _registerAgreement;
+   private ProgressBar mLoadingSpinner;
+   private LinearLayout mRegisterAgreement;
 
-   boolean readyForRegisterState;
+   private boolean mReadyForRegisterState;
 
    private APIReceiver mApiReceiver = new APIReceiver() {
       public void onSuccess(Object result, Intent intent) {
-         User lUser = (User) result;
-         ((MainApplication) ((Activity) mContext).getApplication()).login(lUser);
+         User user = (User)result;
+         ((MainApplication)getActivity().getApplication()).login(user);
 
-         for (LoginListener l : loginListeners) {
-            l.onLogin(lUser);
+         for (LoginListener loginListener : loginListeners) {
+            loginListener.onLogin(user);
          }
       }
 
       public void onFailure(APIService.Error error, Intent intent) {
          enable(true);
-         _loadingSpinner.setVisibility(View.GONE);
+         mLoadingSpinner.setVisibility(View.GONE);
          mErrorText.setVisibility(View.VISIBLE);
       }
    };
-
-   private CheckBox _agreementCheckBox;
 
    /**
     * Required for restoring fragments
@@ -97,61 +91,57 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       super.onCreate(savedInstanceState);
 
       if (savedInstanceState != null) {
-         // readyForRegisterState
-         readyForRegisterState = savedInstanceState.getBoolean(LOGIN_STATE);
+         mReadyForRegisterState = savedInstanceState.getBoolean(LOGIN_STATE);
       } else {
-         readyForRegisterState = false;
+         mReadyForRegisterState = false;
       }
-
    }
 
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+   public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-      mLoginId = (EditText) view.findViewById(R.id.edit_login_id);
-      mPassword = (EditText) view.findViewById(R.id.edit_password);
-      mLogin = (ImageButton) view.findViewById(R.id.signin_button);
-      mRegister = (ImageButton) view.findViewById(R.id.register_button);
-      mCancelRegister = (ImageButton) view.findViewById(R.id.cancel_register_button);
-      mGoogleLogin = (ImageButton) view.findViewById(R.id.use_google_login_button);
-      mYahooLogin = (ImageButton) view.findViewById(R.id.use_yahoo_login_button);
+      mLoginId = (EditText)view.findViewById(R.id.edit_login_id);
+      mPassword = (EditText)view.findViewById(R.id.edit_password);
+      mLogin = (ImageButton)view.findViewById(R.id.signin_button);
+      mRegister = (ImageButton)view.findViewById(R.id.register_button);
+      mCancelRegister = (ImageButton)view.findViewById(R.id.cancel_register_button);
+      mGoogleLogin = (ImageButton)view.findViewById(R.id.use_google_login_button);
+      mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
 
-      mConfirmPasswordTag = (TextView) view.findViewById(R.id.confirm_password);
-      mUsernameTag = (TextView) view.findViewById(R.id.login_username);
-      mConfirmPassword = (EditText) view.findViewById(R.id.edit_confirm_password);
-      mName = (EditText) view.findViewById(R.id.edit_login_username);
-      mErrorText = (TextView) view.findViewById(R.id.login_error_text);
+      mConfirmPasswordTag = (TextView)view.findViewById(R.id.confirm_password);
+      mUsernameTag = (TextView)view.findViewById(R.id.login_username);
+      mConfirmPassword = (EditText)view.findViewById(R.id.edit_confirm_password);
+      mName = (EditText)view.findViewById(R.id.edit_login_username);
+      mErrorText = (TextView)view.findViewById(R.id.login_error_text);
       mErrorText.setVisibility(View.GONE);
 
-      _registerAgreement = (LinearLayout) view.findViewById(R.id.login_agreement_terms_layout);
-      TextView t = (TextView) view.findViewById(R.id.login_agreement_terms_textview);
+      mRegisterAgreement = (LinearLayout)view.findViewById(R.id.login_agreement_terms_layout);
+      TextView termsAgree = (TextView)view.findViewById(R.id.login_agreement_terms_textview);
 
-      t.setMovementMethod(LinkMovementMethod.getInstance());
+      termsAgree.setMovementMethod(LinkMovementMethod.getInstance());
 
-      _agreementCheckBox = (CheckBox) view.findViewById(R.id.login_agreement_terms_checkbox);
+      mTermsAgreeCheckBox = (CheckBox)view.findViewById(R.id.login_agreement_terms_checkbox);
 
-      _loadingSpinner = (ProgressBar) view.findViewById(R.id.login_loading_bar);
-      _loadingSpinner.setVisibility(View.GONE);
+      mLoadingSpinner = (ProgressBar)view.findViewById(R.id.login_loading_bar);
+      mLoadingSpinner.setVisibility(View.GONE);
 
-      mCreateAccountText = (TextView) view.findViewById(R.id.create_account_header);
+      mCreateAccountText = (TextView)view.findViewById(R.id.create_account_header);
       mCreateAccountText.setVisibility(View.GONE);
-      // /_registerAgreement.setVisibility(View.GONE);
 
       setState();
 
       mLogin.setOnClickListener(new OnClickListener() {
-
          @Override
          public void onClick(View v) {
-            InputMethodManager in = (InputMethodManager) mContext
-                  .getSystemService(Context.INPUT_METHOD_SERVICE);
+            InputMethodManager in = (InputMethodManager)mContext
+             .getSystemService(Context.INPUT_METHOD_SERVICE);
 
             in.hideSoftInputFromWindow(mLoginId.getApplicationWindowToken(),
-                  InputMethodManager.HIDE_NOT_ALWAYS);
+             InputMethodManager.HIDE_NOT_ALWAYS);
             login();
          }
-
       });
 
       mGoogleLogin.setOnClickListener(this);
@@ -168,7 +158,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
        * layout that you hide/show?
        */
       mErrorText.setVisibility(View.GONE);
-      if (readyForRegisterState) {
+      if (mReadyForRegisterState) {
          mErrorText.setVisibility(View.GONE);
          mCreateAccountText.setVisibility(View.VISIBLE);
          mConfirmPasswordTag.setVisibility(View.VISIBLE);
@@ -176,7 +166,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          mConfirmPassword.setVisibility(View.VISIBLE);
          mName.setVisibility(View.VISIBLE);
          mCancelRegister.setVisibility(View.VISIBLE);
-         _registerAgreement.setVisibility(View.VISIBLE);
+         mRegisterAgreement.setVisibility(View.VISIBLE);
 
          mGoogleLogin.setVisibility(View.GONE);
          mYahooLogin.setVisibility(View.GONE);
@@ -186,7 +176,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          mName.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
          mConfirmPasswordTag.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
          mConfirmPassword.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-         _registerAgreement.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
+         mRegisterAgreement.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
       } else {
          mCreateAccountText.clearAnimation();
          mCreateAccountText.setVisibility(View.GONE);
@@ -198,8 +188,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          mConfirmPassword.setVisibility(View.GONE);
          mName.clearAnimation();
          mName.setVisibility(View.GONE);
-         _registerAgreement.clearAnimation();
-         _registerAgreement.setVisibility(View.GONE);
+         mRegisterAgreement.clearAnimation();
+         mRegisterAgreement.setVisibility(View.GONE);
          // _registerAgreement.clearAnimation();
          // _registerAgreement.setVisibility(View.GONE);
          mCancelRegister.clearAnimation();
@@ -208,14 +198,13 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          mYahooLogin.setVisibility(View.VISIBLE);
          mLogin.setVisibility(View.VISIBLE);
       }
-
    }
 
    private void login() {
-
-      if (mLoginId.getText().toString().length() > 1 && mPassword.getText().toString().length() > 1
-            && mLoginId.getText().toString().contains("@")) {
-         _loadingSpinner.setVisibility(View.VISIBLE);
+      if (mLoginId.getText().toString().length() > 1 &&
+       mPassword.getText().toString().length() > 1 &&
+       mLoginId.getText().toString().contains("@")) {
+         mLoadingSpinner.setVisibility(View.VISIBLE);
          AuthenicationPackage authenicationPackage = new AuthenicationPackage();
          authenicationPackage.login = mLoginId.getText().toString();
          authenicationPackage.password = mPassword.getText().toString();
@@ -223,8 +212,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
       } else {
          mErrorText.setVisibility(View.VISIBLE);
-         if (!mLoginId.getText().toString().contains("@")
-               || mLoginId.getText().toString().length() <= 1) {
+         if (!mLoginId.getText().toString().contains("@") ||
+          mLoginId.getText().toString().length() <= 1) {
             mLoginId.requestFocus();
             showKeyboard();
          } else {
@@ -234,11 +223,12 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       }
    }
 
-   public void showKeyboard() {
-      InputMethodManager in = (InputMethodManager) mContext
-            .getSystemService(Context.INPUT_METHOD_SERVICE);
+   private void showKeyboard() {
+      InputMethodManager in = (InputMethodManager)mContext
+       .getSystemService(Context.INPUT_METHOD_SERVICE);
 
-      in.toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
+      in.toggleSoftInput(InputMethodManager.SHOW_FORCED,
+       InputMethodManager.HIDE_IMPLICIT_ONLY);
    }
 
    private void enable(boolean enabled) {
@@ -256,81 +246,74 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
-      outState.putSerializable(LOGIN_STATE, readyForRegisterState);
-   }
-
-   public void onItemClick(AdapterView<?> adapterView, View view, int position, long id) {
-      // mTopicAdapter.onItemClick(null, view, position, id);
+      outState.putSerializable(LOGIN_STATE, mReadyForRegisterState);
    }
 
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
 
-      try {
-         // topicSelectedListener = (TopicSelectedListener)activity;
-         mContext = (Context) activity;
-      } catch (ClassCastException e) {
-         throw new ClassCastException(activity.toString() + " must implement TopicSelectedListener");
-      }
+      mContext = activity;
    }
 
    public static LoginFragment newInstance() {
-      LoginFragment mFrgment = new LoginFragment();
-      return mFrgment;
+      return new LoginFragment();
    }
 
    @Override
    public void onClick(View v) {
-
-      Intent i;
+      Intent intent;
       switch (v.getId()) {
       case R.id.use_google_login_button:
-         i = new Intent(mContext, OpenIDActivity.class);
-         i.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.GOOGLE_LOGIN);
-         startActivityForResult(i, OPEN_ID_RESULT_CODE);
+         intent = new Intent(mContext, OpenIDActivity.class);
+         intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.GOOGLE_LOGIN);
+         startActivityForResult(intent, OPEN_ID_RESULT_CODE);
          break;
 
       case R.id.use_yahoo_login_button:
-         i = new Intent(mContext, OpenIDActivity.class);
-         i.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.YAHOO_LOGIN);
-         startActivityForResult(i, OPEN_ID_RESULT_CODE);
+         intent = new Intent(mContext, OpenIDActivity.class);
+         intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.YAHOO_LOGIN);
+         startActivityForResult(intent, OPEN_ID_RESULT_CODE);
+         break;
 
       case R.id.register_button:
-         if (!readyForRegisterState) {
-            readyForRegisterState = true;
+         if (!mReadyForRegisterState) {
+            mReadyForRegisterState = true;
             setState();
+         } else {
+            String login = mLoginId.getText().toString();
+            String name = mName.getText().toString();
+            String password = mPassword.getText().toString();
+            String confirmPassword = mConfirmPassword.getText().toString();
 
-         } else {//
-            if (mPassword.getText().toString().equals(mConfirmPassword.getText().toString())
-                  && mLoginId.getText().length() > 1 && mLoginId.getText().toString().contains("@")
-                  && mName.getText().length() > 1 && _agreementCheckBox.isChecked()) {
-               // start service for register
+            if (password.equals(confirmPassword) &&
+             login.length() > 1 && login.contains("@") &&
+             name.length() > 1 && mTermsAgreeCheckBox.isChecked()) {
                AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-               authenicationPackage.login = mLoginId.getText().toString();
-               authenicationPackage.password = mPassword.getText().toString();
-               authenicationPackage.username = mName.getText().toString();
+               authenicationPackage.login = login;
+               authenicationPackage.password = password;
+               authenicationPackage.username = name;
                enable(false);
-               mContext.startService(APIService.getRegisterIntent(mContext, authenicationPackage));
-
+               mContext.startService(APIService.getRegisterIntent(mContext,
+                authenicationPackage));
             } else {
                mErrorText.setVisibility(View.VISIBLE);
-               if (!mLoginId.getText().toString().contains("@")
-                     || mLoginId.getText().toString().length() <= 1) {
+               if (!login.contains("@") || login.length() <= 1) {
                   mLoginId.requestFocus();
                   showKeyboard();
-               } else if (mPassword.getText().toString().length() <= 1) {
+               } else if (password.length() <= 1) {
                   mPassword.requestFocus();
                   showKeyboard();
-               } else if (mName.getText().toString().length() <= 1) {
+               } else if (name.length() <= 1) {
                   mName.requestFocus();
                   showKeyboard();
                }
             }
          }
          break;
+
       case R.id.cancel_register_button:
-         readyForRegisterState = false;
+         mReadyForRegisterState = false;
          setState();
          break;
       }
@@ -339,16 +322,16 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-      if (resultCode == Activity.RESULT_OK)
+      if (resultCode == Activity.RESULT_OK) {
          if (data != null) {
-            _loadingSpinner.setVisibility(View.VISIBLE);
+            mLoadingSpinner.setVisibility(View.VISIBLE);
             String session = data.getStringExtra("session");
             AuthenicationPackage authenicationPackage = new AuthenicationPackage();
             authenicationPackage.session = session;
             enable(false);
             mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
          }
+      }
    }
 
    @Override
@@ -378,44 +361,44 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    }
 
    static AlertDialog getLogoutDialog(final Context context) {
-      return createLogoutDialog(context, R.string.logout_title, R.string.logout_messege,
-            R.string.logout_confirm, R.string.logout_cancel);
+      return createLogoutDialog(context, R.string.logout_title,
+       R.string.logout_messege, R.string.logout_confirm, R.string.logout_cancel);
    }
 
-   private static AlertDialog createLogoutDialog(final Context context, int titleRes,
-         int messageRes, int buttonConfirm, int buttonCancel) {
+   private static AlertDialog createLogoutDialog(final Context context,
+    int titleRes, int messageRes, int buttonConfirm, int buttonCancel) {
       HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
       builder
-            .setTitle(context.getString(titleRes))
-            .setMessage(context.getString(messageRes))
-            .setPositiveButton(context.getString(buttonConfirm),
-                  new DialogInterface.OnClickListener() {
-                     public void onClick(DialogInterface dialog, int id) {
+         .setTitle(context.getString(titleRes))
+         .setMessage(context.getString(messageRes))
+         .setPositiveButton(context.getString(buttonConfirm),
+            new DialogInterface.OnClickListener() {
+               public void onClick(DialogInterface dialog, int id) {
+                  HTTPRequestHelper.clearCookies(context);
 
-                        HTTPRequestHelper.clearCookies(context);
-                        for (LoginListener l : loginListeners) {
-                           l.onLogout();
-                        }
+                  for (LoginListener loginListener : loginListeners) {
+                     loginListener.onLogout();
+                  }
 
-                        MediaFragment.showingLogout = false;
-                        dialog.cancel();
-                     }
-                  })
-            .setNegativeButton(context.getString(buttonCancel),
-                  new DialogInterface.OnClickListener() {
-                     public void onClick(DialogInterface dialog, int id) {
+                  MediaFragment.showingLogout = false;
+                  dialog.cancel();
+               }
+            })
+      .setNegativeButton(context.getString(buttonCancel),
+         new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               MediaFragment.showingLogout = false;
+               dialog.cancel();
+            }
+         });
 
-                        MediaFragment.showingLogout = false;
-                        dialog.cancel();
-                     }
-                  });
-      AlertDialog d = builder.create();
-      d.setCancelable(false);
-      return d;
+      AlertDialog dialog = builder.create();
+      dialog.setCancelable(false);
+
+      return dialog;
    }
 
    public static void clearLoginListeners() {
       loginListeners.clear();
-
    }
 }
