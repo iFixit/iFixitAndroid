@@ -318,8 +318,8 @@ public class MediaFragment extends SherlockFragment implements
       for (int i = 0; i < count; i++) {
          MediaViewItem mediaView = (MediaViewItem)mGridView.getChildAt(i);
          if (mediaView != null) {
-            if (mediaView.imageview.getDrawable() != null) {
-               mediaView.imageview.getDrawable().setCallback(null);
+            if (mediaView.mImageview.getDrawable() != null) {
+               mediaView.mImageview.getDrawable().setCallback(null);
             }
          }
       }
@@ -525,7 +525,7 @@ public class MediaFragment extends SherlockFragment implements
              mImageList.getImages().get(position).getKey() == null) {
                String imageUrl = image.getGuid() + mImageSizes.getThumb();
                itemView.setImageItem(imageUrl, getActivity(), !image.getLoaded());
-               itemView.listRef = image;
+               itemView.mListRef = image;
                image.setLoaded(true);
                itemView.setTag(image.getGuid());
                // image was added locally
@@ -542,8 +542,8 @@ public class MediaFragment extends SherlockFragment implements
                    MediaStore.Images.Thumbnails.MINI_KIND, null);
                }
 
-               itemView.imageview.setImageBitmap(bitmap);
-               itemView.listRef = image;
+               itemView.mImageview.setImageBitmap(bitmap);
+               itemView.mListRef = image;
                if (image.getKey() != null) {
                   if (mLocalURL.get(image.getKey()).mImgid == null) {
                      // Has not received an imageID so is still uploading
@@ -559,9 +559,9 @@ public class MediaFragment extends SherlockFragment implements
          }
 
          if (mSelectedList.get(position)) {
-            itemView.selectImage.setVisibility(View.VISIBLE);
+            itemView.mSelectImage.setVisibility(View.VISIBLE);
          } else {
-            itemView.selectImage.setVisibility(View.INVISIBLE);
+            itemView.mSelectImage.setVisibility(View.INVISIBLE);
          }
 
          return itemView;
