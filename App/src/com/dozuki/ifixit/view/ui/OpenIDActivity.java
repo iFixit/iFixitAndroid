@@ -21,7 +21,7 @@ public class OpenIDActivity extends Activity {
    public static String YAHOO_LOGIN = "yahoo";
    public static String GOOGLE_LOGIN = "google";
 
-   private WebView _webView;
+   private WebView mWebView;
    private String mBaseUrl;
    private Site mSite;
 
@@ -37,23 +37,23 @@ public class OpenIDActivity extends Activity {
 
       final String method = extras.getString(LOGIN_METHOD);
 
-      _webView = (WebView) findViewById(R.id.open_id_web_view);
+      mWebView = (WebView)findViewById(R.id.open_id_web_view);
 
       CookieSyncManager.createInstance(this);
       CookieSyncManager.getInstance().sync();
       CookieManager.getInstance().removeAllCookie();
 
-      _webView.loadUrl(mBaseUrl + method);
-      _webView.getSettings().setJavaScriptEnabled(true);
+      mWebView.loadUrl(mBaseUrl + method);
+      mWebView.getSettings().setJavaScriptEnabled(true);
 
-      _webView.setWebChromeClient(new WebChromeClient() {
+      mWebView.setWebChromeClient(new WebChromeClient() {
          // Show loading progress in activity's title bar.
          @Override
          public void onProgressChanged(WebView view, int progress) {
             setProgress(progress * 100);
          }
       });
-      _webView.setWebViewClient(new WebViewClient() {
+      mWebView.setWebViewClient(new WebViewClient() {
          // When start to load page, show url in activity's title bar
          @Override
          public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -61,33 +61,26 @@ public class OpenIDActivity extends Activity {
          }
       });
 
-      // CookieSyncManager.getInstance().sync();
-      // CookieManager.getInstance().setCookie(mBaseUrl+method,
-      // "sso-origin=SHOW_SUCCESS;");
-      // CookieSyncManager.getInstance().sync();
-      // CookieManager.getInstance().removeAllCookie();
-
-      _webView.setWebViewClient(new WebViewClient() {
+      mWebView.setWebViewClient(new WebViewClient() {
          @Override
          public void onPageFinished(WebView view, String url) {
             CookieSyncManager.getInstance().sync();
-            // Get the cookie from cookie jar.
-            Log.e("URL", url);
-            if (!url.contains(mSite.mName)) {
-               return;
-            }
-            if (url.contains(mBaseUrl)) {
+            // Ignore page loads if it's on the openID site.
+            if (!url.contains(mSite.mName) || url.contains(mBaseUrl)) {
                return;
             }
 
+            /**
+             * We've been bounced back to the original site - get the cookie from cookie jar.
+             */
             String cookie = CookieManager.getInstance().getCookie(url);
             if (cookie == null) {
                return;
             }
-            Log.e("cookie", cookie);
+
             // Cookie is a string like NAME=VALUE [; NAME=VALUE]
             String[] pairs = cookie.split(";");
-            for (int i = 0; i < pairs.length; ++i) {
+            for (int i = 0; i < pairs.length; i++) {
                String[] parts = pairs[i].split("=", 2);
                // If token is found, return it to the calling activity.
                if (parts.length == 2 && parts[0].equalsIgnoreCase("session")) {
@@ -97,6 +90,11 @@ public class OpenIDActivity extends Activity {
                   finish();
                }
             }
+
+            Log.w("iFixit", "Couldn't find session in Cookie from OpenID login");
+            Intent result = new Intent();
+            setResult(RESULT_CANCELED, result);
+            finish();
          }
       });
    }
