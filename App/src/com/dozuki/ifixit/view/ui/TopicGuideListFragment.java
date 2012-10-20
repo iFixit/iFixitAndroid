@@ -53,7 +53,7 @@ public class TopicGuideListFragment extends SherlockFragment {
       super.onCreate(savedState);
 
       if (savedState != null && mTopicLeaf == null) {
-         mTopicLeaf = (TopicLeaf) savedState.getSerializable(SAVED_TOPIC);
+         mTopicLeaf = (TopicLeaf)savedState.getSerializable(SAVED_TOPIC);
       }
 
       if (mImageManager == null) {
@@ -71,7 +71,7 @@ public class TopicGuideListFragment extends SherlockFragment {
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_guide_list, container, false);
 
-      mGridView = (GridView) view.findViewById(R.id.gridview);
+      mGridView = (GridView)view.findViewById(R.id.gridview);
 
       mGuideAdapter = new TopicGuideListAdapter();
       mGuideAdapter.setTopic(mTopicLeaf);
@@ -117,7 +117,7 @@ public class TopicGuideListFragment extends SherlockFragment {
       }
 
       public View getView(int position, View convertView, ViewGroup parent) {
-         TopicGuideItemView itemView = (TopicGuideItemView) convertView;
+         TopicGuideItemView itemView = (TopicGuideItemView)convertView;
 
          if (convertView == null) {
             itemView = new TopicGuideItemView(getActivity(), mImageManager);

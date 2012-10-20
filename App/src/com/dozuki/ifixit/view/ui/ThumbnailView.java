@@ -42,9 +42,9 @@ public class ThumbnailView extends LinearLayout {
 
       mThumbs = new ArrayList<ImageView>();
 
-      mThumbs.add((ImageView) findViewById(R.id.thumbnail_1));
-      mThumbs.add((ImageView) findViewById(R.id.thumbnail_2));
-      mThumbs.add((ImageView) findViewById(R.id.thumbnail_3));
+      mThumbs.add((ImageView)findViewById(R.id.thumbnail_1));
+      mThumbs.add((ImageView)findViewById(R.id.thumbnail_2));
+      mThumbs.add((ImageView)findViewById(R.id.thumbnail_3));
    }
 
    public void setImageSizes(ImageSizes imageSizes) {
@@ -52,7 +52,7 @@ public class ThumbnailView extends LinearLayout {
    }
 
    public void setThumbs(ArrayList<StepImage> images,
-      ImageManager imageManager, Context context) {
+    ImageManager imageManager, Context context) {
       if (images.size() <= 1) {
          setVisibility(INVISIBLE);
       }
@@ -69,12 +69,12 @@ public class ThumbnailView extends LinearLayout {
             thumb.setOnClickListener(new OnClickListener() {
                @Override
                public void onClick(View v) {
-                  setCurrentThumb((String) v.getTag());
+                  setCurrentThumb((String)v.getTag());
                }
             });
 
             mImageManager.displayImage(images.get(thumbId).getText() +
-             mImageSizes.getThumb(), (Activity) mContext, thumb);
+             mImageSizes.getThumb(), (Activity)mContext, thumb);
          }
       }
    }
@@ -82,7 +82,7 @@ public class ThumbnailView extends LinearLayout {
    public void setCurrentThumb(String url) {
       mCurrentURL = url;
       mImageManager.displayImage(mCurrentURL + mImageSizes.getMain(),
-       (Activity) mContext, mMainImage);
+       (Activity)mContext, mMainImage);
       mMainImage.setTag(url);
    }
 

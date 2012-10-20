@@ -45,7 +45,7 @@ public class TopicListFragment extends SherlockFragment
       super.onCreate(savedInstanceState);
 
       if (savedInstanceState != null) {
-         mTopic = (TopicNode) savedInstanceState.getSerializable(CURRENT_TOPIC);
+         mTopic = (TopicNode)savedInstanceState.getSerializable(CURRENT_TOPIC);
       }
    }
 
@@ -55,7 +55,7 @@ public class TopicListFragment extends SherlockFragment
       View view = inflater.inflate(R.layout.topic_list_fragment, container,
        false);
 
-      mListView = (SectionListView) view.findViewById(R.id.topicList);
+      mListView = (SectionListView)view.findViewById(R.id.topicList);
       mListView.getListView().setOnItemClickListener(this);
 
       setTopic(mTopic);
@@ -133,8 +133,8 @@ public class TopicListFragment extends SherlockFragment
       super.onAttach(activity);
 
       try {
-         topicSelectedListener = (TopicSelectedListener) activity;
-         mContext = (Context) activity;
+         topicSelectedListener = (TopicSelectedListener)activity;
+         mContext = (Context)activity;
       } catch (ClassCastException e) {
          throw new ClassCastException(activity.toString() +
           " must implement TopicSelectedListener");

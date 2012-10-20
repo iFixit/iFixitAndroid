@@ -19,7 +19,7 @@ public class TopicListAdapter extends Section {
    private TopicListRowView prevSelected = null;
 
    public TopicListAdapter(Context context, String header,
-      ArrayList<TopicNode> topicList) {
+    ArrayList<TopicNode> topicList) {
       mContext = context;
       mHeader = header;
       mTopicList = topicList;
@@ -51,7 +51,7 @@ public class TopicListAdapter extends Section {
       if (convertView == null) {
          topicRow = new TopicListRowView(mContext);
       } else {
-         topicRow = (TopicListRowView) convertView;
+         topicRow = (TopicListRowView)convertView;
       }
 
       topicRow.setTopic(mTopicList.get(position));
@@ -66,7 +66,7 @@ public class TopicListAdapter extends Section {
 
    @Override
    public View getHeaderView(View convertView, ViewGroup parent) {
-      TopicListHeaderView header = (TopicListHeaderView) convertView;
+      TopicListHeaderView header = (TopicListHeaderView)convertView;
 
       if (header == null) {
          header = new TopicListHeaderView(mContext);
@@ -79,7 +79,7 @@ public class TopicListAdapter extends Section {
 
    @Override
    public void onItemClick(AdapterView<?> adapterView, View view, int position,
-      long id) {
+    long id) {
       if (mTopicListener != null) {
          mTopicListener.onTopicSelected(mTopicList.get(position));
 
@@ -88,7 +88,7 @@ public class TopicListAdapter extends Section {
          }
 
          ((TopicListRowView) view).setCurrentTopicStyle();
-         prevSelected = (TopicListRowView) view;
+         prevSelected = (TopicListRowView)view;
       }
    }
 }

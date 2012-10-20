@@ -42,13 +42,13 @@ public class TopicViewActivity extends SherlockFragmentActivity {
           .findFragmentById(R.id.topic_view_fragment);
       }
 
-      mTopicNode = (TopicNode) getIntent().getSerializableExtra(TOPIC_KEY);
+      mTopicNode = (TopicNode)getIntent().getSerializableExtra(TOPIC_KEY);
    }
 
    @Override
    public void onAttachFragment(Fragment fragment) {
       if (fragment instanceof TopicViewFragment) {
-         TopicViewFragment topicViewFragment = (TopicViewFragment) fragment;
+         TopicViewFragment topicViewFragment = (TopicViewFragment)fragment;
 
          if (topicViewFragment.getTopicNode() == null && mTopicNode != null) {
             topicViewFragment.setTopicNode(mTopicNode);

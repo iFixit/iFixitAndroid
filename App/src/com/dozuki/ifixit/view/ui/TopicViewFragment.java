@@ -123,7 +123,7 @@ public class TopicViewFragment extends SherlockFragment
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-      mActionBar = ((SherlockFragmentActivity) activity).getSupportActionBar();
+      mActionBar = ((SherlockFragmentActivity)activity).getSupportActionBar();
    }
 
    @Override
@@ -198,36 +198,6 @@ public class TopicViewFragment extends SherlockFragment
          mActionBar.setSelectedNavigationItem(mSelectedTab);
       } else {
          selectDefaultTab();
-      }
-   }
-
-   public void reDisplayActionBar() {
-      if (mTopicLeaf != null) {
-         int i = mSelectedTab;
-         mActionBar.setTitle(mTopicLeaf.getName());
-         mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-         ActionBar.Tab tab = mActionBar.newTab();
-         tab.setText(getActivity().getString(R.string.guides));
-         tab.setTabListener(this);
-         mActionBar.addTab(tab);
-
-         tab = mActionBar.newTab();
-         tab.setText(getActivity().getString(R.string.answers));
-         tab.setTabListener(this);
-         mActionBar.addTab(tab);
-
-         tab = mActionBar.newTab();
-         tab.setText(getActivity().getString(R.string.info));
-         tab.setTabListener(this);
-         mActionBar.addTab(tab);
-
-         if (i != -1) {
-            mActionBar.setSelectedNavigationItem(i);
-         } else {
-            selectDefaultTab();
-         }
-      } else if (mActionBar != null) {
-         mActionBar.setTitle("");
       }
    }
 
