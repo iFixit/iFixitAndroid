@@ -19,14 +19,10 @@ public class LocalImage implements Serializable {
 
    @Override
    public boolean equals(Object obj) {
-      if (obj == null)
+      if (!(obj instanceof LocalImage)) {
          return false;
-      if (obj == this)
-         return true;
-      if (obj.getClass() != getClass())
-         return false;
-      LocalImage inf = (LocalImage) obj;
+      }
 
-      return inf.mPath.equals(this.mPath);
+      return ((LocalImage)obj).mPath.equals(mPath);
    }
 }

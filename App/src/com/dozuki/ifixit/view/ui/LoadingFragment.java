@@ -10,7 +10,7 @@ import com.dozuki.ifixit.R;
 
 public class LoadingFragment extends SherlockFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
+    Bundle savedInstanceState) {
       return inflater.inflate(R.layout.loading_fragment, container, false);
    }
 }
