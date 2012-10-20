@@ -22,6 +22,10 @@ public class UserImageInfo implements Serializable {
       mLocalKey = key;
    }
 
+   public boolean getLoaded() {
+      return mLoaded;
+   }
+
    public void setLoaded(boolean loaded) {
       mLoaded = loaded;
    }
@@ -76,19 +80,14 @@ public class UserImageInfo implements Serializable {
 
    @Override
    public boolean equals(Object obj) {
-      if (obj == null)
+      if (!(obj instanceof UserImageInfo)) {
          return false;
-      if (obj == this)
-         return true;
-      if (obj.getClass() != getClass())
-         return false;
-      UserImageInfo inf = (UserImageInfo) obj;
+      }
+
+      UserImageInfo inf = (UserImageInfo)obj;
       if (mImageId == null || inf.mImageId == null)
          return false;
-      return (inf.mImageId.equals(mImageId));
-   }
 
-   public boolean getLoaded() {
-      return mLoaded;
+      return inf.mImageId.equals(mImageId);
    }
 }
