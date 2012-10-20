@@ -13,6 +13,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -117,11 +118,11 @@ public class TopicsActivity extends SherlockFragmentActivity
       IntentFilter filter = new IntentFilter();
       filter.addAction(APIEndpoint.CATEGORIES.mAction);
       registerReceiver(mApiReceiver, filter);
-      //when this is activity is paused, before categories returned, they
-      //will never be listed on resume.
+
+      // Fetch categories if necessary.
       if (mRootTopic == null) {
-          fetchCategories();
-       }
+         fetchCategories();
+      }
    }
 
    @Override
@@ -189,7 +190,7 @@ public class TopicsActivity extends SherlockFragmentActivity
    }
 
    @Override
-   public boolean onCreateOptionsMenu(com.actionbarsherlock.view.Menu menu) {
+   public boolean onCreateOptionsMenu(Menu menu) {
       MenuInflater inflater = getSupportMenuInflater();
       inflater.inflate(R.menu.menu_bar, menu);
       MenuItem galleryIcon = menu.findItem(R.id.gallery_button);

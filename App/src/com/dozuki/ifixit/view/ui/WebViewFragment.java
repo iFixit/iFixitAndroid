@@ -23,15 +23,15 @@ public class WebViewFragment extends SherlockFragment
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-      Bundle savedInstanceState) {
+    Bundle savedInstanceState) {
       if (mWebView != null) {
          mWebView.destroy();
       }
 
       View view = inflater.inflate(R.layout.web_view_fragment, container,
        false);
-      mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-      mWebView = (WebView) view.findViewById(R.id.web_view);
+      mProgressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
+      mWebView = (WebView)view.findViewById(R.id.web_view);
 
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
@@ -123,7 +123,9 @@ public class WebViewFragment extends SherlockFragment
                mGuideListener.onViewGuide(guideid);
                return true;
             }
-         } catch (ArrayIndexOutOfBoundsException e) {} catch (NumberFormatException e) {}
+         } catch (ArrayIndexOutOfBoundsException e) {
+         } catch (NumberFormatException e) {
+         }
 
          view.loadUrl(url);
 
