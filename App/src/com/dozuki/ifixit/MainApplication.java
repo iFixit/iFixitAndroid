@@ -129,7 +129,7 @@ public class MainApplication extends Application {
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {
          WindowManager wm = (WindowManager)getSystemService(
-         Context.WINDOW_SERVICE);
+          Context.WINDOW_SERVICE);
          DisplayMetrics metrics = new DisplayMetrics();
          wm.getDefaultDisplay().getMetrics(metrics);
          int maxDimension = Math.max(metrics.heightPixels,
@@ -157,16 +157,19 @@ public class MainApplication extends Application {
    }
 
    public User getUserFromPreferenceFile() {
-      SharedPreferences preferenceFile = this.getSharedPreferences(
-            PREFERENCE_FILE, MODE_PRIVATE);
-      String session = preferenceFile.getString(SESSION_KEY +   mSite.mName, null);
-      String username = preferenceFile.getString(USERNAME_KEY+  mSite.mName, null);
+      SharedPreferences preferenceFile = getSharedPreferences(
+       PREFERENCE_FILE, MODE_PRIVATE);
+      String session = preferenceFile.getString(mSite.mName + SESSION_KEY,
+       null);
+      String username = preferenceFile.getString(mSite.mName + USERNAME_KEY,
+       null);
       mUser = null;
-      if(username != null && session != null) {
-         mUser= new User();
+      if (username != null && session != null) {
+         mUser = new User();
          mUser.setSession(session);
          mUser.setUsername(username);
       }
+
       return mUser;
    }
 
@@ -186,20 +189,20 @@ public class MainApplication extends Application {
 
    public void setUserToPreferenceFile(User user) {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-            Context.MODE_PRIVATE);
+       Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
-      editor.putString(SESSION_KEY +  mSite.mName, user.getSession());
-      editor.putString(USERNAME_KEY +  mSite.mName, user.getUsername());
+      editor.putString(mSite.mName + SESSION_KEY, user.getSession());
+      editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
       editor.commit();
       mUser = user;
    }
 
    public void clearUserFromPreferenceFile() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-            Context.MODE_PRIVATE);
+       Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
-      editor.remove(SESSION_KEY +  mSite.mName);
-      editor.remove(USERNAME_KEY +  mSite.mName);
+      editor.remove(mSite.mName + SESSION_KEY);
+      editor.remove(mSite.mName + USERNAME_KEY);
       editor.commit();
       mUser = null;
    }
