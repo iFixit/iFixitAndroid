@@ -14,7 +14,7 @@ public class UploadedImageInfo implements Serializable {
    }
 
    public void setmGuid(String guid) {
-      mGuid = mGuid;
+      mGuid = guid;
    }
 
    public String getmImageid() {
@@ -22,7 +22,7 @@ public class UploadedImageInfo implements Serializable {
    }
 
    public void setmImageid(String imageid) {
-      mImageid = mImageid;
+      mImageid = imageid;
    }
 
    public String getStatus() {
