@@ -38,10 +38,9 @@ public class UserImageList implements Serializable {
       this.mImages = mImages;
    }
 
-   static class UserImageInfoComparator implements Comparator<UserImageInfo> {
-
+   private static class UserImageInfoComparator implements
+    Comparator<UserImageInfo> {
       public int compare(UserImageInfo e1, UserImageInfo e2) {
-
          if (e1.getImageid() == null && e2.getImageid() == null)
             return 0;
 
@@ -51,10 +50,8 @@ public class UserImageList implements Serializable {
          if (e2.getImageid() == null)
             return -1;
 
-         return (int) (Long.parseLong(e1.getImageid()) - Long.parseLong(e2
-            .getImageid()));
-
+         return Integer.parseInt(e1.getImageid()) - Integer.parseInt(
+          e2 .getImageid());
       }
-
    }
 }
