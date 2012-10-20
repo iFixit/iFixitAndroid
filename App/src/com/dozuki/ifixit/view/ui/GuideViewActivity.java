@@ -132,7 +132,7 @@ public class GuideViewActivity extends SherlockFragmentActivity
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-      // initSpeechRecognizer();
+      //initSpeechRecognizer();
    }
 
    @Override

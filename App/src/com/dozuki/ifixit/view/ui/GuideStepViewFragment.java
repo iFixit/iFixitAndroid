@@ -49,7 +49,8 @@ public class GuideStepViewFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedState) {
-      getActivity().setTheme(((MainApplication)getActivity().getApplication()).getSiteTheme());
+      getActivity().setTheme(((MainApplication)getActivity().getApplication()).
+       getSiteTheme());
 
       super.onCreate(savedState);
 
@@ -119,12 +120,12 @@ public class GuideStepViewFragment extends SherlockFragment {
       float height = 0f;
       float width = 0f;
 
-      float thumbPadding =
-       resources.getDimensionPixelSize(R.dimen.guide_thumbnail_padding) * 2f;
-      float mainPadding =
-       resources.getDimensionPixelSize(R.dimen.guide_image_padding) * 2f;
-      float pagePadding =
-       resources.getDimensionPixelSize(R.dimen.page_padding) * 2f;
+      float thumbPadding = resources.getDimensionPixelSize(
+       R.dimen.guide_thumbnail_padding) * 2f;
+      float mainPadding = resources.getDimensionPixelSize(
+       R.dimen.guide_image_padding) * 2f;
+      float pagePadding = resources.getDimensionPixelSize(
+       R.dimen.page_padding) * 2f;
 
       // padding that's included on every page
       float padding = pagePadding + mainPadding + thumbPadding;
@@ -229,7 +230,7 @@ public class GuideStepViewFragment extends SherlockFragment {
 
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-         GuideStepLineView stepLine = (GuideStepLineView) convertView;
+         GuideStepLineView stepLine = (GuideStepLineView)convertView;
 
          if (stepLine == null) {
             stepLine = new GuideStepLineView(mContext);
