@@ -69,14 +69,11 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
    public static boolean showingLogout;
    public static boolean showingDelete;
 
-   public static final String LOCAL_URL = "LOCAL_URL";
-
    private static final String TAG = "MediaFragment";
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;
    private static final int MAX_WRITING_IMAGES = 15;
    private static final int IMAGE_PAGE_SIZE = 40;
-   private static final String IMAGE_URL = "IMAGE_URL";
    private static final String CAMERA_PATH = "CAMERA_PATH";
    private static final int SELECT_PICTURE = 1;
    private static final int CAMERA_PIC_REQUEST = 2;
@@ -761,12 +758,12 @@ public class MediaFragment extends SherlockFragment implements OnItemClickListen
          }
          if (mLocalURL.get(url) != null) {
             Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-            intent.putExtra(IMAGE_URL, mLocalURL.get(url).mPath);
-            intent.putExtra(LOCAL_URL, true);
+            intent.putExtra(FullImageViewActivity.IMAGE_URL, mLocalURL.get(url).mPath);
+            intent.putExtra(FullImageViewActivity.LOCAL_URL, true);
             startActivity(intent);
          } else {
             Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-            intent.putExtra(IMAGE_URL, url);
+            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
             startActivity(intent);
          }
       }

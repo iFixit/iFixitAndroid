@@ -28,7 +28,7 @@ public class FadeInImageView extends ImageView {
    public void setImageBitmap(Bitmap bm) {
       super.setImageBitmap(bm);
       if (mFadeIn) {
-         this.setAnimation(AnimationUtils.loadAnimation(mContext,
+         setAnimation(AnimationUtils.loadAnimation(mContext,
           R.anim.fade_in));
       }
    }

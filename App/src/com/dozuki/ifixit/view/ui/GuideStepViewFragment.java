@@ -28,8 +28,6 @@ import com.dozuki.ifixit.view.model.StepLine;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideStepViewFragment extends SherlockFragment {
-   protected static final String IMAGE_URL = "IMAGE_URL";
-
    private TextView mTitle;
    private ThumbnailView mThumbs;
    private ImageView mMainImage;
@@ -87,7 +85,7 @@ public class GuideStepViewFragment extends SherlockFragment {
 
             Intent intent = new Intent(getActivity(),
              FullImageViewActivity.class);
-            intent.putExtra(IMAGE_URL, url);
+            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
 
             startActivity(intent);
          }

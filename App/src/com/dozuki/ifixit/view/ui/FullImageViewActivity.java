@@ -17,6 +17,9 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class FullImageViewActivity extends Activity {
+   public static final String IMAGE_URL = "IMAGE_URL";
+   public static final String LOCAL_URL = "LOCAL_URL";
+
    private String mImageUrl;
    private ImageViewTouch mImageZoom;
    private ImageView mCloseFullScreen;
@@ -32,17 +35,17 @@ public class FullImageViewActivity extends Activity {
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       Bundle extras = getIntent().getExtras();
-      mImageUrl = (String) extras.get(GuideStepViewFragment.IMAGE_URL);
-      MainApplication application = ((MainApplication) getApplication());
+      mImageUrl = (String)extras.get(IMAGE_URL);
+      MainApplication application = ((MainApplication)getApplication());
       mImageManager = application.getImageManager();
       mImageSizes = application.getImageSizes();
 
       setContentView(R.layout.full_screen_image);
 
       mImageZoom = (ImageViewTouch)findViewById(R.id.imageZoom);
-      Boolean localUri = (Boolean)extras.get(MediaFragment.LOCAL_URL);
+      boolean localUri = extras.getBoolean(LOCAL_URL, false);
 
-      if (localUri != null) {
+      if (localUri) {
          BitmapFactory.Options opt = new BitmapFactory.Options();
          opt.inSampleSize = 2;
          opt.inDither = false;
