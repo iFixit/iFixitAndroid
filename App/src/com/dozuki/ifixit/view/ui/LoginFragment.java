@@ -70,7 +70,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    private APIReceiver mApiReceiver = new APIReceiver() {
       public void onSuccess(Object result, Intent intent) {
          User lUser = (User) result;
-         ((MainApplication) ((Activity) mContext).getApplication()).setUserToPreferenceFile(lUser);
+         ((MainApplication) ((Activity) mContext).getApplication()).login(lUser);
 
          for (LoginListener l : loginListeners) {
             l.onLogin(lUser);

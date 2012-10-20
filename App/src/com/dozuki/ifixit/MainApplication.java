@@ -24,6 +24,8 @@ public class MainApplication extends Application {
    public static final String CURRENT_SITE = "SITE_ifixit";
 
    public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
+   private static final String FIRST_TIME_GALLERY_USER =
+    "FIRST_TIME_GALLERY_USER";
    private static final String SESSION_KEY = "SESSION_KEY";
    private static final String USERNAME_KEY = "USERNAME_KEY";
 
@@ -173,6 +175,21 @@ public class MainApplication extends Application {
       return mUser;
    }
 
+   public boolean isFirstTimeGalleryUser() {
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE);
+
+      return preferenceFile.getBoolean(FIRST_TIME_GALLERY_USER, true);
+   }
+
+   public void setFirstTimeGalleryUser(boolean firstTimeGalleryUser) {
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE);
+      Editor editor = preferenceFile.edit();
+      editor.putBoolean(FIRST_TIME_GALLERY_USER, firstTimeGalleryUser);
+      editor.commit();
+   }
+
    public boolean isUserLoggedIn() {
       return mUser != null;
    }
@@ -187,7 +204,10 @@ public class MainApplication extends Application {
       return Site.getSite(siteName);
    }
 
-   public void setUserToPreferenceFile(User user) {
+   /**
+    * Logs the given user in by writing it to SharedPreferences.
+    */
+   public void login(User user) {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
@@ -197,7 +217,10 @@ public class MainApplication extends Application {
       mUser = user;
    }
 
-   public void clearUserFromPreferenceFile() {
+   /**
+    * Logs the currently logged in user out by deleting it from SharedPreferences.
+    */
+   public void logout() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();

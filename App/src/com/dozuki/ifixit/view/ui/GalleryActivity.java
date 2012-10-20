@@ -1,8 +1,5 @@
 package com.dozuki.ifixit.view.ui;
 
-import android.content.Context;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -11,6 +8,7 @@ import android.view.View;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -22,19 +20,13 @@ public class GalleryActivity extends SherlockFragmentActivity
 
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
    private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
-   private static final String FIRST_TIME_USER = "FIRST_TIME_USER";
    private MediaFragment mMediaView;
 
    private ActionBar mActionBar;
    private boolean mLoginVisible;
    private View mLoginView;
+   private User mUser;
 
-   /**
-    * TODO Are these ever initialized?
-    */
-   private MenuItem galleryIcon;
-   private MenuItem cameraIcon;
-   private MenuItem helpIcon;
    private boolean mIconsHidden;
 
    @Override
@@ -42,8 +34,6 @@ public class GalleryActivity extends SherlockFragmentActivity
       setTheme(((MainApplication)getApplication()).getSiteTheme());
       getSupportActionBar().setTitle(((MainApplication)getApplication())
        .getSite().mTitle);
-
-      ((MainApplication)this.getApplication()).getUserFromPreferenceFile();
 
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
@@ -59,13 +49,14 @@ public class GalleryActivity extends SherlockFragmentActivity
       LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
        findFragmentByTag(LOGIN_FRAGMENT);
 
-      if (((MainApplication)this.getApplication()).getUserFromPreferenceFile() != null) {
-      User user = ((MainApplication)this.getApplication()).getUserFromPreferenceFile();
-      mLoginView.setVisibility(View.INVISIBLE);
-      ((MainApplication)getApplication()).setUser(user);
-      mMediaView.onLogin(user);
-      mIconsHidden = false;
-      supportInvalidateOptionsMenu();
+      mUser = ((MainApplication)getApplication()).getUserFromPreferenceFile();
+
+      if (mUser != null) {
+         mLoginView.setVisibility(View.INVISIBLE);
+         ((MainApplication)getApplication()).setUser(mUser);
+         mMediaView.onLogin(mUser);
+         mIconsHidden = false;
+         supportInvalidateOptionsMenu();
       } else {
          mIconsHidden = true;
          if (mLogin == null) {
@@ -86,7 +77,7 @@ public class GalleryActivity extends SherlockFragmentActivity
 
       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
       int inAnim, outAnim;
-      LoginFragment fg = new LoginFragment();;
+      LoginFragment fg = new LoginFragment();
 
       inAnim = R.anim.fade_in;
       outAnim = R.anim.fade_out;
@@ -95,15 +86,6 @@ public class GalleryActivity extends SherlockFragmentActivity
       ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
       ft.addToBackStack(null);
       ft.commitAllowingStateLoss();
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      if (((MainApplication)getApplication()).getUser() == null) {
-         hideMenuBarIcons();
-      }
    }
 
    @Override
@@ -152,29 +134,22 @@ public class GalleryActivity extends SherlockFragmentActivity
       getSupportFragmentManager().popBackStack();
       mLoginView.setVisibility(View.INVISIBLE);
 
-      SharedPreferences preferenceFile = getSharedPreferences(
-            MainApplication.PREFERENCE_FILE, MODE_PRIVATE);
-      boolean firstTimeUser = preferenceFile.getBoolean(FIRST_TIME_USER, true);
-
-      if (firstTimeUser) {
+      if (((MainApplication)getApplication()).isFirstTimeGalleryUser()) {
          MediaFragment.createHelpDialog(this).show();
-         Editor editor = preferenceFile.edit();
-         editor.putBoolean(FIRST_TIME_USER, false);
-         editor.commit();
+         ((MainApplication)getApplication()).setFirstTimeGalleryUser(false);
       }
    }
 
    @Override
    public void onLogout() {
-      ((MainApplication)getApplication()).clearUserFromPreferenceFile();
+      ((MainApplication)getApplication()).logout();
       finish();
    }
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       if (!mIconsHidden) {
-         com.actionbarsherlock.view.MenuInflater inflater =
-          getSupportMenuInflater();
+         MenuInflater inflater = getSupportMenuInflater();
          inflater.inflate(R.menu.gallery_menu, menu);
       }
 
@@ -184,35 +159,10 @@ public class GalleryActivity extends SherlockFragmentActivity
    @Override
    public boolean onKeyDown(int keyCode, KeyEvent event) {
       if (keyCode == KeyEvent.KEYCODE_BACK) {
-         this.finish();
+         finish();
          return true;
       }
+
       return super.onKeyDown(keyCode, event);
    }
-
-   public void hideMenuBarIcons() {
-      if (galleryIcon != null)
-         galleryIcon.setVisible(false);
-      if (cameraIcon != null)
-         cameraIcon.setVisible(false);
-      if (helpIcon != null)
-         helpIcon.setVisible(false);
-
-   }
-
-   public void showMenuBarIcons() {
-
-      if (galleryIcon != null) {
-         galleryIcon.setVisible(true);
-         // galleryIcon.invalidate();
-      }
-      if (cameraIcon != null) {
-         cameraIcon.setVisible(true);
-      }
-      if (helpIcon != null) {
-         helpIcon.setVisible(true);
-      }
-
-   }
-
 }
