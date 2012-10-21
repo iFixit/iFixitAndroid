@@ -275,7 +275,7 @@ public class MediaFragment extends SherlockFragment implements
       mNextPageRequestInProgress = true;
       int initialPageSize = 5;
       mContext.startService(APIService.getUserImagesIntent(mContext,
-       authenicationPackage, "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize) +
+       "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize) +
        "&offset=" + mImagesDownloaded));
       mUserName = ((MainApplication)((Activity)mContext).getApplication()).
        getUser().getUsername();
@@ -755,11 +755,8 @@ public class MediaFragment extends SherlockFragment implements
              !mNextPageRequestInProgress && mCurScrollState ==
              OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                mNextPageRequestInProgress = true;
-               AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-               authenicationPackage.session = ((MainApplication)((Activity)mContext)
-                .getApplication()).getUser().getSession();
                mContext.startService(APIService.getUserImagesIntent(mContext,
-                authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset=" + mImagesDownloaded));
+                "?limit=" + IMAGE_PAGE_SIZE + "&offset=" + mImagesDownloaded));
             }
          }
       }

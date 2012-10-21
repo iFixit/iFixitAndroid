@@ -3,6 +3,7 @@ package com.dozuki.ifixit.util;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
 import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
@@ -89,6 +90,7 @@ public class APIService extends Service {
    private static final String RESPONSE = "RESPONSE";
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
+   private static final String REQUEST_POST_DATA = "REQUEST_POST_DATA";
    private static final String REQUEST_AUTHENICATION_PACKAGE =
     "AUTHENICATION_PACKAGE";
    public static final String REQUEST_RESULT_INFORMATION =
@@ -117,30 +119,8 @@ public class APIService extends Service {
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String resultInformation =
        extras.getString(REQUEST_RESULT_INFORMATION);
-      final AuthenicationPackage authenicationPackage =
-       (AuthenicationPackage)extras.getSerializable(
-       REQUEST_AUTHENICATION_PACKAGE);
-
-      if (authenicationPackage != null) {
-         perfromAuthenicatedRequestHelper(this, endpoint,
-          authenicationPackage, requestQuery, new Responder() {
-             public void setResult(Result result) {
-
-                if (!result.hasError()) {
-                   result = parseResult(result.getResponse(), endpoint);
-                }
-
-                // Don't save if there a parse error.
-                if (!result.hasError()) {
-                   saveResult(result, requestTarget, requestQuery);
-                }
-
-                // Always broadcast the result despite any errors.
-                broadcastResult(result, endpoint, resultInformation);
-             }
-          });
-         return START_NOT_STICKY;
-      }
+      final Map<String, String> postData =
+       (Map<String, String>)extras.getSerializable(REQUEST_POST_DATA);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -158,7 +138,7 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequest(this, endpoint, requestQuery, new Responder() {
+      performRequest(this, endpoint, requestQuery, postData, new Responder() {
          public void setResult(Result result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
@@ -225,35 +205,59 @@ public class APIService extends Service {
    }
 
    public static Intent getLoginIntent(Context context,
-    AuthenicationPackage authenicationPackage) {
+    String login, String password) {
       Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
 
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
+      postData.put("login", login);
+      postData.put("password", password);
+
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
 
       return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
    }
 
-   public static Intent getRegisterIntent(Context context,
-    AuthenicationPackage authenicationPackage) {
+   /**
+    * There are two login intent methods because the user has a sessionid
+    * after logging in via OpenID but we still need to hit the login endpoint
+    * to verify this and to get a username.
+    *
+    * TODO: Make this better. This method involves POSTing with a sessionid
+    * rather than sending it in a Cookie like all of the other requests.
+    */
+   public static Intent getLoginIntent(Context context,
+    String session) {
       Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
 
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
+      postData.put("session", session);
 
-      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
+
+      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
    }
 
-   public static Intent getUserImagesIntent(Context context,
-    AuthenicationPackage authenicationPackage, String query) {
+   public static Intent getRegisterIntent(Context context, String login,
+    String password, String username) {
       Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
 
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
+      postData.put("login", login);
+      postData.put("password", password);
+      postData.put("username", username);
 
-      return createIntent(context, APIEndpoint.USER_IMAGES, query, extras);
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
+
+      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
    }
 
+   public static Intent getUserImagesIntent(Context context, String query) {
+      return createIntent(context, APIEndpoint.USER_IMAGES, query);
+   }
+
+   /**
+    * TODO: Update this endpoint to use new system.
+    */
    public static Intent getUploadImageIntent(Context context,
     AuthenicationPackage authenicationPackage, String filePath,
     String extraInformation) {
@@ -268,13 +272,7 @@ public class APIService extends Service {
 
    public static Intent getDeleteImageIntent(Context context,
     AuthenicationPackage authenicationPackage, String requestQuery) {
-      Bundle extras = new Bundle();
-
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-
-      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery,
-       extras);
+      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery);
    }
 
    public static Intent getSitesIntent(Context context) {
@@ -355,7 +353,8 @@ public class APIService extends Service {
    }
 
    private static void performRequest(final Context context, final APIEndpoint endpoint,
-    final String requestQuery, final Responder responder) {
+    final String requestQuery, final Map<String, String> postData,
+    final Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
@@ -365,7 +364,14 @@ public class APIService extends Service {
       new AsyncTask<String, Void, Result>() {
          @Override
          protected Result doInBackground(String... dummy) {
-            HttpRequest request = HttpRequest.get(url);
+            HttpRequest request;
+
+            if (postData == null) {
+               // No post data, lets do a GET.
+               request = HttpRequest.get(url);
+            } else {
+               request = HttpRequest.post(url).form(postData);
+            }
 
             if (request.ok()) {
                return new Result(request.body());

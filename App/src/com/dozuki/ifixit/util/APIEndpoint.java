@@ -166,7 +166,8 @@ public enum APIEndpoint {
    public final boolean mHttps;
 
    /**
-    * Whether or not this is an authenticated endpoint.
+    * Whether or not this is an authenticated endpoint. If true, sends the
+    * user's sessionid along in a cookie.
     */
    public final boolean mAuthenticated;
 

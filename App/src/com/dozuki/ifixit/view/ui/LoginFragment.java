@@ -201,19 +201,16 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    }
 
    private void login() {
-      if (mLoginId.getText().toString().length() > 1 &&
-       mPassword.getText().toString().length() > 1 &&
-       mLoginId.getText().toString().contains("@")) {
+      String login = mLoginId.getText().toString();
+      String password = mPassword.getText().toString();
+
+      if (login.length() > 1 && password.length() > 1 && login.contains("@")) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
-         AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-         authenicationPackage.login = mLoginId.getText().toString();
-         authenicationPackage.password = mPassword.getText().toString();
          enable(false);
-         mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
+         mContext.startService(APIService.getLoginIntent(mContext, login, password));
       } else {
          mErrorText.setVisibility(View.VISIBLE);
-         if (!mLoginId.getText().toString().contains("@") ||
-          mLoginId.getText().toString().length() <= 1) {
+         if (!login.contains("@") || login.length() <= 1) {
             mLoginId.requestFocus();
             showKeyboard();
          } else {
@@ -294,8 +291,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
                authenicationPackage.password = password;
                authenicationPackage.username = name;
                enable(false);
-               mContext.startService(APIService.getRegisterIntent(mContext,
-                authenicationPackage));
+               mContext.startService(APIService.getRegisterIntent(mContext, login,
+                password, name));
             } else {
                mErrorText.setVisibility(View.VISIBLE);
                if (!login.contains("@") || login.length() <= 1) {
@@ -326,10 +323,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          if (data != null) {
             mLoadingSpinner.setVisibility(View.VISIBLE);
             String session = data.getStringExtra("session");
-            AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-            authenicationPackage.session = session;
             enable(false);
-            mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
+            mContext.startService(APIService.getLoginIntent(mContext, session));
          }
       }
    }
