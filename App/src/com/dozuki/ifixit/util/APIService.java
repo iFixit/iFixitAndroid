@@ -14,6 +14,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.IBinder;
@@ -25,6 +26,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.github.kevinsawicki.http.HttpRequest;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -443,28 +445,19 @@ public class APIService extends Service {
 
    private static void performRequest(final String url,
     final Responder responder) {
-      final Handler handler = new Handler() {
-         public void handleMessage(Message message) {
-            String response = message.getData().getString(RESPONSE);
 
-            responder.setResult(new Result(response));
+      new AsyncTask<String, Void, Result>() {
+         @Override
+         protected Result doInBackground(String... dummy) {
+            // TODO: Check return codes etc.
+            return new Result(HttpRequest.get(url).body());
          }
-      };
 
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(handler);
-
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-
-            try {
-               helper.performGet(url);
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
-            }
+         @Override
+         protected void onPostExecute(Result result) {
+            responder.setResult(result);
          }
-      }.start();
+      }.execute();
    }
 
    private static boolean checkConnectivity(Context context,
