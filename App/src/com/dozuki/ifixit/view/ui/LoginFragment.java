@@ -30,7 +30,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.util.HTTPRequestHelper;
 import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.User;
 
@@ -314,13 +313,11 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (resultCode == Activity.RESULT_OK) {
-         if (data != null) {
-            mLoadingSpinner.setVisibility(View.VISIBLE);
-            String session = data.getStringExtra("session");
-            enable(false);
-            mContext.startService(APIService.getLoginIntent(mContext, session));
-         }
+      if (resultCode == Activity.RESULT_OK && data != null) {
+         mLoadingSpinner.setVisibility(View.VISIBLE);
+         String session = data.getStringExtra("session");
+         enable(false);
+         mContext.startService(APIService.getLoginIntent(mContext, session));
       }
    }
 
@@ -346,8 +343,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       }
    }
 
-   public static void registerOnLoginListener(LoginListener l) {
-      LoginFragment.loginListeners.add(l);
+   public static void registerOnLoginListener(LoginListener listener) {
+      loginListeners.add(listener);
    }
 
    static AlertDialog getLogoutDialog(final Context context) {
@@ -364,8 +361,6 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  HTTPRequestHelper.clearCookies(context);
-
                   for (LoginListener loginListener : loginListeners) {
                      loginListener.onLogout();
                   }

@@ -5,7 +5,6 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
 
 import android.app.AlertDialog;
@@ -17,9 +16,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
@@ -27,7 +24,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.User;
 import com.github.kevinsawicki.http.HttpRequest;
 
@@ -89,12 +85,9 @@ public class APIService extends Service {
       public void setResult(Result result);
    }
 
-   private static final String RESPONSE = "RESPONSE";
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
    private static final String REQUEST_POST_DATA = "REQUEST_POST_DATA";
-   private static final String REQUEST_AUTHENICATION_PACKAGE =
-    "AUTHENICATION_PACKAGE";
    private static final String REQUEST_UPLOAD_FILE_PATH =
     "REQUEST_UPLOAD_FILE_PATH";
    public static final String REQUEST_RESULT_INFORMATION =
@@ -274,8 +267,7 @@ public class APIService extends Service {
       return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
    }
 
-   public static Intent getDeleteImageIntent(Context context,
-    AuthenicationPackage authenicationPackage, String requestQuery) {
+   public static Intent getDeleteImageIntent(Context context, String requestQuery) {
       return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery);
    }
 
@@ -432,87 +424,6 @@ public class APIService extends Service {
             responder.setResult(result);
          }
       }.execute();
-   }
-
-
-   private static void perfromAuthenicatedRequestHelper(Context context,
-      APIEndpoint endpoint, AuthenicationPackage authenicationPackage,
-      String requestQuery, Responder responder) {
-      if (!checkConnectivity(context, responder)) {
-         return;
-      }
-
-      int requestTarget = endpoint.getTarget();
-
-      /**
-       * TODO: Remove these if statements and move logic into APIEndpoint.
-       */
-      String url;
-      File file = null;
-      if (requestTarget == APIEndpoint.LOGIN.getTarget()) {
-         url = endpoint.getUrl(mSite);
-      } else if (requestTarget == APIEndpoint.REGISTER.getTarget()) {
-         url = endpoint.getUrl(mSite);
-      } else if (requestTarget == APIEndpoint.USER_IMAGES.getTarget()) {
-         url = endpoint.getUrl(mSite, requestQuery);
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-      } else if (requestTarget == APIEndpoint.UPLOAD_IMAGE.getTarget()) {
-         file = new File(requestQuery);
-         url = endpoint.getUrl(mSite, file.getName());
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-      } else if (requestTarget == APIEndpoint.DELETE_IMAGE.getTarget()) {
-         url = endpoint.getUrl(mSite, requestQuery);
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-      } else {
-         Log.w("iFixit", "Invalid request target: " + requestTarget);
-         responder.setResult(new Result(Error.PARSE));
-         return;
-      }
-      performAuthenicatedRequest(url, authenicationPackage, file, responder);
-   }
-
-   private static void performAuthenicatedRequest(final String url,
-    final AuthenicationPackage authenicationPackage, final File file,
-    final Responder responder) {
-      final Handler handler = new Handler() {
-         public void handleMessage(Message message) {
-            String response = message.getData().getString(RESPONSE);
-
-            responder.setResult(new Result(response));
-         }
-      };
-
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(handler);
-
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-            HashMap<String, String> params = new HashMap<String, String>();
-            HashMap<String, String> header = new HashMap<String, String>();
-
-            params.put("login", authenicationPackage.login);
-            params.put("password", authenicationPackage.password);
-            params.put("username", authenicationPackage.username);
-
-            if (file != null) {
-               params.put("file", file.getName());
-            }
-
-            try {
-               helper.performPostWithSessionCookie(url, null, null,
-                authenicationPackage.session, mSite.getDomainForCookie(), header, params, file);
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
-            }
-         }
-      }.start();
    }
 
    private static boolean checkConnectivity(Context context,
