@@ -430,7 +430,7 @@ public class MediaFragment extends SherlockFragment implements
             AuthenicationPackage authenicationPackage = new AuthenicationPackage();
             authenicationPackage.session = ((MainApplication)((Activity)mContext)
              .getApplication()).getUser().getSession();
-            mContext.startService(APIService.getUploadImageIntent(mContext, authenicationPackage,
+            mContext.startService(APIService.getUploadImageIntent(mContext,
              getPath(selectedImageUri), key));
          } else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
@@ -448,8 +448,7 @@ public class MediaFragment extends SherlockFragment implements
             AuthenicationPackage authenicationPackage = new AuthenicationPackage();
             authenicationPackage.session = ((MainApplication)((Activity)mContext)
              .getApplication()).getUser().getSession();
-            mContext.startService(APIService.getUploadImageIntent(mContext,
-             authenicationPackage, fPath, key));
+            mContext.startService(APIService.getUploadImageIntent(mContext, fPath, key));
          }
       }
    }

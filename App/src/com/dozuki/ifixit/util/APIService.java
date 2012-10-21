@@ -95,6 +95,8 @@ public class APIService extends Service {
    private static final String REQUEST_POST_DATA = "REQUEST_POST_DATA";
    private static final String REQUEST_AUTHENICATION_PACKAGE =
     "AUTHENICATION_PACKAGE";
+   private static final String REQUEST_UPLOAD_FILE_PATH =
+    "REQUEST_UPLOAD_FILE_PATH";
    public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
 
@@ -123,6 +125,7 @@ public class APIService extends Service {
        extras.getString(REQUEST_RESULT_INFORMATION);
       final Map<String, String> postData =
        (Map<String, String>)extras.getSerializable(REQUEST_POST_DATA);
+      final String filePath = extras.getString(REQUEST_UPLOAD_FILE_PATH);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -140,7 +143,8 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequest(this, endpoint, requestQuery, postData, new Responder() {
+      performRequest(this, endpoint, requestQuery, postData, filePath,
+       new Responder() {
          public void setResult(Result result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
@@ -260,14 +264,12 @@ public class APIService extends Service {
    /**
     * TODO: Update this endpoint to use new system.
     */
-   public static Intent getUploadImageIntent(Context context,
-    AuthenicationPackage authenicationPackage, String filePath,
+   public static Intent getUploadImageIntent(Context context, String filePath,
     String extraInformation) {
       Bundle extras = new Bundle();
 
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
       extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
+      extras.putString(REQUEST_UPLOAD_FILE_PATH, filePath);
 
       return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
    }
@@ -356,32 +358,66 @@ public class APIService extends Service {
 
    private static void performRequest(final Context context, final APIEndpoint endpoint,
     final String requestQuery, final Map<String, String> postData,
-    final Responder responder) {
+    final String filePath, final Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
 
       final String url = endpoint.getUrl(mSite, requestQuery);
 
+      Log.i("iFixit", "Performing API call: " + url);
+
       new AsyncTask<String, Void, Result>() {
          @Override
          protected Result doInBackground(String... dummy) {
+            /**
+             * Unfortunately we must split the creation of the HttpRequest
+             * object and the appropriate actions to take for a GET vs. a POST
+             * request. The request headers and trustAllCerts calls must be
+             * made before any data is sent. However, we must have an HttpRequest
+             * object already.
+             */
             HttpRequest request;
 
+            /**
+             * Create the HttpRequest with the appropriate method.
+             */
             if (endpoint.mPost) {
                request = HttpRequest.post(url);
-
-               if (postData != null) {
-                  request.form(postData);
-               }
             } else {
                request = HttpRequest.get(url);
             }
 
+            /**
+             * Uncomment to test HTTPS API calls in development.
+             *
+             * request.trustAllCerts();
+             * request.trustAllHosts();
+             */
+
+            /**
+             * Send the session along in a Cookie.
+             *
+             * TODO: Also send it along if the current site has SSL everywhere.
+             */
             if (endpoint.mAuthenticated) {
                User user = ((MainApplication)context.getApplicationContext()).getUser();
                String session = user.getSession();
                request.header("Cookie", "session=" + session);
+            }
+
+            /**
+             * Continue with constructing the request body.
+             */
+            if (endpoint.mPost) {
+               if (filePath != null) {
+                  // POST the file if present.
+                  request.send(new File(filePath));
+               } else if (postData != null) {
+                  request.form(postData);
+               }
+            } else {
+               // Do nothing extra for GET.
             }
 
             if (request.ok()) {

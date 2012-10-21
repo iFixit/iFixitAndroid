@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.json.JSONException;
@@ -111,7 +112,30 @@ public enum APIEndpoint {
    UPLOAD_IMAGE(
       new CreateUrl() {
          public String create(String query) {
-            return "/api/1.0/image/upload?file=" + query;
+            String fileName;
+
+            try {
+               fileName = URLEncoder.encode(getFileNameFromFilePath(query), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+               // Provide a default file name.
+               fileName = "uploaded_image.jpg";
+            }
+
+            return "/api/1.0/image/upload?file=" + fileName;
+         }
+
+         private String getFileNameFromFilePath(String filePath) {
+            int index = filePath.lastIndexOf('/');
+
+            if (index == -1) {
+               /**
+                * filePath doesn't have a '/' in it. That's weird but just
+                * return the whole file path.
+                */
+               return filePath;
+            }
+
+            return filePath.substring(index + 1);
          }
       },
       false,
