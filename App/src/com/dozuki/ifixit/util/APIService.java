@@ -250,7 +250,7 @@ public class APIService extends Service {
 
       extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
 
-      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
+      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
    }
 
    public static Intent getUserImagesIntent(Context context, String query) {

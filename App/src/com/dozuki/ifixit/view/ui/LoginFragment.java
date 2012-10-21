@@ -31,7 +31,6 @@ import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.HTTPRequestHelper;
-import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.User;
 
@@ -286,10 +285,6 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
             if (password.equals(confirmPassword) &&
              login.length() > 1 && login.contains("@") &&
              name.length() > 1 && mTermsAgreeCheckBox.isChecked()) {
-               AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-               authenicationPackage.login = login;
-               authenicationPackage.password = password;
-               authenicationPackage.username = name;
                enable(false);
                mContext.startService(APIService.getRegisterIntent(mContext, login,
                 password, name));
