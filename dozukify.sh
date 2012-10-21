@@ -42,6 +42,10 @@ then
    sed -i "" -e "s/dozuki\.ui\.SiteListActivity/view.ui.TopicsActivity/" ./AndroidManifest.xml
    sed -i "" -e "s/view\.ui\.TopicsActivityTmp/dozuki.ui.SiteListActivity/" ./AndroidManifest.xml
 
+   # Remove comments to enable Dozuki specific code
+   sed -i "" -e "/<\!--DOZUKI/d" ./AndroidManifest.xml
+   sed -i "" -e "/DOZUKI-->/d" ./AndroidManifest.xml
+
    # Turn on flags for Dozuki.
    sed -i "" -e "s/UP_NAVIGATION_FINISH_ACTIVITY = false/UP_NAVIGATION_FINISH_ACTIVITY = true/" `find ./src -name "TopicsActivity.java"`
 
