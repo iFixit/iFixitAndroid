@@ -158,7 +158,7 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequestHelper(this, endpoint, requestQuery, new Responder() {
+      performRequest(this, endpoint, requestQuery, new Responder() {
          public void setResult(Result result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
@@ -354,14 +354,33 @@ public class APIService extends Service {
       return builder.create();
    }
 
-   private static void performRequestHelper(Context context,
-    APIEndpoint endpoint, String requestQuery, Responder responder) {
+   private static void performRequest(final Context context, final APIEndpoint endpoint,
+    final String requestQuery, final Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
 
-      performRequest(endpoint.getUrl(mSite, requestQuery), responder);
+      final String url = endpoint.getUrl(mSite, requestQuery);
+
+      new AsyncTask<String, Void, Result>() {
+         @Override
+         protected Result doInBackground(String... dummy) {
+            HttpRequest request = HttpRequest.get(url);
+
+            if (request.ok()) {
+               return new Result(request.body());
+            } else {
+               return new Result(Error.PARSE);
+            }
+         }
+
+         @Override
+         protected void onPostExecute(Result result) {
+            responder.setResult(result);
+         }
+      }.execute();
    }
+
 
    private static void perfromAuthenicatedRequestHelper(Context context,
       APIEndpoint endpoint, AuthenicationPackage authenicationPackage,
@@ -441,28 +460,6 @@ public class APIService extends Service {
             }
          }
       }.start();
-   }
-
-   private static void performRequest(final String url,
-    final Responder responder) {
-
-      new AsyncTask<String, Void, Result>() {
-         @Override
-         protected Result doInBackground(String... dummy) {
-            HttpRequest request = HttpRequest.get(url);
-
-            if (request.ok()) {
-               return new Result(request.body());
-            } else {
-               return new Result(Error.PARSE);
-            }
-         }
-
-         @Override
-         protected void onPostExecute(Result result) {
-            responder.setResult(result);
-         }
-      }.execute();
    }
 
    private static boolean checkConnectivity(Context context,
