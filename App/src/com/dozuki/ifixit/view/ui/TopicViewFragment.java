@@ -3,15 +3,12 @@ package com.dozuki.ifixit.view.ui;
 import java.net.URLEncoder;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +20,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.TopicLeaf;
 import com.dozuki.ifixit.view.model.TopicNode;
@@ -44,20 +43,15 @@ public class TopicViewFragment extends SherlockFragment
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result = (APIService.Result)
-          intent.getExtras().getSerializable(APIService.RESULT);
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+         setTopicLeaf((TopicLeaf)result);
+      }
 
-         if (!result.hasError()) {
-            setTopicLeaf((TopicLeaf)result.getResult());
-         } else {
-            APIService.getErrorDialog(getActivity(),
-             result.getError(),
-             APIService.getTopicIntent(getActivity(),
-             mTopicNode.getName())).show();
-         }
+      public void onFailure(APIService.Error error, Intent intent) {
+         APIService.getErrorDialog(getActivity(), error,
+          APIService.getTopicIntent(getActivity(), mTopicNode.getName()))
+          .show();
       }
    };
 
@@ -77,17 +71,17 @@ public class TopicViewFragment extends SherlockFragment
       }
 
       if (mSite == null) {
-         mSite = ((MainApplication)getActivity().getApplication()).
-          getSite();
+         mSite = ((MainApplication)getActivity().getApplication())
+          .getSite();
       }
-      
+
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
          mTopicNode = (TopicNode)savedInstanceState.getSerializable(
           CURRENT_TOPIC_NODE);
          TopicLeaf topicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
           CURRENT_TOPIC_LEAF);
-     
+
          if (topicLeaf != null) {
             setTopicLeaf(topicLeaf);
          } else if (mTopicNode != null) {
@@ -101,7 +95,7 @@ public class TopicViewFragment extends SherlockFragment
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_view_fragment, container,
        false);
-      
+
       return view;
    }
 
@@ -110,7 +104,7 @@ public class TopicViewFragment extends SherlockFragment
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_TOPIC);
+      filter.addAction(APIEndpoint.TOPIC.mAction);
       getActivity().registerReceiver(mApiReceiver, filter);
    }
 
@@ -236,8 +230,7 @@ public class TopicViewFragment extends SherlockFragment
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      getActivity().startService(
-       APIService.getTopicIntent(getActivity(),
+      getActivity().startService(APIService.getTopicIntent(getActivity(),
        topicName));
    }
 
@@ -264,14 +257,17 @@ public class TopicViewFragment extends SherlockFragment
          if (mTopicLeaf.getGuides().size() == 0) {
             selectedFragment = new NoGuidesFragment();
          } else {
-            selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
+            selectedFragment = new TopicGuideListFragment(mImageManager,
+             mTopicLeaf);
          }
+         mSelectedTab = GUIDES_TAB;
       } else if (position == ANSWERS_TAB && mSite.mAnswers) {
          WebViewFragment webView = new WebViewFragment();
 
          webView.loadUrl(mTopicLeaf.getSolutionsUrl());
 
          selectedFragment = webView;
+         mSelectedTab = ANSWERS_TAB;
       } else if (position == MORE_INFO_TAB) {
          WebViewFragment webView = new WebViewFragment();
 
@@ -283,6 +279,7 @@ public class TopicViewFragment extends SherlockFragment
          }
 
          selectedFragment = webView;
+         mSelectedTab = MORE_INFO_TAB;
       } else {
          Log.w("iFixit", "Too many tabs!");
          return;
@@ -293,10 +290,8 @@ public class TopicViewFragment extends SherlockFragment
    }
 
    @Override
-   public void onTabUnselected(Tab tab, FragmentTransaction ft) {
-   }
+   public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
 
    @Override
-   public void onTabReselected(Tab tab, FragmentTransaction ft) {
-   }
+   public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 }

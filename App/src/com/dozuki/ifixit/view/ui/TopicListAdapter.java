@@ -78,17 +78,17 @@ public class TopicListAdapter extends Section {
    }
 
    @Override
-   public void onItemClick(AdapterView<?> adapterView, View view,
-    int position, long id) {
+   public void onItemClick(AdapterView<?> adapterView, View view, int position,
+    long id) {
       if (mTopicListener != null) {
-    	 mTopicListener.onTopicSelected(mTopicList.get(position));
-    	    	 
-    	 if (prevSelected != null) {
-    		 ((TopicListRowView) prevSelected).clearCurrentTopicStyle(); 
-    	 }
-    	 
-       ((TopicListRowView)view).setCurrentTopicStyle();
-    	 prevSelected = (TopicListRowView) view;
+         mTopicListener.onTopicSelected(mTopicList.get(position));
+
+         if (prevSelected != null) {
+            ((TopicListRowView) prevSelected).clearCurrentTopicStyle();
+         }
+
+         ((TopicListRowView) view).setCurrentTopicStyle();
+         prevSelected = (TopicListRowView)view;
       }
    }
 }

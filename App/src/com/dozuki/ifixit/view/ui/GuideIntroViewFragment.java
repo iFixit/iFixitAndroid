@@ -29,7 +29,7 @@ public class GuideIntroViewFragment extends SherlockFragment {
    private ImageManager mImageManager;
    private Guide mGuide;
    private Typeface mBoldFont;
-   
+
    public GuideIntroViewFragment() {
 
    }
@@ -47,8 +47,8 @@ public class GuideIntroViewFragment extends SherlockFragment {
       }
 
       if (mImageManager == null) {
-         mImageManager = ((MainApplication)getActivity().getApplication()).
-          getImageManager();
+         mImageManager = ((MainApplication)getActivity().getApplication())
+          .getImageManager();
       }
    }
 
@@ -64,12 +64,12 @@ public class GuideIntroViewFragment extends SherlockFragment {
       mBoldFont = Typeface.createFromAsset(getActivity().getAssets(),
        "fonts/Ubuntu-B.ttf");
 
-      mTitle      = (TextView)view.findViewById(R.id.guide_title);
-      mIntro      = (TextView)view.findViewById(R.id.guide_intro_text);
+      mTitle = (TextView)view.findViewById(R.id.guide_title);
+      mIntro = (TextView)view.findViewById(R.id.guide_intro_text);
       mDifficulty = (TextView)view.findViewById(R.id.guide_difficulty);
-      mAuthor     = (TextView)view.findViewById(R.id.guide_author);
-      mTools      = (TextView)view.findViewById(R.id.guide_tools);
-      mParts      = (TextView)view.findViewById(R.id.guide_parts);
+      mAuthor = (TextView)view.findViewById(R.id.guide_author);
+      mTools = (TextView)view.findViewById(R.id.guide_tools);
+      mParts = (TextView)view.findViewById(R.id.guide_parts);
 
       MovementMethod method = LinkMovementMethod.getInstance();
 
@@ -82,23 +82,24 @@ public class GuideIntroViewFragment extends SherlockFragment {
       if (mGuide != null) {
          setGuide();
       }
-      
+
       return view;
    }
 
    public void setGuide() {
       mTitle.setText(Html.fromHtml(mGuide.getDisplayTitle()));
-      mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
-       mGuide.getIntroduction())));
+      mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
+       .getIntroduction())));
 
       if (!mGuide.getDifficulty().equals("false")) {
-         mDifficulty.setText(getActivity().getString(R.string.difficulty) + ": " +
-          JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getDifficulty())));
+         mDifficulty.setText(getActivity().getString(R.string.difficulty) +
+          ": " + JSONHelper.correctLinkPaths(Html.fromHtml(
+          mGuide.getDifficulty())));
       }
 
       mAuthor.setText(getActivity().getString(R.string.author) + ": " +
        JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
-      
+
       if (mGuide.getNumTools() != 0) {
          mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(
           getActivity().getString(R.string.requiredTools))));

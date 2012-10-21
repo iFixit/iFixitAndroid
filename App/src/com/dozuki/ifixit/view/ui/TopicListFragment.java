@@ -45,15 +45,13 @@ public class TopicListFragment extends SherlockFragment
       super.onCreate(savedInstanceState);
 
       if (savedInstanceState != null) {
-         mTopic = (TopicNode)savedInstanceState.getSerializable(
-          CURRENT_TOPIC);
+         mTopic = (TopicNode)savedInstanceState.getSerializable(CURRENT_TOPIC);
       }
-      
    }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-	 Bundle savedInstanceState) {
+    Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_list_fragment, container,
        false);
 
@@ -91,15 +89,15 @@ public class TopicListFragment extends SherlockFragment
 
       if (!mTopic.isRoot()) {
          generalInfo.add(new TopicNode(mTopic.getName()));
-         adapter = new TopicListAdapter(mContext,
-          mContext.getString(R.string.generalInformation), generalInfo);
+         adapter = new TopicListAdapter(mContext, mContext.getString(
+          R.string.generalInformation), generalInfo);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
 
       if (nonLeaves.size() > 0) {
-         adapter = new TopicListAdapter(mContext,
-          mContext.getString(R.string.categories), nonLeaves);
+         adapter = new TopicListAdapter(mContext, mContext.getString(
+          R.string.categories), nonLeaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
@@ -107,13 +105,13 @@ public class TopicListFragment extends SherlockFragment
       if (leaves.size() > 0) {
          MainApplication app = (MainApplication)getActivity().getApplication();
 
-         adapter = new TopicListAdapter(mContext,
-          app.getSiteObjectName(), leaves);
+         adapter = new TopicListAdapter(mContext, mContext.getString(
+          app.getSite().getObjectName()), leaves);
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
    }
-   
+
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
@@ -121,8 +119,8 @@ public class TopicListFragment extends SherlockFragment
       outState.putSerializable(CURRENT_TOPIC, mTopic);
    }
 
-   public void onItemClick(AdapterView<?> adapterView, View view,
-    int position, long id) {
+   public void onItemClick(AdapterView<?> adapterView, View view, int position,
+    long id) {
       mTopicAdapter.onItemClick(null, view, position, id);
    }
 

@@ -20,11 +20,12 @@ public class APIDatabase extends SQLiteOpenHelper {
 
    private static final String CREATE_API_RESULTS_TABLE =
     "CREATE TABLE " + TABLE_API_RESULTS + "(" +
-    KEY_ID + " INTEGER PRIMARY KEY, " +
-    KEY_TARGET + " INTEGER, " +
-    KEY_QUERY + " TEXT, " +
-    KEY_RESULT + " TEXT, " +
-    KEY_DATE + " INTEGER" + ")";
+      KEY_ID + " INTEGER PRIMARY KEY, " +
+      KEY_TARGET + " INTEGER, " +
+      KEY_QUERY + " TEXT, " +
+      KEY_RESULT + " TEXT, " +
+      KEY_DATE + " INTEGER" +
+    ")";
 
    public APIDatabase(Context context) throws Exception {
       super(context, DATABASE_NAME, null, DATABASE_VERSION);

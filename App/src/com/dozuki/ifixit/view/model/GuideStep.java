@@ -23,8 +23,8 @@ public class GuideStep implements Serializable {
 
    public String getTitle() {
       return mTitle;
-   } 
-   
+   }
+
    public int getStepNum() {
       return mStepNum;
    }
@@ -32,11 +32,11 @@ public class GuideStep implements Serializable {
    public void addImage(StepImage image) {
       mImages.add(image);
    }
-   
+
    public ArrayList<StepImage> getImages() {
       return mImages;
    }
-   
+
    public ArrayList<StepLine> getLines() {
       return mLines;
    }
@@ -44,11 +44,11 @@ public class GuideStep implements Serializable {
    public void addLine(StepLine line) {
       mLines.add(line);
    }
-   
+
    public StepLine getLine(int pos) {
       return mLines.get(pos);
    }
-   
+
    public String toString() {
       return "{GuideStep: " + mStepNum + ", " + mTitle +  ", " + mLines +
        ", " + mImages + "}";

@@ -2,8 +2,6 @@ package com.dozuki.ifixit.view.ui;
 
 import java.util.List;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -11,7 +9,6 @@ import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.Display;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -26,13 +23,15 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.model.Guide;
 import com.dozuki.ifixit.view.model.SpeechCommander;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 
-public class GuideViewActivity extends SherlockFragmentActivity 
+public class GuideViewActivity extends SherlockFragmentActivity
  implements OnPageChangeListener {
    private static final int MAX_LOADING_IMAGES = 9;
    private static final int MAX_STORED_IMAGES = 9;
@@ -50,30 +49,25 @@ public class GuideViewActivity extends SherlockFragmentActivity
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage = -1;
-   protected ImageManager mImageManager;
+   private ImageManager mImageManager;
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
-   protected ProgressBar mProgressBar;
+   private ProgressBar mProgressBar;
    private ImageView mNextPageImage;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result = (APIService.Result)
-          intent.getExtras().getSerializable(APIService.RESULT);
-
-         if (!result.hasError()) {
-            if (mGuide == null) {
-               setGuide((Guide)result.getResult(), 0);
-            }
-         } else {
-            APIService.getErrorDialog(GuideViewActivity.this, result.getError(),
-             APIService.getGuideIntent(GuideViewActivity.this, mGuideid)).show();
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+         if (mGuide == null) {
+            setGuide((Guide)result, 0);
          }
+      }
+
+      public void onFailure(APIService.Error error, Intent intent) {
+         APIService.getErrorDialog(GuideViewActivity.this, error,
+          APIService.getGuideIntent(GuideViewActivity.this, mGuideid)).show();
       }
    };
 
-   
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication)getApplication()).getSiteTheme());
@@ -84,7 +78,7 @@ public class GuideViewActivity extends SherlockFragmentActivity
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       setContentView(R.layout.guide_main);
-      
+
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
@@ -118,11 +112,10 @@ public class GuideViewActivity extends SherlockFragmentActivity
             }
          } else {
             Bundle extras = intent.getExtras();
-            mGuideid = extras.getInt(MainActivity.GUIDEID);
+            mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
          }
 
          getGuide(mGuideid);
-         
       }
 
       mNextPageImage.setOnTouchListener(new View.OnTouchListener() {
@@ -144,6 +137,12 @@ public class GuideViewActivity extends SherlockFragmentActivity
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      /**
+       * TODO Figure out why we don't super.onSaveInstanceState(). I think
+       * this causes step fragments to not maintain state across orientation
+       * changes (selected thumbnail). However, I remember this failing with a
+       * call to super.onSavInstanceState(). Investigate.
+       */
       state.putSerializable(SAVED_GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
@@ -160,14 +159,14 @@ public class GuideViewActivity extends SherlockFragmentActivity
 
       ActionBar actionBar = getSupportActionBar();
       actionBar.setTitle(mGuide.getTitle());
-      
+
       mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(),
        mImageManager, mGuide);
 
       mPager.setAdapter(mGuideAdapter);
       mIndicator.setOnPageChangeListener(this);
       mIndicator.setViewPager(mPager);
-      
+
       final float density = getResources().getDisplayMetrics().density;
       mIndicator.setBackgroundColor(0x00FFFFFF);
       mIndicator.setRadius(6 * density);
@@ -187,7 +186,6 @@ public class GuideViewActivity extends SherlockFragmentActivity
 
       if (mSpeechCommander != null)
          mSpeechCommander.destroy();
-      
    }
 
    @Override
@@ -212,21 +210,12 @@ public class GuideViewActivity extends SherlockFragmentActivity
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_GUIDE);
+      filter.addAction(APIEndpoint.GUIDE.mAction);
       registerReceiver(mApiReceiver, filter);
 
-      if (mSpeechCommander != null)
+      if (mSpeechCommander != null) {
          mSpeechCommander.startListening();
-   }
-
-   public int getScreenHeight() {
-      Display display = getWindowManager().getDefaultDisplay();
-      return display.getHeight();
-   }
-
-   public int getScreenWidth() {
-      Display display = getWindowManager().getDefaultDisplay();
-      return display.getWidth();
+      }
    }
 
    public void getGuide(final int guideid) {
@@ -251,14 +240,16 @@ public class GuideViewActivity extends SherlockFragmentActivity
    private void guideHome() {
       mIndicator.setCurrentItem(0);
    }
-   
+
    public int getIndicatorHeight() {
       return mIndicator.getHeight();
    }
 
-   public void initSpeechRecognizer() {
-      if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext()))
+   @SuppressWarnings("unused")
+   private void initSpeechRecognizer() {
+      if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext())) {
          return;
+      }
 
       mSpeechCommander = new SpeechCommander(this, PACKAGE_NAME);
 
@@ -286,6 +277,7 @@ public class GuideViewActivity extends SherlockFragmentActivity
 
    @Override
    public void onPageScrollStateChanged(int arg0) {}
+
    @Override
    public void onPageScrolled(int arg0, float arg1, int arg2) {}
 

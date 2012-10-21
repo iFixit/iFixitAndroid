@@ -31,7 +31,7 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
 
    @Override
    public Fragment getItem(int position) {
-	   GuideIntroViewFragment introView;
+      GuideIntroViewFragment introView;
       GuideStepViewFragment stepView;
 
       if (position == GUIDE_INTRO_POSITION) {
@@ -40,7 +40,7 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
          return introView;
       } else {
          stepView = new GuideStepViewFragment(mImageManager,
-          mGuide.getStep(position-STEP_OFFSET));
+          mGuide.getStep(position - STEP_OFFSET));
 
          return stepView;
       }

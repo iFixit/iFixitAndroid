@@ -3,24 +3,24 @@
    xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="match_parent"
    android:layout_height="match_parent"
-   android:background="@color/gray"> 
-	<ProgressBar
-         android:id="@+id/progress_bar_image_zoom"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:minHeight="@dimen/progress_bar_width_height"
-         android:minWidth="@dimen/progress_bar_width_height"
-         android:layout_gravity="center" />
-	<it.sephiroth.android.library.imagezoom.ImageViewTouch
-         android:id="@+id/imageZoom"
-         android:scaleType="fitCenter"
-	      android:layout_width="match_parent"
-	      android:visibility="gone"
-	      android:layout_height="match_parent" />
-	<ImageView 
-	      android:id="@+id/fullScreenClose"
-	      android:src="@drawable/x_icon"
-	      android:layout_height="wrap_content"
-	      android:layout_width="wrap_content" 
-	      android:contentDescription="@string/close_full_screen_desc"/>
+   android:background="@color/gray">
+   <ProgressBar
+      android:id="@+id/progress_bar_image_zoom"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:minHeight="@dimen/progress_bar_width_height"
+      android:minWidth="@dimen/progress_bar_width_height"
+      android:layout_gravity="center" />
+   <it.sephiroth.android.library.imagezoom.ImageViewTouch
+      android:id="@+id/imageZoom"
+      android:scaleType="fitCenter"
+      android:layout_width="match_parent"
+      android:visibility="gone"
+      android:layout_height="match_parent" />
+   <ImageView
+      android:id="@+id/fullScreenClose"
+      android:src="@drawable/x_icon"
+      android:layout_height="wrap_content"
+      android:layout_width="wrap_content"
+      android:contentDescription="@string/close_full_screen_desc"/>
 </FrameLayout>

@@ -1,6 +1,9 @@
 package com.dozuki.ifixit.view.ui;
 
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -14,8 +17,11 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class FullImageViewActivity extends Activity {
+   public static final String IMAGE_URL = "IMAGE_URL";
+   public static final String LOCAL_URL = "LOCAL_URL";
+
    private String mImageUrl;
-   private ImageView mImageZoom;
+   private ImageViewTouch mImageZoom;
    private ImageView mCloseFullScreen;
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
@@ -29,18 +35,30 @@ public class FullImageViewActivity extends Activity {
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       Bundle extras = getIntent().getExtras();
-      mImageUrl = (String)extras.get(GuideStepViewFragment.IMAGE_URL);
+      mImageUrl = (String)extras.get(IMAGE_URL);
       MainApplication application = ((MainApplication)getApplication());
       mImageManager = application.getImageManager();
       mImageSizes = application.getImageSizes();
 
       setContentView(R.layout.full_screen_image);
 
-      mImageZoom = (ImageView)findViewById(R.id.imageZoom);
-      mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,
-       mImageZoom);
-      
-      mCloseFullScreen = (ImageView)findViewById(R.id.fullScreenClose);
+      mImageZoom = (ImageViewTouch)findViewById(R.id.imageZoom);
+      boolean localUri = extras.getBoolean(LOCAL_URL, false);
+
+      if (localUri) {
+         BitmapFactory.Options opt = new BitmapFactory.Options();
+         opt.inSampleSize = 2;
+         opt.inDither = false;
+         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+         mImageZoom.setImageBitmapReset(
+          BitmapFactory.decodeFile(mImageUrl, opt), true);
+         mImageZoom.setVisibility(View.VISIBLE);
+      } else {
+         mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,
+          mImageZoom);
+      }
+
+      mCloseFullScreen = (ImageView) findViewById(R.id.fullScreenClose);
       mCloseFullScreen.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {

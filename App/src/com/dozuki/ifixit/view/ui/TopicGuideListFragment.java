@@ -1,9 +1,7 @@
 package com.dozuki.ifixit.view.ui;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -38,7 +36,8 @@ public class TopicGuideListFragment extends SherlockFragment {
     */
    public TopicGuideListFragment() {}
 
-   public TopicGuideListFragment(ImageManager imageManager, TopicLeaf topicLeaf) {
+   public TopicGuideListFragment(ImageManager imageManager,
+    TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
       mImageManager = imageManager;
       mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
@@ -48,24 +47,25 @@ public class TopicGuideListFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedState) {
-      getActivity().setTheme(((MainApplication)getActivity().getApplication()).getSiteTheme());
+      getActivity().setTheme(((MainApplication)getActivity().getApplication()).
+       getSiteTheme());
 
       super.onCreate(savedState);
-      
+
       if (savedState != null && mTopicLeaf == null) {
          mTopicLeaf = (TopicLeaf)savedState.getSerializable(SAVED_TOPIC);
       }
-     
+
       if (mImageManager == null) {
-         mImageManager = ((MainApplication)getActivity().getApplication()).
-          getImageManager();
+         mImageManager = ((MainApplication)getActivity().getApplication())
+          .getImageManager();
          mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       }
 
       mImageSizes = ((MainApplication)getActivity().getApplication()).
        getImageSizes();
    }
-   
+
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
@@ -79,12 +79,13 @@ public class TopicGuideListFragment extends SherlockFragment {
       mGridView.setAdapter(mGuideAdapter);
       mGridView.setOnItemClickListener(new OnItemClickListener() {
          @Override
-         public void onItemClick(AdapterView<?> arg0, View view, int position, long id) {
+         public void onItemClick(AdapterView<?> arg0, View view, int position,
+          long id) {
             GuideInfo guide = mTopicLeaf.getGuides().get(position);
             Intent intent = new Intent(getActivity(), GuideViewActivity.class);
 
             intent.putExtra(GUIDEID, guide.getGuideid());
-            startActivity(intent);		   	
+            startActivity(intent);
          }
       });
 
@@ -126,7 +127,6 @@ public class TopicGuideListFragment extends SherlockFragment {
          String image = mTopic.getGuides().get(position).getImage() +
           mImageSizes.getGrid();
          itemView.setGuideItem(subject, image, getActivity());
-         
 
          return itemView;
       }

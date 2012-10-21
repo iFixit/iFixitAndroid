@@ -20,7 +20,6 @@ public class Guide implements Serializable {
    protected ArrayList<GuideTool> mTools;
    protected ArrayList<GuidePart> mParts;
 
-
    public Guide(int guideid) {
       mGuideid = guideid;
       mSteps = new ArrayList<GuideStep>();
@@ -64,8 +63,10 @@ public class Guide implements Serializable {
 
    public String getPartsFormatted(String title) {
       String formattedPart = title + ": <br />";
-      for (GuidePart t : mParts)
-         formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() + "</a><br />";
+      for (GuidePart t : mParts) {
+         formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
+          "</a><br />";
+      }
 
       return formattedPart;
    }
@@ -163,11 +164,11 @@ public class Guide implements Serializable {
    }
 
    public String getSubject() {
-	  return mSubject;
+      return mSubject;
    }
 
    public void setSubject(String subject) {
-	  mSubject = subject;
+      mSubject = subject;
    }
 
    public String toString() {

@@ -3,6 +3,8 @@ package com.dozuki.ifixit;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import android.app.Application;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
@@ -13,6 +15,7 @@ import android.widget.ImageView;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.view.model.User;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MainApplication extends Application {
@@ -20,8 +23,15 @@ public class MainApplication extends Application {
    // The current version of the app (this is replaced by dozukify.sh).
    public static final String CURRENT_SITE = "SITE_ifixit";
 
+   public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
+   private static final String FIRST_TIME_GALLERY_USER =
+    "FIRST_TIME_GALLERY_USER";
+   private static final String SESSION_KEY = "SESSION_KEY";
+   private static final String USERNAME_KEY = "USERNAME_KEY";
+
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
+   private User mUser;
    private Site mSite;
 
    public MainApplication() {
@@ -82,17 +92,6 @@ public class MainApplication extends Application {
       }
 
       return R.style.Theme_Dozuki;
-   }
-
-   /**
-    * Returns the current site's object name.
-    */
-   public String getSiteObjectName() {
-      if (mSite.mName.equals("ifixit")) {
-         return getString(R.string.devices);
-      } else {
-         return getString(R.string.topics);
-      }
    }
 
    public ImageManager getImageManager() {
@@ -165,6 +164,50 @@ public class MainApplication extends Application {
       return mImageSizes;
    }
 
+   public void setUser(User user) {
+      mUser = user;
+   }
+
+   public User getUser() {
+      return mUser;
+   }
+
+   public User getUserFromPreferenceFile() {
+      SharedPreferences preferenceFile = getSharedPreferences(
+       PREFERENCE_FILE, MODE_PRIVATE);
+      String session = preferenceFile.getString(mSite.mName + SESSION_KEY,
+       null);
+      String username = preferenceFile.getString(mSite.mName + USERNAME_KEY,
+       null);
+      mUser = null;
+      if (username != null && session != null) {
+         mUser = new User();
+         mUser.setSession(session);
+         mUser.setUsername(username);
+      }
+
+      return mUser;
+   }
+
+   public boolean isFirstTimeGalleryUser() {
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE);
+
+      return preferenceFile.getBoolean(FIRST_TIME_GALLERY_USER, true);
+   }
+
+   public void setFirstTimeGalleryUser(boolean firstTimeGalleryUser) {
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE);
+      Editor editor = preferenceFile.edit();
+      editor.putBoolean(FIRST_TIME_GALLERY_USER, firstTimeGalleryUser);
+      editor.commit();
+   }
+
+   public boolean isUserLoggedIn() {
+      return mUser != null;
+   }
+
    /**
     * Should only be used to get the current site for a "custom" app
     * (iFixit/Crucial etc.).
@@ -173,5 +216,31 @@ public class MainApplication extends Application {
       String siteName = CURRENT_SITE.replace("SITE_", "");
 
       return Site.getSite(siteName);
+   }
+
+   /**
+    * Logs the given user in by writing it to SharedPreferences.
+    */
+   public void login(User user) {
+      final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
+       Context.MODE_PRIVATE);
+      Editor editor = prefs.edit();
+      editor.putString(mSite.mName + SESSION_KEY, user.getSession());
+      editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
+      editor.commit();
+      mUser = user;
+   }
+
+   /**
+    * Logs the currently logged in user out by deleting it from SharedPreferences.
+    */
+   public void logout() {
+      final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
+       Context.MODE_PRIVATE);
+      Editor editor = prefs.edit();
+      editor.remove(mSite.mName + SESSION_KEY);
+      editor.remove(mSite.mName + USERNAME_KEY);
+      editor.commit();
+      mUser = null;
    }
 }

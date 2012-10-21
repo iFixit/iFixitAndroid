@@ -15,8 +15,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.view.model.OnViewGuideListener;
 
-public class WebViewFragment extends SherlockFragment implements
- OnViewGuideListener {
+public class WebViewFragment extends SherlockFragment
+ implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;
    protected ProgressBar mProgressBar;
@@ -28,7 +28,8 @@ public class WebViewFragment extends SherlockFragment implements
          mWebView.destroy();
       }
 
-      View view = inflater.inflate(R.layout.web_view_fragment, container, false);
+      View view = inflater.inflate(R.layout.web_view_fragment, container,
+       false);
       mProgressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
       mWebView = (WebView)view.findViewById(R.id.web_view);
 
@@ -116,15 +117,15 @@ public class WebViewFragment extends SherlockFragment implements
          int guideid;
 
          try {
-            if (pieces[GUIDE_POSITION].equals(GUIDE_URL) ||
-             pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
+            if (pieces[GUIDE_POSITION].equals(GUIDE_URL)
+               || pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
                guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
                mGuideListener.onViewGuide(guideid);
                return true;
             }
+         } catch (ArrayIndexOutOfBoundsException e) {
+         } catch (NumberFormatException e) {
          }
-         catch (ArrayIndexOutOfBoundsException e) {}
-         catch (NumberFormatException e) {}
 
          view.loadUrl(url);
 
