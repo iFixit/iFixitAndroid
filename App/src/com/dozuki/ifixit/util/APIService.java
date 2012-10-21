@@ -449,8 +449,13 @@ public class APIService extends Service {
       new AsyncTask<String, Void, Result>() {
          @Override
          protected Result doInBackground(String... dummy) {
-            // TODO: Check return codes etc.
-            return new Result(HttpRequest.get(url).body());
+            HttpRequest request = HttpRequest.get(url);
+
+            if (request.ok()) {
+               return new Result(request.body());
+            } else {
+               return new Result(Error.PARSE);
+            }
          }
 
          @Override
