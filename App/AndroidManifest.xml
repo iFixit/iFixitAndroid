@@ -18,7 +18,7 @@
       <service android:name=".util.APIService"/>
       <activity android:name=".dozuki.ui.SiteListActivity"
                 android:launchMode="singleTop" ></activity>
-      <activity android:name=".view.ui.TopicsActivity"
+      <activity android:name=".topic_view.ui.TopicsActivity"
                 android:launchMode="singleTop" >
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -36,11 +36,11 @@
          DOZUKI-->
       </activity>
 
-      <activity android:name=".view.ui.GalleryActivity"></activity>
-      <activity android:name=".view.ui.LoginActivity"></activity>
-      <activity android:name=".view.ui.OpenIDActivity"></activity>
-      <activity android:name=".view.ui.TopicViewActivity"></activity>
-      <activity android:name=".view.ui.GuideViewActivity"
+      <activity android:name=".gallery.ui.GalleryActivity"></activity>
+      <activity android:name=".login.ui.LoginActivity"></activity>
+      <activity android:name=".login.ui.OpenIDActivity"></activity>
+      <activity android:name=".topic_view.ui.TopicViewActivity"></activity>
+      <activity android:name=".guide_view.ui.GuideViewActivity"
                 android:exported="false"
                 android:launchMode="singleTop" >
          <intent-filter>
@@ -58,7 +58,7 @@
                   android:pathPrefix="/Project/" />
          </intent-filter>
       </activity>
-      <activity android:name=".view.ui.FullImageViewActivity"
+      <activity android:name=".guide_view.ui.FullImageViewActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar">
       </activity>
    </application>

@@ -13,9 +13,9 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.view.model.User;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class MainApplication extends Application {

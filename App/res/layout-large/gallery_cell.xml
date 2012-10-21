@@ -3,12 +3,12 @@
    android:layout_width="match_parent"
    android:layout_height="300dp" >
 
-   <com.dozuki.ifixit.view.ui.FadeInImageView
+   <com.dozuki.ifixit.gallery.ui.FadeInImageView
       android:id="@+id/media_image"
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       android:scaleType="centerCrop" >
-   </com.dozuki.ifixit.view.ui.FadeInImageView>
+   </com.dozuki.ifixit.gallery.ui.FadeInImageView>
 
    <RelativeLayout
       android:id="@+id/selected_image"

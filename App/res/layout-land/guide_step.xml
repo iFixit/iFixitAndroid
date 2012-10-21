@@ -22,7 +22,7 @@
          android:padding="@dimen/guide_image_padding"
          android:contentDescription="@string/thumbnail_desc" />
 
-      <com.dozuki.ifixit.view.ui.ThumbnailView
+      <com.dozuki.ifixit.guide_view.ui.ThumbnailView
          android:id="@+id/thumbnails"
          android:layout_width="wrap_content"
          android:layout_height="wrap_content"

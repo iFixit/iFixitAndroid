@@ -13,19 +13,19 @@ import android.text.style.URLSpan;
 import android.util.Log;
 
 import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.view.model.Guide;
-import com.dozuki.ifixit.view.model.GuideInfo;
-import com.dozuki.ifixit.view.model.GuidePart;
-import com.dozuki.ifixit.view.model.GuideStep;
-import com.dozuki.ifixit.view.model.GuideTool;
-import com.dozuki.ifixit.view.model.StepImage;
-import com.dozuki.ifixit.view.model.StepLine;
-import com.dozuki.ifixit.view.model.TopicLeaf;
-import com.dozuki.ifixit.view.model.TopicNode;
-import com.dozuki.ifixit.view.model.UploadedImageInfo;
-import com.dozuki.ifixit.view.model.User;
-import com.dozuki.ifixit.view.model.UserImageInfo;
-import com.dozuki.ifixit.view.model.UserImageList;
+import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
+import com.dozuki.ifixit.gallery.model.UserImageInfo;
+import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.guide_view.model.Guide;
+import com.dozuki.ifixit.guide_view.model.GuideInfo;
+import com.dozuki.ifixit.guide_view.model.GuidePart;
+import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.guide_view.model.GuideTool;
+import com.dozuki.ifixit.guide_view.model.StepImage;
+import com.dozuki.ifixit.guide_view.model.StepLine;
+import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.topic_view.model.TopicLeaf;
+import com.dozuki.ifixit.topic_view.model.TopicNode;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
