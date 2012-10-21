@@ -53,7 +53,6 @@ import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.UploadedImageInfo;
 import com.dozuki.ifixit.view.model.User;
@@ -269,13 +268,10 @@ public class MediaFragment extends SherlockFragment implements
    }
 
    public void retrieveUserImages() {
-      AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-      authenicationPackage.session = ((MainApplication)((Activity)mContext).getApplication())
-       .getUser().getSession();
       mNextPageRequestInProgress = true;
       int initialPageSize = 5;
       mContext.startService(APIService.getUserImagesIntent(mContext,
-       authenicationPackage, "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize) +
+       "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize) +
        "&offset=" + mImagesDownloaded));
       mUserName = ((MainApplication)((Activity)mContext).getApplication()).
        getUser().getUsername();
@@ -427,10 +423,7 @@ public class MediaFragment extends SherlockFragment implements
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-            authenicationPackage.session = ((MainApplication)((Activity)mContext)
-             .getApplication()).getUser().getSession();
-            mContext.startService(APIService.getUploadImageIntent(mContext, authenicationPackage,
+            mContext.startService(APIService.getUploadImageIntent(mContext,
              getPath(selectedImageUri), key));
          } else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
@@ -445,11 +438,7 @@ public class MediaFragment extends SherlockFragment implements
             Bitmap img = BitmapFactory.decodeFile(fPath, opt);
 
             String key = mGalleryAdapter.addFile(new String(fPath));
-            AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-            authenicationPackage.session = ((MainApplication)((Activity)mContext)
-             .getApplication()).getUser().getSession();
-            mContext.startService(APIService.getUploadImageIntent(mContext,
-             authenicationPackage, fPath, key));
+            mContext.startService(APIService.getUploadImageIntent(mContext, fPath, key));
          }
       }
    }
@@ -639,11 +628,7 @@ public class MediaFragment extends SherlockFragment implements
          deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 1);
       }
 
-      AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-      authenicationPackage.session = ((MainApplication) ((Activity) mContext).getApplication())
-       .getUser().getSession();
-      mContext.startService(APIService.getDeleteImageIntent(mContext,
-       authenicationPackage, deleteQuery));
+      mContext.startService(APIService.getDeleteImageIntent(mContext, deleteQuery));
 
       if (mImageList.getImages().size() == 0) {
          noImagesText.setVisibility(View.VISIBLE);
@@ -755,11 +740,8 @@ public class MediaFragment extends SherlockFragment implements
              !mNextPageRequestInProgress && mCurScrollState ==
              OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                mNextPageRequestInProgress = true;
-               AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-               authenicationPackage.session = ((MainApplication)((Activity)mContext)
-                .getApplication()).getUser().getSession();
                mContext.startService(APIService.getUserImagesIntent(mContext,
-                authenicationPackage, "?limit=" + IMAGE_PAGE_SIZE + "&offset=" + mImagesDownloaded));
+                "?limit=" + IMAGE_PAGE_SIZE + "&offset=" + mImagesDownloaded));
             }
          }
       }

@@ -30,8 +30,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.util.HTTPRequestHelper;
-import com.dozuki.ifixit.view.model.AuthenicationPackage;
 import com.dozuki.ifixit.view.model.LoginListener;
 import com.dozuki.ifixit.view.model.User;
 
@@ -201,19 +199,16 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
    }
 
    private void login() {
-      if (mLoginId.getText().toString().length() > 1 &&
-       mPassword.getText().toString().length() > 1 &&
-       mLoginId.getText().toString().contains("@")) {
+      String login = mLoginId.getText().toString();
+      String password = mPassword.getText().toString();
+
+      if (login.length() > 1 && password.length() > 1 && login.contains("@")) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
-         AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-         authenicationPackage.login = mLoginId.getText().toString();
-         authenicationPackage.password = mPassword.getText().toString();
          enable(false);
-         mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
+         mContext.startService(APIService.getLoginIntent(mContext, login, password));
       } else {
          mErrorText.setVisibility(View.VISIBLE);
-         if (!mLoginId.getText().toString().contains("@") ||
-          mLoginId.getText().toString().length() <= 1) {
+         if (!login.contains("@") || login.length() <= 1) {
             mLoginId.requestFocus();
             showKeyboard();
          } else {
@@ -289,13 +284,9 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
             if (password.equals(confirmPassword) &&
              login.length() > 1 && login.contains("@") &&
              name.length() > 1 && mTermsAgreeCheckBox.isChecked()) {
-               AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-               authenicationPackage.login = login;
-               authenicationPackage.password = password;
-               authenicationPackage.username = name;
                enable(false);
-               mContext.startService(APIService.getRegisterIntent(mContext,
-                authenicationPackage));
+               mContext.startService(APIService.getRegisterIntent(mContext, login,
+                password, name));
             } else {
                mErrorText.setVisibility(View.VISIBLE);
                if (!login.contains("@") || login.length() <= 1) {
@@ -322,15 +313,11 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (resultCode == Activity.RESULT_OK) {
-         if (data != null) {
-            mLoadingSpinner.setVisibility(View.VISIBLE);
-            String session = data.getStringExtra("session");
-            AuthenicationPackage authenicationPackage = new AuthenicationPackage();
-            authenicationPackage.session = session;
-            enable(false);
-            mContext.startService(APIService.getLoginIntent(mContext, authenicationPackage));
-         }
+      if (resultCode == Activity.RESULT_OK && data != null) {
+         mLoadingSpinner.setVisibility(View.VISIBLE);
+         String session = data.getStringExtra("session");
+         enable(false);
+         mContext.startService(APIService.getLoginIntent(mContext, session));
       }
    }
 
@@ -356,8 +343,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       }
    }
 
-   public static void registerOnLoginListener(LoginListener l) {
-      LoginFragment.loginListeners.add(l);
+   public static void registerOnLoginListener(LoginListener listener) {
+      loginListeners.add(listener);
    }
 
    static AlertDialog getLogoutDialog(final Context context) {
@@ -374,8 +361,6 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  HTTPRequestHelper.clearCookies(context);
-
                   for (LoginListener loginListener : loginListeners) {
                      loginListener.onLogout();
                   }

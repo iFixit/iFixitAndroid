@@ -3,8 +3,8 @@ package com.dozuki.ifixit.util;
 import java.io.File;
 import java.io.Serializable;
 import java.util.HashMap;
+import java.util.Map;
 
-import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
 
 import android.app.AlertDialog;
@@ -14,17 +14,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.dozuki.ifixit.view.model.User;
+import com.github.kevinsawicki.http.HttpRequest;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -84,11 +85,11 @@ public class APIService extends Service {
       public void setResult(Result result);
    }
 
-   private static final String RESPONSE = "RESPONSE";
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
-   private static final String REQUEST_AUTHENICATION_PACKAGE =
-    "AUTHENICATION_PACKAGE";
+   private static final String REQUEST_POST_DATA = "REQUEST_POST_DATA";
+   private static final String REQUEST_UPLOAD_FILE_PATH =
+    "REQUEST_UPLOAD_FILE_PATH";
    public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
 
@@ -115,30 +116,9 @@ public class APIService extends Service {
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String resultInformation =
        extras.getString(REQUEST_RESULT_INFORMATION);
-      final AuthenicationPackage authenicationPackage =
-       (AuthenicationPackage)extras.getSerializable(
-       REQUEST_AUTHENICATION_PACKAGE);
-
-      if (authenicationPackage != null) {
-         perfromAuthenicatedRequestHelper(this, endpoint,
-          authenicationPackage, requestQuery, new Responder() {
-             public void setResult(Result result) {
-
-                if (!result.hasError()) {
-                   result = parseResult(result.getResponse(), endpoint);
-                }
-
-                // Don't save if there a parse error.
-                if (!result.hasError()) {
-                   saveResult(result, requestTarget, requestQuery);
-                }
-
-                // Always broadcast the result despite any errors.
-                broadcastResult(result, endpoint, resultInformation);
-             }
-          });
-         return START_NOT_STICKY;
-      }
+      final Map<String, String> postData =
+       (Map<String, String>)extras.getSerializable(REQUEST_POST_DATA);
+      final String filePath = extras.getString(REQUEST_UPLOAD_FILE_PATH);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -156,7 +136,8 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequestHelper(this, endpoint, requestQuery, new Responder() {
+      performRequest(this, endpoint, requestQuery, postData, filePath,
+       new Responder() {
          public void setResult(Result result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
@@ -223,56 +204,71 @@ public class APIService extends Service {
    }
 
    public static Intent getLoginIntent(Context context,
-    AuthenicationPackage authenicationPackage) {
+    String login, String password) {
       Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
 
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
+      postData.put("login", login);
+      postData.put("password", password);
+
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
 
       return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
    }
 
-   public static Intent getRegisterIntent(Context context,
-    AuthenicationPackage authenicationPackage) {
+   /**
+    * There are two login intent methods because the user has a sessionid
+    * after logging in via OpenID but we still need to hit the login endpoint
+    * to verify this and to get a username.
+    *
+    * TODO: Make this better. This method involves POSTing with a sessionid
+    * rather than sending it in a Cookie like all of the other requests.
+    */
+   public static Intent getLoginIntent(Context context,
+    String session) {
       Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
 
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
+      postData.put("session", session);
+
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
+
+      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
+   }
+
+   public static Intent getRegisterIntent(Context context, String login,
+    String password, String username) {
+      Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
+
+      postData.put("login", login);
+      postData.put("password", password);
+      postData.put("username", username);
+
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
 
       return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
    }
 
-   public static Intent getUserImagesIntent(Context context,
-    AuthenicationPackage authenicationPackage, String query) {
-      Bundle extras = new Bundle();
-
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-
-      return createIntent(context, APIEndpoint.USER_IMAGES, query, extras);
+   public static Intent getUserImagesIntent(Context context, String query) {
+      return createIntent(context, APIEndpoint.USER_IMAGES, query);
    }
 
-   public static Intent getUploadImageIntent(Context context,
-    AuthenicationPackage authenicationPackage, String filePath,
+   /**
+    * TODO: Update this endpoint to use new system.
+    */
+   public static Intent getUploadImageIntent(Context context, String filePath,
     String extraInformation) {
       Bundle extras = new Bundle();
 
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
       extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
+      extras.putString(REQUEST_UPLOAD_FILE_PATH, filePath);
 
       return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
    }
 
-   public static Intent getDeleteImageIntent(Context context,
-    AuthenicationPackage authenicationPackage, String requestQuery) {
-      Bundle extras = new Bundle();
-
-      extras.putSerializable(REQUEST_AUTHENICATION_PACKAGE,
-       authenicationPackage);
-
-      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery,
-       extras);
+   public static Intent getDeleteImageIntent(Context context, String requestQuery) {
+      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery);
    }
 
    public static Intent getSitesIntent(Context context) {
@@ -352,119 +348,82 @@ public class APIService extends Service {
       return builder.create();
    }
 
-   private static void performRequestHelper(Context context,
-    APIEndpoint endpoint, String requestQuery, Responder responder) {
+   private static void performRequest(final Context context, final APIEndpoint endpoint,
+    final String requestQuery, final Map<String, String> postData,
+    final String filePath, final Responder responder) {
       if (!checkConnectivity(context, responder)) {
          return;
       }
 
-      performRequest(endpoint.getUrl(mSite, requestQuery), responder);
-   }
+      final String url = endpoint.getUrl(mSite, requestQuery);
 
-   private static void perfromAuthenicatedRequestHelper(Context context,
-      APIEndpoint endpoint, AuthenicationPackage authenicationPackage,
-      String requestQuery, Responder responder) {
-      if (!checkConnectivity(context, responder)) {
-         return;
-      }
+      Log.i("iFixit", "Performing API call: " + url);
 
-      int requestTarget = endpoint.getTarget();
+      new AsyncTask<String, Void, Result>() {
+         @Override
+         protected Result doInBackground(String... dummy) {
+            /**
+             * Unfortunately we must split the creation of the HttpRequest
+             * object and the appropriate actions to take for a GET vs. a POST
+             * request. The request headers and trustAllCerts calls must be
+             * made before any data is sent. However, we must have an HttpRequest
+             * object already.
+             */
+            HttpRequest request;
 
-      /**
-       * TODO: Remove these if statements and move logic into APIEndpoint.
-       */
-      String url;
-      File file = null;
-      if (requestTarget == APIEndpoint.LOGIN.getTarget()) {
-         url = endpoint.getUrl(mSite);
-      } else if (requestTarget == APIEndpoint.REGISTER.getTarget()) {
-         url = endpoint.getUrl(mSite);
-      } else if (requestTarget == APIEndpoint.USER_IMAGES.getTarget()) {
-         url = endpoint.getUrl(mSite, requestQuery);
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-      } else if (requestTarget == APIEndpoint.UPLOAD_IMAGE.getTarget()) {
-         file = new File(requestQuery);
-         url = endpoint.getUrl(mSite, file.getName());
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-      } else if (requestTarget == APIEndpoint.DELETE_IMAGE.getTarget()) {
-         url = endpoint.getUrl(mSite, requestQuery);
-         authenicationPackage.login = null;
-         authenicationPackage.password = null;
-         authenicationPackage.username = null;
-      } else {
-         Log.w("iFixit", "Invalid request target: " + requestTarget);
-         responder.setResult(new Result(Error.PARSE));
-         return;
-      }
-      performAuthenicatedRequest(url, authenicationPackage, file, responder);
-   }
-
-   private static void performAuthenicatedRequest(final String url,
-    final AuthenicationPackage authenicationPackage, final File file,
-    final Responder responder) {
-      final Handler handler = new Handler() {
-         public void handleMessage(Message message) {
-            String response = message.getData().getString(RESPONSE);
-
-            responder.setResult(new Result(response));
-         }
-      };
-
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(handler);
-
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-            HashMap<String, String> params = new HashMap<String, String>();
-            HashMap<String, String> header = new HashMap<String, String>();
-
-            params.put("login", authenicationPackage.login);
-            params.put("password", authenicationPackage.password);
-            params.put("username", authenicationPackage.username);
-
-            if (file != null) {
-               params.put("file", file.getName());
+            /**
+             * Create the HttpRequest with the appropriate method.
+             */
+            if (endpoint.mPost) {
+               request = HttpRequest.post(url);
+            } else {
+               request = HttpRequest.get(url);
             }
 
-            try {
-               helper.performPostWithSessionCookie(url, null, null,
-                authenicationPackage.session, mSite.getDomainForCookie(), header, params, file);
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
+            /**
+             * Uncomment to test HTTPS API calls in development.
+             *
+             * request.trustAllCerts();
+             * request.trustAllHosts();
+             */
+
+            /**
+             * Send the session along in a Cookie.
+             *
+             * TODO: Also send it along if the current site has SSL everywhere.
+             */
+            if (endpoint.mAuthenticated) {
+               User user = ((MainApplication)context.getApplicationContext()).getUser();
+               String session = user.getSession();
+               request.header("Cookie", "session=" + session);
+            }
+
+            /**
+             * Continue with constructing the request body.
+             */
+            if (endpoint.mPost) {
+               if (filePath != null) {
+                  // POST the file if present.
+                  request.send(new File(filePath));
+               } else if (postData != null) {
+                  request.form(postData);
+               }
+            } else {
+               // Do nothing extra for GET.
+            }
+
+            if (request.ok()) {
+               return new Result(request.body());
+            } else {
+               return new Result(Error.PARSE);
             }
          }
-      }.start();
-   }
 
-   private static void performRequest(final String url,
-    final Responder responder) {
-      final Handler handler = new Handler() {
-         public void handleMessage(Message message) {
-            String response = message.getData().getString(RESPONSE);
-
-            responder.setResult(new Result(response));
+         @Override
+         protected void onPostExecute(Result result) {
+            responder.setResult(result);
          }
-      };
-
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(handler);
-
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
-
-            try {
-               helper.performGet(url);
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
-            }
-         }
-      }.start();
+      }.execute();
    }
 
    private static boolean checkConnectivity(Context context,

@@ -88,6 +88,7 @@ public class OpenIDActivity extends Activity {
                   result.putExtra("session", parts[1]);
                   setResult(RESULT_OK, result);
                   finish();
+                  return;
                }
             }
 

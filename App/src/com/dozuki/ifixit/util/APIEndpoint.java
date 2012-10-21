@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
 import org.json.JSONException;
@@ -16,6 +17,7 @@ public enum APIEndpoint {
       "/api/1.0/categories/",
       false,
       false,
+      false,
       "com.dozuki.ifixit.api.categories",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -30,6 +32,7 @@ public enum APIEndpoint {
             return "/api/1.0/guide/" + query;
          }
       },
+      false,
       false,
       false,
       "com.dozuki.ifixit.api.guide",
@@ -54,6 +57,7 @@ public enum APIEndpoint {
       },
       false,
       false,
+      false,
       "com.dozuki.ifixit.api.topic",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -66,6 +70,7 @@ public enum APIEndpoint {
       "/api/1.0/login/",
       true,
       false,
+      true,
       "com.dozuki.ifixit.api.login",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -78,6 +83,7 @@ public enum APIEndpoint {
       "/api/1.0/register/",
       true,
       false,
+      true,
       "com.dozuki.ifixit.api.register",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -94,6 +100,7 @@ public enum APIEndpoint {
       },
       false,
       true,
+      true,
       "com.dozuki.ifixit.api.user_images",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -105,10 +112,34 @@ public enum APIEndpoint {
    UPLOAD_IMAGE(
       new CreateUrl() {
          public String create(String query) {
-            return "/api/1.0/image/upload?file=" + query;
+            String fileName;
+
+            try {
+               fileName = URLEncoder.encode(getFileNameFromFilePath(query), "UTF-8");
+            } catch (UnsupportedEncodingException e) {
+               // Provide a default file name.
+               fileName = "uploaded_image.jpg";
+            }
+
+            return "/api/1.0/image/upload?file=" + fileName;
+         }
+
+         private String getFileNameFromFilePath(String filePath) {
+            int index = filePath.lastIndexOf('/');
+
+            if (index == -1) {
+               /**
+                * filePath doesn't have a '/' in it. That's weird but just
+                * return the whole file path.
+                */
+               return filePath;
+            }
+
+            return filePath.substring(index + 1);
          }
       },
       false,
+      true,
       true,
       "com.dozuki.ifixit.api.upload_image",
       new ParseResult() {
@@ -126,6 +157,7 @@ public enum APIEndpoint {
       },
       false,
       true,
+      true,
       "com.dozuki.ifixit.api.delete_image",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -137,6 +169,7 @@ public enum APIEndpoint {
 
    SITES(
       "/api/1.0/sites?limit=1000",
+      false,
       false,
       false,
       "com.dozuki.ifixit.api.sites",
@@ -166,9 +199,15 @@ public enum APIEndpoint {
    public final boolean mHttps;
 
    /**
-    * Whether or not this is an authenticated endpoint.
+    * Whether or not this is an authenticated endpoint. If true, sends the
+    * user's sessionid along in a cookie.
     */
    public final boolean mAuthenticated;
+
+   /**
+    * True if this endpoint should always perform POST requests.
+    */
+   public final boolean mPost;
 
    /**
     * Action used for broadcast receivers.
@@ -186,20 +225,22 @@ public enum APIEndpoint {
    private final ParseResult mParseResult;
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    String action, ParseResult parseResult) {
-      this(url, https, authenticated, action, null, parseResult);
+    boolean post, String action, ParseResult parseResult) {
+      this(url, https, authenticated, post, action, null, parseResult);
    }
 
    private APIEndpoint(CreateUrl createUrl, boolean https,
-    boolean authenticated, String action, ParseResult parseResult) {
-      this(null, https, authenticated, action, createUrl, parseResult);
+    boolean authenticated, boolean post, String action,
+    ParseResult parseResult) {
+      this(null, https, authenticated, post, action, createUrl, parseResult);
    }
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    String action, CreateUrl createUrl, ParseResult parseResult) {
+    boolean post, String action, CreateUrl createUrl, ParseResult parseResult) {
       mUrl = url;
       mHttps = https;
       mAuthenticated = authenticated;
+      mPost = post;
       mAction = action;
       mCreateUrl = createUrl;
       mParseResult = parseResult;
