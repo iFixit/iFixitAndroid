@@ -116,6 +116,7 @@ public class APIService extends Service {
       final String requestQuery = extras.getString(REQUEST_QUERY);
       final String resultInformation =
        extras.getString(REQUEST_RESULT_INFORMATION);
+      @SuppressWarnings("unchecked")
       final Map<String, String> postData =
        (Map<String, String>)extras.getSerializable(REQUEST_POST_DATA);
       final String filePath = extras.getString(REQUEST_UPLOAD_FILE_PATH);
@@ -136,7 +137,7 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequest(this, endpoint, requestQuery, postData, filePath,
+      performRequest(endpoint, requestQuery, postData, filePath,
        new Responder() {
          public void setResult(Result result) {
             // Don't parse if we've erred already.
@@ -254,9 +255,6 @@ public class APIService extends Service {
       return createIntent(context, APIEndpoint.USER_IMAGES, query);
    }
 
-   /**
-    * TODO: Update this endpoint to use new system.
-    */
    public static Intent getUploadImageIntent(Context context, String filePath,
     String extraInformation) {
       Bundle extras = new Bundle();
@@ -348,10 +346,10 @@ public class APIService extends Service {
       return builder.create();
    }
 
-   private static void performRequest(final Context context, final APIEndpoint endpoint,
+   private void performRequest(final APIEndpoint endpoint,
     final String requestQuery, final Map<String, String> postData,
     final String filePath, final Responder responder) {
-      if (!checkConnectivity(context, responder)) {
+      if (!checkConnectivity(responder)) {
          return;
       }
 
@@ -393,7 +391,7 @@ public class APIService extends Service {
              * TODO: Also send it along if the current site has SSL everywhere.
              */
             if (endpoint.mAuthenticated) {
-               User user = ((MainApplication)context.getApplicationContext()).getUser();
+               User user = ((MainApplication)getApplicationContext()).getUser();
                String session = user.getSession();
                request.header("Cookie", "session=" + session);
             }
@@ -426,9 +424,8 @@ public class APIService extends Service {
       }.execute();
    }
 
-   private static boolean checkConnectivity(Context context,
-    Responder responder) {
-      ConnectivityManager cm = (ConnectivityManager)context.
+   private boolean checkConnectivity(Responder responder) {
+      ConnectivityManager cm = (ConnectivityManager)
        getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
