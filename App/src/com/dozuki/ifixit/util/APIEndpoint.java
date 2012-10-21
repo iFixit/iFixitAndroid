@@ -16,6 +16,7 @@ public enum APIEndpoint {
       "/api/1.0/categories/",
       false,
       false,
+      false,
       "com.dozuki.ifixit.api.categories",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -30,6 +31,7 @@ public enum APIEndpoint {
             return "/api/1.0/guide/" + query;
          }
       },
+      false,
       false,
       false,
       "com.dozuki.ifixit.api.guide",
@@ -54,6 +56,7 @@ public enum APIEndpoint {
       },
       false,
       false,
+      false,
       "com.dozuki.ifixit.api.topic",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -66,6 +69,7 @@ public enum APIEndpoint {
       "/api/1.0/login/",
       true,
       false,
+      true,
       "com.dozuki.ifixit.api.login",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -78,6 +82,7 @@ public enum APIEndpoint {
       "/api/1.0/register/",
       true,
       false,
+      true,
       "com.dozuki.ifixit.api.register",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -93,6 +98,7 @@ public enum APIEndpoint {
          }
       },
       false,
+      true,
       true,
       "com.dozuki.ifixit.api.user_images",
       new ParseResult() {
@@ -110,6 +116,7 @@ public enum APIEndpoint {
       },
       false,
       true,
+      true,
       "com.dozuki.ifixit.api.upload_image",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -126,6 +133,7 @@ public enum APIEndpoint {
       },
       false,
       true,
+      true,
       "com.dozuki.ifixit.api.delete_image",
       new ParseResult() {
          public Object parse(String json) throws JSONException {
@@ -137,6 +145,7 @@ public enum APIEndpoint {
 
    SITES(
       "/api/1.0/sites?limit=1000",
+      false,
       false,
       false,
       "com.dozuki.ifixit.api.sites",
@@ -172,6 +181,11 @@ public enum APIEndpoint {
    public final boolean mAuthenticated;
 
    /**
+    * True if this endpoint should always perform POST requests.
+    */
+   public final boolean mPost;
+
+   /**
     * Action used for broadcast receivers.
     */
    public final String mAction;
@@ -187,20 +201,22 @@ public enum APIEndpoint {
    private final ParseResult mParseResult;
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    String action, ParseResult parseResult) {
-      this(url, https, authenticated, action, null, parseResult);
+    boolean post, String action, ParseResult parseResult) {
+      this(url, https, authenticated, post, action, null, parseResult);
    }
 
    private APIEndpoint(CreateUrl createUrl, boolean https,
-    boolean authenticated, String action, ParseResult parseResult) {
-      this(null, https, authenticated, action, createUrl, parseResult);
+    boolean authenticated, boolean post, String action,
+    ParseResult parseResult) {
+      this(null, https, authenticated, post, action, createUrl, parseResult);
    }
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    String action, CreateUrl createUrl, ParseResult parseResult) {
+    boolean post, String action, CreateUrl createUrl, ParseResult parseResult) {
       mUrl = url;
       mHttps = https;
       mAuthenticated = authenticated;
+      mPost = post;
       mAction = action;
       mCreateUrl = createUrl;
       mParseResult = parseResult;

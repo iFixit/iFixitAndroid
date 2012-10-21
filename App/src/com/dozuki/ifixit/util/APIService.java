@@ -24,9 +24,11 @@ import android.util.Log;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.view.model.AuthenicationPackage;
+import com.dozuki.ifixit.view.model.User;
 import com.github.kevinsawicki.http.HttpRequest;
 
 /**
@@ -366,11 +368,20 @@ public class APIService extends Service {
          protected Result doInBackground(String... dummy) {
             HttpRequest request;
 
-            if (postData == null) {
-               // No post data, lets do a GET.
-               request = HttpRequest.get(url);
+            if (endpoint.mPost) {
+               request = HttpRequest.post(url);
+
+               if (postData != null) {
+                  request.form(postData);
+               }
             } else {
-               request = HttpRequest.post(url).form(postData);
+               request = HttpRequest.get(url);
+            }
+
+            if (endpoint.mAuthenticated) {
+               User user = ((MainApplication)context.getApplicationContext()).getUser();
+               String session = user.getSession();
+               request.header("Cookie", "session=" + session);
             }
 
             if (request.ok()) {
