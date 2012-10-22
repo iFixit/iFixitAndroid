@@ -26,7 +26,6 @@ public class GalleryActivity extends SherlockFragmentActivity
    private ActionBar mActionBar;
    private boolean mLoginVisible;
    private View mLoginView;
-   private User mUser;
 
    private boolean mIconsHidden;
 
@@ -50,12 +49,12 @@ public class GalleryActivity extends SherlockFragmentActivity
       LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
        findFragmentByTag(LOGIN_FRAGMENT);
 
-      mUser = ((MainApplication)getApplication()).getUserFromPreferenceFile();
+      User user = ((MainApplication)getApplication()).getUserFromPreferenceFile();
 
-      if (mUser != null) {
+      if (user != null) {
          mLoginView.setVisibility(View.INVISIBLE);
-         ((MainApplication)getApplication()).setUser(mUser);
-         mMediaView.onLogin(mUser);
+         ((MainApplication)getApplication()).setUser(user);
+         mMediaView.onLogin(user);
          mIconsHidden = false;
          supportInvalidateOptionsMenu();
       } else {
