@@ -96,26 +96,27 @@ public class GalleryActivity extends SherlockFragmentActivity
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
+      boolean isLoggedIn = ((MainApplication)getApplication()).isUserLoggedIn();
       switch (item.getItemId()) {
          case android.R.id.home:
             finish();
             return true;
          case R.id.top_camera_button:
-            if (((MainApplication)getApplication()).getUser() == null) {
+            if (!isLoggedIn) {
                return false;
             }
 
             mMediaView.launchCamera();
             return true;
          case R.id.top_gallery_button:
-            if (((MainApplication)getApplication()).getUser() == null) {
+            if (!isLoggedIn) {
                return false;
             }
 
             mMediaView.launchGallery();
             return true;
          case R.id.top_question_button:
-            if (((MainApplication)getApplication()).getUser() == null) {
+            if (!isLoggedIn) {
                return false;
             }
 
