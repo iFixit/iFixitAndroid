@@ -183,18 +183,18 @@ public class TopicViewFragment extends SherlockFragment
       ActionBar.Tab tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.guides));
       tab.setTabListener(this);
-      mActionBar.addTab(tab);
+      mActionBar.addTab(tab, false);
 
       tab = mActionBar.newTab();
       tab.setText(getActivity().getString(R.string.info));
       tab.setTabListener(this);
-      mActionBar.addTab(tab);
+      mActionBar.addTab(tab, false);
 
       if (mSite.mAnswers) {
          tab = mActionBar.newTab();
          tab.setText(getActivity().getString(R.string.answers));
          tab.setTabListener(this);
-         mActionBar.addTab(tab);
+         mActionBar.addTab(tab, false);
       }
 
       if (mSelectedTab != -1) {
