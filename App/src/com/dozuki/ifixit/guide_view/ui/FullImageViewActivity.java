@@ -58,7 +58,7 @@ public class FullImageViewActivity extends Activity {
           mImageZoom);
       }
 
-      mCloseFullScreen = (ImageView) findViewById(R.id.fullScreenClose);
+      mCloseFullScreen = (ImageView)findViewById(R.id.fullScreenClose);
       mCloseFullScreen.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
