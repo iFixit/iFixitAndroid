@@ -375,7 +375,6 @@ public class APIService extends Service {
    private void performRequest(final APIEndpoint endpoint,
     final String requestQuery, final Map<String, String> postData,
     final String filePath, final Responder responder) {
-	   Log.e("iFixit", "Performing API call: " + endpoint.getUrl(mSite, requestQuery));
       if (!checkConnectivity(responder)) {
          return;
       }
