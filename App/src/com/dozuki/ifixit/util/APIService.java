@@ -7,10 +7,13 @@ import java.util.Map;
 
 import org.json.JSONException;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
+import android.content.DialogInterface.OnDismissListener;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -343,11 +346,17 @@ public class APIService extends Service {
                 public void onClick(DialogInterface dialog, int id) {
                    // Try performing the request again.
                    context.startService(apiIntent);
-                   dialog.cancel();
+                   dialog.dismiss();
                 }
              });
-
-      return builder.create();
+      AlertDialog d = builder.create();
+      d.setOnCancelListener(new OnCancelListener() {
+         @Override
+		 public void onCancel(DialogInterface dialog) {
+            ((Activity) context).finish();
+         }
+      });
+      return d;
    }
 
    private void performRequest(final APIEndpoint endpoint,
