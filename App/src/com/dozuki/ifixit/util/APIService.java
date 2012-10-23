@@ -307,20 +307,33 @@ public class APIService extends Service {
       }
    }
 
-   public static AlertDialog getListMediaErrorDialog(final Context mContext) {
-      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
-      builder.setTitle(mContext.getString(R.string.media_error_title))
-         .setPositiveButton(mContext.getString(R.string.media_error_confirm),
-         new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               //kill the media activity, and have them try again later
-               //incase the server needs some rest
-               ((SherlockFragmentActivity)mContext).finish();
-               dialog.cancel();
-            }
-         });
+   public static AlertDialog getListMediaErrorDialog(Context context, Error error,
+           Intent apiIntent) {
+       
+       switch (error.mType) {
+       case CONNECTION:
+          return getConnectionErrorDialog(context, apiIntent);
+       default:
+          return getListMediaUnknownErrorDialog(context);
+       }
+      
+   }
+       
+   public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext)
+   {
+       HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
+       builder.setTitle(mContext.getString(R.string.media_error_title))
+          .setPositiveButton(mContext.getString(R.string.media_error_confirm),
+          new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int id) {
+                //kill the media activity, and have them try again later
+                //incase the server needs some rest
+                ((SherlockFragmentActivity)mContext).finish();
+                dialog.cancel();
+             }
+          });
 
-      return builder.create();
+       return builder.create();
    }
 
    private static AlertDialog getParseErrorDialog(final Context context,
@@ -362,6 +375,7 @@ public class APIService extends Service {
    private void performRequest(final APIEndpoint endpoint,
     final String requestQuery, final Map<String, String> postData,
     final String filePath, final Responder responder) {
+	   Log.e("iFixit", "Performing API call: " + endpoint.getUrl(mSite, requestQuery));
       if (!checkConnectivity(responder)) {
          return;
       }
