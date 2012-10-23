@@ -665,16 +665,16 @@ public class MediaFragment extends SherlockFragment implements
 
    @Override
    public void onLogin(User user) {
-      if (mImageList.getImages().size() == 0) {
-         mUserName = ((MainApplication)((Activity)mContext).getApplication()).
-          getUser().getUsername();
-         mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
-         mButtons.setOnClickListener(this);
-         retrieveUserImages();
-         mButtons.setVisibility(View.VISIBLE);
-         mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,
+	  mImageList.getImages().clear();
+      mUserName = ((MainApplication)((Activity)mContext).getApplication()).
+      getUser().getUsername();
+      mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
+      mButtons.setOnClickListener(this);
+      retrieveUserImages();
+      mButtons.setVisibility(View.VISIBLE);
+      mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,
           R.anim.slide_in_bottom));
-      }
+      
    }
 
    @Override

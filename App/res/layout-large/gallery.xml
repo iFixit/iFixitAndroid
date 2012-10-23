@@ -8,26 +8,4 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent">
    </fragment>
-   <LinearLayout
-      android:baselineAligned="false"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="horizontal">
-      <FrameLayout
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="20">
-      </FrameLayout>
-      <FrameLayout
-         android:id="@+id/login_fragment"
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="60">
-      </FrameLayout>
-      <FrameLayout
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="20">
-      </FrameLayout>
-   </LinearLayout>
 </FrameLayout>

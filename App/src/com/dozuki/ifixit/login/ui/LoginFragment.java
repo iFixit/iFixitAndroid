@@ -61,6 +61,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
    private ProgressBar mLoadingSpinner;
    private LinearLayout mRegisterAgreement;
+   private Intent mCurIntent;
 
    private boolean mReadyForRegisterState;
 
@@ -77,6 +78,10 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       public void onFailure(Error error, Intent intent) {
          enable(true);
+         if(error.mType == Error.ErrorType.CONNECTION)
+         {
+            APIService.getErrorDialog(mContext, error, mCurIntent).show(); 
+         }
          mLoadingSpinner.setVisibility(View.GONE);
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessege);
@@ -210,7 +215,8 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       if (login.length() > 0 && password.length() > 0 ) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
-         getActivity().startService(APIService.getLoginIntent(getActivity(), login, password));
+         mCurIntent = APIService.getLoginIntent(getActivity(), login, password);
+         getActivity().startService(mCurIntent);
       } else {
          if (login.length() < 1) {
             mLoginId.requestFocus();
@@ -293,8 +299,9 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
                enable(false);
                mErrorText.setVisibility(View.INVISIBLE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
-               getActivity().startService(APIService.getRegisterIntent(getActivity(), login,
-                password, name));
+               mCurIntent = APIService.getRegisterIntent(getActivity(), login,
+                       password, name);
+               getActivity().startService(mCurIntent);
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);
@@ -336,7 +343,8 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          mLoadingSpinner.setVisibility(View.VISIBLE);
          String session = data.getStringExtra("session");
          enable(false);
-         getActivity().startService(APIService.getLoginIntent(getActivity(), session));
+         mCurIntent = APIService.getLoginIntent(getActivity(), session);
+         getActivity().startService(mCurIntent);
       }
    }
 
