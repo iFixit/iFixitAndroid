@@ -278,6 +278,7 @@ public class MediaFragment extends SherlockFragment implements
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
+	  super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putBooleanArray(USER_SELECTED_LIST,
        toPrimitiveArray(mSelectedList));
       savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
@@ -512,8 +513,6 @@ public class MediaFragment extends SherlockFragment implements
 
       @Override
       public int getCount() {
-         if (mImageList.getImages().size() > 0)
-            noImagesText.setVisibility(View.GONE);
          return mImageList.getImages().size();
       }
 
@@ -523,6 +522,10 @@ public class MediaFragment extends SherlockFragment implements
       }
 
       public View getView(int position, View convertView, ViewGroup parent) {
+    	  
+         if (mImageList.getImages().size() > 0)
+              noImagesText.setVisibility(View.GONE);
+          
          MediaViewItem itemView = (MediaViewItem)convertView;
 
          if (convertView == null) {
