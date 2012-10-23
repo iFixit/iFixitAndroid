@@ -95,6 +95,8 @@ public class APIService extends Service {
     "REQUEST_UPLOAD_FILE_PATH";
    public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
+   public static final String INVALID_LOGIN_STRING =
+		    "Invalid login";
 
    private static final String NO_QUERY = "";
 
@@ -166,8 +168,11 @@ public class APIService extends Service {
     */
    private Result parseResult(String response, APIEndpoint endpoint) {
       String error = JSONHelper.parseError(response);
-      if(error != null) {  
-         return new Result(new Error(error, ErrorType.OTHER));
+      if(error != null) {
+         if(INVALID_LOGIN_STRING.equals(error))
+            return new Result(new Error(error, ErrorType.INVALID_USER));
+         else
+            return new Result(new Error(error, ErrorType.OTHER));
 	  }
       try {
          Object parsedResult = endpoint.parseResult(response);

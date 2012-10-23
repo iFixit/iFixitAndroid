@@ -24,6 +24,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -35,7 +36,7 @@ import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.Error;
 
-public class LoginFragment extends SherlockFragment implements OnClickListener {
+public class LoginFragment extends SherlockDialogFragment implements OnClickListener {
    private static ArrayList<LoginListener> loginListeners =
     new ArrayList<LoginListener>();
    private static final int OPEN_ID_RESULT_CODE = 4;
@@ -70,6 +71,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
 
          for (LoginListener loginListener : loginListeners) {
             loginListener.onLogin(user);
+            dismiss();
          }
       }
 
@@ -97,7 +99,8 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          mReadyForRegisterState = false;
       }
    }
-
+   
+ 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
@@ -149,7 +152,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       mYahooLogin.setOnClickListener(this);
       mRegister.setOnClickListener(this);
       mCancelRegister.setOnClickListener(this);
-
+      getDialog().setTitle(R.string.login_dialog_title);
       return view;
    }
 
@@ -208,7 +211,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       if (login.length() > 0 && password.length() > 0 ) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
-         mContext.startService(APIService.getLoginIntent(mContext, login, password));
+         getActivity().startService(APIService.getLoginIntent(getActivity(), login, password));
       } else {
          if (login.length() < 1) {
             mLoginId.requestFocus();
@@ -291,7 +294,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
                enable(false);
                mErrorText.setVisibility(View.INVISIBLE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
-               mContext.startService(APIService.getRegisterIntent(mContext, login,
+               getActivity().startService(APIService.getRegisterIntent(getActivity(), login,
                 password, name));
             } else {
                if (login.length() <= 0) {
@@ -334,7 +337,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          String session = data.getStringExtra("session");
          enable(false);
-         mContext.startService(APIService.getLoginIntent(mContext, session));
+         getActivity().startService(APIService.getLoginIntent(getActivity(), session));
       }
    }
 
@@ -345,7 +348,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       IntentFilter filter = new IntentFilter();
       filter.addAction(APIEndpoint.LOGIN.mAction);
       filter.addAction(APIEndpoint.REGISTER.mAction);
-      mContext.registerReceiver(mApiReceiver, filter);
+      getActivity().registerReceiver(mApiReceiver, filter);
    }
 
    @Override
@@ -353,7 +356,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       super.onPause();
 
       try {
-         mContext.unregisterReceiver(mApiReceiver);
+    	  getActivity().unregisterReceiver(mApiReceiver);
       } catch (IllegalArgumentException e) {
          // Do nothing. This happens in the unlikely event that
          // unregisterReceiver has been called already.

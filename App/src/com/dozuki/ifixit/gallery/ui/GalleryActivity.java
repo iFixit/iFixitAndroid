@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.gallery.ui;
 
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
@@ -12,9 +14,16 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
+import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.ui.LocalImage;
 import com.dozuki.ifixit.login.ui.LoginFragment;
+import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.Error;
 
 public class GalleryActivity extends SherlockFragmentActivity
  implements LoginListener {
@@ -28,6 +37,20 @@ public class GalleryActivity extends SherlockFragmentActivity
    private View mLoginView;
 
    private boolean mIconsHidden;
+   
+   private APIReceiver mApiReceiver = new APIReceiver() {
+      public void onSuccess(Object result, Intent intent) {
+     
+      }
+
+      public void onFailure(Error error, Intent intent) {
+         if (error.mType == Error.ErrorType.INVALID_USER) {
+            LoginFragment editNameDialog = new LoginFragment();
+            editNameDialog.show(getSupportFragmentManager(), "");
+         }	
+		}
+	};
+
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -52,8 +75,8 @@ public class GalleryActivity extends SherlockFragmentActivity
       User user = ((MainApplication)getApplication()).getUserFromPreferenceFile();
 
       if (user != null) {
-         mLoginView.setVisibility(View.INVISIBLE);
-         ((MainApplication)getApplication()).setUser(user);
+        // mLoginView.setVisibility(View.INVISIBLE);
+         //((MainApplication)getApplication()).setUser(user);
          mMediaView.onLogin(user);
          mIconsHidden = false;
          supportInvalidateOptionsMenu();
@@ -75,7 +98,7 @@ public class GalleryActivity extends SherlockFragmentActivity
       mIconsHidden = true;
       supportInvalidateOptionsMenu();
 
-      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+   /*   FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
       int inAnim, outAnim;
       LoginFragment fg = new LoginFragment();
 
@@ -85,7 +108,10 @@ public class GalleryActivity extends SherlockFragmentActivity
       ft.setCustomAnimations(inAnim, outAnim);
       ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
       ft.addToBackStack(null);
-      ft.commitAllowingStateLoss();
+      ft.commitAllowingStateLoss();*/
+      LoginFragment editNameDialog = new LoginFragment();
+      editNameDialog.getDialog();
+      editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
    }
 
    @Override
@@ -132,8 +158,8 @@ public class GalleryActivity extends SherlockFragmentActivity
       mIconsHidden = false;
       supportInvalidateOptionsMenu();
 
-      getSupportFragmentManager().popBackStack();
-      mLoginView.setVisibility(View.INVISIBLE);
+      //getSupportFragmentManager().popBackStack();
+     // mLoginView.setVisibility(View.INVISIBLE);
 
       if (((MainApplication)getApplication()).isFirstTimeGalleryUser()) {
          MediaFragment.createHelpDialog(this).show();
@@ -165,5 +191,27 @@ public class GalleryActivity extends SherlockFragmentActivity
       }
 
       return super.onKeyDown(keyCode, event);
+   }
+   
+   @Override
+   public void onResume()
+   {
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(APIEndpoint.USER_IMAGES.mAction);
+      filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
+      filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
+      registerReceiver(mApiReceiver, filter);
+      super.onResume();
+   }
+   
+   @Override
+   public void onPause()
+   {
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(APIEndpoint.USER_IMAGES.mAction);
+      filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
+      filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
+      registerReceiver(mApiReceiver, filter);
+      super.onPause();
    }
 }

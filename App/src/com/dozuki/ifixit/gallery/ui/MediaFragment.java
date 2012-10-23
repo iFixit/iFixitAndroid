@@ -147,8 +147,12 @@ public class MediaFragment extends SherlockFragment implements
       }
 
       public void onFailure(Error error, Intent intent) {
-         APIService.getListMediaErrorDialog(mContext, error, mCurIntent).show();
-         mNextPageRequestInProgress = false;
+    	  
+    	  if(error.mType != Error.ErrorType.INVALID_USER)
+    	  {
+    	     APIService.getListMediaErrorDialog(mContext, error, mCurIntent).show();
+    	     mNextPageRequestInProgress = false;
+    	  }
       }
    };
 
