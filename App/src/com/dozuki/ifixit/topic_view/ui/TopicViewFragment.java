@@ -29,6 +29,7 @@ import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.dozuki.ifixit.util.Error;
 
 public class TopicViewFragment extends SherlockFragment
  implements ActionBar.TabListener {
@@ -51,7 +52,7 @@ public class TopicViewFragment extends SherlockFragment
          setTopicLeaf((TopicLeaf)result);
       }
 
-      public void onFailure(APIService.Error error, Intent intent) {
+      public void onFailure(Error error, Intent intent) {
          APIService.getErrorDialog(getActivity(), error,
           APIService.getTopicIntent(getActivity(), mTopicNode.getName()))
           .show();

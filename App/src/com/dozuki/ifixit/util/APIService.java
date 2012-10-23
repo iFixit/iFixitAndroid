@@ -25,6 +25,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.util.Error.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 
 /**
@@ -79,7 +80,6 @@ public class APIService extends Service {
       }
    }
 
-   public static enum Error {PARSE, CONNECTION};
 
    private interface Responder {
       public void setResult(Result result);
@@ -162,11 +162,15 @@ public class APIService extends Service {
     * Parse the response in the given result with the given requestTarget.
     */
    private Result parseResult(String response, APIEndpoint endpoint) {
+      String error = JSONHelper.parseError(response);
+      if(error != null) {  
+         return new Result(new Error(error, ErrorType.OTHER));
+	  }
       try {
          Object parsedResult = endpoint.parseResult(response);
          return new Result(response, parsedResult);
       } catch (JSONException e) {
-         return new Result(Error.PARSE);
+         return new Result(new Error("", ErrorType.PARSE));
       }
    }
 
@@ -291,7 +295,7 @@ public class APIService extends Service {
 
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
-      switch (error) {
+      switch (error.mType) {
       case CONNECTION:
          return getConnectionErrorDialog(context, apiIntent);
       case PARSE:
@@ -413,7 +417,7 @@ public class APIService extends Service {
             if (request.ok()) {
                return new Result(request.body());
             } else {
-               return new Result(Error.PARSE);
+               return new Result(new Error("", ErrorType.PARSE));
             }
          }
 
@@ -430,7 +434,7 @@ public class APIService extends Service {
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(new Result(Error.CONNECTION));
+         responder.setResult(new Result(new Error("", ErrorType.CONNECTION)));
          return false;
       }
 

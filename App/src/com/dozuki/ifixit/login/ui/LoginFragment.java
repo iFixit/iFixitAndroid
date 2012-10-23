@@ -33,6 +33,7 @@ import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.Error;
 
 public class LoginFragment extends SherlockFragment implements OnClickListener {
    private static ArrayList<LoginListener> loginListeners =
@@ -72,7 +73,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          }
       }
 
-      public void onFailure(APIService.Error error, Intent intent) {
+      public void onFailure(Error error, Intent intent) {
          enable(true);
          mLoadingSpinner.setVisibility(View.GONE);
          mErrorText.setVisibility(View.VISIBLE);

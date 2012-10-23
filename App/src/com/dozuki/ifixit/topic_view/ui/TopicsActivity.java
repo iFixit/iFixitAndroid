@@ -24,6 +24,7 @@ import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.Error;
 
 public class TopicsActivity extends SherlockFragmentActivity
  implements TopicSelectedListener, OnBackStackChangedListener {
@@ -53,7 +54,7 @@ public class TopicsActivity extends SherlockFragmentActivity
          }
       }
 
-      public void onFailure(APIService.Error error, Intent intent) {
+      public void onFailure(Error error, Intent intent) {
          APIService.getErrorDialog(TopicsActivity.this, error,
           APIService.getCategoriesIntent(TopicsActivity.this)).show();
       }
