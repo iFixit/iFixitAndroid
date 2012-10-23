@@ -137,7 +137,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       mCreateAccountText = (TextView)view.findViewById(R.id.create_account_header);
       mCreateAccountText.setVisibility(View.GONE);
 
-      setState();
+      toggleView();
 
       mLogin.setOnClickListener(new OnClickListener() {
          @Override
@@ -159,7 +159,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       return view;
    }
 
-   private void setState() {
+   private void toggleView() {
       /**
        * TODO This is super ugly. Can you wrap all of these elements in a single
        * layout that you hide/show?
@@ -284,7 +284,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       case R.id.register_button:
          if (!mReadyForRegisterState) {
             mReadyForRegisterState = true;
-            setState();
+            toggleView();
          } else {
             String login = mLoginId.getText().toString();
             String name = mName.getText().toString();
@@ -329,7 +329,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       case R.id.cancel_register_button:
          mReadyForRegisterState = false;
-         setState();
+         toggleView();
          break;
       }
 
