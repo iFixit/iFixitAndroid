@@ -71,4 +71,7 @@
    <string name="image">image</string>
    <string name="images">images</string>
    <string name="image_chooser_title">Select Picture</string>
+   <string name="empty_field_error">One or more fields are still empty.</string>
+   <string name="passwords_do_not_match_error">Passwords do not match.</string>
+   <string name="terms_unchecked_error">You must agree to the terms.</string>
 </resources>

@@ -77,6 +77,7 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
          enable(true);
          mLoadingSpinner.setVisibility(View.GONE);
          mErrorText.setVisibility(View.VISIBLE);
+         mErrorText.setText(error.mMessege);
       }
    };
 
@@ -204,19 +205,20 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
       String login = mLoginId.getText().toString();
       String password = mPassword.getText().toString();
 
-      if (login.length() > 1 && password.length() > 1 && login.contains("@")) {
+      if (login.length() > 0 && password.length() > 0 ) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
          mContext.startService(APIService.getLoginIntent(mContext, login, password));
       } else {
-         mErrorText.setVisibility(View.VISIBLE);
-         if (!login.contains("@") || login.length() <= 1) {
+         if (login.length() < 1) {
             mLoginId.requestFocus();
             showKeyboard();
          } else {
             mPassword.requestFocus();
             showKeyboard();
          }
+         mErrorText.setText(R.string.empty_field_error);
+         mErrorText.setVisibility(View.VISIBLE);
       }
    }
 
@@ -284,23 +286,36 @@ public class LoginFragment extends SherlockFragment implements OnClickListener {
             String confirmPassword = mConfirmPassword.getText().toString();
 
             if (password.equals(confirmPassword) &&
-             login.length() > 1 && login.contains("@") &&
-             name.length() > 1 && mTermsAgreeCheckBox.isChecked()) {
+               login.length() > 0 &&
+               name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
                enable(false);
+               mErrorText.setVisibility(View.INVISIBLE);
+               mLoadingSpinner.setVisibility(View.VISIBLE);
                mContext.startService(APIService.getRegisterIntent(mContext, login,
                 password, name));
             } else {
-               mErrorText.setVisibility(View.VISIBLE);
-               if (!login.contains("@") || login.length() <= 1) {
+               if (login.length() <= 0) {
+                  mErrorText.setText(R.string.empty_field_error);
                   mLoginId.requestFocus();
                   showKeyboard();
-               } else if (password.length() <= 1) {
+               } else if (password.length() <= 0) {
+                  mErrorText.setText(R.string.empty_field_error);
                   mPassword.requestFocus();
                   showKeyboard();
-               } else if (name.length() <= 1) {
+               } else if (name.length() <= 0) {
+                  mErrorText.setText(R.string.empty_field_error);
                   mName.requestFocus();
                   showKeyboard();
-               }
+               }else if(!password.equals(confirmPassword))
+               {
+                  mErrorText.setText(R.string.passwords_do_not_match_error);
+               }else if(!mTermsAgreeCheckBox.isChecked())
+               {
+                  mErrorText.setText(R.string.terms_unchecked_error);
+                  mConfirmPassword.requestFocus();
+                  showKeyboard();
+               }     
+               mErrorText.setVisibility(View.VISIBLE);
             }
          }
          break;
