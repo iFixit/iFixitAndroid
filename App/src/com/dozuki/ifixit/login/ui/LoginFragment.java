@@ -163,6 +163,13 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       /**
        * TODO This is super ugly. Can you wrap all of these elements in a single
        * layout that you hide/show?
+       * This will be difficult as some view elements are resued in both login
+       * and register state.
+       * 
+       * The login fragment has two interfaces. The first interface is just 
+       * for logging in. The second is an interface for registering. 
+       * This function will switch the view elements around depending on 
+       * a state variable
        */
       mErrorText.setVisibility(View.GONE);
       if (mReadyForRegisterState) {

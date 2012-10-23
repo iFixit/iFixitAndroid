@@ -297,19 +297,21 @@ public class MediaFragment extends SherlockFragment implements
 
    public void retrieveUserImages() {
       mNextPageRequestInProgress = true;
-      int initialPageSize = 5;
       mCurIntent = APIService.getUserImagesIntent(mContext,
-    	       "?limit=" + (IMAGE_PAGE_SIZE + initialPageSize) +
+    	       "?limit=" + (IMAGE_PAGE_SIZE) +
     	       "&offset=" + mImagesDownloaded);
       mContext.startService(mCurIntent);
-      mUserName = ((MainApplication)((Activity)mContext).getApplication()).
-       getUser().getUsername();
    }
 
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
       mContext = (Context)activity;
+      if(((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn())
+      {
+         mUserName = ((MainApplication)((Activity)mContext).getApplication()).
+    	       getUser().getUsername();
+      }
    }
 
    @Override
@@ -760,15 +762,12 @@ public class MediaFragment extends SherlockFragment implements
 
       // Used to determine when to load more images.
       @Override
-      public void onScroll(AbsListView arg0, int arg1, int arg2, int arg3) {
-         if ((arg1 + arg2) >= arg3 / 2 && !mLastPage) {
+      public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+         if ((firstVisibleItem + visibleItemCount) >= totalItemCount / 2 && !mLastPage) {
             if (((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn() &&
              !mNextPageRequestInProgress && mCurScrollState ==
              OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-               mNextPageRequestInProgress = true;
-               mCurIntent = APIService.getUserImagesIntent(mContext,
-                       "?limit=" + IMAGE_PAGE_SIZE + "&offset=" + mImagesDownloaded);
-               mContext.startService(mCurIntent);
+            	retrieveUserImages();
             }
          }
       }
