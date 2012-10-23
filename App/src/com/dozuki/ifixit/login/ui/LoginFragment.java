@@ -99,8 +99,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          mReadyForRegisterState = false;
       }
    }
-   
- 
+
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
@@ -405,5 +404,12 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
    public static void clearLoginListeners() {
       loginListeners.clear();
+   }
+   
+   @Override
+   public void onCancel(DialogInterface dialog) {
+      for (LoginListener loginListener : loginListeners) {
+         loginListener.onCancel();
+      }
    }
 }

@@ -867,4 +867,9 @@ public class MediaFragment extends SherlockFragment implements
       bitmap = BitmapFactory.decodeFile(url, opt);
       return bitmap;
    }
+   
+   @Override
+   public void onCancel() {
+      ///dont do anything on canceled login
+   }
 }

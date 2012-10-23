@@ -110,7 +110,7 @@ public class GalleryActivity extends SherlockFragmentActivity
       ft.addToBackStack(null);
       ft.commitAllowingStateLoss();*/
       LoginFragment editNameDialog = new LoginFragment();
-      editNameDialog.getDialog();
+      //editNameDialog.getDialog();
       editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
    }
 
@@ -169,6 +169,12 @@ public class GalleryActivity extends SherlockFragmentActivity
 
    @Override
    public void onLogout() {
+      ((MainApplication)getApplication()).logout();
+      finish();
+   }
+   
+   @Override
+   public void onCancel() {
       ((MainApplication)getApplication()).logout();
       finish();
    }
