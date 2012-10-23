@@ -37,8 +37,7 @@ import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.Error;
 
 public class LoginFragment extends SherlockDialogFragment implements OnClickListener {
-   private static ArrayList<LoginListener> loginListeners =
-    new ArrayList<LoginListener>();
+
    private static final int OPEN_ID_RESULT_CODE = 4;
    private static final String LOGIN_STATE = "LOGIN_STATE";
 
@@ -69,10 +68,8 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          User user = (User)result;
          ((MainApplication)getActivity().getApplication()).login(user);
 
-         for (LoginListener loginListener : loginListeners) {
-            loginListener.onLogin(user);
+         ((LoginListener)getActivity()).onLogin(user);
             dismiss();
-         }
       }
 
       public void onFailure(Error error, Intent intent) {
@@ -375,9 +372,6 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       }
    }
 
-   public static void registerOnLoginListener(LoginListener listener) {
-      loginListeners.add(listener);
-   }
 
    public static AlertDialog getLogoutDialog(final Context context) {
       return createLogoutDialog(context, R.string.logout_title,
@@ -393,12 +387,8 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  for (LoginListener loginListener : loginListeners) {
-                     loginListener.onLogout();
-                  }
-
-                  MediaFragment.showingLogout = false;
-                  dialog.cancel();
+            	  ((LoginListener)context).onLogout();
+                  dialog.dismiss();
                }
             })
       .setNegativeButton(context.getString(buttonCancel),
@@ -415,14 +405,9 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       return dialog;
    }
 
-   public static void clearLoginListeners() {
-      loginListeners.clear();
-   }
    
    @Override
    public void onCancel(DialogInterface dialog) {
-      for (LoginListener loginListener : loginListeners) {
-         loginListener.onCancel();
-      }
+	   ((LoginListener)getActivity()).onCancel();
    }
 }

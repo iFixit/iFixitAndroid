@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 
@@ -82,10 +83,6 @@ public class GalleryActivity extends SherlockFragmentActivity
          }
       }
 
-      LoginFragment.clearLoginListeners();
-      LoginFragment.registerOnLoginListener(this);
-      LoginFragment.registerOnLoginListener(mMediaView);
-
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
    }
 
@@ -152,7 +149,8 @@ public class GalleryActivity extends SherlockFragmentActivity
    public void onLogin(User user) {
       mIconsHidden = false;
       supportInvalidateOptionsMenu();
-
+      Log.e("LOGGED IN", "EFCEF");
+      ((LoginListener)mMediaView).onLogin(user);
       if (((MainApplication)getApplication()).isFirstTimeGalleryUser()) {
          MediaFragment.createHelpDialog(this).show();
          ((MainApplication)getApplication()).setFirstTimeGalleryUser(false);
@@ -167,7 +165,6 @@ public class GalleryActivity extends SherlockFragmentActivity
    
    @Override
    public void onCancel() {
-      ((MainApplication)getApplication()).logout();
       finish();
    }
 
@@ -196,11 +193,10 @@ public class GalleryActivity extends SherlockFragmentActivity
    @Override
    public void onPause()
    {
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.USER_IMAGES.mAction);
-      filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
-      filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
-      registerReceiver(mApiReceiver, filter);
+      try {
+         unregisterReceiver(mApiReceiver);
+      } catch (IllegalArgumentException e) {
+      }
       super.onPause();
    }
 }

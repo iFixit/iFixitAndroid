@@ -223,10 +223,7 @@ public class MediaFragment extends SherlockFragment implements
       //until the activity is destroyed
       //this ensures that mApiReceiver is not registered 
       //twice
-      try {
-          mContext.unregisterReceiver(mApiReceiver);
-       } catch (IllegalArgumentException e) {
-       }
+
       IntentFilter filter = new IntentFilter();
       filter.addAction(APIEndpoint.USER_IMAGES.mAction);
       filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
