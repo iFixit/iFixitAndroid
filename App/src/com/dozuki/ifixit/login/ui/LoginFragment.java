@@ -42,7 +42,6 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    private static final int OPEN_ID_RESULT_CODE = 4;
    private static final String LOGIN_STATE = "LOGIN_STATE";
 
-   private Context mContext;
    private ImageButton mLogin;
    private ImageButton mRegister;
    private ImageButton mCancelRegister;
@@ -80,7 +79,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          enable(true);
          if(error.mType == Error.ErrorType.CONNECTION)
          {
-            APIService.getErrorDialog(mContext, error, mCurIntent).show(); 
+            APIService.getErrorDialog(getActivity(), error, mCurIntent).show(); 
          }
          mLoadingSpinner.setVisibility(View.GONE);
          mErrorText.setVisibility(View.VISIBLE);
@@ -143,7 +142,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       mLogin.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            InputMethodManager in = (InputMethodManager)mContext
+            InputMethodManager in = (InputMethodManager)getActivity()
              .getSystemService(Context.INPUT_METHOD_SERVICE);
 
             in.hideSoftInputFromWindow(mLoginId.getApplicationWindowToken(),
@@ -179,12 +178,12 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          mGoogleLogin.setVisibility(View.GONE);
          mYahooLogin.setVisibility(View.GONE);
          mLogin.setVisibility(View.GONE);
-         mCreateAccountText.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-         mUsernameTag.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-         mName.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-         mConfirmPasswordTag.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-         mConfirmPassword.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
-         mRegisterAgreement.startAnimation(AnimationUtils.loadAnimation(mContext, R.anim.fade_in));
+         mCreateAccountText.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+         mUsernameTag.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+         mName.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+         mConfirmPasswordTag.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+         mConfirmPassword.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
+         mRegisterAgreement.startAnimation(AnimationUtils.loadAnimation(getActivity(), R.anim.fade_in));
       } else {
          mCreateAccountText.clearAnimation();
          mCreateAccountText.setVisibility(View.GONE);
@@ -231,7 +230,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    }
 
    private void showKeyboard() {
-      InputMethodManager in = (InputMethodManager)mContext
+      InputMethodManager in = (InputMethodManager)getActivity()
        .getSystemService(Context.INPUT_METHOD_SERVICE);
 
       in.toggleSoftInput(InputMethodManager.SHOW_FORCED,
@@ -260,7 +259,6 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    public void onAttach(Activity activity) {
       super.onAttach(activity);
 
-      mContext = activity;
    }
 
    public static LoginFragment newInstance() {
@@ -272,13 +270,13 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       Intent intent;
       switch (v.getId()) {
       case R.id.use_google_login_button:
-         intent = new Intent(mContext, OpenIDActivity.class);
+         intent = new Intent(getActivity(), OpenIDActivity.class);
          intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.GOOGLE_LOGIN);
          startActivityForResult(intent, OPEN_ID_RESULT_CODE);
          break;
 
       case R.id.use_yahoo_login_button:
-         intent = new Intent(mContext, OpenIDActivity.class);
+         intent = new Intent(getActivity(), OpenIDActivity.class);
          intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.YAHOO_LOGIN);
          startActivityForResult(intent, OPEN_ID_RESULT_CODE);
          break;
