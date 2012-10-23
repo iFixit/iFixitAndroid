@@ -77,7 +77,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       public void onFailure(Error error, Intent intent) {
          enable(true);
-         if(error.mType == Error.ErrorType.CONNECTION)
+         if(error.mType == Error.ErrorType.CONNECTION || error.mType == Error.ErrorType.PARSE)
          {
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show(); 
          }
