@@ -313,6 +313,27 @@ public class JSONHelper {
    }
 
    /**
+    * Returns the error message contained in the given JSON, or null if one
+    * does not exist.
+    *
+    * e.g. Returns "Guide not found" for:
+    * "{"error":true,"msg":"Guide not found"}"
+    */
+   public static String parseError(String json) {
+      String error = null;
+
+      try {
+         JSONObject jError = new JSONObject(json);
+         if (jError.getBoolean("error")) {
+            error = jError.getString("msg");
+         }
+      }catch(JSONException e) {
+      }
+
+      return error;
+   }
+
+   /**
     * Removes relative a hrefs
     *
     * TODO: Update domain with the current site's domain.
@@ -343,17 +364,5 @@ public class JSONHelper {
       }
 
       return spantext;
-   }
-
-   public static String parseError(String json) {
-      String error = null;
-
-      try {
-         JSONObject jError = new JSONObject(json);
-         error = jError.getString("msg");
-      }catch(JSONException e) {
-      }
-
-      return error;
    }
 }

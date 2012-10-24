@@ -195,7 +195,6 @@ public class TopicsActivity extends SherlockFragmentActivity
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuInflater inflater = getSupportMenuInflater();
       inflater.inflate(R.menu.menu_bar, menu);
-      MenuItem galleryIcon = menu.findItem(R.id.gallery_button);
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -263,9 +262,11 @@ public class TopicsActivity extends SherlockFragmentActivity
             boolean poppedStack = getSupportFragmentManager().
              popBackStackImmediate();
 
-            // If there is not a previous category to go to and the up
-            // navigation button should finish the activity, finish
-            // the activity.
+            /**
+             *  If there is not a previous category to go to and the up navigation
+             *  button should finish the activity, finish the activity.
+             *  Note: Although this is a warning for iFixit, it is not for Dozuki.
+             */
             if (!poppedStack && UP_NAVIGATION_FINISH_ACTIVITY) {
                finish();
             }

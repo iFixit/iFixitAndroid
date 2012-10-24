@@ -454,11 +454,9 @@ public class MediaFragment extends SherlockFragment implements
             opt.inSampleSize = 2;
             opt.inDither = true;
             opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-            String fPath = new String(mCameraTempFileName);
-            Bitmap img = BitmapFactory.decodeFile(fPath, opt);
 
-            String key = mGalleryAdapter.addFile(new String(fPath));
-            mCurIntent = APIService.getUploadImageIntent(mContext, fPath, key);
+            String key = mGalleryAdapter.addFile(mCameraTempFileName);
+            mCurIntent = APIService.getUploadImageIntent(mContext, mCameraTempFileName, key);
             mContext.startService(mCurIntent);
          }
       }
