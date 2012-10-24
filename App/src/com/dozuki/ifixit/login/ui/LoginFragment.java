@@ -76,7 +76,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          }
          mLoadingSpinner.setVisibility(View.GONE);
          mErrorText.setVisibility(View.VISIBLE);
-         mErrorText.setText(error.mMessege);
+         mErrorText.setText(error.mMessage);
       }
    };
 

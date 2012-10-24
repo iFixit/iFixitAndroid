@@ -168,16 +168,19 @@ public class APIService extends Service {
       String error = JSONHelper.parseError(response);
       if (error != null) {
          if (error.equals(INVALID_LOGIN_STRING)) {
-            return new Result(new Error(error, ErrorType.INVALID_USER));
+            return new Result(new Error(getString(R.string.error_dialog_title),
+             error, ErrorType.INVALID_USER));
          } else {
-            return new Result(new Error(error, ErrorType.OTHER));
+            return new Result(new Error(getString(R.string.error_dialog_title),
+             error, ErrorType.OTHER));
          }
-	  }
+      }
+
       try {
          Object parsedResult = endpoint.parseResult(response);
          return new Result(response, parsedResult);
       } catch (JSONException e) {
-         return new Result(new Error("", ErrorType.PARSE));
+         return new Result(Error.getParseError(this));
       }
    }
 
@@ -302,20 +305,14 @@ public class APIService extends Service {
 
    public static AlertDialog getErrorDialog(Context context, Error error,
     Intent apiIntent) {
-      switch (error.mType) {
-      case CONNECTION:
-         return getConnectionErrorDialog(context, apiIntent);
-      case PARSE:
-      default:
-         return getParseErrorDialog(context, apiIntent);
-      }
+      return createErrorDialog(context, apiIntent, error);
    }
 
    public static AlertDialog getListMediaErrorDialog(Context context, Error error,
     Intent apiIntent) {
        switch (error.mType) {
        case CONNECTION:
-          return getConnectionErrorDialog(context, apiIntent);
+          return getErrorDialog(context, error, apiIntent);
        default:
           return getListMediaUnknownErrorDialog(context);
        }
@@ -337,25 +334,12 @@ public class APIService extends Service {
        return builder.create();
    }
 
-   private static AlertDialog getParseErrorDialog(final Context context,
-    Intent apiIntent) {
-      return createErrorDialog(context, apiIntent, R.string.parse_error_title,
-       R.string.parse_error_message, R.string.try_again);
-   }
-
-   private static AlertDialog getConnectionErrorDialog(final Context context,
-    Intent apiIntent) {
-      return createErrorDialog(context, apiIntent, R.string.no_connection_title,
-       R.string.no_connection, R.string.try_again);
-   }
-
    private static AlertDialog createErrorDialog(final Context context,
-    final Intent apiIntent, int titleRes, int messageRes,
-    int buttonRes) {
+    final Intent apiIntent, Error error) {
       HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
-      builder.setTitle(context.getString(titleRes))
-             .setMessage(context.getString(messageRes))
-             .setPositiveButton(context.getString(buttonRes),
+      builder.setTitle(error.mTitle)
+             .setMessage(error.mMessage)
+             .setPositiveButton(context.getString(R.string.try_again),
               new DialogInterface.OnClickListener() {
                 public void onClick(DialogInterface dialog, int id) {
                    // Try performing the request again.
@@ -437,11 +421,7 @@ public class APIService extends Service {
                // Do nothing extra for GET.
             }
 
-            if (request.ok()) {
-               return new Result(request.body());
-            } else {
-               return new Result(new Error("", ErrorType.PARSE));
-            }
+            return new Result(request.body());
          }
 
          @Override
@@ -457,7 +437,7 @@ public class APIService extends Service {
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(new Result(new Error("", ErrorType.CONNECTION)));
+         responder.setResult(new Result(Error.getConnectionError(this)));
          return false;
       }
 
