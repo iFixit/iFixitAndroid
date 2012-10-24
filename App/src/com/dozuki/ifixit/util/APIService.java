@@ -168,8 +168,8 @@ public class APIService extends Service {
     */
    private Result parseResult(String response, APIEndpoint endpoint) {
       String error = JSONHelper.parseError(response);
-      if(error != null) {
-         if(INVALID_LOGIN_STRING.equals(error))
+      if (error != null) {
+         if (INVALID_LOGIN_STRING.equals(error))
             return new Result(new Error(error, ErrorType.INVALID_USER));
          else
             return new Result(new Error(error, ErrorType.OTHER));
@@ -370,7 +370,7 @@ public class APIService extends Service {
       AlertDialog d = builder.create();
       d.setOnCancelListener(new OnCancelListener() {
          @Override
-		 public void onCancel(DialogInterface dialog) {
+         public void onCancel(DialogInterface dialog) {
             ((Activity) context).finish();
          }
       });

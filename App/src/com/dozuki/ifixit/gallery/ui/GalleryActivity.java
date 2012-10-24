@@ -40,7 +40,8 @@ public class GalleryActivity extends SherlockFragmentActivity
    
    private APIReceiver mApiReceiver = new APIReceiver() {
       public void onSuccess(Object result, Intent intent) {
-     
+         //The success are handled by the media fragment
+    	 //this is here to catch if the user has an invalid session
       }
 
       public void onFailure(Error error, Intent intent) {
@@ -48,8 +49,8 @@ public class GalleryActivity extends SherlockFragmentActivity
             LoginFragment editNameDialog = new LoginFragment();
             editNameDialog.show(getSupportFragmentManager(), "");
          }	
-		}
-	};
+      }
+   };
 
 
    @Override
@@ -89,20 +90,7 @@ public class GalleryActivity extends SherlockFragmentActivity
    private void displayLogin() {
       mIconsHidden = true;
       supportInvalidateOptionsMenu();
-
-   /*   FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-      int inAnim, outAnim;
-      LoginFragment fg = new LoginFragment();
-
-      inAnim = R.anim.fade_in;
-      outAnim = R.anim.fade_out;
-
-      ft.setCustomAnimations(inAnim, outAnim);
-      ft.add(R.id.login_fragment, fg, LOGIN_FRAGMENT);
-      ft.addToBackStack(null);
-      ft.commitAllowingStateLoss();*/
       LoginFragment editNameDialog = new LoginFragment();
-      //editNameDialog.getDialog();
       editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
    }
 
@@ -149,7 +137,6 @@ public class GalleryActivity extends SherlockFragmentActivity
    public void onLogin(User user) {
       mIconsHidden = false;
       supportInvalidateOptionsMenu();
-      Log.e("LOGGED IN", "EFCEF");
       ((LoginListener)mMediaView).onLogin(user);
       if (((MainApplication)getApplication()).isFirstTimeGalleryUser()) {
          MediaFragment.createHelpDialog(this).show();
