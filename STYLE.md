@@ -7,11 +7,13 @@ Code Style
   * There are exceptions to this if it makes code line up better.
 * [UNIX file format](http://en.wikipedia.org/wiki/Newline#Representations)
 * [K&R style braces](http://en.wikipedia.org/wiki/Indent_style#K.26R_style)
-  * Even though it is unnecessary, prefer including braces around a single line of code. It simply makes it easier to add more code such as logs and is less error prone since all of the braces line up without any weird gaps.
+  * Even though it is unnecessary, prefer including braces around a single line of code. It simply makes it easier to add more code such as logs and is less error prone. Also, all of the braces line up without any weird gaps so you aren't left with [unresolved tension](http://xkcd.com/859/).
+* Avoid trailing whitespace at the end of lines.
 
 
 Example:
-```
+--------
+```java
 ...
 
 public class TopicListAdapter extends Section {
