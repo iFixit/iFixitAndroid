@@ -37,18 +37,20 @@ public class GalleryActivity extends SherlockFragmentActivity
    private boolean mLoginVisible;
 
    private boolean mIconsHidden;
-   
+
    private APIReceiver mApiReceiver = new APIReceiver() {
       public void onSuccess(Object result, Intent intent) {
-         //The success are handled by the media fragment
-    	 //this is here to catch if the user has an invalid session
+         /**
+          * The success are handled by the media fragment. This is here to catch
+          * if the user has an invalid session.
+          */
       }
 
       public void onFailure(Error error, Intent intent) {
          if (error.mType == Error.ErrorType.INVALID_USER) {
             LoginFragment editNameDialog = new LoginFragment();
             editNameDialog.show(getSupportFragmentManager(), "");
-         }	
+         }
       }
    };
 
@@ -149,7 +151,7 @@ public class GalleryActivity extends SherlockFragmentActivity
       ((MainApplication)getApplication()).logout();
       finish();
    }
-   
+
    @Override
    public void onCancel() {
       finish();
@@ -165,10 +167,8 @@ public class GalleryActivity extends SherlockFragmentActivity
       return super.onCreateOptionsMenu(menu);
    }
 
-   
    @Override
-   public void onResume()
-   {
+   public void onResume() {
       IntentFilter filter = new IntentFilter();
       filter.addAction(APIEndpoint.USER_IMAGES.mAction);
       filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
@@ -176,10 +176,9 @@ public class GalleryActivity extends SherlockFragmentActivity
       registerReceiver(mApiReceiver, filter);
       super.onResume();
    }
-   
+
    @Override
-   public void onPause()
-   {
+   public void onPause() {
       try {
          unregisterReceiver(mApiReceiver);
       } catch (IllegalArgumentException e) {

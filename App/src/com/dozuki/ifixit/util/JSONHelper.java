@@ -345,13 +345,15 @@ public class JSONHelper {
       return spantext;
    }
 
-  public static String parseError(String json) {
-    String error = null;
-    try {
-        JSONObject jError = new JSONObject(json);
-        error = jError.getString("msg");
-    }catch(JSONException e) {
-    }
-	return error;
-  }
+   public static String parseError(String json) {
+      String error = null;
+
+      try {
+         JSONObject jError = new JSONObject(json);
+         error = jError.getString("msg");
+      }catch(JSONException e) {
+      }
+
+      return error;
+   }
 }

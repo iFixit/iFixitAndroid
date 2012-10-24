@@ -95,8 +95,7 @@ public class APIService extends Service {
     "REQUEST_UPLOAD_FILE_PATH";
    public static final String REQUEST_RESULT_INFORMATION =
     "REQUEST_RESULT_INFORMATION";
-   public static final String INVALID_LOGIN_STRING =
-		    "Invalid login";
+   public static final String INVALID_LOGIN_STRING = "Invalid login";
 
    private static final String NO_QUERY = "";
 
@@ -169,10 +168,11 @@ public class APIService extends Service {
    private Result parseResult(String response, APIEndpoint endpoint) {
       String error = JSONHelper.parseError(response);
       if (error != null) {
-         if (INVALID_LOGIN_STRING.equals(error))
+         if (error.equals(INVALID_LOGIN_STRING)) {
             return new Result(new Error(error, ErrorType.INVALID_USER));
-         else
+         } else {
             return new Result(new Error(error, ErrorType.OTHER));
+         }
 	  }
       try {
          Object parsedResult = endpoint.parseResult(response);
@@ -313,19 +313,16 @@ public class APIService extends Service {
    }
 
    public static AlertDialog getListMediaErrorDialog(Context context, Error error,
-           Intent apiIntent) {
-       
+    Intent apiIntent) {
        switch (error.mType) {
        case CONNECTION:
           return getConnectionErrorDialog(context, apiIntent);
        default:
           return getListMediaUnknownErrorDialog(context);
        }
-      
    }
-       
-   public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext)
-   {
+
+   public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext) {
        HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(mContext);
        builder.setTitle(mContext.getString(R.string.media_error_title))
           .setPositiveButton(mContext.getString(R.string.media_error_confirm),

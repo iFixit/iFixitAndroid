@@ -146,9 +146,7 @@ public class MediaFragment extends SherlockFragment implements
       }
 
       public void onFailure(Error error, Intent intent) {
-    	  
-    	  if(error.mType != Error.ErrorType.INVALID_USER)
-    	  {
+    	  if (error.mType != Error.ErrorType.INVALID_USER) {
     	     APIService.getListMediaErrorDialog(mContext, error, mCurIntent).show();
     	     mNextPageRequestInProgress = false;
     	  }
@@ -217,11 +215,11 @@ public class MediaFragment extends SherlockFragment implements
          mImageList = new UserImageList();
          mGalleryAdapter = new MediaAdapter();
       }
-    //since this is not unregistered
-      //until the activity is destroyed
-      //this ensures that mApiReceiver is not registered 
-      //twice
 
+      /**
+       * Since this is not unregistered until the activity is destroyed this
+       * ensures that mApiReceiver is not registered twice.
+       */
       IntentFilter filter = new IntentFilter();
       filter.addAction(APIEndpoint.USER_IMAGES.mAction);
       filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
@@ -256,27 +254,29 @@ public class MediaFragment extends SherlockFragment implements
       }
       return view;
    }
-   
+
    @Override
-   public void onStart()
-   {
-	   if (!((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn()) {
-	         mButtons.setVisibility(View.GONE);
-	      } else {
-	         mUserName = ((MainApplication)((Activity)mContext).getApplication()).
-	          getUser().getUsername();
-	         mLoginText.setText("Logged in as " + mUserName);
-	         mButtons.setOnClickListener(this);
-	         if (mImageList.getImages().size() == 0 && !mNextPageRequestInProgress) {
-	            retrieveUserImages();
-	         }
-	      }
-	   super.onStart();
+   public void onStart() {
+      if (!((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn()) {
+         mButtons.setVisibility(View.GONE);
+      } else {
+         mUserName = ((MainApplication)((Activity)mContext).getApplication())
+          .getUser().getUsername();
+         mLoginText.setText(mContext.getString(R.string.logged_in_as) + " " +
+          mUserName);
+         mButtons.setOnClickListener(this);
+
+         if (mImageList.getImages().size() == 0 && !mNextPageRequestInProgress) {
+            retrieveUserImages();
+         }
+      }
+
+      super.onStart();
    }
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
-	  super.onSaveInstanceState(savedInstanceState);
+      super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putBooleanArray(USER_SELECTED_LIST,
        toPrimitiveArray(mSelectedList));
       savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
@@ -294,8 +294,7 @@ public class MediaFragment extends SherlockFragment implements
    public void retrieveUserImages() {
       mNextPageRequestInProgress = true;
       mCurIntent = APIService.getUserImagesIntent(mContext,
-    	       "?limit=" + (IMAGE_PAGE_SIZE) +
-    	       "&offset=" + mImagesDownloaded);
+       "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded);
       mContext.startService(mCurIntent);
    }
 
@@ -303,17 +302,15 @@ public class MediaFragment extends SherlockFragment implements
    public void onAttach(Activity activity) {
       super.onAttach(activity);
       mContext = (Context)activity;
-      if(((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn())
-      {
-         mUserName = ((MainApplication)((Activity)mContext).getApplication()).
-    	       getUser().getUsername();
+      if (((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn()) {
+         mUserName = ((MainApplication)((Activity)mContext).getApplication())
+          .getUser().getUsername();
       }
    }
 
    @Override
    public void onResume() {
       super.onResume();
-      
    }
 
    @Override
@@ -446,7 +443,7 @@ public class MediaFragment extends SherlockFragment implements
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
             mCurIntent = APIService.getUploadImageIntent(mContext,
-                    getPath(selectedImageUri), key);
+             getPath(selectedImageUri), key);
             mContext.startService(mCurIntent);
          } else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
@@ -520,10 +517,9 @@ public class MediaFragment extends SherlockFragment implements
       }
 
       public View getView(int position, View convertView, ViewGroup parent) {
-    	  
-         if (mImageList.getImages().size() > 0)
-              noImagesText.setVisibility(View.GONE);
-          
+         if (mImageList.getImages().size() > 0) {
+            noImagesText.setVisibility(View.GONE);
+         }
          MediaViewItem itemView = (MediaViewItem)convertView;
 
          if (convertView == null) {
@@ -665,16 +661,14 @@ public class MediaFragment extends SherlockFragment implements
 
    @Override
    public void onLogin(User user) {
-	  mImageList.getImages().clear();
+      mImageList.getImages().clear();
       mUserName = ((MainApplication)((Activity)mContext).getApplication()).
-      getUser().getUsername();
+       getUser().getUsername();
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
       retrieveUserImages();
       mButtons.setVisibility(View.VISIBLE);
-      mButtons.setAnimation(AnimationUtils.loadAnimation(mContext,
-          R.anim.slide_in_bottom));
-      
+      mButtons.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_bottom));
    }
 
    @Override
@@ -765,7 +759,7 @@ public class MediaFragment extends SherlockFragment implements
             if (((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn() &&
              !mNextPageRequestInProgress && mCurScrollState ==
              OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-            	retrieveUserImages();
+               retrieveUserImages();
             }
          }
       }
@@ -864,9 +858,9 @@ public class MediaFragment extends SherlockFragment implements
       bitmap = BitmapFactory.decodeFile(url, opt);
       return bitmap;
    }
-   
+
    @Override
    public void onCancel() {
-      ///dont do anything on canceled login
+      // Don't do anything on canceled login.
    }
 }
