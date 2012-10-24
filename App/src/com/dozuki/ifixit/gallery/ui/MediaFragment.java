@@ -89,7 +89,6 @@ public class MediaFragment extends SherlockFragment implements
    private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
-   private static final String IMAGES_DOWNLOADING = "IMAGES_DOWNLOADING";
 
    private Context mContext;
    private GridView mGridView;
@@ -193,7 +192,6 @@ public class MediaFragment extends SherlockFragment implements
          showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 
          mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
-         mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADING);
          mImageList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
          mGalleryAdapter = new MediaAdapter();
 
