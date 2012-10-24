@@ -30,4 +30,5 @@
    <string name="topic_img_desc">Topic image</string>
    <string name="next_page_image_desc">Next page</string>
    <string name="dozuki_search_hint">Search sites</string>
+   <string name="site_list_button">Explore Sites</string>
 </resources>

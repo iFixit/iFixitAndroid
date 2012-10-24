@@ -21,11 +21,14 @@
 	       android:layout_height="wrap_content"
 	       android:src="@drawable/dozuki_splash_logo"
 	       android:scaleType="fitCenter" />
-	   <ListView
-	       android:id="@+id/siteListView"
-	       android:layout_width="match_parent"
-	       android:layout_height="match_parent" 
+	   <Button
+	       android:id="@+id/list_dialog_btn"
+	       android:layout_height="wrap_content"
+	       android:layout_width="match_parent" 
+	       android:text="@string/site_list_button" 
+	       android:textSize="30sp"
+	       android:paddingLeft="16dp"
 	       android:background="@drawable/site_list_background"
-	       style="?attr/listViewStyle" /> 
+	       android:gravity="left|center_vertical" />
    </LinearLayout>
 </FrameLayout>
