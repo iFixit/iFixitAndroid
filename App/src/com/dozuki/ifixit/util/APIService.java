@@ -29,6 +29,7 @@ import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -380,48 +381,52 @@ public class APIService extends Service {
              */
             HttpRequest request;
 
-            /**
-             * Create the HttpRequest with the appropriate method.
-             */
-            if (endpoint.mPost) {
-               request = HttpRequest.post(url);
-            } else {
-               request = HttpRequest.get(url);
-            }
-
-            /**
-             * Uncomment to test HTTPS API calls in development.
-             *
-             * request.trustAllCerts();
-             * request.trustAllHosts();
-             */
-
-            /**
-             * Send the session along in a Cookie.
-             *
-             * TODO: Also send it along if the current site is private.
-             */
-            if (endpoint.mAuthenticated) {
-               User user = ((MainApplication)getApplicationContext()).getUser();
-               String session = user.getSession();
-               request.header("Cookie", "session=" + session);
-            }
-
-            /**
-             * Continue with constructing the request body.
-             */
-            if (endpoint.mPost) {
-               if (filePath != null) {
-                  // POST the file if present.
-                  request.send(new File(filePath));
-               } else if (postData != null) {
-                  request.form(postData);
+            try {
+               /**
+                * Create the HttpRequest with the appropriate method.
+                */
+               if (endpoint.mPost) {
+                  request = HttpRequest.post(url);
+               } else {
+                  request = HttpRequest.get(url);
                }
-            } else {
-               // Do nothing extra for GET.
-            }
 
-            return new Result(request.body());
+               /**
+                * Uncomment to test HTTPS API calls in development.
+                *
+                * request.trustAllCerts();
+                * request.trustAllHosts();
+                */
+
+               /**
+                * Send the session along in a Cookie.
+                *
+                * TODO: Also send it along if the current site is private.
+                */
+               if (endpoint.mAuthenticated) {
+                  User user = ((MainApplication)getApplicationContext()).getUser();
+                  String session = user.getSession();
+                  request.header("Cookie", "session=" + session);
+               }
+
+               /**
+                * Continue with constructing the request body.
+                */
+               if (endpoint.mPost) {
+                  if (filePath != null) {
+                     // POST the file if present.
+                     request.send(new File(filePath));
+                  } else if (postData != null) {
+                     request.form(postData);
+                  }
+               } else {
+                  // Do nothing extra for GET.
+               }
+
+               return new Result(request.body());
+            } catch (HttpRequestException e) {
+               return new Result(APIError.getParseError(APIService.this));
+            }
          }
 
          @Override
