@@ -31,7 +31,7 @@ import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.util.Error;
+import com.dozuki.ifixit.util.APIError;
 
 public class LoginFragment extends SherlockDialogFragment implements OnClickListener {
    private static final int OPEN_ID_RESULT_CODE = 4;
@@ -68,10 +68,10 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
          dismiss();
       }
 
-      public void onFailure(Error error, Intent intent) {
+      public void onFailure(APIError error, Intent intent) {
          enable(true);
-         if (error.mType == Error.ErrorType.CONNECTION ||
-          error.mType == Error.ErrorType.PARSE) {
+         if (error.mType == APIError.ErrorType.CONNECTION ||
+          error.mType == APIError.ErrorType.PARSE) {
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
          }
          mLoadingSpinner.setVisibility(View.GONE);

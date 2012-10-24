@@ -27,7 +27,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.util.Error.ErrorType;
+import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 
 /**
@@ -42,7 +42,7 @@ public class APIService extends Service {
 
       private String mResponse;
       private Object mResult;
-      private Error mError;
+      private APIError mError;
 
       public Result(String response) {
          mResponse = response;
@@ -53,7 +53,7 @@ public class APIService extends Service {
          setResult(result);
       }
 
-      public Result(Error error) {
+      public Result(APIError error) {
          setError(error);
       }
 
@@ -73,11 +73,11 @@ public class APIService extends Service {
          mResult = result;
       }
 
-      public Error getError() {
+      public APIError getError() {
          return mError;
       }
 
-      public void setError(Error error) {
+      public void setError(APIError error) {
          mError = error;
       }
    }
@@ -168,10 +168,10 @@ public class APIService extends Service {
       String error = JSONHelper.parseError(response);
       if (error != null) {
          if (error.equals(INVALID_LOGIN_STRING)) {
-            return new Result(new Error(getString(R.string.error_dialog_title),
+            return new Result(new APIError(getString(R.string.error_dialog_title),
              error, ErrorType.INVALID_USER));
          } else {
-            return new Result(new Error(getString(R.string.error_dialog_title),
+            return new Result(new APIError(getString(R.string.error_dialog_title),
              error, ErrorType.OTHER));
          }
       }
@@ -180,7 +180,7 @@ public class APIService extends Service {
          Object parsedResult = endpoint.parseResult(response);
          return new Result(response, parsedResult);
       } catch (JSONException e) {
-         return new Result(Error.getParseError(this));
+         return new Result(APIError.getParseError(this));
       }
    }
 
@@ -303,12 +303,12 @@ public class APIService extends Service {
       return intent;
    }
 
-   public static AlertDialog getErrorDialog(Context context, Error error,
+   public static AlertDialog getErrorDialog(Context context, APIError error,
     Intent apiIntent) {
       return createErrorDialog(context, apiIntent, error);
    }
 
-   public static AlertDialog getListMediaErrorDialog(Context context, Error error,
+   public static AlertDialog getListMediaErrorDialog(Context context, APIError error,
     Intent apiIntent) {
        switch (error.mType) {
        case CONNECTION:
@@ -335,7 +335,7 @@ public class APIService extends Service {
    }
 
    private static AlertDialog createErrorDialog(final Context context,
-    final Intent apiIntent, Error error) {
+    final Intent apiIntent, APIError error) {
       HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
       builder.setTitle(error.mTitle)
              .setMessage(error.mMessage)
@@ -437,7 +437,7 @@ public class APIService extends Service {
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(new Result(Error.getConnectionError(this)));
+         responder.setResult(new Result(APIError.getConnectionError(this)));
          return false;
       }
 

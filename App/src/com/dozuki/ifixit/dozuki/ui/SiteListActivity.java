@@ -27,7 +27,7 @@ import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.util.Error;
+import com.dozuki.ifixit.util.APIError;
 
 public class SiteListActivity extends SherlockFragmentActivity
  implements SearchView.OnQueryTextListener {
@@ -45,7 +45,7 @@ public class SiteListActivity extends SherlockFragmentActivity
          setSiteList(mSiteList);
       }
 
-      public void onFailure(Error error, Intent intent) {
+      public void onFailure(APIError error, Intent intent) {
          APIService.getErrorDialog(SiteListActivity.this, error,
           APIService.getSitesIntent(SiteListActivity.this)).show();
       }

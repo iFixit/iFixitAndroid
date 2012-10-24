@@ -17,7 +17,7 @@ import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIReceiver;
-import com.dozuki.ifixit.util.Error;
+import com.dozuki.ifixit.util.APIError;
 
 public class GalleryActivity extends SherlockFragmentActivity
  implements LoginListener {
@@ -39,8 +39,8 @@ public class GalleryActivity extends SherlockFragmentActivity
           */
       }
 
-      public void onFailure(Error error, Intent intent) {
-         if (error.mType == Error.ErrorType.INVALID_USER) {
+      public void onFailure(APIError error, Intent intent) {
+         if (error.mType == APIError.ErrorType.INVALID_USER) {
             LoginFragment editNameDialog = new LoginFragment();
             editNameDialog.show(getSupportFragmentManager(), "");
          }

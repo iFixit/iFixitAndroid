@@ -31,7 +31,7 @@ import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
-import com.dozuki.ifixit.util.Error;
+import com.dozuki.ifixit.util.APIError;
 
 public class GuideViewActivity extends SherlockFragmentActivity
  implements OnPageChangeListener {
@@ -64,7 +64,7 @@ public class GuideViewActivity extends SherlockFragmentActivity
          }
       }
 
-      public void onFailure(Error error, Intent intent) {
+      public void onFailure(APIError error, Intent intent) {
          APIService.getErrorDialog(GuideViewActivity.this, error,
           APIService.getGuideIntent(GuideViewActivity.this, mGuideid)).show();
       }

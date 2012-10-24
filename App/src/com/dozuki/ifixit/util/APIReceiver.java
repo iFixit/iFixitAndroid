@@ -40,5 +40,5 @@ public abstract class APIReceiver extends BroadcastReceiver {
     * @param intent The Intent provided to onReceive that contains various
     * information from APIService.
     */
-   public abstract void onFailure(Error error, Intent intent);
+   public abstract void onFailure(APIError error, Intent intent);
 }

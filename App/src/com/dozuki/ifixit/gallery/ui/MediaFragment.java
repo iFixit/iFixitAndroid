@@ -62,7 +62,7 @@ import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
-import com.dozuki.ifixit.util.Error;
+import com.dozuki.ifixit.util.APIError;
 
 public class MediaFragment extends SherlockFragment implements
  OnItemClickListener, OnClickListener, OnItemLongClickListener, LoginListener {
@@ -145,11 +145,11 @@ public class MediaFragment extends SherlockFragment implements
          }
       }
 
-      public void onFailure(Error error, Intent intent) {
-    	  if (error.mType != Error.ErrorType.INVALID_USER) {
-    	     APIService.getListMediaErrorDialog(mContext, error, mCurIntent).show();
-    	     mNextPageRequestInProgress = false;
-    	  }
+      public void onFailure(APIError error, Intent intent) {
+         if (error.mType != APIError.ErrorType.INVALID_USER) {
+            APIService.getListMediaErrorDialog(mContext, error, mCurIntent).show();
+            mNextPageRequestInProgress = false;
+         }
       }
    };
 
