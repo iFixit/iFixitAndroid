@@ -415,7 +415,7 @@ public class APIService extends Service {
             /**
              * Send the session along in a Cookie.
              *
-             * TODO: Also send it along if the current site has SSL everywhere.
+             * TODO: Also send it along if the current site is private.
              */
             if (endpoint.mAuthenticated) {
                User user = ((MainApplication)getApplicationContext()).getUser();
