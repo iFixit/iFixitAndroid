@@ -7,7 +7,7 @@
         android:id="@+id/dozuki_search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"        
+        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:title="Search Sites"
         android:icon="@android:drawable/ic_menu_search"
@@ -16,6 +16,6 @@
     <ListView
         android:id="@+id/siteListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-        style="?attr/listViewStyle" /> 
+        android:layout_height="match_parent"
+        style="?attr/listViewStyle" />
 </LinearLayout>

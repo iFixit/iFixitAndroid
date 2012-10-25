@@ -53,8 +53,10 @@ public class SiteListActivity extends SherlockFragmentActivity
 
          if (!result.hasError()) {
             mSiteList = (ArrayList<Site>)result.getResult();
-            if (!onTablet)
+
+            if (!onTablet) {
                setSiteList(mSiteList);
+            }
          } else {
             APIService.getErrorDialog(SiteListActivity.this, result.getError(),
              APIService.getSitesIntent(SiteListActivity.this)).show();
@@ -265,6 +267,7 @@ public class SiteListActivity extends SherlockFragmentActivity
    private void getSiteList() {
       startService(APIService.getSitesIntent(this));
    }
+
    private void showSiteListDialog(ArrayList<Site> sites) {
        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
