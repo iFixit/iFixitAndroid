@@ -36,15 +36,14 @@ public class SiteListDialogFragment extends DialogFragment {
     Bundle savedInstanceState) {
       getDialog().setTitle(R.string.site_list_title);
 
-      View v = inflater.inflate(R.layout.site_dialog_list, container, false);
+      View view = inflater.inflate(R.layout.site_dialog_list, container, false);
 
-      mSiteListView = (ListView)v.findViewById(R.id.siteListView);
-      mSiteListActivity.setSiteListView(mSiteListView);
+      mSiteListView = (ListView)view.findViewById(R.id.siteListView);
+      mSearchView = (SearchView)view.findViewById(R.id.dozuki_search_view);
 
-      mSearchView = (SearchView)v.findViewById(R.id.dozuki_search_view);
-      mSiteListActivity.setSearchView(mSearchView);
+      mSiteListActivity.setSiteListViews(mSiteListView, mSearchView);
 
-      return v;
+      return view;
    }
 }
 

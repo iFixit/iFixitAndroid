@@ -1,13 +1,10 @@
 package com.dozuki.ifixit.dozuki.ui;
 
-import java.util.ArrayList;
-
 import android.app.SearchManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -22,27 +19,23 @@ import android.widget.Button;
 import android.widget.ListView;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.view.ui.TopicsActivity;
-import com.dozuki.ifixit.dozuki.ui.SiteListAdapter;
-import com.dozuki.ifixit.dozuki.ui.SiteListDialogFragment;
+
+import java.util.ArrayList;
 
 public class SiteListActivity extends SherlockFragmentActivity
  implements SearchView.OnQueryTextListener {
    private static final String SITE_LIST = "SITE_LIST";
 
+   private Button mSiteListButton;
    private ArrayList<Site> mSiteList;
-   private SearchView mSearchView;
-
-   private SiteListAdapter mSiteListAdapter;
    private ListView mSiteListView;
-   private Boolean onTablet;
+   private SearchView mSearchView;
 
    private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
       @SuppressWarnings("unchecked")
@@ -54,9 +47,7 @@ public class SiteListActivity extends SherlockFragmentActivity
          if (!result.hasError()) {
             mSiteList = (ArrayList<Site>)result.getResult();
 
-            if (!onTablet) {
-               setSiteList(mSiteList);
-            }
+            setSiteList(mSiteList);
          } else {
             APIService.getErrorDialog(SiteListActivity.this, result.getError(),
              APIService.getSitesIntent(SiteListActivity.this)).show();
@@ -67,19 +58,7 @@ public class SiteListActivity extends SherlockFragmentActivity
    @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setTitle("");
-      Boolean isLarge = ((getResources().getConfiguration().screenLayout &
-            Configuration.SCREENLAYOUT_SIZE_LARGE) ==
-             Configuration.SCREENLAYOUT_SIZE_LARGE);
-      Boolean isXLarge = ((getResources().getConfiguration().screenLayout &
-            Configuration.SCREENLAYOUT_SIZE_XLARGE) ==
-            Configuration.SCREENLAYOUT_SIZE_XLARGE);
-
-      onTablet = (isLarge || isXLarge);
-
-      if (onTablet) {
-         getSupportActionBar().hide();
-      }
+      getSupportActionBar().hide();
 
       super.onCreate(savedInstanceState);
 
@@ -94,33 +73,24 @@ public class SiteListActivity extends SherlockFragmentActivity
          getSiteList();
       }
 
-      // Non-tablets just show the list view
-      if (!onTablet) {
-         setSiteListView((ListView)findViewById(R.id.siteListView));
+      mSiteListButton = (Button)findViewById(R.id.list_dialog_btn);
+      Typeface btnType = Typeface.createFromAsset(getAssets(), "fonts/ProximaNovaRegular.otf");
+      mSiteListButton.setTypeface(btnType);
 
-         if (mSiteList != null) {
-            setSiteList(mSiteList);
-         }
-      } else {
-         // Otherwise we set up listeners for the FragmentDialog list view
-         Button siteListButton = (Button)findViewById(R.id.list_dialog_btn);
-         Typeface btnType = Typeface.createFromAsset(getAssets(), "fonts/ProximaNovaRegular.otf");
-         siteListButton.setTypeface(btnType);
-
-         siteListButton.setOnClickListener(new OnClickListener() {
-            public void onClick(View v) {
-               if (mSiteList != null) {
-                  showSiteListDialog(mSiteList);
-               }
+      mSiteListButton.setOnClickListener(new OnClickListener() {
+         public void onClick(View view) {
+            /**
+             * TODO: It should probably always open up the list dialog even if
+             * we don't have the site list yet. Then once we get it we can
+             * update the list.
+             */
+            if (mSiteList != null) {
+               showSiteListDialog(mSiteList);
             }
-         });
-      }
+         }
+      });
 
       handleIntent(getIntent());
-   }
-
-   protected void setSiteListView(ListView siteListView) {
-      mSiteListView = siteListView;
    }
 
    @Override
@@ -146,13 +116,11 @@ public class SiteListActivity extends SherlockFragmentActivity
          }
       }
 
-      if (!onTablet)
-         setSiteList(matchedSites);
+      setSiteList(matchedSites);
    }
 
    private void cancelSearch() {
-      if (!onTablet)
-         setSiteList(mSiteList);
+      setSiteList(mSiteList);
    }
 
    @Override
@@ -183,20 +151,11 @@ public class SiteListActivity extends SherlockFragmentActivity
       }
    }
 
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      super.onCreateOptionsMenu(menu);
-
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.site_search_menu, menu);
-      setSearchView((SearchView)menu.findItem(R.id.site_search)
-       .getActionView());
-
-      return true;
-   }
-
-   protected void setSearchView(SearchView searchView) {
+   /**
+    * Sets the ListView and SearchView so this Activity can proxy searches through.
+    */
+   protected void setSiteListViews(ListView siteListView, SearchView searchView) {
+      mSiteListView = siteListView;
       mSearchView = searchView;
 
       SearchManager searchManager = (SearchManager)getSystemService(
@@ -206,6 +165,8 @@ public class SiteListActivity extends SherlockFragmentActivity
        getComponentName()));
       searchView.setIconifiedByDefault(false);
       searchView.setOnQueryTextListener(this);
+
+      setSiteList(mSiteList);
    }
 
    public boolean onQueryTextChange(String newText) {
@@ -247,8 +208,12 @@ public class SiteListActivity extends SherlockFragmentActivity
    }
 
    private void setSiteList(ArrayList<Site> sites) {
-      mSiteListAdapter = new SiteListAdapter(sites);
-      mSiteListView.setAdapter(mSiteListAdapter);
+      if (mSiteListView == null || mSiteList == null) {
+         return;
+      }
+
+      final SiteListAdapter siteListAdapter = new SiteListAdapter(sites);
+      mSiteListView.setAdapter(siteListAdapter);
 
       mSiteListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
@@ -258,7 +223,7 @@ public class SiteListActivity extends SherlockFragmentActivity
             Intent intent = new Intent(SiteListActivity.this,
              TopicsActivity.class);
 
-            application.setSite(mSiteListAdapter.getSiteList().get(position));
+            application.setSite(siteListAdapter.getSiteList().get(position));
             startActivity(intent);
          }
       });
