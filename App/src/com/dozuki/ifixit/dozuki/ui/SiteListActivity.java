@@ -66,19 +66,19 @@ public class SiteListActivity extends SherlockFragmentActivity
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTitle("");
-      Boolean isLarge = ((getResources().getConfiguration().screenLayout & 
-            Configuration.SCREENLAYOUT_SIZE_LARGE) == 
+      Boolean isLarge = ((getResources().getConfiguration().screenLayout &
+            Configuration.SCREENLAYOUT_SIZE_LARGE) ==
              Configuration.SCREENLAYOUT_SIZE_LARGE);
-      Boolean isXLarge = ((getResources().getConfiguration().screenLayout & 
-            Configuration.SCREENLAYOUT_SIZE_XLARGE) == 
+      Boolean isXLarge = ((getResources().getConfiguration().screenLayout &
+            Configuration.SCREENLAYOUT_SIZE_XLARGE) ==
             Configuration.SCREENLAYOUT_SIZE_XLARGE);
-     
+
       onTablet = (isLarge || isXLarge);
-      
+
       if (onTablet) {
          getSupportActionBar().hide();
-      }      
-      
+      }
+
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.site_list);
@@ -87,20 +87,24 @@ public class SiteListActivity extends SherlockFragmentActivity
          mSiteList = (ArrayList<Site>)savedInstanceState.getSerializable(
           SITE_LIST);
       }
-      
+
       if (mSiteList == null) {
          getSiteList();
-      } 
-      
+      }
+
       // Non-tablets just show the list view
-      if (!onTablet && mSiteList != null) {
-         setSiteList(mSiteList);
+      if (!onTablet) {
+         setSiteListView((ListView)findViewById(R.id.siteListView));
+
+         if (mSiteList != null) {
+            setSiteList(mSiteList);
+         }
       } else {
          // Otherwise we set up listeners for the FragmentDialog list view
          Button siteListButton = (Button)findViewById(R.id.list_dialog_btn);
          Typeface btnType = Typeface.createFromAsset(getAssets(), "fonts/ProximaNovaRegular.otf");
          siteListButton.setTypeface(btnType);
-         
+
          siteListButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                if (mSiteList != null) {
@@ -111,6 +115,10 @@ public class SiteListActivity extends SherlockFragmentActivity
       }
 
       handleIntent(getIntent());
+   }
+
+   protected void setSiteListView(ListView siteListView) {
+      mSiteListView = siteListView;
    }
 
    @Override
@@ -180,18 +188,22 @@ public class SiteListActivity extends SherlockFragmentActivity
 
       MenuInflater inflater = getSupportMenuInflater();
       inflater.inflate(R.menu.site_search_menu, menu);
+      setSearchView((SearchView)menu.findItem(R.id.site_search)
+       .getActionView());
+
+      return true;
+   }
+
+   protected void setSearchView(SearchView searchView) {
+      mSearchView = searchView;
 
       SearchManager searchManager = (SearchManager)getSystemService(
        Context.SEARCH_SERVICE);
-      mSearchView = (SearchView)menu.findItem(R.id.site_search)
-       .getActionView();
-      mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
+
+      searchView.setSearchableInfo(searchManager.getSearchableInfo(
        getComponentName()));
-      mSearchView.setIconifiedByDefault(false);
-
-      mSearchView.setOnQueryTextListener(this);
-
-      return true;
+      searchView.setIconifiedByDefault(false);
+      searchView.setOnQueryTextListener(this);
    }
 
    public boolean onQueryTextChange(String newText) {
@@ -235,7 +247,7 @@ public class SiteListActivity extends SherlockFragmentActivity
    private void setSiteList(ArrayList<Site> sites) {
       mSiteListAdapter = new SiteListAdapter(sites);
       mSiteListView.setAdapter(mSiteListAdapter);
-     
+
       mSiteListView.setOnItemClickListener(new OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> arg0, View view, int position,
@@ -243,17 +255,16 @@ public class SiteListActivity extends SherlockFragmentActivity
             MainApplication application = ((MainApplication)getApplication());
             Intent intent = new Intent(SiteListActivity.this,
              TopicsActivity.class);
-     
+
             application.setSite(mSiteListAdapter.getSiteList().get(position));
             startActivity(intent);
          }
       });
    }
-   
+
    private void getSiteList() {
       startService(APIService.getSitesIntent(this));
    }
-   
    private void showSiteListDialog(ArrayList<Site> sites) {
        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
        Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
@@ -263,7 +274,7 @@ public class SiteListActivity extends SherlockFragmentActivity
        ft.addToBackStack(null);
 
        // Create and show the dialog.
-       DialogFragment siteList = SiteListDialogFragment.newInstance(sites);
-       siteList.show(ft, "dialog"); 
+       DialogFragment siteList = SiteListDialogFragment.newInstance();
+       siteList.show(ft, "dialog");
    }
 }
