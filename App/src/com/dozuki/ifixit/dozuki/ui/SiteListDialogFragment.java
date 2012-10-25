@@ -10,6 +10,7 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.AdapterView.OnItemClickListener;
 
+import com.WazaBe.HoloEverywhere.app.Dialog;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
@@ -37,10 +38,12 @@ public class SiteListDialogFragment extends DialogFragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+      getDialog().setTitle(R.string.site_list_title);
+      
       View v = inflater.inflate(R.layout.site_dialog_list, container, false);
         
       mSiteListView = (ListView)v.findViewById(R.id.siteListView);
-        
+      
       mSiteListAdapter = new SiteListAdapter(mSites);
       mSiteListView.setAdapter(mSiteListAdapter);
 

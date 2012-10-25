@@ -21,14 +21,16 @@
 	       android:layout_height="wrap_content"
 	       android:src="@drawable/dozuki_splash_logo"
 	       android:scaleType="fitCenter" />
-	   <Button
+	   <com.dozuki.ifixit.dozuki.ui.SiteListOffsetButton
 	       android:id="@+id/list_dialog_btn"
 	       android:layout_height="wrap_content"
-	       android:layout_width="match_parent" 
+	       android:layout_width="400dp"
+	       android:layout_gravity="center"
+	       android:layout_marginTop="20dp" 
 	       android:text="@string/site_list_button" 
 	       android:textSize="30sp"
-	       android:paddingLeft="16dp"
-	       android:background="@drawable/site_list_background"
-	       android:gravity="left|center_vertical" />
+	       android:textColor="#232323"
+	       android:textStyle="bold"
+	       android:background="@drawable/site_button_states" />
    </LinearLayout>
 </FrameLayout>

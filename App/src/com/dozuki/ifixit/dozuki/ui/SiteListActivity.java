@@ -8,18 +8,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.res.Configuration;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 
@@ -100,6 +98,9 @@ public class SiteListActivity extends SherlockFragmentActivity
       } else {
          // Otherwise we set up listeners for the FragmentDialog list view
          Button siteListButton = (Button)findViewById(R.id.list_dialog_btn);
+         Typeface btnType = Typeface.createFromAsset(getAssets(), "fonts/ProximaNovaRegular.otf");
+         siteListButton.setTypeface(btnType);
+         
          siteListButton.setOnClickListener(new OnClickListener() {
             public void onClick(View v) {
                if (mSiteList != null) {
@@ -262,7 +263,7 @@ public class SiteListActivity extends SherlockFragmentActivity
        ft.addToBackStack(null);
 
        // Create and show the dialog.
-       DialogFragment newFragment = SiteListDialogFragment.newInstance(sites);
-       newFragment.show(ft, "dialog"); 
+       DialogFragment siteList = SiteListDialogFragment.newInstance(sites);
+       siteList.show(ft, "dialog"); 
    }
 }

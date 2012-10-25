@@ -1,11 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import java.io.Serializable;
-import java.net.URLEncoder;
-
-import org.apache.http.client.ResponseHandler;
-import org.json.JSONException;
-
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -19,9 +13,14 @@ import android.os.IBinder;
 import android.os.Message;
 import android.util.Log;
 
-import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+
+import org.apache.http.client.ResponseHandler;
+import org.json.JSONException;
+
+import java.io.Serializable;
+import java.net.URLEncoder;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -274,7 +273,7 @@ public class APIService extends Service {
    private static AlertDialog createErrorDialog(final Context context,
     final Intent apiIntent, int titleRes, int messageRes,
     int buttonRes) {
-      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(context.getString(titleRes))
              .setMessage(context.getString(messageRes))
              .setPositiveButton(context.getString(buttonRes),
