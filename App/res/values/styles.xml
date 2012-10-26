@@ -160,4 +160,12 @@
         <item name="android:listSelector">@drawable/list_selector_grey</item>
     </style>
     
+    <style name="Holo.DialogWindowTitle.Dozuki">
+        <item name="android:textAppearance">@style/Holo.TextAppearance.DialogWindowTitle.Dozuki</item>
+    </style>
+    
+    <style name="Holo.TextAppearance.DialogWindowTitle.Dozuki">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/dozuki_red</item>
+    </style>
 </resources>

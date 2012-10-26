@@ -20,8 +20,8 @@
         <item name="sectionListViewStyle">@style/Widget.iFixit.ListViewStyle</item>
         <item name="topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
     </style>
-     
-    <style name="Theme.Dozuki" parent="Theme.iFixit">
+    
+    <style name="Theme.Dozuki" parent="Holo.Theme.Sherlock.Light">
         <!-- Action Bar Logo -->
         <item name="logo">@drawable/logo_dozuki</item>
         <item name="android:logo">@drawable/logo_dozuki</item>
@@ -44,8 +44,14 @@
         <item name="topicHeaderColor">@color/dozuki_green</item>
         <item name="topicGuideList">@style/Widget.Dozuki.ListViewStyle</item>
         <item name="topicDefaultBackground">@style/Widget.Dozuki.TopicBackground</item>
-    </style>
     
+        <item name="android:dialogTheme">@style/Theme.Dozuki.Dialog</item>
+    </style>
+
+    <style name="Theme.Dozuki.Dialog">
+        <item name="android:windowTitleStyle">@style/Holo.DialogWindowTitle.Dozuki</item>
+    </style>
+     
     <!-- Custom Attributes / Styles for Dozuki -->
     <style name="Theme.Dozuki.Green"  parent="Theme.Dozuki">
         <item name="topicHeaderColor">@color/dozuki_green</item>
