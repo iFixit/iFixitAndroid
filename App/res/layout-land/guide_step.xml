@@ -1,55 +1,55 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:paddingTop="@dimen/page_padding"
-    android:paddingRight="@dimen/page_padding"
-    android:paddingLeft="@dimen/page_padding"
-    style="@style/step_wrap">
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:paddingTop="@dimen/page_padding"
+   android:paddingRight="@dimen/page_padding"
+   android:paddingLeft="@dimen/page_padding"
+   style="@style/step_wrap">
 
-    <RelativeLayout 
-    	android:layout_width="wrap_content"
-    	android:layout_height="fill_parent"
-    	android:layout_marginRight="@dimen/section_seperator">
+   <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginRight="@dimen/section_seperator">
 
-        <ImageView
-            android:id="@+id/main_image"
-            android:layout_width="@dimen/guide_image_width"
-    		   android:layout_height="@dimen/guide_image_height"
-    		   android:layout_marginRight="@dimen/guide_image_spacing_right"
-	    		android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
-	    		android:background="@color/image_border"
-	    		android:padding="@dimen/guide_image_padding"
-	    		android:contentDescription="@string/thumbnail_desc" />
+      <ImageView
+         android:id="@+id/main_image"
+         android:layout_width="@dimen/guide_image_width"
+         android:layout_height="@dimen/guide_image_height"
+         android:layout_marginRight="@dimen/guide_image_spacing_right"
+         android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+         android:background="@color/image_border"
+         android:padding="@dimen/guide_image_padding"
+         android:contentDescription="@string/thumbnail_desc" />
 
-        <com.dozuki.ifixit.view.ui.ThumbnailView
-            android:id="@+id/thumbnails"    
-            android:layout_width="wrap_content"
-    		   android:layout_height="wrap_content"
-    		   style="@style/thumbnail_position" />
-    </RelativeLayout>
+      <com.dozuki.ifixit.guide_view.ui.ThumbnailView
+         android:id="@+id/thumbnails"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         style="@style/thumbnail_position" />
+   </RelativeLayout>
 
-    <RelativeLayout 
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent">
+   <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent">
 
-        <TextView
-            android:id="@+id/step_title"
-            android:layout_width="match_parent"
-    	      android:layout_height="wrap_content"
-            style="@style/text.title"/>
+      <TextView
+         android:id="@+id/step_title"
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content"
+         style="@style/text.title"/>
 
-        <ListView
-            android:id="@+id/step_text_list"
-			   android:layout_width="match_parent"
-				android:layout_height="match_parent"
-				android:divider="@color/invisible"
-				android:listSelector="@android:color/transparent"
-				android:scrollingCache="false"
-				android:cacheColorHint="@android:color/transparent"
-				android:layout_below="@id/step_title"
-				android:background="@android:color/transparent"
-				android:overScrollFooter="@null" />
-    </RelativeLayout>
+      <ListView
+         android:id="@+id/step_text_list"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:divider="@color/invisible"
+         android:listSelector="@android:color/transparent"
+         android:scrollingCache="false"
+         android:cacheColorHint="@android:color/transparent"
+         android:layout_below="@id/step_title"
+         android:background="@android:color/transparent"
+         android:overScrollFooter="@null" />
+   </RelativeLayout>
 
 </LinearLayout>

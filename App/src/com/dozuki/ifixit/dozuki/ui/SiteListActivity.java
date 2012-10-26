@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.dozuki.ui;
 
 import android.app.SearchManager;
-import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -23,8 +22,11 @@ import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
+import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.view.ui.TopicsActivity;
+import com.dozuki.ifixit.util.APIError;
 
 import java.util.ArrayList;
 
@@ -37,21 +39,16 @@ public class SiteListActivity extends SherlockFragmentActivity
    private ListView mSiteListView;
    private SearchView mSearchView;
 
-   private BroadcastReceiver mApiReceiver = new BroadcastReceiver() {
+   private APIReceiver mApiReceiver = new APIReceiver() {
       @SuppressWarnings("unchecked")
-      @Override
-      public void onReceive(Context context, Intent intent) {
-         APIService.Result result = (APIService.Result)
-          intent.getExtras().getSerializable(APIService.RESULT);
+      public void onSuccess(Object result, Intent intent) {
+         mSiteList = (ArrayList<Site>)result;
+         setSiteList(mSiteList);
+      }
 
-         if (!result.hasError()) {
-            mSiteList = (ArrayList<Site>)result.getResult();
-
-            setSiteList(mSiteList);
-         } else {
-            APIService.getErrorDialog(SiteListActivity.this, result.getError(),
-             APIService.getSitesIntent(SiteListActivity.this)).show();
-         }
+      public void onFailure(APIError error, Intent intent) {
+         APIService.getErrorDialog(SiteListActivity.this, error,
+          APIService.getSitesIntent(SiteListActivity.this)).show();
       }
    };
 
@@ -135,7 +132,7 @@ public class SiteListActivity extends SherlockFragmentActivity
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIService.ACTION_SITES);
+      filter.addAction(APIEndpoint.SITES.mAction);
       registerReceiver(mApiReceiver, filter);
    }
 

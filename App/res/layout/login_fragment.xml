@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent" >
+
+   <ScrollView
+      android:id="@+id/scroller"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:fillViewport="true" >
+
+      <RelativeLayout
+         android:id="@+id/login_screen"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:paddingLeft="40dp"
+         android:paddingRight="40dp"
+         android:paddingTop="40dp" >
+
+         <LinearLayout
+            android:id="@+id/login_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="20dp" >
+
+            <TextView
+               android:id="@+id/login_error_text"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_marginBottom="5dp"
+               android:text="@string/login_error"
+               android:textColor="@color/red" />
+
+            <ProgressBar
+               android:id="@+id/login_loading_bar"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:layout_marginBottom="5dp"
+               android:visibility="gone" />
+
+            <TextView
+               android:id="@+id/create_account_header"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="center"
+               android:layout_marginBottom="10dp"
+               android:text="@string/create_account"
+               android:textAppearance="?android:attr/textAppearanceLarge"
+               android:visibility="gone" />
+
+            <TextView
+               android:id="@+id/login_id"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/email" />
+
+            <EditText
+               android:id="@+id/edit_login_id"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:ems="10"
+               android:inputType="textEmailAddress" >
+
+               <requestFocus />
+            </EditText>
+
+            <TextView
+               android:id="@+id/login_username"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/user_name" />
+
+            <EditText
+               android:id="@+id/edit_login_username"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:inputType="text"
+               android:ems="10" />
+
+            <TextView
+               android:id="@+id/password"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/password" />
+
+            <EditText
+               android:id="@+id/edit_password"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:ems="10"
+               android:inputType="textPassword" />
+
+            <TextView
+               android:id="@+id/confirm_password"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:text="@string/confirm_password" />
+
+            <EditText
+               android:id="@+id/edit_confirm_password"
+               android:layout_width="match_parent"
+               android:layout_height="wrap_content"
+               android:ems="10"
+               android:inputType="textPassword" />
+
+            <LinearLayout
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:id="@+id/login_agreement_terms_layout"
+               android:orientation="horizontal" >
+
+               <CheckBox
+                  android:id="@+id/login_agreement_terms_checkbox"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:gravity="center_vertical" />
+
+               <TextView
+                  android:id="@+id/login_agreement_terms_textview"
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:text="@string/register_agreement"
+                  android:layout_marginBottom="10dp" />
+
+            </LinearLayout>
+
+            <ImageButton
+               android:id="@+id/signin_button"
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_gravity="right"
+               android:layout_margin="5dp"
+               android:contentDescription="@string/signin_description"
+               android:background="@drawable/ic_btn_login" />
+         </LinearLayout>
+
+         <ImageButton
+            android:id="@+id/register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/login_text"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_margin="1dp"
+            android:contentDescription="@string/register_description"
+            android:background="@drawable/ic_btn_register" />
+
+         <ImageButton
+            android:id="@+id/cancel_register_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/register_button"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center"
+            android:layout_margin="4dp"
+            android:contentDescription="@string/cancel_register_description"
+            android:background="@drawable/ic_btn_cancel" />
+
+         <ImageButton
+            android:id="@+id/use_google_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/cancel_register_button"
+            android:layout_centerHorizontal="true"
+            android:layout_margin="1dp"
+            android:contentDescription="@string/google_signin_description"
+            android:background="@drawable/ic_btn_sign_in_google" />
+
+         <ImageButton
+            android:id="@+id/use_yahoo_login_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/register_button"
+            android:layout_below="@+id/use_google_login_button"
+            android:layout_margin="1dp"
+            android:contentDescription="@string/yahoo_signin_description"
+            android:background="@drawable/ic_btn_sign_in_yahoo" />
+
+      </RelativeLayout>
+   </ScrollView>
+</RelativeLayout>

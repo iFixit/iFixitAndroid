@@ -6,7 +6,7 @@
 
     <FrameLayout
         android:id="@+id/topic_view_fragment"
-        android:name="com.dozuki.ifixit.view.ui.TopicViewFragment"
+        android:name="com.dozuki.ifixit.topic_view.ui.TopicViewFragment"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
     </FrameLayout>

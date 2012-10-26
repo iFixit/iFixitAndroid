@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-     Taken from @Lars from Stack Overflow - thanks!
-	 @link http://stackoverflow.com/questions/3769762/android-color-xml-resource-file
+Taken from @Lars from Stack Overflow - thanks!
+@link http://stackoverflow.com/questions/3769762/android-color-xml-resource-file
 -->
 <resources>
     <color name="white">#FFFFFF</color>
     <color name="translucent_white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>
     <color name="black">#444444</color>
+    <color name="red">#FFff0000</color>
     <color name="image_border">#AAAAAA</color>
     <color name="ifixit_blue">#336DA8</color>
     <color name="invisible">#00000000</color>

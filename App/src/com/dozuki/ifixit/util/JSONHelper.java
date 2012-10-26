@@ -13,15 +13,19 @@ import android.text.style.URLSpan;
 import android.util.Log;
 
 import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.view.model.Guide;
-import com.dozuki.ifixit.view.model.GuideInfo;
-import com.dozuki.ifixit.view.model.GuidePart;
-import com.dozuki.ifixit.view.model.GuideStep;
-import com.dozuki.ifixit.view.model.GuideTool;
-import com.dozuki.ifixit.view.model.StepImage;
-import com.dozuki.ifixit.view.model.StepLine;
-import com.dozuki.ifixit.view.model.TopicLeaf;
-import com.dozuki.ifixit.view.model.TopicNode;
+import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
+import com.dozuki.ifixit.gallery.model.UserImageInfo;
+import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.guide_view.model.Guide;
+import com.dozuki.ifixit.guide_view.model.GuideInfo;
+import com.dozuki.ifixit.guide_view.model.GuidePart;
+import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.guide_view.model.GuideTool;
+import com.dozuki.ifixit.guide_view.model.StepImage;
+import com.dozuki.ifixit.guide_view.model.StepLine;
+import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.topic_view.model.TopicLeaf;
+import com.dozuki.ifixit.topic_view.model.TopicNode;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
@@ -40,7 +44,6 @@ public class JSONHelper {
                sites.add(site);
             }
          }
-
       } catch (JSONException e) {
          Log.e("iFixit", "Error parsing sites: " + e);
       }
@@ -150,8 +153,7 @@ public class JSONHelper {
       // last image doesn't have orderby so this is necessary. API bug?
       try {
          image.setOrderby(jImage.getInt("orderby"));
-      }
-      catch (JSONException e) {
+      } catch (JSONException e) {
          image.setOrderby(1);
       }
 
@@ -234,8 +236,7 @@ public class JSONHelper {
          topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
       }
 
-      topicLeaf.setNumSolutions(Integer.parseInt(
-       jSolutions.getString("count")));
+      topicLeaf.setNumSolutions(Integer.parseInt(jSolutions.getString("count")));
       topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
 
       return topicLeaf;
@@ -259,7 +260,84 @@ public class JSONHelper {
    }
 
    /**
+    * Parsing list of UserImageInfo.
+    */
+   public static UserImageList parseUserImages(String json) throws JSONException {
+      JSONArray jImages = new JSONArray(json);
+
+      UserImageList userImageList = new UserImageList();
+
+      for (int i = 0; i < jImages.length(); i++) {
+         userImageList.addImage((parseUserImageInfo(jImages.getJSONObject(i))));
+      }
+
+      return userImageList;
+   }
+
+   public static UserImageInfo parseUserImageInfo(JSONObject jImage)
+    throws JSONException {
+      UserImageInfo userImageInfo = new UserImageInfo();
+      userImageInfo.setImageid(jImage.getString("imageid"));
+      userImageInfo.setGuid(jImage.getString("guid"));
+      userImageInfo.setHeight(jImage.getString("height"));
+      userImageInfo.setWidth(jImage.getString("width"));
+      userImageInfo.setRatio(jImage.getString("ratio"));
+
+      return userImageInfo;
+   }
+
+   public static UploadedImageInfo parseUploadedImageInfo(String image)
+    throws JSONException {
+      JSONObject jImage = new JSONObject(image);
+
+      UploadedImageInfo userImageInfo = new UploadedImageInfo();
+      userImageInfo.setImageid(jImage.getString("imageid"));
+      userImageInfo.setGuid(jImage.getString("guid"));
+
+      return userImageInfo;
+   }
+
+   /**
+    * Login parsing info
+    */
+   public static User parseLoginInfo(String json) throws JSONException {
+      JSONObject jUser = new JSONObject(json);
+
+      User user = new User();
+      user.setUserid(jUser.getString("userid"));
+      user.setUsername(jUser.getString("username"));
+      user.setImageid(jUser.getString("imageid"));
+      user.setSession(jUser.getString("session"));
+
+      return user;
+   }
+
+   /**
+    * Returns the error message contained in the given JSON, or null if one
+    * does not exist.
+    *
+    * e.g. Returns "Guide not found" for:
+    * "{"error":true,"msg":"Guide not found"}"
+    */
+   public static String parseError(String json) {
+      String error = null;
+
+      try {
+         JSONObject jError = new JSONObject(json);
+         if (jError.getBoolean("error")) {
+            error = jError.getString("msg");
+         }
+      }catch(JSONException e) {
+      }
+
+      return error;
+   }
+
+   /**
     * Removes relative a hrefs
+    *
+    * TODO: Update domain with the current site's domain.
+    *
     * @param spantext (from Html.fromhtml())
     * @return spanned with fixed links
     */

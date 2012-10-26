@@ -1,27 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="step_wrap">
-        <item name="android:orientation">horizontal</item>
-    </style>
+   <style name="step_wrap">
+      <item name="android:orientation">horizontal</item>
+   </style>
 
-    <style name="thumbnail_orientation">
-        <item name="android:orientation">horizontal</item>
-    </style>
-    
-    <style name="guide_thumbnail">
-        <item name="android:background">@color/image_border</item>
-        <item name="android:visibility">invisible</item>
-        <item name="android:padding">@dimen/guide_thumbnail_padding</item>
-        <item name="android:layout_gravity">bottom</item>
-    </style>
-    
-    <style name="guide_thumbnail_w_spacing" parent="guide_thumbnail">
-        <item name="android:layout_marginRight">@dimen/guide_thumbnail_spacing</item>
-    </style>
-    
-    <style name="thumbnail_position">
-       	<item name="android:layout_below">@id/main_image</item>
-       	<item name="android:layout_gravity">bottom</item>
-    </style>
+   <style name="thumbnail_orientation">
+      <item name="android:orientation">horizontal</item>
+   </style>
+
+   <style name="guide_thumbnail">
+      <item name="android:background">@color/image_border</item>
+      <item name="android:visibility">invisible</item>
+      <item name="android:padding">@dimen/guide_thumbnail_padding</item>
+      <item name="android:layout_gravity">bottom</item>
+   </style>
+
+   <style name="guide_thumbnail_w_spacing" parent="guide_thumbnail">
+      <item name="android:layout_marginRight">@dimen/guide_thumbnail_spacing</item>
+   </style>
+
+   <style name="thumbnail_position">
+      <item name="android:layout_below">@id/main_image</item>
+      <item name="android:layout_gravity">bottom</item>
+   </style>
 </resources>

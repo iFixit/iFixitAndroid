@@ -1,20 +1,34 @@
 package com.dozuki.ifixit.util;
 
+import java.io.File;
+import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONException;
+
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.Message;
 import android.util.Log;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.util.APIError.ErrorType;
+import com.github.kevinsawicki.http.HttpRequest;
+import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
 import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
@@ -34,7 +48,7 @@ public class APIService extends Service {
 
       private String mResponse;
       private Object mResult;
-      private Error mError;
+      private APIError mError;
 
       public Result(String response) {
          mResponse = response;
@@ -45,7 +59,7 @@ public class APIService extends Service {
          setResult(result);
       }
 
-      public Result(Error error) {
+      public Result(APIError error) {
          setError(error);
       }
 
@@ -65,48 +79,30 @@ public class APIService extends Service {
          mResult = result;
       }
 
-      public Error getError() {
+      public APIError getError() {
          return mError;
       }
 
-      public void setError(Error error) {
+      public void setError(APIError error) {
          mError = error;
       }
    }
 
-   public static enum Error {PARSE, CONNECTION};
 
    private interface Responder {
       public void setResult(Result result);
    }
 
-   private static final String RESPONSE = "RESPONSE";
-
-   private static final String SITES_API_URL = "/api/1.0/sites?limit=1000";
-   private static final String TOPIC_API_URL = "/api/1.0/topic/";
-   private static final String GUIDE_API_URL = "/api/1.0/guide/";
-   private static final String CATEGORIES_API_URL = "/api/1.0/categories/";
-
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
    private static final String REQUEST_QUERY = "REQUEST_QUERY";
-   private static final String REQUEST_BROADCAST_ACTION =
-    "REQUEST_BROADCAST_ACTION";
-
-   private static final int TARGET_CATEGORIES = 0;
-   private static final int TARGET_GUIDE = 1;
-   private static final int TARGET_TOPIC = 2;
-   private static final int TARGET_SITES = 3;
+   private static final String REQUEST_POST_DATA = "REQUEST_POST_DATA";
+   private static final String REQUEST_UPLOAD_FILE_PATH =
+    "REQUEST_UPLOAD_FILE_PATH";
+   public static final String REQUEST_RESULT_INFORMATION =
+    "REQUEST_RESULT_INFORMATION";
+   public static final String INVALID_LOGIN_STRING = "Invalid login";
 
    private static final String NO_QUERY = "";
-
-   public static final String ACTION_CATEGORIES =
-    "com.dozuki.ifixit.api.categories";
-   public static final String ACTION_GUIDE =
-    "com.dozuki.ifixit.api.guide";
-   public static final String ACTION_TOPIC =
-    "com.dozuki.ifixit.api.topic";
-   public static final String ACTION_SITES =
-    "com.dozuki.ifixit.api.sites";
 
    public static final String RESULT = "RESULT";
 
@@ -125,8 +121,14 @@ public class APIService extends Service {
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
       final int requestTarget = extras.getInt(REQUEST_TARGET);
+      final APIEndpoint endpoint = APIEndpoint.getByTarget(requestTarget);
       final String requestQuery = extras.getString(REQUEST_QUERY);
-      final String broadcastAction = extras.getString(REQUEST_BROADCAST_ACTION);
+      final String resultInformation =
+       extras.getString(REQUEST_RESULT_INFORMATION);
+      @SuppressWarnings("unchecked")
+      final Map<String, String> postData =
+       (Map<String, String>)extras.getSerializable(REQUEST_POST_DATA);
+      final String filePath = extras.getString(REQUEST_UPLOAD_FILE_PATH);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -144,12 +146,12 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequestHelper(this, requestTarget, requestQuery, new Responder() {
+      performRequest(endpoint, requestQuery, postData, filePath,
+       new Responder() {
          public void setResult(Result result) {
-            // Don't parse if we've errored already.
+            // Don't parse if we've erred already.
             if (!result.hasError()) {
-               result = parseResult(result.getResponse(), requestTarget,
-                broadcastAction);
+               result = parseResult(result.getResponse(), endpoint);
             }
 
             // Don't save if there a parse error.
@@ -158,7 +160,7 @@ public class APIService extends Service {
             }
 
             // Always broadcast the result despite any errors.
-            broadcastResult(result, broadcastAction);
+            broadcastResult(result, endpoint, resultInformation);
          }
       });
 
@@ -168,32 +170,23 @@ public class APIService extends Service {
    /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private Result parseResult(String response, int requestTarget,
-    String broadcastAction) {
-      Object parsedResult = null;
+   private Result parseResult(String response, APIEndpoint endpoint) {
+      String error = JSONHelper.parseError(response);
+      if (error != null) {
+         if (error.equals(INVALID_LOGIN_STRING)) {
+            return new Result(new APIError(getString(R.string.error_dialog_title),
+             error, ErrorType.INVALID_USER));
+         } else {
+            return new Result(new APIError(getString(R.string.error_dialog_title),
+             error, ErrorType.OTHER));
+         }
+      }
 
       try {
-         switch (requestTarget) {
-         case TARGET_CATEGORIES:
-            parsedResult = JSONHelper.parseTopics(response);
-            break;
-         case TARGET_GUIDE:
-            parsedResult = JSONHelper.parseGuide(response);
-            break;
-         case TARGET_TOPIC:
-            parsedResult = JSONHelper.parseTopicLeaf(response);
-            break;
-         case TARGET_SITES:
-            parsedResult = JSONHelper.parseSites(response);
-            break;
-         default:
-            Log.w("iFixit", "Invalid request target: " + requestTarget);
-            return new Result(Error.PARSE);
-         }
-
+         Object parsedResult = endpoint.parseResult(response);
          return new Result(response, parsedResult);
       } catch (JSONException e) {
-         return new Result(Error.PARSE);
+         return new Result(APIError.getParseError(this));
       }
    }
 
@@ -205,69 +198,146 @@ public class APIService extends Service {
       // db.close();
    }
 
-   private void broadcastResult(Result result, String broadcastAction) {
+   private void broadcastResult(Result result, APIEndpoint endpoint,
+    String extraResultInfo) {
       Intent broadcast = new Intent();
       Bundle extras = new Bundle();
 
       extras.putSerializable(RESULT, result);
+      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
+      extras.putString(REQUEST_RESULT_INFORMATION, extraResultInfo);
       broadcast.putExtras(extras);
 
-      broadcast.setAction(broadcastAction);
+      broadcast.setAction(endpoint.mAction);
       sendBroadcast(broadcast);
    }
 
    public static Intent getCategoriesIntent(Context context) {
-      return createIntent(context, TARGET_CATEGORIES, NO_QUERY,
-       ACTION_CATEGORIES);
+      return createIntent(context, APIEndpoint.CATEGORIES, NO_QUERY);
    }
 
    public static Intent getGuideIntent(Context context, int guideid) {
-      return createIntent(context, TARGET_GUIDE, "" + guideid, ACTION_GUIDE);
+      return createIntent(context, APIEndpoint.GUIDE, "" + guideid);
    }
 
    public static Intent getTopicIntent(Context context, String topicName) {
-      return createIntent(context, TARGET_TOPIC, topicName, ACTION_TOPIC);
+      return createIntent(context, APIEndpoint.TOPIC, topicName);
+   }
+
+   public static Intent getLoginIntent(Context context,
+    String login, String password) {
+      Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
+
+      postData.put("login", login);
+      postData.put("password", password);
+
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
+
+      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
+   }
+
+   /**
+    * There are two login intent methods because the user has a sessionid
+    * after logging in via OpenID but we still need to hit the login endpoint
+    * to verify this and to get a username.
+    *
+    * TODO: Make this better. This method involves POSTing with a sessionid
+    * rather than sending it in a Cookie like all of the other requests.
+    */
+   public static Intent getLoginIntent(Context context,
+    String session) {
+      Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
+
+      postData.put("session", session);
+
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
+
+      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
+   }
+
+   public static Intent getRegisterIntent(Context context, String login,
+    String password, String username) {
+      Bundle extras = new Bundle();
+      Map<String, String> postData = new HashMap<String, String>();
+
+      postData.put("login", login);
+      postData.put("password", password);
+      postData.put("username", username);
+
+      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
+
+      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
+   }
+
+   public static Intent getUserImagesIntent(Context context, String query) {
+      return createIntent(context, APIEndpoint.USER_IMAGES, query);
+   }
+
+   public static Intent getUploadImageIntent(Context context, String filePath,
+    String extraInformation) {
+      Bundle extras = new Bundle();
+
+      extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
+      extras.putString(REQUEST_UPLOAD_FILE_PATH, filePath);
+
+      return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
+   }
+
+   public static Intent getDeleteImageIntent(Context context, String requestQuery) {
+      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery);
    }
 
    public static Intent getSitesIntent(Context context) {
-      return createIntent(context, TARGET_SITES, NO_QUERY,
-       ACTION_SITES);
+      return createIntent(context, APIEndpoint.SITES, NO_QUERY);
    }
 
-   private static Intent createIntent(Context context, int target,
-    String query, String action) {
-      Intent intent = new Intent(context, APIService.class);
-      Bundle extras = new Bundle();
+   private static Intent createIntent(Context context, APIEndpoint endpoint,
+    String query) {
+      return createIntent(context, endpoint, query, new Bundle());
+   }
 
-      extras.putInt(REQUEST_TARGET, target);
+   private static Intent createIntent(Context context, APIEndpoint endpoint,
+    String query, Bundle extras) {
+      Intent intent = new Intent(context, APIService.class);
+
+      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
       extras.putString(REQUEST_QUERY, query);
-      extras.putString(REQUEST_BROADCAST_ACTION, action);
       intent.putExtras(extras);
 
       return intent;
    }
 
-   public static AlertDialog getErrorDialog(Context context, Error error,
+   public static AlertDialog getErrorDialog(Context context, APIError error,
     Intent apiIntent) {
-      switch (error) {
-      case CONNECTION:
-         return getConnectionErrorDialog(context, apiIntent);
-      case PARSE:
-      default:
-         return getParseErrorDialog(context, apiIntent);
-      }
+      return createErrorDialog(context, apiIntent, error);
    }
 
-   private static AlertDialog getParseErrorDialog(final Context context,
+   public static AlertDialog getListMediaErrorDialog(Context context, APIError error,
     Intent apiIntent) {
-      return createErrorDialog(context, apiIntent, R.string.parse_error_title,
-       R.string.parse_error_message, R.string.try_again);
+       switch (error.mType) {
+       case CONNECTION:
+          return getErrorDialog(context, error, apiIntent);
+       default:
+          return getListMediaUnknownErrorDialog(context);
+       }
    }
 
-   private static AlertDialog getConnectionErrorDialog(final Context context,
-    Intent apiIntent) {
-      return createErrorDialog(context, apiIntent, R.string.no_connection_title,
-       R.string.no_connection, R.string.try_again);
+   public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext) {
+       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+       builder.setTitle(mContext.getString(R.string.media_error_title))
+          .setPositiveButton(mContext.getString(R.string.media_error_confirm),
+          new DialogInterface.OnClickListener() {
+             public void onClick(DialogInterface dialog, int id) {
+                //kill the media activity, and have them try again later
+                //incase the server needs some rest
+                ((SherlockFragmentActivity)mContext).finish();
+                dialog.cancel();
+             }
+          });
+
+       return builder.create();
    }
 
    private static AlertDialog createErrorDialog(final Context context,
@@ -281,98 +351,104 @@ public class APIService extends Service {
                 public void onClick(DialogInterface dialog, int id) {
                    // Try performing the request again.
                    context.startService(apiIntent);
-                   dialog.cancel();
+                   dialog.dismiss();
                 }
              });
-
-      return builder.create();
+      AlertDialog d = builder.create();
+      d.setOnCancelListener(new OnCancelListener() {
+         @Override
+         public void onCancel(DialogInterface dialog) {
+            ((Activity) context).finish();
+         }
+      });
+      return d;
    }
 
-   private static void performRequestHelper(Context context, int requestTarget,
-    String requestQuery, Responder responder) {
-      if (!checkConnectivity(context, responder)) {
+   private void performRequest(final APIEndpoint endpoint,
+    final String requestQuery, final Map<String, String> postData,
+    final String filePath, final Responder responder) {
+      if (!checkConnectivity(responder)) {
          return;
       }
 
-      String relativeUrl = null;
+      final String url = endpoint.getUrl(mSite, requestQuery);
 
-      switch (requestTarget) {
-      case TARGET_CATEGORIES:
-         relativeUrl = CATEGORIES_API_URL;
-         break;
-      case TARGET_GUIDE:
-         relativeUrl = GUIDE_API_URL + requestQuery;
-         break;
-      case TARGET_TOPIC:
-         try {
-            relativeUrl = TOPIC_API_URL + URLEncoder.encode(requestQuery,
-             "UTF-8");
-         } catch (Exception e) {
-            Log.w("iFixit", "Encoding error: " + e.getMessage());
-            responder.setResult(new Result(Error.PARSE));
-            return;
-         }
-         break;
-      case TARGET_SITES:
-         relativeUrl = SITES_API_URL;
-         break;
-      default:
-         Log.w("iFixit", "Invalid request target: " + requestTarget);
-         responder.setResult(new Result(Error.PARSE));
-         return;
-      }
+      Log.i("iFixit", "Performing API call: " + url);
 
-      String absoluteUrl = getUrl(relativeUrl);
-
-      performRequest(absoluteUrl, responder);
-   }
-
-   private static String getUrl(String endPoint) {
-      String domain;
-
-      if (mSite != null) {
-         domain = mSite.mDomain;
-      } else {
-         domain = "www.ifixit.com";
-      }
-
-      return "http://" + domain + endPoint;
-   }
-
-   private static void performRequest(final String url,
-    final Responder responder) {
-      final Handler handler = new Handler() {
-         public void handleMessage(Message message) {
-            String response = message.getData().getString(RESPONSE);
-
-            responder.setResult(new Result(response));
-         }
-      };
-
-      final ResponseHandler<String> responseHandler =
-       HTTPRequestHelper.getResponseHandlerInstance(handler);
-
-      new Thread() {
-         public void run() {
-            HTTPRequestHelper helper = new HTTPRequestHelper(responseHandler);
+      new AsyncTask<String, Void, Result>() {
+         @Override
+         protected Result doInBackground(String... dummy) {
+            /**
+             * Unfortunately we must split the creation of the HttpRequest
+             * object and the appropriate actions to take for a GET vs. a POST
+             * request. The request headers and trustAllCerts calls must be
+             * made before any data is sent. However, we must have an HttpRequest
+             * object already.
+             */
+            HttpRequest request;
 
             try {
-               helper.performGet(url);
-            } catch (Exception e) {
-               Log.w("iFixit", "Encoding error: " + e.getMessage());
+               /**
+                * Create the HttpRequest with the appropriate method.
+                */
+               if (endpoint.mPost) {
+                  request = HttpRequest.post(url);
+               } else {
+                  request = HttpRequest.get(url);
+               }
+
+               /**
+                * Uncomment to test HTTPS API calls in development.
+                *
+                * request.trustAllCerts();
+                * request.trustAllHosts();
+                */
+
+               /**
+                * Send the session along in a Cookie.
+                *
+                * TODO: Also send it along if the current site is private.
+                */
+               if (endpoint.mAuthenticated) {
+                  User user = ((MainApplication)getApplicationContext()).getUser();
+                  String session = user.getSession();
+                  request.header("Cookie", "session=" + session);
+               }
+
+               /**
+                * Continue with constructing the request body.
+                */
+               if (endpoint.mPost) {
+                  if (filePath != null) {
+                     // POST the file if present.
+                     request.send(new File(filePath));
+                  } else if (postData != null) {
+                     request.form(postData);
+                  }
+               } else {
+                  // Do nothing extra for GET.
+               }
+
+               return new Result(request.body());
+            } catch (HttpRequestException e) {
+               return new Result(APIError.getParseError(APIService.this));
             }
          }
-      }.start();
+
+         @Override
+         protected void onPostExecute(Result result) {
+            responder.setResult(result);
+         }
+      }.execute();
    }
 
-   private static boolean checkConnectivity(Context context,
-    Responder responder) {
-      ConnectivityManager cm = (ConnectivityManager)context.
+   private boolean checkConnectivity(Responder responder) {
+      ConnectivityManager cm = (ConnectivityManager)
        getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(new Result(Error.CONNECTION));
+         responder.setResult(new Result(APIError.getConnectionError(this)));
          return false;
       }
 
