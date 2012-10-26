@@ -41,7 +41,7 @@ public class GuideStepLineView extends LinearLayout {
       mStepText.setMovementMethod(LinkMovementMethod.getInstance());
 
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-       LinearLayout.LayoutParams.FILL_PARENT,
+       LinearLayout.LayoutParams.MATCH_PARENT,
        LinearLayout.LayoutParams.WRAP_CONTENT);
 
       layoutParams.setMargins(LINE_INDENT * line.getLevel(), MARGIN, 0,
