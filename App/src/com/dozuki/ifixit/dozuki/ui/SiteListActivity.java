@@ -24,9 +24,9 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.util.APIError;
 
 import java.util.ArrayList;
 

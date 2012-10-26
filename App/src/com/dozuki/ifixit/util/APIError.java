@@ -1,10 +1,10 @@
 package com.dozuki.ifixit.util;
 
-import java.io.Serializable;
-
 import android.content.Context;
 
 import com.dozuki.ifixit.R;
+
+import java.io.Serializable;
 
 
 public class APIError implements Serializable {

@@ -21,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -29,9 +28,9 @@ import com.dozuki.ifixit.gallery.ui.MediaFragment;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.util.APIError;
 
 public class LoginFragment extends SherlockDialogFragment implements OnClickListener {
    private static final int OPEN_ID_RESULT_CODE = 4;
@@ -374,7 +373,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
    private static AlertDialog createLogoutDialog(final Context context,
     int titleRes, int messageRes, int buttonConfirm, int buttonCancel) {
-      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder
          .setTitle(context.getString(titleRes))
          .setMessage(context.getString(messageRes))

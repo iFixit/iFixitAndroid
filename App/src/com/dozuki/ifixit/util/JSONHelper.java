@@ -1,12 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
@@ -26,6 +19,13 @@ import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+import java.util.Iterator;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";

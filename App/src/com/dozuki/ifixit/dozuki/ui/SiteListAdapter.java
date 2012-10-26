@@ -5,7 +5,6 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
 import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.dozuki.ui.SiteRowView;
 
 import java.util.ArrayList;
 

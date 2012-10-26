@@ -1,13 +1,5 @@
 package com.dozuki.ifixit.gallery.ui;
 
-import java.io.File;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentUris;
@@ -41,7 +33,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.WazaBe.HoloEverywhere.HoloAlertDialogBuilder;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -58,11 +49,19 @@ import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
-import com.dozuki.ifixit.util.APIError;
+
+import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 
 public class MediaFragment extends SherlockFragment implements
  OnItemClickListener, OnClickListener, OnItemLongClickListener, LoginListener {
@@ -774,7 +773,7 @@ public class MediaFragment extends SherlockFragment implements
 
    public static AlertDialog createHelpDialog(final Context context) {
       showingHelp = true;
-      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder
             .setTitle(context.getString(R.string.media_help_title))
             .setMessage(context.getString(R.string.media_help_messege))
@@ -815,7 +814,7 @@ public class MediaFragment extends SherlockFragment implements
       }
       msg += "?";
 
-      HoloAlertDialogBuilder builder = new HoloAlertDialogBuilder(context);
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder
             .setTitle(context.getString(R.string.confirm_delete_title))
             .setMessage(msg)

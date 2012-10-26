@@ -16,8 +16,8 @@ import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIError;
+import com.dozuki.ifixit.util.APIReceiver;
 
 public class GalleryActivity extends SherlockFragmentActivity
  implements LoginListener {

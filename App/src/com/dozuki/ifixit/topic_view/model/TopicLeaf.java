@@ -1,9 +1,9 @@
 package com.dozuki.ifixit.topic_view.model;
 
+import com.dozuki.ifixit.guide_view.model.GuideInfo;
+
 import java.io.Serializable;
 import java.util.ArrayList;
-
-import com.dozuki.ifixit.guide_view.model.GuideInfo;
 
 public class TopicLeaf implements Serializable {
    private static final long serialVersionUID = 1L;

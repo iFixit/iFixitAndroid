@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.topic_view.ui;
 
-import java.util.ArrayList;
-
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,6 +8,8 @@ import android.widget.AdapterView;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.ifixit.android.sectionheaders.Section;
+
+import java.util.ArrayList;
 
 public class TopicListAdapter extends Section {
    private Context mContext;

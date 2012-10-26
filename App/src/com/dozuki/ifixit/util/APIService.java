@@ -1,12 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import java.io.File;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.json.JSONException;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
@@ -30,11 +23,12 @@ import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
-import org.apache.http.client.ResponseHandler;
 import org.json.JSONException;
 
+import java.io.File;
 import java.io.Serializable;
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -341,19 +335,19 @@ public class APIService extends Service {
    }
 
    private static AlertDialog createErrorDialog(final Context context,
-    final Intent apiIntent, int titleRes, int messageRes,
-    int buttonRes) {
+    final Intent apiIntent, APIError error) {
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
-      builder.setTitle(context.getString(titleRes))
-             .setMessage(context.getString(messageRes))
-             .setPositiveButton(context.getString(buttonRes),
+      builder.setTitle(error.mTitle)
+             .setMessage(error.mMessage)
+             .setPositiveButton(context.getString(R.string.try_again),
               new DialogInterface.OnClickListener() {
-                public void onClick(DialogInterface dialog, int id) {
-                   // Try performing the request again.
-                   context.startService(apiIntent);
-                   dialog.dismiss();
-                }
-             });
+                 public void onClick(DialogInterface dialog, int id) {
+                    // Try performing the request again.
+                    context.startService(apiIntent);
+                    dialog.dismiss();
+                 }
+              });
+
       AlertDialog d = builder.create();
       d.setOnCancelListener(new OnCancelListener() {
          @Override

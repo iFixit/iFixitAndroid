@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.guide_view.ui;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -26,6 +24,8 @@ import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
+
+import java.util.ArrayList;
 
 public class GuideStepViewFragment extends SherlockFragment {
    private TextView mTitle;

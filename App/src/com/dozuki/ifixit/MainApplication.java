@@ -1,6 +1,5 @@
 package com.dozuki.ifixit;
 
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import android.app.Application;
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -17,6 +16,8 @@ import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
+
+import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MainApplication extends Application {
    public static final int SIZE_CUTOFF = 800;

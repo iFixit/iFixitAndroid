@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.guide_view.ui;
 
-import java.util.List;
-
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -26,12 +24,14 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.topic_view.ui.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
-import com.dozuki.ifixit.util.APIError;
+
+import java.util.List;
 
 public class GuideViewActivity extends SherlockFragmentActivity
  implements OnPageChangeListener {

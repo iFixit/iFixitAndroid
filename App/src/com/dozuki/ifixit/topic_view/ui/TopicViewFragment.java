@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.topic_view.ui;
 
-import java.net.URLEncoder;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -26,10 +24,12 @@ import com.dozuki.ifixit.guide_view.ui.WebViewFragment;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
-import com.dozuki.ifixit.util.APIError;
+
+import java.net.URLEncoder;
 
 public class TopicViewFragment extends SherlockFragment
  implements ActionBar.TabListener {

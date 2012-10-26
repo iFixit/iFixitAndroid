@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.guide_view.ui;
 
-import java.util.ArrayList;
-
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
@@ -14,6 +12,8 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
+
+import java.util.ArrayList;
 
 public class ThumbnailView extends LinearLayout {
 

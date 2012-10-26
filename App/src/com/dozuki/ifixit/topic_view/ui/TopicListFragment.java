@@ -1,9 +1,5 @@
 package com.dozuki.ifixit.topic_view.ui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-
 import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
@@ -20,6 +16,10 @@ import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
 import com.ifixit.android.sectionheaders.SectionListView;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 
 public class TopicListFragment extends SherlockFragment
  implements TopicSelectedListener, OnItemClickListener {

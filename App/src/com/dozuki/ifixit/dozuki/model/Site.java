@@ -1,9 +1,9 @@
 package com.dozuki.ifixit.dozuki.model;
 
-import java.io.Serializable;
-
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.EditDistance;
+
+import java.io.Serializable;
 
 public class Site implements Serializable {
    private static final long serialVersionUID = -2798641261277805693L;
