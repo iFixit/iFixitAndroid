@@ -3,20 +3,20 @@ package com.dozuki.ifixit.guide_view.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
-import android.widget.ProgressBar;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.WazaBe.HoloEverywhere.LayoutInflater;
+import com.WazaBe.HoloEverywhere.sherlock.SFragment;
+import com.WazaBe.HoloEverywhere.widget.ProgressBar;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.OnViewGuideListener;
 import com.dozuki.ifixit.topic_view.ui.TopicGuideListFragment;
 
-public class WebViewFragment extends SherlockFragment
+public class WebViewFragment extends SFragment
  implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;

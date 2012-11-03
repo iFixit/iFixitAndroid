@@ -4,11 +4,11 @@ import android.content.Context;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.WazaBe.HoloEverywhere.LayoutInflater;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.JSONHelper;
@@ -25,7 +25,7 @@ public class GuideStepLineView extends LinearLayout {
    public GuideStepLineView(Context context) {
       super(context);
 
-      LayoutInflater inflater = (LayoutInflater) context
+      LayoutInflater inflater = (LayoutInflater)context
        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.guide_step_row, this, true);
 

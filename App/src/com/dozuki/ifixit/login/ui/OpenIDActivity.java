@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.login.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -11,11 +10,12 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.WazaBe.HoloEverywhere.sherlock.SActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 
-public class OpenIDActivity extends Activity {
+public class OpenIDActivity extends SActivity {
    public static String LOGIN_METHOD = "LOGIN_METHOD";
 
    public static String YAHOO_LOGIN = "yahoo";

@@ -1,20 +1,20 @@
 package com.dozuki.ifixit.topic_view.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.WazaBe.HoloEverywhere.LayoutInflater;
+import com.WazaBe.HoloEverywhere.app.Activity;
+import com.WazaBe.HoloEverywhere.sherlock.SActivity;
+import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
@@ -31,7 +31,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 import java.net.URLEncoder;
 
-public class TopicViewFragment extends SherlockFragment
+public class TopicViewFragment extends SFragment
  implements ActionBar.TabListener {
    private static final int GUIDES_TAB = 0;
    private static final int MORE_INFO_TAB = 1;
@@ -127,7 +127,7 @@ public class TopicViewFragment extends SherlockFragment
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-      mActionBar = ((SherlockFragmentActivity)activity).getSupportActionBar();
+      mActionBar = ((SActivity)activity).getSupportActionBar();
    }
 
    @Override

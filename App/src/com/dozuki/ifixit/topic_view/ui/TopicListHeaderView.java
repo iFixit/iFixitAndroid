@@ -1,10 +1,10 @@
 package com.dozuki.ifixit.topic_view.ui;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
+import com.WazaBe.HoloEverywhere.LayoutInflater;
+import com.WazaBe.HoloEverywhere.widget.LinearLayout;
+import com.WazaBe.HoloEverywhere.widget.TextView;
 import com.dozuki.ifixit.R;
 
 public class TopicListHeaderView extends LinearLayout {

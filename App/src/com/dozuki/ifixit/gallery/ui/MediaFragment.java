@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.gallery.ui;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
@@ -15,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -33,7 +31,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.WazaBe.HoloEverywhere.LayoutInflater;
+import com.WazaBe.HoloEverywhere.app.Activity;
+import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -63,7 +63,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class MediaFragment extends SherlockFragment implements
+public class MediaFragment extends SFragment implements
  OnItemClickListener, OnClickListener, OnItemLongClickListener, LoginListener {
 
    public TextView noImagesText;

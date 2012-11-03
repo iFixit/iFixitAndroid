@@ -8,7 +8,6 @@ import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -17,7 +16,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import com.WazaBe.HoloEverywhere.LayoutInflater;
+import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
@@ -27,7 +27,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 import java.util.ArrayList;
 
-public class GuideStepViewFragment extends SherlockFragment {
+public class GuideStepViewFragment extends SFragment {
    private TextView mTitle;
    private ThumbnailView mThumbs;
    private ImageView mMainImage;

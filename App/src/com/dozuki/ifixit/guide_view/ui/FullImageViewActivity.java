@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.guide_view.ui;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -9,6 +8,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
+import com.WazaBe.HoloEverywhere.sherlock.SActivity;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -17,7 +17,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
-public class FullImageViewActivity extends Activity {
+public class FullImageViewActivity extends SActivity {
    public static final String IMAGE_URL = "IMAGE_URL";
    public static final String LOCAL_URL = "LOCAL_URL";
 

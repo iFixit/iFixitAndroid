@@ -5,7 +5,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.WazaBe.HoloEverywhere.sherlock.SActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -15,7 +15,7 @@ import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class TopicViewActivity extends SherlockFragmentActivity {
+public class TopicViewActivity extends SActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;

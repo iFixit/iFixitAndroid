@@ -19,6 +19,15 @@ import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 
+/**
+ * TODO: This should be changed to extend SActivity. I switched it over but
+ * found this error on 2.2:
+ * 11-02 18:16:23.017: E/AndroidRuntime(413): java.lang.NoSuchMethodError:
+ *    android.support.v4.app._HoloActivity.invalidateOptionsMenu
+ *    
+ * TODO: And this doesn't work for 2.2 anyway because of a ClassCastException
+ * while inflating a layout.
+ */
 public class GalleryActivity extends SherlockFragmentActivity
  implements LoginListener {
 
