@@ -1,17 +1,17 @@
 package com.dozuki.ifixit.dozuki.ui;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
+import com.WazaBe.HoloEverywhere.LayoutInflater;
+import com.WazaBe.HoloEverywhere.app.Activity;
+import com.WazaBe.HoloEverywhere.sherlock.SDialogFragment;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.R;
 
-public class SiteListDialogFragment extends DialogFragment {
+public class SiteListDialogFragment extends SDialogFragment {
    private SiteListActivity mSiteListActivity;
    private ListView mSiteListView;
    private SearchView mSearchView;

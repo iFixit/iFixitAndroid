@@ -6,8 +6,6 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
@@ -17,7 +15,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.WazaBe.HoloEverywhere.app.DialogFragment;
+import com.WazaBe.HoloEverywhere.app.Fragment;
+import com.WazaBe.HoloEverywhere.sherlock.SActivity;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -30,7 +30,7 @@ import com.dozuki.ifixit.util.APIService;
 
 import java.util.ArrayList;
 
-public class SiteListActivity extends SherlockFragmentActivity
+public class SiteListActivity extends SActivity
  implements SearchView.OnQueryTextListener {
    private static final String SITE_LIST = "SITE_LIST";
 
@@ -82,7 +82,7 @@ public class SiteListActivity extends SherlockFragmentActivity
              * update the list.
              */
             if (mSiteList != null) {
-               showSiteListDialog(mSiteList);
+               showSiteListDialog();
             }
          }
       });
@@ -230,16 +230,12 @@ public class SiteListActivity extends SherlockFragmentActivity
       startService(APIService.getSitesIntent(this));
    }
 
-   private void showSiteListDialog(ArrayList<Site> sites) {
+   private void showSiteListDialog() {
        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-       Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-       if (prev != null) {
-          ft.remove(prev);
-       }
        ft.addToBackStack(null);
 
        // Create and show the dialog.
-       DialogFragment siteList = SiteListDialogFragment.newInstance();
-       siteList.show(ft, "dialog");
+       DialogFragment siteListFragment = SiteListDialogFragment.newInstance();
+       siteListFragment.show(ft);
    }
 }
