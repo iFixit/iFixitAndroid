@@ -156,9 +156,7 @@ public class MediaFragment extends SherlockFragment implements
       mContext = con;
    }
 
-   public MediaFragment() {
-
-   }
+   public MediaFragment() {}
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
