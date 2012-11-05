@@ -59,11 +59,18 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       public void onFailure(APIError error, Intent intent) {
          enable(true);
+         
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
          }
+
          mLoadingSpinner.setVisibility(View.GONE);
+
+         // Hide input fields
+         mLoginId.setVisibility(View.VISIBLE);
+         mPassword.setVisibility(View.VISIBLE);
+
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
       }
@@ -117,6 +124,10 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       String password = mPassword.getText().toString();
 
       if (login.length() > 0 && password.length() > 0 ) {
+         // Hide input fields
+         mLoginId.setVisibility(View.GONE);
+         mPassword.setVisibility(View.GONE);
+         
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
          mCurIntent = APIService.getLoginIntent(getActivity(), login, password);
@@ -267,6 +278,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       AlertDialog dialog = builder.create();
       dialog.setCancelable(false);
+      dialog.setCanceledOnTouchOutside(true);
 
       return dialog;
    }

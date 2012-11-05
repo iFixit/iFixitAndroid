@@ -64,6 +64,12 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
          }
          mLoadingSpinner.setVisibility(View.GONE);
+       
+         mLoginId.setVisibility(View.VISIBLE);
+         mPassword.setVisibility(View.VISIBLE);
+         mConfirmPassword.setVisibility(View.VISIBLE);
+         mName.setVisibility(View.VISIBLE);
+
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
       }
@@ -155,7 +161,12 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
                login.length() > 0 &&
                name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
                enable(false);
-               mErrorText.setVisibility(View.INVISIBLE);
+               mLoginId.setVisibility(View.GONE);
+               mPassword.setVisibility(View.GONE);
+               mConfirmPassword.setVisibility(View.GONE);
+               mName.setVisibility(View.GONE);
+
+               mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
                mCurIntent = APIService.getRegisterIntent(getActivity(), login,
                 password, name);
