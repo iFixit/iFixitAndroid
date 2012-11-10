@@ -5,13 +5,14 @@ import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.JSONHelper;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.TextView;
 
 public class GuideStepLineView extends LinearLayout {
    private static final int LINE_INDENT = 50;

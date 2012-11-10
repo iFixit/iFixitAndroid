@@ -9,8 +9,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.GuideInfo;
@@ -19,7 +17,10 @@ import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class TopicGuideListFragment extends SFragment {
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Fragment;
+
+public class TopicGuideListFragment extends Fragment {
    private static final int MAX_LOADING_IMAGES = 20;
    private static final int MAX_STORED_IMAGES = 30;
    private static final int MAX_WRITING_IMAGES = 20;

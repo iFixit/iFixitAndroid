@@ -9,14 +9,15 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.sherlock.SFragment;
-import com.WazaBe.HoloEverywhere.widget.ProgressBar;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.OnViewGuideListener;
 import com.dozuki.ifixit.topic_view.ui.TopicGuideListFragment;
 
-public class WebViewFragment extends SFragment
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.ProgressBar;
+
+public class WebViewFragment extends Fragment
  implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;

@@ -10,12 +10,13 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.WazaBe.HoloEverywhere.sherlock.SActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 
-public class OpenIDActivity extends SActivity {
+import org.holoeverywhere.app.Activity;
+
+public class OpenIDActivity extends Activity {
    public static String LOGIN_METHOD = "LOGIN_METHOD";
 
    public static String YAHOO_LOGIN = "yahoo";

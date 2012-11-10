@@ -7,17 +7,18 @@ import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class GuideIntroViewFragment extends SFragment {
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.TextView;
+
+public class GuideIntroViewFragment extends Fragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
 
    private TextView mTitle;

@@ -8,7 +8,6 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
 
-import com.WazaBe.HoloEverywhere.sherlock.SActivity;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -17,7 +16,9 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
-public class FullImageViewActivity extends SActivity {
+import org.holoeverywhere.app.Activity;
+
+public class FullImageViewActivity extends Activity {
    public static final String IMAGE_URL = "IMAGE_URL";
    public static final String LOCAL_URL = "LOCAL_URL";
 

@@ -3,16 +3,11 @@ package com.dozuki.ifixit.topic_view.ui;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.app.Activity;
-import com.WazaBe.HoloEverywhere.sherlock.SActivity;
-import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
 import com.dozuki.ifixit.MainApplication;
@@ -29,9 +24,13 @@ import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
 
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
+
 import java.net.URLEncoder;
 
-public class TopicViewFragment extends SFragment
+public class TopicViewFragment extends Fragment
  implements ActionBar.TabListener {
    private static final int GUIDES_TAB = 0;
    private static final int MORE_INFO_TAB = 1;
@@ -127,7 +126,7 @@ public class TopicViewFragment extends SFragment
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-      mActionBar = ((SActivity)activity).getSupportActionBar();
+      mActionBar = ((Activity)activity).getSupportActionBar();
    }
 
    @Override

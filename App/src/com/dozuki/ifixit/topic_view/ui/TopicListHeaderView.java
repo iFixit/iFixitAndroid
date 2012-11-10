@@ -2,10 +2,11 @@ package com.dozuki.ifixit.topic_view.ui;
 
 import android.content.Context;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.widget.LinearLayout;
-import com.WazaBe.HoloEverywhere.widget.TextView;
 import com.dozuki.ifixit.R;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.TextView;
 
 public class TopicListHeaderView extends LinearLayout {
    private TextView mTopicName;

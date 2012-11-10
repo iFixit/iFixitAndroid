@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-   <style name="Theme.iFixit" parent="Holo.Theme.Sherlock.Light.DarkActionBar">
+   <style name="Theme.iFixit" parent="Holo.Theme.Light.DarkActionBar">
         <!-- Action Bar Logo -->
         <item name="logo">@drawable/logo_ifixit</item>
         <item name="android:logo">@drawable/logo_ifixit</item>
@@ -21,7 +21,7 @@
         <item name="topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
     </style>
     
-    <style name="Theme.Dozuki" parent="Holo.Theme.Sherlock.Light">
+    <style name="Theme.Dozuki" parent="Holo.Theme.Light">
         <!-- Action Bar Logo -->
         <item name="logo">@drawable/logo_dozuki</item>
         <item name="android:logo">@drawable/logo_dozuki</item>

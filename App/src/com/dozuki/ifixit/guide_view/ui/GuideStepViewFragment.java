@@ -1,23 +1,19 @@
 package com.dozuki.ifixit.guide_view.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
@@ -25,9 +21,14 @@ import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.ListView;
+import org.holoeverywhere.widget.TextView;
+
 import java.util.ArrayList;
 
-public class GuideStepViewFragment extends SFragment {
+public class GuideStepViewFragment extends Fragment {
    private TextView mTitle;
    private ThumbnailView mThumbs;
    private ImageView mMainImage;
@@ -108,7 +109,7 @@ public class GuideStepViewFragment extends SFragment {
    }
 
    public void fitImagesToSpace() {
-      Activity context = getActivity();
+      FragmentActivity context = getActivity();
       Resources resources = context.getResources();
       DisplayMetrics metrics = new DisplayMetrics();
       context.getWindowManager().getDefaultDisplay().getMetrics(metrics);

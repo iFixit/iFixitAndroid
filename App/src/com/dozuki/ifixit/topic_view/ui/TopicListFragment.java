@@ -7,9 +7,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.WazaBe.HoloEverywhere.LayoutInflater;
-import com.WazaBe.HoloEverywhere.app.Activity;
-import com.WazaBe.HoloEverywhere.sherlock.SFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
@@ -17,11 +14,15 @@ import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
 import com.ifixit.android.sectionheaders.SectionListView;
 
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class TopicListFragment extends SFragment
+public class TopicListFragment extends Fragment
  implements TopicSelectedListener, OnItemClickListener {
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
 

@@ -61,6 +61,7 @@
       </activity>
       <activity android:name=".guide_view.ui.FullImageViewActivity"
             android:theme="@android:style/Theme.Holo.NoActionBar">
+            <!-- TODO: This theme doesn't work - ActionBarSherlock complains. -->
       </activity>
    </application>
 </manifest>

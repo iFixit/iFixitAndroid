@@ -12,12 +12,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ListView;
 
-import com.WazaBe.HoloEverywhere.app.DialogFragment;
-import com.WazaBe.HoloEverywhere.app.Fragment;
-import com.WazaBe.HoloEverywhere.sherlock.SActivity;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -28,9 +23,14 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.ListView;
+
 import java.util.ArrayList;
 
-public class SiteListActivity extends SActivity
+public class SiteListActivity extends Activity
  implements SearchView.OnQueryTextListener {
    private static final String SITE_LIST = "SITE_LIST";
 

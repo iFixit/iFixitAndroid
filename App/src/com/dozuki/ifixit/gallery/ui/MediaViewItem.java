@@ -1,16 +1,17 @@
 package com.dozuki.ifixit.gallery.ui;
 
-import android.app.Activity;
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.ifixit.android.imagemanager.ImageManager;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.ProgressBar;
 
 public class MediaViewItem extends RelativeLayout {
    public UserImageInfo mListRef;
@@ -36,7 +37,7 @@ public class MediaViewItem extends RelativeLayout {
       mSelectImage = (RelativeLayout)findViewById(com.dozuki.ifixit.R.id.selected_image);
       mSelectImage.setVisibility(View.INVISIBLE);
       mLoadingBar = (ProgressBar)findViewById(com.dozuki.ifixit.R.id.gallery_cell_progress_bar);
-      mLoadingBar.setVisibility(View.INVISIBLE);
+      mLoadingBar.setVisibility(View.GONE);
    }
 
    public void setImageItem(String image, Context context, boolean fade) {
@@ -53,7 +54,7 @@ public class MediaViewItem extends RelativeLayout {
          alpha.setFillAfter(true); // Persist after the animation ends.
          mImageview.startAnimation(alpha);
       } else {
-         mLoadingBar.setVisibility(View.INVISIBLE);
+         mLoadingBar.setVisibility(View.GONE);
          mImageview.clearAnimation();
       }
    }
