@@ -40,6 +40,7 @@ public class SiteListDialogFragment extends DialogFragment {
       View view = inflater.inflate(R.layout.site_dialog_list, container, false);
 
       mSiteListView = (ListView)view.findViewById(R.id.siteListView);
+      mSiteListView.setEmptyView(view.findViewById(R.id.emptyView));
       mSearchView = (SearchView)view.findViewById(R.id.dozuki_search_view);
 
       mSiteListActivity.setSiteListViews(mSiteListView, mSearchView);
