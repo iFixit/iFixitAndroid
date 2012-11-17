@@ -62,7 +62,17 @@ public class JSONHelper {
       site.mDescription = jSite.getString("description");
       site.mAnswers = jSite.getInt("answers") != 0;
 
+      setAuthentication(site, jSite.getJSONObject("authentication"));
+
       return site;
+   }
+
+   private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
+      site.mStandardAuth = jAuth.has("standard") ? jAuth.getBoolean("standard") : false;
+
+      site.mSsoUrl = jAuth.has("sso") ? jAuth.getString("sso") : null;
+
+      site.mPublicRegistration = jAuth.getBoolean("public-registration");
    }
 
    /**
