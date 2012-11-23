@@ -16,6 +16,9 @@ import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.guide_view.model.GuideTool;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
+import com.dozuki.ifixit.guide_view.model.StepVideo;
+import com.dozuki.ifixit.guide_view.model.VideoEmbed;
+import com.dozuki.ifixit.guide_view.model.VideoEncoding;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
@@ -128,16 +131,27 @@ public class JSONHelper {
 
       try {
          JSONObject jMedia = jStep.getJSONObject("media");
-         JSONArray jImages = jMedia.getJSONArray("image");
-
-         for (int i = 0; i < jImages.length(); i++) {
-            step.addImage(parseImage(jImages.getJSONObject(i)));
+         
+         if (jMedia.has("image")) {
+            JSONArray jImages = jMedia.getJSONArray("image");
+            for (int i = 0; i < jImages.length(); i++)
+               step.addImage(parseImage(jImages.getJSONObject(i)));
          }
+         if (jMedia.has("video")) {
+            JSONObject jVideo = jMedia.getJSONObject("video");
+            step.addVideo(parseVideo(jVideo));
+         }
+         if (jMedia.has("embed")) {
+            JSONObject jEmbed = jMedia.getJSONObject("embed");
+            step.addEmbed(parseEmbed(jEmbed));
+         }
+
       } catch (JSONException e) {
          StepImage image = new StepImage(0);
          image.setOrderby(1);
          image.setText("");
          step.addImage(image);
+         e.printStackTrace();
       }
 
       for (int i = 0; i < jLines.length(); i++) {
@@ -147,7 +161,12 @@ public class JSONHelper {
       return step;
    }
 
-   private static StepImage parseImage(JSONObject jImage) throws JSONException {
+   private static VideoEmbed parseEmbed(JSONObject jEmbed) throws JSONException {
+      return new VideoEmbed(jEmbed.getInt("width"), jEmbed.getInt("height"),
+         jEmbed.getString("type"), jEmbed.getString("url"));
+   }
+
+private static StepImage parseImage(JSONObject jImage) throws JSONException {
       StepImage image = new StepImage(jImage.getInt("imageid"));
 
       // last image doesn't have orderby so this is necessary. API bug?
@@ -165,6 +184,23 @@ public class JSONHelper {
    private static StepLine parseLine(JSONObject jLine) throws JSONException {
       return new StepLine(jLine.getString("bullet"), jLine.getInt("level"),
        jLine.getString("text"));
+   }
+   
+   private static StepVideo parseVideo(JSONObject jVideo) throws JSONException {
+      StepVideo video = new StepVideo();
+      try {
+         JSONArray jEncodings = jVideo.getJSONArray("encoding");
+         for (int i = 0; i < jEncodings.length(); i++) {
+            video.addEncoding(parseVideoEncoding(jEncodings.getJSONObject(i)));
+         }
+      } catch (JSONException e) {
+         // image.setOrderby(1);
+         e.printStackTrace();
+      }
+
+      video.setThumbnail(jVideo.getString("thumbnail"));
+
+      return video;
    }
 
    /**
@@ -364,5 +400,12 @@ public class JSONHelper {
       }
 
       return spantext;
+   }
+   
+   private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
+      VideoEncoding encoding = new VideoEncoding(jVideoEncoding.getInt("width"),
+         jVideoEncoding.getInt("height"), jVideoEncoding.getString("url"),
+         jVideoEncoding.getString("format"));
+      return encoding;
    }
 }

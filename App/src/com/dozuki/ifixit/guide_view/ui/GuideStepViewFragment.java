@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -84,11 +85,15 @@ public class GuideStepViewFragment extends SherlockFragment {
                return;
             }
 
-            Intent intent = new Intent(getActivity(),
-             FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-
-            startActivity(intent);
+            if (!mStep.hasVideo() && !mStep.hasEmbed()) {
+               Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+               intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
+               startActivity(intent);
+            } else {
+               Intent i = new Intent(getActivity(), VideoViewActivity.class);
+               i.putExtra(VideoViewActivity.VIDEO_URL, url);
+               startActivity(i);
+            }
          }
       });
 
@@ -206,10 +211,20 @@ public class GuideStepViewFragment extends SherlockFragment {
       mLineList.setAdapter(mTextAdapter);
 
       mThumbs.setImageSizes(mImageSizes);
-      mThumbs.setThumbs(mStep.getImages(), mImageManager, getActivity());
 
-      // Might be a problem if there are no images for a step...
-      mThumbs.setCurrentThumb(mStep.getImages().get(0).getText());
+      if (mStep.hasVideo()) {
+         mImageManager.displayImage(mStep.getVideo().getThumbnail() + mImageSizes.getMain(),
+            getActivity(), mMainImage);
+         mMainImage.setTag(mStep.getVideo().getEncodings().get(0).getURL());
+      } else
+         if (mStep.hasEmbed()) {
+            mMainImage.setTag(mStep.getEmded().getURL());
+         } else
+            if (mStep.getImages().size() > 0) {
+               // Might be a problem if there are no images for a step...
+               mThumbs.setThumbs(mStep.getImages(), mImageManager, getActivity());
+               mThumbs.setCurrentThumb(mStep.getImages().get(0).getText());
+            }
    }
 
    public void setImageManager(ImageManager im) {
