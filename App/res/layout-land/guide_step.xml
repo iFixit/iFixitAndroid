@@ -21,6 +21,15 @@
          android:background="@color/image_border"
          android:padding="@dimen/guide_image_padding"
          android:contentDescription="@string/thumbnail_desc" />
+      
+            <WebView
+         android:id="@+id/main_web_view"
+         android:layout_width="@dimen/guide_image_width"
+         android:layout_height="@dimen/guide_image_height"
+         android:layout_marginRight="@dimen/guide_image_spacing_right"
+         android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+         android:background="@color/image_border"
+         android:padding="@dimen/guide_image_padding"/>
 
       <com.dozuki.ifixit.guide_view.ui.ThumbnailView
          android:id="@+id/thumbnails"
