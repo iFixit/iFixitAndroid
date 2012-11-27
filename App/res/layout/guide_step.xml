@@ -12,14 +12,21 @@
       android:layout_height="wrap_content"
       android:layout_marginBottom="@dimen/section_seperator">
       
-       <ProgressBar
+      <RelativeLayout
          android:id="@+id/progress_bar_guide_step"
          android:layout_width="@dimen/guide_image_width"
          android:layout_height="@dimen/guide_image_height"
          android:layout_marginRight="@dimen/guide_image_spacing_right"
          android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
          android:background="@color/image_border"
-         android:padding="@dimen/guide_image_padding" />
+         android:padding="@dimen/guide_image_padding">
+      
+         <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+        </RelativeLayout>
 
       <ImageView
          android:id="@+id/main_image"
