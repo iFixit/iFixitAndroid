@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
@@ -97,6 +98,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       mLoginId = (EditText)view.findViewById(R.id.edit_username);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
+      mPassword.setTypeface(Typeface.DEFAULT);
       
       mLogin = (Button)view.findViewById(R.id.signin_button);
       mRegister = (Button)view.findViewById(R.id.register_button);

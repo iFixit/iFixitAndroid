@@ -6,8 +6,10 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -41,6 +43,7 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
    private EditText mConfirmPassword;
    private EditText mName;
    private TextView mErrorText;
+   private TextView mTermsAgreeText;
    private CheckBox mTermsAgreeCheckBox;
 
    private ProgressBar mLoadingSpinner;
@@ -92,8 +95,13 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
 
       mLoginId = (EditText)view.findViewById(R.id.edit_login_id);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
-
       mConfirmPassword = (EditText)view.findViewById(R.id.edit_confirm_password);
+      
+      // Password fields default to a courier typeface (very annoying) and 
+      // setting the font-family in xml does nothing, so we have to set it 
+      // explicitly here
+      mPassword.setTypeface(Typeface.DEFAULT);
+      mConfirmPassword.setTypeface(Typeface.DEFAULT);
       mName = (EditText)view.findViewById(R.id.edit_login_username);
     
       mRegister = (Button)view.findViewById(R.id.register_button);
@@ -103,7 +111,10 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
       mErrorText.setVisibility(View.GONE);
 
       mTermsAgreeCheckBox = (CheckBox)view.findViewById(R.id.login_agreement_terms_checkbox);
-
+      mTermsAgreeText = (TextView)view.findViewById(R.id.login_agreement_terms_textview);
+      mTermsAgreeText.setText(R.string.register_agreement);
+      mTermsAgreeText.setMovementMethod(LinkMovementMethod.getInstance());
+      
       mLoadingSpinner = (ProgressBar)view.findViewById(R.id.login_loading_bar);
       mLoadingSpinner.setVisibility(View.GONE);
 
@@ -157,9 +168,8 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
             String password = mPassword.getText().toString();
             String confirmPassword = mConfirmPassword.getText().toString();
         
-            if (password.equals(confirmPassword) &&
-               login.length() > 0 &&
-               name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
+            if (password.equals(confirmPassword) && login.length() > 0 &&
+             name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
                enable(false);
                mLoginId.setVisibility(View.GONE);
                mPassword.setVisibility(View.GONE);
@@ -207,9 +217,7 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
                .commit();
                
               break;
-
-          }
-
+       }
    }
 
    @Override

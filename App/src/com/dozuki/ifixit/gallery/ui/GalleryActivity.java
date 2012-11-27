@@ -92,7 +92,7 @@ public class GalleryActivity extends SherlockFragmentActivity
       FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
       
       transaction.add(editNameDialog, MainApplication.LOGIN_FRAGMENT);
-      
+      transaction.setTransition(android.R.anim.fade_in);
       // Commit the transaction
       transaction.commit();
    }
