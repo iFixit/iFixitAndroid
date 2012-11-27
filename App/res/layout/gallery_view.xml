@@ -1,59 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="match_parent"
-   android:layout_height="match_parent"
-   android:background="@color/white"
-   android:orientation="vertical" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
 
-   <GridView
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/gridview"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_above="@+id/button_holder"
-      android:alwaysDrawnWithCache="true"
-      android:clipChildren="true"
-      android:columnWidth="150dp"
-      android:drawSelectorOnTop="false"
-      android:gravity="center_horizontal"
-      android:horizontalSpacing="4dp"
-      android:numColumns="auto_fit"
-      android:orientation="vertical"
-      android:padding="4dp"
-      android:scrollingCache="true"
-      android:smoothScrollbar="true"
-      android:stretchMode="columnWidth"
-      android:verticalSpacing="4dp" >
-   </GridView>
+    <GridView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_holder"
+        android:alwaysDrawnWithCache="true"
+        android:clipChildren="true"
+        android:columnWidth="150dp"
+        android:drawSelectorOnTop="false"
+        android:gravity="center_horizontal"
+        android:horizontalSpacing="4dp"
+        android:numColumns="auto_fit"
+        android:orientation="vertical"
+        android:padding="4dp"
+        android:scrollingCache="true"
+        android:smoothScrollbar="true"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="4dp" >
+    </GridView>
 
-   <RelativeLayout
-      android:id="@+id/button_holder"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/gallery_bottom_bar_height"
-      android:layout_alignParentBottom="true"
-      android:background="@color/dark"
-      android:clickable="true"
-      android:onClick="onClick" >
+    <RelativeLayout
+        android:id="@+id/button_holder"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gallery_bottom_bar_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/dark"
+        android:clickable="true"
+        android:onClick="onClick" >
 
-      <TextView
-         android:id="@+id/login_text"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentLeft="true"
-         android:layout_centerVertical="true"
-         android:layout_marginLeft="@dimen/gallery_login_text_padding"
-         android:text="@string/welcome"
-         android:textColor="@color/white"
-         android:textStyle="bold" />
-   </RelativeLayout>
+        <TextView
+            android:id="@+id/login_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="@dimen/gallery_login_text_padding"
+            android:text="@string/welcome"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </RelativeLayout>
 
-   <TextView
-      android:id="@+id/no_images_text"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_alignParentTop="true"
-      android:layout_centerHorizontal="true"
-      android:layout_marginTop="40dp"
-      android:visibility="gone"
-      android:text="@string/no_images_text"/>
+    <TextView
+        android:id="@+id/no_images_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="40dp"
+        android:text="@string/no_images_text"
+        android:visibility="gone" />
+
 </RelativeLayout>

@@ -30,6 +30,9 @@ public class MainApplication extends Application {
    private static final String SESSION_KEY = "SESSION_KEY";
    private static final String USERNAME_KEY = "USERNAME_KEY";
 
+   public static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
+   public static final String REGISTER_FRAGMENT = "REGISTER_FRAGMENT";
+
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
    private User mUser;

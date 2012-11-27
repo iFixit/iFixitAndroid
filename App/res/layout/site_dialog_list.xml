@@ -2,20 +2,22 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical" >
+
     <com.actionbarsherlock.widget.SearchView
         android:id="@+id/dozuki_search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:title="Search Sites"
+        android:layout_marginTop="8dp"
         android:icon="@android:drawable/ic_menu_search"
-        android:imeOptions="actionSearch" />
+        android:imeOptions="actionSearch"
+        android:title="Search Sites" />
 
     <ListView
         android:id="@+id/siteListView"
+        style="?attr/listViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        style="?attr/listViewStyle" />
+        android:layout_height="match_parent" />
+
 </LinearLayout>

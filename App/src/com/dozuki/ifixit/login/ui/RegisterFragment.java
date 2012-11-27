@@ -9,14 +9,15 @@ import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -31,18 +32,19 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 
-public class LoginFragment extends SherlockDialogFragment implements OnClickListener {
-   private static final int OPEN_ID_RESULT_CODE = 4;
-   private static final String LOGIN_STATE = "LOGIN_STATE";
+public class RegisterFragment extends SherlockDialogFragment implements OnClickListener {
+   private static final String REGISTER_STATE = "REGISTER_STATE";
 
-   private Button mLogin;
    private Button mRegister;
-   private ImageButton mGoogleLogin;
-   private ImageButton mYahooLogin;
+   private Button mCancelRegister;
 
    private EditText mLoginId;
    private EditText mPassword;
+   private EditText mConfirmPassword;
+   private EditText mName;
    private TextView mErrorText;
+   private TextView mTermsAgreeText;
+   private CheckBox mTermsAgreeCheckBox;
 
    private ProgressBar mLoadingSpinner;
    private Intent mCurIntent;
@@ -60,17 +62,16 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       public void onFailure(APIError error, Intent intent) {
          enable(true);
-         
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
          }
-
          mLoadingSpinner.setVisibility(View.GONE);
-
-         // Hide input fields
+       
          mLoginId.setVisibility(View.VISIBLE);
          mPassword.setVisibility(View.VISIBLE);
+         mConfirmPassword.setVisibility(View.VISIBLE);
+         mName.setVisibility(View.VISIBLE);
 
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
@@ -80,11 +81,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    /**
     * Required for restoring fragments
     */
-   public LoginFragment() {}
-   
-   public static LoginFragment newInstance() {
-      return new LoginFragment();
-   }
+   public RegisterFragment() {}
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -94,57 +91,38 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.login_fragment, container, false);
+      View view = inflater.inflate(R.layout.register_fragment, container, false);
 
-      mLoginId = (EditText)view.findViewById(R.id.edit_username);
+      mLoginId = (EditText)view.findViewById(R.id.edit_login_id);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
-      mPassword.setTypeface(Typeface.DEFAULT);
+      mConfirmPassword = (EditText)view.findViewById(R.id.edit_confirm_password);
       
-      mLogin = (Button)view.findViewById(R.id.signin_button);
+      // Password fields default to a courier typeface (very annoying) and 
+      // setting the font-family in xml does nothing, so we have to set it 
+      // explicitly here
+      mPassword.setTypeface(Typeface.DEFAULT);
+      mConfirmPassword.setTypeface(Typeface.DEFAULT);
+      mName = (EditText)view.findViewById(R.id.edit_login_username);
+    
       mRegister = (Button)view.findViewById(R.id.register_button);
-      mGoogleLogin = (ImageButton)view.findViewById(R.id.use_google_login_button);
-      mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
+      mCancelRegister = (Button)view.findViewById(R.id.cancel_register_button);
 
       mErrorText = (TextView)view.findViewById(R.id.login_error_text);
       mErrorText.setVisibility(View.GONE);
 
+      mTermsAgreeCheckBox = (CheckBox)view.findViewById(R.id.login_agreement_terms_checkbox);
+      mTermsAgreeText = (TextView)view.findViewById(R.id.login_agreement_terms_textview);
+      mTermsAgreeText.setText(R.string.register_agreement);
+      mTermsAgreeText.setMovementMethod(LinkMovementMethod.getInstance());
+      
       mLoadingSpinner = (ProgressBar)view.findViewById(R.id.login_loading_bar);
       mLoadingSpinner.setVisibility(View.GONE);
 
-      mLogin.setOnClickListener(this);  
       mRegister.setOnClickListener(this);
-      mGoogleLogin.setOnClickListener(this);
-      mYahooLogin.setOnClickListener(this);
-      
-      getDialog().setTitle(R.string.login_dialog_title);
+      mCancelRegister.setOnClickListener(this);
+      getDialog().setTitle(R.string.register_dialog_title);
       
       return view;
-   }
-
-   private void login() {
-      String login = mLoginId.getText().toString();
-      String password = mPassword.getText().toString();
-
-      if (login.length() > 0 && password.length() > 0 ) {
-         // Hide input fields
-         mLoginId.setVisibility(View.GONE);
-         mPassword.setVisibility(View.GONE);
-         
-         mLoadingSpinner.setVisibility(View.VISIBLE);
-         enable(false);
-         mCurIntent = APIService.getLoginIntent(getActivity(), login, password);
-         getActivity().startService(mCurIntent);
-      } else {
-         if (login.length() < 1) {
-            mLoginId.requestFocus();
-            showKeyboard();
-         } else {
-            mPassword.requestFocus();
-            showKeyboard();
-         }
-         mErrorText.setText(R.string.empty_field_error);
-         mErrorText.setVisibility(View.VISIBLE);
-      }
    }
 
    private void showKeyboard() {
@@ -158,62 +136,88 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    private void enable(boolean enabled) {
       mLoginId.setEnabled(enabled);
       mPassword.setEnabled(enabled);
-      mLogin.setEnabled(enabled);
+      mConfirmPassword.setEnabled(enabled);
       mRegister.setEnabled(enabled);
-      mGoogleLogin.setEnabled(enabled);
-      mYahooLogin.setEnabled(enabled);
+      mCancelRegister.setEnabled(enabled);
+      mName.setEnabled(enabled);
    }
 
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
-      outState.putSerializable(LOGIN_STATE, mReadyForRegisterState);
+      outState.putSerializable(REGISTER_STATE, mReadyForRegisterState);
    }
 
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
+
+   }
+
+   public static RegisterFragment newInstance() {
+      return new RegisterFragment();
    }
 
    @Override
    public void onClick(View v) {
-      Intent intent;
       switch (v.getId()) {
-          case R.id.use_google_login_button:
-             intent = new Intent(getActivity(), OpenIDActivity.class);
-             intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.GOOGLE_LOGIN);
-             startActivityForResult(intent, OPEN_ID_RESULT_CODE);
-             break;
-    
-          case R.id.use_yahoo_login_button:
-             intent = new Intent(getActivity(), OpenIDActivity.class);
-             intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.YAHOO_LOGIN);
-             startActivityForResult(intent, OPEN_ID_RESULT_CODE);
-             break;
-    
-          case R.id.register_button:
-             FragmentManager fragmentManager = getFragmentManager();
-           
-             fragmentManager.beginTransaction()
-              .add(new RegisterFragment(), MainApplication.REGISTER_FRAGMENT)
-              .remove(fragmentManager.findFragmentByTag(
-                      MainApplication.LOGIN_FRAGMENT))
-              .addToBackStack(MainApplication.LOGIN_FRAGMENT)
-              .setTransition(android.R.anim.slide_in_left)
-              .commit();
-              
-             break;
-             
-          case R.id.signin_button:
-             InputMethodManager in = (InputMethodManager)getActivity()
-              .getSystemService(Context.INPUT_METHOD_SERVICE);
+         case R.id.register_button:
+            String login = mLoginId.getText().toString();
+            String name = mName.getText().toString();
+            String password = mPassword.getText().toString();
+            String confirmPassword = mConfirmPassword.getText().toString();
+        
+            if (password.equals(confirmPassword) && login.length() > 0 &&
+             name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
+               enable(false);
+               mLoginId.setVisibility(View.GONE);
+               mPassword.setVisibility(View.GONE);
+               mConfirmPassword.setVisibility(View.GONE);
+               mName.setVisibility(View.GONE);
 
-             in.hideSoftInputFromWindow(mLoginId.getApplicationWindowToken(),
-              InputMethodManager.HIDE_NOT_ALWAYS);
-             login();
-             break;
-      }
+               mErrorText.setVisibility(View.GONE);
+               mLoadingSpinner.setVisibility(View.VISIBLE);
+               mCurIntent = APIService.getRegisterIntent(getActivity(), login,
+                password, name);
+               getActivity().startService(mCurIntent);
+            } else {
+               if (login.length() <= 0) {
+                  mErrorText.setText(R.string.empty_field_error);
+                  mLoginId.requestFocus();
+                  showKeyboard();
+               } else if (password.length() <= 0) {
+                  mErrorText.setText(R.string.empty_field_error);
+                  mPassword.requestFocus();
+                  showKeyboard();
+               } else if (name.length() <= 0) {
+                  mErrorText.setText(R.string.empty_field_error);
+                  mName.requestFocus();
+                  showKeyboard();
+               } else if (!password.equals(confirmPassword)) {
+                  mErrorText.setText(R.string.passwords_do_not_match_error);
+               } else if (!mTermsAgreeCheckBox.isChecked()) {
+                  mErrorText.setText(R.string.terms_unchecked_error);
+                  mConfirmPassword.requestFocus();
+                  showKeyboard();
+               }
+               mErrorText.setVisibility(View.VISIBLE);
+            }     
+            break;
+
+          case R.id.cancel_register_button:
+              FragmentManager fragmentManager = getFragmentManager();
+              
+              fragmentManager.beginTransaction()
+               .add(new LoginFragment(), MainApplication.LOGIN_FRAGMENT)
+               .remove(fragmentManager.findFragmentByTag(
+                       MainApplication.REGISTER_FRAGMENT))
+               .addToBackStack(MainApplication.REGISTER_FRAGMENT)
+               .setTransition(android.R.anim.slide_out_right)
+               .commit();
+               
+              break;
+       }
    }
 
    @Override
@@ -232,7 +236,8 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       super.onResume();
 
       IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.LOGIN.mAction);
+
+      filter.addAction(APIEndpoint.REGISTER.mAction);
       getActivity().registerReceiver(mApiReceiver, filter);
    }
 
@@ -250,11 +255,8 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
 
    public static AlertDialog getLogoutDialog(final Context context) {
-      return createLogoutDialog(context, 
-              R.string.logout_title,    // Title Text
-              R.string.logout_messege,  // Message Text
-              R.string.logout_confirm,  // Confirm Button Text
-              R.string.logout_cancel);  // Cancel Button Text
+      return createLogoutDialog(context, R.string.logout_title,
+       R.string.logout_messege, R.string.logout_confirm, R.string.logout_cancel);
    }
 
    private static AlertDialog createLogoutDialog(final Context context,
@@ -280,7 +282,6 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
       AlertDialog dialog = builder.create();
       dialog.setCancelable(false);
-      dialog.setCanceledOnTouchOutside(true);
 
       return dialog;
    }
