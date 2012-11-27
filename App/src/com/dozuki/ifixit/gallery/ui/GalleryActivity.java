@@ -3,6 +3,8 @@ package com.dozuki.ifixit.gallery.ui;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -23,7 +25,7 @@ public class GalleryActivity extends SherlockFragmentActivity
  implements LoginListener {
 
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
-   private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
+
    private MediaFragment mMediaView;
 
    private ActionBar mActionBar;
@@ -65,7 +67,7 @@ public class GalleryActivity extends SherlockFragmentActivity
        R.id.gallery_view_fragment);
       mMediaView.noImagesText.setVisibility(View.GONE);
       LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
-       findFragmentByTag(LOGIN_FRAGMENT);
+       findFragmentByTag(MainApplication.LOGIN_FRAGMENT);
 
       User user = ((MainApplication)getApplication()).getUserFromPreferenceFile();
 
@@ -85,8 +87,14 @@ public class GalleryActivity extends SherlockFragmentActivity
    private void displayLogin() {
       mIconsHidden = true;
       supportInvalidateOptionsMenu();
-      LoginFragment editNameDialog = new LoginFragment();
-      editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
+      
+      Fragment editNameDialog = new LoginFragment();
+      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+      
+      transaction.add(editNameDialog, MainApplication.LOGIN_FRAGMENT);
+      transaction.setTransition(android.R.anim.fade_in);
+      // Commit the transaction
+      transaction.commit();
    }
 
    @Override

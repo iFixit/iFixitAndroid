@@ -1,33 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="match_parent"
-   android:layout_height="match_parent">
-   <fragment
-      android:id="@+id/gallery_view_fragment"
-      android:name="com.dozuki.ifixit.gallery.ui.MediaFragment"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent">
-   </fragment>
-   <LinearLayout
-      android:baselineAligned="false"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:orientation="horizontal">
-      <FrameLayout
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="25">
-      </FrameLayout>
-      <FrameLayout
-         android:id="@+id/login_fragment"
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="50">
-      </FrameLayout>
-      <FrameLayout
-         android:layout_width="0dp"
-         android:layout_height="match_parent"
-         android:layout_weight="25">
-      </FrameLayout>
-   </LinearLayout>
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <fragment
+        android:id="@+id/gallery_view_fragment"
+        android:name="com.dozuki.ifixit.gallery.ui.MediaFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" >
+    </fragment>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:baselineAligned="false"
+        android:orientation="horizontal" >
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25" >
+        </FrameLayout>
+
+        <FrameLayout
+            android:id="@+id/login_fragment"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="50" >
+        </FrameLayout>
+
+        <FrameLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="25" >
+        </FrameLayout>
+    </LinearLayout>
+
 </FrameLayout>

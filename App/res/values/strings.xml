@@ -44,13 +44,16 @@
    <string name="next_page_image_desc">Next page</string>
    <string name="action_delete">Delete</string>
    <string name="welcome">Welcome, iFixit</string>
-   <string name="user_name">Enter a username</string>
-   <string name="email">What is your email?</string>
-   <string name="password">What is your password?</string>
-   <string name="signin_description">Login</string>
-   <string name="register_description">Register</string>
+   <string name="user_name_hint">Username</string>
+   <string name="email_hint">Email</string>
+   <string name="password_hint">Password</string>
+   <string name="signin_description">Login to iFixit.com</string>
+   <string name="signin_button">Login</string>
+   <string name="register_description">Register for iFixit.com</string>
+   <string name="register_button">Register</string>  
    <string name="confirm_password">Confirm Password</string>
-   <string name="cancel_register_description">Cancel</string>
+   <string name="cancel_register_description">Cancel Registration</string>
+   <string name="cancel_register_button">Cancel</string>
    <string name="google_signin_description">Sign-in with Google</string>
    <string name="yahoo_signin_description">Sign-in with Yahoo!</string>
    <string name="dozuki_background_description">Dozuki background</string>
@@ -80,4 +83,8 @@
    <string name="passwords_do_not_match_error">Passwords do not match.</string>
    <string name="terms_unchecked_error">You must agree to the terms.</string>
    <string name="login_dialog_title">Login</string>
+   <string name="register_dialog_title">Register</string>
+   <string name="login_password_hint">Password</string>
+   <string name="login_username_hint">Username</string>
+   <string name="password_confirm_hint">Confirm Password</string>
 </resources>
