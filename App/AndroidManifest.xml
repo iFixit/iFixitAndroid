@@ -4,7 +4,7 @@
       android:versionCode="9"
       android:versionName="1.2.1">
    <uses-sdk android:minSdkVersion="8"
-         android:targetSdkVersion="15" />
+         android:targetSdkVersion="17"  />
    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
    <uses-permission android:name="android.permission.INTERNET" />
@@ -61,7 +61,7 @@
          </intent-filter>
       </activity>
       <activity android:name=".guide_view.ui.FullImageViewActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar">
+            android:theme="@style/Holo.Theme.Light.NoActionBar">
       </activity>
    </application>
 </manifest>
