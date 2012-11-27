@@ -7,12 +7,19 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -21,17 +28,30 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.guide_view.model.Embed;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.guide_view.model.OEmbed;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.ifixit.android.imagemanager.ImageManager;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class GuideStepViewFragment extends SherlockFragment {
    private TextView mTitle;
    private ThumbnailView mThumbs;
    private ImageView mMainImage;
+   private WebView mMainWebView;
    private GuideStep mStep;
    private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
@@ -75,11 +95,48 @@ public class GuideStepViewFragment extends SherlockFragment {
       mTitle = (TextView)view.findViewById(R.id.step_title);
       mTitle.setTypeface(mFont);
 
-      mMainImage = (ImageView)view.findViewById(R.id.main_image);
+      mMainImage = (ImageView) view.findViewById(R.id.main_image);
+      mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
+      mMainWebView.getSettings().setUseWideViewPort(true);
+      mMainWebView.getSettings().setJavaScriptEnabled(true);
+      mMainWebView.getSettings().setSupportZoom(false);
+      mMainWebView.getSettings().setLoadWithOverviewMode(true);
+      mMainWebView.setWebViewClient(new WebViewClient() {
+
+         public void onPageFinished(WebView view, String url) {
+            // add loading and hide
+         }
+
+      });
+      
+      mMainWebView.setOnTouchListener(new View.OnTouchListener() {
+
+         @Override
+         public boolean onTouch(View v, MotionEvent event) {
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+               String url = (String) v.getTag();
+               if (url.equals("") || url.indexOf(".") == 0) {
+                  return true;
+               }
+
+               if (mStep.hasEmbed()) {
+                  // if (mStep.getEmded().getType().equals("VIDEO")) {
+                  Intent i = new Intent(getActivity(), EmbedViewActivity.class);
+                  i.putExtra(EmbedViewActivity.HTML, url);
+                  startActivity(i);
+                  // }
+               }
+            }
+            return true;
+         }
+      });
+      
+  
       mMainImage.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            String url = (String)v.getTag();
+            String url = (String) v.getTag();
 
             if (url.equals("") || url.indexOf(".") == 0) {
                return;
@@ -111,6 +168,7 @@ public class GuideStepViewFragment extends SherlockFragment {
 
       return view;
    }
+   
 
    public void fitImagesToSpace() {
       Activity context = getActivity();
@@ -180,6 +238,9 @@ public class GuideStepViewFragment extends SherlockFragment {
       // Set the width and height of the main image
       mMainImage.getLayoutParams().height = (int)(height + .5f);
       mMainImage.getLayoutParams().width = (int)(width + .5f);
+      
+      mMainWebView.getLayoutParams().height = (int)(height + .5f);
+      mMainWebView.getLayoutParams().width = (int) ((int)(width + .5f));
 
       mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
    }
@@ -211,16 +272,28 @@ public class GuideStepViewFragment extends SherlockFragment {
       mLineList.setAdapter(mTextAdapter);
 
       mThumbs.setImageSizes(mImageSizes);
-
+      mMainWebView.setVisibility(View.GONE);
       if (mStep.hasVideo()) {
-         mImageManager.displayImage(mStep.getVideo().getThumbnail() + mImageSizes.getMain(),
-            getActivity(), mMainImage);
+         mMainWebView.setVisibility(View.GONE);
+         mImageManager.displayImage(mStep.getVideo().getThumbnail(), getActivity(), mMainImage);
          mMainImage.setTag(mStep.getVideo().getEncodings().get(0).getURL());
+
       } else
          if (mStep.hasEmbed()) {
-            mMainImage.setTag(mStep.getEmded().getURL());
+            if (mStep.getEmded().hasOembed()) {
+
+               mMainWebView.setVisibility(View.VISIBLE);
+               mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
+               mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
+            } else {
+               // TODO: find the best place and way to handle the returned
+               // oembed
+               new EmbedRetriever().execute(mStep.getEmded());
+            }
+
          } else
             if (mStep.getImages().size() > 0) {
+               mMainWebView.setVisibility(View.GONE);
                // Might be a problem if there are no images for a step...
                mThumbs.setThumbs(mStep.getImages(), mImageManager, getActivity());
                mThumbs.setCurrentThumb(mStep.getImages().get(0).getText());
@@ -255,4 +328,49 @@ public class GuideStepViewFragment extends SherlockFragment {
          return stepLine;
       }
    }
+
+   public class EmbedRetriever extends AsyncTask<Embed, Void, OEmbed> {
+
+      protected OEmbed doInBackground(Embed... embed) {
+         OEmbed oe = null;
+         try {
+            URL url = new URL(embed[0].getURL());
+            URLConnection urlConnection = null;
+            InputStream in = null;
+            StringBuilder x = null;
+
+            urlConnection = url.openConnection();
+            in = new BufferedInputStream(urlConnection.getInputStream());
+            byte[] bytes = new byte[1000];
+
+            x = new StringBuilder();
+
+            int numRead = 0;
+            while ((numRead = in.read(bytes)) >= 0) {
+               x.append(new String(bytes, 0, numRead));
+            }
+
+            in.close();
+            oe = JSONHelper.parseOEmbed(x.toString());
+            embed[0].addOembed(oe);
+            return oe;
+
+         } catch (Exception e) {
+         } finally {
+
+            return oe;
+         }
+
+      }
+
+      protected void onPostExecute(OEmbed embed) {
+         if (embed != null) {
+            // TODO: decide if this is ok. Most likely because the setStep
+            // function isnt intensive
+            setStep();
+         }
+      }
+
+   }
+
 }

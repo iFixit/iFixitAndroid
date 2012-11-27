@@ -14,10 +14,11 @@ import com.dozuki.ifixit.guide_view.model.GuideInfo;
 import com.dozuki.ifixit.guide_view.model.GuidePart;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.guide_view.model.GuideTool;
+import com.dozuki.ifixit.guide_view.model.OEmbed;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.guide_view.model.StepVideo;
-import com.dozuki.ifixit.guide_view.model.VideoEmbed;
+import com.dozuki.ifixit.guide_view.model.Embed;
 import com.dozuki.ifixit.guide_view.model.VideoEncoding;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
@@ -26,9 +27,13 @@ import com.dozuki.ifixit.topic_view.model.TopicNode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
@@ -161,12 +166,42 @@ public class JSONHelper {
       return step;
    }
 
-   private static VideoEmbed parseEmbed(JSONObject jEmbed) throws JSONException {
-      return new VideoEmbed(jEmbed.getInt("width"), jEmbed.getInt("height"),
+   private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
+
+      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"),
          jEmbed.getString("type"), jEmbed.getString("url"));
+      
+      em.setContentURL(getQueryMap(jEmbed.getString("url")).get("url"));
+
+      return em;
+   }
+   
+   public static Map<String, String> getQueryMap(String url) {
+      String query = url.substring(url.indexOf('?') + 1);
+      String[] params = query.split("&");
+      Map<String, String> map = new HashMap<String, String>();
+      for (String param : params) {
+         String name = param.split("=")[0];
+         String value = param.split("=")[1];
+         map.put(name, value);
+      }
+
+      return map;
    }
 
-private static StepImage parseImage(JSONObject jImage) throws JSONException {
+   public static OEmbed parseOEmbed(String embed) throws JSONException {
+
+      JSONObject jOEmbed = new JSONObject(embed);
+      String thumbnail = null;
+      if (jOEmbed.has("thumbnail_url")) {
+         thumbnail = jOEmbed.getString("thumbnail_url");
+      }
+      Document doc = Jsoup.parse(jOEmbed.getString("html"));
+      return new OEmbed(jOEmbed.getString("html"), doc.getElementsByAttribute("src").get(0)
+         .attr("src"), thumbnail);
+   }
+
+   private static StepImage parseImage(JSONObject jImage) throws JSONException {
       StepImage image = new StepImage(jImage.getInt("imageid"));
 
       // last image doesn't have orderby so this is necessary. API bug?

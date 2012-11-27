@@ -13,7 +13,7 @@ public class GuideStep implements Serializable {
    protected ArrayList<StepImage> mImages;
    protected ArrayList<StepLine> mLines;
    protected StepVideo mVideo;
-   private VideoEmbed mEmbed;
+   private Embed mEmbed;
 
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
@@ -70,7 +70,7 @@ public class GuideStep implements Serializable {
       return mVideo;
    }
 
-   public void addEmbed(VideoEmbed parseEmbed) {
+   public void addEmbed(Embed parseEmbed) {
       mEmbed = parseEmbed;
    }
 
@@ -78,7 +78,7 @@ public class GuideStep implements Serializable {
       return mEmbed != null;
    }
 
-   public VideoEmbed getEmded() {
+   public Embed getEmded() {
       return mEmbed;
    }
 }
