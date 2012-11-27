@@ -16,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
@@ -23,6 +24,7 @@ import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -52,13 +54,14 @@ public class GuideStepViewFragment extends SherlockFragment {
    private ThumbnailView mThumbs;
    private ImageView mMainImage;
    private WebView mMainWebView;
+   private ProgressBar mMainProgress;
    private GuideStep mStep;
    private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
    private ListView mLineList;
    private Typeface mFont;
    private ImageSizes mImageSizes;
-
+   private EmbedRetriever mEmbedRet;
    public GuideStepViewFragment() {
 
    }
@@ -95,6 +98,7 @@ public class GuideStepViewFragment extends SherlockFragment {
       mTitle = (TextView)view.findViewById(R.id.step_title);
       mTitle.setTypeface(mFont);
 
+      mMainProgress = (ProgressBar) view.findViewById(R.id.progress_bar_guide_step);
       mMainImage = (ImageView) view.findViewById(R.id.main_image);
       mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
       mMainWebView.getSettings().setUseWideViewPort(true);
@@ -104,7 +108,10 @@ public class GuideStepViewFragment extends SherlockFragment {
       mMainWebView.setWebViewClient(new WebViewClient() {
 
          public void onPageFinished(WebView view, String url) {
-            // add loading and hide
+            
+            mMainWebView.setVisibility(View.VISIBLE);
+            mMainWebView.setAnimation(AnimationUtils.loadAnimation(getActivity(),
+               R.anim.fade_in));
          }
 
       });
@@ -241,6 +248,9 @@ public class GuideStepViewFragment extends SherlockFragment {
       
       mMainWebView.getLayoutParams().height = (int)(height + .5f);
       mMainWebView.getLayoutParams().width = (int) ((int)(width + .5f));
+      
+      mMainProgress.getLayoutParams().height = (int)(height + .5f);
+      mMainProgress.getLayoutParams().width = (int) ((int)(width + .5f));
 
       mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
    }
@@ -260,6 +270,10 @@ public class GuideStepViewFragment extends SherlockFragment {
    }
 
    public void setStep() {
+      //stop the load of the 
+      mMainWebView.stopLoading();
+      
+  
       if (mStep.getTitle().length() == 0) {
          mTitle.setText(getActivity().getString(R.string.step) + " " +
           mStep.getStepNum());
@@ -272,8 +286,8 @@ public class GuideStepViewFragment extends SherlockFragment {
       mLineList.setAdapter(mTextAdapter);
 
       mThumbs.setImageSizes(mImageSizes);
-      mMainWebView.setVisibility(View.GONE);
       if (mStep.hasVideo()) {
+         mMainImage.setVisibility(View.VISIBLE);
          mMainWebView.setVisibility(View.GONE);
          mImageManager.displayImage(mStep.getVideo().getThumbnail(), getActivity(), mMainImage);
          mMainImage.setTag(mStep.getVideo().getEncodings().get(0).getURL());
@@ -281,18 +295,22 @@ public class GuideStepViewFragment extends SherlockFragment {
       } else
          if (mStep.hasEmbed()) {
             if (mStep.getEmded().hasOembed()) {
-
-               mMainWebView.setVisibility(View.VISIBLE);
+               mMainImage.setVisibility(View.GONE);
+               mMainWebView.setVisibility(View.INVISIBLE);
                mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
                mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
             } else {
                // TODO: find the best place and way to handle the returned
                // oembed
-               new EmbedRetriever().execute(mStep.getEmded());
+               if (mEmbedRet == null) {
+                  mEmbedRet = new EmbedRetriever();
+               }
+               mEmbedRet.execute(mStep.getEmded());
             }
 
          } else
             if (mStep.getImages().size() > 0) {
+               mMainImage.setVisibility(View.VISIBLE);
                mMainWebView.setVisibility(View.GONE);
                // Might be a problem if there are no images for a step...
                mThumbs.setThumbs(mStep.getImages(), mImageManager, getActivity());
@@ -327,6 +345,15 @@ public class GuideStepViewFragment extends SherlockFragment {
          stepLine.setLine(mLines.get(position));
          return stepLine;
       }
+   }
+   
+   @Override
+   public void onPause() {
+      mMainWebView.stopLoading();
+      if (mEmbedRet != null) {
+         mEmbedRet.cancel(true);
+      }
+      super.onPause();
    }
 
    public class EmbedRetriever extends AsyncTask<Embed, Void, OEmbed> {
@@ -367,7 +394,12 @@ public class GuideStepViewFragment extends SherlockFragment {
          if (embed != null) {
             // TODO: decide if this is ok. Most likely because the setStep
             // function isnt intensive
-            setStep();
+            if(!isCancelled()) {
+               mMainImage.setVisibility(View.GONE);
+               mMainWebView.setVisibility(View.INVISIBLE);
+               mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
+               mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
+            }
          }
       }
 
