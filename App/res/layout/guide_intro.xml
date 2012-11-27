@@ -1,60 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView
-      xmlns:android="http://schemas.android.com/apk/res/android"
-      android:id="@+id/guide_intro_scroll"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:padding="@dimen/page_padding">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/guide_intro_scroll"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="@dimen/page_padding" >
 
-   <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical" >
 
-      <TextView
+        <TextView
             android:id="@+id/guide_title"
+            style="@style/text.title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="top"
-            style="@style/text.title" />
+            android:layout_gravity="top" />
 
-      <TextView
+        <TextView
             android:id="@+id/guide_intro_text"
+            style="@style/text.body"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/text.body"/>
+            android:layout_height="wrap_content" />
 
-      <LinearLayout
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:weightSum="2" >
 
-         <TextView
-               android:id="@+id/guide_difficulty"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               style="@style/text.body" />
+            <TextView
+                android:id="@+id/guide_difficulty"
+                style="@style/text.body"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
 
-         <TextView
-               android:id="@+id/guide_author"
-               android:layout_width="0dp"
-               android:layout_height="wrap_content"
-               android:layout_weight="1"
-               style="@style/text.body" />
-      </LinearLayout>
+            <TextView
+                android:id="@+id/guide_author"
+                style="@style/text.body"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1" />
+        </LinearLayout>
 
-      <TextView
+        <TextView
             android:id="@+id/guide_tools"
+            style="@style/text.body"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/text.body" />
+            android:layout_height="wrap_content" />
 
-      <TextView
+        <TextView
             android:id="@+id/guide_parts"
+            style="@style/text.body"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            style="@style/text.body" />
-   </LinearLayout>
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+
 </ScrollView>

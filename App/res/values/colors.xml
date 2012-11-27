@@ -4,10 +4,11 @@ Taken from @Lars from Stack Overflow - thanks!
 @link http://stackoverflow.com/questions/3769762/android-color-xml-resource-file
 -->
 <resources>
+
     <color name="white">#FFFFFF</color>
     <color name="translucent_white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>
-    <color name="dark">#222222</color>   
+    <color name="dark">#222222</color>
     <color name="black">#444444</color>
     <color name="red">#FFff0000</color>
     <color name="image_border">#AAAAAA</color>
@@ -18,4 +19,5 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_orange">#FFF25D07</color>
     <color name="dozuki_white">#FFCCCCCC</color>
     <color name="dozuki_grey">#F7777777</color>
+
 </resources>
