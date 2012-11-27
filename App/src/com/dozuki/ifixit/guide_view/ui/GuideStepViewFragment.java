@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -54,7 +55,7 @@ public class GuideStepViewFragment extends SherlockFragment {
    private ThumbnailView mThumbs;
    private ImageView mMainImage;
    private WebView mMainWebView;
-   private ProgressBar mMainProgress;
+   private RelativeLayout mMainProgress;
    private GuideStep mStep;
    private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
@@ -98,7 +99,7 @@ public class GuideStepViewFragment extends SherlockFragment {
       mTitle = (TextView)view.findViewById(R.id.step_title);
       mTitle.setTypeface(mFont);
 
-      mMainProgress = (ProgressBar) view.findViewById(R.id.progress_bar_guide_step);
+      mMainProgress = (RelativeLayout) view.findViewById(R.id.progress_bar_guide_step);
       mMainImage = (ImageView) view.findViewById(R.id.main_image);
       mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
       mMainWebView.getSettings().setUseWideViewPort(true);
@@ -110,8 +111,15 @@ public class GuideStepViewFragment extends SherlockFragment {
          public void onPageFinished(WebView view, String url) {
             
             mMainWebView.setVisibility(View.VISIBLE);
+            try {
             mMainWebView.setAnimation(AnimationUtils.loadAnimation(getActivity(),
                R.anim.fade_in));
+            } catch(Exception e) {
+               //fragment was pushed off view and a view
+               //element is invalid
+               //disregard
+            }
+           
          }
 
       });
@@ -251,6 +259,7 @@ public class GuideStepViewFragment extends SherlockFragment {
       
       mMainProgress.getLayoutParams().height = (int)(height + .5f);
       mMainProgress.getLayoutParams().width = (int) ((int)(width + .5f));
+      
 
       mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
    }
@@ -302,9 +311,7 @@ public class GuideStepViewFragment extends SherlockFragment {
             } else {
                // TODO: find the best place and way to handle the returned
                // oembed
-               if (mEmbedRet == null) {
-                  mEmbedRet = new EmbedRetriever();
-               }
+               mEmbedRet = new EmbedRetriever();
                mEmbedRet.execute(mStep.getEmded());
             }
 
