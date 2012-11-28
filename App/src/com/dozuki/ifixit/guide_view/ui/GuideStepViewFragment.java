@@ -56,6 +56,7 @@ public class GuideStepViewFragment extends SherlockFragment {
    private ImageView mMainImage;
    private WebView mMainWebView;
    private RelativeLayout mMainProgress;
+   private RelativeLayout mVideoPlayButtonContainer;
    private GuideStep mStep;
    private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
@@ -100,8 +101,10 @@ public class GuideStepViewFragment extends SherlockFragment {
       mTitle.setTypeface(mFont);
 
       mMainProgress = (RelativeLayout) view.findViewById(R.id.progress_bar_guide_step);
+      mVideoPlayButtonContainer = (RelativeLayout) view.findViewById(R.id.video_play_button_container);
       mMainImage = (ImageView) view.findViewById(R.id.main_image);
       mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
+      
       mMainWebView.getSettings().setUseWideViewPort(true);
       mMainWebView.getSettings().setJavaScriptEnabled(true);
       mMainWebView.getSettings().setSupportZoom(false);
@@ -221,6 +224,13 @@ public class GuideStepViewFragment extends SherlockFragment {
          // Screen height minus everything else that occupies horizontal space
          thumbnailWidth = (screenWidth - width - padding);
          thumbnailHeight = thumbnailWidth * (3f/4f);
+
+         mMainWebView.getLayoutParams().height = (int) ((int) (height + .5f));
+         mMainWebView.getLayoutParams().width = (int) ((int) (width + .5f) + thumbnailWidth);
+
+         mMainProgress.getLayoutParams().height = (int) ((int) (height + .5f));
+         mMainProgress.getLayoutParams().width = (int) ((int) (width + .5f)+ thumbnailWidth);
+
       } else {
          int actionBarHeight = resources.getDimensionPixelSize(
           com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
@@ -248,19 +258,20 @@ public class GuideStepViewFragment extends SherlockFragment {
          thumbnailHeight = (screenHeight - height - actionBarHeight - padding -
           indicatorHeight);
          thumbnailWidth = (thumbnailHeight * (4f/3f));
+
+         mMainWebView.getLayoutParams().height = (int) ((int) (height + .5f) + thumbnailHeight);
+         mMainWebView.getLayoutParams().width = (int) ((int) (width + .5f));
+
+         mMainProgress.getLayoutParams().height = (int) ((int) (height + .5f) + thumbnailHeight);
+         mMainProgress.getLayoutParams().width = (int) ((int) (width + .5f));
       }
 
       // Set the width and height of the main image
-      mMainImage.getLayoutParams().height = (int)(height + .5f);
-      mMainImage.getLayoutParams().width = (int)(width + .5f);
+      mMainImage.getLayoutParams().height = (int) (height + .5f);
+      mMainImage.getLayoutParams().width = (int) (width + .5f);
+      mVideoPlayButtonContainer.getLayoutParams().height = mMainImage.getLayoutParams().height;
+      mVideoPlayButtonContainer.getLayoutParams().width = mMainImage.getLayoutParams().width;
       
-      mMainWebView.getLayoutParams().height = (int)(height + .5f);
-      mMainWebView.getLayoutParams().width = (int) ((int)(width + .5f));
-      
-      mMainProgress.getLayoutParams().height = (int)(height + .5f);
-      mMainProgress.getLayoutParams().width = (int) ((int)(width + .5f));
-      
-
       mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
    }
 
@@ -297,15 +308,19 @@ public class GuideStepViewFragment extends SherlockFragment {
       mThumbs.setImageSizes(mImageSizes);
       if (mStep.hasVideo()) {
          mMainImage.setVisibility(View.VISIBLE);
+         mVideoPlayButtonContainer.setVisibility(View.VISIBLE);
          mMainWebView.setVisibility(View.GONE);
+         mMainProgress.setVisibility(View.GONE);
          mImageManager.displayImage(mStep.getVideo().getThumbnail(), getActivity(), mMainImage);
          mMainImage.setTag(mStep.getVideo().getEncodings().get(0).getURL());
 
       } else
          if (mStep.hasEmbed()) {
+            mMainImage.setVisibility(View.GONE);
+            mMainWebView.setVisibility(View.INVISIBLE);
+            mMainProgress.setVisibility(View.VISIBLE);
+            mVideoPlayButtonContainer.setVisibility(View.GONE);
             if (mStep.getEmded().hasOembed()) {
-               mMainImage.setVisibility(View.GONE);
-               mMainWebView.setVisibility(View.INVISIBLE);
                mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
                mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
             } else {
@@ -319,6 +334,8 @@ public class GuideStepViewFragment extends SherlockFragment {
             if (mStep.getImages().size() > 0) {
                mMainImage.setVisibility(View.VISIBLE);
                mMainWebView.setVisibility(View.GONE);
+               mMainProgress.setVisibility(View.GONE);
+               mVideoPlayButtonContainer.setVisibility(View.GONE);
                // Might be a problem if there are no images for a step...
                mThumbs.setThumbs(mStep.getImages(), mImageManager, getActivity());
                mThumbs.setCurrentThumb(mStep.getImages().get(0).getText());
@@ -402,8 +419,6 @@ public class GuideStepViewFragment extends SherlockFragment {
             // TODO: decide if this is ok. Most likely because the setStep
             // function isnt intensive
             if(!isCancelled()) {
-               mMainImage.setVisibility(View.GONE);
-               mMainWebView.setVisibility(View.INVISIBLE);
                mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
                mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
             }
