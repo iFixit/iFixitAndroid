@@ -372,12 +372,12 @@ public class GuideStepViewFragment extends SherlockFragment {
    }
    
    @Override
-   public void onPause() {
+   public void onDestroyView() {
       mMainWebView.stopLoading();
       if (mEmbedRet != null) {
          mEmbedRet.cancel(true);
       }
-      super.onPause();
+      super.onDestroyView();
    }
 
    public class EmbedRetriever extends AsyncTask<Embed, Void, OEmbed> {
