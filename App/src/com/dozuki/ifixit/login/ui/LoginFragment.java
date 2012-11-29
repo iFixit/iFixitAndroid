@@ -68,7 +68,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
 
          mLoadingSpinner.setVisibility(View.GONE);
 
-         // Hide input fields
+         // Show input fields
          mLoginId.setVisibility(View.VISIBLE);
          mPassword.setVisibility(View.VISIBLE);
 

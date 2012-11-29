@@ -7,6 +7,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -233,6 +234,8 @@ public class MainApplication extends Application {
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
       editor.commit();
       mUser = user;
+      
+      APIService.setRequireAuthentication(!mSite.mPublic);
    }
 
    /**
@@ -245,6 +248,11 @@ public class MainApplication extends Application {
       editor.remove(mSite.mName + SESSION_KEY);
       editor.remove(mSite.mName + USERNAME_KEY);
       editor.commit();
+
+      // Do not require authentication once the user logs out, otherwise the 
+      // Login API request will fail
+      APIService.setRequireAuthentication(false);
+
       mUser = null;
    }
 }

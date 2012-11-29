@@ -6,12 +6,17 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.login.model.LoginListener;
+import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
@@ -22,7 +27,7 @@ import java.util.Collections;
 import java.util.Comparator;
 
 public class TopicListFragment extends SherlockFragment
- implements TopicSelectedListener, OnItemClickListener {
+ implements TopicSelectedListener, OnItemClickListener, LoginListener {
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
 
    private TopicSelectedListener topicSelectedListener;
@@ -145,5 +150,21 @@ public class TopicListFragment extends SherlockFragment
       mTopic = topic;
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);
+   }
+
+   @Override
+   public void onLogin(User user) {
+      setTopic(mTopic);
+   }
+
+   @Override
+   public void onCancel() {
+      // TODO Auto-generated method stub
+      
+   }
+
+   @Override
+   public void onLogout() {
+      // TODO Auto-generated method stub   
    }
 }

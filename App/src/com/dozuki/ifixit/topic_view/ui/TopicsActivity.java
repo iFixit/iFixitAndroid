@@ -8,6 +8,7 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -18,7 +19,12 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
+import com.dozuki.ifixit.gallery.ui.MediaFragment;
+import com.dozuki.ifixit.login.model.LoginListener;
+import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.dozuki.ifixit.util.APIEndpoint;
@@ -27,7 +33,7 @@ import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 
 public class TopicsActivity extends SherlockFragmentActivity
- implements TopicSelectedListener, OnBackStackChangedListener {
+ implements TopicSelectedListener, OnBackStackChangedListener, LoginListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
@@ -45,6 +51,9 @@ public class TopicsActivity extends SherlockFragmentActivity
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
+   private boolean mVerifiedUser;
+   private boolean mRequireLogin;
+   private Site mSite;
 
    private APIReceiver mApiReceiver = new APIReceiver() {
       public void onSuccess(Object result, Intent intent) {
@@ -55,8 +64,12 @@ public class TopicsActivity extends SherlockFragmentActivity
       }
 
       public void onFailure(APIError error, Intent intent) {
-         APIService.getErrorDialog(TopicsActivity.this, error,
-          APIService.getCategoriesIntent(TopicsActivity.this)).show();
+         if (mRequireLogin && !mVerifiedUser) {
+            triggerLogin();
+         } else {
+            APIService.getErrorDialog(TopicsActivity.this, error,
+             APIService.getCategoriesIntent(TopicsActivity.this)).show();
+         }
       }
    };
 
@@ -69,6 +82,11 @@ public class TopicsActivity extends SherlockFragmentActivity
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.topics);
+
+      if (mSite == null) {
+         mSite = ((MainApplication)getApplication())
+          .getSite();
+      }   
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -83,15 +101,12 @@ public class TopicsActivity extends SherlockFragmentActivity
          mTopicListVisible = true;
       }
 
-
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
       }
 
-      if (mTopicListVisible && mHideTopicList &&
-       mTopicView.isDisplayingTopic()) {
+      if (mTopicListVisible && mHideTopicList && mTopicView.isDisplayingTopic())
          hideTopicListWithDelay();
-      }
 
       getSupportFragmentManager().addOnBackStackChangedListener(this);
 
@@ -111,22 +126,53 @@ public class TopicsActivity extends SherlockFragmentActivity
             }
          });
       }
-   }
+      
+      mRequireLogin = !mSite.mPublic;      
+      mVerifiedUser = ((MainApplication)getApplication()).getUserFromPreferenceFile() != null;
+      
+      Log.w("requireLogin", ""+mRequireLogin);
+      Log.w("verifiedUser", ""+mVerifiedUser);
 
+      APIService.setRequireAuthentication(mVerifiedUser);
+      
+      // If a site is private, and the user has not yet logged in, promt to log in
+      if (mRequireLogin && !mVerifiedUser) {
+         triggerLogin();
+      }
+   }
+   
+   public void triggerLogin() {
+      LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
+       findFragmentByTag(MainApplication.LOGIN_FRAGMENT);
+
+      if (mLogin == null) {
+         Fragment editNameDialog = new LoginFragment();
+         FragmentTransaction transaction = 
+          (FragmentTransaction)getSupportFragmentManager()
+           .beginTransaction();
+         
+         transaction.add(editNameDialog, MainApplication.LOGIN_FRAGMENT);
+         transaction.setTransition(android.R.anim.fade_in);
+         // Commit the transaction
+         transaction.commit();            
+      }
+   }
+   
    @Override
    public void onResume() {
       super.onResume();
 
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.CATEGORIES.mAction);
-      registerReceiver(mApiReceiver, filter);
-
-      // Fetch categories if necessary.
-      if (mRootTopic == null) {
-         fetchCategories();
+      if (mVerifiedUser) {
+         initApiReceiver();
       }
    }
 
+   @Override
+   public void onLogin(User user) {
+      mVerifiedUser = (user != null);
+      initApiReceiver();
+   }
+   
    @Override
    public void onPause() {
       super.onPause();
@@ -147,9 +193,16 @@ public class TopicsActivity extends SherlockFragmentActivity
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
    }
 
-   // Load categories from the API.
-   private void fetchCategories() {
-      startService(APIService.getCategoriesIntent(this));
+   public void initApiReceiver() {
+      IntentFilter filter = new IntentFilter();
+      filter.addAction(APIEndpoint.CATEGORIES.mAction);
+      registerReceiver(mApiReceiver, filter);
+
+      // Fetch categories if necessary.
+      if (mRootTopic == null) {
+         // Load categories from the API.
+         startService(APIService.getCategoriesIntent(this));
+      }      
    }
 
    public void onBackStackChanged() {
@@ -280,5 +333,20 @@ public class TopicsActivity extends SherlockFragmentActivity
          default:
             return super.onOptionsItemSelected(item);
       }
+   }
+
+   @Override
+   public void onLogout() {
+      ((MainApplication)getApplication()).logout();
+      mVerifiedUser = false;
+      
+      finish();
+   }
+
+   @Override
+   public void onCancel() {
+      mVerifiedUser = false;
+
+      finish();
    }
 }

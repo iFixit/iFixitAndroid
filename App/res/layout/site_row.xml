@@ -22,5 +22,14 @@
         android:ellipsize="end"
         android:maxLines="3"
         android:textSize="15sp" />
+    
+    <ImageView 
+        android:id="@+id/site_private" 
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/site_name" 
+        android:src="@drawable/ic_action_lock_closed"
+        android:contentDescription="@string/lock_description"
+        android:visibility="invisible" />
 
 </RelativeLayout>
