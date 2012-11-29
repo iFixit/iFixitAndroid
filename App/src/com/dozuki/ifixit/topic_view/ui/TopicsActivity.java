@@ -146,15 +146,18 @@ public class TopicsActivity extends SherlockFragmentActivity
        findFragmentByTag(MainApplication.LOGIN_FRAGMENT);
 
       if (mLogin == null) {
-         Fragment editNameDialog = new LoginFragment();
+         Fragment loginDialog = new LoginFragment();
+         Bundle args = new Bundle();
+         args.putBoolean(LoginFragment.LOGIN_NO_REGISTER, true);
+         loginDialog.setArguments(args);
+
          FragmentTransaction transaction = 
-          (FragmentTransaction)getSupportFragmentManager()
-           .beginTransaction();
+          (FragmentTransaction)getSupportFragmentManager().beginTransaction();
          
-         transaction.add(editNameDialog, MainApplication.LOGIN_FRAGMENT);
+         transaction.add(loginDialog, MainApplication.LOGIN_FRAGMENT);
          transaction.setTransition(android.R.anim.fade_in);
          // Commit the transaction
-         transaction.commit();            
+         transaction.commit();
       }
    }
    
@@ -171,6 +174,21 @@ public class TopicsActivity extends SherlockFragmentActivity
    public void onLogin(User user) {
       mVerifiedUser = (user != null);
       initApiReceiver();
+   }
+
+   @Override
+   public void onLogout() {
+      ((MainApplication)getApplication()).logout();
+      mVerifiedUser = false;
+      
+      finish();
+   }
+
+   @Override
+   public void onCancel() {
+      mVerifiedUser = false;
+
+      finish();
    }
    
    @Override
@@ -333,20 +351,5 @@ public class TopicsActivity extends SherlockFragmentActivity
          default:
             return super.onOptionsItemSelected(item);
       }
-   }
-
-   @Override
-   public void onLogout() {
-      ((MainApplication)getApplication()).logout();
-      mVerifiedUser = false;
-      
-      finish();
-   }
-
-   @Override
-   public void onCancel() {
-      mVerifiedUser = false;
-
-      finish();
    }
 }

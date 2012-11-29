@@ -34,6 +34,7 @@ import com.dozuki.ifixit.util.APIService;
 public class LoginFragment extends SherlockDialogFragment implements OnClickListener {
    private static final int OPEN_ID_RESULT_CODE = 4;
    private static final String LOGIN_STATE = "LOGIN_STATE";
+   public static final String LOGIN_NO_REGISTER = "LOGIN_NO_REGISTER";
 
    private Button mLogin;
    private Button mRegister;
@@ -48,6 +49,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    private Intent mCurIntent;
 
    private boolean mReadyForRegisterState;
+   private boolean mHasRegisterBtn;
 
    private APIReceiver mApiReceiver = new APIReceiver() {
       public void onSuccess(Object result, Intent intent) {
@@ -89,32 +91,43 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      Bundle bundle = this.getArguments();
+
+      mHasRegisterBtn = !bundle.getBoolean(LOGIN_NO_REGISTER);
    }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+      
       View view = inflater.inflate(R.layout.login_fragment, container, false);
 
       mLoginId = (EditText)view.findViewById(R.id.edit_username);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
       mPassword.setTypeface(Typeface.DEFAULT);
-      
+
       mLogin = (Button)view.findViewById(R.id.signin_button);
-      mRegister = (Button)view.findViewById(R.id.register_button);
+      mRegister = (Button)view.findViewById(R.id.register_button);      
       mGoogleLogin = (ImageButton)view.findViewById(R.id.use_google_login_button);
       mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
+
+      mLogin.setOnClickListener(this);  
+      
+      if (mHasRegisterBtn) {
+         mRegister.setOnClickListener(this);
+         mGoogleLogin.setOnClickListener(this);
+         mYahooLogin.setOnClickListener(this);
+      } else {
+         mRegister.setVisibility(View.INVISIBLE);
+         mGoogleLogin.setVisibility(View.INVISIBLE);
+         mYahooLogin.setVisibility(View.INVISIBLE);
+      }
 
       mErrorText = (TextView)view.findViewById(R.id.login_error_text);
       mErrorText.setVisibility(View.GONE);
 
       mLoadingSpinner = (ProgressBar)view.findViewById(R.id.login_loading_bar);
       mLoadingSpinner.setVisibility(View.GONE);
-
-      mLogin.setOnClickListener(this);  
-      mRegister.setOnClickListener(this);
-      mGoogleLogin.setOnClickListener(this);
-      mYahooLogin.setOnClickListener(this);
       
       getDialog().setTitle(R.string.login_dialog_title);
       
@@ -159,9 +172,11 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       mLoginId.setEnabled(enabled);
       mPassword.setEnabled(enabled);
       mLogin.setEnabled(enabled);
-      mRegister.setEnabled(enabled);
-      mGoogleLogin.setEnabled(enabled);
-      mYahooLogin.setEnabled(enabled);
+      if (mHasRegisterBtn) {
+         mRegister.setEnabled(enabled);
+         mGoogleLogin.setEnabled(enabled);
+         mYahooLogin.setEnabled(enabled);
+      }
    }
 
    @Override
