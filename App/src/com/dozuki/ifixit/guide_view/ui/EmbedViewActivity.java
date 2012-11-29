@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
+import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.widget.MediaController;
 import android.widget.VideoView;
@@ -16,6 +17,7 @@ import com.dozuki.ifixit.R;
 public class EmbedViewActivity extends Activity {
    protected static final String HTML = "HTML";
    private String mHTML;
+   private WebView mWebView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -28,15 +30,31 @@ public class EmbedViewActivity extends Activity {
       setContentView(R.layout.embed_view);
       Bundle extras = getIntent().getExtras();
       mHTML = (String) extras.get(HTML);
-      WebView webView = (WebView) findViewById(R.id.full_screen_web_view);
-      webView.getSettings().setUseWideViewPort(true);
-      webView.getSettings().setJavaScriptEnabled(true);
-      webView.getSettings().setLoadWithOverviewMode(true);
-      webView.getSettings().setBuiltInZoomControls(true);
-      webView.setWebChromeClient(new WebChromeClient() {
+      mWebView = (WebView) findViewById(R.id.full_screen_web_view);
+      mWebView.getSettings().setUseWideViewPort(true);
+      mWebView.getSettings().setJavaScriptEnabled(true);
+      mWebView.getSettings().setLoadWithOverviewMode(true);
+      mWebView.getSettings().setBuiltInZoomControls(true);
+      mWebView.getSettings().setAppCacheEnabled(true);
+      mWebView.getSettings().setCacheMode(WebSettings.LOAD_NORMAL);
+      mWebView.setWebChromeClient(new WebChromeClient() {
       });
-      webView.loadUrl(mHTML);
 
+      if (savedInstanceState != null) {
+         mWebView.restoreState(savedInstanceState);
+      }
+
+      mWebView.loadUrl(mHTML);
+
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      if (mWebView != null) {
+         mWebView.saveState(outState);
+      }
    }
 
    @Override

@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.AsyncTask;
@@ -84,6 +85,8 @@ public class GuideStepViewFragment extends SherlockFragment {
          mImageManager = ((MainApplication)getActivity().getApplication()).
           getImageManager();
       }
+      
+      
 
       mImageSizes = ((MainApplication)getActivity().getApplication()).
        getImageSizes();
@@ -92,6 +95,10 @@ public class GuideStepViewFragment extends SherlockFragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+      
+      if (mMainWebView != null) {
+         mMainWebView.destroy();
+      }
       View view = inflater.inflate(R.layout.guide_step, container, false);
       mFont = Typeface.createFromAsset(getActivity().getAssets(),
        "fonts/Ubuntu-B.ttf");
@@ -105,26 +112,19 @@ public class GuideStepViewFragment extends SherlockFragment {
       mMainImage = (ImageView) view.findViewById(R.id.main_image);
       mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
       
-      mMainWebView.getSettings().setUseWideViewPort(true);
-      mMainWebView.getSettings().setJavaScriptEnabled(true);
-      mMainWebView.getSettings().setSupportZoom(false);
-      mMainWebView.getSettings().setLoadWithOverviewMode(true);
+      WebSettings settings = mMainWebView.getSettings();
+      settings.setUseWideViewPort(true);
+      settings.setJavaScriptEnabled(true);
+      settings.setSupportZoom(false);
+      settings.setLoadWithOverviewMode(true);
+      settings.setAppCacheEnabled(true);
+      settings.setCacheMode(WebSettings.LOAD_NORMAL);
+            
       mMainWebView.setWebViewClient(new WebViewClient() {
 
          public void onPageFinished(WebView view, String url) {
-            
             mMainWebView.setVisibility(View.VISIBLE);
-            try {
-            mMainWebView.setAnimation(AnimationUtils.loadAnimation(getActivity(),
-               R.anim.fade_in));
-            } catch(Exception e) {
-               //fragment was pushed off view and a view
-               //element is invalid
-               //disregard
-            }
-           
          }
-
       });
       
       mMainWebView.setOnTouchListener(new View.OnTouchListener() {
@@ -179,12 +179,25 @@ public class GuideStepViewFragment extends SherlockFragment {
       fitImagesToSpace();
 
       mThumbs.setMainImage(mMainImage);
+      
+      if (savedInstanceState != null) {
+         mMainWebView.restoreState(savedInstanceState);
+      }
 
       if (mStep != null) {
          setStep();
       }
 
       return view;
+   }
+   
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      if (mMainWebView != null) {
+         mMainWebView.saveState(outState);
+      }
    }
    
 
@@ -321,8 +334,10 @@ public class GuideStepViewFragment extends SherlockFragment {
             mMainProgress.setVisibility(View.VISIBLE);
             mVideoPlayButtonContainer.setVisibility(View.GONE);
             if (mStep.getEmded().hasOembed()) {
+
                mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
                mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
+
             } else {
                // TODO: find the best place and way to handle the returned
                // oembed
@@ -378,6 +393,16 @@ public class GuideStepViewFragment extends SherlockFragment {
          mEmbedRet.cancel(true);
       }
       super.onDestroyView();
+   }
+
+   @Override
+   public void onDestroy() {
+      if (mMainWebView != null) {
+         mMainWebView.destroy();
+         mMainWebView = null;
+      }
+
+      super.onDestroy();
    }
 
    public class EmbedRetriever extends AsyncTask<Embed, Void, OEmbed> {
