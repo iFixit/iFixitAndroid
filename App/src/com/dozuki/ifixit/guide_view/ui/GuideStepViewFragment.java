@@ -124,6 +124,7 @@ public class GuideStepViewFragment extends SherlockFragment {
 
          public void onPageFinished(WebView view, String url) {
             mMainWebView.setVisibility(View.VISIBLE);
+            super.onPageFinished(view, url);
          }
       });
       
