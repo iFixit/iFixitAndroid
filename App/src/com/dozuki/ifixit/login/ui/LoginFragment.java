@@ -49,7 +49,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
    private Intent mCurIntent;
 
    private boolean mReadyForRegisterState;
-   private boolean mHasRegisterBtn;
+   private boolean mHasRegisterBtn = true;
 
    private APIReceiver mApiReceiver = new APIReceiver() {
       public void onSuccess(Object result, Intent intent) {
@@ -93,7 +93,9 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       super.onCreate(savedInstanceState);
       Bundle bundle = this.getArguments();
 
-      mHasRegisterBtn = !bundle.getBoolean(LOGIN_NO_REGISTER);
+      if (bundle != null) {
+         mHasRegisterBtn = !bundle.getBoolean(LOGIN_NO_REGISTER);
+      }
    }
 
    @Override

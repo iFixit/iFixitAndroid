@@ -3,7 +3,15 @@
 
     <item
         android:id="@+id/gallery_button"
-        android:icon="@drawable/ic_menu_gallery_inactive"
-        android:showAsAction="always|withText"/>
+        android:icon="@drawable/ic_action_picture"
+        android:showAsAction="always|withText"
+        android:title="@string/media_gallery_title" />
 
+    <item
+        android:id="@+id/logout_button"
+        android:icon="@drawable/ic_action_exit"
+        android:showAsAction="ifRoom|withText"
+        android:visible="false"
+        android:title="@string/logout_title"/>
+    
 </menu>

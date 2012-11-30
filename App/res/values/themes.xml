@@ -36,7 +36,9 @@
         <item name="android:actionBarStyle">@style/Widget.Dozuki.ActionBar</item>
         <item name="actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView</item>
         <item name="android:actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView</item>
-
+        <item name="homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_dark</item>
+        <item name="android:homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_dark</item>
+        
         <!-- Custom Attributes / Styles for Dozuki -->
         <item name="listViewStyle">@style/Widget.Dozuki.ListViewStyle</item>
 

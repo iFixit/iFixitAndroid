@@ -21,7 +21,6 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
-import com.dozuki.ifixit.gallery.ui.MediaFragment;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
@@ -127,11 +126,13 @@ public class TopicsActivity extends SherlockFragmentActivity
          });
       }
       
-      mRequireLogin = !mSite.mPublic;      
-      mVerifiedUser = ((MainApplication)getApplication()).getUserFromPreferenceFile() != null;
+      mRequireLogin = !mSite.mPublic;
       
-      Log.w("requireLogin", ""+mRequireLogin);
-      Log.w("verifiedUser", ""+mVerifiedUser);
+      if (mRequireLogin) {
+         findViewById(R.id.logout_button).setVisibility(View.VISIBLE);
+      }
+      
+      mVerifiedUser = ((MainApplication)getApplication()).getUserFromPreferenceFile() != null;
 
       APIService.setRequireAuthentication(mVerifiedUser);
       
@@ -165,7 +166,7 @@ public class TopicsActivity extends SherlockFragmentActivity
    public void onResume() {
       super.onResume();
 
-      if (mVerifiedUser) {
+      if (mVerifiedUser || !mRequireLogin) {
          initApiReceiver();
       }
    }
@@ -348,6 +349,8 @@ public class TopicsActivity extends SherlockFragmentActivity
             Intent intent = new Intent(this, GalleryActivity.class);
             startActivity(intent);
             return true;
+         case R.id.logout_button:
+            LoginFragment.getLogoutDialog(this).show();
          default:
             return super.onOptionsItemSelected(item);
       }
