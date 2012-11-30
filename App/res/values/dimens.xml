@@ -39,4 +39,7 @@
     <dimen name="progress_bar_width">80dp</dimen>
     <dimen name="gallery_login_text_padding">8dp</dimen>
     <dimen name="gallery_bottom_bar_height">30dp</dimen>
+    
+    <dimen name="guide_create_edit_button_dim">36dp</dimen>
+     <dimen name="guide_create_icon_button_dim">24dp</dimen>
 </resources>

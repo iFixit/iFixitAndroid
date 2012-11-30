@@ -3,7 +3,7 @@
       package="com.dozuki.ifixit"
       android:versionCode="9"
       android:versionName="1.2.1">
-   <uses-sdk android:minSdkVersion="8"
+   <uses-sdk android:minSdkVersion="11"
          android:targetSdkVersion="15" />
    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
@@ -38,6 +38,7 @@
       </activity>
 
       <activity android:name=".gallery.ui.GalleryActivity"></activity>
+      <activity android:name=".guide_create.ui.GuideCreateActivity"></activity>
       <activity android:name=".login.ui.LoginActivity"></activity>
       <activity android:name=".login.ui.OpenIDActivity"></activity>
       <activity android:name=".topic_view.ui.TopicViewActivity"></activity>

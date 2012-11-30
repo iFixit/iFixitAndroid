@@ -18,4 +18,5 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_orange">#FFF25D07</color>
     <color name="dozuki_white">#FFCCCCCC</color>
     <color name="dozuki_grey">#F7777777</color>
+    <color name="fireswing_grey">#EFEFEF</color>
 </resources>

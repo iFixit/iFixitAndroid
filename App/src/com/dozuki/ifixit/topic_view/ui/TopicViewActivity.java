@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.SubMenu;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateActivity;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.ifixit.android.imagemanager.ImageManager;
 
@@ -59,22 +62,32 @@ public class TopicViewActivity extends SherlockFragmentActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.menu_bar, menu);
+	   SubMenu subMenu = menu.addSubMenu("");
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.menu_bar, subMenu);
+		subMenu.setIcon(R.drawable.ic_menu_spinner);
+		MenuItem subMenuItem = subMenu.getItem();
+		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
+				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-      return super.onCreateOptionsMenu(menu);
+		return super.onCreateOptionsMenu(menu);
    }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
+	   Intent intent ;
       switch (item.getItemId()) {
          case android.R.id.home:
             finish();
             return true;
          case R.id.gallery_button:
-            Intent intent = new Intent(this, GalleryActivity.class);
+            intent = new Intent(this, GalleryActivity.class);
             startActivity(intent);
             return true;
+         case R.id.my_guides_button:
+        	 intent = new Intent(this, GuideCreateActivity.class);
+        	 startActivity(intent);
+        	 return true;
          default:
             return super.onOptionsItemSelected(item);
       }

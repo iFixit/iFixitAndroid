@@ -80,4 +80,5 @@
    <string name="passwords_do_not_match_error">Passwords do not match.</string>
    <string name="terms_unchecked_error">You must agree to the terms.</string>
    <string name="login_dialog_title">Login</string>
+   <string name="edit">Edit</string>
 </resources>

@@ -1,7 +1,22 @@
 <?xml version = "1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
-   <item
+  
+    <item
+      android:id="@+id/browse_button"
+	android:title="Browse"
+      android:showAsAction="always|withText" />
+     <item
+      android:id="@+id/my_guides_button"
+     android:title="My Guides"
+      android:showAsAction="always|withText" />
+      <item
       android:id="@+id/gallery_button"
+      android:title="My Gallery"
       android:icon="@drawable/ic_menu_gallery_inactive"
       android:showAsAction="always|withText" />
+      <item
+      android:id="@+id/help_button"
+      android:title="Help"
+      android:showAsAction="always|withText" />
+      
 </menu>
