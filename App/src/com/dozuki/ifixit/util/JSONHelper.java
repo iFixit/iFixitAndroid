@@ -167,12 +167,9 @@ public class JSONHelper {
    }
 
    private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
-
       Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"),
-         jEmbed.getString("type"), jEmbed.getString("url"));
-      
+         jEmbed.getString("type"), jEmbed.getString("url"));   
       em.setContentURL(getQueryMap(jEmbed.getString("url")).get("url"));
-
       return em;
    }
    
@@ -229,12 +226,9 @@ public class JSONHelper {
             video.addEncoding(parseVideoEncoding(jEncodings.getJSONObject(i)));
          }
       } catch (JSONException e) {
-         // image.setOrderby(1);
          e.printStackTrace();
       }
-
       video.setThumbnail(jVideo.getString("thumbnail"));
-
       return video;
    }
 
@@ -438,9 +432,9 @@ public class JSONHelper {
    }
    
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
-      VideoEncoding encoding = new VideoEncoding(jVideoEncoding.getInt("width"),
-         jVideoEncoding.getInt("height"), jVideoEncoding.getString("url"),
-         jVideoEncoding.getString("format"));
+      VideoEncoding encoding =
+         new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
+            jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
       return encoding;
    }
 }

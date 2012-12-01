@@ -2,8 +2,6 @@ package com.dozuki.ifixit.guide_view.model;
 
 import java.io.Serializable;
 
-import android.util.Log;
-
 public class OEmbed implements Serializable {
 
    private String mHTML;
@@ -29,5 +27,4 @@ public class OEmbed implements Serializable {
    public String getHtml() {
       return mHTML;
    }
-
 }

@@ -3,7 +3,6 @@ package com.dozuki.ifixit.guide_view.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-import android.util.Log;
 
 public class GuideStep implements Serializable {
    private static final long serialVersionUID = 2884598684003517264L;

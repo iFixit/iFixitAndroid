@@ -2,13 +2,8 @@ package com.dozuki.ifixit.guide_view.model;
 
 import java.io.Serializable;
 
-import android.util.Log;
-
 public class VideoEncoding implements Serializable {
 
-   /**
-	 * 
-	 */
    private static final long serialVersionUID = -6244973891206389939L;
    protected int mWidth;
    protected int mHeight;
@@ -25,5 +20,4 @@ public class VideoEncoding implements Serializable {
    public String getURL() {
       return mURL;
    }
-
 }

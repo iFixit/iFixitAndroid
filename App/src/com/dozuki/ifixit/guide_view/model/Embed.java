@@ -2,8 +2,6 @@ package com.dozuki.ifixit.guide_view.model;
 
 import java.io.Serializable;
 
-import android.util.Log;
-
 public class Embed implements Serializable {
 
    private static final long serialVersionUID = 1L;
