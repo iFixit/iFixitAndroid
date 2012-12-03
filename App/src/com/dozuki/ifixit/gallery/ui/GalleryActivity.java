@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -21,7 +20,9 @@ import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 
-public class GalleryActivity extends SherlockFragmentActivity
+import org.holoeverywhere.app.Activity;
+
+public class GalleryActivity extends Activity
  implements LoginListener {
 
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";

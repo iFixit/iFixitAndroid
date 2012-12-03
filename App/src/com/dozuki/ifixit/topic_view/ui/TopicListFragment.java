@@ -1,9 +1,7 @@
 package com.dozuki.ifixit.topic_view.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
@@ -12,7 +10,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.login.model.LoginListener;
@@ -22,11 +19,15 @@ import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.ifixit.android.sectionheaders.SectionHeadersAdapter;
 import com.ifixit.android.sectionheaders.SectionListView;
 
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class TopicListFragment extends SherlockFragment
+public class TopicListFragment extends Fragment
  implements TopicSelectedListener, OnItemClickListener, LoginListener {
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
 

@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.util;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -23,6 +22,7 @@ import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
+import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
 import java.io.File;

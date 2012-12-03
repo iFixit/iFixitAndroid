@@ -1,11 +1,12 @@
 package com.dozuki.ifixit.topic_view.ui;
 
 import android.content.Context;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.TextView;
 
 public class TopicListHeaderView extends LinearLayout {
    private TextView mTopicName;

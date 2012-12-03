@@ -14,10 +14,8 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -31,9 +29,12 @@ import com.dozuki.ifixit.util.SpeechCommander;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.ProgressBar;
+
 import java.util.List;
 
-public class GuideViewActivity extends SherlockFragmentActivity
+public class GuideViewActivity extends Activity
  implements OnPageChangeListener {
    private static final int MAX_LOADING_IMAGES = 9;
    private static final int MAX_STORED_IMAGES = 9;
