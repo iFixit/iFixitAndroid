@@ -129,10 +129,6 @@ public class TopicsActivity extends Activity
       
       mRequireLogin = !mSite.mPublic;
       
-      if (mRequireLogin) {
-         findViewById(R.id.logout_button).setVisibility(View.VISIBLE);
-      }
-      
       mVerifiedUser = ((MainApplication)getApplication()).getUserFromPreferenceFile() != null;
 
       APIService.setRequireAuthentication(mVerifiedUser);
@@ -325,6 +321,14 @@ public class TopicsActivity extends Activity
       // run after the fragments parent already saved its state.  Possibly
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
+   }
+   
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      MenuItem logout = menu.findItem(R.id.logout_button);
+      logout.setVisible(mRequireLogin);
+      
+      return super.onPrepareOptionsMenu(menu);
    }
 
    @Override

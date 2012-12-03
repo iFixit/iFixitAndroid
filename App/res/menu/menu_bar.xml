@@ -10,7 +10,7 @@
     <item
         android:id="@+id/logout_button"
         android:icon="@drawable/ic_action_exit"
-        android:showAsAction="ifRoom|withText"
+        android:showAsAction="always|withText"
         android:visible="false"
         android:title="@string/logout_title"/>
     

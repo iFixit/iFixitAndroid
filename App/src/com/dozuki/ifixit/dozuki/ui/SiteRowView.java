@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.dozuki.ui;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
