@@ -140,23 +140,11 @@ public class TopicsActivity extends Activity
    }
    
    public void triggerLogin() {
-      LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
-       findFragmentByTag(MainApplication.LOGIN_FRAGMENT);
-
-      if (mLogin == null) {
-         Fragment loginDialog = new LoginFragment();
-         Bundle args = new Bundle();
-         args.putBoolean(LoginFragment.LOGIN_NO_REGISTER, true);
-         loginDialog.setArguments(args);
-
-         FragmentTransaction transaction = 
-          (FragmentTransaction)getSupportFragmentManager().beginTransaction();
-         
-         transaction.add(loginDialog, MainApplication.LOGIN_FRAGMENT);
-         transaction.setTransition(android.R.anim.fade_in);
-         // Commit the transaction
-         transaction.commit();
-      }
+      LoginFragment lf = LoginFragment.newInstance();
+      Bundle args = new Bundle();
+      args.putBoolean(LoginFragment.LOGIN_NO_REGISTER, true);
+      lf.setArguments(args);
+      lf.show(getSupportFragmentManager());
    }
    
    @Override
@@ -171,6 +159,7 @@ public class TopicsActivity extends Activity
    @Override
    public void onLogin(User user) {
       mVerifiedUser = (user != null);
+            
       initApiReceiver();
    }
 

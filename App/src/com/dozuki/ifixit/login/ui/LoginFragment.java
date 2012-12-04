@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.dozuki.ifixit.MainApplication;
@@ -29,6 +28,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.LinearLayout;

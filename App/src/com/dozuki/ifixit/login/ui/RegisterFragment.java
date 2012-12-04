@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.login.ui;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,16 +8,10 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.dozuki.ifixit.MainApplication;
@@ -32,7 +24,21 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 
-public class RegisterFragment extends SherlockDialogFragment implements OnClickListener {
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.ProgressBar;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.CheckBox;
+import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.ProgressBar;
+import org.holoeverywhere.widget.TextView;
+
+
+public class RegisterFragment extends DialogFragment 
+ implements OnClickListener {
    private static final String REGISTER_STATE = "REGISTER_STATE";
 
    private Button mRegister;
@@ -152,7 +158,6 @@ public class RegisterFragment extends SherlockDialogFragment implements OnClickL
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-
    }
 
    public static RegisterFragment newInstance() {
