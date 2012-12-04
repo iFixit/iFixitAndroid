@@ -36,7 +36,7 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
          android:hint="@string/email_hint"
-         android:inputType="textEmailAddress"
+         android:inputType="textEmailAddress|textNoSuggestions"
          android:fontFamily="sans"              
          android:layout_marginBottom="10dp">
 
@@ -47,7 +47,7 @@
          android:id="@+id/edit_login_username"
          android:layout_width="match_parent"
          android:layout_height="wrap_content"
-         android:inputType="text"
+         android:inputType="textNoSuggestions"
          android:hint="@string/user_name_hint"
          android:fontFamily="sans"              
          android:layout_marginBottom="10dp" />

@@ -11,6 +11,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
+import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.ifixit.android.imagemanager.ImageManager;
 
@@ -57,6 +58,14 @@ public class TopicViewActivity extends Activity {
          }
       }
    }
+   
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      MenuItem logout = menu.findItem(R.id.logout_button);
+      logout.setVisible(!((MainApplication)getApplication()).getSite().mPublic);
+      
+      return super.onPrepareOptionsMenu(menu);
+   }
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
@@ -76,6 +85,8 @@ public class TopicViewActivity extends Activity {
             Intent intent = new Intent(this, GalleryActivity.class);
             startActivity(intent);
             return true;
+         case R.id.logout_button:
+            LoginFragment.getLogoutDialog(this).show();
          default:
             return super.onOptionsItemSelected(item);
       }

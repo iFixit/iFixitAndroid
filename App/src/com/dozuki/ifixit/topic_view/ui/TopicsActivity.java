@@ -140,11 +140,7 @@ public class TopicsActivity extends Activity
    }
    
    public void triggerLogin() {
-      LoginFragment lf = LoginFragment.newInstance();
-      Bundle args = new Bundle();
-      args.putBoolean(LoginFragment.LOGIN_NO_REGISTER, true);
-      lf.setArguments(args);
-      lf.show(getSupportFragmentManager());
+      LoginFragment.newInstance().show(getSupportFragmentManager());
    }
    
    @Override

@@ -95,11 +95,9 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      Bundle bundle = this.getArguments();
-
-      if (bundle != null) {
-         mHasRegisterBtn = !bundle.getBoolean(LOGIN_NO_REGISTER);
-      }
+      
+      mHasRegisterBtn = ((MainApplication)getActivity().getApplication())
+       .getSite().mPublicRegistration;
    }
 
    @Override
