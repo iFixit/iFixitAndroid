@@ -3,14 +3,21 @@ package com.dozuki.ifixit.guide_view.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.SystemClock;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.guide_view.model.OnViewGuideListener;
+import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.ui.TopicGuideListFragment;
 
 import org.holoeverywhere.LayoutInflater;
@@ -21,6 +28,7 @@ public class WebViewFragment extends Fragment
  implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;
+   private Site mSite;
    protected ProgressBar mProgressBar;
 
    @Override
@@ -29,12 +37,20 @@ public class WebViewFragment extends Fragment
       if (mWebView != null) {
          mWebView.destroy();
       }
-
+      
+      if (mSite == null) {
+         mSite = ((MainApplication)getActivity().getApplication()).getSite();
+      }
+      
       View view = inflater.inflate(R.layout.web_view_fragment, container,
        false);
       mProgressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
       mWebView = (WebView)view.findViewById(R.id.web_view);
-
+            
+      CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(mWebView.getContext());
+      CookieManager cookieManager = CookieManager.getInstance();
+      cookieManager.setAcceptCookie(true);
+      
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
       settings.setBuiltInZoomControls(true);
@@ -47,8 +63,11 @@ public class WebViewFragment extends Fragment
       mWebView.setWebViewClient(new GuideWebView(this));
 
       if (savedInstanceState != null) {
+         Log.w("WEB VIEW", "savedInstanceState != null");
          mWebView.restoreState(savedInstanceState);
       } else if (mUrl != null) {
+         Log.w("WEB VIEW", "mUrl != null");
+
          mWebView.loadUrl(mUrl);
       }
 
@@ -68,11 +87,14 @@ public class WebViewFragment extends Fragment
    public void onPause() {
       super.onPause();
       mWebView.onPause();
+      CookieSyncManager.getInstance().stopSync();
    }
 
    @Override
    public void onResume() {
       mWebView.onResume();
+      CookieSyncManager.getInstance().startSync();
+
       super.onResume();
    }
 
@@ -106,29 +128,63 @@ public class WebViewFragment extends Fragment
       private static final int GUIDEID_POSITION = 5;
       private static final String GUIDE_URL = "Guide";
       private static final String TEARDOWN_URL = "Teardown";
+      
+      private String mPrevUrl;
 
       private OnViewGuideListener mGuideListener;
 
       public GuideWebView(OnViewGuideListener guideListener) {
          mGuideListener = guideListener;
+         
+         if (!mSite.mPublic) {
+            setSessionCookie("http://"+mSite.mDomain);
+         }
+      }
+      
+      protected void setSessionCookie(String url) {
+         User user = ((MainApplication)getActivity().getApplication())
+          .getUserFromPreferenceFile();
+         String session = "";
+         if (user != null)
+            session = user.getSession();
+
+         CookieManager.getInstance().setCookie(url,"session="+session);
+
+         CookieSyncManager.getInstance().sync();
       }
 
       @Override
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
          String[] pieces = url.split("/");
          int guideid;
-
-         try {
-            if (pieces[GUIDE_POSITION].equals(GUIDE_URL)
-               || pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
-               guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
-               mGuideListener.onViewGuide(guideid);
-               return true;
+         
+         for(int i = 0; i < pieces.length; i++)
+            Log.w("url pieces", i+"="+pieces[i]);
+                  
+         Log.w("GuideWebView", "url="+url);
+         if (url.equals("http://"+ mSite.mDomain + "/Guide/login")) {
+            url = mUrl;
+         } else {
+            try {
+               if (pieces[GUIDE_POSITION + 1].equals("login")) {
+                  url = mUrl;
+               } else if (pieces[GUIDE_POSITION].equals(GUIDE_URL)
+                || pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
+                  guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
+                  mGuideListener.onViewGuide(guideid);
+                  return true;
+               } 
+            } catch (ArrayIndexOutOfBoundsException e) {
+               Log.w("GuideWebView ArrayIndexOutOfBoundsException", e.toString());
+            } catch (NumberFormatException e) {
+               Log.w("GuideWebView NumberFormatException", e.toString());
+   
             }
-         } catch (ArrayIndexOutOfBoundsException e) {
-         } catch (NumberFormatException e) {
          }
-
+        
+         Log.w("GuideWebView Client", url );
+         
+         setSessionCookie(url);
          view.loadUrl(url);
 
          return true;
@@ -142,6 +198,7 @@ public class WebViewFragment extends Fragment
       @Override
       public void onPageFinished(WebView view, String url) {
          mProgressBar.setVisibility(View.GONE);
+         CookieSyncManager.getInstance().sync();
       }
    }
 }

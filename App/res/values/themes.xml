@@ -21,7 +21,7 @@
         <item name="topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
     </style>
     
-    <style name="Theme.Dozuki" parent="Holo.Theme.Light">
+    <style name="Theme.Dozuki" parent="Holo.Theme.Light.DarkActionBar">
         <!-- Action Bar Logo -->
         <item name="logo">@drawable/logo_dozuki</item>
         <item name="android:logo">@drawable/logo_dozuki</item>
