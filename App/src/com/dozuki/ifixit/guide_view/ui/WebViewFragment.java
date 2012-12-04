@@ -3,7 +3,6 @@ package com.dozuki.ifixit.guide_view.ui;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.os.SystemClock;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,7 +46,7 @@ public class WebViewFragment extends Fragment
       mProgressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
       mWebView = (WebView)view.findViewById(R.id.web_view);
             
-      CookieSyncManager cookieSyncManager = CookieSyncManager.createInstance(mWebView.getContext());
+      CookieSyncManager.createInstance(mWebView.getContext());
       CookieManager cookieManager = CookieManager.getInstance();
       cookieManager.setAcceptCookie(true);
       
@@ -63,11 +62,8 @@ public class WebViewFragment extends Fragment
       mWebView.setWebViewClient(new GuideWebView(this));
 
       if (savedInstanceState != null) {
-         Log.w("WEB VIEW", "savedInstanceState != null");
          mWebView.restoreState(savedInstanceState);
       } else if (mUrl != null) {
-         Log.w("WEB VIEW", "mUrl != null");
-
          mWebView.loadUrl(mUrl);
       }
 
@@ -129,8 +125,6 @@ public class WebViewFragment extends Fragment
       private static final String GUIDE_URL = "Guide";
       private static final String TEARDOWN_URL = "Teardown";
       
-      private String mPrevUrl;
-
       private OnViewGuideListener mGuideListener;
 
       public GuideWebView(OnViewGuideListener guideListener) {
@@ -158,10 +152,6 @@ public class WebViewFragment extends Fragment
          String[] pieces = url.split("/");
          int guideid;
          
-         for(int i = 0; i < pieces.length; i++)
-            Log.w("url pieces", i+"="+pieces[i]);
-                  
-         Log.w("GuideWebView", "url="+url);
          if (url.equals("http://"+ mSite.mDomain + "/Guide/login")) {
             url = mUrl;
          } else {
@@ -178,11 +168,8 @@ public class WebViewFragment extends Fragment
                Log.w("GuideWebView ArrayIndexOutOfBoundsException", e.toString());
             } catch (NumberFormatException e) {
                Log.w("GuideWebView NumberFormatException", e.toString());
-   
             }
          }
-        
-         Log.w("GuideWebView Client", url );
          
          setSessionCookie(url);
          view.loadUrl(url);
@@ -198,7 +185,6 @@ public class WebViewFragment extends Fragment
       @Override
       public void onPageFinished(WebView view, String url) {
          mProgressBar.setVisibility(View.GONE);
-         CookieSyncManager.getInstance().sync();
       }
    }
 }
