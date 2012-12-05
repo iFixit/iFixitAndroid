@@ -1,10 +1,7 @@
 package com.dozuki.ifixit.guide_create.ui;
 
-import java.util.ArrayList;
 
-import android.app.Activity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +11,7 @@ import android.widget.GridView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.MediaViewItem;
+import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuidePortalFragment extends SherlockFragment {
@@ -23,8 +20,7 @@ public class GuidePortalFragment extends SherlockFragment {
 	private ImageManager mImageManager;
 	private GuideCreateListAdapter mGuideAdapter;
 	private GuidePortalFragment mSelf;
-	private ArrayList<GuideCreateListItem> mGuideList;
-	public static int GuideItemID = 0;
+	private GuideCreateActivity mParentRef;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +31,7 @@ public class GuidePortalFragment extends SherlockFragment {
 					.getImageManager();
 		}
 		mSelf = this;
-		mGuideList = new ArrayList<GuideCreateListItem>();
+		mParentRef = (GuideCreateActivity)getActivity();
 		mGuideAdapter = new GuideCreateListAdapter();
 	}
 
@@ -48,20 +44,16 @@ public class GuidePortalFragment extends SherlockFragment {
 		mGridView.setAdapter(mGuideAdapter);
 		return view;
 	}
-
-	public void createGuide() {
-		if (mGuideList == null)
-			return;
-		GuideCreateListItem temp = new GuideCreateListItem(getActivity(),
-				mImageManager, mSelf, GuideItemID++);
-		temp.setText("Test Title" + Math.random());
-		mGuideList.add(temp);
+	
+	@Override
+	public void onResume()
+	{
+		super.onResume();
 		mGuideAdapter.invalidatedView();
 	}
 
-	public void deleteGuide(GuideCreateListItem item) {
-		mGuideList.remove(item);
-		Log.e("portalfrag", "remove guide id: " + item.getId() + " list size: " + mGuideList.size());
+	public void deleteGuide(GuideCreateObject item) {
+		mParentRef.getGuideList().remove(item);
 		mGuideAdapter.invalidatedView();
 	}
 
@@ -69,12 +61,12 @@ public class GuidePortalFragment extends SherlockFragment {
 
 		@Override
 		public int getCount() {
-			return mGuideList.size();
+			return mParentRef.getGuideList().size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			return mGuideList.get(position);
+			return mParentRef.getGuideList().get(position);
 		}
 
 		@Override
@@ -88,16 +80,15 @@ public class GuidePortalFragment extends SherlockFragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-
 			GuideCreateListItem itemView = (GuideCreateListItem) convertView;
+			GuideCreateObject listRef = mParentRef.getGuideList().get(position);
 			if (convertView == null) {
 				itemView = new GuideCreateListItem(getActivity(),
-						mImageManager, mSelf, -1);
+						mImageManager, mSelf, listRef);
 			}
-			
-			GuideCreateListItem listRef = mGuideList.get(position);
-			itemView.setId(listRef.getId());
-			itemView.setEditMode(listRef.editEnabled(), false);
+			itemView.setGuideObject(listRef);
+			itemView.setEditMode(listRef.getEditMode(), false);
+			itemView.setGuideItem(listRef.getTitle(), "");
 			return itemView;
 		}
 

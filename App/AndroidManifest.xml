@@ -3,7 +3,7 @@
       package="com.dozuki.ifixit"
       android:versionCode="9"
       android:versionName="1.2.1">
-   <uses-sdk android:minSdkVersion="11"
+   <uses-sdk android:minSdkVersion="8"
          android:targetSdkVersion="15" />
    <uses-feature android:name="android.hardware.camera" android:required="false" />
 
@@ -61,7 +61,7 @@
          </intent-filter>
       </activity>
       <activity android:name=".guide_view.ui.FullImageViewActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar">
+           >
       </activity>
    </application>
 </manifest>

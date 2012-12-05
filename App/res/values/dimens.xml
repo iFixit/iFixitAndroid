@@ -41,5 +41,5 @@
     <dimen name="gallery_bottom_bar_height">30dp</dimen>
     
     <dimen name="guide_create_edit_button_dim">36dp</dimen>
-     <dimen name="guide_create_icon_button_dim">24dp</dimen>
+     <dimen name="guide_create_icon_button_dim">20dp</dimen>
 </resources>

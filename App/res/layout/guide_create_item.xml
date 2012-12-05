@@ -15,7 +15,7 @@
         android:background="@color/fireswing_grey"
         android:gravity="right"
         android:orientation="horizontal"
-        android:padding="4dp"
+        android:padding="6dp"
         android:visibility="gone" >
 
         <Button
@@ -85,7 +85,4 @@
             android:textOn="" />
 
     </RelativeLayout>
-
-    
-
 </RelativeLayout>

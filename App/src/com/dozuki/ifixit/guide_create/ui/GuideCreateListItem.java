@@ -1,11 +1,13 @@
 package com.dozuki.ifixit.guide_create.ui;
 
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.ifixit.android.imagemanager.ImageManager;
 
 import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -30,30 +32,29 @@ public class GuideCreateListItem extends RelativeLayout {
 	private ImageManager mImageManager;
 	private GuidePortalFragment mPortalRef;
 	private Context mContext;
-	private GuideCreateListItem mSelf;
 	private boolean editBarVisible = false;
-	private int mID;
+	private GuideCreateObject mGuideCreateObject;
 
 	public GuideCreateListItem(Context context, ImageManager imageManager,
-			final GuidePortalFragment portalRef, int id) {
+			final GuidePortalFragment portalRef, GuideCreateObject gObject) {
 		super(context);
 		mContext = context;
 		mPortalRef = portalRef;
 		mImageManager = imageManager;
-		mID = id;
-		mSelf = this;
+		mGuideCreateObject = gObject;
 		LayoutInflater inflater = (LayoutInflater) context
 				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		inflater.inflate(R.layout.guide_create_item, this, true);
-
 		mTitleView = (TextView) findViewById(R.id.guide_create_item_title);
 		mThumbnail = (ImageView) findViewById(R.id.guide_create_item_thumbnail);
 		mEditBar = (LinearLayout) findViewById(R.id.guide_create_item_edit_section);
 		mToggleEdit = (ToggleButton) findViewById(R.id.guide_create_toggle_edit);
+		mToggleEdit.setChecked(mGuideCreateObject.getEditMode());
 		mToggleEdit.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 			@Override
 			public void onCheckedChanged(CompoundButton buttonView,
 					boolean isChecked) {
+				mGuideCreateObject.setEditMode(isChecked);
 				setEditMode(isChecked, true);
 			}
 		});
@@ -62,8 +63,7 @@ public class GuideCreateListItem extends RelativeLayout {
 
 			@Override
 			public void onClick(View v) {
-				portalRef.deleteGuide(mSelf);
-				// mDeleteButton.setOnClickListener(null);
+				mPortalRef .deleteGuide(mGuideCreateObject);
 			}
 
 		});
@@ -76,6 +76,14 @@ public class GuideCreateListItem extends RelativeLayout {
 			}
 
 		});
+		
+		if(mGuideCreateObject.getEditMode())
+			setEditMode(true, false);
+	}
+	
+	public void setGuideObject(GuideCreateObject obj)
+	{
+		mGuideCreateObject = obj;
 	}
 
 	public void setEditMode(boolean isChecked, boolean animate) {
@@ -85,12 +93,16 @@ public class GuideCreateListItem extends RelativeLayout {
 						mContext, R.anim.rotate_clockwise);
 
 				mToggleEdit.startAnimation(rotateAnimation);
+				
+				Animation slideDownAnimation = AnimationUtils.loadAnimation(
+						mContext, R.anim.slide_down);
+				mEditBar.setVisibility(VISIBLE);
+				mEditBar.startAnimation(slideDownAnimation);
 			}
-
-			Animation slideDownAnimation = AnimationUtils.loadAnimation(
-					mContext, R.anim.slide_down);
-			mEditBar.setVisibility(VISIBLE);
-			mEditBar.startAnimation(slideDownAnimation);
+			else
+			{
+				mEditBar.setVisibility(VISIBLE);
+			}
 
 			editBarVisible = true;
 		} else {
@@ -99,30 +111,35 @@ public class GuideCreateListItem extends RelativeLayout {
 						mContext, R.anim.rotate_counterclockwise);
 
 				mToggleEdit.startAnimation(rotateAnimation);
+				Animation slideUpAnimation = AnimationUtils.loadAnimation(mContext,
+						R.anim.slide_up);
+				slideUpAnimation.setAnimationListener(new AnimationListener() {
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						mEditBar.setVisibility(GONE);
+
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						// TODO Auto-generated method stub
+
+					}
+
+					@Override
+					public void onAnimationStart(Animation animation) {
+						// TODO Auto-generated method stub
+
+					}
+				});
+				mEditBar.startAnimation(slideUpAnimation);
 			}
-			Animation slideUpAnimation = AnimationUtils.loadAnimation(mContext,
-					R.anim.slide_up);
-			slideUpAnimation.setAnimationListener(new AnimationListener() {
-
-				@Override
-				public void onAnimationEnd(Animation animation) {
-					mEditBar.setVisibility(GONE);
-
-				}
-
-				@Override
-				public void onAnimationRepeat(Animation animation) {
-					// TODO Auto-generated method stub
-
-				}
-
-				@Override
-				public void onAnimationStart(Animation animation) {
-					// TODO Auto-generated method stub
-
-				}
-			});
-			mEditBar.startAnimation(slideUpAnimation);
+			else
+			{
+				mEditBar.setVisibility(GONE);
+			}
+			
 			editBarVisible = false;
 		}
 	}
@@ -131,43 +148,25 @@ public class GuideCreateListItem extends RelativeLayout {
 		return editBarVisible;
 	}
 
-	public void setGuideItem(String title, String image, Context context) {
-		mContext = context;
+	public void setGuideItem(String title, String image) {
+		mTitleView.setText(title);
 
-		mTitleView.setText(Html.fromHtml(title));
-
-		mImageManager.displayImage(image, (Activity) mContext, mThumbnail);
+		mImageManager.displayImage(image, mPortalRef.getActivity(), mThumbnail);
 	}
+	
 
-	public void setText(final String title) {
-		mPortalRef.getActivity().runOnUiThread(new Runnable() {
+	public void setTitleText(final String title) {
+		Log.i("GuideItem", " title: " + title);
+		mTitleView.setText(title);
+		//mTitleView.invalidate();
+		/*mPortalRef.getActivity().runOnUiThread(new Runnable() {
 
 			public void run() {
 
 				mTitleView.setText(title);
 
 			}
-		});
+		});*/
 
-	}
-
-	public int getId() {
-		return mID;
-	}
-
-	public void setId(int id) {
-		mID = id;
-	}
-
-	@Override
-	public boolean equals(Object o) {
-		if (this == o) {
-			return true;
-		}
-		if (!(o instanceof GuideCreateListItem)) {
-			return false;
-		}
-		GuideCreateListItem lhs = (GuideCreateListItem) o;
-		return mID == lhs.mID;
 	}
 }
