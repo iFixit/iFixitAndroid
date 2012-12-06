@@ -88,11 +88,9 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.guide_create_menu, menu);
 		SubMenu subMenu = menu.addSubMenu("");
 		subMenu.setIcon(R.drawable.ic_menu_spinner);
 		inflater.inflate(R.menu.menu_bar, subMenu);
-
 		MenuItem subMenuItem = subMenu.getItem();
 		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
 				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
@@ -106,9 +104,6 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			finish();
-			return true;
-		case R.id.new_guide_button:
-			createGuide();
 			return true;
 		case R.id.gallery_button:
 			intent = new Intent(this, GalleryActivity.class);

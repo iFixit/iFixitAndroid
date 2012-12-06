@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -25,7 +26,7 @@ public class GuideIntroFragment extends SherlockFragment {
 	EditText mSummary;
 	EditText mIntroduction;
 	TextView mErrorText;
-	ImageButton mSubmitGuideButton;
+	Button mSubmitGuideButton;
 	private GuideCreateActivity mParentRef;
 	
 	@Override
@@ -47,7 +48,7 @@ public class GuideIntroFragment extends SherlockFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.guide_create_intro, container,
 				false);
-		mSubmitGuideButton = (ImageButton)view.findViewById(R.id.confirm_create_guide_button);
+		mSubmitGuideButton = (Button)view.findViewById(R.id.confirm_create_guide_button);
 		mDeviceType = (EditText)view.findViewById(R.id.edit_guide_intro_device_id);
 		mTitle = (EditText)view.findViewById(R.id.edit_guide_intro_title);
 		mSummary = (EditText)view.findViewById(R.id.edit_guide_intro_summary);

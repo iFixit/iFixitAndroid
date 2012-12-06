@@ -62,7 +62,6 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater inflater = getSupportMenuInflater();
-		inflater.inflate(R.menu.step_create_menu, menu);
 		SubMenu subMenu = menu.addSubMenu("");
 		subMenu.setIcon(R.drawable.ic_menu_spinner);
 		inflater.inflate(R.menu.menu_bar, subMenu);

@@ -4,9 +4,11 @@ package com.dozuki.ifixit.guide_create.ui;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.RelativeLayout;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
@@ -22,6 +24,7 @@ public class GuidePortalFragment extends SherlockFragment {
 	private GuideCreateListAdapter mGuideAdapter;
 	private GuidePortalFragment mSelf;
 	private GuideCreateActivity mParentRef;
+	private RelativeLayout mAddGuideBar;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +46,15 @@ public class GuidePortalFragment extends SherlockFragment {
 				false);
 		mGridView = (GridView) view.findViewById(R.id.guide_create_gridview);
 		mGridView.setAdapter(mGuideAdapter);
+		mAddGuideBar = (RelativeLayout) view.findViewById(R.id.add_guide_bar);
+		mAddGuideBar.setOnClickListener(new OnClickListener(){
+
+			@Override
+			public void onClick(View v) {
+				mParentRef.createGuide();
+			}
+			
+		});
 		return view;
 	}
 	
