@@ -97,13 +97,13 @@
             android:lines="3"
             android:scrollHorizontally="false" />
 
-        <ImageButton
+        <Button
             android:id="@+id/confirm_create_guide_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_margin="5dp"
-            android:background="@drawable/ic_btn_login"
+ 			android:text="@string/create_guide_intro_button"
             android:contentDescription="@string/signin_description" />
     </LinearLayout>
 

@@ -16,3 +16,6 @@
 [submodule "HoloEverywhere"]
 	path = HoloEverywhere
 	url = http://github.com/iFixit/HoloEverywhere.git
+[submodule "drag-sort-listview"]
+	path = drag-sort-listview
+	url = https://github.com/mpaddon/drag-sort-listview.git

@@ -45,6 +45,8 @@
     <string name="next_page_image_desc">Next page</string>
     <string name="action_delete">Delete</string>
     <string name="welcome">Welcome, iFixit</string>
+     <string name="add_step">Add a step</string>
+     <string name="add_guide">Add a guide</string>
     <string name="user_name">Enter a username</string>
     <string name="email">What is your email?</string>
     <string name="password">What is your password?</string>
@@ -64,6 +66,8 @@
     <string name="register_agreement">I agree to <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a> under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.</string>
     <string name="create_account">Create an Account</string>
     <string name="no_images_text">Add images with the icons above!</string>
+    <string name="no_steps_text">Add steps with the bar above!</string>
+    <string name="no_guides_text">Add guides with the bar above!</string>
     <string name="dozuki_search_hint">Search sites</string>
     <string name="site_list_button">Explore Sites</string>
     <string name="site_list_title">Select a site</string>
@@ -92,4 +96,5 @@
 	<string name="title_hint">Change automatic title.</string>
 	<string name="summary_hint">Summarize in a sentence or two what this guide will accomplish.</string>
 	<string name="introduction_hint">Outline what you are going to teach someone how to do.</string>
+	<string name="create_guide_intro_button">Create</string>
 </resources>

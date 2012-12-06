@@ -12,7 +12,8 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.ifixit.android
+.imagemanager.ImageManager;
 
 public class GuidePortalFragment extends SherlockFragment {
 

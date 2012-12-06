@@ -4,22 +4,20 @@
     android:layout_height="match_parent"
     android:background="@color/white"
     android:orientation="vertical" >
-<GridView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/guide_create_gridview"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginTop="@dimen/topic_list_top_margin"
-    android:columnWidth="@dimen/topic_list_column_width"
-    android:numColumns="auto_fit"
-    android:verticalSpacing="@dimen/topic_list_vertical_spacing"
-    android:horizontalSpacing="@dimen/topic_list_horizontal_spacing"
-    android:stretchMode="columnWidth"
-    android:layout_below="@+id/add_guide_bar"
-    android:gravity="center"
-    style="?attr/topicGuideList"
-/>
- <RelativeLayout
-        android:id="@+id/add_guide_bar"
+
+    <com.mobeta.android.dslv.DragSortListView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:dslv="http://schemas.android.com/apk/res/com.mobeta.android.demodslv"
+        android:id="@+id/steps_portal_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/add_step_bar"
+        android:layout_margin="3dp"
+        android:dividerHeight="2dp"
+        android:padding="3dp" />
+
+    <RelativeLayout
+        android:id="@+id/add_step_bar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/gallery_bottom_bar_height"
         android:layout_alignParentTop="true"
@@ -27,7 +25,7 @@
         android:clickable="true" >
 
         <ImageView
-            android:id="@+id/add_guide_button"
+            android:id="@+id/add_step_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -36,23 +34,25 @@
             android:src="@drawable/ic_add_list_item" />
 
         <TextView
-            android:id="@+id/add_guide_text"
+            android:id="@+id/add_step_text"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/gallery_login_text_padding"
-            android:layout_toRightOf="@+id/add_guide_button"
-            android:text="@string/add_guide"
+            android:layout_toRightOf="@+id/add_step_button"
+            android:text="@string/add_step"
             android:textColor="@color/dozuki_grey"
             android:textStyle="bold" />
     </RelativeLayout>
-     <TextView
-        android:id="@+id/no_guides_text"
+
+    <TextView
+        android:id="@+id/no_steps_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
-        android:text="@string/no_guides_text"
+        android:text="@string/no_steps_text"
         android:visibility="gone" />
+
 </RelativeLayout>

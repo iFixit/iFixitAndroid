@@ -6,6 +6,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -72,7 +73,9 @@ public class GuideCreateListItem extends RelativeLayout {
 
 			@Override
 			public void onClick(View v) {
-
+				Intent intent = new Intent(mPortalRef.getActivity(), GuideCreateStepsActivity.class);
+				intent.putExtra(GuideCreateStepsActivity.GuideKey, mGuideCreateObject);
+				mPortalRef.getActivity().startActivity(intent);
 			}
 
 		});
