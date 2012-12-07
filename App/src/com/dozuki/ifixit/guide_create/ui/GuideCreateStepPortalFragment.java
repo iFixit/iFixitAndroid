@@ -110,7 +110,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			}
 		});
 		mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
-		
+
 		if (mParentRef.getStepList().isEmpty())
 			mNoStepsText.setVisibility(View.VISIBLE);
 		mDragListView.setDropListener(onDrop);
@@ -147,41 +147,51 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 				TextView tv = (TextView) v
 						.findViewById(R.id.step_title_textview);
 				holder.stepsView = tv;
-				holder.mToggleEdit = (ToggleButton) v.findViewById(R.id.step_item_toggle_edit);
-				holder.mImageView = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail);
-				holder.mDeleteButton = (Button) v.findViewById(R.id.step_create_delete_button);
-				holder.mDeleteButton.setOnClickListener(new OnClickListener(){
+				holder.mToggleEdit = (ToggleButton) v
+						.findViewById(R.id.step_item_toggle_edit);
+				holder.mImageView = (ImageView) v
+						.findViewById(R.id.guide_step_item_thumbnail);
+				holder.mDeleteButton = (Button) v
+						.findViewById(R.id.step_create_delete_button);
 
-					@Override
-					public void onClick(View v) {
-						mParentRef.deleteStep(stepObj);
-						mDragListView.invalidateViews();
-					}
-					
-				});
-				holder.mEditButton = (Button) v.findViewById(R.id.step_create_edit_button);
-				holder.mEditButton.setOnClickListener(new OnClickListener(){
+				holder.mEditButton = (Button) v
+						.findViewById(R.id.step_create_edit_button);
 
-					@Override
-					public void onClick(View v) {
-						// TODO Auto-generated method stub
-						
-					}
-					
-				});
-				holder.mEditBar = (LinearLayout) v.findViewById(R.id.step_create_item_edit_section);
-				holder.mToggleEdit.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-					@Override
-					public void onCheckedChanged(CompoundButton buttonView,
-							boolean isChecked) {
-						stepObj.setEditMode(isChecked);
-						setEditMode(isChecked, true, holder.mToggleEdit, holder.mEditBar);
-						mDragListView.invalidateViews();
-					}
-				});
+				holder.mEditBar = (LinearLayout) v
+						.findViewById(R.id.step_create_item_edit_section);
+
 				v.setTag(holder);
 			}
-			ViewHolder holder = (ViewHolder) v.getTag();
+			final ViewHolder holder = (ViewHolder) v.getTag();
+			holder.mToggleEdit
+					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+						@Override
+						public void onCheckedChanged(CompoundButton buttonView,
+								boolean isChecked) {
+							stepObj.setEditMode(isChecked);
+							setEditMode(isChecked, true, holder.mToggleEdit,
+									holder.mEditBar);
+							mDragListView.invalidateViews();
+						}
+					});
+			holder.mDeleteButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					mParentRef.deleteStep(stepObj);
+					mDragListView.invalidateViews();
+				}
+
+			});
+			holder.mEditButton.setOnClickListener(new OnClickListener() {
+
+				@Override
+				public void onClick(View v) {
+					// TODO Auto-generated method stub
+
+				}
+
+			});
 			String step = getItem(position).getTitle();
 			holder.stepsView.setText(step);
 			boolean isEdit = getItem(position).getEditMode();
@@ -190,57 +200,59 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			setEditMode(isEdit, false, holder.mToggleEdit, holder.mEditBar);
 			return v;
 		}
-		
-		public void setEditMode(boolean isChecked, boolean animate,final ToggleButton mToggleEdit,final LinearLayout mEditBar) {
+
+		public void setEditMode(boolean isChecked, boolean animate,
+				final ToggleButton mToggleEdit, final LinearLayout mEditBar) {
 			if (isChecked) {
 				if (animate) {
 					Animation rotateAnimation = AnimationUtils.loadAnimation(
-							mParentRef.getApplicationContext(), R.anim.rotate_clockwise);
+							mParentRef.getApplicationContext(),
+							R.anim.rotate_clockwise);
 
 					mToggleEdit.startAnimation(rotateAnimation);
-					
-					Animation slideDownAnimation = AnimationUtils.loadAnimation(
-							mParentRef.getApplicationContext(), R.anim.slide_down);
+
+					Animation slideDownAnimation = AnimationUtils
+							.loadAnimation(mParentRef.getApplicationContext(),
+									R.anim.slide_down);
 					mEditBar.setVisibility(View.VISIBLE);
 					mEditBar.startAnimation(slideDownAnimation);
-				}
-				else
-				{
+				} else {
 					mEditBar.setVisibility(View.VISIBLE);
 				}
 
 			} else {
 				if (animate) {
 					Animation rotateAnimation = AnimationUtils.loadAnimation(
-							mParentRef.getApplicationContext(), R.anim.rotate_counterclockwise);
+							mParentRef.getApplicationContext(),
+							R.anim.rotate_counterclockwise);
 
 					mToggleEdit.startAnimation(rotateAnimation);
-					Animation slideUpAnimation = AnimationUtils.loadAnimation(mParentRef.getApplicationContext(),
-							R.anim.slide_up);
-					slideUpAnimation.setAnimationListener(new AnimationListener() {
+					Animation slideUpAnimation = AnimationUtils
+							.loadAnimation(mParentRef.getApplicationContext(),
+									R.anim.slide_up);
+					slideUpAnimation
+							.setAnimationListener(new AnimationListener() {
 
-						@Override
-						public void onAnimationEnd(Animation animation) {
-							mEditBar.setVisibility(View.GONE);
-						}
+								@Override
+								public void onAnimationEnd(Animation animation) {
+									mEditBar.setVisibility(View.GONE);
+								}
 
-						@Override
-						public void onAnimationRepeat(Animation animation) {
-						}
+								@Override
+								public void onAnimationRepeat(
+										Animation animation) {
+								}
 
-						@Override
-						public void onAnimationStart(Animation animation) {
-						}
-					});
+								@Override
+								public void onAnimationStart(Animation animation) {
+								}
+							});
 					mEditBar.startAnimation(slideUpAnimation);
-				}
-				else
-				{
+				} else {
 					mEditBar.setVisibility(View.GONE);
 				}
 			}
 		}
 	}
-	
-	
+
 }
