@@ -27,7 +27,7 @@ public class GuideIntroFragment extends SherlockFragment {
 	EditText mIntroduction;
 	TextView mErrorText;
 	Button mSubmitGuideButton;
-	private GuideCreateActivity mParentRef;
+	GuideCreateObject mGuideObject;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -43,6 +43,11 @@ public class GuideIntroFragment extends SherlockFragment {
 		savedInstanceState.putString(IntroductionKey, mIntroduction.getText().toString());
 	}
 	
+	public void setGuideOBject(GuideCreateObject obj)
+	{
+		mGuideObject = obj;
+	}
+	
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -54,7 +59,6 @@ public class GuideIntroFragment extends SherlockFragment {
 		mSummary = (EditText)view.findViewById(R.id.edit_guide_intro_summary);
 		mIntroduction = (EditText)view.findViewById(R.id.edit_guide_intro_introduction_text);
 		mErrorText = (TextView)view.findViewById(R.id.guide_intro_error_text);
-		mParentRef = (GuideCreateActivity)getActivity();
 		
 		if(savedInstanceState != null)
 		{
@@ -86,11 +90,11 @@ public class GuideIntroFragment extends SherlockFragment {
 	
 	private void confirmCreateGuide(String device, String title, String summary, String intro)
 	{
-		GuideCreateObject item = mParentRef.getGuideList().get(mParentRef.getGuideList().size() - 1);
-		item.setTitle(title);
-		item.setTopic(device);
-		item.setSummary(summary);
-		item.setIntroduction(intro);
+		if(mGuideObject == null) return;
+		mGuideObject.setTitle(title);
+		mGuideObject.setTopic(device);
+		mGuideObject.setSummary(summary);
+		mGuideObject.setIntroduction(intro);
 		getFragmentManager().popBackStack();
 	}
 }

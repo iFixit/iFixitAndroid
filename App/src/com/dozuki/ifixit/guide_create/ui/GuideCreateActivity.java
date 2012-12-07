@@ -129,14 +129,16 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 	public void createGuide() {
 		if (mGuideList == null)
 			return;
-		GuideCreateObject temp = new GuideCreateObject(GuideItemID++);
-		mGuideList.add(temp);
+		
 		launchGuideCreateIntro();
 	}
 	
 	private void launchGuideCreateIntro()
 	{
+		GuideCreateObject temp = new GuideCreateObject(GuideItemID++);
+		mGuideList.add(temp);
 		GuideIntroFragment newFragment = new GuideIntroFragment();
+		newFragment.setGuideOBject(temp);
 		FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.guide_create_fragment_container, newFragment);
 		transaction.addToBackStack(null);

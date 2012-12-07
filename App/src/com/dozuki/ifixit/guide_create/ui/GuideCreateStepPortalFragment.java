@@ -39,6 +39,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 	private StepAdapter mAdapter;
 	private DragSortController mController;
 	private RelativeLayout mAddStepBar;
+	private RelativeLayout mEditIntroBar;
 	private TextView mNoStepsText;
 
 	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
@@ -109,6 +110,14 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 				mDragListView.invalidateViews();
 			}
 		});
+		mEditIntroBar = (RelativeLayout) view.findViewById(R.id.edit_intro_bar);
+		mAddStepBar = (RelativeLayout) view.findViewById(R.id.add_step_bar);
+		mEditIntroBar.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				
+			}
+		});
 		mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
 
 		if (mParentRef.getStepList().isEmpty())
@@ -163,6 +172,9 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 				v.setTag(holder);
 			}
 			final ViewHolder holder = (ViewHolder) v.getTag();
+			boolean isEdit = getItem(position).getEditMode();
+			holder.mToggleEdit.setOnCheckedChangeListener(null);
+			holder.mToggleEdit.setChecked(isEdit);
 			holder.mToggleEdit
 					.setOnCheckedChangeListener(new OnCheckedChangeListener() {
 						@Override
@@ -175,27 +187,21 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 						}
 					});
 			holder.mDeleteButton.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					mParentRef.deleteStep(stepObj);
 					mDragListView.invalidateViews();
 				}
-
 			});
 			holder.mEditButton.setOnClickListener(new OnClickListener() {
-
 				@Override
 				public void onClick(View v) {
 					// TODO Auto-generated method stub
 
 				}
-
 			});
 			String step = getItem(position).getTitle();
 			holder.stepsView.setText(step);
-			boolean isEdit = getItem(position).getEditMode();
-			holder.mToggleEdit.setChecked(isEdit);
 			mImageManager.displayImage("", mParentRef, holder.mImageView);
 			setEditMode(isEdit, false, holder.mToggleEdit, holder.mEditBar);
 			return v;

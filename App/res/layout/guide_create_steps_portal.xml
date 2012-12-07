@@ -11,39 +11,84 @@
         android:id="@+id/steps_portal_list"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/add_step_bar"
+        android:layout_below="@+id/guide_create_top_bar"
         android:layout_margin="3dp"
         android:dividerHeight="2dp"
         android:padding="3dp" />
 
-    <RelativeLayout
-        android:id="@+id/add_step_bar"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/gallery_bottom_bar_height"
-        android:layout_alignParentTop="true"
-        android:background="@color/gray"
-        android:clickable="true" >
+    <LinearLayout
+        android:id="@+id/guide_create_top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="false"
+        android:weightSum="1.0" >
 
-        <ImageView
-            android:id="@+id/add_step_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:paddingLeft="15dp"
-            android:src="@drawable/ic_add_list_item" />
+        <RelativeLayout
+            android:id="@+id/edit_intro_bar"
+            android:layout_width="0dp"
+            android:layout_weight=".4875"
+             android:layout_gravity="left"
+            android:layout_height="@dimen/gallery_top_bar_height"
+            android:background="@color/gray"
+            android:clickable="true" >
 
-        <TextView
-            android:id="@+id/add_step_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/gallery_login_text_padding"
-            android:layout_toRightOf="@+id/add_step_button"
-            android:text="@string/add_step"
-            android:textColor="@color/dozuki_grey"
-            android:textStyle="bold" />
-    </RelativeLayout>
+            <ImageView
+                android:id="@+id/edit_intro_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_edit_intro" />
+
+            <TextView
+                android:id="@+id/aedit_intro__text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@+id/edit_intro_button"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/edit_intro_button"
+                android:text="@string/edit_step_intro"
+                android:textColor="@color/dozuki_grey"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+         <RelativeLayout
+              android:layout_width="0dp"
+            android:layout_height="@dimen/gallery_top_bar_height"
+            android:layout_weight=".025"
+            />
+        <RelativeLayout
+            android:id="@+id/add_step_bar"
+            android:layout_width="0dp"
+            android:layout_height="@dimen/gallery_top_bar_height"
+            android:layout_weight=".4875"
+            android:background="@color/gray"
+            android:clickable="true" >
+
+            <ImageView
+                android:id="@+id/add_step_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:src="@drawable/ic_add_list_item" />
+
+            <TextView
+                android:id="@+id/add_step_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="20dp"
+                android:layout_toRightOf="@+id/add_step_button"
+                android:text="@string/add_step"
+                android:textColor="@color/dozuki_grey"
+                android:textStyle="bold" />
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <TextView
         android:id="@+id/no_steps_text"
@@ -52,6 +97,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:layout_below="@+id/guide_create_top_bar"
         android:text="@string/no_steps_text"
         android:visibility="gone" />
 

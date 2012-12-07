@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.guide_create.ui;
 
-
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,13 +8,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.ifixit.android
-.imagemanager.ImageManager;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuidePortalFragment extends SherlockFragment {
 
@@ -25,6 +24,7 @@ public class GuidePortalFragment extends SherlockFragment {
 	private GuidePortalFragment mSelf;
 	private GuideCreateActivity mParentRef;
 	private RelativeLayout mAddGuideBar;
+	private TextView mNoGuidesText;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -35,7 +35,7 @@ public class GuidePortalFragment extends SherlockFragment {
 					.getImageManager();
 		}
 		mSelf = this;
-		mParentRef = (GuideCreateActivity)getActivity();
+		mParentRef = (GuideCreateActivity) getActivity();
 		mGuideAdapter = new GuideCreateListAdapter();
 	}
 
@@ -46,21 +46,23 @@ public class GuidePortalFragment extends SherlockFragment {
 				false);
 		mGridView = (GridView) view.findViewById(R.id.guide_create_gridview);
 		mGridView.setAdapter(mGuideAdapter);
+		mNoGuidesText = (TextView) view.findViewById(R.id.no_guides_text);
+		if (mParentRef.getGuideList().isEmpty())
+			mNoGuidesText.setVisibility(View.VISIBLE);
 		mAddGuideBar = (RelativeLayout) view.findViewById(R.id.add_guide_bar);
-		mAddGuideBar.setOnClickListener(new OnClickListener(){
-
+		mAddGuideBar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
+				if (mNoGuidesText.getVisibility() == View.VISIBLE)
+					mNoGuidesText.setVisibility(View.GONE);
 				mParentRef.createGuide();
 			}
-			
 		});
 		return view;
 	}
-	
+
 	@Override
-	public void onResume()
-	{
+	public void onResume() {
 		super.onResume();
 		mGuideAdapter.invalidatedView();
 	}
@@ -86,10 +88,10 @@ public class GuidePortalFragment extends SherlockFragment {
 		public long getItemId(int position) {
 			return position;
 		}
-		
-		 public void invalidatedView() {
-	         mGridView.invalidateViews();
-	      }
+
+		public void invalidatedView() {
+			mGridView.invalidateViews();
+		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
@@ -104,6 +106,5 @@ public class GuidePortalFragment extends SherlockFragment {
 			itemView.setGuideItem(listRef.getTitle(), "");
 			return itemView;
 		}
-
 	}
 }
