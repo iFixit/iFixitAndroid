@@ -5,7 +5,8 @@
       android:id="@+id/browse_button"
 	android:title="Browse"
 	android:icon="@drawable/ic_spinner_browse"
-      android:showAsAction="always|withText" />
+      android:showAsAction="always|withText" 
+   />
      <item
       android:id="@+id/my_guides_button"
      android:title="My Guides"

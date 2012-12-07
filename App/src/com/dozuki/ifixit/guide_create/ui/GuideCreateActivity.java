@@ -78,7 +78,7 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 		String tag = "guide_portal_fragment";
 		if (findViewById(R.id.guide_create_fragment_container) != null && getSupportFragmentManager().findFragmentByTag(tag) == null) {	
 			mGuidePortal = new GuidePortalFragment();
-			mGuidePortal.setRetainInstance(true);
+		//	mGuidePortal.setRetainInstance(true);
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.guide_create_fragment_container, mGuidePortal, tag)
 					.commit();
@@ -122,8 +122,8 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putSerializable(GuideObjectKey, mGuideList);
+		super.onSaveInstanceState(savedInstanceState);
 	}
 	
 	public void createGuide() {
@@ -137,11 +137,10 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 	private void launchGuideCreateIntro()
 	{
 		GuideIntroFragment newFragment = new GuideIntroFragment();
-		newFragment.setRetainInstance(true);
 		FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.guide_create_fragment_container, newFragment);
 		transaction.addToBackStack(null);
-		transaction.commit();		
+		transaction.commitAllowingStateLoss();	
 	}
 
 }

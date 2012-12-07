@@ -7,7 +7,8 @@
     android:layout_marginRight="4dp"
     android:background="@color/gray"
     android:padding="1dp" >
-<LinearLayout
+
+    <LinearLayout
         android:id="@+id/guide_create_item_edit_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,7 +17,24 @@
         android:gravity="right"
         android:orientation="horizontal"
         android:padding="6dp"
-        android:visibility="gone" >
+        android:visibility="visible" >
+
+        <ToggleButton
+            android:id="@+id/guide_create_publish_button"
+            android:layout_width="@dimen/guide_create_icon_button_dim"
+            android:layout_height="@dimen/guide_create_icon_button_dim"
+            android:background="@drawable/ic_list_item_publish"
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp" />
+
+        <TextView
+            android:id="@+id/guide_create_item_publish"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:paddingLeft="10dp"
+            android:paddingRight="32dp"
+            android:gravity="center_vertical"
+            android:text="@string/publish" />
 
         <Button
             android:id="@+id/guide_create_delete_button"
@@ -24,32 +42,35 @@
             android:layout_height="@dimen/guide_create_icon_button_dim"
             android:background="@drawable/ic_guide_delete"
             android:paddingLeft="20dp"
-             android:paddingRight="20dp" />
+            android:paddingRight="10dp" />
 
         <TextView
             android:id="@+id/guide_create_item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/action_delete" 
-             android:paddingLeft="20dp"
-             android:paddingRight="20dp"/>
+            android:paddingLeft="10dp"
+            android:paddingRight="32dp"
+            android:gravity="center_vertical"
+            android:text="@string/action_delete" />
 
         <Button
             android:id="@+id/guide_create_edit_button"
             android:layout_width="@dimen/guide_create_icon_button_dim"
             android:layout_height="@dimen/guide_create_icon_button_dim"
             android:background="@drawable/ic_guide_edit"
-             android:paddingLeft="20dp"
-             android:paddingRight="20dp" />
+            android:paddingLeft="20dp"
+            android:paddingRight="10dp" />
 
         <TextView
             android:id="@+id/guide_create_item_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/edit"
-             android:paddingLeft="20dp"
-             android:paddingRight="20dp" />
+            android:paddingLeft="10dp"
+             android:gravity="center_vertical"
+            android:paddingRight="13dp"
+            android:text="@string/edit" />
     </LinearLayout>
+
     <RelativeLayout
         android:id="@+id/guide_create_upper_section"
         android:layout_width="match_parent"
@@ -67,12 +88,15 @@
             android:padding="1dp" />
 
         <TextView
-            android:id="@+id/guide_create_item_title"
+            android:id="@+id/guide_create_item_publish_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
+            android:layout_below="@+id/guide_create_item_title"
             android:layout_toRightOf="@+id/guide_create_item_thumbnail"
-            android:text="" />
+            android:text="@string/unpublished"
+            android:textColor="@color/dozuki_red"
+            android:textStyle="italic"
+            android:textSize="12sp" />
 
         <ToggleButton
             android:id="@+id/guide_create_toggle_edit"
@@ -84,5 +108,14 @@
             android:textOff=""
             android:textOn="" />
 
+        <TextView
+            android:id="@+id/guide_create_item_title"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/guide_create_toggle_edit"
+            android:layout_alignLeft="@+id/guide_create_item_publish_status"
+            android:text="@string/default_title" />
     </RelativeLayout>
+
 </RelativeLayout>

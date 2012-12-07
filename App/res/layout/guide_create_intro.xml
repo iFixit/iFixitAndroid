@@ -28,7 +28,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="30dp"
             android:text="@string/create_guide_header"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
@@ -42,9 +42,9 @@
             android:id="@+id/edit_guide_intro_device_id"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
             android:ems="10"
             android:hint="@string/device_hint"
-            android:inputType="text"
             android:scrollHorizontally="false" >
 
             <requestFocus />
@@ -60,9 +60,9 @@
             android:id="@+id/edit_guide_intro_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
             android:ems="10"
             android:hint="@string/title_hint"
-            android:inputType="text"
             android:scrollHorizontally="false" />
 
         <TextView
@@ -75,11 +75,12 @@
             android:id="@+id/edit_guide_intro_summary"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:layout_marginBottom="35dp"
+            android:gravity="top"
             android:hint="@string/summary_hint"
-            android:inputType="text"
             android:lines="3"
-            android:scrollHorizontally="false" />
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
 
         <TextView
             android:id="@+id/guide_intro_introduction_text"
@@ -91,11 +92,12 @@
             android:id="@+id/edit_guide_intro_introduction_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
+            android:layout_marginBottom="35dp"
+            android:gravity="top"
             android:hint="@string/introduction_hint"
-            android:inputType="text"
             android:lines="3"
-            android:scrollHorizontally="false" />
+            android:scrollHorizontally="false"
+            android:singleLine="false" />
 
         <Button
             android:id="@+id/confirm_create_guide_button"
@@ -103,8 +105,9 @@
             android:layout_height="wrap_content"
             android:layout_gravity="right"
             android:layout_margin="5dp"
- 			android:text="@string/create_guide_intro_button"
-            android:contentDescription="@string/signin_description" />
+            android:contentDescription="@string/signin_description"
+            android:text="@string/create_guide_intro_button"
+            android:textColor="@color/dozuki_grey" />
     </LinearLayout>
 
 </ScrollView>

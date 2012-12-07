@@ -28,6 +28,16 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 	public ArrayList<GuideCreateStepObject> getStepList() {
 		return mStepList;
 	}
+	
+	public void deleteStep(GuideCreateStepObject step)
+	{
+		mStepList.remove(step);
+	}
+	
+	public void addStep(GuideCreateStepObject step, int index)
+	{
+		mStepList.add(index, step);
+	}
 
 	@SuppressWarnings("unchecked")
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,7 +75,6 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 		SubMenu subMenu = menu.addSubMenu("");
 		subMenu.setIcon(R.drawable.ic_menu_spinner);
 		inflater.inflate(R.menu.menu_bar, subMenu);
-
 		MenuItem subMenuItem = subMenu.getItem();
 		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
 				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);

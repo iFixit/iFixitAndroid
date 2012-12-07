@@ -12,6 +12,7 @@
         <item name="actionBarStyle">@style/Widget.iFixit.ActionBar</item>
         <item name="actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
         <item name="android:actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
+        <item name="actionDropDownStyle">@style/Widget.iFixit.ActionBar.ListPopupWindow</item>
 
         <!-- Custom Attributes / Styles -->
         <item name="topicHeaderColor">@color/ifixit_blue</item>

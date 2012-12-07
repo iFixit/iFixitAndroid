@@ -7,6 +7,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +29,9 @@ public class GuideCreateListItem extends RelativeLayout {
 	private ImageView mThumbnail;
 	private Button mDeleteButton;
 	private Button mEditButton;
+	private ToggleButton mPublishButton;
+	private TextView mPublishText;
+	private TextView mPublishButtonText;
 	private ToggleButton mToggleEdit;
 	private LinearLayout mEditBar;
 	private ImageManager mImageManager;
@@ -64,7 +68,7 @@ public class GuideCreateListItem extends RelativeLayout {
 
 			@Override
 			public void onClick(View v) {
-				mPortalRef .deleteGuide(mGuideCreateObject);
+				mPortalRef.deleteGuide(mGuideCreateObject);
 			}
 
 		});
@@ -73,19 +77,48 @@ public class GuideCreateListItem extends RelativeLayout {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(mPortalRef.getActivity(), GuideCreateStepsActivity.class);
-				intent.putExtra(GuideCreateStepsActivity.GuideKey, mGuideCreateObject);
+				Intent intent = new Intent(mPortalRef.getActivity(),
+						GuideCreateStepsActivity.class);
+				intent.putExtra(GuideCreateStepsActivity.GuideKey,
+						mGuideCreateObject);
 				mPortalRef.getActivity().startActivity(intent);
 			}
 
 		});
-		
-		if(mGuideCreateObject.getEditMode())
+		mPublishText = (TextView) findViewById(R.id.guide_create_item_publish_status);
+
+		mPublishButton = (ToggleButton) findViewById(R.id.guide_create_publish_button);
+		mPublishButtonText = (TextView) findViewById(R.id.guide_create_item_publish);
+		mPublishButton
+				.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+					@Override
+					public void onCheckedChanged(CompoundButton buttonView,
+							boolean isChecked) {
+						if (isChecked) {
+							mPublishButton.setBackgroundDrawable(getResources()
+									.getDrawable(
+											R.drawable.ic_list_item_unpublish));
+							mPublishText.setText(R.string.published);
+							mPublishButtonText.setText(R.string.unpublish);
+							mPublishText.setTextColor(Color.GREEN);
+						} else {
+							mPublishButton.setBackgroundDrawable(getResources()
+									.getDrawable(
+											R.drawable.ic_list_item_publish));
+							mPublishText.setText(R.string.unpublished);
+							mPublishButtonText.setText(R.string.publish);
+							mPublishText.setTextColor(Color.RED);
+						}
+						mGuideCreateObject.setPublished(isChecked);
+					}
+				});
+		if (mGuideCreateObject.getPublished())
+			mPublishButton.setChecked(true);
+		if (mGuideCreateObject.getEditMode())
 			setEditMode(true, false);
 	}
-	
-	public void setGuideObject(GuideCreateObject obj)
-	{
+
+	public void setGuideObject(GuideCreateObject obj) {
 		mGuideCreateObject = obj;
 	}
 
@@ -96,14 +129,12 @@ public class GuideCreateListItem extends RelativeLayout {
 						mContext, R.anim.rotate_clockwise);
 
 				mToggleEdit.startAnimation(rotateAnimation);
-				
+
 				Animation slideDownAnimation = AnimationUtils.loadAnimation(
 						mContext, R.anim.slide_down);
 				mEditBar.setVisibility(VISIBLE);
 				mEditBar.startAnimation(slideDownAnimation);
-			}
-			else
-			{
+			} else {
 				mEditBar.setVisibility(VISIBLE);
 			}
 
@@ -114,8 +145,8 @@ public class GuideCreateListItem extends RelativeLayout {
 						mContext, R.anim.rotate_counterclockwise);
 
 				mToggleEdit.startAnimation(rotateAnimation);
-				Animation slideUpAnimation = AnimationUtils.loadAnimation(mContext,
-						R.anim.slide_up);
+				Animation slideUpAnimation = AnimationUtils.loadAnimation(
+						mContext, R.anim.slide_up);
 				slideUpAnimation.setAnimationListener(new AnimationListener() {
 
 					@Override
@@ -137,12 +168,10 @@ public class GuideCreateListItem extends RelativeLayout {
 					}
 				});
 				mEditBar.startAnimation(slideUpAnimation);
-			}
-			else
-			{
+			} else {
 				mEditBar.setVisibility(GONE);
 			}
-			
+
 			editBarVisible = false;
 		}
 	}
@@ -156,20 +185,20 @@ public class GuideCreateListItem extends RelativeLayout {
 
 		mImageManager.displayImage(image, mPortalRef.getActivity(), mThumbnail);
 	}
-	
 
 	public void setTitleText(final String title) {
 		Log.i("GuideItem", " title: " + title);
 		mTitleView.setText(title);
-		//mTitleView.invalidate();
-		/*mPortalRef.getActivity().runOnUiThread(new Runnable() {
-
-			public void run() {
-
-				mTitleView.setText(title);
-
-			}
-		});*/
+		// mTitleView.invalidate();
+		/*
+		 * mPortalRef.getActivity().runOnUiThread(new Runnable() {
+		 * 
+		 * public void run() {
+		 * 
+		 * mTitleView.setText(title);
+		 * 
+		 * } });
+		 */
 
 	}
 }
