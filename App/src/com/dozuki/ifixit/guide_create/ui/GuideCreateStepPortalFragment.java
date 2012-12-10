@@ -4,6 +4,8 @@ import java.util.List;
 
 import android.R.color;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -25,6 +27,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
@@ -40,6 +43,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 	private DragSortController mController;
 	private RelativeLayout mAddStepBar;
 	private RelativeLayout mEditIntroBar;
+
 	private TextView mNoStepsText;
 
 	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
@@ -58,6 +62,12 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			mAdapter.remove(mAdapter.getItem(which));
 		}
 	};
+	private GuideCreateObject mGuide;
+
+	public GuideCreateStepPortalFragment(GuideCreateObject guide) {
+		super();
+       mGuide = guide;
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -70,6 +80,8 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		mSelf = this;
 		mParentRef = (GuideCreateStepsActivity) getActivity();
 		mAdapter = new StepAdapter(mParentRef.getStepList());
+		
+	
 	}
 
 	/**
@@ -115,7 +127,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		mEditIntroBar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				
+				launchGuideEditIntro();
 			}
 		});
 		mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
@@ -259,6 +271,16 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 				}
 			}
 		}
+	}
+	
+	private void launchGuideEditIntro()
+	{
+		GuideIntroFragment newFragment = new GuideIntroFragment();
+		newFragment.setGuideOBject(mGuide);
+		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
+		transaction.addToBackStack(null);
+		transaction.commitAllowingStateLoss();	
 	}
 
 }

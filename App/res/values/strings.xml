@@ -102,5 +102,5 @@
 	<string name="title_hint">Add guide title.</string>
 	<string name="summary_hint">Summarize this guide in a sentence or two.</string>
 	<string name="introduction_hint">Briefly outline what your guide will teach someone.</string>
-	<string name="create_guide_intro_button">Create</string>
+	<string name="create_guide_intro_button">Save</string>
 </resources>

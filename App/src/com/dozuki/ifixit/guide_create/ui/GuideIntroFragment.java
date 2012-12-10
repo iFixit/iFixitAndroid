@@ -85,6 +85,14 @@ public class GuideIntroFragment extends SherlockFragment {
 			
 		});
 		
+		if(mGuideObject != null)
+		{
+		   mDeviceType.setText(mGuideObject.getTopic());
+		   mTitle.setText(mGuideObject.getTitle());
+		   mSummary.setText(mGuideObject.getSummary());
+		   mIntroduction.setText(mGuideObject.getIntroduction());
+		}
+		
 		return view;
 	}
 	
@@ -95,6 +103,6 @@ public class GuideIntroFragment extends SherlockFragment {
 		mGuideObject.setTopic(device);
 		mGuideObject.setSummary(summary);
 		mGuideObject.setIntroduction(intro);
-		getFragmentManager().popBackStack();
+		getActivity().getSupportFragmentManager().popBackStack();
 	}
 }

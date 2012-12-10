@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -24,6 +25,7 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 	private ActionBar mActionBar;
 	private GuideCreateStepPortalFragment mStepPortalFragment;
 	private ArrayList<GuideCreateStepObject> mStepList;
+	private GuideCreateObject mGuide;
 
 	public ArrayList<GuideCreateStepObject> getStepList() {
 		return mStepList;
@@ -52,6 +54,13 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 			mStepList = (ArrayList<GuideCreateStepObject>) savedInstanceState
 					.getSerializable(GuideStepKey);
 		}
+		
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+		
+		mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsActivity.GuideKey );
+		
+		}
 
 		super.onCreate(savedInstanceState);
 
@@ -60,7 +69,7 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 		String tag = "guide_steeps_portal_fragment";
 		if (findViewById(R.id.guide_create_fragment_steps_container) != null
 				&& getSupportFragmentManager().findFragmentByTag(tag) == null) {
-			mStepPortalFragment = new GuideCreateStepPortalFragment();
+			mStepPortalFragment = new GuideCreateStepPortalFragment(mGuide);
 			mStepPortalFragment.setRetainInstance(true);
 			getSupportFragmentManager()
 					.beginTransaction()
@@ -110,5 +119,6 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putSerializable(GuideStepKey, mStepList);
+		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey , mGuide);
 	}
 }
