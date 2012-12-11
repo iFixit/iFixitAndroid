@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="https://schemas.android.com/tools" tools:ignore="TypograpyDashes">
+  
+  <string name="ga_trackingId">UA-30506-14</string>
+  <bool   name="ga_autoActivityTracking">true</bool>
+  <bool   name="ga_reportUncaughtExceptions">true</bool>
+  <string name="ga_appName">iFixit</string>
+  <string name="ga_appVersion">1.2.2</string>
+  <bool   name="ga_debug">true</bool>
+  <bool   name="ga_reportUncaughtExceptions">true</bool>
+</resources>

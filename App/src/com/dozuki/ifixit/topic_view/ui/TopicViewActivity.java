@@ -13,6 +13,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 
 import org.holoeverywhere.app.Activity;
@@ -91,4 +92,18 @@ public class TopicViewActivity extends Activity {
             return super.onOptionsItemSelected(item);
       }
    }
+   
+   @Override
+   public void onStart() {
+      super.onStart();
+      
+      EasyTracker.getInstance().activityStart(this);
+   }
+   
+   @Override
+   public void onStop() {
+      super.onStop();
+      
+      EasyTracker.getInstance().activityStop(this);
+   } 
 }

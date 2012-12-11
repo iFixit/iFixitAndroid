@@ -8,7 +8,6 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -29,6 +28,7 @@ import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import org.holoeverywhere.app.Activity;
 
@@ -144,6 +144,20 @@ public class TopicsActivity extends Activity
    }
    
    @Override
+   public void onStart() {
+      super.onStart();
+      
+      EasyTracker.getInstance().activityStart(this);
+   }
+   
+   @Override
+   public void onStop() {
+      super.onStop();
+      
+      EasyTracker.getInstance().activityStop(this);
+   } 
+   
+   @Override
    public void onResume() {
       super.onResume();
 
@@ -221,6 +235,8 @@ public class TopicsActivity extends Activity
 
    @Override
    public void onTopicSelected(TopicNode topic) {
+      EasyTracker.getTracker().trackEvent("ui_navigation", "list_item_selected", "topic_list", null);
+      
       if (topic.isLeaf()) {
          if (mDualPane) {
             mTopicView.setTopicNode(topic);

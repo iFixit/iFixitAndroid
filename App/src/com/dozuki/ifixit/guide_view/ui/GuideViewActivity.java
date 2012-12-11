@@ -26,6 +26,7 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -331,5 +332,19 @@ public class GuideViewActivity extends Activity
          default:
             return super.onOptionsItemSelected(item);
       }
+   }
+   
+   @Override
+   public void onStart() {
+      super.onStart();
+      
+      EasyTracker.getInstance().activityStart(this);
+   }
+   
+   @Override
+   public void onStop() {
+      super.onStop();
+      
+      EasyTracker.getInstance().activityStop(this);
    }
 }

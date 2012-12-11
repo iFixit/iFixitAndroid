@@ -4,10 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 
 import com.dozuki.ifixit.MainApplication;

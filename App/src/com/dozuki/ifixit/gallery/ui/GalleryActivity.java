@@ -19,6 +19,7 @@ import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import org.holoeverywhere.app.Activity;
 
@@ -109,9 +110,13 @@ public class GalleryActivity extends Activity
       boolean isLoggedIn = ((MainApplication)getApplication()).isUserLoggedIn();
       switch (item.getItemId()) {
          case android.R.id.home:
+            EasyTracker.getTracker().trackEvent("ui_action", "menu_item_press", "home", null);
+
             finish();
             return true;
          case R.id.top_camera_button:
+            EasyTracker.getTracker().trackEvent("ui_action", "menu_item_press", "top_camera_button", null);
+
             if (!isLoggedIn) {
                return false;
             }
@@ -119,6 +124,8 @@ public class GalleryActivity extends Activity
             mMediaView.launchCamera();
             return true;
          case R.id.top_gallery_button:
+            EasyTracker.getTracker().trackEvent("ui_action", "menu_item_press", "top_gallery_button", null);
+
             if (!isLoggedIn) {
                return false;
             }
@@ -126,6 +133,8 @@ public class GalleryActivity extends Activity
             mMediaView.launchGallery();
             return true;
          case R.id.top_question_button:
+            EasyTracker.getTracker().trackEvent("ui_action", "menu_item_press", "top_question_button", null);
+
             if (!isLoggedIn) {
                return false;
             }
@@ -139,6 +148,7 @@ public class GalleryActivity extends Activity
 
    @Override
    public void onLogin(User user) {
+
       mIconsHidden = false;
       supportInvalidateOptionsMenu();
       ((LoginListener)mMediaView).onLogin(user);
@@ -186,5 +196,20 @@ public class GalleryActivity extends Activity
       } catch (IllegalArgumentException e) {
       }
       super.onPause();
+   }
+   
+   
+   @Override
+   public void onStart() {
+      super.onStart();
+      
+      EasyTracker.getInstance().activityStart(this);
+   }
+   
+   @Override
+   public void onStop() {
+      super.onStop();
+      
+      EasyTracker.getInstance().activityStop(this);
    }
 }

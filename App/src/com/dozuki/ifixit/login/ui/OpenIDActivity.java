@@ -13,6 +13,7 @@ import android.webkit.WebViewClient;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import org.holoeverywhere.app.Activity;
 
@@ -100,4 +101,19 @@ public class OpenIDActivity extends Activity {
          }
       });
    }
+   
+   
+   @Override
+   public void onStart() {
+      super.onStart();
+      
+      EasyTracker.getInstance().activityStart(this);
+   }
+   
+   @Override
+   public void onStop() {
+      super.onStop();
+      
+      EasyTracker.getInstance().activityStop(this);
+   } 
 }

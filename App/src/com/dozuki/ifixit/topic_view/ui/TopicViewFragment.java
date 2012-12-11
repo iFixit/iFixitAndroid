@@ -16,8 +16,6 @@ import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
 import com.dozuki.ifixit.guide_view.ui.NoGuidesFragment;
 import com.dozuki.ifixit.guide_view.ui.WebViewFragment;
-import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.util.APIEndpoint;

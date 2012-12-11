@@ -1,0 +1,50 @@
+Google Analytics SDK for Android Changelog
+
+--------------------------------------------
+Version: 2.0beta3 (August 2012)
+--------------------------------------------
+* Third beta release.
+* Implemented custom dimensions and metrics.
+* Fixed occasional crashes during initialization of the SDK.
+* Fixed INSTALL_REFERRER broadcasts being ignored on some devices.
+* Fixed ConcurrentModificationExceptions in GoogleTracker class.
+* Made StandardExceptionParser class public.
+* Implemented social tracking.
+* Other bugfixes and enhancements.
+
+--------------------------------------------
+Version: 2.0beta2 (June 2012)
+--------------------------------------------
+* Second beta release.
+* Simplified EasyTracker interface.
+* Control of dispatching moved to a new class, GAServiceManager.
+* Updated to latest wire format.
+* sampleRate changed to double.
+* Excessive tracking is throttled.
+* Undispatched tracking information is deleted when opt-out is enabled.
+* Undispatched tracking information older than 30 days will be deleted.
+* Other bugfixes and enhancements.
+
+--------------------------------------------
+Version: 2.0beta1 (May 2012)
+--------------------------------------------
+* Initial internal beta release.
+* startSession method has been removed.  Use setStartSession instead.
+* Added ga_sessionTimeout parameter to EasyTracker.  See javadoc for details.
+* Uncaught exceptions on the Analytics Thread should no longer cause app
+  crashes.
+* Implemented power save mode.  Automatic dispatch calls will now be turned off
+  if no hits are queued for dispatch.
+* Exposed several new Tracker methods in EasyTracker.  See javadoc for details.
+* Added trackView method to GAITracker which takes no argument.
+* Fixed a bug that prevented exception parameters from being sent on hits.
+* Hits that can't be read from the database are discarded instead of
+  permanently blocking all hits from being dispatched.
+* Updated to latest wire format.
+* Implemented timing hit type.
+* Implemented Ecommerce hit types (transaction and item).
+
+--------------------------------------------
+Version: 2.0alpha1 (April 2012)
+--------------------------------------------
+* Initial internal alpha release.

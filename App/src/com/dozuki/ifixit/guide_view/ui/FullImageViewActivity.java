@@ -12,6 +12,7 @@ import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.ifixit.android.imagemanager.ImageManager;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
@@ -67,5 +68,19 @@ public class FullImageViewActivity extends Activity {
             finish();
          }
       });
+   } 
+   
+   @Override
+   public void onStart() {
+      super.onStart();
+      
+      EasyTracker.getInstance().activityStart(this);
+   }
+   
+   @Override
+   public void onStop() {
+      super.onStop();
+      
+      EasyTracker.getInstance().activityStop(this);
    }
 }

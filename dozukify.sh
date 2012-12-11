@@ -23,6 +23,10 @@ sed -i "" -e "s/SITE_ifixit/SITE_$siteName/" `find ./src -name "MainApplication.
 # Update logo and app name
 sed -i "" -e "s/_ifixit/_$siteName/" ./AndroidManifest.xml
 
+# Update the analytics profile and site name
+
+sed -i "" -e "s/iFixit/$siteName/" ./res/values/analytics.xml
+
 case "$siteName" in
 "dozuki")
    domain="www.dozuki.com"
