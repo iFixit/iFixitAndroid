@@ -10,14 +10,18 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.dozuki.ui.SiteListActivity;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
+import com.dozuki.ifixit.gallery.ui.MediaFragment;
+import com.dozuki.ifixit.login.model.LoginListener;
+import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.ifixit.android.imagemanager.ImageManager;
 
 import org.holoeverywhere.app.Activity;
 
-public class TopicViewActivity extends Activity {
+public class TopicViewActivity extends Activity implements LoginListener {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;
@@ -90,5 +94,24 @@ public class TopicViewActivity extends Activity {
          default:
             return super.onOptionsItemSelected(item);
       }
+   }
+
+   @Override
+   public void onLogout() {
+      ((MainApplication)getApplication()).logout();
+      Intent intent = new Intent(this, SiteListActivity.class);
+      startActivity(intent);
+      
+      finish();
+   }
+
+   @Override
+   public void onLogin(User user) {
+      // TODO Auto-generated method stub
+   }
+
+   @Override
+   public void onCancel() {
+      finish();
    }
 }

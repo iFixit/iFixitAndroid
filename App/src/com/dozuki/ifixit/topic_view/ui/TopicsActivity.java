@@ -84,8 +84,7 @@ public class TopicsActivity extends Activity
       setContentView(R.layout.topics);
 
       if (mSite == null) {
-         mSite = ((MainApplication)getApplication())
-          .getSite();
+         mSite = ((MainApplication)getApplication()).getSite();
       }   
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()

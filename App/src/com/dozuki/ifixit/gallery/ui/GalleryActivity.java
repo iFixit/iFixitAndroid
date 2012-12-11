@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.dozuki.ui.SiteListActivity;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
@@ -150,7 +151,12 @@ public class GalleryActivity extends Activity
 
    @Override
    public void onLogout() {
-      ((MainApplication)getApplication()).logout();
+      MainApplication app = ((MainApplication)getApplication());
+      app.logout();
+      if (!app.getSite().mPublic) {
+         Intent intent = new Intent(this, SiteListActivity.class);
+         startActivity(intent);
+      }
       finish();
    }
 
