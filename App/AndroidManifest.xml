@@ -38,8 +38,6 @@
       </activity>
 
       <activity android:name=".gallery.ui.GalleryActivity"></activity>
-      <activity android:name=".login.ui.LoginActivity"></activity>
-      <activity android:name=".login.ui.RegisterActivity"></activity>
       <activity android:name=".login.ui.OpenIDActivity"></activity>
       <activity android:name=".topic_view.ui.TopicViewActivity"></activity>
       <activity android:name=".guide_view.ui.GuideViewActivity"
