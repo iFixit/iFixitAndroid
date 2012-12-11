@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.guide_create.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class GuideCreateObject implements Serializable {
 
@@ -20,10 +21,25 @@ public class GuideCreateObject implements Serializable {
 	protected String mSummary;
 	protected boolean mEditMode;
 	protected boolean mPublished;
+	protected ArrayList<GuideCreateStepObject> mStepList;
 
 	public GuideCreateObject(int guideid) {
 		mGuideid = guideid;
-
+	}
+	
+	public void setStepList(ArrayList<GuideCreateStepObject> stepList)
+	{
+		mStepList = stepList;
+	}
+	
+	public void deleteStep(GuideCreateStepObject step)
+	{
+		mStepList.remove(step);
+	}
+	
+	public ArrayList<GuideCreateStepObject> getSteps()
+	{
+		return mStepList;
 	}
 
 	public void setEditMode(boolean editMode) {

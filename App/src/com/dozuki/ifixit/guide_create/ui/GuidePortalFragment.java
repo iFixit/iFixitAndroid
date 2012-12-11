@@ -17,7 +17,6 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuidePortalFragment extends SherlockFragment {
-
 	private GridView mGridView;
 	private ImageManager mImageManager;
 	private GuideCreateListAdapter mGuideAdapter;
@@ -60,6 +59,8 @@ public class GuidePortalFragment extends SherlockFragment {
 		});
 		return view;
 	}
+	
+	
 
 	@Override
 	public void onResume() {

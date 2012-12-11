@@ -23,6 +23,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 
 public class GuideCreateActivity extends SherlockFragmentActivity {
+	static final int GUIDE_STEP_LIST_REQUEST = 0;
 	private static String GuideObjectKey = "GuideCreateObject";
 	public static int GuideItemID = 0;
 	private ActionBar mActionBar;
@@ -143,6 +144,24 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 		transaction.replace(R.id.guide_create_fragment_container, newFragment);
 		transaction.addToBackStack(null);
 		transaction.commitAllowingStateLoss();	
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == GUIDE_STEP_LIST_REQUEST) {
+			if (resultCode == RESULT_OK) {
+				GuideCreateObject guide = (GuideCreateObject) data
+						.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
+				if (guide != null) {
+					mGuideList.set(mGuideList.indexOf(guide),guide);
+					if(mGuidePortal != null)
+					{
+						
+					}					
+				}
+			}
+		}
 	}
 
 }

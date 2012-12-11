@@ -3,6 +3,8 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.List;
 
 import android.R.color;
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -16,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -37,13 +38,11 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 	private static int StepID = 0;
 	private DragSortListView mDragListView;
 	private ImageManager mImageManager;
-	private GuideCreateStepPortalFragment mSelf;
-	private GuideCreateStepsActivity mParentRef;
 	private StepAdapter mAdapter;
 	private DragSortController mController;
 	private RelativeLayout mAddStepBar;
 	private RelativeLayout mEditIntroBar;
-
+	private GuideCreateObject mGuide;
 	private TextView mNoStepsText;
 
 	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
@@ -62,7 +61,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			mAdapter.remove(mAdapter.getItem(which));
 		}
 	};
-	private GuideCreateObject mGuide;
+
 
 	public GuideCreateStepPortalFragment(GuideCreateObject guide) {
 		super();
@@ -77,11 +76,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			mImageManager = ((MainApplication) getActivity().getApplication())
 					.getImageManager();
 		}
-		mSelf = this;
-		mParentRef = (GuideCreateStepsActivity) getActivity();
-		mAdapter = new StepAdapter(mParentRef.getStepList());
-		
-	
+		mAdapter = new StepAdapter(mGuide.getSteps());
 	}
 
 	/**
@@ -118,7 +113,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 					mNoStepsText.setVisibility(View.GONE);
 				GuideCreateStepObject item = new GuideCreateStepObject(StepID++);
 				item.setTitle("Test Step " + StepID);
-				mParentRef.getStepList().add(item);
+				mGuide.getSteps().add(item);
 				mDragListView.invalidateViews();
 			}
 		});
@@ -132,7 +127,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		});
 		mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
 
-		if (mParentRef.getStepList().isEmpty())
+		if (mGuide.getSteps().isEmpty())
 			mNoStepsText.setVisibility(View.VISIBLE);
 		mDragListView.setDropListener(onDrop);
 		mDragListView.setRemoveListener(onRemove);
@@ -158,9 +153,10 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			super(getActivity(), R.layout.guide_create_step_list_item,
 					R.id.step_title_textview, list);
 		}
-
+		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = super.getView(position, convertView, parent);
+			final int p = position;
 			final GuideCreateStepObject stepObj = getItem(position);
 			if (v != convertView && v != null) {
 				final ViewHolder holder = new ViewHolder();
@@ -201,20 +197,19 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			holder.mDeleteButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					mParentRef.deleteStep(stepObj);
+					mGuide.deleteStep(stepObj);
 					mDragListView.invalidateViews();
 				}
 			});
 			holder.mEditButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
-					// TODO Auto-generated method stub
-
+					launchStepEdit(p);
 				}
 			});
 			String step = getItem(position).getTitle();
 			holder.stepsView.setText(step);
-			mImageManager.displayImage("", mParentRef, holder.mImageView);
+			mImageManager.displayImage("", getActivity(), holder.mImageView);
 			setEditMode(isEdit, false, holder.mToggleEdit, holder.mEditBar);
 			return v;
 		}
@@ -224,13 +219,13 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			if (isChecked) {
 				if (animate) {
 					Animation rotateAnimation = AnimationUtils.loadAnimation(
-							mParentRef.getApplicationContext(),
+							getActivity().getApplicationContext(),
 							R.anim.rotate_clockwise);
 
 					mToggleEdit.startAnimation(rotateAnimation);
 
 					Animation slideDownAnimation = AnimationUtils
-							.loadAnimation(mParentRef.getApplicationContext(),
+							.loadAnimation(getActivity().getApplicationContext(),
 									R.anim.slide_down);
 					mEditBar.setVisibility(View.VISIBLE);
 					mEditBar.startAnimation(slideDownAnimation);
@@ -241,12 +236,12 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			} else {
 				if (animate) {
 					Animation rotateAnimation = AnimationUtils.loadAnimation(
-							mParentRef.getApplicationContext(),
+							getActivity().getApplicationContext(),
 							R.anim.rotate_counterclockwise);
 
 					mToggleEdit.startAnimation(rotateAnimation);
 					Animation slideUpAnimation = AnimationUtils
-							.loadAnimation(mParentRef.getApplicationContext(),
+							.loadAnimation(getActivity().getApplicationContext(),
 									R.anim.slide_up);
 					slideUpAnimation
 							.setAnimationListener(new AnimationListener() {
@@ -273,6 +268,15 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		}
 	}
 	
+	private void launchStepEdit(int curStep)
+	{
+		//GuideCreateStepsEditActivity
+		Intent intent = new Intent(getActivity(), GuideCreateStepsEditActivity.class);
+		intent.putExtra(GuideCreateStepsEditActivity.GuideKey, mGuide);
+		intent.putExtra(GuideCreateStepsEditActivity.GuideStepKey, curStep);
+		startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
+	}
+	
 	private void launchGuideEditIntro()
 	{
 		GuideIntroFragment newFragment = new GuideIntroFragment();
@@ -281,6 +285,25 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
 		transaction.addToBackStack(null);
 		transaction.commitAllowingStateLoss();	
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		Log.i("StepPortalFragmetn", "hit fragment on activity result");
+		
+		if (requestCode == GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST) {
+			if (resultCode == Activity.RESULT_OK) {
+				GuideCreateObject guide = (GuideCreateObject) data
+						.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
+				if (guide != null) {
+					Log.i("StepPortalFragmetn", "non null guide update");
+					mGuide = guide;
+					mAdapter = new StepAdapter(mGuide.getSteps());
+					mDragListView.setAdapter(mAdapter);
+					mDragListView.invalidateViews();
+				}
+			}
+		}
 	}
 
 }

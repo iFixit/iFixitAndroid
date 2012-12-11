@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/step_create_item"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="4dp"
+    android:background="@color/white"
+    android:padding="1dp" >
+
+    <TextView
+        android:id="@+id/step_title_textview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/guide_step_item_thumbnail"
+        android:text="Text Text" />
+
+    <ImageView
+        android:id="@+id/guide_step_item_thumbnail"
+        android:layout_width="@dimen/guide_thumbnail_width"
+        android:layout_height="@dimen/guide_thumbnail_height"
+        android:layout_alignParentLeft="true"
+        android:layout_centerVertical="true"
+        android:background="@color/image_border"
+        android:contentDescription="@string/topic_guide_thumbnail"
+        android:padding="1dp" />
+
+    <RelativeLayout
+        android:id="@+id/drag_handle"
+        android:layout_width="30dp"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:background="@color/gray" >
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/ic_list_item_move"
+            android:contentDescription="@string/topic_guide_thumbnail" />
+    </RelativeLayout>
+
+</RelativeLayout>

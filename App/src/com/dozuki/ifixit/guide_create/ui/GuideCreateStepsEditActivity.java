@@ -4,7 +4,18 @@ import java.util.ArrayList;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.ListFragment;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
+import android.widget.EditText;
+import android.widget.ListView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -19,30 +30,17 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 
-public class GuideCreateStepsActivity extends SherlockFragmentActivity {
-	static final int GUIDE_EDIT_STEP_REQUEST = 0;
+public class GuideCreateStepsEditActivity extends SherlockFragmentActivity {
 	public static String GuideKey = "GuideKey";
+	public static String GuideStepKey = "GuideStepObject";
 	private ActionBar mActionBar;
-	private GuideCreateStepPortalFragment mStepPortalFragment;
-	private ArrayList<GuideCreateStepObject> mStepList;
 	private GuideCreateObject mGuide;
 
-	public ArrayList<GuideCreateStepObject> getStepList() {
-		return mStepList;
-	}
+	private StepAdapter mStepAdapter;
+	private ViewPager mPager;
 
-	public void deleteStep(GuideCreateStepObject step) {
-		mStepList.remove(step);
-	}
-
-	public void addStep(GuideCreateStepObject step, int index) {
-		mStepList.add(index, step);
-	}
-
-	public GuideCreateObject getGuide() {
-		return mGuide;
-	}
-
+	//TODO: Add "swipey tabs" to top bar
+	
 	@SuppressWarnings("unchecked")
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(((MainApplication) getApplication()).getSiteTheme());
@@ -52,30 +50,29 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 		mActionBar.setTitle("");
 
 		Bundle extras = getIntent().getExtras();
+		int startStep = 0;
 		if (extras != null) {
+
 			mGuide = (GuideCreateObject) extras
-					.getSerializable(GuideCreateStepsActivity.GuideKey);
-			if (mGuide.getSteps() == null)
-				mGuide.setStepList(new ArrayList<GuideCreateStepObject>());
-			mStepList = mGuide.getSteps();
-		} else if (savedInstanceState != null) {
-			mStepList = mGuide.getSteps();
+					.getSerializable( GuideCreateStepsEditActivity.GuideKey);
+			startStep = extras.getInt( GuideCreateStepsEditActivity.GuideStepKey);
+		}
+
+		if (savedInstanceState != null) {
+			mGuide = (GuideCreateObject) savedInstanceState
+					.getSerializable(GuideKey);
 		}
 
 		super.onCreate(savedInstanceState);
 
-		setContentView(R.layout.guide_create_steps_root);
+		setContentView(R.layout.guide_create_step_edit);
+
+		mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+		mPager = (ViewPager) findViewById(R.id.guide_edit_body_pager);
+		mPager.setAdapter(mStepAdapter);
+		mPager.setCurrentItem(startStep);
+
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		String tag = "guide_steeps_portal_fragment";
-		if (findViewById(R.id.guide_create_fragment_steps_container) != null
-				&& getSupportFragmentManager().findFragmentByTag(tag) == null) {
-			mStepPortalFragment = new GuideCreateStepPortalFragment(mGuide);
-			mStepPortalFragment.setRetainInstance(true);
-			getSupportFragmentManager()
-					.beginTransaction()
-					.add(R.id.guide_create_fragment_steps_container,
-							mStepPortalFragment, tag).commit();
-		}
 	}
 
 	@Override
@@ -114,13 +111,6 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 			return super.onOptionsItemSelected(item);
 		}
 	}
-
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
-		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
-				mGuide);
-	}
 	
 	@Override
 	public void finish()
@@ -132,17 +122,29 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 	}
 
 	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == GUIDE_EDIT_STEP_REQUEST) {
-			if (resultCode == RESULT_OK) {
-				GuideCreateObject guide = (GuideCreateObject) data
-						.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
-				if (guide != null) {
-					mGuide = guide;
-					mStepList = mGuide.getSteps();
-				}
-			}
+	public void onSaveInstanceState(Bundle savedInstanceState) {
+		super.onSaveInstanceState(savedInstanceState);
+		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
+				mGuide);
+	}
+
+	public class StepAdapter extends FragmentStatePagerAdapter {
+
+		public StepAdapter(FragmentManager fm) {
+			super(fm);
 		}
+
+		@Override
+		public int getCount() {
+			return mGuide.getSteps().size();
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			GuideCreateStepEditFragment frag = new GuideCreateStepEditFragment();
+			frag.setStepObject(mGuide.getSteps().get(position));
+			return frag;
+		}
+
 	}
 }

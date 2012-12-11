@@ -81,7 +81,7 @@ public class GuideCreateListItem extends RelativeLayout {
 						GuideCreateStepsActivity.class);
 				intent.putExtra(GuideCreateStepsActivity.GuideKey,
 						mGuideCreateObject);
-				mPortalRef.getActivity().startActivity(intent);
+				mPortalRef.getActivity().startActivityForResult(intent,  GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
 			}
 
 		});
