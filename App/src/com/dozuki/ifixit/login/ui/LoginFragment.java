@@ -122,9 +122,9 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          mGoogleLogin.setOnClickListener(this);
          mYahooLogin.setOnClickListener(this);
       } else {
-         mRegister.setVisibility(View.INVISIBLE);
-         mGoogleLogin.setVisibility(View.INVISIBLE);
-         mYahooLogin.setVisibility(View.INVISIBLE);
+         mRegister.setVisibility(View.GONE);
+         mGoogleLogin.setVisibility(View.GONE);
+         mYahooLogin.setVisibility(View.GONE);
       }
 
       mErrorText = (TextView)view.findViewById(R.id.login_error_text);
