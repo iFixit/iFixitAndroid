@@ -103,6 +103,7 @@ public class GuideIntroFragment extends SherlockFragment {
 		mGuideObject.setTopic(device);
 		mGuideObject.setSummary(summary);
 		mGuideObject.setIntroduction(intro);
+		((GuideCreateActivity)getActivity()).addGuide(mGuideObject);
 		getActivity().getSupportFragmentManager().popBackStack();
 	}
 }

@@ -9,6 +9,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.util.Log;
+import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -51,6 +52,11 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 
 	public ArrayList<GuideCreateObject> getGuideList() {
 		return mGuideList;
+	}
+	
+	public void addGuide(GuideCreateObject guide)
+	{
+		mGuideList.add(guide);
 	}
 
 	@SuppressWarnings("unchecked")
@@ -137,12 +143,12 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 	private void launchGuideCreateIntro()
 	{
 		GuideCreateObject temp = new GuideCreateObject(GuideItemID++);
-		mGuideList.add(temp);
+		String tag = "guide_intro_fragment";
 		GuideIntroFragment newFragment = new GuideIntroFragment();
 		newFragment.setGuideOBject(temp);
 		FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.guide_create_fragment_container, newFragment);
-		transaction.addToBackStack(null);
+		transaction.addToBackStack(tag);
 		transaction.commitAllowingStateLoss();	
 	}
 	
@@ -155,13 +161,9 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 						.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
 				if (guide != null) {
 					mGuideList.set(mGuideList.indexOf(guide),guide);
-					if(mGuidePortal != null)
-					{
-						
-					}					
+									
 				}
 			}
 		}
 	}
-
 }
