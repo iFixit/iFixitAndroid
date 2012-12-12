@@ -18,10 +18,11 @@
       android:layout_width="match_parent"
       android:layout_height="match_parent"
       style="?attr/listViewStyle" />
-   <!-- TODO: Make this look better. -->
+
    <TextView
       android:id="@+id/emptyView"
       android:layout_width="wrap_content"
       android:layout_height="wrap_content"
-      android:text="@string/empty_site_list" />
+      android:text="@string/empty_site_list"
+      style="@style/text.list" />
 </LinearLayout>
