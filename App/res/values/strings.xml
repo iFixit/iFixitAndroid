@@ -87,7 +87,7 @@
    <string name="login_dialog_title">Login</string>
    <string name="register_dialog_title">Register</string>
    <string name="login_password_hint">Password</string>
-   <string name="login_username_hint">Username</string>
+   <string name="login_email_hint">Email</string>
    <string name="password_confirm_hint">Confirm Password</string>
    <string name="empty_site_list">No sites found.</string>
 </resources>

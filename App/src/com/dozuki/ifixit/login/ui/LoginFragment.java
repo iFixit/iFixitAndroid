@@ -106,7 +106,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       
       View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-      mLoginId = (EditText)view.findViewById(R.id.edit_username);
+      mLoginId = (EditText)view.findViewById(R.id.edit_email);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
       mPassword.setTypeface(Typeface.DEFAULT);
 
