@@ -16,3 +16,6 @@
 [submodule "HoloEverywhere"]
 	path = HoloEverywhere
 	url = http://github.com/iFixit/HoloEverywhere.git
+[submodule "http-request"]
+	path = http-request
+	url = http://github.com/iFixit/http-request.git
