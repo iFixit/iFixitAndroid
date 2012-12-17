@@ -98,7 +98,9 @@ public class TopicViewActivity extends Activity implements LoginListener {
 
    @Override
    public void onLogout() {
-      ((MainApplication)getApplication()).logout();
+      MainApplication app = (MainApplication)getApplication();
+      app.logout();
+      app.setSite(null);
       Intent intent = new Intent(this, SiteListActivity.class);
       startActivity(intent);
       
