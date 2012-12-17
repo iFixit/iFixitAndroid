@@ -9,7 +9,7 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="8dp"
       android:layout_marginBottom="8dp"
-      android:title="Search Sites"
+      android:title="@string/site_list_search_title"
       android:icon="@android:drawable/ic_menu_search"
       android:imeOptions="actionSearch" />
 
