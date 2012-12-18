@@ -106,4 +106,6 @@
 	<string name="edit_add_step">Add Step</string>
 	<string name="delete_step">Delete Step</string>
 	<string name="steps">Steps</string>
+	<string name="step_edit_confirm_delete_title">Delete Step</string>
+	<string name="step_edit_confirm_delete_message">Are you sure you want to delete </string>
 </resources>
