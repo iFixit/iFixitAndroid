@@ -15,40 +15,32 @@
         android:background="@color/fireswing_grey"
         android:gravity="right"
         android:orientation="horizontal"
-        android:padding="6dp"
-        android:visibility="gone" >
-
-        <Button
-            android:id="@+id/step_create_delete_button"
-            android:layout_width="@dimen/guide_create_icon_button_dim"
-            android:layout_height="@dimen/guide_create_icon_button_dim"
-            android:background="@drawable/ic_guide_delete"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp" />
-
-        <TextView
+        android:padding="6dp">
+        
+         <TextView
             android:id="@+id/step_create_item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_guide_delete"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
+             android:paddingRight="20dp"
             android:text="@string/action_delete" />
 
-        <Button
-            android:id="@+id/step_create_edit_button"
-            android:layout_width="@dimen/guide_create_icon_button_dim"
-            android:layout_height="@dimen/guide_create_icon_button_dim"
-            android:background="@drawable/ic_guide_edit"
-            android:paddingLeft="20dp"
-            android:paddingRight="20dp" />
-
-        <TextView
+    
+         
+         <TextView
             android:id="@+id/step_create_item_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingLeft="20dp"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_guide_edit"
+            android:drawablePadding="10dp"
             android:paddingRight="20dp"
+            android:gravity="center_vertical"
             android:text="@string/edit" />
+
     </LinearLayout>
 
     <LinearLayout

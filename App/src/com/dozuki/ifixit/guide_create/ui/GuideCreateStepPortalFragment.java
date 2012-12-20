@@ -142,8 +142,8 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 	private class ViewHolder {
 		public TextView stepsView;
 		public ToggleButton mToggleEdit;
-		public Button mDeleteButton;
-		public Button mEditButton;
+		public TextView mDeleteButton;
+		public TextView mEditButton;
 		public LinearLayout mEditBar;
 		public ImageView mImageView;
 	}
@@ -169,11 +169,11 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 						.findViewById(R.id.step_item_toggle_edit);
 				holder.mImageView = (ImageView) v
 						.findViewById(R.id.guide_step_item_thumbnail);
-				holder.mDeleteButton = (Button) v
-						.findViewById(R.id.step_create_delete_button);
+				holder.mDeleteButton = (TextView) v
+						.findViewById(R.id.step_create_item_delete);
 
-				holder.mEditButton = (Button) v
-						.findViewById(R.id.step_create_edit_button);
+				holder.mEditButton = (TextView) v
+						.findViewById(R.id.step_create_item_edit);
 
 				holder.mEditBar = (LinearLayout) v
 						.findViewById(R.id.step_create_item_edit_section);
