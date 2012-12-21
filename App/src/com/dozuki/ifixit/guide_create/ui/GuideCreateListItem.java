@@ -4,19 +4,15 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.ifixit.android.imagemanager.ImageManager;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
@@ -108,7 +104,6 @@ public class GuideCreateListItem extends RelativeLayout {
          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
          mPublishButtonText.setCompoundDrawables(img, null, null, null);
-
          mPublishText.setText(R.string.unpublished);
          mPublishButtonText.setText(R.string.publish);
          mPublishText.setTextColor(Color.RED);
@@ -118,50 +113,36 @@ public class GuideCreateListItem extends RelativeLayout {
 
 	public void setEditMode(boolean isChecked, boolean animate) {
 		if (isChecked) {
-			if (animate) {
-				Animation rotateAnimation = AnimationUtils.loadAnimation(
-						mContext, R.anim.rotate_clockwise);
+         if (animate) {
+            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
 
-				mToggleEdit.startAnimation(rotateAnimation);
+            mToggleEdit.startAnimation(rotateAnimation);
 
-				Animation slideDownAnimation = AnimationUtils.loadAnimation(
-						mContext, R.anim.slide_down);
-				mEditBar.setVisibility(VISIBLE);
-				mEditBar.startAnimation(slideDownAnimation);
-			} else {
-				mEditBar.setVisibility(VISIBLE);
-			}
+            // Creating the expand animation for the item
+            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
 
-			editBarVisible = true;
-		} else {
-			if (animate) {
-				Animation rotateAnimation = AnimationUtils.loadAnimation(
-						mContext, R.anim.rotate_counterclockwise);
+            // Start the animation on the toolbar
+            mEditBar.startAnimation(expandAni);
+         } else {
+            mEditBar.setVisibility(VISIBLE);
+            ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
 
-				mToggleEdit.startAnimation(rotateAnimation);
-				Animation slideUpAnimation = AnimationUtils.loadAnimation(
-						mContext, R.anim.slide_up);
-				slideUpAnimation.setAnimationListener(new AnimationListener() {
+         }
 
-					@Override
-					public void onAnimationEnd(Animation animation) {
-						mEditBar.setVisibility(GONE);
+         editBarVisible = true;
+      } else {
+         if (animate) {
+            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counterclockwise);
 
-					}
+            mToggleEdit.startAnimation(rotateAnimation);
+            // Creating the expand animation for the item
+            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
 
-					@Override
-					public void onAnimationRepeat(Animation animation) {
-
-					}
-
-					@Override
-					public void onAnimationStart(Animation animation) {
-					
-					}
-				});
-				mEditBar.startAnimation(slideUpAnimation);
+            // Start the animation on the toolbar
+            mEditBar.startAnimation(expandAni);
 			} else {
 				mEditBar.setVisibility(GONE);
+            ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
 			}
 
 			editBarVisible = false;
