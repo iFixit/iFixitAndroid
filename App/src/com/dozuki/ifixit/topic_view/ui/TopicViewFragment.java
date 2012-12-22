@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.topic_view.ui;
 
-import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
@@ -16,15 +14,12 @@ import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
 import com.dozuki.ifixit.guide_view.ui.NoGuidesFragment;
 import com.dozuki.ifixit.guide_view.ui.WebViewFragment;
-import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -48,17 +43,16 @@ public class TopicViewFragment extends Fragment
    private ActionBar mActionBar;
    private int mSelectedTab = -1;
 
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
-         setTopicLeaf((TopicLeaf)result);
-      }
-
-      public void onFailure(APIError error, Intent intent) {
-         APIService.getErrorDialog(getActivity(), error,
+   @Subscribe
+   public void onTopic(APIEvent.Topic event) {
+      if (!event.hasError()) {
+         setTopicLeaf(event.getResult());
+      } else {
+         APIService.getErrorDialog(getActivity(), event.getError(),
           APIService.getTopicIntent(getActivity(), mTopicNode.getName()))
           .show();
       }
-   };
+   }
 
    public boolean isDisplayingTopic() {
       return mTopicLeaf != null;
@@ -108,21 +102,14 @@ public class TopicViewFragment extends Fragment
    public void onResume() {
       super.onResume();
 
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.TOPIC.mAction);
-      getActivity().registerReceiver(mApiReceiver, filter);
+      MainApplication.getBus().register(this);
    }
 
    @Override
    public void onPause() {
       super.onPause();
 
-      try {
-         getActivity().unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
-      }
+      MainApplication.getBus().unregister(this);
    }
 
    @Override
