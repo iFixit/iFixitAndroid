@@ -1,14 +1,12 @@
 package com.dozuki.ifixit.topic_view.ui;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -25,8 +23,6 @@ import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
@@ -83,7 +79,7 @@ public class TopicsActivity extends IfixitActivity
       }
 
       if (mRootTopic == null) {
-         startService(APIService.getCategoriesIntent(this));
+         APIService.call(this, APIService.getCategoriesIntent(this));
       }
 
       if (!mTopicListVisible && !mHideTopicList) {

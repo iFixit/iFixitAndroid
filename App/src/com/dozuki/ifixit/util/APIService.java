@@ -65,6 +65,11 @@ public class APIService extends Service {
       return null; // Do nothing.
    }
 
+   public static boolean call(Context context, Intent apiCall) {
+      context.startService(apiCall);
+      return true;
+   }
+
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
