@@ -115,10 +115,8 @@ public class TopicsActivity extends IfixitActivity
       mRequireLogin = !mSite.mPublic;
       
       mVerifiedUser = ((MainApplication)getApplication()).getUserFromPreferenceFile() != null;
-
-      APIService.setRequireAuthentication(mVerifiedUser);
       
-      // If a site is private, and the user has not yet logged in, promt to log in
+      // If a site is private, and the user has not yet logged in, prompt to log in.
       if (mRequireLogin && !mVerifiedUser) {
          triggerLogin();
       }

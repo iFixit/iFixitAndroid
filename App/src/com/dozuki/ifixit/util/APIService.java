@@ -55,17 +55,11 @@ public class APIService extends Service {
    public static final String RESULT = "RESULT";
 
    private static Site mSite;
-   private static boolean mRequireAuthentication = false;
 
    public static void setSite(Site site) {
       mSite = site;
    }
    
-   // For private sites, the API reciever has to authenticate all API requests
-   public static void setRequireAuthentication(boolean require) {
-      mRequireAuthentication = require;
-   }
-
    @Override
    public IBinder onBind(Intent intent) {
       return null; // Do nothing.
@@ -231,9 +225,6 @@ public class APIService extends Service {
    }
 
    public static Intent getSitesIntent(Context context) {
-      // This is needed to reset the requireAuthentication flag when a user logs into a private 
-      // site, then navigates back to the site list.
-      setRequireAuthentication(false);
       return createIntent(context, APIEndpoint.SITES, NO_QUERY);
    }
 
@@ -350,10 +341,8 @@ public class APIService extends Service {
 
                /**
                 * Send the session along in a Cookie.
-                *
-                * TODO: Also send it along if the current site is private.
                 */
-               if (endpoint.mAuthenticated || mRequireAuthentication) {
+               if (endpoint.mAuthenticated || !mSite.mPublic) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
                   String session = user.getSession();
                   request.header("Cookie", "session=" + session);
