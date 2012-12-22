@@ -28,7 +28,6 @@ import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;

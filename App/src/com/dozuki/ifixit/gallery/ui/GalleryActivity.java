@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.gallery.ui;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -17,9 +16,6 @@ import com.dozuki.ifixit.dozuki.ui.SiteListActivity;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
 
 import org.holoeverywhere.app.Activity;
 
