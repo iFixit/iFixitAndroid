@@ -27,12 +27,13 @@ import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
+import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.IfixitActivity;
+import com.squareup.otto.Subscribe;
 
-import org.holoeverywhere.app.Activity;
-
-public class TopicsActivity extends Activity
+public class TopicsActivity extends IfixitActivity
  implements TopicSelectedListener, OnBackStackChangedListener, LoginListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
@@ -54,24 +55,6 @@ public class TopicsActivity extends Activity
    private boolean mVerifiedUser;
    private boolean mRequireLogin;
    private Site mSite;
-
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
-         if (mRootTopic == null) {
-            mRootTopic = (TopicNode)result;
-            onTopicSelected(mRootTopic);
-         }
-      }
-
-      public void onFailure(APIError error, Intent intent) {
-         if (mRequireLogin && !mVerifiedUser) {
-            triggerLogin();
-         } else {
-            APIService.getErrorDialog(TopicsActivity.this, error,
-             APIService.getCategoriesIntent(TopicsActivity.this)).show();
-         }
-      }
-   };
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -141,21 +124,32 @@ public class TopicsActivity extends Activity
    public void triggerLogin() {
       LoginFragment.newInstance().show(getSupportFragmentManager());
    }
+
+   @Subscribe
+   public void onCategories(APIEvent.Categories event) {
+      if (!event.hasError()) {
+         if (mRootTopic == null) {
+            mRootTopic = event.getResult();
+            onTopicSelected(mRootTopic);
+         }
+      } else {
+         if (mRequireLogin && !mVerifiedUser) {
+            triggerLogin();
+         } else {
+            APIService.getErrorDialog(TopicsActivity.this, event.getError(),
+             APIService.getCategoriesIntent(TopicsActivity.this)).show();
+         }
+      }
+   }
    
    @Override
    public void onResume() {
       super.onResume();
-
-      if (mVerifiedUser || !mRequireLogin) {
-         initApiReceiver();
-      }
    }
 
    @Override
    public void onLogin(User user) {
       mVerifiedUser = (user != null);
-            
-      initApiReceiver();
    }
 
    @Override
@@ -174,35 +168,11 @@ public class TopicsActivity extends Activity
    }
    
    @Override
-   public void onPause() {
-      super.onPause();
-
-      try {
-         unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
-      }
-   }
-
-   @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
-   }
-
-   public void initApiReceiver() {
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.CATEGORIES.mAction);
-      registerReceiver(mApiReceiver, filter);
-
-      // Fetch categories if necessary.
-      if (mRootTopic == null) {
-         // Load categories from the API.
-         startService(APIService.getCategoriesIntent(this));
-      }      
    }
 
    public void onBackStackChanged() {

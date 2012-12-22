@@ -23,9 +23,12 @@ public abstract class APIEvent<T> {
    public static class DeleteImage extends APIEvent<String> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}
 
+   public String mResponse;
    public T mResult;
+   public APIError mError;
+   public String mExtraInfo;
 
-   public APIEvent<T> set(T result) {
+   public APIEvent<T> setResult(T result) {
        mResult = result;
 
        return this;
@@ -33,5 +36,35 @@ public abstract class APIEvent<T> {
 
    public T getResult() {
       return mResult;
+   }
+
+   public void setExtraInfo(String info) {
+      mExtraInfo = info;
+   }
+
+   public String getExtraInfo() {
+      return mExtraInfo;
+   }
+
+   public boolean hasError() {
+      return mError != null;
+   }
+
+   public APIEvent<T> setResponse(String response) {
+      mResponse = response;
+      return this;
+   }
+
+   public String getResponse() {
+      return mResponse;
+   }
+
+   public APIError getError() {
+      return mError;
+   }
+
+   public APIEvent<T> setError(APIError error) {
+      mError = error;
+      return this;
    }
 }

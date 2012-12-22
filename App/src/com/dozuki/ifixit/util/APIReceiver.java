@@ -10,14 +10,6 @@ import android.content.Intent;
 public abstract class APIReceiver extends BroadcastReceiver {
    @Override
    public void onReceive(Context context, Intent intent) {
-      APIService.Result result = (APIService.Result)intent.getExtras().
-       getSerializable(APIService.RESULT);
-
-      if (!result.hasError()) {
-         onSuccess(result.getResult(), intent);
-      } else {
-         onFailure(result.getError(), intent);
-      }
    }
 
    /**
