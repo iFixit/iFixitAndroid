@@ -34,6 +34,7 @@ public class MainApplication extends Application {
    public static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
    public static final String REGISTER_FRAGMENT = "REGISTER_FRAGMENT";
 
+   private static MainApplication sMainApplication;
    private static Bus sBus;
 
    private ImageManager mImageManager;
@@ -42,7 +43,12 @@ public class MainApplication extends Application {
    private Site mSite;
 
    public MainApplication() {
+      sMainApplication = this;
       setSite(getDefaultSite());
+   }
+
+   public static MainApplication get() {
+      return sMainApplication;
    }
 
    public Site getSite() {

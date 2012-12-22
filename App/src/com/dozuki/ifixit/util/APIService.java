@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,10 +17,12 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
@@ -65,9 +66,15 @@ public class APIService extends Service {
       return null; // Do nothing.
    }
 
-   public static boolean call(Context context, Intent apiCall) {
-      context.startService(apiCall);
-      return true;
+   public static void call(Activity activity, Intent apiCall) {
+      APIEndpoint endpoint = APIEndpoint.getByTarget(apiCall.getExtras().getInt(REQUEST_TARGET));
+
+      // User needs to be logged in for an authenticated endpoint.
+      if (endpoint.mAuthenticated && !MainApplication.get().isUserLoggedIn()) {
+         LoginFragment.newInstance().show(activity.getSupportFragmentManager());
+      } else {
+         activity.startService(apiCall);
+      }
    }
 
    @Override

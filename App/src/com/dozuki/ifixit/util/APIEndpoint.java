@@ -260,6 +260,7 @@ public enum APIEndpoint {
 
    /**
     * Action used for broadcast receivers.
+    * TODO: Remove.
     */
    public final String mAction;
 
