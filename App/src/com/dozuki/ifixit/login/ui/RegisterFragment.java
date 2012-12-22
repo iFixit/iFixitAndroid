@@ -13,7 +13,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.MediaFragment;
@@ -21,16 +20,15 @@ import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.ProgressBar;
-import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.ProgressBar;
@@ -57,17 +55,17 @@ public class RegisterFragment extends DialogFragment
 
    private boolean mReadyForRegisterState;
 
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
-         User user = (User)result;
+   @Subscribe
+   public void onRegister(APIEvent.Register event) {
+      if (!event.hasError()) {
+         User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
 
          ((LoginListener)getActivity()).onLogin(user);
          dismiss();
-      }
-
-      public void onFailure(APIError error, Intent intent) {
+      } else {
          enable(true);
+         APIError error = event.getError();
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
@@ -82,7 +80,7 @@ public class RegisterFragment extends DialogFragment
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
       }
-   };
+   }
 
    /**
     * Required for restoring fragments
@@ -240,24 +238,15 @@ public class RegisterFragment extends DialogFragment
    public void onResume() {
       super.onResume();
 
-      IntentFilter filter = new IntentFilter();
-
-      filter.addAction(APIEndpoint.REGISTER.mAction);
-      getActivity().registerReceiver(mApiReceiver, filter);
+      MainApplication.getBus().register(this);
    }
 
    @Override
    public void onPause() {
       super.onPause();
 
-      try {
-         getActivity().unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
-      }
+      MainApplication.getBus().unregister(this);
    }
-
 
    public static AlertDialog getLogoutDialog(final Context context) {
       return createLogoutDialog(context, R.string.logout_title,
