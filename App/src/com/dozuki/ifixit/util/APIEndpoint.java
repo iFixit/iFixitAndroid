@@ -20,8 +20,8 @@ public enum APIEndpoint {
       false,
       "com.dozuki.ifixit.api.categories",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseTopics(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Categories().set(JSONHelper.parseTopics(json));
          }
       }
    ),
@@ -37,8 +37,8 @@ public enum APIEndpoint {
       false,
       "com.dozuki.ifixit.api.guide",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseGuide(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Guide().set(JSONHelper.parseGuide(json));
          }
       }
    ),
@@ -60,8 +60,8 @@ public enum APIEndpoint {
       false,
       "com.dozuki.ifixit.api.topic",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseTopicLeaf(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Topic().set(JSONHelper.parseTopicLeaf(json));
          }
       }
    ),
@@ -73,8 +73,8 @@ public enum APIEndpoint {
       true,
       "com.dozuki.ifixit.api.login",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseLoginInfo(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Login().set(JSONHelper.parseLoginInfo(json));
          }
       }
    ),
@@ -86,8 +86,8 @@ public enum APIEndpoint {
       true,
       "com.dozuki.ifixit.api.register",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseLoginInfo(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Register().set(JSONHelper.parseLoginInfo(json));
          }
       }
    ),
@@ -103,8 +103,8 @@ public enum APIEndpoint {
       true,
       "com.dozuki.ifixit.api.user_images",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseUserImages(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserImages().set(JSONHelper.parseUserImages(json));
          }
       }
    ),
@@ -143,8 +143,8 @@ public enum APIEndpoint {
       true,
       "com.dozuki.ifixit.api.upload_image",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseUploadedImageInfo(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UploadImage().set(JSONHelper.parseUploadedImageInfo(json));
          }
       }
    ),
@@ -160,9 +160,9 @@ public enum APIEndpoint {
       true,
       "com.dozuki.ifixit.api.delete_image",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json) throws JSONException {
             // TODO: Actually look at the response?
-            return "";
+            return new APIEvent.DeleteImage().set("");
          }
       }
    ),
@@ -174,8 +174,8 @@ public enum APIEndpoint {
       false,
       "com.dozuki.ifixit.api.sites",
       new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseSites(json);
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Sites().set(JSONHelper.parseSites(json));
          }
       }
    );
@@ -185,7 +185,7 @@ public enum APIEndpoint {
    }
 
    private interface ParseResult {
-      public Object parse(String json) throws JSONException;
+      public APIEvent<?> parse(String json) throws JSONException;
    }
 
    /**
@@ -296,7 +296,7 @@ public enum APIEndpoint {
       return protocol + domain + url;
    }
 
-   public Object parseResult(String json) throws JSONException {
+   public APIEvent<?> parseResult(String json) throws JSONException {
       return mParseResult.parse(json);
    }
 
