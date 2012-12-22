@@ -16,10 +16,9 @@ import com.dozuki.ifixit.dozuki.ui.SiteListActivity;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
+import com.dozuki.ifixit.util.IfixitActivity;
 
-import org.holoeverywhere.app.Activity;
-
-public class GalleryActivity extends Activity
+public class GalleryActivity extends IfixitActivity
  implements LoginListener {
 
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
