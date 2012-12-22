@@ -82,6 +82,10 @@ public class TopicsActivity extends IfixitActivity
          mTopicListVisible = true;
       }
 
+      if (mRootTopic == null) {
+         startService(APIService.getCategoriesIntent(this));
+      }
+
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
       }
