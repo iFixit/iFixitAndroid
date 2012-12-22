@@ -35,22 +35,22 @@ public class GalleryActivity extends Activity
 
    private boolean mIconsHidden;
 
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
-         /**
-          * The success are handled by the media fragment. This is here to catch
-          * if the user has an invalid session.
-          */
-      }
+   // TODO: Make this work.
+   // private APIReceiver mApiReceiver = new APIReceiver() {
+   //    public void onSuccess(Object result, Intent intent) {
+   //       /**
+   //        * The success are handled by the media fragment. This is here to catch
+   //        * if the user has an invalid session.
+   //        */
+   //    }
 
-      public void onFailure(APIError error, Intent intent) {
-         if (error.mType == APIError.ErrorType.INVALID_USER) {
-            LoginFragment editNameDialog = new LoginFragment();
-            editNameDialog.show(getSupportFragmentManager(), "");
-         }
-      }
-   };
-
+   //    public void onFailure(APIError error, Intent intent) {
+   //       if (error.mType == APIError.ErrorType.INVALID_USER) {
+   //          LoginFragment editNameDialog = new LoginFragment();
+   //          editNameDialog.show(getSupportFragmentManager(), "");
+   //       }
+   //    }
+   // };
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -173,24 +173,5 @@ public class GalleryActivity extends Activity
       }
 
       return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public void onResume() {
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.USER_IMAGES.mAction);
-      filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
-      filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
-      registerReceiver(mApiReceiver, filter);
-      super.onResume();
-   }
-
-   @Override
-   public void onPause() {
-      try {
-         unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-      }
-      super.onPause();
    }
 }
