@@ -15,7 +15,6 @@ import android.widget.ImageButton;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.MediaFragment;
-import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -57,7 +56,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
 
-         ((LoginListener)getActivity()).onLogin(user);
          dismiss();
       } else {
          enable(true);
@@ -273,7 +271,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  ((LoginListener)context).onLogout();
+                  // TODO: Logout. 
                   dialog.dismiss();
                }
             })
@@ -290,10 +288,5 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       dialog.setCanceledOnTouchOutside(true);
 
       return dialog;
-   }
-
-   @Override
-   public void onCancel(DialogInterface dialog) {
-      ((LoginListener)getActivity()).onCancel();
    }
 }

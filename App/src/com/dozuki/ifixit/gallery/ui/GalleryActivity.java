@@ -13,13 +13,13 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.ui.SiteListActivity;
-import com.dozuki.ifixit.login.model.LoginListener;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.IfixitActivity;
+import com.squareup.otto.Subscribe;
 
-public class GalleryActivity extends IfixitActivity
- implements LoginListener {
+public class GalleryActivity extends IfixitActivity {
 
    private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
 
@@ -133,19 +133,18 @@ public class GalleryActivity extends IfixitActivity
       }
    }
 
-   @Override
-   public void onLogin(User user) {
+   @Subscribe
+   public void onLogin(LoginEvent.Login event) {
       mIconsHidden = false;
       supportInvalidateOptionsMenu();
-      ((LoginListener)mMediaView).onLogin(user);
       if (((MainApplication)getApplication()).isFirstTimeGalleryUser()) {
          MediaFragment.createHelpDialog(this).show();
          ((MainApplication)getApplication()).setFirstTimeGalleryUser(false);
       }
    }
 
-   @Override
-   public void onLogout() {
+   @Subscribe
+   public void onLogout(LoginEvent.Logout event) {
       MainApplication app = ((MainApplication)getApplication());
       app.logout();
       if (!app.getSite().mPublic) {
@@ -155,8 +154,8 @@ public class GalleryActivity extends IfixitActivity
       finish();
    }
 
-   @Override
-   public void onCancel() {
+   @Subscribe
+   public void onCancel(LoginEvent.Cancel event) {
       finish();
    }
 

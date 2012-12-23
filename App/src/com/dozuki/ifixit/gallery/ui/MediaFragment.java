@@ -37,8 +37,7 @@ import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
-import com.dozuki.ifixit.login.model.LoginListener;
-import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.ui.LocalImage;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEvent;
@@ -63,7 +62,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class MediaFragment extends Fragment implements
- OnItemClickListener, OnClickListener, OnItemLongClickListener, LoginListener {
+ OnItemClickListener, OnClickListener, OnItemLongClickListener {
 
    public TextView noImagesText;
    public static boolean showingHelp;
@@ -644,14 +643,13 @@ public class MediaFragment extends Fragment implements
       mMode.finish();
    }
 
-   @Override
-   public void onLogin(User user) {
+   @Subscribe
+   public void onLogin(LoginEvent.Login event) {
       mImageList.getImages().clear();
       mUserName = ((MainApplication)((Activity)mContext).getApplication()).
        getUser().getUsername();
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
-      retrieveUserImages();
       mButtons.setVisibility(View.VISIBLE);
       mButtons.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_bottom));
    }
@@ -755,10 +753,6 @@ public class MediaFragment extends Fragment implements
       }
    }
 
-   @Override
-   public void onLogout() {
-   }
-
    public static AlertDialog createHelpDialog(final Context context) {
       showingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -842,10 +836,5 @@ public class MediaFragment extends Fragment implements
       Bitmap bitmap;
       bitmap = BitmapFactory.decodeFile(url, opt);
       return bitmap;
-   }
-
-   @Override
-   public void onCancel() {
-      // Don't do anything on canceled login.
    }
 }

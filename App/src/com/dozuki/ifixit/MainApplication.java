@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
@@ -250,6 +251,8 @@ public class MainApplication extends Application {
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
       editor.commit();
       mUser = user;
+
+      getBus().post(new LoginEvent.Login(mUser));
    }
 
    /**
@@ -264,5 +267,7 @@ public class MainApplication extends Application {
       editor.commit();
 
       mUser = null;
+
+      getBus().post(new LoginEvent.Logout());
    }
 }

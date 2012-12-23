@@ -12,14 +12,14 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.ui.SiteListActivity;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
-import com.dozuki.ifixit.login.model.LoginListener;
-import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
 
-public class TopicViewActivity extends IfixitActivity implements LoginListener {
+public class TopicViewActivity extends IfixitActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;
@@ -94,22 +94,11 @@ public class TopicViewActivity extends IfixitActivity implements LoginListener {
       }
    }
 
-   @Override
-   public void onLogout() {
-      ((MainApplication)getApplication()).logout();
+   @Subscribe
+   public void onLogout(LoginEvent.Logout event) {
       Intent intent = new Intent(this, SiteListActivity.class);
       startActivity(intent);
       
-      finish();
-   }
-
-   @Override
-   public void onLogin(User user) {
-      // TODO Auto-generated method stub
-   }
-
-   @Override
-   public void onCancel() {
       finish();
    }
 }

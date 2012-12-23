@@ -18,8 +18,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
-import com.dozuki.ifixit.login.model.LoginListener;
-import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
@@ -29,7 +28,7 @@ import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
 
 public class TopicsActivity extends IfixitActivity
- implements TopicSelectedListener, OnBackStackChangedListener, LoginListener {
+ implements TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
@@ -144,21 +143,20 @@ public class TopicsActivity extends IfixitActivity
       super.onResume();
    }
 
-   @Override
-   public void onLogin(User user) {
-      mVerifiedUser = (user != null);
+   @Subscribe
+   public void onLogin(LoginEvent.Login event) {
+      mVerifiedUser = (event.getUser() != null);
    }
 
-   @Override
-   public void onLogout() {
-      ((MainApplication)getApplication()).logout();
+   @Subscribe
+   public void onLogout(LoginEvent.Logout event) {
       mVerifiedUser = false;
       
       finish();
    }
 
-   @Override
-   public void onCancel() {
+   @Subscribe
+   public void onCancel(LoginEvent.Cancel event) {
       mVerifiedUser = false;
 
       finish();
