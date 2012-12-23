@@ -134,6 +134,20 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       return view;
    }
 
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      MainApplication.getBus().unregister(this);
+   }
+
    private void login() {
       String login = mLoginId.getText().toString();
       String password = mPassword.getText().toString();

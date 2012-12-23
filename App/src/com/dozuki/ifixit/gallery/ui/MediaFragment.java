@@ -199,6 +199,32 @@ public class MediaFragment extends Fragment implements
    }
 
    @Override
+   public void onResume() {
+      super.onResume();
+
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      MainApplication.getBus().unregister(this);
+
+      // This helps out with managing memory on context changes.
+      int count = mGridView.getCount();
+      for (int i = 0; i < count; i++) {
+         MediaViewItem mediaView = (MediaViewItem)mGridView.getChildAt(i);
+         if (mediaView != null) {
+            if (mediaView.mImageview.getDrawable() != null) {
+               mediaView.mImageview.getDrawable().setCallback(null);
+            }
+         }
+      }
+      System.gc();
+   }
+
+   @Override
    public void onStart() {
       if (!((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn()) {
          mButtons.setVisibility(View.GONE);
@@ -300,27 +326,6 @@ public class MediaFragment extends Fragment implements
          mUserName = ((MainApplication)((Activity)mContext).getApplication())
           .getUser().getUsername();
       }
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-      // This helps out with managing memory on context changes.
-      int count = mGridView.getCount();
-      for (int i = 0; i < count; i++) {
-         MediaViewItem mediaView = (MediaViewItem)mGridView.getChildAt(i);
-         if (mediaView != null) {
-            if (mediaView.mImageview.getDrawable() != null) {
-               mediaView.mImageview.getDrawable().setCallback(null);
-            }
-         }
-      }
-      System.gc();
    }
 
    @Override
