@@ -2,6 +2,7 @@ package com.dozuki.ifixit;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -253,6 +254,11 @@ public class MainApplication extends Application {
       mUser = user;
 
       getBus().post(new LoginEvent.Login(mUser));
+
+      Intent pendingApiCall = APIService.getAndRemovePendingApiCall();
+      if (pendingApiCall != null) {
+         startService(pendingApiCall);
+      }
    }
 
    /**

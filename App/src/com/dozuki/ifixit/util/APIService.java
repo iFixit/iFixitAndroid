@@ -16,6 +16,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
@@ -55,12 +56,14 @@ public class APIService extends Service {
 
    public static final String RESULT = "RESULT";
 
+   private static Intent sPendingApiCall;
+
    private static Site mSite;
 
    public static void setSite(Site site) {
       mSite = site;
    }
-   
+
    @Override
    public IBinder onBind(Intent intent) {
       return null; // Do nothing.
@@ -71,10 +74,18 @@ public class APIService extends Service {
 
       // User needs to be logged in for an authenticated endpoint.
       if (endpoint.mAuthenticated && !MainApplication.get().isUserLoggedIn()) {
+         sPendingApiCall = apiCall;
          LoginFragment.newInstance().show(activity.getSupportFragmentManager());
       } else {
          activity.startService(apiCall);
       }
+   }
+
+   public static Intent getAndRemovePendingApiCall() {
+      Intent pendingApiCall = sPendingApiCall;
+      sPendingApiCall = null;
+
+      return pendingApiCall;
    }
 
    @Override
