@@ -145,12 +145,6 @@ public class GalleryActivity extends IfixitActivity {
 
    @Subscribe
    public void onLogout(LoginEvent.Logout event) {
-      MainApplication app = ((MainApplication)getApplication());
-      app.logout();
-      if (!app.getSite().mPublic) {
-         Intent intent = new Intent(this, SiteListActivity.class);
-         startActivity(intent);
-      }
       finish();
    }
 

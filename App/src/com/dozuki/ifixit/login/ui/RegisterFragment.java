@@ -257,7 +257,7 @@ public class RegisterFragment extends DialogFragment
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  // TODO: Login.
+                  MainApplication.get().logout();
                   dialog.dismiss();
                }
             })

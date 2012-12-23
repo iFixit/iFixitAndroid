@@ -270,4 +270,8 @@ public class MainApplication extends Application {
 
       getBus().post(new LoginEvent.Logout());
    }
+
+   public void cancelLogin() {
+      getBus().post(new LoginEvent.Cancel());
+   }
 }

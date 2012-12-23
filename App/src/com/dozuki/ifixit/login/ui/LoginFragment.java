@@ -60,7 +60,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       } else {
          enable(true);
          APIError error = event.getError();
-         
+
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
@@ -81,7 +81,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
     * Required for restoring fragments
     */
    public LoginFragment() {}
-   
+
    public static LoginFragment newInstance() {
       return new LoginFragment();
    }
@@ -271,7 +271,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  // TODO: Logout. 
+                  MainApplication.get().logout();
                   dialog.dismiss();
                }
             })
@@ -288,5 +288,10 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       dialog.setCanceledOnTouchOutside(true);
 
       return dialog;
+   }
+
+   @Override
+   public void onCancel(DialogInterface dialog) {
+      MainApplication.get().cancelLogin();
    }
 }
