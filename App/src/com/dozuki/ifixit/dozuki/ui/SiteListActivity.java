@@ -88,6 +88,13 @@ public class SiteListActivity extends IfixitActivity
       }
    }
 
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      MainApplication.get().setSite(Site.getSite("dozuki"));
+   }
+
    private void search(String query) {
       String lowerQuery = query.toLowerCase();
       ArrayList<Site> matchedSites = new ArrayList<Site>();

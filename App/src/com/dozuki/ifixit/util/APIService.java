@@ -73,7 +73,7 @@ public class APIService extends Service {
       APIEndpoint endpoint = APIEndpoint.getByTarget(apiCall.getExtras().getInt(REQUEST_TARGET));
 
       // User needs to be logged in for an authenticated endpoint.
-      if (endpoint.mAuthenticated && !MainApplication.get().isUserLoggedIn()) {
+      if ((endpoint.mAuthenticated || !mSite.mPublic) && !MainApplication.get().isUserLoggedIn()) {
          sPendingApiCall = apiCall;
          LoginFragment.newInstance().show(activity.getSupportFragmentManager());
       } else {
