@@ -38,6 +38,7 @@ import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
 import com.dozuki.ifixit.login.model.LoginEvent;
+import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEvent;
@@ -66,7 +67,6 @@ public class MediaFragment extends Fragment implements
 
    public TextView noImagesText;
    public static boolean showingHelp;
-   public static boolean showingLogout;
    public static boolean showingDelete;
 
    private static final String TAG = "MediaFragment";
@@ -83,23 +83,22 @@ public class MediaFragment extends Fragment implements
    private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
    private static final String HASH_MAP = "HASH_MAP";
    private static final String SHOWING_HELP = "SHOWING_HELP";
-   private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
+
+   private static ArrayList<Boolean> mSelectedList;
+   private static UserImageList mImageList;
 
    private Activity mActivity;
    private GridView mGridView;
    private RelativeLayout mButtons;
    private MediaAdapter mGalleryAdapter;
    private TextView mLoginText;
-
    private String mUserName;
    private ImageManager mImageManager;
-   private static ArrayList<Boolean> mSelectedList;
    private HashMap<String, LocalImage> mLocalURL;
    private HashMap<String, Bitmap> mLimages;
    private ImageSizes mImageSizes;
-   private static UserImageList mImageList;
    private ActionMode mMode;
    private int mImagesDownloaded;
    private boolean mLastPage;
@@ -117,6 +116,10 @@ public class MediaFragment extends Fragment implements
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      if (MainApplication.get().isUserLoggedIn()) {
+         setupUser(MainApplication.get().getUser());
+      }
+
       if (mImageManager == null) {
          mImageManager = ((MainApplication)getActivity().getApplication()).getImageManager();
          mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
@@ -127,7 +130,6 @@ public class MediaFragment extends Fragment implements
       mImageSizes = ((MainApplication)getActivity().getApplication()).getImageSizes();
       mMode = null;
       showingHelp = false;
-      showingLogout = false;
       showingDelete = false;
       mSelectedList = new ArrayList<Boolean>();
       mLocalURL = new HashMap<String, LocalImage>();
@@ -136,9 +138,6 @@ public class MediaFragment extends Fragment implements
          showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          if (showingHelp)
             createHelpDialog(mActivity).show();
-         showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
-         if (showingLogout)
-            LoginFragment.getLogoutDialog(mActivity).show();
          showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 
          mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
@@ -166,6 +165,10 @@ public class MediaFragment extends Fragment implements
       } else {
          mImageList = new UserImageList();
          mGalleryAdapter = new MediaAdapter();
+      }
+
+      if (mImageList.getImages().size() == 0 && !mNextPageRequestInProgress) {
+         retrieveUserImages();
       }
    }
 
@@ -209,37 +212,6 @@ public class MediaFragment extends Fragment implements
       super.onPause();
 
       MainApplication.getBus().unregister(this);
-
-      // This helps out with managing memory on context changes.
-      int count = mGridView.getCount();
-      for (int i = 0; i < count; i++) {
-         MediaViewItem mediaView = (MediaViewItem)mGridView.getChildAt(i);
-         if (mediaView != null) {
-            if (mediaView.mImageview.getDrawable() != null) {
-               mediaView.mImageview.getDrawable().setCallback(null);
-            }
-         }
-      }
-      System.gc();
-   }
-
-   @Override
-   public void onStart() {
-      if (!((MainApplication)((Activity)mActivity).getApplication()).isUserLoggedIn()) {
-         mButtons.setVisibility(View.GONE);
-      } else {
-         mUserName = ((MainApplication)((Activity)mActivity).getApplication())
-          .getUser().getUsername();
-         mLoginText.setText(mActivity.getString(R.string.logged_in_as) + " " +
-          mUserName);
-         mButtons.setOnClickListener(this);
-
-         if (mImageList.getImages().size() == 0 && !mNextPageRequestInProgress) {
-            retrieveUserImages();
-         }
-      }
-
-      super.onStart();
    }
 
    @Override
@@ -251,7 +223,6 @@ public class MediaFragment extends Fragment implements
       savedInstanceState.putSerializable(HASH_MAP, mLocalURL);
       savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
       savedInstanceState.putBoolean(SHOWING_HELP, showingHelp);
-      savedInstanceState.putBoolean(SHOWING_LOGOUT, showingLogout);
       savedInstanceState.putBoolean(SHOWING_DELETE, showingDelete);;
 
       if (mCameraTempFileName != null) {
@@ -321,10 +292,6 @@ public class MediaFragment extends Fragment implements
    public void onAttach(Activity activity) {
       super.onAttach(activity);
       mActivity = activity;
-      if (((MainApplication)mActivity.getApplication()).isUserLoggedIn()) {
-         mUserName = ((MainApplication)mActivity.getApplication())
-          .getUser().getUsername();
-      }
    }
 
    @Override
@@ -645,9 +612,12 @@ public class MediaFragment extends Fragment implements
 
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
+      setupUser(event.getUser());
+   }
+
+   private void setupUser(User user) {
       mImageList.getImages().clear();
-      mUserName = ((MainApplication)mActivity.getApplication()).
-       getUser().getUsername();
+      mUserName = user.getUsername();
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
       mButtons.setVisibility(View.VISIBLE);
@@ -737,7 +707,8 @@ public class MediaFragment extends Fragment implements
 
       // Used to determine when to load more images.
       @Override
-      public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
+      public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount,
+       int totalItemCount) {
          if ((firstVisibleItem + visibleItemCount) >= totalItemCount / 2 && !mLastPage) {
             if (((MainApplication)mActivity.getApplication()).isUserLoggedIn() &&
              !mNextPageRequestInProgress && mCurScrollState ==
