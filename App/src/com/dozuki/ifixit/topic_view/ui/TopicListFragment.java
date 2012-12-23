@@ -9,7 +9,6 @@ import android.widget.AdapterView.OnItemClickListener;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
 import com.ifixit.android.sectionheaders.SectionHeadersAdapter;

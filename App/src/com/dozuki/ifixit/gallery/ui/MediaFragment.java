@@ -298,7 +298,6 @@ public class MediaFragment extends Fragment implements
    public void onClick(View view) {
       switch (view.getId()) {
       case R.id.button_holder:
-         showingLogout = true;
          LoginFragment.getLogoutDialog(mActivity).show();
          break;
       }

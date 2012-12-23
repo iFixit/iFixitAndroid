@@ -16,7 +16,6 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;

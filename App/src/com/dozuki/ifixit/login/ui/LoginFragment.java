@@ -14,7 +14,6 @@ import android.widget.ImageButton;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.MediaFragment;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -278,7 +277,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       .setNegativeButton(context.getString(buttonCancel),
          new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               MediaFragment.showingLogout = false;
                dialog.cancel();
             }
          });
