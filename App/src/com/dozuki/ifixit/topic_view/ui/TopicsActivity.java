@@ -46,9 +46,6 @@ public class TopicsActivity extends IfixitActivity
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
-   private boolean mVerifiedUser;
-   private boolean mRequireLogin;
-   private Site mSite;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -59,10 +56,6 @@ public class TopicsActivity extends IfixitActivity
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.topics);
-
-      if (mSite == null) {
-         mSite = ((MainApplication)getApplication()).getSite();
-      }   
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -85,8 +78,9 @@ public class TopicsActivity extends IfixitActivity
          getSupportFragmentManager().popBackStack();
       }
 
-      if (mTopicListVisible && mHideTopicList && mTopicView.isDisplayingTopic())
+      if (mTopicListVisible && mHideTopicList && mTopicView.isDisplayingTopic()) {
          hideTopicListWithDelay();
+      }
 
       getSupportFragmentManager().addOnBackStackChangedListener(this);
 
@@ -106,19 +100,6 @@ public class TopicsActivity extends IfixitActivity
             }
          });
       }
-      
-      mRequireLogin = !mSite.mPublic;
-      
-      mVerifiedUser = ((MainApplication)getApplication()).getUserFromPreferenceFile() != null;
-      
-      // If a site is private, and the user has not yet logged in, prompt to log in.
-      if (mRequireLogin && !mVerifiedUser) {
-         triggerLogin();
-      }
-   }
-   
-   public void triggerLogin() {
-      LoginFragment.newInstance().show(getSupportFragmentManager());
    }
 
    @Subscribe
@@ -129,39 +110,11 @@ public class TopicsActivity extends IfixitActivity
             onTopicSelected(mRootTopic);
          }
       } else {
-         if (mRequireLogin && !mVerifiedUser) {
-            triggerLogin();
-         } else {
-            APIService.getErrorDialog(TopicsActivity.this, event.getError(),
-             APIService.getCategoriesIntent(TopicsActivity.this)).show();
-         }
+         APIService.getErrorDialog(TopicsActivity.this, event.getError(),
+          APIService.getCategoriesIntent(TopicsActivity.this)).show();
       }
    }
-   
-   @Override
-   public void onResume() {
-      super.onResume();
-   }
 
-   @Subscribe
-   public void onLogin(LoginEvent.Login event) {
-      mVerifiedUser = (event.getUser() != null);
-   }
-
-   @Subscribe
-   public void onLogout(LoginEvent.Logout event) {
-      mVerifiedUser = false;
-      
-      finish();
-   }
-
-   @Subscribe
-   public void onCancel(LoginEvent.Cancel event) {
-      mVerifiedUser = false;
-
-      finish();
-   }
-   
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
@@ -205,16 +158,16 @@ public class TopicsActivity extends IfixitActivity
       }
    }
 
-   private void hideTopicList() {
-      hideTopicList(false);
-   }
-
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuInflater inflater = getSupportMenuInflater();
       inflater.inflate(R.menu.menu_bar, menu);
 
       return super.onCreateOptionsMenu(menu);
+   }
+
+   private void hideTopicList() {
+      hideTopicList(false);
    }
 
    private void hideTopicList(boolean delay) {
@@ -271,12 +224,12 @@ public class TopicsActivity extends IfixitActivity
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
    }
-   
+
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
       MenuItem logout = menu.findItem(R.id.logout_button);
-      logout.setVisible(mRequireLogin);
-      
+      logout.setVisible(!MainApplication.get().getSite().mPublic);
+
       return super.onPrepareOptionsMenu(menu);
    }
 
@@ -305,6 +258,7 @@ public class TopicsActivity extends IfixitActivity
             return true;
          case R.id.logout_button:
             LoginFragment.getLogoutDialog(this).show();
+            return true;
          default:
             return super.onOptionsItemSelected(item);
       }
