@@ -178,7 +178,7 @@ public class RegisterFragment extends DialogFragment
                mLoadingSpinner.setVisibility(View.VISIBLE);
                mCurIntent = APIService.getRegisterIntent(getActivity(), login,
                 password, name);
-               getActivity().startService(mCurIntent);
+               APIService.call((Activity)getActivity(), mCurIntent);
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);
@@ -225,7 +225,7 @@ public class RegisterFragment extends DialogFragment
          String session = data.getStringExtra("session");
          enable(false);
          mCurIntent = APIService.getLoginIntent(getActivity(), session);
-         getActivity().startService(mCurIntent);
+         APIService.call((Activity)getActivity(), mCurIntent);
       }
    }
 

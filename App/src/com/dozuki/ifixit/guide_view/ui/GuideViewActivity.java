@@ -210,7 +210,7 @@ public class GuideViewActivity extends IfixitActivity
    public void getGuide(final int guideid) {
       mNextPageImage.setVisibility(View.GONE);
 
-      startService(APIService.getGuideIntent(this, guideid));
+      APIService.call(this, APIService.getGuideIntent(this, guideid));
    }
 
    private void displayError() {

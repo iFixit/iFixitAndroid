@@ -158,7 +158,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
          mCurIntent = APIService.getLoginIntent(getActivity(), login, password);
-         getActivity().startService(mCurIntent);
+         APIService.call((Activity)getActivity(), mCurIntent);
       } else {
          if (login.length() < 1) {
             mLoginId.requestFocus();
@@ -250,7 +250,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          String session = data.getStringExtra("session");
          enable(false);
          mCurIntent = APIService.getLoginIntent(getActivity(), session);
-         getActivity().startService(mCurIntent);
+         APIService.call((Activity)getActivity(), mCurIntent);
       }
    }
 

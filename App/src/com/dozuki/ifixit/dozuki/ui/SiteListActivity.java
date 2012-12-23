@@ -202,7 +202,7 @@ public class SiteListActivity extends IfixitActivity
    }
 
    private void getSiteList() {
-      startService(APIService.getSitesIntent(this));
+      APIService.call(this, APIService.getSitesIntent(this));
    }
 
    private void showSiteListDialog() {

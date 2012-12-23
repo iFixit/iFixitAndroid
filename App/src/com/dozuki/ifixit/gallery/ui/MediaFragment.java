@@ -87,7 +87,7 @@ public class MediaFragment extends Fragment implements
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
 
-   private Context mContext;
+   private Activity mActivity;
    private GridView mGridView;
    private RelativeLayout mButtons;
    private MediaAdapter mGalleryAdapter;
@@ -107,8 +107,8 @@ public class MediaFragment extends Fragment implements
    private boolean mNextPageRequestInProgress;
    private Intent mCurIntent;
 
-   public MediaFragment(Context con) {
-      mContext = con;
+   public MediaFragment(Activity activity) {
+      mActivity = activity;
    }
 
    public MediaFragment() {}
@@ -135,10 +135,10 @@ public class MediaFragment extends Fragment implements
       if (savedInstanceState != null) {
          showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          if (showingHelp)
-            createHelpDialog(mContext).show();
+            createHelpDialog(mActivity).show();
          showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
          if (showingLogout)
-            LoginFragment.getLogoutDialog(mContext).show();
+            LoginFragment.getLogoutDialog(mActivity).show();
          showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 
          mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
@@ -151,7 +151,7 @@ public class MediaFragment extends Fragment implements
          }
 
          if (showingDelete) {
-            createDeleteConfirmDialog(mContext).show();
+            createDeleteConfirmDialog(mActivity).show();
          }
 
          if (savedInstanceState.getString(CAMERA_PATH) != null) {
@@ -225,12 +225,12 @@ public class MediaFragment extends Fragment implements
 
    @Override
    public void onStart() {
-      if (!((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn()) {
+      if (!((MainApplication)((Activity)mActivity).getApplication()).isUserLoggedIn()) {
          mButtons.setVisibility(View.GONE);
       } else {
-         mUserName = ((MainApplication)((Activity)mContext).getApplication())
+         mUserName = ((MainApplication)((Activity)mActivity).getApplication())
           .getUser().getUsername();
-         mLoginText.setText(mContext.getString(R.string.logged_in_as) + " " +
+         mLoginText.setText(mActivity.getString(R.string.logged_in_as) + " " +
           mUserName);
          mButtons.setOnClickListener(this);
 
@@ -312,17 +312,17 @@ public class MediaFragment extends Fragment implements
 
    public void retrieveUserImages() {
       mNextPageRequestInProgress = true;
-      mCurIntent = APIService.getUserImagesIntent(mContext,
+      mCurIntent = APIService.getUserImagesIntent(mActivity,
        "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded);
-      mContext.startService(mCurIntent);
+      APIService.call(mActivity, mCurIntent);
    }
 
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-      mContext = (Context)activity;
-      if (((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn()) {
-         mUserName = ((MainApplication)((Activity)mContext).getApplication())
+      mActivity = activity;
+      if (((MainApplication)mActivity.getApplication()).isUserLoggedIn()) {
+         mUserName = ((MainApplication)mActivity.getApplication())
           .getUser().getUsername();
       }
    }
@@ -332,7 +332,7 @@ public class MediaFragment extends Fragment implements
       switch (view.getId()) {
       case R.id.button_holder:
          showingLogout = true;
-         LoginFragment.getLogoutDialog(mContext).show();
+         LoginFragment.getLogoutDialog(mActivity).show();
          break;
       }
    }
@@ -386,7 +386,7 @@ public class MediaFragment extends Fragment implements
 
    public String getPath(Uri uri) {
       String[] projection = { MediaStore.Images.Media.DATA };
-      Cursor cursor = ((Activity)mContext).managedQuery(uri, projection, null,
+      Cursor cursor = mActivity.managedQuery(uri, projection, null,
        null, null);
       if (cursor != null) {
          int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -407,7 +407,7 @@ public class MediaFragment extends Fragment implements
             String path = getPath(selectedImageUri);
             if (path == null || !(path.toLowerCase().contains(".jpeg") ||
              path.toLowerCase().contains(".jpg") || path.toLowerCase().contains(".png"))) {
-               Toast.makeText(mContext, mContext.getString(R.string.non_image_error),
+               Toast.makeText(mActivity, mActivity.getString(R.string.non_image_error),
                 Toast.LENGTH_LONG).show();
 
                return;
@@ -422,15 +422,15 @@ public class MediaFragment extends Fragment implements
             }
 
             if (imagesBeingUploaded >= MAX_UPLOAD_COUNT) {
-               Toast.makeText(mContext, mContext.getString(R.string.too_many_image_error),
+               Toast.makeText(mActivity, mActivity.getString(R.string.too_many_image_error),
                 Toast.LENGTH_LONG).show();
                return;
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            mCurIntent = APIService.getUploadImageIntent(mContext,
+            mCurIntent = APIService.getUploadImageIntent(mActivity,
              getPath(selectedImageUri), key);
-            mContext.startService(mCurIntent);
+            APIService.call(mActivity, mCurIntent);
          } else if (requestCode == MediaFragment.CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
                Log.w(TAG, "Error cameraTempFile is null!");
@@ -442,8 +442,8 @@ public class MediaFragment extends Fragment implements
             opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
-            mCurIntent = APIService.getUploadImageIntent(mContext, mCameraTempFileName, key);
-            mContext.startService(mCurIntent);
+            mCurIntent = APIService.getUploadImageIntent(mActivity, mCameraTempFileName, key);
+            APIService.call(mActivity, mCurIntent);
          }
       }
    }
@@ -533,7 +533,7 @@ public class MediaFragment extends Fragment implements
                } else {
                   // gallery image
                   bitmap = MediaStore.Images.Thumbnails.getThumbnail(
-                   mContext.getContentResolver(), ContentUris.parseId(temp),
+                   mActivity.getContentResolver(), ContentUris.parseId(temp),
                    MediaStore.Images.Thumbnails.MINI_KIND, null);
                }
 
@@ -623,7 +623,7 @@ public class MediaFragment extends Fragment implements
             deleteQuery += "imageids[]=" + mImageList.getImages().get(i).getImageid() + "&";
 
             if (mImageList.getImages().get(i).getImageid() == null) {
-               Toast.makeText(mContext, mContext.getString(R.string.delete_loading_image_error),
+               Toast.makeText(mActivity, mActivity.getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
             }
             mImageList.getImages().remove(i);
@@ -633,8 +633,8 @@ public class MediaFragment extends Fragment implements
       if (deleteQuery.length() > 1) {
          deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 1);
       }
-      mCurIntent = APIService.getDeleteImageIntent(mContext, deleteQuery);
-      mContext.startService(mCurIntent);
+      mCurIntent = APIService.getDeleteImageIntent(mActivity, deleteQuery);
+      APIService.call(mActivity, mCurIntent);
 
       if (mImageList.getImages().size() == 0) {
          noImagesText.setVisibility(View.VISIBLE);
@@ -646,12 +646,12 @@ public class MediaFragment extends Fragment implements
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
       mImageList.getImages().clear();
-      mUserName = ((MainApplication)((Activity)mContext).getApplication()).
+      mUserName = ((MainApplication)mActivity.getApplication()).
        getUser().getUsername();
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
       mButtons.setVisibility(View.VISIBLE);
-      mButtons.setAnimation(AnimationUtils.loadAnimation(mContext, R.anim.slide_in_bottom));
+      mButtons.setAnimation(AnimationUtils.loadAnimation(mActivity, R.anim.slide_in_bottom));
    }
 
    @Override
@@ -663,7 +663,7 @@ public class MediaFragment extends Fragment implements
 
    public void setDeleteMode() {
       if (mMode == null) {
-         Animation animHide = AnimationUtils.loadAnimation(mContext,
+         Animation animHide = AnimationUtils.loadAnimation(mActivity,
           R.anim.slide_out_bottom_slow);
          animHide.setAnimationListener(new AnimationListener() {
             @Override
@@ -681,7 +681,7 @@ public class MediaFragment extends Fragment implements
          });
          mButtons.startAnimation(animHide);
          mMode = getSherlockActivity().startActionMode(
-          new ModeCallback(mContext));
+          new ModeCallback(mActivity));
       }
    }
 
@@ -739,7 +739,7 @@ public class MediaFragment extends Fragment implements
       @Override
       public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
          if ((firstVisibleItem + visibleItemCount) >= totalItemCount / 2 && !mLastPage) {
-            if (((MainApplication)((Activity)mContext).getApplication()).isUserLoggedIn() &&
+            if (((MainApplication)mActivity.getApplication()).isUserLoggedIn() &&
              !mNextPageRequestInProgress && mCurScrollState ==
              OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
                retrieveUserImages();
