@@ -18,7 +18,6 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      "com.dozuki.ifixit.api.categories",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.Categories().setResult(JSONHelper.parseTopics(json));
@@ -40,7 +39,6 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      "com.dozuki.ifixit.api.guide",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.Guide().setResult(JSONHelper.parseGuide(json));
@@ -68,7 +66,6 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      "com.dozuki.ifixit.api.topic",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.Topic().setResult(JSONHelper.parseTopicLeaf(json));
@@ -86,7 +83,6 @@ public enum APIEndpoint {
       true,
       false,
       true,
-      "com.dozuki.ifixit.api.login",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.Login().setResult(JSONHelper.parseLoginInfo(json));
@@ -104,7 +100,6 @@ public enum APIEndpoint {
       true,
       false,
       true,
-      "com.dozuki.ifixit.api.register",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.Register().setResult(JSONHelper.parseLoginInfo(json));
@@ -126,7 +121,6 @@ public enum APIEndpoint {
       false,
       true,
       true,
-      "com.dozuki.ifixit.api.user_images",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.UserImages().setResult(JSONHelper.parseUserImages(json));
@@ -171,7 +165,6 @@ public enum APIEndpoint {
       false,
       true,
       true,
-      "com.dozuki.ifixit.api.upload_image",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.UploadImage().setResult(JSONHelper.parseUploadedImageInfo(json));
@@ -193,7 +186,6 @@ public enum APIEndpoint {
       false,
       true,
       true,
-      "com.dozuki.ifixit.api.delete_image",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             // TODO: Actually look at the response?
@@ -212,7 +204,6 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      "com.dozuki.ifixit.api.sites",
       new ParseResult() {
          public APIEvent<?> parse(String json) throws JSONException {
             return new APIEvent.Sites().setResult(JSONHelper.parseSites(json));
@@ -259,12 +250,6 @@ public enum APIEndpoint {
    public final boolean mPost;
 
    /**
-    * Action used for broadcast receivers.
-    * TODO: Remove.
-    */
-   public final String mAction;
-
-   /**
     * Used for endpoints to create special URLs.
     */
    private final CreateUrl mCreateUrl;
@@ -280,23 +265,21 @@ public enum APIEndpoint {
    private final GetEvent mGetEvent;
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    boolean post, String action, ParseResult parseResult, GetEvent getEvent) {
-      this(url, https, authenticated, post, action, null, parseResult, getEvent);
+    boolean post, ParseResult parseResult, GetEvent getEvent) {
+      this(url, https, authenticated, post, null, parseResult, getEvent);
    }
 
-   private APIEndpoint(CreateUrl createUrl, boolean https,
-    boolean authenticated, boolean post, String action,
-    ParseResult parseResult, GetEvent getEvent) {
-      this(null, https, authenticated, post, action, createUrl, parseResult, getEvent);
+   private APIEndpoint(CreateUrl createUrl, boolean https, boolean authenticated,
+    boolean post, ParseResult parseResult, GetEvent getEvent) {
+      this(null, https, authenticated, post, createUrl, parseResult, getEvent);
    }
 
    private APIEndpoint(String url, boolean https, boolean authenticated,
-    boolean post, String action, CreateUrl createUrl, ParseResult parseResult, GetEvent getEvent) {
+    boolean post, CreateUrl createUrl, ParseResult parseResult, GetEvent getEvent) {
       mUrl = url;
       mHttps = https;
       mAuthenticated = authenticated;
       mPost = post;
-      mAction = action;
       mCreateUrl = createUrl;
       mParseResult = parseResult;
       mGetEvent = getEvent;
@@ -371,7 +354,6 @@ public enum APIEndpoint {
    }
 
    public String toString() {
-      return mUrl + " | " + mHttps + " | " + mAuthenticated + " | " +
-       ordinal() + " | " + mAction;
+      return mUrl + " | " + mHttps + " | " + mAuthenticated + " | " + ordinal();
    }
 }
