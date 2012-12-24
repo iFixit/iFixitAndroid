@@ -149,6 +149,7 @@ public class GalleryActivity extends IfixitActivity
       MainApplication app = ((MainApplication)getApplication());
       app.logout();
       if (!app.getSite().mPublic) {
+         app.setSite(null);
          Intent intent = new Intent(this, SiteListActivity.class);
          startActivity(intent);
       }
