@@ -81,11 +81,10 @@ public class GalleryActivity extends IfixitActivity implements
    private static final int MAX_UPLOAD_COUNT = 4;
 
    private static ArrayList<Boolean> mSelectedList;
-   private static UserImageList mImageList;
    public static boolean showingHelp;
    public static boolean showingDelete;
 
-   public TextView noImagesText;
+   private TextView noImagesText;
    private GridView mGridView;
    private RelativeLayout mButtons;
    private MediaAdapter mGalleryAdapter;
@@ -95,6 +94,7 @@ public class GalleryActivity extends IfixitActivity implements
    private HashMap<String, LocalImage> mLocalURL;
    private HashMap<String, Bitmap> mLimages;
    private ImageSizes mImageSizes;
+   private UserImageList mImageList;
    private ActionMode mMode;
    private int mImagesDownloaded;
    private boolean mLastPage;
@@ -113,20 +113,11 @@ public class GalleryActivity extends IfixitActivity implements
       setContentView(R.layout.gallery_view);
 
       mGridView = (GridView)findViewById(R.id.gridview);
-      mGridView.setOnScrollListener(new GalleryOnScrollListener());
-
-      mGridView.setAdapter(mGalleryAdapter);
-      mGridView.setOnItemClickListener(this);
-      mGridView.setOnItemLongClickListener(this);
-
+      noImagesText = (TextView)findViewById(R.id.no_images_text);
       mButtons = (RelativeLayout)findViewById(R.id.button_holder);
-      mLoginText = ((TextView)findViewById(R.id.login_text));
+      mLoginText = (TextView)findViewById(R.id.login_text);
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-      if (MainApplication.get().isUserLoggedIn()) {
-         setupUser(MainApplication.get().getUser());
-      }
 
       if (mImageManager == null) {
          mImageManager = MainApplication.get().getImageManager();
@@ -142,6 +133,7 @@ public class GalleryActivity extends IfixitActivity implements
       mSelectedList = new ArrayList<Boolean>();
       mLocalURL = new HashMap<String, LocalImage>();
       mLimages = new HashMap<String, Bitmap>();
+
       if (savedInstanceState != null) {
          showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          if (showingHelp)
@@ -150,7 +142,6 @@ public class GalleryActivity extends IfixitActivity implements
 
          mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
          mImageList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
-         mGalleryAdapter = new MediaAdapter();
 
          boolean[] selected = savedInstanceState.getBooleanArray(USER_SELECTED_LIST);
          for (boolean b : selected) {
@@ -172,10 +163,14 @@ public class GalleryActivity extends IfixitActivity implements
          }
       } else {
          mImageList = new UserImageList();
-         mGalleryAdapter = new MediaAdapter();
       }
 
-      noImagesText = (TextView)findViewById(R.id.no_images_text);
+      mGalleryAdapter = new MediaAdapter();
+      mGridView.setAdapter(mGalleryAdapter);
+      mGridView.setOnScrollListener(new GalleryOnScrollListener());
+      mGridView.setOnItemClickListener(this);
+      mGridView.setOnItemLongClickListener(this);
+
       if (mImageList.getImages().size() < 1) {
          noImagesText.setVisibility(View.VISIBLE);
       } else {
@@ -188,6 +183,10 @@ public class GalleryActivity extends IfixitActivity implements
 
       if (mImageList.getImages().size() == 0 && !mNextPageRequestInProgress) {
          retrieveUserImages();
+      }
+
+      if (MainApplication.get().isUserLoggedIn()) {
+         setupUser(MainApplication.get().getUser());
       }
    }
 
@@ -248,7 +247,7 @@ public class GalleryActivity extends IfixitActivity implements
       savedInstanceState.putSerializable(HASH_MAP, mLocalURL);
       savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
       savedInstanceState.putBoolean(SHOWING_HELP, showingHelp);
-      savedInstanceState.putBoolean(SHOWING_DELETE, showingDelete);;
+      savedInstanceState.putBoolean(SHOWING_DELETE, showingDelete);
 
       if (mCameraTempFileName != null) {
          savedInstanceState.putString(CAMERA_PATH, mCameraTempFileName);
@@ -629,7 +628,6 @@ public class GalleryActivity extends IfixitActivity implements
    }
 
    private void setupUser(User user) {
-      mImageList.getImages().clear();
       mUserName = user.getUsername();
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
