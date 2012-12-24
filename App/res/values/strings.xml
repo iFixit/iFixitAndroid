@@ -90,4 +90,5 @@
    <string name="login_email_hint">Email</string>
    <string name="password_confirm_hint">Confirm Password</string>
    <string name="empty_site_list">No sites found.</string>
+   <string name="site_list_search_title">Search Sites</string>
 </resources>
