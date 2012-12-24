@@ -65,6 +65,12 @@ public abstract class IfixitActivity extends Activity {
       MenuItem logout = menu.findItem(R.id.logout_button);
       logout.setVisible(MainApplication.get().isUserLoggedIn());
 
+      menu.findItem(R.id.gallery_button).setVisible(showGalleryIcon());
+
       return super.onPrepareOptionsMenu(menu);
+   }
+
+   public boolean showGalleryIcon() {
+      return true;
    }
 }

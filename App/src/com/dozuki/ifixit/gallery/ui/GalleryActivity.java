@@ -191,6 +191,11 @@ public class GalleryActivity extends IfixitActivity implements
    }
 
    @Override
+   public boolean showGalleryIcon() {
+      return false;
+   }
+
+   @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
@@ -198,9 +203,6 @@ public class GalleryActivity extends IfixitActivity implements
             return true;
          case R.id.top_camera_button:
             launchCamera();
-            return true;
-         case R.id.top_gallery_button:
-            launchGallery();
             return true;
          case R.id.top_question_button:
             createHelpDialog().show();

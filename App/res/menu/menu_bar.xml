@@ -12,5 +12,5 @@
         android:icon="@drawable/ic_action_exit"
         android:showAsAction="ifRoom"
         android:title="@string/logout_title"/>
-    
+
 </menu>
