@@ -156,14 +156,6 @@ public class TopicsActivity extends IfixitActivity
       }
    }
 
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.menu_bar, menu);
-
-      return super.onCreateOptionsMenu(menu);
-   }
-
    private void hideTopicList() {
       hideTopicList(false);
    }
@@ -224,14 +216,6 @@ public class TopicsActivity extends IfixitActivity
    }
 
    @Override
-   public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem logout = menu.findItem(R.id.logout_button);
-      logout.setVisible(!MainApplication.get().getSite().mPublic);
-
-      return super.onPrepareOptionsMenu(menu);
-   }
-
-   @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
@@ -248,14 +232,6 @@ public class TopicsActivity extends IfixitActivity
                finish();
             }
 
-            return true;
-
-         case R.id.gallery_button:
-            Intent intent = new Intent(this, GalleryActivity.class);
-            startActivity(intent);
-            return true;
-         case R.id.logout_button:
-            LoginFragment.getLogoutDialog(this).show();
             return true;
          default:
             return super.onOptionsItemSelected(item);

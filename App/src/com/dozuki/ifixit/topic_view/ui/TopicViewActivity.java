@@ -60,22 +60,6 @@ public class TopicViewActivity extends IfixitActivity {
          }
       }
    }
-   
-   @Override
-   public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem logout = menu.findItem(R.id.logout_button);
-      logout.setVisible(!((MainApplication)getApplication()).getSite().mPublic);
-      
-      return super.onPrepareOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.menu_bar, menu);
-
-      return super.onCreateOptionsMenu(menu);
-   }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
@@ -83,12 +67,6 @@ public class TopicViewActivity extends IfixitActivity {
          case android.R.id.home:
             finish();
             return true;
-         case R.id.gallery_button:
-            Intent intent = new Intent(this, GalleryActivity.class);
-            startActivity(intent);
-            return true;
-         case R.id.logout_button:
-            LoginFragment.getLogoutDialog(this).show();
          default:
             return super.onOptionsItemSelected(item);
       }
@@ -98,7 +76,7 @@ public class TopicViewActivity extends IfixitActivity {
    public void onLogout(LoginEvent.Logout event) {
       Intent intent = new Intent(this, SiteListActivity.class);
       startActivity(intent);
-      
+
       finish();
    }
 }
