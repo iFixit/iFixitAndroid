@@ -187,10 +187,6 @@ public class MainApplication extends Application {
       return mImageSizes;
    }
 
-   public void setUser(User user) {
-      mUser = user;
-   }
-
    public User getUser() {
       return mUser;
    }
@@ -278,6 +274,9 @@ public class MainApplication extends Application {
    }
 
    public void cancelLogin() {
+      // Clear the pending api call if one exists.
+      APIService.getAndRemovePendingApiCall();
+
       getBus().post(new LoginEvent.Cancel());
    }
 }
