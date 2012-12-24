@@ -44,7 +44,10 @@ public class MainApplication extends Application {
    private User mUser;
    private Site mSite;
 
-   public MainApplication() {
+   @Override
+   public void onCreate() {
+      super.onCreate();
+
       sMainApplication = this;
       setSite(getDefaultSite());
    }
@@ -60,6 +63,7 @@ public class MainApplication extends Application {
    public void setSite(Site site) {
       mSite = site;
       APIService.setSite(site);
+      mUser = getUserFromPreferenceFile(site);
    }
 
    /**
@@ -191,21 +195,21 @@ public class MainApplication extends Application {
       return mUser;
    }
 
-   public User getUserFromPreferenceFile() {
+   private User getUserFromPreferenceFile(Site site) {
       SharedPreferences preferenceFile = getSharedPreferences(
        PREFERENCE_FILE, MODE_PRIVATE);
-      String session = preferenceFile.getString(mSite.mName + SESSION_KEY,
+      String session = preferenceFile.getString(site.mName + SESSION_KEY,
        null);
-      String username = preferenceFile.getString(mSite.mName + USERNAME_KEY,
+      String username = preferenceFile.getString(site.mName + USERNAME_KEY,
        null);
-      mUser = null;
+      User user = null;
       if (username != null && session != null) {
-         mUser = new User();
-         mUser.setSession(session);
-         mUser.setUsername(username);
+         user = new User();
+         user.setSession(session);
+         user.setUsername(username);
       }
 
-      return mUser;
+      return user;
    }
 
    public boolean isFirstTimeGalleryUser() {
