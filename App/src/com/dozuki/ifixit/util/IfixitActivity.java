@@ -34,8 +34,17 @@ public abstract class IfixitActivity extends Activity {
    private Object loginEventListener = new Object() {
       @SuppressWarnings("unused")
       @Subscribe
+      public void onLogin(LoginEvent.Login event) {
+         // Update menu icons.
+         supportInvalidateOptionsMenu();
+      }
+
+      @SuppressWarnings("unused")
+      @Subscribe
       public void onLogout(LoginEvent.Logout event) {
          finishActivityIfPermissionDenied();
+         // Update menu icons.
+         supportInvalidateOptionsMenu();
       }
 
       @SuppressWarnings("unused")
@@ -54,6 +63,9 @@ public abstract class IfixitActivity extends Activity {
    @Override
    public void onResume() {
       super.onResume();
+
+      // Invalidate the options menu in case the user has logged in or out.
+      supportInvalidateOptionsMenu();
 
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
