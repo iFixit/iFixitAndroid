@@ -89,6 +89,11 @@ public class SiteListActivity extends IfixitActivity
    }
 
    @Override
+   public boolean neverFinishActivityOnLogout() {
+      return true;
+   }
+
+   @Override
    public void onResume() {
       MainApplication.get().setSite(Site.getSite("dozuki"));
 

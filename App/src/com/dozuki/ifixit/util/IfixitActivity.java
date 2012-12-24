@@ -60,6 +60,23 @@ public abstract class IfixitActivity extends Activity {
       super.onCreate(savedState);
    }
 
+   /**
+    * If the user is coming back to this Activity make sure they still have permission
+    * to view it. onRestoreInstanceState is for Activities that are being recreated
+    * and onRestart is for Activities who are merely being restarted. Unfortunately
+    * both are needed.
+    */
+   @Override
+   public void onRestoreInstanceState(Bundle savedState) {
+      super.onRestoreInstanceState(savedState);
+      finishActivityIfPermissionDenied();
+   }
+   @Override
+   public void onRestart() {
+      super.onRestart();
+      finishActivityIfPermissionDenied();
+   }
+
    @Override
    public void onResume() {
       super.onResume();
@@ -120,13 +137,18 @@ public abstract class IfixitActivity extends Activity {
       return false;
    }
 
+   public boolean neverFinishActivityOnLogout() {
+      return false;
+   }
+
    private void finishActivityIfPermissionDenied() {
       if (MainApplication.get().isUserLoggedIn()) {
          return;
       }
 
       // Finish if the site is private or activity requires authentication.
-      if (finishActivityIfLoggedOut() || !MainApplication.get().getSite().mPublic) {
+      if (!neverFinishActivityOnLogout() &&
+       (finishActivityIfLoggedOut() || !MainApplication.get().getSite().mPublic)) {
          finish();
       }
    }
