@@ -50,9 +50,6 @@ public class GuideStepViewFragment extends Fragment {
 
    @Override
    public void onCreate(Bundle savedState) {
-      getActivity().setTheme(((MainApplication)getActivity().getApplication()).
-       getSiteTheme());
-
       super.onCreate(savedState);
 
       if (mImageManager == null) {

@@ -60,7 +60,6 @@ public class TopicViewFragment extends Fragment
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      getActivity().setTheme(((MainApplication)getActivity().getApplication()).getSiteTheme());
       getActivity().setTitle("");
       super.onCreate(savedInstanceState);
 

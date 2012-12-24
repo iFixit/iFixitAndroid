@@ -105,9 +105,6 @@ public class GalleryActivity extends IfixitActivity implements
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setTheme(MainApplication.get().getSiteTheme());
-      getSupportActionBar().setTitle(MainApplication.get().getSite().mTitle);
-
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
 

@@ -28,7 +28,6 @@ public class TopicViewActivity extends IfixitActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
-      setTheme(((MainApplication)getApplication()).getSiteTheme());
       super.onCreate(savedState);
 
       setContentView(R.layout.topic_view);

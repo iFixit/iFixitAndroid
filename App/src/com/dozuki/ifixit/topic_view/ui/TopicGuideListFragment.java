@@ -49,9 +49,6 @@ public class TopicGuideListFragment extends Fragment {
 
    @Override
    public void onCreate(Bundle savedState) {
-      getActivity().setTheme(((MainApplication)getActivity().getApplication()).
-       getSiteTheme());
-
       super.onCreate(savedState);
 
       if (savedState != null && mTopicLeaf == null) {

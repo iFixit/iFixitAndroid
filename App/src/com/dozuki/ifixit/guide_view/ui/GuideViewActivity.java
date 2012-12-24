@@ -70,7 +70,6 @@ public class GuideViewActivity extends IfixitActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setTheme(((MainApplication)getApplication()).getSiteTheme());
       setTitle("");
       super.onCreate(savedInstanceState);
 

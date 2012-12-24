@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.util;
 
 import android.content.Intent;
+import android.os.Bundle;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -16,6 +17,12 @@ import org.holoeverywhere.app.Activity;
  * Base Activity that handles registering for the event bus.
  */
 public abstract class IfixitActivity extends Activity {
+   @Override
+   public void onCreate(Bundle savedState) {
+      setTheme(MainApplication.get().getSiteTheme());
+      super.onCreate(savedState);
+   }
+
    @Override
    public void onResume() {
       super.onResume();

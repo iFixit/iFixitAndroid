@@ -47,10 +47,7 @@ public class TopicsActivity extends IfixitActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setTheme(((MainApplication)getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication)getApplication()).
-       getSiteDisplayTitle());
-
+      getSupportActionBar().setTitle(MainApplication.get().  getSiteDisplayTitle());
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.topics);
