@@ -69,7 +69,7 @@ public class APIService extends Service {
    }
 
    private static boolean requireAuthentication(Site site, APIEndpoint endpoint) {
-      return (endpoint.mAuthenticated || !mSite.mPublic) && endpoint.mForcePublic;
+      return (endpoint.mAuthenticated || !mSite.mPublic) && !endpoint.mForcePublic;
    }
 
    public static void call(Activity activity, Intent apiCall) {

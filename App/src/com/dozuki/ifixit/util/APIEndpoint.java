@@ -30,7 +30,7 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      true
+      false
    ),
 
    GUIDE(
@@ -50,7 +50,7 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      true
+      false
    ),
 
    TOPIC(
@@ -75,7 +75,7 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      true
+      false
    ),
 
    LOGIN(
@@ -95,7 +95,7 @@ public enum APIEndpoint {
       true,
       false,
       true,
-      false
+      true
    ),
 
    REGISTER(
@@ -115,7 +115,7 @@ public enum APIEndpoint {
       true,
       false,
       true,
-      false
+      true
    ),
 
    USER_IMAGES(
@@ -135,7 +135,7 @@ public enum APIEndpoint {
       false,
       true,
       true,
-      true
+      false
    ),
 
    UPLOAD_IMAGE(
@@ -178,7 +178,7 @@ public enum APIEndpoint {
       false,
       true,
       true,
-      true
+      false
    ),
 
    DELETE_IMAGE(
@@ -199,7 +199,7 @@ public enum APIEndpoint {
       false,
       true,
       true,
-      true
+      false
    ),
 
    SITES(
@@ -219,7 +219,7 @@ public enum APIEndpoint {
       false,
       false,
       false,
-      true
+      false
    );
 
    private interface Endpoint {
