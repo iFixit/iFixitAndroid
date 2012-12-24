@@ -68,11 +68,15 @@ public class APIService extends Service {
       return null; // Do nothing.
    }
 
+   private static boolean requireAuthentication(Site site, APIEndpoint endpoint) {
+      return (endpoint.mAuthenticated || !mSite.mPublic) && endpoint.mForcePublic;
+   }
+
    public static void call(Activity activity, Intent apiCall) {
       APIEndpoint endpoint = APIEndpoint.getByTarget(apiCall.getExtras().getInt(REQUEST_TARGET));
 
-      // User needs to be logged in for an authenticated endpoint.
-      if ((endpoint.mAuthenticated || !mSite.mPublic) && !MainApplication.get().isUserLoggedIn()) {
+      // User needs to be logged in for an authenticated endpoint with the exception of login.
+      if (requireAuthentication(mSite, endpoint) && !MainApplication.get().isUserLoggedIn()) {
          sPendingApiCall = apiCall;
          LoginFragment.newInstance().show(activity.getSupportFragmentManager());
       } else {
@@ -364,7 +368,7 @@ public class APIService extends Service {
                /**
                 * Send the session along in a Cookie.
                 */
-               if (endpoint.mAuthenticated || !mSite.mPublic) {
+               if (requireAuthentication(mSite, endpoint)) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
                   String session = user.getSession();
                   request.header("Cookie", "session=" + session);

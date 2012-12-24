@@ -29,7 +29,8 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false
+      false,
+      true
    ),
 
    GUIDE(
@@ -48,7 +49,8 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false
+      false,
+      true
    ),
 
    TOPIC(
@@ -72,7 +74,8 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false
+      false,
+      true
    ),
 
    LOGIN(
@@ -91,7 +94,8 @@ public enum APIEndpoint {
       },
       true,
       false,
-      true
+      true,
+      false
    ),
 
    REGISTER(
@@ -110,7 +114,8 @@ public enum APIEndpoint {
       },
       true,
       false,
-      true
+      true,
+      false
    ),
 
    USER_IMAGES(
@@ -128,6 +133,7 @@ public enum APIEndpoint {
          }
       },
       false,
+      true,
       true,
       true
    ),
@@ -171,6 +177,7 @@ public enum APIEndpoint {
       },
       false,
       true,
+      true,
       true
    ),
 
@@ -191,6 +198,7 @@ public enum APIEndpoint {
       },
       false,
       true,
+      true,
       true
    ),
 
@@ -210,7 +218,8 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false
+      false,
+      true
    );
 
    private interface Endpoint {
@@ -237,11 +246,19 @@ public enum APIEndpoint {
     */
    public final boolean mPost;
 
-   private APIEndpoint(Endpoint endpoint, boolean https, boolean authenticated, boolean post) {
+   /**
+    * True if endpoint must be public. This is primarily for login and register so
+    * users can actually log in without being prompted for login repeatedly.
+    */
+   public final boolean mForcePublic;
+
+   private APIEndpoint(Endpoint endpoint, boolean https, boolean authenticated,
+    boolean post, boolean forcePublic) {
       mEndpoint = endpoint;
       mHttps = https;
       mAuthenticated = authenticated;
       mPost = post;
+      mForcePublic = forcePublic;
    }
 
    /**
