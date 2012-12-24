@@ -90,9 +90,9 @@ public class SiteListActivity extends IfixitActivity
 
    @Override
    public void onResume() {
-      super.onResume();
-
       MainApplication.get().setSite(Site.getSite("dozuki"));
+
+      super.onResume();
    }
 
    private void search(String query) {

@@ -222,14 +222,9 @@ public class GalleryActivity extends IfixitActivity implements
       setupUser(event.getUser());
    }
 
-   @Subscribe
-   public void onLogout(LoginEvent.Logout event) {
-      finish();
-   }
-
-   @Subscribe
-   public void onCancel(LoginEvent.Cancel event) {
-      finish();
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
    }
 
    @Override

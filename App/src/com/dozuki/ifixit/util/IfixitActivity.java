@@ -9,7 +9,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.ui.LoginFragment;
+import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.app.Activity;
 
@@ -17,6 +19,32 @@ import org.holoeverywhere.app.Activity;
  * Base Activity that handles registering for the event bus.
  */
 public abstract class IfixitActivity extends Activity {
+   /**
+    * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
+    * methods in parent classes because the performance hit is far too big for Android
+    * because of the deep inheritance with the framework and views. Because of this
+    * @Subscribed methods on IfixitActivity itself don't get registered. The workaround
+    * is to make an anonymous object that is registered on behalf of the parent class.
+    *
+    * Workaround courtesy of: https://github.com/square/otto/issues/26
+    *
+    * Note: The '@SuppressWarnings("unused")' is to prevent warnings that are incorrect
+    * (the methods *are* actually used.
+    */
+   private Object loginEventListener = new Object() {
+      @SuppressWarnings("unused")
+      @Subscribe
+      public void onLogout(LoginEvent.Logout event) {
+         finishActivityIfPermissionDenied();
+      }
+
+      @SuppressWarnings("unused")
+      @Subscribe
+      public void onCancel(LoginEvent.Cancel event) {
+         finishActivityIfPermissionDenied();
+      }
+   };
+
    @Override
    public void onCreate(Bundle savedState) {
       setTheme(MainApplication.get().getSiteTheme());
@@ -28,6 +56,7 @@ public abstract class IfixitActivity extends Activity {
       super.onResume();
 
       MainApplication.getBus().register(this);
+      MainApplication.getBus().register(loginEventListener);
    }
 
    @Override
@@ -35,6 +64,7 @@ public abstract class IfixitActivity extends Activity {
       super.onPause();
 
       MainApplication.getBus().unregister(this);
+      MainApplication.getBus().unregister(loginEventListener);
    }
 
    @Override
@@ -72,5 +102,20 @@ public abstract class IfixitActivity extends Activity {
 
    public boolean showGalleryIcon() {
       return true;
+   }
+
+   public boolean finishActivityIfLoggedOut() {
+      return false;
+   }
+
+   private void finishActivityIfPermissionDenied() {
+      if (MainApplication.get().isUserLoggedIn()) {
+         return;
+      }
+
+      // Finish if the site is private or activity requires authentication.
+      if (finishActivityIfLoggedOut() || !MainApplication.get().getSite().mPublic) {
+         finish();
+      }
    }
 }

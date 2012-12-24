@@ -70,12 +70,4 @@ public class TopicViewActivity extends IfixitActivity {
             return super.onOptionsItemSelected(item);
       }
    }
-
-   @Subscribe
-   public void onLogout(LoginEvent.Logout event) {
-      Intent intent = new Intent(this, SiteListActivity.class);
-      startActivity(intent);
-
-      finish();
-   }
 }
