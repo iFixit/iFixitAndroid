@@ -380,6 +380,8 @@ public class GalleryActivity extends IfixitActivity implements
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+
       if (resultCode == Activity.RESULT_OK) {
          if (requestCode == SELECT_PICTURE) {
             Uri selectedImageUri = data.getData();

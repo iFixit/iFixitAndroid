@@ -88,9 +88,18 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      MainApplication.get().setIsLoggingIn(true);
       
       mHasRegisterBtn = ((MainApplication)getActivity().getApplication())
        .getSite().mPublicRegistration;
+   }
+
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      MainApplication.get().setIsLoggingIn(false);
    }
 
    @Override
@@ -244,6 +253,8 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+
       if (resultCode == Activity.RESULT_OK && data != null) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          String session = data.getStringExtra("session");

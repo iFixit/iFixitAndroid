@@ -43,6 +43,7 @@ public class MainApplication extends Application {
    private ImageSizes mImageSizes;
    private User mUser;
    private Site mSite;
+   private boolean mIsLoggingIn = false;
 
    @Override
    public void onCreate() {
@@ -111,6 +112,14 @@ public class MainApplication extends Application {
       }
 
       return R.style.Theme_Dozuki;
+   }
+
+   public void setIsLoggingIn(boolean isLoggingIn) {
+      mIsLoggingIn = isLoggingIn;
+   }
+
+   public boolean isLoggingIn() {
+      return mIsLoggingIn;
    }
 
    public ImageManager getImageManager() {

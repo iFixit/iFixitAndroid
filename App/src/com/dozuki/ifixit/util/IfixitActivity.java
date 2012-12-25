@@ -142,13 +142,15 @@ public abstract class IfixitActivity extends Activity {
    }
 
    private void finishActivityIfPermissionDenied() {
-      if (MainApplication.get().isUserLoggedIn()) {
+      MainApplication app = MainApplication.get();
+
+      if (app.isUserLoggedIn() || app.isLoggingIn()) {
          return;
       }
 
       // Finish if the site is private or activity requires authentication.
       if (!neverFinishActivityOnLogout() &&
-       (finishActivityIfLoggedOut() || !MainApplication.get().getSite().mPublic)) {
+       (finishActivityIfLoggedOut() || !app.getSite().mPublic)) {
          finish();
       }
    }
