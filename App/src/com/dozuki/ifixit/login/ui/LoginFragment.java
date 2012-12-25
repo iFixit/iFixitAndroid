@@ -3,11 +3,9 @@ package com.dozuki.ifixit.login.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -19,19 +17,17 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.MediaFragment;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.TextView;
 
@@ -55,17 +51,17 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    private boolean mReadyForRegisterState;
    private boolean mHasRegisterBtn = true;
 
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
-         User user = (User)result;
+   @Subscribe
+   public void onLogin(APIEvent.Login event) {
+      if (!event.hasError()) {
+         User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
 
          ((LoginListener)getActivity()).onLogin(user);
          dismiss();
-      }
-
-      public void onFailure(APIError error, Intent intent) {
+      } else {
          enable(true);
+         APIError error = event.getError();
          
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
@@ -81,7 +77,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
       }
-   };
+   }
 
    /**
     * Required for restoring fragments
@@ -245,28 +241,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          getActivity().startService(mCurIntent);
       }
    }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.LOGIN.mAction);
-      getActivity().registerReceiver(mApiReceiver, filter);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      try {
-         getActivity().unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
-      }
-   }
-
 
    public static AlertDialog getLogoutDialog(final Context context) {
       return createLogoutDialog(context, 

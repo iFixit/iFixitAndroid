@@ -16,6 +16,7 @@ import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Bus;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
@@ -32,6 +33,8 @@ public class MainApplication extends Application {
 
    public static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
    public static final String REGISTER_FRAGMENT = "REGISTER_FRAGMENT";
+
+   private static Bus sBus;
 
    private ImageManager mImageManager;
    private ImageSizes mImageSizes;
@@ -144,6 +147,14 @@ public class MainApplication extends Application {
       }
 
       return mImageManager;
+   }
+
+   public static Bus getBus() {
+      if (sBus == null) {
+         sBus = new Bus();
+      }
+
+      return sBus;
    }
 
    public ImageSizes getImageSizes() {

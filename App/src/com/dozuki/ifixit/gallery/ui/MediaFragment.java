@@ -4,7 +4,6 @@ import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -42,12 +41,11 @@ import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
 import com.dozuki.ifixit.login.ui.LoginFragment;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -110,49 +108,6 @@ public class MediaFragment extends Fragment implements
    private boolean mNextPageRequestInProgress;
    private Intent mCurIntent;
 
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
-         if (intent.getAction().equals(APIEndpoint.USER_IMAGES.mAction)) {
-            UserImageList imageList = (UserImageList) result;
-            if (imageList.getImages().size() > 0) {
-               int oldImageSize = mImageList.getImages().size();
-               for (int i = 0; i < imageList.getImages().size(); i++) {
-                  mSelectedList.add(false);
-                  mImageList.addImage(imageList.getImages().get(i));
-               }
-               mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
-               mGalleryAdapter.invalidatedView();
-               mLastPage = false;
-               noImagesText.setVisibility(View.GONE);
-            } else {
-               mLastPage = true;
-               noImagesText.setVisibility(View.VISIBLE);
-            }
-            mNextPageRequestInProgress = false;
-         } else if (intent.getAction().equals(APIEndpoint.UPLOAD_IMAGE.mAction)) {
-            UploadedImageInfo imageinfo = (UploadedImageInfo)result;
-            String url = intent.getExtras().getString(APIService.REQUEST_RESULT_INFORMATION);
-
-            LocalImage cur = mLocalURL.get(url);
-            if (cur == null)
-               return;
-            cur.mImgid = imageinfo.getImageid();
-            mLocalURL.put(url, cur);
-            mImagesDownloaded++;
-            mGalleryAdapter.invalidatedView();
-         } else if (intent.getAction().equals(APIEndpoint.DELETE_IMAGE.mAction)) {
-
-         }
-      }
-
-      public void onFailure(APIError error, Intent intent) {
-         if (error.mType != APIError.ErrorType.INVALID_USER) {
-            APIService.getListMediaErrorDialog(mContext, error, mCurIntent).show();
-            mNextPageRequestInProgress = false;
-         }
-      }
-   };
-
    public MediaFragment(Context con) {
       mContext = con;
    }
@@ -213,16 +168,6 @@ public class MediaFragment extends Fragment implements
          mImageList = new UserImageList();
          mGalleryAdapter = new MediaAdapter();
       }
-
-      /**
-       * Since this is not unregistered until the activity is destroyed this
-       * ensures that mApiReceiver is not registered twice.
-       */
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.USER_IMAGES.mAction);
-      filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
-      filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
-      mContext.registerReceiver(mApiReceiver, filter);
    }
 
    @Override
@@ -289,6 +234,57 @@ public class MediaFragment extends Fragment implements
       }
    }
 
+   @Subscribe
+   public void onUserImages(APIEvent.UserImages event) {
+      if (!event.hasError()) {
+         UserImageList imageList = event.getResult();
+         if (imageList.getImages().size() > 0) {
+            int oldImageSize = mImageList.getImages().size();
+            for (int i = 0; i < imageList.getImages().size(); i++) {
+               mSelectedList.add(false);
+               mImageList.addImage(imageList.getImages().get(i));
+            }
+            mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
+            mGalleryAdapter.invalidatedView();
+            mLastPage = false;
+            noImagesText.setVisibility(View.GONE);
+         } else {
+            mLastPage = true;
+            noImagesText.setVisibility(View.VISIBLE);
+         }
+         mNextPageRequestInProgress = false;
+      } else {
+         // TODO
+      }
+   }
+
+   @Subscribe
+   public void onUploadImage(APIEvent.UploadImage event) {
+      if (!event.hasError()) {
+         UploadedImageInfo imageinfo = event.getResult();
+         String url = event.getExtraInfo();
+
+         LocalImage cur = mLocalURL.get(url);
+         if (cur == null)
+            return;
+         cur.mImgid = imageinfo.getImageid();
+         mLocalURL.put(url, cur);
+         mImagesDownloaded++;
+         mGalleryAdapter.invalidatedView();
+      } else {
+         // TODO
+      }
+   }
+
+   @Subscribe
+   public void onDeleteImage(APIEvent.DeleteImage event) {
+      if (!event.hasError()) {
+         // TODO
+      } else {
+         // TODO
+      }
+   }
+
    public void retrieveUserImages() {
       mNextPageRequestInProgress = true;
       mCurIntent = APIService.getUserImagesIntent(mContext,
@@ -309,18 +305,6 @@ public class MediaFragment extends Fragment implements
    @Override
    public void onResume() {
       super.onResume();
-   }
-
-   @Override
-   public void onDestroy() {
-      try {
-         mContext.unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
-      }
-
-      super.onDestroy();
    }
 
    @Override

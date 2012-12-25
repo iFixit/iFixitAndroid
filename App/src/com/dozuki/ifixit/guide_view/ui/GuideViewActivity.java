@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.guide_view.ui;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
@@ -21,20 +20,19 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.topic_view.ui.TopicGuideListFragment;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.IfixitActivity;
 import com.dozuki.ifixit.util.SpeechCommander;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.ProgressBar;
 
 import java.util.List;
 
-public class GuideViewActivity extends Activity
+public class GuideViewActivity extends IfixitActivity
  implements OnPageChangeListener {
    private static final int MAX_LOADING_IMAGES = 9;
    private static final int MAX_STORED_IMAGES = 9;
@@ -58,18 +56,17 @@ public class GuideViewActivity extends Activity
    private ProgressBar mProgressBar;
    private ImageView mNextPageImage;
 
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
+   @Subscribe
+   public void onGuide(APIEvent.Guide event) {
+      if (!event.hasError()) {
          if (mGuide == null) {
-            setGuide((Guide)result, 0);
+            setGuide(event.getResult(), 0);
          }
-      }
-
-      public void onFailure(APIError error, Intent intent) {
-         APIService.getErrorDialog(GuideViewActivity.this, error,
+      } else {
+         APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
           APIService.getGuideIntent(GuideViewActivity.this, mGuideid)).show();
       }
-   };
+   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -195,13 +192,6 @@ public class GuideViewActivity extends Activity
    public void onPause() {
       super.onPause();
 
-      try {
-         unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
-      }
-
       if (mSpeechCommander != null) {
          mSpeechCommander.stopListening();
          mSpeechCommander.cancel();
@@ -211,10 +201,6 @@ public class GuideViewActivity extends Activity
    @Override
    public void onResume() {
       super.onResume();
-
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.GUIDE.mAction);
-      registerReceiver(mApiReceiver, filter);
 
       if (mSpeechCommander != null) {
          mSpeechCommander.startListening();
