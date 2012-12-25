@@ -20,7 +20,8 @@
       <service android:name=".util.APIService"/>
       <activity android:name=".dozuki.ui.SiteListActivity"
                 android:launchMode="singleTop" ></activity>
-      <activity android:name=".topic_view.ui.TopicsActivity">
+      <activity android:name=".topic_view.ui.TopicsActivity"
+                android:launchMode="singleTop">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
