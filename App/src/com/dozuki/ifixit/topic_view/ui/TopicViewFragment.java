@@ -60,7 +60,6 @@ public class TopicViewFragment extends Fragment
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      getActivity().setTheme(((MainApplication)getActivity().getApplication()).getSiteTheme());
       getActivity().setTitle("");
       super.onCreate(savedInstanceState);
 
@@ -222,8 +221,8 @@ public class TopicViewFragment extends Fragment
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      getActivity().startService(APIService.getTopicIntent(getActivity(),
-       topicName));
+      APIService.call((Activity)getActivity(),
+       APIService.getTopicIntent(getActivity(), topicName));
    }
 
    public TopicLeaf getTopicLeaf() {

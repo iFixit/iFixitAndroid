@@ -3,7 +3,6 @@ package com.dozuki.ifixit.login.ui;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
@@ -15,10 +14,7 @@ import android.view.inputmethod.InputMethodManager;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.MediaFragment;
-import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -33,7 +29,6 @@ import org.holoeverywhere.widget.CheckBox;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.TextView;
-
 
 public class RegisterFragment extends DialogFragment 
  implements OnClickListener {
@@ -61,7 +56,6 @@ public class RegisterFragment extends DialogFragment
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
 
-         ((LoginListener)getActivity()).onLogin(user);
          dismiss();
       } else {
          enable(true);
@@ -183,7 +177,7 @@ public class RegisterFragment extends DialogFragment
                mLoadingSpinner.setVisibility(View.VISIBLE);
                mCurIntent = APIService.getRegisterIntent(getActivity(), login,
                 password, name);
-               getActivity().startService(mCurIntent);
+               APIService.call((Activity)getActivity(), mCurIntent);
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);
@@ -230,7 +224,7 @@ public class RegisterFragment extends DialogFragment
          String session = data.getStringExtra("session");
          enable(false);
          mCurIntent = APIService.getLoginIntent(getActivity(), session);
-         getActivity().startService(mCurIntent);
+         APIService.call((Activity)getActivity(), mCurIntent);
       }
    }
 
@@ -262,14 +256,13 @@ public class RegisterFragment extends DialogFragment
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  ((LoginListener)context).onLogout();
+                  MainApplication.get().logout();
                   dialog.dismiss();
                }
             })
       .setNegativeButton(context.getString(buttonCancel),
          new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               MediaFragment.showingLogout = false;
                dialog.cancel();
             }
          });
@@ -278,10 +271,5 @@ public class RegisterFragment extends DialogFragment
       dialog.setCancelable(false);
 
       return dialog;
-   }
-
-   @Override
-   public void onCancel(DialogInterface dialog) {
-      ((LoginListener)getActivity()).onCancel();
    }
 }

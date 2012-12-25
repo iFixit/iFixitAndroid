@@ -81,6 +81,18 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
+      } else if (siteName.equals("dozuki")) {
+         site = new Site(5);
+         site.mName = "dozuki";
+         site.mDomain = "www.dozuki.com";
+         site.mTitle = "Dozuki";
+         site.mTheme = "custom";
+         site.mPublic = true;
+         site.mAnswers = true;
+         site.mDescription = "Using the Dozuki platform: How-to guides and other useful information.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = true;
       } else if (siteName.equals("crucial")) {
          site = new Site(549);
          site.mName = "crucial";

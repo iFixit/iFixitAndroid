@@ -2,6 +2,7 @@ package com.dozuki.ifixit;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
@@ -34,6 +36,7 @@ public class MainApplication extends Application {
    public static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
    public static final String REGISTER_FRAGMENT = "REGISTER_FRAGMENT";
 
+   private static MainApplication sMainApplication;
    private static Bus sBus;
 
    private ImageManager mImageManager;
@@ -41,8 +44,16 @@ public class MainApplication extends Application {
    private User mUser;
    private Site mSite;
 
-   public MainApplication() {
+   @Override
+   public void onCreate() {
+      super.onCreate();
+
+      sMainApplication = this;
       setSite(getDefaultSite());
+   }
+
+   public static MainApplication get() {
+      return sMainApplication;
    }
 
    public Site getSite() {
@@ -52,6 +63,7 @@ public class MainApplication extends Application {
    public void setSite(Site site) {
       mSite = site;
       APIService.setSite(site);
+      mUser = getUserFromPreferenceFile(site);
    }
 
    /**
@@ -179,29 +191,25 @@ public class MainApplication extends Application {
       return mImageSizes;
    }
 
-   public void setUser(User user) {
-      mUser = user;
-   }
-
    public User getUser() {
       return mUser;
    }
 
-   public User getUserFromPreferenceFile() {
+   private User getUserFromPreferenceFile(Site site) {
       SharedPreferences preferenceFile = getSharedPreferences(
        PREFERENCE_FILE, MODE_PRIVATE);
-      String session = preferenceFile.getString(mSite.mName + SESSION_KEY,
+      String session = preferenceFile.getString(site.mName + SESSION_KEY,
        null);
-      String username = preferenceFile.getString(mSite.mName + USERNAME_KEY,
+      String username = preferenceFile.getString(site.mName + USERNAME_KEY,
        null);
-      mUser = null;
+      User user = null;
       if (username != null && session != null) {
-         mUser = new User();
-         mUser.setSession(session);
-         mUser.setUsername(username);
+         user = new User();
+         user.setSession(session);
+         user.setUsername(username);
       }
 
-      return mUser;
+      return user;
    }
 
    public boolean isFirstTimeGalleryUser() {
@@ -244,8 +252,13 @@ public class MainApplication extends Application {
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
       editor.commit();
       mUser = user;
-      
-      APIService.setRequireAuthentication(!mSite.mPublic);
+
+      getBus().post(new LoginEvent.Login(mUser));
+
+      Intent pendingApiCall = APIService.getAndRemovePendingApiCall();
+      if (pendingApiCall != null) {
+         startService(pendingApiCall);
+      }
    }
 
    /**
@@ -259,10 +272,15 @@ public class MainApplication extends Application {
       editor.remove(mSite.mName + USERNAME_KEY);
       editor.commit();
 
-      // Do not require authentication once the user logs out, otherwise the 
-      // Login API request will fail
-      APIService.setRequireAuthentication(false);
-
       mUser = null;
+
+      getBus().post(new LoginEvent.Logout());
+   }
+
+   public void cancelLogin() {
+      // Clear the pending api call if one exists.
+      APIService.getAndRemovePendingApiCall();
+
+      getBus().post(new LoginEvent.Cancel());
    }
 }

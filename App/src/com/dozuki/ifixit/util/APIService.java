@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -18,10 +17,12 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
@@ -54,21 +55,40 @@ public class APIService extends Service {
 
    public static final String RESULT = "RESULT";
 
+   private static Intent sPendingApiCall;
+
    private static Site mSite;
-   private static boolean mRequireAuthentication = false;
 
    public static void setSite(Site site) {
       mSite = site;
-   }
-   
-   // For private sites, the API reciever has to authenticate all API requests
-   public static void setRequireAuthentication(boolean require) {
-      mRequireAuthentication = require;
    }
 
    @Override
    public IBinder onBind(Intent intent) {
       return null; // Do nothing.
+   }
+
+   private static boolean requireAuthentication(Site site, APIEndpoint endpoint) {
+      return (endpoint.mAuthenticated || !mSite.mPublic) && !endpoint.mForcePublic;
+   }
+
+   public static void call(Activity activity, Intent apiCall) {
+      APIEndpoint endpoint = APIEndpoint.getByTarget(apiCall.getExtras().getInt(REQUEST_TARGET));
+
+      // User needs to be logged in for an authenticated endpoint with the exception of login.
+      if (requireAuthentication(mSite, endpoint) && !MainApplication.get().isUserLoggedIn()) {
+         sPendingApiCall = apiCall;
+         LoginFragment.newInstance().show(activity.getSupportFragmentManager());
+      } else {
+         activity.startService(apiCall);
+      }
+   }
+
+   public static Intent getAndRemovePendingApiCall() {
+      Intent pendingApiCall = sPendingApiCall;
+      sPendingApiCall = null;
+
+      return pendingApiCall;
    }
 
    @Override
@@ -231,9 +251,6 @@ public class APIService extends Service {
    }
 
    public static Intent getSitesIntent(Context context) {
-      // This is needed to reset the requireAuthentication flag when a user logs into a private 
-      // site, then navigates back to the site list.
-      setRequireAuthentication(false);
       return createIntent(context, APIEndpoint.SITES, NO_QUERY);
    }
 
@@ -350,10 +367,8 @@ public class APIService extends Service {
 
                /**
                 * Send the session along in a Cookie.
-                *
-                * TODO: Also send it along if the current site is private.
                 */
-               if (endpoint.mAuthenticated || mRequireAuthentication) {
+               if (requireAuthentication(mSite, endpoint)) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
                   String session = user.getSession();
                   request.header("Cookie", "session=" + session);

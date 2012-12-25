@@ -14,8 +14,6 @@ import android.widget.ImageButton;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.MediaFragment;
-import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -57,12 +55,11 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
 
-         ((LoginListener)getActivity()).onLogin(user);
          dismiss();
       } else {
          enable(true);
          APIError error = event.getError();
-         
+
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
             APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
@@ -83,7 +80,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
     * Required for restoring fragments
     */
    public LoginFragment() {}
-   
+
    public static LoginFragment newInstance() {
       return new LoginFragment();
    }
@@ -134,6 +131,20 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       return view;
    }
 
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      MainApplication.getBus().unregister(this);
+   }
+
    private void login() {
       String login = mLoginId.getText().toString();
       String password = mPassword.getText().toString();
@@ -146,7 +157,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
          mCurIntent = APIService.getLoginIntent(getActivity(), login, password);
-         getActivity().startService(mCurIntent);
+         APIService.call((Activity)getActivity(), mCurIntent);
       } else {
          if (login.length() < 1) {
             mLoginId.requestFocus();
@@ -238,7 +249,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          String session = data.getStringExtra("session");
          enable(false);
          mCurIntent = APIService.getLoginIntent(getActivity(), session);
-         getActivity().startService(mCurIntent);
+         APIService.call((Activity)getActivity(), mCurIntent);
       }
    }
 
@@ -259,14 +270,13 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          .setPositiveButton(context.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  ((LoginListener)context).onLogout();
+                  MainApplication.get().logout();
                   dialog.dismiss();
                }
             })
       .setNegativeButton(context.getString(buttonCancel),
          new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               MediaFragment.showingLogout = false;
                dialog.cancel();
             }
          });
@@ -280,6 +290,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
 
    @Override
    public void onCancel(DialogInterface dialog) {
-      ((LoginListener)getActivity()).onCancel();
+      MainApplication.get().cancelLogin();
    }
 }

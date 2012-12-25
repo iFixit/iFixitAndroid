@@ -88,6 +88,18 @@ public class SiteListActivity extends IfixitActivity
       }
    }
 
+   @Override
+   public boolean neverFinishActivityOnLogout() {
+      return true;
+   }
+
+   @Override
+   public void onResume() {
+      MainApplication.get().setSite(Site.getSite("dozuki"));
+
+      super.onResume();
+   }
+
    private void search(String query) {
       String lowerQuery = query.toLowerCase();
       ArrayList<Site> matchedSites = new ArrayList<Site>();
@@ -202,7 +214,7 @@ public class SiteListActivity extends IfixitActivity
    }
 
    private void getSiteList() {
-      startService(APIService.getSitesIntent(this));
+      APIService.call(this, APIService.getSitesIntent(this));
    }
 
    private void showSiteListDialog() {

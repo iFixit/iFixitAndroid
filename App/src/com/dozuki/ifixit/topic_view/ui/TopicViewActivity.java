@@ -12,14 +12,14 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.ui.SiteListActivity;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
-import com.dozuki.ifixit.login.model.LoginListener;
-import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
 
-public class TopicViewActivity extends IfixitActivity implements LoginListener {
+public class TopicViewActivity extends IfixitActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;
@@ -28,7 +28,6 @@ public class TopicViewActivity extends IfixitActivity implements LoginListener {
 
    @Override
    public void onCreate(Bundle savedState) {
-      setTheme(((MainApplication)getApplication()).getSiteTheme());
       super.onCreate(savedState);
 
       setContentView(R.layout.topic_view);
@@ -60,22 +59,6 @@ public class TopicViewActivity extends IfixitActivity implements LoginListener {
          }
       }
    }
-   
-   @Override
-   public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem logout = menu.findItem(R.id.logout_button);
-      logout.setVisible(!((MainApplication)getApplication()).getSite().mPublic);
-      
-      return super.onPrepareOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.menu_bar, menu);
-
-      return super.onCreateOptionsMenu(menu);
-   }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
@@ -83,35 +66,8 @@ public class TopicViewActivity extends IfixitActivity implements LoginListener {
          case android.R.id.home:
             finish();
             return true;
-         case R.id.gallery_button:
-            Intent intent = new Intent(this, GalleryActivity.class);
-            startActivity(intent);
-            return true;
-         case R.id.logout_button:
-            LoginFragment.getLogoutDialog(this).show();
          default:
             return super.onOptionsItemSelected(item);
       }
-   }
-
-   @Override
-   public void onLogout() {
-      MainApplication app = (MainApplication)getApplication();
-      app.logout();
-      app.setSite(null);
-      Intent intent = new Intent(this, SiteListActivity.class);
-      startActivity(intent);
-      
-      finish();
-   }
-
-   @Override
-   public void onLogin(User user) {
-      // TODO Auto-generated method stub
-   }
-
-   @Override
-   public void onCancel() {
-      finish();
    }
 }

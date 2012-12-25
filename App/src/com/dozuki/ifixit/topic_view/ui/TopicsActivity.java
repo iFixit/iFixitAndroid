@@ -1,39 +1,28 @@
 package com.dozuki.ifixit.topic_view.ui;
 
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.gallery.ui.GalleryActivity;
-import com.dozuki.ifixit.login.model.LoginListener;
-import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
 
 public class TopicsActivity extends IfixitActivity
- implements TopicSelectedListener, OnBackStackChangedListener, LoginListener {
+ implements TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
@@ -51,23 +40,13 @@ public class TopicsActivity extends IfixitActivity
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
-   private boolean mVerifiedUser;
-   private boolean mRequireLogin;
-   private Site mSite;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setTheme(((MainApplication)getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication)getApplication()).
-       getSiteDisplayTitle());
-
+      getSupportActionBar().setTitle(MainApplication.get().  getSiteDisplayTitle());
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.topics);
-
-      if (mSite == null) {
-         mSite = ((MainApplication)getApplication()).getSite();
-      }   
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -83,15 +62,16 @@ public class TopicsActivity extends IfixitActivity
       }
 
       if (mRootTopic == null) {
-         startService(APIService.getCategoriesIntent(this));
+         APIService.call(this, APIService.getCategoriesIntent(this));
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
          getSupportFragmentManager().popBackStack();
       }
 
-      if (mTopicListVisible && mHideTopicList && mTopicView.isDisplayingTopic())
+      if (mTopicListVisible && mHideTopicList && mTopicView.isDisplayingTopic()) {
          hideTopicListWithDelay();
+      }
 
       getSupportFragmentManager().addOnBackStackChangedListener(this);
 
@@ -111,21 +91,6 @@ public class TopicsActivity extends IfixitActivity
             }
          });
       }
-      
-      mRequireLogin = !mSite.mPublic;
-      
-      mVerifiedUser = ((MainApplication)getApplication()).getUserFromPreferenceFile() != null;
-
-      APIService.setRequireAuthentication(mVerifiedUser);
-      
-      // If a site is private, and the user has not yet logged in, promt to log in
-      if (mRequireLogin && !mVerifiedUser) {
-         triggerLogin();
-      }
-   }
-   
-   public void triggerLogin() {
-      LoginFragment.newInstance().show(getSupportFragmentManager());
    }
 
    @Subscribe
@@ -136,40 +101,11 @@ public class TopicsActivity extends IfixitActivity
             onTopicSelected(mRootTopic);
          }
       } else {
-         if (mRequireLogin && !mVerifiedUser) {
-            triggerLogin();
-         } else {
-            APIService.getErrorDialog(TopicsActivity.this, event.getError(),
-             APIService.getCategoriesIntent(TopicsActivity.this)).show();
-         }
+         APIService.getErrorDialog(TopicsActivity.this, event.getError(),
+          APIService.getCategoriesIntent(TopicsActivity.this)).show();
       }
    }
-   
-   @Override
-   public void onResume() {
-      super.onResume();
-   }
 
-   @Override
-   public void onLogin(User user) {
-      mVerifiedUser = (user != null);
-   }
-
-   @Override
-   public void onLogout() {
-      ((MainApplication)getApplication()).logout();
-      mVerifiedUser = false;
-      
-      finish();
-   }
-
-   @Override
-   public void onCancel() {
-      mVerifiedUser = false;
-
-      finish();
-   }
-   
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
@@ -215,14 +151,6 @@ public class TopicsActivity extends IfixitActivity
 
    private void hideTopicList() {
       hideTopicList(false);
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.menu_bar, menu);
-
-      return super.onCreateOptionsMenu(menu);
    }
 
    private void hideTopicList(boolean delay) {
@@ -279,14 +207,6 @@ public class TopicsActivity extends IfixitActivity
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
    }
-   
-   @Override
-   public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem logout = menu.findItem(R.id.logout_button);
-      logout.setVisible(mRequireLogin);
-      
-      return super.onPrepareOptionsMenu(menu);
-   }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
@@ -306,13 +226,6 @@ public class TopicsActivity extends IfixitActivity
             }
 
             return true;
-
-         case R.id.gallery_button:
-            Intent intent = new Intent(this, GalleryActivity.class);
-            startActivity(intent);
-            return true;
-         case R.id.logout_button:
-            LoginFragment.getLogoutDialog(this).show();
          default:
             return super.onOptionsItemSelected(item);
       }
