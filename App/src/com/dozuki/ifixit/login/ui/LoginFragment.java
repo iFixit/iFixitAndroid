@@ -257,41 +257,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       }
    }
 
-   public static AlertDialog getLogoutDialog(final Context context) {
-      return createLogoutDialog(context, 
-              R.string.logout_title,    // Title Text
-              R.string.logout_messege,  // Message Text
-              R.string.logout_confirm,  // Confirm Button Text
-              R.string.logout_cancel);  // Cancel Button Text
-   }
-
-   private static AlertDialog createLogoutDialog(final Context context,
-    int titleRes, int messageRes, int buttonConfirm, int buttonCancel) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
-      builder
-         .setTitle(context.getString(titleRes))
-         .setMessage(context.getString(messageRes))
-         .setPositiveButton(context.getString(buttonConfirm),
-            new DialogInterface.OnClickListener() {
-               public void onClick(DialogInterface dialog, int id) {
-                  MainApplication.get().logout();
-                  dialog.dismiss();
-               }
-            })
-      .setNegativeButton(context.getString(buttonCancel),
-         new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               dialog.cancel();
-            }
-         });
-
-      AlertDialog dialog = builder.create();
-      dialog.setCancelable(false);
-      dialog.setCanceledOnTouchOutside(true);
-
-      return dialog;
-   }
-
    @Override
    public void onCancel(DialogInterface dialog) {
       MainApplication.get().cancelLogin();

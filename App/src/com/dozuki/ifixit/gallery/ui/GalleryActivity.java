@@ -40,7 +40,7 @@ import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
 import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
-import com.dozuki.ifixit.login.ui.LoginFragment;
+import com.dozuki.ifixit.login.ui.LogoutDialog;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
@@ -309,7 +309,7 @@ public class GalleryActivity extends IfixitActivity implements
    public void onClick(View view) {
       switch (view.getId()) {
       case R.id.button_holder:
-         LoginFragment.getLogoutDialog(this).show();
+         LogoutDialog.create(this).show();
          break;
       }
    }

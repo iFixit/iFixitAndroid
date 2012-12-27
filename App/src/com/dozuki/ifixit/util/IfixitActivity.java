@@ -10,7 +10,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.login.model.LoginEvent;
-import com.dozuki.ifixit.login.ui.LoginFragment;
+import com.dozuki.ifixit.login.ui.LogoutDialog;
 import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.app.Activity;
@@ -112,7 +112,7 @@ public abstract class IfixitActivity extends Activity {
             startActivity(intent);
             return true;
          case R.id.logout_button:
-            LoginFragment.getLogoutDialog(this).show();
+            LogoutDialog.create(this).show();
             return true;
          default:
             return super.onOptionsItemSelected(item);
