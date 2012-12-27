@@ -59,7 +59,6 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 
 public class GalleryActivity extends IfixitActivity implements
  OnItemClickListener, OnClickListener, OnItemLongClickListener {
@@ -298,7 +297,7 @@ public class GalleryActivity extends IfixitActivity implements
       }
    }
 
-   public void retrieveUserImages() {
+   private void retrieveUserImages() {
       mNextPageRequestInProgress = true;
       mCurIntent = APIService.getUserImagesIntent(this,
        "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded);
@@ -361,7 +360,7 @@ public class GalleryActivity extends IfixitActivity implements
       return storageDir;
    }
 
-   public String getPath(Uri uri) {
+   private String getPath(Uri uri) {
       String[] projection = { MediaStore.Images.Media.DATA };
       Cursor cursor = managedQuery(uri, projection, null, null, null);
       if (cursor != null) {
@@ -541,7 +540,7 @@ public class GalleryActivity extends IfixitActivity implements
       }
    }
 
-   public final class ModeCallback implements ActionMode.Callback {
+   private final class ModeCallback implements ActionMode.Callback {
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
@@ -630,7 +629,7 @@ public class GalleryActivity extends IfixitActivity implements
       return false;
    }
 
-   public void setDeleteMode() {
+   private void setDeleteMode() {
       if (mMode == null) {
          Animation animHide = AnimationUtils.loadAnimation(this,
           R.anim.slide_out_bottom_slow);
@@ -691,7 +690,7 @@ public class GalleryActivity extends IfixitActivity implements
       }
    }
 
-   public final class GalleryOnScrollListener implements AbsListView.OnScrollListener {
+   private final class GalleryOnScrollListener implements AbsListView.OnScrollListener {
       int mCurScrollState;
 
       // Used to determine when to load more images.
@@ -713,7 +712,7 @@ public class GalleryActivity extends IfixitActivity implements
       }
    }
 
-   public AlertDialog createHelpDialog() {
+   private AlertDialog createHelpDialog() {
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
