@@ -264,7 +264,6 @@ public class GalleryActivity extends IfixitActivity implements
             mNoImagesText.setVisibility(View.GONE);
          } else {
             mLastPage = true;
-            mNoImagesText.setVisibility(View.VISIBLE);
          }
          mNextPageRequestInProgress = false;
       } else {
