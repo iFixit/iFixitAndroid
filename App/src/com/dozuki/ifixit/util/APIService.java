@@ -78,7 +78,11 @@ public class APIService extends Service {
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(mSite, endpoint) && !MainApplication.get().isUserLoggedIn()) {
          sPendingApiCall = apiCall;
-         LoginFragment.newInstance().show(activity.getSupportFragmentManager());
+
+         // Don't display the login dialog twice.
+         if (!MainApplication.get().isLoggingIn()) {
+            LoginFragment.newInstance().show(activity.getSupportFragmentManager());
+         }
       } else {
          activity.startService(apiCall);
       }
