@@ -24,6 +24,7 @@
     <dimen name="topic_list_image_height">270dp</dimen>
     <dimen name="topic_list_column_width">270dp</dimen>
     <dimen name="gallery_bottom_bar_height">50dp</dimen>
+    <dimen name="gallery_grid_column_width">250dp</dimen>
     <dimen name="login_agreement_text_top_padding">9dp</dimen>
 
 </resources>

@@ -13,7 +13,7 @@
         android:layout_above="@+id/button_holder"
         android:alwaysDrawnWithCache="true"
         android:clipChildren="true"
-        android:columnWidth="150dp"
+        android:columnWidth="@dimen/gallery_grid_column_width"
         android:drawSelectorOnTop="false"
         android:gravity="center_horizontal"
         android:horizontalSpacing="4dp"
