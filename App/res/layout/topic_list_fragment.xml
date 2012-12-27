@@ -5,7 +5,6 @@
     android:background="@color/gray" >
 
     <FrameLayout
-        android:id="@+id/topic_list_fr"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_marginRight="@dimen/topic_list_right_divider"
