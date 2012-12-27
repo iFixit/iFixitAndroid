@@ -128,27 +128,23 @@ public class GalleryActivity extends IfixitActivity implements
       mMode = null;
       mShowingHelp = false;
       mShowingDelete = false;
-      mSelectedList = new ArrayList<Boolean>();
-      mLocalURL = new HashMap<String, LocalImage>();
       mLimages = new HashMap<String, Bitmap>();
 
       if (savedInstanceState != null) {
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-         if (mShowingHelp)
+         if (mShowingHelp) {
             createHelpDialog().show();
+         }
+
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
+         if (mShowingDelete) {
+            createDeleteConfirmDialog().show();
+         }
 
          mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
          mImageList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
 
-         boolean[] selected = savedInstanceState.getBooleanArray(USER_SELECTED_LIST);
-         for (boolean b : selected) {
-            mSelectedList.add(b);
-         }
-
-         if (mShowingDelete) {
-            createDeleteConfirmDialog().show();
-         }
+         mSelectedList = (ArrayList<Boolean>)savedInstanceState.getSerializable(USER_SELECTED_LIST);
 
          if (savedInstanceState.getString(CAMERA_PATH) != null) {
             mCameraTempFileName = savedInstanceState.getString(CAMERA_PATH);
@@ -162,6 +158,8 @@ public class GalleryActivity extends IfixitActivity implements
          }
       } else {
          mImageList = new UserImageList();
+         mSelectedList = new ArrayList<Boolean>();
+         mLocalURL = new HashMap<String, LocalImage>();
       }
 
       mGalleryAdapter = new MediaAdapter();
@@ -237,8 +235,7 @@ public class GalleryActivity extends IfixitActivity implements
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
-      savedInstanceState.putBooleanArray(USER_SELECTED_LIST,
-       toPrimitiveArray(mSelectedList));
+      savedInstanceState.putSerializable(USER_SELECTED_LIST, mSelectedList);
       savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
       savedInstanceState.putSerializable(HASH_MAP, mLocalURL);
       savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
@@ -692,15 +689,6 @@ public class GalleryActivity extends IfixitActivity implements
          intent.putExtra(FullImageViewActivity.LOCAL_URL, isLocal);
          startActivity(intent);
       }
-   }
-
-   private boolean[] toPrimitiveArray(final List<Boolean> booleanList) {
-      final boolean[] primitives = new boolean[booleanList.size()];
-      int index = 0;
-      for (Boolean object : booleanList) {
-         primitives[index++] = object;
-      }
-      return primitives;
    }
 
    public final class GalleryOnScrollListener implements AbsListView.OnScrollListener {
