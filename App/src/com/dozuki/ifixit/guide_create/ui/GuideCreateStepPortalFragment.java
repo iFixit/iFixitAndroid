@@ -192,7 +192,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 							stepObj.setEditMode(isChecked);
 							setEditMode(isChecked, true, holder.mToggleEdit,
 									holder.mEditBar);
-							mDragListView.invalidateViews();
+							//mDragListView.invalidateViews();
 						}
 					});
 			holder.mDeleteButton.setOnClickListener(new OnClickListener() {
@@ -215,61 +215,79 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			return v;
 		}
 
-		public void setEditMode(boolean isChecked, boolean animate,
-				final ToggleButton mToggleEdit, final LinearLayout mEditBar) {
-			if (isChecked) {
-				if (animate) {
-					Animation rotateAnimation = AnimationUtils.loadAnimation(
-							getActivity().getApplicationContext(),
-							R.anim.rotate_clockwise);
+      public void setEditMode(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
+         final LinearLayout mEditBar) {
+         if (isChecked) {
+            if (animate) {
+               Animation rotateAnimation =
+                  AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate_clockwise);
 
-					mToggleEdit.startAnimation(rotateAnimation);
+               mToggleEdit.startAnimation(rotateAnimation);
 
-					Animation slideDownAnimation = AnimationUtils
-							.loadAnimation(getActivity()
-									.getApplicationContext(), R.anim.slide_down);
-					mEditBar.setVisibility(View.VISIBLE);
-					mEditBar.startAnimation(slideDownAnimation);
-				} else {
-					mEditBar.setVisibility(View.VISIBLE);
-				}
+               // Creating the expand animation for the item
+               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
 
-			} else {
-				if (animate) {
-					Animation rotateAnimation = AnimationUtils.loadAnimation(
-							getActivity().getApplicationContext(),
-							R.anim.rotate_counterclockwise);
+               expandAni.setAnimationListener(new AnimationListener() {
 
-					mToggleEdit.startAnimation(rotateAnimation);
-					Animation slideUpAnimation = AnimationUtils.loadAnimation(
-							getActivity().getApplicationContext(),
-							R.anim.slide_up);
-					slideUpAnimation
-							.setAnimationListener(new AnimationListener() {
+                  @Override
+                  public void onAnimationEnd(Animation animation) {
+                     mDragListView.invalidateViews();
+                  }
 
-								@Override
-								public void onAnimationEnd(Animation animation) {
-									mEditBar.setVisibility(View.GONE);
-								}
+                  @Override
+                  public void onAnimationRepeat(Animation animation) {
+                     // TODO Auto-generated method stub
 
-								@Override
-								public void onAnimationRepeat(
-										Animation animation) {
-								}
+                  }
 
-								@Override
-								public void onAnimationStart(Animation animation) {
-								}
-							});
-					mEditBar.startAnimation(slideUpAnimation);
-				} else {
-					mEditBar.setVisibility(View.GONE);
-				}
-			}
-		}
-	}
+                  @Override
+                  public void onAnimationStart(Animation animation) {
 
-	private void launchStepEdit(int curStep) {
+                  }
+               });
+               // Start the animation on the toolbar
+               mEditBar.startAnimation(expandAni);
+            } else {
+               mEditBar.setVisibility(View.VISIBLE);
+               ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
+            }
+
+         } else {
+            if (animate) {
+               Animation rotateAnimation =
+                  AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate_counterclockwise);
+
+               mToggleEdit.startAnimation(rotateAnimation);
+               // Creating the expand animation for the item
+               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
+               mDragListView.invalidate();
+               expandAni.setAnimationListener(new AnimationListener() {
+
+                  @Override
+                  public void onAnimationEnd(Animation animation) {
+                     mDragListView.invalidateViews();
+                     mDragListView.requestLayout();
+                  }
+
+                  @Override
+                  public void onAnimationRepeat(Animation animation) {}
+
+                  @Override
+                  public void onAnimationStart(Animation animation) {
+
+                  }
+               });
+               // Start the animation on the toolbar
+               mEditBar.startAnimation(expandAni);
+            } else {
+               mEditBar.setVisibility(View.GONE);
+               ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
+            }
+         }
+      }
+   }
+
+   private void launchStepEdit(int curStep) {
 		// GuideCreateStepsEditActivity
 		Intent intent = new Intent(getActivity(),
 				GuideCreateStepsEditActivity.class);
