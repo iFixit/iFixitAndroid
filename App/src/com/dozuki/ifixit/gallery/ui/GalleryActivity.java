@@ -225,8 +225,10 @@ public class GalleryActivity extends IfixitActivity implements
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.gallery_menu, menu);
+      if (MainApplication.get().isUserLoggedIn()) {
+         MenuInflater inflater = getSupportMenuInflater();
+         inflater.inflate(R.menu.gallery_menu, menu);
+      }
 
       return super.onCreateOptionsMenu(menu);
    }
