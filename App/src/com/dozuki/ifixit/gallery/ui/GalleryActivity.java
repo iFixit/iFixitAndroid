@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.gallery.ui;
 
 import android.content.ContentUris;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -80,10 +79,6 @@ public class GalleryActivity extends IfixitActivity implements
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
 
-   private static ArrayList<Boolean> mSelectedList;
-   public static boolean showingHelp;
-   public static boolean showingDelete;
-
    private TextView noImagesText;
    private GridView mGridView;
    private RelativeLayout mButtons;
@@ -91,6 +86,7 @@ public class GalleryActivity extends IfixitActivity implements
    private TextView mLoginText;
    private String mUserName;
    private ImageManager mImageManager;
+   private ArrayList<Boolean> mSelectedList;
    private HashMap<String, LocalImage> mLocalURL;
    private HashMap<String, Bitmap> mLimages;
    private ImageSizes mImageSizes;
@@ -100,6 +96,8 @@ public class GalleryActivity extends IfixitActivity implements
    private boolean mLastPage;
    private String mCameraTempFileName;
    private boolean mNextPageRequestInProgress;
+   private boolean mShowingHelp;
+   private boolean mShowingDelete;
    private Intent mCurIntent;
    private ActionBar mActionBar;
 
@@ -117,7 +115,7 @@ public class GalleryActivity extends IfixitActivity implements
       mButtons = (RelativeLayout)findViewById(R.id.button_holder);
       mLoginText = (TextView)findViewById(R.id.login_text);
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      mActionBar.setDisplayHomeAsUpEnabled(true);
 
       if (mImageManager == null) {
          mImageManager = MainApplication.get().getImageManager();
@@ -128,17 +126,17 @@ public class GalleryActivity extends IfixitActivity implements
 
       mImageSizes = MainApplication.get().getImageSizes();
       mMode = null;
-      showingHelp = false;
-      showingDelete = false;
+      mShowingHelp = false;
+      mShowingDelete = false;
       mSelectedList = new ArrayList<Boolean>();
       mLocalURL = new HashMap<String, LocalImage>();
       mLimages = new HashMap<String, Bitmap>();
 
       if (savedInstanceState != null) {
-         showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-         if (showingHelp)
+         mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+         if (mShowingHelp)
             createHelpDialog().show();
-         showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
+         mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 
          mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
          mImageList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
@@ -148,7 +146,7 @@ public class GalleryActivity extends IfixitActivity implements
             mSelectedList.add(b);
          }
 
-         if (showingDelete) {
+         if (mShowingDelete) {
             createDeleteConfirmDialog().show();
          }
 
@@ -158,8 +156,9 @@ public class GalleryActivity extends IfixitActivity implements
 
          mLocalURL = (HashMap<String, LocalImage>)savedInstanceState.getSerializable(HASH_MAP);
          for (LocalImage li : mLocalURL.values()) {
-            if (li.mPath.contains(".jpg"))
+            if (li.mPath.contains(".jpg")) {
                mLimages.put(li.mPath, buildBitmap(li.mPath));
+            }
          }
       } else {
          mImageList = new UserImageList();
@@ -243,8 +242,8 @@ public class GalleryActivity extends IfixitActivity implements
       savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
       savedInstanceState.putSerializable(HASH_MAP, mLocalURL);
       savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
-      savedInstanceState.putBoolean(SHOWING_HELP, showingHelp);
-      savedInstanceState.putBoolean(SHOWING_DELETE, showingDelete);
+      savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+      savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
 
       if (mCameraTempFileName != null) {
          savedInstanceState.putString(CAMERA_PATH, mCameraTempFileName);
@@ -367,8 +366,7 @@ public class GalleryActivity extends IfixitActivity implements
 
    public String getPath(Uri uri) {
       String[] projection = { MediaStore.Images.Media.DATA };
-      Cursor cursor = managedQuery(uri, projection, null,
-       null, null);
+      Cursor cursor = managedQuery(uri, projection, null, null, null);
       if (cursor != null) {
          int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
          cursor.moveToFirst();
@@ -547,12 +545,6 @@ public class GalleryActivity extends IfixitActivity implements
    }
 
    public final class ModeCallback implements ActionMode.Callback {
-      private Context mParentContext;
-
-      public ModeCallback(Context parentContext) {
-         mParentContext = parentContext;
-      }
-
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
@@ -660,7 +652,7 @@ public class GalleryActivity extends IfixitActivity implements
             }
          });
          mButtons.startAnimation(animHide);
-         mMode = startActionMode(new ModeCallback(this));
+         mMode = startActionMode(new ModeCallback());
       }
    }
 
@@ -734,7 +726,7 @@ public class GalleryActivity extends IfixitActivity implements
    }
 
    public AlertDialog createHelpDialog() {
-      showingHelp = true;
+      mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
             .setTitle(getString(R.string.media_help_title))
@@ -742,7 +734,7 @@ public class GalleryActivity extends IfixitActivity implements
             .setPositiveButton(getString(R.string.media_help_confirm),
                new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int id) {
-                     showingHelp = false;
+                     mShowingHelp = false;
                      dialog.cancel();
                   }
                });
@@ -751,7 +743,7 @@ public class GalleryActivity extends IfixitActivity implements
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
-            showingHelp = false;
+            mShowingHelp = false;
          }
       });
 
@@ -759,7 +751,7 @@ public class GalleryActivity extends IfixitActivity implements
    }
 
    private AlertDialog createDeleteConfirmDialog() {
-      showingDelete = true;
+      mShowingDelete = true;
       int selectedCount = 0;
       for (boolean selected : mSelectedList) {
          if (selected) {
@@ -784,7 +776,7 @@ public class GalleryActivity extends IfixitActivity implements
                new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int id) {
-                     showingDelete = false;
+                     mShowingDelete = false;
                      deleteSelectedPhotos();
                      dialog.cancel();
                   }
@@ -792,7 +784,7 @@ public class GalleryActivity extends IfixitActivity implements
             .setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int which) {
-                  showingDelete = false;
+                  mShowingDelete = false;
                   dialog.cancel();
                }
             });
@@ -801,7 +793,7 @@ public class GalleryActivity extends IfixitActivity implements
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
-            showingDelete = false;
+            mShowingDelete = false;
          }
       });
 
