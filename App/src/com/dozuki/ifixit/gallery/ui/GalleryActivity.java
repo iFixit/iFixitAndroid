@@ -167,7 +167,7 @@ public class GalleryActivity extends IfixitActivity implements
       mGridView.setOnItemClickListener(this);
       mGridView.setOnItemLongClickListener(this);
 
-      if (mImageList.getImages().size() < 1) {
+      if (mImageList.getImages().size() < 1 && MainApplication.get().isUserLoggedIn()) {
          mNoImagesText.setVisibility(View.VISIBLE);
       } else {
          mNoImagesText.setVisibility(View.GONE);
