@@ -78,7 +78,7 @@ public class GalleryActivity extends IfixitActivity implements
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
 
-   private TextView noImagesText;
+   private TextView mNoImagesText;
    private GridView mGridView;
    private RelativeLayout mButtons;
    private MediaAdapter mGalleryAdapter;
@@ -110,7 +110,7 @@ public class GalleryActivity extends IfixitActivity implements
       setContentView(R.layout.gallery_view);
 
       mGridView = (GridView)findViewById(R.id.gridview);
-      noImagesText = (TextView)findViewById(R.id.no_images_text);
+      mNoImagesText = (TextView)findViewById(R.id.no_images_text);
       mButtons = (RelativeLayout)findViewById(R.id.button_holder);
       mLoginText = (TextView)findViewById(R.id.login_text);
 
@@ -168,9 +168,9 @@ public class GalleryActivity extends IfixitActivity implements
       mGridView.setOnItemLongClickListener(this);
 
       if (mImageList.getImages().size() < 1) {
-         noImagesText.setVisibility(View.VISIBLE);
+         mNoImagesText.setVisibility(View.VISIBLE);
       } else {
-         noImagesText.setVisibility(View.GONE);
+         mNoImagesText.setVisibility(View.GONE);
       }
 
       if (mSelectedList.contains(true)) {
@@ -259,10 +259,10 @@ public class GalleryActivity extends IfixitActivity implements
             mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
             mGalleryAdapter.invalidatedView();
             mLastPage = false;
-            noImagesText.setVisibility(View.GONE);
+            mNoImagesText.setVisibility(View.GONE);
          } else {
             mLastPage = true;
-            noImagesText.setVisibility(View.VISIBLE);
+            mNoImagesText.setVisibility(View.VISIBLE);
          }
          mNextPageRequestInProgress = false;
       } else {
@@ -478,9 +478,6 @@ public class GalleryActivity extends IfixitActivity implements
       }
 
       public View getView(int position, View convertView, ViewGroup parent) {
-         if (mImageList.getImages().size() > 0) {
-            noImagesText.setVisibility(View.GONE);
-         }
          MediaViewItem itemView = (MediaViewItem)convertView;
 
          if (convertView == null) {
@@ -583,9 +580,6 @@ public class GalleryActivity extends IfixitActivity implements
    };
 
    private void deleteSelectedPhotos() {
-      if (mImageList == null)
-         return;
-
       String deleteQuery = "?";
 
       for (int i = mSelectedList.size() - 1; i >= 0; i--) {
@@ -608,7 +602,7 @@ public class GalleryActivity extends IfixitActivity implements
       APIService.call(this, mCurIntent);
 
       if (mImageList.getImages().size() == 0) {
-         noImagesText.setVisibility(View.VISIBLE);
+         mNoImagesText.setVisibility(View.VISIBLE);
       }
 
       mMode.finish();
@@ -619,7 +613,6 @@ public class GalleryActivity extends IfixitActivity implements
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
       mButtons.setVisibility(View.VISIBLE);
-      mButtons.setAnimation(AnimationUtils.loadAnimation(this, R.anim.slide_in_bottom));
    }
 
    @Override

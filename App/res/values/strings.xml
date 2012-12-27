@@ -44,7 +44,6 @@
    <string name="topic_img_desc">Topic image</string>
    <string name="next_page_image_desc">Next page</string>
    <string name="action_delete">Delete</string>
-   <string name="welcome">Welcome, iFixit</string>
    <string name="user_name_hint">Username</string>
    <string name="email_hint">Email</string>
    <string name="password_hint">Password</string>

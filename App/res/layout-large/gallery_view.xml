@@ -42,7 +42,6 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="@dimen/gallery_login_text_padding"
-            android:text="@string/welcome"
             android:textColor="@color/white"
             android:textStyle="bold" />
     </RelativeLayout>
