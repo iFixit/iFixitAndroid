@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.login.ui;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -22,7 +21,6 @@ import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.CheckBox;
