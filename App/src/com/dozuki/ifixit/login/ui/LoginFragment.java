@@ -30,22 +30,16 @@ import org.holoeverywhere.widget.TextView;
 
 public class LoginFragment extends DialogFragment implements OnClickListener {
    private static final int OPEN_ID_RESULT_CODE = 4;
-   private static final String LOGIN_STATE = "LOGIN_STATE";
-   public static final String LOGIN_NO_REGISTER = "LOGIN_NO_REGISTER";
 
    private Button mLogin;
    private Button mRegister;
    private ImageButton mGoogleLogin;
    private ImageButton mYahooLogin;
-
    private EditText mLoginId;
    private EditText mPassword;
    private TextView mErrorText;
-
    private ProgressBar mLoadingSpinner;
    private Intent mCurIntent;
-
-   private boolean mReadyForRegisterState;
    private boolean mHasRegisterBtn = true;
 
    @Subscribe
@@ -192,13 +186,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    }
 
    @Override
-   public void onSaveInstanceState(Bundle outState) {
-      super.onSaveInstanceState(outState);
-
-      outState.putSerializable(LOGIN_STATE, mReadyForRegisterState);
-   }
-
-   @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
    }
@@ -220,14 +207,11 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
              break;
     
           case R.id.register_button:
-             FragmentManager fragmentManager = getFragmentManager();
+             FragmentManager fragmentManager = getSupportFragmentManager();
            
              fragmentManager.beginTransaction()
-              .add(new RegisterFragment(), MainApplication.REGISTER_FRAGMENT)
-              .remove(fragmentManager.findFragmentByTag(
-                      MainApplication.LOGIN_FRAGMENT))
-              .addToBackStack(MainApplication.LOGIN_FRAGMENT)
-              .setTransition(android.R.anim.slide_in_left)
+              .add(new RegisterFragment(), null)
+              .addToBackStack(null)
               .commit();
               
              break;

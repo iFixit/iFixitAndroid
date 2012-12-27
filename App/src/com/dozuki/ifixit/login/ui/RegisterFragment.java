@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,13 +27,9 @@ import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.TextView;
 
-public class RegisterFragment extends DialogFragment 
- implements OnClickListener {
-   private static final String REGISTER_STATE = "REGISTER_STATE";
-
+public class RegisterFragment extends DialogFragment implements OnClickListener {
    private Button mRegister;
    private Button mCancelRegister;
-
    private EditText mLoginId;
    private EditText mPassword;
    private EditText mConfirmPassword;
@@ -42,11 +37,8 @@ public class RegisterFragment extends DialogFragment
    private TextView mErrorText;
    private TextView mTermsAgreeText;
    private CheckBox mTermsAgreeCheckBox;
-
    private ProgressBar mLoadingSpinner;
    private Intent mCurIntent;
-
-   private boolean mReadyForRegisterState;
 
    @Subscribe
    public void onRegister(APIEvent.Register event) {
@@ -78,11 +70,6 @@ public class RegisterFragment extends DialogFragment
     * Required for restoring fragments
     */
    public RegisterFragment() {}
-
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-   }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -136,13 +123,6 @@ public class RegisterFragment extends DialogFragment
       mRegister.setEnabled(enabled);
       mCancelRegister.setEnabled(enabled);
       mName.setEnabled(enabled);
-   }
-
-   @Override
-   public void onSaveInstanceState(Bundle outState) {
-      super.onSaveInstanceState(outState);
-
-      outState.putSerializable(REGISTER_STATE, mReadyForRegisterState);
    }
 
    @Override
@@ -201,15 +181,8 @@ public class RegisterFragment extends DialogFragment
             break;
 
           case R.id.cancel_register_button:
-              FragmentManager fragmentManager = getFragmentManager();
-              
-              fragmentManager.beginTransaction()
-               .add(new LoginFragment(), MainApplication.LOGIN_FRAGMENT)
-               .remove(fragmentManager.findFragmentByTag(
-                       MainApplication.REGISTER_FRAGMENT))
-               .addToBackStack(MainApplication.REGISTER_FRAGMENT)
-               .setTransition(android.R.anim.slide_out_right)
-               .commit();
+              // Go back to login.
+              getSupportFragmentManager().popBackStack();
                
               break;
        }
