@@ -96,13 +96,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    }
 
    @Override
-   public void onDestroy() {
-      super.onDestroy();
-
-      MainApplication.get().setIsLoggingIn(false);
-   }
-
-   @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       

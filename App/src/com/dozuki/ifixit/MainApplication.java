@@ -264,6 +264,8 @@ public class MainApplication extends Application {
 
       getBus().post(new LoginEvent.Login(mUser));
 
+      setIsLoggingIn(false);
+
       Intent pendingApiCall = APIService.getAndRemovePendingApiCall();
       if (pendingApiCall != null) {
          startService(pendingApiCall);
@@ -289,6 +291,7 @@ public class MainApplication extends Application {
    public void cancelLogin() {
       // Clear the pending api call if one exists.
       APIService.getAndRemovePendingApiCall();
+      setIsLoggingIn(false);
 
       getBus().post(new LoginEvent.Cancel());
    }
