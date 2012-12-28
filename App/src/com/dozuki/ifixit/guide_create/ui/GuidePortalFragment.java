@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -17,7 +18,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuidePortalFragment extends SherlockFragment {
-	private GridView mGridView;
+	private ListView mGridView;
 	private ImageManager mImageManager;
 	private GuideCreateListAdapter mGuideAdapter;
 	private GuidePortalFragment mSelf;
@@ -43,7 +44,7 @@ public class GuidePortalFragment extends SherlockFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.guide_create_portal, container,
 				false);
-		mGridView = (GridView) view.findViewById(R.id.guide_create_gridview);
+		mGridView = (ListView) view.findViewById(R.id.guide_create_listview);
 		mGridView.setAdapter(mGuideAdapter);
 		mNoGuidesText = (TextView) view.findViewById(R.id.no_guides_text);
 		if (mParentRef.getGuideList().isEmpty())

@@ -1,121 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/guide_create_grid_box"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginLeft="4dp"
     android:layout_marginRight="4dp"
     android:background="@color/gray"
-    android:padding="1dp" >
+    android:padding="1dp" 
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RelativeLayout
+            android:id="@+id/guide_create_upper_section"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/border"
+            android:padding="4dp" >
+
+            <ImageView
+                android:id="@+id/guide_create_item_thumbnail"
+                android:layout_width="@dimen/guide_thumbnail_width"
+                android:layout_height="@dimen/guide_thumbnail_height"
+                android:layout_marginRight="8dp"
+                android:background="@color/image_border"
+                android:contentDescription="@string/topic_guide_thumbnail"
+                android:padding="1dp" />
+
+            <TextView
+                android:id="@+id/guide_create_item_publish_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/guide_create_item_title"
+                android:layout_toRightOf="@+id/guide_create_item_thumbnail"
+                android:text="@string/unpublished"
+                android:textColor="@color/dozuki_red"
+                android:textSize="12sp"
+                android:textStyle="italic" />
+
+            <ToggleButton
+                android:id="@+id/guide_create_toggle_edit"
+                android:layout_width="@dimen/guide_create_edit_button_dim"
+                android:layout_height="@dimen/guide_create_edit_button_dim"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_guide_expand"
+                android:textOff=""
+                android:textOn="" />
+
+            <TextView
+                android:id="@+id/guide_create_item_title"
+                style="@android:style/TextAppearance.Medium"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/guide_create_toggle_edit"
+                android:layout_alignLeft="@+id/guide_create_item_publish_status"
+                android:text="@string/default_title" />
+        </RelativeLayout>
+    </FrameLayout>
 
     <LinearLayout
         android:id="@+id/guide_create_item_edit_section"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/guide_create_upper_section"
+        android:layout_marginBottom="-50dip"
         android:background="@color/fireswing_grey"
         android:gravity="right"
         android:orientation="horizontal"
         android:padding="6dp"
-        android:visibility="visible" >
-
-        <ToggleButton
-            android:id="@+id/guide_create_publish_button"
-            android:layout_width="@dimen/guide_create_icon_button_dim"
-            android:layout_height="@dimen/guide_create_icon_button_dim"
-            android:background="@drawable/ic_list_item_publish"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp" />
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/guide_create_item_publish"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="32dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_list_item_publish"
+            android:drawablePadding="10dp"
             android:gravity="center_vertical"
             android:text="@string/publish" />
 
-        <Button
-            android:id="@+id/guide_create_delete_button"
-            android:layout_width="@dimen/guide_create_icon_button_dim"
-            android:layout_height="@dimen/guide_create_icon_button_dim"
-            android:background="@drawable/ic_guide_delete"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp" />
-
         <TextView
             android:id="@+id/guide_create_item_delete"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="32dp"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_guide_delete"
+            android:drawablePadding="10dp"
             android:gravity="center_vertical"
+            android:paddingLeft="10dp"
             android:text="@string/action_delete" />
-
-        <Button
-            android:id="@+id/guide_create_edit_button"
-            android:layout_width="@dimen/guide_create_icon_button_dim"
-            android:layout_height="@dimen/guide_create_icon_button_dim"
-            android:background="@drawable/ic_guide_edit"
-            android:paddingLeft="20dp"
-            android:paddingRight="10dp" />
 
         <TextView
             android:id="@+id/guide_create_item_edit"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_guide_edit"
+            android:drawablePadding="10dp"
+            android:gravity="center_vertical"
             android:paddingLeft="10dp"
-             android:gravity="center_vertical"
-            android:paddingRight="13dp"
             android:text="@string/edit" />
-    </LinearLayout>
+    </LinearLayout>   
+    
 
-    <RelativeLayout
-        android:id="@+id/guide_create_upper_section"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@drawable/border"
-        android:padding="4dp" >
-
-        <ImageView
-            android:id="@+id/guide_create_item_thumbnail"
-            android:layout_width="@dimen/guide_thumbnail_width"
-            android:layout_height="@dimen/guide_thumbnail_height"
-            android:layout_marginRight="8dp"
-            android:background="@color/image_border"
-            android:contentDescription="@string/topic_guide_thumbnail"
-            android:padding="1dp" />
-
-        <TextView
-            android:id="@+id/guide_create_item_publish_status"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/guide_create_item_title"
-            android:layout_toRightOf="@+id/guide_create_item_thumbnail"
-            android:text="@string/unpublished"
-            android:textColor="@color/dozuki_red"
-            android:textStyle="italic"
-            android:textSize="12sp" />
-
-        <ToggleButton
-            android:id="@+id/guide_create_toggle_edit"
-            android:layout_width="@dimen/guide_create_edit_button_dim"
-            android:layout_height="@dimen/guide_create_edit_button_dim"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/ic_guide_expand"
-            android:textOff=""
-            android:textOn="" />
-
-        <TextView
-            android:id="@+id/guide_create_item_title"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/guide_create_toggle_edit"
-            android:layout_alignLeft="@+id/guide_create_item_publish_status"
-            android:text="@string/default_title" />
-    </RelativeLayout>
-
-</RelativeLayout>
+</LinearLayout>
