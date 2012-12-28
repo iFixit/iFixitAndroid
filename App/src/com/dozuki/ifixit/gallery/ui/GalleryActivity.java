@@ -196,6 +196,9 @@ public class GalleryActivity extends IfixitActivity implements
          case R.id.top_camera_button:
             launchCamera();
             return true;
+         case R.id.top_gallery_button:
+            launchImageChooser();
+            return true;
          case R.id.top_question_button:
             createHelpDialog().show();
             return true;
@@ -310,7 +313,7 @@ public class GalleryActivity extends IfixitActivity implements
       }
    }
 
-   protected void launchGallery() {
+   protected void launchImageChooser() {
       Intent intent = new Intent();
       intent.setType("image/*");
       intent.setAction(Intent.ACTION_GET_CONTENT);
