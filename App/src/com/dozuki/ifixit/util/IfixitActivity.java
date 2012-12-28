@@ -16,7 +16,13 @@ import com.squareup.otto.Subscribe;
 import org.holoeverywhere.app.Activity;
 
 /**
- * Base Activity that handles registering for the event bus.
+ * Base Activity that performs various functions that all Activities in this app
+ * should do. Such as:
+ *
+ * Registering for the event bus.
+ * Setting the current site's theme.
+ * Finishing the Activity if the user logs out but the Activity requires authentication.
+ * Displaying various menu icons.
  */
 public abstract class IfixitActivity extends Activity {
    /**
@@ -56,6 +62,9 @@ public abstract class IfixitActivity extends Activity {
 
    @Override
    public void onCreate(Bundle savedState) {
+      /**
+       * Set the current site's theme. Must be before onCreate because of inflating views.
+       */
       setTheme(MainApplication.get().getSiteTheme());
       super.onCreate(savedState);
    }
@@ -129,29 +138,57 @@ public abstract class IfixitActivity extends Activity {
       return super.onPrepareOptionsMenu(menu);
    }
 
-   public boolean showGalleryIcon() {
-      return true;
-   }
-
-   public boolean finishActivityIfLoggedOut() {
-      return false;
-   }
-
-   public boolean neverFinishActivityOnLogout() {
-      return false;
-   }
-
+   /**
+    * Finishes the Activity if the user should be logged in but isn't.
+    */
    private void finishActivityIfPermissionDenied() {
       MainApplication app = MainApplication.get();
 
+      /**
+       * Never finish if user is logged in or is logging in.
+       */
       if (app.isUserLoggedIn() || app.isLoggingIn()) {
          return;
       }
 
-      // Finish if the site is private or activity requires authentication.
+      /**
+       * Finish if the site is private or activity requires authentication.
+       */
       if (!neverFinishActivityOnLogout() &&
        (finishActivityIfLoggedOut() || !app.getSite().mPublic)) {
          finish();
       }
+   }
+
+
+   /**
+    * "Settings" methods for derived classes are found below. Decides when to finish the Activity,
+    * what icons to display etc.
+    */
+
+   /**
+    * Return true if the gallery launcher should be in the options menu.
+    */
+   public boolean showGalleryIcon() {
+      return true;
+   }
+
+   /**
+    * Returns true if the Activity should be finished if the user logs out or cancels
+    * authentication.
+    */
+   public boolean finishActivityIfLoggedOut() {
+      return false;
+   }
+
+   /**
+    * Returns true if the Activity should never be finished despite meeting other conditions.
+    *
+    * This exists because of a race condition of sorts involving logging out of private
+    * Dozuki sites. SiteListActivity can't reset the current site to one that is public
+    * so it is erroneously finished unless flagged otherwise.
+    */
+   public boolean neverFinishActivityOnLogout() {
+      return false;
    }
 }
