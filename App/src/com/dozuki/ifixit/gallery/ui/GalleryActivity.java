@@ -24,11 +24,13 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.gallery.ui.PhotoMediaFragment.ModeCallback;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepsEditActivity.StepAdapter;
 import com.dozuki.ifixit.login.model.LoginListener;
@@ -71,6 +73,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private TextView mLoginText;
 	private String mUserName;
 	public TextView noImagesText;
+	
+	private boolean mGetMediaItemForReturn;
+	private int mMediaReturnValue;
+	private ActionMode mMode;
 
 	private APIReceiver mApiReceiver = new APIReceiver() {
 		public void onSuccess(Object result, Intent intent) {
@@ -106,6 +112,19 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		showingHelp = false;
 		showingLogout = false;
 		showingDelete = false;
+		
+		mGetMediaItemForReturn = false;
+		mMediaReturnValue = -1;
+		mMode = null;
+		
+		if(getIntent().getExtras() != null)
+		{
+			Bundle bundle = getIntent().getExtras();
+			mMediaReturnValue = bundle.getInt(GuideCreateStepEditFragment.ThumbPositionKey, -1);
+			if(mMediaReturnValue != -1)
+				mGetMediaItemForReturn = true;
+			mMode = startActionMode(new ContextualMediaSelect(this));
+		}
 
 		if (savedInstanceState != null) {
 			showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
@@ -365,5 +384,38 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 		return dialog;
 	}
+	
+	public final class ContextualMediaSelect implements ActionMode.Callback {
+		private Context mParentContext;
+
+		public ContextualMediaSelect(Context parentContext) {
+			mParentContext = parentContext;
+		}
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			// Create the menu from the xml file
+			//MenuInflater inflater = getSupportMenuInflater();
+			//inflater.inflate(R.menu.contextual_delete, menu);
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			finish();
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+			
+
+			return true;
+		}
+	};
 
 }
