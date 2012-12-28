@@ -97,7 +97,6 @@ public class GalleryActivity extends IfixitActivity implements
    private boolean mNextPageRequestInProgress;
    private boolean mShowingHelp;
    private boolean mShowingDelete;
-   private Intent mCurIntent;
    private ActionBar mActionBar;
 
    @Override
@@ -299,9 +298,8 @@ public class GalleryActivity extends IfixitActivity implements
 
    private void retrieveUserImages() {
       mNextPageRequestInProgress = true;
-      mCurIntent = APIService.getUserImagesIntent(this,
-       "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded);
-      APIService.call(this, mCurIntent);
+      APIService.call(this, APIService.getUserImagesIntent(this,
+       "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded));
    }
 
    @Override
@@ -405,9 +403,8 @@ public class GalleryActivity extends IfixitActivity implements
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            mCurIntent = APIService.getUploadImageIntent(this,
-             getPath(selectedImageUri), key);
-            APIService.call(this, mCurIntent);
+            APIService.call(this, APIService.getUploadImageIntent(this,
+             getPath(selectedImageUri), key));
             updateNoImagesText();
          } else if (requestCode == CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
@@ -421,8 +418,8 @@ public class GalleryActivity extends IfixitActivity implements
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
             updateNoImagesText();
-            mCurIntent = APIService.getUploadImageIntent(this, mCameraTempFileName, key);
-            APIService.call(this, mCurIntent);
+            APIService.call(this, APIService.getUploadImageIntent(this,
+             mCameraTempFileName, key));
          }
       }
    }
@@ -600,8 +597,7 @@ public class GalleryActivity extends IfixitActivity implements
       if (deleteQuery.length() > 1) {
          deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 1);
       }
-      mCurIntent = APIService.getDeleteImageIntent(this, deleteQuery);
-      APIService.call(this, mCurIntent);
+      APIService.call(this, APIService.getDeleteImageIntent(this, deleteQuery));
 
       updateNoImagesText();
 
