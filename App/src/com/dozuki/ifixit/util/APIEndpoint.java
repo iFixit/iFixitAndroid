@@ -16,7 +16,7 @@ public enum APIEndpoint {
    CATEGORIES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "/api/1.0/categories/";
+            return "categories/";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -36,7 +36,7 @@ public enum APIEndpoint {
    GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "/api/1.0/guide/" + query;
+            return "guide/" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -57,7 +57,7 @@ public enum APIEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "/api/1.0/topic/" + URLEncoder.encode(query, "UTF-8");
+               return "topic/" + URLEncoder.encode(query, "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
@@ -81,7 +81,7 @@ public enum APIEndpoint {
    LOGIN(
       new Endpoint() {
          public String createUrl(String query) {
-            return "/api/1.0/login/";
+            return "login/";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -101,7 +101,7 @@ public enum APIEndpoint {
    REGISTER(
       new Endpoint() {
          public String createUrl(String query) {
-            return "/api/1.0/register/";
+            return "register/";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -121,7 +121,7 @@ public enum APIEndpoint {
    USER_IMAGES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "/api/1.0/image/user" + query;
+            return "image/user" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -150,7 +150,7 @@ public enum APIEndpoint {
                fileName = "uploaded_image.jpg";
             }
 
-            return "/api/1.0/image/upload?file=" + fileName;
+            return "image/upload?file=" + fileName;
          }
 
          private String getFileNameFromFilePath(String filePath) {
@@ -184,7 +184,7 @@ public enum APIEndpoint {
    DELETE_IMAGE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "/api/1.0/image/delete" + query;
+            return "image/delete" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -205,7 +205,7 @@ public enum APIEndpoint {
    SITES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "/api/1.0/sites?limit=1000";
+            return "sites?limit=1000";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -221,6 +221,8 @@ public enum APIEndpoint {
       false,
       false
    );
+
+   private static final String API_VERSION = "1.0";
 
    private interface Endpoint {
       public String createUrl(String query);
@@ -298,11 +300,7 @@ public enum APIEndpoint {
          protocol = "http://";
       }
 
-      url = mEndpoint.createUrl(query);
-
-      if (url == null) {
-         return null;
-      }
+      url = "/api/" + API_VERSION + "/" + mEndpoint.createUrl(query);
 
       return protocol + domain + url;
    }
