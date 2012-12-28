@@ -613,6 +613,7 @@ public class GalleryActivity extends IfixitActivity implements
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
       mButtons.setVisibility(View.VISIBLE);
+      updateNoImagesText();
    }
 
    private void updateNoImagesText() {
