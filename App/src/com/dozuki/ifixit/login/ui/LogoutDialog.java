@@ -8,6 +8,9 @@ import com.dozuki.ifixit.R;
 
 import org.holoeverywhere.app.AlertDialog;
 
+/**
+ * Creates a logout dialog that logs the user out.
+ */
 public class LogoutDialog {
    public static AlertDialog create(Context context) {
       return createLogoutDialog(
