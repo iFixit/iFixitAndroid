@@ -1,181 +1,369 @@
 package com.dozuki.ifixit.gallery.ui;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.AnimationUtils;
+import android.view.ViewGroup;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepsEditActivity.StepAdapter;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIReceiver;
+import com.viewpagerindicator.TitlePageIndicator;
 
-public class GalleryActivity extends SherlockFragmentActivity
- implements LoginListener {
+public class GalleryActivity extends SherlockFragmentActivity implements
+		LoginListener, OnClickListener {
 
-   private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
-   private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
-   private MediaFragment mMediaView;
+	public static final String MEDIA_FRAGMENT_PHOTOS = "MEDIA_FRAGMENT_PHOTOS";
+	public static final String MEDIA_FRAGMENT_VIDEOS = "MEDIA_FRAGMENT_VIDEOS";
+	public static final String MEDIA_FRAGMENT_EMBEDS = "MEDIA_FRAGMENT_EMBEDS";
 
-   private ActionBar mActionBar;
-   private boolean mLoginVisible;
+	private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
+	private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
 
-   private boolean mIconsHidden;
+	private static final String SHOWING_HELP = "SHOWING_HELP";
+	private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
+	private static final String SHOWING_DELETE = "SHOWING_DELETE";
 
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      public void onSuccess(Object result, Intent intent) {
-         /**
-          * The success are handled by the media fragment. This is here to catch
-          * if the user has an invalid session.
-          */
-      }
+	public static boolean showingLogout;
+	public static boolean showingHelp;
+	public static boolean showingDelete;
 
-      public void onFailure(APIError error, Intent intent) {
-         if (error.mType == APIError.ErrorType.INVALID_USER) {
-            LoginFragment editNameDialog = new LoginFragment();
-            editNameDialog.show(getSupportFragmentManager(), "");
-         }
-      }
-   };
+	private ActionBar mActionBar;
+	private boolean mLoginVisible;
+	private boolean mIconsHidden;
+	
+	private HashMap<String, MediaFragment> mMediaCategoryFragments;
+	private MediaFragment mCurrentMediaFragment;
+	
+	private StepAdapter mStepAdapter;
+	private ViewPager mPager;
+	private TitlePageIndicator titleIndicator;
+	private RelativeLayout mButtons;
+	private TextView mLoginText;
+	private String mUserName;
+	public TextView noImagesText;
 
+	private APIReceiver mApiReceiver = new APIReceiver() {
+		public void onSuccess(Object result, Intent intent) {
+			/**
+			 * The success are handled by the media fragment. This is here to
+			 * catch if the user has an invalid session.
+			 */
+		}
 
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-      setTheme(((MainApplication)getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication)getApplication())
-       .getSite().mTitle);
+		public void onFailure(APIError error, Intent intent) {
+			if (error.mType == APIError.ErrorType.INVALID_USER) {
+				LoginFragment editNameDialog = new LoginFragment();
+				editNameDialog.show(getSupportFragmentManager(), "");
+			}
+		}
+	};
 
-      mActionBar = getSupportActionBar();
-      mActionBar.setTitle("");
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		setTheme(((MainApplication) getApplication()).getSiteTheme());
+		getSupportActionBar().setTitle(
+				((MainApplication) getApplication()).getSite().mTitle);
 
-      super.onCreate(savedInstanceState);
+		mActionBar = getSupportActionBar();
+		mActionBar.setTitle("");
 
-      setContentView(R.layout.gallery);
+		mMediaCategoryFragments = new HashMap<String, MediaFragment>();
+		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS, new PhotoMediaFragment());
+		mMediaCategoryFragments.put(MEDIA_FRAGMENT_VIDEOS, new VideoMediaFragment());
+		mMediaCategoryFragments.put(MEDIA_FRAGMENT_EMBEDS, new EmbedMediaFragment());
+		mCurrentMediaFragment = mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
+		
+		showingHelp = false;
+		showingLogout = false;
+		showingDelete = false;
 
-      mMediaView = (MediaFragment)getSupportFragmentManager().findFragmentById(
-       R.id.gallery_view_fragment);
-      mMediaView.noImagesText.setVisibility(View.GONE);
-      LoginFragment mLogin = (LoginFragment)getSupportFragmentManager().
-       findFragmentByTag(LOGIN_FRAGMENT);
+		if (savedInstanceState != null) {
+			showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+			if (showingHelp)
+				createHelpDialog(this).show();
+			showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
+			if (showingLogout)
+				LoginFragment.getLogoutDialog(this).show();
+			showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
+			/*
+			 * if (showingDelete) { createDeleteConfirmDialog(this).show(); }
+			 */
+		}
 
-      User user = ((MainApplication)getApplication()).getUserFromPreferenceFile();
+		super.onCreate(savedInstanceState);
 
-      if (user != null) {
-         mIconsHidden = false;
-         supportInvalidateOptionsMenu();
-      } else {
-         mIconsHidden = true;
-         if (mLogin == null) {
-            displayLogin();
-         }
-      }
+		setContentView(R.layout.gallery_root);
+		mButtons = (RelativeLayout) findViewById(R.id.button_holder);
+		mLoginText = ((TextView) findViewById(R.id.login_text));
+		mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+		mPager = (ViewPager) findViewById(R.id.gallery_view_body_pager);
+		mPager.setAdapter(mStepAdapter);
+		titleIndicator = (TitlePageIndicator) findViewById(R.id.gallery_view_top_bar);
+		titleIndicator.setViewPager(mPager);
+		mPager.setCurrentItem(1);
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-   }
+		/*
+		 * mMediaView = (MediaFragment) getSupportFragmentManager()
+		 * .findFragmentById(R.id.gallery_view_fragment);
+		 * 
+		 * mMediaView.noImagesText.setVisibility(View.GONE);
+		 */
+		LoginFragment mLogin = (LoginFragment) getSupportFragmentManager()
+				.findFragmentByTag(LOGIN_FRAGMENT);
 
-   private void displayLogin() {
-      mIconsHidden = true;
-      supportInvalidateOptionsMenu();
-      LoginFragment editNameDialog = new LoginFragment();
-      editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
-   }
+		User user = ((MainApplication) getApplication())
+				.getUserFromPreferenceFile();
 
-   @Override
-   public void onSaveInstanceState(Bundle outState) {
-      super.onSaveInstanceState(outState);
-      outState.putBoolean(LOGIN_VISIBLE, mLoginVisible);
-   }
+		if (user != null) {
+			mIconsHidden = false;
+			supportInvalidateOptionsMenu();
+		} else {
+			mIconsHidden = true;
+			if (mLogin == null) {
+				displayLogin();
+			}
+		}
 
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      boolean isLoggedIn = ((MainApplication)getApplication()).isUserLoggedIn();
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            finish();
-            return true;
-         case R.id.top_camera_button:
-            if (!isLoggedIn) {
-               return false;
-            }
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+	}
 
-            mMediaView.launchCamera();
-            return true;
-         case R.id.top_gallery_button:
-            if (!isLoggedIn) {
-               return false;
-            }
+	@Override
+	public void onStart() {
+		if (!((MainApplication) this.getApplication()).isUserLoggedIn()) {
+			mButtons.setVisibility(View.GONE);
+		} else {
+			mUserName = ((MainApplication) (this).getApplication()).getUser()
+					.getUsername();
+			mLoginText.setText(this.getString(R.string.logged_in_as) + " "
+					+ mUserName);
+			mButtons.setOnClickListener(this);
 
-            mMediaView.launchGallery();
-            return true;
-         case R.id.top_question_button:
-            if (!isLoggedIn) {
-               return false;
-            }
+		}
 
-            MediaFragment.createHelpDialog(this).show();
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
+		super.onStart();
+	}
+	
+	
 
-   @Override
-   public void onLogin(User user) {
-      mIconsHidden = false;
-      supportInvalidateOptionsMenu();
-      ((LoginListener)mMediaView).onLogin(user);
-      if (((MainApplication)getApplication()).isFirstTimeGalleryUser()) {
-         MediaFragment.createHelpDialog(this).show();
-         ((MainApplication)getApplication()).setFirstTimeGalleryUser(false);
-      }
-   }
+	@Override
+	public void onClick(View view) {
+		switch (view.getId()) {
+		case R.id.button_holder:
+			showingLogout = true;
+			LoginFragment.getLogoutDialog(this).show();
+			break;
+		}
+	}
 
-   @Override
-   public void onLogout() {
-      ((MainApplication)getApplication()).logout();
-      finish();
-   }
+	private void displayLogin() {
+		mIconsHidden = true;
+		supportInvalidateOptionsMenu();
+		LoginFragment editNameDialog = new LoginFragment();
+		editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
+	}
 
-   @Override
-   public void onCancel() {
-      finish();
-   }
+	@Override
+	public void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putBoolean(LOGIN_VISIBLE, mLoginVisible);
+		outState.putBoolean(SHOWING_HELP, showingHelp);
+		outState.putBoolean(SHOWING_LOGOUT, showingLogout);
+		outState.putBoolean(SHOWING_DELETE, showingDelete);
+	}
 
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      if (!mIconsHidden) {
-         MenuInflater inflater = getSupportMenuInflater();
-         inflater.inflate(R.menu.gallery_menu, menu);
-      }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		boolean isLoggedIn = ((MainApplication) getApplication())
+				.isUserLoggedIn();
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			finish();
+			return true;
+		case R.id.top_camera_button:
+			if (!isLoggedIn) {
+				return false;
+			}
+			mCurrentMediaFragment.launchCamera();
+			return true;
+		case R.id.top_gallery_button:
+			if (!isLoggedIn) {
+				return false;
+			}
+			mCurrentMediaFragment.launchGallery();
+			return true;
+		case R.id.top_question_button:
+			if (!isLoggedIn) {
+				return false;
+			}
+			createHelpDialog(this).show();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
 
-      return super.onCreateOptionsMenu(menu);
-   }
+	@Override
+	public void onLogin(User user) {
+		mIconsHidden = false;
+		supportInvalidateOptionsMenu();
+		mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).clearMediaList();
+		mUserName = ((MainApplication) (this).getApplication()).getUser()
+				.getUsername();
+		mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
+		mButtons.setOnClickListener(this);
+		mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).retrieveUserMedia();
+		mButtons.setVisibility(View.VISIBLE);
+		mButtons.setAnimation(AnimationUtils.loadAnimation(this,
+				R.anim.slide_in_bottom));
 
-   @Override
-   public void onResume() {
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.USER_IMAGES.mAction);
-      filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
-      filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
-      registerReceiver(mApiReceiver, filter);
-      super.onResume();
-   }
+		if (((MainApplication) getApplication()).isFirstTimeGalleryUser()) {
+			createHelpDialog(this).show();
+			((MainApplication) getApplication()).setFirstTimeGalleryUser(false);
+		}
+	}
 
-   @Override
-   public void onPause() {
-      try {
-         unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-      }
-      super.onPause();
-   }
+	@Override
+	public void onLogout() {
+		((MainApplication) getApplication()).logout();
+		finish();
+	}
+
+	@Override
+	public void onCancel() {
+		finish();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		if (!mIconsHidden) {
+			MenuInflater inflater = getSupportMenuInflater();
+			inflater.inflate(R.menu.gallery_menu, menu);
+		}
+
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public void onResume() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(APIEndpoint.USER_IMAGES.mAction);
+		filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
+		filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
+		registerReceiver(mApiReceiver, filter);
+		super.onResume();
+	}
+
+	@Override
+	public void onPause() {
+		try {
+			unregisterReceiver(mApiReceiver);
+		} catch (IllegalArgumentException e) {
+		}
+		super.onPause();
+	}
+
+	public class StepAdapter extends FragmentStatePagerAdapter {
+
+		public StepAdapter(FragmentManager fm) {
+			super(fm);
+		}
+
+		@Override
+		public int getCount() {
+			return mMediaCategoryFragments.size();
+		}
+
+		@Override
+		public CharSequence getPageTitle(int position) {
+			switch (position) {
+			case 0:
+				return "Videos";
+			case 1:
+				return "Photos";
+			case 2:
+				return "Embeds";
+			default:
+				return "Photos";
+			}	
+		}
+
+		@Override
+		public Fragment getItem(int position) {
+			switch (position) {
+			case 0:
+				return (VideoMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS);
+			case 1:
+				return (PhotoMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
+			case 2:
+				return (EmbedMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS);
+			default:
+				return (PhotoMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
+			}	
+		}
+
+		@Override
+		public void setPrimaryItem(ViewGroup container, int position,
+				Object object) {
+			super.setPrimaryItem(container, position, object);
+			// mPagePosition = position;
+			mCurrentMediaFragment = (MediaFragment) object;
+			// Log.i(TAG, "page selected: " + mPagePosition);
+		}
+	}
+
+	public static AlertDialog createHelpDialog(final Context context) {
+		showingHelp = true;
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(context.getString(R.string.media_help_title))
+				.setMessage(context.getString(R.string.media_help_messege))
+				.setPositiveButton(
+						context.getString(R.string.media_help_confirm),
+						new DialogInterface.OnClickListener() {
+							public void onClick(DialogInterface dialog, int id) {
+								showingHelp = false;
+								dialog.cancel();
+							}
+						});
+
+		AlertDialog dialog = builder.create();
+		dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				showingHelp = false;
+			}
+		});
+
+		return dialog;
+	}
+
 }

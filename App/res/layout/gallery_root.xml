@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:orientation="vertical" >
+
+    <com.viewpagerindicator.TitlePageIndicator
+        android:id="@+id/gallery_view_top_bar"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="@color/black" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/gallery_view_body_pager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/button_holder"
+        android:layout_below="@+id/gallery_view_top_bar" >
+    </android.support.v4.view.ViewPager>
+
+     <RelativeLayout
+      android:id="@+id/button_holder"
+      android:layout_width="match_parent"
+      android:layout_height="@dimen/gallery_bottom_bar_height"
+      android:layout_alignParentBottom="true"
+      android:background="@color/dark"
+      android:clickable="true"
+      android:onClick="onClick" >
+
+      <TextView
+         android:id="@+id/login_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentLeft="true"
+         android:layout_centerVertical="true"
+         android:layout_marginLeft="@dimen/gallery_login_text_padding"
+         android:text="@string/welcome"
+         android:textColor="@color/white"
+         android:textStyle="bold" />
+   </RelativeLayout>
+
+</RelativeLayout>

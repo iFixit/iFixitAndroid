@@ -67,6 +67,8 @@
     <string name="register_agreement">I agree to <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a> under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.</string>
     <string name="create_account">Create an Account</string>
     <string name="no_images_text">Add images with the icons above!</string>
+    <string name="no_videos_text">Add videos with the icons above!</string>
+    <string name="no_embeds_text">Add HTML embeds online at iFixit.com!</string>
     <string name="no_steps_text">Add steps with the bar above!</string>
     <string name="no_guides_text">Add guides with the bar above!</string>
     <string name="dozuki_search_hint">Search sites</string>

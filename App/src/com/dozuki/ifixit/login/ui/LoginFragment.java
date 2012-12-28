@@ -24,7 +24,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.MediaFragment;
+import com.dozuki.ifixit.gallery.ui.PhotoMediaFragment;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIEndpoint;
@@ -387,7 +387,7 @@ public class LoginFragment extends SherlockDialogFragment implements OnClickList
       .setNegativeButton(context.getString(buttonCancel),
          new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-               MediaFragment.showingLogout = false;
+               PhotoMediaFragment.showingLogout = false;
                dialog.cancel();
             }
          });
