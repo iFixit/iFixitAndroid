@@ -167,11 +167,7 @@ public class GalleryActivity extends IfixitActivity implements
       mGridView.setOnItemClickListener(this);
       mGridView.setOnItemLongClickListener(this);
 
-      if (mImageList.getImages().size() < 1 && MainApplication.get().isUserLoggedIn()) {
-         mNoImagesText.setVisibility(View.VISIBLE);
-      } else {
-         mNoImagesText.setVisibility(View.GONE);
-      }
+      updateNoImagesText();
 
       if (mSelectedList.contains(true)) {
          setDeleteMode();
@@ -261,7 +257,7 @@ public class GalleryActivity extends IfixitActivity implements
             mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
             mGalleryAdapter.invalidatedView();
             mLastPage = false;
-            mNoImagesText.setVisibility(View.GONE);
+            updateNoImagesText();
          } else {
             mLastPage = true;
          }
@@ -409,6 +405,7 @@ public class GalleryActivity extends IfixitActivity implements
             mCurIntent = APIService.getUploadImageIntent(this,
              getPath(selectedImageUri), key);
             APIService.call(this, mCurIntent);
+            updateNoImagesText();
          } else if (requestCode == CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
                Log.w("iFixit", "Error cameraTempFile is null!");
@@ -420,6 +417,7 @@ public class GalleryActivity extends IfixitActivity implements
             opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
+            updateNoImagesText();
             mCurIntent = APIService.getUploadImageIntent(this, mCameraTempFileName, key);
             APIService.call(this, mCurIntent);
          }
@@ -602,9 +600,7 @@ public class GalleryActivity extends IfixitActivity implements
       mCurIntent = APIService.getDeleteImageIntent(this, deleteQuery);
       APIService.call(this, mCurIntent);
 
-      if (mImageList.getImages().size() == 0) {
-         mNoImagesText.setVisibility(View.VISIBLE);
-      }
+      updateNoImagesText();
 
       mMode.finish();
    }
@@ -614,6 +610,14 @@ public class GalleryActivity extends IfixitActivity implements
       mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
       mButtons.setOnClickListener(this);
       mButtons.setVisibility(View.VISIBLE);
+   }
+
+   private void updateNoImagesText() {
+      if (mImageList.getImages().size() < 1 && MainApplication.get().isUserLoggedIn()) {
+         mNoImagesText.setVisibility(View.VISIBLE);
+      } else {
+         mNoImagesText.setVisibility(View.GONE);
+      }
    }
 
    @Override
