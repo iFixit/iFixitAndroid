@@ -33,13 +33,41 @@ public class MainApplication extends Application {
    private static final String SESSION_KEY = "SESSION_KEY";
    private static final String USERNAME_KEY = "USERNAME_KEY";
 
+   /**
+    * Singleton reference.
+    */
    private static MainApplication sMainApplication;
+
+   /**
+    * Singleton for Bus (Otto).
+    */
    private static Bus sBus;
 
+   /**
+    * Singleton for ImageManager.
+    */
    private ImageManager mImageManager;
+
+   /**
+    * Singleton for ImageSizes.
+    */
    private ImageSizes mImageSizes;
+
+   /**
+    * Currently logged in user or null if user is not logged in.
+    */
    private User mUser;
+
+   /**
+    * Current site. Shouldn't ever be null. Set to "dozuki" for dozuki splash screen.
+    */
    private Site mSite;
+
+   /**
+    * True if the user is in the middle of authenticating. Used to determine whether or
+    * not to open a new login dialog and for finishing Activities that require the user
+    * to be logged in.
+    */
    private boolean mIsLoggingIn = false;
 
    @Override
@@ -50,6 +78,9 @@ public class MainApplication extends Application {
       setSite(getDefaultSite());
    }
 
+   /**
+    * Singleton getter.
+    */
    public static MainApplication get() {
       return sMainApplication;
    }
@@ -61,6 +92,8 @@ public class MainApplication extends Application {
    public void setSite(Site site) {
       mSite = site;
       APIService.setSite(site);
+
+      // Update logged in user based on current site.
       mUser = getUserFromPreferenceFile(site);
    }
 
@@ -248,7 +281,7 @@ public class MainApplication extends Application {
    }
 
    /**
-    * Logs the given user in by writing it to SharedPreferences.
+    * Logs the given user in by writing it to SharedPreferences and setting mUser.
     */
    public void login(User user) {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
@@ -263,6 +296,9 @@ public class MainApplication extends Application {
 
       setIsLoggingIn(false);
 
+      /**
+       * Execute pending API call if one exists.
+       */
       Intent pendingApiCall = APIService.getAndRemovePendingApiCall();
       if (pendingApiCall != null) {
          startService(pendingApiCall);
@@ -270,7 +306,8 @@ public class MainApplication extends Application {
    }
 
    /**
-    * Logs the currently logged in user out by deleting it from SharedPreferences.
+    * Logs the currently logged in user out by deleting it from SharedPreferences and
+    * resetting mUser.
     */
    public void logout() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
@@ -285,6 +322,9 @@ public class MainApplication extends Application {
       getBus().post(new LoginEvent.Logout());
    }
 
+   /**
+    * Call when the user has cancelled login.
+    */
    public void cancelLogin() {
       // Clear the pending api call if one exists.
       APIService.getAndRemovePendingApiCall();
