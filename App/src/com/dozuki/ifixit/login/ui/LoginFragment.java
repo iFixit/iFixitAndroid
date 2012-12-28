@@ -210,8 +210,8 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
              FragmentManager fragmentManager = getSupportFragmentManager();
            
              fragmentManager.beginTransaction()
+              .remove(this)
               .add(new RegisterFragment(), null)
-              .addToBackStack(null)
               .commit();
               
              break;

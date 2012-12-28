@@ -1,9 +1,11 @@
 package com.dozuki.ifixit.login.ui;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.text.method.LinkMovementMethod;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -181,8 +183,13 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
             break;
 
           case R.id.cancel_register_button:
+             FragmentManager fragmentManager = getSupportFragmentManager();
+
               // Go back to login.
-              getSupportFragmentManager().popBackStack();
+             fragmentManager.beginTransaction()
+              .remove(this)
+              .add(new LoginFragment(), null)
+              .commit();
                
               break;
        }
@@ -197,6 +204,11 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
          mCurIntent = APIService.getLoginIntent(getActivity(), session);
          APIService.call((Activity)getActivity(), mCurIntent);
       }
+   }
+
+   @Override
+   public void onCancel(DialogInterface dialog) {
+      MainApplication.get().cancelLogin();
    }
 
    @Override
