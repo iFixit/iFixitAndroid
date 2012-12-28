@@ -29,9 +29,9 @@ public abstract class APIEvent<T> {
    public String mExtraInfo;
 
    public APIEvent<T> setResult(T result) {
-       mResult = result;
+      mResult = result;
 
-       return this;
+      return this;
    }
 
    public T getResult() {

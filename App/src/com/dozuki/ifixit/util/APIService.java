@@ -55,8 +55,16 @@ public class APIService extends Service {
 
    public static final String RESULT = "RESULT";
 
+   /**
+    * Pending API call. This is set when an authenticated request is performed
+    * but the user is not logged in. This is then performed once the user has
+    * authenticated.
+    */
    private static Intent sPendingApiCall;
 
+   /**
+    * Current site.
+    */
    private static Site mSite;
 
    public static void setSite(Site site) {
@@ -68,10 +76,20 @@ public class APIService extends Service {
       return null; // Do nothing.
    }
 
+   /**
+    * Returns true if the the user needs to be authenticated for the given site and endpoint.
+    */
    private static boolean requireAuthentication(Site site, APIEndpoint endpoint) {
       return (endpoint.mAuthenticated || !mSite.mPublic) && !endpoint.mForcePublic;
    }
 
+   /**
+    * Performs the API call defined by the given Intent. This takes care of opening a
+    * login dialog and saving the Intent if the user isn't authenticated but should be.
+    *
+    * TODO: Make it take an "APICall" that wraps an Intent so this is the only way to
+    * perform an API call.
+    */
    public static void call(Activity activity, Intent apiCall) {
       APIEndpoint endpoint = APIEndpoint.getByTarget(apiCall.getExtras().getInt(REQUEST_TARGET));
 
@@ -88,6 +106,9 @@ public class APIService extends Service {
       }
    }
 
+   /**
+    * Returns the pending API call and sets it to null. Returns null if no pending API call.
+    */
    public static Intent getAndRemovePendingApiCall() {
       Intent pendingApiCall = sPendingApiCall;
       sPendingApiCall = null;
@@ -139,7 +160,10 @@ public class APIService extends Service {
 
             result.setExtraInfo(resultInformation);
 
-            // Always post the result despite any errors.
+            /**
+             * Always post the result despite any errors. This actually sends it off
+             * to Activities etc. that care about API cals.
+             */
             MainApplication.getBus().post(result);
          }
       });
