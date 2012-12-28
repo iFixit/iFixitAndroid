@@ -222,14 +222,38 @@ public enum APIEndpoint {
       false
    );
 
+   /**
+    * Current version of the API to use.
+    */
    private static final String API_VERSION = "1.0";
 
+   /**
+    * Defines various methods that each endpoint must provide.
+    */
    private interface Endpoint {
+      /**
+       * Returns the end of a URL that defines this endpoint.
+       *
+       * The full URL is then: protocol + domain + "/api/" + api version + "/" + createUrl
+       */
       public String createUrl(String query);
+
+      /**
+       * Returns an APIEvent given the JSON response of the request.
+       */
       public APIEvent<?> parse(String json) throws JSONException;
+
+      /**
+       * Returns an empty APIEvent that is used for events for this endpoint.
+       *
+       * This is typically used to put errors into so they still get to the right place.
+       */
       public APIEvent<?> getEvent();
    }
 
+   /**
+    * Endpoint's functionality.
+    */
    private final Endpoint mEndpoint;
 
    /**
@@ -309,6 +333,9 @@ public enum APIEndpoint {
       return mEndpoint.parse(json).setResponse(json);
    }
 
+   /**
+    * Returns a "plain" event that is the correct type for this endpoint.
+    */
    public APIEvent<?> getEvent() {
       return mEndpoint.getEvent();
    }
