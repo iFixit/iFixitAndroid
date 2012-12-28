@@ -12,15 +12,17 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.UserVideoList;
 
-public class VideoMediaFragment extends SherlockFragment implements MediaFragment{
+public class VideoMediaFragment extends SherlockFragment implements
+		MediaFragment {
 	private GridView mGridView;
 	private MediaAdapter mGalleryAdapter;
 	public TextView noVideoText;
 	private static UserVideoList mVideoList;
+	private int mSelectForReturn;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);	
+		super.onCreate(savedInstanceState);
 		mVideoList = new UserVideoList();
 		mGalleryAdapter = new MediaAdapter();
 	}
@@ -39,21 +41,21 @@ public class VideoMediaFragment extends SherlockFragment implements MediaFragmen
 		}
 
 		mGridView = (GridView) view.findViewById(R.id.gridview);
-		//mGridView.setOnScrollListener(new GalleryOnScrollListener());
+		// mGridView.setOnScrollListener(new GalleryOnScrollListener());
 
 		mGridView.setAdapter(mGalleryAdapter);
-		//mGridView.setOnItemClickListener(this);
-		//mGridView.setOnItemLongClickListener(this);
+		// mGridView.setOnItemClickListener(this);
+		// mGridView.setOnItemLongClickListener(this);
 
-	//	mButtons = (RelativeLayout) view.findViewById(R.id.button_holder);
-		//mLoginText = ((TextView) view.findViewById(R.id.login_text));
+		// mButtons = (RelativeLayout) view.findViewById(R.id.button_holder);
+		// mLoginText = ((TextView) view.findViewById(R.id.login_text));
 
-	//	if (mSelectedList.contains(true)) {
-		//	setDeleteMode();
-		//}
+		// if (mSelectedList.contains(true)) {
+		// setDeleteMode();
+		// }
 		return view;
 	}
-	
+
 	private class MediaAdapter extends BaseAdapter {
 		@Override
 		public long getItemId(int id) {
@@ -74,29 +76,34 @@ public class VideoMediaFragment extends SherlockFragment implements MediaFragmen
 			return null;
 		}
 	}
-	
+
 	@Override
 	public void launchCamera() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void launchGallery() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void clearMediaList() {
 		// TODO Auto-generated method stub
-		
+
 	}
 
 	@Override
 	public void retrieveUserMedia() {
 		// TODO Auto-generated method stub
-		
+
+	}
+
+	@Override
+	public void setForReturn(int mMediaQuickReturn) {
+		mSelectForReturn = mMediaQuickReturn;
 	}
 
 }

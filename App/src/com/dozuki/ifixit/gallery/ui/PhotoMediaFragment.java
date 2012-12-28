@@ -43,6 +43,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepsEditActivity;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
 import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
@@ -107,6 +108,8 @@ public class PhotoMediaFragment extends SherlockFragment implements
 	private String mCameraTempFileName;
 	private boolean mNextPageRequestInProgress;
 	private Intent mCurIntent;
+
+	private int mSelectForReturn;
 
 	private APIReceiver mApiReceiver = new APIReceiver() {
 		public void onSuccess(Object result, Intent intent) {
@@ -698,7 +701,7 @@ public class PhotoMediaFragment extends SherlockFragment implements
 			animHide.setAnimationListener(new AnimationListener() {
 				@Override
 				public void onAnimationEnd(Animation arg0) {
-					//mButtons.setVisibility(View.GONE);
+					// mButtons.setVisibility(View.GONE);
 				}
 
 				@Override
@@ -709,7 +712,7 @@ public class PhotoMediaFragment extends SherlockFragment implements
 				public void onAnimationStart(Animation arg0) {
 				}
 			});
-			//mButtons.startAnimation(animHide);
+			// mButtons.startAnimation(animHide);
 			mMode = getSherlockActivity().startActionMode(
 					new ModeCallback(mContext));
 		}
@@ -719,7 +722,34 @@ public class PhotoMediaFragment extends SherlockFragment implements
 			int position, long id) {
 		MediaViewItem cell = (MediaViewItem) view;
 		// Long-click delete mode
-		if (mMode != null) {
+		if (mSelectForReturn > 0) {
+			String url = (String) view.getTag();
+
+			if (url == null) {
+				return;
+			} else if (url.equals("") || url.indexOf(".") == 0) {
+				return;
+			}
+
+			String imageUrl;
+			boolean isLocal;
+			if (mLocalURL.get(url) != null) {
+				imageUrl = mLocalURL.get(url).mPath;
+				isLocal = true;
+			} else {
+				imageUrl = url;
+				isLocal = false;
+			}
+
+			Intent selectResult = new Intent();
+			selectResult.putExtra(GuideCreateStepsEditActivity.MediaReturnKey,
+					imageUrl);
+			selectResult.putExtra(
+					GuideCreateStepsEditActivity.MediaSlotReturnKey,
+					mSelectForReturn);
+			getActivity().setResult(Activity.RESULT_OK, selectResult);
+			getActivity().finish();
+		} else if (mMode != null) {
 			if (cell == null) {
 				Log.i("iFixit", "Delete cell null!");
 				return;
@@ -894,5 +924,10 @@ public class PhotoMediaFragment extends SherlockFragment implements
 	public void retrieveUserMedia() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void setForReturn(int mMediaQuickReturn) {
+		mSelectForReturn = mMediaQuickReturn;
 	}
 }

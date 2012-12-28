@@ -62,10 +62,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private ActionBar mActionBar;
 	private boolean mLoginVisible;
 	private boolean mIconsHidden;
-	
+
 	private HashMap<String, MediaFragment> mMediaCategoryFragments;
 	private MediaFragment mCurrentMediaFragment;
-	
+
 	private StepAdapter mStepAdapter;
 	private ViewPager mPager;
 	private TitlePageIndicator titleIndicator;
@@ -73,7 +73,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private TextView mLoginText;
 	private String mUserName;
 	public TextView noImagesText;
-	
+
 	private boolean mGetMediaItemForReturn;
 	private int mMediaReturnValue;
 	private ActionMode mMode;
@@ -104,26 +104,36 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		mActionBar.setTitle("");
 
 		mMediaCategoryFragments = new HashMap<String, MediaFragment>();
-		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS, new PhotoMediaFragment());
-		mMediaCategoryFragments.put(MEDIA_FRAGMENT_VIDEOS, new VideoMediaFragment());
-		mMediaCategoryFragments.put(MEDIA_FRAGMENT_EMBEDS, new EmbedMediaFragment());
-		mCurrentMediaFragment = mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
-		
+		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS,
+				new PhotoMediaFragment());
+		mMediaCategoryFragments.put(MEDIA_FRAGMENT_VIDEOS,
+				new VideoMediaFragment());
+		mMediaCategoryFragments.put(MEDIA_FRAGMENT_EMBEDS,
+				new EmbedMediaFragment());
+		mCurrentMediaFragment = mMediaCategoryFragments
+				.get(MEDIA_FRAGMENT_PHOTOS);
+
 		showingHelp = false;
 		showingLogout = false;
 		showingDelete = false;
-		
+
 		mGetMediaItemForReturn = false;
 		mMediaReturnValue = -1;
 		mMode = null;
-		
-		if(getIntent().getExtras() != null)
-		{
+
+		if (getIntent().getExtras() != null) {
 			Bundle bundle = getIntent().getExtras();
-			mMediaReturnValue = bundle.getInt(GuideCreateStepEditFragment.ThumbPositionKey, -1);
-			if(mMediaReturnValue != -1)
+			mMediaReturnValue = bundle.getInt(
+					GuideCreateStepEditFragment.ThumbPositionKey, -1);
+			if (mMediaReturnValue != -1)
 				mGetMediaItemForReturn = true;
 			mMode = startActionMode(new ContextualMediaSelect(this));
+			mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(
+					mMediaReturnValue);
+			mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS).setForReturn(
+					mMediaReturnValue);
+			mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(
+					mMediaReturnValue);
 		}
 
 		if (savedInstanceState != null) {
@@ -191,8 +201,6 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 		super.onStart();
 	}
-	
-	
 
 	@Override
 	public void onClick(View view) {
@@ -333,21 +341,25 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 				return "Embeds";
 			default:
 				return "Photos";
-			}	
+			}
 		}
 
 		@Override
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
-				return (VideoMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS);
+				return (VideoMediaFragment) mMediaCategoryFragments
+						.get(MEDIA_FRAGMENT_VIDEOS);
 			case 1:
-				return (PhotoMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
+				return (PhotoMediaFragment) mMediaCategoryFragments
+						.get(MEDIA_FRAGMENT_PHOTOS);
 			case 2:
-				return (EmbedMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS);
+				return (EmbedMediaFragment) mMediaCategoryFragments
+						.get(MEDIA_FRAGMENT_EMBEDS);
 			default:
-				return (PhotoMediaFragment)mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
-			}	
+				return (PhotoMediaFragment) mMediaCategoryFragments
+						.get(MEDIA_FRAGMENT_PHOTOS);
+			}
 		}
 
 		@Override
@@ -384,7 +396,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 		return dialog;
 	}
-	
+
 	public final class ContextualMediaSelect implements ActionMode.Callback {
 		private Context mParentContext;
 
@@ -395,8 +407,8 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// Create the menu from the xml file
-			//MenuInflater inflater = getSupportMenuInflater();
-			//inflater.inflate(R.menu.contextual_delete, menu);
+			MenuInflater inflater = getSupportMenuInflater();
+			inflater.inflate(R.menu.gallery_menu, menu);
 			return true;
 		}
 
@@ -412,7 +424,6 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 
 		@Override
 		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-			
 
 			return true;
 		}

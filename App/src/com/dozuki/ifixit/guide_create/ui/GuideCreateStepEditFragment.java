@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
@@ -8,23 +9,27 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 
 import com.actionbarsherlock.app.SherlockFragment;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideCreateStepEditFragment extends SherlockFragment implements
-		OnClickListener {
-	public static int FetchImageKey = 1;
-	public static String ThumbPositionKey = "ThumbPositionKey";
-	private static String GuideEditKey = "GuideEditKey";
+		OnClickListener, OnLongClickListener {
+	public static final int FetchImageKey = 1;
+	public static final String ThumbPositionKey = "ThumbPositionKey";
+	private static final String GuideEditKey = "GuideEditKey";
 	GuideCreateStepObject mStepObject;
 	EditText mStepTitle;
+	ImageManager mImageManager;
 	ImageView mLargeImage;
 	ImageView mImageOne;
 	ImageView mImageTwo;
@@ -34,6 +39,10 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		if (mImageManager == null) {
+			mImageManager = ((MainApplication) getActivity().getApplication())
+					.getImageManager();
+		}
 	}
 
 	@Override
@@ -48,10 +57,13 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		}
 		mLargeImage = (ImageView) view.findViewById(R.id.step_edit_large_image);
 		mImageOne = (ImageView) view.findViewById(R.id.step_edit_thumb_1);
+		mImageOne.setOnLongClickListener(this);
 		mImageOne.setOnClickListener(this);
 		mImageTwo = (ImageView) view.findViewById(R.id.step_edit_thumb_2);
+		mImageTwo.setOnLongClickListener(this);
 		mImageTwo.setOnClickListener(this);
 		mImageThree = (ImageView) view.findViewById(R.id.step_edit_thumb_3);
+		mImageThree.setOnLongClickListener(this);
 		mImageThree.setOnClickListener(this);
 		mMediaIcon = (ImageView) view.findViewById(R.id.step_edit_thumb_media);
 		mStepTitle.setText(mStepObject.getTitle());
@@ -94,6 +106,72 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 
 	@Override
 	public void onClick(View v) {
+		String microURL = null;
+		switch (v.getId()) {
+		case R.id.step_edit_thumb_1:
+			microURL = (String) mImageOne.getTag();
+			break;
+		case R.id.step_edit_thumb_2:
+			microURL = (String) mImageTwo.getTag();
+			break;
+		case R.id.step_edit_thumb_3:
+			microURL = (String) mImageThree.getTag();
+			break;
+		case R.id.step_edit_thumb_media:
+			break;
+		default:
+			return;
+		}
+		if (microURL != null) {
+			mImageManager.displayImage(microURL, getActivity(), mLargeImage);
+			mLargeImage.invalidate();
+		}
+	}
+
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		switch (requestCode) {
+		case FetchImageKey:
+			if (resultCode == Activity.RESULT_OK) {
+				String mediaURL = data
+						.getStringExtra(GuideCreateStepsEditActivity.MediaReturnKey);
+				int mediaSlot = data.getIntExtra(
+						GuideCreateStepsEditActivity.MediaSlotReturnKey, -1);
+				Log.i("editstep", mediaSlot + "");
+				setImage(mediaSlot, mediaURL);
+			}
+			break;
+		}
+	}
+
+	private void setImage(int location, String url) {
+		switch (location) {
+		case 1:
+			mImageManager.displayImage(url, getActivity(), mImageOne);
+			mImageOne.setTag(url);
+			mImageOne.invalidate();
+			break;
+		case 2:
+			mImageManager.displayImage(url, getActivity(), mImageTwo);
+			mImageTwo.setTag(url);
+			mImageTwo.invalidate();
+			break;
+		case 3:
+
+			mImageManager.displayImage(url, getActivity(), mImageThree);
+			mImageThree.setTag(url);
+			mImageThree.invalidate();
+			break;
+		default:
+			return;
+		}
+		mImageManager.displayImage(url, getActivity(), mLargeImage);
+		mLargeImage.invalidate();
+	}
+
+	@Override
+	public boolean onLongClick(View v) {
 		Intent intent;
 		switch (v.getId()) {
 		case R.id.step_edit_thumb_1:
@@ -114,10 +192,7 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		case R.id.step_edit_thumb_media:
 			break;
 		}
+		return true;
 	}
 
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-	}
 }

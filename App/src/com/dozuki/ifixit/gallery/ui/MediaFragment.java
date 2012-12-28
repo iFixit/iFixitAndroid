@@ -10,4 +10,6 @@ public interface MediaFragment {
 
 	public void retrieveUserMedia();
 
+	public void setForReturn(int mMediaQuickReturn);
+
 }

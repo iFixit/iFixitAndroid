@@ -41,10 +41,12 @@ import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
-		implements OnClickListener{
+		implements OnClickListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";
 	public static String GuideStepKey = "GuideStepObject";
+	public static String MediaReturnKey = "MediaReturnKey";
+	public static String MediaSlotReturnKey = "MediaSlotReturnKey";
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
@@ -55,7 +57,7 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 	private ViewPager mPager;
 	private TitlePageIndicator titleIndicator;
 	private int mPagePosition;
-	private boolean  mConfirmDelete;
+	private boolean mConfirmDelete;
 
 	// TODO: Add "swipey tabs" to top bar
 
@@ -80,8 +82,10 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		if (savedInstanceState != null) {
 			mGuide = (GuideCreateObject) savedInstanceState
 					.getSerializable(GuideKey);
-			mPagePosition  = savedInstanceState.getInt(GuideCreateStepsEditActivity.GuideStepKey);
-			mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
+			mPagePosition = savedInstanceState
+					.getInt(GuideCreateStepsEditActivity.GuideStepKey);
+			mConfirmDelete = savedInstanceState
+					.getBoolean(DeleteGuideDialogKey);
 		}
 
 		super.onCreate(savedInstanceState);
@@ -105,8 +109,8 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		mDeleteStep.setOnClickListener(this);
 
 		mViewSteps.setOnClickListener(this);
-		
-		if(mConfirmDelete)
+
+		if (mConfirmDelete)
 			createDeleteDialog(this).show();
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -163,7 +167,8 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
 				mGuide);
 		savedInstanceState.putBoolean(DeleteGuideDialogKey, mConfirmDelete);
-		savedInstanceState.putInt(GuideCreateStepsEditActivity.GuideStepKey, mPagePosition);
+		savedInstanceState.putInt(GuideCreateStepsEditActivity.GuideStepKey,
+				mPagePosition);
 	}
 
 	public class StepAdapter extends FragmentStatePagerAdapter {
@@ -188,12 +193,13 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 			frag.setStepObject(mGuide.getSteps().get(position));
 			return frag;
 		}
-		
+
 		@Override
-		public void setPrimaryItem(ViewGroup container, int position, Object object) {
-		   super.setPrimaryItem(container, position, object);
-		   mPagePosition = position;
-		  // Log.i(TAG, "page selected: " +   mPagePosition);
+		public void setPrimaryItem(ViewGroup container, int position,
+				Object object) {
+			super.setPrimaryItem(container, position, object);
+			mPagePosition = position;
+			// Log.i(TAG, "page selected: " + mPagePosition);
 		}
 	}
 
@@ -201,15 +207,16 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.step_edit_add_step:
-			GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.StepID++);
+			GuideCreateStepObject item = new GuideCreateStepObject(
+					GuideCreateStepPortalFragment.StepID++);
 			item.setTitle("Test Step " + GuideCreateStepPortalFragment.StepID);
-			mGuide.getSteps().add( mPagePosition + 1, item);
+			mGuide.getSteps().add(mPagePosition + 1, item);
 			mPager.invalidate();
 			titleIndicator.invalidate();
 			mPager.setCurrentItem(mPagePosition + 1, true);
 			break;
 		case R.id.step_edit_delete_step:
-			if(!mGuide.getSteps().isEmpty())
+			if (!mGuide.getSteps().isEmpty())
 				createDeleteDialog(this).show();
 			break;
 		case R.id.step_edit_view_steps:
@@ -217,46 +224,50 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 			break;
 		}
 	}
-	
-	private void deleteStep()
-	{
+
+	private void deleteStep() {
 		mGuide.getSteps().remove(mPagePosition);
 		mPager.invalidate();
 		titleIndicator.invalidate();
 	}
-	
+
 	public AlertDialog createDeleteDialog(final Context context) {
-	      mConfirmDelete = true;
-	      AlertDialog.Builder builder = new AlertDialog.Builder(context);
-	      builder
-	            .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
-	            .setMessage(context.getString(R.string.step_edit_confirm_delete_message) + " " + mGuide.getSteps().get(mPagePosition).getTitle() + "?")
-	              .setPositiveButton(context.getString(R.string.logout_confirm),
-               new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int id) {
-                	  mConfirmDelete = false;
-                	  deleteStep();
-                     dialog.cancel();
-                  }
-               })
-            .setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int which) {
-            	   mConfirmDelete = false;
-                  dialog.cancel();
-               }
-            });
+		mConfirmDelete = true;
+		AlertDialog.Builder builder = new AlertDialog.Builder(context);
+		builder.setTitle(
+				context.getString(R.string.step_edit_confirm_delete_title))
+				.setMessage(
+						context.getString(R.string.step_edit_confirm_delete_message)
+								+ " "
+								+ mGuide.getSteps().get(mPagePosition)
+										.getTitle() + "?")
+				.setPositiveButton(context.getString(R.string.logout_confirm),
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog, int id) {
+								mConfirmDelete = false;
+								deleteStep();
+								dialog.cancel();
+							}
+						})
+				.setNegativeButton(R.string.logout_cancel,
+						new DialogInterface.OnClickListener() {
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								mConfirmDelete = false;
+								dialog.cancel();
+							}
+						});
 
-	      AlertDialog dialog = builder.create();
-	      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-	         @Override
-	         public void onDismiss(DialogInterface dialog) {
-	        	 mConfirmDelete = false;
-	         }
-	      });
+		AlertDialog dialog = builder.create();
+		dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+			@Override
+			public void onDismiss(DialogInterface dialog) {
+				mConfirmDelete = false;
+			}
+		});
 
-	      return dialog;
-	   }
+		return dialog;
+	}
 }
-
