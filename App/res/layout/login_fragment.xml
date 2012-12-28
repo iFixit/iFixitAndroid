@@ -41,8 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans"
-                android:hint="@string/login_email_hint"
-                android:inputType="textNoSuggestions" >
+                android:inputType="textEmailAddress|textNoSuggestions"
+                android:hint="@string/login_email_hint" >
 
                 <requestFocus />
             </EditText>
