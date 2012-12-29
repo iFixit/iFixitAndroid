@@ -20,6 +20,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideCreateStepEditFragment extends SherlockFragment implements
@@ -39,10 +40,8 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		if (mImageManager == null) {
-			mImageManager = ((MainApplication) getActivity().getApplication())
-					.getImageManager();
-		}
+		mImageManager = ((MainApplication) getActivity().getApplication())
+				.getImageManager();
 	}
 
 	@Override
@@ -51,10 +50,7 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.guide_create_step_edit_body,
 				container, false);
 		mStepTitle = (EditText) view.findViewById(R.id.step_edit_title_text);
-		if (savedInstanceState != null) {
-			mStepObject = (GuideCreateStepObject) savedInstanceState
-					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);
-		}
+		
 		mLargeImage = (ImageView) view.findViewById(R.id.step_edit_large_image);
 		mImageOne = (ImageView) view.findViewById(R.id.step_edit_thumb_1);
 		mImageOne.setOnLongClickListener(this);
@@ -66,6 +62,13 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		mImageThree.setOnLongClickListener(this);
 		mImageThree.setOnClickListener(this);
 		mMediaIcon = (ImageView) view.findViewById(R.id.step_edit_thumb_media);
+		if (savedInstanceState != null) {
+			mStepObject = (GuideCreateStepObject) savedInstanceState
+					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);
+			for (StepImage img : mStepObject.getImages()) {
+				setImage(img.getImageid(), img.getText());
+			}
+		}
 		mStepTitle.setText(mStepObject.getTitle());
 		mStepTitle.addTextChangedListener(new TextWatcher() {
 
@@ -158,7 +161,6 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 			mImageTwo.invalidate();
 			break;
 		case 3:
-
 			mImageManager.displayImage(url, getActivity(), mImageThree);
 			mImageThree.setTag(url);
 			mImageThree.invalidate();
@@ -168,6 +170,7 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		}
 		mImageManager.displayImage(url, getActivity(), mLargeImage);
 		mLargeImage.invalidate();
+		mStepObject.getImages().get(location - 1).setText(url);
 	}
 
 	@Override

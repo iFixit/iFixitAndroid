@@ -2,6 +2,7 @@ package com.dozuki.ifixit.guide_create.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
@@ -21,6 +22,11 @@ public class GuideCreateStepObject  implements Serializable{
 	   public GuideCreateStepObject (int stepNum) {
 	      mStepNum = stepNum;
 	      mImages = new ArrayList<StepImage>();
+	      for(int i = 0 ; i < 3 ; i++)
+	      {
+	    	  mImages.add(new StepImage(i + 1));
+	    	  mImages.get(i).setText("");
+	      }
 	      mLines = new ArrayList<StepLine>();
 	   }
 	   
