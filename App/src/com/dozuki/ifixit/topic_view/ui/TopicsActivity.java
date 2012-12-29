@@ -4,7 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
@@ -20,6 +19,8 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
+
+import org.holoeverywhere.app.Fragment;
 
 public class TopicsActivity extends IfixitActivity
  implements TopicSelectedListener, OnBackStackChangedListener {
