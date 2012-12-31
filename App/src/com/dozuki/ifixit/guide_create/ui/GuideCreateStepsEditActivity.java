@@ -22,7 +22,9 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -50,9 +52,11 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
-	private TextView mAddStep;
-	private TextView mDeleteStep;
-	private TextView mViewSteps;
+	//private TextView mAddStep;
+	//private TextView mDeleteStep;
+	private ImageView mSpinnerMenu;
+	private Button mSaveStep;
+	private ImageView mViewSteps;
 	private StepAdapter mStepAdapter;
 	private ViewPager mPager;
 	private TitlePageIndicator titleIndicator;
@@ -72,14 +76,11 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		Bundle extras = getIntent().getExtras();
 		mPagePosition = 0;
 		if (extras != null) {
-
 			mGuide = (GuideCreateObject) extras
 					.getSerializable(GuideCreateStepsEditActivity.GuideKey);
 			mPagePosition = extras
 					.getInt(GuideCreateStepsEditActivity.GuideStepKey);
-		}
-
-		if (savedInstanceState != null) {
+		}else if (savedInstanceState != null) {
 			mGuide = (GuideCreateObject) savedInstanceState
 					.getSerializable(GuideKey);
 			mPagePosition = savedInstanceState
@@ -91,11 +92,13 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.guide_create_step_edit);
-		mAddStep = (TextView) findViewById(R.id.step_edit_add_step);
+		//mAddStep = (TextView) findViewById(R.id.step_edit_add_step);
 
-		mDeleteStep = (TextView) findViewById(R.id.step_edit_delete_step);
+		//mDeleteStep = (TextView) findViewById(R.id.step_edit_delete_step);
 
-		mViewSteps = (TextView) findViewById(R.id.step_edit_view_steps);
+		mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
+		mSpinnerMenu = (ImageView) findViewById(R.id.step_edit_spinner);
+		mViewSteps = (ImageView) findViewById(R.id.step_edit_view_steps);
 
 		mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
 		mPager = (ViewPager) findViewById(R.id.guide_edit_body_pager);
@@ -104,9 +107,9 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 
 		titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
 		titleIndicator.setViewPager(mPager);
-		mAddStep.setOnClickListener(this);
+		mSaveStep.setOnClickListener(this);
 
-		mDeleteStep.setOnClickListener(this);
+		mSpinnerMenu.setOnClickListener(this);
 
 		mViewSteps.setOnClickListener(this);
 
@@ -206,7 +209,7 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.step_edit_add_step:
+		/*case R.id.step_edit_add_step:
 			GuideCreateStepObject item = new GuideCreateStepObject(
 					GuideCreateStepPortalFragment.StepID++);
 			item.setTitle("Test Step " + GuideCreateStepPortalFragment.StepID);
@@ -218,9 +221,15 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		case R.id.step_edit_delete_step:
 			if (!mGuide.getSteps().isEmpty())
 				createDeleteDialog(this).show();
-			break;
+			break;*/
 		case R.id.step_edit_view_steps:
 			finish();
+			break;
+		case R.id.step_edit_view_save:
+			
+			break;
+		case R.id.step_edit_spinner:
+			
 			break;
 		}
 	}

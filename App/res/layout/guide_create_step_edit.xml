@@ -28,18 +28,31 @@
         android:background="@color/black"
         android:clickable="true" >
 
-        <TextView
+        <ImageView
             android:id="@+id/step_edit_view_steps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:clickable="true"
-            android:paddingLeft="10dp"
-            android:text="@string/steps"
-            android:textColor="@color/gray" />
+            android:layout_marginLeft="20dp"
+            android:background="@drawable/ic_menu_bot_steplist"
+            android:clickable="true" />
 
-        <TextView
+        <Button
+            android:id="@+id/step_edit_view_save"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:paddingRight="18dp"
+            android:paddingLeft="18dp"
+            android:text="@string/step_edit_save_step"
+            android:textSize="14sp"
+            android:textStyle="bold"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+             android:textColor="@color/white" 
+             android:background="@color/fireswing_blue"/>
+        <!--
+            <TextView
             android:id="@+id/step_edit_delete_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -50,19 +63,18 @@
             android:drawablePadding="10dip"
             android:text="@string/delete_step"
             android:textColor="@color/gray" />
+        -->
 
-        <TextView
-            android:id="@+id/step_edit_add_step"
+        <ImageView
+            android:id="@+id/step_edit_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
+            android:layout_alignTop="@+id/step_edit_view_steps"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/ic_menu_bot_more"
             android:clickable="true"
-            android:drawableLeft="@drawable/ic_add_list_item"
-            android:drawablePadding="10dip"
-            android:paddingRight="10dp"
-            android:text="@string/edit_add_step"
-            android:textColor="@color/gray" />
+            android:paddingRight="20dp" />
     </RelativeLayout>
 
 </RelativeLayout>

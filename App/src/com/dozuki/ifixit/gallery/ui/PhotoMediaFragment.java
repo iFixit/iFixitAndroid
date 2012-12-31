@@ -730,7 +730,7 @@ public class PhotoMediaFragment extends SherlockFragment implements
 			} else if (url.equals("") || url.indexOf(".") == 0) {
 				return;
 			}
-
+			
 			String imageUrl;
 			boolean isLocal;
 			if (mLocalURL.get(url) != null) {

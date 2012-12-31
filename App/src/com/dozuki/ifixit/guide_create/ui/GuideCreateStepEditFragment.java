@@ -64,11 +64,9 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		mMediaIcon = (ImageView) view.findViewById(R.id.step_edit_thumb_media);
 		if (savedInstanceState != null) {
 			mStepObject = (GuideCreateStepObject) savedInstanceState
-					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);
-			for (StepImage img : mStepObject.getImages()) {
-				setImage(img.getImageid(), img.getText());
-			}
+					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);	
 		}
+		
 		mStepTitle.setText(mStepObject.getTitle());
 		mStepTitle.addTextChangedListener(new TextWatcher() {
 
@@ -93,6 +91,9 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 			}
 
 		});
+		for (StepImage img : mStepObject.getImages()) {
+			setImage(img.getImageid(), img.getText());
+		}
 		return view;
 	}
 

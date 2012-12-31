@@ -12,13 +12,13 @@
     android:dividerHeight="@dimen/topic_list_vertical_spacing"
     android:divider="@color/white"
     android:layout_below="@+id/add_guide_bar"
-    android:gravity="center"
+    android:gravity="center" 
     style="?attr/topicGuideList"
 />
  <RelativeLayout
         android:id="@+id/add_guide_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/gallery_bottom_bar_height"
+        android:layout_height="@dimen/gallery_top_bar_height"
         android:layout_alignParentTop="true"
         android:background="@color/gray"
         android:clickable="true" >

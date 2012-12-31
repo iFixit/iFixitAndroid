@@ -18,7 +18,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:layout_margin="15dp"
                     android:src="@drawable/bullet_black" />
             </FrameLayout>
@@ -31,7 +31,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:layout_margin="20dp"
                     android:src="@drawable/bullet_red" />
             </FrameLayout>
@@ -44,7 +44,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:src="@drawable/bullet_orange" />
             </FrameLayout>
 
@@ -56,7 +56,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:src="@drawable/bullet_yellow" />
             </FrameLayout>
         </TableRow>
@@ -75,7 +75,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:layout_margin="15dp"
                     android:src="@drawable/bullet_white" />
             </FrameLayout>
@@ -88,7 +88,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:src="@drawable/bullet_blue" />
             </FrameLayout>
 
@@ -100,7 +100,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:src="@drawable/bullet_purple" />
             </FrameLayout>
 
@@ -112,7 +112,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:src="@drawable/bullet_teal" />
             </FrameLayout>
         </TableRow>
@@ -131,7 +131,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:layout_margin="15dp"
                     android:src="@drawable/ic_menu_help" />
             </FrameLayout>
@@ -144,7 +144,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_menu_help" />
             </FrameLayout>
 
@@ -156,7 +156,7 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:layout_gravity="center_vertical | center_horizontal"
+                    android:layout_gravity="center"
                     android:src="@drawable/ic_menu_help" />
             </FrameLayout>
 

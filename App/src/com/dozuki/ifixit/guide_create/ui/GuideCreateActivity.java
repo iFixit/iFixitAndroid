@@ -160,8 +160,7 @@ public class GuideCreateActivity extends SherlockFragmentActivity {
 				GuideCreateObject guide = (GuideCreateObject) data
 						.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
 				if (guide != null) {
-					mGuideList.set(mGuideList.indexOf(guide),guide);
-									
+					mGuideList.set(mGuideList.indexOf(guide),guide);				
 				}
 			}
 		}
