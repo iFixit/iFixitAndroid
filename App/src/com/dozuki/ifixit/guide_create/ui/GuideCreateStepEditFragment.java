@@ -1,24 +1,34 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import android.app.Activity;
+import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
+
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.ifixit.android.imagemanager.ImageManager;
@@ -36,6 +46,7 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 	ImageView mImageTwo;
 	ImageView mImageThree;
 	ImageView mMediaIcon;
+	ListView mBulletList;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -61,7 +72,12 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		mImageThree = (ImageView) view.findViewById(R.id.step_edit_thumb_3);
 		mImageThree.setOnLongClickListener(this);
 		mImageThree.setOnClickListener(this);
+		ArrayList<GuideCreateStepBullet> temp_list = new ArrayList<GuideCreateStepBullet>();
+      temp_list.add(new GuideCreateStepBullet());
 		mMediaIcon = (ImageView) view.findViewById(R.id.step_edit_thumb_media);
+		mBulletList = (ListView)view.findViewById(R.id.steps_portal_list);
+
+      mBulletList.setAdapter(new BulletListAdapter( this.getActivity(), R.layout.guide_create_step_edit_list_item, temp_list));
 		if (savedInstanceState != null) {
 			mStepObject = (GuideCreateStepObject) savedInstanceState
 					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);
@@ -81,7 +97,6 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 			public void beforeTextChanged(CharSequence s, int start, int count,
 					int after) {
 				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -197,5 +212,40 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		}
 		return true;
 	}
+	
+	private class BulletListAdapter extends ArrayAdapter<GuideCreateStepBullet> {
 
+      private ArrayList<GuideCreateStepBullet> items;
+      private Context con;
+
+      public BulletListAdapter(Context context, int textViewResourceId, ArrayList<GuideCreateStepBullet> items) {
+              super(context, textViewResourceId, items);
+              this.items = items;
+              con = context;
+      }
+
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+              View v = convertView;
+              if (v == null) {
+                  LayoutInflater vi = (LayoutInflater)con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                  v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
+              } 
+              v.findViewById(R.id.guide_step_item_thumbnail).setOnClickListener(new OnClickListener()
+              {
+
+               @Override
+               public void onClick(View v) {
+                  final Dialog dialog = new Dialog(con);
+                  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); 
+                  
+                  FragmentManager fm = getActivity().getSupportFragmentManager();
+                  ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
+                  chooseBulletDialog.show(fm, "fragment_choose_bullet");
+               }
+                 
+              });
+              return v;
+      }
+}
 }
