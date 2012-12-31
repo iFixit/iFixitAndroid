@@ -131,9 +131,15 @@ public abstract class IfixitActivity extends Activity {
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
       MenuItem logout = menu.findItem(R.id.logout_button);
-      logout.setVisible(MainApplication.get().isUserLoggedIn());
+      MenuItem gallery = menu.findItem(R.id.gallery_button);
 
-      menu.findItem(R.id.gallery_button).setVisible(showGalleryIcon());
+      if (logout != null) {
+         logout.setVisible(MainApplication.get().isUserLoggedIn());
+      }
+
+      if (gallery != null) {
+         gallery.setVisible(showGalleryIcon());
+      }
 
       return super.onPrepareOptionsMenu(menu);
    }
