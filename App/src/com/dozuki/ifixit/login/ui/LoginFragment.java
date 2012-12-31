@@ -34,7 +34,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    private Button mLogin;
    private Button mRegister;
    private ImageButton mGoogleLogin;
-   private ImageButton mYahooLogin;
+   //private ImageButton mYahooLogin;
    private EditText mLoginId;
    private EditText mPassword;
    private TextView mErrorText;
@@ -101,18 +101,18 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       mLogin = (Button)view.findViewById(R.id.signin_button);
       mRegister = (Button)view.findViewById(R.id.register_button);      
       mGoogleLogin = (ImageButton)view.findViewById(R.id.use_google_login_button);
-      mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
+      //mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
 
       mLogin.setOnClickListener(this);  
       
       if (mHasRegisterBtn) {
          mRegister.setOnClickListener(this);
          mGoogleLogin.setOnClickListener(this);
-         mYahooLogin.setOnClickListener(this);
+         //mYahooLogin.setOnClickListener(this);
       } else {
          mRegister.setVisibility(View.GONE);
          mGoogleLogin.setVisibility(View.GONE);
-         mYahooLogin.setVisibility(View.GONE);
+         //mYahooLogin.setVisibility(View.GONE);
       }
 
       mErrorText = (TextView)view.findViewById(R.id.login_error_text);
@@ -181,7 +181,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       if (mHasRegisterBtn) {
          mRegister.setEnabled(enabled);
          mGoogleLogin.setEnabled(enabled);
-         mYahooLogin.setEnabled(enabled);
+         //mYahooLogin.setEnabled(enabled);
       }
    }
 

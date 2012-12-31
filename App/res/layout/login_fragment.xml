@@ -96,6 +96,7 @@
             android:layout_below="@+id/use_google_login_button"
             android:layout_centerHorizontal="true"
             android:background="@drawable/ic_btn_sign_in_yahoo"
+            android:visibility="gone"
             android:contentDescription="@string/yahoo_signin_description" />
     </RelativeLayout>
 
