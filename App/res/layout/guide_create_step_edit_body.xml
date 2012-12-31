@@ -90,9 +90,8 @@
             </LinearLayout>
         </LinearLayout>
 
-        <com.mobeta.android.dslv.DragSortListView
-            xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:dslv="http://schemas.android.com/apk/res/com.mobeta.android.demodslv"
+        <ListView
+
             android:id="@+id/steps_portal_list"
             android:layout_width="fill_parent"
             android:layout_height="0dp"
@@ -100,6 +99,6 @@
             android:layout_weight=".5"
             android:dividerHeight="2dp"
             android:padding="3dp" />
-    </LinearLayout>
+        </LinearLayout>
 
 </RelativeLayout>
