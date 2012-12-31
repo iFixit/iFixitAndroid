@@ -1,6 +1,9 @@
 package com.dozuki.ifixit.dozuki.ui;
 
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnKeyListener;
 import android.os.Bundle;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +29,28 @@ public class SiteListDialogFragment extends DialogFragment {
       super.onCreate(savedInstanceState);
    }
 
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      getDialog().setOnKeyListener(new OnKeyListener() {
+         public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+               /**
+                * Phones with a hardware search button open up the SearchDialog by
+                * default. This overrides that by setting focus on the SearchView.
+                * Unfortunately it does not open the soft keyboard as of now.
+                */
+               mSearchView.requestFocus();
+               return true;
+            } else {
+               return false;
+            }
+         }
+      });
+   }
+
+   @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
 
@@ -48,4 +73,3 @@ public class SiteListDialogFragment extends DialogFragment {
       return view;
    }
 }
-

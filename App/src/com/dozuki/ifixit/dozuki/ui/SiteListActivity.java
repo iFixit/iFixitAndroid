@@ -180,11 +180,8 @@ public class SiteListActivity extends IfixitActivity
    public boolean onKeyUp(int keyCode, KeyEvent event) {
       if (keyCode == KeyEvent.KEYCODE_SEARCH) {
          /**
-          * Phones with a hardware search button open up the SearchDialog by
-          * default. This overrides that by setting focus on the SearchView.
-          * Unfortunately it does not open the soft keyboard as of now.
+          * We want to ignore the hardware search button if the dialog doesn't handle it.
           */
-         mSearchView.requestFocus();
          return true;
       } else {
          return super.onKeyUp(keyCode, event);
