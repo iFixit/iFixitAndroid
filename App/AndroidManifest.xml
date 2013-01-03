@@ -62,5 +62,11 @@
       <activity android:name=".guide_view.ui.FullImageViewActivity"
             android:theme="@style/Holo.Theme.Light.NoActionBar">
       </activity>
+      <activity android:name=".guide_view.ui.VideoViewActivity"
+            android:theme="@android:style/Theme.Holo.NoActionBar">
+      </activity>
+      <activity android:name=".guide_view.ui.EmbedViewActivity"
+            android:theme="@android:style/Theme.Holo.NoActionBar">
+      </activity>
    </application>
 </manifest>
