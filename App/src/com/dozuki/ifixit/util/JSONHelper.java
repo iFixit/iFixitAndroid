@@ -9,13 +9,17 @@ import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.guide_view.model.Embed;
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.guide_view.model.GuideInfo;
 import com.dozuki.ifixit.guide_view.model.GuidePart;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.guide_view.model.GuideTool;
+import com.dozuki.ifixit.guide_view.model.OEmbed;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
+import com.dozuki.ifixit.guide_view.model.StepVideo;
+import com.dozuki.ifixit.guide_view.model.VideoEncoding;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
@@ -23,9 +27,13 @@ import com.dozuki.ifixit.topic_view.model.TopicNode;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
@@ -146,9 +154,6 @@ public class JSONHelper {
             step.addEmbed(parseEmbed(jEmbed));
          }
 
-         for (int i = 0; i < jImages.length(); i++) {
-            step.addImage(parseImage(jImages.getJSONObject(i)));
-         }
       } catch (JSONException e) {
          StepImage image = new StepImage(0);
          image.setOrderby(1);
@@ -220,8 +225,8 @@ public class JSONHelper {
          thumbnail = jOEmbed.getString("thumbnail_url");
       }
       Document doc = Jsoup.parse(jOEmbed.getString("html"));
-      return new OEmbed(jOEmbed.getString("html"), doc.getElementsByAttribute("src").get(0)
-         .attr("src"), thumbnail);
+      return new OEmbed(jOEmbed.getString("html"), 
+         doc.getElementsByAttribute("src").get(0).attr("src"), thumbnail);
    }
 
    private static StepLine parseLine(JSONObject jLine) throws JSONException {

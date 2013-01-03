@@ -9,7 +9,6 @@ import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,7 +22,6 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.Embed;
@@ -34,13 +32,16 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.ifixit.android.imagemanager.ImageManager;
 
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Fragment;
+
 import java.io.BufferedInputStream;
 import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class GuideStepViewFragment extends SherlockFragment {
+public class GuideStepViewFragment extends Fragment {
    private TextView mTitle;
    private ThumbnailView mThumbs;
    private ImageView mMainImage;
