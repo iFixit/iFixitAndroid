@@ -1,43 +1,59 @@
 package com.dozuki.ifixit.guide_view.ui;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
+import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.guide_view.model.Embed;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.guide_view.model.OEmbed;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.ifixit.android.imagemanager.ImageManager;
 
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.TextView;
-
+import java.io.BufferedInputStream;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
-public class GuideStepViewFragment extends Fragment {
+public class GuideStepViewFragment extends SherlockFragment {
    private TextView mTitle;
    private ThumbnailView mThumbs;
    private ImageView mMainImage;
+   private WebView mMainWebView;
+   private RelativeLayout mMainProgress;
+   private RelativeLayout mVideoPlayButtonContainer;
    private GuideStep mStep;
    private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
    private ListView mLineList;
    private Typeface mFont;
    private ImageSizes mImageSizes;
+   private EmbedRetriever mEmbedRet;
 
    public GuideStepViewFragment() {
 
@@ -50,6 +66,9 @@ public class GuideStepViewFragment extends Fragment {
 
    @Override
    public void onCreate(Bundle savedState) {
+      getActivity().setTheme(((MainApplication)getActivity().getApplication()).
+       getSiteTheme());
+
       super.onCreate(savedState);
 
       if (mImageManager == null) {
@@ -64,6 +83,11 @@ public class GuideStepViewFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+
+      if (mMainWebView != null) {
+         mMainWebView.destroy();
+      }
+
       View view = inflater.inflate(R.layout.guide_step, container, false);
       mFont = Typeface.createFromAsset(getActivity().getAssets(),
        "fonts/Ubuntu-B.ttf");
@@ -72,21 +96,65 @@ public class GuideStepViewFragment extends Fragment {
       mTitle = (TextView)view.findViewById(R.id.step_title);
       mTitle.setTypeface(mFont);
 
-      mMainImage = (ImageView)view.findViewById(R.id.main_image);
+      mMainProgress = (RelativeLayout) view.findViewById(R.id.progress_bar_guide_step);
+      mVideoPlayButtonContainer = (RelativeLayout) view.findViewById(R.id.video_play_button_container);
+      mMainImage = (ImageView) view.findViewById(R.id.main_image);
+      mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
+
+      WebSettings settings = mMainWebView.getSettings();
+      settings.setUseWideViewPort(true);
+      settings.setJavaScriptEnabled(true);
+      settings.setSupportZoom(false);
+      settings.setLoadWithOverviewMode(true);
+      settings.setAppCacheEnabled(true);
+      settings.setCacheMode(WebSettings.LOAD_NORMAL);
+
+      mMainWebView.setWebViewClient(new WebViewClient() {
+
+         public void onPageFinished(WebView view, String url) {
+            mMainWebView.setVisibility(View.VISIBLE);
+            super.onPageFinished(view, url);
+         }
+      });
+
+      mMainWebView.setOnTouchListener(new View.OnTouchListener() {
+
+         @Override
+         public boolean onTouch(View v, MotionEvent event) {
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+               String url = (String) v.getTag();
+               if (url.equals("") || url.indexOf(".") == 0) {
+                  return true;
+               }
+               if (mStep.hasEmbed()) {
+                  Intent i = new Intent(getActivity(), EmbedViewActivity.class);
+                  i.putExtra(EmbedViewActivity.HTML, url);
+                  startActivity(i);
+               }
+            }
+            return true;
+         }
+      });
+
       mMainImage.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            String url = (String)v.getTag();
+            String url = (String) v.getTag();
 
             if (url.equals("") || url.indexOf(".") == 0) {
                return;
             }
 
-            Intent intent = new Intent(getActivity(),
-             FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-
-            startActivity(intent);
+            if (!mStep.hasVideo() && !mStep.hasEmbed()) {
+               Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+               intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
+               startActivity(intent);
+            } else {
+               Intent i = new Intent(getActivity(), VideoViewActivity.class);
+               i.putExtra(VideoViewActivity.VIDEO_URL, url);
+               startActivity(i);
+            }
          }
       });
 
@@ -98,6 +166,10 @@ public class GuideStepViewFragment extends Fragment {
 
       mThumbs.setMainImage(mMainImage);
 
+      if (savedInstanceState != null) {
+         mMainWebView.restoreState(savedInstanceState);
+      }
+
       if (mStep != null) {
          setStep();
       }
@@ -105,8 +177,17 @@ public class GuideStepViewFragment extends Fragment {
       return view;
    }
 
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      if (mMainWebView != null) {
+         mMainWebView.saveState(outState);
+      }
+   }
+
    public void fitImagesToSpace() {
-      FragmentActivity context = getActivity();
+      Activity context = getActivity();
       Resources resources = context.getResources();
       DisplayMetrics metrics = new DisplayMetrics();
       context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -141,6 +222,12 @@ public class GuideStepViewFragment extends Fragment {
          // Screen height minus everything else that occupies horizontal space
          thumbnailWidth = (screenWidth - width - padding);
          thumbnailHeight = thumbnailWidth * (3f/4f);
+
+         mMainWebView.getLayoutParams().height = (int) ((int) (height + .5f));
+         mMainWebView.getLayoutParams().width = (int) ((int) (width + .5f) + thumbnailWidth);
+         mMainProgress.getLayoutParams().height = (int) ((int) (height + .5f));
+         mMainProgress.getLayoutParams().width = (int) ((int) (width + .5f)+ thumbnailWidth);
+
       } else {
          int actionBarHeight = resources.getDimensionPixelSize(
           com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
@@ -168,11 +255,18 @@ public class GuideStepViewFragment extends Fragment {
          thumbnailHeight = (screenHeight - height - actionBarHeight - padding -
           indicatorHeight);
          thumbnailWidth = (thumbnailHeight * (4f/3f));
+
+         mMainWebView.getLayoutParams().height = (int) ((int) (height + .5f) + thumbnailHeight);
+         mMainWebView.getLayoutParams().width = (int) ((int) (width + .5f));
+         mMainProgress.getLayoutParams().height = (int) ((int) (height + .5f) + thumbnailHeight);
+         mMainProgress.getLayoutParams().width = (int) ((int) (width + .5f));
       }
 
       // Set the width and height of the main image
-      mMainImage.getLayoutParams().height = (int)(height + .5f);
-      mMainImage.getLayoutParams().width = (int)(width + .5f);
+      mMainImage.getLayoutParams().height = (int) (height + .5f);
+      mMainImage.getLayoutParams().width = (int) (width + .5f);
+      mVideoPlayButtonContainer.getLayoutParams().height = mMainImage.getLayoutParams().height;
+      mVideoPlayButtonContainer.getLayoutParams().width = mMainImage.getLayoutParams().width;
 
       mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
    }
@@ -192,9 +286,11 @@ public class GuideStepViewFragment extends Fragment {
    }
 
    public void setStep() {
+      //stop the load of the 
+      mMainWebView.stopLoading();
+
       if (mStep.getTitle().length() == 0) {
-         mTitle.setText(getActivity().getString(R.string.step) + " " +
-          mStep.getStepNum());
+         mTitle.setText(getActivity().getString(R.string.step) + " " + mStep.getStepNum());
       } else {
          mTitle.setText(mStep.getTitle());
       }
@@ -204,10 +300,37 @@ public class GuideStepViewFragment extends Fragment {
       mLineList.setAdapter(mTextAdapter);
 
       mThumbs.setImageSizes(mImageSizes);
-      mThumbs.setThumbs(mStep.getImages(), mImageManager, getActivity());
+      if (mStep.hasVideo()) {
+         mMainImage.setVisibility(View.VISIBLE);
+         mVideoPlayButtonContainer.setVisibility(View.VISIBLE);
+         mMainWebView.setVisibility(View.GONE);
+         mMainProgress.setVisibility(View.GONE);
+         mImageManager.displayImage(mStep.getVideo().getThumbnail(), getActivity(), mMainImage);
+         mMainImage.setTag(mStep.getVideo().getEncodings().get(0).getURL());
 
-      // Might be a problem if there are no images for a step...
-      mThumbs.setCurrentThumb(mStep.getImages().get(0).getText());
+      } else if (mStep.hasEmbed()) {
+         mMainImage.setVisibility(View.GONE);
+         mMainWebView.setVisibility(View.INVISIBLE);
+         mMainProgress.setVisibility(View.VISIBLE);
+         mVideoPlayButtonContainer.setVisibility(View.GONE);
+         if (mStep.getEmded().hasOembed()) {
+            mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
+            mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
+         } else {
+            // TODO: find the best place and way to handle the returned
+            // oembed
+            mEmbedRet = new EmbedRetriever();
+            mEmbedRet.execute(mStep.getEmded());
+         }
+      } else if (mStep.getImages().size() > 0) {
+         mMainImage.setVisibility(View.VISIBLE);
+         mMainWebView.setVisibility(View.GONE);
+         mMainProgress.setVisibility(View.GONE);
+         mVideoPlayButtonContainer.setVisibility(View.GONE);
+         // Might be a problem if there are no images for a step...
+         mThumbs.setThumbs(mStep.getImages(), mImageManager, getActivity());
+         mThumbs.setCurrentThumb(mStep.getImages().get(0).getText());
+      }
    }
 
    public void setImageManager(ImageManager im) {
@@ -233,9 +356,70 @@ public class GuideStepViewFragment extends Fragment {
          if (stepLine == null) {
             stepLine = new GuideStepLineView(mContext);
          }
-
          stepLine.setLine(mLines.get(position));
          return stepLine;
+      }
+   }
+
+   @Override
+   public void onDestroyView() {
+      mMainWebView.stopLoading();
+      if (mEmbedRet != null) {
+         mEmbedRet.cancel(true);
+      }
+      super.onDestroyView();
+   }
+
+   @Override
+   public void onDestroy() {
+      if (mMainWebView != null) {
+         mMainWebView.destroy();
+         mMainWebView = null;
+      }
+
+      super.onDestroy();
+   }
+
+   public class EmbedRetriever extends AsyncTask<Embed, Void, OEmbed> {
+
+      protected OEmbed doInBackground(Embed... embed) {
+         OEmbed oe = null;
+         try {
+            URL url = new URL(embed[0].getURL());
+            URLConnection urlConnection = null;
+            InputStream in = null;
+            StringBuilder x = null;
+            urlConnection = url.openConnection();
+            in = new BufferedInputStream(urlConnection.getInputStream());
+            byte[] bytes = new byte[1000];
+
+            x = new StringBuilder();
+
+            int numRead = 0;
+            while ((numRead = in.read(bytes)) >= 0) {
+               x.append(new String(bytes, 0, numRead));
+            }
+            in.close();
+            oe = JSONHelper.parseOEmbed(x.toString());
+            embed[0].addOembed(oe);
+            return oe;
+
+         } catch (Exception e) {
+
+         }
+         return oe;
+      }
+
+      protected void onPostExecute(OEmbed embed) {
+         if (embed != null) {
+            // TODO: decide if this is ok. Most likely because the setStep
+            // function isnt intensive
+            if(!isCancelled()) {
+               String url = mStep.getEmded().getOembed().getURL();
+               mMainWebView.loadUrl(url);
+               mMainWebView.setTag(url);
+            }
+         }
       }
    }
 }

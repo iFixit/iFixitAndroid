@@ -131,7 +131,20 @@ public class JSONHelper {
 
       try {
          JSONObject jMedia = jStep.getJSONObject("media");
-         JSONArray jImages = jMedia.getJSONArray("image");
+
+         if (jMedia.has("image")) {
+            JSONArray jImages = jMedia.getJSONArray("image");
+            for (int i = 0; i < jImages.length(); i++)
+               step.addImage(parseImage(jImages.getJSONObject(i)));
+         }
+         if (jMedia.has("video")) {
+            JSONObject jVideo = jMedia.getJSONObject("video");
+            step.addVideo(parseVideo(jVideo));
+         }
+         if (jMedia.has("embed")) {
+            JSONObject jEmbed = jMedia.getJSONObject("embed");
+            step.addEmbed(parseEmbed(jEmbed));
+         }
 
          for (int i = 0; i < jImages.length(); i++) {
             step.addImage(parseImage(jImages.getJSONObject(i)));
@@ -150,6 +163,19 @@ public class JSONHelper {
       return step;
    }
 
+   public static Map<String, String> getQueryMap(String url) {
+      String query = url.substring(url.indexOf('?') + 1);
+      String[] params = query.split("&");
+      Map<String, String> map = new HashMap<String, String>();
+      for (String param : params) {
+         String name = param.split("=")[0];
+         String value = param.split("=")[1];
+         map.put(name, value);
+      }
+
+      return map;
+   }
+
    private static StepImage parseImage(JSONObject jImage) throws JSONException {
       StepImage image = new StepImage(jImage.getInt("imageid"));
 
@@ -163,6 +189,39 @@ public class JSONHelper {
       image.setText(jImage.getString("text"));
 
       return image;
+   }
+
+   private static StepVideo parseVideo(JSONObject jVideo) throws JSONException {
+      StepVideo video = new StepVideo();
+      try {
+         JSONArray jEncodings = jVideo.getJSONArray("encoding");
+         for (int i = 0; i < jEncodings.length(); i++) {
+            video.addEncoding(parseVideoEncoding(jEncodings.getJSONObject(i)));
+         }
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
+      video.setThumbnail(jVideo.getString("thumbnail"));
+      return video;
+   }
+
+   private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
+      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"),
+         jEmbed.getString("type"), jEmbed.getString("url"));
+      em.setContentURL(getQueryMap(jEmbed.getString("url")).get("url"));
+      return em;
+   }
+
+   public static OEmbed parseOEmbed(String embed) throws JSONException {
+
+      JSONObject jOEmbed = new JSONObject(embed);
+      String thumbnail = null;
+      if (jOEmbed.has("thumbnail_url")) {
+         thumbnail = jOEmbed.getString("thumbnail_url");
+      }
+      Document doc = Jsoup.parse(jOEmbed.getString("html"));
+      return new OEmbed(jOEmbed.getString("html"), doc.getElementsByAttribute("src").get(0)
+         .attr("src"), thumbnail);
    }
 
    private static StepLine parseLine(JSONObject jLine) throws JSONException {
@@ -367,5 +426,12 @@ public class JSONHelper {
       }
 
       return spantext;
+   }
+
+   private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
+      VideoEncoding encoding =
+         new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
+            jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
+      return encoding;
    }
 }

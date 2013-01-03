@@ -7,20 +7,61 @@
     android:paddingRight="@dimen/page_padding"
     android:paddingTop="@dimen/page_padding" >
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/section_seperator" >
+   <RelativeLayout
+      android:layout_width="wrap_content"
+      android:layout_height="match_parent"
+      android:layout_marginRight="@dimen/section_seperator">
+      
+       <RelativeLayout
+         android:id="@+id/progress_bar_guide_step"
+         android:layout_width="@dimen/guide_image_width"
+         android:layout_height="@dimen/guide_image_height"
+         android:layout_marginRight="@dimen/guide_image_spacing_right"
+         android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+         android:background="@color/image_border"
+         android:padding="@dimen/guide_image_padding">
+      
+         <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            />
+        </RelativeLayout>
 
-        <ImageView
-            android:id="@+id/main_image"
-            android:layout_width="@dimen/guide_image_width"
-            android:layout_height="@dimen/guide_image_height"
-            android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
-            android:layout_marginRight="@dimen/guide_image_spacing_right"
-            android:background="@color/image_border"
-            android:contentDescription="@string/thumbnail_desc"
-            android:padding="@dimen/guide_image_padding" />
+      <ImageView
+         android:id="@+id/main_image"
+         android:layout_width="@dimen/guide_image_width"
+         android:layout_height="@dimen/guide_image_height"
+         android:layout_marginRight="@dimen/guide_image_spacing_right"
+         android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+         android:background="@color/image_border"
+         android:padding="@dimen/guide_image_padding"
+         android:contentDescription="@string/thumbnail_desc" />
+      
+      <RelativeLayout
+         android:id="@+id/video_play_button_container"
+         android:layout_width="@dimen/guide_image_width"
+         android:layout_height="@dimen/guide_image_height"
+         android:layout_marginRight="@dimen/guide_image_spacing_right"
+         android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+         android:padding="@dimen/guide_image_padding">
+   
+            <Button
+               android:layout_width="wrap_content"
+               android:layout_height="wrap_content"
+               android:layout_centerInParent="true"
+               android:background="@drawable/video_play_button_selector" />
+        </RelativeLayout>
+         
+      
+      <WebView
+         android:id="@+id/main_web_view"
+         android:layout_width="@dimen/guide_image_width"
+         android:layout_height="@dimen/guide_image_height"
+         android:layout_marginRight="@dimen/guide_image_spacing_right"
+         android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+         android:background="@color/image_border"
+         android:padding="@dimen/guide_image_padding"/>
 
         <com.dozuki.ifixit.guide_view.ui.ThumbnailView
             android:id="@+id/thumbnails"
