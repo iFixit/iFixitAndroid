@@ -377,14 +377,7 @@ public class APIService extends Service {
             HttpRequest request;
 
             try {
-               /**
-                * Create the HttpRequest with the appropriate method.
-                */
-               if (endpoint.mPost) {
-                  request = HttpRequest.post(url);
-               } else {
-                  request = HttpRequest.get(url);
-               }
+               request = new HttpRequest(url, endpoint.mMethod);
 
                /**
                 * Uncomment to test HTTPS API calls in development.
@@ -404,15 +397,11 @@ public class APIService extends Service {
                /**
                 * Continue with constructing the request body.
                 */
-               if (endpoint.mPost) {
-                  if (filePath != null) {
-                     // POST the file if present.
-                     request.send(new File(filePath));
-                  } else if (postData != null) {
-                     request.form(postData);
-                  }
-               } else {
-                  // Do nothing extra for GET.
+               if (filePath != null) {
+                  // POST the file if present.
+                  request.send(new File(filePath));
+               } else if (postData != null) {
+                  request.form(postData);
                }
 
                int code = request.code();

@@ -29,7 +29,7 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false,
+      "GET",
       false
    ),
 
@@ -49,7 +49,7 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false,
+      "GET",
       false
    ),
 
@@ -74,7 +74,7 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false,
+      "GET",
       false
    ),
 
@@ -94,7 +94,7 @@ public enum APIEndpoint {
       },
       true,
       false,
-      true,
+      "POST",
       true
    ),
 
@@ -114,7 +114,7 @@ public enum APIEndpoint {
       },
       true,
       false,
-      true,
+      "POST",
       true
    ),
 
@@ -134,7 +134,7 @@ public enum APIEndpoint {
       },
       false,
       true,
-      true,
+      "GET",
       false
    ),
 
@@ -177,7 +177,7 @@ public enum APIEndpoint {
       },
       false,
       true,
-      true,
+      "POST",
       false
    ),
 
@@ -198,7 +198,7 @@ public enum APIEndpoint {
       },
       false,
       true,
-      true,
+      "DELETE",
       false
    ),
 
@@ -218,7 +218,7 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false,
+      "GET",
       false
    );
 
@@ -268,9 +268,9 @@ public enum APIEndpoint {
    public final boolean mAuthenticated;
 
    /**
-    * True if this endpoint should always perform POST requests.
+    * Request method for this endpoint e.g. GET, POST, DELETE
     */
-   public final boolean mPost;
+   public final String mMethod;
 
    /**
     * True if endpoint must be public. This is primarily for login and register so
@@ -279,11 +279,11 @@ public enum APIEndpoint {
    public final boolean mForcePublic;
 
    private APIEndpoint(Endpoint endpoint, boolean https, boolean authenticated,
-    boolean post, boolean forcePublic) {
+    String method, boolean forcePublic) {
       mEndpoint = endpoint;
       mHttps = https;
       mAuthenticated = authenticated;
-      mPost = post;
+      mMethod = method;
       mForcePublic = forcePublic;
    }
 
