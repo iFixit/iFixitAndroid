@@ -388,10 +388,9 @@ public class APIService extends Service {
 
                /**
                 * Uncomment to test HTTPS API calls in development.
-                *
-                * request.trustAllCerts();
-                * request.trustAllHosts();
                 */
+                //request.trustAllCerts();
+                //request.trustAllHosts();
 
                /**
                 * Send the session along in a Cookie.
@@ -416,7 +415,10 @@ public class APIService extends Service {
                   // Do nothing extra for GET.
                }
 
-               return endpoint.getEvent().setResponse(request.body());
+               int code = request.code();
+               String responseBody = request.body();
+
+               return endpoint.getEvent().setResponse(responseBody);
             } catch (HttpRequestException e) {
                return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
             }

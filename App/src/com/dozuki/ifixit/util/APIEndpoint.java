@@ -36,7 +36,7 @@ public enum APIEndpoint {
    GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "guide/" + query;
+            return "guides/" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -57,7 +57,7 @@ public enum APIEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "topic/" + URLEncoder.encode(query, "UTF-8");
+               return "topics/" + URLEncoder.encode(query, "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
@@ -121,7 +121,7 @@ public enum APIEndpoint {
    USER_IMAGES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "image/user" + query;
+            return "user/media/image" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -150,7 +150,7 @@ public enum APIEndpoint {
                fileName = "uploaded_image.jpg";
             }
 
-            return "image/upload?file=" + fileName;
+            return "user/media/image?file=" + fileName;
          }
 
          private String getFileNameFromFilePath(String filePath) {
@@ -184,7 +184,7 @@ public enum APIEndpoint {
    DELETE_IMAGE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "image/delete" + query;
+            return "user/media/image" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -225,7 +225,7 @@ public enum APIEndpoint {
    /**
     * Current version of the API to use.
     */
-   private static final String API_VERSION = "1.0";
+   private static final String API_VERSION = "1.1";
 
    /**
     * Defines various methods that each endpoint must provide.
