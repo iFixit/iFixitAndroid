@@ -121,7 +121,7 @@ public enum APIEndpoint {
    USER_IMAGES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "user/media/image" + query;
+            return "user/media/images" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -150,7 +150,7 @@ public enum APIEndpoint {
                fileName = "uploaded_image.jpg";
             }
 
-            return "user/media/image?file=" + fileName;
+            return "user/media/images?file=" + fileName;
          }
 
          private String getFileNameFromFilePath(String filePath) {
@@ -184,7 +184,7 @@ public enum APIEndpoint {
    DELETE_IMAGE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "user/media/image" + query;
+            return "user/media/images" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
