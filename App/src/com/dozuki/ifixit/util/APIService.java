@@ -268,7 +268,8 @@ public class APIService extends Service {
 
    public static APICall getUploadImageAPICall(Context context, String filePath,
     String extraInformation) {
-      return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, "", extraInformation);
+      return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, null, extraInformation,
+       filePath);
    }
 
    public static APICall getDeleteImageAPICall(Context context, String requestQuery) {
