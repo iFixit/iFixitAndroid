@@ -28,6 +28,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -272,8 +273,21 @@ public class APIService extends Service {
        filePath);
    }
 
-   public static APICall getDeleteImageAPICall(Context context, String requestQuery) {
-      return new APICall(APIEndpoint.DELETE_IMAGE, requestQuery);
+   public static APICall getDeleteImageAPICall(Context context, List<Integer> deleteList) {
+      StringBuilder stringBuilder = new StringBuilder();
+      String separator = "";
+
+      stringBuilder.append("?imageids=");
+
+      /**
+       * Construct a string of imageids separated by comma's.
+       */
+      for (Integer imageid : deleteList) {
+         stringBuilder.append(separator).append(imageid);
+         separator = ",";
+      }
+
+      return new APICall(APIEndpoint.DELETE_IMAGE, stringBuilder.toString());
    }
 
    public static APICall getSitesAPICall(Context context) {
@@ -344,6 +358,7 @@ public class APIService extends Service {
       final String url = endpoint.getUrl(mSite, apiCall.mQuery);
 
       Log.i("iFixit", "Performing API call: " + url);
+      Log.i("iFixit", "Request body: " + apiCall.mRequestBody);
 
       new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
@@ -388,8 +403,12 @@ public class APIService extends Service {
                int code = request.code();
                String responseBody = request.body();
 
+               Log.i("iFixit", "Response code: " + code);
+               Log.i("iFixit", "Response body: " + responseBody);
+
                return endpoint.getEvent().setResponse(responseBody);
             } catch (HttpRequestException e) {
+               Log.e("iFixit", "API error", e);
                return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
             }
          }

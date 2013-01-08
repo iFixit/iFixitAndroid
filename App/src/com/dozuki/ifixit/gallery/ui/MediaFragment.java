@@ -567,26 +567,26 @@ public class MediaFragment extends Fragment implements
    };
 
    private void deleteSelectedPhotos() {
-      String deleteQuery = "?";
+      ArrayList<Integer> deleteList = new ArrayList<Integer>();
 
       for (int i = mSelectedList.size() - 1; i >= 0; i--) {
          if (mSelectedList.get(i)) {
             mSelectedList.remove(i);
-            deleteQuery += "imageids[]=" + mImageList.getImages().get(i).getImageid() + "&";
+            String imageid = mImageList.getImages().get(i).getImageid();
 
             if (mImageList.getImages().get(i).getImageid() == null) {
                Toast.makeText(getActivity(), getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
+            } else {
+               deleteList.add(Integer.parseInt(imageid));
             }
             mImageList.getImages().remove(i);
          }
       }
 
-      if (deleteQuery.length() > 1) {
-         deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 1);
-      }
       //TODO: Fix deleteQuery.
-      APIService.call((Activity)getActivity(), APIService.getDeleteImageAPICall(getActivity(), deleteQuery));
+      APIService.call((Activity)getActivity(),
+       APIService.getDeleteImageAPICall(getActivity(), deleteList));
 
       updateNoImagesText();
 
