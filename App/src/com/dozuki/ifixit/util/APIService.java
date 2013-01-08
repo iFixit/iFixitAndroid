@@ -227,27 +227,6 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
 
-   /**
-    * There are two login intent methods because the user has a sessionid
-    * after logging in via OpenID but we still need to hit the login endpoint
-    * to verify this and to get a username.
-    *
-    * TODO: Make this better. This method involves POSTing with a sessionid
-    * rather than sending it in a Cookie like all of the other requests.
-    */
-   public static APICall getLoginAPICall(Context context,
-    String session) {
-      JSONObject requestBody = new JSONObject();
-
-      try {
-         requestBody.put("session", session);
-      } catch (JSONException e) {
-         return null;
-      }
-
-      return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
-   }
-
    public static APICall getRegisterAPICall(Context context, String login,
     String password, String username) {
       JSONObject requestBody = new JSONObject();
@@ -292,6 +271,15 @@ public class APIService extends Service {
 
    public static APICall getSitesAPICall(Context context) {
       return new APICall(APIEndpoint.SITES, NO_QUERY);
+   }
+
+   // TODO: Remove Context param.
+   public static APICall getUserInfoAPICall(Context context, String session) {
+      APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
+
+      apiCall.mSessionid = session;
+
+      return apiCall;
    }
 
    public static AlertDialog getErrorDialog(Context context, APIError error,
@@ -381,13 +369,23 @@ public class APIService extends Service {
                 //request.trustAllCerts();
                 //request.trustAllHosts();
 
+               String sessionid = null;
                /**
-                * Send the session along in a Cookie.
+                * Get an appropriate sessionid.
                 */
-               if (requireAuthentication(mSite, endpoint)) {
+               if (apiCall.mSessionid != null) {
+                  // This sessionid overrides all other requirements/sessionids.
+                  sessionid = apiCall.mSessionid;
+               } else if (requireAuthentication(mSite, endpoint)) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
-                  String session = user.getSession();
-                  request.header("Cookie", "session=" + session);
+                  sessionid = user.getSession();
+               }
+
+               /**
+                * Send along the sessionid if we found one.
+                */
+               if (sessionid != null) {
+                  request.header("Cookie", "session=" + sessionid);
                }
 
                /**

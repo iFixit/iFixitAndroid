@@ -45,6 +45,15 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
 
    @Subscribe
    public void onLogin(APIEvent.Login event) {
+      handleLogin(event);
+   }
+
+   @Subscribe
+   public void onUserInfo(APIEvent.UserInfo event) {
+      handleLogin(event);
+   }
+
+   private void handleLogin(APIEvent<User> event) {
       if (!event.hasError()) {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
@@ -234,9 +243,9 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
 
       if (resultCode == Activity.RESULT_OK && data != null) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
-         String session = data.getStringExtra("session");
+         String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
-         mCurAPICall = APIService.getLoginAPICall(getActivity(), session);
+         mCurAPICall = APIService.getUserInfoAPICall(getActivity(), session);
          APIService.call((Activity)getActivity(), mCurAPICall);
       }
    }

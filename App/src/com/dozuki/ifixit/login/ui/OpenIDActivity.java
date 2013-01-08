@@ -17,6 +17,7 @@ import com.dozuki.ifixit.dozuki.model.Site;
 import org.holoeverywhere.app.Activity;
 
 public class OpenIDActivity extends Activity {
+   public static String SESSION = "SESSION";
    public static String LOGIN_METHOD = "LOGIN_METHOD";
 
    public static String YAHOO_LOGIN = "yahoo";
@@ -31,7 +32,7 @@ public class OpenIDActivity extends Activity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.open_id_view);
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
-      Bundle extras = this.getIntent().getExtras();
+      Bundle extras = getIntent().getExtras();
 
       mSite = ((MainApplication)getApplication()).getSite();
       mBaseUrl = mSite.getOpenIdLoginUrl();
@@ -86,7 +87,7 @@ public class OpenIDActivity extends Activity {
                // If token is found, return it to the calling activity.
                if (parts.length == 2 && parts[0].equalsIgnoreCase("session")) {
                   Intent result = new Intent();
-                  result.putExtra("session", parts[1]);
+                  result.putExtra(SESSION, parts[1]);
                   setResult(RESULT_OK, result);
                   finish();
                   return;

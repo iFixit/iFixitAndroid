@@ -220,6 +220,26 @@ public enum APIEndpoint {
       false,
       "GET",
       false
+   ),
+
+   USER_INFO(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserInfo().setResult(JSONHelper.parseLoginInfo(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserInfo();
+         }
+      },
+      false,
+      false,
+      "GET",
+      false
    );
 
    /**

@@ -197,17 +197,6 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
    }
 
    @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (resultCode == Activity.RESULT_OK && data != null) {
-         mLoadingSpinner.setVisibility(View.VISIBLE);
-         String session = data.getStringExtra("session");
-         enable(false);
-         mCurAPICall = APIService.getLoginAPICall(getActivity(), session);
-         APIService.call((Activity)getActivity(), mCurAPICall);
-      }
-   }
-
-   @Override
    public void onCancel(DialogInterface dialog) {
       MainApplication.get().cancelLogin();
    }
