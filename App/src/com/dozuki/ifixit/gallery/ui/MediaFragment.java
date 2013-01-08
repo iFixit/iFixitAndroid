@@ -584,7 +584,6 @@ public class MediaFragment extends Fragment implements
          }
       }
 
-      //TODO: Fix deleteQuery.
       APIService.call((Activity)getActivity(),
        APIService.getDeleteImageAPICall(deleteList));
 
