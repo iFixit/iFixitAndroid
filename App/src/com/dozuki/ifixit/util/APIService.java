@@ -363,8 +363,8 @@ public class APIService extends Service {
                /**
                 * Uncomment to test HTTPS API calls in development.
                 */
-                //request.trustAllCerts();
-                //request.trustAllHosts();
+               //request.trustAllCerts();
+               //request.trustAllHosts();
 
                String sessionid = null;
                /**
