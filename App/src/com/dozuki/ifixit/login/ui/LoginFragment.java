@@ -161,7 +161,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
-         mCurAPICall = APIService.getLoginAPICall(getActivity(), login, password);
+         mCurAPICall = APIService.getLoginAPICall(login, password);
          APIService.call((Activity)getActivity(), mCurAPICall);
       } else {
          if (login.length() < 1) {
@@ -245,7 +245,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
-         mCurAPICall = APIService.getUserInfoAPICall(getActivity(), session);
+         mCurAPICall = APIService.getUserInfoAPICall(session);
          APIService.call((Activity)getActivity(), mCurAPICall);
       }
    }

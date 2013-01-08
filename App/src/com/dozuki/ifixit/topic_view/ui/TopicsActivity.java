@@ -63,7 +63,7 @@ public class TopicsActivity extends IfixitActivity
       }
 
       if (mRootTopic == null) {
-         APIService.call(this, APIService.getCategoriesAPICall(this));
+         APIService.call(this, APIService.getCategoriesAPICall());
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
@@ -103,7 +103,7 @@ public class TopicsActivity extends IfixitActivity
          }
       } else {
          APIService.getErrorDialog(TopicsActivity.this, event.getError(),
-          APIService.getCategoriesAPICall(TopicsActivity.this)).show();
+          APIService.getCategoriesAPICall()).show();
       }
    }
 

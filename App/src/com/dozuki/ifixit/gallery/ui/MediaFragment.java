@@ -286,7 +286,7 @@ public class MediaFragment extends Fragment implements
 
    private void retrieveUserImages() {
       mNextPageRequestInProgress = true;
-      APIService.call((Activity)getActivity(), APIService.getUserImagesAPICall(getActivity(),
+      APIService.call((Activity)getActivity(), APIService.getUserImagesAPICall(
        "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded));
    }
 
@@ -391,7 +391,7 @@ public class MediaFragment extends Fragment implements
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(getActivity(),
+            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(
              getPath(selectedImageUri), key));
             updateNoImagesText();
          } else if (requestCode == CAMERA_PIC_REQUEST) {
@@ -406,7 +406,7 @@ public class MediaFragment extends Fragment implements
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
             updateNoImagesText();
-            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(getActivity(),
+            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(
              mCameraTempFileName, key));
          }
       }
@@ -586,7 +586,7 @@ public class MediaFragment extends Fragment implements
 
       //TODO: Fix deleteQuery.
       APIService.call((Activity)getActivity(),
-       APIService.getDeleteImageAPICall(getActivity(), deleteList));
+       APIService.getDeleteImageAPICall(deleteList));
 
       updateNoImagesText();
 

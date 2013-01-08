@@ -201,20 +201,19 @@ public class APIService extends Service {
       // db.close();
    }
 
-   public static APICall getCategoriesAPICall(Context context) {
+   public static APICall getCategoriesAPICall() {
       return new APICall(APIEndpoint.CATEGORIES, NO_QUERY);
    }
 
-   public static APICall getGuideAPICall(Context context, int guideid) {
+   public static APICall getGuideAPICall(int guideid) {
       return new APICall(APIEndpoint.GUIDE, "" + guideid);
    }
 
-   public static APICall getTopicAPICall(Context context, String topicName) {
+   public static APICall getTopicAPICall(String topicName) {
       return new APICall(APIEndpoint.TOPIC, topicName);
    }
 
-   public static APICall getLoginAPICall(Context context,
-    String login, String password) {
+   public static APICall getLoginAPICall(String login, String password) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -227,8 +226,7 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
 
-   public static APICall getRegisterAPICall(Context context, String login,
-    String password, String username) {
+   public static APICall getRegisterAPICall(String login, String password, String username) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -242,17 +240,16 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.REGISTER, NO_QUERY, requestBody.toString());
    }
 
-   public static APICall getUserImagesAPICall(Context context, String query) {
+   public static APICall getUserImagesAPICall(String query) {
       return new APICall(APIEndpoint.USER_IMAGES, query);
    }
 
-   public static APICall getUploadImageAPICall(Context context, String filePath,
-    String extraInformation) {
+   public static APICall getUploadImageAPICall(String filePath, String extraInformation) {
       return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, null, extraInformation,
        filePath);
    }
 
-   public static APICall getDeleteImageAPICall(Context context, List<Integer> deleteList) {
+   public static APICall getDeleteImageAPICall(List<Integer> deleteList) {
       StringBuilder stringBuilder = new StringBuilder();
       String separator = "";
 
@@ -269,12 +266,12 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.DELETE_IMAGE, stringBuilder.toString());
    }
 
-   public static APICall getSitesAPICall(Context context) {
+   public static APICall getSitesAPICall() {
       return new APICall(APIEndpoint.SITES, NO_QUERY);
    }
 
    // TODO: Remove Context param.
-   public static APICall getUserInfoAPICall(Context context, String session) {
+   public static APICall getUserInfoAPICall(String session) {
       APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
 
       apiCall.mSessionid = session;

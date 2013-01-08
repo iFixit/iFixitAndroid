@@ -156,8 +156,7 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
-               mCurAPICall = APIService.getRegisterAPICall(getActivity(), login,
-                password, name);
+               mCurAPICall = APIService.getRegisterAPICall(login, password, name);
                APIService.call((Activity)getActivity(), mCurAPICall);
             } else {
                if (login.length() <= 0) {
