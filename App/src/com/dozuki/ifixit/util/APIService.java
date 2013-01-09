@@ -395,8 +395,12 @@ public class APIService extends Service {
                   request.send(apiCall.mRequestBody);
                }
 
-               int code = request.code();
+               /**
+                * The order is important here. If the code() is called first an IOException
+                * is thrown in some cases (invalid login for one, maybe more).
+                */
                String responseBody = request.body();
+               int code = request.code();
 
                Log.i("iFixit", "Response code: " + code);
                Log.i("iFixit", "Response body: " + responseBody);
