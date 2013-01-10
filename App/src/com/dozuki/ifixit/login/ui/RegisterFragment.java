@@ -15,6 +15,7 @@ import android.view.inputmethod.InputMethodManager;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -40,7 +41,7 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
    private TextView mTermsAgreeText;
    private CheckBox mTermsAgreeCheckBox;
    private ProgressBar mLoadingSpinner;
-   private Intent mCurIntent;
+   private APICall mCurAPICall;
 
    @Subscribe
    public void onRegister(APIEvent.Register event) {
@@ -54,7 +55,7 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
          APIError error = event.getError();
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
-            APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
+            APIService.getErrorDialog(getActivity(), error, mCurAPICall).show();
          }
          mLoadingSpinner.setVisibility(View.GONE);
        
@@ -155,9 +156,8 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
-               mCurIntent = APIService.getRegisterIntent(getActivity(), login,
-                password, name);
-               APIService.call((Activity)getActivity(), mCurIntent);
+               mCurAPICall = APIService.getRegisterAPICall(login, password, name);
+               APIService.call((Activity)getActivity(), mCurAPICall);
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);
@@ -193,17 +193,6 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
                
               break;
        }
-   }
-
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (resultCode == Activity.RESULT_OK && data != null) {
-         mLoadingSpinner.setVisibility(View.VISIBLE);
-         String session = data.getStringExtra("session");
-         enable(false);
-         mCurIntent = APIService.getLoginIntent(getActivity(), session);
-         APIService.call((Activity)getActivity(), mCurIntent);
-      }
    }
 
    @Override

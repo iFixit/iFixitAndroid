@@ -22,6 +22,7 @@ public abstract class APIEvent<T> {
    public static class UploadImage extends APIEvent<UploadedImageInfo> {}
    public static class DeleteImage extends APIEvent<String> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}
+   public static class UserInfo extends APIEvent<User> {}
 
    public String mResponse;
    public T mResult;

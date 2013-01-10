@@ -286,7 +286,7 @@ public class MediaFragment extends Fragment implements
 
    private void retrieveUserImages() {
       mNextPageRequestInProgress = true;
-      APIService.call((Activity)getActivity(), APIService.getUserImagesIntent(getActivity(),
+      APIService.call((Activity)getActivity(), APIService.getUserImagesAPICall(
        "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded));
    }
 
@@ -391,7 +391,7 @@ public class MediaFragment extends Fragment implements
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            APIService.call((Activity)getActivity(), APIService.getUploadImageIntent(getActivity(),
+            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(
              getPath(selectedImageUri), key));
             updateNoImagesText();
          } else if (requestCode == CAMERA_PIC_REQUEST) {
@@ -406,7 +406,7 @@ public class MediaFragment extends Fragment implements
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
             updateNoImagesText();
-            APIService.call((Activity)getActivity(), APIService.getUploadImageIntent(getActivity(),
+            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(
              mCameraTempFileName, key));
          }
       }
@@ -567,25 +567,25 @@ public class MediaFragment extends Fragment implements
    };
 
    private void deleteSelectedPhotos() {
-      String deleteQuery = "?";
+      ArrayList<Integer> deleteList = new ArrayList<Integer>();
 
       for (int i = mSelectedList.size() - 1; i >= 0; i--) {
          if (mSelectedList.get(i)) {
             mSelectedList.remove(i);
-            deleteQuery += "imageids[]=" + mImageList.getImages().get(i).getImageid() + "&";
+            String imageid = mImageList.getImages().get(i).getImageid();
 
             if (mImageList.getImages().get(i).getImageid() == null) {
                Toast.makeText(getActivity(), getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
+            } else {
+               deleteList.add(Integer.parseInt(imageid));
             }
             mImageList.getImages().remove(i);
          }
       }
 
-      if (deleteQuery.length() > 1) {
-         deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 1);
-      }
-      APIService.call((Activity)getActivity(), APIService.getDeleteImageIntent(getActivity(), deleteQuery));
+      APIService.call((Activity)getActivity(),
+       APIService.getDeleteImageAPICall(deleteList));
 
       updateNoImagesText();
 

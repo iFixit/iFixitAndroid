@@ -25,11 +25,10 @@ import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -42,13 +41,8 @@ public class APIService extends Service {
       public void setResult(APIEvent<?> result);
    }
 
-   private static final String REQUEST_TARGET = "REQUEST_TARGET";
-   private static final String REQUEST_QUERY = "REQUEST_QUERY";
-   private static final String REQUEST_POST_DATA = "REQUEST_POST_DATA";
-   private static final String REQUEST_UPLOAD_FILE_PATH =
-    "REQUEST_UPLOAD_FILE_PATH";
-   public static final String REQUEST_RESULT_INFORMATION =
-    "REQUEST_RESULT_INFORMATION";
+   private static final String API_CALL = "API_CALL";
+
    public static final String INVALID_LOGIN_STRING = "Invalid login";
 
    private static final String NO_QUERY = "";
@@ -60,7 +54,7 @@ public class APIService extends Service {
     * but the user is not logged in. This is then performed once the user has
     * authenticated.
     */
-   private static Intent sPendingApiCall;
+   private static APICall sPendingApiCall;
 
    /**
     * Current site.
@@ -86,12 +80,9 @@ public class APIService extends Service {
    /**
     * Performs the API call defined by the given Intent. This takes care of opening a
     * login dialog and saving the Intent if the user isn't authenticated but should be.
-    *
-    * TODO: Make it take an "APICall" that wraps an Intent so this is the only way to
-    * perform an API call.
     */
-   public static void call(Activity activity, Intent apiCall) {
-      APIEndpoint endpoint = APIEndpoint.getByTarget(apiCall.getExtras().getInt(REQUEST_TARGET));
+   public static void call(Activity activity, APICall apiCall) {
+      APIEndpoint endpoint = apiCall.mEndpoint;
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(mSite, endpoint) && !MainApplication.get().isUserLoggedIn()) {
@@ -102,32 +93,42 @@ public class APIService extends Service {
             LoginFragment.newInstance().show(activity.getSupportFragmentManager());
          }
       } else {
-         activity.startService(apiCall);
+         activity.startService(makeApiIntent(activity, apiCall));
       }
    }
 
    /**
     * Returns the pending API call and sets it to null. Returns null if no pending API call.
     */
-   public static Intent getAndRemovePendingApiCall() {
-      Intent pendingApiCall = sPendingApiCall;
+   public static Intent getAndRemovePendingApiCall(Context context) {
+      APICall pendingApiCall = sPendingApiCall;
       sPendingApiCall = null;
 
-      return pendingApiCall;
+      if (pendingApiCall != null) {
+         return makeApiIntent(context, pendingApiCall);
+      } else {
+         return null;
+      }
+   }
+
+   /**
+    * Constructs an Intent that can be used to start the APIService and perform
+    * the given APIcall.
+    */
+   private static Intent makeApiIntent(Context context, APICall apiCall) {
+      Intent intent = new Intent(context, APIService.class);
+      Bundle extras = new Bundle();
+
+      extras.putSerializable(API_CALL, apiCall);
+      intent.putExtras(extras);
+
+      return intent;
    }
 
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
-      final int requestTarget = extras.getInt(REQUEST_TARGET);
-      final APIEndpoint endpoint = APIEndpoint.getByTarget(requestTarget);
-      final String requestQuery = extras.getString(REQUEST_QUERY);
-      final String resultInformation =
-       extras.getString(REQUEST_RESULT_INFORMATION);
-      @SuppressWarnings("unchecked")
-      final Map<String, String> postData =
-       (Map<String, String>)extras.getSerializable(REQUEST_POST_DATA);
-      final String filePath = extras.getString(REQUEST_UPLOAD_FILE_PATH);
+      final APICall apiCall = (APICall)extras.getSerializable(API_CALL);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -145,24 +146,23 @@ public class APIService extends Service {
       //    }
       // }
 
-      performRequest(endpoint, requestQuery, postData, filePath,
-       new Responder() {
+      performRequest(apiCall, new Responder() {
          public void setResult(APIEvent<?> result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
-               result = parseResult(result.getResponse(), endpoint);
+               result = parseResult(result.getResponse(), apiCall.mEndpoint);
             }
 
             // Don't save if there a parse error.
             if (!result.hasError()) {
-               saveResult(result, requestTarget, requestQuery);
+               saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
             }
 
-            result.setExtraInfo(resultInformation);
+            result.setExtraInfo(apiCall.mExtraInfo);
 
             /**
              * Always post the result despite any errors. This actually sends it off
-             * to Activities etc. that care about API cals.
+             * to Activities etc. that care about API calls.
              */
             MainApplication.getBus().post(result);
          }
@@ -201,136 +201,117 @@ public class APIService extends Service {
       // db.close();
    }
 
-   public static Intent getCategoriesIntent(Context context) {
-      return createIntent(context, APIEndpoint.CATEGORIES, NO_QUERY);
+   public static APICall getCategoriesAPICall() {
+      return new APICall(APIEndpoint.CATEGORIES, NO_QUERY);
    }
 
-   public static Intent getGuideIntent(Context context, int guideid) {
-      return createIntent(context, APIEndpoint.GUIDE, "" + guideid);
+   public static APICall getGuideAPICall(int guideid) {
+      return new APICall(APIEndpoint.GUIDE, "" + guideid);
    }
 
-   public static Intent getTopicIntent(Context context, String topicName) {
-      return createIntent(context, APIEndpoint.TOPIC, topicName);
+   public static APICall getTopicAPICall(String topicName) {
+      return new APICall(APIEndpoint.TOPIC, topicName);
    }
 
-   public static Intent getLoginIntent(Context context,
-    String login, String password) {
-      Bundle extras = new Bundle();
-      Map<String, String> postData = new HashMap<String, String>();
+   public static APICall getLoginAPICall(String login, String password) {
+      JSONObject requestBody = new JSONObject();
 
-      postData.put("login", login);
-      postData.put("password", password);
+      try {
+         requestBody.put("login", login);
+         requestBody.put("password", password);
+      } catch (JSONException e) {
+         return null;
+      }
 
-      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
-
-      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
+      return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
 
-   /**
-    * There are two login intent methods because the user has a sessionid
-    * after logging in via OpenID but we still need to hit the login endpoint
-    * to verify this and to get a username.
-    *
-    * TODO: Make this better. This method involves POSTing with a sessionid
-    * rather than sending it in a Cookie like all of the other requests.
-    */
-   public static Intent getLoginIntent(Context context,
-    String session) {
-      Bundle extras = new Bundle();
-      Map<String, String> postData = new HashMap<String, String>();
+   public static APICall getRegisterAPICall(String login, String password, String username) {
+      JSONObject requestBody = new JSONObject();
 
-      postData.put("session", session);
+      try {
+         requestBody.put("login", login);
+         requestBody.put("password", password);
+         requestBody.put("username", username);
+      } catch (JSONException e) {
+         return null;
+      }
 
-      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
-
-      return createIntent(context, APIEndpoint.LOGIN, NO_QUERY, extras);
+      return new APICall(APIEndpoint.REGISTER, NO_QUERY, requestBody.toString());
    }
 
-   public static Intent getRegisterIntent(Context context, String login,
-    String password, String username) {
-      Bundle extras = new Bundle();
-      Map<String, String> postData = new HashMap<String, String>();
-
-      postData.put("login", login);
-      postData.put("password", password);
-      postData.put("username", username);
-
-      extras.putSerializable(REQUEST_POST_DATA, (Serializable)postData);
-
-      return createIntent(context, APIEndpoint.REGISTER, NO_QUERY, extras);
+   public static APICall getUserImagesAPICall(String query) {
+      return new APICall(APIEndpoint.USER_IMAGES, query);
    }
 
-   public static Intent getUserImagesIntent(Context context, String query) {
-      return createIntent(context, APIEndpoint.USER_IMAGES, query);
+   public static APICall getUploadImageAPICall(String filePath, String extraInformation) {
+      return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, null, extraInformation,
+       filePath);
    }
 
-   public static Intent getUploadImageIntent(Context context, String filePath,
-    String extraInformation) {
-      Bundle extras = new Bundle();
+   public static APICall getDeleteImageAPICall(List<Integer> deleteList) {
+      StringBuilder stringBuilder = new StringBuilder();
+      String separator = "";
 
-      extras.putString(REQUEST_RESULT_INFORMATION, extraInformation);
-      extras.putString(REQUEST_UPLOAD_FILE_PATH, filePath);
+      stringBuilder.append("?imageids=");
 
-      return createIntent(context, APIEndpoint.UPLOAD_IMAGE, filePath, extras);
+      /**
+       * Construct a string of imageids separated by comma's.
+       */
+      for (Integer imageid : deleteList) {
+         stringBuilder.append(separator).append(imageid);
+         separator = ",";
+      }
+
+      return new APICall(APIEndpoint.DELETE_IMAGE, stringBuilder.toString());
    }
 
-   public static Intent getDeleteImageIntent(Context context, String requestQuery) {
-      return createIntent(context, APIEndpoint.DELETE_IMAGE, requestQuery);
+   public static APICall getSitesAPICall() {
+      return new APICall(APIEndpoint.SITES, NO_QUERY);
    }
 
-   public static Intent getSitesIntent(Context context) {
-      return createIntent(context, APIEndpoint.SITES, NO_QUERY);
-   }
+   // TODO: Remove Context param.
+   public static APICall getUserInfoAPICall(String session) {
+      APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
 
-   private static Intent createIntent(Context context, APIEndpoint endpoint,
-    String query) {
-      return createIntent(context, endpoint, query, new Bundle());
-   }
+      apiCall.mSessionid = session;
 
-   private static Intent createIntent(Context context, APIEndpoint endpoint,
-    String query, Bundle extras) {
-      Intent intent = new Intent(context, APIService.class);
-
-      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
-      extras.putString(REQUEST_QUERY, query);
-      intent.putExtras(extras);
-
-      return intent;
+      return apiCall;
    }
 
    public static AlertDialog getErrorDialog(Context context, APIError error,
-    Intent apiIntent) {
-      return createErrorDialog(context, apiIntent, error);
+    APICall apiCall) {
+      return createErrorDialog(context, apiCall, error);
    }
 
    public static AlertDialog getListMediaErrorDialog(Context context, APIError error,
-    Intent apiIntent) {
+    APICall apiCall) {
        switch (error.mType) {
        case CONNECTION:
-          return getErrorDialog(context, error, apiIntent);
+          return getErrorDialog(context, error, apiCall);
        default:
           return getListMediaUnknownErrorDialog(context);
        }
    }
 
    public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext) {
-       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-       builder.setTitle(mContext.getString(R.string.media_error_title))
-          .setPositiveButton(mContext.getString(R.string.media_error_confirm),
-          new DialogInterface.OnClickListener() {
-             public void onClick(DialogInterface dialog, int id) {
-                //kill the media activity, and have them try again later
-                //incase the server needs some rest
-                ((SherlockFragmentActivity)mContext).finish();
-                dialog.cancel();
-             }
-          });
+      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+      builder.setTitle(mContext.getString(R.string.media_error_title))
+         .setPositiveButton(mContext.getString(R.string.media_error_confirm),
+         new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               //kill the media activity, and have them try again later
+               //incase the server needs some rest
+               ((SherlockFragmentActivity)mContext).finish();
+               dialog.cancel();
+            }
+         });
 
-       return builder.create();
+      return builder.create();
    }
 
    private static AlertDialog createErrorDialog(final Context context,
-    final Intent apiIntent, APIError error) {
+    final APICall apiCall, APIError error) {
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(error.mTitle)
              .setMessage(error.mMessage)
@@ -338,7 +319,7 @@ public class APIService extends Service {
               new DialogInterface.OnClickListener() {
                  public void onClick(DialogInterface dialog, int id) {
                     // Try performing the request again.
-                    context.startService(apiIntent);
+                    context.startService(makeApiIntent(context, apiCall));
                     dialog.dismiss();
                  }
               });
@@ -353,16 +334,16 @@ public class APIService extends Service {
       return d;
    }
 
-   private void performRequest(final APIEndpoint endpoint,
-    final String requestQuery, final Map<String, String> postData,
-    final String filePath, final Responder responder) {
+   private void performRequest(final APICall apiCall, final Responder responder) {
+      final APIEndpoint endpoint = apiCall.mEndpoint;
       if (!checkConnectivity(responder, endpoint)) {
          return;
       }
 
-      final String url = endpoint.getUrl(mSite, requestQuery);
+      final String url = endpoint.getUrl(mSite, apiCall.mQuery);
 
       Log.i("iFixit", "Performing API call: " + url);
+      Log.i("iFixit", "Request body: " + apiCall.mRequestBody);
 
       new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
@@ -377,47 +358,56 @@ public class APIService extends Service {
             HttpRequest request;
 
             try {
-               /**
-                * Create the HttpRequest with the appropriate method.
-                */
-               if (endpoint.mPost) {
-                  request = HttpRequest.post(url);
-               } else {
-                  request = HttpRequest.get(url);
-               }
+               request = new HttpRequest(url, endpoint.mMethod);
 
                /**
                 * Uncomment to test HTTPS API calls in development.
-                *
-                * request.trustAllCerts();
-                * request.trustAllHosts();
                 */
+               //request.trustAllCerts();
+               //request.trustAllHosts();
+
+               String sessionid = null;
+               /**
+                * Get an appropriate sessionid.
+                */
+               if (apiCall.mSessionid != null) {
+                  // This sessionid overrides all other requirements/sessionids.
+                  sessionid = apiCall.mSessionid;
+               } else if (requireAuthentication(mSite, endpoint)) {
+                  User user = ((MainApplication)getApplicationContext()).getUser();
+                  sessionid = user.getSession();
+               }
 
                /**
-                * Send the session along in a Cookie.
+                * Send along the sessionid if we found one.
                 */
-               if (requireAuthentication(mSite, endpoint)) {
-                  User user = ((MainApplication)getApplicationContext()).getUser();
-                  String session = user.getSession();
-                  request.header("Cookie", "session=" + session);
+               if (sessionid != null) {
+                  request.header("Cookie", "session=" + sessionid);
                }
 
                /**
                 * Continue with constructing the request body.
                 */
-               if (endpoint.mPost) {
-                  if (filePath != null) {
-                     // POST the file if present.
-                     request.send(new File(filePath));
-                  } else if (postData != null) {
-                     request.form(postData);
-                  }
-               } else {
-                  // Do nothing extra for GET.
+               if (apiCall.mFilePath != null) {
+                  // POST the file if present.
+                  request.send(new File(apiCall.mFilePath));
+               } else if (apiCall.mRequestBody != null) {
+                  request.send(apiCall.mRequestBody);
                }
 
-               return endpoint.getEvent().setResponse(request.body());
+               /**
+                * The order is important here. If the code() is called first an IOException
+                * is thrown in some cases (invalid login for one, maybe more).
+                */
+               String responseBody = request.body();
+               int code = request.code();
+
+               Log.i("iFixit", "Response code: " + code);
+               Log.i("iFixit", "Response body: " + responseBody);
+
+               return endpoint.getEvent().setResponse(responseBody);
             } catch (HttpRequestException e) {
+               Log.e("iFixit", "API error", e);
                return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
             }
          }
