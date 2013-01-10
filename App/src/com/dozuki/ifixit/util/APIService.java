@@ -270,7 +270,6 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.SITES, NO_QUERY);
    }
 
-   // TODO: Remove Context param.
    public static APICall getUserInfoAPICall(String session) {
       APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
 
