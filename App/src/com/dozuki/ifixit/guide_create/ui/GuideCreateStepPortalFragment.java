@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
@@ -37,16 +38,17 @@ import com.mobeta.android.dslv.DragSortListView;
 
 public class GuideCreateStepPortalFragment extends SherlockFragment {
 	public static int StepID = 0;
-	private DragSortListView mDragListView;
+	private ListView mDragListView;
 	private ImageManager mImageManager;
 	private StepAdapter mAdapter;
 	private DragSortController mController;
-	private RelativeLayout mAddStepBar;
-	private RelativeLayout mEditIntroBar;
+	private TextView mAddStepBar;
+	private TextView mEditIntroBar;
+	private TextView mReorderStepsBar;
 	private GuideCreateObject mGuide;
 	private TextView mNoStepsText;
 
-	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
+	/*private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
 		@Override
 		public void drop(int from, int to) {
 			GuideCreateStepObject item = mAdapter.getItem(from);
@@ -61,7 +63,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		public void remove(int which) {
 			mAdapter.remove(mAdapter.getItem(which));
 		}
-	};
+	};*/
 
 	public GuideCreateStepPortalFragment(GuideCreateObject guide) {
 		super();
@@ -103,9 +105,9 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.guide_create_steps_portal,
 				container, false);
-		mDragListView = (DragSortListView) view
+		mDragListView = (ListView) view
 				.findViewById(R.id.steps_portal_list);
-		mAddStepBar = (RelativeLayout) view.findViewById(R.id.add_step_bar);
+		mAddStepBar = (TextView) view.findViewById(R.id.add_step_bar);
 		mAddStepBar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
@@ -117,25 +119,32 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 				mDragListView.invalidateViews();
 			}
 		});
-		mEditIntroBar = (RelativeLayout) view.findViewById(R.id.edit_intro_bar);
-		mAddStepBar = (RelativeLayout) view.findViewById(R.id.add_step_bar);
+		mEditIntroBar = (TextView) view.findViewById(R.id.edit_intro_bar);
 		mEditIntroBar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
 				launchGuideEditIntro();
 			}
 		});
+		mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
+		mReorderStepsBar.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+
+			}
+		});
+		
 		mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
 
 		if (mGuide.getSteps().isEmpty())
 			mNoStepsText.setVisibility(View.VISIBLE);
-		mDragListView.setDropListener(onDrop);
-		mDragListView.setRemoveListener(onRemove);
+		//mDragListView.setDropListener(onDrop);
+		//mDragListView.setRemoveListener(onRemove);
 		mDragListView.setAdapter(mAdapter);
-		mController = buildController(mDragListView);
-		mDragListView.setFloatViewManager(mController);
-		mDragListView.setOnTouchListener(mController);
-		mDragListView.setDragEnabled(true);
+		//mController = buildController(mDragListView);
+		//mDragListView.setFloatViewManager(mController);
+		//mDragListView.setOnTouchListener(mController);
+		//mDragListView.setDragEnabled(true);
 		return view;
 	}
 
@@ -226,7 +235,6 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 
                // Creating the expand animation for the item
                ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
-
                expandAni.setAnimationListener(new AnimationListener() {
 
                   @Override

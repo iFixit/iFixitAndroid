@@ -45,9 +45,10 @@
     <string name="next_page_image_desc">Next page</string>
     <string name="action_delete">Delete</string>
     <string name="welcome">Welcome, iFixit</string>
-     <string name="add_step">Add a step</string>
+     <string name="add_step">Add step</string>
       <string name="edit_step_intro">Edit intro</string>
-     <string name="add_guide">Add a guide</string>
+       <string name="reorder_steps">Reorder</string>
+     <string name="add_guide">Add guide</string>
     <string name="user_name">Enter a username</string>
     <string name="email">What is your email?</string>
     <string name="password">What is your password?</string>

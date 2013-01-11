@@ -115,7 +115,7 @@ public class GuideCreateStepsActivity extends SherlockFragmentActivity {
 		}
 	}
 
-	@Override
+	@Override 
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
