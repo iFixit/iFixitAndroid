@@ -38,12 +38,14 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet.BulletTypes;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
-		implements OnClickListener {
+		implements OnClickListener, BulletDialogListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";
 	public static String GuideStepKey = "GuideStepObject";
@@ -278,5 +280,11 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		});
 
 		return dialog;
+	}
+
+	@Override
+	public void onFinishBulletDialog(String bulletID, BulletTypes type) {
+		// TODO Auto-generated method stub
+		
 	}
 }
