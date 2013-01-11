@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@color/dark"
+    android:orientation="vertical" >
+     <TextView
+            android:id="@+id/step_edit_add_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_menu_bot_step_add"
+            android:drawablePadding="10dip"
+            android:text="@string/add_step"
+            android:textColor="@color/gray" />
+  <TextView
+            android:id="@+id/step_edit_delete_step"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:gravity="center"
+            android:drawableLeft="@drawable/ic_menu_bot_step_delete"
+            android:drawablePadding="10dip"
+            android:text="@string/delete_step"
+            android:textColor="@color/gray" />
+</LinearLayout>

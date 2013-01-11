@@ -111,4 +111,5 @@
 	<string name="step_edit_confirm_delete_title">Delete Step</string>
 	<string name="step_edit_confirm_delete_message">Are you sure you want to delete </string>
 	<string name="step_edit_save_step">SAVE</string>
+	<string name="or">-OR-</string>
 </resources>

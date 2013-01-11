@@ -30,10 +30,12 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.ContextMenu;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.view.SubMenu;
+import com.actionbarsherlock.view.MenuItem.OnMenuItemClickListener;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
@@ -118,6 +120,7 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
+
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

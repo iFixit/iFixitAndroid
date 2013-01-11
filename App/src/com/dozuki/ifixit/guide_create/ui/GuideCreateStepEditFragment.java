@@ -81,9 +81,6 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		if (savedInstanceState != null) {
 			mStepObject = (GuideCreateStepObject) savedInstanceState
 					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);
-			for (StepImage img : mStepObject.getImages()) {
-				setImage(img.getImageid(), img.getText());
-			}
 		}
 		mStepTitle.setText(mStepObject.getTitle());
 		mStepTitle.addTextChangedListener(new TextWatcher() {
@@ -108,6 +105,9 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 			}
 
 		});
+		for (StepImage img : mStepObject.getImages()) {
+			setImage(img.getImageid(), img.getText());
+		}
 		return view;
 	}
 
@@ -164,6 +164,8 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 	}
 
 	private void setImage(int location, String url) {
+		if(url.equals(""))
+			return;
 		switch (location) {
 		case 1:
 			mImageManager.displayImage(url, getActivity(), mImageOne);

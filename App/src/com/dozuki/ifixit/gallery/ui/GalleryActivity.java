@@ -77,6 +77,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private boolean mGetMediaItemForReturn;
 	private int mMediaReturnValue;
 	private ActionMode mMode;
+	
+	private MenuItem mCameraIcon;
+	private MenuItem mGalleryIcon;
+	private Menu curMenu;
 
 	private APIReceiver mApiReceiver = new APIReceiver() {
 		public void onSuccess(Object result, Intent intent) {
@@ -293,8 +297,11 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		if (!mIconsHidden) {
+			curMenu = menu;
 			MenuInflater inflater = getSupportMenuInflater();
 			inflater.inflate(R.menu.gallery_menu, menu);
+			mCameraIcon = (MenuItem)  menu.findItem(R.id.top_camera_button);
+			mGalleryIcon = (MenuItem)  menu.findItem(R.id.top_gallery_button);
 		}
 
 		return super.onCreateOptionsMenu(menu);
@@ -348,9 +355,13 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
+				if(mCameraIcon != null)
+				mCameraIcon.setIcon(R.drawable.ic_menu_video);
 				return (VideoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_VIDEOS);
 			case 1:
+				if(mCameraIcon != null)
+				mCameraIcon.setIcon(R.drawable.ic_menu_camera);
 				return (PhotoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_PHOTOS);
 			case 2:
@@ -407,8 +418,11 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// Create the menu from the xml file
+			curMenu = menu;
 			MenuInflater inflater = getSupportMenuInflater();
 			inflater.inflate(R.menu.gallery_menu, menu);
+			mCameraIcon = (MenuItem)  menu.findItem(R.id.top_camera_button);
+			mGalleryIcon = (MenuItem)  menu.findItem(R.id.top_gallery_button);
 			return true;
 		}
 
