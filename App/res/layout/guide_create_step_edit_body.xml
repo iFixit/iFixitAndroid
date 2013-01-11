@@ -39,7 +39,6 @@
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="25dp"
                 android:background="@color/image_border"
-                android:src="@drawable/ic_placeholder_feature_img"
                 android:contentDescription="@string/topic_guide_thumbnail"
                 android:padding="1dp" />
 
@@ -53,7 +52,6 @@
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_image"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp" />
@@ -63,7 +61,6 @@
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_image"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp" />
@@ -73,7 +70,6 @@
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_image"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp" />
@@ -81,14 +77,13 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/or" />
+                    android:text="-OR-" />
 
                 <ImageView
                     android:id="@+id/step_edit_thumb_media"
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_media"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp" />

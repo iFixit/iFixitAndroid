@@ -1,21 +1,28 @@
 [submodule "Android-ViewPagerIndicator"]
 	path = Android-ViewPagerIndicator
 	url = http://github.com/iFixit/Android-ViewPagerIndicator.git
+	ignore = dirty
 [submodule "AndroidSectionHeaders"]
 	path = AndroidSectionHeaders
 	url = http://github.com/iFixit/AndroidSectionHeaders.git
+	ignore = dirty
 [submodule "ActionBarSherlock"]
 	path = ActionBarSherlock
 	url = http://github.com/iFixit/ActionBarSherlock.git
+	ignore = dirty
 [submodule "ImageZoomLibrary"]
 	path = ImageZoomLibrary
 	url = http://github.com/iFixit/ImageZoomLibrary.git
+	ignore = dirty
 [submodule "AndroidImageManager"]
 	path = AndroidImageManager
 	url = http://github.com/iFixit/AndroidImageManager.git
+	ignore = dirty
 [submodule "HoloEverywhere"]
 	path = HoloEverywhere
 	url = http://github.com/iFixit/HoloEverywhere.git
+	ignore = dirty
 [submodule "drag-sort-listview"]
 	path = drag-sort-listview
 	url = https://github.com/mpaddon/drag-sort-listview.git
+	ignore = dirty

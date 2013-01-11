@@ -1,25 +1,24 @@
 <?xml version = "1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+  
     <item
-        android:id="@+id/browse_button"
-        android:icon="@drawable/ic_menu_spinner_browse"
-        android:showAsAction="always|withText"
-        android:title="Browse"/>
-    <item
-        android:id="@+id/my_guides_button"
-        android:icon="@drawable/ic_menu_spinner_guides"
-        android:showAsAction="always|withText"
-        android:title="My Guides"/>
-    <item
-        android:id="@+id/gallery_button"
-        android:icon="@drawable/ic_menu_spinner_gallery"
-        android:showAsAction="always|withText"
-        android:title="My Gallery"/>
-    <item
-        android:id="@+id/help_button"
-        android:icon="@drawable/ic_menu_spinner_help"
-        android:showAsAction="always|withText"
-        android:title="Help"/>
-
+      android:id="@+id/browse_button"
+	android:title="Browse"
+	android:icon="@drawable/ic_spinner_browse"
+      android:showAsAction="always|withText" 
+   />
+     <item
+      android:id="@+id/my_guides_button"
+     android:title="My Guides"
+      android:showAsAction="always|withText" />
+      <item
+      android:id="@+id/gallery_button"
+      android:title="My Gallery"
+      android:icon="@drawable/ic_menu_gallery_inactive"
+      android:showAsAction="always|withText" />
+      <item
+      android:id="@+id/help_button"
+      android:title="Help"
+      android:showAsAction="always|withText" />
+      
 </menu>

@@ -24,6 +24,7 @@
                 android:layout_margin="8dp" >
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -36,6 +37,7 @@
                 android:layout_margin="8dp">
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_red"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -48,6 +50,7 @@
                 android:layout_margin="8dp">
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_orange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -61,6 +64,7 @@
                 android:layout_margin="8dp" >
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_yellow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -80,6 +84,7 @@
                 android:layout_margin="8dp" >
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_white"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -92,6 +97,7 @@
                 android:layout_margin="8dp">
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_blue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -105,6 +111,7 @@
                 android:layout_margin="8dp">
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_purple"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -118,6 +125,7 @@
                 android:layout_margin="8dp">
 
                 <ImageView
+                    android:id="@+id/bullet_dialog_color_teal"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
@@ -184,7 +192,7 @@
      android:orientation="vertical" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/bullet_dialog_indent"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:drawableLeft="@drawable/ic_menu_help"
@@ -194,7 +202,7 @@
                 android:text="Indent bullet" />
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/bullet_dialog_unindent"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:drawableLeft="@drawable/ic_menu_help"
@@ -203,7 +211,7 @@
                 android:text="Unindent bullet" />
        
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/bullet_dialog_rearrange"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
                 android:drawableLeft="@drawable/ic_list_item_move"
@@ -214,7 +222,7 @@
      
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/bullet_dialog_cancel"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
