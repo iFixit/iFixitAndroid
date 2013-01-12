@@ -1,13 +1,11 @@
 package com.dozuki.ifixit.gallery.ui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,33 +14,27 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.AnimationUtils;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.PhotoMediaFragment.ModeCallback;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment;
-import com.dozuki.ifixit.guide_create.ui.GuideCreateStepsEditActivity.StepAdapter;
-import com.dozuki.ifixit.login.model.LoginListener;
-import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.IfixitActivity;
+import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
+import com.dozuki.ifixit.login.model.LoginEvent;
+import com.dozuki.ifixit.util.IfixitActivity;
 
-public class GalleryActivity extends SherlockFragmentActivity implements
-		LoginListener, OnClickListener {
+public class GalleryActivity extends IfixitActivity implements
+		 OnClickListener {
 
 	public static final String MEDIA_FRAGMENT_PHOTOS = "MEDIA_FRAGMENT_PHOTOS";
 	public static final String MEDIA_FRAGMENT_VIDEOS = "MEDIA_FRAGMENT_VIDEOS";
@@ -77,22 +69,23 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	private boolean mGetMediaItemForReturn;
 	private int mMediaReturnValue;
 	private ActionMode mMode;
+	private boolean mShowingHelp;
 
-	private APIReceiver mApiReceiver = new APIReceiver() {
-		public void onSuccess(Object result, Intent intent) {
-			/**
-			 * The success are handled by the media fragment. This is here to
-			 * catch if the user has an invalid session.
-			 */
-		}
-
-		public void onFailure(APIError error, Intent intent) {
-			if (error.mType == APIError.ErrorType.INVALID_USER) {
-				LoginFragment editNameDialog = new LoginFragment();
-				editNameDialog.show(getSupportFragmentManager(), "");
-			}
-		}
-	};
+//	private APIReceiver mApiReceiver = new APIReceiver() {
+//		public void onSuccess(Object result, Intent intent) {
+//			/**
+//			 * The success are handled by the media fragment. This is here to
+//			 * catch if the user has an invalid session.
+//			 */
+//		}
+//
+//		public void onFailure(APIError error, Intent intent) {
+//			if (error.mType == APIError.ErrorType.INVALID_USER) {
+//				LoginFragment editNameDialog = new LoginFragment();
+//				editNameDialog.show(getSupportFragmentManager(), "");
+//			}
+//		}
+//	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -139,10 +132,10 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		if (savedInstanceState != null) {
 			showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
 			if (showingHelp)
-				createHelpDialog(this).show();
+				createHelpDialog().show();
 			showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
-			if (showingLogout)
-				LoginFragment.getLogoutDialog(this).show();
+		//	if (showingLogout)
+			//	LoginFragment.getLogoutDialog(this).show();
 			showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 			/*
 			 * if (showingDelete) { createDeleteConfirmDialog(this).show(); }
@@ -167,21 +160,21 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		 * 
 		 * mMediaView.noImagesText.setVisibility(View.GONE);
 		 */
-		LoginFragment mLogin = (LoginFragment) getSupportFragmentManager()
-				.findFragmentByTag(LOGIN_FRAGMENT);
+	//	LoginFragment mLogin = (LoginFragment) getSupportFragmentManager()
+		//		.findFragmentByTag(LOGIN_FRAGMENT);
 
-		User user = ((MainApplication) getApplication())
-				.getUserFromPreferenceFile();
-
-		if (user != null) {
-			mIconsHidden = false;
-			supportInvalidateOptionsMenu();
-		} else {
-			mIconsHidden = true;
-			if (mLogin == null) {
-				displayLogin();
-			}
-		}
+		//User user = ((MainApplication) getApplication())
+	//			.getUserFromPreferenceFile();
+//
+//		if (user != null) {
+//			mIconsHidden = false;
+//			supportInvalidateOptionsMenu();
+//		} else {
+//			mIconsHidden = true;
+//			if (mLogin == null) {
+//				displayLogin();
+//			}
+//		}
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
@@ -207,7 +200,7 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		switch (view.getId()) {
 		case R.id.button_holder:
 			showingLogout = true;
-			LoginFragment.getLogoutDialog(this).show();
+		//	LoginFragment.getLogoutDialog(this).show();
 			break;
 		}
 	}
@@ -252,14 +245,14 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			if (!isLoggedIn) {
 				return false;
 			}
-			createHelpDialog(this).show();
+			createHelpDialog().show();
 			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
 	}
 
-	@Override
+	/*@Override
 	public void onLogin(User user) {
 		mIconsHidden = false;
 		supportInvalidateOptionsMenu();
@@ -277,18 +270,31 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			createHelpDialog(this).show();
 			((MainApplication) getApplication()).setFirstTimeGalleryUser(false);
 		}
-	}
+	}*/
 
-	@Override
-	public void onLogout() {
-		((MainApplication) getApplication()).logout();
-		finish();
-	}
+	//@Override
+	//public void onLogout() {
+	//	((MainApplication) getApplication()).logout();
+	//	finish();
+	//}
 
-	@Override
-	public void onCancel() {
-		finish();
-	}
+	//@Override
+	//public void onCancel() {
+//		finish();
+//	}
+	
+   @Subscribe
+   public void onLogin(LoginEvent.Login event) {
+      if (MainApplication.get().isFirstTimeGalleryUser()) {
+         createHelpDialog().show();
+         MainApplication.get().setFirstTimeGalleryUser(false);
+      }
+   }
+
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -303,17 +309,17 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 	@Override
 	public void onResume() {
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(APIEndpoint.USER_IMAGES.mAction);
-		filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
-		filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
-		registerReceiver(mApiReceiver, filter);
+		//filter.addAction(APIEndpoint.USER_IMAGES.mAction);
+		//filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
+		//filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
+		//registerReceiver(mApiReceiver, filter);
 		super.onResume();
 	}
 
 	@Override
 	public void onPause() {
 		try {
-			unregisterReceiver(mApiReceiver);
+		//	unregisterReceiver(mApiReceiver);
 		} catch (IllegalArgumentException e) {
 		}
 		super.onPause();
@@ -372,30 +378,32 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 		}
 	}
 
-	public static AlertDialog createHelpDialog(final Context context) {
-		showingHelp = true;
-		AlertDialog.Builder builder = new AlertDialog.Builder(context);
-		builder.setTitle(context.getString(R.string.media_help_title))
-				.setMessage(context.getString(R.string.media_help_messege))
-				.setPositiveButton(
-						context.getString(R.string.media_help_confirm),
-						new DialogInterface.OnClickListener() {
-							public void onClick(DialogInterface dialog, int id) {
-								showingHelp = false;
-								dialog.cancel();
-							}
-						});
+	private AlertDialog createHelpDialog() {
+	      mShowingHelp = true;
+	      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+	      builder
+	            .setTitle(getString(R.string.media_help_title))
+	            .setMessage(getString(R.string.media_help_messege))
+	            .setPositiveButton(getString(R.string.media_help_confirm),
+	               new DialogInterface.OnClickListener() {
+	                  private boolean mShowingHelp;
 
-		AlertDialog dialog = builder.create();
-		dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-			@Override
-			public void onDismiss(DialogInterface dialog) {
-				showingHelp = false;
-			}
-		});
+					public void onClick(DialogInterface dialog, int id) {
+	                     mShowingHelp = false;
+	                     dialog.cancel();
+	                  }
+	               });
 
-		return dialog;
-	}
+	      AlertDialog dialog = builder.create();
+	      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+	         @Override
+	         public void onDismiss(DialogInterface dialog) {
+	            mShowingHelp = false;
+	         }
+	      });
+
+	      return dialog;
+	   }
 
 	public final class ContextualMediaSelect implements ActionMode.Callback {
 		private Context mParentContext;
@@ -428,5 +436,5 @@ public class GalleryActivity extends SherlockFragmentActivity implements
 			return true;
 		}
 	};
-
 }
+

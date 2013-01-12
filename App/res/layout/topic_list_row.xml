@@ -3,12 +3,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="horizontal"
-    android:weightSum="100"
-    android:id="@+id/topic_row">
+    android:weightSum="100" >
 
     <TextView
         android:id="@+id/topic_title"
+        style="@style/text.list"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/text.list" />
+        android:layout_height="wrap_content" />
+
 </LinearLayout>

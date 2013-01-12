@@ -2,6 +2,7 @@ package com.dozuki.ifixit;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
@@ -12,10 +13,12 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Bus;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
@@ -30,13 +33,56 @@ public class MainApplication extends Application {
    private static final String SESSION_KEY = "SESSION_KEY";
    private static final String USERNAME_KEY = "USERNAME_KEY";
 
+   /**
+    * Singleton reference.
+    */
+   private static MainApplication sMainApplication;
+
+   /**
+    * Singleton for Bus (Otto).
+    */
+   private static Bus sBus;
+
+   /**
+    * Singleton for ImageManager.
+    */
    private ImageManager mImageManager;
+
+   /**
+    * Singleton for ImageSizes.
+    */
    private ImageSizes mImageSizes;
+
+   /**
+    * Currently logged in user or null if user is not logged in.
+    */
    private User mUser;
+
+   /**
+    * Current site. Shouldn't ever be null. Set to "dozuki" for dozuki splash screen.
+    */
    private Site mSite;
 
-   public MainApplication() {
+   /**
+    * True if the user is in the middle of authenticating. Used to determine whether or
+    * not to open a new login dialog and for finishing Activities that require the user
+    * to be logged in.
+    */
+   private boolean mIsLoggingIn = false;
+
+   @Override
+   public void onCreate() {
+      super.onCreate();
+
+      sMainApplication = this;
       setSite(getDefaultSite());
+   }
+
+   /**
+    * Singleton getter.
+    */
+   public static MainApplication get() {
+      return sMainApplication;
    }
 
    public Site getSite() {
@@ -46,6 +92,9 @@ public class MainApplication extends Application {
    public void setSite(Site site) {
       mSite = site;
       APIService.setSite(site);
+
+      // Update logged in user based on current site.
+      mUser = getUserFromPreferenceFile(site);
    }
 
    /**
@@ -93,6 +142,14 @@ public class MainApplication extends Application {
       }
 
       return R.style.Theme_Dozuki;
+   }
+
+   public void setIsLoggingIn(boolean isLoggingIn) {
+      mIsLoggingIn = isLoggingIn;
+   }
+
+   public boolean isLoggingIn() {
+      return mIsLoggingIn;
    }
 
    public ImageManager getImageManager() {
@@ -143,6 +200,14 @@ public class MainApplication extends Application {
       return mImageManager;
    }
 
+   public static Bus getBus() {
+      if (sBus == null) {
+         sBus = new Bus();
+      }
+
+      return sBus;
+   }
+
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {
          WindowManager wm = (WindowManager)getSystemService(
@@ -165,29 +230,25 @@ public class MainApplication extends Application {
       return mImageSizes;
    }
 
-   public void setUser(User user) {
-      mUser = user;
-   }
-
    public User getUser() {
       return mUser;
    }
 
-   public User getUserFromPreferenceFile() {
+   private User getUserFromPreferenceFile(Site site) {
       SharedPreferences preferenceFile = getSharedPreferences(
        PREFERENCE_FILE, MODE_PRIVATE);
-      String session = preferenceFile.getString(mSite.mName + SESSION_KEY,
+      String session = preferenceFile.getString(site.mName + SESSION_KEY,
        null);
-      String username = preferenceFile.getString(mSite.mName + USERNAME_KEY,
+      String username = preferenceFile.getString(site.mName + USERNAME_KEY,
        null);
-      mUser = null;
+      User user = null;
       if (username != null && session != null) {
-         mUser = new User();
-         mUser.setSession(session);
-         mUser.setUsername(username);
+         user = new User();
+         user.setSession(session);
+         user.setUsername(username);
       }
 
-      return mUser;
+      return user;
    }
 
    public boolean isFirstTimeGalleryUser() {
@@ -220,7 +281,7 @@ public class MainApplication extends Application {
    }
 
    /**
-    * Logs the given user in by writing it to SharedPreferences.
+    * Logs the given user in by writing it to SharedPreferences and setting mUser.
     */
    public void login(User user) {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
@@ -230,10 +291,23 @@ public class MainApplication extends Application {
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
       editor.commit();
       mUser = user;
+
+      getBus().post(new LoginEvent.Login(mUser));
+
+      setIsLoggingIn(false);
+
+      /**
+       * Execute pending API call if one exists.
+       */
+      Intent pendingApiCall = APIService.getAndRemovePendingApiCall();
+      if (pendingApiCall != null) {
+         startService(pendingApiCall);
+      }
    }
 
    /**
-    * Logs the currently logged in user out by deleting it from SharedPreferences.
+    * Logs the currently logged in user out by deleting it from SharedPreferences and
+    * resetting mUser.
     */
    public void logout() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
@@ -242,6 +316,20 @@ public class MainApplication extends Application {
       editor.remove(mSite.mName + SESSION_KEY);
       editor.remove(mSite.mName + USERNAME_KEY);
       editor.commit();
+
       mUser = null;
+
+      getBus().post(new LoginEvent.Logout());
+   }
+
+   /**
+    * Call when the user has cancelled login.
+    */
+   public void cancelLogin() {
+      // Clear the pending api call if one exists.
+      APIService.getAndRemovePendingApiCall();
+      setIsLoggingIn(false);
+
+      getBus().post(new LoginEvent.Cancel());
    }
 }

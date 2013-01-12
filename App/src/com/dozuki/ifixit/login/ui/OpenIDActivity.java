@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.login.ui;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -14,6 +13,8 @@ import android.webkit.WebViewClient;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+
+import org.holoeverywhere.app.Activity;
 
 public class OpenIDActivity extends Activity {
    public static String LOGIN_METHOD = "LOGIN_METHOD";

@@ -148,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_menu_help" />
+                    android:src="@drawable/ic_menu_spinner_help" />
             </FrameLayout>
 
             <FrameLayout
@@ -160,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_menu_help" />
+                    android:src="@drawable/ic_menu_spinner_help" />
 
             </FrameLayout>
 
@@ -173,7 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_menu_help" />
+                    android:src="@drawable/ic_menu_spinner_help" />
 
             </FrameLayout>
 
@@ -195,7 +195,7 @@
                 android:id="@+id/bullet_dialog_indent"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:drawableLeft="@drawable/ic_menu_help"
+                android:drawableLeft="@drawable/ic_menu_spinner_help"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:singleLine="true"
@@ -205,7 +205,7 @@
                 android:id="@+id/bullet_dialog_unindent"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:drawableLeft="@drawable/ic_menu_help"
+                android:drawableLeft="@drawable/ic_menu_spinner_help"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:text="Unindent bullet" />

@@ -14,104 +14,133 @@ import java.net.URLEncoder;
  */
 public enum APIEndpoint {
    CATEGORIES(
-      "/api/1.0/categories/",
-      false,
-      false,
-      false,
-      "com.dozuki.ifixit.api.categories",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseTopics(json);
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "categories/";
          }
-      }
-   ),
 
-   GUIDE(
-      new CreateUrl() {
-         public String create(String query) {
-            return "/api/1.0/guide/" + query;
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Categories().setResult(JSONHelper.parseTopics(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Categories();
          }
       },
       false,
       false,
       false,
-      "com.dozuki.ifixit.api.guide",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseGuide(json);
+      false
+   ),
+
+   GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guide/" + query;
          }
-      }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Guide().setResult(JSONHelper.parseGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Guide();
+         }
+      },
+      false,
+      false,
+      false,
+      false
    ),
 
    TOPIC(
-      new CreateUrl() {
-         public String create(String query) {
+      new Endpoint() {
+         public String createUrl(String query) {
             try {
-               return "/api/1.0/topic/" +
-                URLEncoder.encode(query, "UTF-8");
+               return "topic/" + URLEncoder.encode(query, "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
             }
          }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Topic().setResult(JSONHelper.parseTopicLeaf(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Topic();
+         }
       },
       false,
       false,
       false,
-      "com.dozuki.ifixit.api.topic",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseTopicLeaf(json);
-         }
-      }
+      false
    ),
 
    LOGIN(
-      "/api/1.0/login/",
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "login/";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Login().setResult(JSONHelper.parseLoginInfo(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Login();
+         }
+      },
       true,
       false,
       true,
-      "com.dozuki.ifixit.api.login",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseLoginInfo(json);
-         }
-      }
+      true
    ),
 
    REGISTER(
-      "/api/1.0/register/",
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "register/";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Register().setResult(JSONHelper.parseLoginInfo(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Register();
+         }
+      },
       true,
       false,
       true,
-      "com.dozuki.ifixit.api.register",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseLoginInfo(json);
-         }
-      }
+      true
    ),
 
    USER_IMAGES(
-      new CreateUrl() {
-         public String create(String query) {
-            return "/api/1.0/image/user" + query;
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "image/user" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserImages().setResult(JSONHelper.parseUserImages(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserImages();
          }
       },
       false,
       true,
       true,
-      "com.dozuki.ifixit.api.user_images",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseUserImages(json);
-         }
-      }
+      false
    ),
 
    UPLOAD_IMAGE(
-      new CreateUrl() {
-         public String create(String query) {
+      new Endpoint() {
+         public String createUrl(String query) {
             String fileName;
 
             try {
@@ -121,7 +150,7 @@ public enum APIEndpoint {
                fileName = "uploaded_image.jpg";
             }
 
-            return "/api/1.0/image/upload?file=" + fileName;
+            return "image/upload?file=" + fileName;
          }
 
          private String getFileNameFromFilePath(String filePath) {
@@ -137,61 +166,95 @@ public enum APIEndpoint {
 
             return filePath.substring(index + 1);
          }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UploadImage().setResult(JSONHelper.parseUploadedImageInfo(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UploadImage();
+         }
       },
       false,
       true,
       true,
-      "com.dozuki.ifixit.api.upload_image",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseUploadedImageInfo(json);
-         }
-      }
+      false
    ),
 
    DELETE_IMAGE(
-      new CreateUrl() {
-         public String create(String query) {
-            return "/api/1.0/image/delete" + query;
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "image/delete" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            // TODO: Actually look at the response?
+            return new APIEvent.DeleteImage().setResult("");
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.DeleteImage();
          }
       },
       false,
       true,
       true,
-      "com.dozuki.ifixit.api.delete_image",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            // TODO: Actually look at the response?
-            return "";
-         }
-      }
+      false
    ),
 
    SITES(
-      "/api/1.0/sites?limit=1000",
-      false,
-      false,
-      false,
-      "com.dozuki.ifixit.api.sites",
-      new ParseResult() {
-         public Object parse(String json) throws JSONException {
-            return JSONHelper.parseSites(json);
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "sites?limit=1000";
          }
-      }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Sites().setResult(JSONHelper.parseSites(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Sites();
+         }
+      },
+      false,
+      false,
+      false,
+      false
    );
 
-   private interface CreateUrl {
-      public String create(String query);
-   }
+   /**
+    * Current version of the API to use.
+    */
+   private static final String API_VERSION = "1.0";
 
-   private interface ParseResult {
-      public Object parse(String json) throws JSONException;
+   /**
+    * Defines various methods that each endpoint must provide.
+    */
+   private interface Endpoint {
+      /**
+       * Returns the end of a URL that defines this endpoint.
+       *
+       * The full URL is then: protocol + domain + "/api/" + api version + "/" + createUrl
+       */
+      public String createUrl(String query);
+
+      /**
+       * Returns an APIEvent given the JSON response of the request.
+       */
+      public APIEvent<?> parse(String json) throws JSONException;
+
+      /**
+       * Returns an empty APIEvent that is used for events for this endpoint.
+       *
+       * This is typically used to put errors into so they still get to the right place.
+       */
+      public APIEvent<?> getEvent();
    }
 
    /**
-    * The relative URL for the API endpoint.
+    * Endpoint's functionality.
     */
-   private final String mUrl;
+   private final Endpoint mEndpoint;
 
    /**
     * Whether or not to use https://.
@@ -210,40 +273,18 @@ public enum APIEndpoint {
    public final boolean mPost;
 
    /**
-    * Action used for broadcast receivers.
+    * True if endpoint must be public. This is primarily for login and register so
+    * users can actually log in without being prompted for login repeatedly.
     */
-   public final String mAction;
+   public final boolean mForcePublic;
 
-   /**
-    * Used for endpoints to create special URLs.
-    */
-   private final CreateUrl mCreateUrl;
-
-   /**
-    * Used to parse JSON results into the expected form.
-    */
-   private final ParseResult mParseResult;
-
-   private APIEndpoint(String url, boolean https, boolean authenticated,
-    boolean post, String action, ParseResult parseResult) {
-      this(url, https, authenticated, post, action, null, parseResult);
-   }
-
-   private APIEndpoint(CreateUrl createUrl, boolean https,
-    boolean authenticated, boolean post, String action,
-    ParseResult parseResult) {
-      this(null, https, authenticated, post, action, createUrl, parseResult);
-   }
-
-   private APIEndpoint(String url, boolean https, boolean authenticated,
-    boolean post, String action, CreateUrl createUrl, ParseResult parseResult) {
-      mUrl = url;
+   private APIEndpoint(Endpoint endpoint, boolean https, boolean authenticated,
+    boolean post, boolean forcePublic) {
+      mEndpoint = endpoint;
       mHttps = https;
       mAuthenticated = authenticated;
       mPost = post;
-      mAction = action;
-      mCreateUrl = createUrl;
-      mParseResult = parseResult;
+      mForcePublic = forcePublic;
    }
 
    /**
@@ -283,21 +324,20 @@ public enum APIEndpoint {
          protocol = "http://";
       }
 
-      if (mCreateUrl != null) {
-         url = mCreateUrl.create(query);
-
-         if (url == null) {
-            return null;
-         }
-      } else {
-         url = mUrl;
-      }
+      url = "/api/" + API_VERSION + "/" + mEndpoint.createUrl(query);
 
       return protocol + domain + url;
    }
 
-   public Object parseResult(String json) throws JSONException {
-      return mParseResult.parse(json);
+   public APIEvent<?> parseResult(String json) throws JSONException {
+      return mEndpoint.parse(json).setResponse(json);
+   }
+
+   /**
+    * Returns a "plain" event that is the correct type for this endpoint.
+    */
+   public APIEvent<?> getEvent() {
+      return mEndpoint.getEvent();
    }
 
    public static APIEndpoint getByTarget(int target) {
@@ -311,7 +351,6 @@ public enum APIEndpoint {
    }
 
    public String toString() {
-      return mUrl + " | " + mHttps + " | " + mAuthenticated + " | " +
-       ordinal() + " | " + mAction;
+      return mHttps + " | " + mAuthenticated + " | " + ordinal();
    }
 }

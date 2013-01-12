@@ -16,6 +16,9 @@ public class Site implements Serializable {
    public boolean mPublic;
    public boolean mAnswers;
    public String mDescription;
+   public boolean mStandardAuth;
+   public String mSsoUrl;
+   public boolean mPublicRegistration;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -75,6 +78,21 @@ public class Site implements Serializable {
          site.mDescription = "iFixit is the free repair manual you can edit." +
           " We sell tools, parts and upgrades for Apple Mac, iPod, iPhone," +
           " iPad, and MacBook as well as game consoles.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = true;
+      } else if (siteName.equals("dozuki")) {
+         site = new Site(5);
+         site.mName = "dozuki";
+         site.mDomain = "www.dozuki.com";
+         site.mTitle = "Dozuki";
+         site.mTheme = "custom";
+         site.mPublic = true;
+         site.mAnswers = true;
+         site.mDescription = "Using the Dozuki platform: How-to guides and other useful information.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = true;
       } else if (siteName.equals("crucial")) {
          site = new Site(549);
          site.mName = "crucial";
@@ -85,6 +103,9 @@ public class Site implements Serializable {
          site.mAnswers = true;
          site.mDescription = "Free installation guides for Crucial RAM and" +
           " SSD products.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = false;
       }
 
       return site;

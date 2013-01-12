@@ -2,12 +2,13 @@ package com.dozuki.ifixit.topic_view.ui;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.view.LayoutInflater;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.TextView;
 
 public class TopicListRowView extends LinearLayout {
    private TextView mTopicName;

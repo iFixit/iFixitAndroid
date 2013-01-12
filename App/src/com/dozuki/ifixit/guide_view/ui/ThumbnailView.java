@@ -1,17 +1,18 @@
 package com.dozuki.ifixit.guide_view.ui;
 
-import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.LinearLayout;
 
 import java.util.ArrayList;
 

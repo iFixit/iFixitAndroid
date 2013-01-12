@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.guide_view.ui;
 
-import android.app.Activity;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
@@ -16,6 +15,8 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+
+import org.holoeverywhere.app.Activity;
 
 public class FullImageViewActivity extends Activity {
    public static final String IMAGE_URL = "IMAGE_URL";

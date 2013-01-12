@@ -7,39 +7,39 @@
      to notify TopicViewActivity to switch back to the other activity
 -->
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="match_parent"
-   android:layout_height="match_parent"
-   android:baselineAligned="false"
-   android:orientation="horizontal" >
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:baselineAligned="false"
+    android:orientation="horizontal" >
 
-   <FrameLayout
-      android:id="@+id/topic_list_fragment"
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="25" >
-   </FrameLayout>
+    <FrameLayout
+        android:id="@+id/topic_list_fragment"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="25" >
+    </FrameLayout>
 
-   <FrameLayout
-      android:layout_width="0dp"
-      android:layout_height="match_parent"
-      android:layout_weight="75">
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="75" >
 
-      <ImageView
-         android:id="@+id/fist_background"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_gravity="bottom"
-         android:paddingTop="20dp"
-         android:scaleType="fitXY"
-         android:clipToPadding="true"
-         android:contentDescription="@string/topic_background_description"
-         style="?attr/topicDefaultBackground" />
+        <ImageView
+            style="?attr/topicDefaultBackground"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:clipToPadding="true"
+            android:contentDescription="@string/topic_background_description"
+            android:paddingTop="20dp"
+            android:scaleType="fitXY" />
 
-      <fragment
-         android:id="@+id/topic_view_fragment"
-         android:name="com.dozuki.ifixit.topic_view.ui.TopicViewFragment"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent">
-      </fragment>
-   </FrameLayout>
+        <fragment
+            android:id="@+id/topic_view_fragment"
+            android:name="com.dozuki.ifixit.topic_view.ui.TopicViewFragment"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </fragment>
+    </FrameLayout>
+
 </LinearLayout>

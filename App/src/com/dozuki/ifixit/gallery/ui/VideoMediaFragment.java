@@ -1,18 +1,22 @@
 package com.dozuki.ifixit.gallery.ui;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.UserVideoList;
 
-public class VideoMediaFragment extends SherlockFragment implements
+public class VideoMediaFragment extends Fragment implements
 		MediaFragment {
 	private GridView mGridView;
 	private MediaAdapter mGalleryAdapter;

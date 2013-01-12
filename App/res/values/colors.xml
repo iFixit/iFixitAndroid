@@ -4,6 +4,7 @@ Taken from @Lars from Stack Overflow - thanks!
 @link http://stackoverflow.com/questions/3769762/android-color-xml-resource-file
 -->
 <resources>
+
     <color name="white">#FFFFFF</color>
     <color name="translucent_white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>

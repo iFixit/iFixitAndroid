@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="site_list_button_width">340dp</dimen>
-    <dimen name="site_list_width">300dp</dimen>
-    
+
     <dimen name="title_text_size">24sp</dimen>
     <dimen name="body_text_size">14sp</dimen>
     <dimen name="body_text_top_spacing">8dp</dimen>
@@ -20,7 +19,8 @@
     <dimen name="guide_thumbnail_height">60dp</dimen>
     <dimen name="guide_thumbnail_spacing">6dp</dimen>
     <dimen name="guide_thumbnail_padding">1dp</dimen>
-     <dimen name="guide_micro_thumbnail_width">40dp</dimen>
+    
+    <dimen name="guide_micro_thumbnail_width">40dp</dimen>
     <dimen name="guide_micro_thumbnail_height">30dp</dimen>
 
     <dimen name="topic_list_column_width">270dp</dimen>
@@ -39,10 +39,13 @@
 
     <dimen name="progress_bar_height">80dp</dimen>
     <dimen name="progress_bar_width">80dp</dimen>
+
     <dimen name="gallery_login_text_padding">8dp</dimen>
-    <dimen name="gallery_bottom_bar_height">48dp</dimen>
+    <dimen name="gallery_bottom_bar_height">30dp</dimen>
+    <dimen name="gallery_grid_column_width">150dp</dimen>
     <dimen name="gallery_top_bar_height">35dp</dimen>
+    <dimen name="login_agreement_text_top_padding">3dp</dimen>
     
     <dimen name="guide_create_edit_button_dim">36dp</dimen>
-     <dimen name="guide_create_icon_button_dim">20dp</dimen>
+    <dimen name="guide_create_icon_button_dim">20dp</dimen>
 </resources>

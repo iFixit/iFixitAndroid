@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.gallery.ui;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -15,7 +13,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -30,8 +27,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -45,13 +40,11 @@ import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepsEditActivity;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
-import com.dozuki.ifixit.login.model.LoginListener;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
@@ -64,9 +57,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-public class PhotoMediaFragment extends SherlockFragment implements
+import com.squareup.otto.Subscribe;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
+
+public class PhotoMediaFragment extends Fragment  implements
 		MediaFragment, OnItemClickListener, OnClickListener,
-		OnItemLongClickListener, LoginListener {
+		OnItemLongClickListener {
 
 	public TextView noImagesText;
 	public static boolean showingHelp;
@@ -111,52 +113,52 @@ public class PhotoMediaFragment extends SherlockFragment implements
 
 	private int mSelectForReturn;
 
-	private APIReceiver mApiReceiver = new APIReceiver() {
-		public void onSuccess(Object result, Intent intent) {
-			if (intent.getAction().equals(APIEndpoint.USER_IMAGES.mAction)) {
-				UserImageList imageList = (UserImageList) result;
-				if (imageList.getImages().size() > 0) {
-					int oldImageSize = mImageList.getImages().size();
-					for (int i = 0; i < imageList.getImages().size(); i++) {
-						mSelectedList.add(false);
-						mImageList.addImage(imageList.getImages().get(i));
-					}
-					mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
-					mGalleryAdapter.invalidatedView();
-					mLastPage = false;
-					noImagesText.setVisibility(View.GONE);
-				} else {
-					mLastPage = true;
-					noImagesText.setVisibility(View.VISIBLE);
-				}
-				mNextPageRequestInProgress = false;
-			} else if (intent.getAction().equals(
-					APIEndpoint.UPLOAD_IMAGE.mAction)) {
-				UploadedImageInfo imageinfo = (UploadedImageInfo) result;
-				String url = intent.getExtras().getString(
-						APIService.REQUEST_RESULT_INFORMATION);
-
-				LocalImage cur = mLocalURL.get(url);
-				if (cur == null)
-					return;
-				cur.mImgid = imageinfo.getImageid();
-				mLocalURL.put(url, cur);
-				mImagesDownloaded++;
-				mGalleryAdapter.invalidatedView();
-			} else if (intent.getAction().equals(
-					APIEndpoint.DELETE_IMAGE.mAction)) {
-
-			}
-		}
-
-		public void onFailure(APIError error, Intent intent) {
-			if (error.mType != APIError.ErrorType.INVALID_USER) {
-				APIService.getListMediaErrorDialog(mContext, error, mCurIntent)
-						.show();
-				mNextPageRequestInProgress = false;
-			}
-		}
-	};
+//	private APIReceiver mApiReceiver = new APIReceiver() {
+//		public void onSuccess(Object result, Intent intent) {
+//			if (intent.getAction().equals(APIEndpoint.USER_IMAGES.mAction)) {
+//				UserImageList imageList = (UserImageList) result;
+//				if (imageList.getImages().size() > 0) {
+//					int oldImageSize = mImageList.getImages().size();
+//					for (int i = 0; i < imageList.getImages().size(); i++) {
+//						mSelectedList.add(false);
+//						mImageList.addImage(imageList.getImages().get(i));
+//					}
+//					mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
+//					mGalleryAdapter.invalidatedView();
+//					mLastPage = false;
+//					noImagesText.setVisibility(View.GONE);
+//				} else {
+//					mLastPage = true;
+//					noImagesText.setVisibility(View.VISIBLE);
+//				}
+//				mNextPageRequestInProgress = false;
+//			} else if (intent.getAction().equals(
+//					APIEndpoint.UPLOAD_IMAGE.mAction)) {
+//				UploadedImageInfo imageinfo = (UploadedImageInfo) result;
+//				String url = intent.getExtras().getString(
+//						APIService.REQUEST_RESULT_INFORMATION);
+//
+//				LocalImage cur = mLocalURL.get(url);
+//				if (cur == null)
+//					return;
+//				cur.mImgid = imageinfo.getImageid();
+//				mLocalURL.put(url, cur);
+//				mImagesDownloaded++;
+//				mGalleryAdapter.invalidatedView();
+//			} else if (intent.getAction().equals(
+//					APIEndpoint.DELETE_IMAGE.mAction)) {
+//
+//			}
+//		}
+//
+//		public void onFailure(APIError error, Intent intent) {
+//			if (error.mType != APIError.ErrorType.INVALID_USER) {
+//				APIService.getListMediaErrorDialog(mContext, error, mCurIntent)
+//						.show();
+//				mNextPageRequestInProgress = false;
+//			}
+//		}
+//	};
 
 	public PhotoMediaFragment(Context con) {
 		mContext = con;
@@ -193,7 +195,7 @@ public class PhotoMediaFragment extends SherlockFragment implements
 				createHelpDialog(mContext).show();
 			showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
 			if (showingLogout)
-				LoginFragment.getLogoutDialog(mContext).show();
+				//LoginFragment.getLogoutDialog(mContext).show();
 			showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 
 			mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
@@ -231,10 +233,10 @@ public class PhotoMediaFragment extends SherlockFragment implements
 		 * ensures that mApiReceiver is not registered twice.
 		 */
 		IntentFilter filter = new IntentFilter();
-		filter.addAction(APIEndpoint.USER_IMAGES.mAction);
-		filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
-		filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
-		mContext.registerReceiver(mApiReceiver, filter);
+		//filter.addAction(APIEndpoint.USER_IMAGES.mAction);
+		//filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
+		//filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
+		//mContext.registerReceiver(mApiReceiver, filter);
 	}
 
 	@Override
@@ -319,7 +321,7 @@ public class PhotoMediaFragment extends SherlockFragment implements
 	@Override
 	public void onDestroy() {
 		try {
-			mContext.unregisterReceiver(mApiReceiver);
+		//	mContext.unregisterReceiver(mApiReceiver);
 		} catch (IllegalArgumentException e) {
 			// Do nothing. This happens in the unlikely event that
 			// unregisterReceiver has been called already.
@@ -349,7 +351,7 @@ public class PhotoMediaFragment extends SherlockFragment implements
 		switch (view.getId()) {
 		case R.id.button_holder:
 			showingLogout = true;
-			LoginFragment.getLogoutDialog(mContext).show();
+			//LoginFragment.getLogoutDialog(mContext).show();
 			break;
 		}
 	}
@@ -679,13 +681,13 @@ public class PhotoMediaFragment extends SherlockFragment implements
 		mMode.finish();
 	}
 
-	@Override
-	public void onLogin(User user) {
-		mImageList.getImages().clear();
-		mUserName = ((MainApplication) ((Activity) mContext).getApplication())
-				.getUser().getUsername();
-		retrieveUserImages();
-	}
+//	@Override
+//	public void onLogin(User user) {
+//		mImageList.getImages().clear();
+//		mUserName = ((MainApplication) ((Activity) mContext).getApplication())
+//				.getUser().getUsername();
+//		retrieveUserImages();
+//	}
 
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view,
@@ -819,9 +821,9 @@ public class PhotoMediaFragment extends SherlockFragment implements
 		}
 	}
 
-	@Override
-	public void onLogout() {
-	}
+//	@Override
+//	public void onLogout() {
+//	}
 
 	public static AlertDialog createHelpDialog(final Context context) {
 		showingHelp = true;
@@ -909,10 +911,10 @@ public class PhotoMediaFragment extends SherlockFragment implements
 		return bitmap;
 	}
 
-	@Override
-	public void onCancel() {
-		// Don't do anything on canceled login.
-	}
+//	@Override
+//	public void onCancel() {
+//		// Don't do anything on canceled login.
+//	}
 
 	@Override
 	public void clearMediaList() {

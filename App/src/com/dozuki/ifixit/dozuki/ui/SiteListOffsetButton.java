@@ -3,9 +3,10 @@ package com.dozuki.ifixit.dozuki.ui;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
-import android.widget.Button;
 
 import com.dozuki.ifixit.R;
+
+import org.holoeverywhere.widget.Button;
 
 public class SiteListOffsetButton extends Button {
 

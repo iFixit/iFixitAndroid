@@ -1,16 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/topic_header_row"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    android:background="?attr/topicHeaderColor">
+    android:background="?attr/topicHeaderColor"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/topic_header"
+        style="@style/text.list.header"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/text.list.header" />
+        android:layout_height="wrap_content" />
 
 </LinearLayout>
-

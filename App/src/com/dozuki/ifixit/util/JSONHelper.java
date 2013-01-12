@@ -52,24 +52,27 @@ public class JSONHelper {
    }
 
    private static Site parseSite(JSONObject jSite) throws JSONException {
-      boolean isPublic = !jSite.getBoolean("private");
-
-      // We don't currently support private sites.
-      if (!isPublic) {
-         return null;
-      }
-
       Site site = new Site(jSite.getInt("siteid"));
 
       site.mName = jSite.getString("name");
       site.mDomain = jSite.getString("domain");
       site.mTitle = jSite.getString("title");
       site.mTheme = jSite.getString("theme");
-      site.mPublic = isPublic;
+      site.mPublic = !jSite.getBoolean("private");
       site.mDescription = jSite.getString("description");
       site.mAnswers = jSite.getInt("answers") != 0;
 
+      setAuthentication(site, jSite.getJSONObject("authentication"));
+
       return site;
+   }
+
+   private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
+      site.mStandardAuth = jAuth.has("standard") ? jAuth.getBoolean("standard") : false;
+
+      site.mSsoUrl = jAuth.has("sso") ? jAuth.getString("sso") : null;
+
+      site.mPublicRegistration = jAuth.getBoolean("public-registration");
    }
 
    /**

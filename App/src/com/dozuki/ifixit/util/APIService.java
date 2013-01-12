@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import android.app.Activity;
-import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -19,10 +17,13 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 
 import java.io.File;
@@ -37,54 +38,8 @@ import java.util.Map;
  *               Add functionality to download multiple guides including images.
  */
 public class APIService extends Service {
-   public static class Result implements Serializable {
-      private static final long serialVersionUID = 1L;
-
-      private String mResponse;
-      private Object mResult;
-      private APIError mError;
-
-      public Result(String response) {
-         mResponse = response;
-      }
-
-      public Result(String response, Object result) {
-         this(response);
-         setResult(result);
-      }
-
-      public Result(APIError error) {
-         setError(error);
-      }
-
-      public boolean hasError() {
-         return mError != null;
-      }
-
-      public String getResponse() {
-         return mResponse;
-      }
-
-      public Object getResult() {
-         return mResult;
-      }
-
-      public void setResult(Object result) {
-         mResult = result;
-      }
-
-      public APIError getError() {
-         return mError;
-      }
-
-      public void setError(APIError error) {
-         mError = error;
-      }
-   }
-
-
    private interface Responder {
-      public void setResult(Result result);
+      public void setResult(APIEvent<?> result);
    }
 
    private static final String REQUEST_TARGET = "REQUEST_TARGET";
@@ -100,6 +55,16 @@ public class APIService extends Service {
 
    public static final String RESULT = "RESULT";
 
+   /**
+    * Pending API call. This is set when an authenticated request is performed
+    * but the user is not logged in. This is then performed once the user has
+    * authenticated.
+    */
+   private static Intent sPendingApiCall;
+
+   /**
+    * Current site.
+    */
    private static Site mSite;
 
    public static void setSite(Site site) {
@@ -109,6 +74,46 @@ public class APIService extends Service {
    @Override
    public IBinder onBind(Intent intent) {
       return null; // Do nothing.
+   }
+
+   /**
+    * Returns true if the the user needs to be authenticated for the given site and endpoint.
+    */
+   private static boolean requireAuthentication(Site site, APIEndpoint endpoint) {
+      return (endpoint.mAuthenticated || !mSite.mPublic) && !endpoint.mForcePublic;
+   }
+
+   /**
+    * Performs the API call defined by the given Intent. This takes care of opening a
+    * login dialog and saving the Intent if the user isn't authenticated but should be.
+    *
+    * TODO: Make it take an "APICall" that wraps an Intent so this is the only way to
+    * perform an API call.
+    */
+   public static void call(Activity activity, Intent apiCall) {
+      APIEndpoint endpoint = APIEndpoint.getByTarget(apiCall.getExtras().getInt(REQUEST_TARGET));
+
+      // User needs to be logged in for an authenticated endpoint with the exception of login.
+      if (requireAuthentication(mSite, endpoint) && !MainApplication.get().isUserLoggedIn()) {
+         sPendingApiCall = apiCall;
+
+         // Don't display the login dialog twice.
+         if (!MainApplication.get().isLoggingIn()) {
+            LoginFragment.newInstance().show(activity.getSupportFragmentManager());
+         }
+      } else {
+         activity.startService(apiCall);
+      }
+   }
+
+   /**
+    * Returns the pending API call and sets it to null. Returns null if no pending API call.
+    */
+   public static Intent getAndRemovePendingApiCall() {
+      Intent pendingApiCall = sPendingApiCall;
+      sPendingApiCall = null;
+
+      return pendingApiCall;
    }
 
    @Override
@@ -142,7 +147,7 @@ public class APIService extends Service {
 
       performRequest(endpoint, requestQuery, postData, filePath,
        new Responder() {
-         public void setResult(Result result) {
+         public void setResult(APIEvent<?> result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
                result = parseResult(result.getResponse(), endpoint);
@@ -153,8 +158,13 @@ public class APIService extends Service {
                saveResult(result, requestTarget, requestQuery);
             }
 
-            // Always broadcast the result despite any errors.
-            broadcastResult(result, endpoint, resultInformation);
+            result.setExtraInfo(resultInformation);
+
+            /**
+             * Always post the result despite any errors. This actually sends it off
+             * to Activities etc. that care about API cals.
+             */
+            MainApplication.getBus().post(result);
          }
       });
 
@@ -164,46 +174,31 @@ public class APIService extends Service {
    /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private Result parseResult(String response, APIEndpoint endpoint) {
+   private APIEvent<?> parseResult(String response, APIEndpoint endpoint) {
       String error = JSONHelper.parseError(response);
       if (error != null) {
          if (error.equals(INVALID_LOGIN_STRING)) {
-            return new Result(new APIError(getString(R.string.error_dialog_title),
-             error, ErrorType.INVALID_USER));
+            return endpoint.getEvent().setError(new APIError(getString(
+             R.string.error_dialog_title), error, ErrorType.INVALID_USER));
          } else {
-            return new Result(new APIError(getString(R.string.error_dialog_title),
-             error, ErrorType.OTHER));
+            return endpoint.getEvent().setError(new APIError(getString(
+             R.string.error_dialog_title), error, ErrorType.OTHER));
          }
       }
 
       try {
-         Object parsedResult = endpoint.parseResult(response);
-         return new Result(response, parsedResult);
+         return endpoint.parseResult(response);
       } catch (JSONException e) {
-         return new Result(APIError.getParseError(this));
+         return endpoint.getEvent().setError(APIError.getParseError(this));
       }
    }
 
-   private void saveResult(Result result, int requestTarget,
+   private void saveResult(APIEvent<?> result, int requestTarget,
     String requestQuery) {
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
       // db.insertResult(result.getResponse(), requestTarget, requestQuery);
       // db.close();
-   }
-
-   private void broadcastResult(Result result, APIEndpoint endpoint,
-    String extraResultInfo) {
-      Intent broadcast = new Intent();
-      Bundle extras = new Bundle();
-
-      extras.putSerializable(RESULT, result);
-      extras.putInt(REQUEST_TARGET, endpoint.getTarget());
-      extras.putString(REQUEST_RESULT_INFORMATION, extraResultInfo);
-      broadcast.putExtras(extras);
-
-      broadcast.setAction(endpoint.mAction);
-      sendBroadcast(broadcast);
    }
 
    public static Intent getCategoriesIntent(Context context) {
@@ -352,7 +347,7 @@ public class APIService extends Service {
       d.setOnCancelListener(new OnCancelListener() {
          @Override
          public void onCancel(DialogInterface dialog) {
-            ((Activity) context).finish();
+            ((Activity)context).finish();
          }
       });
       return d;
@@ -361,7 +356,7 @@ public class APIService extends Service {
    private void performRequest(final APIEndpoint endpoint,
     final String requestQuery, final Map<String, String> postData,
     final String filePath, final Responder responder) {
-      if (!checkConnectivity(responder)) {
+      if (!checkConnectivity(responder, endpoint)) {
          return;
       }
 
@@ -369,9 +364,9 @@ public class APIService extends Service {
 
       Log.i("iFixit", "Performing API call: " + url);
 
-      new AsyncTask<String, Void, Result>() {
+      new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
-         protected Result doInBackground(String... dummy) {
+         protected APIEvent<?> doInBackground(String... dummy) {
             /**
              * Unfortunately we must split the creation of the HttpRequest
              * object and the appropriate actions to take for a GET vs. a POST
@@ -400,10 +395,8 @@ public class APIService extends Service {
 
                /**
                 * Send the session along in a Cookie.
-                *
-                * TODO: Also send it along if the current site is private.
                 */
-               if (endpoint.mAuthenticated) {
+               if (requireAuthentication(mSite, endpoint)) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
                   String session = user.getSession();
                   request.header("Cookie", "session=" + session);
@@ -423,26 +416,26 @@ public class APIService extends Service {
                   // Do nothing extra for GET.
                }
 
-               return new Result(request.body());
+               return endpoint.getEvent().setResponse(request.body());
             } catch (HttpRequestException e) {
-               return new Result(APIError.getParseError(APIService.this));
+               return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
             }
          }
 
          @Override
-         protected void onPostExecute(Result result) {
+         protected void onPostExecute(APIEvent<?> result) {
             responder.setResult(result);
          }
       }.execute();
    }
 
-   private boolean checkConnectivity(Responder responder) {
+   private boolean checkConnectivity(Responder responder, APIEndpoint endpoint) {
       ConnectivityManager cm = (ConnectivityManager)
        getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(new Result(APIError.getConnectionError(this)));
+         responder.setResult(endpoint.getEvent().setError(APIError.getConnectionError(this)));
          return false;
       }
 

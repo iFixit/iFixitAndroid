@@ -3,34 +3,32 @@ package com.dozuki.ifixit.dozuki.ui;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.Button;
-import android.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
-import com.dozuki.ifixit.util.APIEndpoint;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIReceiver;
+import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.IfixitActivity;
+import com.squareup.otto.Subscribe;
+
+import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.ListView;
 
 import java.util.ArrayList;
 
-public class SiteListActivity extends SherlockFragmentActivity
+public class SiteListActivity extends IfixitActivity
  implements SearchView.OnQueryTextListener {
    private static final String SITE_LIST = "SITE_LIST";
 
@@ -38,19 +36,6 @@ public class SiteListActivity extends SherlockFragmentActivity
    private ArrayList<Site> mSiteList;
    private ListView mSiteListView;
    private SearchView mSearchView;
-
-   private APIReceiver mApiReceiver = new APIReceiver() {
-      @SuppressWarnings("unchecked")
-      public void onSuccess(Object result, Intent intent) {
-         mSiteList = (ArrayList<Site>)result;
-         setSiteList(mSiteList);
-      }
-
-      public void onFailure(APIError error, Intent intent) {
-         APIService.getErrorDialog(SiteListActivity.this, error,
-          APIService.getSitesIntent(SiteListActivity.this)).show();
-      }
-   };
 
    @SuppressWarnings("unchecked")
    @Override
@@ -82,7 +67,7 @@ public class SiteListActivity extends SherlockFragmentActivity
              * update the list.
              */
             if (mSiteList != null) {
-               showSiteListDialog(mSiteList);
+               showSiteListDialog();
             }
          }
       });
@@ -101,6 +86,18 @@ public class SiteListActivity extends SherlockFragmentActivity
          String query = intent.getStringExtra(SearchManager.QUERY);
          search(query);
       }
+   }
+
+   @Override
+   public boolean neverFinishActivityOnLogout() {
+      return true;
+   }
+
+   @Override
+   public void onResume() {
+      MainApplication.get().setSite(Site.getSite("dozuki"));
+
+      super.onResume();
    }
 
    private void search(String query) {
@@ -127,24 +124,14 @@ public class SiteListActivity extends SherlockFragmentActivity
       outState.putSerializable(SITE_LIST, mSiteList);
    }
 
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      IntentFilter filter = new IntentFilter();
-      filter.addAction(APIEndpoint.SITES.mAction);
-      registerReceiver(mApiReceiver, filter);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      try {
-         unregisterReceiver(mApiReceiver);
-      } catch (IllegalArgumentException e) {
-         // Do nothing. This happens in the unlikely event that
-         // unregisterReceiver has been called already.
+   @Subscribe
+   public void onSites(APIEvent.Sites event) {
+      if (!event.hasError()) {
+         mSiteList = event.getResult();
+         setSiteList(mSiteList);
+      } else {
+         APIService.getErrorDialog(SiteListActivity.this, event.getError(),
+          APIService.getSitesIntent(SiteListActivity.this)).show();
       }
    }
 
@@ -193,11 +180,8 @@ public class SiteListActivity extends SherlockFragmentActivity
    public boolean onKeyUp(int keyCode, KeyEvent event) {
       if (keyCode == KeyEvent.KEYCODE_SEARCH) {
          /**
-          * Phones with a hardware search button open up the SearchDialog by
-          * default. This overrides that by setting focus on the SearchView.
-          * Unfortunately it does not open the soft keyboard as of now.
+          * We want to ignore the hardware search button if the dialog doesn't handle it.
           */
-         mSearchView.requestFocus();
          return true;
       } else {
          return super.onKeyUp(keyCode, event);
@@ -227,19 +211,15 @@ public class SiteListActivity extends SherlockFragmentActivity
    }
 
    private void getSiteList() {
-      startService(APIService.getSitesIntent(this));
+      APIService.call(this, APIService.getSitesIntent(this));
    }
 
-   private void showSiteListDialog(ArrayList<Site> sites) {
+   private void showSiteListDialog() {
        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-       Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-       if (prev != null) {
-          ft.remove(prev);
-       }
        ft.addToBackStack(null);
 
        // Create and show the dialog.
-       DialogFragment siteList = SiteListDialogFragment.newInstance();
-       siteList.show(ft, "dialog");
+       DialogFragment siteListFragment = SiteListDialogFragment.newInstance();
+       siteListFragment.show(ft);
    }
 }

@@ -2,7 +2,6 @@ package com.dozuki.ifixit.topic_view.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -10,7 +9,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.GuideInfo;
@@ -19,7 +17,10 @@ import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class TopicGuideListFragment extends SherlockFragment {
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Fragment;
+
+public class TopicGuideListFragment extends Fragment {
    private static final int MAX_LOADING_IMAGES = 20;
    private static final int MAX_STORED_IMAGES = 30;
    private static final int MAX_WRITING_IMAGES = 20;
@@ -48,9 +49,6 @@ public class TopicGuideListFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedState) {
-      getActivity().setTheme(((MainApplication)getActivity().getApplication()).
-       getSiteTheme());
-
       super.onCreate(savedState);
 
       if (savedState != null && mTopicLeaf == null) {

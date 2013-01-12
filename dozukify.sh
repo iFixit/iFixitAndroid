@@ -38,9 +38,9 @@ sed -i "" -e "s/www\.ifixit\.com/$domain/" ./AndroidManifest.xml
 # Change the default activity to the site list for Dozuki
 if [ "$siteName" = "dozuki" ]
 then
-   sed -i "" -e "s/view\.ui\.TopicsActivity/view.ui.TopicsActivityTmp/" ./AndroidManifest.xml
-   sed -i "" -e "s/dozuki\.ui\.SiteListActivity/view.ui.TopicsActivity/" ./AndroidManifest.xml
-   sed -i "" -e "s/view\.ui\.TopicsActivityTmp/dozuki.ui.SiteListActivity/" ./AndroidManifest.xml
+   sed -i "" -e "s/topic_view\.ui\.TopicsActivity/topic_view.ui.TopicsActivityTmp/" ./AndroidManifest.xml
+   sed -i "" -e "s/dozuki\.ui\.SiteListActivity/topic_view.ui.TopicsActivity/" ./AndroidManifest.xml
+   sed -i "" -e "s/topic_view\.ui\.TopicsActivityTmp/dozuki.ui.SiteListActivity/" ./AndroidManifest.xml
 
    # Remove comments to enable Dozuki specific code
    sed -i "" -e "/<\!--DOZUKI/d" ./AndroidManifest.xml
