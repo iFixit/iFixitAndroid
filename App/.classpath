@@ -2,8 +2,10 @@
 <classpath>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
+	<classpathentry exported="true" kind="lib" path="/http-request/target/http-request-3.1-SNAPSHOT.jar"/>
 	<classpathentry kind="lib" path="/ActionBar/libs/android-support-v4.jar"/>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="lib" path="/ImageManager"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -39,11 +40,20 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    private EditText mPassword;
    private TextView mErrorText;
    private ProgressBar mLoadingSpinner;
-   private Intent mCurIntent;
+   private APICall mCurAPICall;
    private boolean mHasRegisterBtn = true;
 
    @Subscribe
    public void onLogin(APIEvent.Login event) {
+      handleLogin(event);
+   }
+
+   @Subscribe
+   public void onUserInfo(APIEvent.UserInfo event) {
+      handleLogin(event);
+   }
+
+   private void handleLogin(APIEvent<User> event) {
       if (!event.hasError()) {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
@@ -55,7 +65,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
 
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
-            APIService.getErrorDialog(getActivity(), error, mCurIntent).show();
+            APIService.getErrorDialog(getActivity(), error, mCurAPICall).show();
          }
 
          mLoadingSpinner.setVisibility(View.GONE);
@@ -151,8 +161,8 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
-         mCurIntent = APIService.getLoginIntent(getActivity(), login, password);
-         APIService.call((Activity)getActivity(), mCurIntent);
+         mCurAPICall = APIService.getLoginAPICall(login, password);
+         APIService.call((Activity)getActivity(), mCurAPICall);
       } else {
          if (login.length() < 1) {
             mLoginId.requestFocus();
@@ -233,10 +243,10 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
 
       if (resultCode == Activity.RESULT_OK && data != null) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
-         String session = data.getStringExtra("session");
+         String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
-         mCurIntent = APIService.getLoginIntent(getActivity(), session);
-         APIService.call((Activity)getActivity(), mCurIntent);
+         mCurAPICall = APIService.getUserInfoAPICall(session);
+         APIService.call((Activity)getActivity(), mCurAPICall);
       }
    }
 

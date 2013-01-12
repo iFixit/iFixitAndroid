@@ -49,7 +49,7 @@ public class TopicViewFragment extends Fragment
          setTopicLeaf(event.getResult());
       } else {
          APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getTopicIntent(getActivity(), mTopicNode.getName()))
+          APIService.getTopicAPICall(mTopicNode.getName()))
           .show();
       }
    }
@@ -222,7 +222,7 @@ public class TopicViewFragment extends Fragment
       mSelectedTab = -1;
 
       APIService.call((Activity)getActivity(),
-       APIService.getTopicIntent(getActivity(), topicName));
+       APIService.getTopicAPICall(topicName));
    }
 
    public TopicLeaf getTopicLeaf() {

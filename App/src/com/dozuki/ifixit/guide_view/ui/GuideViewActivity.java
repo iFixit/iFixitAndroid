@@ -64,7 +64,7 @@ public class GuideViewActivity extends IfixitActivity
          }
       } else {
          APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
-          APIService.getGuideIntent(GuideViewActivity.this, mGuideid)).show();
+          APIService.getGuideAPICall(mGuideid)).show();
       }
    }
 
@@ -209,7 +209,7 @@ public class GuideViewActivity extends IfixitActivity
    public void getGuide(final int guideid) {
       mNextPageImage.setVisibility(View.GONE);
 
-      APIService.call(this, APIService.getGuideIntent(this, guideid));
+      APIService.call(this, APIService.getGuideAPICall(guideid));
    }
 
    private void displayError() {

@@ -297,8 +297,8 @@ public class PhotoMediaFragment extends Fragment  implements
 
 	public void retrieveUserImages() {
 		mNextPageRequestInProgress = true;
-		mCurIntent = APIService.getUserImagesIntent(mContext, "?limit="
-				+ (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded);
+	//	mCurIntent = APIService.getUserImagesIntent(mContext, "?limit="
+	//			+ (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded);
 		mContext.startService(mCurIntent);
 	}
 
@@ -458,8 +458,8 @@ public class PhotoMediaFragment extends Fragment  implements
 				}
 
 				String key = mGalleryAdapter.addUri(selectedImageUri);
-				mCurIntent = APIService.getUploadImageIntent(mContext,
-						getPath(selectedImageUri), key);
+			//	mCurIntent = APIService.getUploadImageIntent(mContext,
+			//			getPath(selectedImageUri), key);
 				mContext.startService(mCurIntent);
 			} else if (requestCode == PhotoMediaFragment.CAMERA_PIC_REQUEST) {
 				if (mCameraTempFileName == null) {
@@ -472,8 +472,8 @@ public class PhotoMediaFragment extends Fragment  implements
 				opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
 				String key = mGalleryAdapter.addFile(mCameraTempFileName);
-				mCurIntent = APIService.getUploadImageIntent(mContext,
-						mCameraTempFileName, key);
+		//		mCurIntent = APIService.getUploadImageIntent(mContext,
+		//				mCameraTempFileName, key);
 				mContext.startService(mCurIntent);
 			}
 		}
@@ -671,7 +671,7 @@ public class PhotoMediaFragment extends Fragment  implements
 		if (deleteQuery.length() > 1) {
 			deleteQuery = deleteQuery.substring(0, deleteQuery.length() - 1);
 		}
-		mCurIntent = APIService.getDeleteImageIntent(mContext, deleteQuery);
+	//	mCurIntent = APIService.getDeleteImageIntent(mContext, deleteQuery);
 		mContext.startService(mCurIntent);
 
 		if (mImageList.getImages().size() == 0) {

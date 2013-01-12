@@ -12,4 +12,5 @@ public interface MediaFragment {
 
 	public void setForReturn(int mMediaQuickReturn);
 
+
 }

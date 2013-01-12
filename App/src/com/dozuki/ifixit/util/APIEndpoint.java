@@ -29,14 +29,14 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false,
+      "GET",
       false
    ),
 
    GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "guide/" + query;
+            return "guides/" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -49,7 +49,7 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false,
+      "GET",
       false
    ),
 
@@ -57,7 +57,7 @@ public enum APIEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "topic/" + URLEncoder.encode(query, "UTF-8");
+               return "topics/" + URLEncoder.encode(query, "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
@@ -74,7 +74,7 @@ public enum APIEndpoint {
       },
       false,
       false,
-      false,
+      "GET",
       false
    ),
 
@@ -94,7 +94,7 @@ public enum APIEndpoint {
       },
       true,
       false,
-      true,
+      "POST",
       true
    ),
 
@@ -114,14 +114,14 @@ public enum APIEndpoint {
       },
       true,
       false,
-      true,
+      "POST",
       true
    ),
 
    USER_IMAGES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "image/user" + query;
+            return "user/media/images" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -134,7 +134,7 @@ public enum APIEndpoint {
       },
       false,
       true,
-      true,
+      "GET",
       false
    ),
 
@@ -150,7 +150,7 @@ public enum APIEndpoint {
                fileName = "uploaded_image.jpg";
             }
 
-            return "image/upload?file=" + fileName;
+            return "user/media/images?file=" + fileName;
          }
 
          private String getFileNameFromFilePath(String filePath) {
@@ -177,14 +177,14 @@ public enum APIEndpoint {
       },
       false,
       true,
-      true,
+      "POST",
       false
    ),
 
    DELETE_IMAGE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "image/delete" + query;
+            return "user/media/images" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -198,7 +198,7 @@ public enum APIEndpoint {
       },
       false,
       true,
-      true,
+      "DELETE",
       false
    ),
 
@@ -218,14 +218,34 @@ public enum APIEndpoint {
       },
       false,
       false,
+      "GET",
+      false
+   ),
+
+   USER_INFO(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserInfo().setResult(JSONHelper.parseLoginInfo(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserInfo();
+         }
+      },
       false,
+      false,
+      "GET",
       false
    );
 
    /**
     * Current version of the API to use.
     */
-   private static final String API_VERSION = "1.0";
+   private static final String API_VERSION = "1.1";
 
    /**
     * Defines various methods that each endpoint must provide.
@@ -268,9 +288,9 @@ public enum APIEndpoint {
    public final boolean mAuthenticated;
 
    /**
-    * True if this endpoint should always perform POST requests.
+    * Request method for this endpoint e.g. GET, POST, DELETE
     */
-   public final boolean mPost;
+   public final String mMethod;
 
    /**
     * True if endpoint must be public. This is primarily for login and register so
@@ -279,11 +299,11 @@ public enum APIEndpoint {
    public final boolean mForcePublic;
 
    private APIEndpoint(Endpoint endpoint, boolean https, boolean authenticated,
-    boolean post, boolean forcePublic) {
+    String method, boolean forcePublic) {
       mEndpoint = endpoint;
       mHttps = https;
       mAuthenticated = authenticated;
-      mPost = post;
+      mMethod = method;
       mForcePublic = forcePublic;
    }
 

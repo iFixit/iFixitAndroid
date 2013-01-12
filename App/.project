@@ -3,6 +3,7 @@
 	<name>iFixitAndroid</name>
 	<comment></comment>
 	<projects>
+		<project>http-request</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
