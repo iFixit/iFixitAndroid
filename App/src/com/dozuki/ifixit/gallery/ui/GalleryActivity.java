@@ -31,6 +31,7 @@ import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 import com.dozuki.ifixit.login.model.LoginEvent;
+import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GalleryActivity extends IfixitActivity implements
@@ -55,8 +56,8 @@ public class GalleryActivity extends IfixitActivity implements
 	private boolean mLoginVisible;
 	private boolean mIconsHidden;
 
-	private HashMap<String, MediaFragment> mMediaCategoryFragments;
-	private MediaFragment mCurrentMediaFragment;
+	private HashMap<String, PhotoMediaFragment> mMediaCategoryFragments;
+	private PhotoMediaFragment mCurrentMediaFragment;
 
 	private StepAdapter mStepAdapter;
 	private ViewPager mPager;
@@ -96,13 +97,13 @@ public class GalleryActivity extends IfixitActivity implements
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
 
-		mMediaCategoryFragments = new HashMap<String, MediaFragment>();
+		mMediaCategoryFragments = new HashMap<String, PhotoMediaFragment>();
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS,
 				new PhotoMediaFragment());
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_VIDEOS,
-				new VideoMediaFragment());
+				new PhotoMediaFragment());
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_EMBEDS,
-				new EmbedMediaFragment());
+				new PhotoMediaFragment());
 		mCurrentMediaFragment = mMediaCategoryFragments
 				.get(MEDIA_FRAGMENT_PHOTOS);
 
@@ -134,8 +135,8 @@ public class GalleryActivity extends IfixitActivity implements
 			if (showingHelp)
 				createHelpDialog().show();
 			showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
-		//	if (showingLogout)
-			//	LoginFragment.getLogoutDialog(this).show();
+			if (showingLogout)
+				//LoginFragment.newInstance();
 			showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 			/*
 			 * if (showingDelete) { createDeleteConfirmDialog(this).show(); }
@@ -160,21 +161,18 @@ public class GalleryActivity extends IfixitActivity implements
 		 * 
 		 * mMediaView.noImagesText.setVisibility(View.GONE);
 		 */
-	//	LoginFragment mLogin = (LoginFragment) getSupportFragmentManager()
-		//		.findFragmentByTag(LOGIN_FRAGMENT);
-
-		//User user = ((MainApplication) getApplication())
-	//			.getUserFromPreferenceFile();
-//
-//		if (user != null) {
-//			mIconsHidden = false;
-//			supportInvalidateOptionsMenu();
-//		} else {
-//			mIconsHidden = true;
-//			if (mLogin == null) {
-//				displayLogin();
-//			}
-//		}
+      LoginFragment mLogin = (LoginFragment) getSupportFragmentManager().findFragmentByTag(LOGIN_FRAGMENT);
+      User user =
+         ((MainApplication) getApplication()).getUser();
+      if (user != null) {
+         mIconsHidden = false;
+         supportInvalidateOptionsMenu();
+      } else {
+         mIconsHidden = true;
+         if (mLogin == null) {
+            displayLogin();
+         }
+      }
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
@@ -208,7 +206,7 @@ public class GalleryActivity extends IfixitActivity implements
 	private void displayLogin() {
 		mIconsHidden = true;
 		supportInvalidateOptionsMenu();
-		LoginFragment editNameDialog = new LoginFragment();
+		LoginFragment editNameDialog = LoginFragment.newInstance();
 		editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
 	}
 
@@ -283,6 +281,9 @@ public class GalleryActivity extends IfixitActivity implements
 //		finish();
 //	}
 	
+	
+	
+	
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
       if (MainApplication.get().isFirstTimeGalleryUser()) {
@@ -354,13 +355,13 @@ public class GalleryActivity extends IfixitActivity implements
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
-				return (VideoMediaFragment) mMediaCategoryFragments
+				return (PhotoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_VIDEOS);
 			case 1:
 				return (PhotoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_PHOTOS);
 			case 2:
-				return (EmbedMediaFragment) mMediaCategoryFragments
+				return (PhotoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_EMBEDS);
 			default:
 				return (PhotoMediaFragment) mMediaCategoryFragments
@@ -373,7 +374,7 @@ public class GalleryActivity extends IfixitActivity implements
 				Object object) {
 			super.setPrimaryItem(container, position, object);
 			// mPagePosition = position;
-			mCurrentMediaFragment = (MediaFragment) object;
+			mCurrentMediaFragment = (PhotoMediaFragment) object;
 			// Log.i(TAG, "page selected: " + mPagePosition);
 		}
 	}
