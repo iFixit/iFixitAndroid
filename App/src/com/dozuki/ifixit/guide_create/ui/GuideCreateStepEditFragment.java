@@ -22,7 +22,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ListView;
-
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
@@ -31,6 +31,7 @@ import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_view.model.StepImage;
+import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideCreateStepEditFragment extends SherlockFragment implements
@@ -61,7 +62,7 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		View view = inflater.inflate(R.layout.guide_create_step_edit_body,
 				container, false);
 		mStepTitle = (EditText) view.findViewById(R.id.step_edit_title_text);
-		
+
 		mLargeImage = (ImageView) view.findViewById(R.id.step_edit_large_image);
 		mImageOne = (ImageView) view.findViewById(R.id.step_edit_thumb_1);
 		mImageOne.setOnLongClickListener(this);
@@ -72,12 +73,10 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		mImageThree = (ImageView) view.findViewById(R.id.step_edit_thumb_3);
 		mImageThree.setOnLongClickListener(this);
 		mImageThree.setOnClickListener(this);
-		ArrayList<GuideCreateStepBullet> temp_list = new ArrayList<GuideCreateStepBullet>();
-      temp_list.add(new GuideCreateStepBullet());
-		mMediaIcon = (ImageView) view.findViewById(R.id.step_edit_thumb_media);
-		mBulletList = (ListView)view.findViewById(R.id.steps_portal_list);
 
-      mBulletList.setAdapter(new BulletListAdapter( this.getActivity(), R.layout.guide_create_step_edit_list_item, temp_list));
+		mMediaIcon = (ImageView) view.findViewById(R.id.step_edit_thumb_media);
+		mBulletList = (ListView) view.findViewById(R.id.steps_portal_list);
+
 		if (savedInstanceState != null) {
 			mStepObject = (GuideCreateStepObject) savedInstanceState
 					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);
@@ -85,6 +84,11 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 				setImage(img.getImageid(), img.getText());
 			}
 		}
+		
+		mBulletList.setAdapter(new BulletListAdapter(this.getActivity(),
+				R.layout.guide_create_step_edit_list_item, mStepObject
+						.getLines()));
+		
 		mStepTitle.setText(mStepObject.getTitle());
 		mStepTitle.addTextChangedListener(new TextWatcher() {
 
@@ -212,41 +216,71 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 		}
 		return true;
 	}
-	
-	private class BulletListAdapter extends ArrayAdapter<GuideCreateStepBullet> {
 
-      private ArrayList<GuideCreateStepBullet> items;
-      private Context con;
+	private class BulletListAdapter extends ArrayAdapter<StepLine> {
 
-      public BulletListAdapter(Context context, int textViewResourceId, ArrayList<GuideCreateStepBullet> items) {
-              super(context, textViewResourceId, items);
-              this.items = items;
-              con = context;
-      }
+		private ArrayList<StepLine> items;
+		private Context con;
 
-      @Override
-      public View getView(int position, View convertView, ViewGroup parent) {
-              View v = convertView;
-              if (v == null) {
-                  LayoutInflater vi = (LayoutInflater)con.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-                  v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
-              } 
-              v.findViewById(R.id.guide_step_item_thumbnail).setOnClickListener(new OnClickListener()
-              {
+		public BulletListAdapter(Context context, int textViewResourceId,
+				ArrayList<StepLine> items) {
+			super(context, textViewResourceId, items);
+			this.items = items;
+			con = context;
+		}
+		
+		@Override
+		public int getCount()
+		{
+			return items.size() + 1;
+		}
 
-               @Override
-               public void onClick(View v) {
-                  final Dialog dialog = new Dialog(con);
-                  dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); 
-                  
-                  FragmentManager fm = getActivity().getSupportFragmentManager();
-                  ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
-                  chooseBulletDialog.show(fm, "fragment_choose_bullet");
-               }
-                 
-              });
-              return v;
-      }
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View v = convertView;
+			if (v == null) {
+				LayoutInflater vi = (LayoutInflater) con
+						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+				v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
+			}
+			
+			if(position == items.size())
+			{
+				ImageView newItem = (ImageView)v.findViewById(R.id.add_new_bullet);
+				v.findViewById(R.id.guide_step_item_thumbnail).setVisibility(View.GONE);
+				v.findViewById(R.id.step_title_textview).setVisibility(View.GONE);
+				newItem.setVisibility(View.VISIBLE);
+				newItem.setOnClickListener(new OnClickListener(){
+
+					@Override
+					public void onClick(View v) {
+						mStepObject.addLine(new StepLine("black", 0, "Test Step"));
+						mBulletList.invalidate();
+					}
+					
+				});
+				return v;
+			}
+			
+			v.findViewById(R.id.guide_step_item_thumbnail).setOnClickListener(
+					new OnClickListener() {
+
+						@Override
+						public void onClick(View v) {
+							final Dialog dialog = new Dialog(con);
+							dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+
+							FragmentManager fm = getActivity()
+									.getSupportFragmentManager();
+							ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
+							chooseBulletDialog.show(fm,
+									"fragment_choose_bullet");
+						}
+
+					});
+			TextView text = (TextView) v.findViewById(R.id.step_title_textview);
+			text.setText(items.get(position).getText());
+			return v;
+		}
+	}
 }
-}
-

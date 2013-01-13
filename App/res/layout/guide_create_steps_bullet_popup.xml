@@ -148,7 +148,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_menu_spinner_help" />
+                    android:src="@drawable/ic_dialog_bullet_caution" />
             </FrameLayout>
 
             <FrameLayout
@@ -160,7 +160,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_menu_spinner_help" />
+                    android:src="@drawable/ic_dialog_bullet_note_light" />
 
             </FrameLayout>
 
@@ -173,7 +173,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="center"
-                    android:src="@drawable/ic_menu_spinner_help" />
+                    android:src="@drawable/ic_dialog_bullet_reminder_light" />
 
             </FrameLayout>
 
@@ -195,29 +195,32 @@
                 android:id="@+id/bullet_dialog_indent"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:drawableLeft="@drawable/ic_menu_spinner_help"
+                android:drawableLeft="@drawable/ic_dialog_indent"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:text="Indent bullet" />
+                android:text="Indent bullet"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/bullet_dialog_unindent"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:drawableLeft="@drawable/ic_menu_spinner_help"
+                android:drawableLeft="@drawable/ic_dialog_unindent"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
-                android:text="Unindent bullet" />
+                android:text="Unindent bullet"
+                 android:textColor="@color/white" />
        
             <TextView
                 android:id="@+id/bullet_dialog_rearrange"
                 android:layout_width="fill_parent"
                 android:layout_height="48dp"
-                android:drawableLeft="@drawable/ic_list_item_move"
+                android:drawableLeft="@drawable/ic_dialog_arrange_bullets_light"
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
-                android:text="Rearrange bullets" />
+                android:text="Rearrange bullets"
+                 android:textColor="@color/white" />
 
      
 
@@ -226,7 +229,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:gravity="center"
-                android:text="Cancel" />
+                android:text="Cancel"
+                 android:textColor="@color/white"  />
 
 </LinearLayout>    
     </LinearLayout>
