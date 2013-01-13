@@ -271,7 +271,7 @@ public class JSONHelper {
       UserImageList userImageList = new UserImageList();
 
       for (int i = 0; i < jImages.length(); i++) {
-         userImageList.addImage((parseUserImageInfo(jImages.getJSONObject(i))));
+         userImageList.addItem((parseUserImageInfo(jImages.getJSONObject(i))));
       }
 
       return userImageList;
@@ -280,7 +280,7 @@ public class JSONHelper {
    public static UserImageInfo parseUserImageInfo(JSONObject jImage)
     throws JSONException {
       UserImageInfo userImageInfo = new UserImageInfo();
-      userImageInfo.setImageid(jImage.getString("imageid"));
+      userImageInfo.setItemId(jImage.getString("imageid"));
       userImageInfo.setGuid(jImage.getString("guid"));
       userImageInfo.setHeight(jImage.getString("height"));
       userImageInfo.setWidth(jImage.getString("width"));

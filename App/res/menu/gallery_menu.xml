@@ -1,20 +1,38 @@
 <?xml version = "1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android" >
 
-    <item
+     <item
         android:id="@+id/top_camera_button"
         android:icon="@drawable/ic_action_camera"
-        android:showAsAction="always|withText"
+        android:showAsAction="always"
         android:title="@string/camera_tool_tip"/>
     <item
         android:id="@+id/top_gallery_button"
         android:icon="@drawable/ic_action_picture_add"
-        android:showAsAction="always|withText"
+        android:showAsAction="always"
         android:title="@string/gallery_tool_tip"/>
+    
     <item
-        android:id="@+id/top_question_button"
-        android:icon="@drawable/ic_action_help"
-        android:showAsAction="always|withText"
-        android:title="@string/help_tool_tip"/>
+        android:id="@+id/browse_button"
+        android:icon="@drawable/ic_menu_spinner_browse"
+        android:showAsAction="ifRoom"
+        android:title="Browse"/>
+    <item
+        android:id="@+id/my_guides_button"
+        android:icon="@drawable/ic_menu_spinner_guides"
+        android:showAsAction="ifRoom"
+        android:title="My Guides"/>
+
+    <item
+        android:id="@+id/help_button"
+        android:icon="@drawable/ic_menu_spinner_help"
+        android:showAsAction="ifRoom"
+        android:title="Help"/>
+    
+    <item
+        android:id="@+id/logout_button"
+        android:icon="@drawable/ic_action_exit"
+        android:showAsAction="never"
+        android:title="@string/logout_title"/>
 
 </menu>

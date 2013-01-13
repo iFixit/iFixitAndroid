@@ -47,9 +47,11 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.gallery.model.UserMediaList;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
 import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
@@ -62,7 +64,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 
 public class MediaFragment  extends Fragment implements
-OnItemClickListener, OnClickListener, OnItemLongClickListener {
+OnItemClickListener,  OnItemLongClickListener {
 
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;
@@ -81,16 +83,14 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
 
    private TextView mNoImagesText;
    private GridView mGridView;
-   private RelativeLayout mButtons;
    protected MediaAdapter mGalleryAdapter;
-   private TextView mLoginText;
    private String mUserName;
    private ImageManager mImageManager;
    protected ArrayList<Boolean> mSelectedList;
    protected HashMap<String, LocalImage> mLocalURL;
    private HashMap<String, Bitmap> mLimages;
    private ImageSizes mImageSizes;
-   protected UserImageList mImageList;
+   protected UserMediaList mImageList;
    private ActionMode mMode;
    protected int mImagesDownloaded;
    protected boolean mLastPage;
@@ -98,7 +98,6 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
    protected boolean mNextPageRequestInProgress;
    private boolean mShowingHelp;
    private boolean mShowingDelete;
-   private ActionBar mActionBar;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -148,7 +147,7 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
 
       mGalleryAdapter = new MediaAdapter();
 
-      if (mImageList.getImages().size() == 0 && !mNextPageRequestInProgress) {
+      if (mImageList.getItems().size() == 0 && !mNextPageRequestInProgress) {
          retrieveUserImages();
       }
    }
@@ -160,9 +159,7 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
 
       mGridView = (GridView)view.findViewById(R.id.gridview);
       mNoImagesText = (TextView)view.findViewById(R.id.no_images_text);
-      mButtons = (RelativeLayout)view.findViewById(R.id.button_holder);
-      mLoginText = (TextView)view.findViewById(R.id.login_text);
-
+    
       mGridView.setAdapter(mGalleryAdapter);
       mGridView.setOnScrollListener(new GalleryOnScrollListener());
       mGridView.setOnItemClickListener(this);
@@ -182,7 +179,6 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
    @Override
    public void onResume() {
       super.onResume();
-
       MainApplication.getBus().register(this);
    }
 
@@ -208,16 +204,6 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
    }
 
 
-
-   @Override
-   public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-      if (MainApplication.get().isUserLoggedIn()) {
-         inflater.inflate(R.menu.gallery_menu, menu);
-      }
-
-      super.onCreateOptionsMenu(menu, inflater);
-   }
-
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
@@ -240,14 +226,7 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
        "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded));
    }
 
-   @Override
-   public void onClick(View view) {
-      switch (view.getId()) {
-      case R.id.button_holder:
-         LogoutDialog.create(getActivity()).show();
-         break;
-      }
-   }
+
 
    protected void launchImageChooser() {
       Intent intent = new Intent();
@@ -374,9 +353,9 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
          String url = uri.toString();
 
          userImageInfo.setGuid(url);
-         userImageInfo.setImageid(null);
+         userImageInfo.setItemId(null);
          userImageInfo.setKey(key);
-         mImageList.addImage(userImageInfo);
+         mImageList.addItem(userImageInfo);
          mSelectedList.add(false);
 
          mLocalURL.put(key, new LocalImage(getPath(uri)));
@@ -389,9 +368,9 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
          UserImageInfo userImageInfo = new UserImageInfo();
          String url = path;
          userImageInfo.setGuid(path);
-         userImageInfo.setImageid(null);
+         userImageInfo.setItemId(null);
          userImageInfo.setKey(key);
-         mImageList.addImage(userImageInfo);
+         mImageList.addItem(userImageInfo);
          mSelectedList.add(false);
 
          mLocalURL.put(key, new LocalImage(path));
@@ -406,7 +385,7 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
 
       @Override
       public int getCount() {
-         return mImageList.getImages().size();
+         return mImageList.getItems().size();
       }
 
       @Override
@@ -424,11 +403,11 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
          itemView.setLoading(false);
 
          if (mImageList != null) {
-            UserImageInfo image = mImageList.getImages().get(position);
+            MediaInfo image = mImageList.getItems().get(position);
 
             // image was pulled from the server
-            if (mImageList.getImages().get(position).getImageid() != null &&
-             mImageList.getImages().get(position).getKey() == null) {
+            if (mImageList.getItems().get(position).getItemId() != null &&
+             mImageList.getItems().get(position).getKey() == null) {
                String imageUrl = image.getGuid() + mImageSizes.getThumb();
                itemView.setImageItem(imageUrl, getActivity(), !image.getLoaded());
                itemView.mListRef = image;
@@ -455,7 +434,7 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
                      // Has not received an imageID so is still uploading
                      itemView.setLoading(true);
                   } else {
-                     image.setImageid(mLocalURL.get(image.getKey()).mImgid);
+                     image.setItemId(mLocalURL.get(image.getKey()).mImgid);
                      itemView.setLoading(false);
                   }
                }
@@ -500,7 +479,6 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
             }
          }
          mGalleryAdapter.invalidatedView();
-         mButtons.setVisibility(View.VISIBLE);
       }
 
       @Override
@@ -522,15 +500,15 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
       for (int i = mSelectedList.size() - 1; i >= 0; i--) {
          if (mSelectedList.get(i)) {
             mSelectedList.remove(i);
-            String imageid = mImageList.getImages().get(i).getImageid();
+            String imageid = mImageList.getItems().get(i).getItemId();
 
-            if (mImageList.getImages().get(i).getImageid() == null) {
+            if (mImageList.getItems().get(i).getItemId() == null) {
                Toast.makeText(getActivity(), getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
             } else {
                deleteList.add(Integer.parseInt(imageid));
             }
-            mImageList.getImages().remove(i);
+            mImageList.getItems().remove(i);
          }
       }
 
@@ -544,14 +522,11 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
 
    protected void setupUser(User user) {
       mUserName = user.getUsername();
-      mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
-      mButtons.setOnClickListener(this);
-      mButtons.setVisibility(View.VISIBLE);
       updateNoImagesText();
    }
 
    protected void updateNoImagesText() {
-      if (mImageList.getImages().size() < 1 && MainApplication.get().isUserLoggedIn()) {
+      if (mImageList.getItems().size() < 1 && MainApplication.get().isUserLoggedIn()) {
          mNoImagesText.setVisibility(View.VISIBLE);
       } else {
          mNoImagesText.setVisibility(View.GONE);
@@ -572,7 +547,7 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
          animHide.setAnimationListener(new AnimationListener() {
             @Override
             public void onAnimationEnd(Animation arg0) {
-               mButtons.setVisibility(View.GONE);
+              
             }
 
             @Override
@@ -583,7 +558,6 @@ OnItemClickListener, OnClickListener, OnItemLongClickListener {
             public void onAnimationStart(Animation arg0) {
             }
          });
-         mButtons.startAnimation(animHide);
          mMode = ((Activity)getActivity()).startActionMode(new ModeCallback());
       }
    }

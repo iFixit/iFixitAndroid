@@ -5,44 +5,48 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class UserImageList implements Serializable {
+public class UserImageList implements  UserMediaList {
    private static final long serialVersionUID = 7067096480019401662L;
 
-   private ArrayList<UserImageInfo> mImages;
+   private ArrayList<MediaInfo> mImages;
 
    public UserImageList() {
-      mImages = new ArrayList<UserImageInfo>();
+      mImages = new ArrayList<MediaInfo>();
    }
 
-   public void addImage(UserImageInfo userImageInfo) {
+   public void addItem(MediaInfo userImageInfo) {
       if (mImages.contains(userImageInfo))
          return;
       mImages.add(userImageInfo);
       Collections.sort(mImages, new UserImageInfoComparator());
    }
 
-   public ArrayList<UserImageInfo> getImages() {
+   public ArrayList<MediaInfo> getItems() {
       return mImages;
    }
 
-   public void setImages(ArrayList<UserImageInfo> images) {
+   public void setItems(ArrayList<MediaInfo> images) {
       mImages = images;
    }
 
    private static class UserImageInfoComparator implements
-    Comparator<UserImageInfo> {
-      public int compare(UserImageInfo e1, UserImageInfo e2) {
-         if (e1.getImageid() == null && e2.getImageid() == null)
+    Comparator<MediaInfo> {
+      public int compare(MediaInfo e1, MediaInfo e2) {
+         if (e1.getItemId() == null && e2.getItemId() == null)
             return 0;
 
-         if (e1.getImageid() == null)
+         if (e1.getItemId() == null)
             return 1;
 
-         if (e2.getImageid() == null)
+         if (e2.getItemId() == null)
             return -1;
 
-         return Integer.parseInt(e1.getImageid()) - Integer.parseInt(
-          e2.getImageid());
+         return Integer.parseInt(e1.getItemId()) - Integer.parseInt(
+          e2.getItemId());
       }
    }
+
+
+
+  
 }

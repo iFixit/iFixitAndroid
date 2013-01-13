@@ -34,13 +34,13 @@ public class PhotoMediaFragment extends MediaFragment {
    public void onUserImages(APIEvent.UserImages event) {
       if (!event.hasError()) {
          UserImageList imageList = event.getResult();
-         if (imageList.getImages().size() > 0) {
-            int oldImageSize = mImageList.getImages().size();
-            for (int i = 0; i < imageList.getImages().size(); i++) {
+         if (imageList.getItems().size() > 0) {
+            int oldImageSize = mImageList.getItems().size();
+            for (int i = 0; i < imageList.getItems().size(); i++) {
                mSelectedList.add(false);
-               mImageList.addImage(imageList.getImages().get(i));
+               mImageList.addItem(imageList.getItems().get(i));
             }
-            mImagesDownloaded += (mImageList.getImages().size() - oldImageSize);
+            mImagesDownloaded += (mImageList.getItems().size() - oldImageSize);
             mGalleryAdapter.invalidatedView();
             mLastPage = false;
             updateNoImagesText();

@@ -106,13 +106,6 @@ public abstract class IfixitActivity extends Activity {
       MainApplication.getBus().unregister(loginEventListener);
    }
 
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.menu_bar, menu);
-
-      return super.onCreateOptionsMenu(menu);
-   }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
@@ -137,14 +130,9 @@ public abstract class IfixitActivity extends Activity {
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
       MenuItem logout = menu.findItem(R.id.logout_button);
-      MenuItem gallery = menu.findItem(R.id.gallery_button);
 
       if (logout != null) {
          logout.setVisible(MainApplication.get().isUserLoggedIn());
-      }
-
-      if (gallery != null) {
-         gallery.setVisible(showGalleryIcon());
       }
 
       return super.onPrepareOptionsMenu(menu);

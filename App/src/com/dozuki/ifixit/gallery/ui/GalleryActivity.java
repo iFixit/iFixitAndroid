@@ -72,21 +72,6 @@ public class GalleryActivity extends IfixitActivity implements
 	private ActionMode mMode;
 	private boolean mShowingHelp;
 
-//	private APIReceiver mApiReceiver = new APIReceiver() {
-//		public void onSuccess(Object result, Intent intent) {
-//			/**
-//			 * The success are handled by the media fragment. This is here to
-//			 * catch if the user has an invalid session.
-//			 */
-//		}
-//
-//		public void onFailure(APIError error, Intent intent) {
-//			if (error.mType == APIError.ErrorType.INVALID_USER) {
-//				LoginFragment editNameDialog = new LoginFragment();
-//				editNameDialog.show(getSupportFragmentManager(), "");
-//			}
-//		}
-//	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -155,12 +140,6 @@ public class GalleryActivity extends IfixitActivity implements
 		titleIndicator.setViewPager(mPager);
 		mPager.setCurrentItem(1);
 
-		/*
-		 * mMediaView = (MediaFragment) getSupportFragmentManager()
-		 * .findFragmentById(R.id.gallery_view_fragment);
-		 * 
-		 * mMediaView.noImagesText.setVisibility(View.GONE);
-		 */
       LoginFragment mLogin = (LoginFragment) getSupportFragmentManager().findFragmentByTag(LOGIN_FRAGMENT);
       User user =
          ((MainApplication) getApplication()).getUser();
@@ -239,7 +218,7 @@ public class GalleryActivity extends IfixitActivity implements
 			}
 			mCurrentMediaFragment.launchGallery();
 			return true;
-		case R.id.top_question_button:
+		case R.id.help_button:
 			if (!isLoggedIn) {
 				return false;
 			}
@@ -250,40 +229,6 @@ public class GalleryActivity extends IfixitActivity implements
 		}
 	}
 
-	/*@Override
-	public void onLogin(User user) {
-		mIconsHidden = false;
-		supportInvalidateOptionsMenu();
-		mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).clearMediaList();
-		mUserName = ((MainApplication) (this).getApplication()).getUser()
-				.getUsername();
-		mLoginText.setText(getString(R.string.logged_in_as) + " " + mUserName);
-		mButtons.setOnClickListener(this);
-		mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).retrieveUserMedia();
-		mButtons.setVisibility(View.VISIBLE);
-		mButtons.setAnimation(AnimationUtils.loadAnimation(this,
-				R.anim.slide_in_bottom));
-
-		if (((MainApplication) getApplication()).isFirstTimeGalleryUser()) {
-			createHelpDialog(this).show();
-			((MainApplication) getApplication()).setFirstTimeGalleryUser(false);
-		}
-	}*/
-
-	//@Override
-	//public void onLogout() {
-	//	((MainApplication) getApplication()).logout();
-	//	finish();
-	//}
-
-	//@Override
-	//public void onCancel() {
-//		finish();
-//	}
-	
-	
-	
-	
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
       if (MainApplication.get().isFirstTimeGalleryUser()) {
@@ -299,28 +244,40 @@ public class GalleryActivity extends IfixitActivity implements
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+	   
 		if (!mIconsHidden) {
 			MenuInflater inflater = getSupportMenuInflater();
 			inflater.inflate(R.menu.gallery_menu, menu);
 		}
-
 		return super.onCreateOptionsMenu(menu);
 	}
+	
+	  @Override
+	   public boolean onPrepareOptionsMenu(Menu menu) {
+	      super.onPrepareOptionsMenu(menu);
+	      
+	      MenuItem gallery = menu.findItem(R.id.gallery_button);
+	      MenuItem help = menu.findItem(R.id.help_button);
+	     
+	      if (help != null) {
+	         help.setVisible(true);
+	      }
+
+	      if (gallery != null) {
+	         gallery.setVisible(false);
+	      }
+
+	      return true;
+	   }
 
 	@Override
 	public void onResume() {
-		IntentFilter filter = new IntentFilter();
-		//filter.addAction(APIEndpoint.USER_IMAGES.mAction);
-		//filter.addAction(APIEndpoint.UPLOAD_IMAGE.mAction);
-		//filter.addAction(APIEndpoint.DELETE_IMAGE.mAction);
-		//registerReceiver(mApiReceiver, filter);
 		super.onResume();
 	}
 
 	@Override
 	public void onPause() {
 		try {
-		//	unregisterReceiver(mApiReceiver);
 		} catch (IllegalArgumentException e) {
 		}
 		super.onPause();
@@ -373,9 +330,7 @@ public class GalleryActivity extends IfixitActivity implements
 		public void setPrimaryItem(ViewGroup container, int position,
 				Object object) {
 			super.setPrimaryItem(container, position, object);
-			// mPagePosition = position;
 			mCurrentMediaFragment = (PhotoMediaFragment) object;
-			// Log.i(TAG, "page selected: " + mPagePosition);
 		}
 	}
 

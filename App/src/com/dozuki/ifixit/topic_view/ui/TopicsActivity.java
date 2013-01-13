@@ -10,6 +10,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -207,6 +209,16 @@ public class TopicsActivity extends IfixitActivity
       // run after the fragments parent already saved its state.  Possibly
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
+   }
+   
+   
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+
+      MenuInflater inflater = getSupportMenuInflater();
+      inflater.inflate(R.menu.menu_bar, menu);
+
+      return super.onCreateOptionsMenu(menu);
    }
 
    @Override
