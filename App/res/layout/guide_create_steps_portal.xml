@@ -60,6 +60,7 @@
             android:clickable="true"
             android:drawableLeft="@drawable/ic_dialog_arrange_bullets_dark"
             android:drawablePadding="10dip"
+            android:gravity="center_vertical"
             android:text="@string/reorder_steps"
             android:textColor="@color/dozuki_grey"
             android:textStyle="bold" />

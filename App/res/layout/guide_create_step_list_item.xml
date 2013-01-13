@@ -16,22 +16,6 @@
         android:orientation="horizontal" >
 
         <RelativeLayout
-            android:id="@+id/drag_handle"
-            android:layout_width="20dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@color/gray" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/ic_list_item_move"
-                android:contentDescription="@string/topic_guide_thumbnail" />
-        </RelativeLayout>
-
-        <RelativeLayout
            
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,7 +27,6 @@
                 android:layout_width="@dimen/guide_thumbnail_width"
                 android:layout_height="@dimen/guide_thumbnail_height"
                 android:layout_marginRight="8dp"
-                android:layout_toRightOf="@+id/drag_handle"
                 android:background="@color/image_border"
                 android:contentDescription="@string/topic_guide_thumbnail"
                 android:padding="1dp" />

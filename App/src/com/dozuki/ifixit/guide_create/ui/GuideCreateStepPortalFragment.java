@@ -2,13 +2,11 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.List;
 
-import android.R.color;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,12 +15,10 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -33,37 +29,17 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.ifixit.android.imagemanager.ImageManager;
-import com.mobeta.android.dslv.DragSortController;
-import com.mobeta.android.dslv.DragSortListView;
 
 public class GuideCreateStepPortalFragment extends SherlockFragment {
 	public static int StepID = 0;
 	private ListView mDragListView;
 	private ImageManager mImageManager;
 	private StepAdapter mAdapter;
-	private DragSortController mController;
 	private TextView mAddStepBar;
 	private TextView mEditIntroBar;
 	private TextView mReorderStepsBar;
 	private GuideCreateObject mGuide;
 	private TextView mNoStepsText;
-
-	/*private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
-		@Override
-		public void drop(int from, int to) {
-			GuideCreateStepObject item = mAdapter.getItem(from);
-			mAdapter.remove(item);
-			mAdapter.insert(item, to);
-			mDragListView.invalidateViews();
-		}
-	};
-
-	private DragSortListView.RemoveListener onRemove = new DragSortListView.RemoveListener() {
-		@Override
-		public void remove(int which) {
-			mAdapter.remove(mAdapter.getItem(which));
-		}
-	};*/
 
 	public GuideCreateStepPortalFragment(GuideCreateObject guide) {
 		super();
@@ -81,24 +57,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		mAdapter = new StepAdapter(mGuide.getSteps());
 	}
 
-	/**
-	 * Called in onCreateView. Override this to provide a custom
-	 * DragSortController.
-	 */
-	public DragSortController buildController(DragSortListView dslv) {
-		// defaults are
-		// dragStartMode = onDown
-		// removeMode = flingRight
-		DragSortController controller = new DragSortController(dslv);
-		controller.setDragHandleId(R.id.drag_handle);
-		// controller.setClickRemoveId(R.id.click_remove);
-		controller.setRemoveEnabled(false);
-		controller.setSortEnabled(true);
-		controller.setDragInitMode(DragSortController.ON_DOWN);
-		controller.setRemoveMode(DragSortController.FLING_RIGHT_REMOVE);
-		controller.setBackgroundColor(color.background_light);
-		return controller;
-	}
+	
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -130,7 +89,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 		mReorderStepsBar.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-
+				launchStepReorder();
 			}
 		});
 		
@@ -138,13 +97,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 
 		if (mGuide.getSteps().isEmpty())
 			mNoStepsText.setVisibility(View.VISIBLE);
-		//mDragListView.setDropListener(onDrop);
-		//mDragListView.setRemoveListener(onRemove);
 		mDragListView.setAdapter(mAdapter);
-		//mController = buildController(mDragListView);
-		//mDragListView.setFloatViewManager(mController);
-		//mDragListView.setOnTouchListener(mController);
-		//mDragListView.setDragEnabled(true);
 		return view;
 	}
 
@@ -312,6 +265,16 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 				.getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.guide_create_fragment_steps_container,
 				newFragment);
+		transaction.addToBackStack(null);
+		transaction.commitAllowingStateLoss();
+	}
+	
+	private void launchStepReorder()
+	{
+		GuideCreateStepReorderFragment newFragment = new GuideCreateStepReorderFragment();
+		newFragment.setGuide(mGuide);
+		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
 		transaction.addToBackStack(null);
 		transaction.commitAllowingStateLoss();
 	}
