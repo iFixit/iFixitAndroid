@@ -243,6 +243,14 @@ public class APIService extends Service {
    public static APICall getUserImagesAPICall(String query) {
       return new APICall(APIEndpoint.USER_IMAGES, query);
    }
+   
+   public static APICall getUserVideosAPICall(String query) {
+      return new APICall(APIEndpoint.USER_VIDEOS, query);
+   }
+   
+   public static APICall getUserEmbedsAPICall(String query) {
+      return new APICall(APIEndpoint.USER_EMBEDS, query);
+   }
 
    public static APICall getUploadImageAPICall(String filePath, String extraInformation) {
       return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, null, extraInformation,

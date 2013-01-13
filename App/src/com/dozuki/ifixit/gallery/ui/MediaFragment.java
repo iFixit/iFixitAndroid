@@ -27,7 +27,6 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.Animation.AnimationListener;
@@ -35,12 +34,10 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
-import android.widget.RelativeLayout;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -48,28 +45,23 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.MediaInfo;
-import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.gallery.model.UserMediaList;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
-import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
-import com.dozuki.ifixit.login.ui.LogoutDialog;
-import com.dozuki.ifixit.util.APIEvent;
+
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.ifixit.android.imagemanager.ImageManager;
-import com.squareup.otto.Subscribe;
-
-public class MediaFragment  extends Fragment implements
+public abstract class MediaFragment  extends Fragment implements
 OnItemClickListener,  OnItemLongClickListener {
 
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;
    private static final int MAX_WRITING_IMAGES = 15;
-   private static final int IMAGE_PAGE_SIZE = 40;
+   protected static final int IMAGE_PAGE_SIZE = 40;
    private static final String CAMERA_PATH = "CAMERA_PATH";
    private static final int SELECT_PICTURE = 1;
    private static final int CAMERA_PIC_REQUEST = 2;
@@ -81,7 +73,7 @@ OnItemClickListener,  OnItemLongClickListener {
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
 
-   private TextView mNoImagesText;
+   protected TextView mNoMediaText;
    private GridView mGridView;
    protected MediaAdapter mGalleryAdapter;
    private String mUserName;
@@ -90,9 +82,9 @@ OnItemClickListener,  OnItemLongClickListener {
    protected HashMap<String, LocalImage> mLocalURL;
    private HashMap<String, Bitmap> mLimages;
    private ImageSizes mImageSizes;
-   protected UserMediaList mImageList;
+   protected UserMediaList mMediaList;
    private ActionMode mMode;
-   protected int mImagesDownloaded;
+   protected int mItemsDownloaded;
    protected boolean mLastPage;
    private String mCameraTempFileName;
    protected boolean mNextPageRequestInProgress;
@@ -120,14 +112,15 @@ OnItemClickListener,  OnItemLongClickListener {
 
       if (savedInstanceState != null) {
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
+
+         mItemsDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
+         mMediaList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
+
+         mSelectedList = (ArrayList<Boolean>)savedInstanceState.getSerializable(USER_SELECTED_LIST);
+         
          if (mShowingDelete) {
             createDeleteConfirmDialog().show();
          }
-
-         mImagesDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
-         mImageList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
-
-         mSelectedList = (ArrayList<Boolean>)savedInstanceState.getSerializable(USER_SELECTED_LIST);
 
          if (savedInstanceState.getString(CAMERA_PATH) != null) {
             mCameraTempFileName = savedInstanceState.getString(CAMERA_PATH);
@@ -140,15 +133,15 @@ OnItemClickListener,  OnItemLongClickListener {
             }
          }
       } else {
-         mImageList = new UserImageList();
+         mMediaList = new UserImageList();
          mSelectedList = new ArrayList<Boolean>();
          mLocalURL = new HashMap<String, LocalImage>();
       }
 
       mGalleryAdapter = new MediaAdapter();
 
-      if (mImageList.getItems().size() == 0 && !mNextPageRequestInProgress) {
-         retrieveUserImages();
+      if (mMediaList.getItems().size() == 0 && !mNextPageRequestInProgress) {
+         retrieveUserMedia();
       }
    }
 
@@ -158,7 +151,7 @@ OnItemClickListener,  OnItemLongClickListener {
       View view = inflater.inflate(R.layout.gallery_view, container, false);
 
       mGridView = (GridView)view.findViewById(R.id.gridview);
-      mNoImagesText = (TextView)view.findViewById(R.id.no_images_text);
+      mNoMediaText = (TextView)view.findViewById(R.id.no_images_text);
     
       mGridView.setAdapter(mGalleryAdapter);
       mGridView.setOnScrollListener(new GalleryOnScrollListener());
@@ -208,9 +201,9 @@ OnItemClickListener,  OnItemLongClickListener {
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(USER_SELECTED_LIST, mSelectedList);
-      savedInstanceState.putInt(IMAGES_DOWNLOADED, mImagesDownloaded);
+      savedInstanceState.putInt(IMAGES_DOWNLOADED, mItemsDownloaded);
       savedInstanceState.putSerializable(HASH_MAP, mLocalURL);
-      savedInstanceState.putSerializable(USER_IMAGE_LIST, mImageList);
+      savedInstanceState.putSerializable(USER_IMAGE_LIST, mMediaList);
       savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
 
       if (mCameraTempFileName != null) {
@@ -220,11 +213,7 @@ OnItemClickListener,  OnItemLongClickListener {
 
    
 
-   private void retrieveUserImages() {
-      mNextPageRequestInProgress = true;
-      APIService.call((Activity)getActivity(), APIService.getUserImagesAPICall(
-       "?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mImagesDownloaded));
-   }
+   protected abstract void retrieveUserMedia();
 
 
 
@@ -355,7 +344,7 @@ OnItemClickListener,  OnItemLongClickListener {
          userImageInfo.setGuid(url);
          userImageInfo.setItemId(null);
          userImageInfo.setKey(key);
-         mImageList.addItem(userImageInfo);
+         mMediaList.addItem(userImageInfo);
          mSelectedList.add(false);
 
          mLocalURL.put(key, new LocalImage(getPath(uri)));
@@ -370,7 +359,7 @@ OnItemClickListener,  OnItemLongClickListener {
          userImageInfo.setGuid(path);
          userImageInfo.setItemId(null);
          userImageInfo.setKey(key);
-         mImageList.addItem(userImageInfo);
+         mMediaList.addItem(userImageInfo);
          mSelectedList.add(false);
 
          mLocalURL.put(key, new LocalImage(path));
@@ -385,7 +374,7 @@ OnItemClickListener,  OnItemLongClickListener {
 
       @Override
       public int getCount() {
-         return mImageList.getItems().size();
+         return mMediaList.getItems().size();
       }
 
       @Override
@@ -402,12 +391,12 @@ OnItemClickListener,  OnItemLongClickListener {
 
          itemView.setLoading(false);
 
-         if (mImageList != null) {
-            MediaInfo image = mImageList.getItems().get(position);
+         if (mMediaList != null) {
+            MediaInfo image = mMediaList.getItems().get(position);
 
             // image was pulled from the server
-            if (mImageList.getItems().get(position).getItemId() != null &&
-             mImageList.getItems().get(position).getKey() == null) {
+            if (mMediaList.getItems().get(position).getItemId() != null &&
+             mMediaList.getItems().get(position).getKey() == null) {
                String imageUrl = image.getGuid() + mImageSizes.getThumb();
                itemView.setImageItem(imageUrl, getActivity(), !image.getLoaded());
                itemView.mListRef = image;
@@ -500,15 +489,15 @@ OnItemClickListener,  OnItemLongClickListener {
       for (int i = mSelectedList.size() - 1; i >= 0; i--) {
          if (mSelectedList.get(i)) {
             mSelectedList.remove(i);
-            String imageid = mImageList.getItems().get(i).getItemId();
+            String imageid = mMediaList.getItems().get(i).getItemId();
 
-            if (mImageList.getItems().get(i).getItemId() == null) {
+            if (mMediaList.getItems().get(i).getItemId() == null) {
                Toast.makeText(getActivity(), getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
             } else {
                deleteList.add(Integer.parseInt(imageid));
             }
-            mImageList.getItems().remove(i);
+            mMediaList.getItems().remove(i);
          }
       }
 
@@ -526,10 +515,10 @@ OnItemClickListener,  OnItemLongClickListener {
    }
 
    protected void updateNoImagesText() {
-      if (mImageList.getItems().size() < 1 && MainApplication.get().isUserLoggedIn()) {
-         mNoImagesText.setVisibility(View.VISIBLE);
+      if (mMediaList.getItems().size() < 1 && MainApplication.get().isUserLoggedIn()) {
+         mNoMediaText.setVisibility(View.VISIBLE);
       } else {
-         mNoImagesText.setVisibility(View.GONE);
+         mNoMediaText.setVisibility(View.GONE);
       }
    }
 
@@ -611,7 +600,7 @@ OnItemClickListener,  OnItemLongClickListener {
             if (MainApplication.get().isUserLoggedIn() &&
              !mNextPageRequestInProgress && mCurScrollState ==
              OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
-               retrieveUserImages();
+               retrieveUserMedia();
             }
          }
       }
@@ -682,13 +671,5 @@ OnItemClickListener,  OnItemLongClickListener {
       return bitmap;
    }
 
-   public void setForReturn(int mMediaReturnValue) {
-      // TODO Auto-generated method stub
-      
-   }
 
-   public void launchGallery() {
-      // TODO Auto-generated method stub
-      
-   }
 }

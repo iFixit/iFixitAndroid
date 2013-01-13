@@ -1,12 +1,14 @@
 package com.dozuki.ifixit.gallery.ui;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.ui.LocalImage;
 import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
 import android.os.Bundle;
@@ -35,12 +37,12 @@ public class PhotoMediaFragment extends MediaFragment {
       if (!event.hasError()) {
          UserImageList imageList = event.getResult();
          if (imageList.getItems().size() > 0) {
-            int oldImageSize = mImageList.getItems().size();
+            int oldImageSize = mMediaList.getItems().size();
             for (int i = 0; i < imageList.getItems().size(); i++) {
                mSelectedList.add(false);
-               mImageList.addItem(imageList.getItems().get(i));
+               mMediaList.addItem(imageList.getItems().get(i));
             }
-            mImagesDownloaded += (mImageList.getItems().size() - oldImageSize);
+            mItemsDownloaded += (mMediaList.getItems().size() - oldImageSize);
             mGalleryAdapter.invalidatedView();
             mLastPage = false;
             updateNoImagesText();
@@ -64,7 +66,7 @@ public class PhotoMediaFragment extends MediaFragment {
             return;
          cur.mImgid = imageinfo.getImageid();
          mLocalURL.put(url, cur);
-         mImagesDownloaded++;
+         mItemsDownloaded++;
          mGalleryAdapter.invalidatedView();
       } else {
          // TODO
@@ -84,5 +86,12 @@ public class PhotoMediaFragment extends MediaFragment {
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
       setupUser(event.getUser());
+   }
+
+   @Override
+   protected void retrieveUserMedia() {
+      mNextPageRequestInProgress = true;
+      APIService.call((Activity) getActivity(),
+         APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));
    }
 }

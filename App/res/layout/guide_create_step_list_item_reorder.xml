@@ -40,7 +40,7 @@
             <RelativeLayout
                 android:id="@+id/drag_handle_reorder"
                 android:layout_width="20dp"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
                 android:layout_alignTop="@+id/step_title_textview_reorder"
                 android:background="@color/gray" >

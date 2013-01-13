@@ -32,6 +32,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 
 public class GuideCreateStepPortalFragment extends SherlockFragment {
 	public static int StepID = 0;
+	private static int ANIMATION_DURATION = 300;
 	private ListView mDragListView;
 	private ImageManager mImageManager;
 	private StepAdapter mAdapter;
@@ -187,7 +188,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
                mToggleEdit.startAnimation(rotateAnimation);
 
                // Creating the expand animation for the item
-               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
+               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
                expandAni.setAnimationListener(new AnimationListener() {
 
                   @Override
@@ -220,7 +221,7 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 
                mToggleEdit.startAnimation(rotateAnimation);
                // Creating the expand animation for the item
-               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
+               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
                mDragListView.invalidate();
                expandAni.setAnimationListener(new AnimationListener() {
 

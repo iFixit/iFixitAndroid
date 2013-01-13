@@ -13,7 +13,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/guide_create_top_bar"
         android:layout_margin="3dp"
-        android:dividerHeight="2dp"
+        android:dividerHeight="@dimen/topic_list_vertical_spacing"
+        android:divider="@color/white"
         android:padding="3dp" />
 
     <RelativeLayout

@@ -56,8 +56,8 @@ public class GalleryActivity extends IfixitActivity implements
 	private boolean mLoginVisible;
 	private boolean mIconsHidden;
 
-	private HashMap<String, PhotoMediaFragment> mMediaCategoryFragments;
-	private PhotoMediaFragment mCurrentMediaFragment;
+	private HashMap<String, MediaFragment> mMediaCategoryFragments;
+	private MediaFragment mCurrentMediaFragment;
 
 	private StepAdapter mStepAdapter;
 	private ViewPager mPager;
@@ -82,13 +82,13 @@ public class GalleryActivity extends IfixitActivity implements
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
 
-		mMediaCategoryFragments = new HashMap<String, PhotoMediaFragment>();
+		mMediaCategoryFragments = new HashMap<String, MediaFragment>();
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS,
 				new PhotoMediaFragment());
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_VIDEOS,
-				new PhotoMediaFragment());
+				new VideoMediaFragment());
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_EMBEDS,
-				new PhotoMediaFragment());
+				new EmbedMediaFragment());
 		mCurrentMediaFragment = mMediaCategoryFragments
 				.get(MEDIA_FRAGMENT_PHOTOS);
 
@@ -107,12 +107,9 @@ public class GalleryActivity extends IfixitActivity implements
 			if (mMediaReturnValue != -1)
 				mGetMediaItemForReturn = true;
 			mMode = startActionMode(new ContextualMediaSelect(this));
-			mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(
-					mMediaReturnValue);
-			mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS).setForReturn(
-					mMediaReturnValue);
-			mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(
-					mMediaReturnValue);
+//         mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(mMediaReturnValue);
+//         mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS).setForReturn(mMediaReturnValue);
+//         mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(mMediaReturnValue);
 		}
 
 		if (savedInstanceState != null) {
@@ -123,9 +120,7 @@ public class GalleryActivity extends IfixitActivity implements
 			if (showingLogout)
 				//LoginFragment.newInstance();
 			showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
-			/*
-			 * if (showingDelete) { createDeleteConfirmDialog(this).show(); }
-			 */
+
 		}
 
 		super.onCreate(savedInstanceState);
@@ -213,11 +208,11 @@ public class GalleryActivity extends IfixitActivity implements
 			mCurrentMediaFragment.launchCamera();
 			return true;
 		case R.id.top_gallery_button:
-			if (!isLoggedIn) {
-				return false;
-			}
-			mCurrentMediaFragment.launchGallery();
-			return true;
+         if (!isLoggedIn) {
+            return false;
+         }
+         mCurrentMediaFragment.launchImageChooser();
+         return true;
 		case R.id.help_button:
 			if (!isLoggedIn) {
 				return false;
@@ -236,39 +231,41 @@ public class GalleryActivity extends IfixitActivity implements
          MainApplication.get().setFirstTimeGalleryUser(false);
       }
    }
+   
+ 
 
    @Override
    public boolean finishActivityIfLoggedOut() {
       return true;
    }
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-	   
-		if (!mIconsHidden) {
-			MenuInflater inflater = getSupportMenuInflater();
-			inflater.inflate(R.menu.gallery_menu, menu);
-		}
-		return super.onCreateOptionsMenu(menu);
-	}
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+
+      if (!mIconsHidden) {
+         MenuInflater inflater = getSupportMenuInflater();
+         inflater.inflate(R.menu.gallery_menu, menu);
+      }
+      return super.onCreateOptionsMenu(menu);
+   }
 	
-	  @Override
-	   public boolean onPrepareOptionsMenu(Menu menu) {
-	      super.onPrepareOptionsMenu(menu);
-	      
-	      MenuItem gallery = menu.findItem(R.id.gallery_button);
-	      MenuItem help = menu.findItem(R.id.help_button);
-	     
-	      if (help != null) {
-	         help.setVisible(true);
-	      }
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      super.onPrepareOptionsMenu(menu);
 
-	      if (gallery != null) {
-	         gallery.setVisible(false);
-	      }
+      MenuItem gallery = menu.findItem(R.id.gallery_button);
+      MenuItem help = menu.findItem(R.id.help_button);
 
-	      return true;
-	   }
+      if (help != null) {
+         help.setVisible(true);
+      }
+
+      if (gallery != null) {
+         gallery.setVisible(false);
+      }
+
+      return true;
+   }
 
 	@Override
 	public void onResume() {
@@ -312,13 +309,13 @@ public class GalleryActivity extends IfixitActivity implements
 		public Fragment getItem(int position) {
 			switch (position) {
 			case 0:
-				return (PhotoMediaFragment) mMediaCategoryFragments
+				return (VideoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_VIDEOS);
 			case 1:
 				return (PhotoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_PHOTOS);
 			case 2:
-				return (PhotoMediaFragment) mMediaCategoryFragments
+				return (EmbedMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_EMBEDS);
 			default:
 				return (PhotoMediaFragment) mMediaCategoryFragments
@@ -330,7 +327,7 @@ public class GalleryActivity extends IfixitActivity implements
 		public void setPrimaryItem(ViewGroup container, int position,
 				Object object) {
 			super.setPrimaryItem(container, position, object);
-			mCurrentMediaFragment = (PhotoMediaFragment) object;
+			mCurrentMediaFragment = (MediaFragment) object;
 		}
 	}
 

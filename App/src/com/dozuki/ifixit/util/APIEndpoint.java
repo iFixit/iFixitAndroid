@@ -137,6 +137,44 @@ public enum APIEndpoint {
       "GET",
       false
    ),
+   USER_VIDEOS(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/media/videos" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserVideos().setResult(JSONHelper.parseUserVideos(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserVideos();
+         }
+      },
+      false,
+      true,
+      "GET",
+      false
+   ),
+   USER_EMBEDS(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/media/embeds" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserEmbeds().setResult(JSONHelper.parseUserEmbeds(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserVideos();
+         }
+      },
+      false,
+      true,
+      "GET",
+      false
+   ),
 
    UPLOAD_IMAGE(
       new Endpoint() {

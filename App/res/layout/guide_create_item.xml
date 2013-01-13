@@ -3,8 +3,7 @@
     android:id="@+id/guide_create_grid_box"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginLeft="4dp"
-    android:layout_marginRight="4dp"
+    android:layout_margin="4dp"
     android:background="@color/gray"
     android:padding="1dp" 
     android:orientation="vertical">

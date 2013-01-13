@@ -4,13 +4,10 @@ import java.io.Serializable;
 
 public abstract class MediaInfo implements Serializable {
 
-   
    /**
     * 
     */
    private static final long serialVersionUID = 7721134808315009007L;
-
- 
 
    private String mItemId;
    private String mGuid;
@@ -20,7 +17,6 @@ public abstract class MediaInfo implements Serializable {
    private String mHeight;
    private String mRatio;
    private boolean mLoaded;
-
 
    public String getKey() {
       return mLocalKey;
@@ -92,7 +88,7 @@ public abstract class MediaInfo implements Serializable {
          return false;
       }
 
-      MediaInfo inf = (MediaInfo)obj;
+      MediaInfo inf = (MediaInfo) obj;
       if (mItemId == null || inf.mItemId == null)
          return false;
 

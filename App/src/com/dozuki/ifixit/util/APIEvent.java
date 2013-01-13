@@ -2,7 +2,9 @@ package com.dozuki.ifixit.util;
 
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
+import com.dozuki.ifixit.gallery.model.UserEmbedList;
 import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.gallery.model.UserVideoList;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
@@ -19,6 +21,8 @@ public abstract class APIEvent<T> {
    public static class Login extends APIEvent<User> {}
    public static class Register extends APIEvent<User> {}
    public static class UserImages extends APIEvent<UserImageList> {}
+   public static class UserVideos extends APIEvent<UserVideoList> {}
+   public static class UserEmbeds extends APIEvent<UserEmbedList> {}
    public static class UploadImage extends APIEvent<UploadedImageInfo> {}
    public static class DeleteImage extends APIEvent<String> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}

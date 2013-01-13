@@ -121,42 +121,26 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		MenuInflater inflater = getSupportMenuInflater();
-		SubMenu subMenu = menu.addSubMenu("");
-		subMenu.setIcon(R.drawable.ic_menu_spinner);
-		inflater.inflate(R.menu.menu_bar, subMenu);
-		MenuItem subMenuItem = subMenu.getItem();
-		subMenuItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS
-				| MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+	 @Override
+	   public boolean onCreateOptionsMenu(Menu menu) {
 
-		return super.onCreateOptionsMenu(menu);
-	}
+	      MenuInflater inflater = getSupportMenuInflater();
+	      inflater.inflate(R.menu.step_create_menu, menu);
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		Intent intent;
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		case R.id.gallery_button:
-			intent = new Intent(this, GalleryActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.my_guides_button:
-			return true;
-		case R.id.browse_button:
-			intent = new Intent(this, TopicsActivity.class);
-			startActivity(intent);
-			return true;
-		case R.id.new_step_button:
-			return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+	      return super.onCreateOptionsMenu(menu);
+	   }
+
+	   @Override
+	   public boolean onOptionsItemSelected(MenuItem item) {
+	      Intent intent;
+	      switch (item.getItemId()) {
+	      case android.R.id.home:
+	         finish();
+	         return true;
+	      default:
+	         return super.onOptionsItemSelected(item);
+	      }
+	   }
 
 	@Override
 	public void finish() {

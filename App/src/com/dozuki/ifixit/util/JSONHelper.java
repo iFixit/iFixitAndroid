@@ -7,8 +7,12 @@ import android.util.Log;
 
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
+import com.dozuki.ifixit.gallery.model.UserEmbedInfo;
+import com.dozuki.ifixit.gallery.model.UserEmbedList;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.gallery.model.UserVideoInfo;
+import com.dozuki.ifixit.gallery.model.UserVideoList;
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.guide_view.model.GuideInfo;
 import com.dozuki.ifixit.guide_view.model.GuidePart;
@@ -288,6 +292,53 @@ public class JSONHelper {
 
       return userImageInfo;
    }
+   
+   public static UserVideoList parseUserVideos(String jVideo) throws JSONException {
+      JSONArray jImages = new JSONArray(jVideo);
+
+      UserVideoList userVideoList = new UserVideoList();
+
+      for (int i = 0; i < jImages.length(); i++) {
+         userVideoList.addItem((parseUserVideoInfo(jImages.getJSONObject(i))));
+      }
+      return userVideoList;
+   }
+   
+   public static UserVideoInfo parseUserVideoInfo(JSONObject jVideo)
+      throws JSONException {
+        UserVideoInfo userVideoInfo = new UserVideoInfo();
+        userVideoInfo.setItemId(jVideo.getString("imageid"));
+        userVideoInfo.setGuid(jVideo.getString("guid"));
+        userVideoInfo.setHeight(jVideo.getString("height"));
+        userVideoInfo.setWidth(jVideo.getString("width"));
+        userVideoInfo.setRatio(jVideo.getString("ratio"));
+
+        return userVideoInfo;
+     }
+   
+   public static UserEmbedList parseUserEmbeds(String jEmbed) throws JSONException {
+      JSONArray jEmbeds = new JSONArray(jEmbed);
+
+      UserEmbedList userEmbedList = new UserEmbedList();
+
+      for (int i = 0; i < jEmbed.length(); i++) {
+         userEmbedList.addItem((parseUserVideoInfo(jEmbeds.getJSONObject(i))));
+      }
+      return userEmbedList;
+   }
+   
+   public static UserEmbedInfo parseUserEmbedInfo(JSONObject jEmbed)
+      throws JSONException {
+        UserEmbedInfo userEmbedInfo = new UserEmbedInfo();
+//        userEmbedInfo.setItemId(jEmbed.getString("imageid"));
+//        userEmbedInfo.setGuid(jEmbed.getString("guid"));
+//        userEmbedInfo.setHeight(jEmbed.getString("height"));
+//        userEmbedInfo.setWidth(jEmbed.getString("width"));
+//        userEmbedInfo.setRatio(jEmbed.getString("ratio"));
+
+        return userEmbedInfo;
+     }
+   
 
    public static UploadedImageInfo parseUploadedImageInfo(String image)
     throws JSONException {
@@ -368,4 +419,9 @@ public class JSONHelper {
 
       return spantext;
    }
+
+
+   
+   
+   
 }

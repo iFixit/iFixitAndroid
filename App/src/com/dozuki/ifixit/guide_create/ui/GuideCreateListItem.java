@@ -11,8 +11,10 @@ import android.graphics.drawable.Drawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
@@ -22,7 +24,8 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 public class GuideCreateListItem extends RelativeLayout {
-	private TextView mTitleView;
+	private static final int ANIMATION_DURATION = 300;
+   private TextView mTitleView;
 	private ImageView mThumbnail;
 	private TextView mDeleteButton;
 	private TextView mEditButton;
@@ -115,11 +118,11 @@ public class GuideCreateListItem extends RelativeLayout {
 		if (isChecked) {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
-
+            rotateAnimation.setInterpolator(new DecelerateInterpolator());
             mToggleEdit.startAnimation(rotateAnimation);
 
             // Creating the expand animation for the item
-            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
+            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
 
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
@@ -133,10 +136,10 @@ public class GuideCreateListItem extends RelativeLayout {
       } else {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counterclockwise);
-
+            rotateAnimation.setInterpolator(new AccelerateInterpolator());
             mToggleEdit.startAnimation(rotateAnimation);
             // Creating the expand animation for the item
-            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, 500);
+            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
 
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);

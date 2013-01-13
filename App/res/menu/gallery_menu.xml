@@ -11,17 +11,6 @@
         android:icon="@drawable/ic_action_picture_add"
         android:showAsAction="always"
         android:title="@string/gallery_tool_tip"/>
-    
-    <item
-        android:id="@+id/browse_button"
-        android:icon="@drawable/ic_menu_spinner_browse"
-        android:showAsAction="ifRoom"
-        android:title="Browse"/>
-    <item
-        android:id="@+id/my_guides_button"
-        android:icon="@drawable/ic_menu_spinner_guides"
-        android:showAsAction="ifRoom"
-        android:title="My Guides"/>
 
     <item
         android:id="@+id/help_button"
