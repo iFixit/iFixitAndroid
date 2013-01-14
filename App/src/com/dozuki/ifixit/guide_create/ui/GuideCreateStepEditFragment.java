@@ -21,7 +21,12 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout.LayoutParams;
+
 import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.FrameLayout;
+import org.holoeverywhere.widget.TextView;
+
 import android.widget.ImageView;
 import org.holoeverywhere.widget.ListView;
 
@@ -286,7 +291,7 @@ public class GuideCreateStepEditFragment extends Fragment implements
 			LayoutParams params = (LayoutParams)iconFrame.getLayoutParams();
 			params.setMargins(25 * items.get(position).getLevel(), 0, 0, 0);
 			iconFrame.setLayoutParams(params);
-			TextView text = (TextView) v.findViewById(R.id.step_title_textview);
+			EditText text = (EditText) v.findViewById(R.id.step_title_textview);
 			text.setText(items.get(position).getText());
 			ImageView icon = (ImageView) v
 					.findViewById(R.id.guide_step_item_thumbnail);

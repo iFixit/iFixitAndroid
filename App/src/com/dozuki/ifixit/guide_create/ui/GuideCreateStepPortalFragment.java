@@ -29,6 +29,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -329,5 +330,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 			}
 		}
 	}
+	
+
 
 }
