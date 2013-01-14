@@ -48,6 +48,7 @@
             android:text="@string/step_edit_save_step"
             android:textSize="14sp"
             android:textStyle="bold"
+            android:layout_margin="4dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
              android:textColor="@color/white" 
