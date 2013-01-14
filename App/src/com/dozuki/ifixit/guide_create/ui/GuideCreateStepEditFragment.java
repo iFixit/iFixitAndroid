@@ -69,10 +69,11 @@ public class GuideCreateStepEditFragment extends Fragment implements
 	ImageView mImageTwo;
 	ImageView mImageThree;
 	ImageView mMediaIcon;
-	DragSortListView mBulletList;
 	DragSortController mController;
 	BulletListAdapter mBulletListAdapter;
 	boolean mReorderStepsMode;
+	  ImageView mBottomBarSpinnerIcon;
+	   DragSortListView mBulletList;
 
 	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
 		@Override
@@ -90,6 +91,7 @@ public class GuideCreateStepEditFragment extends Fragment implements
 			mBulletListAdapter.remove(mBulletListAdapter.getItem(which));
 		}
 	};
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
