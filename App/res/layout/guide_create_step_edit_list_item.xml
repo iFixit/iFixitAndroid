@@ -34,7 +34,7 @@
     </FrameLayout>
 
     <RelativeLayout
-        android:id="@+id/drag_handle"
+        android:id="@+id/guide_step_drag_handle"
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"

@@ -87,7 +87,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <ListView
+    <com.mobeta.android.dslv.DragSortListView
         android:id="@+id/steps_portal_list"
         android:layout_width="fill_parent"
         android:layout_toRightOf="@+id/step_edit_body"

@@ -57,13 +57,14 @@ public class GuideCreateStepsEditActivity extends Activity
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
+	private GuideCreateStepEditFragment mCurStepFragment;
 	//private TextView mAddStep;
 	//private TextView mDeleteStep;
 	private ImageView mSpinnerMenu;
 	private Button mSaveStep;
 	private ImageView mViewSteps;
 	private StepAdapter mStepAdapter;
-	private ViewPager mPager;
+	private LockableViewPager mPager;
 	private TitlePageIndicator titleIndicator;
 	private int mPagePosition;
 	private boolean mConfirmDelete;
@@ -106,7 +107,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		mViewSteps = (ImageView) findViewById(R.id.step_edit_view_steps);
 
 		mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-		mPager = (ViewPager) findViewById(R.id.guide_edit_body_pager);
+		mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
 		mPager.setAdapter(mStepAdapter);
 		mPager.setCurrentItem(mPagePosition);
 
@@ -165,8 +166,11 @@ public class GuideCreateStepsEditActivity extends Activity
 
 	public class StepAdapter extends FragmentStatePagerAdapter {
 
+		private boolean isPagingEnabled;
+		
 		public StepAdapter(FragmentManager fm) {
 			super(fm);
+			isPagingEnabled = true;
 		}
 
 		@Override
@@ -183,6 +187,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		public Fragment getItem(int position) {
 			GuideCreateStepEditFragment frag = new GuideCreateStepEditFragment();
 			frag.setStepObject(mGuide.getSteps().get(position));
+			mCurStepFragment = frag;
 			return frag;
 		}
 		
@@ -291,9 +296,10 @@ public class GuideCreateStepsEditActivity extends Activity
 		{
 			curStep.setLevel(curStep.getLevel() - 1);
 		}
-		else if(color.equals("bullet_dialog_rearrange"))
+		else if(color.equals("action_reorder"))
 		{
-			
+			mCurStepFragment.setReorderStepsMode();
+			mPager.setPagingEnabled(false);
 		}
 		else
 		{
