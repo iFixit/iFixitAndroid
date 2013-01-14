@@ -2,16 +2,17 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.List;
 
+import org.holoeverywhere.app.Fragment;
+
 import android.R.color;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import org.holoeverywhere.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
-import android.widget.TextView;
+import org.holoeverywhere.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -23,7 +24,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
-public class GuideCreateStepReorderFragment extends SherlockFragment {
+public class GuideCreateStepReorderFragment extends Fragment {
 
 	private DragSortListView mDragListView;
 	private DragSortController mController;

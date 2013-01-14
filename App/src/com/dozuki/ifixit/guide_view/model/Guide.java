@@ -3,6 +3,8 @@ package com.dozuki.ifixit.guide_view.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+
 public class Guide implements Serializable {
    private static final long serialVersionUID = -1965203088124961695L;
 
@@ -175,5 +177,9 @@ public class Guide implements Serializable {
       return "{" + mGuideid + "\n" + mTitle + "\n" + mTopic + "\n" + mAuthor +
        "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroduction + "\n"
        + mSummary + "\n\n" + mSteps + "\n" + mSummary + "}";
+   }
+
+   public ArrayList<GuideStep> getStepList() {
+      return mSteps;
    }
 }

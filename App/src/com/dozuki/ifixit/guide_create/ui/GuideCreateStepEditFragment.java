@@ -3,7 +3,9 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 import java.util.List;
 
-import android.app.Activity;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -12,22 +14,17 @@ import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
+import org.holoeverywhere.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
-import android.widget.EditText;
-import android.widget.FrameLayout;
+import org.holoeverywhere.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.RelativeLayout.LayoutParams;
-import android.widget.TextView;
+import org.holoeverywhere.widget.ListView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
@@ -37,7 +34,9 @@ import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.ifixit.android.imagemanager.ImageManager;
 
-public class GuideCreateStepEditFragment extends SherlockFragment implements
+
+
+public class GuideCreateStepEditFragment extends Fragment implements
 		OnClickListener, OnLongClickListener {
 	public static final int FetchImageKey = 1;
 	public static final String ThumbPositionKey = "ThumbPositionKey";

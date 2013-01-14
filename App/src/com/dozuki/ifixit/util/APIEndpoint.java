@@ -240,6 +240,46 @@ public enum APIEndpoint {
       false
    ),
 
+   USER_GUIDES(
+      new Endpoint() {
+         public String createUrl(String query) {
+            //return "user/"+ query +"/guides";
+            return "guides";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserGuides().setResult(JSONHelper.parseUserGuides(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserGuides();
+         }
+      },
+      false,
+      true,
+      "GET",
+      false
+   ),
+   CREATE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.CreateGuide();
+         }
+      },
+      false,
+      true,
+      "POST",
+      false
+   ),
+
    SITES(
       new Endpoint() {
          public String createUrl(String query) {

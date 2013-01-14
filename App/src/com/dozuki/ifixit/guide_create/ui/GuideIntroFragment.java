@@ -2,20 +2,23 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import org.holoeverywhere.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.TextView;
+import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Spinner;
 
-import com.actionbarsherlock.app.SherlockFragment;
+
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.util.APIService;
 
-public class GuideIntroFragment extends SherlockFragment {
+public class GuideIntroFragment extends Fragment {
 	
 	private static String DeviceTypeKey = "DeviceType";
 	private static String TitleKey = "DeviceType";
@@ -24,8 +27,10 @@ public class GuideIntroFragment extends SherlockFragment {
 	EditText mDeviceType;
 	EditText mTitle;
 	EditText mSummary;
+	EditText mFocus;
 	EditText mIntroduction;
 	TextView mErrorText;
+	Spinner mGuideTypeSpinner;
 	Button mSubmitGuideButton;
 	GuideCreateObject mGuideObject;
 	
@@ -55,10 +60,12 @@ public class GuideIntroFragment extends SherlockFragment {
 				false);
 		mSubmitGuideButton = (Button)view.findViewById(R.id.confirm_create_guide_button);
 		mDeviceType = (EditText)view.findViewById(R.id.edit_guide_intro_device_id);
+		mFocus = (EditText)view.findViewById(R.id.edit_guide_intro_focus);
 		mTitle = (EditText)view.findViewById(R.id.edit_guide_intro_title);
 		mSummary = (EditText)view.findViewById(R.id.edit_guide_intro_summary);
 		mIntroduction = (EditText)view.findViewById(R.id.edit_guide_intro_introduction_text);
 		mErrorText = (TextView)view.findViewById(R.id.guide_intro_error_text);
+		mGuideTypeSpinner = (Spinner)view.findViewById(R.id.guide_intro_type_spinner);
 		
 		if(savedInstanceState != null)
 		{
@@ -79,7 +86,7 @@ public class GuideIntroFragment extends SherlockFragment {
 				else*/
 				
 					Log.i("TITLE", mTitle.getText().toString());
-					confirmCreateGuide(mDeviceType.getText().toString(), mTitle.getText().toString(), mSummary.getText().toString(), mIntroduction.getText().toString());
+					confirmCreateGuide(mDeviceType.getText().toString(), mTitle.getText().toString(), mSummary.getText().toString(), mIntroduction.getText().toString(), (String)mGuideTypeSpinner.getSelectedItem(), mFocus.getText().toString());
 				
 			}
 			
@@ -96,14 +103,20 @@ public class GuideIntroFragment extends SherlockFragment {
 		return view;
 	}
 	
-	private void confirmCreateGuide(String device, String title, String summary, String intro)
+	private void confirmCreateGuide(String device, String title, String summary, String intro, String guideType, String thing)
 	{
-		if(mGuideObject == null) return;
-		mGuideObject.setTitle(title);
-		mGuideObject.setTopic(device);
-		mGuideObject.setSummary(summary);
-		mGuideObject.setIntroduction(intro);
-		((GuideCreateActivity)getActivity()).addGuide(mGuideObject);
-		getActivity().getSupportFragmentManager().popBackStack();
+      if (mGuideObject == null)
+         return;
+      mGuideObject.setTitle(title);
+      mGuideObject.setTopic(device);
+      mGuideObject.setSummary(summary);
+      mGuideObject.setIntroduction(intro);
+      
+      ((GuideCreateActivity)getActivity()).getGuideList().add(mGuideObject);
+      
+     // APIService.call((Activity) getActivity(),
+      //   APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
+
+      getActivity().getSupportFragmentManager().popBackStack();
 	}
 }

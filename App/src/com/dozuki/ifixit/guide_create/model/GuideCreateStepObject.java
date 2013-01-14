@@ -4,6 +4,9 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.util.Log;
+
+import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 
@@ -30,7 +33,15 @@ public class GuideCreateStepObject  implements Serializable{
 	      mLines = new ArrayList<StepLine>();
 	   }
 	   
-	   public void setEditMode(boolean editMode)
+	   public GuideCreateStepObject(GuideStep gs) {
+	      mStepNum = gs.getStepNum();
+         mImages = gs.getImages();
+        
+         mLines = gs.getLines();
+         mTitle = gs.getTitle();
+      }
+
+      public void setEditMode(boolean editMode)
 	   {
 		   mEditMode = editMode;
 	   }

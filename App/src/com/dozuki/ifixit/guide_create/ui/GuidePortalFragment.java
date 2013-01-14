@@ -1,23 +1,31 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
+
+
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import org.holoeverywhere.LayoutInflater;
+
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.ListView;
+import org.holoeverywhere.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+import org.holoeverywhere.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
+import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
 
-public class GuidePortalFragment extends SherlockFragment {
+public class GuidePortalFragment extends Fragment {
 	private ListView mGridView;
 	private ImageManager mImageManager;
 	private GuideCreateListAdapter mGuideAdapter;
@@ -37,11 +45,13 @@ public class GuidePortalFragment extends SherlockFragment {
 		mSelf = this;
 		mParentRef = (GuideCreateActivity) getActivity();
 		mGuideAdapter = new GuideCreateListAdapter();
+     // APIService.call((Activity) getActivity(),
+       //  APIService.getUserGuidesAPICall(((MainApplication) getActivity().getApplication()).getUser().getUserId()));
 	}
 
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
+   @Override
+   public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.guide_create_portal, container,
 				false);
 		mGridView = (ListView) view.findViewById(R.id.guide_create_listview);
@@ -60,14 +70,44 @@ public class GuidePortalFragment extends SherlockFragment {
 		});
 		return view;
 	}
-	
-	
+   
+   @Subscribe
+   public void onUserGuides(APIEvent.UserGuides event) {
+      if (!event.hasError()) {
+         mParentRef.getGuideList().removeAll(event.getResult());
+         mParentRef.getGuideList().addAll(event.getResult());
+         mGuideAdapter.notifyDataSetChanged();
+      } else {
+         //TODO
+       //  APIService.getErrorDialog(TopicsActivity.this, event.getError(), APIService.getCategoriesAPICall()).show();
+      }
+   }
+   
+   
+   @Subscribe
+   public void onGuideCreated(APIEvent.CreateGuide event) {
+      if (!event.hasError()) {
+         mParentRef.getGuideList().add(event.getResult());
+         mGuideAdapter.notifyDataSetChanged();
+      } else {
+         //TODO
+       //  APIService.getErrorDialog(TopicsActivity.this, event.getError(), APIService.getCategoriesAPICall()).show();
+      }
+   }
 
-	@Override
-	public void onResume() {
-		super.onResume();
-		mGuideAdapter.invalidatedView();
-	}
+   @Override
+   public void onResume() {
+      super.onResume();
+      mGuideAdapter.invalidatedView();
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      MainApplication.getBus().unregister(this);
+   }
 
 	public void deleteGuide(GuideCreateObject item) {
 		mParentRef.getGuideList().remove(item);

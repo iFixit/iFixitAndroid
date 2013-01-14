@@ -5,6 +5,7 @@ import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserEmbedList;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.gallery.model.UserVideoList;
+import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
@@ -25,6 +26,8 @@ public abstract class APIEvent<T> {
    public static class UserEmbeds extends APIEvent<UserEmbedList> {}
    public static class UploadImage extends APIEvent<UploadedImageInfo> {}
    public static class DeleteImage extends APIEvent<String> {}
+   public static class UserGuides extends APIEvent<ArrayList<GuideCreateObject>> {}
+   public static class CreateGuide extends APIEvent<GuideCreateObject> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}
    public static class UserInfo extends APIEvent<User> {}
 

@@ -3,6 +3,9 @@ package com.dozuki.ifixit.guide_create.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.dozuki.ifixit.guide_view.model.Guide;
+import com.dozuki.ifixit.guide_view.model.GuideStep;
+
 public class GuideCreateObject implements Serializable {
 
 	/**
@@ -26,7 +29,25 @@ public class GuideCreateObject implements Serializable {
 	public GuideCreateObject(int guideid) {
 		mGuideid = guideid;
 	}
-	
+
+   public GuideCreateObject(Guide guide) {
+      mStepList = new ArrayList<GuideCreateStepObject>();
+      mGuideid = guide.getGuideid();
+      mTitle = guide.getTitle();
+      mTopic = guide.getTopic();
+      mAuthor = guide.getAuthor();
+      mTimeRequired = guide.getTimeRequired();
+      mDifficulty = guide.getDifficulty();
+      mIntroduction = guide.getIntroduction();
+      mSubject = guide.getSubject();
+      mIntroImage = guide.getIntroImage();
+      mSummary = guide.getSummary();
+
+      for (GuideStep gs : guide.getStepList()) {
+         mStepList.add(new GuideCreateStepObject(gs));
+      }
+   }
+
 	public void setStepList(ArrayList<GuideCreateStepObject> stepList)
 	{
 		mStepList = stepList;

@@ -2,12 +2,14 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.List;
 
-import android.app.Activity;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.Fragment;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
-import android.view.LayoutInflater;
+import org.holoeverywhere.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.animation.Animation;
@@ -17,20 +19,23 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.ToggleButton;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.ListView;
+import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
 
-public class GuideCreateStepPortalFragment extends SherlockFragment {
+public class GuideCreateStepPortalFragment extends Fragment {
 	public static int StepID = 0;
 	private static int ANIMATION_DURATION = 300;
 	private ListView mDragListView;
@@ -56,7 +61,33 @@ public class GuideCreateStepPortalFragment extends SherlockFragment {
 					.getImageManager();
 		}
 		mAdapter = new StepAdapter(mGuide.getSteps());
+		//APIService.call((Activity) getActivity(), APIService.getGuideAPICall(mGuide.getGuideid()));
 	}
+	
+	 @Subscribe
+	   public void onGuideCreated(APIEvent.Guide event) {
+	      if (!event.hasError()) {
+	         for(GuideStep gs : event.getResult().getStepList())
+	            mGuide.getSteps().add(new GuideCreateStepObject(gs));
+	         mAdapter.notifyDataSetChanged();
+	      } else {
+	        
+	      }
+	   }
+
+	   @Override
+	   public void onResume() {
+	      super.onResume();
+	      MainApplication.getBus().register(this);
+	   }
+
+	   @Override
+	   public void onPause() {
+	      super.onPause();
+
+	      MainApplication.getBus().unregister(this);
+	   }
+
 
 	
 

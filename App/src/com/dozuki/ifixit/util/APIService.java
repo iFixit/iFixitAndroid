@@ -225,6 +225,27 @@ public class APIService extends Service {
 
       return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
+   
+   public static APICall getCreateGuideAPICall(String device, String title, String summary, String intro,
+      String guideType, String thing) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("topic", device);
+         requestBody.put("type", guideType);
+         requestBody.put("thing", thing);
+         requestBody.put("title", title);
+         requestBody.put("summary", summary);
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
+   }
+   
+   public static APICall getUserGuidesAPICall(String userid) {
+      return new APICall(APIEndpoint.USER_GUIDES, userid);
+   }
 
    public static APICall getRegisterAPICall(String login, String password, String username) {
       JSONObject requestBody = new JSONObject();
@@ -370,8 +391,8 @@ public class APIService extends Service {
                /**
                 * Uncomment to test HTTPS API calls in development.
                 */
-               //request.trustAllCerts();
-               //request.trustAllHosts();
+               request.trustAllCerts();
+              request.trustAllHosts();
 
                String sessionid = null;
                /**
