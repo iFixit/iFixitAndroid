@@ -6,6 +6,8 @@ import java.util.List;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
+import android.R.color;
+
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
@@ -21,23 +23,35 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+
+
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+
 import android.widget.RelativeLayout.LayoutParams;
 
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.TextView;
 
-import android.widget.ImageView;
 import org.holoeverywhere.widget.ListView;
+
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.ContextualStepReorder;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.ifixit.android.imagemanager.ImageManager;
+import com.mobeta.android.dslv.DragSortController;
+import com.mobeta.android.dslv.DragSortListView;
 
 
 
@@ -46,6 +60,7 @@ public class GuideCreateStepEditFragment extends Fragment implements
 	public static final int FetchImageKey = 1;
 	public static final String ThumbPositionKey = "ThumbPositionKey";
 	private static final String GuideEditKey = "GuideEditKey";
+	private static final String ReorderStepsKey = "ReorderStepsKey";
 	GuideCreateStepObject mStepObject;
 	EditText mStepTitle;
 	ImageManager mImageManager;
@@ -54,7 +69,27 @@ public class GuideCreateStepEditFragment extends Fragment implements
 	ImageView mImageTwo;
 	ImageView mImageThree;
 	ImageView mMediaIcon;
-	ListView mBulletList;
+	DragSortListView mBulletList;
+	DragSortController mController;
+	BulletListAdapter mBulletListAdapter;
+	boolean mReorderStepsMode;
+
+	private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
+		@Override
+		public void drop(int from, int to) {
+			StepLine item = mBulletListAdapter.getItem(from);
+			mBulletListAdapter.remove(item);
+			mBulletListAdapter.insert(item, to);
+			mBulletList.invalidateViews();
+		}
+	};
+
+	private DragSortListView.RemoveListener onRemove = new DragSortListView.RemoveListener() {
+		@Override
+		public void remove(int which) {
+			mBulletListAdapter.remove(mBulletListAdapter.getItem(which));
+		}
+	};
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -82,19 +117,28 @@ public class GuideCreateStepEditFragment extends Fragment implements
 		mImageThree.setOnClickListener(this);
 
 		mMediaIcon = (ImageView) view.findViewById(R.id.step_edit_thumb_media);
-		mBulletList = (ListView) view.findViewById(R.id.steps_portal_list);
-
+		mBulletList = (DragSortListView) view
+				.findViewById(R.id.steps_portal_list);
+		mBulletList.setDropListener(onDrop);
+		mBulletList.setRemoveListener(onRemove);
+	
+		mController = buildController(mBulletList);
+		mBulletList.setFloatViewManager(mController);
+		mBulletList.setOnTouchListener(mController);
+		mBulletList.setDragEnabled(true);
+		mReorderStepsMode = false;
 		if (savedInstanceState != null) {
+			mReorderStepsMode = savedInstanceState.getBoolean(ReorderStepsKey);
 			mStepObject = (GuideCreateStepObject) savedInstanceState
 					.getSerializable(GuideCreateStepEditFragment.GuideEditKey);
 			for (StepImage img : mStepObject.getImages()) {
 				setImage(img.getImageid(), img.getText());
 			}
 		}
-
-		mBulletList.setAdapter(new BulletListAdapter(this.getActivity(),
-				R.layout.guide_create_step_edit_list_item, mStepObject
-						.getLines()));
+		mBulletListAdapter = new BulletListAdapter(this.getActivity(),
+				R.layout.guide_create_step_edit_list_item,
+				mStepObject.getLines());
+		mBulletList.setAdapter(mBulletListAdapter);
 
 		mStepTitle.setText(mStepObject.getTitle());
 		mStepTitle.addTextChangedListener(new TextWatcher() {
@@ -122,6 +166,23 @@ public class GuideCreateStepEditFragment extends Fragment implements
 		return view;
 	}
 
+	public DragSortController buildController(DragSortListView dslv) {
+		DragSortController controller = new DragSortController(dslv);
+		controller.setDragHandleId(R.id.guide_step_drag_handle);
+		controller.setRemoveEnabled(false);
+		controller.setSortEnabled(true);
+		controller.setDragInitMode(DragSortController.ON_DOWN);
+		controller.setRemoveMode(DragSortController.FLING_RIGHT_REMOVE);
+		controller.setBackgroundColor(color.background_light);
+		return controller;
+	}
+
+	public void setReorderStepsMode() {
+		getSherlockActivity().startActionMode(new ContextualStepReorder());
+		mReorderStepsMode = true;
+		((GuideCreateStepsEditActivity) getActivity()).invalidateStepAdapter();
+	}
+
 	public void setStepObject(GuideCreateStepObject stepObject) {
 		mStepObject = stepObject;
 	}
@@ -131,6 +192,7 @@ public class GuideCreateStepEditFragment extends Fragment implements
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putSerializable(
 				GuideCreateStepEditFragment.GuideEditKey, mStepObject);
+		savedInstanceState.putBoolean(ReorderStepsKey, mReorderStepsMode);
 	}
 
 	@Override
@@ -244,11 +306,11 @@ public class GuideCreateStepEditFragment extends Fragment implements
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View v = convertView;
-			if (v == null) {
+			//if (v == null) {
 				LayoutInflater vi = (LayoutInflater) con
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
-			}
+			//}
 
 			if (position == items.size()) {
 				ImageView newItem = (ImageView) v
@@ -271,31 +333,42 @@ public class GuideCreateStepEditFragment extends Fragment implements
 				return v;
 			}
 			final int mPos = position;
-			FrameLayout iconFrame = (FrameLayout)v.findViewById(R.id.guide_step_item_frame);
-			iconFrame.setOnClickListener(
-					new OnClickListener() {
+			FrameLayout iconFrame = (FrameLayout) v
+					.findViewById(R.id.guide_step_item_frame);
+			iconFrame.setOnClickListener(new OnClickListener() {
 
-						@Override
-						public void onClick(View v) {
-							final Dialog dialog = new Dialog(con);
-							dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-							FragmentManager fm = getActivity()
-									.getSupportFragmentManager();
-							ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
-							chooseBulletDialog.setStepIndex(mPos);
-							chooseBulletDialog.show(fm,
-									"fragment_choose_bullet");
-						}
+				@Override
+				public void onClick(View v) {
+					final Dialog dialog = new Dialog(con);
+					dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+					FragmentManager fm = getActivity()
+							.getSupportFragmentManager();
+					ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
+					chooseBulletDialog.setStepIndex(mPos);
+					chooseBulletDialog.show(fm, "fragment_choose_bullet");
+				}
 
-					});
-			LayoutParams params = (LayoutParams)iconFrame.getLayoutParams();
+			});
+			LayoutParams params = (LayoutParams) iconFrame.getLayoutParams();
 			params.setMargins(25 * items.get(position).getLevel(), 0, 0, 0);
 			iconFrame.setLayoutParams(params);
 			EditText text = (EditText) v.findViewById(R.id.step_title_textview);
 			text.setText(items.get(position).getText());
 			ImageView icon = (ImageView) v
 					.findViewById(R.id.guide_step_item_thumbnail);
-			icon.setImageResource(getBulletResource(items.get(position).getColor()));
+			icon.setImageResource(getBulletResource(items.get(position)
+					.getColor()));
+			
+			RelativeLayout reorderDragHandle = (RelativeLayout) v.findViewById(R.id.guide_step_drag_handle);
+			if(mReorderStepsMode)
+			{
+				 reorderDragHandle.setVisibility(View.VISIBLE);
+			}
+			else
+			{
+				 reorderDragHandle.setVisibility(View.GONE);
+			}
+			
 			return v;
 		}
 
@@ -331,4 +404,31 @@ public class GuideCreateStepEditFragment extends Fragment implements
 			return iconRes;
 		}
 	}
+
+	public final class ContextualStepReorder implements ActionMode.Callback {
+		public ContextualStepReorder() {
+		}
+
+		@Override
+		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+			return true;
+		}
+
+		@Override
+		public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+			return false;
+		}
+
+		@Override
+		public void onDestroyActionMode(ActionMode mode) {
+			mReorderStepsMode = false;
+			//((GuideCreateStepsEditActivity) getActivity()).invalidateStepAdapter();
+		}
+
+		@Override
+		public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
+			return true;
+		}
+	};
 }

@@ -20,8 +20,8 @@
     <dimen name="guide_thumbnail_spacing">6dp</dimen>
     <dimen name="guide_thumbnail_padding">1dp</dimen>
     
-    <dimen name="guide_micro_thumbnail_width">40dp</dimen>
-    <dimen name="guide_micro_thumbnail_height">30dp</dimen>
+    <dimen name="guide_micro_thumbnail_width">53dp</dimen>
+    <dimen name="guide_micro_thumbnail_height">42.67dp</dimen>
 
     <dimen name="topic_list_column_width">270dp</dimen>
     <dimen name="topic_list_vertical_spacing">4dp</dimen>

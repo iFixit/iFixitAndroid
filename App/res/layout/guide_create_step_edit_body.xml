@@ -3,9 +3,9 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
-    android:orientation="vertical"
     android:focusable="true"
-    android:focusableInTouchMode="true"  >
+    android:focusableInTouchMode="true"
+    android:orientation="vertical" >
 
     <EditText
         android:id="@+id/step_edit_title_text"
@@ -21,31 +21,29 @@
         android:layout_height="fill_parent"
         android:layout_above="@+id/step_edit_bottom_bar"
         android:layout_below="@+id/step_edit_title_text"
-        android:orientation="vertical"
-        android:weightSum="1.0" >
+        android:orientation="vertical" >
 
         <LinearLayout
             android:id="@+id/step_edit_image_holder"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
-            android:layout_weight=".5"
+            android:layout_height="wrap_content"
             android:gravity="center"
             android:orientation="horizontal" >
 
             <ImageView
                 android:id="@+id/step_edit_large_image"
                 android:layout_width="200dp"
-                android:layout_height="fill_parent"
+                android:layout_height="150dp"
                 android:layout_marginLeft="2dp"
                 android:layout_marginRight="25dp"
-                android:src="@drawable/ic_placeholder_feature_img"
                 android:background="@color/image_border"
                 android:contentDescription="@string/topic_guide_thumbnail"
-                android:padding="1dp" />
+                android:padding="1dp"
+                android:src="@drawable/ic_placeholder_feature_img" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="fill_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical" >
 
                 <ImageView
@@ -53,59 +51,59 @@
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_image"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
-                    android:padding="1dp" />
+                    android:padding="1dp"
+                    android:src="@drawable/ic_btn_add_gallery_image" />
 
                 <ImageView
                     android:id="@+id/step_edit_thumb_2"
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_image"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
-                    android:padding="1dp" />
+                    android:padding="1dp"
+                    android:src="@drawable/ic_btn_add_gallery_image" />
 
                 <ImageView
                     android:id="@+id/step_edit_thumb_3"
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_image"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
-                    android:padding="1dp" />
+                    android:padding="1dp"
+                    android:src="@drawable/ic_btn_add_gallery_image" />
 
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_btn_add_gallery_image"
-                    android:textColor="@color/image_border"
-                    android:text="-OR-" />
+                    android:text="-OR-"
+                    android:textColor="@color/image_border" />
 
                 <ImageView
                     android:id="@+id/step_edit_thumb_media"
                     android:layout_width="@dimen/guide_micro_thumbnail_width"
                     android:layout_height="@dimen/guide_micro_thumbnail_height"
                     android:layout_margin="2dp"
-                    android:src="@drawable/ic_btn_add_gallery_media"
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
-                    android:padding="1dp" />
+                    android:padding="1dp"
+                    android:src="@drawable/ic_btn_add_gallery_media" />
             </LinearLayout>
         </LinearLayout>
 
-        <ListView
+        <com.mobeta.android.dslv.DragSortListView
             android:id="@+id/steps_portal_list"
             android:layout_width="fill_parent"
-            android:layout_height="0dp"
+            android:layout_height="fill_parent"
             android:layout_margin="3dp"
-            android:layout_weight=".5"
-            android:dividerHeight="2dp"
+            android:divider="@color/white"
+            android:dividerHeight="@dimen/topic_list_vertical_spacing"
             android:padding="3dp" />
-        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>
