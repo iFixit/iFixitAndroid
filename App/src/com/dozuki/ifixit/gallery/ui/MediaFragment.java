@@ -48,6 +48,7 @@ import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.gallery.model.UserMediaList;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepsEditActivity;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
@@ -90,6 +91,7 @@ OnItemClickListener,  OnItemLongClickListener {
    protected boolean mNextPageRequestInProgress;
    private boolean mShowingHelp;
    private boolean mShowingDelete;
+   private int mSelectForReturn;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -555,7 +557,35 @@ OnItemClickListener,  OnItemLongClickListener {
     long id) {
       MediaViewItem cell = (MediaViewItem)view;
       // Long-click delete mode
-      if (mMode != null) {
+      if (mSelectForReturn > 0) {
+			String url = (String) view.getTag();
+
+			if (url == null) {
+				return;
+			} else if (url.equals("") || url.indexOf(".") == 0) {
+				return;
+			}
+
+			String imageUrl;
+			boolean isLocal;
+			if (mLocalURL.get(url) != null) {
+				imageUrl = mLocalURL.get(url).mPath;
+				isLocal = true;
+			} else {
+				imageUrl = url;
+				isLocal = false;
+			}
+
+			Intent selectResult = new Intent();
+			selectResult.putExtra(GuideCreateStepsEditActivity.MediaReturnKey,
+					imageUrl);
+			selectResult.putExtra(
+					GuideCreateStepsEditActivity.MediaSlotReturnKey,
+					mSelectForReturn);
+			getActivity().setResult(Activity.RESULT_OK, selectResult);
+			getActivity().finish();
+		} 
+      else if (mMode != null) {
          if (cell == null) {
             Log.i("iFixit", "Delete cell null!");
             return;
@@ -671,5 +701,8 @@ OnItemClickListener,  OnItemLongClickListener {
       return bitmap;
    }
 
+   public void setForReturn(int mMediaQuickReturn) {
+		mSelectForReturn = mMediaQuickReturn;
+	}
 
 }
