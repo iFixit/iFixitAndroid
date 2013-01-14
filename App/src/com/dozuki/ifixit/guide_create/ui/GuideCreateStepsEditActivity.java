@@ -41,6 +41,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet.BulletTypes;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.ChooseBulletDialog.BulletDialogListener;
+import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -182,6 +183,11 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 			frag.setStepObject(mGuide.getSteps().get(position));
 			return frag;
 		}
+		
+		@Override
+		public int getItemPosition(Object object) {
+		    return POSITION_NONE;
+		}
 
 		@Override
 		public void setPrimaryItem(ViewGroup container, int position,
@@ -225,6 +231,11 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 		mPager.invalidate();
 		titleIndicator.invalidate();
 	}
+	
+	public void invalidateStepAdapter()
+	{
+		mStepAdapter.notifyDataSetChanged();
+	}
 
 	public AlertDialog createDeleteDialog(final Context context) {
 		mConfirmDelete = true;
@@ -267,8 +278,25 @@ public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
 	}
 
 	@Override
-	public void onFinishBulletDialog(String bulletID, BulletTypes type) {
-		// TODO Auto-generated method stub
+	public void onFinishBulletDialog(int index, String color) {
+		StepLine curStep = mGuide.getSteps().get(mPagePosition).getLine(index);
 		
+		if(color.equals("action_indent"))
+		{
+			curStep.setLevel(curStep.getLevel() + 1);
+		}
+		else if(color.equals("action_unindent"))
+		{
+			curStep.setLevel(curStep.getLevel() - 1);
+		}
+		else if(color.equals("bullet_dialog_rearrange"))
+		{
+			
+		}
+		else
+		{
+			curStep.setColor(color);
+		}
+		mStepAdapter.notifyDataSetChanged();
 	}
 }

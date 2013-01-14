@@ -12,11 +12,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@+id/guide_step_item_thumbnail"
+        android:layout_toRightOf="@+id/guide_step_item_frame"
         android:text="Text Text" />
 
-    <FrameLayout
-        android:id="@+id/guide_step_item_thumbnail"
+    <FrameLayout   
+        android:id="@+id/guide_step_item_frame"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
         android:layout_alignParentLeft="true"
@@ -24,10 +24,11 @@
         android:clickable="true" >
 
         <ImageView
+            android:id="@+id/guide_step_item_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:background="@drawable/bullet_black"
+            android:src="@drawable/bullet_black"
             android:contentDescription="@string/topic_guide_thumbnail"
             android:padding="1dp" />
     </FrameLayout>
@@ -37,7 +38,7 @@
         android:layout_width="30dp"
         android:layout_height="match_parent"
         android:layout_alignParentRight="true"
-        android:background="@color/gray" >
+        android:visibility="gone" >
 
         <ImageView
             android:layout_width="wrap_content"

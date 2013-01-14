@@ -19,9 +19,12 @@ import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -84,11 +87,11 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 				setImage(img.getImageid(), img.getText());
 			}
 		}
-		
+
 		mBulletList.setAdapter(new BulletListAdapter(this.getActivity(),
 				R.layout.guide_create_step_edit_list_item, mStepObject
 						.getLines()));
-		
+
 		mStepTitle.setText(mStepObject.getTitle());
 		mStepTitle.addTextChangedListener(new TextWatcher() {
 
@@ -228,10 +231,9 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 			this.items = items;
 			con = context;
 		}
-		
+
 		@Override
-		public int getCount()
-		{
+		public int getCount() {
 			return items.size() + 1;
 		}
 
@@ -243,44 +245,86 @@ public class GuideCreateStepEditFragment extends SherlockFragment implements
 						.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 				v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
 			}
-			
-			if(position == items.size())
-			{
-				ImageView newItem = (ImageView)v.findViewById(R.id.add_new_bullet);
-				v.findViewById(R.id.guide_step_item_thumbnail).setVisibility(View.GONE);
-				v.findViewById(R.id.step_title_textview).setVisibility(View.GONE);
+
+			if (position == items.size()) {
+				ImageView newItem = (ImageView) v
+						.findViewById(R.id.add_new_bullet);
+				v.findViewById(R.id.guide_step_item_thumbnail).setVisibility(
+						View.GONE);
+				v.findViewById(R.id.step_title_textview).setVisibility(
+						View.GONE);
 				newItem.setVisibility(View.VISIBLE);
-				newItem.setOnClickListener(new OnClickListener(){
+				newItem.setOnClickListener(new OnClickListener() {
 
 					@Override
 					public void onClick(View v) {
-						mStepObject.addLine(new StepLine("black", 0, "Test Step"));
-						mBulletList.invalidate();
+						mStepObject.addLine(new StepLine("black", 0,
+								"Test Step"));
+						((GuideCreateStepsEditActivity) getActivity())
+								.invalidateStepAdapter();
 					}
-					
 				});
 				return v;
 			}
-			
-			v.findViewById(R.id.guide_step_item_thumbnail).setOnClickListener(
+			final int mPos = position;
+			FrameLayout iconFrame = (FrameLayout)v.findViewById(R.id.guide_step_item_frame);
+			iconFrame.setOnClickListener(
 					new OnClickListener() {
 
 						@Override
 						public void onClick(View v) {
 							final Dialog dialog = new Dialog(con);
 							dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
 							FragmentManager fm = getActivity()
 									.getSupportFragmentManager();
 							ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
+							chooseBulletDialog.setStepIndex(mPos);
 							chooseBulletDialog.show(fm,
 									"fragment_choose_bullet");
 						}
 
 					});
+			LayoutParams params = (LayoutParams)iconFrame.getLayoutParams();
+			params.setMargins(25 * items.get(position).getLevel(), 0, 0, 0);
+			iconFrame.setLayoutParams(params);
 			TextView text = (TextView) v.findViewById(R.id.step_title_textview);
 			text.setText(items.get(position).getText());
+			ImageView icon = (ImageView) v
+					.findViewById(R.id.guide_step_item_thumbnail);
+			icon.setImageResource(getBulletResource(items.get(position).getColor()));
 			return v;
+		}
+
+		public int getBulletResource(String color) {
+			int iconRes;
+
+			if (color.equals("black")) {
+				iconRes = R.drawable.bullet_black;
+			} else if (color.equals("orange")) {
+				iconRes = R.drawable.bullet_orange;
+			} else if (color.equals("blue")) {
+				iconRes = R.drawable.bullet_blue;
+			} else if (color.equals("purple")) {
+				iconRes = R.drawable.bullet_purple;
+			} else if (color.equals("red")) {
+				iconRes = R.drawable.bullet_red;
+			} else if (color.equals("teal")) {
+				iconRes = R.drawable.bullet_teal;
+			} else if (color.equals("white")) {
+				iconRes = R.drawable.bullet_white;
+			} else if (color.equals("yellow")) {
+				iconRes = R.drawable.bullet_yellow;
+			} else if (color.equals("icon_reminder")) {
+				iconRes = R.drawable.ic_dialog_bullet_reminder_dark;
+			} else if (color.equals("icon_caution")) {
+				iconRes = R.drawable.ic_dialog_bullet_caution;
+			} else if (color.equals("icon_note")) {
+				iconRes = R.drawable.ic_dialog_bullet_note_dark;
+			} else {
+				iconRes = R.drawable.bullet_black;
+			}
+
+			return iconRes;
 		}
 	}
 }
