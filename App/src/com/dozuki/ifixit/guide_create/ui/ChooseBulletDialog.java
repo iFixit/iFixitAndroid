@@ -1,16 +1,16 @@
 package com.dozuki.ifixit.guide_create.ui;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.DialogFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet.BulletTypes;
 
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
-public class ChooseBulletDialog extends SherlockDialogFragment implements
+public class ChooseBulletDialog extends DialogFragment implements
 		OnClickListener {
 
 	private int mStepIndex;

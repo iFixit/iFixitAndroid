@@ -91,6 +91,7 @@ public class GalleryActivity extends IfixitActivity implements
 				new EmbedMediaFragment());
 		mCurrentMediaFragment = mMediaCategoryFragments
 				.get(MEDIA_FRAGMENT_PHOTOS);
+		
 
 		showingHelp = false;
 		showingLogout = false;
@@ -111,6 +112,8 @@ public class GalleryActivity extends IfixitActivity implements
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS).setForReturn(mMediaReturnValue);
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(mMediaReturnValue);
 		}
+		
+		mCurrentMediaFragment.setForReturn(mMediaReturnValue);
 
 		if (savedInstanceState != null) {
 			showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
