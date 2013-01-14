@@ -19,8 +19,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 
-public class GuideCreateActivity extends Activity {
+public class GuideCreateActivity extends Activity implements GuideCreateIntroListener {
 	static final int GUIDE_STEP_LIST_REQUEST = 0;
 	private static String GuideObjectKey = "GuideCreateObject";
 	public static int GuideItemID = 0;
@@ -124,10 +125,10 @@ public class GuideCreateActivity extends Activity {
 	
 	private void launchGuideCreateIntro()
 	{
-		GuideCreateObject temp = new GuideCreateObject(GuideItemID++);
+
 		String tag = "guide_intro_fragment";
 		GuideIntroFragment newFragment = new GuideIntroFragment();
-		newFragment.setGuideOBject(temp);
+		newFragment.setGuideOBject(null);
 		FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
 		transaction.replace(R.id.guide_create_fragment_container, newFragment);
 		transaction.addToBackStack(tag);
@@ -147,4 +148,23 @@ public class GuideCreateActivity extends Activity {
 			}
 		}
 	}
+
+   @Override
+   public void onFinishIntroInput(String device, String title, String summary, String intro, String guideType,
+      String thing) {
+      
+      GuideCreateObject guideObject =  new GuideCreateObject(GuideItemID++);
+      guideObject.setTitle(title);
+      guideObject.setTopic(device);
+      guideObject.setSummary(summary);
+      guideObject.setIntroduction(intro);
+      
+      getGuideList().add(guideObject);
+      
+     // APIService.call((Activity) getActivity(),
+      //   APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
+
+      getSupportFragmentManager().popBackStack();
+      
+   }
 }

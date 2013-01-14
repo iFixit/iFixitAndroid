@@ -38,6 +38,7 @@ public class GuideCreateListItem extends RelativeLayout {
 	private Context mContext;
 	private boolean editBarVisible = false;
 	private GuideCreateObject mGuideCreateObject;
+	private boolean mHasAnimated;
 
 	public GuideCreateListItem(Context context, ImageManager imageManager,
 			final GuidePortalFragment portalRef, GuideCreateObject gObject) {
@@ -126,6 +127,7 @@ public class GuideCreateListItem extends RelativeLayout {
 
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
+            
          } else {
             mEditBar.setVisibility(VISIBLE);
             ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;

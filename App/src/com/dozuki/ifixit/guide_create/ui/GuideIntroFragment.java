@@ -20,6 +20,11 @@ import com.dozuki.ifixit.util.APIService;
 
 public class GuideIntroFragment extends Fragment {
 	
+   
+   public interface GuideCreateIntroListener {
+      void onFinishIntroInput(String device, String title, String summary, String intro, String guideType, String thing);
+   }
+   
 	private static String DeviceTypeKey = "DeviceType";
 	private static String TitleKey = "DeviceType";
 	private static String SummaryKey = "DeviceType";
@@ -105,18 +110,6 @@ public class GuideIntroFragment extends Fragment {
 	
 	private void confirmCreateGuide(String device, String title, String summary, String intro, String guideType, String thing)
 	{
-      if (mGuideObject == null)
-         return;
-      mGuideObject.setTitle(title);
-      mGuideObject.setTopic(device);
-      mGuideObject.setSummary(summary);
-      mGuideObject.setIntroduction(intro);
-      
-      ((GuideCreateActivity)getActivity()).getGuideList().add(mGuideObject);
-      
-     // APIService.call((Activity) getActivity(),
-      //   APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
-
-      getActivity().getSupportFragmentManager().popBackStack();
+      ((GuideCreateIntroListener)getActivity()).onFinishIntroInput(device, title, summary, intro, guideType, thing); 
 	}
 }

@@ -18,9 +18,10 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 
-public class GuideCreateStepsActivity extends Activity {
+public class GuideCreateStepsActivity extends Activity implements GuideCreateIntroListener {
 	static final int GUIDE_EDIT_STEP_REQUEST = 0;
 	public static String GuideKey = "GuideKey";
 	private ActionBar mActionBar;
@@ -129,4 +130,23 @@ public class GuideCreateStepsActivity extends Activity {
 			}
 		}
 	}
+	
+	
+	  
+   @Override
+   public void onFinishIntroInput(String device, String title, String summary, String intro, String guideType,
+      String thing) {
+      
+      mGuide.setTitle(title);
+      mGuide.setTopic(device);
+      mGuide.setSummary(summary);
+      mGuide.setIntroduction(intro);
+            
+      //TODO PATCH GUIDE
+     // APIService.call((Activity) getActivity(),
+      //   APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
+
+      getSupportFragmentManager().popBackStack();
+      
+   }
 }
