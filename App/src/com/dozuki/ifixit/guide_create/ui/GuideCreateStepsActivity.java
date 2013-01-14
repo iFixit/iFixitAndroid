@@ -2,12 +2,13 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import org.holoeverywhere.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -19,7 +20,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 
-public class GuideCreateStepsActivity extends SherlockFragmentActivity {
+public class GuideCreateStepsActivity extends Activity {
 	static final int GUIDE_EDIT_STEP_REQUEST = 0;
 	public static String GuideKey = "GuideKey";
 	private ActionBar mActionBar;

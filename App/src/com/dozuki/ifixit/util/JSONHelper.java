@@ -13,6 +13,8 @@ import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.gallery.model.UserVideoInfo;
 import com.dozuki.ifixit.gallery.model.UserVideoList;
+import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.guide_view.model.GuideInfo;
 import com.dozuki.ifixit.guide_view.model.GuidePart;
@@ -418,6 +420,59 @@ public class JSONHelper {
       }
 
       return spantext;
+   }
+
+   public static ArrayList<GuideCreateObject> parseUserGuides(String json) throws JSONException {
+      JSONArray jGuideInfos = new JSONArray(json);
+      ArrayList<GuideCreateObject>  guideList = new ArrayList<GuideCreateObject>(); 
+
+      for (int i = 0; i < jGuideInfos.length(); i++) {
+         guideList.add(parseUserGuideInfo(jGuideInfos.getJSONObject(i)));
+      }
+      return guideList;
+
+   }
+   
+   public static GuideCreateObject parseUserGuide(String json) throws JSONException {
+     
+      return new GuideCreateObject(parseGuide(json));
+   }
+   
+   
+//   private static GuideCreateStepObject parseCreateGuideStep(JSONObject jStep) throws JSONException {
+//      JSONArray jLines = jStep.getJSONArray("lines");
+//      GuideCreateStepObject step = new GuideCreateStepObject(jStep.getInt("number"));
+//
+//      step.setTitle(jStep.getString("title"));
+//
+//      try {
+//         JSONObject jMedia = jStep.getJSONObject("media");
+//         JSONArray jImages = jMedia.getJSONArray("image");
+//
+//         for (int i = 0; i < jImages.length(); i++) {
+//            step.addImage(parseImage(jImages.getJSONObject(i)));
+//         }
+//      } catch (JSONException e) {
+//         StepImage image = new StepImage(0);
+//         image.setOrderby(1);
+//         image.setText("");
+//         step.addImage(image);
+//      }
+//
+//      for (int i = 0; i < jLines.length(); i++) {
+//         step.addLine(parseLine(jLines.getJSONObject(i)));
+//      }
+//
+//      return step;
+//   }
+   
+   public static GuideCreateObject parseUserGuideInfo(JSONObject json) throws JSONException {
+      GuideCreateObject guide = new GuideCreateObject(json.getInt("guideid"));
+      guide.setTitle(json.getString("title"));
+      guide.setSubject(json.getString("subject"));
+      guide.setIntroImage(json.getString("image_url"));
+
+      return guide;
    }
 
 

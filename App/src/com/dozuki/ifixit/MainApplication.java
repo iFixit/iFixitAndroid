@@ -32,6 +32,7 @@ public class MainApplication extends Application {
     "FIRST_TIME_GALLERY_USER";
    private static final String SESSION_KEY = "SESSION_KEY";
    private static final String USERNAME_KEY = "USERNAME_KEY";
+   private static final String USERID_KEY = "USERID_KEY";
 
    /**
     * Singleton reference.
@@ -241,11 +242,14 @@ public class MainApplication extends Application {
        null);
       String username = preferenceFile.getString(site.mName + USERNAME_KEY,
        null);
+      String userid = preferenceFile.getString(site.mName + USERID_KEY,
+         null);
       User user = null;
       if (username != null && session != null) {
          user = new User();
          user.setSession(session);
          user.setUsername(username);
+         user.setUserid(userid);
       }
 
       return user;
@@ -289,6 +293,7 @@ public class MainApplication extends Application {
       Editor editor = prefs.edit();
       editor.putString(mSite.mName + SESSION_KEY, user.getSession());
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
+      editor.putString(mSite.mName + USERID_KEY, user.getUserId());
       editor.commit();
       mUser = user;
 
@@ -315,6 +320,7 @@ public class MainApplication extends Application {
       Editor editor = prefs.edit();
       editor.remove(mSite.mName + SESSION_KEY);
       editor.remove(mSite.mName + USERNAME_KEY);
+      editor.remove(mSite.mName + USERID_KEY);
       editor.commit();
 
       mUser = null;

@@ -12,7 +12,7 @@
         android:background="@color/white"
         android:orientation="vertical"
         android:padding="20dp" >
-
+        
         <TextView
             android:id="@+id/guide_intro_error_text"
             android:layout_width="wrap_content"
@@ -31,6 +31,21 @@
             android:layout_marginBottom="30dp"
             android:text="@string/create_guide_header"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+        
+        <TextView
+            android:id="@+id/guide_intro_device_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/guide_type_prompt" />
+        
+        <Spinner
+            android:id="@+id/guide_intro_type_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
+            android:textColor="@color/dozuki_grey"
+            android:entries="@array/guide_type_array"
+            android:prompt="@string/guide_type_prompt" />
 
         <TextView
             android:id="@+id/guide_intro_device_id"
@@ -45,6 +60,24 @@
             android:layout_marginBottom="35dp"
             android:ems="10"
             android:hint="@string/device_hint"
+            android:scrollHorizontally="false" >
+
+            <requestFocus />
+        </EditText>
+        
+        
+         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/create_guide_device_focus" />
+
+        <EditText
+            android:id="@+id/edit_guide_intro_focus"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="35dp"
+            android:ems="10"
+            android:hint="@string/device_focus_hint"
             android:scrollHorizontally="false" >
 
             <requestFocus />

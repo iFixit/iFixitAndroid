@@ -2,6 +2,8 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import org.holoeverywhere.app.Activity;
+
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -45,7 +47,7 @@ import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class GuideCreateStepsEditActivity extends SherlockFragmentActivity
+public class GuideCreateStepsEditActivity extends Activity
 		implements OnClickListener, BulletDialogListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";

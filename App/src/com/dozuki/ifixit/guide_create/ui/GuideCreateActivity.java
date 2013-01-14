@@ -2,28 +2,25 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import org.holoeverywhere.app.Activity;
+
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
+import org.holoeverywhere.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.util.Log;
-import android.view.KeyEvent;
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 
-public class GuideCreateActivity extends SherlockFragmentActivity {
+public class GuideCreateActivity extends Activity {
 	static final int GUIDE_STEP_LIST_REQUEST = 0;
 	private static String GuideObjectKey = "GuideCreateObject";
 	public static int GuideItemID = 0;
