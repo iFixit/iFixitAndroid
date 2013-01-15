@@ -181,7 +181,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
             @Override
             public void afterTextChanged(Editable s) {
-
+               items.get(position).setText(s.toString());
             }
 
             @Override
@@ -193,9 +193,6 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             @Override
             public void onTextChanged(CharSequence s, int start, int before,
                   int count) {
-               Log.i("GuideCreateStepEditFragment", "GuideTitle changed to: "
-                     + s.toString());
-               items.get(position).setText(s.toString());
             }
 
          });
