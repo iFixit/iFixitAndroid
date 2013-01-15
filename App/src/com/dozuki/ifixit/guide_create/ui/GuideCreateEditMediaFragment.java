@@ -9,12 +9,17 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_view.ui.GuideViewActivity;
 import com.ifixit.android.imagemanager.ImageManager;
 
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
@@ -88,8 +93,75 @@ OnClickListener, OnLongClickListener {
 
       });
       
+      fitImagesToSpace(v.getLayoutParams().height, v.getLayoutParams().width);
       
        return v;
+   }
+   
+   
+   public void fitImagesToSpace(float vHeight, float vWidth) {
+      FragmentActivity context = getActivity();
+      Resources resources = context.getResources();
+      DisplayMetrics metrics = new DisplayMetrics();
+      context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+
+      float screenHeight = metrics.heightPixels;
+      float screenWidth = metrics.widthPixels;
+      float thumbnailHeight = 0f;
+      float thumbnailWidth = 0f;
+      float height = 0f;
+      float width = 0f;
+      float titleHeight = mStepTitle.getHeight();
+
+      float thumbPadding = resources.getDimensionPixelSize(R.dimen.guide_thumbnail_padding) * 2f;
+      float mainPadding = resources.getDimensionPixelSize(R.dimen.guide_image_padding) * 2f;
+      float pagePadding = resources.getDimensionPixelSize(R.dimen.page_padding) * 2f;
+
+      float padding = pagePadding + mainPadding + thumbPadding;
+
+      // Portrait orientation
+      if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+         padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
+
+         width = (((screenWidth - padding - titleHeight) / 8f) * 5f);
+         height = width * (3f / 4f);
+
+         thumbnailHeight = (1f / 3f) * height;
+         thumbnailWidth = (thumbnailHeight * (4f / 3f));
+
+      } else {
+         int actionBarHeight =
+            resources.getDimensionPixelSize(com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
+
+         int indicatorHeight = ((GuideCreateStepsEditActivity) context).getIndicatorHeight();
+
+         if (indicatorHeight == 0) {
+            indicatorHeight = 49;
+         }
+
+         padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+
+         padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+
+         height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 8f) * 4f);
+         width = height * (4f / 3f);
+
+         thumbnailHeight = (1f / 3f) * height;
+         thumbnailWidth = (thumbnailHeight * (4f / 3f));
+      }
+
+      // Set the width and height of the main image
+      mLargeImage.getLayoutParams().height = (int) (height + .5f);
+      mLargeImage.getLayoutParams().width = (int) (width + .5f);
+
+      mImageOne.getLayoutParams().width = (int) thumbnailWidth;
+      mImageOne.getLayoutParams().height = (int) thumbnailHeight;
+
+      mImageTwo.getLayoutParams().width = (int) thumbnailWidth;
+      mImageTwo.getLayoutParams().height = (int) thumbnailHeight;
+
+      mImageThree.getLayoutParams().width = (int) thumbnailWidth;
+      mImageThree.getLayoutParams().height = (int) thumbnailHeight;
    }
 
    

@@ -5,10 +5,12 @@ import org.holoeverywhere.app.DialogFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet.BulletTypes;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.WindowManager.LayoutParams;
 
 public class ChooseBulletDialog extends DialogFragment implements
 		OnClickListener {
@@ -32,6 +34,7 @@ public class ChooseBulletDialog extends DialogFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		setStyle(STYLE_NO_TITLE, 0);
 		super.onCreate(savedInstanceState);
+		
 	}
 
 	@Override
@@ -47,14 +50,14 @@ public class ChooseBulletDialog extends DialogFragment implements
 				this);
 		view.findViewById(R.id.bullet_dialog_color_yellow).setOnClickListener(
 				this);
-		view.findViewById(R.id.bullet_dialog_color_white).setOnClickListener(
+		view.findViewById(R.id.bullet_dialog_color_green).setOnClickListener(
 				this);
 		view.findViewById(R.id.bullet_dialog_color_blue).setOnClickListener(
 				this);
 		view.findViewById(R.id.bullet_dialog_color_purple).setOnClickListener(
 				this);
-		view.findViewById(R.id.bullet_dialog_color_teal).setOnClickListener(
-				this);
+		//view.findViewById(R.id.ic_dialog_bullet_pink).setOnClickListener(
+			//	this);
 		view.findViewById(R.id.bullet_dialog_caution).setOnClickListener(this);
 		view.findViewById(R.id.bullet_dialog_note).setOnClickListener(this);
 		view.findViewById(R.id.bullet_dialog_reminder).setOnClickListener(this);
@@ -63,57 +66,61 @@ public class ChooseBulletDialog extends DialogFragment implements
 		view.findViewById(R.id.bullet_dialog_rearrange)
 				.setOnClickListener(this);
 		view.findViewById(R.id.bullet_dialog_cancel).setOnClickListener(this);
-
+		
+		LayoutParams params = getDialog().getWindow().getAttributes();
+      params.width = LayoutParams.WRAP_CONTENT;
+      getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+      getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
 		return view;
 	}
 
 	@Override
 	public void onClick(View v) {
-		BulletDialogListener activity = (BulletDialogListener) getActivity();
+		BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
 		switch (v.getId()) {
 		case R.id.bullet_dialog_color_black:
-			activity.onFinishBulletDialog(mStepIndex,"black");
+			frag.onFinishBulletDialog(mStepIndex,"black");
 			break;
 		case R.id.bullet_dialog_color_red:
-			activity.onFinishBulletDialog(mStepIndex,"red");
+			frag.onFinishBulletDialog(mStepIndex,"red");
 			break;
 
 		case R.id.bullet_dialog_color_orange:
-			activity.onFinishBulletDialog(mStepIndex,"orange");
+			frag.onFinishBulletDialog(mStepIndex,"orange");
 			break;
 		case R.id.bullet_dialog_color_yellow:
-			activity.onFinishBulletDialog(mStepIndex,"yellow");
+			frag.onFinishBulletDialog(mStepIndex,"yellow");
 			break;
-		case R.id.bullet_dialog_color_white:
-			activity.onFinishBulletDialog(mStepIndex,"white");
+		//case R.id.bullet_dialog_color_white:
+		//	frag.onFinishBulletDialog(mStepIndex,"black");
 
-			break;
+		//	break;
 		case R.id.bullet_dialog_color_blue:
-			activity.onFinishBulletDialog(mStepIndex,"blue");
+			frag.onFinishBulletDialog(mStepIndex,"blue");
 			break;
 		case R.id.bullet_dialog_color_purple:
-			activity.onFinishBulletDialog(mStepIndex,"purple");
+			frag.onFinishBulletDialog(mStepIndex,"purple");
 			break;
-		case R.id.bullet_dialog_color_teal:
-			activity.onFinishBulletDialog(mStepIndex,"teal");
+		case R.id.bullet_dialog_color_green:
+			frag.onFinishBulletDialog(mStepIndex,"teal");
 			break;
 		case R.id.bullet_dialog_caution:
-			activity.onFinishBulletDialog(mStepIndex,"icon_caution");
+			frag.onFinishBulletDialog(mStepIndex,"icon_caution");
 			break;
 		case R.id.bullet_dialog_note:
-			activity.onFinishBulletDialog(mStepIndex,"icon_note");
+			frag.onFinishBulletDialog(mStepIndex,"icon_note");
 			break;
 		case R.id.bullet_dialog_reminder:
-			activity.onFinishBulletDialog(mStepIndex,"icon_reminder");
+			frag.onFinishBulletDialog(mStepIndex,"icon_reminder");
 			break;
 		case R.id.bullet_dialog_indent:
-			activity.onFinishBulletDialog(mStepIndex,"action_indent");
+			frag.onFinishBulletDialog(mStepIndex,"action_indent");
 			break;
 		case R.id.bullet_dialog_unindent:
-			activity.onFinishBulletDialog(mStepIndex,"action_unindent");
+			frag.onFinishBulletDialog(mStepIndex,"action_unindent");
 			break;
 		case R.id.bullet_dialog_rearrange:
-			activity.onFinishBulletDialog(mStepIndex,"action_reorder");
+			frag.onFinishBulletDialog(mStepIndex,"action_reorder");
 			break;
 		case R.id.bullet_dialog_cancel:
 			break;

@@ -36,6 +36,7 @@
                 android:background="@color/image_border"
                 android:contentDescription="@string/topic_guide_thumbnail"
                 android:padding="1dp"
+                android:scaleType="center"
                 android:src="@drawable/ic_placeholder_feature_img" />
 
             <LinearLayout
@@ -51,6 +52,7 @@
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp"
+                    android:scaleType="center"
                     android:src="@drawable/ic_btn_add_gallery_image" />
 
                 <ImageView
@@ -61,6 +63,7 @@
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp"
+                    android:scaleType="center"
                     android:src="@drawable/ic_btn_add_gallery_image" />
 
                 <ImageView
@@ -71,6 +74,7 @@
                     android:background="@color/image_border"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp"
+                    android:scaleType="center"
                     android:src="@drawable/ic_btn_add_gallery_image" />
 
             </LinearLayout>

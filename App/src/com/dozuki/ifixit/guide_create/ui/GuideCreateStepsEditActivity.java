@@ -12,43 +12,27 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.ListFragment;
-import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
-import android.support.v4.view.ViewPager.SimpleOnPageChangeListener;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.MotionEvent;
+
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.EditText;
+import android.widget.RelativeLayout;
+
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.TextView;
+
 
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.view.SubMenu;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet.BulletTypes;
-import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
-import com.dozuki.ifixit.guide_create.ui.ChooseBulletDialog.BulletDialogListener;
-import com.dozuki.ifixit.guide_view.model.StepLine;
-import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class GuideCreateStepsEditActivity extends Activity
-		implements OnClickListener, BulletDialogListener {
+		implements OnClickListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";
 	public static String GUIDE_STEP_KEY = "GuideStepObject";
@@ -66,6 +50,7 @@ public class GuideCreateStepsEditActivity extends Activity
 	private StepAdapter mStepAdapter;
 	private LockableViewPager mPager;
 	private TitlePageIndicator titleIndicator;
+	RelativeLayout mBottomBar;
 	private int mPagePosition;
 	private boolean mConfirmDelete;
 
@@ -105,6 +90,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
 		mSpinnerMenu = (ImageView) findViewById(R.id.step_edit_spinner);
 		mViewSteps = (ImageView) findViewById(R.id.step_edit_view_steps);
+		mBottomBar = (RelativeLayout)findViewById(R.id.guide_create_edit_bottom_bar);
 
 		mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
 		mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
@@ -286,27 +272,9 @@ public class GuideCreateStepsEditActivity extends Activity
 		return dialog;
 	}
 
-	@Override
-	public void onFinishBulletDialog(int index, String color) {
-		StepLine curStep = mGuide.getSteps().get(mPagePosition).getLine(index);
-		
-		if(color.equals("action_indent"))
-		{
-			curStep.setLevel(curStep.getLevel() + 1);
-		}
-		else if(color.equals("action_unindent"))
-		{
-			curStep.setLevel(curStep.getLevel() - 1);
-		}
-		else if(color.equals("action_reorder"))
-		{
-		//	mCurStepFragment.setReorderStepsMode();
-			mPager.setPagingEnabled(false);
-		}
-		else
-		{
-			curStep.setColor(color);
-		}
-		mStepAdapter.notifyDataSetChanged();
+	int getIndicatorHeight()
+	{
+      return titleIndicator.getHeight() + mBottomBar.getHeight();
+	   
 	}
 }
