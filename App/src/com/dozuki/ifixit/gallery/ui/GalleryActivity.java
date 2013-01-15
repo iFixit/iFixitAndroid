@@ -25,6 +25,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateEditMediaFragment;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.IfixitActivity;
@@ -40,6 +41,8 @@ public class GalleryActivity extends IfixitActivity implements
 	public static final String MEDIA_FRAGMENT_PHOTOS = "MEDIA_FRAGMENT_PHOTOS";
 	public static final String MEDIA_FRAGMENT_VIDEOS = "MEDIA_FRAGMENT_VIDEOS";
 	public static final String MEDIA_FRAGMENT_EMBEDS = "MEDIA_FRAGMENT_EMBEDS";
+	//for return values
+	public static final String ACTIVITY_RETURN_MODE = "ACTIVITY_RETURN_ID";
 
 	private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
 	private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
@@ -47,6 +50,7 @@ public class GalleryActivity extends IfixitActivity implements
 	private static final String SHOWING_HELP = "SHOWING_HELP";
 	private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
 	private static final String SHOWING_DELETE = "SHOWING_DELETE";
+   public static final String MEDIA_RETURN_KEY = "MEDIA_RETURN_KEY";
 
 	public static boolean showingLogout;
 	public static boolean showingHelp;
@@ -104,7 +108,7 @@ public class GalleryActivity extends IfixitActivity implements
 		if (getIntent().getExtras() != null) {
 			Bundle bundle = getIntent().getExtras();
 			mMediaReturnValue = bundle.getInt(
-					GuideCreateStepEditFragment.ThumbPositionKey, -1);
+					ACTIVITY_RETURN_MODE, -1);
 			if (mMediaReturnValue != -1)
 				mGetMediaItemForReturn = true;
 			mMode = startActionMode(new ContextualMediaSelect(this));

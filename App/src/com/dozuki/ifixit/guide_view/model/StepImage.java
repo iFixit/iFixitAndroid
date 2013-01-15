@@ -31,4 +31,8 @@ public class StepImage implements Serializable {
    public String toString() {
       return "{StepImage: " + mImageid + ", " + mOrderby + ", " + mText + "}";
    }
+
+   public void setImageId(int itemId) {
+      mImageid = itemId;
+   }
 }

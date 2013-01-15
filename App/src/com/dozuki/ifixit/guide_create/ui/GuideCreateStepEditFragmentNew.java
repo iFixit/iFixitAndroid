@@ -3,7 +3,9 @@ package com.dozuki.ifixit.guide_create.ui;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -59,6 +61,11 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       mStepObject.setImages(mEditMediaFrag.getImageIDs());
       mStepObject.setTitle(mEditMediaFrag.getTitle());
       //API Call
+   }
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+     // super.onActivityResult(requestCode, resultCode, data);
+      mEditMediaFrag.onActivityResult(requestCode, resultCode, data);
    }
 
 }

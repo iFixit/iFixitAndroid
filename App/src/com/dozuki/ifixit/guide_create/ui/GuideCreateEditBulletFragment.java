@@ -10,6 +10,7 @@ import org.holoeverywhere.widget.FrameLayout;
 import android.R.color;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -318,4 +319,6 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    public ArrayList<StepLine> getLines() {
       return mLines;
    }
+
+
 }

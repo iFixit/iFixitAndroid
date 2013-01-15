@@ -228,12 +228,12 @@ public class GuideCreateStepEditFragment extends Fragment implements
 		switch (requestCode) {
 		case FetchImageKey:
 			if (resultCode == Activity.RESULT_OK) {
-				String mediaURL = data
-						.getStringExtra(GuideCreateStepsEditActivity.MediaReturnKey);
-				int mediaSlot = data.getIntExtra(
-						GuideCreateStepsEditActivity.MediaSlotReturnKey, -1);
-				Log.i("editstep", mediaSlot + "");
-				setImage(mediaSlot, mediaURL);
+			//	String mediaURL = data
+			//			.getStringExtra(GuideCreateStepsEditActivity.MediaReturnKey);
+				//int mediaSlot = data.getIntExtra(
+			//			GuideCreateStepsEditActivity.MediaSlotReturnKey, -1);
+				//Log.i("editstep", mediaSlot + "");
+			//	setImage(mediaSlot, mediaURL);
 			}
 			break;
 		}
