@@ -51,13 +51,13 @@ public class GuideCreateStepsEditActivity extends Activity
 		implements OnClickListener, BulletDialogListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";
-	public static String GuideStepKey = "GuideStepObject";
+	public static String GUIDE_STEP_KEY = "GuideStepObject";
 	public static String MediaReturnKey = "MediaReturnKey";
 	public static String MediaSlotReturnKey = "MediaSlotReturnKey";
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
-	private GuideCreateStepEditFragment mCurStepFragment;
+	private GuideCreateStepEditFragmentNew mCurStepFragment;
 	//private TextView mAddStep;
 	//private TextView mDeleteStep;
 	private ImageView mSpinnerMenu;
@@ -85,12 +85,12 @@ public class GuideCreateStepsEditActivity extends Activity
 			mGuide = (GuideCreateObject) extras
 					.getSerializable(GuideCreateStepsEditActivity.GuideKey);
 			mPagePosition = extras
-					.getInt(GuideCreateStepsEditActivity.GuideStepKey);
+					.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
 		}else if (savedInstanceState != null) {
 			mGuide = (GuideCreateObject) savedInstanceState
 					.getSerializable(GuideKey);
 			mPagePosition = savedInstanceState
-					.getInt(GuideCreateStepsEditActivity.GuideStepKey);
+					.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
 			mConfirmDelete = savedInstanceState
 					.getBoolean(DeleteGuideDialogKey);
 		}
@@ -160,7 +160,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
 				mGuide);
 		savedInstanceState.putBoolean(DeleteGuideDialogKey, mConfirmDelete);
-		savedInstanceState.putInt(GuideCreateStepsEditActivity.GuideStepKey,
+		savedInstanceState.putInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY,
 				mPagePosition);
 	}
 
@@ -185,8 +185,10 @@ public class GuideCreateStepsEditActivity extends Activity
 
 		@Override
 		public Fragment getItem(int position) {
-			GuideCreateStepEditFragment frag = new GuideCreateStepEditFragment();
-			frag.setStepObject(mGuide.getSteps().get(position));
+			GuideCreateStepEditFragmentNew frag = new GuideCreateStepEditFragmentNew();
+			Bundle args = new Bundle();
+			args.putSerializable(GUIDE_STEP_KEY, mGuide.getSteps().get(position));
+			frag.setArguments(args);
 			mCurStepFragment = frag;
 			return frag;
 		}
@@ -298,7 +300,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		}
 		else if(color.equals("action_reorder"))
 		{
-			mCurStepFragment.setReorderStepsMode();
+		//	mCurStepFragment.setReorderStepsMode();
 			mPager.setPagingEnabled(false);
 		}
 		else

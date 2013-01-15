@@ -68,6 +68,7 @@ public class GuideCreateStepEditFragment extends Fragment implements
 	ImageView mImageOne;
 	ImageView mImageTwo;
 	ImageView mImageThree;
+	////
 	ImageView mMediaIcon;
 	DragSortController mController;
 	BulletListAdapter mBulletListAdapter;

@@ -286,7 +286,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		Intent intent = new Intent(getActivity(),
 				GuideCreateStepsEditActivity.class);
 		intent.putExtra(GuideCreateStepsEditActivity.GuideKey, mGuide);
-		intent.putExtra(GuideCreateStepsEditActivity.GuideStepKey, curStep);
+		intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
 		startActivityForResult(intent,
 				GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
 	}
