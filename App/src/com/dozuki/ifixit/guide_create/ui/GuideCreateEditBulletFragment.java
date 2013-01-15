@@ -26,11 +26,12 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
-public class GuideCreateEditBulletFragment extends Fragment {
+public class GuideCreateEditBulletFragment extends Fragment implements BulletDialogListener {
    
    private static final String GUIDE_EDIT_KEY = "GuideEditKey";
    private static final String REORDER_STEPS_KEY = "ReorderStepsKey";
@@ -161,6 +162,7 @@ public class GuideCreateEditBulletFragment extends Fragment {
                FragmentManager fm = getActivity()
                      .getSupportFragmentManager();
                ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
+               chooseBulletDialog.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
                chooseBulletDialog.setStepIndex(mPos);
                chooseBulletDialog.show(fm, "fragment_choose_bullet");
             }
@@ -264,5 +266,29 @@ public class GuideCreateEditBulletFragment extends Fragment {
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
+   }
+   
+   @Override
+   public void onFinishBulletDialog(int index, String color) {
+      StepLine curStep = mLines.get(index);
+      
+      if(color.equals("action_indent"))
+      {
+         curStep.setLevel(curStep.getLevel() + 1);
+      }
+      else if(color.equals("action_unindent"))
+      {
+         curStep.setLevel(curStep.getLevel() - 1);
+      }
+      else if(color.equals("action_reorder"))
+      {
+      // mCurStepFragment.setReorderStepsMode();
+         //mPager.setPagingEnabled(false);
+      }
+      else
+      {
+         curStep.setColor(color);
+      }
+      mBulletListAdapter.notifyDataSetChanged();
    }
 }

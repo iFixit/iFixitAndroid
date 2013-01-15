@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout 
+<RelativeLayout 
      xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    
+    <ScrollView 
+    android:layout_width="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_height="wrap_content">
+
+<LinearLayout
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:background="@color/dark"
@@ -16,56 +25,56 @@
             android:layout_height="wrap_content">
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp" >
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp" >
 
                 <ImageView
                     android:id="@+id/bullet_dialog_color_black"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/bullet_black" />
+                    android:src="@drawable/ic_dialog_bullet_black" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
 
                 <ImageView
                     android:id="@+id/bullet_dialog_color_red"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/bullet_red" />
+                    android:src="@drawable/ic_dialog_bullet_red" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
 
                 <ImageView
                     android:id="@+id/bullet_dialog_color_orange"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/bullet_orange" />
+                    android:src="@drawable/ic_dialog_bullet_orange" />
 
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp" >
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp" >
 
                 <ImageView
                     android:id="@+id/bullet_dialog_color_yellow"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/bullet_yellow" />
+                    android:src="@drawable/ic_dialog_bullet_yellow" />
 
             </FrameLayout>
         </TableRow>
@@ -76,57 +85,50 @@
             android:layout_height="wrap_content">
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp" >
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp" >
 
                 <ImageView
-                    android:id="@+id/bullet_dialog_color_white"
+                    android:id="@+id/bullet_dialog_color_green"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/bullet_white" />
+                    android:src="@drawable/ic_dialog_bullet_green" />
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
 
                 <ImageView
                     android:id="@+id/bullet_dialog_color_blue"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/bullet_blue" />
+                    android:src="@drawable/ic_dialog_bullet_blue" />
 
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
 
                 <ImageView
                     android:id="@+id/bullet_dialog_color_purple"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:src="@drawable/bullet_purple" />
+                    android:src="@drawable/ic_dialog_bullet_pink" />
 
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp">
-
-                <ImageView
-                    android:id="@+id/bullet_dialog_color_teal"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:src="@drawable/bullet_teal" />
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
 
             </FrameLayout>
         </TableRow>
@@ -137,9 +139,9 @@
             android:layout_height="wrap_content">
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp" >
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp" >
 
                 <ImageView
                     android:id="@+id/bullet_dialog_caution"
@@ -150,9 +152,9 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
 
                 <ImageView
                      android:id="@+id/bullet_dialog_note"
@@ -164,14 +166,14 @@
             </FrameLayout>
 
             <FrameLayout
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_margin="8dp">
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp">
 
                 <ImageView
                      android:id="@+id/bullet_dialog_reminder"
                     android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
+                    android:layout_height="wrap_content"
                     android:layout_gravity="center"
                     android:src="@drawable/ic_dialog_bullet_reminder_light" />
 
@@ -179,8 +181,8 @@
 
             <FrameLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
-                android:layout_margin="8dp" >
+                android:layout_height="wrap_content"
+                android:layout_margin="15dp" >
 
             </FrameLayout>
         </TableRow>
@@ -199,6 +201,7 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:singleLine="true"
+                android:layout_margin="10dp" 
                 android:text="Indent bullet"
                 android:textColor="@color/white" />
 
@@ -210,6 +213,7 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:text="Unindent bullet"
+                android:layout_margin="10dp" 
                  android:textColor="@color/white" />
        
             <TextView
@@ -220,6 +224,7 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:text="Rearrange bullets"
+                android:layout_margin="10dp" 
                  android:textColor="@color/white" />
 
      
@@ -227,10 +232,13 @@
             <TextView
                 android:id="@+id/bullet_dialog_cancel"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
+                android:layout_height="48dp"
                 android:gravity="center"
                 android:text="Cancel"
+                android:layout_margin="10dp" 
                  android:textColor="@color/white"  />
 
 </LinearLayout>    
     </LinearLayout>
+     </ScrollView>
+    </RelativeLayout>
