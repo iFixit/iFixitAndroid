@@ -4,20 +4,21 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
     
+    <LinearLayout
+    android:focusable="true" android:focusableInTouchMode="true"
+    android:layout_width="0px" android:layout_height="0px"/>
+    
+    
         <EditText
         android:id="@+id/step_edit_title_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/step_edit_top_bar"
         android:text="Untitled" />
 
     <LinearLayout
         android:id="@+id/step_edit_body"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@+id/step_edit_bottom_bar"
-        android:layout_below="@+id/step_edit_title_text"
         android:orientation="vertical" >
 
         <LinearLayout

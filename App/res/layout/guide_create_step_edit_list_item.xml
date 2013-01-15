@@ -13,7 +13,10 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/guide_step_item_frame"
-        android:text="Text Text" />
+        android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+        android:imeOptions="actionSend|flagNoEnterAction"
+        android:maxLength="350"
+        android:hint="Tell me more" />
 
     <FrameLayout   
         android:id="@+id/guide_step_item_frame"
