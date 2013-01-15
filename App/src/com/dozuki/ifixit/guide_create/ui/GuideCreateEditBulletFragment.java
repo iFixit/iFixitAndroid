@@ -12,6 +12,9 @@ import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -123,7 +126,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       }
 
       @Override
-      public View getView(int position, View convertView, ViewGroup parent) {
+      public View getView(final int position, View convertView, ViewGroup parent) {
          View v = convertView;
          //if (v == null) {
             LayoutInflater vi = (LayoutInflater) con
@@ -144,7 +147,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
                @Override
                public void onClick(View v) {
                   mLines.add(new StepLine("black", 0,
-                        "Test Step"));
+                        ""));
                   notifyDataSetChanged();
                }
             });
@@ -171,8 +174,31 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          LayoutParams params = (LayoutParams) iconFrame.getLayoutParams();
          params.setMargins(25 * items.get(position).getLevel(), 0, 0, 0);
          iconFrame.setLayoutParams(params);
-         EditText text = (EditText) v.findViewById(R.id.step_title_textview);
+         final EditText text = (EditText) v.findViewById(R.id.step_title_textview);
          text.setText(items.get(position).getText());
+         text.requestFocusFromTouch();
+         text.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void afterTextChanged(Editable s) {
+
+            }
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count,
+                  int after) {
+               // TODO Auto-generated method stub
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before,
+                  int count) {
+               Log.i("GuideCreateStepEditFragment", "GuideTitle changed to: "
+                     + s.toString());
+               items.get(position).setText(s.toString());
+            }
+
+         });
          ImageView icon = (ImageView) v
                .findViewById(R.id.guide_step_item_thumbnail);
          icon.setImageResource(getBulletResource(items.get(position)
