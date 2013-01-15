@@ -2,6 +2,10 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+
+import net.londatiga.android.ActionItem;
+import net.londatiga.android.QuickAction;
+
 import org.holoeverywhere.app.Activity;
 
 import android.app.AlertDialog;
@@ -29,6 +33,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class GuideCreateStepsEditActivity extends Activity
@@ -39,6 +44,8 @@ public class GuideCreateStepsEditActivity extends Activity
 	public static String MediaReturnKey = "MediaReturnKey";
 	public static String MediaSlotReturnKey = "MediaSlotReturnKey";
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
+	private static final int  NEW_STEP_ID = 1;
+	private static final int DELETE_STEP_ID = 2;
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
 	private GuideCreateStepEditFragmentNew mCurStepFragment;
@@ -53,6 +60,7 @@ public class GuideCreateStepsEditActivity extends Activity
 	RelativeLayout mBottomBar;
 	private int mPagePosition;
 	private boolean mConfirmDelete;
+   private QuickAction mQuickAction;
 
 	// TODO: Add "swipey tabs" to top bar
 
@@ -100,6 +108,40 @@ public class GuideCreateStepsEditActivity extends Activity
 		titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
 		titleIndicator.setViewPager(mPager);
 		mSaveStep.setOnClickListener(this);
+		
+		ActionItem addAction = new ActionItem(NEW_STEP_ID, "Add Step", getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
+		
+	
+		ActionItem delAction = new ActionItem(DELETE_STEP_ID, "Delete Step", getResources().getDrawable(R.drawable.ic_menu_bot_step_delete)); 
+
+	   mQuickAction  = new QuickAction(this);
+		 
+		mQuickAction.addActionItem(addAction);
+		mQuickAction.addActionItem(delAction);
+	
+		//setup the action item click listener
+		mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
+		   
+         @Override
+         public void onItemClick(QuickAction source, int pos, int actionId) {
+            switch(actionId)
+            {
+               case NEW_STEP_ID:
+                  GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.StepID++);
+                  item.setTitle("Test Step " + GuideCreateStepPortalFragment.StepID);
+                  mGuide.getSteps().add(mPagePosition + 1, item);
+                  mPager.invalidate();
+                  titleIndicator.invalidate();
+                  mPager.setCurrentItem(mPagePosition + 1, true);
+                  break;
+               case DELETE_STEP_ID:
+                  if (!mGuide.getSteps().isEmpty())
+                     createDeleteDialog(GuideCreateStepsEditActivity.this).show();
+                  break;
+            }
+            
+         }
+		});
 
 		mSpinnerMenu.setOnClickListener(this);
 
@@ -213,10 +255,11 @@ public class GuideCreateStepsEditActivity extends Activity
 			finish();
 			break;
 		case R.id.step_edit_view_save:
-			
+			//
+		   mCurStepFragment.syncGuideChanges();
 			break;
 		case R.id.step_edit_spinner:
-			
+			mQuickAction.show(v);
 			break;
 		}
 	}
