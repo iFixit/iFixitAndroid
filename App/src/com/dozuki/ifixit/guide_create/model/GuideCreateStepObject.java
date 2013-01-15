@@ -99,5 +99,12 @@ public class GuideCreateStepObject  implements Serializable{
 			GuideCreateStepObject lhs = (GuideCreateStepObject) o;
 			return mStepNum == lhs.mStepNum;
 		}
-	   
+
+      public void setImages(ArrayList<StepImage> imageIDs) {
+         mImages = imageIDs;
+      }
+
+      public void setLines(ArrayList<StepLine> lines) {
+         mLines = lines;
+      } 
 }

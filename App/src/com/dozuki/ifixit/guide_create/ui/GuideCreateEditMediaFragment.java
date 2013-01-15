@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import java.util.ArrayList;
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
@@ -9,6 +11,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.ui.GuideViewActivity;
 import com.ifixit.android.imagemanager.ImageManager;
 
@@ -242,7 +245,7 @@ OnClickListener, OnLongClickListener {
       }
       mImageManager.displayImage(url, getActivity(), mLargeImage);
       mLargeImage.invalidate();
-     // mStepObject.getImages().get(location - 1).setText(url);
+     //mStepObject.getImages().get(location - 1).setText(url);
    }
 
    @Override
@@ -268,6 +271,19 @@ OnClickListener, OnLongClickListener {
          break;
       }
       return true;
+   }
+
+
+   public String getTitle() {
+      return mTitle;
+   }
+   
+   public ArrayList<StepImage> getImageIDs() {
+      ArrayList<StepImage> list = new ArrayList<StepImage>();
+//      list.add(new StepImage(mImageID1));
+//      list.add(new StepImage(mImageID2));
+//      list.add(new StepImage(mImageID3));
+      return list;
    }
 
 }

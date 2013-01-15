@@ -291,4 +291,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       }
       mBulletListAdapter.notifyDataSetChanged();
    }
+
+   public ArrayList<StepLine> getLines() {
+      return mLines;
+   }
 }

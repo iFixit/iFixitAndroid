@@ -4,7 +4,6 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -26,6 +25,9 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       View v = inflater.inflate(R.layout.guide_create_step_edit_body_new, container, false);
       
       if (savedInstanceState != null) {
+         mEditMediaFrag = (GuideCreateEditMediaFragment) getChildFragmentManager().findFragmentById(R.id.guide_create_edit_media_fragment_container);
+         mEditBulletFrag = (GuideCreateEditBulletFragment) getChildFragmentManager().findFragmentById(R.id.guide_create_edit_bullet_fragment_container);
+         
           return v;
       }
 
@@ -48,6 +50,15 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       
      
        return v;
+   }
+
+
+
+   public void syncGuideChanges() {
+      mStepObject.setLines(mEditBulletFrag.getLines());
+      mStepObject.setImages(mEditMediaFrag.getImageIDs());
+      mStepObject.setTitle(mEditMediaFrag.getTitle());
+      //API Call
    }
 
 }
