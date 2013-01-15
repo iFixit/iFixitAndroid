@@ -41,8 +41,7 @@ public class GuideCreateStepsEditActivity extends Activity
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";
 	public static String GUIDE_STEP_KEY = "GuideStepObject";
-	public static String MediaReturnKey = "MediaReturnKey";
-	public static String MediaSlotReturnKey = "MediaSlotReturnKey";
+	public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
 	private static final int  NEW_STEP_ID = 1;
 	private static final int DELETE_STEP_ID = 2;

@@ -556,7 +556,6 @@ OnItemClickListener,  OnItemLongClickListener {
    public void onItemClick(AdapterView<?> adapterView, View view, int position,
     long id) {
       MediaViewItem cell = (MediaViewItem)view;
-      // Long-click delete mode
       if (mSelectForReturn > 0) {
 			String url = (String) view.getTag();
 
@@ -565,7 +564,6 @@ OnItemClickListener,  OnItemLongClickListener {
 			} else if (url.equals("") || url.indexOf(".") == 0) {
 				return;
 			}
-
 			String imageUrl;
 			boolean isLocal;
 			if (mLocalURL.get(url) != null) {
@@ -577,11 +575,8 @@ OnItemClickListener,  OnItemLongClickListener {
 			}
 
 			Intent selectResult = new Intent();
-			selectResult.putExtra(GuideCreateStepsEditActivity.MediaReturnKey,
-					imageUrl);
-			selectResult.putExtra(
-					GuideCreateStepsEditActivity.MediaSlotReturnKey,
-					mSelectForReturn);
+			selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY,
+			   cell.mListRef);
 			getActivity().setResult(Activity.RESULT_OK, selectResult);
 			getActivity().finish();
 		} 
