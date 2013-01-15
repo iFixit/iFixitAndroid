@@ -77,21 +77,21 @@ OnClickListener, OnLongClickListener {
 
          @Override
          public void afterTextChanged(Editable s) {
-
+            Log.i("GuideCreateStepEditFragment", "GuideTitle changed to: "
+               + s.toString());
+         mTitle = s.toString();
+         
          }
 
          @Override
          public void beforeTextChanged(CharSequence s, int start, int count,
                int after) {
-            // TODO Auto-generated method stub
+            mStepTitle.selectAll();
          }
 
          @Override
          public void onTextChanged(CharSequence s, int start, int before,
                int count) {
-            Log.i("GuideCreateStepEditFragment", "GuideTitle changed to: "
-                  + s.toString());
-            mTitle = s.toString();
          }
 
       });
