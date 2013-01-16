@@ -3,9 +3,11 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.FrameLayout;
+import org.holoeverywhere.widget.Toast;
 
 import android.R.color;
 import android.app.Dialog;
@@ -132,6 +134,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
       @Override
       public int getCount() {
+         if(items.size() == 8)
+         {
+            return items.size();
+         }
          return items.size() + 1;
       }
 
@@ -145,6 +151,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          //}
 
          if (position == items.size()) {
+            
             ImageView newItem = (ImageView) v
                   .findViewById(R.id.add_new_bullet);
             v.findViewById(R.id.guide_step_item_thumbnail).setVisibility(
@@ -308,10 +315,18 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       
       if(color.equals("action_indent"))
       {
+         if(curStep.getLevel() == 3) {
+            Toast.makeText(((Activity)getActivity()), R.string.indent_limit_above, Toast.LENGTH_SHORT).show();
+            return;
+         }
          curStep.setLevel(curStep.getLevel() + 1);
       }
       else if(color.equals("action_unindent"))
       {
+         if(curStep.getLevel() == 0) {
+            Toast.makeText(((Activity)getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
+            return;
+         }
          curStep.setLevel(curStep.getLevel() - 1);
       }
       else if(color.equals("action_reorder"))

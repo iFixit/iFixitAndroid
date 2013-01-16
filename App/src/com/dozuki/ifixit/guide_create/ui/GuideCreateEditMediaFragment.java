@@ -2,6 +2,9 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import net.londatiga.android.ActionItem;
+import net.londatiga.android.QuickAction;
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
@@ -11,6 +14,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragmentNew.GuideStepChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.ifixit.android.imagemanager.ImageManager;
@@ -39,6 +43,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    public static final int IMAGE_KEY_2 = 2;
    public static final int IMAGE_KEY_3 = 3;
    private static final String TITLE_KEY = "TITLE_KEY";
+   private static final int REPLACE_IMAGE_ID = 1;
+   private static final int REMOVE_IMAGE_ID = 2;
 
    EditText mStepTitle;
    // images
@@ -50,11 +56,13 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    StepImage mImageOneInfo = new StepImage(NO_IMAGE);
    StepImage mImageTwoInfo = new StepImage(NO_IMAGE);
    StepImage mImageThreeInfo = new StepImage(NO_IMAGE);
+   private int mCurSelectedKey;
 
    // video
 
    // title
    String mTitle = NO_TITLE;
+   private QuickAction mQuickAction;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -89,6 +97,46 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
          mTitle = savedInstanceState.getString(TITLE_KEY);
 
       }
+      
+      ActionItem addAction =
+         new ActionItem(REPLACE_IMAGE_ID, "Replace Image", getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
+      ActionItem delAction =
+         new ActionItem(REMOVE_IMAGE_ID, "Remove Image", getResources().getDrawable(R.drawable.ic_menu_bot_step_delete));
+
+      mQuickAction = new QuickAction(getActivity());
+      mQuickAction.addActionItem(addAction);
+      mQuickAction.addActionItem(delAction);
+      mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
+         
+
+         @Override
+         public void onItemClick(QuickAction source, int pos, int actionId) {
+            switch(actionId)
+            {
+               case REPLACE_IMAGE_ID:
+                  Intent intent = new Intent(getActivity(), GalleryActivity.class);
+                  intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+                  startActivityForResult(intent, mCurSelectedKey);
+                  break;
+               case REMOVE_IMAGE_ID:
+                  if(mCurSelectedKey == IMAGE_KEY_1) {
+                     mImageOneInfo = new StepImage(NO_IMAGE);
+                     setImage(IMAGE_KEY_1);
+                  }
+                  if(mCurSelectedKey == IMAGE_KEY_2) {
+                     mImageTwoInfo = new StepImage(NO_IMAGE);
+                     setImage(IMAGE_KEY_2);
+                  }
+                  if(mCurSelectedKey == IMAGE_KEY_3) {
+                     mImageThreeInfo = new StepImage(NO_IMAGE);
+                     setImage(IMAGE_KEY_3);
+                  }
+                     
+                  break;
+            }
+            
+         }
+      });
 
       mStepTitle.setText(mTitle);
       mStepTitle.addTextChangedListener(new TextWatcher() {
@@ -260,16 +308,26 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    private void setImage(int location) {
       switch (location) {
          case 1:
+            if(mImageOneInfo.getImageid() == NO_IMAGE) {
+               mImageOne.setScaleType(ScaleType.CENTER);
+               mImageOne.setImageResource(R.drawable.ic_btn_add_gallery_image);
+               return;
+            }
             mImageOne.setScaleType(ScaleType.FIT_CENTER);
             mImageManager.displayImage(mImageOneInfo.getText() + MainApplication.get().getImageSizes().getThumb(),
                getActivity(), mImageOne);
             mImageOne.setTag(mImageOneInfo.getText() + MainApplication.get().getImageSizes().getThumb());
             mImageOne.invalidate();
 
-            mImageManager.displayImage((String) mImageOne.getTag(), getActivity(), mLargeImage);
+            mImageManager.displayImage(mImageOneInfo.getText() + MainApplication.get().getImageSizes().getThumb(), getActivity(), mLargeImage);
             mLargeImage.invalidate();
             break;
          case 2:
+            if(mImageTwoInfo.getImageid() == NO_IMAGE) {
+               mImageTwo.setScaleType(ScaleType.CENTER);
+               mImageTwo.setImageResource(R.drawable.ic_btn_add_gallery_image);
+               return;
+            }
             mImageTwo.setScaleType(ScaleType.FIT_CENTER);
             mImageManager.displayImage(mImageTwoInfo.getText() + MainApplication.get().getImageSizes().getThumb(),
                getActivity(), mImageTwo);
@@ -280,6 +338,11 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
             mLargeImage.invalidate();
             break;
          case 3:
+            if(mImageThreeInfo.getImageid() == NO_IMAGE){
+               mImageThree.setScaleType(ScaleType.CENTER);
+               mImageThree.setImageResource(R.drawable.ic_btn_add_gallery_image);
+               return;
+            }
             mImageThree.setScaleType(ScaleType.FIT_CENTER);
             mImageManager.displayImage(mImageThreeInfo.getText() + MainApplication.get().getImageSizes().getThumb(),
                getActivity(), mImageThree);
@@ -319,16 +382,34 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
       Intent intent;
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
+            if(mImageOneInfo.getImageid() != NO_IMAGE)
+            {
+               mCurSelectedKey = IMAGE_KEY_1;
+               mQuickAction.show(v);
+               return true;
+            } 
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
             startActivityForResult(intent, IMAGE_KEY_1);
             break;
          case R.id.step_edit_thumb_2:
+            if(mImageTwoInfo.getImageid() != NO_IMAGE)
+            {
+               mCurSelectedKey = IMAGE_KEY_2;
+               mQuickAction.show(v);
+               return true;
+            } 
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
             startActivityForResult(intent, IMAGE_KEY_2);
             break;
          case R.id.step_edit_thumb_3:
+            if(mImageThreeInfo.getImageid() != NO_IMAGE)
+            {
+               mCurSelectedKey = IMAGE_KEY_3;
+               mQuickAction.show(v);
+               return true;
+            } 
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
             startActivityForResult(intent, IMAGE_KEY_3);
