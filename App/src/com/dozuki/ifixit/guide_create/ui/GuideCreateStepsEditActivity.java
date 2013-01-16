@@ -1,12 +1,10 @@
 package com.dozuki.ifixit.guide_create.ui;
 
-import java.util.ArrayList;
-
-
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
 
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.ProgressBar;
 
 import android.app.AlertDialog;
 import android.content.Context;
@@ -26,7 +24,6 @@ import android.widget.RelativeLayout;
 
 import android.widget.ImageView;
 
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -35,17 +32,21 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragmentNew.GuideStepChangedListener;
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class GuideCreateStepsEditActivity extends Activity
-		implements OnClickListener {
+		implements OnClickListener, GuideStepChangedListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";
 	public static String GUIDE_STEP_KEY = "GuideStepObject";
 	public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
+	
+	
 	private static final int  NEW_STEP_ID = 1;
 	private static final int DELETE_STEP_ID = 2;
+   private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
 	private GuideCreateStepEditFragmentNew mCurStepFragment;
@@ -61,10 +62,11 @@ public class GuideCreateStepsEditActivity extends Activity
 	private int mPagePosition;
 	private boolean mConfirmDelete;
    private QuickAction mQuickAction;
+   private ProgressBar mSavingIndicator;
+   private boolean mIsStepDirty;
 
 	// TODO: Add "swipey tabs" to top bar
 
-	@SuppressWarnings("unchecked")
 	public void onCreate(Bundle savedInstanceState) {
 		setTheme(((MainApplication) getApplication()).getSiteTheme());
 		getSupportActionBar().setTitle(
@@ -79,50 +81,51 @@ public class GuideCreateStepsEditActivity extends Activity
 					.getSerializable(GuideCreateStepsEditActivity.GuideKey);
 			mPagePosition = extras
 					.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
-		}else if (savedInstanceState != null) {
-			mGuide = (GuideCreateObject) savedInstanceState
-					.getSerializable(GuideKey);
-			mPagePosition = savedInstanceState
-					.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
-			mConfirmDelete = savedInstanceState
-					.getBoolean(DeleteGuideDialogKey);
+      } else if (savedInstanceState != null) {
+         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideKey);
+         mPagePosition = savedInstanceState.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
+         mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
+         mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
+         mCurStepFragment =
+            (GuideCreateStepEditFragmentNew) getSupportFragmentManager().getFragment(savedInstanceState, "step_frag");
+      }
 
-	      
-			mCurStepFragment = (GuideCreateStepEditFragmentNew) getSupportFragmentManager().getFragment(savedInstanceState, "step_frag");
-		}
+      super.onCreate(savedInstanceState);
 
-		super.onCreate(savedInstanceState);
+      setContentView(R.layout.guide_create_step_edit);
+      // mAddStep = (TextView) findViewById(R.id.step_edit_add_step);
 
-		setContentView(R.layout.guide_create_step_edit);
-		//mAddStep = (TextView) findViewById(R.id.step_edit_add_step);
+      // mDeleteStep = (TextView) findViewById(R.id.step_edit_delete_step);
 
-		//mDeleteStep = (TextView) findViewById(R.id.step_edit_delete_step);
+      mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
+      if (!mIsStepDirty) {
+         disableSave();
+      }else
+      {
+         enableSave();
+      }
+      mSpinnerMenu = (ImageView) findViewById(R.id.step_edit_spinner);
+      mViewSteps = (ImageView) findViewById(R.id.step_edit_view_steps);
+      mBottomBar = (RelativeLayout) findViewById(R.id.guide_create_edit_bottom_bar);
+      mSavingIndicator = (ProgressBar) findViewById(R.id.step_edit_save_progress_bar);
 
-		mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
-		mSpinnerMenu = (ImageView) findViewById(R.id.step_edit_spinner);
-		mViewSteps = (ImageView) findViewById(R.id.step_edit_view_steps);
-		mBottomBar = (RelativeLayout)findViewById(R.id.guide_create_edit_bottom_bar);
+      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+      mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
+      mPager.setAdapter(mStepAdapter);
+      mPager.setCurrentItem(mPagePosition);
 
-		mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-		mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
-		mPager.setAdapter(mStepAdapter);
-		mPager.setCurrentItem(mPagePosition);
+      titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
+      titleIndicator.setViewPager(mPager);
+      mSaveStep.setOnClickListener(this);
 
-		titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
-		titleIndicator.setViewPager(mPager);
-		mSaveStep.setOnClickListener(this);
-		
-		ActionItem addAction = new ActionItem(NEW_STEP_ID, "Add Step", getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
-		
-	
-		ActionItem delAction = new ActionItem(DELETE_STEP_ID, "Delete Step", getResources().getDrawable(R.drawable.ic_menu_bot_step_delete)); 
+      ActionItem addAction =
+         new ActionItem(NEW_STEP_ID, "Add Step", getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
+      ActionItem delAction =
+         new ActionItem(DELETE_STEP_ID, "Delete Step", getResources().getDrawable(R.drawable.ic_menu_bot_step_delete));
 
-	   mQuickAction  = new QuickAction(this);
-		 
-		mQuickAction.addActionItem(addAction);
-		mQuickAction.addActionItem(delAction);
-	
-		//setup the action item click listener
+      mQuickAction = new QuickAction(this);
+      mQuickAction.addActionItem(addAction);
+      mQuickAction.addActionItem(delAction);
 		mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
 		   
          @Override
@@ -147,9 +150,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		});
 
 		mSpinnerMenu.setOnClickListener(this);
-
 		mViewSteps.setOnClickListener(this);
-
 		if (mConfirmDelete)
 			createDeleteDialog(this).show();
 
@@ -167,7 +168,6 @@ public class GuideCreateStepsEditActivity extends Activity
 
 	   @Override
 	   public boolean onOptionsItemSelected(MenuItem item) {
-	      Intent intent;
 	      switch (item.getItemId()) {
 	      case android.R.id.home:
 	         finish();
@@ -196,15 +196,13 @@ public class GuideCreateStepsEditActivity extends Activity
 		savedInstanceState.putBoolean(DeleteGuideDialogKey, mConfirmDelete);
 		savedInstanceState.putInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY,
 				mPagePosition);
+		savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
 	}
 
 	public class StepAdapter extends FragmentStatePagerAdapter {
-
-		private boolean isPagingEnabled;
 		
 		public StepAdapter(FragmentManager fm) {
 			super(fm);
-			isPagingEnabled = true;
 		}
 
 		@Override
@@ -223,8 +221,6 @@ public class GuideCreateStepsEditActivity extends Activity
 			Bundle args = new Bundle();
 			args.putSerializable(GUIDE_STEP_KEY, mGuide.getSteps().get(position));
 			frag.setArguments(args);
-			//mCurStepFragment = frag;
-			
 			return frag;
 		}
 		
@@ -237,6 +233,9 @@ public class GuideCreateStepsEditActivity extends Activity
 		public void setPrimaryItem(ViewGroup container, int position,
 				Object object) {
 			super.setPrimaryItem(container, position, object);
+			if(mPagePosition != position) {
+			   disableSave();
+			}
 			mPagePosition = position;
 			mCurStepFragment = (GuideCreateStepEditFragmentNew) object;
 			 Log.i(TAG, "page selected: " + mPagePosition);
@@ -250,7 +249,12 @@ public class GuideCreateStepsEditActivity extends Activity
 			finish();
 			break;
 		case R.id.step_edit_view_save:
+		   mSaveStep.setEnabled(false);
+		   ((Button) v).setText(R.string.step_edit_saving_step);
+		   mSavingIndicator.setVisibility(View.VISIBLE);
 		   mGuide.replace(mCurStepFragment.syncGuideChanges());
+		   mSavingIndicator.setVisibility(View.INVISIBLE);
+		   disableSave();
 			break;
 		case R.id.step_edit_spinner:
 			mQuickAction.show(v);
@@ -314,4 +318,20 @@ public class GuideCreateStepsEditActivity extends Activity
       return titleIndicator.getHeight() + mBottomBar.getHeight();
 	   
 	}
+
+   @Override
+   public void onGuideStepChanged() {
+        mIsStepDirty = true;    
+        enableSave();
+   }
+   
+   private void enableSave() {
+      mSaveStep.setText(R.string.step_edit_save_step);
+      mSaveStep.setEnabled(true);
+   }
+   private void disableSave() {
+      mSaveStep.setText(R.string.step_edit_saved_step);
+      mSaveStep.setEnabled(false);
+   }
+	
 }

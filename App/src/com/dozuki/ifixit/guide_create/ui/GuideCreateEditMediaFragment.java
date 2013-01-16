@@ -11,9 +11,8 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
-import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragmentNew.GuideStepChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepImage;
-import com.dozuki.ifixit.guide_view.ui.GuideViewActivity;
 import com.ifixit.android.imagemanager.ImageManager;
 
 import android.content.Intent;
@@ -98,7 +97,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
          public void afterTextChanged(Editable s) {
             Log.i("GuideCreateStepEditFragment", "GuideTitle changed to: " + s.toString());
             mTitle = s.toString();
-
+            setGuideDirty();
          }
 
          @Override
@@ -255,6 +254,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
             }
             break;
       }
+      setGuideDirty();
    }
 
    private void setImage(int location) {
@@ -349,6 +349,10 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
       list.add(mImageTwoInfo);
       list.add(mImageThreeInfo);
       return list;
+   }
+   
+   public void setGuideDirty() {
+      ((GuideStepChangedListener) getActivity()).onGuideStepChanged();
    }
 
 }
