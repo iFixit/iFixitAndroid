@@ -201,8 +201,9 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:singleLine="true"
-                android:layout_margin="10dp" 
+                android:layout_margin="5dp" 
                 android:text="Indent bullet"
+                android:background="@drawable/view_border"
                 android:textColor="@color/white" />
 
             <TextView
@@ -213,7 +214,8 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:text="Unindent bullet"
-                android:layout_margin="10dp" 
+                android:layout_margin="5dp" 
+                android:background="@drawable/view_border"
                  android:textColor="@color/white" />
        
             <TextView
@@ -224,10 +226,23 @@
                 android:drawablePadding="10dp"
                 android:gravity="center_vertical"
                 android:text="Rearrange bullets"
-                android:layout_margin="10dp" 
-                 android:textColor="@color/white" />
-
-     
+                android:layout_margin="5dp" 
+                android:background="@drawable/view_border"
+                android:textColor="@color/white" />
+            
+            
+            <TextView
+                android:id="@+id/bullet_dialog_delete"
+                android:layout_width="fill_parent"
+                android:layout_height="48dp"
+                android:drawableTop="@drawable/view_border"
+                android:drawableLeft="@drawable/ic_menu_bot_step_delete"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="Delete line"
+                android:layout_margin="5dp" 
+                android:background="@drawable/view_border"
+                android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/bullet_dialog_cancel"
@@ -235,8 +250,9 @@
                 android:layout_height="48dp"
                 android:gravity="center"
                 android:text="Cancel"
-                android:layout_margin="10dp" 
-                 android:textColor="@color/white"  />
+                android:layout_margin="5dp" 
+                android:background="@drawable/view_border"
+                android:textColor="@color/white"  />
 
 </LinearLayout>    
     </LinearLayout>

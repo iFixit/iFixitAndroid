@@ -65,6 +65,7 @@ public class ChooseBulletDialog extends DialogFragment implements
 		view.findViewById(R.id.bullet_dialog_unindent).setOnClickListener(this);
 		view.findViewById(R.id.bullet_dialog_rearrange)
 				.setOnClickListener(this);
+		view.findViewById(R.id.bullet_dialog_delete).setOnClickListener(this);
 		view.findViewById(R.id.bullet_dialog_cancel).setOnClickListener(this);
 		
 		LayoutParams params = getDialog().getWindow().getAttributes();
@@ -122,6 +123,9 @@ public class ChooseBulletDialog extends DialogFragment implements
 		case R.id.bullet_dialog_rearrange:
 			frag.onFinishBulletDialog(mStepIndex,"action_reorder");
 			break;
+	   case R.id.bullet_dialog_delete:
+         frag.onFinishBulletDialog(mStepIndex,"action_delete");
+         break;
 		case R.id.bullet_dialog_cancel:
 			break;
 		}

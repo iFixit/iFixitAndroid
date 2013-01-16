@@ -333,6 +333,13 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       {
          launchBulletReorder();
       }
+      else if(color.equals("action_reorder"))
+      {
+         launchBulletReorder();
+      } else if(color.equals("action_delete"))
+      {
+         mLines.remove(index);
+      }
       else
       {
          curStep.setColor(color);
