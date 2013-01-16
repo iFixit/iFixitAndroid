@@ -136,7 +136,6 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
 	
 	private void launchGuideCreateIntro()
 	{
-
 		String tag = "guide_intro_fragment";
 		GuideIntroFragment newFragment = new GuideIntroFragment();
 		newFragment.setGuideOBject(null);
@@ -179,7 +178,6 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
       
    }
    
-   
    private AlertDialog createHelpDialog() {
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -188,7 +186,6 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
             .setMessage(getString(R.string.guide_create_help))
             .setPositiveButton(getString(R.string.media_help_confirm),
                new DialogInterface.OnClickListener() {
-                  private boolean mShowingHelp;
 
             public void onClick(DialogInterface dialog, int id) {
                      mShowingHelp = false;

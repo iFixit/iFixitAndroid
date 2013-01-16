@@ -64,14 +64,18 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditMediaFrag.setStepTitle(mStepObject.getTitle());
       
-      if(mStepObject.getImages().size() > 0)
+      if(mStepObject.getImages().size() > 0) {
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_1, mStepObject.getImages().get(0));
+      }
       
-      if(mStepObject.getImages().size() > 1)
+      if(mStepObject.getImages().size() > 1) {
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_2, mStepObject.getImages().get(1));
+      }
       
-      if(mStepObject.getImages().size() > 2)
+      if(mStepObject.getImages().size() > 2) {
+         
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_3, mStepObject.getImages().get(2));
+      }
       
    }
 
