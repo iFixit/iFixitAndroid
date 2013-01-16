@@ -52,6 +52,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    ImageView mBottomBarSpinnerIcon;
    DragSortListView mBulletList;
    ArrayList<StepLine> mLines = new ArrayList<StepLine>();
+   private ChooseBulletDialog mChooseBulletDialog;
    
    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
       @Override
@@ -98,6 +99,9 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       if (savedInstanceState != null) {
          mReorderStepsMode = savedInstanceState.getBoolean(REORDER_STEPS_KEY);
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
+
+         mChooseBulletDialog = (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, "BULLET_FRAG" );
+         mChooseBulletDialog.setTargetFragment(this, 0);
       }
       mBulletListAdapter = new BulletListAdapter(this.getActivity(),
             R.layout.guide_create_step_edit_list_item,
@@ -175,16 +179,15 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
                .findViewById(R.id.guide_step_item_frame);
          iconFrame.setOnClickListener(new OnClickListener() {
 
+
             @Override
             public void onClick(View v) {
-               final Dialog dialog = new Dialog(con);
-               dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
                FragmentManager fm = getActivity()
                      .getSupportFragmentManager();
-               ChooseBulletDialog chooseBulletDialog = new ChooseBulletDialog();
-               chooseBulletDialog.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
-               chooseBulletDialog.setStepIndex(mPos);
-               chooseBulletDialog.show(fm, "fragment_choose_bullet");
+               mChooseBulletDialog = new ChooseBulletDialog();
+               mChooseBulletDialog.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
+               mChooseBulletDialog.setStepIndex(mPos);
+               mChooseBulletDialog.show(fm, "fragment_choose_bullet");
             }
 
          });
@@ -307,6 +310,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
+      getSupportFragmentManager().putFragment(savedInstanceState, "BULLET_FRAG", mChooseBulletDialog );
    }
    
    @Override

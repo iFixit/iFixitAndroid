@@ -52,6 +52,10 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		super();
 		mGuide = guide;
 	}
+	
+	public GuideCreateStepPortalFragment() {
+      super();
+   }
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

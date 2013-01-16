@@ -2,6 +2,8 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.app.Fragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet.BulletTypes;
 
@@ -15,7 +17,8 @@ import android.view.WindowManager.LayoutParams;
 public class ChooseBulletDialog extends DialogFragment implements
 		OnClickListener {
 
-	private int mStepIndex;
+   private static final String INDEX_KEY = "INDEX_KEY";
+   private int mStepIndex;
 	
 	public interface BulletDialogListener {
 		void onFinishBulletDialog(int index, String color);
@@ -40,6 +43,12 @@ public class ChooseBulletDialog extends DialogFragment implements
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+	   
+	 if(savedInstanceState != null) {
+	    mStepIndex = savedInstanceState.getInt(INDEX_KEY);
+	 }
+	    
+	   
 		View view = inflater.inflate(R.layout.guide_create_steps_bullet_popup,
 				container);
 		view.findViewById(R.id.bullet_dialog_color_black).setOnClickListener(
@@ -72,8 +81,18 @@ public class ChooseBulletDialog extends DialogFragment implements
       params.width = LayoutParams.WRAP_CONTENT;
       getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
       getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
+      
+      
 		return view;
 	}
+	
+	 @Override
+    public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+      savedInstanceState.putInt(INDEX_KEY, mStepIndex);
+         //    getSupportFragmentManager().putFragment(savedInstanceState, TARGET, mTargetFragment);
+    }
+
 
 	@Override
 	public void onClick(View v) {
