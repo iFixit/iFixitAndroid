@@ -30,3 +30,7 @@
 	path = http-request
 	url = http://github.com/iFixit/http-request.git
 	ignore = dirty
+[submodule "NewQuickAction3D"]
+	path = NewQuickAction3D
+	url = https://github.com/lorensiuswlt/NewQuickAction3D.git
+
