@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -31,16 +32,16 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.ChooseBulletDialog.BulletDialogListener;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateBulletReorderFragment.BulletRearrangeListener;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
-public class GuideCreateEditBulletFragment extends Fragment implements BulletDialogListener {
+public class GuideCreateEditBulletFragment extends Fragment implements BulletDialogListener, BulletRearrangeListener {
    
    private static final String GUIDE_EDIT_KEY = "GuideEditKey";
    private static final String REORDER_STEPS_KEY = "ReorderStepsKey";
    private static final String STEP_LIST_KEY = "STEP_LIST_KEY";
-   GuideCreateStepObject mStepObject;
    ImageView mMediaIcon;
    DragSortController mController;
    BulletListAdapter mBulletListAdapter;
@@ -103,9 +104,16 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
        return v;
    }
    
-   public void setSteps(GuideCreateStepObject so) {
-      mStepObject = so;
-      mLines.addAll(mStepObject.getLines());
+   @Override
+   public void onResume() {
+      super.onResume();
+      
+      if(mBulletListAdapter != null)
+         mBulletListAdapter.notifyDataSetChanged();
+   }
+   
+   public void setSteps(ArrayList<StepLine> lines) {
+      mLines.addAll(lines);
    }
    
    
@@ -306,8 +314,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       }
       else if(color.equals("action_reorder"))
       {
-      // mCurStepFragment.setReorderStepsMode();
-         //mPager.setPagingEnabled(false);
+         launchBulletReorder();
       }
       else
       {
@@ -319,6 +326,25 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    public ArrayList<StepLine> getLines() {
       return mLines;
    }
+   
+   private void launchBulletReorder()
+   {
+      GuideCreateBulletReorderFragment newFragment = new GuideCreateBulletReorderFragment();
+      newFragment.setLines(mLines);
+      FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+      newFragment.setTargetFragment(this, 0);
+      transaction.replace(R.id.guide_create_edit_bullet_fragment_container, newFragment);
+      transaction.addToBackStack(null);
+      transaction.commitAllowingStateLoss();
+   }
+
+   @Override
+   public void onReorderComplete() {
+      mBulletListAdapter.notifyDataSetChanged();
+      
+      ///TODO: API CALL
+   }
+
 
 
 }

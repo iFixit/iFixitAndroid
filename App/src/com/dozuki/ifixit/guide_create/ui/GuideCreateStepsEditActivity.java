@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -85,6 +86,9 @@ public class GuideCreateStepsEditActivity extends Activity
 					.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
 			mConfirmDelete = savedInstanceState
 					.getBoolean(DeleteGuideDialogKey);
+
+	      
+			mCurStepFragment = (GuideCreateStepEditFragmentNew) getSupportFragmentManager().getFragment(savedInstanceState, "step_frag");
 		}
 
 		super.onCreate(savedInstanceState);
@@ -183,6 +187,9 @@ public class GuideCreateStepsEditActivity extends Activity
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
+	  // Log.e("CUR FRAG", "wdwd" + mCurStepFragment.getTag());
+	   
+	   getSupportFragmentManager().putFragment(savedInstanceState, "step_frag", mCurStepFragment);
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
 				mGuide);
@@ -216,7 +223,8 @@ public class GuideCreateStepsEditActivity extends Activity
 			Bundle args = new Bundle();
 			args.putSerializable(GUIDE_STEP_KEY, mGuide.getSteps().get(position));
 			frag.setArguments(args);
-			mCurStepFragment = frag;
+			//mCurStepFragment = frag;
+			
 			return frag;
 		}
 		
@@ -230,32 +238,19 @@ public class GuideCreateStepsEditActivity extends Activity
 				Object object) {
 			super.setPrimaryItem(container, position, object);
 			mPagePosition = position;
-			// Log.i(TAG, "page selected: " + mPagePosition);
+			mCurStepFragment = (GuideCreateStepEditFragmentNew) object;
+			 Log.i(TAG, "page selected: " + mPagePosition);
 		}
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		/*case R.id.step_edit_add_step:
-			GuideCreateStepObject item = new GuideCreateStepObject(
-					GuideCreateStepPortalFragment.StepID++);
-			item.setTitle("Test Step " + GuideCreateStepPortalFragment.StepID);
-			mGuide.getSteps().add(mPagePosition + 1, item);
-			mPager.invalidate();
-			titleIndicator.invalidate();
-			mPager.setCurrentItem(mPagePosition + 1, true);
-			break;
-		case R.id.step_edit_delete_step:
-			if (!mGuide.getSteps().isEmpty())
-				createDeleteDialog(this).show();
-			break;*/
 		case R.id.step_edit_view_steps:
 			finish();
 			break;
 		case R.id.step_edit_view_save:
-			//
-		   mCurStepFragment.syncGuideChanges();
+		   mGuide.replace(mCurStepFragment.syncGuideChanges());
 			break;
 		case R.id.step_edit_spinner:
 			mQuickAction.show(v);

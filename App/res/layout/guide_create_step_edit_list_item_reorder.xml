@@ -7,15 +7,12 @@
     android:background="@color/white"
     android:padding="1dp" >
 
-    <EditText
-        android:id="@+id/step_title_textview"
+    <TextView
+        android:id="@+id/bullet_text_textview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/guide_step_item_frame"
-        android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
-        android:imeOptions="actionSend|flagNoEnterAction"
-        android:maxLength="350"
         android:hint="Tell me more" />
 
     <FrameLayout   
@@ -40,8 +37,7 @@
         android:id="@+id/guide_step_drag_handle"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:visibility="gone" >
+        android:layout_alignParentRight="true">
 
         <ImageView
             android:layout_width="wrap_content"
@@ -51,16 +47,5 @@
             android:background="@drawable/ic_list_item_move"
             android:contentDescription="@string/topic_guide_thumbnail" />
     </RelativeLayout>
-
-    <ImageView
-        android:id="@+id/add_new_bullet"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:background="@drawable/ic_btn_add_bullet"
-        android:contentDescription="@string/topic_guide_thumbnail"
-        android:padding="1dp"
-        android:visibility="gone" />
 
 </RelativeLayout>
