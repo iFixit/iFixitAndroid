@@ -6,10 +6,6 @@
     android:layout_margin="4dp"
     android:background="@color/white"
     android:padding="1dp" >
-    
-    <LinearLayout
-    android:focusable="true" android:focusableInTouchMode="true"
-    android:layout_width="0px" android:layout_height="0px"/>
 
     <EditText
         android:id="@+id/step_title_textview"

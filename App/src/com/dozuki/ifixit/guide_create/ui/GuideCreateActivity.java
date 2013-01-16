@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import org.holoeverywhere.app.Activity;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import org.holoeverywhere.app.Fragment;
@@ -23,12 +25,14 @@ import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroList
 
 public class GuideCreateActivity extends Activity implements GuideCreateIntroListener {
 	static final int GUIDE_STEP_LIST_REQUEST = 0;
+   private static final String SHOWING_HELP = "SHOWING_HELP";
 	private static String GuideObjectKey = "GuideCreateObject";
 	public static int GuideItemID = 0;
 	private ActionBar mActionBar;
 	private GuidePortalFragment mGuidePortal;
 
 	private ArrayList<GuideCreateObject> mGuideList;
+   private boolean mShowingHelp;
 
 	private OnBackStackChangedListener getListener() {
 		OnBackStackChangedListener result = new OnBackStackChangedListener() {
@@ -71,6 +75,9 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
 		if (savedInstanceState != null) {
 			mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState
 					.getSerializable(GuideObjectKey);
+			mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+			if (mShowingHelp)
+            createHelpDialog().show();
 		}
 		
 		super.onCreate(savedInstanceState);
@@ -105,6 +112,9 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
 		case android.R.id.home:
 			finish();
 			return true;
+		case R.id.help_button:
+		   createHelpDialog().show();
+		   return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}
@@ -113,6 +123,7 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
 		savedInstanceState.putSerializable(GuideObjectKey, mGuideList);
+		savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
 		super.onSaveInstanceState(savedInstanceState);
 	}
 	
@@ -166,5 +177,33 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
 
       getSupportFragmentManager().popBackStack();
       
+   }
+   
+   
+   private AlertDialog createHelpDialog() {
+      mShowingHelp = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+            .setTitle(getString(R.string.media_help_title))
+            .setMessage(getString(R.string.guide_create_help))
+            .setPositiveButton(getString(R.string.media_help_confirm),
+               new DialogInterface.OnClickListener() {
+                  private boolean mShowingHelp;
+
+            public void onClick(DialogInterface dialog, int id) {
+                     mShowingHelp = false;
+                     dialog.cancel();
+                  }
+               });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingHelp = false;
+         }
+      });
+
+      return dialog;
    }
 }
