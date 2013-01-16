@@ -25,12 +25,12 @@ public class GuideCreateStepObject  implements Serializable{
 	   public GuideCreateStepObject (int stepNum) {
 	      mStepNum = stepNum;
 	      mImages = new ArrayList<StepImage>();
-	      for(int i = 0 ; i < 3 ; i++)
-	      {
-	    	  mImages.add(new StepImage(i + 1));
-	    	  mImages.get(i).setText("");
-	      }
-	      mLines = new ArrayList<StepLine>();
+	     // for(int i = 0 ; i < 3 ; i++)
+	     // {
+	    //	  mImages.add(new StepImage(i + 1));
+	    	//  mImages.get(i).setText("");
+	     // }
+	     mLines = new ArrayList<StepLine>();
 	   }
 	   
 	   public GuideCreateStepObject(GuideStep gs) {

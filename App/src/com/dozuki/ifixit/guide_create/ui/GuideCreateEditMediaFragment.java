@@ -35,11 +35,11 @@ import android.widget.ImageView.ScaleType;
 public class GuideCreateEditMediaFragment extends Fragment implements OnClickListener, OnLongClickListener {
 
    private static String NO_TITLE = "Title";
-   private static int NO_IMAGE = -1;
-   public static final String THUMB_POSITION_KEY = "THUMB_POSITION_KEY";
-   private static final int IMAGE_KEY_1 = 1;
-   private static final int IMAGE_KEY_2 = 2;
-   private static final int IMAGE_KEY_3 = 3;
+   public static int NO_IMAGE = -1;;
+   public static final int IMAGE_KEY_1 = 1;
+   public static final int IMAGE_KEY_2 = 2;
+   public static final int IMAGE_KEY_3 = 3;
+   private static final String TITLE_KEY = "TITLE_KEY";
 
    EditText mStepTitle;
    // images
@@ -79,6 +79,18 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
       mImageThree.setOnLongClickListener(this);
       mImageThree.setOnClickListener(this);
 
+      if (savedInstanceState != null) {
+
+         mImageOneInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_1);
+
+         mImageTwoInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_2);
+
+         mImageThreeInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_3);
+
+         mTitle = savedInstanceState.getString(TITLE_KEY);
+
+      }
+
       mStepTitle.setText(mTitle);
       mStepTitle.addTextChangedListener(new TextWatcher() {
 
@@ -100,6 +112,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
       });
 
       fitImagesToSpace(v.getLayoutParams().height, v.getLayoutParams().width);
+      setImage(IMAGE_KEY_1);
+      setImage(IMAGE_KEY_2);
+      setImage(IMAGE_KEY_3);
 
       return v;
    }
@@ -178,9 +193,13 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
-      // savedInstanceState.putSerializable(
-      // GuideCreateStepEditFragment.GuideEditKey, mStepObject);
-      // savedInstanceState.putBoolean(ReorderStepsKey, mReorderStepsMode);
+      savedInstanceState.putSerializable("" + IMAGE_KEY_1, mImageOneInfo);
+
+      savedInstanceState.putSerializable("" + IMAGE_KEY_2, mImageTwoInfo);
+
+      savedInstanceState.putSerializable("" + IMAGE_KEY_3, mImageThreeInfo);
+
+      savedInstanceState.putString(TITLE_KEY, mTitle);
    }
 
    @Override
@@ -276,7 +295,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
 
    }
 
-   private void setImage(int location, StepImage si) {
+   public void setImage(int location, StepImage si) {
       switch (location) {
          case 1:
             mImageOneInfo = si;
@@ -291,7 +310,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
             return;
       }
 
-      setImage(location);
+      if (mImageOne != null)
+         setImage(location);
    }
 
    @Override
@@ -325,9 +345,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
 
    public ArrayList<StepImage> getImageIDs() {
       ArrayList<StepImage> list = new ArrayList<StepImage>();
-//      list.add(new StepImage(mImageID1));
-//      list.add(new StepImage(mImageID2));
-//      list.add(new StepImage(mImageID3));
+      list.add(mImageOneInfo);
+      list.add(mImageTwoInfo);
+      list.add(mImageThreeInfo);
       return list;
    }
 

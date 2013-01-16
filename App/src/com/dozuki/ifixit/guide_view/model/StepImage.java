@@ -2,6 +2,8 @@ package com.dozuki.ifixit.guide_view.model;
 
 import java.io.Serializable;
 
+import android.util.Log;
+
 public class StepImage implements Serializable {
    private static final long serialVersionUID = 6728708938023120624L;
    protected int mImageid;

@@ -12,6 +12,7 @@ public class GuideCreateObject implements Serializable {
 	 * 
 	 */
 	private static final long serialVersionUID = -356754234536788271L;
+   private static final String stepList = null;
 	protected int mGuideid;
 	protected String mTitle;
 	protected String mTopic;
@@ -186,4 +187,14 @@ public class GuideCreateObject implements Serializable {
 		GuideCreateObject lhs = (GuideCreateObject) o;
 		return mGuideid == lhs.mGuideid;
 	}
+
+   public void replace(GuideCreateStepObject changedStep) {
+      for (GuideCreateStepObject so : mStepList) {
+          if(so.equals(changedStep))
+          {
+             so = changedStep;
+          }
+      }
+
+   }
 }
