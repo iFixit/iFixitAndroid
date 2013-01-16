@@ -42,6 +42,7 @@ public class GuideCreateStepsEditActivity extends Activity
 	public static String GUIDE_STEP_KEY = "GuideStepObject";
 	public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
+   private static final String SHOWING_HELP = "SHOWING_HELP";
 	
 	
 	private static final int  NEW_STEP_ID = 1;
@@ -50,8 +51,6 @@ public class GuideCreateStepsEditActivity extends Activity
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
 	private GuideCreateStepEditFragmentNew mCurStepFragment;
-	//private TextView mAddStep;
-	//private TextView mDeleteStep;
 	private ImageView mSpinnerMenu;
 	private Button mSaveStep;
 	private ImageView mViewSteps;
@@ -64,6 +63,7 @@ public class GuideCreateStepsEditActivity extends Activity
    private QuickAction mQuickAction;
    private ProgressBar mSavingIndicator;
    private boolean mIsStepDirty;
+   private boolean mShowingHelp;
 
 	// TODO: Add "swipey tabs" to top bar
 
@@ -86,8 +86,9 @@ public class GuideCreateStepsEditActivity extends Activity
          mPagePosition = savedInstanceState.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
-         mCurStepFragment =
-            (GuideCreateStepEditFragmentNew) getSupportFragmentManager().getFragment(savedInstanceState, "step_frag");
+         mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+         if (mShowingHelp)
+            createHelpDialog().show();
       }
 
       super.onCreate(savedInstanceState);
@@ -172,6 +173,9 @@ public class GuideCreateStepsEditActivity extends Activity
 	      case android.R.id.home:
 	         finish();
 	         return true;
+	      case R.id.help_button:
+	         createHelpDialog().show();
+	         return true;
 	      default:
 	         return super.onOptionsItemSelected(item);
 	      }
@@ -187,9 +191,7 @@ public class GuideCreateStepsEditActivity extends Activity
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-	  // Log.e("CUR FRAG", "wdwd" + mCurStepFragment.getTag());
-	   
-	   getSupportFragmentManager().putFragment(savedInstanceState, "step_frag", mCurStepFragment);
+      getSupportFragmentManager().putFragment(savedInstanceState, "step_frag", mCurStepFragment);
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
 				mGuide);
@@ -197,6 +199,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		savedInstanceState.putInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY,
 				mPagePosition);
 		savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
+		savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
 	}
 
 	public class StepAdapter extends FragmentStatePagerAdapter {
@@ -332,6 +335,32 @@ public class GuideCreateStepsEditActivity extends Activity
    private void disableSave() {
       mSaveStep.setText(R.string.step_edit_saved_step);
       mSaveStep.setEnabled(false);
+   }
+   
+   private AlertDialog createHelpDialog() {
+      mShowingHelp = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+            .setTitle(getString(R.string.media_help_title))
+            .setMessage(getString(R.string.guide_create_edit_steps_help))
+            .setPositiveButton(getString(R.string.media_help_confirm),
+               new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                     mShowingHelp = false;
+                     dialog.cancel();
+                  }
+               });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingHelp = false;
+         }
+      });
+
+      return dialog;
    }
 	
 }
