@@ -11,6 +11,7 @@ import android.R.color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
@@ -111,6 +112,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       mDragListView.setFloatViewManager(mController);
       mDragListView.setOnTouchListener(mController);
       mDragListView.setDragEnabled(true);
+      
 
       return view;
    }

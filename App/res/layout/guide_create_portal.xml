@@ -38,13 +38,15 @@
             android:textColor="@color/dozuki_grey"/>
         
     </RelativeLayout>
+
      <TextView
-        android:id="@+id/no_guides_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/no_guides_text"
-        android:visibility="gone" />
+         android:id="@+id/no_guides_text"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_below="@+id/add_guide_bar"
+         android:layout_marginTop="4dp"
+         android:layout_centerHorizontal="true"
+         android:text="@string/no_guides_text"       
+         android:visibility="gone"/>
+
 </RelativeLayout>

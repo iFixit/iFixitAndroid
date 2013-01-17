@@ -125,6 +125,9 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             mLines);
       mBulletList.setAdapter(mBulletListAdapter);
       
+      mBulletList.setFocusableInTouchMode(true);
+      mBulletList.requestFocus();
+      
        return v;
    }
    
@@ -388,10 +391,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    {
       mReorderFragment = new GuideCreateBulletReorderFragment();
       mReorderFragment.setLines(mLines);
-      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+      FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
       mReorderFragment.setTargetFragment(this, 0);
       mReorderFragment.setRetainInstance(true);
-      transaction.add(R.id.guide_create_edit_bullet_fragment_container, mReorderFragment);
+      transaction.add(R.id.guide_create_edit_bullet_reorder_fragment_container, mReorderFragment);
       transaction.addToBackStack(null);
       transaction.commitAllowingStateLoss();
       mShowingReorder =true;
