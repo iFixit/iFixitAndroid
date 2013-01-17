@@ -26,6 +26,7 @@ public class OpenIDActivity extends Activity {
    private WebView mWebView;
    private String mBaseUrl;
    private Site mSite;
+   private boolean mSingleSignOn;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -34,11 +35,11 @@ public class OpenIDActivity extends Activity {
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
       Bundle extras = this.getIntent().getExtras();
 
-      boolean singleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
+      mSingleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
       mSite = ((MainApplication)getApplication()).getSite();
 
       String loginUrl;
-      if (singleSignOn) {
+      if (mSingleSignOn) {
          loginUrl = mSite.mSsoUrl;
       } else {
          mBaseUrl = mSite.getOpenIdLoginUrl();
