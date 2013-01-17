@@ -43,6 +43,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    private ProgressBar mLoadingSpinner;
    private APICall mCurAPICall;
    private boolean mHasRegisterBtn = true;
+   private boolean mFailedSsoLogin = false;
 
    @Subscribe
    public void onLogin(APIEvent.Login event) {
@@ -149,6 +150,11 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       super.onResume();
 
       MainApplication.getBus().register(this);
+
+      if (mFailedSsoLogin) {
+         // Dismiss the dialog because SSO login failed.
+         getDialog().cancel();
+      }
    }
 
    @Override
@@ -250,6 +256,13 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          enable(false);
          mCurAPICall = APIService.getUserInfoAPICall(session);
          APIService.call((Activity)getActivity(), mCurAPICall);
+      } else if (!MainApplication.get().getSite().mStandardAuth) {
+         /**
+          * Single sign on failed. There aren't any login alternatives so we need
+          * to close the dialog. We can't do that here because onResume hasn't been
+          * called yet. This sets a flag which is used in onResume to kill the dialog.
+          */
+         mFailedSsoLogin = true;
       }
    }
 
