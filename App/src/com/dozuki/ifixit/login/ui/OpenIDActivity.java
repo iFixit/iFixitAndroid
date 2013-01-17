@@ -18,6 +18,7 @@ import org.holoeverywhere.app.Activity;
 
 public class OpenIDActivity extends Activity {
    public static String LOGIN_METHOD = "LOGIN_METHOD";
+   public static String SINGLE_SIGN_ON = "SINGLE_SIGN_ON";
 
    public static String YAHOO_LOGIN = "yahoo";
    public static String GOOGLE_LOGIN = "google";
@@ -33,10 +34,17 @@ public class OpenIDActivity extends Activity {
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
       Bundle extras = this.getIntent().getExtras();
 
+      boolean singleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
       mSite = ((MainApplication)getApplication()).getSite();
-      mBaseUrl = mSite.getOpenIdLoginUrl();
 
-      final String method = extras.getString(LOGIN_METHOD);
+      String loginUrl;
+      if (singleSignOn) {
+         loginUrl = mSite.mSsoUrl;
+      } else {
+         mBaseUrl = mSite.getOpenIdLoginUrl();
+         final String method = extras.getString(LOGIN_METHOD);
+         loginUrl = mBaseUrl + method;
+      }
 
       mWebView = (WebView)findViewById(R.id.open_id_web_view);
 
@@ -44,7 +52,7 @@ public class OpenIDActivity extends Activity {
       CookieSyncManager.getInstance().sync();
       CookieManager.getInstance().removeAllCookie();
 
-      mWebView.loadUrl(mBaseUrl + method);
+      mWebView.loadUrl(loginUrl);
       mWebView.getSettings().setJavaScriptEnabled(true);
 
       mWebView.setWebChromeClient(new WebChromeClient() {

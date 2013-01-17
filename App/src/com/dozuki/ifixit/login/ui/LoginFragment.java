@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -83,9 +84,16 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       super.onCreate(savedInstanceState);
 
       MainApplication.get().setIsLoggingIn(true);
+
+      Site site = MainApplication.get().getSite();
       
-      mHasRegisterBtn = ((MainApplication)getActivity().getApplication())
-       .getSite().mPublicRegistration;
+      mHasRegisterBtn = site.mPublicRegistration;
+
+      if (!site.mStandardAuth) {
+          Intent intent = new Intent(getActivity(), OpenIDActivity.class);
+          intent.putExtra(OpenIDActivity.SINGLE_SIGN_ON, true);
+          startActivityForResult(intent, OPEN_ID_RESULT_CODE);
+      }
    }
 
    @Override
@@ -183,11 +191,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          mGoogleLogin.setEnabled(enabled);
          //mYahooLogin.setEnabled(enabled);
       }
-   }
-
-   @Override
-   public void onAttach(Activity activity) {
-      super.onAttach(activity);
    }
 
    @Override
