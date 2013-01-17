@@ -30,7 +30,6 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:gravity="center_vertical"
-            android:clickable="true"
             android:drawableLeft="@drawable/ic_add_list_item"
             android:drawablePadding="4dp"
             android:text="@string/add_guide"
