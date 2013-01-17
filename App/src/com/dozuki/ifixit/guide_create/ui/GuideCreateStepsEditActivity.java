@@ -188,10 +188,18 @@ public class GuideCreateStepsEditActivity extends Activity
 		setResult(RESULT_OK, returnIntent);
 		super.finish();
 	}
+	
+	
+	  @Override
+	   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+	   //   super.onActivityResult(requestCode, resultCode, data);
+	     
+	      mCurStepFragment.setMediaResult(requestCode, resultCode, data);
+	   }
 
 	@Override
 	public void onSaveInstanceState(Bundle savedInstanceState) {
-      getSupportFragmentManager().putFragment(savedInstanceState, "step_frag", mCurStepFragment);
+      //getSupportFragmentManager().putFragment(savedInstanceState, "step_frag", mCurStepFragment);
 		super.onSaveInstanceState(savedInstanceState);
 		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
 				mGuide);

@@ -274,10 +274,13 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      super.onActivityResult(requestCode, resultCode, data);
+    //  super.onActivityResult(requestCode, resultCode, data);
+      Log.e("LOL", " in meida result" + requestCode);
       switch (requestCode) {
          case IMAGE_KEY_1:
+            Log.e("LOL", " in meida result image 1");
             if (resultCode == Activity.RESULT_OK) {
+               Log.e("LOL", " result meida result");
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mImageOneInfo.setText(media.getGuid());
                mImageOneInfo.setImageId(Integer.valueOf(media.getItemId()));
@@ -389,7 +392,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
             } 
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-            startActivityForResult(intent, IMAGE_KEY_1);
+            getActivity().startActivityForResult(intent, IMAGE_KEY_1);
             break;
          case R.id.step_edit_thumb_2:
             if(mImageTwoInfo.getImageid() != NO_IMAGE)
@@ -400,7 +403,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
             } 
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-            startActivityForResult(intent, IMAGE_KEY_2);
+            getActivity().startActivityForResult(intent, IMAGE_KEY_2);
             break;
          case R.id.step_edit_thumb_3:
             if(mImageThreeInfo.getImageid() != NO_IMAGE)
@@ -411,7 +414,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
             } 
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-            startActivityForResult(intent, IMAGE_KEY_3);
+            getActivity().startActivityForResult(intent, IMAGE_KEY_3);
             break;
          case R.id.step_edit_thumb_media:
             break;

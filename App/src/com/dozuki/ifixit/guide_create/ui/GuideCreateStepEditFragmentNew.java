@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.guide_create.ui;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 import android.content.Intent;
@@ -97,12 +98,6 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       }
       return mStepObject;
    }
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-     // super.onActivityResult(requestCode, resultCode, data);
-      mEditMediaFrag.onActivityResult(requestCode, resultCode, data);
-   }
-   
    
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -110,6 +105,12 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
     
       savedInstanceState.putSerializable(GUIDE_STEP_KEY,
          mStepObject);
+   }
+
+
+
+   public void setMediaResult(int requestCode, int resultCode, Intent data) {
+      mEditMediaFrag.onActivityResult(requestCode, resultCode, data);
    }
    
 
