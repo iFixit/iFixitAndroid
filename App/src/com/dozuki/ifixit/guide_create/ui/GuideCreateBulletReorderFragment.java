@@ -3,6 +3,7 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.TextView;
@@ -112,9 +113,27 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       mDragListView.setFloatViewManager(mController);
       mDragListView.setOnTouchListener(mController);
       mDragListView.setDragEnabled(true);
-
+      
+   
       return view;
    }
+   
+   @Override
+   public void onStart ()
+   {
+      super.onStart();
+      ((GuideCreateStepsEditActivity)getActivity()).enableViewPager(false);
+   }
+   
+   @Override
+   public void onStop ()
+   {
+
+      super.onStop();
+      ((GuideCreateStepsEditActivity)getActivity()).enableViewPager(true);
+   }
+   
+
 
    public final class ContextualStepReorder implements ActionMode.Callback {
       public ContextualStepReorder() {}
