@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.TextView;
 
 import android.R.color;
@@ -12,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.RelativeLayout.LayoutParams;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
@@ -79,7 +81,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    }
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
+   public void onActivityCreated(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       getSherlockActivity().startActionMode(new ContextualStepReorder());
       if (mImageManager == null) {
@@ -98,6 +100,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(LINES_KEY, mLines);
+      
    }
 
    @Override
@@ -144,6 +147,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    private class ViewHolder {
       public TextView stepsView;
       public ImageView mImageView;
+      public FrameLayout mItemHolder;
    }
 
    private class StepAdapter extends ArrayAdapter<StepLine> {
@@ -162,11 +166,17 @@ public class GuideCreateBulletReorderFragment extends Fragment {
 
             holder.mImageView = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail);
             v.setTag(holder);
+            
+            holder.mItemHolder = (FrameLayout) v
+               .findViewById(R.id.guide_step_item_frame);
          }
          final ViewHolder holder = (ViewHolder) v.getTag();
          String step = getItem(position).getText();
          holder.stepsView.setText(step);
          holder.mImageView.setImageResource(getBulletResource(getItem(position).getColor()));
+         LayoutParams params = (LayoutParams) holder.mItemHolder.getLayoutParams();
+         params.setMargins(25 * getItem(position).getLevel(), 0, 0, 0);
+         holder.mItemHolder.setLayoutParams(params);
 
          return v;
       }
