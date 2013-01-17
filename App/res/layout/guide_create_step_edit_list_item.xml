@@ -31,7 +31,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
+            android:scaleType="center"
             android:src="@drawable/bullet_black"
+            android:background="@drawable/ic_dialog_bullet_arrow_spinner"
             android:contentDescription="@string/topic_guide_thumbnail"
             android:padding="1dp" />
     </FrameLayout>

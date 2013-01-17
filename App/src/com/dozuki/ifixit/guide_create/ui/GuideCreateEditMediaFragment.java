@@ -275,10 +275,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
     //  super.onActivityResult(requestCode, resultCode, data);
-      Log.e("LOL", " in meida result" + requestCode);
       switch (requestCode) {
          case IMAGE_KEY_1:
-            Log.e("LOL", " in meida result image 1");
             if (resultCode == Activity.RESULT_OK) {
                Log.e("LOL", " result meida result");
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
