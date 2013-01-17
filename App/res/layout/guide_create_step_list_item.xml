@@ -47,28 +47,32 @@
         </RelativeLayout>
     </FrameLayout>
     
-      <LinearLayout
+    <LinearLayout
         android:id="@+id/step_create_item_edit_section"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/gallery_top_bar_height"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="-50dp"
         android:background="@color/fireswing_grey"
-        android:gravity="right"
+        android:gravity="center"
         android:orientation="horizontal"
         android:padding="6dp"
-         android:layout_marginBottom="-50dp"
-        android:visibility="gone">
+        android:visibility="gone" >
         
         
-        <TextView
+<TextView
             android:id="@+id/step_create_item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_guide_delete"
-            android:drawablePadding="10dp"
+            android:drawablePadding="4dp"
             android:gravity="center_vertical"
-            android:paddingRight="20dp"
-            android:text="@string/action_delete" />
+            android:text="@string/action_delete"
+            android:textColor="@color/dozuki_grey" 
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
          
          <TextView
             android:id="@+id/step_create_item_edit"
@@ -76,10 +80,13 @@
             android:layout_height="wrap_content"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_guide_edit"
-            android:drawablePadding="10dp"
+            android:drawablePadding="4dp"
             android:gravity="center_vertical"
-            android:paddingRight="20dp"
-            android:text="@string/edit" />
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
+            android:text="@string/edit" 
+            android:textColor="@color/dozuki_grey" 
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 
     </LinearLayout>
     

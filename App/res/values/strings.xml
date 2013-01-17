@@ -114,7 +114,7 @@
    <string name="step_edit_confirm_delete_message">Are you sure you want to delete </string>
    <string name="step_edit_save_step">SAVE</string>
    <string name="edit">Edit</string>
-   <string name="edit_step_intro">Edit intro</string>
+   <string name="edit_step_intro">Intro</string>
    <string name="add_step">Add step</string>
    <string name="reorder_steps">Reorder</string>
    <string name="no_steps_text">Add steps with the bar above!</string>

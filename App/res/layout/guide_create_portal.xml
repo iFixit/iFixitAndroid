@@ -20,28 +20,24 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/gallery_top_bar_height"
         android:layout_alignParentTop="true"
-        android:background="@color/gray"
+        android:background="@color/fireswing_grey"
         android:clickable="true" >
 
-        <ImageView
+        
+        <TextView
             android:id="@+id/add_guide_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:paddingLeft="15dp"
-            android:src="@drawable/ic_add_list_item" />
-
-        <TextView
-            android:id="@+id/add_guide_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="@dimen/gallery_login_text_padding"
-            android:layout_toRightOf="@+id/add_guide_button"
+            android:gravity="center_vertical"
+            android:clickable="true"
+            android:drawableLeft="@drawable/ic_add_list_item"
+            android:drawablePadding="4dp"
             android:text="@string/add_guide"
-            android:textColor="@color/dozuki_grey"
-            android:textStyle="bold" />
+            android:layout_marginLeft="16dp"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/dozuki_grey"/>
+        
     </RelativeLayout>
      <TextView
         android:id="@+id/no_guides_text"
