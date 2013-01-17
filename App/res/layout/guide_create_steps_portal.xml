@@ -21,7 +21,7 @@
         android:id="@+id/guide_create_top_bar"
         android:layout_width="fill_parent"
         android:layout_height="@dimen/gallery_top_bar_height"
-        android:background="@color/gray"
+        android:background="@color/fireswing_grey"
         android:orientation="horizontal" >
 
         <TextView
@@ -30,14 +30,15 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="12dp"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_guide_edit"
             android:gravity="center_vertical"
-            android:drawablePadding="7dip"
+            android:drawablePadding="4dp"
             android:text="@string/edit_step_intro"
-            android:textColor="@color/dozuki_grey"
-            android:textStyle="bold" />
+            android:textColor="@color/dozuki_grey" 
+            android:textAppearance="?android:attr/textAppearanceSmall"/>
 
         <TextView
             android:id="@+id/add_step_bar"
@@ -45,13 +46,15 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-             android:gravity="center_vertical"
+            android:gravity="center_vertical"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_add_list_item"
-            android:drawablePadding="7dp"
+            android:drawablePadding="4dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:text="@string/add_step"
-            android:textColor="@color/dozuki_grey"
-            android:textStyle="bold" />
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/dozuki_grey"/>
 
         <TextView
             android:id="@+id/reorder_steps_bar"
@@ -59,14 +62,16 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="12dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_dialog_arrange_bullets_dark"
-            android:drawablePadding="7dp"
+            android:drawablePadding="4dp"
             android:gravity="center_vertical"
             android:text="@string/reorder_steps"
-            android:textColor="@color/dozuki_grey"
-            android:textStyle="bold" />
+            android:textColor="@color/dozuki_grey" 
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            />
     </RelativeLayout>
 
     <TextView

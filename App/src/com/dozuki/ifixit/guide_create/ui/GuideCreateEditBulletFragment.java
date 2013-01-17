@@ -45,6 +45,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private static final String GUIDE_EDIT_KEY = "GuideEditKey";
    private static final String REORDER_STEPS_KEY = "ReorderStepsKey";
    private static final String STEP_LIST_KEY = "STEP_LIST_KEY";
+   private static final String SHOWING_BULLET_FRAG = "SHOWING_BULLET_FRAG";
+   private static final String BULLET_FRAG_ID = "BULLET_FRAG_ID";
    ImageView mMediaIcon;
    DragSortController mController;
    BulletListAdapter mBulletListAdapter;
@@ -53,6 +55,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    DragSortListView mBulletList;
    ArrayList<StepLine> mLines = new ArrayList<StepLine>();
    private ChooseBulletDialog mChooseBulletDialog;
+   private boolean mShowingChooseBulletDialog;
+   
    
    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
       @Override
@@ -100,8 +104,11 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          mReorderStepsMode = savedInstanceState.getBoolean(REORDER_STEPS_KEY);
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
 
-         mChooseBulletDialog = (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, "BULLET_FRAG" );
-         mChooseBulletDialog.setTargetFragment(this, 0);
+         mChooseBulletDialog = (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, BULLET_FRAG_ID );
+         mShowingChooseBulletDialog = savedInstanceState.getBoolean(SHOWING_BULLET_FRAG);
+         if(mChooseBulletDialog != null && mShowingChooseBulletDialog) {
+            mChooseBulletDialog.setTargetFragment(this, 0);
+         }
       }
       mBulletListAdapter = new BulletListAdapter(this.getActivity(),
             R.layout.guide_create_step_edit_list_item,
@@ -188,6 +195,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
                mChooseBulletDialog.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
                mChooseBulletDialog.setStepIndex(mPos);
                mChooseBulletDialog.show(fm, "fragment_choose_bullet");
+               mShowingChooseBulletDialog = true;
             }
 
          });
@@ -310,7 +318,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
-      getSupportFragmentManager().putFragment(savedInstanceState, "BULLET_FRAG", mChooseBulletDialog );
+      if(mChooseBulletDialog != null && mShowingChooseBulletDialog) {
+         getSupportFragmentManager().putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog );
+         savedInstanceState.putBoolean(SHOWING_BULLET_FRAG, mShowingChooseBulletDialog);
+      }
    }
    
    @Override

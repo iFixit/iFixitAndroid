@@ -43,7 +43,7 @@
     <dimen name="gallery_login_text_padding">8dp</dimen>
     <dimen name="gallery_bottom_bar_height">30dp</dimen>
     <dimen name="gallery_grid_column_width">150dp</dimen>
-    <dimen name="gallery_top_bar_height">35dp</dimen>
+    <dimen name="gallery_top_bar_height">48dp</dimen>
     <dimen name="login_agreement_text_top_padding">3dp</dimen>
     
     <dimen name="guide_create_edit_button_dim">36dp</dimen>
