@@ -78,11 +78,10 @@
         android:id="@+id/no_steps_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
         android:layout_below="@+id/guide_create_top_bar"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/no_steps_text"
-        android:visibility="gone" />
+        android:text="@string/no_steps_text"  
+        android:layout_marginTop="4dp"  
+        android:visibility="gone"/>
 
 </RelativeLayout>
