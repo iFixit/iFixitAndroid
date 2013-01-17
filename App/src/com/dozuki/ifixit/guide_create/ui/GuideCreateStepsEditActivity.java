@@ -370,5 +370,10 @@ public class GuideCreateStepsEditActivity extends Activity
 
       return dialog;
    }
+   
+   
+   public void enableViewPager(boolean unlocked) {
+      mPager.setPagingEnabled(unlocked);
+   }
 	
 }
