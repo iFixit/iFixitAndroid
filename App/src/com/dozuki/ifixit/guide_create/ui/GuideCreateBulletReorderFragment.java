@@ -112,7 +112,6 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       mDragListView.setFloatViewManager(mController);
       mDragListView.setOnTouchListener(mController);
       mDragListView.setDragEnabled(true);
-      
 
       return view;
    }
@@ -132,8 +131,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
 
       @Override
       public void onDestroyActionMode(ActionMode mode) {
-         getActivity().getSupportFragmentManager().popBackStack();
-         ((BulletRearrangeListener) getTargetFragment()).onReorderComplete();
+         ((BulletRearrangeListener) getParentFragment()).onReorderComplete();   
       }
 
       @Override

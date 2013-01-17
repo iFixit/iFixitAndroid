@@ -51,6 +51,7 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       
     
       mEditBulletFrag = new GuideCreateEditBulletFragment();
+      mEditBulletFrag.setRetainInstance(true);
       getChildFragmentManager().beginTransaction()
               .add(R.id.guide_create_edit_bullet_fragment_container, mEditBulletFrag).commit();
       
