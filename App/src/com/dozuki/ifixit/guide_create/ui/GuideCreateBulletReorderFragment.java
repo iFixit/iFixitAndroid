@@ -80,9 +80,17 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       return controller;
    }
 
+ 
+
    @Override
-   public void onActivityCreated(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+      savedInstanceState.putSerializable(LINES_KEY, mLines);
+   }
+
+   @Override
+   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      
       getSherlockActivity().startActionMode(new ContextualStepReorder());
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
@@ -94,17 +102,6 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       }
 
       mAdapter = new StepAdapter(mLines);
-   }
-
-   @Override
-   public void onSaveInstanceState(Bundle savedInstanceState) {
-      super.onSaveInstanceState(savedInstanceState);
-      savedInstanceState.putSerializable(LINES_KEY, mLines);
-      
-   }
-
-   @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_create_step_portal_reorder, container, false);
       mDragListView = (DragSortListView) view.findViewById(R.id.steps_portal_list_reorder);
       mDragListView.setDropListener(onDrop);
