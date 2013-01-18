@@ -52,7 +52,7 @@
             android:layout_margin="4dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-             android:textColor="@color/white" 
+             android:textColor="@color/dark" 
              android:background="@color/fireswing_blue"/>
         <!--
             <TextView
