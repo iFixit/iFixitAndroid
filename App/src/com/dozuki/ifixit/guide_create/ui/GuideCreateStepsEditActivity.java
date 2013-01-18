@@ -266,8 +266,7 @@ public class GuideCreateStepsEditActivity extends Activity
 			finish();
 			break;
 		case R.id.step_edit_view_save:
-		   mSaveStep.setEnabled(false);
-		   ((Button) v).setText(R.string.step_edit_saving_step);
+		   disableSave();
 		   mSavingIndicator.setVisibility(View.VISIBLE);
 		   mGuide.replace(mCurStepFragment.syncGuideChanges());
 		   mSavingIndicator.setVisibility(View.INVISIBLE);
@@ -345,12 +344,15 @@ public class GuideCreateStepsEditActivity extends Activity
         enableSave();
    }
    
-   private void enableSave() {
-      mSaveStep.setText(R.string.step_edit_save_step);
+   public void enableSave() {
+      Log.e("dvpoerkpoe","enable");
+      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_blue));
       mSaveStep.setEnabled(true);
    }
-   private void disableSave() {
-      mSaveStep.setText(R.string.step_edit_saved_step);
+   
+   public void disableSave() {
+      Log.e("dvpoerkpoe","disable");
+      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_grey));
       mSaveStep.setEnabled(false);
    }
    
