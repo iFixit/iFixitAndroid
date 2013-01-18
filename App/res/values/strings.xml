@@ -102,7 +102,7 @@
    <string name="create_guide_summary">SUMMARY</string>
    <string name="create_guide_intro">INTRODUCTION</string>
    <string name="device_hint">What are you working on?</string>
-   <string name="device_focus_hint">what part of the device are you focusing on?</string>
+   <string name="device_focus_hint">What part of the device are you focusing on?</string>
    <string name="title_hint">Add guide title.</string>
    <string name="summary_hint">Summarize this guide in a sentence or two.</string>
    <string name="introduction_hint">Briefly outline what your guide will teach someone.</string>
