@@ -93,7 +93,7 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       for(StepImage si : mEditMediaFrag.getImageIDs())
       {  
          if(si.getImageid() != GuideCreateEditMediaFragment.NO_IMAGE) {
-          mStepObject.addImage(si);
+              mStepObject.addImage(si);
          }
          
       }
@@ -112,6 +112,20 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
 
    public void setMediaResult(int requestCode, int resultCode, Intent data) {
       mEditMediaFrag.onActivityResult(requestCode, resultCode, data);
+   }
+
+
+
+   public GuideCreateStepObject getStepObject() {
+      // TODO Auto-generated method stub
+      return mStepObject;
+   }
+
+
+
+   public void setGuideStep(GuideCreateStepObject guideCreateStepObject) {
+      mStepObject = guideCreateStepObject;
+      setCopiesForEdit();
    }
    
 

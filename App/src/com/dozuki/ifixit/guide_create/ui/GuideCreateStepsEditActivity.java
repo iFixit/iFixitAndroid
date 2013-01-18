@@ -48,6 +48,7 @@ public class GuideCreateStepsEditActivity extends Activity
 	private static final int  NEW_STEP_ID = 1;
 	private static final int DELETE_STEP_ID = 2;
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
+   private static final String STEP_APADTER = "STEP_APADTER";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
 	private GuideCreateStepEditFragmentNew mCurStepFragment;
@@ -87,6 +88,9 @@ public class GuideCreateStepsEditActivity extends Activity
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+        // mStepAdapter.restoreState(arg0, arg1)
+         
+         
          if (mShowingHelp)
             createHelpDialog().show();
       }
@@ -94,9 +98,6 @@ public class GuideCreateStepsEditActivity extends Activity
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.guide_create_step_edit);
-      // mAddStep = (TextView) findViewById(R.id.step_edit_add_step);
-
-      // mDeleteStep = (TextView) findViewById(R.id.step_edit_delete_step);
 
       mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
       if (!mIsStepDirty) {
@@ -114,6 +115,7 @@ public class GuideCreateStepsEditActivity extends Activity
       mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
       mPager.setAdapter(mStepAdapter);
       mPager.setCurrentItem(mPagePosition);
+      
 
       titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
       titleIndicator.setViewPager(mPager);
@@ -208,6 +210,7 @@ public class GuideCreateStepsEditActivity extends Activity
 				mPagePosition);
 		savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
 		savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+		savedInstanceState.putParcelable(STEP_APADTER, mStepAdapter.saveState());
 	}
 
 	public class StepAdapter extends FragmentStatePagerAdapter {
@@ -237,7 +240,10 @@ public class GuideCreateStepsEditActivity extends Activity
 		
 		@Override
 		public int getItemPosition(Object object) {
-		    return POSITION_NONE;
+		  
+		   
+		   return POSITION_NONE;
+		   
 		}
 
 		@Override
@@ -275,8 +281,11 @@ public class GuideCreateStepsEditActivity extends Activity
 
 	private void deleteStep() {
 		mGuide.getSteps().remove(mPagePosition);
-		mPager.invalidate();
-		titleIndicator.invalidate();
+		  mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+	      mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
+	      mPager.setAdapter(mStepAdapter);
+	     mPager.setCurrentItem(mPagePosition);
+		
 	}
 	
 	public void invalidateStepAdapter()

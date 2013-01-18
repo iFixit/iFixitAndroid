@@ -116,19 +116,29 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
                   Intent intent = new Intent(getActivity(), GalleryActivity.class);
                   intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                   startActivityForResult(intent, mCurSelectedKey);
-                  break;
+                  return;
                case REMOVE_IMAGE_ID:
                   if(mCurSelectedKey == IMAGE_KEY_1) {
                      mImageOneInfo = new StepImage(NO_IMAGE);
                      setImage(IMAGE_KEY_1);
+                     setMainImage(mImageTwoInfo.getImageid(), mImageTwo);
+                     return;
                   }
                   if(mCurSelectedKey == IMAGE_KEY_2) {
                      mImageTwoInfo = new StepImage(NO_IMAGE);
                      setImage(IMAGE_KEY_2);
+
+                     setMainImage(mImageThreeInfo.getImageid(), mImageThree);
+                     //setImage(IMAGE_KEY_1);
+                     return;
                   }
                   if(mCurSelectedKey == IMAGE_KEY_3) {
                      mImageThreeInfo = new StepImage(NO_IMAGE);
                      setImage(IMAGE_KEY_3);
+
+                     setMainImage(mImageOneInfo.getImageid(), mImageOne);
+                   ///  setImage(IMAGE_KEY_2);
+                     return;
                   }
                      
                   break;
@@ -308,55 +318,52 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    private void setImage(int location) {
       switch (location) {
          case 1:
-            if(mImageOneInfo.getImageid() == NO_IMAGE) {
-               mImageOne.setScaleType(ScaleType.CENTER);
-               mImageOne.setImageResource(R.drawable.ic_btn_add_gallery_image);
-               return;
-            }
-            mImageOne.setScaleType(ScaleType.FIT_CENTER);
-            mImageManager.displayImage(mImageOneInfo.getText() + MainApplication.get().getImageSizes().getThumb(),
-               getActivity(), mImageOne);
-            mImageOne.setTag(mImageOneInfo.getText() + MainApplication.get().getImageSizes().getThumb());
-            mImageOne.invalidate();
 
-            mImageManager.displayImage(mImageOneInfo.getText() + MainApplication.get().getImageSizes().getThumb(), getActivity(), mLargeImage);
-            mLargeImage.invalidate();
+            setImageThumb(mImageOneInfo, mImageOne);
             break;
          case 2:
-            if(mImageTwoInfo.getImageid() == NO_IMAGE) {
-               mImageTwo.setScaleType(ScaleType.CENTER);
-               mImageTwo.setImageResource(R.drawable.ic_btn_add_gallery_image);
-               return;
-            }
-            mImageTwo.setScaleType(ScaleType.FIT_CENTER);
-            mImageManager.displayImage(mImageTwoInfo.getText() + MainApplication.get().getImageSizes().getThumb(),
-               getActivity(), mImageTwo);
-            mImageTwo.setTag(mImageTwoInfo.getText() + MainApplication.get().getImageSizes().getThumb());
-            mImageTwo.invalidate();
 
-            mImageManager.displayImage((String) mImageTwo.getTag(), getActivity(), mLargeImage);
-            mLargeImage.invalidate();
+            
+            setImageThumb(mImageTwoInfo, mImageTwo);
             break;
          case 3:
-            if(mImageThreeInfo.getImageid() == NO_IMAGE){
-               mImageThree.setScaleType(ScaleType.CENTER);
-               mImageThree.setImageResource(R.drawable.ic_btn_add_gallery_image);
-               return;
-            }
-            mImageThree.setScaleType(ScaleType.FIT_CENTER);
-            mImageManager.displayImage(mImageThreeInfo.getText() + MainApplication.get().getImageSizes().getThumb(),
-               getActivity(), mImageThree);
-            mImageThree.setTag(mImageThreeInfo.getText() + MainApplication.get().getImageSizes().getThumb());
-            mImageThree.invalidate();
-
-            mImageManager.displayImage((String) mImageThree.getTag(), getActivity(), mLargeImage);
-            mLargeImage.invalidate();
+ 
+            setImageThumb(mImageThreeInfo, mImageThree);
             break;
          default:
             return;
       }
 
    }
+   
+   public void setImageThumb(StepImage imageinfo, ImageView imagView)
+   {
+      if(imageinfo.getImageid() == NO_IMAGE){
+         imagView.setScaleType(ScaleType.CENTER);
+         imagView.setImageResource(R.drawable.ic_btn_add_gallery_image);
+         return;
+      }
+      imagView.setScaleType(ScaleType.FIT_CENTER);
+      mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(),
+         getActivity(), imagView);
+      imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
+      imagView.invalidate();
+      
+      setMainImage(imageinfo.getImageid(), imagView);
+      
+   }
+   
+   private void setMainImage(int imageID, ImageView image) {
+      if(imageID == NO_IMAGE){
+         mLargeImage.setImageResource(R.drawable.ic_placeholder_feature_img);
+      }else
+      {
+         mImageManager.displayImage((String) image.getTag(), getActivity(), mLargeImage);
+         mLargeImage.invalidate();
+      }
+         return;
+   }
+
 
    public void setImage(int location, StepImage si) {
       switch (location) {
