@@ -48,7 +48,6 @@ public class GuideCreateStepsEditActivity extends Activity
 	private static final int  NEW_STEP_ID = 1;
 	private static final int DELETE_STEP_ID = 2;
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
-   private static final String STEP_APADTER = "STEP_APADTER";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
 	private GuideCreateStepEditFragmentNew mCurStepFragment;
@@ -194,9 +193,9 @@ public class GuideCreateStepsEditActivity extends Activity
 	
 	  @Override
 	   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-	   //   super.onActivityResult(requestCode, resultCode, data);
-	     
-	      mCurStepFragment.setMediaResult(requestCode, resultCode, data);
+	     if(mCurStepFragment != null) {
+	         mCurStepFragment.setMediaResult(requestCode, resultCode, data);
+	     }
 	   }
 
 	@Override
@@ -210,7 +209,6 @@ public class GuideCreateStepsEditActivity extends Activity
 				mPagePosition);
 		savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
 		savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
-		savedInstanceState.putParcelable(STEP_APADTER, mStepAdapter.saveState());
 	}
 
 	public class StepAdapter extends FragmentStatePagerAdapter {
@@ -252,6 +250,7 @@ public class GuideCreateStepsEditActivity extends Activity
 			super.setPrimaryItem(container, position, object);
 			if(mPagePosition != position) {
 			   disableSave();
+			   mIsStepDirty = false;
 			}
 			mPagePosition = position;
 			mCurStepFragment = (GuideCreateStepEditFragmentNew) object;
@@ -312,7 +311,7 @@ public class GuideCreateStepsEditActivity extends Activity
 							}
 						})
 				.setNegativeButton(R.string.logout_cancel,
-						new DialogInterface.OnClickListener() {
+					new DialogInterface.OnClickListener() {
 							@Override
 							public void onClick(DialogInterface dialog,
 									int which) {

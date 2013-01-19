@@ -7,6 +7,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -72,7 +74,6 @@ public class GalleryActivity extends IfixitActivity implements
 	public TextView noImagesText;
 
 	private boolean mGetMediaItemForReturn;
-	private int mMediaReturnValue;
 	private ActionMode mMode;
 	private boolean mShowingHelp;
 
@@ -102,14 +103,14 @@ public class GalleryActivity extends IfixitActivity implements
 		showingDelete = false;
 
 		mGetMediaItemForReturn = false;
-		mMediaReturnValue = -1;
+		int mReturnValue = -1;
 		mMode = null;
 
 		if (getIntent().getExtras() != null) {
 			Bundle bundle = getIntent().getExtras();
-			mMediaReturnValue = bundle.getInt(
+			mReturnValue = bundle.getInt(
 					ACTIVITY_RETURN_MODE, -1);
-			if (mMediaReturnValue != -1)
+			if (mReturnValue != -1)
 				mGetMediaItemForReturn = true;
 			mMode = startActionMode(new ContextualMediaSelect(this));
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(mMediaReturnValue);
@@ -117,7 +118,8 @@ public class GalleryActivity extends IfixitActivity implements
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(mMediaReturnValue);
 		}
 		
-		mCurrentMediaFragment.setForReturn(mMediaReturnValue);
+		mCurrentMediaFragment.setForReturn(mGetMediaItemForReturn);
+		
 
 		if (savedInstanceState != null) {
 			showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);

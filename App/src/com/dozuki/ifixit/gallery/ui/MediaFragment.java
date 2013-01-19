@@ -73,6 +73,7 @@ OnItemClickListener,  OnItemLongClickListener {
    private static final String HASH_MAP = "HASH_MAP";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
+   private static final String RETURNING_VAL = "RETURNING_VAL";
 
    protected TextView mNoMediaText;
    private GridView mGridView;
@@ -91,7 +92,7 @@ OnItemClickListener,  OnItemLongClickListener {
    protected boolean mNextPageRequestInProgress;
    private boolean mShowingHelp;
    private boolean mShowingDelete;
-   private int mSelectForReturn;
+   private boolean mSelectForReturn;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -119,6 +120,7 @@ OnItemClickListener,  OnItemLongClickListener {
          mMediaList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
 
          mSelectedList = (ArrayList<Boolean>)savedInstanceState.getSerializable(USER_SELECTED_LIST);
+         mSelectForReturn = savedInstanceState.getBoolean(RETURNING_VAL);
          
          if (mShowingDelete) {
             createDeleteConfirmDialog().show();
@@ -207,6 +209,7 @@ OnItemClickListener,  OnItemLongClickListener {
       savedInstanceState.putSerializable(HASH_MAP, mLocalURL);
       savedInstanceState.putSerializable(USER_IMAGE_LIST, mMediaList);
       savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
+      savedInstanceState.putBoolean(RETURNING_VAL, mSelectForReturn);
 
       if (mCameraTempFileName != null) {
          savedInstanceState.putString(CAMERA_PATH, mCameraTempFileName);
@@ -556,7 +559,7 @@ OnItemClickListener,  OnItemLongClickListener {
    public void onItemClick(AdapterView<?> adapterView, View view, int position,
     long id) {
       MediaViewItem cell = (MediaViewItem)view;
-      if (mSelectForReturn > 0) {
+      if (mSelectForReturn) {
 			String url = (String) view.getTag();
 
 			if (url == null) {
@@ -696,8 +699,8 @@ OnItemClickListener,  OnItemLongClickListener {
       return bitmap;
    }
 
-   public void setForReturn(int mMediaQuickReturn) {
-		mSelectForReturn = mMediaQuickReturn;
+   public void setForReturn(boolean returnItem) {
+		mSelectForReturn = returnItem;
 	}
 
 }

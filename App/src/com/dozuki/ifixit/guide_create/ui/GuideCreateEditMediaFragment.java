@@ -261,15 +261,31 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    @Override
    public void onClick(View v) {
       String microURL = null;
+      Intent intent = null;
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
             microURL = (String) mImageOne.getTag();
+            if(microURL == null) {
+               intent = new Intent(getActivity(), GalleryActivity.class);
+               intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+               getActivity().startActivityForResult(intent, IMAGE_KEY_1);
+            }
             break;
          case R.id.step_edit_thumb_2:
             microURL = (String) mImageTwo.getTag();
+            if(microURL == null) {
+               intent = new Intent(getActivity(), GalleryActivity.class);
+               intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+               getActivity().startActivityForResult(intent, IMAGE_KEY_2);
+            }
             break;
          case R.id.step_edit_thumb_3:
             microURL = (String) mImageThree.getTag();
+            if(microURL == null) {
+               intent = new Intent(getActivity(), GalleryActivity.class);
+               intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+               getActivity().startActivityForResult(intent, IMAGE_KEY_3);
+            }
             break;
          case R.id.step_edit_thumb_media:
             break;
@@ -279,7 +295,14 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
       if (microURL != null) {
          mImageManager.displayImage(microURL, getActivity(), mLargeImage);
          mLargeImage.invalidate();
+         return;
       }
+      if(microURL != null) {
+         intent = new Intent(getActivity(), GalleryActivity.class);
+         intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+         getActivity().startActivityForResult(intent, IMAGE_KEY_1);
+      }
+      
    }
 
    @Override
@@ -340,6 +363,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    {
       if(imageinfo.getImageid() == NO_IMAGE){
          imagView.setScaleType(ScaleType.CENTER);
+         imagView.setTag(null);
          imagView.setImageResource(R.drawable.ic_btn_add_gallery_image);
          return;
       }
