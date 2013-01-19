@@ -279,6 +279,137 @@ public enum APIEndpoint {
       "POST",
       false
    ),
+   
+   DELETE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return null;
+            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return null;
+           // return new APIEvent.CreateGuide();
+         }
+      },
+      false,
+      true,
+      "DELETE",
+      false
+   ),
+   
+   UPDATE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return null;
+            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return null;
+           // return new APIEvent.CreateGuide();
+         }
+      },
+      false,
+      true,
+      "PATCH",
+      false
+   ),
+   PUBLISH_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" +  query + "/public";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return null;
+            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return null;
+           // return new APIEvent.CreateGuide();
+         }
+      },
+      false,
+      true,
+      "PUT",
+      false
+   ),
+   
+   UNPUBLISH_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" +  query + "/public";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return null;
+            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return null;
+           // return new APIEvent.CreateGuide();
+         }
+      },
+      false,
+      true,
+      "DELETE",
+      false
+   ), 
+   
+   REORDER_GUIDE_STEPS(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" +  query + "/steporder";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return null;
+            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return null;
+           // return new APIEvent.CreateGuide();
+         }
+      },
+      false,
+      true,
+      "PUT",
+      false
+   ),
+   UPDATE_GUIDE_STEP(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" +  query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return null;
+            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return null;
+           // return new APIEvent.CreateGuide();
+         }
+      },
+      false,
+      true,
+      "PATCH",
+      false
+   ),
+
 
    SITES(
       new Endpoint() {

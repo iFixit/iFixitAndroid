@@ -344,13 +344,11 @@ public class GuideCreateStepsEditActivity extends Activity
    }
    
    public void enableSave() {
-      Log.e("dvpoerkpoe","enable");
       mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_blue));
       mSaveStep.setEnabled(true);
    }
    
    public void disableSave() {
-      Log.e("dvpoerkpoe","disable");
       mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_grey));
       mSaveStep.setEnabled(false);
    }

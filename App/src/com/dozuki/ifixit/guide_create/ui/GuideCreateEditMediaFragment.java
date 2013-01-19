@@ -297,11 +297,6 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
          mLargeImage.invalidate();
          return;
       }
-      if(microURL != null) {
-         intent = new Intent(getActivity(), GalleryActivity.class);
-         intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-         getActivity().startActivityForResult(intent, IMAGE_KEY_1);
-      }
       
    }
 
