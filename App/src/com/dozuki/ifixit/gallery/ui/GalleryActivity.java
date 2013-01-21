@@ -377,8 +377,8 @@ public class GalleryActivity extends IfixitActivity implements
 		@Override
 		public boolean onCreateActionMode(ActionMode mode, Menu menu) {
 			// Create the menu from the xml file
-			MenuInflater inflater = getSupportMenuInflater();
-			inflater.inflate(R.menu.gallery_menu, menu);
+		//	MenuInflater inflater = getSupportMenuInflater();
+		//	inflater.inflate(R.menu.gallery_menu, menu);
 			return true;
 		}
 
