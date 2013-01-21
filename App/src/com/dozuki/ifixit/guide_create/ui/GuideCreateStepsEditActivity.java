@@ -81,7 +81,8 @@ public class GuideCreateStepsEditActivity extends Activity
 					.getSerializable(GuideCreateStepsEditActivity.GuideKey);
 			mPagePosition = extras
 					.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
-      } else if (savedInstanceState != null) {
+       } 
+		if (savedInstanceState != null) {
          mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideKey);
          mPagePosition = savedInstanceState.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
