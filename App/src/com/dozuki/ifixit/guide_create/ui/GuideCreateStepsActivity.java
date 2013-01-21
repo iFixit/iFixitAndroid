@@ -64,7 +64,8 @@ public class GuideCreateStepsActivity extends Activity implements GuideCreateInt
 			if (mGuide.getSteps() == null)
 				mGuide.setStepList(new ArrayList<GuideCreateStepObject>());
 			mStepList = mGuide.getSteps();
-		} else if (savedInstanceState != null) {
+		} 
+		if (savedInstanceState != null) {
 			mStepList = mGuide.getSteps();
 			mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          if (mShowingHelp)
@@ -111,11 +112,11 @@ public class GuideCreateStepsActivity extends Activity implements GuideCreateInt
 	}
 
 	@Override 
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		super.onSaveInstanceState(savedInstanceState);
+	public void onSaveInstanceState(Bundle savedInstanceState) {	
 		savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey,
 				mGuide);
 		savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+		super.onSaveInstanceState(savedInstanceState);
 	}
 	
 	@Override
