@@ -34,7 +34,7 @@ import android.view.View.OnLongClickListener;
 import android.widget.ImageView;
 import android.widget.ImageView.ScaleType;
 
-public class GuideCreateEditMediaFragment extends Fragment implements OnClickListener, OnLongClickListener {
+public class GuideCreateEditMediaFragment extends Fragment implements TextWatcher, OnClickListener, OnLongClickListener {
 
    private static String NO_TITLE = "Title";
    public static int NO_IMAGE = -1;;
@@ -95,6 +95,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
 
          mTitle = savedInstanceState.getString(TITLE_KEY);
 
+      }else {
+         mStepTitle.addTextChangedListener(this);
       }
       
       ActionItem addAction =
@@ -146,26 +148,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
             
          }
       });
-
+      
+      
       mStepTitle.setText(mTitle);
-      mStepTitle.addTextChangedListener(new TextWatcher() {
-
-         @Override
-         public void afterTextChanged(Editable s) {
-            Log.i("GuideCreateStepEditFragment", "GuideTitle changed to: " + s.toString());
-            mTitle = s.toString();
-            setGuideDirty();
-         }
-
-         @Override
-         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            mStepTitle.selectAll();
-         }
-
-         @Override
-         public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-      });
 
       fitImagesToSpace(v.getLayoutParams().height, v.getLayoutParams().width);
       setImage(IMAGE_KEY_1);
@@ -242,8 +227,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
 
    public void setStepTitle(String title) {
       mTitle = title;
-      if (mStepTitle != null)
+      if (mStepTitle != null) {
          mStepTitle.setText(mTitle);
+      }
    }
 
    @Override
@@ -461,5 +447,23 @@ public class GuideCreateEditMediaFragment extends Fragment implements OnClickLis
    public void setGuideDirty() {
       ((GuideStepChangedListener) getActivity()).onGuideStepChanged();
    }
+
+
+   @Override
+   public void afterTextChanged(Editable s) {
+      if(mTitle.equals(s.toString())) {
+         return;
+      }
+      mTitle = s.toString();
+      setGuideDirty();
+   }
+
+   @Override
+   public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+      mStepTitle.selectAll();
+   }
+
+   @Override
+   public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
 }
