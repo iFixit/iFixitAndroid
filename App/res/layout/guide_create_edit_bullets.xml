@@ -2,12 +2,16 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    >
-            <com.mobeta.android.dslv.DragSortListView
+    android:gravity="center_horizontal" >
+
+            <ListView
             android:id="@+id/steps_portal_list"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:layout_margin="3dp"
+            android:layout_marginLeft="3dp"
+            android:layout_marginTop="3dp"
+            android:layout_marginBottom="3dp"
+            android:layout_marginRight="40dp"
             android:divider="@color/white"
             android:focusable="true"
             android:focusableInTouchMode="true"

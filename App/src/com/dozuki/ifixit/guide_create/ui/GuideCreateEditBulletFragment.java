@@ -7,6 +7,7 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.FrameLayout;
+import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.Toast;
 
 import android.R.color;
@@ -50,32 +51,15 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
    private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
    ImageView mMediaIcon;
-   DragSortController mController;
    BulletListAdapter mBulletListAdapter;
    boolean mReorderStepsMode;
    ImageView mBottomBarSpinnerIcon;
-   DragSortListView mBulletList;
+   ListView mBulletList;
    ArrayList<StepLine> mLines = new ArrayList<StepLine>();
    private ChooseBulletDialog mChooseBulletDialog;
    private boolean mShowingChooseBulletDialog;
    
-   
-   private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
-      @Override
-      public void drop(int from, int to) {
-         StepLine item = mBulletListAdapter.getItem(from);
-         mBulletListAdapter.remove(item);
-         mBulletListAdapter.insert(item, to);
-         mBulletList.invalidateViews();
-      }
-   };
 
-   private DragSortListView.RemoveListener onRemove = new DragSortListView.RemoveListener() {
-      @Override
-      public void remove(int which) {
-         mBulletListAdapter.remove(mBulletListAdapter.getItem(which));
-      }
-   };
   
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -90,15 +74,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       
 
       mMediaIcon = (ImageView) v.findViewById(R.id.step_edit_thumb_media);
-      mBulletList = (DragSortListView) v
+      mBulletList = (ListView) v
             .findViewById(R.id.steps_portal_list);
-      mBulletList.setDropListener(onDrop);
-      mBulletList.setRemoveListener(onRemove);
-   
-      mController = buildController(mBulletList);
-      mBulletList.setFloatViewManager(mController);
-      mBulletList.setOnTouchListener(mController);
-      mBulletList.setDragEnabled(true);
+
+  
       mReorderStepsMode = false;
       
       
@@ -236,15 +215,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          icon.setImageResource(getBulletResource(items.get(position)
                .getColor()));
          
-         RelativeLayout reorderDragHandle = (RelativeLayout) v.findViewById(R.id.guide_step_drag_handle);
-         if(mReorderStepsMode)
-         {
-             reorderDragHandle.setVisibility(View.VISIBLE);
-         }
-         else
-         {
-             reorderDragHandle.setVisibility(View.GONE);
-         }
+
          
          return v;
       }
