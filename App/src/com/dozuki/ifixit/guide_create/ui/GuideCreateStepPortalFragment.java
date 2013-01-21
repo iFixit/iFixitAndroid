@@ -113,6 +113,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 				item.setTitle("Test Step " + StepID);
 				mGuide.getSteps().add(item);
 				mDragListView.invalidateViews();
+			   launchStepEdit(mGuide.getSteps().size()-1);
 			}
 		});
 		mEditIntroBar = (TextView) view.findViewById(R.id.edit_intro_bar);
