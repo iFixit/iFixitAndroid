@@ -49,7 +49,6 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private static final String SHOWING_BULLET_FRAG = "SHOWING_BULLET_FRAG";
    private static final String BULLET_FRAG_ID = "BULLET_FRAG_ID";
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
-   private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
    ImageView mMediaIcon;
    BulletListAdapter mBulletListAdapter;
    boolean mReorderStepsMode;
@@ -58,6 +57,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    ArrayList<StepLine> mLines = new ArrayList<StepLine>();
    private ChooseBulletDialog mChooseBulletDialog;
    private boolean mShowingChooseBulletDialog;
+   private boolean mReorderModeActive;
    
 
   
@@ -86,10 +86,11 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
 
          mChooseBulletDialog = (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, BULLET_FRAG_ID );
-         mShowingChooseBulletDialog = savedInstanceState.getBoolean(SHOWING_BULLET_FRAG);
+         mShowingChooseBulletDialog = savedInstanceState.getBoolean(SHOWING_BULLET_FRAG, false);
          if(mChooseBulletDialog != null && mShowingChooseBulletDialog) {
             mChooseBulletDialog.setTargetFragment(this, 0);
          }
+         mReorderModeActive = savedInstanceState.getBoolean(SHOWING_REORDER_FRAG, false);
         
       }
       mBulletListAdapter = new BulletListAdapter(this.getActivity(),
@@ -189,7 +190,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          iconFrame.setLayoutParams(params);
          final EditText text = (EditText) v.findViewById(R.id.step_title_textview);
          text.setText(items.get(position).getText());
-         text.requestFocusFromTouch();
+        // text.requestFocusFromTouch();
          text.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -299,6 +300,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          getSupportFragmentManager().putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog );
          savedInstanceState.putBoolean(SHOWING_BULLET_FRAG, mShowingChooseBulletDialog);
       }
+      savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
       
    
    }
@@ -353,6 +355,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    
    private void launchBulletReorder()
    {
+      
+      mReorderModeActive = true;
       GuideCreateBulletReorderFragment mReorderFragment = new GuideCreateBulletReorderFragment();
       mReorderFragment.setLines(mLines);
       FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
@@ -365,7 +369,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
 
    @Override
-   public void onReorderComplete() {
+   public void onReorderComplete() {     
       ((GuideStepChangedListener) getActivity()).enableSave();;
       getChildFragmentManager().popBackStack();
       mBulletListAdapter.notifyDataSetChanged();
@@ -376,4 +380,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       ((GuideStepChangedListener) getActivity()).onGuideStepChanged();
    }
 
+   public boolean isReorderModeActive() {
+      return mReorderModeActive;
+   }
 }

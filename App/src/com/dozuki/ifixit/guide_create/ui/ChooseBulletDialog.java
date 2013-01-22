@@ -1,14 +1,18 @@
 package com.dozuki.ifixit.guide_create.ui;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Dialog;
 import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.app.Fragment;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepBullet.BulletTypes;
 
+import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -151,4 +155,12 @@ public class ChooseBulletDialog extends DialogFragment implements
 		}
 		this.dismiss();
 	}
+	
+	 @Override
+    public void onCancel( DialogInterface d )
+    {
+	      BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
+         frag.onFinishBulletDialog(mStepIndex,"action_cancel");
+         super.onCancel(d);
+    }
 }

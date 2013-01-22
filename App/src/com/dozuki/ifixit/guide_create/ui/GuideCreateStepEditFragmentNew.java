@@ -12,9 +12,10 @@ import android.view.ViewGroup;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateEditMediaFragment.MediaChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 
-public class GuideCreateStepEditFragmentNew extends Fragment {
+public class GuideCreateStepEditFragmentNew extends Fragment implements MediaChangedListener {
   
    public interface GuideStepChangedListener {
       public void onGuideStepChanged();
@@ -22,7 +23,10 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
       public void disableSave();
 
       public void enableSave();
+      
+      
    }
+   
    
    private static final String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    private GuideCreateStepObject mStepObject;
@@ -130,6 +134,15 @@ public class GuideCreateStepEditFragmentNew extends Fragment {
    public void setGuideStep(GuideCreateStepObject guideCreateStepObject) {
       mStepObject = guideCreateStepObject;
       setCopiesForEdit();
+   }
+
+
+
+   @Override
+   public void onMediaChanging() {
+      if(mEditBulletFrag.isReorderModeActive()) {
+          mEditBulletFrag.onReorderComplete();
+      }
    }
    
 
