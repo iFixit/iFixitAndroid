@@ -18,8 +18,9 @@
         android:layout_centerVertical="true"
         android:layout_marginRight="15dp"
         android:layout_toRightOf="@+id/guide_step_item_frame"
-        android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
-        android:imeOptions="actionSend|flagNoEnterAction"
+        android:singleLine="true"
+        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+        android:imeOptions="actionDone"
         android:maxLength="350"
         android:hint="Tell me more" />
 

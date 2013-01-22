@@ -7,4 +7,5 @@
     android:layout_margin="3dp"
     android:dividerHeight="@dimen/topic_list_vertical_spacing"
     android:divider="@color/white"
+    android:background="@color/white"
     android:padding="3dp" />
