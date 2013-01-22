@@ -135,6 +135,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 
 	private class ViewHolder {
 		public TextView stepsView;
+		public TextView stepNumber;
 		public ToggleButton mToggleEdit;
 		public TextView mDeleteButton;
 		public TextView mEditButton;
@@ -156,10 +157,10 @@ public class GuideCreateStepPortalFragment extends Fragment {
 			final GuideCreateStepObject stepObj = getItem(position);
 			if (v != convertView && v != null) {
 				final ViewHolder holder = new ViewHolder();
-
-				TextView tv = (TextView) v
+				holder.stepsView = (TextView) v
 						.findViewById(R.id.step_title_textview);
-				holder.stepsView = tv;
+				holder.stepNumber = (TextView) v
+						.findViewById(R.id.guide_create_step_item_number);
 				holder.mToggleEdit = (ToggleButton) v
 						.findViewById(R.id.step_item_toggle_edit);
 				holder.mImageView = (ImageView) v
@@ -214,6 +215,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 			});
 			String step = getItem(position).getTitle();
 			holder.stepsView.setText(step);
+			holder.stepNumber.setText("Step " + (position + 1));
 			mImageManager.displayImage("", getActivity(), holder.mImageView);
 			setEditMode(isEdit, false, holder.mToggleEdit, holder.mEditBar);
 			return v;

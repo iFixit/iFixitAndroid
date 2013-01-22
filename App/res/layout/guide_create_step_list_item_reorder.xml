@@ -34,6 +34,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
+                style="@android:style/TextAppearance.Medium"
                 android:layout_toRightOf="@+id/guide_step_item_thumbnail_reorder"
                 android:text="" />
 
@@ -53,6 +54,17 @@
                     android:background="@drawable/ic_list_item_move"
                     android:contentDescription="@string/topic_guide_thumbnail" />
             </RelativeLayout>
+
+            <TextView
+                android:id="@+id/guide_create_step_item_number_reorder"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/drag_handle_reorder"
+                android:layout_alignLeft="@+id/step_title_textview_reorder"
+                android:text=""
+                android:textColor="@color/fireswing_dark_grey"
+                android:textSize="12sp"
+                android:textStyle="italic" />
 
         </RelativeLayout>
     </LinearLayout>
