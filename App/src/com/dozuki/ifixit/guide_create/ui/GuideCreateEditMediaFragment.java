@@ -42,7 +42,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    }
    
    private static String NO_TITLE = "Title";
-   public static int NO_IMAGE = -1;;
+   public static int NO_IMAGE = -1;
    public static final int IMAGE_KEY_1 = 1;
    public static final int IMAGE_KEY_2 = 2;
    public static final int IMAGE_KEY_3 = 3;
@@ -294,11 +294,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-    //  super.onActivityResult(requestCode, resultCode, data);
       switch (requestCode) {
          case IMAGE_KEY_1:
             if (resultCode == Activity.RESULT_OK) {
-               Log.e("LOL", " result meida result");
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mImageOneInfo.setText(media.getGuid());
                mImageOneInfo.setImageId(Integer.valueOf(media.getItemId()));

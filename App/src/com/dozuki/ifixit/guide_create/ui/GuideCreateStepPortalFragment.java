@@ -26,6 +26,7 @@ import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.ToggleButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView.ScaleType;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -33,6 +34,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
@@ -110,8 +112,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
 					mNoStepsText.setVisibility(View.GONE);
 				GuideCreateStepObject item = new GuideCreateStepObject(StepID++);
 				item.setTitle("Test Step " + StepID);
-				//mGuide.getSteps().add(item);
-				//mDragListView.invalidateViews();
+				// mGuide.getSteps().add(item);
+				// mDragListView.invalidateViews();
 				launchStepEdit(item);
 			}
 		});
@@ -173,8 +175,9 @@ public class GuideCreateStepPortalFragment extends Fragment {
 
 				holder.mEditBar = (LinearLayout) v
 						.findViewById(R.id.step_create_item_edit_section);
-				
-				holder.mStepFrame = (FrameLayout) v.findViewById(R.id.guide_step_edit_frame);
+
+				holder.mStepFrame = (FrameLayout) v
+						.findViewById(R.id.guide_step_edit_frame);
 
 				v.setTag(holder);
 			}
@@ -193,11 +196,11 @@ public class GuideCreateStepPortalFragment extends Fragment {
 							// mDragListView.invalidateViews();
 						}
 					});
-			holder.mStepFrame.setOnClickListener(new OnClickListener(){
+			holder.mStepFrame.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					holder.mToggleEdit.toggle();
-				}		
+				}
 			});
 			holder.mDeleteButton.setOnClickListener(new OnClickListener() {
 				@Override
@@ -216,7 +219,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 			String step = getItem(position).getTitle();
 			holder.stepsView.setText(step);
 			holder.stepNumber.setText("Step " + (position + 1));
-			mImageManager.displayImage("", getActivity(), holder.mImageView);
+			setImageThumb(getItem(position).getImages(), holder.mImageView);
 			setEditMode(isEdit, false, holder.mToggleEdit, holder.mEditBar);
 			return v;
 		}
@@ -297,29 +300,31 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		}
 	}
 
-	private void launchStepEdit( ArrayList<GuideCreateStepObject> stepList , int curStep) {
+	private void launchStepEdit(ArrayList<GuideCreateStepObject> stepList,
+			int curStep) {
 		// GuideCreateStepsEditActivity
 		Intent intent = new Intent(getActivity(),
 				GuideCreateStepsEditActivity.class);
 		intent.putExtra(GuideCreateStepsEditActivity.GuideKey, mGuide);
-		intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
+		intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY,
+				stepList);
 		intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
 		startActivityForResult(intent,
 				GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
 	}
-	
-   private void launchStepEdit(GuideCreateStepObject curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new  ArrayList<GuideCreateStepObject>();
-      stepList.addAll(mGuide.getSteps());
-      stepList.add(curStep);
-      launchStepEdit(stepList , stepList.size()-1);
-   }
-   
-   private void launchStepEdit(int curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new  ArrayList<GuideCreateStepObject>();
-      stepList.addAll(mGuide.getSteps());
-      launchStepEdit(stepList , curStep);
-   }
+
+	private void launchStepEdit(GuideCreateStepObject curStep) {
+		ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+		stepList.addAll(mGuide.getSteps());
+		stepList.add(curStep);
+		launchStepEdit(stepList, stepList.size() - 1);
+	}
+
+	private void launchStepEdit(int curStep) {
+		ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+		stepList.addAll(mGuide.getSteps());
+		launchStepEdit(stepList, curStep);
+	}
 
 	private void launchGuideEditIntro() {
 		GuideIntroFragment newFragment = new GuideIntroFragment();
@@ -362,12 +367,11 @@ public class GuideCreateStepPortalFragment extends Fragment {
 			}
 		}
 	}
-	
-	private void verifyReorder()
-	{
-		if(mReorderStepsBar == null || mGuide == null)
+
+	private void verifyReorder() {
+		if (mReorderStepsBar == null || mGuide == null)
 			return;
-		
+
 		if (mGuide.getSteps().size() < 2) {
 			mReorderStepsBar.setAlpha(0.7f);
 			mReorderStepsBar.setOnClickListener(null);
@@ -382,4 +386,23 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		}
 	}
 
+	private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
+		
+		for(StepImage imageinfo : imageList)
+		{
+			if(imageinfo.getImageid() > 0)
+			{
+				imagView.setScaleType(ScaleType.FIT_CENTER);
+				mImageManager.displayImage(imageinfo.getText()
+						+ MainApplication.get().getImageSizes().getThumb(),
+						getActivity(), imagView);
+				imagView.setTag(imageinfo.getText()
+						+ MainApplication.get().getImageSizes().getThumb());
+				imagView.invalidate();
+				return;
+			}
+		}
+		
+		
+	}
 }

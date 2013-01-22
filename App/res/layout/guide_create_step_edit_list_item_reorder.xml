@@ -13,6 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@+id/guide_step_item_frame"
+        android:layout_toLeftOf="@+id/guide_step_drag_handle"
         android:hint="Tell me more" />
 
     <FrameLayout   
