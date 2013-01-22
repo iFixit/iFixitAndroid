@@ -3,6 +3,8 @@ package com.dozuki.ifixit.guide_create.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import android.util.Log;
+
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 
@@ -188,16 +190,20 @@ public class GuideCreateObject implements Serializable {
 		return mGuideid == lhs.mGuideid;
 	}
 
-   public void sync(GuideCreateStepObject changedStep) {
+   public void sync(GuideCreateStepObject changedStep, int position) {
+      
       for (GuideCreateStepObject so : mStepList) {
           if(so.equals(changedStep))
           {
-             so = changedStep;
+
+             so.setTitle(changedStep.getTitle());
+             so.setImages(changedStep.getImages());
+             so.setLines(changedStep.getLines());
              return;
           }
       }
       
-      mStepList.add(changedStep);
+      mStepList.add(position, changedStep);
 
    }
 }
