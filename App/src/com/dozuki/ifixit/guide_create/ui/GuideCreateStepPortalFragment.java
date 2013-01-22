@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.holoeverywhere.app.Activity;
@@ -109,9 +110,9 @@ public class GuideCreateStepPortalFragment extends Fragment {
 					mNoStepsText.setVisibility(View.GONE);
 				GuideCreateStepObject item = new GuideCreateStepObject(StepID++);
 				item.setTitle("Test Step " + StepID);
-				mGuide.getSteps().add(item);
-				mDragListView.invalidateViews();
-				launchStepEdit(mGuide.getSteps().size() - 1);
+				//mGuide.getSteps().add(item);
+				//mDragListView.invalidateViews();
+				launchStepEdit(item);
 			}
 		});
 		mEditIntroBar = (TextView) view.findViewById(R.id.edit_intro_bar);
@@ -294,15 +295,29 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		}
 	}
 
-	private void launchStepEdit(int curStep) {
+	private void launchStepEdit( ArrayList<GuideCreateStepObject> stepList , int curStep) {
 		// GuideCreateStepsEditActivity
 		Intent intent = new Intent(getActivity(),
 				GuideCreateStepsEditActivity.class);
 		intent.putExtra(GuideCreateStepsEditActivity.GuideKey, mGuide);
+		intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
 		intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
 		startActivityForResult(intent,
 				GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
 	}
+	
+   private void launchStepEdit(GuideCreateStepObject curStep) {
+      ArrayList<GuideCreateStepObject> stepList = new  ArrayList<GuideCreateStepObject>();
+      stepList.addAll(mGuide.getSteps());
+      stepList.add(curStep);
+      launchStepEdit(stepList , stepList.size()-1);
+   }
+   
+   private void launchStepEdit(int curStep) {
+      ArrayList<GuideCreateStepObject> stepList = new  ArrayList<GuideCreateStepObject>();
+      stepList.addAll(mGuide.getSteps());
+      launchStepEdit(stepList , curStep);
+   }
 
 	private void launchGuideEditIntro() {
 		GuideIntroFragment newFragment = new GuideIntroFragment();

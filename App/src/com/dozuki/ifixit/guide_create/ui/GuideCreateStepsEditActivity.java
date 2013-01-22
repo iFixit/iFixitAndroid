@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import java.util.ArrayList;
+
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
 
@@ -48,9 +50,11 @@ public class GuideCreateStepsEditActivity extends Activity
 	private static final int  NEW_STEP_ID = 1;
 	private static final int DELETE_STEP_ID = 2;
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
+   public static final String GUIDE_STEP_LIST_KEY = "GUIDE_STEP_LIST_KEY";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
 	private GuideCreateStepEditFragmentNew mCurStepFragment;
+	private ArrayList<GuideCreateStepObject> mStepList;
 	private ImageView mSpinnerMenu;
 	private Button mSaveStep;
 	private ImageView mViewSteps;
@@ -77,19 +81,18 @@ public class GuideCreateStepsEditActivity extends Activity
 		Bundle extras = getIntent().getExtras();
 		mPagePosition = 0;
 		if (extras != null) {
-			mGuide = (GuideCreateObject) extras
-					.getSerializable(GuideCreateStepsEditActivity.GuideKey);
-			mPagePosition = extras
-					.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
-       } 
+         mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsEditActivity.GuideKey);
+         mPagePosition = extras.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
+         mStepList = (ArrayList<GuideCreateStepObject>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
+      }
 		if (savedInstanceState != null) {
          mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideKey);
          mPagePosition = savedInstanceState.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+         mStepList = (ArrayList<GuideCreateStepObject>) savedInstanceState.getSerializable(GUIDE_STEP_LIST_KEY);
         // mStepAdapter.restoreState(arg0, arg1)
-         
          
          if (mShowingHelp)
             createHelpDialog().show();
@@ -138,13 +141,13 @@ public class GuideCreateStepsEditActivity extends Activity
                case NEW_STEP_ID:
                   GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.StepID++);
                   item.setTitle("Test Step " + GuideCreateStepPortalFragment.StepID);
-                  mGuide.getSteps().add(mPagePosition + 1, item);
+                  mStepList.add(mPagePosition + 1, item);
                   mPager.invalidate();
                   titleIndicator.invalidate();
                   mPager.setCurrentItem(mPagePosition + 1, true);
                   break;
                case DELETE_STEP_ID:
-                  if (!mGuide.getSteps().isEmpty())
+                  if (!mStepList.isEmpty())
                      createDeleteDialog(GuideCreateStepsEditActivity.this).show();
                   break;
             }
@@ -210,6 +213,7 @@ public class GuideCreateStepsEditActivity extends Activity
 				mPagePosition);
 		savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
 		savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+		savedInstanceState.putSerializable(GUIDE_STEP_LIST_KEY, mStepList);
 	}
 
 	public class StepAdapter extends FragmentStatePagerAdapter {
@@ -220,19 +224,19 @@ public class GuideCreateStepsEditActivity extends Activity
 
 		@Override
 		public int getCount() {
-			return mGuide.getSteps().size();
+			return mStepList.size();
 		}
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return mGuide.getSteps().get(position).getTitle();
+			return mStepList.get(position).getTitle();
 		}
 
 		@Override
 		public Fragment getItem(int position) {
 			GuideCreateStepEditFragmentNew frag = new GuideCreateStepEditFragmentNew();
 			Bundle args = new Bundle();
-			args.putSerializable(GUIDE_STEP_KEY, mGuide.getSteps().get(position));
+			args.putSerializable(GUIDE_STEP_KEY, mStepList.get(position));
 			frag.setArguments(args);
 			return frag;
 		}
@@ -268,7 +272,7 @@ public class GuideCreateStepsEditActivity extends Activity
 		case R.id.step_edit_view_save:
 		   disableSave();
 		   mSavingIndicator.setVisibility(View.VISIBLE);
-		   mGuide.replace(mCurStepFragment.syncGuideChanges());
+		   mGuide.sync(mCurStepFragment.syncGuideChanges());
 		   mSavingIndicator.setVisibility(View.INVISIBLE);
 		   disableSave();
 			break;
@@ -280,8 +284,13 @@ public class GuideCreateStepsEditActivity extends Activity
 
 	private void deleteStep() {
 	   int curStep = mPagePosition;
-      mGuide.getSteps().remove(mPagePosition);
-      if(mGuide.getSteps().size() == 0) {
+	   mStepList.remove(mPagePosition);
+	   //remove from mGuide
+	   if(mPagePosition < mGuide.getSteps().size()) {
+	      mGuide.getSteps().remove(mPagePosition);
+	   }
+	   
+      if(mStepList.size() == 0) {
          finish();
       }
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
@@ -305,7 +314,7 @@ public class GuideCreateStepsEditActivity extends Activity
 				.setMessage(
 						context.getString(R.string.step_edit_confirm_delete_message)
 								+ " "
-								+ mGuide.getSteps().get(mPagePosition)
+								+ mStepList.get(mPagePosition)
 										.getTitle() + "?")
 				.setPositiveButton(context.getString(R.string.logout_confirm),
 						new DialogInterface.OnClickListener() {
