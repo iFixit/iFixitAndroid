@@ -460,7 +460,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    @Override
    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      mStepTitle.selectAll();
+      //mStepTitle.selectAll();
    }
 
    @Override

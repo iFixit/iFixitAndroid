@@ -335,6 +335,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       {
          mLines.remove(index);
       }
+      else if(color.equals("action_cancel"))
+      {
+        return;
+      }
       else
       {
          curStep.setColor(color);

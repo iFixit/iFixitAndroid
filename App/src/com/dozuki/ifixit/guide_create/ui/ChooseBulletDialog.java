@@ -146,6 +146,7 @@ public class ChooseBulletDialog extends DialogFragment implements
          frag.onFinishBulletDialog(mStepIndex,"action_delete");
          break;
 		case R.id.bullet_dialog_cancel:
+		   frag.onFinishBulletDialog(mStepIndex,"action_cancel");
 			break;
 		}
 		this.dismiss();

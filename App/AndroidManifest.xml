@@ -42,7 +42,8 @@
 	        <activity android:name=".guide_create.ui.GuideCreateActivity"></activity>
       <activity android:name=".guide_create.ui.GuideCreateStepsActivity"></activity>
       <activity android:name=".guide_create.ui.GuideCreateStepsEditActivity"
-          android:windowSoftInputMode="adjustPan"></activity>
+          android:windowSoftInputMode="adjustPan"
+          android:screenOrientation="portrait"></activity>
       <activity android:name=".login.ui.OpenIDActivity"></activity>
       <activity android:name=".topic_view.ui.TopicViewActivity"></activity>
       <activity android:name=".guide_view.ui.GuideViewActivity"
