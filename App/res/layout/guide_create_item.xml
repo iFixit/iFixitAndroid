@@ -10,7 +10,8 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:id="@+id/guide_create_frame" >
 
         <RelativeLayout
             android:id="@+id/guide_create_upper_section"

@@ -17,6 +17,7 @@ import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -61,6 +62,15 @@ public class GuideCreateListItem extends RelativeLayout {
             mGuideCreateObject.setEditMode(isChecked);
             setEditMode(isChecked, true);
          }
+      });
+      FrameLayout frame = (FrameLayout) findViewById(R.id.guide_create_frame);
+      frame.setOnClickListener(new OnClickListener(){
+
+		@Override
+		public void onClick(View v) {
+			mToggleEdit.toggle();
+		}
+    	  
       });
       mDeleteButton = (TextView) findViewById(R.id.guide_create_item_delete);
       mDeleteButton.setOnClickListener(new OnClickListener() {

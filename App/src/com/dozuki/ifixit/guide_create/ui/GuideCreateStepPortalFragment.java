@@ -18,6 +18,7 @@ import android.view.animation.Animation.AnimationListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.ListView;
@@ -52,10 +53,10 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		super();
 		mGuide = guide;
 	}
-	
+
 	public GuideCreateStepPortalFragment() {
-      super();
-   }
+		super();
+	}
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -66,43 +67,40 @@ public class GuideCreateStepPortalFragment extends Fragment {
 					.getImageManager();
 		}
 		mAdapter = new StepAdapter(mGuide.getSteps());
-		//APIService.call((Activity) getActivity(), APIService.getGuideAPICall(mGuide.getGuideid()));
+		// APIService.call((Activity) getActivity(),
+		// APIService.getGuideAPICall(mGuide.getGuideid()));
 	}
-	
-	 @Subscribe
-	   public void onGuideCreated(APIEvent.Guide event) {
-	      if (!event.hasError()) {
-	         for(GuideStep gs : event.getResult().getStepList())
-	            mGuide.getSteps().add(new GuideCreateStepObject(gs));
-	         mAdapter.notifyDataSetChanged();
-	      } else {
-	        
-	      }
-	   }
 
-	   @Override
-	   public void onResume() {
-	      super.onResume();
-	      MainApplication.getBus().register(this);
-	   }
+	@Subscribe
+	public void onGuideCreated(APIEvent.Guide event) {
+		if (!event.hasError()) {
+			for (GuideStep gs : event.getResult().getStepList())
+				mGuide.getSteps().add(new GuideCreateStepObject(gs));
+			mAdapter.notifyDataSetChanged();
+		} else {
 
-	   @Override
-	   public void onPause() {
-	      super.onPause();
+		}
+	}
 
-	      MainApplication.getBus().unregister(this);
-	   }
+	@Override
+	public void onResume() {
+		super.onResume();
+		MainApplication.getBus().register(this);
+	}
 
+	@Override
+	public void onPause() {
+		super.onPause();
 
-	
+		MainApplication.getBus().unregister(this);
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.guide_create_steps_portal,
 				container, false);
-		mDragListView = (ListView) view
-				.findViewById(R.id.steps_portal_list);
+		mDragListView = (ListView) view.findViewById(R.id.steps_portal_list);
 		mAddStepBar = (TextView) view.findViewById(R.id.add_step_bar);
 		mAddStepBar.setOnClickListener(new OnClickListener() {
 			@Override
@@ -113,7 +111,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 				item.setTitle("Test Step " + StepID);
 				mGuide.getSteps().add(item);
 				mDragListView.invalidateViews();
-			   launchStepEdit(mGuide.getSteps().size()-1);
+				launchStepEdit(mGuide.getSteps().size() - 1);
 			}
 		});
 		mEditIntroBar = (TextView) view.findViewById(R.id.edit_intro_bar);
@@ -124,13 +122,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
 			}
 		});
 		mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
-		mReorderStepsBar.setOnClickListener(new OnClickListener() {
-			@Override
-			public void onClick(View v) {
-				launchStepReorder();
-			}
-		});
-		
+		verifyReorder();
+
 		mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
 
 		if (mGuide.getSteps().isEmpty())
@@ -146,6 +139,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		public TextView mEditButton;
 		public LinearLayout mEditBar;
 		public ImageView mImageView;
+		public FrameLayout mStepFrame;
 	}
 
 	private class StepAdapter extends ArrayAdapter<GuideCreateStepObject> {
@@ -177,6 +171,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
 
 				holder.mEditBar = (LinearLayout) v
 						.findViewById(R.id.step_create_item_edit_section);
+				
+				holder.mStepFrame = (FrameLayout) v.findViewById(R.id.guide_step_edit_frame);
 
 				v.setTag(holder);
 			}
@@ -192,14 +188,21 @@ public class GuideCreateStepPortalFragment extends Fragment {
 							stepObj.setEditMode(isChecked);
 							setEditMode(isChecked, true, holder.mToggleEdit,
 									holder.mEditBar);
-							//mDragListView.invalidateViews();
+							// mDragListView.invalidateViews();
 						}
 					});
+			holder.mStepFrame.setOnClickListener(new OnClickListener(){
+				@Override
+				public void onClick(View v) {
+					holder.mToggleEdit.toggle();
+				}		
+			});
 			holder.mDeleteButton.setOnClickListener(new OnClickListener() {
 				@Override
 				public void onClick(View v) {
 					mGuide.deleteStep(stepObj);
 					mDragListView.invalidateViews();
+					verifyReorder();
 				}
 			});
 			holder.mEditButton.setOnClickListener(new OnClickListener() {
@@ -215,78 +218,83 @@ public class GuideCreateStepPortalFragment extends Fragment {
 			return v;
 		}
 
-      public void setEditMode(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
-         final LinearLayout mEditBar) {
-         if (isChecked) {
-            if (animate) {
-               Animation rotateAnimation =
-                  AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate_clockwise);
+		public void setEditMode(boolean isChecked, boolean animate,
+				final ToggleButton mToggleEdit, final LinearLayout mEditBar) {
+			if (isChecked) {
+				if (animate) {
+					Animation rotateAnimation = AnimationUtils.loadAnimation(
+							getActivity().getApplicationContext(),
+							R.anim.rotate_clockwise);
 
-               mToggleEdit.startAnimation(rotateAnimation);
+					mToggleEdit.startAnimation(rotateAnimation);
 
-               // Creating the expand animation for the item
-               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-               expandAni.setAnimationListener(new AnimationListener() {
+					// Creating the expand animation for the item
+					ExpandAnimation expandAni = new ExpandAnimation(mEditBar,
+							ANIMATION_DURATION);
+					expandAni.setAnimationListener(new AnimationListener() {
 
-                  @Override
-                  public void onAnimationEnd(Animation animation) {
-                     mDragListView.invalidateViews();
-                  }
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							mDragListView.invalidateViews();
+						}
 
-                  @Override
-                  public void onAnimationRepeat(Animation animation) {
-                     // TODO Auto-generated method stub
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+							// TODO Auto-generated method stub
 
-                  }
+						}
 
-                  @Override
-                  public void onAnimationStart(Animation animation) {
+						@Override
+						public void onAnimationStart(Animation animation) {
 
-                  }
-               });
-               // Start the animation on the toolbar
-               mEditBar.startAnimation(expandAni);
-            } else {
-               mEditBar.setVisibility(View.VISIBLE);
-               ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
-            }
+						}
+					});
+					// Start the animation on the toolbar
+					mEditBar.startAnimation(expandAni);
+				} else {
+					mEditBar.setVisibility(View.VISIBLE);
+					((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
+				}
 
-         } else {
-            if (animate) {
-               Animation rotateAnimation =
-                  AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.rotate_counterclockwise);
+			} else {
+				if (animate) {
+					Animation rotateAnimation = AnimationUtils.loadAnimation(
+							getActivity().getApplicationContext(),
+							R.anim.rotate_counterclockwise);
 
-               mToggleEdit.startAnimation(rotateAnimation);
-               // Creating the expand animation for the item
-               ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-               mDragListView.invalidate();
-               expandAni.setAnimationListener(new AnimationListener() {
+					mToggleEdit.startAnimation(rotateAnimation);
+					// Creating the expand animation for the item
+					ExpandAnimation expandAni = new ExpandAnimation(mEditBar,
+							ANIMATION_DURATION);
+					mDragListView.invalidate();
+					expandAni.setAnimationListener(new AnimationListener() {
 
-                  @Override
-                  public void onAnimationEnd(Animation animation) {
-                     mDragListView.invalidateViews();
-                     mDragListView.requestLayout();
-                  }
+						@Override
+						public void onAnimationEnd(Animation animation) {
+							mDragListView.invalidateViews();
+							mDragListView.requestLayout();
+						}
 
-                  @Override
-                  public void onAnimationRepeat(Animation animation) {}
+						@Override
+						public void onAnimationRepeat(Animation animation) {
+						}
 
-                  @Override
-                  public void onAnimationStart(Animation animation) {
+						@Override
+						public void onAnimationStart(Animation animation) {
 
-                  }
-               });
-               // Start the animation on the toolbar
-               mEditBar.startAnimation(expandAni);
-            } else {
-               mEditBar.setVisibility(View.GONE);
-               ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
-            }
-         }
-      }
-   }
+						}
+					});
+					// Start the animation on the toolbar
+					mEditBar.startAnimation(expandAni);
+				} else {
+					mEditBar.setVisibility(View.GONE);
+					((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
+				}
+			}
+		}
+	}
 
-   private void launchStepEdit(int curStep) {
+	private void launchStepEdit(int curStep) {
 		// GuideCreateStepsEditActivity
 		Intent intent = new Intent(getActivity(),
 				GuideCreateStepsEditActivity.class);
@@ -306,13 +314,14 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		transaction.addToBackStack(null);
 		transaction.commitAllowingStateLoss();
 	}
-	
-	private void launchStepReorder()
-	{
+
+	private void launchStepReorder() {
 		GuideCreateStepReorderFragment newFragment = new GuideCreateStepReorderFragment();
 		newFragment.setGuide(mGuide);
-		FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-		transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
+		FragmentTransaction transaction = getActivity()
+				.getSupportFragmentManager().beginTransaction();
+		transaction.replace(R.id.guide_create_fragment_steps_container,
+				newFragment);
 		transaction.addToBackStack(null);
 		transaction.commitAllowingStateLoss();
 	}
@@ -329,6 +338,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
 					Log.i("StepPortalFragmetn", "non null guide update");
 					mGuide = guide;
 					mAdapter = new StepAdapter(mGuide.getSteps());
+					verifyReorder();
 					mDragListView.setAdapter(mAdapter);
 					mDragListView.invalidateViews();
 				}
@@ -336,6 +346,23 @@ public class GuideCreateStepPortalFragment extends Fragment {
 		}
 	}
 	
-
+	private void verifyReorder()
+	{
+		if(mReorderStepsBar == null || mGuide == null)
+			return;
+		
+		if (mGuide.getSteps().size() < 2) {
+			mReorderStepsBar.setAlpha(0.7f);
+			mReorderStepsBar.setOnClickListener(null);
+		} else {
+			mReorderStepsBar.setAlpha(1.0f);
+			mReorderStepsBar.setOnClickListener(new OnClickListener() {
+				@Override
+				public void onClick(View v) {
+					launchStepReorder();
+				}
+			});
+		}
+	}
 
 }
