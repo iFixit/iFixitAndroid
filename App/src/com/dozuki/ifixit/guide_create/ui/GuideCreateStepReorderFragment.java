@@ -140,6 +140,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
 
 	private class ViewHolder {
 		public TextView stepsView;
+		public TextView stepNumber;
 		public ImageView mImageView;
 	}
 
@@ -158,7 +159,8 @@ public class GuideCreateStepReorderFragment extends Fragment {
 				TextView tv = (TextView) v
 						.findViewById(R.id.step_title_textview_reorder);
 				holder.stepsView = tv;
-
+				holder.stepNumber = (TextView) v
+				.findViewById(R.id.guide_create_step_item_number_reorder);
 				holder.mImageView = (ImageView) v
 						.findViewById(R.id.guide_step_item_thumbnail_reorder);
 				v.setTag(holder);
@@ -166,6 +168,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
 			final ViewHolder holder = (ViewHolder) v.getTag();
 			String step = getItem(position).getTitle();
 			holder.stepsView.setText(step);
+			holder.stepNumber.setText("Step " + (position + 1));
 			mImageManager.displayImage("", getActivity(), holder.mImageView);
 			return v;
 		}
