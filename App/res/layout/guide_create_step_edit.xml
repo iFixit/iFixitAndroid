@@ -11,7 +11,7 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:background="@color/black" />
+        android:background="@color/fireswing_black" />
 
     
     <com.dozuki.ifixit.guide_create.ui.LockableViewPager
@@ -27,7 +27,7 @@
         android:layout_width="match_parent"
         android:layout_height="@dimen/gallery_top_bar_height"
         android:layout_alignParentBottom="true"
-        android:background="@color/black"
+        android:background="@color/fireswing_black"
         android:clickable="true" >
 
         <ImageView

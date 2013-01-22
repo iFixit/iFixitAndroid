@@ -21,4 +21,5 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_grey">#F7777777</color>
     <color name="fireswing_grey">#EEEEEE</color>
     <color name="fireswing_blue">#33B5E5</color>
+     <color name="fireswing_black">#333333</color>
 </resources>
