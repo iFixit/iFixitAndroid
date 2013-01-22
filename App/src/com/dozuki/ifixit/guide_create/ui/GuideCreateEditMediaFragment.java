@@ -122,9 +122,10 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
                case REPLACE_IMAGE_ID:
                   Intent intent = new Intent(getActivity(), GalleryActivity.class);
                   intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-                  startActivityForResult(intent, mCurSelectedKey);
+                  getActivity().startActivityForResult(intent, mCurSelectedKey);
                   return;
                case REMOVE_IMAGE_ID:
+                  setGuideDirty();
                   if(mCurSelectedKey == IMAGE_KEY_1) {
                      mImageOneInfo = new StepImage(NO_IMAGE);
                      setImage(IMAGE_KEY_1);
@@ -294,6 +295,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
       switch (requestCode) {
          case IMAGE_KEY_1:
             if (resultCode == Activity.RESULT_OK) {

@@ -176,7 +176,7 @@ public class GuideCreateStepsEditActivity extends Activity
 	   public boolean onOptionsItemSelected(MenuItem item) {
 	      switch (item.getItemId()) {
 	      case android.R.id.home:
-	         finish();
+	         finishEdit();
 	         return true;
 	      case R.id.help_button:
 	         createHelpDialog().show();
@@ -254,6 +254,9 @@ public class GuideCreateStepsEditActivity extends Activity
 				Object object) {
 			super.setPrimaryItem(container, position, object);
 			if(mPagePosition != position) {
+			   if(mIsStepDirty) {
+		        save();
+			   }
 			   disableSave();
 			   mIsStepDirty = false;
 			}
@@ -262,24 +265,42 @@ public class GuideCreateStepsEditActivity extends Activity
 			 Log.i(TAG, "page selected: " + mPagePosition);
 		}
 	}
+	
+	
+	private void save()
+	{
+      disableSave();
+      mSavingIndicator.setVisibility(View.VISIBLE);
+      mGuide.sync(mCurStepFragment.syncGuideChanges(), mPagePosition);
+      mSavingIndicator.setVisibility(View.INVISIBLE);
+      mIsStepDirty = false;
+	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.step_edit_view_steps:
-			finish();
+		   finishEdit();
 			break;
 		case R.id.step_edit_view_save:
-		   disableSave();
-		   mSavingIndicator.setVisibility(View.VISIBLE);
-		   mGuide.sync(mCurStepFragment.syncGuideChanges());
-		   mSavingIndicator.setVisibility(View.INVISIBLE);
-		   disableSave();
+		   save();
 			break;
 		case R.id.step_edit_spinner:
 			mQuickAction.show(v);
 			break;
+		case android.R.id.home:
+		   finishEdit();
+			break;
 		}
+	}
+
+	
+	public void finishEdit() {
+	   if(mIsStepDirty) {
+         createExitWarningDialog().show();
+      } else {
+         finish();
+      }
 	}
 
 	private void deleteStep() {
@@ -395,8 +416,50 @@ public class GuideCreateStepsEditActivity extends Activity
    }
    
    
+   
+   private AlertDialog createExitWarningDialog() {
+      mShowingHelp = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+            .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
+            .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
+            .setPositiveButton(getString(R.string.guide_create_confirm_leave_without_save_confirm),
+               new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                   //  mShowingHelp = false;
+                     finish();
+                     dialog.dismiss();
+                  }
+               }).setNegativeButton(R.string.guide_create_confirm_leave_without_save_cancel, new DialogInterface.OnClickListener() {
+
+            public void onClick(DialogInterface dialog, int id) {
+                    // mShowingHelp = false;
+               
+                     dialog.dismiss();
+                  }
+               });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingHelp = false;
+         }
+      });
+
+      return dialog;
+   }
+   
+   
+   
    public void enableViewPager(boolean unlocked) {
       mPager.setPagingEnabled(unlocked);
+   }
+   
+   @Override
+   public void onBackPressed() {
+      finishEdit();
    }
 	
 }
