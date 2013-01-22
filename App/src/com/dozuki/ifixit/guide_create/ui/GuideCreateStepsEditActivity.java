@@ -279,11 +279,16 @@ public class GuideCreateStepsEditActivity extends Activity
 	}
 
 	private void deleteStep() {
-		mGuide.getSteps().remove(mPagePosition);
-		  mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-	      mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
-	      mPager.setAdapter(mStepAdapter);
-	     mPager.setCurrentItem(mPagePosition);
+	   int curStep = mPagePosition;
+      mGuide.getSteps().remove(mPagePosition);
+      if(mGuide.getSteps().size() == 0) {
+         finish();
+      }
+      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+      mPager.setAdapter(mStepAdapter);
+      mPager.setCurrentItem(curStep);
+      mPager.invalidate();
+      titleIndicator.invalidate();
 		
 	}
 	
