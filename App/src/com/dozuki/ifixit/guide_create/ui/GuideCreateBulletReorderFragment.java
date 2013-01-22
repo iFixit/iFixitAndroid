@@ -66,6 +66,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
          mAdapter.remove(mAdapter.getItem(which));
       }
    };
+   private ActionMode mActionMode;
 
    /**
     * Called in onCreateView. Override this to provide a custom
@@ -94,7 +95,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       
-      getSherlockActivity().startActionMode(new ContextualStepReorder());
+     mActionMode =  (getSherlockActivity().startActionMode(new ContextualStepReorder()));
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
@@ -143,6 +144,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
 
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+       
          return true;
       }
 
@@ -198,6 +200,14 @@ public class GuideCreateBulletReorderFragment extends Fragment {
          holder.mItemHolder.setLayoutParams(params);
 
          return v;
+      }
+   }
+   
+   public void onDetach () {
+      super.onDetach();
+      if (mActionMode != null) 
+      {
+         mActionMode.finish();
       }
    }
 

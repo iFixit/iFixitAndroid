@@ -36,6 +36,11 @@ import android.widget.ImageView.ScaleType;
 
 public class GuideCreateEditMediaFragment extends Fragment implements TextWatcher, OnClickListener, OnLongClickListener {
 
+   public interface MediaChangedListener {
+      public void onMediaChanging();
+      
+   }
+   
    private static String NO_TITLE = "Title";
    public static int NO_IMAGE = -1;;
    public static final int IMAGE_KEY_1 = 1;
@@ -248,6 +253,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    public void onClick(View v) {
       String microURL = null;
       Intent intent = null;
+      ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
             microURL = (String) mImageOne.getTag();
@@ -392,6 +398,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    @Override
    public boolean onLongClick(View v) {
       Intent intent;
+      ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
             if(mImageOneInfo.getImageid() != NO_IMAGE)
@@ -460,7 +467,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    @Override
    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      //mStepTitle.selectAll();
+
+      ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
    }
 
    @Override
