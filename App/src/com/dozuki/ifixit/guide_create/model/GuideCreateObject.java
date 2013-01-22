@@ -188,13 +188,16 @@ public class GuideCreateObject implements Serializable {
 		return mGuideid == lhs.mGuideid;
 	}
 
-   public void replace(GuideCreateStepObject changedStep) {
+   public void sync(GuideCreateStepObject changedStep) {
       for (GuideCreateStepObject so : mStepList) {
           if(so.equals(changedStep))
           {
              so = changedStep;
+             return;
           }
       }
+      
+      mStepList.add(changedStep);
 
    }
 }
