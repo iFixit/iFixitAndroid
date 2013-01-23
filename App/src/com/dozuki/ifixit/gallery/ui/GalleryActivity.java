@@ -86,7 +86,8 @@ public class GalleryActivity extends IfixitActivity implements
 
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
-
+		prepareNavigationSpinner(mActionBar);
+		
 		mMediaCategoryFragments = new HashMap<String, MediaFragment>();
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS,
 				new PhotoMediaFragment());
@@ -262,16 +263,16 @@ public class GalleryActivity extends IfixitActivity implements
    public boolean onPrepareOptionsMenu(Menu menu) {
       super.onPrepareOptionsMenu(menu);
 
-      MenuItem gallery = menu.findItem(R.id.gallery_button);
+     // MenuItem gallery = menu.findItem(R.id.gallery_button);
       MenuItem help = menu.findItem(R.id.help_button);
 
       if (help != null) {
          help.setVisible(true);
       }
 
-      if (gallery != null) {
-         gallery.setVisible(false);
-      }
+     // if (gallery != null) {
+      //   gallery.setVisible(false);
+     // }
 
       return true;
    }

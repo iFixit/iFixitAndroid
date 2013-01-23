@@ -35,9 +35,10 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragmentNew.GuideStepChangedListener;
+import com.dozuki.ifixit.util.IfixitActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
-public class GuideCreateStepsEditActivity extends Activity
+public class GuideCreateStepsEditActivity extends IfixitActivity
 		implements OnClickListener, GuideStepChangedListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
 	public static String GuideKey = "GuideKey";
@@ -77,6 +78,7 @@ public class GuideCreateStepsEditActivity extends Activity
 				((MainApplication) getApplication()).getSite().mTitle);
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
+		prepareNavigationSpinner(mActionBar);
 		mConfirmDelete = false;
 		Bundle extras = getIntent().getExtras();
 		mPagePosition = 0;
