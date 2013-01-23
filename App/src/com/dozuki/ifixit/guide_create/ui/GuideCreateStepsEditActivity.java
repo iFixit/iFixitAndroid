@@ -22,6 +22,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 
 import android.widget.ImageView;
@@ -56,9 +57,9 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
 	private GuideCreateObject mGuide;
 	private GuideCreateStepEditFragmentNew mCurStepFragment;
 	private ArrayList<GuideCreateStepObject> mStepList;
-	private ImageView mSpinnerMenu;
+	private ImageButton mSpinnerMenu;
 	private Button mSaveStep;
-	private ImageView mViewSteps;
+	private ImageButton mViewSteps;
 	private StepAdapter mStepAdapter;
 	private LockableViewPager mPager;
 	private TitlePageIndicator titleIndicator;
@@ -111,8 +112,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
       {
          enableSave();
       }
-      mSpinnerMenu = (ImageView) findViewById(R.id.step_edit_spinner);
-      mViewSteps = (ImageView) findViewById(R.id.step_edit_view_steps);
+      mSpinnerMenu = (ImageButton) findViewById(R.id.step_edit_spinner);
+      mViewSteps = (ImageButton) findViewById(R.id.step_edit_view_steps);
       mBottomBar = (RelativeLayout) findViewById(R.id.guide_create_edit_bottom_bar);
       mSavingIndicator = (ProgressBar) findViewById(R.id.step_edit_save_progress_bar);
 
