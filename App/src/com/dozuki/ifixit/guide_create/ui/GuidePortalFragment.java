@@ -1,13 +1,11 @@
 package com.dozuki.ifixit.guide_create.ui;
 
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 
 import android.os.Bundle;
 import org.holoeverywhere.LayoutInflater;
 
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -19,16 +17,14 @@ import org.holoeverywhere.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 
 public class GuidePortalFragment extends Fragment {
 	private static final int NO_ID = -1;
    private static final String CURRENT_OPEN_ITEM = null;
-   private ListView mGridView;
+   private ListView mGuideList;
 	private ImageManager mImageManager;
 	private GuideCreateListAdapter mGuideAdapter;
 	private GuidePortalFragment mSelf;
@@ -62,8 +58,8 @@ public class GuidePortalFragment extends Fragment {
     Bundle savedInstanceState) {
 		View view = inflater.inflate(R.layout.guide_create_portal, container,
 				false);
-		mGridView = (ListView) view.findViewById(R.id.guide_create_listview);
-		mGridView.setAdapter(mGuideAdapter);
+		mGuideList = (ListView) view.findViewById(R.id.guide_create_listview);
+		mGuideList.setAdapter(mGuideAdapter);
 		mNoGuidesText = (TextView) view.findViewById(R.id.no_guides_text);
 		if (mParentRef.getGuideList().isEmpty())
 			mNoGuidesText.setVisibility(View.VISIBLE);
@@ -140,7 +136,7 @@ public class GuidePortalFragment extends Fragment {
 		}
 
 		public void invalidatedView() {
-			mGridView.invalidateViews();
+			mGuideList.invalidateViews();
 		}
 
 		@Override
@@ -171,7 +167,7 @@ public class GuidePortalFragment extends Fragment {
 
       if (mCurOpenGuideObjectID != NO_ID) {
 
-         GuideCreateListItem view = ((GuideCreateListItem) mGridView.findViewWithTag(mCurOpenGuideObjectID));
+         GuideCreateListItem view = ((GuideCreateListItem) mGuideList.findViewWithTag(mCurOpenGuideObjectID));
          if (view != null) {
             view.setChecked(false);
          }
