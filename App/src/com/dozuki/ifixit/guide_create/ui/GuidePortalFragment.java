@@ -26,13 +26,16 @@ import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 
 public class GuidePortalFragment extends Fragment {
-	private ListView mGridView;
+	private static final int NO_ID = -1;
+   private static final String CURRENT_OPEN_ITEM = null;
+   private ListView mGridView;
 	private ImageManager mImageManager;
 	private GuideCreateListAdapter mGuideAdapter;
 	private GuidePortalFragment mSelf;
 	private GuideCreateActivity mParentRef;
 	private RelativeLayout mAddGuideBar;
 	private TextView mNoGuidesText;
+	private int mCurOpenGuideObjectID;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -45,6 +48,11 @@ public class GuidePortalFragment extends Fragment {
 		mSelf = this;
 		mParentRef = (GuideCreateActivity) getActivity();
 		mGuideAdapter = new GuideCreateListAdapter();
+		mCurOpenGuideObjectID = NO_ID;
+		if(savedInstanceState != null) {
+		   mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
+		}
+		
      // APIService.call((Activity) getActivity(),
        //  APIService.getUserGuidesAPICall(((MainApplication) getActivity().getApplication()).getUser().getUserId()));
 	}
@@ -137,16 +145,44 @@ public class GuidePortalFragment extends Fragment {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			GuideCreateListItem itemView = (GuideCreateListItem) convertView;
-			GuideCreateObject listRef = mParentRef.getGuideList().get(position);
-			if (convertView == null) {
-				itemView = new GuideCreateListItem(getActivity(),
-						mImageManager, mSelf, listRef);
-			}
-			itemView.setGuideObject(listRef);
-			itemView.setEditMode(listRef.getEditMode(), false);
-			itemView.setGuideItem(listRef.getTitle(), "");
-			return itemView;
+         GuideCreateListItem itemView = (GuideCreateListItem) convertView;
+         GuideCreateObject listRef = mParentRef.getGuideList().get(position);
+         itemView = new GuideCreateListItem(getActivity(), mImageManager, mSelf, listRef);
+         itemView.setTag(listRef.getGuideid());
+         itemView.setGuideObject(listRef);
+         itemView.setEditMode(listRef.getEditMode(), false);
+         itemView.setGuideItem(listRef.getTitle(), "");
+         return itemView;
 		}
 	}
+	
+	@Override
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
+      super.onSaveInstanceState(savedInstanceState);
+   }
+   
+	
+   public void onItemSelected(int id, boolean sel) {
+      if (!sel) {
+         mCurOpenGuideObjectID = NO_ID;
+         return;
+      }
+
+      if (mCurOpenGuideObjectID != NO_ID) {
+
+         GuideCreateListItem view = ((GuideCreateListItem) mGridView.findViewWithTag(mCurOpenGuideObjectID));
+         if (view != null) {
+            view.setChecked(false);
+         }
+
+         for (int i = 0; i < mParentRef.getGuideList().size(); i++) {
+
+            if (mParentRef.getGuideList().get(i).getGuideid() == mCurOpenGuideObjectID) {
+               mParentRef.getGuideList().get(i).setEditMode(false);
+            }
+         }
+      }
+      mCurOpenGuideObjectID = id;
+   }
 }

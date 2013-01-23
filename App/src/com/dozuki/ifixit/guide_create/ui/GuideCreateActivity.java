@@ -171,6 +171,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       guideObject.setIntroduction(intro);
       
       getGuideList().add(guideObject);
+      Log.e("ID", "GUIDE OBJECT: " + guideObject.getGuideid());
       
      // APIService.call((Activity) getActivity(),
       //   APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));

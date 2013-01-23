@@ -20,7 +20,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnFocusChangeListener;
+import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.View.OnClickListener;
@@ -49,6 +52,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private static final String SHOWING_BULLET_FRAG = "SHOWING_BULLET_FRAG";
    private static final String BULLET_FRAG_ID = "BULLET_FRAG_ID";
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
+   private static final int NONE = -1;
    ImageView mMediaIcon;
    BulletListAdapter mBulletListAdapter;
    boolean mReorderStepsMode;
@@ -58,6 +62,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private ChooseBulletDialog mChooseBulletDialog;
    private boolean mShowingChooseBulletDialog;
    private boolean mReorderModeActive;
+   private int mCurrentFocusedRow;
    
 
   
@@ -79,7 +84,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
   
       mReorderStepsMode = false;
-      
+      mCurrentFocusedRow = NONE;
       
       if (savedInstanceState != null) {
          mReorderStepsMode = savedInstanceState.getBoolean(REORDER_STEPS_KEY);
@@ -98,8 +103,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             mLines);
       mBulletList.setAdapter(mBulletListAdapter);
       
-      mBulletList.setFocusableInTouchMode(true);
-      mBulletList.requestFocus();
+     // mBulletList.setFocusableInTouchMode(true);
+     // mBulletList.requestFocus();
       
        return v;
    }
@@ -141,11 +146,9 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       @Override
       public View getView(final int position, View convertView, ViewGroup parent) {
          View v = convertView;
-         //if (v == null) {
             LayoutInflater vi = (LayoutInflater) con
                   .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
-         //}
 
          if (position == items.size()) {
             
@@ -211,6 +214,35 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             }
 
          });
+         
+         text.setOnFocusChangeListener(new OnFocusChangeListener() {
+
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+               if (hasFocus) {
+                  mCurrentFocusedRow = position;
+               }
+            }
+         });
+
+         if (mCurrentFocusedRow == position) {
+            text.requestFocus();
+         } else {
+            text.setFocusableInTouchMode(false);
+         }
+
+         text.setOnTouchListener(new OnTouchListener() {
+
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+               if (event.getAction() == MotionEvent.ACTION_UP) {
+                  v.setFocusableInTouchMode(true);
+               }
+               return false;
+            }
+
+         });
+         
          ImageView icon = (ImageView) v
                .findViewById(R.id.guide_step_item_thumbnail);
          icon.setImageResource(getBulletResource(items.get(position)
