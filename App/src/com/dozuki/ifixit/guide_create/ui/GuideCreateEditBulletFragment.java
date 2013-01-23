@@ -159,7 +159,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             v.findViewById(R.id.step_title_textview).setVisibility(
                   View.GONE);
             newItem.setVisibility(View.VISIBLE);
-            newItem.setOnClickListener(new OnClickListener() {
+            v.setOnClickListener(new OnClickListener() {
 
                @Override
                public void onClick(View v) {
@@ -168,6 +168,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
                   notifyDataSetChanged();
                }
             });
+            
+            v.setBackgroundColor(getResources().getColor(R.color.fireswing_grey));
             return v;
          }
          final int mPos = position;

@@ -30,15 +30,14 @@
         android:background="@color/fireswing_black"
         android:clickable="true" >
 
-        <ImageView
+        <ImageButton
             android:id="@+id/step_edit_view_steps"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/ic_menu_bot_steplist"
-            android:clickable="true" />
+            android:background="@drawable/ic_menu_bot_steplist" />
 
         <Button
             android:id="@+id/step_edit_view_save"
@@ -68,7 +67,7 @@
             android:textColor="@color/gray" />
         -->
 
-        <ImageView
+        <ImageButton
             android:id="@+id/step_edit_spinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -76,8 +75,6 @@
             android:layout_alignTop="@+id/step_edit_view_steps"
             android:layout_marginRight="20dp"
             android:background="@drawable/ic_menu_bot_more"
-            android:clickable="true"
-            
             android:paddingRight="20dp" />
 
         <ProgressBar
