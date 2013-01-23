@@ -60,6 +60,7 @@ public class GuideCreateListItem extends RelativeLayout {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mGuideCreateObject.setEditMode(isChecked);
+            portalRef.onItemSelected(mGuideCreateObject.getGuideid(), isChecked);
             setEditMode(isChecked, true);
          }
       });
@@ -167,6 +168,10 @@ public class GuideCreateListItem extends RelativeLayout {
 	public boolean editEnabled() {
 		return editBarVisible;
 	}
+	
+	public void setChecked(boolean check) {
+	   mToggleEdit.setChecked(check);
+	}
 
 	public void setGuideItem(String title, String image) {
 		mTitleView.setText(title);
@@ -189,4 +194,5 @@ public class GuideCreateListItem extends RelativeLayout {
 		 */
 
 	}
+
 }
