@@ -22,8 +22,9 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
+import com.dozuki.ifixit.util.IfixitActivity;
 
-public class GuideCreateActivity extends Activity implements GuideCreateIntroListener {
+public class GuideCreateActivity extends IfixitActivity implements GuideCreateIntroListener {
 	static final int GUIDE_STEP_LIST_REQUEST = 0;
    private static final String SHOWING_HELP = "SHOWING_HELP";
 	private static String GuideObjectKey = "GuideCreateObject";
@@ -71,7 +72,7 @@ public class GuideCreateActivity extends Activity implements GuideCreateIntroLis
 				((MainApplication) getApplication()).getSite().mTitle);
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
-
+		prepareNavigationSpinner(mActionBar);
 		if (savedInstanceState != null) {
 			mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState
 					.getSerializable(GuideObjectKey);

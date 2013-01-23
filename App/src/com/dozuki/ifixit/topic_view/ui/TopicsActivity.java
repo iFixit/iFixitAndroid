@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.topic_view.ui;
 
+import android.app.ActionBar;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -8,8 +9,12 @@ import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
+import android.widget.SpinnerAdapter;
 
+import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
@@ -22,7 +27,10 @@ import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
 
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.TextView;
 
 public class TopicsActivity extends IfixitActivity
  implements TopicSelectedListener, OnBackStackChangedListener {
@@ -46,7 +54,9 @@ public class TopicsActivity extends IfixitActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      getSupportActionBar().setTitle(MainApplication.get().  getSiteDisplayTitle());
+	  com.actionbarsherlock.app.ActionBar actionbar = getSupportActionBar();
+	  prepareNavigationSpinner(actionbar);
+	  
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.topics);
@@ -216,8 +226,9 @@ public class TopicsActivity extends IfixitActivity
    public boolean onCreateOptionsMenu(Menu menu) {
 
       MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.menu_bar, menu);
 
+      inflater.inflate(R.menu.menu_bar, menu);
+     
       return super.onCreateOptionsMenu(menu);
    }
 

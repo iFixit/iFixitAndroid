@@ -1,8 +1,6 @@
 <?xml version = "1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
-    
-    
-    <item
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <!-- <item
         android:id="@+id/my_guides_button"
         android:icon="@drawable/ic_menu_spinner_guides"
         android:showAsAction="ifRoom"
@@ -11,11 +9,10 @@
         android:id="@+id/gallery_button"
         android:icon="@drawable/ic_menu_spinner_gallery"
         android:showAsAction="ifRoom"
-        android:title="My Gallery"/> 
+        android:title="My Gallery"/>  -->
     <item
         android:id="@+id/logout_button"
         android:icon="@drawable/ic_action_exit"
         android:showAsAction="never"
         android:title="@string/logout_title"/>
-
 </menu>
