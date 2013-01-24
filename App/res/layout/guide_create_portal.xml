@@ -23,20 +23,19 @@
         android:background="@color/fireswing_grey"
         android:clickable="true" >
 
-        
         <TextView
             android:id="@+id/add_guide_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:gravity="center_vertical"
             android:drawableLeft="@drawable/ic_add_list_item"
             android:drawablePadding="4dp"
+            android:gravity="center"
             android:text="@string/add_guide"
-            android:layout_marginLeft="16dp"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/dozuki_grey"/>
-        
+            android:textColor="@color/dozuki_grey" />
+
     </RelativeLayout>
 
      <TextView
