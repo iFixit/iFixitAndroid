@@ -281,7 +281,7 @@ public abstract class IfixitActivity extends Activity {
       super.onStart();
    }
 	
-	/**adapter for the navigation bar**/
+   /** adapter for the navigation bar **/
 
    public class NavigationItemAdapter extends BaseAdapter {
 
@@ -290,12 +290,10 @@ public abstract class IfixitActivity extends Activity {
       ArrayList<NavigationItem> data;
       LayoutInflater inflater;
 
-      public NavigationItemAdapter(Context a, int textViewResourceId,
-            ArrayList<NavigationItem> data) {
+      public NavigationItemAdapter(Context a, int textViewResourceId, ArrayList<NavigationItem> data) {
          // super(a, textViewResourceId, data);
          this.data = data;
-         inflater = (LayoutInflater) a
-               .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+         inflater = (LayoutInflater) a.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
          this.context = a;
          this.layoutResourceId = textViewResourceId;
 
@@ -304,27 +302,21 @@ public abstract class IfixitActivity extends Activity {
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
          View v = convertView;
-             LayoutInflater vi =
-                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            v = inflater.inflate(R.layout.navigation_item_selected, null);
-           TextView title = (TextView) v.findViewById(R.id.selected_navigation_item_text);
-      
-     
+         v = inflater.inflate(R.layout.navigation_item_selected, null);
+         TextView title = (TextView) v.findViewById(R.id.selected_navigation_item_text);
          final NavigationItem item = data.get(position);
          if (item != null) {
-           title.setText(item.title);
+            title.setText(item.title);
          }
          return v;
       }
-      
+
       @Override
       public View getDropDownView(int position, View convertView, ViewGroup parent) {
          View v = convertView;
-         LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
          v = inflater.inflate(R.layout.navigation_item, null);
          TextView title = (TextView) v.findViewById(R.id.navigation_item_text);
          ImageView image = (ImageView) v.findViewById(R.id.navigation_item_icon);
-
          final NavigationItem item = data.get(position);
          if (item != null) {
             title.setText(item.title);
@@ -352,8 +344,7 @@ public abstract class IfixitActivity extends Activity {
          return 0;
       }
    }
-   
-   
+
    public class NavigationItem {
       public int icon;
       public String title;

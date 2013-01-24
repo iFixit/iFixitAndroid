@@ -70,7 +70,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
    public DragSortController buildController(DragSortListView dslv) {
       DragSortController controller = new DragSortController(dslv);
       controller.setDragHandleId(R.id.drag_handle_reorder);
-      // controller.setClickRemoveId(R.id.click_remove);
       controller.setRemoveEnabled(false);
       controller.setSortEnabled(true);
       controller.setDragInitMode(DragSortController.ON_DOWN);
@@ -86,7 +85,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
-
       if (savedInstanceState != null) {
          mGuide = (GuideCreateObject) savedInstanceState.get(GuideCreateStepsActivity.GuideKey);
       }
@@ -184,9 +182,8 @@ public class GuideCreateStepReorderFragment extends Fragment {
          return v;
       }
    }
-   
-   private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
 
+   private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
       for (StepImage imageinfo : imageList) {
          if (imageinfo.getImageid() > 0) {
             imagView.setScaleType(ScaleType.FIT_CENTER);
