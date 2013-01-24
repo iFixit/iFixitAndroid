@@ -55,14 +55,14 @@ public class TopicsActivity extends IfixitActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-	  com.actionbarsherlock.app.ActionBar actionbar = getSupportActionBar();
-	  prepareNavigationSpinner(actionbar);
-	  TASK_ID =this.getTaskId();
-     this.getSupportActionBar().setSelectedNavigationItem(0);
 	  
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.topics);
+      com.actionbarsherlock.app.ActionBar actionbar = getSupportActionBar();
+      prepareNavigationSpinner(actionbar);
+      TASK_ID =this.getTaskId();
+      this.getSupportActionBar().setSelectedNavigationItem(0);
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);

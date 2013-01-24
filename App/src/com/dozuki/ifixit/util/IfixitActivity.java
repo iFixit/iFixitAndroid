@@ -1,12 +1,19 @@
 package com.dozuki.ifixit.util;
 
+import java.util.ArrayList;
+
 import android.app.ActionBar;
 import android.app.ActivityManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.SpinnerAdapter;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
@@ -22,7 +29,9 @@ import com.dozuki.ifixit.login.ui.LogoutDialog;
 import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.squareup.otto.Subscribe;
 
+import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.widget.TextView;
 
 /**
  * Base Activity that performs various functions that all Activities in this app
@@ -139,10 +148,24 @@ public abstract class IfixitActivity extends Activity {
 	
 	public void prepareNavigationSpinner(com.actionbarsherlock.app.ActionBar actionbar)
 	{
+	   
+	   
+      ArrayList<NavigationItem> data = new ArrayList<NavigationItem>();
+      data.add(new NavigationItem(R.drawable.ic_menu_spinner_browse,
+            "Browse", 1));
+      data.add(new NavigationItem(R.drawable.ic_menu_spinner_guides,
+         "My Guides", 2));
+
+
+      NavigationItemAdapter adapter = new NavigationItemAdapter(this, R.layout.navigation_item,
+            data);
+	   ///////////
+	   
 		  actionbar.setTitle(MainApplication.get().getSiteDisplayTitle());
 		  actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		  SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.action_list,
-		          android.R.layout.simple_spinner_dropdown_item);
+
+		 /* SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.action_list,
+		          android.R.layout.simple_spinner_dropdown_item);*/
 		  OnNavigationListener mOnNavigationListener = new OnNavigationListener() {
 			   //String[] strings = getResources().getStringArray(R.array.action_list);
 			   @Override
@@ -151,7 +174,7 @@ public abstract class IfixitActivity extends Activity {
 			     return true;
 			   }
 			 };
-		  actionbar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
+		  actionbar.setListNavigationCallbacks(adapter, mOnNavigationListener);
 	}
 
    public void onSpinnerItemSelected(int position) {
@@ -244,4 +267,96 @@ public abstract class IfixitActivity extends Activity {
 	public boolean neverFinishActivityOnLogout() {
 		return false;
 	}
+	
+	
+	
+	/**adapter for the navigation bar**/
+
+   public class NavigationItemAdapter extends BaseAdapter {
+
+      Context context;
+      int layoutResourceId;
+      ArrayList<NavigationItem> data;
+      LayoutInflater inflater;
+
+      public NavigationItemAdapter(Context a, int textViewResourceId,
+            ArrayList<NavigationItem> data) {
+         // super(a, textViewResourceId, data);
+         this.data = data;
+         inflater = (LayoutInflater) a
+               .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+         this.context = a;
+         this.layoutResourceId = textViewResourceId;
+
+      }
+
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+         View v = convertView;
+             LayoutInflater vi =
+                (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            v = inflater.inflate(R.layout.navigation_item_selected, null);
+           TextView title = (TextView) v.findViewById(R.id.selected_navigation_item_text);
+      
+     
+         final NavigationItem item = data.get(position);
+         if (item != null) {
+           title.setText(item.title);
+         }
+         return v;
+      }
+      
+      @Override
+      public View getDropDownView(int position, View convertView, ViewGroup parent) {
+         View v = convertView;
+         LayoutInflater vi = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+         v = inflater.inflate(R.layout.navigation_item, null);
+         TextView title = (TextView) v.findViewById(R.id.navigation_item_text);
+         ImageView image = (ImageView) v.findViewById(R.id.navigation_item_icon);
+
+         final NavigationItem item = data.get(position);
+         if (item != null) {
+            title.setText(item.title);
+            image.setImageResource(item.icon);
+
+         }
+         return v;
+      }
+
+      @Override
+      public int getCount() {
+         // TODO Auto-generated method stub
+         return data.size();
+      }
+
+      @Override
+      public Object getItem(int position) {
+         // TODO Auto-generated method stub
+         return null;
+      }
+
+      @Override
+      public long getItemId(int position) {
+         // TODO Auto-generated method stub
+         return 0;
+      }
+   }
+   
+   
+   public class NavigationItem {
+      public int icon;
+      public String title;
+      public int id;
+
+      public NavigationItem() {
+         super();
+      }
+
+      public NavigationItem(int icon, String title, int id) {
+         super();
+         this.icon = icon;
+         this.title = title;
+         this.id = id;
+      }
+   }
 }
