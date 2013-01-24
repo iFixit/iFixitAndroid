@@ -134,6 +134,8 @@
    
     <string name="guide_create_edit_step_media_replace">Replace Image</string>
     <string name="guide_create_edit_step_media_remove">Remove Image</string>
+    <string name="guide_create_edit_step_add_action">Add Step</string>
+    <string name="guide_create_edit_step_delete_action">Delete Action</string>
    
    <string name="guide_create_confirm_leave_without_save_title">Leave Without Saving?</string>
    <string name="guide_create_confirm_leave_without_save_body">If you leave now all your changes to the current step will be lost.</string>
