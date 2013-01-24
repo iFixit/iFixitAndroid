@@ -1,8 +1,11 @@
 package com.dozuki.ifixit.util;
 
 import android.app.ActionBar;
+import android.app.ActivityManager;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.SpinnerAdapter;
 
@@ -16,6 +19,7 @@ import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateActivity;
 import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.ui.LogoutDialog;
+import com.dozuki.ifixit.topic_view.ui.TopicsActivity;
 import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.app.Activity;
@@ -76,6 +80,7 @@ public abstract class IfixitActivity extends Activity {
 		 */
 		setTheme(MainApplication.get().getSiteTheme());
 		super.onCreate(savedState);
+		
 	}
 
 	/**
@@ -119,14 +124,10 @@ public abstract class IfixitActivity extends Activity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		Intent intent = null;
 		switch (item.getItemId()) {
-		/*case R.id.gallery_button:
+		case R.id.gallery_button:
 			intent = new Intent(this, GalleryActivity.class);
 			startActivity(intent);
 			return true;
-				case R.id.my_guides_button:
-			intent = new Intent(this, GuideCreateActivity.class);
-			startActivity(intent);
-			return true;*/
 		case R.id.logout_button:
 			LogoutDialog.create(this).show();
 			return true;
@@ -153,24 +154,30 @@ public abstract class IfixitActivity extends Activity {
 		  actionbar.setListNavigationCallbacks(mSpinnerAdapter, mOnNavigationListener);
 	}
 
-	public void onSpinnerItemSelected(int position) {
-		Intent intent = null;
-		switch (position) {
-		// view
-		case 0:
-			return;
-			// create
-		case 1:
-			intent = new Intent(this, GuideCreateActivity.class);
-			startActivity(intent);
-			return;
-			// gallery
-		case 2:
-			intent = new Intent(this, GalleryActivity.class);
-			startActivity(intent);
-			return;
-		}
-	}
+   public void onSpinnerItemSelected(int position) {
+      Intent intent = null;
+      switch (position) {
+      // view
+         case 0:
+            if (Build.VERSION.SDK_INT > 10 && TopicsActivity.TASK_ID != -1) {
+               ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+               activityManager.moveTaskToFront(TopicsActivity.TASK_ID, ActivityManager.MOVE_TASK_WITH_HOME);
+               return;
+            }
+            intent = new Intent(this, TopicsActivity.class);
+            startActivity(intent);
+            return;
+         case 1:
+            if (Build.VERSION.SDK_INT > 10 && GuideCreateActivity.TASK_ID != -1) {
+               ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
+               activityManager.moveTaskToFront(GuideCreateActivity.TASK_ID, ActivityManager.MOVE_TASK_WITH_HOME);
+               return;
+            }
+            intent = new Intent(this, GuideCreateActivity.class);
+            startActivity(intent);
+            return;
+      }
+   }
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {

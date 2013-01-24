@@ -43,6 +43,7 @@ public class TopicsActivity extends IfixitActivity
     * activity and go back to the sites list.
     */
    private static final boolean UP_NAVIGATION_FINISH_ACTIVITY = false;
+   public static int TASK_ID = -1;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -56,6 +57,8 @@ public class TopicsActivity extends IfixitActivity
    public void onCreate(Bundle savedInstanceState) {
 	  com.actionbarsherlock.app.ActionBar actionbar = getSupportActionBar();
 	  prepareNavigationSpinner(actionbar);
+	  TASK_ID =this.getTaskId();
+     this.getSupportActionBar().setSelectedNavigationItem(0);
 	  
       super.onCreate(savedInstanceState);
 
@@ -254,4 +257,17 @@ public class TopicsActivity extends IfixitActivity
             return super.onOptionsItemSelected(item);
       }
    }
+   
+   @Override
+   protected void onDestroy () {
+      super.onDestroy();
+      TASK_ID = -1;
+   }
+   
+   @Override
+   public void onResume() {
+      super.onResume();
+      this.getSupportActionBar().setSelectedNavigationItem(0);
+   }
+   
 }

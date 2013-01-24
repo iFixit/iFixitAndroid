@@ -80,6 +80,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
 		prepareNavigationSpinner(mActionBar);
+		this.getSupportActionBar().setSelectedNavigationItem(1);
 		mConfirmDelete = false;
 		Bundle extras = getIntent().getExtras();
 		mPagePosition = 0;
@@ -465,4 +466,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
       finishEdit();
    }
 	
+   public void onResume() {
+      super.onResume();
+      this.getSupportActionBar().setSelectedNavigationItem(1);
+   }
 }

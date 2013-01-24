@@ -86,7 +86,6 @@ public class GalleryActivity extends IfixitActivity implements
 
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
-		prepareNavigationSpinner(mActionBar);
 		
 		mMediaCategoryFragments = new HashMap<String, MediaFragment>();
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS,

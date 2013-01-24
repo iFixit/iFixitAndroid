@@ -11,6 +11,7 @@
    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.REORDER_TASKS"/>
 
    <application android:name=".MainApplication"
             android:allowBackup="true"
@@ -21,7 +22,8 @@
       <activity android:name=".dozuki.ui.SiteListActivity"
                 android:launchMode="singleTop" ></activity>
       <activity android:name=".topic_view.ui.TopicsActivity"
-                android:launchMode="singleTop">
+                android:launchMode="singleTask"
+                android:taskAffinity=".topics">
          <intent-filter>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -39,8 +41,11 @@
       </activity>
 
       <activity android:name=".gallery.ui.GalleryActivity"></activity>
-	        <activity android:name=".guide_create.ui.GuideCreateActivity"></activity>
-      <activity android:name=".guide_create.ui.GuideCreateStepsActivity"></activity>
+	        <activity android:name=".guide_create.ui.GuideCreateActivity"
+	            android:launchMode="singleTask"
+	            android:taskAffinity=".guidecreate"></activity>
+      <activity android:name=".guide_create.ui.GuideCreateStepsActivity" 
+          android:launchMode="singleTop"></activity>
       <activity android:name=".guide_create.ui.GuideCreateStepsEditActivity"
           android:windowSoftInputMode="adjustPan"
           android:screenOrientation="portrait"></activity>

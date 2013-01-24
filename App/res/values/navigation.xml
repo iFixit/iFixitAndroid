@@ -3,6 +3,5 @@
     <string-array name="action_list">
         <item>View Guides</item>
         <item>Create Guides</item>
-        <item>My Gallery</item>
     </string-array>
 </resources>

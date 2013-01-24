@@ -58,6 +58,8 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
 		prepareNavigationSpinner(mActionBar);
+	   this.getSupportActionBar().setSelectedNavigationItem(1);
+		
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
 			mGuide = (GuideCreateObject) extras
@@ -186,5 +188,10 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 
       getSupportFragmentManager().popBackStack();
       
+   }
+   
+   public void onResume() {
+      super.onResume();
+      this.getSupportActionBar().setSelectedNavigationItem(1);
    }
 }
