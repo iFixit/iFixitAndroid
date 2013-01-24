@@ -63,47 +63,42 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
 		mGuideList.add(guide);
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		if (savedInstanceState != null) {
-			mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState
-					.getSerializable(GuideObjectKey);
-			mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-			if (mShowingHelp)
+   @SuppressWarnings("unchecked")
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setTheme(((MainApplication) getApplication()).getSiteTheme());
+      getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
+      mActionBar = getSupportActionBar();
+      mActionBar.setTitle("");
+      prepareNavigationSpinner(mActionBar);
+      TASK_ID = this.getTaskId();
+      this.getSupportActionBar().setSelectedNavigationItem(1);
+
+      mGuideList = new ArrayList<GuideCreateObject>();
+      if (savedInstanceState != null) {
+         mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState.getSerializable(GuideObjectKey);
+         mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+         if (mShowingHelp)
             createHelpDialog().show();
-		}
-		
-		
-		super.onCreate(savedInstanceState);
-		 mGuideList = new ArrayList<GuideCreateObject>();
+      }
 
-	      setTheme(((MainApplication) getApplication()).getSiteTheme());
-	      getSupportActionBar().setTitle(
-	            ((MainApplication) getApplication()).getSite().mTitle);
-	      mActionBar = getSupportActionBar();
-	      mActionBar.setTitle("");
-	      prepareNavigationSpinner(mActionBar);
-	      TASK_ID =this.getTaskId();
-	      this.getSupportActionBar().setSelectedNavigationItem(1);
+      setContentView(R.layout.guide_create);
 
-		setContentView(R.layout.guide_create);
+      getSupportFragmentManager().addOnBackStackChangedListener(getListener());
+      // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      String tag = "guide_portal_fragment";
+      if (findViewById(R.id.guide_create_fragment_container) != null
+         && getSupportFragmentManager().findFragmentByTag(tag) == null) {
+         mGuidePortal = new GuidePortalFragment();
+         // mGuidePortal.setRetainInstance(true);
+         getSupportFragmentManager().beginTransaction().add(R.id.guide_create_fragment_container, mGuidePortal, tag)
+            .commit();
+      }
 
-		getSupportFragmentManager()
-				.addOnBackStackChangedListener(getListener());
-		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-		String tag = "guide_portal_fragment";
-		if (findViewById(R.id.guide_create_fragment_container) != null && getSupportFragmentManager().findFragmentByTag(tag) == null) {	
-			mGuidePortal = new GuidePortalFragment();
-		//	mGuidePortal.setRetainInstance(true);
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.guide_create_fragment_container, mGuidePortal, tag)
-					.commit();
-		}
-		
-		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
-		
-	}
+      getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+
+   }
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
