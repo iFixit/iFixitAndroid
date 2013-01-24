@@ -26,7 +26,6 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -38,9 +37,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    public interface MediaChangedListener {
       public void onMediaChanging();
-      
    }
-   
+
    private static String NO_TITLE = "Title";
    public static int NO_IMAGE = -1;
    public static final int IMAGE_KEY_1 = 1;
@@ -50,22 +48,20 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    private static final int REPLACE_IMAGE_ID = 1;
    private static final int REMOVE_IMAGE_ID = 2;
 
-   EditText mStepTitle;
+   private EditText mStepTitle;
    // images
-   ImageManager mImageManager;
-   ImageView mLargeImage;
-   ImageView mImageOne;
-   ImageView mImageTwo;
-   ImageView mImageThree;
-   StepImage mImageOneInfo = new StepImage(NO_IMAGE);
-   StepImage mImageTwoInfo = new StepImage(NO_IMAGE);
-   StepImage mImageThreeInfo = new StepImage(NO_IMAGE);
+   private ImageManager mImageManager;
+   private ImageView mLargeImage;
+   private ImageView mImageOne;
+   private ImageView mImageTwo;
+   private ImageView mImageThree;
+   private StepImage mImageOneInfo = new StepImage(NO_IMAGE);
+   private StepImage mImageTwoInfo = new StepImage(NO_IMAGE);
+   private StepImage mImageThreeInfo = new StepImage(NO_IMAGE);
    private int mCurSelectedKey;
 
-   // video
-
    // title
-   String mTitle = NO_TITLE;
+   private String mTitle = NO_TITLE;
    private QuickAction mQuickAction;
 
    @Override
@@ -91,73 +87,38 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       mImageThree.setOnClickListener(this);
 
       if (savedInstanceState != null) {
-
          mImageOneInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_1);
-
          mImageTwoInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_2);
-
          mImageThreeInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_3);
-
          mTitle = savedInstanceState.getString(TITLE_KEY);
-
-      }else {
-         mStepTitle.addTextChangedListener(this);
       }
-      
+      mStepTitle.addTextChangedListener(this);
       ActionItem addAction =
-         new ActionItem(REPLACE_IMAGE_ID, "Replace Image", getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
+         new ActionItem(REPLACE_IMAGE_ID, getResources().getString(R.string.guide_create_edit_step_media_replace),
+            getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
       ActionItem delAction =
-         new ActionItem(REMOVE_IMAGE_ID, "Remove Image", getResources().getDrawable(R.drawable.ic_menu_bot_step_delete));
+         new ActionItem(REMOVE_IMAGE_ID, getResources().getString(R.string.guide_create_edit_step_media_remove),
+            getResources().getDrawable(R.drawable.ic_menu_bot_step_delete));
 
       mQuickAction = new QuickAction(getActivity());
       mQuickAction.addActionItem(addAction);
       mQuickAction.addActionItem(delAction);
       mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
-         
-
          @Override
          public void onItemClick(QuickAction source, int pos, int actionId) {
-            switch(actionId)
-            {
+            switch (actionId) {
                case REPLACE_IMAGE_ID:
                   Intent intent = new Intent(getActivity(), GalleryActivity.class);
                   intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                   getActivity().startActivityForResult(intent, mCurSelectedKey);
                   return;
                case REMOVE_IMAGE_ID:
-                  setGuideDirty();
-                  if(mCurSelectedKey == IMAGE_KEY_1) {
-                     mImageOneInfo = new StepImage(NO_IMAGE);
-                     setImage(IMAGE_KEY_1);
-                     setMainImage(mImageTwoInfo.getImageid(), mImageTwo);
-                     return;
-                  }
-                  if(mCurSelectedKey == IMAGE_KEY_2) {
-                     mImageTwoInfo = new StepImage(NO_IMAGE);
-                     setImage(IMAGE_KEY_2);
-
-                     setMainImage(mImageThreeInfo.getImageid(), mImageThree);
-                     //setImage(IMAGE_KEY_1);
-                     return;
-                  }
-                  if(mCurSelectedKey == IMAGE_KEY_3) {
-                     mImageThreeInfo = new StepImage(NO_IMAGE);
-                     setImage(IMAGE_KEY_3);
-
-                     setMainImage(mImageOneInfo.getImageid(), mImageOne);
-                   ///  setImage(IMAGE_KEY_2);
-                     return;
-                  }
-                     
+                  removeImage();
                   break;
             }
-            
          }
       });
-      
-      
       mStepTitle.setText(mTitle);
-
       fitImagesToSpace(v.getLayoutParams().height, v.getLayoutParams().width);
       setImage(IMAGE_KEY_1);
       setImage(IMAGE_KEY_2);
@@ -195,11 +156,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
          thumbnailHeight = (1f / 3f) * height;
          thumbnailWidth = (thumbnailHeight * (4f / 3f));
-
       } else {
          int actionBarHeight =
             resources.getDimensionPixelSize(com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
-
          int indicatorHeight = ((GuideCreateStepsEditActivity) context).getIndicatorHeight();
 
          if (indicatorHeight == 0) {
@@ -207,7 +166,6 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          }
 
          padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
-
          padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
 
          height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 8f) * 4f);
@@ -242,12 +200,31 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable("" + IMAGE_KEY_1, mImageOneInfo);
-
       savedInstanceState.putSerializable("" + IMAGE_KEY_2, mImageTwoInfo);
-
       savedInstanceState.putSerializable("" + IMAGE_KEY_3, mImageThreeInfo);
-
       savedInstanceState.putString(TITLE_KEY, mTitle);
+   }
+
+   public void removeImage() {
+      setGuideDirty();
+      if (mCurSelectedKey == IMAGE_KEY_1) {
+         mImageOneInfo = new StepImage(NO_IMAGE);
+         setImage(IMAGE_KEY_1);
+         setMainImage(mImageTwoInfo.getImageid(), mImageTwo);
+         return;
+      }
+      if (mCurSelectedKey == IMAGE_KEY_2) {
+         mImageTwoInfo = new StepImage(NO_IMAGE);
+         setImage(IMAGE_KEY_2);
+         setMainImage(mImageThreeInfo.getImageid(), mImageThree);
+         return;
+      }
+      if (mCurSelectedKey == IMAGE_KEY_3) {
+         mImageThreeInfo = new StepImage(NO_IMAGE);
+         setImage(IMAGE_KEY_3);
+         setMainImage(mImageOneInfo.getImageid(), mImageOne);
+         return;
+      }
    }
 
    @Override
@@ -258,7 +235,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
             microURL = (String) mImageOne.getTag();
-            if(microURL == null) {
+            if (microURL == null) {
                intent = new Intent(getActivity(), GalleryActivity.class);
                intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                getActivity().startActivityForResult(intent, IMAGE_KEY_1);
@@ -266,7 +243,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             break;
          case R.id.step_edit_thumb_2:
             microURL = (String) mImageTwo.getTag();
-            if(microURL == null) {
+            if (microURL == null) {
                intent = new Intent(getActivity(), GalleryActivity.class);
                intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                getActivity().startActivityForResult(intent, IMAGE_KEY_2);
@@ -274,7 +251,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             break;
          case R.id.step_edit_thumb_3:
             microURL = (String) mImageThree.getTag();
-            if(microURL == null) {
+            if (microURL == null) {
                intent = new Intent(getActivity(), GalleryActivity.class);
                intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                getActivity().startActivityForResult(intent, IMAGE_KEY_3);
@@ -290,7 +267,6 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          mLargeImage.invalidate();
          return;
       }
-      
    }
 
    @Override
@@ -328,53 +304,43 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    private void setImage(int location) {
       switch (location) {
          case 1:
-
             setImageThumb(mImageOneInfo, mImageOne);
             break;
          case 2:
-
-            
             setImageThumb(mImageTwoInfo, mImageTwo);
             break;
          case 3:
- 
             setImageThumb(mImageThreeInfo, mImageThree);
             break;
          default:
             return;
       }
-
    }
-   
-   public void setImageThumb(StepImage imageinfo, ImageView imagView)
-   {
-      if(imageinfo.getImageid() == NO_IMAGE){
+
+   public void setImageThumb(StepImage imageinfo, ImageView imagView) {
+      if (imageinfo.getImageid() == NO_IMAGE) {
          imagView.setScaleType(ScaleType.CENTER);
          imagView.setTag(null);
          imagView.setImageResource(R.drawable.ic_btn_add_gallery_image);
          return;
       }
       imagView.setScaleType(ScaleType.FIT_CENTER);
-      mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(),
-         getActivity(), imagView);
+      mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(), getActivity(),
+         imagView);
       imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
       imagView.invalidate();
-      
       setMainImage(imageinfo.getImageid(), imagView);
-      
    }
-   
+
    private void setMainImage(int imageID, ImageView image) {
-      if(imageID == NO_IMAGE){
+      if (imageID == NO_IMAGE) {
          mLargeImage.setImageResource(R.drawable.ic_placeholder_feature_img);
-      }else
-      {
+      } else {
          mImageManager.displayImage((String) image.getTag(), getActivity(), mLargeImage);
          mLargeImage.invalidate();
       }
-         return;
+      return;
    }
-
 
    public void setImage(int location, StepImage si) {
       switch (location) {
@@ -390,7 +356,6 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          default:
             return;
       }
-
       if (mImageOne != null)
          setImage(location);
    }
@@ -401,34 +366,31 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
-            if(mImageOneInfo.getImageid() != NO_IMAGE)
-            {
+            if (mImageOneInfo.getImageid() != NO_IMAGE) {
                mCurSelectedKey = IMAGE_KEY_1;
                mQuickAction.show(v);
                return true;
-            } 
+            }
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
             getActivity().startActivityForResult(intent, IMAGE_KEY_1);
             break;
          case R.id.step_edit_thumb_2:
-            if(mImageTwoInfo.getImageid() != NO_IMAGE)
-            {
+            if (mImageTwoInfo.getImageid() != NO_IMAGE) {
                mCurSelectedKey = IMAGE_KEY_2;
                mQuickAction.show(v);
                return true;
-            } 
+            }
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
             getActivity().startActivityForResult(intent, IMAGE_KEY_2);
             break;
          case R.id.step_edit_thumb_3:
-            if(mImageThreeInfo.getImageid() != NO_IMAGE)
-            {
+            if (mImageThreeInfo.getImageid() != NO_IMAGE) {
                mCurSelectedKey = IMAGE_KEY_3;
                mQuickAction.show(v);
                return true;
-            } 
+            }
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
             getActivity().startActivityForResult(intent, IMAGE_KEY_3);
@@ -450,15 +412,14 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       list.add(mImageThreeInfo);
       return list;
    }
-   
+
    public void setGuideDirty() {
       ((GuideStepChangedListener) getActivity()).onGuideStepChanged();
    }
 
-
    @Override
    public void afterTextChanged(Editable s) {
-      if(mTitle.equals(s.toString())) {
+      if (mTitle.equals(s.toString())) {
          return;
       }
       mTitle = s.toString();
@@ -467,7 +428,6 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    @Override
    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
       ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
    }
 
