@@ -188,6 +188,7 @@ public abstract class IfixitActivity extends Activity {
                return;
             }
             intent = new Intent(this, TopicsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             return;
          case 1:
@@ -197,6 +198,7 @@ public abstract class IfixitActivity extends Activity {
                return;
             }
             intent = new Intent(this, GuideCreateActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             return;
       }
@@ -268,7 +270,11 @@ public abstract class IfixitActivity extends Activity {
 		return false;
 	}
 	
-	
+   @Override
+   public void onStart() {
+      this.overridePendingTransition(0, 0);
+      super.onStart();
+   }
 	
 	/**adapter for the navigation bar**/
 
