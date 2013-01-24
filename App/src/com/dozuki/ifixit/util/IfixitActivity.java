@@ -8,17 +8,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app._HoloActivity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.SpinnerAdapter;
 
 import com.actionbarsherlock.app.ActionBar.OnNavigationListener;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -293,7 +290,7 @@ public abstract class IfixitActivity extends Activity {
       public NavigationItemAdapter(Context a, int textViewResourceId, ArrayList<NavigationItem> data) {
          // super(a, textViewResourceId, data);
          this.data = data;
-         inflater = (LayoutInflater) a.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+         inflater = (LayoutInflater) ((_HoloActivity) a).getLayoutInflater();
          this.context = a;
          this.layoutResourceId = textViewResourceId;
 
