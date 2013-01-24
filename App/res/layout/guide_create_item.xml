@@ -5,13 +5,13 @@
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="@color/gray"
-    android:padding="1dp" 
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="1dp" >
 
     <FrameLayout
+        android:id="@+id/guide_create_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guide_create_frame" >
+        android:layout_height="wrap_content" >
 
         <RelativeLayout
             android:id="@+id/guide_create_upper_section"
@@ -60,25 +60,24 @@
                 android:text="@string/default_title" />
         </RelativeLayout>
     </FrameLayout>
-    
-    
+
     <LinearLayout
         android:id="@+id/guide_create_item_edit_section"
         android:layout_width="match_parent"
         android:layout_height="@dimen/gallery_top_bar_height"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="-50dip"
+        android:layout_marginBottom="-50dp"
         android:background="@color/fireswing_grey"
-        android:gravity="center"
+        android:gravity="right"
         android:orientation="horizontal"
-        android:padding="6dp"
+        android:paddingTop="8dp"
         android:visibility="gone" >
 
         <TextView
             android:id="@+id/guide_create_item_publish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
+            android:layout_marginLeft="14dp"
             android:layout_marginRight="8dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_list_item_publish"
@@ -107,7 +106,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
+            android:layout_marginRight="14dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_guide_edit"
             android:drawablePadding="4dp"

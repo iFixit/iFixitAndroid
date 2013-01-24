@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/step_create_item"
-     android:layout_width="match_parent"
+    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
     android:background="@color/gray"
-    android:padding="1dp" 
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:padding="1dp" >
 
     <FrameLayout
+        android:id="@+id/guide_step_edit_frame"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/guide_step_edit_frame" >
+        android:layout_height="wrap_content" >
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -57,10 +57,9 @@
                 android:textColor="@color/fireswing_dark_grey"
                 android:textSize="12sp"
                 android:textStyle="italic" />
-
         </RelativeLayout>
     </FrameLayout>
-    
+
     <LinearLayout
         android:id="@+id/step_create_item_edit_section"
         android:layout_width="match_parent"
@@ -68,41 +67,38 @@
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="-50dp"
         android:background="@color/fireswing_grey"
-        android:gravity="center"
+        android:gravity="right"
         android:orientation="horizontal"
-        android:padding="6dp"
+        android:paddingTop="8dp"
         android:visibility="gone" >
-        
-        
-<TextView
+
+        <TextView
             android:id="@+id/step_create_item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="8dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_guide_delete"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
             android:text="@string/action_delete"
-            android:textColor="@color/dozuki_grey" 
-            android:layout_marginLeft="16dp"
-            android:layout_marginRight="8dp"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-         
-         <TextView
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/dozuki_grey" />
+
+        <TextView
             android:id="@+id/step_create_item_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="16dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_guide_edit"
             android:drawablePadding="4dp"
             android:gravity="center_vertical"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="16dp"
-            android:text="@string/edit" 
-            android:textColor="@color/dozuki_grey" 
-            android:textAppearance="?android:attr/textAppearanceSmall"/>
-
+            android:text="@string/edit"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/dozuki_grey" />
     </LinearLayout>
-    
 
 </LinearLayout>

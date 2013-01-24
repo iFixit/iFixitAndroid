@@ -113,7 +113,7 @@ public class GuideCreateListItem extends RelativeLayout {
          mPublishButtonText.setCompoundDrawables(img, null, null, null);
          mPublishText.setText(R.string.published);
          mPublishButtonText.setText(R.string.unpublish);
-         mPublishText.setTextColor(Color.GREEN);
+         mPublishText.setTextColor(Color.rgb(0, 191, 0));
       } else {
          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
