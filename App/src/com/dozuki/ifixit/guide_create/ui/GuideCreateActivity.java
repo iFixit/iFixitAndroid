@@ -66,16 +66,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
 	@SuppressWarnings("unchecked")
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-		mGuideList = new ArrayList<GuideCreateObject>();
-
-		setTheme(((MainApplication) getApplication()).getSiteTheme());
-		getSupportActionBar().setTitle(
-				((MainApplication) getApplication()).getSite().mTitle);
-		mActionBar = getSupportActionBar();
-		mActionBar.setTitle("");
-		prepareNavigationSpinner(mActionBar);
-		TASK_ID =this.getTaskId();
-      this.getSupportActionBar().setSelectedNavigationItem(1);
 		if (savedInstanceState != null) {
 			mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState
 					.getSerializable(GuideObjectKey);
@@ -86,6 +76,16 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
 		
 		
 		super.onCreate(savedInstanceState);
+		 mGuideList = new ArrayList<GuideCreateObject>();
+
+	      setTheme(((MainApplication) getApplication()).getSiteTheme());
+	      getSupportActionBar().setTitle(
+	            ((MainApplication) getApplication()).getSite().mTitle);
+	      mActionBar = getSupportActionBar();
+	      mActionBar.setTitle("");
+	      prepareNavigationSpinner(mActionBar);
+	      TASK_ID =this.getTaskId();
+	      this.getSupportActionBar().setSelectedNavigationItem(1);
 
 		setContentView(R.layout.guide_create);
 
