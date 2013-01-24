@@ -15,6 +15,7 @@ import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
+import android.view.animation.Animation.AnimationListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
@@ -59,7 +60,7 @@ public class GuideCreateListItem extends RelativeLayout {
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mGuideCreateObject.setEditMode(isChecked);
             portalRef.onItemSelected(mGuideCreateObject.getGuideid(), isChecked);
-            setEditMode(isChecked, true);
+            setEditMode(isChecked, true,  mToggleEdit, mEditBar);
          }
       });
       FrameLayout frame = (FrameLayout) findViewById(R.id.guide_create_frame);
@@ -98,7 +99,7 @@ public class GuideCreateListItem extends RelativeLayout {
       if (mGuideCreateObject.getPublished())
          setPublished(true);
       if (mGuideCreateObject.getEditMode())
-         setEditMode(true, false);
+         setEditMode(true, false, mToggleEdit, mEditBar);
    }
 
    public void setGuideObject(GuideCreateObject obj) {
@@ -124,42 +125,71 @@ public class GuideCreateListItem extends RelativeLayout {
       mGuideCreateObject.setPublished(published);
    }
 
-   public void setEditMode(boolean isChecked, boolean animate) {
+   public void setEditMode(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
+      final LinearLayout mEditBar) {
       if (isChecked) {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
-            rotateAnimation.setInterpolator(new DecelerateInterpolator());
+
             mToggleEdit.startAnimation(rotateAnimation);
 
             // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
+            expandAni.setAnimationListener(new AnimationListener() {
 
+               @Override
+               public void onAnimationEnd(Animation animation) {
+                  mPortalRef.invalidateViews();
+               }
+
+               @Override
+               public void onAnimationRepeat(Animation animation) {
+                  // TODO Auto-generated method stub
+
+               }
+
+               @Override
+               public void onAnimationStart(Animation animation) {
+
+               }
+            });
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
-
          } else {
-            mEditBar.setVisibility(VISIBLE);
+            mEditBar.setVisibility(View.VISIBLE);
             ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
-
          }
 
-         mEditBarVisible = true;
       } else {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counterclockwise);
-            rotateAnimation.setInterpolator(new AccelerateInterpolator());
+
             mToggleEdit.startAnimation(rotateAnimation);
             // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
+            // mPortalRef.invalidateViews();
+            expandAni.setAnimationListener(new AnimationListener() {
 
+               @Override
+               public void onAnimationEnd(Animation animation) {
+                  mPortalRef.invalidateViews();
+                  // mStepList.requestLayout();
+               }
+
+               @Override
+               public void onAnimationRepeat(Animation animation) {}
+
+               @Override
+               public void onAnimationStart(Animation animation) {
+
+               }
+            });
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
          } else {
-            mEditBar.setVisibility(GONE);
+            mEditBar.setVisibility(View.GONE);
             ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
          }
-
-         mEditBarVisible = false;
       }
    }
 
