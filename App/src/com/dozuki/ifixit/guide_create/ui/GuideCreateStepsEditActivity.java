@@ -35,7 +35,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
-import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragmentNew.GuideStepChangedListener;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment.GuideStepChangedListener;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -54,7 +54,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
    public static final String GUIDE_STEP_LIST_KEY = "GUIDE_STEP_LIST_KEY";
 	private ActionBar mActionBar;
 	private GuideCreateObject mGuide;
-	private GuideCreateStepEditFragmentNew mCurStepFragment;
+	private GuideCreateStepEditFragment mCurStepFragment;
 	private ArrayList<GuideCreateStepObject> mStepList;
 	private ImageButton mSpinnerMenu;
 	private Button mSaveStep;
@@ -237,7 +237,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
 
 		@Override
 		public Fragment getItem(int position) {
-			GuideCreateStepEditFragmentNew frag = new GuideCreateStepEditFragmentNew();
+			GuideCreateStepEditFragment frag = new GuideCreateStepEditFragment();
 			Bundle args = new Bundle();
 			args.putSerializable(GUIDE_STEP_KEY, mStepList.get(position));
 			frag.setArguments(args);
@@ -264,7 +264,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
 			   mIsStepDirty = false;
 			}
 			mPagePosition = position;
-			mCurStepFragment = (GuideCreateStepEditFragmentNew) object;
+			mCurStepFragment = (GuideCreateStepEditFragment) object;
 			 Log.i(TAG, "page selected: " + mPagePosition);
 		}
 	}

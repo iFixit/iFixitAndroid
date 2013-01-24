@@ -8,13 +8,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AccelerateInterpolator;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.DecelerateInterpolator;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
@@ -25,7 +22,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
-public class GuideCreateListItem extends RelativeLayout {
+public class GuideCreateListItem extends RelativeLayout implements AnimationListener {
    private static final int ANIMATION_DURATION = 300;
    private TextView mTitleView;
    private ImageView mThumbnail;
@@ -37,14 +34,12 @@ public class GuideCreateListItem extends RelativeLayout {
    private LinearLayout mEditBar;
    private ImageManager mImageManager;
    private GuidePortalFragment mPortalRef;
-   private Context mContext;
    private boolean mEditBarVisible = false;
    private GuideCreateObject mGuideCreateObject;
 
    public GuideCreateListItem(Context context, ImageManager imageManager, final GuidePortalFragment portalRef,
       GuideCreateObject gObject) {
       super(context);
-      mContext = context;
       mPortalRef = portalRef;
       mImageManager = imageManager;
       mGuideCreateObject = gObject;
@@ -60,17 +55,15 @@ public class GuideCreateListItem extends RelativeLayout {
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mGuideCreateObject.setEditMode(isChecked);
             portalRef.onItemSelected(mGuideCreateObject.getGuideid(), isChecked);
-            setEditMode(isChecked, true,  mToggleEdit, mEditBar);
+            setEditMode(isChecked, true, mToggleEdit, mEditBar);
          }
       });
       FrameLayout frame = (FrameLayout) findViewById(R.id.guide_create_frame);
       frame.setOnClickListener(new OnClickListener() {
-
          @Override
          public void onClick(View v) {
             mToggleEdit.toggle();
          }
-
       });
       mDeleteButton = (TextView) findViewById(R.id.guide_create_item_delete);
       mDeleteButton.setOnClickListener(new OnClickListener() {
@@ -96,10 +89,12 @@ public class GuideCreateListItem extends RelativeLayout {
             setPublished(!mGuideCreateObject.getPublished());
          }
       });
-      if (mGuideCreateObject.getPublished())
+      if (mGuideCreateObject.getPublished()) {
          setPublished(true);
-      if (mGuideCreateObject.getEditMode())
+      }
+      if (mGuideCreateObject.getEditMode()) {
          setEditMode(true, false, mToggleEdit, mEditBar);
+      }
    }
 
    public void setGuideObject(GuideCreateObject obj) {
@@ -110,81 +105,48 @@ public class GuideCreateListItem extends RelativeLayout {
       if (published) {
          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_unpublish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-         mPublishButtonText.setCompoundDrawables(img, null, null, null);
-         mPublishText.setText(R.string.published);
-         mPublishButtonText.setText(R.string.unpublish);
-         mPublishText.setTextColor(Color.rgb(0, 191, 0));
+         setPublishedText(Color.rgb(0, 191, 0), R.string.published);
+         setPublishedButton(img, R.string.unpublish);
       } else {
          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-         mPublishButtonText.setCompoundDrawables(img, null, null, null);
-         mPublishText.setText(R.string.unpublished);
-         mPublishButtonText.setText(R.string.publish);
-         mPublishText.setTextColor(Color.RED);
+         setPublishedText(Color.RED, R.string.unpublished);
+         setPublishedButton(img, R.string.publish);
       }
       mGuideCreateObject.setPublished(published);
+   }
+
+   private void setPublishedText(int color, int text) {
+      mPublishText.setText(text);
+      mPublishText.setTextColor(Color.RED);
+   }
+
+   private void setPublishedButton(Drawable img, int text) {
+      mPublishButtonText.setCompoundDrawables(img, null, null, null);
+      mPublishButtonText.setText(text);
    }
 
    public void setEditMode(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
       final LinearLayout mEditBar) {
       if (isChecked) {
          if (animate) {
-            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
-
+            Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
             mToggleEdit.startAnimation(rotateAnimation);
-
             // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            expandAni.setAnimationListener(new AnimationListener() {
-
-               @Override
-               public void onAnimationEnd(Animation animation) {
-                  mPortalRef.invalidateViews();
-               }
-
-               @Override
-               public void onAnimationRepeat(Animation animation) {
-                  // TODO Auto-generated method stub
-
-               }
-
-               @Override
-               public void onAnimationStart(Animation animation) {
-
-               }
-            });
+            expandAni.setAnimationListener(this);
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.VISIBLE);
             ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
          }
-
       } else {
          if (animate) {
-            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counterclockwise);
-
+            Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_counterclockwise);
             mToggleEdit.startAnimation(rotateAnimation);
-            // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            // mPortalRef.invalidateViews();
-            expandAni.setAnimationListener(new AnimationListener() {
-
-               @Override
-               public void onAnimationEnd(Animation animation) {
-                  mPortalRef.invalidateViews();
-                  // mStepList.requestLayout();
-               }
-
-               @Override
-               public void onAnimationRepeat(Animation animation) {}
-
-               @Override
-               public void onAnimationStart(Animation animation) {
-
-               }
-            });
-            // Start the animation on the toolbar
+            expandAni.setAnimationListener(this);
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.GONE);
@@ -208,8 +170,22 @@ public class GuideCreateListItem extends RelativeLayout {
    }
 
    public void setTitleText(final String title) {
-      Log.i("GuideItem", " title: " + title);
       mTitleView.setText(title);
+   }
+
+   @Override
+   public void onAnimationEnd(Animation animation) {
+      mPortalRef.invalidateViews();
+   }
+
+   @Override
+   public void onAnimationRepeat(Animation animation) {
+
+   }
+
+   @Override
+   public void onAnimationStart(Animation animation) {
+
    }
 
 }

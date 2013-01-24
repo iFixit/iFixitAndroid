@@ -15,7 +15,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateEditMediaFragment.MediaChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 
-public class GuideCreateStepEditFragmentNew extends Fragment implements MediaChangedListener {
+public class GuideCreateStepEditFragment extends Fragment implements MediaChangedListener {
   
    public interface GuideStepChangedListener {
       public void onGuideStepChanged();
