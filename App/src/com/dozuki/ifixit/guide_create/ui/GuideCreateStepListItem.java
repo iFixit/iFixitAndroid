@@ -25,10 +25,10 @@ import android.widget.RelativeLayout;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView.ScaleType;
 
-public class GuideCreateStepListItem extends RelativeLayout {
+public class GuideCreateStepListItem extends RelativeLayout implements AnimationListener {
    private static int ANIMATION_DURATION = 300;
-   private TextView stepsView;
-   private TextView stepNumber;
+   private TextView mStepsView;
+   private TextView mStepNumber;
    private ToggleButton mToggleEdit;
    private TextView mDeleteButton;
    private TextView mEditButton;
@@ -51,8 +51,8 @@ public class GuideCreateStepListItem extends RelativeLayout {
       mStepPosition = position;
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.guide_create_step_list_item, this, true);
-      stepsView = (TextView) findViewById(R.id.step_title_textview);
-      stepNumber = (TextView) findViewById(R.id.guide_create_step_item_number);
+      mStepsView = (TextView) findViewById(R.id.step_title_textview);
+      mStepNumber = (TextView) findViewById(R.id.guide_create_step_item_number);
       mToggleEdit = (ToggleButton) findViewById(R.id.step_item_toggle_edit);
       mImageView = (ImageView) findViewById(R.id.guide_step_item_thumbnail);
       mDeleteButton = (TextView) findViewById(R.id.step_create_item_delete);
@@ -66,7 +66,7 @@ public class GuideCreateStepListItem extends RelativeLayout {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mStepObject.setEditMode(isChecked);
-            portalRef.onItemSelected( mStepObject.getStepNum(), isChecked);
+            portalRef.onItemSelected(mStepObject.getStepNum(), isChecked);
             setEditMode(isChecked, true, mToggleEdit, mEditBar);
          }
       });
@@ -91,8 +91,8 @@ public class GuideCreateStepListItem extends RelativeLayout {
          }
       });
       String step = mStepObject.getTitle();
-      stepsView.setText(step);
-      stepNumber.setText("Step " + (mStepPosition + 1));
+      mStepsView.setText(step);
+      mStepNumber.setText("Step " + (mStepPosition + 1));
       setImageThumb(mStepObject.getImages(), mImageView);
       setEditMode(isEdit, false, mToggleEdit, mEditBar);
    }
@@ -102,61 +102,22 @@ public class GuideCreateStepListItem extends RelativeLayout {
       if (isChecked) {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
-
             mToggleEdit.startAnimation(rotateAnimation);
-
             // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            expandAni.setAnimationListener(new AnimationListener() {
-
-               @Override
-               public void onAnimationEnd(Animation animation) {
-                  mPortalRef.invalidateViews();
-               }
-
-               @Override
-               public void onAnimationRepeat(Animation animation) {
-                  // TODO Auto-generated method stub
-
-               }
-
-               @Override
-               public void onAnimationStart(Animation animation) {
-
-               }
-            });
+            expandAni.setAnimationListener(this);
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.VISIBLE);
             ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
          }
-
       } else {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counterclockwise);
-
             mToggleEdit.startAnimation(rotateAnimation);
-            // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            // mPortalRef.invalidateViews();
-            expandAni.setAnimationListener(new AnimationListener() {
-
-               @Override
-               public void onAnimationEnd(Animation animation) {
-                  mPortalRef.invalidateViews();
-                  // mStepList.requestLayout();
-               }
-
-               @Override
-               public void onAnimationRepeat(Animation animation) {}
-
-               @Override
-               public void onAnimationStart(Animation animation) {
-
-               }
-            });
-            // Start the animation on the toolbar
+            expandAni.setAnimationListener(this);
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.GONE);
@@ -184,4 +145,18 @@ public class GuideCreateStepListItem extends RelativeLayout {
       mToggleEdit.setChecked(check);
    }
 
+   @Override
+   public void onAnimationEnd(Animation animation) {
+      mPortalRef.invalidateViews();
+   }
+
+   @Override
+   public void onAnimationRepeat(Animation animation) {
+
+   }
+
+   @Override
+   public void onAnimationStart(Animation animation) {
+
+   }
 }
