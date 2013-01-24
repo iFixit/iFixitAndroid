@@ -8,11 +8,12 @@ import org.holoeverywhere.app.Fragment;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import org.holoeverywhere.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.BaseAdapter;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.TextView;
@@ -54,17 +55,14 @@ public class GuideCreateStepPortalFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
       mStepAdapter = new StepAdapter();
-
       mCurOpenGuideObjectID = NO_ID;
       if (savedInstanceState != null) {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
       }
-
       // APIService.call((Activity) getActivity(),
       // APIService.getGuideAPICall(mGuide.getGuideid()));
    }
@@ -89,7 +87,6 @@ public class GuideCreateStepPortalFragment extends Fragment {
    @Override
    public void onPause() {
       super.onPause();
-
       MainApplication.getBus().unregister(this);
    }
 
@@ -105,8 +102,6 @@ public class GuideCreateStepPortalFragment extends Fragment {
                mNoStepsText.setVisibility(View.GONE);
             GuideCreateStepObject item = new GuideCreateStepObject(StepID++);
             item.setTitle("Test Step " + StepID);
-            // mGuide.getSteps().add(item);
-            // mDragListView.invalidateViews();
             launchStepEdit(item);
          }
       });
@@ -119,9 +114,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
       });
       mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
       verifyReorder();
-
       mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
-
       if (mGuide.getSteps().isEmpty())
          mNoStepsText.setVisibility(View.VISIBLE);
       mStepList.setAdapter(mStepAdapter);
@@ -157,11 +150,9 @@ public class GuideCreateStepPortalFragment extends Fragment {
          itemView.setTag(step.getStepNum());
          return itemView;
       }
-
    }
 
    private void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
-      // GuideCreateStepsEditActivity
       Intent intent = new Intent(getActivity(), GuideCreateStepsEditActivity.class);
       intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
@@ -204,10 +195,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST) {
          if (resultCode == Activity.RESULT_OK) {
-            GuideCreateObject guide =
-               (GuideCreateObject) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
+            GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
             if (guide != null) {
-               Log.i("StepPortalFragmetn", "non null guide update");
                mGuide = guide;
                mStepAdapter = new StepAdapter();
                verifyReorder();
@@ -227,10 +216,14 @@ public class GuideCreateStepPortalFragment extends Fragment {
          return;
 
       if (mGuide.getSteps().size() < 2) {
-         mReorderStepsBar.setAlpha(0.7f);
+         Animation anim = new AlphaAnimation(.7f, .7f);
+         anim.setFillAfter(true);
+         mReorderStepsBar.startAnimation(anim);
          mReorderStepsBar.setOnClickListener(null);
       } else {
-         mReorderStepsBar.setAlpha(1.0f);
+         Animation anim = new AlphaAnimation(1f, 1f);
+         anim.setFillAfter(true);
+         mReorderStepsBar.startAnimation(anim);
          mReorderStepsBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -251,16 +244,12 @@ public class GuideCreateStepPortalFragment extends Fragment {
          mCurOpenGuideObjectID = NO_ID;
          return;
       }
-
       if (mCurOpenGuideObjectID != NO_ID) {
-
          GuideCreateStepListItem view = ((GuideCreateStepListItem) mStepList.findViewWithTag(mCurOpenGuideObjectID));
          if (view != null) {
             view.setChecked(false);
          }
-
          for (int i = 0; i < mGuide.getSteps().size(); i++) {
-
             if (mGuide.getSteps().get(i).getStepNum() == mCurOpenGuideObjectID) {
                mGuide.getSteps().get(i).setEditMode(false);
             }
