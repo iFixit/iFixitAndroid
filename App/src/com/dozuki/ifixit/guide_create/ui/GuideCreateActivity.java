@@ -223,6 +223,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    @Override
    public void onResume() {
       super.onResume();
+      
       this.getSupportActionBar().setSelectedNavigationItem(1);
    }
 }
