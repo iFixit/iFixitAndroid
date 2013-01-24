@@ -42,8 +42,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 public class GuideCreateStepsEditActivity extends IfixitActivity
 		implements OnClickListener, GuideStepChangedListener {
 	public static String TAG = "GuideCreateStepsEditActivity";
-	public static String GuideKey = "GuideKey";
-	public static String GUIDE_STEP_KEY = "GuideStepObject";
+	public static String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
 	public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
 	public static String DeleteGuideDialogKey = "DeleteGuideDialog";
    private static final String SHOWING_HELP = "SHOWING_HELP";
@@ -85,12 +84,12 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
 		Bundle extras = getIntent().getExtras();
 		mPagePosition = 0;
 		if (extras != null) {
-         mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsEditActivity.GuideKey);
+         mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
          mPagePosition = extras.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mStepList = (ArrayList<GuideCreateStepObject>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
       }
 		if (savedInstanceState != null) {
-         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideKey);
+         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateActivity.GUIDE_KEY);
          mPagePosition = savedInstanceState.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
@@ -193,7 +192,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
 	@Override
 	public void finish() {
 		Intent returnIntent = new Intent();
-		returnIntent.putExtra(GuideCreateStepsEditActivity.GuideKey, mGuide);
+		returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
 		setResult(RESULT_OK, returnIntent);
 		super.finish();
 	}
