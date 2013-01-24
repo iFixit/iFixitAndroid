@@ -233,7 +233,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			return mStepList.get(position).getTitle();
+			return "Step " + (position+1);//mStepList.get(position).getTitle();
 		}
 
 		@Override
