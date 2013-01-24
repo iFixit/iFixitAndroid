@@ -42,6 +42,11 @@ import org.holoeverywhere.widget.TextView;
  * Displaying various menu icons.
  */
 public abstract class IfixitActivity extends Activity {
+   
+   /**Navigation indexes*/
+   public int VIEW_GUIDES = 0;
+   public int CREATE_GUIDES = 1;
+   
 	/**
 	 * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
 	 * methods in parent classes because the performance hit is far too big for

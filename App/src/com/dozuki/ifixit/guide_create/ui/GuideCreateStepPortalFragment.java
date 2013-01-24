@@ -163,7 +163,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
    private void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
       // GuideCreateStepsEditActivity
       Intent intent = new Intent(getActivity(), GuideCreateStepsEditActivity.class);
-      intent.putExtra(GuideCreateStepsEditActivity.GuideKey, mGuide);
+      intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
       startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
@@ -205,7 +205,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
       if (requestCode == GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST) {
          if (resultCode == Activity.RESULT_OK) {
             GuideCreateObject guide =
-               (GuideCreateObject) data.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
+               (GuideCreateObject) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
             if (guide != null) {
                Log.i("StepPortalFragmetn", "non null guide update");
                mGuide = guide;

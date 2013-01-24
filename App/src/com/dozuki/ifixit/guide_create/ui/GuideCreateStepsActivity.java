@@ -126,7 +126,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 	public void finish()
 	{
 		Intent returnIntent = new Intent();
-		returnIntent.putExtra(GuideCreateStepsEditActivity.GuideKey, mGuide);
+		returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
 		setResult(RESULT_OK, returnIntent);
 		super.finish();
 	}
@@ -137,7 +137,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 		if (requestCode == GUIDE_EDIT_STEP_REQUEST) {
 			if (resultCode == RESULT_OK) {
 				GuideCreateObject guide = (GuideCreateObject) data
-						.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
+						.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
 				if (guide != null) {
 					mGuide = guide;
 					mStepList = mGuide.getSteps();

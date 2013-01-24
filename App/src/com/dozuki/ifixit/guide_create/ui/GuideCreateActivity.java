@@ -1,9 +1,6 @@
 package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
-
-import org.holoeverywhere.app.Activity;
-
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -25,43 +22,43 @@ import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroList
 import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GuideCreateActivity extends IfixitActivity implements GuideCreateIntroListener {
-	static final int GUIDE_STEP_LIST_REQUEST = 0;
-	public static int TASK_ID = -1;
+   static final int GUIDE_STEP_LIST_REQUEST = 0;
+   public static int TASK_ID = -1;
    private static final String SHOWING_HELP = "SHOWING_HELP";
-	private static String GuideObjectKey = "GuideCreateObject";
-	public static int GuideItemID = 0;
-	private ActionBar mActionBar;
-	private GuidePortalFragment mGuidePortal;
+   private static String GUIDE_OBJECT_KEY = "GUIDE_OBJECT_KEY";
+   private static String GUIDE_PORTAL_FRAGMENT_TAG = "GUIDE_PORTAL_FRAGMENT_TAG";
+   private static String GUIDE_INTRO_FRAGMENT_TAG = "GUIDE_INTRO_FRAGMENT_TAG";
+   public static String GUIDE_KEY = "GUIDE_KEY";
+   public static int GuideItemID = 0;
+   private ActionBar mActionBar;
+   private GuidePortalFragment mGuidePortal;
 
-	private ArrayList<GuideCreateObject> mGuideList;
+   private ArrayList<GuideCreateObject> mGuideList;
    private boolean mShowingHelp;
 
-	private OnBackStackChangedListener getListener() {
-		OnBackStackChangedListener result = new OnBackStackChangedListener() {
-			public void onBackStackChanged() {
-				FragmentManager manager = getSupportFragmentManager();
+   private OnBackStackChangedListener getListener() {
+      OnBackStackChangedListener result = new OnBackStackChangedListener() {
+         public void onBackStackChanged() {
+            FragmentManager manager = getSupportFragmentManager();
 
-				if (manager != null) {
-					Log.i("GuideCreateActivity", "onbacklistenerfragment");
-					Fragment currFrag = (Fragment) manager
-							.findFragmentById(R.id.guide_create_fragment_container);
+            if (manager != null) {
+               Fragment currFrag = (Fragment) manager.findFragmentById(R.id.guide_create_fragment_container);
 
-					currFrag.onResume();
-				}
-			}
-		};
+               currFrag.onResume();
+            }
+         }
+      };
 
-		return result;
-	}
+      return result;
+   }
 
-	public ArrayList<GuideCreateObject> getGuideList() {
-		return mGuideList;
-	}
-	
-	public void addGuide(GuideCreateObject guide)
-	{
-		mGuideList.add(guide);
-	}
+   public ArrayList<GuideCreateObject> getGuideList() {
+      return mGuideList;
+   }
+
+   public void addGuide(GuideCreateObject guide) {
+      mGuideList.add(guide);
+   }
 
    @SuppressWarnings("unchecked")
    @Override
@@ -73,11 +70,11 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       mActionBar.setTitle("");
       prepareNavigationSpinner(mActionBar);
       TASK_ID = this.getTaskId();
-      this.getSupportActionBar().setSelectedNavigationItem(1);
+      this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
 
       mGuideList = new ArrayList<GuideCreateObject>();
       if (savedInstanceState != null) {
-         mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState.getSerializable(GuideObjectKey);
+         mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          if (mShowingHelp)
             createHelpDialog().show();
@@ -86,14 +83,11 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       setContentView(R.layout.guide_create);
 
       getSupportFragmentManager().addOnBackStackChangedListener(getListener());
-      // getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      String tag = "guide_portal_fragment";
       if (findViewById(R.id.guide_create_fragment_container) != null
-         && getSupportFragmentManager().findFragmentByTag(tag) == null) {
+         && getSupportFragmentManager().findFragmentByTag(GUIDE_PORTAL_FRAGMENT_TAG) == null) {
          mGuidePortal = new GuidePortalFragment();
-         // mGuidePortal.setRetainInstance(true);
-         getSupportFragmentManager().beginTransaction().add(R.id.guide_create_fragment_container, mGuidePortal, tag)
-            .commit();
+         getSupportFragmentManager().beginTransaction()
+            .add(R.id.guide_create_fragment_container, mGuidePortal, GUIDE_PORTAL_FRAGMENT_TAG).commit();
       }
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(false);
@@ -109,100 +103,90 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       return super.onCreateOptionsMenu(menu);
    }
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			finish();
-			return true;
-		case R.id.help_button:
-		   createHelpDialog().show();
-		   return true;
-		default:
-			return super.onOptionsItemSelected(item);
-		}
-	}
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case android.R.id.home:
+            finish();
+            return true;
+         case R.id.help_button:
+            createHelpDialog().show();
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
+   }
 
-	@Override
-	public void onSaveInstanceState(Bundle savedInstanceState) {
-		savedInstanceState.putSerializable(GuideObjectKey, mGuideList);
-		savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
-		super.onSaveInstanceState(savedInstanceState);
-	}
-	
-	public void createGuide() {
-		if (mGuideList == null)
-			return;
-		
-		launchGuideCreateIntro();
-	}
-	
-	private void launchGuideCreateIntro()
-	{
-		String tag = "guide_intro_fragment";
-		GuideIntroFragment newFragment = new GuideIntroFragment();
-		newFragment.setGuideOBject(null);
-		FragmentTransaction transaction =  getSupportFragmentManager().beginTransaction();
-		transaction.replace(R.id.guide_create_fragment_container, newFragment);
-		transaction.addToBackStack(tag);
-		transaction.commitAllowingStateLoss();	
-	}
-	
-	@Override
-	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-		super.onActivityResult(requestCode, resultCode, data);
-		if (requestCode == GUIDE_STEP_LIST_REQUEST) {
-			if (resultCode == RESULT_OK) {
-				GuideCreateObject guide = (GuideCreateObject) data
-						.getSerializableExtra(GuideCreateStepsEditActivity.GuideKey);
-				if (guide != null) {
-					mGuideList.set(mGuideList.indexOf(guide),guide);				
-				}
-			}
-		}
-	}
+   @Override
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mGuideList);
+      savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+      super.onSaveInstanceState(savedInstanceState);
+   }
+
+   public void createGuide() {
+      if (mGuideList == null)
+         return;
+      launchGuideCreateIntro();
+   }
+
+   private void launchGuideCreateIntro() {
+      GuideIntroFragment newFragment = new GuideIntroFragment();
+      newFragment.setGuideOBject(null);
+      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+      transaction.replace(R.id.guide_create_fragment_container, newFragment);
+      transaction.addToBackStack(GUIDE_INTRO_FRAGMENT_TAG);
+      transaction.commitAllowingStateLoss();
+   }
+
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == GUIDE_STEP_LIST_REQUEST) {
+         if (resultCode == RESULT_OK) {
+            GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GUIDE_KEY);
+            if (guide != null) {
+               mGuideList.set(mGuideList.indexOf(guide), guide);
+            }
+         }
+      }
+   }
 
    @Override
    public void onFinishIntroInput(String device, String title, String summary, String intro, String guideType,
       String thing) {
-      
-      GuideCreateObject guideObject =  new GuideCreateObject(GuideItemID++);
+
+      GuideCreateObject guideObject = new GuideCreateObject(GuideItemID++);
       guideObject.setTitle(title);
       guideObject.setTopic(device);
       guideObject.setSummary(summary);
       guideObject.setIntroduction(intro);
-      
+
       getGuideList().add(guideObject);
-      Log.e("ID", "GUIDE OBJECT: " + guideObject.getGuideid());
-      
-     // APIService.call((Activity) getActivity(),
-      //   APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
+      // APIService.call((Activity) getActivity(),
+      // APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
 
       getSupportFragmentManager().popBackStack();
-      
+
    }
-   
+
    @Override
-   protected void onDestroy () {
+   protected void onDestroy() {
       super.onDestroy();
       TASK_ID = -1;
    }
-   
-   
+
    private AlertDialog createHelpDialog() {
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder
-            .setTitle(getString(R.string.media_help_title))
-            .setMessage(getString(R.string.guide_create_help))
-            .setPositiveButton(getString(R.string.media_help_confirm),
-               new DialogInterface.OnClickListener() {
+      builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_help))
+         .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
 
             public void onClick(DialogInterface dialog, int id) {
-                     mShowingHelp = false;
-                     dialog.cancel();
-                  }
-               });
+               mShowingHelp = false;
+               dialog.cancel();
+            }
+         });
 
       AlertDialog dialog = builder.create();
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -214,11 +198,11 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
 
       return dialog;
    }
-   
+
    @Override
    public void onResume() {
       super.onResume();
-      
+
       this.getSupportActionBar().setSelectedNavigationItem(1);
    }
 }

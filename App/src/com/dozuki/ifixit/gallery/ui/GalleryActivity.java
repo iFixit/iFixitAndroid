@@ -27,15 +27,12 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.guide_create.ui.GuideCreateEditMediaFragment;
-import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GalleryActivity extends IfixitActivity implements
 		 OnClickListener {
