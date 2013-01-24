@@ -14,7 +14,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
-import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragmentNew.GuideStepChangedListener;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment.GuideStepChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.ifixit.android.imagemanager.ImageManager;
 
@@ -231,7 +231,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    public void onClick(View v) {
       String microURL = null;
       Intent intent = null;
-      ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
+      ((GuideCreateStepEditFragment) getParentFragment()).onMediaChanging();
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
             microURL = (String) mImageOne.getTag();
@@ -363,7 +363,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    @Override
    public boolean onLongClick(View v) {
       Intent intent;
-      ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
+      ((GuideCreateStepEditFragment) getParentFragment()).onMediaChanging();
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
             if (mImageOneInfo.getImageid() != NO_IMAGE) {
@@ -428,7 +428,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    @Override
    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-      ((GuideCreateStepEditFragmentNew) getParentFragment()).onMediaChanging();
+      ((GuideCreateStepEditFragment) getParentFragment()).onMediaChanging();
    }
 
    @Override
