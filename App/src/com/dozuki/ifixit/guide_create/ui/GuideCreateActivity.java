@@ -26,6 +26,7 @@ import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GuideCreateActivity extends IfixitActivity implements GuideCreateIntroListener {
 	static final int GUIDE_STEP_LIST_REQUEST = 0;
+	public static int TASK_ID = -1;
    private static final String SHOWING_HELP = "SHOWING_HELP";
 	private static String GuideObjectKey = "GuideCreateObject";
 	public static int GuideItemID = 0;
@@ -73,6 +74,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
 		mActionBar = getSupportActionBar();
 		mActionBar.setTitle("");
 		prepareNavigationSpinner(mActionBar);
+		TASK_ID =this.getTaskId();
+      this.getSupportActionBar().setSelectedNavigationItem(1);
 		if (savedInstanceState != null) {
 			mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState
 					.getSerializable(GuideObjectKey);
@@ -81,13 +84,14 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
             createHelpDialog().show();
 		}
 		
+		
 		super.onCreate(savedInstanceState);
 
 		setContentView(R.layout.guide_create);
 
 		getSupportFragmentManager()
 				.addOnBackStackChangedListener(getListener());
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		//getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 		String tag = "guide_portal_fragment";
 		if (findViewById(R.id.guide_create_fragment_container) != null && getSupportFragmentManager().findFragmentByTag(tag) == null) {	
 			mGuidePortal = new GuidePortalFragment();
@@ -96,6 +100,9 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
 					.add(R.id.guide_create_fragment_container, mGuidePortal, tag)
 					.commit();
 		}
+		
+		getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+		
 	}
 
    @Override
@@ -180,6 +187,13 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       
    }
    
+   @Override
+   protected void onDestroy () {
+      super.onDestroy();
+      TASK_ID = -1;
+   }
+   
+   
    private AlertDialog createHelpDialog() {
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -204,5 +218,11 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       });
 
       return dialog;
+   }
+   
+   @Override
+   public void onResume() {
+      super.onResume();
+      this.getSupportActionBar().setSelectedNavigationItem(1);
    }
 }
