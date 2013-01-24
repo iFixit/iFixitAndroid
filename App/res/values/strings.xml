@@ -132,6 +132,9 @@
    <string name="indent_limit_below">Cannot unindent any further.</string>
    <string name="indent_limit_above">Cannot indent any further.</string>
    
+    <string name="guide_create_edit_step_media_replace">Replace Image</string>
+    <string name="guide_create_edit_step_media_remove">Remove Image</string>
+   
    <string name="guide_create_confirm_leave_without_save_title">Leave Without Saving?</string>
    <string name="guide_create_confirm_leave_without_save_body">If you leave now all your changes to the current step will be lost.</string>
    <string name="guide_create_confirm_leave_without_save_confirm">Yes, I want to exit with out saving.</string>

@@ -24,7 +24,6 @@ public class GuideCreateStepEditFragmentNew extends Fragment implements MediaCha
 
       public void enableSave();
       
-      
    }
    
    

@@ -3,7 +3,6 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 
 import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.TextView;
@@ -12,7 +11,6 @@ import android.R.color;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
@@ -37,16 +35,15 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    }
 
    private static String LINES_KEY = "LINES_KEY";
+   private static final int INDENT_MARGIN = 25;
    private DragSortListView mDragListView;
    private DragSortController mController;
    private StepAdapter mAdapter;
    private ImageManager mImageManager;
 
-   // private GuideCreateObject mGuide;
-   ArrayList<StepLine> mLines = new ArrayList<StepLine>();
+   private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
 
    public void setLines(ArrayList<StepLine> lines) {
-      // mGuide = guide;
       mLines = lines;
    }
 
@@ -75,7 +72,6 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    public DragSortController buildController(DragSortListView dslv) {
       DragSortController controller = new DragSortController(dslv);
       controller.setDragHandleId(R.id.guide_step_drag_handle);
-      // controller.setClickRemoveId(R.id.click_remove);
       controller.setRemoveEnabled(false);
       controller.setSortEnabled(true);
       controller.setDragInitMode(DragSortController.ON_DOWN);
@@ -83,8 +79,6 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       controller.setBackgroundColor(color.background_light);
       return controller;
    }
-
- 
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -94,17 +88,14 @@ public class GuideCreateBulletReorderFragment extends Fragment {
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      
-     mActionMode =  (getSherlockActivity().startActionMode(new ContextualStepReorder()));
+
+      mActionMode = (getSherlockActivity().startActionMode(new ContextualStepReorder()));
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
-
       if (savedInstanceState != null) {
          mLines = (ArrayList<StepLine>) savedInstanceState.get(LINES_KEY);
-         // mGuide = (GuideCreateObject)savedInstanceState.get(GuideCreateStepsActivity.GuideKey);
       }
-
       mAdapter = new StepAdapter(mLines);
       View view = inflater.inflate(R.layout.guide_create_step_portal_reorder, container, false);
       mDragListView = (DragSortListView) view.findViewById(R.id.steps_portal_list_reorder);
@@ -115,36 +106,30 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       mDragListView.setFloatViewManager(mController);
       mDragListView.setOnTouchListener(mController);
       mDragListView.setDragEnabled(true);
-      
-   
       return view;
    }
-   
+
    @Override
-   public void onStart ()
-   {
+   public void onStart() {
       super.onStart();
-      ((GuideCreateStepsEditActivity)getActivity()).enableViewPager(false);
+      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(false);
       ((GuideStepChangedListener) getActivity()).disableSave();
    }
-   
+
    @Override
-   public void onStop ()
-   {
+   public void onStop() {
 
       super.onStop();
-      ((GuideCreateStepsEditActivity)getActivity()).enableViewPager(true);
+      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(true);
       ((GuideStepChangedListener) getActivity()).enableSave();
    }
-   
-
 
    public final class ContextualStepReorder implements ActionMode.Callback {
       public ContextualStepReorder() {}
 
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-       
+
          return true;
       }
 
@@ -155,7 +140,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
 
       @Override
       public void onDestroyActionMode(ActionMode mode) {
-         ((BulletRearrangeListener) getParentFragment()).onReorderComplete();   
+         ((BulletRearrangeListener) getParentFragment()).onReorderComplete();
       }
 
       @Override
@@ -172,6 +157,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    }
 
    private class StepAdapter extends ArrayAdapter<StepLine> {
+
       public StepAdapter(ArrayList<StepLine> lines) {
          super(getActivity(), R.layout.guide_create_step_edit_list_item_reorder, R.id.bullet_text_textview, lines);
       }
@@ -187,26 +173,24 @@ public class GuideCreateBulletReorderFragment extends Fragment {
 
             holder.mImageView = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail);
             v.setTag(holder);
-            
-            holder.mItemHolder = (FrameLayout) v
-               .findViewById(R.id.guide_step_item_frame);
+
+            holder.mItemHolder = (FrameLayout) v.findViewById(R.id.guide_step_item_frame);
          }
          final ViewHolder holder = (ViewHolder) v.getTag();
          String step = getItem(position).getText();
          holder.stepsView.setText(step);
          holder.mImageView.setImageResource(getBulletResource(getItem(position).getColor()));
          LayoutParams params = (LayoutParams) holder.mItemHolder.getLayoutParams();
-         params.setMargins(25 * getItem(position).getLevel(), 0, 0, 0);
+         params.setMargins(INDENT_MARGIN * getItem(position).getLevel(), 0, 0, 0);
          holder.mItemHolder.setLayoutParams(params);
 
          return v;
       }
    }
-   
-   public void onDetach () {
+
+   public void onDetach() {
       super.onDetach();
-      if (mActionMode != null) 
-      {
+      if (mActionMode != null) {
          mActionMode.finish();
       }
    }
