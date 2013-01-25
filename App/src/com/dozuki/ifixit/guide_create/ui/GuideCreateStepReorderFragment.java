@@ -140,7 +140,13 @@ public class GuideCreateStepReorderFragment extends Fragment {
       @Override
       public void onDestroyActionMode(ActionMode mode) {
          if (!mDiscardChanges)
+         {
+            for(int i = 0 ; i < mStepsCopy.size() ; i++)
+            {
+               mStepsCopy.get(i).setStepNum(i);
+            }
             mGuide.setStepList(mStepsCopy);
+         }
          getActivity().getSupportFragmentManager().popBackStack();
       }
 

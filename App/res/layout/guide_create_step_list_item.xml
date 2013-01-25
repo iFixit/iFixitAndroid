@@ -34,6 +34,7 @@
                 android:layout_height="@dimen/guide_create_edit_button_dim"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
+                 android:layout_marginRight="12dp"
                 android:background="@drawable/ic_guide_expand"
                 android:textOff=""
                 android:textOn="" />
