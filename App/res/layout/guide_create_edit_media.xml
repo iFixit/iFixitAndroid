@@ -57,6 +57,7 @@
                     android:background="@color/fireswing_grey"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp"
+                    android:layout_marginBottom="4dp"
                     android:scaleType="center"
                     android:src="@drawable/ic_btn_add_gallery_image" />
 
@@ -67,6 +68,8 @@
                     android:background="@color/fireswing_grey"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp"
+                    android:layout_marginTop="4dp"
+                    android:layout_marginBottom="4dp"
                     android:scaleType="center"
                     android:src="@drawable/ic_btn_add_gallery_image" />
 
@@ -77,6 +80,7 @@
                     android:background="@color/fireswing_grey"
                     android:contentDescription="@string/topic_guide_thumbnail"
                     android:padding="1dp"
+                    android:layout_marginTop="4dp"
                     android:scaleType="center"
                     android:src="@drawable/ic_btn_add_gallery_image" />
             </LinearLayout>

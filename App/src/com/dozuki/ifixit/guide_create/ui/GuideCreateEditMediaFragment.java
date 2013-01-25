@@ -154,7 +154,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          width = (((screenWidth - padding - titleHeight) / 7f) * 5f);
          height = width * (3f / 4f);
 
-         thumbnailHeight = (1f / 3f) * height;
+         thumbnailHeight = ((1f / 3f) * (height))-16/3f;
          thumbnailWidth = (thumbnailHeight * (4f / 3f));
       } else {
          int actionBarHeight =
@@ -171,7 +171,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 7f) * 4f);
          width = height * (4f / 3f);
 
-         thumbnailHeight = (1f / 3f) * height;
+         thumbnailHeight = ((1f / 3f) * (height))-16/3f;
          thumbnailWidth = (thumbnailHeight * (4f / 3f));
       }
 

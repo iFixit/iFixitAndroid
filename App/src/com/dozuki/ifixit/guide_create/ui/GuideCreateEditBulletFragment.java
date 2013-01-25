@@ -80,7 +80,6 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
                  mNewBulletButton.setVisibility(View.GONE);
               }
          }
-         
       });
       
       mBulletContainer = (LinearLayout) v.findViewById(R.id.edit_step_bullet_container);
