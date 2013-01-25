@@ -77,7 +77,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
          @Override
          public void onClick(View v) {
             Intent intent = new Intent(mPortalRef.getActivity(), GuideCreateStepsActivity.class);
-            intent.putExtra(GuideCreateStepsActivity.GuideKey, mGuideCreateObject);
+            intent.putExtra(GuideCreateStepsActivity.GUIDE_KEY, mGuideCreateObject);
             mPortalRef.getActivity().startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
          }
       });

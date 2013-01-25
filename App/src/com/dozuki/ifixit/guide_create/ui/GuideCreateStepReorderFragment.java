@@ -86,7 +86,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
       if (savedInstanceState != null) {
-         mGuide = (GuideCreateObject) savedInstanceState.get(GuideCreateStepsActivity.GuideKey);
+         mGuide = (GuideCreateObject) savedInstanceState.get(GuideCreateStepsActivity.GUIDE_KEY);
       }
       mDiscardChanges = false;
       mAdapter = new StepAdapter(mStepsCopy);
@@ -95,7 +95,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
-      savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey, mGuide);
+      savedInstanceState.putSerializable(GuideCreateStepsActivity.GUIDE_KEY, mGuide);
    }
 
    @Override
