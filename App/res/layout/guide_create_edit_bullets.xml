@@ -4,14 +4,11 @@
     android:layout_height="match_parent"
     android:layout_marginLeft="16dp"
     android:layout_marginRight="16dp"
+    android:descendantFocusability="beforeDescendants"
+    android:focusable="true"
+    android:focusableInTouchMode="true"
     android:gravity="center_horizontal" >
 
-  
-    <LinearLayout
-        android:layout_width="0px"
-        android:layout_height="0px"
-        android:focusable="true"
-        android:focusableInTouchMode="true" />
     <LinearLayout
         android:id="@+id/edit_step_bullet_container"
         android:layout_width="match_parent"
