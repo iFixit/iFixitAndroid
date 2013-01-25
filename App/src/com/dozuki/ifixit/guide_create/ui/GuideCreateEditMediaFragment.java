@@ -151,7 +151,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       if (resources.getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
          padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
-         width = (((screenWidth - padding - titleHeight) / 8f) * 5f);
+         width = (((screenWidth - padding - titleHeight) / 7f) * 5f);
          height = width * (3f / 4f);
 
          thumbnailHeight = (1f / 3f) * height;
@@ -168,7 +168,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
          padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
 
-         height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 8f) * 4f);
+         height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 7f) * 4f);
          width = height * (4f / 3f);
 
          thumbnailHeight = (1f / 3f) * height;

@@ -90,7 +90,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          mStepList = (ArrayList<GuideCreateStepObject>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
       }
       if (savedInstanceState != null) {
-         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateActivity.GUIDE_KEY);
+         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
          mPagePosition = savedInstanceState.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
@@ -201,7 +201,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
-      savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey, mGuide);
+      savedInstanceState.putSerializable(GuideCreateStepsActivity.GUIDE_KEY, mGuide);
       savedInstanceState.putBoolean(DeleteGuideDialogKey, mConfirmDelete);
       savedInstanceState.putInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, mPagePosition);
       savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
@@ -251,7 +251,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          }
          mPagePosition = position;
          mCurStepFragment = (GuideCreateStepEditFragment) object;
-         Log.i(TAG, "page selected: " + mPagePosition);
       }
    }
 

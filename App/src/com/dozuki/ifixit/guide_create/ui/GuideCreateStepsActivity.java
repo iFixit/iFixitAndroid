@@ -22,7 +22,7 @@ import com.dozuki.ifixit.util.IfixitActivity;
 public class GuideCreateStepsActivity extends IfixitActivity implements GuideCreateIntroListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
    private static final String SHOWING_HELP = "SHOWING_HELP";
-   public static String GuideKey = "GuideKey";
+   public static String GUIDE_KEY = "GUIDE_KEY";
    private ActionBar mActionBar;
    private GuideCreateStepPortalFragment mStepPortalFragment;
    private ArrayList<GuideCreateStepObject> mStepList;
@@ -58,7 +58,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       }
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
-         mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsActivity.GuideKey);
+         mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
          if (mGuide.getSteps() == null)
             mGuide.setStepList(new ArrayList<GuideCreateStepObject>());
          mStepList = mGuide.getSteps();
@@ -104,7 +104,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
-      savedInstanceState.putSerializable(GuideCreateStepsActivity.GuideKey, mGuide);
+      savedInstanceState.putSerializable(GuideCreateStepsActivity.GUIDE_KEY, mGuide);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       super.onSaveInstanceState(savedInstanceState);
    }
