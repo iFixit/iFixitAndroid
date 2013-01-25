@@ -16,6 +16,7 @@
         android:id="@+id/edit_step_bullet_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:orientation="vertical" >
         
     <ImageButton
@@ -25,7 +26,7 @@
         android:layout_gravity="center"
         android:src="@drawable/ic_btn_add_bullet"
         android:contentDescription="@string/topic_guide_thumbnail"
-        android:padding="1dp"/>
+        android:padding="8dp"/>
     
    </LinearLayout>
 

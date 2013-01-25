@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 
 import com.actionbarsherlock.app.ActionBar;
@@ -51,9 +52,10 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
-      prepareNavigationSpinner(mActionBar);
-      this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-
+      if (Build.VERSION.SDK_INT > 10) {
+         prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
+         this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
+      }
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsActivity.GuideKey);
@@ -167,6 +169,9 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 
    public void onResume() {
       super.onResume();
-      this.getSupportActionBar().setSelectedNavigationItem(1);
+
+      if (Build.VERSION.SDK_INT > 10) {
+         this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
+      }
    }
 }

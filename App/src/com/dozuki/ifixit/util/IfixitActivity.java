@@ -148,35 +148,27 @@ public abstract class IfixitActivity extends Activity {
 		}
 	}
 	
-	public void prepareNavigationSpinner(com.actionbarsherlock.app.ActionBar actionbar)
+	public void prepareNavigationSpinner(com.actionbarsherlock.app.ActionBar actionbar, int index)
 	{
 	   
 	   
       ArrayList<NavigationItem> data = new ArrayList<NavigationItem>();
-      data.add(new NavigationItem(R.drawable.ic_menu_spinner_browse,
-            "Browse", 1));
-      data.add(new NavigationItem(R.drawable.ic_menu_spinner_guides,
-         "My Guides", 2));
+      data.add(new NavigationItem(R.drawable.ic_menu_spinner_browse, "Browse", 1));
+      data.add(new NavigationItem(R.drawable.ic_menu_spinner_guides, "My Guides", 2));
 
-
-      NavigationItemAdapter adapter = new NavigationItemAdapter(this, R.layout.navigation_item,
-            data);
-	   ///////////
-	   
-		  actionbar.setTitle(MainApplication.get().getSiteDisplayTitle());
-		  actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-
-		 /* SpinnerAdapter mSpinnerAdapter = ArrayAdapter.createFromResource(this, R.array.action_list,
-		          android.R.layout.simple_spinner_dropdown_item);*/
-		  OnNavigationListener mOnNavigationListener = new OnNavigationListener() {
-			   //String[] strings = getResources().getStringArray(R.array.action_list);
-			   @Override
-			   public boolean onNavigationItemSelected(int position, long itemId) {
-				 onSpinnerItemSelected(position);
-			     return true;
-			   }
-			 };
-		  actionbar.setListNavigationCallbacks(adapter, mOnNavigationListener);
+      NavigationItemAdapter adapter = new NavigationItemAdapter(this, R.layout.navigation_item, data);
+      actionbar.setTitle(MainApplication.get().getSiteDisplayTitle());
+      actionbar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+      actionbar.setSelectedNavigationItem(index);
+      OnNavigationListener mOnNavigationListener = new OnNavigationListener() {
+         @Override
+         public boolean onNavigationItemSelected(int position, long itemId) {
+            onSpinnerItemSelected(position);
+            return true;
+         }
+      };
+      actionbar.setListNavigationCallbacks(adapter, mOnNavigationListener);
+      actionbar.setSelectedNavigationItem(index);
 	}
 
    public void onSpinnerItemSelected(int position) {
@@ -300,12 +292,12 @@ public abstract class IfixitActivity extends Activity {
       public View getView(int position, View convertView, ViewGroup parent) {
          View v = convertView;
          v = inflater.inflate(R.layout.navigation_item_selected, null);
-         TextView title = (TextView) v.findViewById(R.id.selected_navigation_item_text);
+         TextView title = (TextView) v;
          final NavigationItem item = data.get(position);
          if (item != null) {
             title.setText(item.title);
          }
-         return v;
+         return title;
       }
 
       @Override

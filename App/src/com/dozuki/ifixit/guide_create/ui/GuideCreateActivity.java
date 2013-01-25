@@ -66,10 +66,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
-      prepareNavigationSpinner(mActionBar);
+      prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
       TASK_ID = this.getTaskId();
-      this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-
       mGuideList = new ArrayList<GuideCreateObject>();
       if (savedInstanceState != null) {
          mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
@@ -201,6 +199,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    public void onResume() {
       super.onResume();
 
-      this.getSupportActionBar().setSelectedNavigationItem(1);
+      this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
    }
 }
