@@ -66,7 +66,7 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mStepObject.setEditMode(isChecked);
-            portalRef.onItemSelected(mStepObject.getStepNum(), isChecked);
+            portalRef.onItemSelected(mStepObject.getStepId(), isChecked);
             setEditMode(isChecked, true, mToggleEdit, mEditBar);
          }
       });

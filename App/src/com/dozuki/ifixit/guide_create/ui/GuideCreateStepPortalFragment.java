@@ -233,6 +233,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
          mReorderStepsBar.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+               closeSelectedStep();
                launchStepReorder();
             }
          });
@@ -250,17 +251,22 @@ public class GuideCreateStepPortalFragment extends Fragment {
          mCurOpenGuideObjectID = NO_ID;
          return;
       }
+      closeSelectedStep();
+      mCurOpenGuideObjectID = id;
+   }
+   
+   private void closeSelectedStep() {
       if (mCurOpenGuideObjectID != NO_ID) {
          GuideCreateStepListItem view = ((GuideCreateStepListItem) mStepList.findViewWithTag(mCurOpenGuideObjectID));
          if (view != null) {
             view.setChecked(false);
          }
          for (int i = 0; i < mGuide.getSteps().size(); i++) {
-            if (mGuide.getSteps().get(i).getStepNum() == mCurOpenGuideObjectID) {
+            if (mGuide.getSteps().get(i).getStepId() == mCurOpenGuideObjectID) {
                mGuide.getSteps().get(i).setEditMode(false);
             }
          }
       }
-      mCurOpenGuideObjectID = id;
+      mCurOpenGuideObjectID = NO_ID;
    }
 }
