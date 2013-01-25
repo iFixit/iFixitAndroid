@@ -13,14 +13,15 @@ public class GuideCreateStepObject implements Serializable {
 	 * 
 	 */
    private static final long serialVersionUID = -2019322123419333278L;
+   protected int mStepId;
    protected int mStepNum;
    protected String mTitle;
    protected boolean mEditMode; // save state for edit drop down
    protected ArrayList<StepImage> mImages;
    protected ArrayList<StepLine> mLines;
 
-   public GuideCreateStepObject(int stepNum) {
-      mStepNum = stepNum;
+   public GuideCreateStepObject(int stepId) {
+      mStepId = stepId;
       mImages = new ArrayList<StepImage>();
       mLines = new ArrayList<StepLine>();
    }
@@ -48,9 +49,23 @@ public class GuideCreateStepObject implements Serializable {
    public String getTitle() {
       return mTitle;
    }
+   
+   public int getStepId() {
+      return mStepId;
+   }
+   
+   public void setStepId(int stepId)
+   {
+      mStepId = stepId;
+   }
 
    public int getStepNum() {
       return mStepNum;
+   }
+   
+   public void setStepNum(int stepNum)
+   {
+      mStepNum = stepNum;
    }
 
    public void addImage(StepImage image) {

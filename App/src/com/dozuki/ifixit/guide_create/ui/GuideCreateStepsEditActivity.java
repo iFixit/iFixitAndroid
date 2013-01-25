@@ -135,8 +135,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          public void onItemClick(QuickAction source, int pos, int actionId) {
             switch (actionId) {
                case NEW_STEP_ID:
-                  GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.StepID++);
-                  item.setTitle("Test Step " + GuideCreateStepPortalFragment.StepID);
+                  GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+                  item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
                   mStepList.add(mPagePosition + 1, item);
                   mPager.invalidate();
                   titleIndicator.invalidate();
@@ -254,6 +254,10 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    }
 
    private void save() {
+      for(int i = 0 ; i < mStepList.size() ; i++)
+      {
+         mStepList.get(i).setStepNum(i);
+      }
       disableSave();
       mSavingIndicator.setVisibility(View.VISIBLE);
       mGuide.sync(mCurStepFragment.syncGuideChanges(), mPagePosition);

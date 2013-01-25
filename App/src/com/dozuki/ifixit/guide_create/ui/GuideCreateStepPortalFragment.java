@@ -28,9 +28,10 @@ import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 
 public class GuideCreateStepPortalFragment extends Fragment {
+   public static int STEP_ID = 0;
+   public static final String DEFAULT_TITLE = "New Title";
    private static final int NO_ID = -1;
    private static final String CURRENT_OPEN_ITEM = null;
-   public static int StepID = 0;
    private ListView mStepList;
    private ImageManager mImageManager;
    private StepAdapter mStepAdapter;
@@ -100,8 +101,9 @@ public class GuideCreateStepPortalFragment extends Fragment {
          public void onClick(View v) {
             if (mNoStepsText.getVisibility() == View.VISIBLE)
                mNoStepsText.setVisibility(View.GONE);
-            GuideCreateStepObject item = new GuideCreateStepObject(StepID++);
-            item.setTitle("Test Step " + StepID);
+            GuideCreateStepObject item = new GuideCreateStepObject(STEP_ID++);
+            item.setStepNum(mGuide.getSteps().size());
+            item.setTitle(DEFAULT_TITLE);
             launchStepEdit(item);
          }
       });
@@ -147,7 +149,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
          GuideCreateStepListItem itemView = (GuideCreateStepListItem) convertView;
          GuideCreateStepObject step = (GuideCreateStepObject) getItem(position);
          itemView = new GuideCreateStepListItem(getActivity(), mImageManager, mSelf, step, position);
-         itemView.setTag(step.getStepNum());
+         itemView.setTag(step.getStepId());
          return itemView;
       }
    }
@@ -209,6 +211,10 @@ public class GuideCreateStepPortalFragment extends Fragment {
 
    void deleteStep(GuideCreateStepObject step) {
       mGuide.deleteStep(step);
+      for(int i = 0 ; i < mGuide.getSteps().size() ; i++)
+      {
+         mGuide.getSteps().get(i).setStepNum(i);
+      }
    }
 
    void verifyReorder() {
