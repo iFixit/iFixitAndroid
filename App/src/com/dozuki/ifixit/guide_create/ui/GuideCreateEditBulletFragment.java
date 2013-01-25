@@ -16,6 +16,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -57,7 +58,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       View v = inflater.inflate(R.layout.guide_create_edit_bullets, container, false);
       if (savedInstanceState != null) {
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
-
+         Log.e("SAVES", "WIOOO");
          mChooseBulletDialog =
             (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, BULLET_FRAG_ID);
          mShowingChooseBulletDialog = savedInstanceState.getBoolean(SHOWING_BULLET_FRAG, false);
@@ -74,7 +75,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          @Override
          public void onClick(View v) {
               mLines.add(new StepLine("black", 0, ""));
-              mBulletContainer.addView(getView(mLines.size()-1), mLines.size()-1);
+              mBulletContainer.addView(getView( mLines.get(mLines.size()-1), mLines.size()-1), mLines.size()-1);
               if(mLines.size() == BULLET_LIMIT) {
                  mNewBulletButton.setVisibility(View.GONE);
               }
@@ -82,11 +83,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          
       });
       
-      
       mBulletContainer = (LinearLayout) v.findViewById(R.id.edit_step_bullet_container);
       initilizeBulletContainer();
-      
-      
 
       return v;
    }
@@ -102,7 +100,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    
    private void initilizeBulletContainer() {
       for(int i = 0; i < mLines.size(); i++) {
-         mBulletContainer.addView(getView(i), i); 
+         mBulletContainer.addView(getView(mLines.get(i), i), i); 
       }
       if(mLines.size() == BULLET_LIMIT) {
          mNewBulletButton.setVisibility(View.GONE);
@@ -110,10 +108,9 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
    
 
-      public View getView(final int position) {
+      public View getView(final StepLine line, final int mPos) {
          LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
          View v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
-         final int mPos = position;
          FrameLayout iconFrame = (FrameLayout) v.findViewById(R.id.guide_step_item_frame);
          
          iconFrame.setOnClickListener(new OnClickListener() {
@@ -128,14 +125,18 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             }
          });
          LayoutParams params = (LayoutParams) iconFrame.getLayoutParams();
-         params.setMargins(BULLET_INDENT * mLines.get(position).getLevel(), 0, 0, 0);
+         params.setMargins(BULLET_INDENT * line.getLevel(), 0, 0, 0);
          iconFrame.setLayoutParams(params);
-         final EditText text = (EditText) v.findViewById(R.id.step_title_textview);
-         text.setText(mLines.get(position).getText());
+         EditText text = (EditText) v.findViewById(R.id.step_title_textview);
+         text.setText(line.getText());
+         text.setId(mPos);
          text.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
-               mLines.get(position).setText(s.toString());
+               if(s.toString().equals(line.getText())) {
+                  return;
+               }
+               mLines.get(mPos).setText(s.toString());
                setGuideDirty();
             }
             @Override
@@ -146,7 +147,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          });
         
          ImageView icon = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail);
-         icon.setImageResource(getBulletResource(mLines.get(position).getColor()));
+         icon.setImageResource(getBulletResource(line.getColor()));
 
          return v;
       }
@@ -209,7 +210,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          }
          curStep.setLevel(curStep.getLevel() + 1);
          mBulletContainer.removeViewAt(index);
-         mBulletContainer.addView(getView(index), index);
+         mBulletContainer.addView(getView(mLines.get(index), index), index);
       } else if (color.equals("action_unindent")) {
          if (curStep.getLevel() == 0) {
             Toast.makeText(((Activity) getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
@@ -217,7 +218,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          }
          curStep.setLevel(curStep.getLevel() - 1);
          mBulletContainer.removeViewAt(index);
-         mBulletContainer.addView(getView(index), index);
+         mBulletContainer.addView(getView(mLines.get(index), index), index);
          
       } else if (color.equals("action_reorder")) {
         // launchBulletReorder();
@@ -232,7 +233,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       } else {
          curStep.setColor(color);
          mBulletContainer.removeViewAt(index);
-         mBulletContainer.addView(getView(index), index);
+         mBulletContainer.addView(getView(mLines.get(index), index), index);
       }
       setGuideDirty();
    }
