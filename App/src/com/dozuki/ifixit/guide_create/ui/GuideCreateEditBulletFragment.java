@@ -176,28 +176,24 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
          });
-
-         text.setOnFocusChangeListener(new OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-               if (hasFocus) {
-                  mCurrentFocusedRow = position;
-               }
-            }
-         });
-
+      
          if (mCurrentFocusedRow == position) {
+            text.setFocusableInTouchMode(true);
             text.requestFocus();
          } else {
             text.setFocusableInTouchMode(false);
          }
 
          text.setOnTouchListener(new OnTouchListener() {
-
             @Override
             public boolean onTouch(View v, MotionEvent event) {
                if (event.getAction() == MotionEvent.ACTION_UP) {
-                  v.setFocusableInTouchMode(true);
+                  if (text.hasFocus()) {
+                     return false;
+                  }
+                  text.setFocusableInTouchMode(true);
+                  mCurrentFocusedRow = position;
+                  mBulletList.invalidateViews();
                }
                return false;
             }
