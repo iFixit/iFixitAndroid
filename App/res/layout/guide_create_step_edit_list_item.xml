@@ -14,8 +14,6 @@
         android:layout_marginLeft="8dp"
         android:layout_toRightOf="@+id/guide_step_item_frame"
         android:singleLine="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
         android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
         android:imeOptions="actionDone"
         android:maxLength="350"
