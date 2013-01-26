@@ -294,6 +294,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
                {
                   mGuide.getSteps().get(i).setStepNum(i);
                }
+               if (mGuide.getSteps().isEmpty())
+                  mNoStepsText.setVisibility(View.VISIBLE);
                mStepForDelete = null;
                invalidateViews();
                verifyReorder();

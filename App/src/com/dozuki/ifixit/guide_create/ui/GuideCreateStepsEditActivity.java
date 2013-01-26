@@ -351,11 +351,13 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    
    public void enableSave() {
       mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_blue));
+      mSaveStep.setTextColor(getResources().getColor(R.color.white));
       mSaveStep.setEnabled(true);
    }
    
    public void disableSave() {
-      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_grey));
+      mSaveStep.setBackgroundColor(getResources().getColor(R.color.dark));
+      mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_disabled));
       mSaveStep.setEnabled(false);
    }
    

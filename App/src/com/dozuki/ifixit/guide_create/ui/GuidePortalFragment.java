@@ -169,6 +169,18 @@ public class GuidePortalFragment extends Fragment {
       }
       mCurOpenGuideObjectID = id;
    }
+   
+   public void toggleNoGuidesText(boolean show)
+   {
+      if(show)
+      {
+         mNoGuidesText.setVisibility(View.VISIBLE);
+      }
+      else
+      {
+         mNoGuidesText.setVisibility(View.GONE);
+      }
+   }
 
    public void invalidateViews() {
       mGuideList.invalidateViews();
