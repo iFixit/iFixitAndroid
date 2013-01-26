@@ -88,9 +88,18 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
             mPortalRef.launchStepEdit(mStepPosition);
          }
       });
-      String step = mStepObject.getTitle();
-      mStepsView.setText(step);
-      mStepNumber.setText("Step " + (mStepPosition + 1));
+      if(mStepObject.getTitle().equals(""))
+      {
+         mStepsView.setText("Step " + (mStepPosition + 1));
+         mStepNumber.setVisibility(View.GONE);
+      }
+      else
+      {
+         mStepsView.setText(mStepObject.getTitle());
+         mStepNumber.setText("Step " + (mStepPosition + 1));
+         mStepNumber.setVisibility(View.VISIBLE);
+      }
+ 
       setImageThumb(mStepObject.getImages(), mImageView);
       setEditMode(isEdit, false, mToggleEdit, mEditBar);
    }
