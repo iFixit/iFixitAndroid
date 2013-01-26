@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.gallery.ui;
 
+import java.util.ArrayList;
+
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 
@@ -19,18 +21,22 @@ import android.view.ViewGroup;
 
 public class PhotoMediaFragment extends MediaFragment {
    
+   static final String FILTERED_MEDIA = "FILTERED_MEDIA";
+   ArrayList<String> mFilteredMedia= new ArrayList<String>();
+   
    
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
    }
- 
+
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
+   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      // mFilteredMedia =
+      Bundle b = getArguments();      
+      mFilteredMedia = (ArrayList<String>) b.getStringArrayList(FILTERED_MEDIA);
       return super.onCreateView(inflater, container, savedInstanceState);
    }
-   
    
    @Subscribe
    public void onUserImages(APIEvent.UserImages event) {
@@ -39,8 +45,12 @@ public class PhotoMediaFragment extends MediaFragment {
          if (imageList.getItems().size() > 0) {
             int oldImageSize = mMediaList.getItems().size();
             for (int i = 0; i < imageList.getItems().size(); i++) {
-               mSelectedList.add(false);
-               mMediaList.addItem(imageList.getItems().get(i));
+               if (mFilteredMedia != null && mFilteredMedia.contains(imageList.getItems().get(i).getItemId())) {
+                  continue;
+               } else {
+                  mSelectedList.add(false);
+                  mMediaList.addItem(imageList.getItems().get(i));
+               }
             }
             mItemsDownloaded += (mMediaList.getItems().size() - oldImageSize);
             mGalleryAdapter.invalidatedView();

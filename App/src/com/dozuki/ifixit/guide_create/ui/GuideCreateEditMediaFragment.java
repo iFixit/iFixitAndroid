@@ -118,6 +118,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
                case REPLACE_IMAGE_ID:
                   Intent intent = new Intent(getActivity(), GalleryActivity.class);
                   intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+                  ArrayList<String> ids = getImageIds();
+                  intent.putExtra(GalleryActivity.FILTER_LIST_KEY, ids);
                   getActivity().startActivityForResult(intent, mCurSelectedKey);
                   return;
                case REMOVE_IMAGE_ID:
@@ -164,7 +166,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          width = (((screenWidth - padding - titleHeight) / 7f) * 5f);
          height = width * (3f / 4f);
 
-         thumbnailHeight = ((1f / 3f) * (height))-16/3f;
+         thumbnailHeight = ((1f / 3f) * (height)) - 16 / 3f;
          thumbnailWidth = (thumbnailHeight * (4f / 3f));
       } else {
          int actionBarHeight =
@@ -182,7 +184,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 7f) * 4f);
          width = height * (4f / 3f);
 
-         thumbnailHeight = ((1f / 3f) * (height))-16/3f;
+         thumbnailHeight = ((1f / 3f) * (height)) - 16 / 3f;
          thumbnailWidth = (thumbnailHeight * (4f / 3f));
       }
 
@@ -206,9 +208,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          mStepTitle.setText(mTitle);
       }
    }
-   
+
    public void setStepNumber(int num) {
-      mStepNum = num+1;
+      mStepNum = num + 1;
       if (mStepSuperTitle != null) {
          mStepSuperTitle.setText("Step " + mStepNum + " — ");
       }
@@ -257,6 +259,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             if (microURL == null) {
                intent = new Intent(getActivity(), GalleryActivity.class);
                intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+               ArrayList<String> ids = getImageIds();
+               intent.putExtra(GalleryActivity.FILTER_LIST_KEY, ids);
                getActivity().startActivityForResult(intent, IMAGE_KEY_1);
             }
             break;
@@ -265,6 +269,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             if (microURL == null) {
                intent = new Intent(getActivity(), GalleryActivity.class);
                intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+               ArrayList<String> ids = getImageIds();
+               intent.putExtra(GalleryActivity.FILTER_LIST_KEY, ids);
                getActivity().startActivityForResult(intent, IMAGE_KEY_2);
             }
             break;
@@ -273,6 +279,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             if (microURL == null) {
                intent = new Intent(getActivity(), GalleryActivity.class);
                intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+               ArrayList<String> ids = getImageIds();
+               intent.putExtra(GalleryActivity.FILTER_LIST_KEY, ids);
                getActivity().startActivityForResult(intent, IMAGE_KEY_3);
             }
             break;
@@ -382,6 +390,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    @Override
    public boolean onLongClick(View v) {
       Intent intent;
+      ArrayList<String> ids;
       ((GuideCreateStepEditFragment) getParentFragment()).onMediaChanging();
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
@@ -392,6 +401,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             }
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+            ids = getImageIds();
+            intent.putExtra(GalleryActivity.FILTER_LIST_KEY, ids);
             getActivity().startActivityForResult(intent, IMAGE_KEY_1);
             break;
          case R.id.step_edit_thumb_2:
@@ -402,6 +413,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             }
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+            ids = getImageIds();
+            intent.putExtra(GalleryActivity.FILTER_LIST_KEY, ids);
             getActivity().startActivityForResult(intent, IMAGE_KEY_2);
             break;
          case R.id.step_edit_thumb_3:
@@ -412,12 +425,22 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             }
             intent = new Intent(getActivity(), GalleryActivity.class);
             intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+            ids = getImageIds();
+            intent.putExtra(GalleryActivity.FILTER_LIST_KEY, ids);
             getActivity().startActivityForResult(intent, IMAGE_KEY_3);
             break;
          case R.id.step_edit_thumb_media:
             break;
       }
       return true;
+   }
+
+   private ArrayList<String> getImageIds() {
+      ArrayList<String> ids = new ArrayList<String>();
+      ids.add(mImageOneInfo.getImageid() + "");
+      ids.add(mImageTwoInfo.getImageid() + "");
+      ids.add(mImageThreeInfo.getImageid() + "");
+      return ids;
    }
 
    public String getTitle() {
