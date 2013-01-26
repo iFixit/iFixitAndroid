@@ -41,7 +41,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       public void onMediaChanging();
    }
 
-   private static String NO_TITLE = "Title";
+   private static String NO_TITLE = "";
    public static int NO_IMAGE = -1;
    public static final int IMAGE_KEY_1 = 1;
    public static final int IMAGE_KEY_2 = 2;
@@ -126,8 +126,10 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             }
          }
       });
-      mStepTitle.setText(mTitle);
-      mStepSuperTitle.setText("Step " + mStepNum + " - ");
+      if (mTitle.length() > 0) {
+         mStepTitle.setText(mTitle);
+      }
+      mStepSuperTitle.setText("Step " + mStepNum + " — ");
       fitImagesToSpace();
       setImage(IMAGE_KEY_1);
       setImage(IMAGE_KEY_2);
@@ -200,16 +202,15 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    public void setStepTitle(String title) {
       mTitle = title;
-      if (mStepTitle != null) {
+      if (mStepTitle != null && title.length() > 0) {
          mStepTitle.setText(mTitle);
       }
    }
    
    public void setStepNumber(int num) {
       mStepNum = num+1;
-      Log.e("STEP NUM", "EEF" + num+1);
       if (mStepSuperTitle != null) {
-         mStepSuperTitle.setText("Step " + mStepNum + " - ");
+         mStepSuperTitle.setText("Step " + mStepNum + " — ");
       }
    }
 

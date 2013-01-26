@@ -33,7 +33,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
    public static int STEP_ID = 0;
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String STEP_FOR_DELETE = "STEP_FOR_DELETE";
-   public static final String DEFAULT_TITLE = "New Title";
+   public static final String DEFAULT_TITLE = "";
    private static final int NO_ID = -1;
    private static final String CURRENT_OPEN_ITEM = null;
    private ListView mStepList;
@@ -125,11 +125,13 @@ public class GuideCreateStepPortalFragment extends Fragment {
       mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
       verifyReorder();
       mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
-      if (mGuide.getSteps().isEmpty())
+      if (mGuide.getSteps().isEmpty()) {
          mNoStepsText.setVisibility(View.VISIBLE);
+      }
       mStepList.setAdapter(mStepAdapter);
-      if( mShowingDelete)
+      if( mShowingDelete) {
          createDeleteDialog(mStepForDelete).show();
+      }
       return view;
    }
 
