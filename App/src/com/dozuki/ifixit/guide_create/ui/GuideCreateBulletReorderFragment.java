@@ -110,6 +110,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
       mAdapter = new StepAdapter(mLines);
       View view = inflater.inflate(R.layout.guide_create_step_portal_reorder, container, false);
       mConfirm = (Button) view.findViewById(R.id.reorder_steps_confirm);
+      mConfirm.setVisibility(View.VISIBLE);
       mConfirm.setOnClickListener(new OnClickListener() {
 
          @Override
@@ -120,6 +121,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
       });
       mCancel = (Button) view.findViewById(R.id.reorder_steps_cancel);
+      mCancel..setVisibility(View.VISIBLE);
       mCancel.setOnClickListener(new OnClickListener() {
 
          @Override
