@@ -40,7 +40,6 @@ public class GuideCreateStepEditFragment extends Fragment implements MediaChange
          mEditBulletFrag = (GuideCreateEditBulletFragment) getChildFragmentManager().findFragmentById(R.id.guide_create_edit_bullet_fragment_container);
          
          mStepObject =  (GuideCreateStepObject) savedInstanceState.getSerializable(GUIDE_STEP_KEY);
-         Log.e("save", "lol");
          mStepObject.getLines();
           return v;
       }

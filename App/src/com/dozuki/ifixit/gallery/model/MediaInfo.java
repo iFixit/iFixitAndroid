@@ -84,7 +84,7 @@ public abstract class MediaInfo implements Serializable {
 
    @Override
    public boolean equals(Object obj) {
-      if (!(obj instanceof UserImageInfo)) {
+      if (!(obj instanceof MediaInfo)) {
          return false;
       }
 
