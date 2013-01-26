@@ -26,6 +26,7 @@ import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -47,6 +48,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    private static final String TITLE_KEY = "TITLE_KEY";
    private static final int REPLACE_IMAGE_ID = 1;
    private static final int REMOVE_IMAGE_ID = 2;
+   private static final int INDICATOR_HEIGHT = 49;
 
    private EditText mStepTitle;
    // images
@@ -119,7 +121,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          }
       });
       mStepTitle.setText(mTitle);
-      fitImagesToSpace(v.getLayoutParams().height, v.getLayoutParams().width);
+      fitImagesToSpace();
       setImage(IMAGE_KEY_1);
       setImage(IMAGE_KEY_2);
       setImage(IMAGE_KEY_3);
@@ -127,12 +129,11 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       return v;
    }
 
-   public void fitImagesToSpace(float vHeight, float vWidth) {
+   public void fitImagesToSpace() {
       FragmentActivity context = getActivity();
       Resources resources = context.getResources();
       DisplayMetrics metrics = new DisplayMetrics();
       context.getWindowManager().getDefaultDisplay().getMetrics(metrics);
-
       float screenHeight = metrics.heightPixels;
       float screenWidth = metrics.widthPixels;
       float thumbnailHeight = 0f;
@@ -161,12 +162,13 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             resources.getDimensionPixelSize(com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
          int indicatorHeight = ((GuideCreateStepsEditActivity) context).getIndicatorHeight();
 
-         if (indicatorHeight == 0) {
-            indicatorHeight = 49;
-         }
+         // if (indicatorHeight == 0) {
+         indicatorHeight = INDICATOR_HEIGHT;
+         // }
 
-         padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
-         padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+         // indicatorHeight = 0;
+         // padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+         // padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
 
          height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 7f) * 4f);
          width = height * (4f / 3f);

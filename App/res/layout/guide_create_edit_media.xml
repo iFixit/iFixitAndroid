@@ -6,6 +6,7 @@
     android:focusable="true"
     android:focusableInTouchMode="true"
     android:orientation="vertical" >
+     <requestFocus />
 
     <EditText
         android:id="@+id/step_edit_title_text"

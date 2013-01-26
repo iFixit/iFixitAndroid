@@ -12,6 +12,8 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -56,16 +58,15 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    private GuideCreateObject mGuide;
    private GuideCreateStepEditFragment mCurStepFragment;
    private ArrayList<GuideCreateStepObject> mStepList;
-   private ImageButton mSpinnerMenu;
+   private ImageButton mAddStepButton;
    private Button mSaveStep;
-   private ImageButton mViewSteps;
+   private ImageButton mDeleteStepButton;
    private StepAdapter mStepAdapter;
    private LockableViewPager mPager;
    private TitlePageIndicator titleIndicator;
    private RelativeLayout mBottomBar;
    private int mPagePosition;
    private boolean mConfirmDelete;
-   private QuickAction mQuickAction;
    private ProgressBar mSavingIndicator;
    private boolean mIsStepDirty;
    private boolean mShowingHelp;
@@ -74,6 +75,16 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @SuppressWarnings("unchecked")
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+     
+      /** lock screen for small sizes to portrait.
+       * Courtesy: http://stackoverflow.com/questions/10491531/android-restrict-activity-orientation-based-on-screen-size
+       **/
+      if (isScreenLarge()) {
+         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+      } else {
+         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      }
+      
       setTheme(((MainApplication) getApplication()).getSiteTheme());
       getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
       mActionBar = getSupportActionBar();
@@ -107,8 +118,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       } else {
          enableSave();
       }
-      mSpinnerMenu = (ImageButton) findViewById(R.id.step_edit_spinner);
-      mViewSteps = (ImageButton) findViewById(R.id.step_edit_view_steps);
+      mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
+      mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
       mBottomBar = (RelativeLayout) findViewById(R.id.guide_create_edit_bottom_bar);
       mSavingIndicator = (ProgressBar) findViewById(R.id.step_edit_save_progress_bar);
 
@@ -121,40 +132,40 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       titleIndicator.setViewPager(mPager);
       mSaveStep.setOnClickListener(this);
 
-      ActionItem addAction =
-         new ActionItem(NEW_STEP_ID, getResources().getString(R.string.guide_create_edit_step_add_action),
-            getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
-      ActionItem delAction =
-         new ActionItem(DELETE_STEP_ID, getResources().getString(R.string.guide_create_edit_step_delete_action),
-            getResources().getDrawable(R.drawable.ic_menu_bot_step_delete));
+//      ActionItem addAction =
+//         new ActionItem(NEW_STEP_ID, getResources().getString(R.string.guide_create_edit_step_add_action),
+//            getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
+//      ActionItem delAction =
+//         new ActionItem(DELETE_STEP_ID, getResources().getString(R.string.guide_create_edit_step_delete_action),
+//            getResources().getDrawable(R.drawable.ic_menu_bot_step_delete));
+//
+//      mQuickAction = new QuickAction(this);
+//      mQuickAction.addActionItem(addAction);
+//      mQuickAction.addActionItem(delAction);
+//      mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
+//
+//         @Override
+//         public void onItemClick(QuickAction source, int pos, int actionId) {
+//            switch (actionId) {
+//               case NEW_STEP_ID:
+//                  GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+//                  item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+//                  mStepList.add(mPagePosition + 1, item);
+//                  mPager.invalidate();
+//                  titleIndicator.invalidate();
+//                  mPager.setCurrentItem(mPagePosition + 1, true);
+//                  break;
+//               case DELETE_STEP_ID:
+//                  if (!mStepList.isEmpty())
+//                     createDeleteDialog(GuideCreateStepsEditActivity.this).show();
+//                  break;
+//            }
+//
+//         }
+//      });
 
-      mQuickAction = new QuickAction(this);
-      mQuickAction.addActionItem(addAction);
-      mQuickAction.addActionItem(delAction);
-      mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
-
-         @Override
-         public void onItemClick(QuickAction source, int pos, int actionId) {
-            switch (actionId) {
-               case NEW_STEP_ID:
-                  GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
-                  item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
-                  mStepList.add(mPagePosition + 1, item);
-                  mPager.invalidate();
-                  titleIndicator.invalidate();
-                  mPager.setCurrentItem(mPagePosition + 1, true);
-                  break;
-               case DELETE_STEP_ID:
-                  if (!mStepList.isEmpty())
-                     createDeleteDialog(GuideCreateStepsEditActivity.this).show();
-                  break;
-            }
-
-         }
-      });
-
-      mSpinnerMenu.setOnClickListener(this);
-      mViewSteps.setOnClickListener(this);
+      mAddStepButton.setOnClickListener(this);
+      mDeleteStepButton.setOnClickListener(this);
       if (mConfirmDelete)
          createDeleteDialog(this).show();
 
@@ -269,14 +280,21 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @Override
    public void onClick(View v) {
       switch (v.getId()) {
-         case R.id.step_edit_view_steps:
-            finishEdit();
+         case R.id.step_edit_delete_step:
+            if (!mStepList.isEmpty()) {
+               createDeleteDialog(GuideCreateStepsEditActivity.this).show();
+            }
             break;
          case R.id.step_edit_view_save:
             save();
             break;
-         case R.id.step_edit_spinner:
-            mQuickAction.show(v);
+         case R.id.step_edit_add_step:
+            GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+            item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+            mStepList.add(mPagePosition + 1, item);
+            mPager.invalidate();
+            titleIndicator.invalidate();
+            mPager.setCurrentItem(mPagePosition + 1, true);       
             break;
          case android.R.id.home:
             finishEdit();
@@ -441,5 +459,11 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       if (Build.VERSION.SDK_INT > 10) {
          this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
       }
+   }
+   
+   public boolean isScreenLarge() {
+      final int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+      return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
+         || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
    }
 }
