@@ -29,6 +29,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    private GuideCreateObject mGuide;
    private boolean mShowingHelp;
 
+
 	public ArrayList<GuideCreateStepObject> getStepList() {
 		return mStepList;
 	}

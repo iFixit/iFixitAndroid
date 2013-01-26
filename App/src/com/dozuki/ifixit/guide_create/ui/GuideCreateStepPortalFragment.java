@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -29,6 +31,8 @@ import com.squareup.otto.Subscribe;
 
 public class GuideCreateStepPortalFragment extends Fragment {
    public static int STEP_ID = 0;
+   private static final String SHOWING_DELETE = "SHOWING_DELETE";
+   private static final String STEP_FOR_DELETE = "STEP_FOR_DELETE";
    public static final String DEFAULT_TITLE = "New Title";
    private static final int NO_ID = -1;
    private static final String CURRENT_OPEN_ITEM = null;
@@ -42,6 +46,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
    private TextView mNoStepsText;
    private GuideCreateStepPortalFragment mSelf;
    private int mCurOpenGuideObjectID;
+   private GuideCreateStepObject mStepForDelete;
+   private boolean mShowingDelete;
 
    public GuideCreateStepPortalFragment(GuideCreateObject guide) {
       super();
@@ -63,6 +69,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
       mCurOpenGuideObjectID = NO_ID;
       if (savedInstanceState != null) {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
+         mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
+         mStepForDelete = (GuideCreateStepObject) savedInstanceState.getSerializable(STEP_FOR_DELETE); 
       }
       // APIService.call((Activity) getActivity(),
       // APIService.getGuideAPICall(mGuide.getGuideid()));
@@ -120,6 +128,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
       if (mGuide.getSteps().isEmpty())
          mNoStepsText.setVisibility(View.VISIBLE);
       mStepList.setAdapter(mStepAdapter);
+      if( mShowingDelete)
+         createDeleteDialog(mStepForDelete).show();
       return view;
    }
 
@@ -210,11 +220,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
    }
 
    void deleteStep(GuideCreateStepObject step) {
-      mGuide.deleteStep(step);
-      for(int i = 0 ; i < mGuide.getSteps().size() ; i++)
-      {
-         mGuide.getSteps().get(i).setStepNum(i);
-      }
+      createDeleteDialog(step).show();
    }
 
    void verifyReorder() {
@@ -243,6 +249,8 @@ public class GuideCreateStepPortalFragment extends Fragment {
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
+      savedInstanceState.putSerializable(STEP_FOR_DELETE, mStepForDelete);
+      savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
       super.onSaveInstanceState(savedInstanceState);
    }
 
@@ -268,5 +276,43 @@ public class GuideCreateStepPortalFragment extends Fragment {
          }
       }
       mCurOpenGuideObjectID = NO_ID;
+   }
+   
+   public AlertDialog createDeleteDialog(GuideCreateStepObject item) {
+      mStepForDelete = item;
+      mShowingDelete = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      builder.setTitle(getString(R.string.confirm_delete_title))
+         .setMessage(getString(R.string.confirm_delete_body) + " " + mStepForDelete.getTitle() + "?")
+         .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               mShowingDelete = false;
+               mGuide.deleteStep(mStepForDelete);
+               for(int i = 0 ; i < mGuide.getSteps().size() ; i++)
+               {
+                  mGuide.getSteps().get(i).setStepNum(i);
+               }
+               mStepForDelete = null;
+               invalidateViews();
+               verifyReorder();
+               dialog.cancel();
+            }
+         }).setNegativeButton(getString(R.string.confirm_delete_cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               mShowingDelete = false;
+               mStepForDelete = null;
+            }
+         });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingDelete = false;
+            mStepForDelete = null;
+         }
+      });
+
+      return dialog;
    }
 }

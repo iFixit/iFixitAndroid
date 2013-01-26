@@ -108,8 +108,7 @@ public class GuidePortalFragment extends Fragment {
    }
 
    public void deleteGuide(GuideCreateObject item) {
-      mParentRef.getGuideList().remove(item);
-      mGuideAdapter.invalidatedView();
+      mParentRef.createDeleteDialog(item).show();    
    }
 
    public class GuideCreateListAdapter extends BaseAdapter {
