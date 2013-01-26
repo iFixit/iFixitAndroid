@@ -9,6 +9,7 @@ import org.holoeverywhere.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
+import android.view.View;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -220,6 +221,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
             public void onClick(DialogInterface dialog, int id) {
                mShowingDelete = false;
                getGuideList().remove(mGuideForDelete);
+               if (getGuideList().isEmpty())
+                  mGuidePortal.toggleNoGuidesText(true);
                mGuidePortal.invalidateViews();
                mGuideForDelete = null;
                dialog.cancel();

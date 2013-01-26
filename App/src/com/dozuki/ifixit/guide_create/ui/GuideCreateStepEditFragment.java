@@ -18,21 +18,15 @@ import com.dozuki.ifixit.guide_view.model.StepImage;
 public class GuideCreateStepEditFragment extends Fragment implements MediaChangedListener {
   
    public interface GuideStepChangedListener {
-      public void onGuideStepChanged();
-      
+      public void onGuideStepChanged(); 
       public void disableSave();
-
-      public void enableSave();
-      
+      public void enableSave();    
    }
-   
    
    private static final String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    private GuideCreateStepObject mStepObject;
    private GuideCreateEditBulletFragment mEditBulletFrag;
-   private GuideCreateEditMediaFragment mEditMediaFrag;
-   
-   
+   private GuideCreateEditMediaFragment mEditMediaFrag;  
    
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, 
