@@ -31,13 +31,13 @@
         android:clickable="true" >
 
         <ImageButton
-            android:id="@+id/step_edit_view_steps"
+            android:id="@+id/step_edit_delete_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="20dp"
-            android:background="@drawable/ic_menu_bot_steplist" />
+            android:background="@drawable/ic_menu_bot_step_delete" />
 
         <Button
             android:id="@+id/step_edit_view_save"
@@ -68,13 +68,13 @@
         -->
 
         <ImageButton
-            android:id="@+id/step_edit_spinner"
+            android:id="@+id/step_edit_add_step"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:layout_alignTop="@+id/step_edit_view_steps"
+            android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
-            android:background="@drawable/ic_menu_bot_more"
+            android:background="@drawable/ic_menu_bot_step_add"
             android:paddingRight="20dp" />
 
         <ProgressBar

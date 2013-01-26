@@ -60,7 +60,9 @@
             android:layout_marginBottom="35dp"
             android:ems="10"
             android:hint="@string/device_hint"
-            android:scrollHorizontally="false" >
+            android:imeOptions="actionDone"
+            android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+            android:singleLine="true" >
 
             <requestFocus />
         </EditText>
@@ -78,7 +80,9 @@
             android:layout_marginBottom="35dp"
             android:ems="10"
             android:hint="@string/device_focus_hint"
-            android:scrollHorizontally="false" >
+            android:imeOptions="actionDone"
+            android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+            android:singleLine="true" >
 
             <requestFocus />
         </EditText>
@@ -96,7 +100,9 @@
             android:layout_marginBottom="35dp"
             android:ems="10"
             android:hint="@string/title_hint"
-            android:scrollHorizontally="false" />
+            android:imeOptions="actionDone"
+            android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+            android:singleLine="true" />
 
         <TextView
             android:id="@+id/guide_intro_summary"
@@ -111,9 +117,8 @@
             android:layout_marginBottom="35dp"
             android:gravity="top"
             android:hint="@string/summary_hint"
-            android:lines="3"
-            android:scrollHorizontally="false"
-            android:singleLine="false" />
+            android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"
+              />
 
         <TextView
             android:id="@+id/guide_intro_introduction_text"
@@ -128,9 +133,7 @@
             android:layout_marginBottom="35dp"
             android:gravity="top"
             android:hint="@string/introduction_hint"
-            android:lines="3"
-            android:scrollHorizontally="false"
-            android:singleLine="false" />
+             android:inputType="textShortMessage|textAutoCorrect|textCapSentences|textMultiLine"/>
 
         <Button
             android:id="@+id/confirm_create_guide_button"
