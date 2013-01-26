@@ -131,7 +131,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       if (mTitle.length() > 0) {
          mStepTitle.setText(mTitle);
       }
-      mStepSuperTitle.setText("Step " + mStepNum + " — ");
+      mStepSuperTitle.setText("Step " + mStepNum + " - ");
       fitImagesToSpace();
       setImage(IMAGE_KEY_1);
       setImage(IMAGE_KEY_2);
@@ -212,7 +212,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    public void setStepNumber(int num) {
       mStepNum = num + 1;
       if (mStepSuperTitle != null) {
-         mStepSuperTitle.setText("Step " + mStepNum + " — ");
+         mStepSuperTitle.setText("Step " + mStepNum + " - ");
       }
    }
 
