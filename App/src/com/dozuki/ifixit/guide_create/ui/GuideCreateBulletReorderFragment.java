@@ -3,13 +3,16 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.TextView;
 
 import android.R.color;
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
@@ -26,7 +29,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
-public class GuideCreateBulletReorderFragment extends Fragment {
+public class GuideCreateBulletReorderFragment extends DialogFragment {
 
    public interface BulletRearrangeListener {
 
@@ -40,6 +43,8 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    private DragSortController mController;
    private StepAdapter mAdapter;
    private ImageManager mImageManager;
+   private Button mCancel;
+   private Button mConfirm;
 
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
 
@@ -64,6 +69,11 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       }
    };
    private ActionMode mActionMode;
+   
+   private void confirmRearrange()
+   {
+      ((BulletRearrangeListener) getTargetFragment()).onReorderComplete();
+   }
 
    /**
     * Called in onCreateView. Override this to provide a custom
@@ -89,7 +99,8 @@ public class GuideCreateBulletReorderFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-      mActionMode = (getSherlockActivity().startActionMode(new ContextualStepReorder()));
+      // mActionMode = (getSherlockActivity().startActionMode(new ContextualStepReorder()));
+      getDialog().setTitle(getActivity().getResources().getString(R.string.reorder_bullets_title));
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
@@ -98,6 +109,25 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       }
       mAdapter = new StepAdapter(mLines);
       View view = inflater.inflate(R.layout.guide_create_step_portal_reorder, container, false);
+      mConfirm = (Button) view.findViewById(R.id.reorder_steps_confirm);
+      mConfirm.setOnClickListener(new OnClickListener() {
+
+         @Override
+         public void onClick(View v) {
+            confirmRearrange();
+            getDialog().dismiss();
+         }
+
+      });
+      mCancel = (Button) view.findViewById(R.id.reorder_steps_cancel);
+      mCancel.setOnClickListener(new OnClickListener() {
+
+         @Override
+         public void onClick(View v) {
+            getDialog().dismiss();
+         }
+
+      });
       mDragListView = (DragSortListView) view.findViewById(R.id.steps_portal_list_reorder);
       mDragListView.setDropListener(onDrop);
       mDragListView.setRemoveListener(onRemove);
@@ -106,6 +136,7 @@ public class GuideCreateBulletReorderFragment extends Fragment {
       mDragListView.setFloatViewManager(mController);
       mDragListView.setOnTouchListener(mController);
       mDragListView.setDragEnabled(true);
+
       return view;
    }
 
@@ -118,7 +149,6 @@ public class GuideCreateBulletReorderFragment extends Fragment {
 
    @Override
    public void onStop() {
-
       super.onStop();
       ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(true);
       ((GuideStepChangedListener) getActivity()).enableSave();

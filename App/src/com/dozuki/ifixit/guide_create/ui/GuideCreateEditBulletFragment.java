@@ -220,9 +220,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          mBulletContainer.addView(getView(mLines.get(index), index), index);
          
       } else if (color.equals("action_reorder")) {
-        // launchBulletReorder();
-      } else if (color.equals("action_reorder")) {
-        // launchBulletReorder();
+         launchBulletReorder();
       } else if (color.equals("action_delete")) {
          mLines.remove(index);
          mBulletContainer.removeViewAt(index);
@@ -243,13 +241,20 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    
    private void launchBulletReorder() {
       mReorderModeActive = true;
-      GuideCreateBulletReorderFragment mReorderFragment = new GuideCreateBulletReorderFragment();
+     /* GuideCreateBulletReorderFragment mReorderFragment = new GuideCreateBulletReorderFragment();
       mReorderFragment.setLines(mLines);
       FragmentTransaction transaction = getChildFragmentManager().beginTransaction();
       transaction.add(R.id.guide_create_edit_bullet_reorder_fragment_container, mReorderFragment);
       transaction.addToBackStack(null);
       transaction.commit();
-      ((GuideStepChangedListener) getActivity()).disableSave();
+      ((GuideStepChangedListener) getActivity()).disableSave();*/
+      
+      
+      FragmentManager fm = getActivity().getSupportFragmentManager();
+      GuideCreateBulletReorderFragment mReorderFragment = new GuideCreateBulletReorderFragment();
+      mReorderFragment.setLines(mLines);
+      mReorderFragment.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
+      mReorderFragment.show(fm, "fragment_choose_bullet");
    }
 
    @Override

@@ -215,6 +215,9 @@ public class GuideCreateStepPortalFragment extends Fragment {
                mStepAdapter = new StepAdapter();
                verifyReorder();
                mStepList.setAdapter(mStepAdapter);
+               if (mGuide.getSteps().isEmpty()) {
+                  mNoStepsText.setVisibility(View.VISIBLE);
+               }
                mStepList.invalidateViews();
             }
          }
