@@ -14,14 +14,11 @@ import org.holoeverywhere.widget.Toast;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -40,12 +37,14 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
    private static final int NONE = -1;
    private static final int INDENT_LIMIT = 3;
+   private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
    private LinearLayout mBulletContainer;
    private Button mNewBulletButton;
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
    private ChooseBulletDialog mChooseBulletDialog;
    private boolean mShowingChooseBulletDialog;
    private boolean mReorderModeActive;
+   private GuideCreateBulletReorderFragment mReorderFragment;
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -61,12 +60,17 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
          mChooseBulletDialog =
             (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, BULLET_FRAG_ID);
+         mReorderFragment =
+            (GuideCreateBulletReorderFragment) getSupportFragmentManager().getFragment(savedInstanceState, REORDER_FRAG_ID);
+         
          mShowingChooseBulletDialog = savedInstanceState.getBoolean(SHOWING_BULLET_FRAG, false);
          if (mChooseBulletDialog != null && mShowingChooseBulletDialog) {
             mChooseBulletDialog.setTargetFragment(this, 0);
          }
          mReorderModeActive = savedInstanceState.getBoolean(SHOWING_REORDER_FRAG, false);
-
+         if (mReorderFragment != null && mReorderModeActive) {
+            mReorderFragment.setTargetFragment(this, 0);
+         }
       }  
       
       mNewBulletButton = (Button) v.findViewById(R.id.add_new_bullet_button);
@@ -194,6 +198,11 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          savedInstanceState.putBoolean(SHOWING_BULLET_FRAG, mShowingChooseBulletDialog);
       }
       savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
+      
+      if (mReorderFragment != null && mReorderModeActive) {
+         getSupportFragmentManager().putFragment(savedInstanceState, REORDER_FRAG_ID, mReorderFragment);
+         savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
+      }
 
    }
    
@@ -242,10 +251,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private void launchBulletReorder() {
       mReorderModeActive = true;
       FragmentManager fm = getActivity().getSupportFragmentManager();
-      GuideCreateBulletReorderFragment mReorderFragment = new GuideCreateBulletReorderFragment();
+      mReorderFragment = new GuideCreateBulletReorderFragment();
       mReorderFragment.setLines(mLines);
       mReorderFragment.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
-      mReorderFragment.show(fm, "fragment_choose_bullet");
+      mReorderFragment.show(fm, "fragment_reorder_bullet");
    }
 
    @Override
@@ -265,8 +274,6 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
 
    public void removeBullets() {
-      for (int i = 0; i < mLines.size(); i++) {
-         mBulletContainer.removeViewAt(i);
-      }
+      mBulletContainer.removeViewsInLayout(0, mLines.size());
    }
 }
