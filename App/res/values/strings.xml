@@ -133,6 +133,7 @@
     <string name="indent_limit_above">Cannot indent any further.</string>
     <string name="guide_create_edit_step_media_replace">Replace Image</string>
     <string name="guide_create_edit_step_media_remove">Remove Image</string>
+    <string name="guide_create_edit_step_media_cannot_add_step">Step cannot be added. Save previous step.</string>
     <string name="guide_create_edit_step_add_action">Add Step</string>
     <string name="guide_create_edit_step_delete_action">Delete Action</string>
     <string name="guide_create_confirm_leave_without_save_title">Leave Without Saving?</string>

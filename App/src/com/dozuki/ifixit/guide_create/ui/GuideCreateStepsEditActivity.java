@@ -2,13 +2,10 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
-import net.londatiga.android.ActionItem;
-import net.londatiga.android.QuickAction;
-
-import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.ProgressBar;
+import org.holoeverywhere.widget.Toast;
 
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -20,15 +17,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-
-import android.widget.ImageView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -254,6 +248,10 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             save();
             break;
          case R.id.step_edit_add_step:
+            if(mGuide.getSteps().size()  <  mPagePosition+1) {
+               Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step), Toast.LENGTH_SHORT).show();
+               return;
+            }
             GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
             item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
             item.setStepNum(mPagePosition+1);
