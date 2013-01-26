@@ -87,10 +87,10 @@ public class GalleryActivity extends IfixitActivity implements
 		mMediaCategoryFragments = new HashMap<String, MediaFragment>();
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS,
 				new PhotoMediaFragment());
-		mMediaCategoryFragments.put(MEDIA_FRAGMENT_VIDEOS,
+		/*mMediaCategoryFragments.put(MEDIA_FRAGMENT_VIDEOS,
 				new VideoMediaFragment());
 		mMediaCategoryFragments.put(MEDIA_FRAGMENT_EMBEDS,
-				new EmbedMediaFragment());
+				new EmbedMediaFragment());*/
 		mCurrentMediaFragment = mMediaCategoryFragments
 				.get(MEDIA_FRAGMENT_PHOTOS);
 		
@@ -299,7 +299,8 @@ public class GalleryActivity extends IfixitActivity implements
 
 		@Override
 		public CharSequence getPageTitle(int position) {
-			switch (position) {
+		   return "Photos";
+			/*switch (position) {
 			case 0:
 				return "Videos";
 			case 1:
@@ -308,12 +309,14 @@ public class GalleryActivity extends IfixitActivity implements
 				return "Embeds";
 			default:
 				return "Photos";
-			}
+			}*/
 		}
 
 		@Override
 		public Fragment getItem(int position) {
-			switch (position) {
+		   return (PhotoMediaFragment) mMediaCategoryFragments
+            .get(MEDIA_FRAGMENT_PHOTOS);
+			/*switch (position) {
 			case 0:
 				return (VideoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_VIDEOS);
@@ -326,7 +329,7 @@ public class GalleryActivity extends IfixitActivity implements
 			default:
 				return (PhotoMediaFragment) mMediaCategoryFragments
 						.get(MEDIA_FRAGMENT_PHOTOS);
-			}
+			}*/
 		}
 
 		@Override
