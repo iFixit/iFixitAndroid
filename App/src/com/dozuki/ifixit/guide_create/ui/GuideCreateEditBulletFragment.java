@@ -107,7 +107,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
    
 
-      public View getView(final StepLine line, final int mPos) {
+      public View getView(final StepLine line, int index) {
          LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
          View v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
          FrameLayout iconFrame = (FrameLayout) v.findViewById(R.id.guide_step_item_frame);
@@ -118,7 +118,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
                FragmentManager fm = getActivity().getSupportFragmentManager();
                mChooseBulletDialog = new ChooseBulletDialog();
                mChooseBulletDialog.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
-               mChooseBulletDialog.setStepIndex(mPos);
+               mChooseBulletDialog.setStepIndex(mLines.indexOf(line));
                mChooseBulletDialog.show(fm, "fragment_choose_bullet");
                mShowingChooseBulletDialog = true;
             }
@@ -128,14 +128,14 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          iconFrame.setLayoutParams(params);
          EditText text = (EditText) v.findViewById(R.id.step_title_textview);
          text.setText(line.getText());
-         text.setId(mPos);
+         text.setId(index);
          text.addTextChangedListener(new TextWatcher() {
             @Override
             public void afterTextChanged(Editable s) {
                if(s.toString().equals(line.getText())) {
                   return;
                }
-               mLines.get(mPos).setText(s.toString());
+               mLines.get(mLines.indexOf(line)).setText(s.toString());
                setGuideDirty();
             }
             @Override
