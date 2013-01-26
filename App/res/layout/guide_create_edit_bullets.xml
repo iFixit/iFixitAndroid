@@ -16,15 +16,18 @@
         android:layout_marginTop="8dp"
         android:orientation="vertical" >
         
-    <ImageButton
+    <Button
         android:id="@+id/add_new_bullet_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:src="@drawable/ic_btn_add_bullet"
+        android:layout_marginTop="8dp"
+        android:text="Tap to add new bullet"
         android:contentDescription="@string/topic_guide_thumbnail"
-        android:padding="8dp"/>
-    
+        android:background="@color/fireswing_grey"
+        android:textStyle="bold"
+        android:textColor="@color/fireswing_dark_grey"
+        android:padding="16dp" />  
    </LinearLayout>
 
     <FrameLayout

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.EditText;
 import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.LinearLayout;
@@ -40,7 +41,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private static final int NONE = -1;
    private static final int INDENT_LIMIT = 3;
    private LinearLayout mBulletContainer;
-   private ImageButton mNewBulletButton;
+   private Button mNewBulletButton;
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
    private ChooseBulletDialog mChooseBulletDialog;
    private boolean mShowingChooseBulletDialog;
@@ -58,7 +59,6 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       View v = inflater.inflate(R.layout.guide_create_edit_bullets, container, false);
       if (savedInstanceState != null) {
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
-         Log.e("SAVES", "WIOOO");
          mChooseBulletDialog =
             (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, BULLET_FRAG_ID);
          mShowingChooseBulletDialog = savedInstanceState.getBoolean(SHOWING_BULLET_FRAG, false);
@@ -69,7 +69,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
       }  
       
-      mNewBulletButton = (ImageButton) v.findViewById(R.id.add_new_bullet_button);
+      mNewBulletButton = (Button) v.findViewById(R.id.add_new_bullet_button);
       mNewBulletButton.setOnClickListener(new OnClickListener() {
 
          @Override
