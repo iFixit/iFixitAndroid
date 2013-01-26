@@ -291,6 +291,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          case R.id.step_edit_add_step:
             GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
             item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+            item.setStepNum(mPagePosition+1);
             mStepList.add(mPagePosition + 1, item);
             mPager.invalidate();
             titleIndicator.invalidate();
@@ -319,6 +320,11 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
 
       if (mStepList.size() == 0) {
          finish();
+      }
+      
+      for(int i = 0 ; i < mStepList.size() ; i++)
+      {
+         mStepList.get(i).setStepNum(i);
       }
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager.setAdapter(mStepAdapter);
