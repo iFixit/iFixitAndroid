@@ -184,7 +184,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
          String step = getItem(position).getTitle();
          holder.stepsView.setText(step);
          holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
-         setImageThumb(mStepsCopy.get(position).getImages(), holder.mImageView);
+         setImageThumb( getItem(position).getImages(), holder.mImageView);
          return v;
       }
    }
