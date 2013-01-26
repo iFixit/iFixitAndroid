@@ -24,6 +24,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    public static int TASK_ID = -1;
    private static final String SHOWING_HELP = "SHOWING_HELP";
+   private static final String SHOWING_DELETE = "SHOWING_DELETE";
+   private static final String GUIDE_FOR_DELETE = "GUIDE_FOR_DELETE";
    private static String GUIDE_OBJECT_KEY = "GUIDE_OBJECT_KEY";
    private static String GUIDE_PORTAL_FRAGMENT_TAG = "GUIDE_PORTAL_FRAGMENT_TAG";
    private static String GUIDE_INTRO_FRAGMENT_TAG = "GUIDE_INTRO_FRAGMENT_TAG";
@@ -33,6 +35,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    private GuidePortalFragment mGuidePortal;
    private ArrayList<GuideCreateObject> mGuideList;
    private boolean mShowingHelp;
+   private GuideCreateObject mGuideForDelete;
+   private boolean mShowingDelete;
 
    private OnBackStackChangedListener getListener() {
       OnBackStackChangedListener result = new OnBackStackChangedListener() {
@@ -72,6 +76,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       if (savedInstanceState != null) {
          mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+         mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
+         mGuideForDelete = (GuideCreateObject) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
          if (mShowingHelp)
             createHelpDialog().show();
       }
@@ -85,6 +91,13 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          getSupportFragmentManager().beginTransaction()
             .add(R.id.guide_create_fragment_container, mGuidePortal, GUIDE_PORTAL_FRAGMENT_TAG).commit();
       }
+      else
+      {
+         mGuidePortal = (GuidePortalFragment)getSupportFragmentManager().findFragmentByTag(GUIDE_PORTAL_FRAGMENT_TAG);
+      }
+      
+      if (mShowingDelete && mGuideForDelete != null)
+         createDeleteDialog(mGuideForDelete).show();
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -116,7 +129,9 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mGuideList);
+      savedInstanceState.putSerializable(GUIDE_FOR_DELETE, mGuideForDelete);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+      savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
       super.onSaveInstanceState(savedInstanceState);
    }
 
@@ -189,6 +204,39 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingHelp = false;
+         }
+      });
+
+      return dialog;
+   }
+
+   public AlertDialog createDeleteDialog(GuideCreateObject item) {
+      mGuideForDelete = item;
+      mShowingDelete = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(getString(R.string.confirm_delete_title))
+         .setMessage(getString(R.string.confirm_delete_body) + " " + mGuideForDelete.getTitle() + "?")
+         .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               mShowingDelete = false;
+               getGuideList().remove(mGuideForDelete);
+               mGuidePortal.invalidateViews();
+               mGuideForDelete = null;
+               dialog.cancel();
+            }
+         }).setNegativeButton(getString(R.string.confirm_delete_cancel), new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+               mShowingDelete = false;
+               mGuideForDelete = null;
+            }
+         });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingDelete = false;
+            mGuideForDelete = null;
          }
       });
 

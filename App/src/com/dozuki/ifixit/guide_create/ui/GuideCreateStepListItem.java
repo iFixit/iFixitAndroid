@@ -80,8 +80,6 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
          @Override
          public void onClick(View v) {
             mPortalRef.deleteStep(mStepObject);
-            mPortalRef.invalidateViews();
-            mPortalRef.verifyReorder();
          }
       });
       mEditButton.setOnClickListener(new OnClickListener() {
