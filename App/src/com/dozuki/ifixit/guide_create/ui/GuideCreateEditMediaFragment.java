@@ -9,6 +9,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.TextView;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -49,6 +50,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    private static final int REPLACE_IMAGE_ID = 1;
    private static final int REMOVE_IMAGE_ID = 2;
    private static final int INDICATOR_HEIGHT = 49;
+   private static final String STEP_NUM_KEY = null;
 
    private EditText mStepTitle;
    // images
@@ -64,7 +66,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    // title
    private String mTitle = NO_TITLE;
+   private int mStepNum = 0;
    private QuickAction mQuickAction;
+   private TextView mStepSuperTitle;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -77,6 +81,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       // Inflate the layout for this fragment
       View v = inflater.inflate(R.layout.guide_create_edit_media, container, false);
       mStepTitle = (EditText) v.findViewById(R.id.step_edit_title_text);
+      mStepSuperTitle = (TextView) v.findViewById(R.id.step_edit_super_title);
       mLargeImage = (ImageView) v.findViewById(R.id.step_edit_large_image);
       mImageOne = (ImageView) v.findViewById(R.id.step_edit_thumb_1);
       mImageOne.setOnLongClickListener(this);
@@ -93,6 +98,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          mImageTwoInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_2);
          mImageThreeInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_3);
          mTitle = savedInstanceState.getString(TITLE_KEY);
+         mStepNum = savedInstanceState.getInt(STEP_NUM_KEY);
       }
       mStepTitle.addTextChangedListener(this);
       ActionItem addAction =
@@ -121,6 +127,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          }
       });
       mStepTitle.setText(mTitle);
+      mStepSuperTitle.setText("Step " + mStepNum + " - ");
       fitImagesToSpace();
       setImage(IMAGE_KEY_1);
       setImage(IMAGE_KEY_2);
@@ -197,6 +204,14 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          mStepTitle.setText(mTitle);
       }
    }
+   
+   public void setStepNumber(int num) {
+      mStepNum = num+1;
+      Log.e("STEP NUM", "EEF" + num+1);
+      if (mStepSuperTitle != null) {
+         mStepSuperTitle.setText("Step " + mStepNum + " - ");
+      }
+   }
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -205,6 +220,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       savedInstanceState.putSerializable("" + IMAGE_KEY_2, mImageTwoInfo);
       savedInstanceState.putSerializable("" + IMAGE_KEY_3, mImageThreeInfo);
       savedInstanceState.putString(TITLE_KEY, mTitle);
+      savedInstanceState.putInt(STEP_NUM_KEY, mStepNum);
    }
 
    public void removeImage() {

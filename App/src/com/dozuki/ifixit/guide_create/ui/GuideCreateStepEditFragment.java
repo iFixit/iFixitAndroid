@@ -72,6 +72,7 @@ public class GuideCreateStepEditFragment extends Fragment implements MediaChange
    private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditMediaFrag.setStepTitle(mStepObject.getTitle());
+      mEditMediaFrag.setStepNumber(mStepObject.getStepNum());
       
       if(mStepObject.getImages().size() > 0) {
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_1, mStepObject.getImages().get(0));
