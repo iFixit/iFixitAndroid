@@ -49,8 +49,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    public static String DeleteGuideDialogKey = "DeleteGuideDialog";
    private static final String SHOWING_HELP = "SHOWING_HELP";
 
-   private static final int NEW_STEP_ID = 1;
-   private static final int DELETE_STEP_ID = 2;
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
    public static final String GUIDE_STEP_LIST_KEY = "GUIDE_STEP_LIST_KEY";
 
@@ -131,39 +129,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
       titleIndicator.setViewPager(mPager);
       mSaveStep.setOnClickListener(this);
-
-//      ActionItem addAction =
-//         new ActionItem(NEW_STEP_ID, getResources().getString(R.string.guide_create_edit_step_add_action),
-//            getResources().getDrawable(R.drawable.ic_menu_bot_step_add));
-//      ActionItem delAction =
-//         new ActionItem(DELETE_STEP_ID, getResources().getString(R.string.guide_create_edit_step_delete_action),
-//            getResources().getDrawable(R.drawable.ic_menu_bot_step_delete));
-//
-//      mQuickAction = new QuickAction(this);
-//      mQuickAction.addActionItem(addAction);
-//      mQuickAction.addActionItem(delAction);
-//      mQuickAction.setOnActionItemClickListener(new QuickAction.OnActionItemClickListener() {
-//
-//         @Override
-//         public void onItemClick(QuickAction source, int pos, int actionId) {
-//            switch (actionId) {
-//               case NEW_STEP_ID:
-//                  GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
-//                  item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
-//                  mStepList.add(mPagePosition + 1, item);
-//                  mPager.invalidate();
-//                  titleIndicator.invalidate();
-//                  mPager.setCurrentItem(mPagePosition + 1, true);
-//                  break;
-//               case DELETE_STEP_ID:
-//                  if (!mStepList.isEmpty())
-//                     createDeleteDialog(GuideCreateStepsEditActivity.this).show();
-//                  break;
-//            }
-//
-//         }
-//      });
-
       mAddStepButton.setOnClickListener(this);
       mDeleteStepButton.setOnClickListener(this);
       if (mConfirmDelete)
