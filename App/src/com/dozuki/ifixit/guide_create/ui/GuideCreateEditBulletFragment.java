@@ -259,8 +259,9 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
    @Override
    public void onReorderComplete() {
-      ((GuideStepChangedListener) getActivity()).enableSave();;
-      getChildFragmentManager().popBackStack();
+      removeBullets();
+      initilizeBulletContainer();
+      ((GuideStepChangedListener) getActivity()).enableSave();
       setGuideDirty();
    }
 
@@ -270,5 +271,11 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
    public boolean isReorderModeActive() {
       return mReorderModeActive;
+   }
+
+   public void removeBullets() {
+      for (int i = 0; i < mLines.size(); i++) {
+         mBulletContainer.removeViewAt(i);
+      }
    }
 }
