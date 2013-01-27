@@ -21,7 +21,7 @@
         android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
         android:imeOptions="actionDone"
         android:maxLength="350"
-        android:hint="Tell me more" />
+        android:hint="@string/step_title_hint" />
 
     <FrameLayout   
         android:id="@+id/guide_step_item_frame"

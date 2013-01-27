@@ -14,9 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-
         android:orientation="vertical" >
-
 
         <Button
             android:id="@+id/add_new_bullet_button"
@@ -27,7 +25,7 @@
             android:background="@color/fireswing_grey"
             android:contentDescription="@string/topic_guide_thumbnail"
             android:padding="16dp"
-            android:text="Tap to add new bullet"
+            android:text="@string/create_bullets"
             android:textColor="@color/fireswing_dark_grey"
             android:textStyle="bold" />
     </LinearLayout>

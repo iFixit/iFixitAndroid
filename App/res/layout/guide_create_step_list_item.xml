@@ -54,7 +54,7 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/step_title_textview"
                 android:layout_toRightOf="@+id/guide_step_item_thumbnail"
-                android:text="TEST"
+                android:text=""
                 android:textColor="@color/fireswing_dark_grey"
                 android:textSize="12sp"
                 android:textStyle="italic" />
