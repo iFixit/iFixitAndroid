@@ -73,7 +73,7 @@
                     android:padding="1dp"
                     android:layout_marginBottom="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/ic_btn_add_gallery_image" />
+                    android:src="@drawable/ic_placeholder_img_thumbnail" />
 
                 <ImageView
                     android:id="@+id/step_edit_thumb_2"
@@ -85,7 +85,7 @@
                     android:layout_marginTop="4dp"
                     android:layout_marginBottom="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/ic_btn_add_gallery_image" />
+                    android:src="@drawable/ic_placeholder_img_thumbnail" />
 
                 <ImageView
                     android:id="@+id/step_edit_thumb_3"
@@ -96,7 +96,7 @@
                     android:padding="1dp"
                     android:layout_marginTop="4dp"
                     android:scaleType="center"
-                    android:src="@drawable/ic_btn_add_gallery_image" />
+                    android:src="@drawable/ic_placeholder_img_thumbnail" />
             </LinearLayout>
         </RelativeLayout>
     </LinearLayout>

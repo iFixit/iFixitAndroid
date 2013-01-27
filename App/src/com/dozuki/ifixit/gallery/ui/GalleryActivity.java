@@ -112,7 +112,6 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
          mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setArguments(args);
          if (mReturnValue != -1) {
             mGetMediaItemForReturn = true;
-            noImagesText.setVisibility(View.GONE);
          }
          mMode = startActionMode(new ContextualMediaSelect(this));
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(mMediaReturnValue);
@@ -156,6 +155,7 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
             displayLogin();
          }
       }
+
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
    }
