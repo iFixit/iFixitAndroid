@@ -101,7 +101,7 @@ public class GuideCreateStepObject implements Serializable {
          return false;
       }
       GuideCreateStepObject lhs = (GuideCreateStepObject) o;
-      return mStepNum == lhs.mStepNum;
+      return mStepId == lhs.mStepId;
    }
 
    public void setImages(ArrayList<StepImage> imageIDs) {

@@ -14,21 +14,23 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
+
         android:orientation="vertical" >
-        
-    <Button
-        android:id="@+id/add_new_bullet_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginTop="8dp"
-        android:text="Tap to add new bullet"
-        android:contentDescription="@string/topic_guide_thumbnail"
-        android:background="@color/fireswing_grey"
-        android:textStyle="bold"
-        android:textColor="@color/fireswing_dark_grey"
-        android:padding="16dp" />  
-   </LinearLayout>
+
+
+        <Button
+            android:id="@+id/add_new_bullet_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="8dp"
+            android:background="@color/fireswing_grey"
+            android:contentDescription="@string/topic_guide_thumbnail"
+            android:padding="16dp"
+            android:text="Tap to add new bullet"
+            android:textColor="@color/fireswing_dark_grey"
+            android:textStyle="bold" />
+    </LinearLayout>
 
     <FrameLayout
         android:id="@+id/guide_create_edit_bullet_reorder_fragment_container"

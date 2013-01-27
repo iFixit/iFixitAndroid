@@ -293,7 +293,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       mShowingDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
-         .setMessage(getString(R.string.confirm_delete_body) + " " + mStepForDelete.getTitle() + "?")
+         .setMessage(getString(R.string.confirm_delete_body) + " '" + mStepForDelete.getTitle() + "'?")
          .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                mShowingDelete = false;
