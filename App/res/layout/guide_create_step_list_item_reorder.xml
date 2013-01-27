@@ -40,9 +40,10 @@
 
             <RelativeLayout
                 android:id="@+id/drag_handle_reorder"
-                android:layout_width="20dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
                 android:layout_alignTop="@+id/step_title_textview_reorder"
                 >
 
@@ -51,6 +52,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
+                    android:layout_marginLeft="32dp"
                     android:background="@drawable/ic_list_item_move"
                     android:contentDescription="@string/topic_guide_thumbnail" />
             </RelativeLayout>

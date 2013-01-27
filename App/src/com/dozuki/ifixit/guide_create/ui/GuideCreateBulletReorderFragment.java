@@ -10,6 +10,7 @@ import org.holoeverywhere.widget.FrameLayout;
 import org.holoeverywhere.widget.TextView;
 
 import android.R.color;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,6 +24,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.guide_create.ui.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment.GuideStepChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.ifixit.android.imagemanager.ImageManager;
@@ -33,7 +35,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
    public interface BulletRearrangeListener {
 
-      public void onReorderComplete();
+      public void onReorderComplete(boolean cancled);
 
    }
 
@@ -72,7 +74,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
    private BulletRearrangeListener mRListenener;
 
    private void confirmRearrange() {
-      (mRListenener).onReorderComplete();
+      (mRListenener).onReorderComplete(false);
    }
 
    /**
@@ -126,7 +128,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
          @Override
          public void onClick(View v) {
-            getDialog().dismiss();
+            getDialog().cancel();
          }
 
       });
@@ -235,5 +237,11 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
    public void setBulletRearrangeListener(BulletRearrangeListener brm) {
       mRListenener = brm;
+   }
+
+   @Override
+   public void onCancel(DialogInterface d) {
+      (mRListenener).onReorderComplete(false);
+      super.onCancel(d);
    }
 }
