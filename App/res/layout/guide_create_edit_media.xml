@@ -18,7 +18,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
             android:gravity="center"
-            android:text="Step - "
+            android:text="@string/step_title_prefix"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <EditText
@@ -26,7 +26,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:hint="Untitled step"
+            android:hint="@string/default_step_title"
             android:imeOptions="actionDone"
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
             android:selectAllOnFocus="true"

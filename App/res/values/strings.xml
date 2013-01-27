@@ -144,9 +144,13 @@
     <string name="confirm_delete_body">Are you sure you want to delete </string>
     <string name="confirm_delete_confirm">Yes</string>
     <string name="confirm_delete_cancel">No</string>
-    <string  name="confirm_reorder_bullets">Confirm</string>
-    <string  name="reorder_bullets_title">Reorder Bullets</string>
- <string  name="cancel_reorder_bullets">Cancel</string>
+    <string name="confirm_reorder_bullets">Confirm</string>
+    <string name="reorder_bullets_title">Reorder Bullets</string>
+    <string name="create_bullets">Tap to add new bullet</string>
+    <string name="cancel_reorder_bullets">Cancel</string>
+	<string name="step_title_prefix">Step - </string>
+	<string name="default_step_title">Untitled step</string>
+	<string name="step_title_hint">Tell me more</string>
     <string-array name="guide_type_array">
         <item>Installation</item>
         <item>Repair</item>
