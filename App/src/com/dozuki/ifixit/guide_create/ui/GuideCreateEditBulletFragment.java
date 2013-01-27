@@ -16,6 +16,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.View.OnClickListener;
@@ -69,7 +70,8 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          }
          mReorderModeActive = savedInstanceState.getBoolean(SHOWING_REORDER_FRAG, false);
          if (mReorderFragment != null && mReorderModeActive) {
-            mReorderFragment.setTargetFragment(this, 0);
+            Log.e("WDEW", "EDE");
+            mReorderFragment.setBulletRearrangeListener(this);
          }
       }  
       
@@ -249,12 +251,12 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
    
    private void launchBulletReorder() {
-      mReorderModeActive = true;
       FragmentManager fm = getActivity().getSupportFragmentManager();
       mReorderFragment = new GuideCreateBulletReorderFragment();
       mReorderFragment.setLines(mLines);
-      mReorderFragment.setTargetFragment(GuideCreateEditBulletFragment.this, 0);
+      mReorderFragment.setBulletRearrangeListener(this);
       mReorderFragment.show(fm, "fragment_reorder_bullet");
+      mReorderModeActive = true;
    }
 
    @Override

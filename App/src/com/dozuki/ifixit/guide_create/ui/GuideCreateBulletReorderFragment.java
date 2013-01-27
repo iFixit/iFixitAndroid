@@ -69,10 +69,10 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
       }
    };
    private ActionMode mActionMode;
-   
-   private void confirmRearrange()
-   {
-      ((BulletRearrangeListener) getTargetFragment()).onReorderComplete();
+   private BulletRearrangeListener mRListenener;
+
+   private void confirmRearrange() {
+      (mRListenener).onReorderComplete();
    }
 
    /**
@@ -121,7 +121,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
       });
       mCancel = (Button) view.findViewById(R.id.reorder_steps_cancel);
-      mCancel..setVisibility(View.VISIBLE);
+      mCancel.setVisibility(View.VISIBLE);
       mCancel.setOnClickListener(new OnClickListener() {
 
          @Override
@@ -142,45 +142,19 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
       return view;
    }
 
-   @Override
-   public void onStart() {
-      super.onStart();
-      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(false);
-      ((GuideStepChangedListener) getActivity()).disableSave();
-   }
-
-   @Override
-   public void onStop() {
-      super.onStop();
-      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(true);
-      ((GuideStepChangedListener) getActivity()).enableSave();
-   }
-
-   public final class ContextualStepReorder implements ActionMode.Callback {
-      public ContextualStepReorder() {}
-
-      @Override
-      public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-
-         return true;
-      }
-
-      @Override
-      public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-         return false;
-      }
-
-      @Override
-      public void onDestroyActionMode(ActionMode mode) {
-         ((BulletRearrangeListener) getParentFragment()).onReorderComplete();
-      }
-
-      @Override
-      public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
-         return true;
-      }
-   };
+//   @Override
+//   public void onStart() {
+//      super.onStart();
+//      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(false);
+//      ((GuideStepChangedListener) getActivity()).disableSave();
+//   }
+//
+//   @Override
+//   public void onStop() {
+//      super.onStop();
+//      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(true);
+//      ((GuideStepChangedListener) getActivity()).enableSave();
+//   }
 
    private class ViewHolder {
       public TextView stepsView;
@@ -257,5 +231,9 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
       }
 
       return iconRes;
+   }
+
+   public void setBulletRearrangeListener(BulletRearrangeListener brm) {
+      mRListenener = brm;
    }
 }

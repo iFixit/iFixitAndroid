@@ -23,7 +23,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="@string/cancel_reorder_bullets"
-            android:visibility="GONE" />
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/reorder_steps_confirm"
@@ -31,7 +31,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.5"
             android:text="@string/confirm_reorder_bullets"
-            android:visibility="GONE" />
+            android:visibility="gone" />
     </LinearLayout>
 
 </RelativeLayout>
