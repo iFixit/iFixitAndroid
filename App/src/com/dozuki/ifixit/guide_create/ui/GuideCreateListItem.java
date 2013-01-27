@@ -118,7 +118,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
 
    private void setPublishedText(int color, int text) {
       mPublishText.setText(text);
-      mPublishText.setTextColor(Color.RED);
+      mPublishText.setTextColor(color);
    }
 
    private void setPublishedButton(Drawable img, int text) {

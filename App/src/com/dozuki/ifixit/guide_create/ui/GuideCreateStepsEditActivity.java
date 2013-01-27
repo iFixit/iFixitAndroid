@@ -108,6 +108,10 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          if (mShowingHelp) {
             createHelpDialog().show();
          }
+         
+         if (mShowingSave) {
+            createExitWarningDialog().show();
+         }
       }
       setContentView(R.layout.guide_create_step_edit);
       mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
@@ -412,7 +416,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             new DialogInterface.OnClickListener() {
 
                public void onClick(DialogInterface dialog, int id) {
-                  finish();
                   dialog.dismiss();
                }
             })
@@ -420,6 +423,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             new DialogInterface.OnClickListener() {
 
                public void onClick(DialogInterface dialog, int id) {
+                  finish();
                   dialog.dismiss();
                }
             });
