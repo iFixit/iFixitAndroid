@@ -72,6 +72,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          if (mShowingHelp)
             createHelpDialog().show();
       }
+
       setContentView(R.layout.guide_create_steps_root);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       String tag = GUIDE_STEPS_PORTAL_FRAG;

@@ -260,11 +260,14 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
 
    @Override
-   public void onReorderComplete() {
-      removeBullets();
-      initilizeBulletContainer();
-      ((GuideStepChangedListener) getActivity()).enableSave();
-      setGuideDirty();
+   public void onReorderComplete(boolean cancled) {
+      mReorderModeActive = false;
+      if (!cancled) {
+         removeBullets();
+         initilizeBulletContainer();
+         ((GuideStepChangedListener) getActivity()).enableSave();
+         setGuideDirty();
+      }
    }
 
    public void setGuideDirty() {

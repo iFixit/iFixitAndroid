@@ -9,6 +9,8 @@
         android:id="@+id/steps_portal_list_reorder"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:dividerHeight="@dimen/topic_list_vertical_spacing"
+        android:divider="@color/white"
         android:layout_margin="3dp"
         android:padding="3dp" />
 
