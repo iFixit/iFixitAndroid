@@ -133,13 +133,13 @@
     <string name="indent_limit_above">Cannot indent any further.</string>
     <string name="guide_create_edit_step_media_replace">Replace Image</string>
     <string name="guide_create_edit_step_media_remove">Remove Image</string>
-    <string name="guide_create_edit_step_media_cannot_add_step">Step cannot be added. Save previous step.</string>
+    <string name="guide_create_edit_step_media_cannot_add_step">Add content to current step before creating a new step.</string>
     <string name="guide_create_edit_step_add_action">Add Step</string>
     <string name="guide_create_edit_step_delete_action">Delete Action</string>
     <string name="guide_create_confirm_leave_without_save_title">Leave Without Saving?</string>
-    <string name="guide_create_confirm_leave_without_save_body">If you leave now all your changes to the current step will be lost.</string>
-    <string name="guide_create_confirm_leave_without_save_confirm">Yes, I want to exit with out saving.</string>
-    <string name="guide_create_confirm_leave_without_save_cancel">On second thought...</string>
+    <string name="guide_create_confirm_leave_without_save_body">Exiting will cancel any changes you have made.</string>
+    <string name="guide_create_confirm_leave_without_save_confirm">Save</string>
+    <string name="guide_create_confirm_leave_without_save_cancel">Exit</string>
     <string name="confirm_delete_title">Confirm Delete</string>
     <string name="confirm_delete_body">Are you sure you want to delete </string>
     <string name="confirm_delete_confirm">Yes</string>
