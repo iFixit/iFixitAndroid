@@ -17,14 +17,11 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 
-
-
 public class PhotoMediaFragment extends MediaFragment {
-   
+
    static final String FILTERED_MEDIA = "FILTERED_MEDIA";
-   ArrayList<String> mFilteredMedia= new ArrayList<String>();
-   
-   
+   ArrayList<String> mFilteredMedia = new ArrayList<String>();
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -33,11 +30,13 @@ public class PhotoMediaFragment extends MediaFragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       // mFilteredMedia =
-      Bundle b = getArguments();      
-      mFilteredMedia = (ArrayList<String>) b.getStringArrayList(FILTERED_MEDIA);
+      Bundle b = getArguments();
+      if (b != null) {
+         mFilteredMedia = (ArrayList<String>) b.getStringArrayList(FILTERED_MEDIA);
+      }
       return super.onCreateView(inflater, container, savedInstanceState);
    }
-   
+
    @Subscribe
    public void onUserImages(APIEvent.UserImages event) {
       if (!event.hasError()) {
@@ -91,8 +90,7 @@ public class PhotoMediaFragment extends MediaFragment {
          // TODO
       }
    }
-   
-   
+
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
       setupUser(event.getUser());
