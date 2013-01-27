@@ -11,6 +11,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import org.holoeverywhere.LayoutInflater;
+
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -24,18 +26,19 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.util.APIEvent;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 
-public class GuideCreateStepPortalFragment extends Fragment {
+public class GuideCreateStepPortalFragment extends Fragment implements StepRearrangeListener {
    public static int STEP_ID = 0;
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String STEP_FOR_DELETE = "STEP_FOR_DELETE";
    public static final String DEFAULT_TITLE = "";
    private static final int NO_ID = -1;
-   private static final String CURRENT_OPEN_ITEM = null;
+   private static final String CURRENT_OPEN_ITEM = "CURRENT_OPEN_ITEM";
    private ListView mStepList;
    private ImageManager mImageManager;
    private StepAdapter mStepAdapter;
@@ -71,6 +74,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
          mStepForDelete = (GuideCreateStepObject) savedInstanceState.getSerializable(STEP_FOR_DELETE); 
+         
       }
       // APIService.call((Activity) getActivity(),
       // APIService.getGuideAPICall(mGuide.getGuideid()));
@@ -197,10 +201,10 @@ public class GuideCreateStepPortalFragment extends Fragment {
    }
 
    void launchStepReorder() {
-      GuideCreateStepReorderFragment newFragment = new GuideCreateStepReorderFragment();
-      newFragment.setGuide(mGuide);
+      GuideCreateStepReorderFragment mGuideCreateReOrder = new GuideCreateStepReorderFragment();
+      mGuideCreateReOrder.setGuide(mGuide);
       FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-      transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
+      transaction.add(R.id.guide_create_fragment_steps_container, mGuideCreateReOrder);
       transaction.addToBackStack(null);
       transaction.commitAllowingStateLoss();
    }
@@ -256,6 +260,7 @@ public class GuideCreateStepPortalFragment extends Fragment {
       savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
       savedInstanceState.putSerializable(STEP_FOR_DELETE, mStepForDelete);
       savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
+      
       super.onSaveInstanceState(savedInstanceState);
    }
 
@@ -321,5 +326,11 @@ public class GuideCreateStepPortalFragment extends Fragment {
       });
 
       return dialog;
+   }
+
+   @Override
+   public void onReorderComplete() {
+      mStepAdapter.notifyDataSetChanged();
+      
    }
 }

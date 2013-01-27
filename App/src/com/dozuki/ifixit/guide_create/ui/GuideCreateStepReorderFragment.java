@@ -6,6 +6,7 @@ import java.util.List;
 import org.holoeverywhere.app.Fragment;
 
 import android.R.color;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import org.holoeverywhere.LayoutInflater;
 
@@ -32,6 +33,14 @@ import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
 public class GuideCreateStepReorderFragment extends Fragment {
+
+   public interface StepRearrangeListener {
+
+      public void onReorderComplete();
+
+   }
+
+   private static final String STEP_LIST_ID = "STEP_LIST_ID";
 
    private DragSortListView mDragListView;
    private DragSortController mController;
@@ -87,6 +96,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
       }
       if (savedInstanceState != null) {
          mGuide = (GuideCreateObject) savedInstanceState.get(GuideCreateStepsActivity.GUIDE_KEY);
+         mStepsCopy = (ArrayList<GuideCreateStepObject>) savedInstanceState.get(STEP_LIST_ID);
       }
       mDiscardChanges = false;
       mAdapter = new StepAdapter(mStepsCopy);
@@ -96,6 +106,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(GuideCreateStepsActivity.GUIDE_KEY, mGuide);
+      savedInstanceState.putSerializable(STEP_LIST_ID, mStepsCopy);
    }
 
    @Override
@@ -139,14 +150,13 @@ public class GuideCreateStepReorderFragment extends Fragment {
 
       @Override
       public void onDestroyActionMode(ActionMode mode) {
-         if (!mDiscardChanges)
-         {
-            for(int i = 0 ; i < mStepsCopy.size() ; i++)
-            {
+         if (!mDiscardChanges) {
+            for (int i = 0; i < mStepsCopy.size(); i++) {
                mStepsCopy.get(i).setStepNum(i);
             }
             mGuide.setStepList(mStepsCopy);
          }
+         ((StepRearrangeListener) getActivity()).onReorderComplete();
          getActivity().getSupportFragmentManager().popBackStack();
       }
 
@@ -184,7 +194,11 @@ public class GuideCreateStepReorderFragment extends Fragment {
          String step = getItem(position).getTitle();
          holder.stepsView.setText(step);
          holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
-         setImageThumb( getItem(position).getImages(), holder.mImageView);
+         holder.mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.fireswing_grey)));
+         holder.mImageView.setTag("");
+         setImageThumb(getItem(position).getImages(), holder.mImageView);
+         holder.mImageView.invalidate();
+
          return v;
       }
    }
@@ -202,4 +216,5 @@ public class GuideCreateStepReorderFragment extends Fragment {
       }
 
    }
+
 }

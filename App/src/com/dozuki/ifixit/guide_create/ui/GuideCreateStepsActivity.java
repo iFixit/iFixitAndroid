@@ -16,12 +16,14 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 import com.dozuki.ifixit.util.IfixitActivity;
 
-public class GuideCreateStepsActivity extends IfixitActivity implements GuideCreateIntroListener {
+public class GuideCreateStepsActivity extends IfixitActivity implements GuideCreateIntroListener, StepRearrangeListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
    private static final String SHOWING_HELP = "SHOWING_HELP";
+   private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
    public static String GUIDE_KEY = "GUIDE_KEY";
    private ActionBar mActionBar;
    private GuideCreateStepPortalFragment mStepPortalFragment;
@@ -72,7 +74,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       }
       setContentView(R.layout.guide_create_steps_root);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      String tag = "guide_steeps_portal_fragment";
+      String tag = GUIDE_STEPS_PORTAL_FRAG;
       if (findViewById(R.id.guide_create_fragment_steps_container) != null
          && getSupportFragmentManager().findFragmentByTag(tag) == null) {
          mStepPortalFragment = new GuideCreateStepPortalFragment(mGuide);
@@ -174,5 +176,10 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       if (Build.VERSION.SDK_INT > 10) {
          this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
       }
+   }
+
+   @Override
+   public void onReorderComplete() {
+      ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG)).onReorderComplete();
    }
 }
