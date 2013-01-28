@@ -21,6 +21,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -222,7 +223,12 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       @Override
       public void setPrimaryItem(ViewGroup container, int position, Object object) {
          super.setPrimaryItem(container, position, object);
+         
          if (mPagePosition != position) {
+            /** keyboard*/
+            final InputMethodManager imm = (InputMethodManager)getSystemService(
+               Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(container.getWindowToken(), 0);
             if (mIsStepDirty) {
                save();
             }

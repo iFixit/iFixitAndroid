@@ -260,9 +260,11 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
 
    @Override
-   public void onReorderComplete(boolean cancled) {
+   public void onReorderComplete(boolean cancled, ArrayList<StepLine> list) {
       mReorderModeActive = false;
       if (!cancled) {
+         mLines.clear();
+         mLines.addAll(list);
          removeBullets();
          initilizeBulletContainer();
          ((GuideStepChangedListener) getActivity()).enableSave();
