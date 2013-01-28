@@ -48,7 +48,6 @@ import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.gallery.model.UserMediaList;
-import com.dozuki.ifixit.guide_create.ui.GuideCreateStepsEditActivity;
 import com.dozuki.ifixit.guide_view.ui.FullImageViewActivity;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LocalImage;
@@ -94,6 +93,7 @@ OnItemClickListener,  OnItemLongClickListener {
    private boolean mShowingDelete;
    private boolean mSelectForReturn;
 
+   @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
