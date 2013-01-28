@@ -295,7 +295,7 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
 
       @Override
       public CharSequence getPageTitle(int position) {
-         return "Photos";
+         return "Images";
          /*
           * switch (position) {
           * case 0:

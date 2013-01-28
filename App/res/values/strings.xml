@@ -151,6 +151,8 @@
 	<string name="step_title_prefix">Step - </string>
 	<string name="default_step_title">Untitled step</string>
 	<string name="step_title_hint">Tell me more</string>
+	<string name="step_rearrange_title">Rearrange</string>
+	<string name="step_rearrange_confirm">Confirm</string>
     <string-array name="guide_type_array">
         <item>Installation</item>
         <item>Repair</item>

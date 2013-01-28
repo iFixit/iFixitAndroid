@@ -3,6 +3,7 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 import android.R.color;
@@ -22,6 +23,7 @@ import org.holoeverywhere.widget.TextView;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -47,7 +49,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
    private StepAdapter mAdapter;
    private ImageManager mImageManager;
    private GuideCreateObject mGuide;
-   private boolean mDiscardChanges;
    private ArrayList<GuideCreateStepObject> mStepsCopy;
 
    public void setGuide(GuideCreateObject guide) {
@@ -98,7 +99,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
          mGuide = (GuideCreateObject) savedInstanceState.get(GuideCreateStepsActivity.GUIDE_KEY);
          mStepsCopy = (ArrayList<GuideCreateStepObject>) savedInstanceState.get(STEP_LIST_ID);
       }
-      mDiscardChanges = false;
       mAdapter = new StepAdapter(mStepsCopy);
    }
 
@@ -122,16 +122,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
       mDragListView.setDragEnabled(true);
       view.setFocusableInTouchMode(true);
       view.requestFocus();
-      view.setOnKeyListener(new OnKeyListener() {
-         @Override
-         public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (keyCode == KeyEvent.KEYCODE_BACK) {
-               mDiscardChanges = true;
-               return false;
-            }
-            return false;
-         }
-      });
+
       return view;
    }
 
@@ -140,6 +131,9 @@ public class GuideCreateStepReorderFragment extends Fragment {
 
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+         MenuInflater inflater = ((Activity) getActivity()).getSupportMenuInflater();
+         inflater.inflate(R.menu.contextual_rearrange, menu);
+         mode.setTitle(R.string.step_rearrange_title);
          return true;
       }
 
@@ -150,20 +144,25 @@ public class GuideCreateStepReorderFragment extends Fragment {
 
       @Override
       public void onDestroyActionMode(ActionMode mode) {
-         if (!mDiscardChanges) {
-            for (int i = 0; i < mStepsCopy.size(); i++) {
-               mStepsCopy.get(i).setStepNum(i);
-            }
-            mGuide.setStepList(mStepsCopy);
-         }
          ((StepRearrangeListener) getActivity()).onReorderComplete();
          getActivity().getSupportFragmentManager().popBackStack();
+
       }
 
       @Override
       public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-
-         return true;
+         switch (item.getItemId()) {
+            case R.id.cab_action_confirm:
+               for (int i = 0; i < mStepsCopy.size(); i++) {
+                  mStepsCopy.get(i).setStepNum(i);
+               }
+               mGuide.setStepList(mStepsCopy);
+               mode.finish(); // Action picked, so close the CAB
+               return true;
+            default:
+               mode.finish();
+               return true;
+         }
       }
    };
 

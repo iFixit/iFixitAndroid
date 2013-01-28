@@ -247,7 +247,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       disableSave();
       mSavingIndicator.setVisibility(View.VISIBLE);
       mGuide.sync(mCurStepFragment.syncGuideChanges(), mPagePosition);
-      mSavingIndicator.setVisibility(View.INVISIBLE);
+      mSavingIndicator.setVisibility(View.GONE);
       mIsStepDirty = false;
    }
 
@@ -337,8 +337,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       builder
          .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
          .setMessage(
-            context.getString(R.string.step_edit_confirm_delete_message) + " '"
-               + mStepList.get(mPagePosition).getTitle() + "'?")
+            context.getString(R.string.step_edit_confirm_delete_message) + " Step "
+               + (mStepList.get(mPagePosition).getStepNum()+1) + "?")
          .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
