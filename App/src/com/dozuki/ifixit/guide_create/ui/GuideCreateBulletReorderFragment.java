@@ -35,7 +35,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
    public interface BulletRearrangeListener {
 
-      public void onReorderComplete(boolean cancled);
+      public void onReorderComplete(boolean cancled, ArrayList<StepLine>  lines);
 
    }
 
@@ -51,7 +51,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
 
    public void setLines(ArrayList<StepLine> lines) {
-      mLines = lines;
+      mLines.addAll(lines);
    }
 
    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
@@ -74,7 +74,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
    private BulletRearrangeListener mRListenener;
 
    private void confirmRearrange() {
-      (mRListenener).onReorderComplete(false);
+      (mRListenener).onReorderComplete(false, mLines);
    }
 
    /**
@@ -143,20 +143,6 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
       return view;
    }
-
-//   @Override
-//   public void onStart() {
-//      super.onStart();
-//      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(false);
-//      ((GuideStepChangedListener) getActivity()).disableSave();
-//   }
-//
-//   @Override
-//   public void onStop() {
-//      super.onStop();
-//      ((GuideCreateStepsEditActivity) getActivity()).enableViewPager(true);
-//      ((GuideStepChangedListener) getActivity()).enableSave();
-//   }
 
    private class ViewHolder {
       public TextView stepsView;
@@ -241,7 +227,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
 
    @Override
    public void onCancel(DialogInterface d) {
-      (mRListenener).onReorderComplete(false);
+      (mRListenener).onReorderComplete(true, null);
       super.onCancel(d);
    }
 }
