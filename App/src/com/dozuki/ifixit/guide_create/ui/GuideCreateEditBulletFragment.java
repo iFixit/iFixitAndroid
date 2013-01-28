@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.EditText;
@@ -12,6 +13,7 @@ import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.Toast;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
@@ -46,6 +48,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private boolean mShowingChooseBulletDialog;
    private boolean mReorderModeActive;
    private GuideCreateBulletReorderFragment mReorderFragment;
+   private boolean mConfirmDelete;
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -233,9 +236,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       } else if (color.equals("action_reorder")) {
          launchBulletReorder();
       } else if (color.equals("action_delete")) {
-         mLines.remove(index);
-         mBulletContainer.removeViewAt(index);
-         mNewBulletButton.setVisibility(View.VISIBLE);
+       //  mLines.remove(index);
+       //  mBulletContainer.removeViewAt(index);
+        // mNewBulletButton.setVisibility(View.VISIBLE);
+         createDeleteDialog(getActivity(), index).show();
       } else if (color.equals("action_cancel")) {
          return;
       } else {
@@ -282,5 +286,41 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
    public void removeBullets() {
       mBulletContainer.removeViewsInLayout(0, mLines.size());
+   }
+   
+   
+   public AlertDialog createDeleteDialog(final Context context, final int index) {
+      mConfirmDelete = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      builder
+         .setTitle(context.getString(R.string.step_delete_dialog_title))
+         .setMessage(
+            context.getString(R.string.step_delete_dialog_body))
+         .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int id) {
+               mConfirmDelete = false;
+               mLines.remove(index);
+               mBulletContainer.removeViewAt(index);
+               mNewBulletButton.setVisibility(View.VISIBLE);
+               dialog.cancel();
+            }
+         }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               mConfirmDelete = false;
+               dialog.cancel();
+            }
+         });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mConfirmDelete = false;
+         }
+      });
+
+      return dialog;
    }
 }
