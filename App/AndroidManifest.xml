@@ -42,7 +42,7 @@
       <activity android:name=".login.ui.OpenIDActivity"></activity>
       <activity android:name=".topic_view.ui.TopicViewActivity"></activity>
       <activity android:name=".guide_view.ui.GuideViewActivity"
-                android:exported="false"
+                android:exported="true"
                 android:launchMode="singleTop" >
          <intent-filter>
             <action android:name="android.intent.action.VIEW" />
