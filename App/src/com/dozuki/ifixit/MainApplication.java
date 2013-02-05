@@ -17,7 +17,7 @@ import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Bus;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;

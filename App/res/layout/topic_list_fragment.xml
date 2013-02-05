@@ -10,7 +10,7 @@
         android:layout_marginRight="@dimen/topic_list_right_divider"
         android:background="@color/translucent_white" >
 
-        <com.ifixit.android.sectionheaders.SectionListView
+        <com.marczych.androidsectionheaders.SectionListView
             android:id="@+id/topicList"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

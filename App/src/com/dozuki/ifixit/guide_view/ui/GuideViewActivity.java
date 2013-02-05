@@ -24,7 +24,7 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.dozuki.ifixit.util.SpeechCommander;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 

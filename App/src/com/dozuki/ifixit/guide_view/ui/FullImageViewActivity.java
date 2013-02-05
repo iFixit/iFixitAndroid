@@ -12,7 +12,7 @@ import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
