@@ -52,7 +52,7 @@ public class FullImageViewActivity extends Activity {
          opt.inSampleSize = 2;
          opt.inDither = false;
          opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-         mImageZoom.setImageBitmapReset(
+         mImageZoom.setImageBitmap(
           BitmapFactory.decodeFile(mImageUrl, opt), true);
          mImageZoom.setVisibility(View.VISIBLE);
       } else {

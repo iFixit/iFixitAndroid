@@ -174,7 +174,7 @@ public class MainApplication extends Application {
             public boolean displayImage(ImageView imageView, Bitmap bitmap,
              String url) {
                if (imageView instanceof ImageViewTouch) {
-                  ((ImageViewTouch)imageView).setImageBitmapReset(bitmap, true);
+                  ((ImageViewTouch)imageView).setImageBitmap(bitmap, true);
                   ((ImageViewTouch)imageView).setVisibility(View.VISIBLE);
                   return true;
                }
@@ -187,7 +187,7 @@ public class MainApplication extends Application {
                   Bitmap noImage = BitmapFactory.decodeResource(getResources(),
                    R.drawable.no_image);
 
-                  ((ImageViewTouch)imageView).setImageBitmapReset(noImage, true);
+                  ((ImageViewTouch)imageView).setImageBitmap(noImage, true);
                } else {
                   imageView.setImageResource(R.drawable.no_image);
                }
