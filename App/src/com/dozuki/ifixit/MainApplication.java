@@ -17,7 +17,7 @@ import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Bus;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
@@ -175,7 +175,7 @@ public class MainApplication extends Application {
             public boolean displayImage(ImageView imageView, Bitmap bitmap,
              String url) {
                if (imageView instanceof ImageViewTouch) {
-                  ((ImageViewTouch)imageView).setImageBitmapReset(bitmap, true);
+                  ((ImageViewTouch)imageView).setImageBitmap(bitmap, true);
                   ((ImageViewTouch)imageView).setVisibility(View.VISIBLE);
                   return true;
                }
@@ -188,7 +188,7 @@ public class MainApplication extends Application {
                   Bitmap noImage = BitmapFactory.decodeResource(getResources(),
                    R.drawable.no_image);
 
-                  ((ImageViewTouch)imageView).setImageBitmapReset(noImage, true);
+                  ((ImageViewTouch)imageView).setImageBitmap(noImage, true);
                } else {
                   imageView.setImageResource(R.drawable.no_image);
                }

@@ -12,7 +12,7 @@ import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
@@ -52,7 +52,7 @@ public class FullImageViewActivity extends Activity {
          opt.inSampleSize = 2;
          opt.inDither = false;
          opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-         mImageZoom.setImageBitmapReset(
+         mImageZoom.setImageBitmap(
           BitmapFactory.decodeFile(mImageUrl, opt), true);
          mImageZoom.setVisibility(View.VISIBLE);
       } else {

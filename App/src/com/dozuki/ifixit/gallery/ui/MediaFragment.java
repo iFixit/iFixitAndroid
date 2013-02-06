@@ -54,9 +54,18 @@ import com.dozuki.ifixit.login.ui.LocalImage;
 
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
-public abstract class MediaFragment  extends Fragment implements
-OnItemClickListener,  OnItemLongClickListener {
+import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.otto.Subscribe;
+
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.TextView;
+import org.holoeverywhere.widget.Toast;
+
+public abstract class MediaFragment extends Fragment implements
+ OnItemClickListener, OnItemLongClickListener {
 
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;

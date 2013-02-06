@@ -7,7 +7,7 @@ import android.widget.AdapterView;
 
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
-import com.ifixit.android.sectionheaders.Section;
+import com.marczych.androidsectionheaders.Section;
 
 import java.util.ArrayList;
 
