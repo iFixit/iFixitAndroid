@@ -67,7 +67,12 @@
             <artifactId>otto</artifactId>
             <version>1.3.2</version>
         </dependency>
-
+        <dependency>
+           <groupId>com.mobeta.android.dslv</groupId>
+           <artifactId>drag-sort-listview</artifactId>
+           <version>0.3.0-SNAPSHOT</version>
+           <type>apklib</type>
+        </dependency>
     </dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>
