@@ -9,7 +9,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.util.IfixitActivity;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 public class TopicViewActivity extends IfixitActivity {
    public static final String TOPIC_KEY = "TOPIC";

@@ -61,7 +61,8 @@ public class Site implements Serializable {
    public String toString() {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
-       mAnswers + "}";
+       mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
+       mPublicRegistration + "}";
    }
 
    public static Site getSite(String siteName) {

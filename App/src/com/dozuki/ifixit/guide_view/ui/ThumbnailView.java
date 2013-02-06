@@ -8,7 +8,7 @@ import android.widget.ImageView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
