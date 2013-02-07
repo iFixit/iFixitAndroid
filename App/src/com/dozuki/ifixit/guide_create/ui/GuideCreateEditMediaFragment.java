@@ -17,7 +17,7 @@ import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment.GuideStepChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepImage;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import android.content.Intent;
 import android.content.res.Configuration;

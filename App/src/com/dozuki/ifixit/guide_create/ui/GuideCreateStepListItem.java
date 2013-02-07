@@ -10,7 +10,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_view.model.StepImage;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import android.content.Context;
 import android.view.LayoutInflater;

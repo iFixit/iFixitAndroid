@@ -27,7 +27,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.ui.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment.GuideStepChangedListener;
 import com.dozuki.ifixit.guide_view.model.StepLine;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
