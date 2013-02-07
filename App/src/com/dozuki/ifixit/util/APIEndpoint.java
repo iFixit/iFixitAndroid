@@ -28,7 +28,6 @@ public enum APIEndpoint {
          }
       },
       false,
-      false,
       "GET",
       false
    ),
@@ -47,7 +46,6 @@ public enum APIEndpoint {
             return new APIEvent.Guide();
          }
       },
-      false,
       false,
       "GET",
       false
@@ -73,7 +71,6 @@ public enum APIEndpoint {
          }
       },
       false,
-      false,
       "GET",
       false
    ),
@@ -92,7 +89,6 @@ public enum APIEndpoint {
             return new APIEvent.Login();
          }
       },
-      true,
       false,
       "POST",
       true
@@ -112,7 +108,6 @@ public enum APIEndpoint {
             return new APIEvent.Register();
          }
       },
-      true,
       false,
       "POST",
       true
@@ -132,7 +127,6 @@ public enum APIEndpoint {
             return new APIEvent.UserImages();
          }
       },
-      false,
       true,
       "GET",
       false
@@ -151,7 +145,6 @@ public enum APIEndpoint {
             return new APIEvent.UserVideos();
          }
       },
-      false,
       true,
       "GET",
       false
@@ -170,7 +163,6 @@ public enum APIEndpoint {
             return new APIEvent.UserVideos();
          }
       },
-      false,
       true,
       "GET",
       false
@@ -213,7 +205,6 @@ public enum APIEndpoint {
             return new APIEvent.UploadImage();
          }
       },
-      false,
       true,
       "POST",
       false
@@ -234,7 +225,6 @@ public enum APIEndpoint {
             return new APIEvent.DeleteImage();
          }
       },
-      false,
       true,
       "DELETE",
       false
@@ -255,7 +245,6 @@ public enum APIEndpoint {
             return new APIEvent.UserGuides();
          }
       },
-      false,
       true,
       "GET",
       false
@@ -274,7 +263,6 @@ public enum APIEndpoint {
             return new APIEvent.CreateGuide();
          }
       },
-      false,
       true,
       "POST",
       false
@@ -296,7 +284,6 @@ public enum APIEndpoint {
            // return new APIEvent.CreateGuide();
          }
       },
-      false,
       true,
       "DELETE",
       false
@@ -318,7 +305,6 @@ public enum APIEndpoint {
            // return new APIEvent.CreateGuide();
          }
       },
-      false,
       true,
       "PATCH",
       false
@@ -339,7 +325,6 @@ public enum APIEndpoint {
            // return new APIEvent.CreateGuide();
          }
       },
-      false,
       true,
       "PUT",
       false
@@ -361,7 +346,6 @@ public enum APIEndpoint {
            // return new APIEvent.CreateGuide();
          }
       },
-      false,
       true,
       "DELETE",
       false
@@ -383,7 +367,6 @@ public enum APIEndpoint {
            // return new APIEvent.CreateGuide();
          }
       },
-      false,
       true,
       "PUT",
       false
@@ -404,7 +387,6 @@ public enum APIEndpoint {
            // return new APIEvent.CreateGuide();
          }
       },
-      false,
       true,
       "PATCH",
       false
@@ -426,7 +408,6 @@ public enum APIEndpoint {
          }
       },
       false,
-      false,
       "GET",
       false
    ),
@@ -445,7 +426,6 @@ public enum APIEndpoint {
             return new APIEvent.UserInfo();
          }
       },
-      false,
       false,
       "GET",
       false
@@ -486,11 +466,6 @@ public enum APIEndpoint {
    private final Endpoint mEndpoint;
 
    /**
-    * Whether or not to use https://.
-    */
-   public final boolean mHttps;
-
-   /**
     * Whether or not this is an authenticated endpoint. If true, sends the
     * user's sessionid along in a cookie.
     */
@@ -507,10 +482,9 @@ public enum APIEndpoint {
     */
    public final boolean mForcePublic;
 
-   private APIEndpoint(Endpoint endpoint, boolean https, boolean authenticated,
+   private APIEndpoint(Endpoint endpoint, boolean authenticated,
     String method, boolean forcePublic) {
       mEndpoint = endpoint;
-      mHttps = https;
       mAuthenticated = authenticated;
       mMethod = method;
       mForcePublic = forcePublic;
@@ -547,12 +521,7 @@ public enum APIEndpoint {
          domain = "www.ifixit.com";
       }
 
-      if (mHttps) {
-         protocol = "https://";
-      } else {
-         protocol = "http://";
-      }
-
+      protocol = "https://";
       url = "/api/" + API_VERSION + "/" + mEndpoint.createUrl(query);
 
       return protocol + domain + url;
@@ -580,6 +549,6 @@ public enum APIEndpoint {
    }
 
    public String toString() {
-      return mHttps + " | " + mAuthenticated + " | " + ordinal();
+      return mAuthenticated + " | " + ordinal();
    }
 }
