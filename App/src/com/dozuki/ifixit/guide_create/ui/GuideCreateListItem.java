@@ -2,7 +2,7 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import android.content.Context;
 import android.content.Intent;
