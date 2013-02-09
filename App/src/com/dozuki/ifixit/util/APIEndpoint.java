@@ -287,6 +287,24 @@ public enum APIEndpoint {
       false
    ),
 
+   EDIT_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.EditGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.EditGuide();
+         }
+      },
+      true,
+      "PATCH",
+      false
+   ),
    DELETE_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {

@@ -18,6 +18,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
+import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GuideCreateStepsActivity extends IfixitActivity implements GuideCreateIntroListener, StepRearrangeListener {
@@ -165,9 +166,11 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       mGuide.setTopic(device);
       mGuide.setSummary(summary);
       mGuide.setIntroduction(intro);
-      // TODO PATCH GUIDE
-      // APIService.call((Activity) getActivity(),
-      // APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
+      /**
+       * TODO: PATCH doesn't work with http-request...
+       */
+      APIService.call(this, APIService.getEditGuideAPICall(mGuide.getGuideid(),
+       device, title, summary, intro, guideType, thing));
       getSupportFragmentManager().popBackStack();
    }
 

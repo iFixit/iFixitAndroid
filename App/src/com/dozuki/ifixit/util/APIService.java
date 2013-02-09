@@ -247,6 +247,26 @@ public class APIService extends Service {
    }
    
    /**
+    * TODO: Pass in entire guide so parameters can easily be changed later.
+    */
+   public static APICall getEditGuideAPICall(int guideid, String device, String title,
+    String summary, String intro, String guideType, String subject) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("topic", device);
+         requestBody.put("type", guideType);
+         requestBody.put("subject", subject);
+         requestBody.put("title", title);
+         requestBody.put("summary", summary);
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid, requestBody.toString());
+   }
+
+   /**
     * TODO: Paginate.
     */
    public static APICall getUserGuidesAPICall() {
