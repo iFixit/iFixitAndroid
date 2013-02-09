@@ -2,25 +2,23 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.ListView;
+import org.holoeverywhere.widget.TextView;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import org.holoeverywhere.LayoutInflater;
-
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.BaseAdapter;
-import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.TextView;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -29,7 +27,8 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.util.APIEvent;
-import com.marczych.androidimagemanager.ImageManager;
+import com.dozuki.ifixit.util.APIService;
+import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 
 public class GuideCreateStepPortalFragment extends Fragment implements StepRearrangeListener {
@@ -76,8 +75,17 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          mStepForDelete = (GuideCreateStepObject) savedInstanceState.getSerializable(STEP_FOR_DELETE); 
          
       }
-      // APIService.call((Activity) getActivity(),
-      // APIService.getGuideAPICall(mGuide.getGuideid()));
+      APIService.call((Activity) getActivity(),
+       APIService.getGuideForEditAPICall(mGuide.getGuideid()));
+   }
+
+   @Subscribe
+   public void onGuideForEdit(APIEvent.GuideForEdit event) {
+      if (!event.hasError()) {
+         // TODO
+      } else {
+         // TODO
+      }
    }
 
    @Subscribe

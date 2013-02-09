@@ -250,6 +250,10 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.USER_GUIDES, NO_QUERY);
    }
 
+   public static APICall getGuideForEditAPICall(int guideid) {
+      return new APICall(APIEndpoint.GUIDE_FOR_EDIT, "" + guideid);
+   }
+
    public static APICall getRegisterAPICall(String login, String password, String username) {
       JSONObject requestBody = new JSONObject();
 

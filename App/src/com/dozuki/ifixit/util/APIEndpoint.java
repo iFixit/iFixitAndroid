@@ -249,6 +249,25 @@ public enum APIEndpoint {
       false
    ),
 
+   GUIDE_FOR_EDIT(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query + "?edit&noPrereqSteps";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.GuideForEdit().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.GuideForEdit();
+         }
+      },
+      true,
+      "GET",
+      false
+   ),
+
    CREATE_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
