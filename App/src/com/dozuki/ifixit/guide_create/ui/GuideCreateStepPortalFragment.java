@@ -28,7 +28,7 @@ import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRear
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 
 public class GuideCreateStepPortalFragment extends Fragment implements StepRearrangeListener {
