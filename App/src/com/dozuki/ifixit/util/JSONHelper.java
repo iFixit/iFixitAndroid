@@ -1,5 +1,12 @@
 package com.dozuki.ifixit.util;
 
+import java.util.ArrayList;
+import java.util.Iterator;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
@@ -14,7 +21,7 @@ import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.gallery.model.UserVideoInfo;
 import com.dozuki.ifixit.gallery.model.UserVideoList;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.guide_view.model.GuideInfo;
 import com.dozuki.ifixit.guide_view.model.GuidePart;
@@ -25,13 +32,6 @@ import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.Iterator;
 
 public class JSONHelper {
    private static final String LEAF_INDICATOR = "TOPICS";
@@ -422,23 +422,22 @@ public class JSONHelper {
       return spantext;
    }
 
-   public static ArrayList<GuideCreateObject> parseUserGuides(String json) throws JSONException {
+
+   public static GuideCreateObject parseUserGuide(String json) throws JSONException {
+      return new GuideCreateObject(parseGuide(json));
+   }
+
+   public static ArrayList<UserGuide> parseUserGuides(String json) throws JSONException {
       JSONArray jGuideInfos = new JSONArray(json);
-      ArrayList<GuideCreateObject>  guideList = new ArrayList<GuideCreateObject>(); 
+      ArrayList<UserGuide> guideList = new ArrayList<UserGuide>(); 
 
       for (int i = 0; i < jGuideInfos.length(); i++) {
          guideList.add(parseUserGuideInfo(jGuideInfos.getJSONObject(i)));
       }
-      return guideList;
 
+      return guideList;
    }
-   
-   public static GuideCreateObject parseUserGuide(String json) throws JSONException {
-     
-      return new GuideCreateObject(parseGuide(json));
-   }
-   
-   
+
 //   private static GuideCreateStepObject parseCreateGuideStep(JSONObject jStep) throws JSONException {
 //      JSONArray jLines = jStep.getJSONArray("lines");
 //      GuideCreateStepObject step = new GuideCreateStepObject(jStep.getInt("number"));
@@ -465,18 +464,17 @@ public class JSONHelper {
 //
 //      return step;
 //   }
-   
-   public static GuideCreateObject parseUserGuideInfo(JSONObject json) throws JSONException {
-      GuideCreateObject guide = new GuideCreateObject(json.getInt("guideid"));
-      guide.setTitle(json.getString("title"));
-      guide.setSubject(json.getString("subject"));
-      guide.setIntroImage(json.getString("image_url"));
 
-      return guide;
+   public static UserGuide parseUserGuideInfo(JSONObject json) throws JSONException {
+      return new UserGuide(
+         json.getInt("guideid"),
+         json.getString("subject"),
+         json.getString("topic"),
+         json.getString("title"),
+         json.getBoolean("public"),
+         json.getInt("userid"),
+         json.getString("username"),
+         json.getString("image")
+      );
    }
-
-
-   
-   
-   
 }

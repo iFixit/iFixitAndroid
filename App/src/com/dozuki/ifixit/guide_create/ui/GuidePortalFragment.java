@@ -10,14 +10,17 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import org.holoeverywhere.widget.ListView;
+import org.holoeverywhere.app.Activity;
 import android.widget.RelativeLayout;
 import org.holoeverywhere.widget.TextView;
+import android.util.Log;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.util.APIEvent;
-import com.marczych.androidimagemanager.ImageManager;
+import com.ifixit.android.imagemanager.ImageManager;
+import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
 public class GuidePortalFragment extends Fragment {
@@ -43,11 +46,12 @@ public class GuidePortalFragment extends Fragment {
       mParentRef = (GuideCreateActivity) getActivity();
       mGuideAdapter = new GuideCreateListAdapter();
       mCurOpenGuideObjectID = NO_ID;
+
       if (savedInstanceState != null) {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
       }
-      // APIService.call((Activity) getActivity(),
-      // APIService.getUserGuidesAPICall(((MainApplication) getActivity().getApplication()).getUser().getUserId()));
+
+      APIService.call((Activity) getActivity(), APIService.getUserGuidesAPICall());
    }
 
    @Override
@@ -74,7 +78,14 @@ public class GuidePortalFragment extends Fragment {
    public void onUserGuides(APIEvent.UserGuides event) {
       if (!event.hasError()) {
          mParentRef.getGuideList().removeAll(event.getResult());
-         mParentRef.getGuideList().addAll(event.getResult());
+
+         /**
+          * TODO: Update this list to use UserGuide objects. The user guides
+          * endpoint only returns a tiny amount of info about the guide so
+          * a separate API call will have to be made to retrieve the full
+          * guide to edit it.
+          */
+         //mParentRef.getGuideList().addAll(event.getResult());
          mGuideAdapter.notifyDataSetChanged();
       } else {
          // TODO
