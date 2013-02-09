@@ -422,7 +422,9 @@ public class JSONHelper {
       return spantext;
    }
 
-
+   /**
+    * TODO: This name should be updated.
+    */
    public static GuideCreateObject parseUserGuide(String json) throws JSONException {
       return new GuideCreateObject(parseGuide(json));
    }
