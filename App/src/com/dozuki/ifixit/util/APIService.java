@@ -243,8 +243,11 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
    
-   public static APICall getUserGuidesAPICall(String userid) {
-      return new APICall(APIEndpoint.USER_GUIDES, userid);
+   /**
+    * TODO: Paginate.
+    */
+   public static APICall getUserGuidesAPICall() {
+      return new APICall(APIEndpoint.USER_GUIDES, NO_QUERY);
    }
 
    public static APICall getRegisterAPICall(String login, String password, String username) {

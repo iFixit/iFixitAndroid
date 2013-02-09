@@ -7,11 +7,8 @@ import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 
 public class GuideCreateObject implements Serializable {
-
-   /**
-	 * 
-	 */
    private static final long serialVersionUID = -356754234536788271L;
+
    private static final String DEFUALT_TITLE = "Title";
    protected int mGuideid;
    protected String mTitle;

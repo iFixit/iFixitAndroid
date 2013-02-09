@@ -1,13 +1,13 @@
 package com.dozuki.ifixit.util;
 
-import android.util.Log;
-
-import com.dozuki.ifixit.dozuki.model.Site;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.json.JSONException;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import android.util.Log;
+
+import com.dozuki.ifixit.dozuki.model.Site;
 
 /**
  * Defines all APIEndpoints.
@@ -233,8 +233,7 @@ public enum APIEndpoint {
    USER_GUIDES(
       new Endpoint() {
          public String createUrl(String query) {
-            //return "user/"+ query +"/guides";
-            return "guides";
+            return "user/guides";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -249,6 +248,7 @@ public enum APIEndpoint {
       "GET",
       false
    ),
+
    CREATE_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
@@ -267,7 +267,7 @@ public enum APIEndpoint {
       "POST",
       false
    ),
-   
+
    DELETE_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {

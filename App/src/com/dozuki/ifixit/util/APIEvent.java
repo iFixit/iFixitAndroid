@@ -1,16 +1,17 @@
 package com.dozuki.ifixit.util;
 
+import java.util.ArrayList;
+
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserEmbedList;
 import com.dozuki.ifixit.gallery.model.UserImageList;
 import com.dozuki.ifixit.gallery.model.UserVideoList;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
-
-import java.util.ArrayList;
 
 /**
  * Base class for API events that are posted to the otto bus.
@@ -26,7 +27,7 @@ public abstract class APIEvent<T> {
    public static class UserEmbeds extends APIEvent<UserEmbedList> {}
    public static class UploadImage extends APIEvent<UploadedImageInfo> {}
    public static class DeleteImage extends APIEvent<String> {}
-   public static class UserGuides extends APIEvent<ArrayList<GuideCreateObject>> {}
+   public static class UserGuides extends APIEvent<ArrayList<UserGuide>> {}
    public static class CreateGuide extends APIEvent<GuideCreateObject> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}
    public static class UserInfo extends APIEvent<User> {}
