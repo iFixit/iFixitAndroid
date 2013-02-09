@@ -1,15 +1,16 @@
 package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
+
+import org.holoeverywhere.app.Fragment;
+
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import org.holoeverywhere.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
-import android.view.View;
+import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
@@ -19,6 +20,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
+import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GuideCreateActivity extends IfixitActivity implements GuideCreateIntroListener {
@@ -165,9 +167,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    }
 
    @Override
-   public void onFinishIntroInput(String device, String title, String summary, String intro, String guideType,
-      String thing) {
-
+   public void onFinishIntroInput(String device, String title, String summary,
+    String intro, String guideType, String subject) {
       GuideCreateObject guideObject = new GuideCreateObject(GuideItemID++);
       guideObject.setTitle(title);
       guideObject.setTopic(device);
@@ -175,11 +176,10 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       guideObject.setIntroduction(intro);
 
       getGuideList().add(guideObject);
-      // APIService.call((Activity) getActivity(),
-      // APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
+      APIService.call(this, APIService.getCreateGuideAPICall(device, title, summary,
+       intro, guideType, subject));
 
       getSupportFragmentManager().popBackStack();
-
    }
 
    @Override
