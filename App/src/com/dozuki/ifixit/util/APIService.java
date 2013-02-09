@@ -226,14 +226,17 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
    
-   public static APICall getCreateGuideAPICall(String device, String title, String summary, String intro,
-      String guideType, String thing) {
+   /**
+    * TODO: Pass in entire guide so parameters can easily be changed later.
+    */
+   public static APICall getCreateGuideAPICall(String device, String title, String summary,
+    String intro, String guideType, String subject) {
       JSONObject requestBody = new JSONObject();
 
       try {
          requestBody.put("topic", device);
          requestBody.put("type", guideType);
-         requestBody.put("thing", thing);
+         requestBody.put("subject", subject);
          requestBody.put("title", title);
          requestBody.put("summary", summary);
       } catch (JSONException e) {
