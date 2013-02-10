@@ -163,14 +163,9 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
       mToggleEdit.setChecked(check);
    }
 
-   public void setGuideItem(String title, String image) {
+   public void setGuideItem(String title, String image) {   
       mTitleView.setText(title);
-
       mImageManager.displayImage(image, mPortalRef.getActivity(), mThumbnail);
-   }
-
-   public void setTitleText(final String title) {
-      mTitleView.setText(title);
    }
 
    @Override

@@ -25,28 +25,28 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
    public static String GUIDE_KEY = "GUIDE_KEY";
+   public static String NEW_GUIDE_KEY = "NEW_GUIDE_KEY";
    private ActionBar mActionBar;
    private GuideCreateStepPortalFragment mStepPortalFragment;
    private ArrayList<GuideCreateStepObject> mStepList;
    private GuideCreateObject mGuide;
    private boolean mShowingHelp;
 
+   public ArrayList<GuideCreateStepObject> getStepList() {
+      return mStepList;
+   }
 
-	public ArrayList<GuideCreateStepObject> getStepList() {
-		return mStepList;
-	}
+   public void deleteStep(GuideCreateStepObject step) {
+      mStepList.remove(step);
+   }
 
-	public void deleteStep(GuideCreateStepObject step) {
-		mStepList.remove(step);
-	}
+   public void addStep(GuideCreateStepObject step, int index) {
+      mStepList.add(index, step);
+   }
 
-	public void addStep(GuideCreateStepObject step, int index) {
-		mStepList.add(index, step);
-	}
-
-	public GuideCreateObject getGuide() {
-		return mGuide;
-	}
+   public GuideCreateObject getGuide() {
+      return mGuide;
+   }
 
    @SuppressWarnings("unchecked")
    public void onCreate(Bundle savedInstanceState) {
@@ -65,6 +65,13 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          if (mGuide.getSteps() == null)
             mGuide.setStepList(new ArrayList<GuideCreateStepObject>());
          mStepList = mGuide.getSteps();
+         boolean newGuide = extras.getBoolean(GuideCreateStepsActivity.NEW_GUIDE_KEY);
+         if (newGuide) {
+            GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+            item.setStepNum(mGuide.getSteps().size());
+            item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+            launchStepEdit(item);
+         }
       }
       if (savedInstanceState != null) {
          mStepList = mGuide.getSteps();
@@ -133,8 +140,8 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
             }
          }
       }
-	}
-	
+   }
+
    private AlertDialog createHelpDialog() {
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -181,6 +188,28 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 
    @Override
    public void onReorderComplete() {
-      ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG)).onReorderComplete();
+      ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
+         .onReorderComplete();
+   }
+
+   void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
+      Intent intent = new Intent(this, GuideCreateStepsEditActivity.class);
+      intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
+      startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
+   }
+
+   void launchStepEdit(GuideCreateStepObject curStep) {
+      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+      stepList.addAll(mGuide.getSteps());
+      stepList.add(curStep);
+      launchStepEdit(stepList, stepList.size() - 1);
+   }
+
+   void launchStepEdit(int curStep) {
+      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+      stepList.addAll(mGuide.getSteps());
+      launchStepEdit(stepList, curStep);
    }
 }
