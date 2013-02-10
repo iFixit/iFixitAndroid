@@ -85,7 +85,7 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
       mEditButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            mPortalRef.launchStepEdit(mStepPosition);
+            ((GuideCreateStepsActivity)mPortalRef.getActivity()).launchStepEdit(mStepPosition);
          }
       });
       if(mStepObject.getTitle().equals(""))

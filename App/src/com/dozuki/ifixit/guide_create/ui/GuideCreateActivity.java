@@ -179,7 +179,12 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       // APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
 
       getSupportFragmentManager().popBackStack();
-
+      
+      //Go straight to creating a new step
+      Intent intent = new Intent(this, GuideCreateStepsActivity.class);
+      intent.putExtra(GuideCreateStepsActivity.GUIDE_KEY, guideObject);
+      intent.putExtra(GuideCreateStepsActivity.NEW_GUIDE_KEY, true);
+      startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
    }
 
    @Override

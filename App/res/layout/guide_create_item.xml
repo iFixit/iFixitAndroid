@@ -58,6 +58,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/guide_create_toggle_edit"
                 android:layout_alignLeft="@+id/guide_create_item_publish_status"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
                 android:text="@string/default_title" />
         </RelativeLayout>
     </FrameLayout>

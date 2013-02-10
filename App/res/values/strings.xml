@@ -96,6 +96,7 @@
     <string name="unpublished">Unpublished</string>
     <string name="create_guide_error">Must enter the type of device!</string>
     <string name="create_guide_header">Create A Guide</string>
+    <string name="create_guide_header_edit">Edit Introduction</string>
     <string name="create_guide_title">TITLE</string>
     <string name="create_guide_device">DEVICE</string>
     <string name="create_guide_device_focus">FOCUS</string>
