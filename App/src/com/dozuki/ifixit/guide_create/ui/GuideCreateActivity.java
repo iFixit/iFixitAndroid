@@ -18,6 +18,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 import com.dozuki.ifixit.util.IfixitActivity;
 
@@ -173,18 +174,27 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       guideObject.setTopic(device);
       guideObject.setSummary(summary);
       guideObject.setIntroduction(intro);
-
+      guideObject.setStepList(new ArrayList<GuideCreateStepObject>());
       getGuideList().add(guideObject);
       // APIService.call((Activity) getActivity(),
       // APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
 
-      getSupportFragmentManager().popBackStack();
+   
       
       //Go straight to creating a new step
-      Intent intent = new Intent(this, GuideCreateStepsActivity.class);
-      intent.putExtra(GuideCreateStepsActivity.GUIDE_KEY, guideObject);
-      intent.putExtra(GuideCreateStepsActivity.NEW_GUIDE_KEY, true);
-      startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
+      GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+      item.setStepNum(0);
+      item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+      ArrayList<GuideCreateStepObject> initialStepList = new ArrayList<GuideCreateStepObject>();
+      initialStepList.add(item);
+ 
+      Intent intent = new Intent(this, GuideCreateStepsEditActivity.class);
+      intent.putExtra(GuideCreateActivity.GUIDE_KEY,  guideObject);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, item);
+      startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
+      
+      getSupportFragmentManager().popBackStack();
    }
 
    @Override

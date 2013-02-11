@@ -65,13 +65,6 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          if (mGuide.getSteps() == null)
             mGuide.setStepList(new ArrayList<GuideCreateStepObject>());
          mStepList = mGuide.getSteps();
-         boolean newGuide = extras.getBoolean(GuideCreateStepsActivity.NEW_GUIDE_KEY);
-         if (newGuide) {
-            GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
-            item.setStepNum(mGuide.getSteps().size());
-            item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
-            launchStepEdit(item);
-         }
       }
       if (savedInstanceState != null) {
          mStepList = mGuide.getSteps();
