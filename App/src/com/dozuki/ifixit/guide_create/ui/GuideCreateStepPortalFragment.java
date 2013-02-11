@@ -28,6 +28,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.APIEvent;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
@@ -116,6 +117,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
             GuideCreateStepObject item = new GuideCreateStepObject(STEP_ID++);
             item.setStepNum(mGuide.getSteps().size());
             item.setTitle(DEFAULT_TITLE);
+            item.addLine(new StepLine("black", 0, ""));
             launchStepEdit(item);
          }
       });

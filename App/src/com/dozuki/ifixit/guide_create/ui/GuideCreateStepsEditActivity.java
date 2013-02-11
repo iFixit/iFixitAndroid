@@ -17,7 +17,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -35,6 +34,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment.GuideStepChangedListener;
+import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -276,6 +276,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
 
             GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
             item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+            item.addLine(new StepLine("black", 0, ""));
             item.setStepNum(mPagePosition + 1);
             mStepList.add(mPagePosition + 1, item);
             int pos = mPagePosition;
@@ -288,7 +289,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             mPager.invalidate();
             titleIndicator.invalidate();
             
-            mPager.setCurrentItem(pos + 1, true);
+            mPager.setCurrentItem(pos + 1, false);
             break;
          case android.R.id.home:
             finishEdit();
@@ -379,12 +380,14 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    public void enableSave() {
       mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_blue));
       mSaveStep.setTextColor(getResources().getColor(R.color.white));
+      mSaveStep.setText(R.string.guide_create_save);
       mSaveStep.setEnabled(true);
    }
 
    public void disableSave() {
       mSaveStep.setBackgroundColor(getResources().getColor(R.color.dark));
       mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_disabled));
+      mSaveStep.setText(R.string.guide_create_saved);
       mSaveStep.setEnabled(false);
    }
 
