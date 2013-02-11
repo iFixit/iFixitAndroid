@@ -65,11 +65,12 @@
 
             <TextView
                 android:id="@+id/guide_create_step_item_number_reorder"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/drag_handle_reorder"
                 android:layout_alignLeft="@+id/step_title_textview_reorder"
                 android:text=""
+                android:layout_marginTop="2dp"
                 android:textColor="@color/fireswing_dark_grey"
                 android:textSize="12sp"
                 android:textStyle="italic" />
