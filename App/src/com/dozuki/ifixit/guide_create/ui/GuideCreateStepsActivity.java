@@ -184,25 +184,4 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
          .onReorderComplete();
    }
-
-   void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
-      Intent intent = new Intent(this, GuideCreateStepsEditActivity.class);
-      intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
-      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
-      startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
-   }
-
-   void launchStepEdit(GuideCreateStepObject curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
-      stepList.addAll(mGuide.getSteps());
-      stepList.add(curStep);
-      launchStepEdit(stepList, stepList.size() - 1);
-   }
-
-   void launchStepEdit(int curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
-      stepList.addAll(mGuide.getSteps());
-      launchStepEdit(stepList, curStep);
-   }
 }

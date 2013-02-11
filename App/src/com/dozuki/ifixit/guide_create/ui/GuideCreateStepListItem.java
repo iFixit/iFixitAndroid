@@ -85,7 +85,7 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
       mEditButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            ((GuideCreateStepsActivity)mPortalRef.getActivity()).launchStepEdit(mStepPosition);
+            mPortalRef.launchStepEdit(mStepPosition);
          }
       });
       if(mStepObject.getTitle().equals(""))
@@ -134,9 +134,10 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
    }
 
    private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
-
+      boolean img = false;
       for (StepImage imageinfo : imageList) {
          if (imageinfo.getImageid() > 0) {
+            img = true;
             imagView.setScaleType(ScaleType.FIT_CENTER);
             mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(),
                mPortalRef.getActivity(), imagView);
@@ -144,6 +145,14 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
             imagView.invalidate();
             return;
          }
+      }
+      
+      if(!img)
+      {
+         imagView.setScaleType(ScaleType.FIT_CENTER);
+         mImageManager.displayImage("",
+            mPortalRef.getActivity(), imagView);
+         imagView.invalidate();
       }
 
    }

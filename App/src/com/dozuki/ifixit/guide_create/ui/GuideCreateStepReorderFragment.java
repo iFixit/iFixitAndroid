@@ -203,6 +203,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
    }
 
    private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
+      boolean img = false;
       for (StepImage imageinfo : imageList) {
          if (imageinfo.getImageid() > 0) {
             imagView.setScaleType(ScaleType.FIT_CENTER);
@@ -212,6 +213,12 @@ public class GuideCreateStepReorderFragment extends Fragment {
             imagView.invalidate();
             return;
          }
+      }
+
+      if (!img) {
+         imagView.setScaleType(ScaleType.FIT_CENTER);
+         mImageManager.displayImage("", getActivity(), imagView);
+         imagView.invalidate();
       }
 
    }
