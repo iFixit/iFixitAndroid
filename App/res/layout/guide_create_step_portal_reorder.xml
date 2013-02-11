@@ -12,9 +12,11 @@
         android:dividerHeight="@dimen/topic_list_vertical_spacing"
         android:divider="@color/white"
         android:layout_margin="3dp"
-        android:padding="3dp" />
+        android:layout_above="@+id/reorder_button_container"
+        android:padding="3dp" /> 
 
     <LinearLayout
+        android:id="@+id/reorder_button_container"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
