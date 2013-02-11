@@ -121,7 +121,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
       if (mLines.size() == 0) {
          mNewBulletButton.setVisibility(View.VISIBLE);
-      } else if (mLines.get(mLines.size() - 1).getText().length() != 0) {
+      } else if (mLines.get(mLines.size() - 1).getText().length() != 0 && mLines.size() != BULLET_LIMIT) {
          mNewBulletButton.setVisibility(View.VISIBLE);
       }
    }
