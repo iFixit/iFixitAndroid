@@ -40,7 +40,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    private static final String BULLET_FRAG_ID = "BULLET_FRAG_ID";
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
    private static final int NONE = -1;
-   private static final int INDENT_LIMIT = 3;
+   private static final int INDENT_LIMIT = 2;
    private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
    private LinearLayout mBulletContainer;
    private Button mNewBulletButton;
@@ -213,8 +213,25 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
    }
 
    private boolean canIndent(StepLine line) {
-      // TODO Auto-generated method stub
-      return line.getLevel() < 3;
+      if (!(line.getLevel() < 2)) {
+         return false;
+      }
+
+      if (mLines.indexOf(line) == 0) {
+         return false;
+      }
+
+      if (line.getLevel() == 0) {
+         return true;
+      }
+
+      if (line.getLevel() == 1) {
+         if (mLines.get(mLines.indexOf(line) - 1).getLevel() >= 1) {
+            return true;
+         }
+      }
+
+      return false;
    }
 
    public int getBulletResource(String color) {
@@ -275,18 +292,20 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             Toast.makeText(((Activity) getActivity()), R.string.indent_limit_above, Toast.LENGTH_SHORT).show();
             return;
          }
-         curStep.setLevel(curStep.getLevel() + 1);
-         mBulletContainer.removeViewAt(index);
-         mBulletContainer.addView(getView(mLines.get(index), index), index);
+         // curStep.setLevel(curStep.getLevel() + 1);
+         // mBulletContainer.removeViewAt(index);
+         // mBulletContainer.addView(getView(mLines.get(index), index), index);
+         indentBullet(index);
          setGuideDirty();
       } else if (color.equals("action_unindent")) {
          if (curStep.getLevel() == 0) {
             Toast.makeText(((Activity) getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
             return;
          }
-         curStep.setLevel(curStep.getLevel() - 1);
-         mBulletContainer.removeViewAt(index);
-         mBulletContainer.addView(getView(mLines.get(index), index), index);
+         // curStep.setLevel(curStep.getLevel() - 1);
+         // mBulletContainer.removeViewAt(index);
+         // mBulletContainer.addView(getView(mLines.get(index), index), index);
+         unIndentBullet(index);
          setGuideDirty();
       } else if (color.equals("action_reorder")) {
          launchBulletReorder();
@@ -303,6 +322,64 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          mBulletContainer.addView(getView(mLines.get(index), index), index);
          setGuideDirty();
       }
+   }
+
+   private void unIndentBullet(int index) {
+      StepLine curStep = mLines.get(index);
+      if (curStep.getLevel() == 0) {
+         return;
+      }
+      for (int i = index; i < mLines.size(); i++) {
+         if (mLines.get(i).getLevel() == (curStep.getLevel() + 1)) {
+            unIndentBullet(i);
+         } else if (mLines.get(i).getLevel() == (curStep.getLevel() - 1)) {
+            break;
+         }
+      }
+      curStep.setLevel(curStep.getLevel() - 1);
+      mBulletContainer.removeViewAt(index);
+      mBulletContainer.addView(getView(mLines.get(index), index), index);
+   }
+
+   private void indentBullet(int index) {
+      StepLine curStep = mLines.get(index);
+      if (curStep.getLevel() == INDENT_LIMIT) {
+         return;
+      }
+      for (int i = index; i < mLines.size(); i++) {
+         if (mLines.get(i).getLevel() == (curStep.getLevel() + 1)) {
+            indentBullet(i);
+         } else if (mLines.get(i).getLevel() == (curStep.getLevel() - 1)) {
+            break;
+         }
+      }
+      curStep.setLevel(curStep.getLevel() + 1);
+      mBulletContainer.removeViewAt(index);
+      mBulletContainer.addView(getView(mLines.get(index), index), index);
+   }
+
+   private boolean isIndentionStateValid() {
+      if (mLines.get(0).getLevel() != 0) {
+         return false;
+      }
+      for (int i = 1; i < mLines.size(); i++) {
+         if (mLines.get(i).getLevel() > mLines.get(i - 1).getLevel() + 1) {
+            return false;
+         }
+      }
+      return true;
+   }
+
+   private void fixIndentionState() {
+      mLines.get(0).setLevel(0);
+
+      for (int i = 1; i < mLines.size(); i++) {
+         if (mLines.get(i).getLevel() > mLines.get(i - 1).getLevel() + 1) {
+            mLines.get(i).setLevel(mLines.get(i - 1).getLevel() + 1);
+         }
+      }
+      removeBullets();
+      initilizeBulletContainer();
    }
 
    public ArrayList<StepLine> getLines() {
@@ -326,7 +403,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          mLines.addAll(list);
          removeBullets();
          initilizeBulletContainer();
-         ((GuideStepChangedListener) getActivity()).enableSave();
+         if (!isIndentionStateValid()) {
+            fixIndentionState();
+         }
+         // ((GuideStepChangedListener) getActivity()).enableSave();
          setGuideDirty();
       }
    }
@@ -353,6 +433,9 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             public void onClick(DialogInterface dialog, int id) {
                mConfirmDelete = false;
                removeBullet(index);
+               if (!isIndentionStateValid()) {
+                  fixIndentionState();
+               }
                dialog.dismiss();
             }
          }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
