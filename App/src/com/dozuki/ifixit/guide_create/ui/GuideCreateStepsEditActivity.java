@@ -17,6 +17,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -31,9 +32,12 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.gallery.model.MediaInfo;
+import com.dozuki.ifixit.gallery.ui.GalleryActivity;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepEditFragment.GuideStepChangedListener;
+import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -109,7 +113,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          if (mShowingHelp) {
             createHelpDialog().show();
          }
-         
+
          if (mShowingSave) {
             createExitWarningDialog().show();
          }
@@ -175,6 +179,46 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (mCurStepFragment != null) {
          mCurStepFragment.setMediaResult(requestCode, resultCode, data);
+      } else {
+         if (resultCode == RESULT_OK) {
+            // we dont have a reference the the fragment managing the media, so we make the changes to the step manually
+            MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
+            StepImage mImageInfo = new StepImage(0);
+            mImageInfo.setText(media.getGuid());
+            mImageInfo.setImageId(Integer.valueOf(media.getItemId()));
+            ArrayList<StepImage> list = mStepList.get(mPagePosition).getImages();
+            if (requestCode == GuideCreateEditMediaFragment.IMAGE_KEY_1) {
+               if (list.size() > 0) {
+                  list.get(0).setText(media.getGuid());
+                  list.get(0).setImageId(Integer.valueOf(media.getItemId()));
+               } else {
+                  list.add(mImageInfo);
+               }
+            } else if (requestCode == GuideCreateEditMediaFragment.IMAGE_KEY_2) {
+               if (list.size() > 1) {
+                  list.get(1).setText(media.getGuid());
+                  list.get(1).setImageId(Integer.valueOf(media.getItemId()));
+               } else {
+                  list.add(mImageInfo);
+               }
+
+            } else if (requestCode == GuideCreateEditMediaFragment.IMAGE_KEY_3) {
+               if (list.size() > 2) {
+                  list.get(2).setText(media.getGuid());
+                  list.get(2).setImageId(Integer.valueOf(media.getItemId()));
+               } else {
+                  list.add(mImageInfo);
+               }
+            }
+            mStepList.get(mPagePosition).setImages(list);
+            enableSave();
+            // recreate pager with updated step:
+            mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+            mPager.setAdapter(mStepAdapter);
+            mPager.invalidate();
+            titleIndicator.invalidate();
+            mPager.setCurrentItem(mPagePosition, false);
+         }
       }
    }
 
@@ -223,11 +267,10 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       @Override
       public void setPrimaryItem(ViewGroup container, int position, Object object) {
          super.setPrimaryItem(container, position, object);
-         
+
          if (mPagePosition != position) {
-            /** keyboard*/
-            final InputMethodManager imm = (InputMethodManager)getSystemService(
-               Context.INPUT_METHOD_SERVICE);
+            /** keyboard */
+            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(container.getWindowToken(), 0);
             if (mIsStepDirty) {
                save();
@@ -265,8 +308,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          case R.id.step_edit_add_step:
 
             if ((mGuide.getSteps().size() == (mPagePosition)) && mIsStepDirty) {
-               //a convenience for the user 
-               //TODO: see if it can work with the API
+               // a convenience for the user
+               // TODO: see if it can work with the API
                save();
             } else if (mGuide.getSteps().size() < mPagePosition + 1) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
@@ -283,12 +326,12 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             for (int i = 0; i < mStepList.size(); i++) {
                mStepList.get(i).setStepNum(i);
             }
-            //The view pager does not recreate the item in the current position unless we force it to:
+            // The view pager does not recreate the item in the current position unless we force it to:
             mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
             mPager.setAdapter(mStepAdapter);
             mPager.invalidate();
             titleIndicator.invalidate();
-            
+
             mPager.setCurrentItem(pos + 1, false);
             break;
          case android.R.id.home:
@@ -319,7 +362,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       for (int i = 0; i < mStepList.size(); i++) {
          mStepList.get(i).setStepNum(i);
       }
-      //The view pager does not recreate the item in the current position unless we force it to:
+      // The view pager does not recreate the item in the current position unless we force it to:
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager.setAdapter(mStepAdapter);
       mPager.setCurrentItem(curStep);
@@ -339,7 +382,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
          .setMessage(
             context.getString(R.string.step_edit_confirm_delete_message) + " Step "
-               + (mStepList.get(mPagePosition).getStepNum()+1) + "?")
+               + (mStepList.get(mPagePosition).getStepNum() + 1) + "?")
          .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
