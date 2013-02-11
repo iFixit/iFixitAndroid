@@ -193,21 +193,21 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
       int iconRes;
 
       if (color.equals("black")) {
-         iconRes = R.drawable.bullet_black;
+         iconRes = R.drawable.ic_dialog_bullet_black;
       } else if (color.equals("orange")) {
-         iconRes = R.drawable.bullet_orange;
+         iconRes = R.drawable.ic_dialog_bullet_orange;
       } else if (color.equals("blue")) {
-         iconRes = R.drawable.bullet_blue;
+         iconRes = R.drawable.ic_dialog_bullet_blue;
       } else if (color.equals("purple")) {
-         iconRes = R.drawable.bullet_purple;
+         iconRes = R.drawable.ic_dialog_bullet_pink;
       } else if (color.equals("red")) {
-         iconRes = R.drawable.bullet_red;
+         iconRes = R.drawable.ic_dialog_bullet_red;
       } else if (color.equals("teal")) {
-         iconRes = R.drawable.bullet_teal;
+         iconRes = R.drawable.ic_dialog_bullet_green;
       } else if (color.equals("white")) {
          iconRes = R.drawable.bullet_white;
       } else if (color.equals("yellow")) {
-         iconRes = R.drawable.bullet_yellow;
+         iconRes = R.drawable.ic_dialog_bullet_yellow;
       } else if (color.equals("icon_reminder")) {
          iconRes = R.drawable.ic_dialog_bullet_reminder_dark;
       } else if (color.equals("icon_caution")) {
@@ -215,9 +215,8 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
       } else if (color.equals("icon_note")) {
          iconRes = R.drawable.ic_dialog_bullet_note_dark;
       } else {
-         iconRes = R.drawable.bullet_black;
+         iconRes = R.drawable.ic_dialog_bullet_black;
       }
-
       return iconRes;
    }
 

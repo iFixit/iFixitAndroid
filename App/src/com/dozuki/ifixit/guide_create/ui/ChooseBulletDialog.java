@@ -2,6 +2,7 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.TextView;
 
 import com.dozuki.ifixit.R;
 
@@ -16,7 +17,20 @@ import android.view.WindowManager.LayoutParams;
 public class ChooseBulletDialog extends DialogFragment implements OnClickListener {
 
    private static final String INDEX_KEY = "INDEX_KEY";
+   private static final String DELETE_VIS_KEY = "DELETE_VIS_KEY";
+   private static final String INDENT_VIS_KEY = "INDENT_VIS_KEY";
+   private static final String UNINDENT_VIS_KEY = "UNINDENT_VIS_KEY";
+   private static final String REARRANGE_VIS_KEY = "REARRANGE_VIS_KEY";
    private int mStepIndex;
+   private TextView mRearrangeText;
+   private TextView mIndentText;
+   private TextView mUnIndentText;
+   private TextView mDeleteText;
+
+   private boolean mRearrangeTextInVis;
+   private boolean mIndentTextInVis;
+   private boolean mUnIndentTextInVis;
+   private boolean mDeleteTextInVis;
 
    public interface BulletDialogListener {
       void onFinishBulletDialog(int index, String color);
@@ -42,6 +56,10 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
 
       if (savedInstanceState != null) {
          mStepIndex = savedInstanceState.getInt(INDEX_KEY);
+         mDeleteTextInVis =  savedInstanceState.getBoolean(DELETE_VIS_KEY);
+         mIndentTextInVis = savedInstanceState.getBoolean(INDENT_VIS_KEY);
+         mUnIndentTextInVis = savedInstanceState.getBoolean(UNINDENT_VIS_KEY);
+         mRearrangeTextInVis = savedInstanceState.getBoolean(REARRANGE_VIS_KEY);
       }
 
       View view = inflater.inflate(R.layout.guide_create_steps_bullet_popup, container);
@@ -57,10 +75,29 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
       view.findViewById(R.id.bullet_dialog_caution).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_note).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_reminder).setOnClickListener(this);
-      view.findViewById(R.id.bullet_dialog_indent).setOnClickListener(this);
-      view.findViewById(R.id.bullet_dialog_unindent).setOnClickListener(this);
-      view.findViewById(R.id.bullet_dialog_rearrange).setOnClickListener(this);
-      view.findViewById(R.id.bullet_dialog_delete).setOnClickListener(this);
+      mIndentText = (TextView) view.findViewById(R.id.bullet_dialog_indent);
+      mIndentText.setOnClickListener(this);
+      if(mIndentTextInVis) {
+         mIndentText.setVisibility(View.GONE);
+      }
+      
+      mUnIndentText = (TextView) view.findViewById(R.id.bullet_dialog_unindent);
+      mUnIndentText.setOnClickListener(this);
+      if(mUnIndentTextInVis) {
+         mUnIndentText.setVisibility(View.GONE);
+      }
+      mRearrangeText = (TextView) view.findViewById(R.id.bullet_dialog_rearrange);
+      mRearrangeText.setOnClickListener(this);
+      if(mRearrangeTextInVis) {
+         mRearrangeText.setVisibility(View.GONE);
+      }
+      
+      mDeleteText = (TextView) view.findViewById(R.id.bullet_dialog_delete);
+      mDeleteText.setOnClickListener(this);
+      if(mDeleteTextInVis) {
+         mDeleteText.setVisibility(View.GONE);
+      }
+      
       view.findViewById(R.id.bullet_dialog_cancel).setOnClickListener(this);
 
       LayoutParams params = getDialog().getWindow().getAttributes();
@@ -75,6 +112,11 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putInt(INDEX_KEY, mStepIndex);
+
+      savedInstanceState.putBoolean(DELETE_VIS_KEY, mDeleteTextInVis);
+      savedInstanceState.putBoolean(INDENT_VIS_KEY, mIndentTextInVis);
+      savedInstanceState.putBoolean(UNINDENT_VIS_KEY, mUnIndentTextInVis);
+      savedInstanceState.putBoolean(REARRANGE_VIS_KEY, mRearrangeTextInVis);
    }
 
    @Override
@@ -135,5 +177,35 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
       BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
       frag.onFinishBulletDialog(mStepIndex, "action_cancel");
       super.onCancel(d);
+   }
+
+   public void disableUnIndent() {
+
+      if (mUnIndentText != null) {
+         mUnIndentText.setVisibility(View.GONE);
+      }
+
+      mUnIndentTextInVis = true;
+   }
+
+   public void disableIndent() {
+      if (mIndentText != null) {
+         mIndentText.setVisibility(View.GONE);
+      }
+      mIndentTextInVis = true;
+   }
+
+   public void disableDelete() {
+      if (mDeleteText != null) {
+         mDeleteText.setVisibility(View.GONE);
+      }
+      mDeleteTextInVis = true;
+   }
+
+   public void disableRearrange() {
+      if (mRearrangeText != null) {
+         mRearrangeText.setVisibility(View.GONE);
+      }
+      mRearrangeTextInVis = true;
    }
 }

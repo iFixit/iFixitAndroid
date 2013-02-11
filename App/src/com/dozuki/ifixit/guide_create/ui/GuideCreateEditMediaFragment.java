@@ -22,6 +22,7 @@ import com.ifixit.android.imagemanager.ImageManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.text.Editable;
@@ -285,6 +286,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             return;
       }
       if (microURL != null) {
+         //set the large image
+         mLargeImage.setBackgroundColor(Color.TRANSPARENT);
          mImageManager.displayImage(microURL, getActivity(), mLargeImage);
          mLargeImage.invalidate();
          return;
@@ -300,6 +303,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mImageOneInfo.setText(media.getGuid());
                mImageOneInfo.setImageId(Integer.valueOf(media.getItemId()));
+               setGuideDirty();
                setImage(IMAGE_KEY_1);
             }
             break;
@@ -308,6 +312,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mImageTwoInfo.setText(media.getGuid());
                mImageTwoInfo.setImageId(Integer.valueOf(media.getItemId()));
+               setGuideDirty();
                setImage(IMAGE_KEY_2);
             }
             break;
@@ -316,11 +321,11 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mImageThreeInfo.setText(media.getGuid());
                mImageThreeInfo.setImageId(Integer.valueOf(media.getItemId()));
+               setGuideDirty();
                setImage(IMAGE_KEY_3);
             }
             break;
       }
-      setGuideDirty();
    }
 
    private void setImage(int location) {
@@ -341,12 +346,14 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    public void setImageThumb(StepImage imageinfo, ImageView imagView) {
       if (imageinfo.getImageid() == NO_IMAGE) {
+         imagView.setBackgroundColor(getResources().getColor(R.color.fireswing_grey));
          imagView.setScaleType(ScaleType.CENTER);
          imagView.setTag(null);
          imagView.setImageResource(R.drawable.ic_btn_add_gallery_image);
          return;
       }
       imagView.setScaleType(ScaleType.FIT_CENTER);
+      imagView.setBackgroundColor(Color.TRANSPARENT);
       mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(), getActivity(),
          imagView);
       imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
@@ -356,8 +363,10 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    private void setMainImage(int imageID, ImageView image) {
       if (imageID == NO_IMAGE) {
+         mLargeImage.setBackgroundColor(getResources().getColor(R.color.fireswing_grey));
          mLargeImage.setImageResource(R.drawable.ic_placeholder_feature_img);
       } else {
+         mLargeImage.setBackgroundColor(Color.TRANSPARENT);
          mImageManager.displayImage((String) image.getTag(), getActivity(), mLargeImage);
          mLargeImage.invalidate();
       }
