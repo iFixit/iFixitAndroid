@@ -24,6 +24,7 @@ import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GuideCreateActivity extends IfixitActivity implements GuideCreateIntroListener {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
+   static int GUIDE_STEP_EDIT_REQUEST = 1;
    public static int TASK_ID = -1;
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
@@ -155,7 +156,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
-      if (requestCode == GUIDE_STEP_LIST_REQUEST) {
+      if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
          if (resultCode == RESULT_OK) {
             GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GUIDE_KEY);
             if (guide != null) {
@@ -163,6 +164,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
             }
          }
       }
+     
    }
 
    @Override
@@ -192,7 +194,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       intent.putExtra(GuideCreateActivity.GUIDE_KEY,  guideObject);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, item);
-      startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
+      startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
       
       getSupportFragmentManager().popBackStack();
    }

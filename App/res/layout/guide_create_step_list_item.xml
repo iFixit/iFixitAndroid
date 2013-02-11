@@ -45,7 +45,11 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/step_item_toggle_edit"
+                android:layout_toLeftOf="@+id/step_item_toggle_edit"
                 android:layout_toRightOf="@+id/guide_step_item_thumbnail"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
                 android:text="" />
 
             <TextView
