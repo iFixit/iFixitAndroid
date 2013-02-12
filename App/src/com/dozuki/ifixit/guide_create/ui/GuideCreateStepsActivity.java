@@ -55,10 +55,6 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
-      if (Build.VERSION.SDK_INT > 10) {
-         prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
-         this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-      }
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
@@ -169,14 +165,6 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       // APIService.call((Activity) getActivity(),
       // APIService.getCreateGuideAPICall(device, title, summary, intro, guideType, thing));
       getSupportFragmentManager().popBackStack();
-   }
-
-   public void onResume() {
-      super.onResume();
-
-      if (Build.VERSION.SDK_INT > 10) {
-         this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-      }
    }
 
    @Override

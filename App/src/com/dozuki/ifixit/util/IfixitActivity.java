@@ -202,9 +202,17 @@ public abstract class IfixitActivity extends Activity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 		MenuItem logout = menu.findItem(R.id.logout_button);
 
-		if (logout != null) {
-			logout.setVisible(MainApplication.get().isUserLoggedIn());
-		}
+      if (logout != null) {
+         boolean loggedIn = MainApplication.get().isUserLoggedIn();
+         logout.setVisible(loggedIn);
+         if (loggedIn) {
+            String username = ((MainApplication) (this).getApplication()).getUser().getUsername();
+            if (username.length() > 5) {
+               username = username.substring(0, 5) + "...";
+            }
+            logout.setTitle(getResources().getString(R.string.logout_title) + " (" + username + ")");
+         }
+      }
 
 		return super.onPrepareOptionsMenu(menu);
 	}
