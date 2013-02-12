@@ -191,8 +191,17 @@ public class GuideCreateStepReorderFragment extends Fragment {
          }
          final ViewHolder holder = (ViewHolder) v.getTag();
          String step = getItem(position).getTitle();
-         holder.stepsView.setText(step);
-         holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+         if(step.equals(""))
+         {
+            holder.stepsView.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+            holder.stepNumber.setVisibility(View.GONE);
+         }
+         else
+         {
+            holder.stepsView.setText(step);
+            holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+            holder.stepNumber.setVisibility(View.VISIBLE);
+         }    
          holder.mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.fireswing_grey)));
          holder.mImageView.setTag("");
          setImageThumb(getItem(position).getImages(), holder.mImageView);
