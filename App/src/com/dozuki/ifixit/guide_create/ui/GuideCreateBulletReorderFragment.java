@@ -110,7 +110,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
          mLines = (ArrayList<StepLine>) savedInstanceState.get(LINES_KEY);
       }
       mAdapter = new StepAdapter(mLines);
-      View view = inflater.inflate(R.layout.guide_create_step_portal_reorder, container, false);
+      View view = inflater.inflate(R.layout.guide_create_step_edit_bullet_reorder, container, false);
       mConfirm = (Button) view.findViewById(R.id.reorder_steps_confirm);
       mConfirm.setVisibility(View.VISIBLE);
       mConfirm.setOnClickListener(new OnClickListener() {

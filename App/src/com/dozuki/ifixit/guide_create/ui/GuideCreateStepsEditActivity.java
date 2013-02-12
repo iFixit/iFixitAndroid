@@ -91,9 +91,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
-      if (Build.VERSION.SDK_INT > 10) {
-         prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
-      }
       mConfirmDelete = false;
       Bundle extras = getIntent().getExtras();
       mPagePosition = 0;
@@ -468,15 +465,19 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             new DialogInterface.OnClickListener() {
 
                public void onClick(DialogInterface dialog, int id) {
+                  save();
+                  //TODO: this call should hold the doalog in place untill the step has been saved to 
+                  //the server
                   dialog.dismiss();
+                  finish();
                }
             })
          .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
             new DialogInterface.OnClickListener() {
 
                public void onClick(DialogInterface dialog, int id) {
-                  finish();
                   dialog.dismiss();
+                  finish();
                }
             });
 
@@ -498,13 +499,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @Override
    public void onBackPressed() {
       finishEdit();
-   }
-
-   public void onResume() {
-      super.onResume();
-      if (Build.VERSION.SDK_INT > 10) {
-         this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-      }
    }
 
    public boolean isScreenLarge() {

@@ -20,25 +20,6 @@
         android:layout_below="@+id/gallery_view_top_bar" >
     </android.support.v4.view.ViewPager>
 
-     <RelativeLayout
-      android:id="@+id/button_holder"
-      android:layout_width="match_parent"
-      android:layout_height="@dimen/gallery_bottom_bar_height"
-      android:layout_alignParentBottom="true"
-      android:background="@color/dark"
-      android:clickable="true"
-      android:onClick="onClick" >
-
-      <TextView
-         android:id="@+id/login_text"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:layout_alignParentLeft="true"
-         android:layout_centerVertical="true"
-         android:layout_marginLeft="@dimen/gallery_login_text_padding"
-         android:text="@string/welcome"
-         android:textColor="@color/white"
-         android:textStyle="bold" />
-   </RelativeLayout>
+     
 
 </RelativeLayout>

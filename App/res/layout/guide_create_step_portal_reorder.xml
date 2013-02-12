@@ -15,28 +15,4 @@
         android:layout_above="@+id/reorder_button_container"
         android:padding="3dp" /> 
 
-    <LinearLayout
-        android:id="@+id/reorder_button_container"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:weightSum="1.0" >
-
-        <Button
-            android:id="@+id/reorder_steps_cancel"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/cancel_reorder_bullets"
-            android:visibility="gone" />
-
-        <Button
-            android:id="@+id/reorder_steps_confirm"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
-            android:text="@string/confirm_reorder_bullets"
-            android:visibility="gone" />
-    </LinearLayout>
-
 </RelativeLayout>
