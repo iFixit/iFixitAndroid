@@ -30,6 +30,7 @@ import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.IfixitActivity;
 import com.ifixit.android.imagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TabPageIndicator;
@@ -170,11 +171,13 @@ public class TopicViewFragment extends Fragment {
 
       mTopicLeaf = topicLeaf;
 
+      ((IfixitActivity) getActivity()).setCustomTitle(mTopicLeaf.getName());
       if (mTopicLeaf == null) {
          // display error message
          return;
       }
 
+      mTitleIndicator.setVisibility(View.VISIBLE);
       mPageAdapter = new PageAdapter(this.getChildFragmentManager());
       mPager.setAdapter(mPageAdapter);
       mTitleIndicator.setViewPager(mPager);
@@ -203,6 +206,10 @@ public class TopicViewFragment extends Fragment {
    private void getTopicLeaf(String topicName) {
       mTopicLeaf = null;
       mSelectedTab = -1;
+
+      if (mTitleIndicator != null) {
+         mTitleIndicator.setVisibility(View.VISIBLE);
+      }
 
       APIService.call((Activity) getActivity(), APIService.getTopicAPICall(topicName));
    }
