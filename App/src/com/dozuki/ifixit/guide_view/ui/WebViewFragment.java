@@ -137,14 +137,13 @@ public class WebViewFragment extends Fragment
       
       protected void setSessionCookie(String url) {
          User user = MainApplication.get().getUser();
-         String session = "";
 
          if (user != null) {
-            session = user.getSession();
-         }
+            String session = user.getSession();
 
-         CookieManager.getInstance().setCookie(url,"session="+session);
-         CookieSyncManager.getInstance().sync();
+            CookieManager.getInstance().setCookie(url,"session=" + session);
+            CookieSyncManager.getInstance().sync();
+         }
       }
 
       @Override
