@@ -363,7 +363,7 @@ public class JSONHelper {
       user.setUserid(jUser.getString("userid"));
       user.setUsername(jUser.getString("username"));
       user.setImageid(jUser.getString("imageid"));
-      user.setSession(jUser.getString("session"));
+      user.setAuthToken(jUser.getString("authToken"));
 
       return user;
    }

@@ -131,7 +131,7 @@ public class WebViewFragment extends Fragment
          mGuideListener = guideListener;
          
          if (!mSite.mPublic) {
-            setSessionCookie("http://"+mSite.mDomain);
+            setSessionCookie("http://" + mSite.mDomain);
          }
       }
       
@@ -139,9 +139,9 @@ public class WebViewFragment extends Fragment
          User user = MainApplication.get().getUser();
 
          if (user != null) {
-            String session = user.getSession();
+            String session = user.getAuthToken();
 
-            CookieManager.getInstance().setCookie(url,"session=" + session);
+            CookieManager.getInstance().setCookie(url, "session=" + session);
             CookieSyncManager.getInstance().sync();
          }
       }

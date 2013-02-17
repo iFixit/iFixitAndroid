@@ -8,7 +8,7 @@ public class User implements Serializable {
    private String mUserid;
    private String mUsername;
    private String mImageid;
-   private String mSession;
+   private String mAuthToken;
 
    public String getUserId() {
       return mUserid;
@@ -34,11 +34,11 @@ public class User implements Serializable {
       mImageid = imageid;
    }
 
-   public String getSession() {
-      return mSession;
+   public String getAuthToken() {
+      return mAuthToken;
    }
 
-   public void setSession(String session) {
-      mSession = session;
+   public void setAuthToken(String authToken) {
+      mAuthToken = authToken;
    }
 }

@@ -332,7 +332,7 @@ public class APIService extends Service {
    public static APICall getUserInfoAPICall(String session) {
       APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
 
-      apiCall.mSessionid = session;
+      apiCall.mAuthToken = session;
 
       return apiCall;
    }
@@ -436,23 +436,23 @@ public class APIService extends Service {
                request.trustAllCerts();
               request.trustAllHosts();
 
-               String sessionid = null;
+               String authToken = null;
                /**
-                * Get an appropriate sessionid.
+                * Get an appropriate auth token.
                 */
-               if (apiCall.mSessionid != null) {
-                  // This sessionid overrides all other requirements/sessionids.
-                  sessionid = apiCall.mSessionid;
+               if (apiCall.mAuthToken != null) {
+                  // This auth token overrides all other requirements/auth tokens.
+                  authToken = apiCall.mAuthToken;
                } else if (requireAuthentication(mSite, endpoint)) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
-                  sessionid = user.getSession();
+                  authToken = user.getAuthToken();
                }
 
                /**
-                * Send along the sessionid if we found one.
+                * Send along the auth token if we found one.
                 */
-               if (sessionid != null) {
-                  request.header("Cookie", "session=" + sessionid);
+               if (authToken != null) {
+                  request.header("Authorization", authToken);
                }
 
                /**
