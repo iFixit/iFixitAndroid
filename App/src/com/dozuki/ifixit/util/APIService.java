@@ -400,7 +400,7 @@ public class APIService extends Service {
 
       final String url = endpoint.getUrl(mSite, apiCall.mQuery);
 
-      Log.i("iFixit", "Performing API call: " + url);
+      Log.i("iFixit", "Performing API call: " + endpoint.mMethod + " " + url);
       Log.i("iFixit", "Request body: " + apiCall.mRequestBody);
 
       new AsyncTask<String, Void, APIEvent<?>>() {
@@ -416,7 +416,19 @@ public class APIService extends Service {
             HttpRequest request;
 
             try {
-               request = new HttpRequest(url, endpoint.mMethod);
+               String requestMethod;
+               if (endpoint.mMethod.equals("GET")) {
+                  request = HttpRequest.get(url);
+               } else {
+                  /**
+                   * For all methods other than get we actually perform a POST but send
+                   * a header indicating the actual request we are performing. This is
+                   * because http-request's underlying HTTPRequest library doesn't
+                   * suupport PATCH requests.
+                   */
+                  request = HttpRequest.post(url);
+                  request.header("X-REQUEST-METHOD-OVERRIDE", endpoint.mMethod);
+               }
 
                /**
                 * Uncomment to test HTTPS API calls in development.
