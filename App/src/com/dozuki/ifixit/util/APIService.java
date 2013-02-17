@@ -189,6 +189,7 @@ public class APIService extends Service {
       try {
          return endpoint.parseResult(response);
       } catch (JSONException e) {
+         Log.e("iFixit", "API parse error", e);
          return endpoint.getEvent().setError(APIError.getParseError(this));
       }
    }
