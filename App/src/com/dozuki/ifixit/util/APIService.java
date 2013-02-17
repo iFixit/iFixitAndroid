@@ -225,7 +225,11 @@ public class APIService extends Service {
 
       return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
-   
+
+   public static APICall getLogoutAPICall() {
+      return new APICall(APIEndpoint.LOGOUT, NO_QUERY);
+   }
+
    /**
     * TODO: Pass in entire guide so parameters can easily be changed later.
     */
