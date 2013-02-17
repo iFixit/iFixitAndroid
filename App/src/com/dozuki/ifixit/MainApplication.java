@@ -30,7 +30,7 @@ public class MainApplication extends Application {
    public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
     "FIRST_TIME_GALLERY_USER";
-   private static final String SESSION_KEY = "SESSION_KEY";
+   private static final String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
    private static final String USERNAME_KEY = "USERNAME_KEY";
    private static final String USERID_KEY = "USERID_KEY";
 
@@ -236,18 +236,16 @@ public class MainApplication extends Application {
    }
 
    private User getUserFromPreferenceFile(Site site) {
-      SharedPreferences preferenceFile = getSharedPreferences(
-       PREFERENCE_FILE, MODE_PRIVATE);
-      String session = preferenceFile.getString(site.mName + SESSION_KEY,
-       null);
-      String username = preferenceFile.getString(site.mName + USERNAME_KEY,
-       null);
-      String userid = preferenceFile.getString(site.mName + USERID_KEY,
-         null);
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE);
+      String authToken = preferenceFile.getString(site.mName + AUTH_TOKEN_KEY, null);
+      String username = preferenceFile.getString(site.mName + USERNAME_KEY, null);
+      String userid = preferenceFile.getString(site.mName + USERID_KEY, null);
       User user = null;
-      if (username != null && session != null) {
+
+      if (username != null && authToken != null) {
          user = new User();
-         user.setSession(session);
+         user.setAuthToken(authToken);
          user.setUsername(username);
          user.setUserid(userid);
       }
@@ -291,7 +289,7 @@ public class MainApplication extends Application {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
-      editor.putString(mSite.mName + SESSION_KEY, user.getSession());
+      editor.putString(mSite.mName + AUTH_TOKEN_KEY, user.getAuthToken());
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
       editor.putString(mSite.mName + USERID_KEY, user.getUserId());
       editor.commit();
@@ -318,7 +316,7 @@ public class MainApplication extends Application {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
-      editor.remove(mSite.mName + SESSION_KEY);
+      editor.remove(mSite.mName + AUTH_TOKEN_KEY);
       editor.remove(mSite.mName + USERNAME_KEY);
       editor.remove(mSite.mName + USERID_KEY);
       editor.commit();
