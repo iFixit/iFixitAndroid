@@ -343,10 +343,10 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.SITES, NO_QUERY);
    }
 
-   public static APICall getUserInfoAPICall(String session) {
+   public static APICall getUserInfoAPICall(String authToken) {
       APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
 
-      apiCall.mAuthToken = session;
+      apiCall.mAuthToken = authToken;
 
       return apiCall;
    }
