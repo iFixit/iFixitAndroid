@@ -30,7 +30,8 @@ public class LogoutDialog {
          .setPositiveButton(activity.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
-                  APIService.call(activity, APIService.getLogoutAPICall());
+                  APIService.call(activity, APIService.getLogoutAPICall(
+                   MainApplication.get().getUser()));
                   MainApplication.get().logout();
                   dialog.dismiss();
                }
