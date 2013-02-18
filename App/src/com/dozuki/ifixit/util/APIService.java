@@ -226,7 +226,20 @@ public class APIService extends Service {
 
       return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
-   
+
+   public static APICall getLogoutAPICall(User user) {
+      // Can't log out an already logged out user.
+      if (user == null) {
+         return null;
+      }
+
+      APICall apiCall = new APICall(APIEndpoint.LOGOUT, NO_QUERY);
+
+      apiCall.mAuthToken = user.getAuthToken();
+
+      return apiCall;
+   }
+
    /**
     * TODO: Pass in entire guide so parameters can easily be changed later.
     */

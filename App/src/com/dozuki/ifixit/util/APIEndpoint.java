@@ -94,6 +94,25 @@ public enum APIEndpoint {
       true
    ),
 
+   LOGOUT(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/token";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Logout();
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Logout();
+         }
+      },
+      true,
+      "DELETE",
+      false
+   ),
+
    REGISTER(
       new Endpoint() {
          public String createUrl(String query) {
