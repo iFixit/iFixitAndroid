@@ -287,9 +287,9 @@ public class JSONHelper {
     throws JSONException {
       UserImageInfo userImageInfo = new UserImageInfo();
       userImageInfo.setItemId(jImage.getString("imageid"));
-      userImageInfo.setGuid(jImage.getString("guid"));
-      userImageInfo.setHeight(jImage.getString("height"));
+      userImageInfo.setGuid(jImage.getString("base_url"));
       userImageInfo.setWidth(jImage.getString("width"));
+      userImageInfo.setHeight(jImage.getString("height"));
       userImageInfo.setRatio(jImage.getString("ratio"));
 
       return userImageInfo;
@@ -363,7 +363,7 @@ public class JSONHelper {
       user.setUserid(jUser.getString("userid"));
       user.setUsername(jUser.getString("username"));
       user.setImageid(jUser.getString("imageid"));
-      user.setSession(jUser.getString("session"));
+      user.setAuthToken(jUser.getString("authToken"));
 
       return user;
    }

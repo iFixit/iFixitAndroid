@@ -189,6 +189,7 @@ public class APIService extends Service {
       try {
          return endpoint.parseResult(response);
       } catch (JSONException e) {
+         Log.e("iFixit", "API parse error", e);
          return endpoint.getEvent().setError(APIError.getParseError(this));
       }
    }
@@ -336,7 +337,7 @@ public class APIService extends Service {
    public static APICall getUserInfoAPICall(String session) {
       APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
 
-      apiCall.mSessionid = session;
+      apiCall.mAuthToken = session;
 
       return apiCall;
    }
@@ -404,7 +405,7 @@ public class APIService extends Service {
 
       final String url = endpoint.getUrl(mSite, apiCall.mQuery);
 
-      Log.i("iFixit", "Performing API call: " + url);
+      Log.i("iFixit", "Performing API call: " + endpoint.mMethod + " " + url);
       Log.i("iFixit", "Request body: " + apiCall.mRequestBody);
 
       new AsyncTask<String, Void, APIEvent<?>>() {
@@ -420,7 +421,19 @@ public class APIService extends Service {
             HttpRequest request;
 
             try {
-               request = new HttpRequest(url, endpoint.mMethod);
+               String requestMethod;
+               if (endpoint.mMethod.equals("GET")) {
+                  request = HttpRequest.get(url);
+               } else {
+                  /**
+                   * For all methods other than get we actually perform a POST but send
+                   * a header indicating the actual request we are performing. This is
+                   * because http-request's underlying HTTPRequest library doesn't
+                   * suupport PATCH requests.
+                   */
+                  request = HttpRequest.post(url);
+                  request.header("X-REQUEST-METHOD-OVERRIDE", endpoint.mMethod);
+               }
 
                /**
                 * Uncomment to test HTTPS API calls in development.
@@ -428,23 +441,23 @@ public class APIService extends Service {
                request.trustAllCerts();
               request.trustAllHosts();
 
-               String sessionid = null;
+               String authToken = null;
                /**
-                * Get an appropriate sessionid.
+                * Get an appropriate auth token.
                 */
-               if (apiCall.mSessionid != null) {
-                  // This sessionid overrides all other requirements/sessionids.
-                  sessionid = apiCall.mSessionid;
+               if (apiCall.mAuthToken != null) {
+                  // This auth token overrides all other requirements/auth tokens.
+                  authToken = apiCall.mAuthToken;
                } else if (requireAuthentication(mSite, endpoint)) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
-                  sessionid = user.getSession();
+                  authToken = user.getAuthToken();
                }
 
                /**
-                * Send along the sessionid if we found one.
+                * Send along the auth token if we found one.
                 */
-               if (sessionid != null) {
-                  request.header("Cookie", "session=" + sessionid);
+               if (authToken != null) {
+                  request.header("Authorization", authToken);
                }
 
                /**
