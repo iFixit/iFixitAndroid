@@ -1,20 +1,19 @@
 package com.dozuki.ifixit.login.ui;
 
-import android.content.Context;
 import android.content.DialogInterface;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-
+import com.dozuki.ifixit.util.APIService;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 
 /**
  * Creates a logout dialog that logs the user out.
  */
 public class LogoutDialog {
-   public static AlertDialog create(Context context) {
+   public static AlertDialog create(Activity activity) {
       return createLogoutDialog(
-         context,
+         activity,
          R.string.logout_title,
          R.string.logout_messege,
          R.string.logout_confirm,
@@ -22,20 +21,22 @@ public class LogoutDialog {
       );
    }
 
-   private static AlertDialog createLogoutDialog(final Context context,
+   private static AlertDialog createLogoutDialog(final Activity activity,
     int titleRes, int messageRes, int buttonConfirm, int buttonCancel) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      AlertDialog.Builder builder = new AlertDialog.Builder(activity);
       builder
-         .setTitle(context.getString(titleRes))
-         .setMessage(context.getString(messageRes))
-         .setPositiveButton(context.getString(buttonConfirm),
+         .setTitle(activity.getString(titleRes))
+         .setMessage(activity.getString(messageRes))
+         .setPositiveButton(activity.getString(buttonConfirm),
             new DialogInterface.OnClickListener() {
                public void onClick(DialogInterface dialog, int id) {
+                  APIService.call(activity, APIService.getLogoutAPICall(
+                   MainApplication.get().getUser()));
                   MainApplication.get().logout();
                   dialog.dismiss();
                }
             })
-      .setNegativeButton(context.getString(buttonCancel),
+      .setNegativeButton(activity.getString(buttonCancel),
          new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                dialog.cancel();

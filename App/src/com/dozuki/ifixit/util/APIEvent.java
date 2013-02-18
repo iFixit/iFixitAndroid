@@ -21,6 +21,7 @@ public abstract class APIEvent<T> {
    public static class Guide extends APIEvent<com.dozuki.ifixit.guide_view.model.Guide> {}
    public static class Topic extends APIEvent<TopicLeaf> {}
    public static class Login extends APIEvent<User> {}
+   public static class Logout extends APIEvent<String> {}
    public static class Register extends APIEvent<User> {}
    public static class UserImages extends APIEvent<UserImageList> {}
    public static class UserVideos extends APIEvent<UserVideoList> {}
