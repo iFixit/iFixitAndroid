@@ -523,7 +523,7 @@ public enum APIEndpoint {
 
    /**
     * Whether or not this is an authenticated endpoint. If true, sends the
-    * user's sessionid along in a cookie.
+    * user's auth token along in a header.
     */
    public final boolean mAuthenticated;
 
