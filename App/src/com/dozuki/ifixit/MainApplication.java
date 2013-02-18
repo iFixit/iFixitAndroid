@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -70,6 +73,11 @@ public class MainApplication extends Application {
     * to be logged in.
     */
    private boolean mIsLoggingIn = false;
+
+   /**
+    * App version singleton.
+    */
+   private String mAppVersion = null;
 
    @Override
    public void onCreate() {
@@ -143,6 +151,20 @@ public class MainApplication extends Application {
       }
 
       return R.style.Theme_Dozuki;
+   }
+
+   public String getAppVersion() {
+      if (mAppVersion == null) {
+         try {
+            PackageInfo packageInfo = null;
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            mAppVersion = packageInfo.versionCode + "";
+         } catch (PackageManager.NameNotFoundException e) {
+            Log.e("iFixit", "Can't get application version", e);
+         }
+      }
+
+      return mAppVersion;
    }
 
    public void setIsLoggingIn(boolean isLoggingIn) {
