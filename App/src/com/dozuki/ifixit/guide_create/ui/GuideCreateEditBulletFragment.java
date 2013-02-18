@@ -80,7 +80,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
          @Override
          public void onClick(View v) {
-              mLines.add(new StepLine("black", 0, ""));
+              mLines.add(new StepLine(null, "black", 0, ""));
               mBulletContainer.addView(getView( mLines.get(mLines.size()-1), mLines.size()-1), mLines.size()-1);
               if(mLines.size() == BULLET_LIMIT) {
                  mNewBulletButton.setVisibility(View.GONE);
