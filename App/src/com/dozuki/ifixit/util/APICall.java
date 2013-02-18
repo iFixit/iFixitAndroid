@@ -13,7 +13,7 @@ public class APICall implements Serializable {
    protected String mRequestBody;
    protected String mExtraInfo;
    protected String mFilePath;
-   protected String mSessionid;
+   protected String mAuthToken;
 
    public APICall(APIEndpoint endpoint, String query) {
       this(endpoint, query, null);
