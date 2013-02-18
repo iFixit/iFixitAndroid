@@ -464,11 +464,7 @@ public class APIService extends Service {
                   authToken = user.getAuthToken();
                }
 
-               String appVersion = MainApplication.get().getAppVersion();
-               if (appVersion != null) {
-                  // Set the user agent with the app version.
-                  request.userAgent(BASE_USER_AGENT + appVersion);
-               }
+               request.userAgent(MainApplication.get().getUserAgent());
 
                /**
                 * Send along the auth token if we found one.

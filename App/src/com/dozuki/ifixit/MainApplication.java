@@ -75,9 +75,9 @@ public class MainApplication extends Application {
    private boolean mIsLoggingIn = false;
 
    /**
-    * App version singleton.
+    * User agent singleton.
     */
-   private String mAppVersion = null;
+   private String mUserAgent = null;
 
    @Override
    public void onCreate() {
@@ -153,18 +153,27 @@ public class MainApplication extends Application {
       return R.style.Theme_Dozuki;
    }
 
-   public String getAppVersion() {
-      if (mAppVersion == null) {
+   public String getUserAgent() {
+      if (mUserAgent == null) {
+         int versionCode = -1;
+
          try {
             PackageInfo packageInfo = null;
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-            mAppVersion = packageInfo.versionCode + "";
+            versionCode = packageInfo.versionCode;
          } catch (PackageManager.NameNotFoundException e) {
             Log.e("iFixit", "Can't get application version", e);
          }
+
+         /**
+          * Returns the Site that this app is "built" for. e.g. Dozuki even if the user
+          * is currently viewing a different nanosite.
+          */
+         Site currentApp = getDefaultSite();
+         mUserAgent = currentApp.mTitle + "Android/" + versionCode;
       }
 
-      return mAppVersion;
+      return mUserAgent;
    }
 
    public void setIsLoggingIn(boolean isLoggingIn) {
