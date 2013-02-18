@@ -49,6 +49,8 @@ public class APIService extends Service {
 
    public static final String RESULT = "RESULT";
 
+   public static final String BASE_USER_AGENT = "iFixitAndroid/";
+
    /**
     * Pending API call. This is set when an authenticated request is performed
     * but the user is not logged in. This is then performed once the user has
@@ -460,6 +462,12 @@ public class APIService extends Service {
                } else if (requireAuthentication(mSite, endpoint)) {
                   User user = ((MainApplication)getApplicationContext()).getUser();
                   authToken = user.getAuthToken();
+               }
+
+               String appVersion = MainApplication.get().getAppVersion();
+               if (appVersion != null) {
+                  // Set the user agent with the app version.
+                  request.userAgent(BASE_USER_AGENT + appVersion);
                }
 
                /**
