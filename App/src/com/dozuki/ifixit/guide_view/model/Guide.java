@@ -9,6 +9,10 @@ public class Guide implements Serializable {
    private static final long serialVersionUID = -1965203088124961695L;
 
    protected int mGuideid;
+   /**
+    * Guide's revisionid or null if this is a new guide.
+    */
+   protected Integer mRevisionid;
    protected String mTitle;
    protected String mTopic;
    protected String mAuthor;
@@ -173,13 +177,21 @@ public class Guide implements Serializable {
       mSubject = subject;
    }
 
-   public String toString() {
-      return "{" + mGuideid + "\n" + mTitle + "\n" + mTopic + "\n" + mAuthor +
-       "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroduction + "\n"
-       + mSummary + "\n\n" + mSteps + "\n" + mSummary + "}";
+   public void setRevisionid(Integer revisionid) {
+      mRevisionid = revisionid;
+   }
+
+   public Integer getRevisionid() {
+      return mRevisionid;
    }
 
    public ArrayList<GuideStep> getStepList() {
       return mSteps;
+   }
+
+   public String toString() {
+      return "{" + mGuideid + "\n" + mRevisionid + "\n" + mTitle + "\n" + mTopic + "\n" +
+       mAuthor + "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroduction + "\n" +
+       mSummary + "\n\n" + mSteps + "\n" + mSummary + "}";
    }
 }

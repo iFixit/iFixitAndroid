@@ -103,9 +103,10 @@ public class JSONHelper {
       guide.setIntroduction(jGuide.getString("introduction"));
       guide.setIntroImage(jImage.getString("text"));
       guide.setSummary(jGuide.getString("summary"));
+      guide.setRevisionid(new Integer(jGuide.getInt("revisionid")));
 
       for (int i = 0; i < jSteps.length(); i++) {
-         guide.addStep(parseStep(jSteps.getJSONObject(i)));
+         guide.addStep(parseStep(jSteps.getJSONObject(i), i + 1));
       }
 
       for (int i = 0; i < jTools.length(); i++) {
@@ -129,10 +130,13 @@ public class JSONHelper {
        jTool.getString("thumbnail"), jTool.getString("notes"));
    }
 
-   private static GuideStep parseStep(JSONObject jStep) throws JSONException {
-      JSONArray jLines = jStep.getJSONArray("lines");
-      GuideStep step = new GuideStep(jStep.getInt("number"));
+   private static GuideStep parseStep(JSONObject jStep, int stepNumber) throws JSONException {
+      GuideStep step = new GuideStep(stepNumber);
 
+      step.setGuideid(jStep.getInt("guideid"));
+      step.setStepid(jStep.getInt("stepid"));
+      step.setRevisionid(new Integer(jStep.getInt("revisionid")));
+      step.setOrderby(jStep.getInt("orderby"));
       step.setTitle(jStep.getString("title"));
 
       try {
@@ -149,6 +153,7 @@ public class JSONHelper {
          step.addImage(image);
       }
 
+      JSONArray jLines = jStep.getJSONArray("lines");
       for (int i = 0; i < jLines.length(); i++) {
          step.addLine(parseLine(jLines.getJSONObject(i)));
       }
@@ -172,8 +177,8 @@ public class JSONHelper {
    }
 
    private static StepLine parseLine(JSONObject jLine) throws JSONException {
-      return new StepLine(jLine.getString("bullet"), jLine.getInt("level"),
-       jLine.getString("text"));
+      return new StepLine(new Integer(jLine.getInt("lineid")), jLine.getString("bullet"),
+       jLine.getInt("level"), jLine.getString("text"));
    }
 
    /**
