@@ -216,11 +216,11 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.TOPIC, topicName);
    }
 
-   public static APICall getLoginAPICall(String login, String password) {
+   public static APICall getLoginAPICall(String email, String password) {
       JSONObject requestBody = new JSONObject();
 
       try {
-         requestBody.put("login", login);
+         requestBody.put("email", email);
          requestBody.put("password", password);
       } catch (JSONException e) {
          return null;
@@ -293,11 +293,11 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.GUIDE_FOR_EDIT, "" + guideid);
    }
 
-   public static APICall getRegisterAPICall(String login, String password, String username) {
+   public static APICall getRegisterAPICall(String email, String password, String username) {
       JSONObject requestBody = new JSONObject();
 
       try {
-         requestBody.put("login", login);
+         requestBody.put("email", email);
          requestBody.put("password", password);
          requestBody.put("username", username);
       } catch (JSONException e) {
