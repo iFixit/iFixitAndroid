@@ -19,12 +19,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 
 public class GuideCreateActivity extends IfixitActivity implements GuideCreateIntroListener {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
+   static int GUIDE_STEP_EDIT_REQUEST = 1;
    public static int TASK_ID = -1;
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
@@ -156,7 +158,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
-      if (requestCode == GUIDE_STEP_LIST_REQUEST) {
+      if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
          if (resultCode == RESULT_OK) {
             GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GUIDE_KEY);
             if (guide != null) {
@@ -164,6 +166,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
             }
          }
       }
+     
    }
 
    @Override
@@ -174,11 +177,26 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       guideObject.setTopic(device);
       guideObject.setSummary(summary);
       guideObject.setIntroduction(intro);
-
+      guideObject.setStepList(new ArrayList<GuideCreateStepObject>());
       getGuideList().add(guideObject);
       APIService.call(this, APIService.getCreateGuideAPICall(device, title, summary,
        intro, guideType, subject));
 
+   
+      
+      //Go straight to creating a new step
+      GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+      item.setStepNum(0);
+      item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+      ArrayList<GuideCreateStepObject> initialStepList = new ArrayList<GuideCreateStepObject>();
+      initialStepList.add(item);
+ 
+      Intent intent = new Intent(this, GuideCreateStepsEditActivity.class);
+      intent.putExtra(GuideCreateActivity.GUIDE_KEY,  guideObject);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, item);
+      startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
+      
       getSupportFragmentManager().popBackStack();
    }
 

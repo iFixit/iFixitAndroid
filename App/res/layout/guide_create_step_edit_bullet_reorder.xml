@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res/com.dozuki.ifixit"
+    android:layout_width="wrap_content"
+    android:background="#ffffffff"
+    android:layout_height="wrap_content" >
+<RelativeLayout
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content" >
+
+    <com.mobeta.android.dslv.DragSortListView
+        android:id="@+id/steps_portal_list_reorder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:dividerHeight="@dimen/topic_list_vertical_spacing"
+        android:divider="@color/white"
+        android:layout_margin="3dp"
+        android:layout_alignParentTop="true"
+        android:padding="3dp" /> 
+
+    <LinearLayout
+        android:id="@+id/reorder_button_container"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"    
+        android:layout_below="@+id/steps_portal_list_reorder"
+        android:weightSum="1.0" >
+
+        <Button
+            android:id="@+id/reorder_steps_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/cancel_reorder_bullets"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/reorder_steps_confirm"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.5"
+            android:text="@string/confirm_reorder_bullets"
+            android:visibility="gone" />
+    </LinearLayout>
+
+</RelativeLayout>
+  </LinearLayout>

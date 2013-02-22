@@ -3,7 +3,8 @@ package com.dozuki.ifixit.gallery.ui;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import android.app.AlertDialog;
+import org.holoeverywhere.app.AlertDialog;
+
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
@@ -66,8 +67,6 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
    private StepAdapter mStepAdapter;
    private ViewPager mPager;
    private TitlePageIndicator titleIndicator;
-   private RelativeLayout mButtons;
-   private TextView mLoginText;
    private String mUserName;
    public TextView noImagesText;
 
@@ -135,8 +134,6 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.gallery_root);
-      mButtons = (RelativeLayout) findViewById(R.id.button_holder);
-      mLoginText = ((TextView) findViewById(R.id.login_text));
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager = (ViewPager) findViewById(R.id.gallery_view_body_pager);
       mPager.setAdapter(mStepAdapter);
@@ -163,11 +160,8 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
    @Override
    public void onStart() {
       if (!((MainApplication) this.getApplication()).isUserLoggedIn()) {
-         mButtons.setVisibility(View.GONE);
       } else {
          mUserName = ((MainApplication) (this).getApplication()).getUser().getUsername();
-         mLoginText.setText(this.getString(R.string.logged_in_as) + " " + mUserName);
-         mButtons.setOnClickListener(this);
 
       }
 

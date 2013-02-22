@@ -26,6 +26,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
+import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
@@ -124,6 +125,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
             GuideCreateStepObject item = new GuideCreateStepObject(STEP_ID++);
             item.setStepNum(mGuide.getSteps().size());
             item.setTitle(DEFAULT_TITLE);
+            item.addLine(new StepLine(null, "black", 0, ""));
             launchStepEdit(item);
          }
       });
@@ -177,28 +179,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          return itemView;
       }
    }
-
-   private void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
-      Intent intent = new Intent(getActivity(), GuideCreateStepsEditActivity.class);
-      intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
-      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
-      startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
-   }
-
-   private void launchStepEdit(GuideCreateStepObject curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
-      stepList.addAll(mGuide.getSteps());
-      stepList.add(curStep);
-      launchStepEdit(stepList, stepList.size() - 1);
-   }
-
-   void launchStepEdit(int curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
-      stepList.addAll(mGuide.getSteps());
-      launchStepEdit(stepList, curStep);
-   }
-
+   
    private void launchGuideEditIntro() {
       GuideIntroFragment newFragment = new GuideIntroFragment();
       newFragment.setGuideOBject(mGuide);
@@ -340,5 +321,26 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    public void onReorderComplete() {
       mStepAdapter.notifyDataSetChanged();
       
+   }
+   
+   void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
+      Intent intent = new Intent(getActivity(), GuideCreateStepsEditActivity.class);
+      intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, curStep);
+      startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
+   }
+
+   void launchStepEdit(GuideCreateStepObject curStep) {
+      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+      stepList.addAll(mGuide.getSteps());
+      stepList.add(curStep);
+      launchStepEdit(stepList, stepList.size() - 1);
+   }
+
+   void launchStepEdit(int curStep) {
+      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+      stepList.addAll(mGuide.getSteps());
+      launchStepEdit(stepList, curStep);
    }
 }
