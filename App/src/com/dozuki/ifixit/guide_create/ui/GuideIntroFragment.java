@@ -26,6 +26,7 @@ public class GuideIntroFragment extends Fragment {
    private static String TITLE_KEY = "TITLE_KEY";
    private static String SUMMARY_KEY = "SUMMARY_KEY";
    private static String INRODUCTION_KEY = "INRODUCTION_KEY";
+   private TextView mViewHeader;
    private EditText mDeviceType;
    private EditText mTitle;
    private EditText mSummary;
@@ -57,6 +58,9 @@ public class GuideIntroFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_create_intro, container, false);
+      mViewHeader = (TextView) view.findViewById(R.id.guide_intro_header);
+      if(mGuideObject != null)
+         mViewHeader.setText(R.string.create_guide_header_edit);
       mSubmitGuideButton = (Button) view.findViewById(R.id.confirm_create_guide_button);
       mDeviceType = (EditText) view.findViewById(R.id.edit_guide_intro_device_id);
       mFocus = (EditText) view.findViewById(R.id.edit_guide_intro_focus);

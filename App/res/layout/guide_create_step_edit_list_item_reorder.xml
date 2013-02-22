@@ -1,52 +1,62 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/step_create_item"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_margin="4dp"
+    android:background="@color/gray"
+    android:orientation="vertical"
     android:padding="1dp" >
 
-    <TextView
-        android:id="@+id/bullet_text_textview"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="8dp"
-        android:layout_centerVertical="true"
-        android:layout_toLeftOf="@+id/guide_step_drag_handle"
-        android:layout_toRightOf="@+id/guide_step_item_frame"
-        android:hint="Tell me more" />
-
-    <FrameLayout
-        android:id="@+id/guide_step_item_frame"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_centerVertical="true"
-        android:clickable="true" >
-
-        <ImageView
-            android:id="@+id/guide_step_item_thumbnail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:contentDescription="@string/topic_guide_thumbnail"
-            android:padding="1dp"
-            android:src="@drawable/bullet_black" />
-    </FrameLayout>
-
     <RelativeLayout
-        android:id="@+id/guide_step_drag_handle"
-        android:layout_width="30dp"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true" >
+        android:id="@+id/step_create_item"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/white"
+        android:padding="4dp" >
 
-        <ImageView
+        <TextView
+            android:id="@+id/bullet_text_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:background="@drawable/ic_list_item_move"
-            android:contentDescription="@string/topic_guide_thumbnail" />
+            android:layout_marginLeft="8dp"
+            android:layout_toLeftOf="@+id/guide_step_drag_handle"
+            android:layout_toRightOf="@+id/guide_step_item_frame"
+            android:ellipsize="end"
+            android:hint="@string/step_title_hint"
+            android:singleLine="true" />
+
+        <FrameLayout
+            android:id="@+id/guide_step_item_frame"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:clickable="true" >
+
+            <ImageView
+                android:id="@+id/guide_step_item_thumbnail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:contentDescription="@string/topic_guide_thumbnail"
+                android:src="@drawable/bullet_black" />
+        </FrameLayout>
+
+        <RelativeLayout
+            android:id="@+id/guide_step_drag_handle"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ic_list_item_move"
+                android:contentDescription="@string/topic_guide_thumbnail" />
+        </RelativeLayout>
     </RelativeLayout>
 
-</RelativeLayout>
+</LinearLayout>

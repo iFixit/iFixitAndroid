@@ -191,8 +191,17 @@ public class GuideCreateStepReorderFragment extends Fragment {
          }
          final ViewHolder holder = (ViewHolder) v.getTag();
          String step = getItem(position).getTitle();
-         holder.stepsView.setText(step);
-         holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+         if(step.equals(""))
+         {
+            holder.stepsView.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+            holder.stepNumber.setVisibility(View.GONE);
+         }
+         else
+         {
+            holder.stepsView.setText(step);
+            holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+            holder.stepNumber.setVisibility(View.VISIBLE);
+         }    
          holder.mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.fireswing_grey)));
          holder.mImageView.setTag("");
          setImageThumb(getItem(position).getImages(), holder.mImageView);
@@ -203,6 +212,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
    }
 
    private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
+      boolean img = false;
       for (StepImage imageinfo : imageList) {
          if (imageinfo.getImageid() > 0) {
             imagView.setScaleType(ScaleType.FIT_CENTER);
@@ -212,6 +222,12 @@ public class GuideCreateStepReorderFragment extends Fragment {
             imagView.invalidate();
             return;
          }
+      }
+
+      if (!img) {
+         imagView.setScaleType(ScaleType.FIT_CENTER);
+         mImageManager.displayImage("", getActivity(), imagView);
+         imagView.invalidate();
       }
 
    }

@@ -26,28 +26,28 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
    public static String GUIDE_KEY = "GUIDE_KEY";
+   public static String NEW_GUIDE_KEY = "NEW_GUIDE_KEY";
    private ActionBar mActionBar;
    private GuideCreateStepPortalFragment mStepPortalFragment;
    private ArrayList<GuideCreateStepObject> mStepList;
    private GuideCreateObject mGuide;
    private boolean mShowingHelp;
 
+   public ArrayList<GuideCreateStepObject> getStepList() {
+      return mStepList;
+   }
 
-	public ArrayList<GuideCreateStepObject> getStepList() {
-		return mStepList;
-	}
+   public void deleteStep(GuideCreateStepObject step) {
+      mStepList.remove(step);
+   }
 
-	public void deleteStep(GuideCreateStepObject step) {
-		mStepList.remove(step);
-	}
+   public void addStep(GuideCreateStepObject step, int index) {
+      mStepList.add(index, step);
+   }
 
-	public void addStep(GuideCreateStepObject step, int index) {
-		mStepList.add(index, step);
-	}
-
-	public GuideCreateObject getGuide() {
-		return mGuide;
-	}
+   public GuideCreateObject getGuide() {
+      return mGuide;
+   }
 
    @SuppressWarnings("unchecked")
    public void onCreate(Bundle savedInstanceState) {
@@ -56,10 +56,6 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
-      if (Build.VERSION.SDK_INT > 10) {
-         prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
-         this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-      }
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
@@ -134,8 +130,8 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
             }
          }
       }
-	}
-	
+   }
+
    private AlertDialog createHelpDialog() {
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -174,16 +170,9 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       getSupportFragmentManager().popBackStack();
    }
 
-   public void onResume() {
-      super.onResume();
-
-      if (Build.VERSION.SDK_INT > 10) {
-         this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-      }
-   }
-
    @Override
    public void onReorderComplete() {
-      ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG)).onReorderComplete();
+      ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
+         .onReorderComplete();
    }
 }

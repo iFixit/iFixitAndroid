@@ -31,7 +31,7 @@
 
             <TextView
                 android:id="@+id/guide_create_item_publish_status"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/guide_create_item_title"
                 android:layout_toRightOf="@+id/guide_create_item_thumbnail"
@@ -58,6 +58,9 @@
                 android:layout_height="wrap_content"
                 android:layout_alignBottom="@+id/guide_create_toggle_edit"
                 android:layout_alignLeft="@+id/guide_create_item_publish_status"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:scrollHorizontally="true"
                 android:text="@string/default_title" />
         </RelativeLayout>
     </FrameLayout>

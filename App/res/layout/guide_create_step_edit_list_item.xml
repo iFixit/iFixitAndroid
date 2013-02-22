@@ -13,17 +13,17 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="8dp"
         android:layout_marginBottom="8dp"
+        android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/guide_step_item_frame"
-        android:singleLine="true"
-        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+        android:hint="@string/step_title_hint"
         android:imeOptions="actionDone"
+        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
         android:maxLength="350"
-        android:hint="@string/step_title_hint" />
+        android:singleLine="true" />
 
-    <FrameLayout   
+    <FrameLayout
         android:id="@+id/guide_step_item_frame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -36,18 +36,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:scaleType="center"
-            android:src="@drawable/bullet_black"
             android:background="@drawable/ic_dialog_bullet_arrow_spinner"
             android:contentDescription="@string/topic_guide_thumbnail"
-            android:padding="1dp" />
+            android:scaleType="center"
+            android:src="@drawable/bullet_black" />
     </FrameLayout>
 
     <RelativeLayout
         android:id="@+id/guide_step_drag_handle"
         android:layout_width="30dp"
         android:layout_height="wrap_content"
-
         android:visibility="gone" >
 
         <ImageView
@@ -58,6 +56,5 @@
             android:background="@drawable/ic_list_item_move"
             android:contentDescription="@string/topic_guide_thumbnail" />
     </RelativeLayout>
-
 
 </RelativeLayout>
