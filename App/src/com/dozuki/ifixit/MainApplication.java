@@ -188,6 +188,10 @@ public class MainApplication extends Application {
       if (mImageManager == null) {
          mImageManager = new ImageManager(this);
 
+         // Uncomment to view images in development.
+         //mImageManager.trustAllCerts(true);
+         //mImageManager.trustAllHosts(true);
+
          mImageManager.setController(new ImageManager.Controller() {
             public boolean overrideDisplay(String url, ImageView imageView) {
                if (url.equals("") || url.indexOf(".") == 0) {
