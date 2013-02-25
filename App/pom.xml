@@ -101,7 +101,7 @@
         <dependency>
            <groupId>com.mobeta.android.dslv</groupId>
            <artifactId>drag-sort-listview</artifactId>
-           <version>0.4.1-SNAPSHOT</version>
+           <version>0.6.1-SNAPSHOT</version>
            <type>apklib</type>
         </dependency>
         <dependency>

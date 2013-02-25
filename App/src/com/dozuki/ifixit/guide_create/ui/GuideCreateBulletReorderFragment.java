@@ -87,7 +87,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
       controller.setRemoveEnabled(false);
       controller.setSortEnabled(true);
       controller.setDragInitMode(DragSortController.ON_DOWN);
-      controller.setRemoveMode(DragSortController.FLING_RIGHT_REMOVE);
+      controller.setRemoveMode(DragSortController.FLING_REMOVE);
       controller.setBackgroundColor(color.background_light);
       return controller;
    }

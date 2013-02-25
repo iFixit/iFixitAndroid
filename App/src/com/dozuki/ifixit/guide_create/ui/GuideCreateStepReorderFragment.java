@@ -83,7 +83,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
       controller.setRemoveEnabled(false);
       controller.setSortEnabled(true);
       controller.setDragInitMode(DragSortController.ON_DOWN);
-      controller.setRemoveMode(DragSortController.FLING_RIGHT_REMOVE);
+      controller.setRemoveMode(DragSortController.FLING_REMOVE);
       controller.setBackgroundColor(color.background_light);
       return controller;
    }
@@ -201,7 +201,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
             holder.stepsView.setText(step);
             holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
             holder.stepNumber.setVisibility(View.VISIBLE);
-         }    
+         }
          holder.mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.fireswing_grey)));
          holder.mImageView.setTag("");
          setImageThumb(getItem(position).getImages(), holder.mImageView);
