@@ -162,9 +162,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       mGuide.setTopic(device);
       mGuide.setSummary(summary);
       mGuide.setIntroduction(intro);
-      /**
-       * TODO: PATCH doesn't work with http-request...
-       */
+
       APIService.call(this, APIService.getEditGuideAPICall(mGuide.getGuideid(),
        device, title, summary, intro, guideType, thing));
       getSupportFragmentManager().popBackStack();
