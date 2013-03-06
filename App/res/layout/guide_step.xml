@@ -8,9 +8,9 @@
     android:paddingBottom="0dp" >
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="@dimen/section_seperator" >
+        android:layout_width="@dimen/guide_step_content_width"
+        android:layout_height="@dimen/guide_step_content_height"
+        android:layout_marginBottom="@dimen/guide_step_section_seperator" >
 
       <ImageView
          android:id="@+id/main_image"
@@ -71,8 +71,8 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_width="@dimen/guide_step_content_width"
+        android:layout_height="@dimen/guide_step_content_height" >
 
         <TextView
             android:id="@+id/step_title"

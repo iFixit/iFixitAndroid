@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Helper dimens: -->
+    <dimen name="match_parent">-1dp</dimen> 
+    <dimen name="wrap_content">-2dp</dimen>
+    
     <dimen name="site_list_button_width">340dp</dimen>
 
     <dimen name="title_text_size">24sp</dimen>
@@ -8,7 +12,12 @@
     <dimen name="progress_bar_width_height">80dp</dimen>
 
     <dimen name="page_padding">8dp</dimen>
-
+    
+    <dimen name="guide_step_content_width">@dimen/match_parent</dimen>
+    <dimen name="guide_step_content_height">@dimen/wrap_content</dimen>
+    
+    <dimen name="guide_step_section_seperator">8dp</dimen>
+    
     <dimen name="guide_image_width">256dp</dimen>
     <dimen name="guide_image_height">192dp</dimen>
     <dimen name="guide_image_padding">1dp</dimen>
@@ -31,8 +40,6 @@
     <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>
     <dimen name="step_icon_left_spacing">10dp</dimen>
-
-    <dimen name="section_seperator">8dp</dimen>
 
     <dimen name="progress_bar_height">80dp</dimen>
     <dimen name="progress_bar_width">80dp</dimen>
