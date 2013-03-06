@@ -3,5 +3,7 @@
 
     <dimen name="guide_image_spacing_right">0dp</dimen>
     <dimen name="guide_image_spacing_bottom">8dp</dimen>
-
+    
+    <dimen name="guide_step_content_width">@dimen/wrap_content</dimen>
+    <dimen name="guide_step_content_height">@dimen/match_parent</dimen>  
 </resources>
