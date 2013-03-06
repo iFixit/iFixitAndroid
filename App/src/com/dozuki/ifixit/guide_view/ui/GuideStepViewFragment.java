@@ -165,10 +165,6 @@ public class GuideStepViewFragment extends Fragment {
       mTitle.setText(mStep.getTitle());
       mTitle.setTypeface(mFont);
       
-      // Initialize the step instructions text and bullets
-      mTextAdapter = new StepTextArrayAdapter(mContext, R.id.step_text_list, mStep.getLines());
-      mLineList.setAdapter(mTextAdapter);
-      
       // Initialize the step media
       if (mStep.hasVideo()) {
          setVideo();
@@ -177,6 +173,10 @@ public class GuideStepViewFragment extends Fragment {
       } else if (mStep.hasImage()) {
          setImage();
       }
+      
+      // Initialize the step instructions text and bullets
+      mTextAdapter = new StepTextArrayAdapter(mContext, R.id.step_text_list, mStep.getLines());
+      mLineList.setAdapter(mTextAdapter);
    }
    
    private void setImage() {
@@ -296,7 +296,7 @@ public class GuideStepViewFragment extends Fragment {
    private void fitVideoToSpace(StepVideoThumbnail video) {
       float width = 0f;
       float height = 0f;    
-      float padding = baseStepPadding();
+      float padding = baseStepPadding(false);
 
       if (inPortraitMode()) {
          width = mMetrics.widthPixels - padding;
@@ -315,7 +315,7 @@ public class GuideStepViewFragment extends Fragment {
       mMainImage.getLayoutParams().width = (int) (width + .5f);
 
       mVideoPlayButtonContainer.getLayoutParams().height = (int) (height + .5f);
-      mVideoPlayButtonContainer.getLayoutParams().width = (int) (height + .5f);
+      mVideoPlayButtonContainer.getLayoutParams().width = (int) (width + .5f);
    }
 
    private void fitImageToSpace() {
@@ -324,7 +324,7 @@ public class GuideStepViewFragment extends Fragment {
       float width = 0f;
       float height = 0f;
 
-      float padding = baseStepPadding();
+      float padding = baseStepPadding(true);
       
       padding += viewPadding(R.dimen.guide_thumbnail_padding);
 
@@ -439,12 +439,18 @@ public class GuideStepViewFragment extends Fragment {
    
    // Helper functions
    
-   private float baseStepPadding() {
-      float mainPadding = viewPadding(R.dimen.guide_image_padding);
+   private float baseStepPadding(boolean isImage) {
+      float imageBorder = viewPadding(R.dimen.guide_image_padding);
       float pagePadding = viewPadding(R.dimen.page_padding);
+      float imagePadding = 0f;
+      
+      Log.w("pagePadding", pagePadding+"");
+      
+      if (!inPortraitMode() || isImage)
+         imagePadding = mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
       // padding that's included on every page
-      return pagePadding + mainPadding;
+      return pagePadding + imageBorder + imagePadding;
    }
    
    private float navigationHeight() {
