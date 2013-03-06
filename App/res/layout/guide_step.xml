@@ -19,8 +19,8 @@
          android:layout_marginRight="@dimen/guide_image_spacing_right"
          android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
          android:background="@color/image_border"
-         android:contentDescription="@string/main_guide_img_description"
-         android:padding="@dimen/guide_image_padding" />
+         android:padding="@dimen/guide_image_padding"
+         android:contentDescription="@string/main_guide_img_description" />
       
       <RelativeLayout
          android:id="@+id/progress_bar_guide_step"
@@ -34,8 +34,7 @@
          <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            />
+            android:layout_centerInParent="true" />
         </RelativeLayout>
       
        <RelativeLayout
@@ -65,9 +64,9 @@
 
         <com.dozuki.ifixit.guide_view.ui.ThumbnailView
             android:id="@+id/thumbnails"
-            style="@style/thumbnail_position"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            style="@style/thumbnail_position" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -76,9 +75,10 @@
 
         <TextView
             android:id="@+id/step_title"
-            style="@style/text.title"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:textIsSelectable="true"
+            style="@style/text.title" />
 
         <ListView
             android:id="@+id/step_text_list"
