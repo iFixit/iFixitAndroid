@@ -296,7 +296,7 @@ public class GuideStepViewFragment extends Fragment {
    private void fitVideoToSpace(StepVideoThumbnail video) {
       float width = 0f;
       float height = 0f;    
-      float padding = baseStepPadding(false);
+      float padding = baseStepPadding();
 
       if (inPortraitMode()) {
          width = mMetrics.widthPixels - padding;
@@ -324,7 +324,7 @@ public class GuideStepViewFragment extends Fragment {
       float width = 0f;
       float height = 0f;
 
-      float padding = baseStepPadding(true);
+      float padding = baseStepPadding();
       
       padding += viewPadding(R.dimen.guide_thumbnail_padding);
 
@@ -439,14 +439,14 @@ public class GuideStepViewFragment extends Fragment {
    
    // Helper functions
    
-   private float baseStepPadding(boolean isImage) {
+   private float baseStepPadding() {
       float imageBorder = viewPadding(R.dimen.guide_image_padding);
       float pagePadding = viewPadding(R.dimen.page_padding);
       float imagePadding = 0f;
       
       Log.w("pagePadding", pagePadding+"");
       
-      if (!inPortraitMode() || isImage)
+      if (!inPortraitMode())
          imagePadding = mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
       // padding that's included on every page
