@@ -47,7 +47,9 @@ public class VideoViewActivity extends Activity {
 		mVideoView.requestFocus();
 		mVideoView.start();
 		
-		mProgressDialog = ProgressDialog.show(this, "Please wait ...", "Retrieving data ...", true);
+		mProgressDialog = ProgressDialog.show(this, 
+		 getString(R.string.video_activity_progress_title), 
+		 getString(R.string.video_activity_progress_body), true);
 
       mVideoView.setOnPreparedListener(new OnPreparedListener() {
          public void onPrepared(MediaPlayer mp) {
