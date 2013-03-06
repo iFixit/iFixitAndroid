@@ -5,24 +5,23 @@ import java.util.ArrayList;
 
 public class StepVideo implements Serializable {
 
-   private static final long serialVersionUID = 1L;
+   private static final long serialVersionUID = 2L;
    protected ArrayList<VideoEncoding> mEncodings = new ArrayList<VideoEncoding>();
-   protected String mThumbnail;
+   protected StepVideoThumbnail mThumbnail;
 
    public void addEncoding(VideoEncoding parseVideoEncoding) {
       mEncodings.add(parseVideoEncoding);
    }
 
-   public void setThumbnail(String url) {
-      mThumbnail = url;
-
+   public void setThumbnail(StepVideoThumbnail thumb) {
+      mThumbnail = thumb;
    }
 
-   public String getThumbnail() {
+   public StepVideoThumbnail getThumbnail() {
       return mThumbnail;
    }
 
    public ArrayList<VideoEncoding> getEncodings() {
       return mEncodings;
-   }
+   }   
 }
