@@ -19,6 +19,7 @@ import com.dozuki.ifixit.guide_view.model.OEmbed;
 import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.guide_view.model.StepVideo;
+import com.dozuki.ifixit.guide_view.model.StepVideoThumbnail;
 import com.dozuki.ifixit.guide_view.model.VideoEncoding;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
@@ -198,6 +199,7 @@ public class JSONHelper {
 
    private static StepVideo parseVideo(JSONObject jVideo) throws JSONException {
       StepVideo video = new StepVideo();
+
       try {
          JSONArray jEncodings = jVideo.getJSONArray("encoding");
          for (int i = 0; i < jEncodings.length(); i++) {
@@ -206,13 +208,29 @@ public class JSONHelper {
       } catch (JSONException e) {
          e.printStackTrace();
       }
-      video.setThumbnail(jVideo.getString("thumbnail"));
+
+      video.setThumbnail(parseVideoThumbnail(jVideo.getJSONObject("thumbnail")));
       return video;
    }
 
+   private static StepVideoThumbnail parseVideoThumbnail(JSONObject jVideoThumb) throws JSONException {
+      String guid = jVideoThumb.getString("guid");
+      int imageid = jVideoThumb.getInt("imageid");
+      String ratio = jVideoThumb.getString("ratio");
+      int width = jVideoThumb.getInt("width");
+      int height = jVideoThumb.getInt("height");
+
+      String url = jVideoThumb.getString("medium");
+      url = url.substring(0, url.lastIndexOf("."));
+      
+      Log.w("StepVideoThumbnail URL:", " >>> " + url);
+
+      return new StepVideoThumbnail(guid, imageid, url, ratio, width, height);
+   }
+
    private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
-      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"),
-         jEmbed.getString("type"), jEmbed.getString("url"));
+      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"), 
+       jEmbed.getString("type"), jEmbed.getString("url"));
       em.setContentURL(getQueryMap(jEmbed.getString("url")).get("url"));
       return em;
    }

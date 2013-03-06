@@ -3,6 +3,8 @@ package com.dozuki.ifixit.guide_view.model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
+import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
 
 public class GuideStep implements Serializable {
    private static final long serialVersionUID = 2884598684003517264L;
@@ -25,11 +27,19 @@ public class GuideStep implements Serializable {
    }
 
    public String getTitle() {
+      if (mTitle.length() == 0) {
+         mTitle = MainApplication.get().getResources().getString(R.string.step) + " " + mStepNum;
+      }
+      
       return mTitle;
    }
 
    public int getStepNum() {
       return mStepNum;
+   }
+   
+   public boolean hasImage() {
+      return mImages.size() > 0;
    }
 
    public void addImage(StepImage image) {
@@ -52,10 +62,6 @@ public class GuideStep implements Serializable {
       return mLines.get(pos);
    }
 
-   public String toString() {
-      return "{GuideStep: " + mStepNum + ", " + mTitle +  ", " + mLines +
-       ", " + mImages + "}";
-   }
 
    public void addVideo(StepVideo stepvid) {
       mVideo = stepvid;
@@ -79,5 +85,10 @@ public class GuideStep implements Serializable {
 
    public Embed getEmded() {
       return mEmbed;
+   }
+
+   public String toString() {
+      return "{GuideStep: " + mStepNum + ", " + mTitle +  ", " + mLines +
+       ", " + mImages + "}";
    }
 }
