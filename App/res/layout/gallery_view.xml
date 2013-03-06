@@ -32,7 +32,7 @@
         android:layout_height="@dimen/gallery_bottom_bar_height"
         android:layout_alignParentBottom="true"
         android:background="@color/dark"
-        android:visibility="gone">
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/login_text"

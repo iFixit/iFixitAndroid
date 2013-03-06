@@ -1,51 +1,41 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <!-- Helper dimens: -->
-    <dimen name="match_parent">-1dp</dimen> 
-    <dimen name="wrap_content">-2dp</dimen>
-    
-    <dimen name="site_list_button_width">340dp</dimen>
 
+    <!-- Helper dimens: -->
+    <dimen name="match_parent">-1dp</dimen>
+    <dimen name="wrap_content">-2dp</dimen>
+    <dimen name="site_list_button_width">340dp</dimen>
     <dimen name="title_text_size">24sp</dimen>
     <dimen name="body_text_size">14sp</dimen>
     <dimen name="body_text_top_spacing">8dp</dimen>
     <dimen name="progress_bar_width_height">80dp</dimen>
-
     <dimen name="page_padding">8dp</dimen>
-    
     <dimen name="guide_step_content_width">@dimen/match_parent</dimen>
     <dimen name="guide_step_content_height">@dimen/wrap_content</dimen>
-    
     <dimen name="guide_step_section_seperator">8dp</dimen>
-    
     <dimen name="guide_image_width">256dp</dimen>
     <dimen name="guide_image_height">192dp</dimen>
     <dimen name="guide_image_padding">1dp</dimen>
-    <dimen name="guide_image_spacing_right">6dp</dimen>
-    <dimen name="guide_image_spacing_bottom">0dp</dimen>
-
+    <dimen name="guide_image_spacing_right">8dp</dimen>
+    <dimen name="guide_image_spacing_bottom">8dp</dimen>
     <dimen name="guide_thumbnail_width">80dp</dimen>
     <dimen name="guide_thumbnail_height">60dp</dimen>
     <dimen name="guide_thumbnail_spacing">6dp</dimen>
     <dimen name="guide_thumbnail_padding">1dp</dimen>
-
     <dimen name="topic_list_column_width">270dp</dimen>
     <dimen name="topic_list_vertical_spacing">4dp</dimen>
     <dimen name="topic_list_horizontal_spacing">2dp</dimen>
     <dimen name="topic_list_top_margin">4dp</dimen>
     <dimen name="topic_list_right_divider">0dp</dimen>
-
     <dimen name="circle_page_indicator_padding">6dp</dimen>
-
     <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>
     <dimen name="step_icon_left_spacing">10dp</dimen>
-
     <dimen name="progress_bar_height">80dp</dimen>
     <dimen name="progress_bar_width">80dp</dimen>
-
     <dimen name="gallery_login_text_padding">8dp</dimen>
     <dimen name="gallery_bottom_bar_height">30dp</dimen>
     <dimen name="gallery_grid_column_width">150dp</dimen>
     <dimen name="login_agreement_text_top_padding">3dp</dimen>
+
 </resources>

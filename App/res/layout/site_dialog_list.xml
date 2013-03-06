@@ -1,28 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-   android:layout_width="match_parent"
-   android:layout_height="match_parent"
-   android:orientation="vertical">
-   <com.actionbarsherlock.widget.SearchView
-      android:id="@+id/dozuki_search_view"
-      android:layout_width="match_parent"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="8dp"
-      android:layout_marginBottom="8dp"
-      android:title="@string/site_list_search_title"
-      android:icon="@android:drawable/ic_menu_search"
-      android:imeOptions="actionSearch" />
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical" >
 
-   <ListView
-      android:id="@+id/siteListView"
-      android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      style="?attr/listViewStyle" />
+    <com.actionbarsherlock.widget.SearchView
+        android:id="@+id/dozuki_search_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:icon="@android:drawable/ic_menu_search"
+        android:imeOptions="actionSearch"
+        android:title="@string/site_list_search_title" />
 
-   <TextView
-      android:id="@+id/emptyView"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:text="@string/empty_site_list"
-      style="@style/text.list" />
+    <ListView
+        android:id="@+id/siteListView"
+        style="?attr/listViewStyle"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <TextView
+        android:id="@+id/emptyView"
+        style="@style/text.list"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/empty_site_list" />
+
 </LinearLayout>
