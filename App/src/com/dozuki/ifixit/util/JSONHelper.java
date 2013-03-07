@@ -207,6 +207,7 @@ public class JSONHelper {
          }
       } catch (JSONException e) {
          e.printStackTrace();
+         Log.e("JSONHelper parseVideo", "Error parsing video API response");
       }
 
       video.setThumbnail(parseVideoThumbnail(jVideo.getJSONObject("thumbnail")));
@@ -222,8 +223,6 @@ public class JSONHelper {
 
       String url = jVideoThumb.getString("medium");
       url = url.substring(0, url.lastIndexOf("."));
-      
-      Log.w("StepVideoThumbnail URL:", " >>> " + url);
 
       return new StepVideoThumbnail(guid, imageid, url, ratio, width, height);
    }
