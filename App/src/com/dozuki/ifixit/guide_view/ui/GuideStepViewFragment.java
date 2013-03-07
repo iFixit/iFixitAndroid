@@ -308,8 +308,6 @@ public class GuideStepViewFragment extends Fragment {
          width = (height * ((float)video.getWidth() / (float)video.getHeight()));
       }
 
-      Log.w("Video Dimensions", width + "x" + height);
-
       // Set the width and height of the main image
       mMainImage.getLayoutParams().height = (int) (height + .5f);
       mMainImage.getLayoutParams().width = (int) (width + .5f);
@@ -328,7 +326,6 @@ public class GuideStepViewFragment extends Fragment {
       
       padding += viewPadding(R.dimen.guide_thumbnail_padding);
 
-      // Portrait orientation
       if (inPortraitMode()) {
          padding += mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
@@ -443,8 +440,6 @@ public class GuideStepViewFragment extends Fragment {
       float imageBorder = viewPadding(R.dimen.guide_image_padding);
       float pagePadding = viewPadding(R.dimen.page_padding);
       float imagePadding = 0f;
-      
-      Log.w("pagePadding", pagePadding+"");
       
       if (!inPortraitMode())
          imagePadding = mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
