@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.guide_view.ui;
 
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.ProgressDialog;
 
 import com.actionbarsherlock.view.Window;
@@ -9,6 +10,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
@@ -43,7 +45,7 @@ public class VideoViewActivity extends Activity {
       mVideoView.setMediaController(mc);
 
       Uri uri = Uri.parse(mVideoUrl);
-
+      
       mVideoView.setVideoURI(uri);
 
       mProgressDialog = ProgressDialog.show(mContext, 
@@ -58,5 +60,35 @@ public class VideoViewActivity extends Activity {
             mVideoView.start();
          }
       });
+      
+      mVideoView.setOnCompletionListener(new OnCompletionListener() {
+         MediaPlayer mMediaPlayer;
+         
+         @Override
+         public void onCompletion(MediaPlayer mp) {
+            mMediaPlayer = mp;
+            AlertDialog.Builder restartDialog = new AlertDialog.Builder(mContext);
+            restartDialog.setTitle("Restart Video");
+            restartDialog
+               .setMessage("Play this video again?")
+               .setCancelable(true)
+               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int id) {
+                     // Reset the video player and restart the clip
+                     mMediaPlayer.seekTo(0);
+                     mMediaPlayer.start();
+                  }})
+               .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog,int id) {
+                     // close the dialog box and go back to the guide step
+                     dialog.cancel();
+                     finish();
+                  }
+               });
+            
+            restartDialog.create().show();
+          }
+      });
    }
+
 }
