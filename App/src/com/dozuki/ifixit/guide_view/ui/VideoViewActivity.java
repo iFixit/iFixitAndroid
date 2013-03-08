@@ -6,6 +6,8 @@ import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.R;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
@@ -20,11 +22,13 @@ public class VideoViewActivity extends Activity {
    private String mVideoUrl;
    private VideoView mVideoView;
    private ProgressDialog mProgressDialog;
+   private Context mContext;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      mContext = this;
       requestWindowFeature((int) Window.FEATURE_NO_TITLE);
 
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -42,16 +46,16 @@ public class VideoViewActivity extends Activity {
 
       mVideoView.setVideoURI(uri);
 
-      mVideoView.requestFocus();
-      mVideoView.start();
-
-      mProgressDialog = ProgressDialog.show(this, 
+      mProgressDialog = ProgressDialog.show(mContext, 
          getString(R.string.video_activity_progress_title),
          getString(R.string.video_activity_progress_body), true);
 
       mVideoView.setOnPreparedListener(new OnPreparedListener() {
          public void onPrepared(MediaPlayer mp) {
             mProgressDialog.dismiss();
+
+            mVideoView.requestFocus();
+            mVideoView.start();
          }
       });
    }
