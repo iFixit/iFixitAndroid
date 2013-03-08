@@ -22,6 +22,14 @@ public class Embed implements Serializable {
    public String getURL() {
       return mURL;
    }
+   
+   public int getWidth() {
+      return mWidth;
+   }
+   
+   public int getHeight() {
+      return mHeight;
+   }
 
    public void addOembed(OEmbed oe) {
       mOEmbed = oe;

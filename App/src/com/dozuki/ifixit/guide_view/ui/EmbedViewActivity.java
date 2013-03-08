@@ -33,8 +33,7 @@ public class EmbedViewActivity extends Activity {
       settings.setBuiltInZoomControls(true);
       settings.setAppCacheEnabled(true);
       settings.setCacheMode(WebSettings.LOAD_NORMAL);
-      mWebView.setWebChromeClient(new WebChromeClient() {
-      });
+      mWebView.setWebChromeClient(new WebChromeClient() {});
       if (savedInstanceState != null) {
          mWebView.restoreState(savedInstanceState);
       }
