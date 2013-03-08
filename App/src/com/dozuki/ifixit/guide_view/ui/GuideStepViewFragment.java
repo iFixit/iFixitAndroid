@@ -313,7 +313,7 @@ public class GuideStepViewFragment extends Fragment {
 
       if (inPortraitMode()) {
          newWidth = mMetrics.widthPixels - padding;
-         newHeight = newWidth * (width / height);
+         newHeight = newWidth * (height / width);
       } else {
          padding += navigationHeight();
           
