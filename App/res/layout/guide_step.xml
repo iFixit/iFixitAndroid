@@ -54,10 +54,9 @@
 
         <WebView
             android:id="@+id/main_web_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
-            android:layout_marginRight="@dimen/guide_image_spacing_right"
+            android:layout_width="@dimen/guide_image_width"
+            android:layout_height="@dimen/guide_image_height"
+            style="@style/guide_main_image_spacing"
             android:background="@color/image_border"
             android:padding="@dimen/guide_image_padding"
             android:visibility="gone" />

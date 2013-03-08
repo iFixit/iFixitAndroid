@@ -214,8 +214,11 @@ public class GuideStepViewFragment extends Fragment {
       StepVideoThumbnail thumb = video.getThumbnail();
 
       // Size the video preview screenshot within the available screen space
-      fitVideoToSpace(thumb);
+      ViewGroup.LayoutParams params = fitToSpace(mMainImage, thumb.getWidth(), thumb.getHeight());
       
+      mMainImage.setLayoutParams(params);
+      mVideoPlayButtonContainer.setLayoutParams(params);
+
       mMainImage.setVisibility(View.VISIBLE);
       mVideoPlayButtonContainer.setVisibility(View.VISIBLE);
       mMainWebView.setVisibility(View.GONE);
@@ -240,6 +243,13 @@ public class GuideStepViewFragment extends Fragment {
    }
    
    private void setEmbed() {
+
+      Embed embed = mStep.getEmbed();
+      
+      mMainWebView.setLayoutParams(
+         fitToSpace(mMainWebView, (float)embed.getWidth(), (float)embed.getHeight())
+      );
+
       WebSettings settings = mMainWebView.getSettings();
       settings.setUseWideViewPort(true);
       settings.setJavaScriptEnabled(true);
@@ -252,6 +262,8 @@ public class GuideStepViewFragment extends Fragment {
 
          public void onPageFinished(WebView view, String url) {
             mMainWebView.setVisibility(View.VISIBLE);
+            mMainProgress.setVisibility(View.GONE);
+
             super.onPageFinished(view, url);
          }
       });
@@ -282,38 +294,38 @@ public class GuideStepViewFragment extends Fragment {
       mMainWebView.setVisibility(View.INVISIBLE);
       mMainProgress.setVisibility(View.VISIBLE);
 
-      if (mStep.getEmded().hasOembed()) {
-         mMainWebView.loadUrl(mStep.getEmded().getOembed().getURL());
-         mMainWebView.setTag(mStep.getEmded().getOembed().getURL());
+      if (embed.hasOembed()) {
+         String embedUrl = embed.getOembed().getURL();
+         mMainWebView.loadUrl(embedUrl);
+         mMainWebView.setTag(embedUrl);
       } else {
          // TODO: find the best place and way to handle the returned
          // oembed
          mEmbedRet = new EmbedRetriever();
-         mEmbedRet.execute(mStep.getEmded());
+         mEmbedRet.execute(embed);
       }
    } 
    
-   private void fitVideoToSpace(StepVideoThumbnail video) {
-      float width = 0f;
-      float height = 0f;    
+   private ViewGroup.LayoutParams fitToSpace(View view, float width, float height) {
+      float newWidth = 0f;
+      float newHeight = 0f;    
       float padding = baseStepPadding();
 
       if (inPortraitMode()) {
-         width = mMetrics.widthPixels - padding;
-         height = width * ((float)video.getHeight() / (float)video.getWidth());
+         newWidth = mMetrics.widthPixels - padding;
+         newHeight = newWidth * (width / height);
       } else {
          padding += navigationHeight();
           
-         height = ((mMetrics.heightPixels - padding) * 3f) / 5f;
-         width = (height * ((float)video.getWidth() / (float)video.getHeight()));
+         newHeight = ((mMetrics.heightPixels - padding) * 3f) / 5f;
+         newWidth = (newHeight * (width / height));
       }
+      
+      ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
+      layoutParams.width = (int) (newWidth + .5f);
+      layoutParams.height = (int) (newHeight + .5f);
 
-      // Set the width and height of the main image
-      mMainImage.getLayoutParams().height = (int) (height + .5f);
-      mMainImage.getLayoutParams().width = (int) (width + .5f);
-
-      mVideoPlayButtonContainer.getLayoutParams().height = (int) (height + .5f);
-      mVideoPlayButtonContainer.getLayoutParams().width = (int) (width + .5f);
+      return layoutParams;
    }
 
    private void fitImageToSpace() {
@@ -426,7 +438,7 @@ public class GuideStepViewFragment extends Fragment {
             // TODO: decide if this is ok. Most likely because the setStep
             // function isnt intensive
             if(!isCancelled()) {
-               String url = mStep.getEmded().getOembed().getURL();
+               String url = mStep.getEmbed().getOembed().getURL();
                mMainWebView.loadUrl(url);
                mMainWebView.setTag(url);
             }

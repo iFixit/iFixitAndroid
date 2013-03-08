@@ -83,7 +83,7 @@ public class GuideStep implements Serializable {
       return mEmbed != null;
    }
 
-   public Embed getEmded() {
+   public Embed getEmbed() {
       return mEmbed;
    }
 
