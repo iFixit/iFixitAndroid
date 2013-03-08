@@ -5,7 +5,8 @@
     android:layout_height="match_parent"
     android:background="@drawable/bg_img"
     android:padding="@dimen/page_padding"
-    android:paddingBottom="0dp" >
+    android:paddingBottom="0dp"
+    android:baselineAligned="false">
 
     <RelativeLayout
         style="@style/guide_step_media_wrap"
