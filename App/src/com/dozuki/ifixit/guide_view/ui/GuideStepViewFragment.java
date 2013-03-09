@@ -117,13 +117,13 @@ public class GuideStepViewFragment extends Fragment {
       mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
       mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);
 
+      if (savedInstanceState != null) {
+         mMainWebView.restoreState(savedInstanceState);
+      }
+      
       // Initialize the step content
       if (mStep != null) {         
          setStep();
-      }
-
-      if (savedInstanceState != null) {
-         mMainWebView.restoreState(savedInstanceState);
       }
 
       return view;
@@ -197,7 +197,7 @@ public class GuideStepViewFragment extends Fragment {
       });
      
       // Size the main image and thumbnails to maximize use of screen space
-      fitImageToSpace();      
+      fitImageToSpace(stepImages.size() > 1);      
 
       mMainImage.setVisibility(View.VISIBLE);
       mMainWebView.setVisibility(View.GONE);
@@ -221,8 +221,10 @@ public class GuideStepViewFragment extends Fragment {
 
       mMainImage.setVisibility(View.VISIBLE);
       mVideoPlayButtonContainer.setVisibility(View.VISIBLE);
+      
       mMainWebView.setVisibility(View.GONE);
       mMainProgress.setVisibility(View.GONE);
+      
       mImageManager.displayImage(thumb.getUrl(), mContext, mMainImage);
       
       // Resize the image view to fit the available space.
@@ -291,7 +293,7 @@ public class GuideStepViewFragment extends Fragment {
       mMainWebView.stopLoading();
       
       mMainImage.setVisibility(View.GONE);
-      mMainWebView.setVisibility(View.INVISIBLE);
+      mMainWebView.setVisibility(View.GONE);
       mMainProgress.setVisibility(View.VISIBLE);
 
       if (embed.hasOembed()) {
@@ -309,7 +311,8 @@ public class GuideStepViewFragment extends Fragment {
    private ViewGroup.LayoutParams fitToSpace(View view, float width, float height) {
       float newWidth = 0f;
       float newHeight = 0f;    
-      float padding = baseStepPadding();
+      
+      float padding = viewPadding(R.dimen.page_padding);
 
       if (inPortraitMode()) {
          newWidth = mMetrics.widthPixels - padding;
@@ -321,62 +324,73 @@ public class GuideStepViewFragment extends Fragment {
          newWidth = (newHeight * (width / height));
       }
       
+      fitProgressIndicator(newWidth, newHeight);
+      
       ViewGroup.LayoutParams layoutParams = view.getLayoutParams();
-      layoutParams.width = (int) (newWidth + .5f);
-      layoutParams.height = (int) (newHeight + .5f);
+      layoutParams.width = (int) (newWidth - .5f);
+      layoutParams.height = (int) (newHeight - .5f);
 
       return layoutParams;
    }
 
-   private void fitImageToSpace() {
+   private void fitImageToSpace(boolean hasThumbnail) {
       float thumbnailHeight = 0f;
       float thumbnailWidth = 0f;
       float width = 0f;
       float height = 0f;
 
-      float padding = baseStepPadding();
+      float padding = viewPadding(R.dimen.page_padding);
       
       padding += viewPadding(R.dimen.guide_thumbnail_padding);
 
       if (inPortraitMode()) {
-         padding += mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
+         if (hasThumbnail) {
+            padding += mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
-         // Main image is 4/5ths of the available screen height
-         width = (((mMetrics.widthPixels - padding) / 5f) * 4f);
-         height = width *  (3f/4f);
+            // Main image is 4/5ths of the available screen height
+            width = (((mMetrics.widthPixels - padding) / 5f) * 4f);
+            height = width *  (3f/4f);
 
-         // Screen height minus everything else that occupies horizontal space
-         thumbnailWidth = (mMetrics.widthPixels - width - padding);
-         thumbnailHeight = thumbnailWidth * (3f/4f);
+            // Screen height minus everything else that occupies horizontal space
+            thumbnailWidth = (mMetrics.widthPixels - width - padding);
+            thumbnailHeight = thumbnailWidth * (3f/4f);
 
-         mMainProgress.getLayoutParams().height = (int) ((int) (height + .5f));
-         mMainProgress.getLayoutParams().width = (int) ((int) (width + .5f) + thumbnailWidth);
+            fitProgressIndicator((width - .5f) + thumbnailWidth, height);
+         } else {
+            mThumbs.setVisibility(View.GONE);
+            
+            width = mMetrics.widthPixels - padding;
+            height = width * (3f / 4f);
+
+            fitProgressIndicator(width, height);
+         }
 
       } else {
-         int actionBarHeight = mResources.getDimensionPixelSize(
-          com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
-         int indicatorHeight = ((GuideViewActivity)mContext).getIndicatorHeight();
-
+         padding += navigationHeight();
          padding += mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
 
          // Main image is 4/5ths of the available screen height
-         height = (((mMetrics.heightPixels - actionBarHeight - indicatorHeight - padding) / 5f) * 4f);
+         height = (((mMetrics.heightPixels - padding) / 5f) * 4f);
          width = height * (4f/3f);
 
          // Screen height minus everything else that occupies vertical space
-         thumbnailHeight = (mMetrics.heightPixels - height - actionBarHeight - padding -
-          indicatorHeight);
+         thumbnailHeight = (mMetrics.heightPixels - height - padding);
          thumbnailWidth = (thumbnailHeight * (4f/3f));
 
-         mMainProgress.getLayoutParams().height = (int) ((int) (height + .5f) + thumbnailHeight);
-         mMainProgress.getLayoutParams().width = (int) ((int) (width + .5f));
+         fitProgressIndicator(width, (height - .5f) + thumbnailHeight);
       }
 
       // Set the width and height of the main image
-      mMainImage.getLayoutParams().height = (int) (height + .5f);
-      mMainImage.getLayoutParams().width = (int) (width + .5f);
+      mMainImage.getLayoutParams().height = (int) (height - .5f);
+      mMainImage.getLayoutParams().width = (int) (width - .5f);
 
-      mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
+      if (hasThumbnail)
+         mThumbs.setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
+   }
+   
+   private void fitProgressIndicator(float width, float height) {
+      mMainProgress.getLayoutParams().height = (int) (height - .5f);
+      mMainProgress.getLayoutParams().width = (int) (width - .5f);
    }
 
    public class StepTextArrayAdapter extends ArrayAdapter<StepLine> {
@@ -448,18 +462,6 @@ public class GuideStepViewFragment extends Fragment {
    
    // Helper functions
    
-   private float baseStepPadding() {
-      float imageBorder = viewPadding(R.dimen.guide_image_padding);
-      float pagePadding = viewPadding(R.dimen.page_padding);
-      float imagePadding = 0f;
-      
-      if (!inPortraitMode())
-         imagePadding = mResources.getDimensionPixelSize(R.dimen.guide_image_spacing_right);
-
-      // padding that's included on every page
-      return pagePadding + imageBorder + imagePadding;
-   }
-   
    private float navigationHeight() {
       int actionBarHeight = mResources.getDimensionPixelSize(
          com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
@@ -474,13 +476,5 @@ public class GuideStepViewFragment extends Fragment {
    
    private static float viewPadding(int view) {
       return mResources.getDimensionPixelSize(view) * 2f;
-   }
-
-   private float dpToPixel(float dp) {
-      return dp * (mMetrics.densityDpi / 160f);
-   }
-
-   private float pixelToDp(float px) {
-      return px / (mMetrics.densityDpi / 160f);
    }
 }
