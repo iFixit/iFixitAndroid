@@ -210,16 +210,10 @@ public class JSONHelper {
       while (iterator.hasNext()) {
          topicName = iterator.next();
 
-         if (topicName.equals(LEAF_INDICATOR)) {
-            topics.addAll(parseTopicLeaves(
-             jTopic.getJSONArray(LEAF_INDICATOR)));
-         }
-         else {
-            currentTopic = new TopicNode(topicName);
-            currentTopic.addAllTopics(parseTopicChildren(
-             jTopic.getJSONObject(topicName)));
-            topics.add(currentTopic);
-         }
+         currentTopic = new TopicNode(topicName);
+         currentTopic.addAllTopics(parseTopicChildren(
+          jTopic.getJSONObject(topicName)));
+         topics.add(currentTopic);
       }
 
       return topics;

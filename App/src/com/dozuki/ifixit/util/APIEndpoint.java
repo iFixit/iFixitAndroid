@@ -16,7 +16,7 @@ public enum APIEndpoint {
    CATEGORIES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "categories/";
+            return "categories";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
