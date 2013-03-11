@@ -36,8 +36,6 @@ import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 
 public class JSONHelper {
-   private static final String LEAF_INDICATOR = "TOPICS";
-
    public static ArrayList<Site> parseSites(String json) {
       ArrayList<Site> sites = new ArrayList<Site>();
 
