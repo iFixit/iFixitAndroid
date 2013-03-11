@@ -55,7 +55,7 @@ public enum APIEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "topics/" + URLEncoder.encode(query, "UTF-8");
+               return "categories/" + URLEncoder.encode(query, "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
