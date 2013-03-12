@@ -2,6 +2,7 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.marczych.androidimagemanager.ImageManager;
 
 import android.content.Context;
@@ -35,10 +36,10 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
    private ImageManager mImageManager;
    private GuidePortalFragment mPortalRef;
    private boolean mEditBarVisible = false;
-   private GuideCreateObject mGuideCreateObject;
+   private UserGuide mGuideCreateObject;
 
    public GuideCreateListItem(Context context, ImageManager imageManager, final GuidePortalFragment portalRef,
-      GuideCreateObject gObject) {
+      UserGuide gObject) {
       super(context);
       mPortalRef = portalRef;
       mImageManager = imageManager;
@@ -77,7 +78,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
          @Override
          public void onClick(View v) {
             Intent intent = new Intent(mPortalRef.getActivity(), GuideCreateStepsActivity.class);
-            intent.putExtra(GuideCreateStepsActivity.GUIDE_KEY, mGuideCreateObject);
+            intent.putExtra(GuideCreateStepsActivity.GUIDE_KEY, mGuideCreateObject.getGuideid());
             mPortalRef.getActivity().startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
          }
       });
@@ -97,7 +98,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
       }
    }
 
-   public void setGuideObject(GuideCreateObject obj) {
+   public void setGuideObject(UserGuide obj) {
       mGuideCreateObject = obj;
    }
 

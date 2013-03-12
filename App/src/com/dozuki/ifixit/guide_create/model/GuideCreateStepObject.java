@@ -15,6 +15,7 @@ public class GuideCreateStepObject implements Serializable {
    private static final long serialVersionUID = -2019322123419333278L;
    protected int mStepId;
    protected int mStepNum;
+   protected Integer mRevisionId;
    protected String mTitle;
    protected boolean mEditMode; // save state for edit drop down
    protected ArrayList<StepImage> mImages;
@@ -32,6 +33,8 @@ public class GuideCreateStepObject implements Serializable {
 
       mLines = gs.getLines();
       mTitle = gs.getTitle();
+      mRevisionId = gs.getRevisionid();
+
    }
 
    public void setEditMode(boolean editMode) {
@@ -110,5 +113,9 @@ public class GuideCreateStepObject implements Serializable {
 
    public void setLines(ArrayList<StepLine> lines) {
       mLines = lines;
+   }
+
+   public Integer getRevisionid() {
+      return mRevisionId;
    }
 }

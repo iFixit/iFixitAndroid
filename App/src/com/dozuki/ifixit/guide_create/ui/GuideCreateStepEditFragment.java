@@ -67,9 +67,10 @@ public class GuideCreateStepEditFragment extends Fragment {
       mEditMediaFrag.setStepNumber(mStepObject.getStepNum());
       
       if(mStepObject.getImages().size() > 0) {
+
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_1, mStepObject.getImages().get(0));
       }
-      
+
       if(mStepObject.getImages().size() > 1) {
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_2, mStepObject.getImages().get(1));
       }
@@ -81,7 +82,7 @@ public class GuideCreateStepEditFragment extends Fragment {
       
    }
 
-   public GuideCreateStepObject syncGuideChanges() {
+   public GuideCreateStepObject getGuideChanges() {
       //lines
       mStepObject.getLines().clear();
       mStepObject.getLines().addAll(mEditBulletFrag.getLines());
@@ -117,7 +118,6 @@ public class GuideCreateStepEditFragment extends Fragment {
 
 
    public GuideCreateStepObject getStepObject() {
-      // TODO Auto-generated method stub
       return mStepObject;
    }
 

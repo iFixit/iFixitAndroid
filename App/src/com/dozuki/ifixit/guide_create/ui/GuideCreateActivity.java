@@ -2,6 +2,9 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import com.dozuki.ifixit.guide_create.model.UserGuide;
+import com.dozuki.ifixit.util.APIEvent;
+import com.squareup.otto.Subscribe;
 import org.holoeverywhere.app.Fragment;
 
 import android.app.AlertDialog;
@@ -38,9 +41,9 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    public static int GuideItemID = 0;
    private ActionBar mActionBar;
    private GuidePortalFragment mGuidePortal;
-   private ArrayList<GuideCreateObject> mGuideList;
+   private ArrayList<UserGuide> mGuideList;
    private boolean mShowingHelp;
-   private GuideCreateObject mGuideForDelete;
+   private UserGuide mGuideForDelete;
    private boolean mShowingDelete;
 
    private OnBackStackChangedListener getListener() {
@@ -59,11 +62,11 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       return result;
    }
 
-   public ArrayList<GuideCreateObject> getGuideList() {
+   public ArrayList<UserGuide> getGuideList() {
       return mGuideList;
    }
 
-   public void addGuide(GuideCreateObject guide) {
+   public void addGuide(UserGuide guide) {
       mGuideList.add(guide);
    }
 
@@ -77,12 +80,12 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       mActionBar.setTitle("");
       prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
       TASK_ID = this.getTaskId();
-      mGuideList = new ArrayList<GuideCreateObject>();
+      mGuideList = new ArrayList<UserGuide>();
       if (savedInstanceState != null) {
-         mGuideList = (ArrayList<GuideCreateObject>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
+         mGuideList = (ArrayList<UserGuide>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
-         mGuideForDelete = (GuideCreateObject) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
+         mGuideForDelete = (UserGuide) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
          if (mShowingHelp)
             createHelpDialog().show();
       }
@@ -160,10 +163,10 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       super.onActivityResult(requestCode, resultCode, data);
       if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
          if (resultCode == RESULT_OK) {
-            GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GUIDE_KEY);
-            if (guide != null) {
-               mGuideList.set(mGuideList.indexOf(guide), guide);
-            }
+         //    UserGuide guide = (UserGuide) data.getSerializableExtra(GUIDE_KEY);
+          //  if (guide != null) {
+           //    mGuideList.set(mGuideList.indexOf(guide), guide);
+           // }
          }
       }
      
@@ -172,33 +175,64 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    @Override
    public void onFinishIntroInput(String device, String title, String summary,
     String intro, String guideType, String subject) {
-      GuideCreateObject guideObject = new GuideCreateObject(GuideItemID++);
+      UserGuide guideObject = new UserGuide();//(GuideItemID++);
       guideObject.setTitle(title);
       guideObject.setTopic(device);
+      guideObject.setType(guideType);
+      guideObject.setDevice(device);
       guideObject.setSummary(summary);
+      guideObject.setSubject(subject);
       guideObject.setIntroduction(intro);
-      guideObject.setStepList(new ArrayList<GuideCreateStepObject>());
-      getGuideList().add(guideObject);
-      APIService.call(this, APIService.getCreateGuideAPICall(device, title, summary,
-       intro, guideType, subject));
+      APIService.call(this, APIService.getCreateGuideAPICall(guideObject));
+      getSupportFragmentManager().popBackStack();
+   }
 
-   
-      
-      //Go straight to creating a new step
+
+   @Subscribe
+   public void onGuideCreated(APIEvent.CreateGuide event) {
+      if (!event.hasError()) {
+         UserGuide userGuide = new UserGuide();
+         GuideCreateObject guideObject = event.getResult();
+
+         userGuide.setGuideid(guideObject.getGuideid());
+         userGuide.setImageObject(guideObject.getIntroImage());
+         userGuide.setTitle(guideObject.getTitle());
+         userGuide.setPublished(guideObject.getPublished());
+         mGuideList.add (userGuide);
+         launchStepEditOnNewGuide(guideObject);
+      } else {
+              ///TODO: handle the error case
+      }
+   }
+
+   public void launchStepEditOnNewGuide(GuideCreateObject guideObject) {
+      Intent intent = new Intent(this, GuideCreateStepsEditActivity.class);
+      intent.putExtra(GuideCreateActivity.GUIDE_KEY,  guideObject);
       GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
       item.setStepNum(0);
       item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
       ArrayList<GuideCreateStepObject> initialStepList = new ArrayList<GuideCreateStepObject>();
       initialStepList.add(item);
- 
-      Intent intent = new Intent(this, GuideCreateStepsEditActivity.class);
-      intent.putExtra(GuideCreateActivity.GUIDE_KEY,  guideObject);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, item);
       startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
-      
-      getSupportFragmentManager().popBackStack();
    }
+
+
+   @Override
+   public void onResume() {
+      super.onResume();
+   //   MainApplication.getBus().register(this);
+      this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+  //    MainApplication.getBus().unregister(this);
+   }
+
 
    @Override
    protected void onDestroy() {
@@ -229,7 +263,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       return dialog;
    }
 
-   public AlertDialog createDeleteDialog(GuideCreateObject item) {
+   public AlertDialog createDeleteDialog(UserGuide item) {
       mGuideForDelete = item;
       mShowingDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -264,10 +298,4 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       return dialog;
    }
 
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-   }
 }

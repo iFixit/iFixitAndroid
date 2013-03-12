@@ -2,6 +2,7 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import android.util.Log;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.ToggleButton;
@@ -136,12 +137,12 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
    private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
       boolean img = false;
       for (StepImage imageinfo : imageList) {
-         if (imageinfo.getImageid() > 0) {
+         if (imageinfo.getImageObject().id > 0) {
             img = true;
             imagView.setScaleType(ScaleType.FIT_CENTER);
-            mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(),
+            mImageManager.displayImage(imageinfo.getImageObject().thumbnail,
                mPortalRef.getActivity(), imagView);
-            imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
+            imagView.setTag(imageinfo.getImageObject().thumbnail);
             imagView.invalidate();
             return;
          }

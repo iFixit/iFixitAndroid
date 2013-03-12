@@ -354,9 +354,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       }
       imagView.setScaleType(ScaleType.FIT_CENTER);
       imagView.setBackgroundColor(Color.TRANSPARENT);
-      mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(), getActivity(),
+      mImageManager.displayImage(imageinfo.getImageObject().thumbnail, getActivity(),
          imagView);
-      imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
+      imagView.setTag(imageinfo.getImageObject().medium);
       imagView.invalidate();
       setMainImage(imageinfo.getImageid(), imagView);
    }
