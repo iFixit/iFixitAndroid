@@ -165,6 +165,10 @@ public class GuideStepViewFragment extends Fragment {
       mTitle.setText(mStep.getTitle());
       mTitle.setTypeface(mFont);
       
+      // Initialize the step instructions text and bullets
+      mTextAdapter = new StepTextArrayAdapter(mContext, R.id.step_text_list, mStep.getLines());
+      mLineList.setAdapter(mTextAdapter);
+      
       // Initialize the step media
       if (mStep.hasVideo()) {
          setVideo();
@@ -173,10 +177,6 @@ public class GuideStepViewFragment extends Fragment {
       } else if (mStep.hasImage()) {
          setImage();
       }
-      
-      // Initialize the step instructions text and bullets
-      mTextAdapter = new StepTextArrayAdapter(mContext, R.id.step_text_list, mStep.getLines());
-      mLineList.setAdapter(mTextAdapter);
    }
    
    private void setImage() {
