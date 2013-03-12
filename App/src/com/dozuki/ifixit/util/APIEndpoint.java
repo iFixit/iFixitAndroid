@@ -117,7 +117,7 @@ public enum APIEndpoint {
    REGISTER(
       new Endpoint() {
          public String createUrl(String query) {
-            return "user";
+            return "users";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
