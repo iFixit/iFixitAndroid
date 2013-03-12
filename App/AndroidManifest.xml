@@ -63,9 +63,12 @@
             android:theme="@style/Holo.Theme.Light.NoActionBar">
       </activity>
       <activity android:name=".guide_view.ui.VideoViewActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Holo.NoActionBar">
       </activity>
       <activity android:name=".guide_view.ui.EmbedViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@android:style/Theme.Holo.NoActionBar">
       </activity>
    </application>

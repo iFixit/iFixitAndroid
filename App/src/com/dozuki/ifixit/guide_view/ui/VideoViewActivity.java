@@ -36,17 +36,16 @@ public class VideoViewActivity extends Activity {
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       setContentView(R.layout.video_view);
-      Bundle extras = getIntent().getExtras();
-      mVideoUrl = (String) extras.get(VIDEO_URL);
 
       mVideoView = (VideoView) findViewById(R.id.video_view);
+
+      Bundle extras = getIntent().getExtras();
+      mVideoUrl = (String) extras.get(VIDEO_URL);
 
       MediaController mc = new MediaController(this);
       mVideoView.setMediaController(mc);
 
-      Uri uri = Uri.parse(mVideoUrl);
-      
-      mVideoView.setVideoURI(uri);
+      mVideoView.setVideoURI(Uri.parse(mVideoUrl));
 
       mProgressDialog = ProgressDialog.show(mContext, 
          getString(R.string.video_activity_progress_title),
@@ -54,13 +53,16 @@ public class VideoViewActivity extends Activity {
 
       mVideoView.setOnPreparedListener(new OnPreparedListener() {
          public void onPrepared(MediaPlayer mp) {
-            mProgressDialog.dismiss();
-
-            mVideoView.requestFocus();
-            mVideoView.start();
-         }
-      });
       
+            if (mProgressDialog != null)
+               mProgressDialog.dismiss();
+            
+            mVideoView.requestFocus();            
+            mp.start();
+            
+         }
+      });                  
+
       mVideoView.setOnCompletionListener(new OnCompletionListener() {
          MediaPlayer mMediaPlayer;
          
