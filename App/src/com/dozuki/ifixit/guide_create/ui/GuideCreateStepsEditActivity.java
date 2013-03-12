@@ -2,6 +2,10 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import com.dozuki.ifixit.guide_create.model.UserGuide;
+import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
+import com.squareup.otto.Subscribe;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.Toast;
@@ -96,7 +100,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       mPagePosition = 0;
       if (extras != null) {
          mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
-         mPagePosition = extras.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
+         mPagePosition = 0;//xtras.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mStepList = (ArrayList<GuideCreateStepObject>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
       }
       if (savedInstanceState != null) {
@@ -286,9 +290,22 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       }
       disableSave();
       mSavingIndicator.setVisibility(View.VISIBLE);
-      mGuide.sync(mCurStepFragment.syncGuideChanges(), mPagePosition);
-      mSavingIndicator.setVisibility(View.GONE);
-      mIsStepDirty = false;
+      mGuide.sync(mCurStepFragment.getGuideChanges(), mPagePosition);
+      APIService.getEditStepAPICall(mGuide.getSteps().get(mPagePosition), mGuide.getGuideid()) ;
+
+
+   }
+
+
+   @Subscribe
+   public void onStepSaved(APIEvent.StepSave event) {
+      if (!event.hasError()) {
+
+         mSavingIndicator.setVisibility(View.GONE);
+         mIsStepDirty = false;
+      } else {
+         ///TODO: handle the error case
+      }
    }
 
    @Override

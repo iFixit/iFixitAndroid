@@ -64,4 +64,8 @@ public class StepLine implements Serializable {
    public String toString() {
       return "{StepLine: " + mLineid + ", " + mColor + ", " + mLevel + ", " + mText + "}";
    }
+
+   public int getLineId() {
+      return mLineid;
+   }
 }

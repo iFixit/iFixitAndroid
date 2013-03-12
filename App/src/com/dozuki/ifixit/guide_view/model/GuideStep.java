@@ -95,4 +95,9 @@ public class GuideStep implements Serializable {
       return "{GuideStep: " + mGuideid + ", " + mStepid + ", " + mRevisionid + ", " +
        mOrderby + ", " + mStepNum + ", " + mTitle +  ", " + mLines + ", " + mImages + "}";
    }
+
+
+   public Integer getRevisionid() {
+      return mRevisionid;
+   }
 }

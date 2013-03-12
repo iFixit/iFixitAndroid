@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import com.dozuki.ifixit.guide_create.model.UserGuide;
 import org.holoeverywhere.app.Fragment;
 
 import android.os.Bundle;
@@ -50,8 +51,6 @@ public class GuidePortalFragment extends Fragment {
       if (savedInstanceState != null) {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
       }
-
-      APIService.call((Activity) getActivity(), APIService.getUserGuidesAPICall());
    }
 
    @Override
@@ -74,35 +73,31 @@ public class GuidePortalFragment extends Fragment {
       return view;
    }
 
+
+   @Override
+   public void onStart() {
+       super.onStart();
+       if (mParentRef.getGuideList().size() == 0) {
+           APIService.call((Activity) getActivity(), APIService.getUserGuidesAPICall());
+       }
+
+   }
+
    @Subscribe
    public void onUserGuides(APIEvent.UserGuides event) {
       if (!event.hasError()) {
          mParentRef.getGuideList().removeAll(event.getResult());
-
-         /**
-          * TODO: Update this list to use UserGuide objects. The user guides
-          * endpoint only returns a tiny amount of info about the guide so
-          * a separate API call will have to be made to retrieve the full
-          * guide to edit it.
-          */
-         //mParentRef.getGuideList().addAll(event.getResult());
+         mParentRef.getGuideList().addAll(event.getResult());
          mGuideAdapter.notifyDataSetChanged();
+         if(event.getResult().size() > 0 && mNoGuidesText != null) {
+            mNoGuidesText.setVisibility(View.GONE);
+         }
       } else {
          // TODO
          // APIService.getErrorDialog(TopicsActivity.this, event.getError(), APIService.getCategoriesAPICall()).show();
       }
    }
 
-   @Subscribe
-   public void onGuideCreated(APIEvent.CreateGuide event) {
-      if (!event.hasError()) {
-         mParentRef.getGuideList().add(event.getResult());
-         mGuideAdapter.notifyDataSetChanged();
-      } else {
-         // TODO
-         // APIService.getErrorDialog(TopicsActivity.this, event.getError(), APIService.getCategoriesAPICall()).show();
-      }
-   }
 
    @Override
    public void onResume() {
@@ -118,7 +113,7 @@ public class GuidePortalFragment extends Fragment {
       MainApplication.getBus().unregister(this);
    }
 
-   public void deleteGuide(GuideCreateObject item) {
+   public void deleteGuide(UserGuide item) {
       mParentRef.createDeleteDialog(item).show();    
    }
 
@@ -146,11 +141,15 @@ public class GuidePortalFragment extends Fragment {
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
          GuideCreateListItem itemView = (GuideCreateListItem) convertView;
-         GuideCreateObject listRef = mParentRef.getGuideList().get(position);
+         UserGuide listRef = mParentRef.getGuideList().get(position);
          itemView = new GuideCreateListItem(getActivity(), mImageManager, mSelf, listRef);
          itemView.setTag(listRef.getGuideid());
          itemView.setGuideObject(listRef);
-         itemView.setGuideItem(listRef.getTitle(), "");
+         String image = listRef.getImageObject().thumbnail;
+         if(image == null) {
+            image = "";
+         }
+         itemView.setGuideItem(listRef.getTitle(), image);
          return itemView;
       }
    }

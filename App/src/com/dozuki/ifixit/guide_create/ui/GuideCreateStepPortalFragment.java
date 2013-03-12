@@ -52,15 +52,6 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    private GuideCreateStepObject mStepForDelete;
    private boolean mShowingDelete;
 
-   public GuideCreateStepPortalFragment(GuideCreateObject guide) {
-      super();
-      mGuide = guide;
-      mSelf = this;
-   }
-
-   public GuideCreateStepPortalFragment() {
-      super();
-   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -68,28 +59,34 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
+
+      int guidid = this.getArguments().getInt(GuideCreateStepsActivity.GUIDE_KEY);
+      mSelf = this;
       mStepAdapter = new StepAdapter();
       mCurOpenGuideObjectID = NO_ID;
       if (savedInstanceState != null) {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
-         mStepForDelete = (GuideCreateStepObject) savedInstanceState.getSerializable(STEP_FOR_DELETE); 
-         
+         mStepForDelete = (GuideCreateStepObject) savedInstanceState.getSerializable(STEP_FOR_DELETE);
+         mGuide = (GuideCreateObject)savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
       }
-      APIService.call((Activity) getActivity(),
-       APIService.getGuideForEditAPICall(mGuide.getGuideid()));
+      if(mGuide == null) {
+        APIService.call((Activity) getActivity(),
+          APIService.getGuideForEditAPICall(guidid));
+      }
    }
 
    @Subscribe
    public void onGuideForEdit(APIEvent.GuideForEdit event) {
       if (!event.hasError()) {
-         // TODO
+          mGuide = event.getResult();
+          mStepAdapter.notifyDataSetChanged();
       } else {
          // TODO
       }
    }
 
-   @Subscribe
+    @Subscribe
    public void onGuideCreated(APIEvent.Guide event) {
       if (!event.hasError()) {
          for (GuideStep gs : event.getResult().getStepList())
@@ -139,9 +136,9 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
       verifyReorder();
       mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
-      if (mGuide.getSteps().isEmpty()) {
-         mNoStepsText.setVisibility(View.VISIBLE);
-      }
+     // if (mGuide.getSteps().isEmpty()) {
+     //    mNoStepsText.setVisibility(View.VISIBLE);
+     // }
       mStepList.setAdapter(mStepAdapter);
       if( mShowingDelete) {
          createDeleteDialog(mStepForDelete).show();
@@ -157,6 +154,9 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
 
       @Override
       public int getCount() {
+          if(mGuide == null) {
+              return 0;
+          }
          return mGuide.getSteps().size();
       }
 
@@ -179,7 +179,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          return itemView;
       }
    }
-   
+
    private void launchGuideEditIntro() {
       GuideIntroFragment newFragment = new GuideIntroFragment();
       newFragment.setGuideOBject(mGuide);
@@ -249,7 +249,9 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
       savedInstanceState.putSerializable(STEP_FOR_DELETE, mStepForDelete);
       savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
-      
+      savedInstanceState.putSerializable(GuideCreateStepsActivity.GUIDE_KEY,
+               mGuide);
+
       super.onSaveInstanceState(savedInstanceState);
    }
 
@@ -261,7 +263,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       closeSelectedStep();
       mCurOpenGuideObjectID = id;
    }
-   
+
    private void closeSelectedStep() {
       if (mCurOpenGuideObjectID != NO_ID) {
          GuideCreateStepListItem view = ((GuideCreateStepListItem) mStepList.findViewWithTag(mCurOpenGuideObjectID));
@@ -276,7 +278,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       }
       mCurOpenGuideObjectID = NO_ID;
    }
-   
+
    public AlertDialog createDeleteDialog(GuideCreateStepObject item) {
       mStepForDelete = item;
       mShowingDelete = true;
@@ -320,9 +322,9 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    @Override
    public void onReorderComplete() {
       mStepAdapter.notifyDataSetChanged();
-      
+
    }
-   
+
    void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
       Intent intent = new Intent(getActivity(), GuideCreateStepsEditActivity.class);
       intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);

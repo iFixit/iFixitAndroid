@@ -16,6 +16,8 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.login.ui.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
@@ -242,19 +244,16 @@ public class APIService extends Service {
       return apiCall;
    }
 
-   /**
-    * TODO: Pass in entire guide so parameters can easily be changed later.
-    */
-   public static APICall getCreateGuideAPICall(String device, String title, String summary,
-    String intro, String guideType, String subject) {
+
+   public static APICall getCreateGuideAPICall(UserGuide guide) {
       JSONObject requestBody = new JSONObject();
 
       try {
-         requestBody.put("topic", device);
-         requestBody.put("type", guideType);
-         requestBody.put("subject", subject);
-         requestBody.put("title", title);
-         requestBody.put("summary", summary);
+         requestBody.put("topic", guide.getTopic());
+         requestBody.put("type", guide.getType());
+         requestBody.put("subject", guide.getSubject());
+         requestBody.put("title", guide.getTitle());
+         requestBody.put("summary", guide.getSummary());
       } catch (JSONException e) {
          return null;
       }
@@ -280,6 +279,20 @@ public class APIService extends Service {
       }
 
       return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid, requestBody.toString());
+   }
+
+   public static APICall getEditStepAPICall(GuideCreateStepObject step, int guideid) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("title", step.getTitle());
+         requestBody.put("lines", JSONHelper.createLineArray(step.getLines()));
+         requestBody.put("media", JSONHelper.createStepMediaJsonObject(step));
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new APICall(APIEndpoint.UPDATE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepId() + "?revisionid=" + step.getRevisionid(), requestBody.toString());
    }
 
    /**

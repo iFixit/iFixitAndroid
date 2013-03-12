@@ -7,194 +7,207 @@ import com.dozuki.ifixit.guide_view.model.Guide;
 import com.dozuki.ifixit.guide_view.model.GuideStep;
 
 public class GuideCreateObject implements Serializable {
-   private static final long serialVersionUID = -356754234536788271L;
+    private static final long serialVersionUID = -356754234536788271L;
 
-   private static final String DEFUALT_TITLE = "Title";
-   protected int mGuideid;
-   protected String mTitle;
-   protected String mTopic;
-   protected String mAuthor;
-   protected String mTimeRequired;
-   protected String mDifficulty;
-   protected String mIntroduction;
-   protected String mSubject;
-   protected String mIntroImage;
-   protected String mSummary;
-   protected boolean mEditMode;
-   protected boolean mPublished;
-   protected ArrayList<GuideCreateStepObject> mStepList;
+    private static final String DEFUALT_TITLE = "Title";
+    protected int mGuideid;
+    protected String mTitle;
+    protected String mTopic;
+    protected String mAuthor;
+    protected String mTimeRequired;
+    protected String mDifficulty;
+    protected String mIntroduction;
+    protected String mSubject;
+    //protected String mIntroImage;
+    protected ImageObject mIntroImage = new ImageObject();
+    protected String mSummary;
+    protected boolean mEditMode;
+    protected boolean mPublished;
+    protected ArrayList<GuideCreateStepObject> mStepList;
 
-   public GuideCreateObject(int guideid) {
-      mGuideid = guideid;
-   }
+    public GuideCreateObject(int guideid) {
+        mGuideid = guideid;
+    }
 
-   public GuideCreateObject(Guide guide) {
-      mStepList = new ArrayList<GuideCreateStepObject>();
-      mGuideid = guide.getGuideid();
-      mTitle = guide.getTitle();
-      mTopic = guide.getTopic();
-      mAuthor = guide.getAuthor();
-      mTimeRequired = guide.getTimeRequired();
-      mDifficulty = guide.getDifficulty();
-      mIntroduction = guide.getIntroduction();
-      mSubject = guide.getSubject();
-      mIntroImage = guide.getIntroImage();
-      mSummary = guide.getSummary();
+    public GuideCreateObject() {
+        mStepList = new ArrayList<GuideCreateStepObject>();
+    }
 
-      for (GuideStep gs : guide.getStepList()) {
-         mStepList.add(new GuideCreateStepObject(gs));
-      }
-   }
+    public GuideCreateObject(Guide guide) {
+        mStepList = new ArrayList<GuideCreateStepObject>();
+        mGuideid = guide.getGuideid();
+        mTitle = guide.getTitle();
+        mTopic = guide.getTopic();
+        mAuthor = guide.getAuthor();
+        mTimeRequired = guide.getTimeRequired();
+        mDifficulty = guide.getDifficulty();
+        mIntroduction = guide.getIntroduction();
+        mSubject = guide.getSubject();
+        //   mIntroImage = guide.getIntroImage();
+        mSummary = guide.getSummary();
 
-   public void setStepList(ArrayList<GuideCreateStepObject> stepList) {
-      mStepList = stepList;
-   }
+        for (GuideStep gs : guide.getStepList()) {
+            mStepList.add(new GuideCreateStepObject(gs));
+        }
+    }
 
-   public void deleteStep(GuideCreateStepObject step) {
-      mStepList.remove(step);
-   }
+    public void setStepList(ArrayList<GuideCreateStepObject> stepList) {
+        mStepList = stepList;
+    }
 
-   public ArrayList<GuideCreateStepObject> getSteps() {
-      return mStepList;
-   }
+    public void addStep(GuideCreateStepObject step) {
+        mStepList.add(step);
+    }
 
-   public void setEditMode(boolean editMode) {
-      mEditMode = editMode;
-   }
+    public void deleteStep(GuideCreateStepObject step) {
+        mStepList.remove(step);
+    }
 
-   public boolean getEditMode() {
-      return mEditMode;
-   }
+    public ArrayList<GuideCreateStepObject> getSteps() {
+        return mStepList;
+    }
 
-   public void setPublished(boolean published) {
-      mPublished = published;
-   }
+    public void setEditMode(boolean editMode) {
+        mEditMode = editMode;
+    }
 
-   public boolean getPublished() {
-      return mPublished;
-   }
+    public boolean getEditMode() {
+        return mEditMode;
+    }
 
-   public void setGuideid(int guideid) {
-      mGuideid = guideid;
-   }
+    public void setPublished(boolean published) {
+        mPublished = published;
+    }
 
-   public int getGuideid() {
-      return mGuideid;
-   }
+    public boolean getPublished() {
+        return mPublished;
+    }
 
-   public void setTitle(String title) {
-      if (title.length() == 0) {
-         title = DEFUALT_TITLE;
-      }
-      mTitle = title;
-   }
+    public void setGuideid(int guideid) {
+        mGuideid = guideid;
+    }
 
-   public String getTitle() {
-      return mTitle;
-   }
+    public int getGuideid() {
+        return mGuideid;
+    }
 
-   public String getDisplayTitle() {
-      if (!(mSubject.equals("null") || mSubject.length() == 0)) {
-         return mSubject;
-      } else {
-         return mTitle;
-      }
-   }
+    public void setTitle(String title) {
+        if (title.length() == 0) {
+            title = DEFUALT_TITLE;
+        }
+        mTitle = title;
+    }
 
-   public void setTopic(String topic) {
-      mTopic = topic;
-   }
+    public String getTitle() {
+        return mTitle;
+    }
 
-   public String getTopic() {
-      return mTopic;
-   }
+    public String getDisplayTitle() {
+        if (!(mSubject.equals("null") || mSubject.length() == 0)) {
+            return mSubject;
+        } else {
+            return mTitle;
+        }
+    }
 
-   public void setAuthor(String author) {
-      mAuthor = author;
-   }
+    public void setTopic(String topic) {
+        mTopic = topic;
+    }
 
-   public String getAuthor() {
-      return mAuthor;
-   }
+    public String getTopic() {
+        return mTopic;
+    }
 
-   public void setTimeRequired(String timeRequired) {
-      mTimeRequired = timeRequired;
-   }
+    public void setAuthor(String author) {
+        mAuthor = author;
+    }
 
-   public String getTimeRequired() {
-      return mTimeRequired;
-   }
+    public String getAuthor() {
+        return mAuthor;
+    }
 
-   public void setDifficulty(String difficulty) {
-      mDifficulty = difficulty;
-   }
+    public void setTimeRequired(String timeRequired) {
+        mTimeRequired = timeRequired;
+    }
 
-   public String getDifficulty() {
-      return mDifficulty;
-   }
+    public String getTimeRequired() {
+        return mTimeRequired;
+    }
 
-   public void setIntroduction(String introduction) {
-      mIntroduction = introduction;
-   }
+    public void setDifficulty(String difficulty) {
+        mDifficulty = difficulty;
+    }
 
-   public String getIntroduction() {
-      return mIntroduction;
-   }
+    public String getDifficulty() {
+        return mDifficulty;
+    }
 
-   public void setIntroImage(String url) {
-      mIntroImage = url;
-   }
+    public void setIntroduction(String introduction) {
+        mIntroduction = introduction;
+    }
 
-   public String getIntroImage() {
-      return mIntroImage;
-   }
+    public String getIntroduction() {
+        return mIntroduction;
+    }
 
-   public void setSummary(String summary) {
-      mSummary = summary;
-   }
+    public void setIntroImage(ImageObject io) {
+        mIntroImage = io;
+    }
 
-   public String getSummary() {
-      return mSummary;
-   }
+    public ImageObject getIntroImage() {
+        return mIntroImage;
+    }
 
-   public String getSubject() {
-      return mSubject;
-   }
+    public void setSummary(String summary) {
+        mSummary = summary;
+    }
 
-   public void setSubject(String subject) {
-      mSubject = subject;
-   }
+    public String getSummary() {
+        return mSummary;
+    }
 
-   public String toString() {
-      return "{" + mGuideid + "\n" + mTitle + "\n" + mTopic + "\n" + mAuthor + "\n" + mTimeRequired + "\n"
-         + mDifficulty + "\n" + mIntroduction + "\n" + mSummary + "\n" + mSummary + "}";
-   }
+    public String getSubject() {
+        return mSubject;
+    }
 
-   @Override
-   public boolean equals(Object o) {
-      if (this == o) {
-         return true;
-      }
-      if (!(o instanceof GuideCreateObject)) {
-         return false;
-      }
-      GuideCreateObject lhs = (GuideCreateObject) o;
-      return mGuideid == lhs.mGuideid;
-   }
+    public void setSubject(String subject) {
+        mSubject = subject;
+    }
 
-   public void sync(GuideCreateStepObject changedStep, int position) {
+    public String toString() {
+        return "{" + mGuideid + "\n" + mTitle + "\n" + mTopic + "\n" + mAuthor + "\n" + mTimeRequired + "\n"
+                + mDifficulty + "\n" + mIntroduction + "\n" + mSummary + "\n" + mSummary + "}";
+    }
 
-      for (GuideCreateStepObject so : mStepList) {
-         if (so.equals(changedStep)) {
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (!(o instanceof GuideCreateObject)) {
+            return false;
+        }
+        GuideCreateObject lhs = (GuideCreateObject) o;
+        return mGuideid == lhs.mGuideid;
+    }
 
-            so.setTitle(changedStep.getTitle());
-            so.setImages(changedStep.getImages());
-            so.setLines(changedStep.getLines());
-            return;
-         }
-      }
+    public void sync(GuideCreateStepObject changedStep, int position) {
 
-      mStepList.add(position, changedStep);
+        for (GuideCreateStepObject so : mStepList) {
+            if (so.equals(changedStep)) {
 
-   }
+                so.setTitle(changedStep.getTitle());
+                so.setImages(changedStep.getImages());
+                so.setLines(changedStep.getLines());
+                return;
+            }
+        }
+
+        mStepList.add(position, changedStep);
+
+    }
+
+    public void setImageObject(ImageObject io) {
+        mIntroImage = io;
+    }
 }
