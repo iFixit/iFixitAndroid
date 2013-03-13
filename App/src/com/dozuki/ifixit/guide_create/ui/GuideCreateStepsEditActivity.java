@@ -168,7 +168,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          hideLoading();
          mIsStepDirty = false;
       } else {
-         // TODO handle errors hideLoading();
+         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(),
+                 APIService.getCategoriesAPICall()).show();
       }
    }
 
@@ -181,7 +182,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             .setRevisionid((event.getResult().getSteps().get(mSavePosition).getRevisionid()));
          hideLoading();
       } else {
-         // TODO handle errors hideLoading();
+         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(),
+                 APIService.getCategoriesAPICall()).show();
       }
    }
 
@@ -192,7 +194,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          deleteStep();
          hideLoading();
       } else {
-         // todo error
+         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(),
+                 APIService.getCategoriesAPICall()).show();
       }
    }
 

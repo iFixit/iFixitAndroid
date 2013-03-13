@@ -86,14 +86,14 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          mStepAdapter.notifyDataSetChanged();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         // TODO error
+         APIService.getErrorDialog(getActivity(), event.getError(),
+                 APIService.getCategoriesAPICall()).show();
       }
    }
 
    @Subscribe
    public void onGuideStepDeleted(APIEvent.StepRemove event) {
       if (!event.hasError()) {
-         Log.e("DEFEF", "EFEFF");
          mGuide.deleteStep(mStepForDelete);
          for (int i = 0; i < mGuide.getSteps().size(); i++) {
             mGuide.getSteps().get(i).setStepNum(i);
@@ -106,7 +106,8 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          verifyReorder();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         //todo error
+         APIService.getErrorDialog(getActivity(), event.getError(),
+                 APIService.getCategoriesAPICall()).show();
       }
    }
 
@@ -115,7 +116,8 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       if (!event.hasError()) {
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         // TODO error
+         APIService.getErrorDialog(getActivity(), event.getError(),
+                 APIService.getCategoriesAPICall()).show();
       }
    }
 
