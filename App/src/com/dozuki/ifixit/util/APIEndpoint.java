@@ -410,43 +410,64 @@ public enum APIEndpoint {
    REORDER_GUIDE_STEPS(
       new Endpoint() {
          public String createUrl(String query) {
-            return "guides/" +  query + "/steporder";
+            return "guides/" +  query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return null;
-            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.StepReorder().setResult(JSONHelper.parseUserGuide(json));
          }
 
          public APIEvent<?> getEvent() {
-            return null;
-           // return new APIEvent.CreateGuide();
+            return new APIEvent.StepReorder();
          }
       },
       true,
       "PUT",
       false
    ),
-   UPDATE_GUIDE_STEP(
-      new Endpoint() {
-         public String createUrl(String query) {
-            return "guides/" +  query;
-         }
+   
+   ADD_GUIDE_STEP(new Endpoint() {
+      public String createUrl(String query) {
+         return "guides/" + query;
+      }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.StepSave().setResult(JSONHelper.parseUserGuide(json));
-         }
+      public APIEvent<?> parse(String json) throws JSONException {
+         return new APIEvent.StepAdd().setResult(JSONHelper.parseUserGuide(json));
+      }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.StepSave();
-         }
-      },
-      true,
-      "PATCH",
-      false
-   ),
+      public APIEvent<?> getEvent() {
+         return new APIEvent.StepAdd();
+      }
+   }, true, "POST", false),
+   
+   UPDATE_GUIDE_STEP(new Endpoint() {
+      public String createUrl(String query) {
+         return "guides/" + query;
+      }
 
+      public APIEvent<?> parse(String json) throws JSONException {
+         return new APIEvent.StepSave().setResult(JSONHelper.parseUserGuide(json));
+      }
 
+      public APIEvent<?> getEvent() {
+         return new APIEvent.StepSave();
+      }
+   }, true, "PATCH", false),
+
+   DELETE_GUIDE_STEP(new Endpoint() {
+      public String createUrl(String query) {
+         return "guides/" + query;
+      }
+
+      public APIEvent<?> parse(String json) throws JSONException {
+         return new APIEvent.StepRemove().setResult(JSONHelper.parseUserGuide(json));
+      }
+
+      public APIEvent<?> getEvent() {
+         return new APIEvent.StepRemove();
+      }
+   }, true, "DELETE", false),
+   
    SITES(
       new Endpoint() {
          public String createUrl(String query) {

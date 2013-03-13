@@ -60,23 +60,22 @@ public class GuideCreateStepEditFragment extends Fragment {
    }
 
 
-
    private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditMediaFrag.setStepTitle(mStepObject.getTitle());
       mEditMediaFrag.setStepNumber(mStepObject.getStepNum());
-      
-      if(mStepObject.getImages().size() > 0) {
+
+      if (mStepObject.getImages().size() > 0) {
 
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_1, mStepObject.getImages().get(0));
       }
 
-      if(mStepObject.getImages().size() > 1) {
+      if (mStepObject.getImages().size() > 1) {
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_2, mStepObject.getImages().get(1));
       }
-      
-      if(mStepObject.getImages().size() > 2) {
-         
+
+      if (mStepObject.getImages().size() > 2) {
+
          mEditMediaFrag.setImage(GuideCreateEditMediaFragment.IMAGE_KEY_3, mStepObject.getImages().get(2));
       }
       
@@ -109,19 +108,13 @@ public class GuideCreateStepEditFragment extends Fragment {
          mStepObject);
    }
 
-
-
    public void setMediaResult(int requestCode, int resultCode, Intent data) {
       mEditMediaFrag.onActivityResult(requestCode, resultCode, data);
    }
 
-
-
    public GuideCreateStepObject getStepObject() {
       return mStepObject;
    }
-
-
 
    public void setGuideStep(GuideCreateStepObject guideCreateStepObject) {
       mStepObject = guideCreateStepObject;

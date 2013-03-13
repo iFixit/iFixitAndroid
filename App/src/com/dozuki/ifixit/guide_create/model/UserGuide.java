@@ -19,8 +19,8 @@ public class UserGuide implements Serializable {
    protected ImageObject mImage = new ImageObject();
    protected boolean mEditMode; // save state for edit drop down
 
-   public UserGuide(int guideid, String subject, String topic, String title,
-                    boolean public_, int userid, String username) {
+   public UserGuide(int guideid, String subject, String topic, String title, boolean public_, int userid,
+      String username) {
       mGuideid = guideid;
       mSubject = subject;
       mTopic = topic;
@@ -34,7 +34,6 @@ public class UserGuide implements Serializable {
 
    }
 
-
    public String getTitle() {
       return mTitle;
    }
@@ -43,11 +42,9 @@ public class UserGuide implements Serializable {
       return mGuideid;
    }
 
-
    public void setGuideid(int gID) {
       mGuideid = gID;
    }
-
 
    public void setTitle(String title) {
       mTitle = title;
@@ -65,7 +62,6 @@ public class UserGuide implements Serializable {
       return mEditMode;
    }
 
-
    public boolean getPublished() {
       return mPublic;
    }
@@ -78,11 +74,9 @@ public class UserGuide implements Serializable {
       mSubject = sub;
    }
 
-
    public void setUserName(String user) {
       mUsername = user;
    }
-
 
    public void setUserid(int userid) {
       mUserid = userid;
@@ -96,7 +90,6 @@ public class UserGuide implements Serializable {
       return mImage;
    }
 
-
    public void setSummary(String sum) {
       mSummary = sum;
    }
@@ -104,7 +97,6 @@ public class UserGuide implements Serializable {
    public void setIntroduction(String intro) {
       mIntro = intro;
    }
-
 
    public void setDevice(String device) {
       mDevice = device;
@@ -129,6 +121,5 @@ public class UserGuide implements Serializable {
    public String getSummary() {
       return mSummary;
    }
-
 
 }

@@ -71,7 +71,7 @@ public class Site implements Serializable {
       if (siteName.equals("ifixit")) {
          site = new Site(2);
          site.mName = "ifixit";
-         site.mDomain = "www.ifixit.com";
+         site.mDomain = "telder.cominor.com";
          site.mTitle = "iFixit";
          site.mTheme = "custom";
          site.mPublic = true;

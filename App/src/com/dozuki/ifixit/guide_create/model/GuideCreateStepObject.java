@@ -30,7 +30,7 @@ public class GuideCreateStepObject implements Serializable {
    public GuideCreateStepObject(GuideStep gs) {
       mStepNum = gs.getStepNum();
       mImages = gs.getImages();
-
+      mStepId = gs.getStepid();
       mLines = gs.getLines();
       mTitle = gs.getTitle();
       mRevisionId = gs.getRevisionid();

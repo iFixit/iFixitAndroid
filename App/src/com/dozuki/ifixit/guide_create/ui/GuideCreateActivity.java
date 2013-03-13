@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.util.APIEvent;
 import com.squareup.otto.Subscribe;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 import android.app.AlertDialog;
@@ -271,6 +272,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          .setMessage(getString(R.string.confirm_delete_body) + " " + mGuideForDelete.getTitle() + "?")
          .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+               // / APIService.call(this, APIService.getRemoveGuideAPICall(mGuideForDelete));
+               // do after confirm delete
                mShowingDelete = false;
                getGuideList().remove(mGuideForDelete);
                if (getGuideList().isEmpty())
