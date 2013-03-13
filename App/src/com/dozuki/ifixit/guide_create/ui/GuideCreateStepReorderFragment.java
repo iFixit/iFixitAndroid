@@ -144,8 +144,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
 
       @Override
       public void onDestroyActionMode(ActionMode mode) {
-         getActivity().getSupportFragmentManager().popBackStack();
-
       }
 
       @Override
@@ -156,10 +154,12 @@ public class GuideCreateStepReorderFragment extends Fragment {
                   mStepsCopy.get(i).setStepNum(i);
                }
                mGuide.setStepList(mStepsCopy);
+               getActivity().getSupportFragmentManager().popBackStack();
                ((StepRearrangeListener) getActivity()).onReorderComplete(true);
                mode.finish(); // Action picked, so close the CAB
                return true;
             default:
+               getActivity().getSupportFragmentManager().popBackStack();
                ((StepRearrangeListener) getActivity()).onReorderComplete(false);
                mode.finish();
                return true;

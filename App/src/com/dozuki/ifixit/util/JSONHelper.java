@@ -132,7 +132,7 @@ public class JSONHelper {
        jTool.getString("thumbnail"), jTool.getString("notes"));
    }
 
-   private static GuideStep parseStep(JSONObject jStep, int stepNumber) throws JSONException {
+   public static GuideStep parseStep(JSONObject jStep, int stepNumber) throws JSONException {
       GuideStep step = new GuideStep(stepNumber);
 
       step.setGuideid(jStep.getInt("guideid"));
@@ -452,11 +452,16 @@ public class JSONHelper {
       guideObject.setAuthor(jGuide.getJSONObject("author").getString("text"));
       guideObject.setGuideid(jGuide.getInt("guideid"));
       guideObject.setRevisionid(jGuide.getInt("revisionid"));
+      guideObject.setTitle(jGuide.getString("title"));
+      guideObject.setSubject(jGuide.getString("subject"));
+      guideObject.setSummary(jGuide.getString("summary"));
+      guideObject.setIntroduction(jGuide.getString("introduction_raw"));
+     // guideObject.setType(json.getString("type"));
 
       // parse image;
 
       for (int i = 0; i < jSteps.length(); i++) {
-         guideObject.addStep(new GuideCreateStepObject(parseStep(jSteps.getJSONObject(i), i + 1)));
+         guideObject.addStep(new GuideCreateStepObject(parseStep(jSteps.getJSONObject(i), i)));
       }
       return guideObject;
    }

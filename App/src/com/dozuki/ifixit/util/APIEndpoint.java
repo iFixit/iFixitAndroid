@@ -8,6 +8,7 @@ import org.json.JSONException;
 import android.util.Log;
 
 import com.dozuki.ifixit.dozuki.model.Site;
+import org.json.JSONObject;
 
 /**
  * Defines all APIEndpoints.
@@ -368,17 +369,15 @@ public enum APIEndpoint {
    PUBLISH_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "guides/" +  query + "/public";
+            return "guides/" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return null;
-            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.PublishStatus().setResult(JSONHelper.parseUserGuide(json));
          }
 
          public APIEvent<?> getEvent() {
-            return null;
-           // return new APIEvent.CreateGuide();
+            return new APIEvent.PublishStatus();
          }
       },
       true,
@@ -393,13 +392,11 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return null;
-            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.PublishStatus().setResult(JSONHelper.parseUserGuide(json));
          }
 
          public APIEvent<?> getEvent() {
-            return null;
-           // return new APIEvent.CreateGuide();
+            return new APIEvent.PublishStatus();
          }
       },
       true,
@@ -446,7 +443,7 @@ public enum APIEndpoint {
       }
 
       public APIEvent<?> parse(String json) throws JSONException {
-         return new APIEvent.StepSave().setResult(JSONHelper.parseUserGuide(json));
+         return new APIEvent.StepSave().setResult(JSONHelper.parseStep(new JSONObject(json), 0));
       }
 
       public APIEvent<?> getEvent() {

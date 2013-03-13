@@ -194,7 +194,7 @@ public class GuideCreateObject implements Serializable {
 
    public void sync(GuideCreateStepObject changedStep, int position) {
 
-      for (GuideCreateStepObject so : mStepList) {
+   /*  for (GuideCreateStepObject so : mStepList) {
          if (so.equals(changedStep)) {
 
             so.setTitle(changedStep.getTitle());
@@ -202,10 +202,16 @@ public class GuideCreateObject implements Serializable {
             so.setLines(changedStep.getLines());
             return;
          }
+      }   */
+
+      if(mStepList.contains(changedStep)) {
+         mStepList.get(position).setTitle(changedStep.getTitle());
+         mStepList.get(position).setImages(changedStep.getImages());
+         mStepList.get(position).setLines(changedStep.getLines());
+         return;
       }
 
       mStepList.add(position, changedStep);
-
    }
 
    public void setImageObject(ImageObject io) {
