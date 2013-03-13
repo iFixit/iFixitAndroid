@@ -100,4 +100,8 @@ public class GuideStep implements Serializable {
    public Integer getRevisionid() {
       return mRevisionid;
    }
+
+   public Integer getStepid() {
+      return mStepid;
+   }
 }

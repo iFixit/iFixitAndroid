@@ -6,6 +6,7 @@ import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.ProgressBar;
 import org.holoeverywhere.widget.Toast;
@@ -291,11 +292,14 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       disableSave();
       mSavingIndicator.setVisibility(View.VISIBLE);
       mGuide.sync(mCurStepFragment.getGuideChanges(), mPagePosition);
-      APIService.getEditStepAPICall(mGuide.getSteps().get(mPagePosition), mGuide.getGuideid()) ;
-
-
+      if (mGuide.getSteps().get(mPagePosition).getStepId() != 0) {
+         APIService
+            .call(this, APIService.getEditStepAPICall(mGuide.getSteps().get(mPagePosition), mGuide.getGuideid()));
+      } else {
+         APIService
+                 .call(this, APIService.getAddStepAPICall(mGuide.getSteps().get(mPagePosition), mGuide.getGuideid(), mPagePosition + 1, mGuide.getRevisionid()));
+      }
    }
-
 
    @Subscribe
    public void onStepSaved(APIEvent.StepSave event) {
@@ -364,6 +368,12 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
 
    private void deleteStep() {
       int curStep = mPagePosition;
+      APIService.call(
+         this,
+         APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(),
+            mGuide.getSteps().get(mPagePosition)));
+
+      //////done later after confirm delete
       mStepList.remove(mPagePosition);
       if (mPagePosition < mGuide.getSteps().size()) {
          mGuide.getSteps().remove(mPagePosition);

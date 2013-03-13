@@ -188,8 +188,8 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    }
 
    @Override
-   public void onReorderComplete() {
+   public void onReorderComplete(boolean val) {
       ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
-         .onReorderComplete();
+         .onReorderComplete(val);
    }
 }

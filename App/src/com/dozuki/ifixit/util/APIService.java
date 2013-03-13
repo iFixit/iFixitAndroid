@@ -16,6 +16,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.login.model.User;
@@ -292,7 +293,50 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.UPDATE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepId() + "?revisionid=" + step.getRevisionid(), requestBody.toString());
+      return new APICall(APIEndpoint.UPDATE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepId() + "?revisionid="
+         + step.getRevisionid(), requestBody.toString());
+   }
+
+   public static APICall getAddStepAPICall(GuideCreateStepObject step, int guideid, int stepPosition, int revisionid) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("title", step.getTitle());
+         requestBody.put("lines", JSONHelper.createLineArray(step.getLines()));
+         requestBody.put("orderby", stepPosition);
+         requestBody.put("media", JSONHelper.createStepMediaJsonObject(step));
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new APICall(APIEndpoint.ADD_GUIDE_STEP, "" + guideid + "/steps" + "?revisionid=" + revisionid,
+         requestBody.toString());
+   }
+
+   public static APICall getRemoveStepAPICall(int guideid, int guideRevisionID, GuideCreateStepObject step) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("revisionid", step.getRevisionid());
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new APICall(APIEndpoint.DELETE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepId() + "?revisionid="
+         + step.getRevisionid(), requestBody.toString());
+   }
+
+   public static APICall getStepReorderAPICall(GuideCreateObject guide) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("stepids", JSONHelper.createStepIdArray(guide.getSteps()));
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new APICall(APIEndpoint.REORDER_GUIDE_STEPS, "" + guide.getGuideid() + "/steporder" + "?revisionid="
+         + guide.getRevisionid(), requestBody.toString());
    }
 
    /**

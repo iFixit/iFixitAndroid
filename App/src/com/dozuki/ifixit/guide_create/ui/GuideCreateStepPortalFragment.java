@@ -284,13 +284,16 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       mShowingDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
-         .setMessage(getString(R.string.confirm_delete_body) + " Step " + (mStepForDelete.getStepNum()+1) + "?")
+         .setMessage(getString(R.string.confirm_delete_body) + " Step " + (mStepForDelete.getStepNum() + 1) + "?")
          .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                mShowingDelete = false;
+
+               APIService.call((Activity) getActivity(),
+                  APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(), mStepForDelete));
+               //do this after confirm delete
                mGuide.deleteStep(mStepForDelete);
-               for(int i = 0 ; i < mGuide.getSteps().size() ; i++)
-               {
+               for (int i = 0; i < mGuide.getSteps().size(); i++) {
                   mGuide.getSteps().get(i).setStepNum(i);
                }
                if (mGuide.getSteps().isEmpty())
@@ -320,9 +323,11 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    }
 
    @Override
-   public void onReorderComplete() {
-      mStepAdapter.notifyDataSetChanged();
-
+   public void onReorderComplete(boolean reOrdered) {
+      if (reOrdered) {
+         mStepAdapter.notifyDataSetChanged();
+         APIService.call((Activity) getActivity(), APIService.getStepReorderAPICall(mGuide));
+      }
    }
 
    void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {

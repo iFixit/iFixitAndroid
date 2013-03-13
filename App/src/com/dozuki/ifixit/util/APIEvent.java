@@ -32,6 +32,9 @@ public abstract class APIEvent<T> {
    public static class GuideForEdit extends APIEvent<GuideCreateObject> {}
    public static class CreateGuide extends APIEvent<GuideCreateObject> {}
    public static class StepSave extends APIEvent<GuideCreateObject> {}
+   public static class StepReorder extends APIEvent<GuideCreateObject> {}
+   public static class StepAdd extends APIEvent<GuideCreateObject> {}
+   public static class StepRemove extends APIEvent<GuideCreateObject> {}
    public static class EditGuide extends APIEvent<GuideCreateObject> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}
    public static class UserInfo extends APIEvent<User> {}
