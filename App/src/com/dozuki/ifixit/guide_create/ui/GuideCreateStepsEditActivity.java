@@ -3,6 +3,7 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 
 import com.dozuki.ifixit.guide_create.model.UserGuide;
+import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -70,13 +71,12 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    private TitlePageIndicator titleIndicator;
    private RelativeLayout mBottomBar;
    private int mPagePosition;
+   private int mSavePosition;
    private boolean mConfirmDelete;
-   private ProgressBar mSavingIndicator;
    private boolean mIsStepDirty;
    private boolean mShowingHelp;
    private boolean mShowingSave;
 
-   // TODO: Add "swipey tabs" to top bar
    @SuppressWarnings("unchecked")
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -101,7 +101,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       mPagePosition = 0;
       if (extras != null) {
          mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
-         mPagePosition = 0;//xtras.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
+         mPagePosition = extras.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mStepList = (ArrayList<GuideCreateStepObject>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
       }
       if (savedInstanceState != null) {
@@ -130,7 +130,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
       mBottomBar = (RelativeLayout) findViewById(R.id.guide_create_edit_bottom_bar);
-      mSavingIndicator = (ProgressBar) findViewById(R.id.step_edit_save_progress_bar);
 
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
@@ -146,6 +145,55 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          createDeleteDialog(this).show();
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+   }
+
+   public void showLoading() {
+      if (mPager != null) {
+         mPager.setVisibility(View.GONE);
+      }
+      getSupportFragmentManager().beginTransaction()
+         .add(R.id.step_edit_loading_screen, new LoadingFragment(), "loading").addToBackStack("loading").commit();
+   }
+
+   public void hideLoading() {
+      if (mPager != null) {
+         mPager.setVisibility(View.VISIBLE);
+      }
+      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+   }
+
+   @Subscribe
+   public void onStepSave(APIEvent.StepSave event) {
+      if (!event.hasError()) {
+         hideLoading();
+         mIsStepDirty = false;
+      } else {
+         // TODO handle errors hideLoading();
+      }
+   }
+
+   @Subscribe
+   public void onStepAdd(APIEvent.StepAdd event) {
+      if (!event.hasError()) {
+         mIsStepDirty = false;
+         mGuide.getSteps().get(mSavePosition).setStepId(event.getResult().getSteps().get(mSavePosition).getStepId());
+         mGuide.getSteps().get(mSavePosition)
+            .setRevisionid((event.getResult().getSteps().get(mSavePosition).getRevisionid()));
+         hideLoading();
+      } else {
+         // TODO handle errors hideLoading();
+      }
+   }
+
+   @Subscribe
+   public void onGuideStepDeleted(APIEvent.StepRemove event) {
+      if (!event.hasError()) {
+         mIsStepDirty = false;
+         deleteStep();
+         hideLoading();
+      } else {
+         // todo error
+      }
    }
 
    @Override
@@ -275,7 +323,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(container.getWindowToken(), 0);
             if (mIsStepDirty) {
-               save();
+               save(mPagePosition);
             }
             disableSave();
             mIsStepDirty = false;
@@ -285,32 +333,23 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       }
    }
 
-   private void save() {
+   private void save(int savePosition) {
+      mSavePosition = savePosition;
       for (int i = 0; i < mStepList.size(); i++) {
          mStepList.get(i).setStepNum(i);
       }
       disableSave();
-      mSavingIndicator.setVisibility(View.VISIBLE);
-      mGuide.sync(mCurStepFragment.getGuideChanges(), mPagePosition);
-      if (mGuide.getSteps().get(mPagePosition).getStepId() != 0) {
+      mGuide.sync(mCurStepFragment.getGuideChanges(), mSavePosition);
+      showLoading();
+      if (mGuide.getSteps().get(mSavePosition).getRevisionid() != null) {
          APIService
-            .call(this, APIService.getEditStepAPICall(mGuide.getSteps().get(mPagePosition), mGuide.getGuideid()));
+            .call(this, APIService.getEditStepAPICall(mGuide.getSteps().get(mSavePosition), mGuide.getGuideid()));
       } else {
-         APIService
-                 .call(this, APIService.getAddStepAPICall(mGuide.getSteps().get(mPagePosition), mGuide.getGuideid(), mPagePosition + 1, mGuide.getRevisionid()));
+         APIService.call(this, APIService.getAddStepAPICall(mGuide.getSteps().get(mSavePosition), mGuide.getGuideid(),
+                 mPagePosition + 1, mGuide.getRevisionid()));
       }
    }
 
-   @Subscribe
-   public void onStepSaved(APIEvent.StepSave event) {
-      if (!event.hasError()) {
-
-         mSavingIndicator.setVisibility(View.GONE);
-         mIsStepDirty = false;
-      } else {
-         ///TODO: handle the error case
-      }
-   }
 
    @Override
    public void onClick(View v) {
@@ -321,14 +360,14 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             }
             break;
          case R.id.step_edit_view_save:
-            save();
+            save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
 
             if ((mGuide.getSteps().size() == (mPagePosition)) && mIsStepDirty) {
                // a convenience for the user
                // TODO: see if it can work with the API
-               save();
+               save(mPagePosition);
             } else if (mGuide.getSteps().size() < mPagePosition + 1) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
                   Toast.LENGTH_SHORT).show();
@@ -368,12 +407,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
 
    private void deleteStep() {
       int curStep = mPagePosition;
-      APIService.call(
-         this,
-         APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(),
-            mGuide.getSteps().get(mPagePosition)));
-
-      //////done later after confirm delete
       mStepList.remove(mPagePosition);
       if (mPagePosition < mGuide.getSteps().size()) {
          mGuide.getSteps().remove(mPagePosition);
@@ -411,8 +444,14 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             @Override
             public void onClick(DialogInterface dialog, int id) {
                mConfirmDelete = false;
-               deleteStep();
+               showLoading();
+               APIService.call(
+                       GuideCreateStepsEditActivity.this,
+                       APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(),
+                               mGuide.getSteps().get(mPagePosition)));
                dialog.cancel();
+
+
             }
          }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
             @Override
@@ -490,11 +529,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
          .setNegativeButton(getString(R.string.guide_create_confirm_leave_without_save_confirm),
             new DialogInterface.OnClickListener() {
-
                public void onClick(DialogInterface dialog, int id) {
-                  save();
-                  //TODO: this call should hold the doalog in place untill the step has been saved to 
-                  //the server
+                  save(mPagePosition);
                   dialog.dismiss();
                   finish();
                }

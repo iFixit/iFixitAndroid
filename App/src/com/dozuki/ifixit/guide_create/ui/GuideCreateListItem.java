@@ -3,6 +3,7 @@ package com.dozuki.ifixit.guide_create.ui;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.UserGuide;
+import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
 
 import android.content.Context;
@@ -22,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.ToggleButton;
+import org.holoeverywhere.app.Activity;
 
 public class GuideCreateListItem extends RelativeLayout implements AnimationListener {
    private static final int ANIMATION_DURATION = 300;
@@ -104,11 +106,13 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
 
    public void setPublished(boolean published) {
       if (published) {
+         APIService.call((Activity) mPortalRef.getActivity(), APIService.getPublishGuideAPICall(mGuideCreateObject.getGuideid(), 0));
          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_unpublish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
          setPublishedText(Color.rgb(0, 191, 0), R.string.published);
          setPublishedButton(img, R.string.unpublish);
       } else {
+         APIService.call((Activity) mPortalRef.getActivity(), APIService.getUnPublishGuideAPICall(mGuideCreateObject.getGuideid(), 0));
          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
          setPublishedText(Color.RED, R.string.unpublished);

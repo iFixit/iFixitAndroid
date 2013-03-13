@@ -118,4 +118,8 @@ public class GuideCreateStepObject implements Serializable {
    public Integer getRevisionid() {
       return mRevisionId;
    }
+
+   public void setRevisionid(Integer id) {
+      mRevisionId = id;
+   }
 }

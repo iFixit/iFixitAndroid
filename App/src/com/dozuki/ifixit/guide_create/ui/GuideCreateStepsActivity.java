@@ -2,12 +2,15 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
-import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -18,10 +21,15 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
+import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
+import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Dialog;
+import org.holoeverywhere.app.DialogFragment;
+import org.holoeverywhere.widget.ProgressBar;
 
 public class GuideCreateStepsActivity extends IfixitActivity implements GuideCreateIntroListener, StepRearrangeListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
@@ -51,18 +59,27 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       return mGuide;
    }
 
+   @Subscribe
+   public void onRetrievedGuide(APIEvent.GuideForEdit event) {
+      if (!event.hasError()) {
+         mGuide = event.getResult();
+         mStepList = mGuide.getSteps();
+         hideLoading();
+      } else {
+         // TODO handle errors hideLoading();
+      }
+   }
 
-    @Subscribe
-    public void onRetrievedGuide(APIEvent.GuideForEdit event) {
-        if (!event.hasError()) {
-            mGuide = event.getResult();
-           // if (mGuide.getSteps() == null)
-          //      mGuide.setStepList(new ArrayList<GuideCreateStepObject>());
-            mStepList = mGuide.getSteps();
-        } else {
-                      //TODO: error
-        }
-    }
+   @Subscribe
+   public void onIntroSavedGuide(APIEvent.EditGuide event) {
+      if (!event.hasError()) {
+         mGuide = event.getResult();
+         mStepList = mGuide.getSteps();
+         hideLoading();
+      } else {
+         // TODO handle errors hideLoading();
+      }
+   }
 
 
     @SuppressWarnings("unchecked")
@@ -75,12 +92,12 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       Bundle extras = getIntent().getExtras();
       int guideID = 0;
       if (extras != null) {
-          guideID = extras.getInt(GuideCreateStepsActivity.GUIDE_KEY);
+         guideID = extras.getInt(GuideCreateStepsActivity.GUIDE_KEY);
       }
       if (savedInstanceState != null) {
 
-          //to persist mGuide
-      //   mStepList = mGuide.getSteps();
+         // to persist mGuide
+         // mStepList = mGuide.getSteps();
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          if (mShowingHelp)
             createHelpDialog().show();
@@ -92,13 +109,28 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       if (findViewById(R.id.guide_create_fragment_steps_container) != null
          && getSupportFragmentManager().findFragmentByTag(tag) == null) {
          mStepPortalFragment = new GuideCreateStepPortalFragment();
-          Bundle fragArgs = new Bundle();
-          fragArgs.putInt(GUIDE_KEY, guideID );
-          mStepPortalFragment.setArguments(fragArgs);
+         Bundle fragArgs = new Bundle();
+         fragArgs.putInt(GUIDE_KEY, guideID);
+         mStepPortalFragment.setArguments(fragArgs);
          mStepPortalFragment.setRetainInstance(true);
          getSupportFragmentManager().beginTransaction()
             .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, tag).commit();
       }
+   }
+
+  public void showLoading() {
+
+     getSupportFragmentManager().beginTransaction()
+             .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading").commit();
+
+     if(mStepPortalFragment != null)    {
+        getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
+     }
+  }
+
+
+   public void hideLoading() {
+      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 
    @Override
@@ -183,8 +215,9 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       mGuide.setIntroduction(intro);
 
       APIService.call(this, APIService.getEditGuideAPICall(mGuide.getGuideid(),
-       device, title, summary, intro, guideType, thing));
+       device, title, summary, intro, guideType, thing, mGuide.getRevisionid()));
       getSupportFragmentManager().popBackStack();
+      showLoading();
    }
 
    @Override

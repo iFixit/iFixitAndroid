@@ -122,4 +122,9 @@ public class UserGuide implements Serializable {
       return mSummary;
    }
 
+   public String getIntro() {
+      return mIntro;
+   }
+
+
 }

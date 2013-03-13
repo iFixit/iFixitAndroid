@@ -2,6 +2,7 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import android.util.Log;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
@@ -71,6 +72,8 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          mGuide = (GuideCreateObject)savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
       }
       if(mGuide == null) {
+
+         ((GuideCreateStepsActivity)getActivity()).showLoading();
         APIService.call((Activity) getActivity(),
           APIService.getGuideForEditAPICall(guidid));
       }
@@ -79,21 +82,40 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    @Subscribe
    public void onGuideForEdit(APIEvent.GuideForEdit event) {
       if (!event.hasError()) {
-          mGuide = event.getResult();
-          mStepAdapter.notifyDataSetChanged();
+         mGuide = event.getResult();
+         mStepAdapter.notifyDataSetChanged();
+         ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         // TODO
+         // TODO error
       }
    }
 
-    @Subscribe
-   public void onGuideCreated(APIEvent.Guide event) {
+   @Subscribe
+   public void onGuideStepDeleted(APIEvent.StepRemove event) {
       if (!event.hasError()) {
-         for (GuideStep gs : event.getResult().getStepList())
-            mGuide.getSteps().add(new GuideCreateStepObject(gs));
-         mStepAdapter.notifyDataSetChanged();
+         Log.e("DEFEF", "EFEFF");
+         mGuide.deleteStep(mStepForDelete);
+         for (int i = 0; i < mGuide.getSteps().size(); i++) {
+            mGuide.getSteps().get(i).setStepNum(i);
+         }
+         if (mGuide.getSteps().isEmpty()) {
+            mNoStepsText.setVisibility(View.VISIBLE);
+         }
+         mStepForDelete = null;
+         invalidateViews();
+         verifyReorder();
+         ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
+         //todo error
+      }
+   }
 
+   @Subscribe
+   public void onStepReorder(APIEvent.StepReorder event) {
+      if (!event.hasError()) {
+         ((GuideCreateStepsActivity) getActivity()).hideLoading();
+      } else {
+         // TODO error
       }
    }
 
@@ -289,19 +311,11 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
             public void onClick(DialogInterface dialog, int id) {
                mShowingDelete = false;
 
+               ((GuideCreateStepsActivity)getActivity()).showLoading();
                APIService.call((Activity) getActivity(),
                   APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(), mStepForDelete));
-               //do this after confirm delete
-               mGuide.deleteStep(mStepForDelete);
-               for (int i = 0; i < mGuide.getSteps().size(); i++) {
-                  mGuide.getSteps().get(i).setStepNum(i);
-               }
-               if (mGuide.getSteps().isEmpty())
-                  mNoStepsText.setVisibility(View.VISIBLE);
-               mStepForDelete = null;
-               invalidateViews();
-               verifyReorder();
                dialog.cancel();
+
             }
          }).setNegativeButton(getString(R.string.confirm_delete_cancel), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
@@ -315,7 +329,6 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingDelete = false;
-            mStepForDelete = null;
          }
       });
 
@@ -326,6 +339,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    public void onReorderComplete(boolean reOrdered) {
       if (reOrdered) {
          mStepAdapter.notifyDataSetChanged();
+         ((GuideCreateStepsActivity)getActivity()).showLoading();
          APIService.call((Activity) getActivity(), APIService.getStepReorderAPICall(mGuide));
       }
    }

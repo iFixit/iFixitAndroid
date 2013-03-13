@@ -88,4 +88,10 @@
 
     </RelativeLayout>
 
+
+    <FrameLayout
+            android:id="@+id/step_edit_loading_screen"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
 </RelativeLayout>

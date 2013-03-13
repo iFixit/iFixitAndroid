@@ -255,6 +255,7 @@ public class APIService extends Service {
          requestBody.put("subject", guide.getSubject());
          requestBody.put("title", guide.getTitle());
          requestBody.put("summary", guide.getSummary());
+         requestBody.put("introduction", guide.getIntro());
       } catch (JSONException e) {
          return null;
       }
@@ -266,7 +267,7 @@ public class APIService extends Service {
     * TODO: Pass in entire guide so parameters can easily be changed later.
     */
    public static APICall getEditGuideAPICall(int guideid, String device, String title,
-    String summary, String intro, String guideType, String subject) {
+    String summary, String intro, String guideType, String subject, int revisionid) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -275,11 +276,28 @@ public class APIService extends Service {
          requestBody.put("subject", subject);
          requestBody.put("title", title);
          requestBody.put("summary", summary);
+         requestBody.put("introduction", intro);
       } catch (JSONException e) {
          return null;
       }
 
-      return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid, requestBody.toString());
+      return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid + "?revisionid="
+              + revisionid, requestBody.toString());
+   }
+
+
+   public static APICall getPublishGuideAPICall(int guideid, int revisionid) {
+
+
+      return new APICall(APIEndpoint.PUBLISH_GUIDE, "" + guideid +  "/public" + "?revisionid="
+              + revisionid, "");
+   }
+
+   public static APICall getUnPublishGuideAPICall(int guideid, int revisionid) {
+
+
+      return new APICall(APIEndpoint.UNPUBLISH_GUIDE, "" + guideid +  "/public" + "?revisionid="
+              + revisionid, "");
    }
 
    public static APICall getEditStepAPICall(GuideCreateStepObject step, int guideid) {
