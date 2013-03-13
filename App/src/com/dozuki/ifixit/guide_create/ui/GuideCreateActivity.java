@@ -160,20 +160,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    }
 
    @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      super.onActivityResult(requestCode, resultCode, data);
-      if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
-         if (resultCode == RESULT_OK) {
-         //    UserGuide guide = (UserGuide) data.getSerializableExtra(GUIDE_KEY);
-          //  if (guide != null) {
-           //    mGuideList.set(mGuideList.indexOf(guide), guide);
-           // }
-         }
-      }
-     
-   }
-
-   @Override
    public void onFinishIntroInput(String device, String title, String summary,
     String intro, String guideType, String subject) {
       UserGuide guideObject = new UserGuide();//(GuideItemID++);
@@ -186,24 +172,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       guideObject.setIntroduction(intro);
       APIService.call(this, APIService.getCreateGuideAPICall(guideObject));
       getSupportFragmentManager().popBackStack();
-   }
-
-
-   @Subscribe
-   public void onGuideCreated(APIEvent.CreateGuide event) {
-      if (!event.hasError()) {
-         UserGuide userGuide = new UserGuide();
-         GuideCreateObject guideObject = event.getResult();
-
-         userGuide.setGuideid(guideObject.getGuideid());
-         userGuide.setImageObject(guideObject.getIntroImage());
-         userGuide.setTitle(guideObject.getTitle());
-         userGuide.setPublished(guideObject.getPublished());
-         mGuideList.add (userGuide);
-         launchStepEditOnNewGuide(guideObject);
-      } else {
-              ///TODO: handle the error case
-      }
    }
 
    public void launchStepEditOnNewGuide(GuideCreateObject guideObject) {
@@ -219,19 +187,15 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
    }
 
-
    @Override
    public void onResume() {
       super.onResume();
-   //   MainApplication.getBus().register(this);
       this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
    }
 
    @Override
    public void onPause() {
       super.onPause();
-
-  //    MainApplication.getBus().unregister(this);
    }
 
 

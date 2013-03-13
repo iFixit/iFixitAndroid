@@ -93,8 +93,8 @@ public class GuidePortalFragment extends Fragment {
             mNoGuidesText.setVisibility(View.GONE);
          }
       } else {
-         // TODO
-         // APIService.getErrorDialog(TopicsActivity.this, event.getError(), APIService.getCategoriesAPICall()).show();
+         APIService.getErrorDialog(getActivity(), event.getError(),
+                 APIService.getCategoriesAPICall()).show();
       }
    }
 
