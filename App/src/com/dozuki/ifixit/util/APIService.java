@@ -430,7 +430,12 @@ public class APIService extends Service {
 
    public static AlertDialog getErrorDialog(Context context, APIError error,
     APICall apiCall) {
-      return createErrorDialog(context, apiCall, error);
+      switch (error.mType) {
+         case INVALID_REVISION:
+            return createFatalErrorDialog(context, error);
+         default:
+            return createErrorDialog(context, apiCall, error);
+      }
    }
 
    public static AlertDialog getListMediaErrorDialog(Context context, APIError error,
@@ -446,7 +451,7 @@ public class APIService extends Service {
    public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext) {
       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
       builder.setTitle(mContext.getString(R.string.media_error_title))
-         .setPositiveButton(mContext.getString(R.string.media_error_confirm),
+         .setPositiveButton(mContext.getString(R.string.error_confirm),
          new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                //kill the media activity, and have them try again later
@@ -482,6 +487,29 @@ public class APIService extends Service {
       });
       return d;
    }
+
+
+   private static AlertDialog createFatalErrorDialog(final Context context, APIError error) {
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      builder.setTitle(error.mTitle)
+              .setMessage(error.mMessage)
+              .setPositiveButton(context.getString(R.string.error_confirm),
+                      new DialogInterface.OnClickListener() {
+                         public void onClick(DialogInterface dialog, int id) {
+                            ((Activity)context).finish();
+                         }
+                      });
+
+      AlertDialog d = builder.create();
+      d.setOnCancelListener(new OnCancelListener() {
+         @Override
+         public void onCancel(DialogInterface dialog) {
+            ((Activity)context).finish();
+         }
+      });
+      return d;
+   }
+
 
    private void performRequest(final APICall apiCall, final Responder responder) {
       final APIEndpoint endpoint = apiCall.mEndpoint;

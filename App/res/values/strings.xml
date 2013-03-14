@@ -25,8 +25,10 @@
     <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
     <string name="no_connection">No connection</string>
     <string name="no_connection_title">Connection error</string>
+    <string name="invalid_revision_error_title">Revision error</string>
+    <string name="invalid_revision_error">It looks like you may be editing a version of this guide that is out of date. To ensure you do not lose any information, please reload this guide.</string>
     <string name="media_error_title">Something went wrong. Try again later.</string>
-    <string name="media_error_confirm">OK</string>
+    <string name="error_confirm">OK</string>
     <string name="error_dialog_title">Error</string>
     <string name="media_help_title">What\'s this?</string>
     <string name="media_help_messege">This gallery is linked directly to your iFixit account. Any pictures you load into here will be available to you in your guide creation
