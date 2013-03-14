@@ -204,7 +204,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
             holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
             holder.stepNumber.setVisibility(View.VISIBLE);
          }
-         holder.mImageView.setImageDrawable(new ColorDrawable(getResources().getColor(R.color.fireswing_grey)));
          holder.mImageView.setTag("");
          setImageThumb(getItem(position).getImages(), holder.mImageView);
          holder.mImageView.invalidate();
@@ -216,7 +215,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
    private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
       boolean img = false;
       for (StepImage imageinfo : imageList) {
-         if (imageinfo.getImageObject().thumbnail != null && imageinfo.getImageObject().thumbnail.length()>0) {
+         if (imageinfo.getImageObject().id > 0) {
             imagView.setScaleType(ScaleType.FIT_CENTER);
             mImageManager.displayImage(imageinfo.getImageObject().thumbnail,
                getActivity(), imagView);
@@ -228,7 +227,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
 
       if (!img) {
          imagView.setScaleType(ScaleType.FIT_CENTER);
-         mImageManager.displayImage("", getActivity(), imagView);
          imagView.invalidate();
       }
 
