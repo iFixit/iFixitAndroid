@@ -86,8 +86,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       }
    }
 
-
-    @SuppressWarnings("unchecked")
+   @SuppressWarnings("unchecked")
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setTheme(((MainApplication) getApplication()).getSiteTheme());
@@ -122,20 +121,22 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
             .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, tag).commit();
       }
 
-       mStepPortalFragment = (GuideCreateStepPortalFragment)getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
+      mStepPortalFragment =
+         (GuideCreateStepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
    }
 
+   public void showLoading() {
+      setRequestedOrientation(getResources().getConfiguration().orientation);
+      mStepPortalFragment =
+         (GuideCreateStepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
+      getSupportFragmentManager().beginTransaction()
+         .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading")
+         .commit();
+      if (mStepPortalFragment != null) {
+         getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
+      }
 
-  public void showLoading() {
-     setRequestedOrientation( getResources().getConfiguration().orientation);
-     mStepPortalFragment = (GuideCreateStepPortalFragment)getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG) ;
-     getSupportFragmentManager().beginTransaction()
-             .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading").commit();
-     if(mStepPortalFragment != null)    {
-        getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
-     }
-
-  }
+   }
 
 
    public void hideLoading() {

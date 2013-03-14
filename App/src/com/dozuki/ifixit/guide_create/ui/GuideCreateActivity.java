@@ -158,6 +158,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          userGuide.setImageObject(guideObject.getIntroImage());
          userGuide.setTitle(guideObject.getTitle());
          userGuide.setPublished(guideObject.getPublished());
+         userGuide.setRevisionid(guideObject.getRevisionid());
          mGuideList.add(userGuide);
          launchStepEditOnNewGuide(guideObject);
       } else {
@@ -166,9 +167,35 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       }
    }
 
+
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+      if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
+         if (resultCode == RESULT_OK) {
+            GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GUIDE_KEY);
+            for (UserGuide g : mGuideList) {
+               if (g.getGuideid() == guide.getGuideid()) {
+                  g.setRevisionid(guide.getRevisionid());
+                  g.setTitle(guide.getTitle());
+                  g.setPublished(guide.getPublished());
+                  break;
+               }
+            }
+         }
+      }
+   }
+
    @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
       if (!event.hasError()) {
+         GuideCreateObject guide = event.getResult();
+         for (UserGuide g : mGuideList) {
+            if (g.getGuideid() == guide.getGuideid()) {
+               g.setRevisionid(guide.getRevisionid());
+               break;
+            }
+         }
          hideLoading();
       } else {
          event.setError(APIError.getRevisionError(this));

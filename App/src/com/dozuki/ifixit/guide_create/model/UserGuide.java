@@ -135,5 +135,16 @@ public class UserGuide implements Serializable {
       mRevisionId = id;
    }
 
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) {
+         return true;
+      }
+      if (!(o instanceof UserGuide)) {
+         return false;
+      }
+      UserGuide lhs = (UserGuide) o;
+      return mGuideid == lhs.mGuideid;
+   }
 
 }

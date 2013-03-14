@@ -102,6 +102,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
             mNoStepsText.setVisibility(View.VISIBLE);
          }
          mStepForDelete = null;
+         mGuide.setRevisionid(event.getResult().getRevisionid());
          invalidateViews();
          // verifyReorder();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
@@ -114,6 +115,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    @Subscribe
    public void onStepReorder(APIEvent.StepReorder event) {
       if (!event.hasError()) {
+         mGuide.setRevisionid(event.getResult().getRevisionid());
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
          event.setError(APIError.getRevisionError(getActivity()));

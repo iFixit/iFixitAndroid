@@ -179,6 +179,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @Subscribe
    public void onStepSave(APIEvent.StepSave event) {
       if (!event.hasError()) {
+         mGuide.getSteps().get(mSavePosition).setRevisionid(event.getResult().getRevisionid());
          hideLoading();
          mIsStepDirty = false;
       } else {
@@ -194,6 +195,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          mGuide.getSteps().get(mSavePosition).setStepId(event.getResult().getSteps().get(mSavePosition).getStepId());
          mGuide.getSteps().get(mSavePosition)
             .setRevisionid((event.getResult().getSteps().get(mSavePosition).getRevisionid()));
+         mGuide.setRevisionid(event.getResult().getRevisionid());
          hideLoading();
       } else {
          event.setError(APIError.getRevisionError(this));
@@ -205,6 +207,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    public void onGuideStepDeleted(APIEvent.StepRemove event) {
       if (!event.hasError()) {
          mIsStepDirty = false;
+         mGuide.setRevisionid(event.getResult().getRevisionid());
          deleteStep();
          hideLoading();
       } else {
