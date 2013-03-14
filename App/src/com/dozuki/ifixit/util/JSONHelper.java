@@ -519,7 +519,7 @@ public class JSONHelper {
       JSONArray array = new JSONArray();
 
       for (StepImage l : lines) {
-         array.put(l.getImageObject().id);
+         array.put(l.getImageObject().mId);
       }
       return array;
    }

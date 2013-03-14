@@ -137,12 +137,12 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
    private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
       boolean img = false;
       for (StepImage imageinfo : imageList) {
-         if (imageinfo.getImageObject().id > 0) {
+         if (imageinfo.getImageObject().mId > 0) {
             img = true;
             imagView.setScaleType(ScaleType.FIT_CENTER);
-            mImageManager.displayImage(imageinfo.getImageObject().thumbnail,
+            mImageManager.displayImage(imageinfo.getImageObject().mThumbnail,
                mPortalRef.getActivity(), imagView);
-            imagView.setTag(imageinfo.getImageObject().thumbnail);
+            imagView.setTag(imageinfo.getImageObject().mThumbnail);
             imagView.invalidate();
             return;
          }
