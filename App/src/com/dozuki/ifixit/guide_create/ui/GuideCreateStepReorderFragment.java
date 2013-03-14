@@ -50,6 +50,7 @@ public class GuideCreateStepReorderFragment extends Fragment {
    private ImageManager mImageManager;
    private GuideCreateObject mGuide;
    private ArrayList<GuideCreateStepObject> mStepsCopy;
+   private boolean mReturnVal;
 
    public void setGuide(GuideCreateObject guide) {
       mGuide = guide;
@@ -144,6 +145,8 @@ public class GuideCreateStepReorderFragment extends Fragment {
 
       @Override
       public void onDestroyActionMode(ActionMode mode) {
+         getActivity().getSupportFragmentManager().popBackStack();
+         ((StepRearrangeListener) getActivity()).onReorderComplete(mReturnVal);
       }
 
       @Override
@@ -154,13 +157,11 @@ public class GuideCreateStepReorderFragment extends Fragment {
                   mStepsCopy.get(i).setStepNum(i);
                }
                mGuide.setStepList(mStepsCopy);
-               getActivity().getSupportFragmentManager().popBackStack();
-               ((StepRearrangeListener) getActivity()).onReorderComplete(true);
+               mReturnVal = true;
                mode.finish(); // Action picked, so close the CAB
                return true;
             default:
-               getActivity().getSupportFragmentManager().popBackStack();
-               ((StepRearrangeListener) getActivity()).onReorderComplete(false);
+               mReturnVal = false;
                mode.finish();
                return true;
          }
@@ -215,9 +216,9 @@ public class GuideCreateStepReorderFragment extends Fragment {
    private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
       boolean img = false;
       for (StepImage imageinfo : imageList) {
-         if (imageinfo.getImageid() > 0) {
+         if (imageinfo.getImageObject().thumbnail != null && imageinfo.getImageObject().thumbnail.length()>0) {
             imagView.setScaleType(ScaleType.FIT_CENTER);
-            mImageManager.displayImage(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb(),
+            mImageManager.displayImage(imageinfo.getImageObject().thumbnail,
                getActivity(), imagView);
             imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
             imagView.invalidate();
