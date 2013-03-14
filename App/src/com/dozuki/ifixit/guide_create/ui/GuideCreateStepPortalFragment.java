@@ -103,7 +103,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          }
          mStepForDelete = null;
          invalidateViews();
-         verifyReorder();
+        // verifyReorder();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
          APIService.getErrorDialog(getActivity(), event.getError(),
@@ -158,7 +158,15 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          }
       });
       mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
-      verifyReorder();
+   //   verifyReorder();
+      mReorderStepsBar.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            closeSelectedStep();
+            launchStepReorder();
+         }
+      });
+
       mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
      // if (mGuide.getSteps().isEmpty()) {
      //    mNoStepsText.setVisibility(View.VISIBLE);
@@ -246,10 +254,19 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    }
 
    void verifyReorder() {
-      if (mReorderStepsBar == null || mGuide == null)
+      if (mReorderStepsBar == null || mGuide == null)  {
          return;
+      }
 
-      if (mGuide.getSteps().size() < 2) {
+      mReorderStepsBar.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            closeSelectedStep();
+            launchStepReorder();
+         }
+      });
+
+     /* if (mGuide.getSteps().size() < 2) {
          Animation anim = new AlphaAnimation(.7f, .7f);
          anim.setFillAfter(true);
          mReorderStepsBar.startAnimation(anim);
@@ -265,7 +282,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
                launchStepReorder();
             }
          });
-      }
+      }   */
    }
 
    @Override
