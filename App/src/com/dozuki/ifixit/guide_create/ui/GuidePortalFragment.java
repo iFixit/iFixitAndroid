@@ -79,6 +79,7 @@ public class GuidePortalFragment extends Fragment {
    public void onStart() {
        super.onStart();
        if (mParentRef.getGuideList().size() == 0) {
+          ((GuideCreateActivity)getActivity()).showLoading();
            APIService.call((Activity) getActivity(), APIService.getUserGuidesAPICall());
        }
 
@@ -93,6 +94,8 @@ public class GuidePortalFragment extends Fragment {
          if (event.getResult().size() > 0 && mNoGuidesText != null) {
             mNoGuidesText.setVisibility(View.GONE);
          }
+
+         ((GuideCreateActivity)getActivity()).hideLoading();
       } else {
          event.setError(APIError.getRevisionError(getActivity()));
          APIService.getErrorDialog(getActivity(), event.getError(), null).show();

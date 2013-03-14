@@ -489,6 +489,7 @@ public class JSONHelper {
       userGuide.setPublished(json.getBoolean("public"));
       userGuide.setUserName(json.getString("username"));
       userGuide.setUserid(json.getInt("userid"));
+      userGuide.setRevisionid(json.getInt("revisionid"));
 
       try {
          JSONObject jImage = json.getJSONObject("image");

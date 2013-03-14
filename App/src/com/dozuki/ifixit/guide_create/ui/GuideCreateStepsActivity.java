@@ -123,7 +123,6 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    }
 
   public void showLoading() {
-
      getSupportFragmentManager().beginTransaction()
              .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading").commit();
 

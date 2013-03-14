@@ -332,13 +332,11 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return null;
-            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+           return new APIEvent.DeleteGuide().setResult(json);
          }
 
          public APIEvent<?> getEvent() {
-            return null;
-           // return new APIEvent.CreateGuide();
+           return new APIEvent.DeleteGuide();
          }
       },
       true,
