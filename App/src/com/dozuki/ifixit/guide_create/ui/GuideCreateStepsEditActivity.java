@@ -149,6 +149,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    }
 
    public void showLoading() {
+
+      setRequestedOrientation( getResources().getConfiguration().orientation);
       if (mPager != null) {
          mPager.setVisibility(View.GONE);
       }
@@ -161,6 +163,17 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          mPager.setVisibility(View.VISIBLE);
       }
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+
+      /**
+       * lock screen for small sizes to portrait.
+       * Courtesy:
+       * http://stackoverflow.com/questions/10491531/android-restrict-activity-orientation-based-on-screen-size
+       **/
+      if (isScreenLarge()) {
+         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+      } else {
+         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      }
    }
 
    @Subscribe
