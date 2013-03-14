@@ -242,11 +242,11 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
          iconRes = R.drawable.ic_dialog_bullet_orange;
       } else if (color.equals("blue")) {
          iconRes = R.drawable.ic_dialog_bullet_blue;
-      } else if (color.equals("purple")) {
+      } else if (color.equals("violet")) {
          iconRes = R.drawable.ic_dialog_bullet_pink;
       } else if (color.equals("red")) {
          iconRes = R.drawable.ic_dialog_bullet_red;
-      } else if (color.equals("teal")) {
+      } else if (color.equals("green")) {
          iconRes = R.drawable.ic_dialog_bullet_green;
       } else if (color.equals("white")) {
          iconRes = R.drawable.bullet_white;

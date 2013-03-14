@@ -3,6 +3,7 @@ package com.dozuki.ifixit.guide_create.ui;
 import java.util.ArrayList;
 
 import android.util.Log;
+import com.dozuki.ifixit.util.APIError;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
@@ -69,13 +70,12 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
          mStepForDelete = (GuideCreateStepObject) savedInstanceState.getSerializable(STEP_FOR_DELETE);
-         mGuide = (GuideCreateObject)savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
+         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
       }
-      if(mGuide == null) {
+      if (mGuide == null) {
 
-         ((GuideCreateStepsActivity)getActivity()).showLoading();
-        APIService.call((Activity) getActivity(),
-          APIService.getGuideForEditAPICall(guidid));
+         ((GuideCreateStepsActivity) getActivity()).showLoading();
+         APIService.call((Activity) getActivity(), APIService.getGuideForEditAPICall(guidid));
       }
    }
 
@@ -86,8 +86,8 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          mStepAdapter.notifyDataSetChanged();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(getActivity()));
+         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
 
@@ -103,11 +103,11 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          }
          mStepForDelete = null;
          invalidateViews();
-        // verifyReorder();
+         // verifyReorder();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(getActivity()));
+         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
 
@@ -116,8 +116,8 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       if (!event.hasError()) {
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(getActivity()));
+         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
 

@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.guide_create.ui;
 
 import com.dozuki.ifixit.guide_create.model.UserGuide;
+import com.dozuki.ifixit.util.APIError;
 import org.holoeverywhere.app.Fragment;
 
 import android.os.Bundle;
@@ -89,12 +90,12 @@ public class GuidePortalFragment extends Fragment {
          mParentRef.getGuideList().removeAll(event.getResult());
          mParentRef.getGuideList().addAll(event.getResult());
          mGuideAdapter.notifyDataSetChanged();
-         if(event.getResult().size() > 0 && mNoGuidesText != null) {
+         if (event.getResult().size() > 0 && mNoGuidesText != null) {
             mNoGuidesText.setVisibility(View.GONE);
          }
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(getActivity()));
+         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
 

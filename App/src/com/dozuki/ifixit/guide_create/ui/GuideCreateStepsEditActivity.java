@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -168,8 +169,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          hideLoading();
          mIsStepDirty = false;
       } else {
-         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(this));
+         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(), null).show();
       }
    }
 
@@ -182,8 +183,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             .setRevisionid((event.getResult().getSteps().get(mSavePosition).getRevisionid()));
          hideLoading();
       } else {
-         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(this));
+         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(), null).show();
       }
    }
 
@@ -194,8 +195,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          deleteStep();
          hideLoading();
       } else {
-         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(this));
+         APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(), null).show();
       }
    }
 

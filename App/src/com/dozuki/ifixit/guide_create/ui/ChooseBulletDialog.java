@@ -139,10 +139,10 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
             frag.onFinishBulletDialog(mStepIndex, "blue");
             break;
          case R.id.bullet_dialog_color_purple:
-            frag.onFinishBulletDialog(mStepIndex, "purple");
+            frag.onFinishBulletDialog(mStepIndex, "violet");
             break;
          case R.id.bullet_dialog_color_green:
-            frag.onFinishBulletDialog(mStepIndex, "teal");
+            frag.onFinishBulletDialog(mStepIndex, "green");
             break;
          case R.id.bullet_dialog_caution:
             frag.onFinishBulletDialog(mStepIndex, "icon_caution");

@@ -22,6 +22,7 @@ import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
 import com.dozuki.ifixit.guide_create.ui.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.guide_create.ui.GuideIntroFragment.GuideCreateIntroListener;
 import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.IfixitActivity;
@@ -66,8 +67,8 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          mStepList = mGuide.getSteps();
          hideLoading();
       } else {
-         APIService.getErrorDialog(GuideCreateStepsActivity.this, event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(this));
+         APIService.getErrorDialog(GuideCreateStepsActivity.this, event.getError(), null).show();
       }
    }
 
@@ -78,8 +79,8 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          mStepList = mGuide.getSteps();
          hideLoading();
       } else {
-         APIService.getErrorDialog(GuideCreateStepsActivity.this, event.getError(),
-                 APIService.getCategoriesAPICall()).show();
+         event.setError(APIError.getRevisionError(this));
+         APIService.getErrorDialog(GuideCreateStepsActivity.this, event.getError(), null).show();
 
       }
    }
