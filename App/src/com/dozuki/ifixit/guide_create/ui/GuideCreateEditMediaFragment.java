@@ -459,6 +459,10 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    }
 
    public void setGuideDirty() {
+      if(((GuideStepChangedListener) getActivity()) == null) {
+         return;
+      }
+
       ((GuideStepChangedListener) getActivity()).onGuideStepChanged();
    }
 

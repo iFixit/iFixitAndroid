@@ -2,6 +2,7 @@ package com.dozuki.ifixit.guide_create.ui;
 
 import java.util.ArrayList;
 
+import android.content.pm.ActivityInfo;
 import com.dozuki.ifixit.guide_create.model.UserGuide;
 import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
@@ -192,7 +193,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    }
 
    public void showLoading() {
-
+      setRequestedOrientation( getResources().getConfiguration().orientation);
       getSupportFragmentManager().beginTransaction()
          .add(R.id.guide_create_fragment_container, new LoadingFragment(), "loading").addToBackStack("loading")
          .commit();
@@ -204,6 +205,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
 
    public void hideLoading() {
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
    }
 
    public void createGuide() {

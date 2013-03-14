@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 
@@ -120,20 +121,26 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          getSupportFragmentManager().beginTransaction()
             .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, tag).commit();
       }
+
+       mStepPortalFragment = (GuideCreateStepPortalFragment)getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
    }
 
+
   public void showLoading() {
+     setRequestedOrientation( getResources().getConfiguration().orientation);
+     mStepPortalFragment = (GuideCreateStepPortalFragment)getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG) ;
      getSupportFragmentManager().beginTransaction()
              .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading").commit();
-
      if(mStepPortalFragment != null)    {
         getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
      }
+
   }
 
 
    public void hideLoading() {
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
    }
 
    @Override
