@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.guide_create.ui;
 
+import android.util.Log;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
 import com.dozuki.ifixit.guide_create.model.UserGuide;
@@ -89,6 +90,13 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
       mPublishButtonText.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
+            if(!mGuideCreateObject.getPublished())   {
+               ((GuideCreateActivity) mPortalRef.getActivity()).showLoading();
+               APIService.call((Activity) mPortalRef.getActivity(), APIService.getPublishGuideAPICall(mGuideCreateObject.getGuideid(), mGuideCreateObject.getRevisionid()));
+            }  else {
+               ((GuideCreateActivity) mPortalRef.getActivity()).showLoading();
+               APIService.call((Activity) mPortalRef.getActivity(), APIService.getUnPublishGuideAPICall(mGuideCreateObject.getGuideid(), mGuideCreateObject.getRevisionid()));
+            }
             setPublished(!mGuideCreateObject.getPublished());
          }
       });
@@ -106,14 +114,12 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
 
    public void setPublished(boolean published) {
       if (published) {
-         APIService.call((Activity) mPortalRef.getActivity(), APIService.getPublishGuideAPICall(mGuideCreateObject.getGuideid(), 0));
          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_unpublish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
          setPublishedText(Color.rgb(0, 191, 0), R.string.published);
          setPublishedButton(img, R.string.unpublish);
       } else {
-         APIService.call((Activity) mPortalRef.getActivity(), APIService.getUnPublishGuideAPICall(mGuideCreateObject.getGuideid(), 0));
-         Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
+          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
          img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
          setPublishedText(Color.RED, R.string.unpublished);
          setPublishedButton(img, R.string.publish);

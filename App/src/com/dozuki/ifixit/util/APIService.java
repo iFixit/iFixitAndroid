@@ -262,6 +262,18 @@ public class APIService extends Service {
 
       return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
+
+   public static APICall getRemoveGuideAPICall(UserGuide guide) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("revisionid", guide.getRevisionid());
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new APICall(APIEndpoint.DELETE_GUIDE, guide.getGuideid() + "?revisionid=" + guide.getRevisionid(), requestBody.toString());
+   }
    
    /**
     * TODO: Pass in entire guide so parameters can easily be changed later.
@@ -287,15 +299,11 @@ public class APIService extends Service {
 
 
    public static APICall getPublishGuideAPICall(int guideid, int revisionid) {
-
-
       return new APICall(APIEndpoint.PUBLISH_GUIDE, "" + guideid +  "/public" + "?revisionid="
               + revisionid, "");
    }
 
    public static APICall getUnPublishGuideAPICall(int guideid, int revisionid) {
-
-
       return new APICall(APIEndpoint.UNPUBLISH_GUIDE, "" + guideid +  "/public" + "?revisionid="
               + revisionid, "");
    }

@@ -18,6 +18,7 @@ public class UserGuide implements Serializable {
    protected String mUsername;
    protected ImageObject mImage = new ImageObject();
    protected boolean mEditMode; // save state for edit drop down
+   protected Integer mRevisionId;
 
    public UserGuide(int guideid, String subject, String topic, String title, boolean public_, int userid,
       String username) {
@@ -124,6 +125,14 @@ public class UserGuide implements Serializable {
 
    public String getIntro() {
       return mIntro;
+   }
+
+   public Integer getRevisionid() {
+      return mRevisionId;
+   }
+
+   public void setRevisionid(Integer id) {
+      mRevisionId = id;
    }
 
 
