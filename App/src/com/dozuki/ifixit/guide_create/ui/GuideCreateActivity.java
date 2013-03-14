@@ -246,7 +246,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       ArrayList<GuideCreateStepObject> initialStepList = new ArrayList<GuideCreateStepObject>();
       initialStepList.add(item);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
-      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, item);
+      intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, 0);
       startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
    }
 
