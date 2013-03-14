@@ -3,28 +3,26 @@ package com.dozuki.ifixit.guide_create.model;
 import java.io.Serializable;
 
 public class ImageObject implements Serializable {
-
-   public int id;
-   public String mini;
-   public String thumbnail;
-   public String standared;
-   public String medium;
-   public String large;
-   public String original;
+   public int mId;
+   public String mMini;
+   public String mThumbnail;
+   public String mStandared;
+   public String mMedium;
+   public String mLarge;
+   public String mOriginal;
 
    public ImageObject() {
 
    }
 
-   public ImageObject(int id, String mini, String thumbnail, String standard, String medium, String large,
-      String original) {
-      this.id = id;
-      this.mini = mini.replace("https", "http");
-      this.thumbnail = thumbnail.replace("https", "http");
-      this.standared = standard.replace("https", "http");
-      this.medium = medium.replace("https", "http");
-      this.large = large.replace("https", "http");
-      this.original = original.replace("https", "http");
+   public ImageObject(int id, String mini, String thumbnail, String standard, String medium,
+    String large, String original) {
+      mId = id;
+      mMini = mini;
+      mThumbnail = thumbnail;
+      mStandared = standard;
+      mMedium = medium;
+      mLarge = large;
+      mOriginal = original;
    }
-
 }
