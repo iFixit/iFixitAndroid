@@ -68,7 +68,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          mStepList = mGuide.getSteps();
          hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(this));
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(GuideCreateStepsActivity.this, event.getError(), null).show();
       }
    }
@@ -80,7 +80,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          mStepList = mGuide.getSteps();
          hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(this));
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(GuideCreateStepsActivity.this, event.getError(), null).show();
 
       }

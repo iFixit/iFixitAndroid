@@ -162,7 +162,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          mGuideList.add(userGuide);
          launchStepEditOnNewGuide(guideObject);
       } else {
-         event.setError(APIError.getRevisionError(this));
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
@@ -198,7 +198,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          }
          hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(this));
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
@@ -214,7 +214,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          hideLoading();
          mGuidePortal.invalidateViews();
       } else {
-         event.setError(APIError.getRevisionError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }

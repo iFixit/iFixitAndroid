@@ -35,4 +35,9 @@ public class APIError implements Serializable {
       return new APIError(context.getString(R.string.invalid_revision_error_title),
               context.getString(R.string.invalid_revision_error), ErrorType.INVALID_REVISION);
    }
+
+   public static APIError getFatalError(Context context) {
+      return new APIError(context.getString(R.string.fatal_error_title),
+              context.getString(R.string.fatal_error), ErrorType.INVALID_REVISION);
+   }
 }

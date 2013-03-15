@@ -27,6 +27,8 @@
     <string name="no_connection_title">Connection error</string>
     <string name="invalid_revision_error_title">Revision error</string>
     <string name="invalid_revision_error">It looks like you may be editing a version of this guide that is out of date. To ensure you do not lose any information, please reload this guide.</string>
+    <string name="fatal_error_title">Unknown Error</string>
+    <string name="fatal_error">It looks like an error occurred. Please reload your guide.</string>
     <string name="media_error_title">Something went wrong. Try again later.</string>
     <string name="error_confirm">OK</string>
     <string name="error_dialog_title">Error</string>

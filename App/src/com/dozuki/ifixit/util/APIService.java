@@ -439,7 +439,7 @@ public class APIService extends Service {
    public static AlertDialog getErrorDialog(Context context, APIError error,
     APICall apiCall) {
       switch (error.mType) {
-         case INVALID_REVISION:
+         case FATAL:
             return createFatalErrorDialog(context, error);
          default:
             return createErrorDialog(context, apiCall, error);
