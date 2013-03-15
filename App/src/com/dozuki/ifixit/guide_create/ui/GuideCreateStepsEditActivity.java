@@ -183,7 +183,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          hideLoading();
          mIsStepDirty = false;
       } else {
-         event.setError(APIError.getRevisionError(this));
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(), null).show();
       }
    }
@@ -198,7 +198,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          mGuide.setRevisionid(event.getResult().getRevisionid());
          hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(this));
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(), null).show();
       }
    }
@@ -211,7 +211,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          deleteStep();
          hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(this));
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(), null).show();
       }
    }

@@ -97,7 +97,7 @@ public class GuidePortalFragment extends Fragment {
 
          ((GuideCreateActivity)getActivity()).hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(getActivity()));
+         event.setError(APIError.getFatalError(getActivity()));
          APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }

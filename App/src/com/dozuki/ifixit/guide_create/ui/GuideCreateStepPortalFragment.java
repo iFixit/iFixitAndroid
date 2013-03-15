@@ -86,7 +86,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          mStepAdapter.notifyDataSetChanged();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(getActivity()));
+         event.setError(APIError.getFatalError(getActivity()));
          APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
@@ -107,7 +107,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          // verifyReorder();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(getActivity()));
+         event.setError(APIError.getFatalError(getActivity()));
          APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
@@ -118,7 +118,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          mGuide.setRevisionid(event.getResult().getRevisionid());
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
-         event.setError(APIError.getRevisionError(getActivity()));
+         event.setError(APIError.getFatalError(getActivity()));
          APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
