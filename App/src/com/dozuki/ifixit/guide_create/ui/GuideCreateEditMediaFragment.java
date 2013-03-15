@@ -296,13 +296,15 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
+      //TODO: when MediaInfo is updated to handle ImageObjects update code to use modifications
       switch (requestCode) {
          case IMAGE_KEY_1:
             if (resultCode == Activity.RESULT_OK) {
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mImageOneInfo.setText(media.getGuid());
+               mImageOneInfo.getImageObject().mThumbnail = media.getGuid();
+               mImageOneInfo.getImageObject().mMedium = media.getGuid();
                mImageOneInfo.setImageId(Integer.valueOf(media.getItemId()));
+               mImageOneInfo.getImageObject().mId = Integer.parseInt(media.getItemId());
                setGuideDirty();
                setImage(IMAGE_KEY_1);
             }
@@ -310,8 +312,10 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          case IMAGE_KEY_2:
             if (resultCode == Activity.RESULT_OK) {
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mImageTwoInfo.setText(media.getGuid());
+               mImageTwoInfo.getImageObject().mThumbnail = media.getGuid();
+               mImageTwoInfo.getImageObject().mMedium = media.getGuid();
                mImageTwoInfo.setImageId(Integer.valueOf(media.getItemId()));
+               mImageTwoInfo.getImageObject().mId = Integer.parseInt(media.getItemId());
                setGuideDirty();
                setImage(IMAGE_KEY_2);
             }
@@ -319,8 +323,10 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          case IMAGE_KEY_3:
             if (resultCode == Activity.RESULT_OK) {
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mImageThreeInfo.setText(media.getGuid());
+               mImageThreeInfo.getImageObject().mThumbnail = media.getGuid();
+               mImageThreeInfo.getImageObject().mMedium = media.getGuid();
                mImageThreeInfo.setImageId(Integer.valueOf(media.getItemId()));
+               mImageThreeInfo.getImageObject().mId = Integer.parseInt(media.getItemId());
                setGuideDirty();
                setImage(IMAGE_KEY_3);
             }
@@ -367,6 +373,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          mLargeImage.setImageResource(R.drawable.ic_placeholder_feature_img);
       } else {
          mLargeImage.setBackgroundColor(Color.TRANSPARENT);
+         mLargeImage.setScaleType(ScaleType.CENTER_INSIDE);
          mImageManager.displayImage((String) image.getTag(), getActivity(), mLargeImage);
          mLargeImage.invalidate();
       }
