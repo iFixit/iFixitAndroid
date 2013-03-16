@@ -168,5 +168,7 @@
         <item>Repair</item>
         <item>Disassembly</item>
     </string-array>
-
+    <string name="video_play_button_description">Video Play Button</string>
+    <string name="video_activity_progress_title">Please Wait...</string>
+    <string name="video_activity_progress_body">Loading Video...</string>
 </resources>

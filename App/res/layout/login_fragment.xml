@@ -41,8 +41,8 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans"
-                android:inputType="textEmailAddress|textNoSuggestions"
-                android:hint="@string/login_email_hint" >
+                android:hint="@string/login_email_hint"
+                android:inputType="textEmailAddress|textNoSuggestions" >
 
                 <requestFocus />
             </EditText>
@@ -96,8 +96,8 @@
             android:layout_below="@+id/use_google_login_button"
             android:layout_centerHorizontal="true"
             android:background="@drawable/ic_btn_sign_in_yahoo"
-            android:visibility="gone"
-            android:contentDescription="@string/yahoo_signin_description" />
+            android:contentDescription="@string/yahoo_signin_description"
+            android:visibility="gone" />
     </RelativeLayout>
 
 </ScrollView>

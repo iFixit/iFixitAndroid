@@ -230,7 +230,19 @@ public class GuideViewActivity extends IfixitActivity
    }
 
    public int getIndicatorHeight() {
-      return mIndicator.getHeight();
+      int indicatorHeight = mIndicator.getHeight();
+      
+      // Unbelievably horrible hack that fixes a problem when
+      // getIndicatorHeight() returns 0 after a orientation change, causing the
+      // Main image view to calculate to large and the thumbnails are hidden by
+      // the CircleIndicator.
+      // TODO: Figure out why this is actually happening and the right way to do
+      //       this.
+      if (indicatorHeight == 0) {
+         indicatorHeight = 49;
+      }
+      
+      return indicatorHeight;
    }
 
    @SuppressWarnings("unused")

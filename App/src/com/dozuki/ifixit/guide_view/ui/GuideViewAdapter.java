@@ -33,8 +33,8 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
 
    @Override
    public Fragment getItem(int position) {
-      GuideIntroViewFragment introView;
-      GuideStepViewFragment stepView;
+      Fragment introView;
+      Fragment stepView;
 
       if (position == GUIDE_INTRO_POSITION) {
          introView = new GuideIntroViewFragment(mGuide);

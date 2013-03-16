@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
       package="com.dozuki.ifixit"
-      android:versionCode="11"
-      android:versionName="1.2.3">
+      android:versionCode="12"
+      android:versionName="1.3">
    <uses-sdk android:minSdkVersion="8"
          android:targetSdkVersion="17"  />
    <uses-feature android:name="android.hardware.camera" android:required="false" />
@@ -54,7 +54,7 @@
       <activity android:name=".login.ui.OpenIDActivity"></activity>
       <activity android:name=".topic_view.ui.TopicViewActivity"></activity>
       <activity android:name=".guide_view.ui.GuideViewActivity"
-                android:exported="false"
+                android:exported="true"
                 android:launchMode="singleTop" >
          <intent-filter>
             <action android:name="android.intent.action.VIEW" />
@@ -73,6 +73,15 @@
       </activity>
       <activity android:name=".guide_view.ui.FullImageViewActivity"
             android:theme="@style/Holo.Theme.Light.NoActionBar">
+      </activity>
+      <activity android:name=".guide_view.ui.VideoViewActivity"
+            android:screenOrientation="landscape"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Holo.NoActionBar">
+      </activity>
+      <activity android:name=".guide_view.ui.EmbedViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:theme="@android:style/Theme.Holo.NoActionBar">
       </activity>
    </application>
 </manifest>

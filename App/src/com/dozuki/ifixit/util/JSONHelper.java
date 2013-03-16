@@ -1,39 +1,29 @@
 package com.dozuki.ifixit.util;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
-import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
-import com.dozuki.ifixit.guide_create.model.ImageObject;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
-
 import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
-import com.dozuki.ifixit.gallery.model.UserEmbedInfo;
-import com.dozuki.ifixit.gallery.model.UserEmbedList;
-import com.dozuki.ifixit.gallery.model.UserImageInfo;
-import com.dozuki.ifixit.gallery.model.UserImageList;
-import com.dozuki.ifixit.gallery.model.UserVideoInfo;
-import com.dozuki.ifixit.gallery.model.UserVideoList;
+import com.dozuki.ifixit.gallery.model.*;
 import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.guide_create.model.ImageObject;
 import com.dozuki.ifixit.guide_create.model.UserGuide;
-import com.dozuki.ifixit.guide_view.model.Guide;
-import com.dozuki.ifixit.guide_view.model.GuideInfo;
-import com.dozuki.ifixit.guide_view.model.GuidePart;
-import com.dozuki.ifixit.guide_view.model.GuideStep;
-import com.dozuki.ifixit.guide_view.model.GuideTool;
-import com.dozuki.ifixit.guide_view.model.StepImage;
-import com.dozuki.ifixit.guide_view.model.StepLine;
+import com.dozuki.ifixit.guide_view.model.*;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class JSONHelper {
    public static ArrayList<Site> parseSites(String json) {
@@ -140,13 +130,22 @@ public class JSONHelper {
       step.setTitle(jStep.getString("title"));
 
       try {
-
          JSONObject jMedia = jStep.getJSONObject("media");
-         JSONArray jImages = jMedia.getJSONArray("data");
 
-         for (int i = 0; i < jImages.length(); i++) {
-            step.addImage(parseImage(jImages.getJSONObject(i)));
+         if (jMedia.has("image")) {
+            JSONArray jImages = jMedia.getJSONArray("data");
+            for (int i = 0; i < jImages.length(); i++)
+               step.addImage(parseImage(jImages.getJSONObject(i)));
          }
+         if (jMedia.has("video")) {
+            JSONObject jVideo = jMedia.getJSONObject("data");
+            step.addVideo(parseVideo(jVideo));
+         }
+         if (jMedia.has("embed")) {
+            JSONObject jEmbed = jMedia.getJSONObject("data");
+            step.addEmbed(parseEmbed(jEmbed));
+         }
+
       } catch (JSONException e) {
          StepImage image = new StepImage(0);
          image.setOrderby(1);
@@ -160,6 +159,19 @@ public class JSONHelper {
       }
 
       return step;
+   }
+
+   public static Map<String, String> getQueryMap(String url) {
+      String query = url.substring(url.indexOf('?') + 1);
+      String[] params = query.split("&");
+      Map<String, String> map = new HashMap<String, String>();
+      for (String param : params) {
+         String name = param.split("=")[0];
+         String value = param.split("=")[1];
+         map.put(name, value);
+      }
+
+      return map;
    }
 
     private static StepImage parseImage(JSONObject jImage) throws JSONException {
@@ -177,6 +189,55 @@ public class JSONHelper {
 
         return image;
     }
+
+   private static StepVideo parseVideo(JSONObject jVideo) throws JSONException {
+      StepVideo video = new StepVideo();
+
+      try {
+         JSONArray jEncodings = jVideo.getJSONArray("encoding");
+         for (int i = 0; i < jEncodings.length(); i++) {
+            video.addEncoding(parseVideoEncoding(jEncodings.getJSONObject(i)));
+         }
+      } catch (JSONException e) {
+         e.printStackTrace();
+         Log.e("JSONHelper parseVideo", "Error parsing video API response");
+      }
+
+      video.setThumbnail(parseVideoThumbnail(jVideo.getJSONObject("thumbnail")));
+      return video;
+   }
+
+   private static StepVideoThumbnail parseVideoThumbnail(JSONObject jVideoThumb) throws JSONException {
+      String guid = jVideoThumb.getString("guid");
+      int imageid = jVideoThumb.getInt("imageid");
+      String ratio = jVideoThumb.getString("ratio");
+      int width = jVideoThumb.getInt("width");
+      int height = jVideoThumb.getInt("height");
+
+      String url = jVideoThumb.getString("medium");
+      url = url.substring(0, url.lastIndexOf("."));
+
+      return new StepVideoThumbnail(guid, imageid, url, ratio, width, height);
+   }
+
+   private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
+      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"), 
+       jEmbed.getString("type"), jEmbed.getString("url"));
+      em.setContentURL(getQueryMap(jEmbed.getString("url")).get("url"));
+      return em;
+   }
+
+   public static OEmbed parseOEmbed(String embed) throws JSONException {
+
+      JSONObject jOEmbed = new JSONObject(embed);
+      String thumbnail = null;
+      if (jOEmbed.has("thumbnail_url")) {
+         thumbnail = jOEmbed.getString("thumbnail_url");
+      }
+      Document doc = Jsoup.parse(jOEmbed.getString("html"));
+      return new OEmbed(jOEmbed.getString("html"), 
+         doc.getElementsByAttribute("src").get(0).attr("src"), thumbnail);
+   }
 
     private static StepLine parseLine(JSONObject jLine) throws JSONException {
       return new StepLine(new Integer(jLine.getInt("lineid")), jLine.getString("bullet"),
@@ -601,4 +662,10 @@ public class JSONHelper {
     * );
     * }
     **/
+   private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
+      VideoEncoding encoding =
+         new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
+            jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
+      return encoding;
+   }
 }
