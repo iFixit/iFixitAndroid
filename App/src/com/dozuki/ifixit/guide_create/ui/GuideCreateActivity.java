@@ -154,7 +154,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       if (!event.hasError()) {
          UserGuide userGuide = new UserGuide();
          GuideCreateObject guideObject = event.getResult();
-
+         mGuidePortal.toggleNoGuidesText(false);
          userGuide.setGuideid(guideObject.getGuideid());
          userGuide.setImageObject(guideObject.getIntroImage());
          userGuide.setTitle(guideObject.getTitle());
