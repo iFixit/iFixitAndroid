@@ -214,6 +214,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          hideLoading();
          mGuidePortal.invalidateViews();
       } else {
+         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
