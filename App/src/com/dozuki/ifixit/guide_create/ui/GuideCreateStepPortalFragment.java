@@ -33,6 +33,7 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
+import org.holoeverywhere.widget.Toast;
 
 public class GuideCreateStepPortalFragment extends Fragment implements StepRearrangeListener {
    public static int STEP_ID = 0;
@@ -167,6 +168,10 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       mReorderStepsBar.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
+            if(mGuide.getSteps().size() < 2) {
+               Toast.makeText(getActivity(), R.string.step_reorder_insufficient_steps, Toast.LENGTH_SHORT).show();
+               return;
+            }
             closeSelectedStep();
             launchStepReorder();
          }
@@ -243,7 +248,6 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
             if (guide != null) {
                mGuide = guide;
                mStepAdapter = new StepAdapter();
-               verifyReorder();
                mStepList.setAdapter(mStepAdapter);
                if (mGuide.getSteps().isEmpty()) {
                   mNoStepsText.setVisibility(View.VISIBLE);
@@ -256,38 +260,6 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
 
    void deleteStep(GuideCreateStepObject step) {
       createDeleteDialog(step).show();
-   }
-
-   void verifyReorder() {
-      if (mReorderStepsBar == null || mGuide == null)  {
-         return;
-      }
-
-      mReorderStepsBar.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            closeSelectedStep();
-            launchStepReorder();
-         }
-      });
-
-     /* if (mGuide.getSteps().size() < 2) {
-         Animation anim = new AlphaAnimation(.7f, .7f);
-         anim.setFillAfter(true);
-         mReorderStepsBar.startAnimation(anim);
-         mReorderStepsBar.setOnClickListener(null);
-      } else {
-         Animation anim = new AlphaAnimation(1f, 1f);
-         anim.setFillAfter(true);
-         mReorderStepsBar.startAnimation(anim);
-         mReorderStepsBar.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               closeSelectedStep();
-               launchStepReorder();
-            }
-         });
-      }   */
    }
 
    @Override

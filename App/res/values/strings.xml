@@ -157,6 +157,7 @@
     <string name="create_bullets">Add new bullet</string>
     <string name="cancel_reorder_bullets">Cancel</string>
 	<string name="step_title_prefix">Step - </string>
+    <string name="step_reorder_insufficient_steps">Not enough steps to reorder.</string>
 	<string name="default_step_title">Untitled step</string>
 	<string name="step_title_hint">Insert wisdom here.</string>
 	<string name="step_rearrange_title">Rearrange</string>
