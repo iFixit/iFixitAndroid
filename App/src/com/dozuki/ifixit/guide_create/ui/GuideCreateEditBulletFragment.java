@@ -291,9 +291,6 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             Toast.makeText(((Activity) getActivity()), R.string.indent_limit_above, Toast.LENGTH_SHORT).show();
             return;
          }
-         // curStep.setLevel(curStep.getLevel() + 1);
-         // mBulletContainer.removeViewAt(index);
-         // mBulletContainer.addView(getView(mLines.get(index), index), index);
          indentBullet(index);
          setGuideDirty();
       } else if (color.equals("action_unindent")) {
@@ -301,17 +298,11 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
             Toast.makeText(((Activity) getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
             return;
          }
-         // curStep.setLevel(curStep.getLevel() - 1);
-         // mBulletContainer.removeViewAt(index);
-         // mBulletContainer.addView(getView(mLines.get(index), index), index);
          unIndentBullet(index);
          setGuideDirty();
       } else if (color.equals("action_reorder")) {
          launchBulletReorder();
       } else if (color.equals("action_delete")) {
-         // mLines.remove(index);
-         // mBulletContainer.removeViewAt(index);
-         // mNewBulletButton.setVisibility(View.VISIBLE);
          createDeleteDialog(getActivity(), index).show();
       } else if (color.equals("action_cancel")) {
          return;
@@ -328,10 +319,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       if (curStep.getLevel() == 0) {
          return;
       }
-      for (int i = index; i < mLines.size(); i++) {
+      for (int i = index+1; i < mLines.size(); i++) {
          if (mLines.get(i).getLevel() == (curStep.getLevel() + 1)) {
             unIndentBullet(i);
-         } else if (mLines.get(i).getLevel() == (curStep.getLevel() - 1)) {
+         } else if (mLines.get(i).getLevel() <= (curStep.getLevel())) {
             break;
          }
       }
@@ -345,10 +336,10 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       if (curStep.getLevel() == INDENT_LIMIT) {
          return;
       }
-      for (int i = index; i < mLines.size(); i++) {
+      for (int i = index+1; i < mLines.size(); i++) {
          if (mLines.get(i).getLevel() == (curStep.getLevel() + 1)) {
             indentBullet(i);
-         } else if (mLines.get(i).getLevel() == (curStep.getLevel() - 1)) {
+         } else if (mLines.get(i).getLevel() <= (curStep.getLevel())) {
             break;
          }
       }
