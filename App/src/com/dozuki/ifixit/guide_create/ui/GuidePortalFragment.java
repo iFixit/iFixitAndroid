@@ -60,15 +60,15 @@ public class GuidePortalFragment extends Fragment {
       mGuideList = (ListView) view.findViewById(R.id.guide_create_listview);
       mGuideList.setAdapter(mGuideAdapter);
       mNoGuidesText = (TextView) view.findViewById(R.id.no_guides_text);
-      if (mParentRef.getGuideList().isEmpty())
-         mNoGuidesText.setVisibility(View.VISIBLE);
+      if (mParentRef.getGuideList().isEmpty()) {
+         toggleNoGuidesText(true);
+      }
       mAddGuideBar = (RelativeLayout) view.findViewById(R.id.add_guide_bar);
       mAddGuideBar.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            if (mNoGuidesText.getVisibility() == View.VISIBLE)
-               mNoGuidesText.setVisibility(View.GONE);
-            mParentRef.createGuide();
+         toggleNoGuidesText(false);
+         mParentRef.createGuide();
          }
       });
       return view;
@@ -76,8 +76,9 @@ public class GuidePortalFragment extends Fragment {
 
 
    @Override
-   public void onStart() {
-       super.onStart();
+   public void onAttach(Activity act) {
+       super.onAttach(act);
+      mParentRef = (GuideCreateActivity)act;
        if (mParentRef.getGuideList().size() == 0) {
           ((GuideCreateActivity)getActivity()).showLoading();
            APIService.call((Activity) getActivity(), APIService.getUserGuidesAPICall());
@@ -92,7 +93,7 @@ public class GuidePortalFragment extends Fragment {
          mParentRef.getGuideList().addAll(event.getResult());
          mGuideAdapter.notifyDataSetChanged();
          if (event.getResult().size() > 0 && mNoGuidesText != null) {
-            mNoGuidesText.setVisibility(View.GONE);
+            toggleNoGuidesText(false) ;
          }
 
          ((GuideCreateActivity)getActivity()).hideLoading();
@@ -184,14 +185,14 @@ public class GuidePortalFragment extends Fragment {
       mCurOpenGuideObjectID = id;
    }
    
-   public void toggleNoGuidesText(boolean show)
-   {
-      if(show)
-      {
-         mNoGuidesText.setVisibility(View.VISIBLE);
+   public void toggleNoGuidesText(boolean show) {
+      if (mNoGuidesText == null) {
+         return;
       }
-      else
-      {
+
+      if (show) {
+         mNoGuidesText.setVisibility(View.VISIBLE);
+      } else {
          mNoGuidesText.setVisibility(View.GONE);
       }
    }

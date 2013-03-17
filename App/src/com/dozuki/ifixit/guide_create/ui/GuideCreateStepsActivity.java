@@ -66,6 +66,9 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       if (!event.hasError()) {
          mGuide = event.getResult();
          mStepList = mGuide.getSteps();
+         if(mGuide.getSteps() != null && mGuide.getSteps().size() == 0) {
+
+         }
          hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));

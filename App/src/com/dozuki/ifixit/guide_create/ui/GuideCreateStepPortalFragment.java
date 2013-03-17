@@ -84,6 +84,11 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       if (!event.hasError()) {
          mGuide = event.getResult();
          mStepAdapter.notifyDataSetChanged();
+         if (!mGuide.getSteps().isEmpty()) {
+            toggleNoStepsText(false);
+         } else {
+            toggleNoStepsText(true);
+         }
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
          event.setError(APIError.getFatalError(getActivity()));
@@ -99,12 +104,11 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
             mGuide.getSteps().get(i).setStepNum(i);
          }
          if (mGuide.getSteps().isEmpty()) {
-            mNoStepsText.setVisibility(View.VISIBLE);
+            toggleNoStepsText(true);
          }
          mStepForDelete = null;
          mGuide.setRevisionid(event.getResult().getRevisionid());
          invalidateViews();
-         // verifyReorder();
          ((GuideCreateStepsActivity) getActivity()).hideLoading();
       } else {
          event.setError(APIError.getFatalError(getActivity()));
@@ -160,7 +164,6 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
          }
       });
       mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
-   //   verifyReorder();
       mReorderStepsBar.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
@@ -170,9 +173,9 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       });
 
       mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
-     // if (mGuide.getSteps().isEmpty()) {
-     //    mNoStepsText.setVisibility(View.VISIBLE);
-     // }
+      if (mGuide == null || mGuide.getSteps().isEmpty()) {
+         toggleNoStepsText(true);
+      }
       mStepList.setAdapter(mStepAdapter);
       if( mShowingDelete) {
          createDeleteDialog(mStepForDelete).show();
@@ -384,5 +387,18 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
       ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
       stepList.addAll(mGuide.getSteps());
       launchStepEdit(stepList, curStep);
+   }
+
+
+   public void toggleNoStepsText(boolean show) {
+      if (mNoStepsText == null) {
+         return;
+      }
+
+      if (show) {
+         mNoStepsText.setVisibility(View.VISIBLE);
+      } else {
+         mNoStepsText.setVisibility(View.GONE);
+      }
    }
 }
