@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.pm.ActivityInfo;
 import com.dozuki.ifixit.guide_create.model.UserGuide;
+import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -272,6 +273,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
       item.setStepNum(0);
       item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
+      item.addLine(new StepLine(null, "black", 0, ""));
       ArrayList<GuideCreateStepObject> initialStepList = new ArrayList<GuideCreateStepObject>();
       initialStepList.add(item);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
