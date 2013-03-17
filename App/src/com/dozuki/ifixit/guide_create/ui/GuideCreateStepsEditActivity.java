@@ -181,7 +181,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       if (!event.hasError()) {
          mGuide.getSteps().get(mSavePosition).setRevisionid(event.getResult().getRevisionid());
          hideLoading();
-         mIsStepDirty = false;
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(GuideCreateStepsEditActivity.this, event.getError(), null).show();
@@ -191,7 +190,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @Subscribe
    public void onStepAdd(APIEvent.StepAdd event) {
       if (!event.hasError()) {
-         mIsStepDirty = false;
          mGuide.getSteps().get(mSavePosition).setStepId(event.getResult().getSteps().get(mSavePosition).getStepId());
          mGuide.getSteps().get(mSavePosition)
             .setRevisionid((event.getResult().getSteps().get(mSavePosition).getRevisionid()));
@@ -206,7 +204,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @Subscribe
    public void onGuideStepDeleted(APIEvent.StepRemove event) {
       if (!event.hasError()) {
-         mIsStepDirty = false;
          mGuide.setRevisionid(event.getResult().getRevisionid());
          deleteStep();
          hideLoading();
@@ -354,7 +351,10 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    }
 
    private void save(int savePosition) {
-
+      if(!mIsStepDirty) {
+         return;
+      }
+      mIsStepDirty = false;
       GuideCreateStepObject obj = mCurStepFragment.getGuideChanges();
       if (obj.getLines().size() == 0) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
@@ -394,8 +394,6 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          case R.id.step_edit_add_step:
 
             if ((mGuide.getSteps().size() == (mPagePosition)) && mIsStepDirty) {
-               // a convenience for the user
-               // TODO: see if it can work with the API
                save(mPagePosition);
             } else if (mGuide.getSteps().size() < mPagePosition + 1) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
@@ -473,6 +471,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
             @Override
             public void onClick(DialogInterface dialog, int id) {
                mConfirmDelete = false;
+               mIsStepDirty = false;
                showLoading();
                APIService.call(
                        GuideCreateStepsEditActivity.this,
