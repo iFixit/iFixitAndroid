@@ -426,6 +426,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
                if (!isIndentionStateValid()) {
                   fixIndentionState();
                }
+               setGuideDirty();
                dialog.dismiss();
             }
          }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
