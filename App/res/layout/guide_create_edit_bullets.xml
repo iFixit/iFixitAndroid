@@ -1,39 +1,36 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
-    android:descendantFocusability="beforeDescendants"
-    android:focusable="true"
-    android:focusableInTouchMode="true"
-    android:gravity="center_horizontal" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="@dimen/guide_create_edit_bullets_padding"
+                android:descendantFocusability="beforeDescendants"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:gravity="center_horizontal">
 
-    <LinearLayout
-        android:id="@+id/edit_step_bullet_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        android:orientation="vertical"
-        android:paddingBottom="12dp" >
+   <LinearLayout
+           android:id="@+id/edit_step_bullet_container"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="vertical">
 
-        <Button
-            android:id="@+id/add_new_bullet_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="8dp"
-            android:background="@color/fireswing_grey"
-            android:contentDescription="@string/topic_guide_thumbnail"
-            android:padding="16dp"
-            android:text="@string/create_bullets"
-            android:textColor="@color/fireswing_dark_grey"
-            android:textStyle="bold" />
-    </LinearLayout>
+      <Button
+              android:id="@+id/add_new_bullet_button"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_gravity="center"
+              android:layout_marginTop="@dimen/guide_create_edit_add_bullet_button_margin_top"
+              android:background="@color/fireswing_grey"
+              android:contentDescription="@string/topic_guide_thumbnail"
+              android:padding="@dimen/guide_create_edit_add_bullet_button_padding"
+              android:text="@string/create_bullets"
+              android:textColor="@color/fireswing_dark_grey"
+              android:textStyle="bold"/>
+   </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/guide_create_edit_bullet_reorder_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+   <FrameLayout
+           android:id="@+id/guide_create_edit_bullet_reorder_fragment_container"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"/>
 
 </RelativeLayout>
