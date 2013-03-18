@@ -216,7 +216,6 @@ public class GuideCreateStepReorderFragment extends Fragment {
       boolean img = false;
       for (StepImage imageinfo : imageList) {
          if (imageinfo.getImageObject().mId > 0) {
-            imagView.setScaleType(ScaleType.FIT_CENTER);
             mImageManager.displayImage(imageinfo.getImageObject().mThumbnail,
                getActivity(), imagView);
             imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
@@ -226,7 +225,8 @@ public class GuideCreateStepReorderFragment extends Fragment {
       }
 
       if (!img) {
-         imagView.setScaleType(ScaleType.FIT_CENTER);
+         mImageManager.displayImage("",
+                getActivity(), imagView);
          imagView.invalidate();
       }
 

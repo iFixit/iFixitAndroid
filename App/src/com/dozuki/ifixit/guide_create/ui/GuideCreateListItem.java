@@ -176,7 +176,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
 
    public void setGuideItem(String title, String image) {   
       mTitleView.setText(title);
-      if(image != null && image.length() > 0) {
+      if(image != null) {
          mImageManager.displayImage(image, mPortalRef.getActivity(), mThumbnail);
       }
    }
