@@ -139,7 +139,6 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
       for (StepImage imageinfo : imageList) {
          if (imageinfo.getImageObject().mId > 0) {
             img = true;
-            imagView.setScaleType(ScaleType.FIT_CENTER);
             mImageManager.displayImage(imageinfo.getImageObject().mThumbnail,
                mPortalRef.getActivity(), imagView);
             imagView.setTag(imageinfo.getImageObject().mThumbnail);
@@ -150,9 +149,8 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
       
       if(!img)
       {
-         imagView.setScaleType(ScaleType.FIT_CENTER);
-       //  mImageManager.displayImage("",
-       //     mPortalRef.getActivity(), imagView);
+         mImageManager.displayImage("",
+            mPortalRef.getActivity(), imagView);
          imagView.invalidate();
       }
 
