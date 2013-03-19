@@ -46,7 +46,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    public static int GuideItemID = 0;
    private ActionBar mActionBar;
    private GuidePortalFragment mGuidePortal;
-   private ArrayList<UserGuide> mGuideList;
+   private ArrayList<UserGuide> mGuideList = new ArrayList<UserGuide>();
    private boolean mShowingHelp;
    private UserGuide mGuideForDelete;
    private boolean mShowingDelete;
@@ -85,7 +85,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       mActionBar.setTitle("");
       prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
       TASK_ID = this.getTaskId();
-      mGuideList = new ArrayList<UserGuide>();
       if (savedInstanceState != null) {
          mGuideList = (ArrayList<UserGuide>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
@@ -175,6 +174,9 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
          if (resultCode == RESULT_OK) {
             GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GUIDE_KEY);
+            if(guide == null) {
+               return;
+            }
             for (UserGuide g : mGuideList) {
                if (g.getGuideid() == guide.getGuideid()) {
                   g.setRevisionid(guide.getRevisionid());

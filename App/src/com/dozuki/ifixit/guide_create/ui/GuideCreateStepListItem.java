@@ -139,9 +139,9 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
       for (StepImage imageinfo : imageList) {
          if (imageinfo.getImageObject().mId > 0) {
             img = true;
+            imagView.setTag(imageinfo.getImageObject().mThumbnail);
             mImageManager.displayImage(imageinfo.getImageObject().mThumbnail,
                mPortalRef.getActivity(), imagView);
-            imagView.setTag(imageinfo.getImageObject().mThumbnail);
             imagView.invalidate();
             return;
          }
