@@ -131,17 +131,20 @@ public class JSONHelper {
 
       try {
          JSONObject jMedia = jStep.getJSONObject("media");
+         String type = jMedia.getString("type");
 
-         if (jMedia.has("image")) {
+         if (type.compareTo("image") == 0) {
             JSONArray jImages = jMedia.getJSONArray("data");
             for (int i = 0; i < jImages.length(); i++)
                step.addImage(parseImage(jImages.getJSONObject(i)));
          }
-         if (jMedia.has("video")) {
+
+         if (type.compareTo("video") == 0) {
             JSONObject jVideo = jMedia.getJSONObject("data");
             step.addVideo(parseVideo(jVideo));
          }
-         if (jMedia.has("embed")) {
+
+         if (type.compareTo("embed") == 0) {
             JSONObject jEmbed = jMedia.getJSONObject("data");
             step.addEmbed(parseEmbed(jEmbed));
          }
@@ -610,9 +613,6 @@ public class JSONHelper {
       return lineObject;
    }
 
-
-
-
    public static JSONArray createStepIdArray(ArrayList<GuideCreateStepObject> steps) throws JSONException {
       JSONArray jSteps = new JSONArray();
       for (GuideCreateStepObject step : steps) {
@@ -621,6 +621,7 @@ public class JSONHelper {
 
       return jSteps;
    }
+
 //   private static GuideCreateStepObject parseCreateGuideStep(JSONObject jStep) throws JSONException {
 //      JSONArray jLines = jStep.getJSONArray("lines");
 //      GuideCreateStepObject step = new GuideCreateStepObject(jStep.getInt("number"));
