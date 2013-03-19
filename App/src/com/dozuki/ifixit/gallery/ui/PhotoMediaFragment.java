@@ -61,6 +61,7 @@ public class PhotoMediaFragment extends MediaFragment {
          mNextPageRequestInProgress = false;
       } else {
          // TODO
+         APIService.getErrorDialog(getActivity(), event.getError(), APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));
       }
    }
 

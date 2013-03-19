@@ -168,15 +168,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       } else {
          int actionBarHeight =
             resources.getDimensionPixelSize(com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
-         int indicatorHeight = ((GuideCreateStepsEditActivity) context).getIndicatorHeight();
-
-         // if (indicatorHeight == 0) {
-         indicatorHeight = INDICATOR_HEIGHT;
-         // }
-
-         // indicatorHeight = 0;
-         // padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
-         // padding += resources.getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+         int indicatorHeight = INDICATOR_HEIGHT;
 
          height = (((screenHeight - actionBarHeight - indicatorHeight - titleHeight - padding) / 7f) * 4f);
          width = height * (4f / 3f);
