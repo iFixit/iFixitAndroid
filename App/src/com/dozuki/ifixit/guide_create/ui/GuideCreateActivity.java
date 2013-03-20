@@ -181,7 +181,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
                if (g.getGuideid() == guide.getGuideid()) {
                   g.setRevisionid(guide.getRevisionid());
                   g.setTitle(guide.getTitle());
-                  g.setPublished(guide.getPublished());
                   break;
                }
             }
