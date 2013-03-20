@@ -205,7 +205,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    public void onGuideStepDeleted(APIEvent.StepRemove event) {
       if (!event.hasError()) {
          mGuide.setRevisionid(event.getResult().getRevisionid());
-         deleteStep();
+         deleteStep(false);
          hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));
@@ -433,11 +433,13 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       }
    }
 
-   private void deleteStep() {
+   private void deleteStep(boolean unsaved) {
       int curStep = mPagePosition;
       mStepList.remove(mPagePosition);
       if (mPagePosition < mGuide.getSteps().size()) {
-         mGuide.getSteps().remove(mPagePosition);
+         if (!unsaved) {
+            mGuide.getSteps().remove(mPagePosition);
+         }
       }
 
       if (mStepList.size() == 0) {
@@ -466,29 +468,34 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       builder
          .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
          .setMessage(
-            context.getString(R.string.step_edit_confirm_delete_message) + " Step "
-               + (mStepList.get(mPagePosition).getStepNum() + 1) + "?")
+                 context.getString(R.string.step_edit_confirm_delete_message) + " Step "
+                         + (mStepList.get(mPagePosition).getStepNum() + 1) + "?")
          .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int id) {
                mConfirmDelete = false;
                mIsStepDirty = false;
-               showLoading();
-               APIService.call(
-                       GuideCreateStepsEditActivity.this,
-                       APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(),
-                               mGuide.getSteps().get(mPagePosition)));
+
+               if (mPagePosition >= mGuide.getSteps().size()) {
+                  //step has not been saved and is at end of list
+                  deleteStep(true);
+               } else if (mStepList.get(mPagePosition).getRevisionid() == null) {
+                  //step in the middle of the list and has not been saved
+                  deleteStep(true);
+               } else {
+                  showLoading();
+                  APIService.call(GuideCreateStepsEditActivity.this, APIService.getRemoveStepAPICall(
+                     mGuide.getGuideid(), mGuide.getRevisionid(), mGuide.getSteps().get(mPagePosition)));
+               }
                dialog.cancel();
-
-
             }
          }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-               mConfirmDelete = false;
-               dialog.cancel();
-            }
-         });
+         @Override
+         public void onClick(DialogInterface dialog, int which) {
+            mConfirmDelete = false;
+            dialog.cancel();
+         }
+      });
 
       AlertDialog dialog = builder.create();
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
