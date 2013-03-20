@@ -243,8 +243,9 @@ public class JSONHelper {
    }
 
     private static StepLine parseLine(JSONObject jLine) throws JSONException {
-      return new StepLine(new Integer(jLine.getInt("lineid")), jLine.getString("bullet"),
-       jLine.getInt("level"), jLine.getString("text_raw"));
+
+       return new StepLine(jLine.getInt("lineid"), jLine.getString("bullet"),
+        jLine.getInt("level"), jLine.getString("text_raw"));
    }
 
    /**
