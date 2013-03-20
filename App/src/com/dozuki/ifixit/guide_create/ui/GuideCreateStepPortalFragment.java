@@ -98,6 +98,13 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
    }
 
    @Subscribe
+   public void onIntroSavedGuide(APIEvent.EditGuide event) {
+      if (!event.hasError()) {
+         mGuide = event.getResult();
+      }
+   }
+
+   @Subscribe
    public void onGuideStepDeleted(APIEvent.StepRemove event) {
       if (!event.hasError()) {
          mGuide.deleteStep(mStepForDelete);

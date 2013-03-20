@@ -87,7 +87,6 @@ public class GuideIntroFragment extends Fragment {
              * }
              * else
              */
-            Log.i("TITLE", mTitle.getText().toString());
             confirmCreateGuide(mDeviceType.getText().toString(), mTitle.getText().toString(), mSummary.getText()
                .toString(), mIntroduction.getText().toString(), (String) mGuideTypeSpinner.getSelectedItem(), mFocus
                .getText().toString());
@@ -97,6 +96,7 @@ public class GuideIntroFragment extends Fragment {
       if (mGuideObject != null) {
          mDeviceType.setText(mGuideObject.getTopic());
          mTitle.setText(mGuideObject.getTitle());
+         mFocus.setText(mGuideObject.getSubject());
          mSummary.setText(mGuideObject.getSummary());
          mIntroduction.setText(mGuideObject.getIntroduction());
       }
