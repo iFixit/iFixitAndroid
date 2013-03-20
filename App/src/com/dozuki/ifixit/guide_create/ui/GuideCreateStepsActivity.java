@@ -128,7 +128,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    }
 
    public void showLoading() {
-      setRequestedOrientation(getResources().getConfiguration().orientation);
+      setRequestedOrientation( getScreenOrientation());
       mStepPortalFragment =
          (GuideCreateStepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
       getSupportFragmentManager().beginTransaction()

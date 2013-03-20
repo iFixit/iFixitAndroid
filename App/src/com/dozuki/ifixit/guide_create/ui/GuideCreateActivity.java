@@ -222,7 +222,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    }
 
    public void showLoading() {
-      setRequestedOrientation( getResources().getConfiguration().orientation);
+      setRequestedOrientation( getScreenOrientation());
       getSupportFragmentManager().beginTransaction()
          .add(R.id.guide_create_fragment_container, new LoadingFragment(), "loading").addToBackStack("loading")
          .commit();

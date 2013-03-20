@@ -149,8 +149,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    }
 
    public void showLoading() {
-
-      setRequestedOrientation( getResources().getConfiguration().orientation);
+      setRequestedOrientation(getScreenOrientation());
       if (mPager != null) {
          mPager.setVisibility(View.GONE);
       }
