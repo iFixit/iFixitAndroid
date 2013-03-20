@@ -38,12 +38,13 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
    public static String GUIDE_KEY = "GUIDE_KEY";
-   public static String NEW_GUIDE_KEY = "NEW_GUIDE_KEY";
+   private static final String LOADING = "LOADING";
    private ActionBar mActionBar;
    private GuideCreateStepPortalFragment mStepPortalFragment;
    private ArrayList<GuideCreateStepObject> mStepList;
    private GuideCreateObject mGuide;
    private boolean mShowingHelp;
+   private boolean mIsLoading;
 
    public ArrayList<GuideCreateStepObject> getStepList() {
       return mStepList;
@@ -105,8 +106,10 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          // to persist mGuide
          mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-         if (mShowingHelp)
+         mIsLoading = savedInstanceState.getBoolean(LOADING);
+         if (mShowingHelp) {
             createHelpDialog().show();
+         }
       }
 
       setContentView(R.layout.guide_create_steps_root);
@@ -125,10 +128,13 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
 
       mStepPortalFragment =
          (GuideCreateStepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
+
+      if(mIsLoading) {
+         getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
+      }
    }
 
    public void showLoading() {
-      setRequestedOrientation( getScreenOrientation());
       mStepPortalFragment =
          (GuideCreateStepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
       getSupportFragmentManager().beginTransaction()
@@ -137,13 +143,13 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
       if (mStepPortalFragment != null) {
          getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
       }
-
+      mIsLoading = true;
    }
 
 
    public void hideLoading() {
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+      mIsLoading = false;
    }
 
    @Override
@@ -171,6 +177,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putSerializable(GuideCreateStepsActivity.GUIDE_KEY, mGuide);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+      savedInstanceState.putBoolean(LOADING, mIsLoading);
       super.onSaveInstanceState(savedInstanceState);
    }
 
