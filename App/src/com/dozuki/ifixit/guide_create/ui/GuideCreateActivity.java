@@ -43,13 +43,14 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    private static String GUIDE_PORTAL_FRAGMENT_TAG = "GUIDE_PORTAL_FRAGMENT_TAG";
    private static String GUIDE_INTRO_FRAGMENT_TAG = "GUIDE_INTRO_FRAGMENT_TAG";
    public static String GUIDE_KEY = "GUIDE_KEY";
-   public static int GuideItemID = 0;
+   private static final String LOADING = "LOADING";
    private ActionBar mActionBar;
    private GuidePortalFragment mGuidePortal;
    private ArrayList<UserGuide> mGuideList = new ArrayList<UserGuide>();
    private boolean mShowingHelp;
    private UserGuide mGuideForDelete;
    private boolean mShowingDelete;
+   private boolean mIsLoading;
 
    private OnBackStackChangedListener getListener() {
       OnBackStackChangedListener result = new OnBackStackChangedListener() {
@@ -93,6 +94,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          if (mShowingHelp) {
             createHelpDialog().show();
          }
+         mIsLoading = savedInstanceState.getBoolean(LOADING);
       }
 
       setContentView(R.layout.guide_create);
@@ -109,8 +111,9 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
          mGuidePortal = (GuidePortalFragment)getSupportFragmentManager().findFragmentByTag(GUIDE_PORTAL_FRAGMENT_TAG);
       }
       
-      if (mShowingDelete && mGuideForDelete != null)
+      if (mShowingDelete && mGuideForDelete != null)    {
          createDeleteDialog(mGuideForDelete).show();
+      }
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
@@ -145,6 +148,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       savedInstanceState.putSerializable(GUIDE_FOR_DELETE, mGuideForDelete);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
+      savedInstanceState.putBoolean(LOADING, mIsLoading);
       super.onSaveInstanceState(savedInstanceState);
    }
 
@@ -222,7 +226,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
    }
 
    public void showLoading() {
-      setRequestedOrientation( getScreenOrientation());
       getSupportFragmentManager().beginTransaction()
          .add(R.id.guide_create_fragment_container, new LoadingFragment(), "loading").addToBackStack("loading")
          .commit();
@@ -230,11 +233,12 @@ public class GuideCreateActivity extends IfixitActivity implements GuideCreateIn
       if (mGuidePortal != null) {
          getSupportFragmentManager().beginTransaction().hide(mGuidePortal).addToBackStack(null).commit();
       }
+      mIsLoading = true;
    }
 
    public void hideLoading() {
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-      setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+      mIsLoading = false;
    }
 
    public void createGuide() {
