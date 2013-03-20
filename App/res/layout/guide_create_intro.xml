@@ -70,7 +70,7 @@
       <TextView
               android:layout_width="wrap_content"
               android:layout_height="wrap_content"
-              android:text="@string/create_guide_device_focus"/>
+              android:text="@string/create_guide_device_subject"/>
 
       <EditText
               android:id="@+id/edit_guide_intro_focus"

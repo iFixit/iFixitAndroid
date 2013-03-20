@@ -102,7 +102,7 @@
     <string name="create_guide_header_edit">Edit Introduction</string>
     <string name="create_guide_title">TITLE</string>
     <string name="create_guide_device">DEVICE</string>
-    <string name="create_guide_device_focus">FOCUS</string>
+    <string name="create_guide_device_subject">SUBJECT</string>
     <string name="create_guide_summary">SUMMARY</string>
     <string name="create_guide_intro">INTRODUCTION</string>
     <string name="device_hint">What are you working on?</string>
