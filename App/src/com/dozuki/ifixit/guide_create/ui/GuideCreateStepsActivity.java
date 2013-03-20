@@ -102,9 +102,8 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideCre
          guideID = extras.getInt(GuideCreateStepsActivity.GUIDE_KEY);
       }
       if (savedInstanceState != null) {
-
          // to persist mGuide
-         // mStepList = mGuide.getSteps();
+         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          if (mShowingHelp)
             createHelpDialog().show();
