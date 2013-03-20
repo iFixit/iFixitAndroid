@@ -59,6 +59,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
    public static final String GUIDE_STEP_LIST_KEY = "GUIDE_STEP_LIST_KEY";
    private static final String SHOWING_SAVE = "SHOWING_SAVE";
+   private static final String LOADING = "LOADING";
 
    private ActionBar mActionBar;
    private GuideCreateObject mGuide;
@@ -77,6 +78,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    private boolean mIsStepDirty;
    private boolean mShowingHelp;
    private boolean mShowingSave;
+   private boolean mIsLoading;
 
    @SuppressWarnings("unchecked")
    public void onCreate(Bundle savedInstanceState) {
@@ -113,6 +115,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
          mStepList = (ArrayList<GuideCreateStepObject>) savedInstanceState.getSerializable(GUIDE_STEP_LIST_KEY);
+         mIsLoading = savedInstanceState.getBoolean(LOADING);
          if (mShowingHelp) {
             createHelpDialog().show();
          }
@@ -142,10 +145,15 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       mSaveStep.setOnClickListener(this);
       mAddStepButton.setOnClickListener(this);
       mDeleteStepButton.setOnClickListener(this);
-      if (mConfirmDelete)
+      if (mConfirmDelete) {
          createDeleteDialog(this).show();
+      }
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+      if(mIsLoading) {
+         mPager.setVisibility(View.GONE);
+      }
    }
 
    public void showLoading() {
@@ -154,6 +162,8 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       }
       getSupportFragmentManager().beginTransaction()
          .add(R.id.step_edit_loading_screen, new LoadingFragment(), "loading").addToBackStack("loading").commit();
+      mIsLoading = true;
+
    }
 
    public void hideLoading() {
@@ -161,6 +171,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          mPager.setVisibility(View.VISIBLE);
       }
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      mIsLoading = false;
    }
 
    @Subscribe
@@ -286,6 +297,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
       savedInstanceState.putSerializable(GUIDE_STEP_LIST_KEY, mStepList);
+      savedInstanceState.putBoolean(LOADING, mIsLoading);
    }
 
    public class StepAdapter extends FragmentStatePagerAdapter {
