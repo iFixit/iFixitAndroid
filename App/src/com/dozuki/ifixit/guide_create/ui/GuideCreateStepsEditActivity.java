@@ -352,10 +352,18 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
 
    private void save(int savePosition) {
       GuideCreateStepObject obj = mCurStepFragment.getGuideChanges();
-      if (obj.getLines().size() == 0 || obj.getLines().get(0).getText().length() == 0) {
+      if (obj.getLines().size() == 0) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
                  Toast.LENGTH_SHORT).show();
          return;
+      }
+
+      for(StepLine l : obj.getLines())  {
+         if(l.getText().length() == 0) {
+            Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
+                    Toast.LENGTH_SHORT).show();
+            return;
+         }
       }
 
       if(!mIsStepDirty) {
