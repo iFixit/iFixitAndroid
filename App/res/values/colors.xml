@@ -19,5 +19,10 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_orange">#FFF25D07</color>
     <color name="dozuki_white">#FFCCCCCC</color>
     <color name="dozuki_grey">#F7777777</color>
+    <color name="fireswing_grey">#EEEEEE</color>
+    <color name="fireswing_blue">#2DB6EA</color>
+    <color name="fireswing_disabled">#656565</color>
+    <color name="fireswing_black">#333333</color>
+    <color name="fireswing_dark_grey">#666666</color>
 
 </resources>

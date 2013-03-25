@@ -1,16 +1,28 @@
 package com.dozuki.ifixit.topic_view.ui;
 
+import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.dozuki.model.Site;
+import com.dozuki.ifixit.gallery.ui.MediaFragment;
+import com.dozuki.ifixit.gallery.ui.PhotoMediaFragment;
+import com.dozuki.ifixit.gallery.ui.GalleryActivity.StepAdapter;
 import com.dozuki.ifixit.guide_view.ui.LoadingFragment;
 import com.dozuki.ifixit.guide_view.ui.NoGuidesFragment;
 import com.dozuki.ifixit.guide_view.ui.WebViewFragment;
@@ -18,17 +30,20 @@ import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
+import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
+import com.viewpagerindicator.TabPageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 
 import java.net.URLEncoder;
 
-public class TopicViewFragment extends Fragment
- implements ActionBar.TabListener {
+public class TopicViewFragment extends Fragment {
    private static final int GUIDES_TAB = 0;
    private static final int MORE_INFO_TAB = 1;
    private static final int ANSWERS_TAB = 2;
@@ -40,7 +55,10 @@ public class TopicViewFragment extends Fragment
    private TopicLeaf mTopicLeaf;
    private ImageManager mImageManager;
    private Site mSite;
-   private ActionBar mActionBar;
+   private PageAdapter mPageAdapter;
+   private ViewPager mPager;
+   private TitlePageIndicator mTitleIndicator;
+
    private int mSelectedTab = -1;
 
    @Subscribe
@@ -48,9 +66,8 @@ public class TopicViewFragment extends Fragment
       if (!event.hasError()) {
          setTopicLeaf(event.getResult());
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getTopicIntent(getActivity(), mTopicNode.getName()))
-          .show();
+         APIService.getErrorDialog(getActivity(), event.getError(), APIService.getTopicAPICall(mTopicNode.getName()))
+            .show();
       }
    }
 
@@ -64,21 +81,25 @@ public class TopicViewFragment extends Fragment
       super.onCreate(savedInstanceState);
 
       if (mImageManager == null) {
-         mImageManager = ((MainApplication)getActivity().getApplication()).
-          getImageManager();
+         mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
 
       if (mSite == null) {
-         mSite = ((MainApplication)getActivity().getApplication())
-          .getSite();
+         mSite = ((MainApplication) getActivity().getApplication()).getSite();
       }
+   }
+
+   @Override
+   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      View view = inflater.inflate(R.layout.topic_view_fragment, container, false);
+
+      mPager = (ViewPager) view.findViewById(R.id.topic_view_view_pager);
+      mTitleIndicator = (TitlePageIndicator) view.findViewById(R.id.topic_view_indicator);
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
-         mTopicNode = (TopicNode)savedInstanceState.getSerializable(
-          CURRENT_TOPIC_NODE);
-         TopicLeaf topicLeaf = (TopicLeaf)savedInstanceState.getSerializable(
-          CURRENT_TOPIC_LEAF);
+         mTopicNode = (TopicNode) savedInstanceState.getSerializable(CURRENT_TOPIC_NODE);
+         TopicLeaf topicLeaf = (TopicLeaf) savedInstanceState.getSerializable(CURRENT_TOPIC_LEAF);
 
          if (topicLeaf != null) {
             setTopicLeaf(topicLeaf);
@@ -86,14 +107,6 @@ public class TopicViewFragment extends Fragment
             getTopicLeaf(mTopicNode.getName());
          }
       }
-   }
-
-   @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.topic_view_fragment, container,
-       false);
-
       return view;
    }
 
@@ -114,14 +127,13 @@ public class TopicViewFragment extends Fragment
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-      mActionBar = ((Activity)activity).getSupportActionBar();
    }
 
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
-      outState.putInt(CURRENT_PAGE, mActionBar.getSelectedNavigationIndex());
+      outState.putInt(CURRENT_PAGE, mSelectedTab);
       outState.putSerializable(CURRENT_TOPIC_LEAF, mTopicLeaf);
       outState.putSerializable(CURRENT_TOPIC_NODE, mTopicNode);
    }
@@ -158,46 +170,19 @@ public class TopicViewFragment extends Fragment
       }
 
       mTopicLeaf = topicLeaf;
-      mActionBar.removeAllTabs();
 
+      ((IfixitActivity) getActivity()).setCustomTitle(mTopicLeaf.getName());
       if (mTopicLeaf == null) {
          // display error message
          return;
       }
 
-      mActionBar.setTitle(mTopicLeaf.getName());
-
-      mActionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-      ActionBar.Tab tab = mActionBar.newTab();
-      tab.setText(getActivity().getString(R.string.guides));
-      tab.setTabListener(this);
-      mActionBar.addTab(tab, false);
-
-      tab = mActionBar.newTab();
-      tab.setText(getActivity().getString(R.string.info));
-      tab.setTabListener(this);
-      mActionBar.addTab(tab, false);
-
-      if (mSite.mAnswers) {
-         tab = mActionBar.newTab();
-         tab.setText(getActivity().getString(R.string.answers));
-         tab.setTabListener(this);
-         mActionBar.addTab(tab, false);
-      }
-
-      if (mSelectedTab != -1) {
-         mActionBar.setSelectedNavigationItem(mSelectedTab);
-      } else {
-         selectDefaultTab();
-      }
-   }
-
-   private void displayLoading() {
-      mActionBar.removeAllTabs();
-      FragmentTransaction ft = getActivity().getSupportFragmentManager().
-       beginTransaction();
-      ft.replace(R.id.topic_view_page_fragment, new LoadingFragment());
-      ft.commit();
+      mTitleIndicator.setVisibility(View.VISIBLE);
+      mPageAdapter = new PageAdapter(this.getChildFragmentManager());
+      mPager.setAdapter(mPageAdapter);
+      mTitleIndicator.setViewPager(mPager);
+      mPager.setOffscreenPageLimit(2);
+      selectDefaultTab();
    }
 
    private void selectDefaultTab() {
@@ -213,16 +198,20 @@ public class TopicViewFragment extends Fragment
          tab = GUIDES_TAB;
       }
 
-      mActionBar.setSelectedNavigationItem(tab);
+      mPager.setCurrentItem(tab, false);
+      mPager.invalidate();
+      mTitleIndicator.invalidate();
    }
 
    private void getTopicLeaf(String topicName) {
-      displayLoading();
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      APIService.call((Activity)getActivity(),
-       APIService.getTopicIntent(getActivity(), topicName));
+      if (mTitleIndicator != null) {
+         mTitleIndicator.setVisibility(View.VISIBLE);
+      }
+
+      APIService.call((Activity) getActivity(), APIService.getTopicAPICall(topicName));
    }
 
    public TopicLeaf getTopicLeaf() {
@@ -233,56 +222,95 @@ public class TopicViewFragment extends Fragment
       return mTopicNode;
    }
 
-   @Override
-   public void onTabSelected(Tab tab, FragmentTransaction ft) {
-      int position = tab.getPosition();
-      Fragment selectedFragment;
-      ft = getActivity().getSupportFragmentManager().beginTransaction();
+   public class PageAdapter extends FragmentStatePagerAdapter {
 
-      if (mTopicLeaf == null) {
-         Log.w("iFixit", "Trying to get Fragment at bad position");
-         return;
+      public PageAdapter(FragmentManager fm) {
+         super(fm);
       }
 
-      if (position == GUIDES_TAB) {
-         if (mTopicLeaf.getGuides().size() == 0) {
-            selectedFragment = new NoGuidesFragment();
-         } else {
-            selectedFragment = new TopicGuideListFragment(mImageManager,
-             mTopicLeaf);
-         }
-         mSelectedTab = GUIDES_TAB;
-      } else if (position == ANSWERS_TAB && mSite.mAnswers) {
-         WebViewFragment webView = new WebViewFragment();
-
-         webView.loadUrl(mTopicLeaf.getSolutionsUrl());
-
-         selectedFragment = webView;
-         mSelectedTab = ANSWERS_TAB;
-      } else if (position == MORE_INFO_TAB) {
-         WebViewFragment webView = new WebViewFragment();
-
-         try {
-            webView.loadUrl("http://" + mSite.mDomain + "/c/" +
-             URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
-         } catch (Exception e) {
-            Log.w("iFixit", "Encoding error: " + e.getMessage());
-         }
-
-         selectedFragment = webView;
-         mSelectedTab = MORE_INFO_TAB;
-      } else {
-         Log.w("iFixit", "Too many tabs!");
-         return;
+      @Override
+      public int getCount() {
+         if (mSite.mAnswers) {
+            return 3;
+         } else
+            return 2;
       }
 
-      ft.replace(R.id.topic_view_page_fragment, selectedFragment);
-      ft.commit();
+      @Override
+      public CharSequence getPageTitle(int position) {
+         switch (position) {
+            case 0:
+               return getActivity().getString(R.string.guides);
+            case 1:
+
+               if (mSite.mAnswers) {
+                  return getActivity().getString(R.string.answers);
+               } else {
+                  return getActivity().getString(R.string.info);
+               }
+
+            case 2:
+               return getActivity().getString(R.string.info);
+         }
+         return "";
+      }
+
+      @Override
+      public Fragment getItem(int position) {
+
+         Fragment selectedFragment;
+         switch (position) {
+            case 0:
+               if (mTopicLeaf.getGuides().size() == 0) {
+                  selectedFragment = new NoGuidesFragment();
+               } else {
+                  selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
+               }
+               mSelectedTab = GUIDES_TAB;
+               return selectedFragment;
+            case 1:
+               if (mSite.mAnswers) {
+                  WebViewFragment webView = new WebViewFragment();
+
+                  webView.loadUrl(mTopicLeaf.getSolutionsUrl());
+
+                  selectedFragment = webView;
+                  mSelectedTab = ANSWERS_TAB;
+               } else {
+                  WebViewFragment webView = new WebViewFragment();
+
+                  try {
+                     webView.loadUrl("http://" + mSite.mDomain + "/c/"
+                        + URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
+                  } catch (Exception e) {
+                     Log.w("iFixit", "Encoding error: " + e.getMessage());
+                  }
+
+                  selectedFragment = webView;
+                  mSelectedTab = MORE_INFO_TAB;
+               }
+               return selectedFragment;
+            case 2:
+               WebViewFragment webView = new WebViewFragment();
+
+               try {
+                  webView.loadUrl("http://" + mSite.mDomain + "/c/" + URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
+               } catch (Exception e) {
+                  Log.w("iFixit", "Encoding error: " + e.getMessage());
+               }
+
+               selectedFragment = webView;
+               mSelectedTab = MORE_INFO_TAB;
+               return selectedFragment;
+            default:
+               return null;
+         }
+      }
+
+      @Override
+      public void setPrimaryItem(ViewGroup container, int position, Object object) {
+         super.setPrimaryItem(container, position, object);
+         mSelectedTab = position;
+      }
    }
-
-   @Override
-   public void onTabUnselected(Tab tab, FragmentTransaction ft) {}
-
-   @Override
-   public void onTabReselected(Tab tab, FragmentTransaction ft) {}
 }

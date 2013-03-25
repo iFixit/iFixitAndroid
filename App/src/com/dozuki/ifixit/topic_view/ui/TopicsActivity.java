@@ -10,8 +10,9 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
 import com.dozuki.ifixit.topic_view.model.TopicSelectedListener;
@@ -21,6 +22,7 @@ import com.dozuki.ifixit.util.IfixitActivity;
 import com.squareup.otto.Subscribe;
 
 import org.holoeverywhere.app.Fragment;
+
 
 public class TopicsActivity extends IfixitActivity
  implements TopicSelectedListener, OnBackStackChangedListener {
@@ -33,6 +35,7 @@ public class TopicsActivity extends IfixitActivity
     * activity and go back to the sites list.
     */
    private static final boolean UP_NAVIGATION_FINISH_ACTIVITY = false;
+   public static int TASK_ID = -1;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -44,10 +47,15 @@ public class TopicsActivity extends IfixitActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      getSupportActionBar().setTitle(MainApplication.get().  getSiteDisplayTitle());
+      /** hack: when the application dies, some things are reinitialized properly. This fixes that.
+       * curtousy of: https://github.com/ChristopheVersieux/HoloEverywhere/issues/127#issuecomment-9208522 **/
+      getLayoutInflater().setFactory(this);
+      
       super.onCreate(savedInstanceState);
-
       setContentView(R.layout.topics);
+      com.actionbarsherlock.app.ActionBar actionbar = getSupportActionBar();
+      prepareNavigationSpinner(actionbar, VIEW_GUIDES);
+      TASK_ID =this.getTaskId();
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -63,7 +71,7 @@ public class TopicsActivity extends IfixitActivity
       }
 
       if (mRootTopic == null) {
-         APIService.call(this, APIService.getCategoriesIntent(this));
+         APIService.call(this, APIService.getCategoriesAPICall());
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
@@ -103,7 +111,7 @@ public class TopicsActivity extends IfixitActivity
          }
       } else {
          APIService.getErrorDialog(TopicsActivity.this, event.getError(),
-          APIService.getCategoriesIntent(TopicsActivity.this)).show();
+          APIService.getCategoriesAPICall()).show();
       }
    }
 
@@ -208,6 +216,17 @@ public class TopicsActivity extends IfixitActivity
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
    }
+   
+   
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+
+      MenuInflater inflater = getSupportMenuInflater();
+
+      inflater.inflate(R.menu.menu_bar, menu);
+     
+      return super.onCreateOptionsMenu(menu);
+   }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
@@ -231,4 +250,17 @@ public class TopicsActivity extends IfixitActivity
             return super.onOptionsItemSelected(item);
       }
    }
+   
+   @Override
+   protected void onDestroy () {
+      super.onDestroy();
+      TASK_ID = -1;
+   }
+   
+   @Override
+   public void onResume() {
+      super.onResume();
+      this.getSupportActionBar().setSelectedNavigationItem(0);
+   }
+   
 }

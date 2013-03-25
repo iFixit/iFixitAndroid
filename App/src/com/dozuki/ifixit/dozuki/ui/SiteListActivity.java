@@ -131,7 +131,7 @@ public class SiteListActivity extends IfixitActivity
          setSiteList(mSiteList);
       } else {
          APIService.getErrorDialog(SiteListActivity.this, event.getError(),
-          APIService.getSitesIntent(SiteListActivity.this)).show();
+          APIService.getSitesAPICall()).show();
       }
    }
 
@@ -211,7 +211,7 @@ public class SiteListActivity extends IfixitActivity
    }
 
    private void getSiteList() {
-      APIService.call(this, APIService.getSitesIntent(this));
+      APIService.call(this, APIService.getSitesAPICall());
    }
 
    private void showSiteListDialog() {

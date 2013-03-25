@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <version>1.2.3</version>
+    <groupId>com.dozuki.ifixit</groupId>
+    <artifactId>ifixit-android-parent</artifactId>
+    <packaging>pom</packaging>
+    <name>iFixit Android app parent POM project</name>
+
+    <modules>
+        <module>App</module>
+    </modules>
+
+    <developers>
+        <developer>
+            <name>Marc Zych</name>
+            <email>marc@ifixit.com</email>
+            <id>marczych</id>
+            <url>http://github.com/marczych</url>
+            <timezone>-5</timezone>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+        <developer>
+            <name>Timothy Asp</name>
+            <email>tim@ifixit.com</email>
+            <id>timothyasp</id>
+            <url>http://github.com/timothyasp</url>
+            <timezone>-5</timezone>
+            <roles>
+                <role>developer</role>
+            </roles>
+        </developer>
+    </developers>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <java.version>1.6</java.version>
+        <android.version>4.2.2_r2</android.version>
+        <android.platform>17</android.platform>
+        <scm.branch>master</scm.branch>
+    </properties>
+
+    <scm>
+        <url>http://github.com/ifixit/iFixitAndroid/tree/${scm.branch}</url>
+        <connection>scm:git:git://github.com/ifixit/iFixitAndroid.git</connection>
+        <developerConnection>scm:git:ssh://git@github.com/ifixit/iFixitAndroid.git</developerConnection>
+        <tag>HEAD</tag>
+    </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/iFixit/iFixitAndroid/issues</url>
+    </issueManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>2.5</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>com.jayway.maven.plugins.android.generation2</groupId>
+                    <artifactId>android-maven-plugin</artifactId>
+                    <version>3.4.1</version>
+                    <configuration>
+                        <sdk>
+                            <platform>${android.platform}</platform>
+                        </sdk>
+                        <emulator>
+                            <avd>23</avd>
+                            <wait>10000</wait>
+                            <!--<options>-no-skin</options> -->
+                        </emulator>
+                        <zipalign>
+                            <verbose>true</verbose>
+                        </zipalign>
+                        <undeployBeforeDeploy>true</undeployBeforeDeploy>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-scm-plugin</artifactId>
+                    <version>1.8.1</version>
+                    <configuration>
+                        <goals>install</goals>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

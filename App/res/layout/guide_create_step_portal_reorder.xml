@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res/com.dozuki.ifixit"
+                android:layout_width="wrap_content"
+                android:background="#ffffffff"
+                android:layout_height="match_parent">
+
+   <com.mobeta.android.dslv.DragSortListView
+           android:id="@+id/steps_portal_list_reorder"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:dividerHeight="@dimen/topic_list_vertical_spacing"
+           android:divider="@color/white"
+           android:layout_margin="3dp"
+           android:layout_above="@+id/reorder_button_container"
+           android:padding="3dp"/>
+
+</RelativeLayout>

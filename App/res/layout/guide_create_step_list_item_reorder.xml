@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/step_create_item_reorder"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:layout_margin="4dp"
+              android:background="@color/gray"
+              android:orientation="vertical"
+              android:padding="1dp">
+
+   <LinearLayout
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:orientation="horizontal">
+
+      <RelativeLayout
+              android:id="@+id/step_create_upper_section_reorder"
+              android:layout_width="match_parent"
+              android:layout_height="wrap_content"
+              android:background="@drawable/border"
+              android:padding="4dp">
+
+         <ImageView
+                 android:id="@+id/guide_step_item_thumbnail_reorder"
+                 android:layout_width="@dimen/guide_thumbnail_width"
+                 android:layout_height="@dimen/guide_thumbnail_height"
+                 android:layout_marginRight="8dp"
+                 android:background="@color/image_border"
+                 android:contentDescription="@string/topic_guide_thumbnail"
+                 android:padding="1dp"/>
+
+         <TextView
+                 android:id="@+id/step_title_textview_reorder"
+                 style="@android:style/TextAppearance.Medium"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerVertical="true"
+                 android:layout_toLeftOf="@+id/drag_handle_reorder"
+                 android:layout_toRightOf="@+id/guide_step_item_thumbnail_reorder"
+                 android:ellipsize="end"
+                 android:maxLines="1"
+                 android:scrollHorizontally="true"
+                 android:text=""/>
+
+         <RelativeLayout
+                 android:id="@+id/drag_handle_reorder"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_alignParentRight="true"
+                 android:layout_centerVertical="true"
+                 android:layout_alignTop="@+id/step_title_textview_reorder"
+                 android:paddingLeft="25dp"
+                 android:paddingRight="10dp"
+                 >
+
+            <ImageView
+                    android:id="@+id/drag_handle_img"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:paddingLeft="10dp"
+                    android:background="@drawable/ic_list_item_move"
+                    android:contentDescription="@string/topic_guide_thumbnail"/>
+         </RelativeLayout>
+
+         <TextView
+                 android:id="@+id/guide_create_step_item_number_reorder"
+                 android:layout_width="match_parent"
+                 android:layout_height="wrap_content"
+                 android:layout_alignBottom="@+id/drag_handle_reorder"
+                 android:layout_alignLeft="@+id/step_title_textview_reorder"
+                 android:text=""
+                 android:layout_marginTop="2dp"
+                 android:textColor="@color/fireswing_dark_grey"
+                 android:textSize="12sp"
+                 android:textStyle="italic"/>
+
+      </RelativeLayout>
+   </LinearLayout>
+</LinearLayout>

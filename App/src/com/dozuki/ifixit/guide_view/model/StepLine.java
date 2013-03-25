@@ -4,12 +4,17 @@ import java.io.Serializable;
 
 public class StepLine implements Serializable {
    private static final long serialVersionUID = 8535265363779393297L;
+   /**
+    * Lineid that identifies this stepline. Can be null if this line hasn't been
+    * saved yet.
+    */
+   protected Integer mLineid;
    protected String mColor;
    protected int mLevel;
    protected String mText;
    protected boolean hasIcon = false;
 
-   public StepLine(String color, int level, String text) {
+   public StepLine(Integer lineid, String color, int level, String text) {
       if (color.equals("icon_reminder") ||
           color.equals("icon_caution") ||
           color.equals("icon_note")) {
@@ -18,9 +23,14 @@ public class StepLine implements Serializable {
          hasIcon = false;
       }
 
+      mLineid = lineid;
       mColor = color;
       mLevel = level;
       mText = text;
+   }
+
+   public void setLineid(Integer lineid) {
+      mLineid = lineid;
    }
 
    public void setColor(String color) {
@@ -52,6 +62,10 @@ public class StepLine implements Serializable {
    }
 
    public String toString() {
-      return "{StepLine: " + mColor + ", " + mLevel + ", " + mText + "}";
+      return "{StepLine: " + mLineid + ", " + mColor + ", " + mLevel + ", " + mText + "}";
+   }
+
+   public Integer getLineId() {
+      return mLineid;
    }
 }

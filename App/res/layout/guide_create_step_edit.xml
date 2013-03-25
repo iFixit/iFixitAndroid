@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/guide_create_edit_bottom_bar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@color/white"
+                android:orientation="vertical">
+
+   <com.viewpagerindicator.TitlePageIndicator
+           android:id="@+id/step_edit_top_bar"
+           android:layout_width="fill_parent"
+           android:layout_height="wrap_content"
+           android:layout_alignParentTop="true"
+           android:background="@color/fireswing_black"/>
+
+
+   <com.dozuki.ifixit.guide_create.ui.LockableViewPager
+           android:id="@+id/guide_edit_body_pager"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:layout_above="@+id/step_edit_bottom_bar"
+           android:layout_below="@+id/step_edit_top_bar">
+   </com.dozuki.ifixit.guide_create.ui.LockableViewPager>
+
+   <RelativeLayout
+           android:id="@+id/step_edit_bottom_bar"
+           android:layout_width="match_parent"
+           android:layout_height="@dimen/gallery_top_bar_height"
+           android:layout_alignParentBottom="true"
+           android:background="@color/fireswing_black"
+           android:clickable="true">
+
+      <ImageButton
+              android:id="@+id/step_edit_delete_step"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentLeft="true"
+              android:layout_centerVertical="true"
+              android:layout_marginLeft="20dp"
+              android:background="@drawable/ic_menu_bot_step_delete"/>
+
+      <Button
+              android:id="@+id/step_edit_view_save"
+              android:layout_width="wrap_content"
+              android:layout_height="32dp"
+              android:paddingRight="18dp"
+              android:paddingLeft="18dp"
+              android:text="@string/step_edit_save_step"
+              android:textSize="14sp"
+              android:textStyle="bold"
+              android:layout_margin="4dp"
+              android:layout_centerHorizontal="true"
+              android:layout_centerVertical="true"
+              android:textColor="@color/dark"
+              android:background="@color/fireswing_blue"/>
+      <!--
+          <TextView
+          android:id="@+id/step_edit_delete_step"
+          android:layout_width="wrap_content"
+          android:layout_height="wrap_content"
+          android:layout_centerHorizontal="true"
+          android:layout_centerVertical="true"
+          android:clickable="true"
+          android:drawableLeft="@drawable/ic_guide_delete"
+          android:drawablePadding="10dip"
+          android:text="@string/delete_step"
+          android:textColor="@color/gray" />
+      -->
+
+      <ImageButton
+              android:id="@+id/step_edit_add_step"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_alignParentRight="true"
+              android:layout_centerVertical="true"
+              android:layout_marginRight="20dp"
+              android:background="@drawable/ic_menu_bot_step_add"
+              android:paddingRight="20dp"/>
+
+      <ProgressBar
+              android:id="@+id/step_edit_save_progress_bar"
+              style="?android:attr/progressBarStyleSmall"
+              android:layout_width="wrap_content"
+              android:layout_height="wrap_content"
+              android:layout_centerVertical="true"
+              android:visibility="gone"
+              android:layout_toLeftOf="@+id/step_edit_view_save"/>
+
+   </RelativeLayout>
+
+
+   <FrameLayout
+           android:id="@+id/step_edit_loading_screen"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"/>
+
+</RelativeLayout>

@@ -1,13 +1,18 @@
 package com.dozuki.ifixit.util;
 
+import java.util.ArrayList;
+
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
+import com.dozuki.ifixit.gallery.model.UserEmbedList;
 import com.dozuki.ifixit.gallery.model.UserImageList;
+import com.dozuki.ifixit.gallery.model.UserVideoList;
+import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
+import com.dozuki.ifixit.guide_create.model.UserGuide;
+import com.dozuki.ifixit.guide_view.model.GuideStep;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.topic_view.model.TopicNode;
-
-import java.util.ArrayList;
 
 /**
  * Base class for API events that are posted to the otto bus.
@@ -17,11 +22,25 @@ public abstract class APIEvent<T> {
    public static class Guide extends APIEvent<com.dozuki.ifixit.guide_view.model.Guide> {}
    public static class Topic extends APIEvent<TopicLeaf> {}
    public static class Login extends APIEvent<User> {}
+   public static class Logout extends APIEvent<String> {}
    public static class Register extends APIEvent<User> {}
    public static class UserImages extends APIEvent<UserImageList> {}
+   public static class UserVideos extends APIEvent<UserVideoList> {}
+   public static class UserEmbeds extends APIEvent<UserEmbedList> {}
    public static class UploadImage extends APIEvent<UploadedImageInfo> {}
    public static class DeleteImage extends APIEvent<String> {}
+   public static class DeleteGuide extends APIEvent<String> {}
+   public static class PublishStatus extends APIEvent<GuideCreateObject> {}
+   public static class UserGuides extends APIEvent<ArrayList<UserGuide>> {}
+   public static class GuideForEdit extends APIEvent<GuideCreateObject> {}
+   public static class CreateGuide extends APIEvent<GuideCreateObject> {}
+   public static class StepSave extends APIEvent<GuideStep> {}
+   public static class StepReorder extends APIEvent<GuideCreateObject> {}
+   public static class StepAdd extends APIEvent<GuideCreateObject> {}
+   public static class StepRemove extends APIEvent<GuideCreateObject> {}
+   public static class EditGuide extends APIEvent<GuideCreateObject> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}
+   public static class UserInfo extends APIEvent<User> {}
 
    public String mResponse;
    public T mResult;

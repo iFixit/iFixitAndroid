@@ -36,7 +36,7 @@ import com.dozuki.ifixit.guide_view.model.StepVideo;
 import com.dozuki.ifixit.guide_view.model.StepVideoThumbnail;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.JSONHelper;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;

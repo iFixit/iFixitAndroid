@@ -5,9 +5,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
@@ -17,7 +20,7 @@ import com.dozuki.ifixit.login.model.LoginEvent;
 import com.dozuki.ifixit.login.model.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Bus;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
@@ -30,8 +33,9 @@ public class MainApplication extends Application {
    public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
     "FIRST_TIME_GALLERY_USER";
-   private static final String SESSION_KEY = "SESSION_KEY";
+   private static final String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
    private static final String USERNAME_KEY = "USERNAME_KEY";
+   private static final String USERID_KEY = "USERID_KEY";
 
    /**
     * Singleton reference.
@@ -69,6 +73,11 @@ public class MainApplication extends Application {
     * to be logged in.
     */
    private boolean mIsLoggingIn = false;
+
+   /**
+    * User agent singleton.
+    */
+   private String mUserAgent = null;
 
    @Override
    public void onCreate() {
@@ -144,6 +153,29 @@ public class MainApplication extends Application {
       return R.style.Theme_Dozuki;
    }
 
+   public String getUserAgent() {
+      if (mUserAgent == null) {
+         int versionCode = -1;
+
+         try {
+            PackageInfo packageInfo = null;
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+            versionCode = packageInfo.versionCode;
+         } catch (PackageManager.NameNotFoundException e) {
+            Log.e("iFixit", "Can't get application version", e);
+         }
+
+         /**
+          * Returns the Site that this app is "built" for. e.g. Dozuki even if the user
+          * is currently viewing a different nanosite.
+          */
+         Site currentApp = getDefaultSite();
+         mUserAgent = currentApp.mTitle + "Android/" + versionCode;
+      }
+
+      return mUserAgent;
+   }
+
    public void setIsLoggingIn(boolean isLoggingIn) {
       mIsLoggingIn = isLoggingIn;
    }
@@ -155,6 +187,10 @@ public class MainApplication extends Application {
    public ImageManager getImageManager() {
       if (mImageManager == null) {
          mImageManager = new ImageManager(this);
+
+         // Uncomment to view images in development.
+         mImageManager.trustAllCerts(true);
+         mImageManager.trustAllHosts(true);
 
          mImageManager.setController(new ImageManager.Controller() {
             public boolean overrideDisplay(String url, ImageView imageView) {
@@ -174,7 +210,7 @@ public class MainApplication extends Application {
             public boolean displayImage(ImageView imageView, Bitmap bitmap,
              String url) {
                if (imageView instanceof ImageViewTouch) {
-                  ((ImageViewTouch)imageView).setImageBitmapReset(bitmap, true);
+                  ((ImageViewTouch)imageView).setImageBitmap(bitmap, true);
                   ((ImageViewTouch)imageView).setVisibility(View.VISIBLE);
                   return true;
                }
@@ -187,7 +223,7 @@ public class MainApplication extends Application {
                   Bitmap noImage = BitmapFactory.decodeResource(getResources(),
                    R.drawable.no_image);
 
-                  ((ImageViewTouch)imageView).setImageBitmapReset(noImage, true);
+                  ((ImageViewTouch)imageView).setImageBitmap(noImage, true);
                } else {
                   imageView.setImageResource(R.drawable.no_image);
                }
@@ -235,17 +271,18 @@ public class MainApplication extends Application {
    }
 
    private User getUserFromPreferenceFile(Site site) {
-      SharedPreferences preferenceFile = getSharedPreferences(
-       PREFERENCE_FILE, MODE_PRIVATE);
-      String session = preferenceFile.getString(site.mName + SESSION_KEY,
-       null);
-      String username = preferenceFile.getString(site.mName + USERNAME_KEY,
-       null);
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE);
+      String authToken = preferenceFile.getString(site.mName + AUTH_TOKEN_KEY, null);
+      String username = preferenceFile.getString(site.mName + USERNAME_KEY, null);
+      String userid = preferenceFile.getString(site.mName + USERID_KEY, null);
       User user = null;
-      if (username != null && session != null) {
+
+      if (username != null && authToken != null) {
          user = new User();
-         user.setSession(session);
+         user.setAuthToken(authToken);
          user.setUsername(username);
+         user.setUserid(userid);
       }
 
       return user;
@@ -287,8 +324,9 @@ public class MainApplication extends Application {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
-      editor.putString(mSite.mName + SESSION_KEY, user.getSession());
+      editor.putString(mSite.mName + AUTH_TOKEN_KEY, user.getAuthToken());
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
+      editor.putString(mSite.mName + USERID_KEY, user.getUserId());
       editor.commit();
       mUser = user;
 
@@ -299,7 +337,7 @@ public class MainApplication extends Application {
       /**
        * Execute pending API call if one exists.
        */
-      Intent pendingApiCall = APIService.getAndRemovePendingApiCall();
+      Intent pendingApiCall = APIService.getAndRemovePendingApiCall(this);
       if (pendingApiCall != null) {
          startService(pendingApiCall);
       }
@@ -313,8 +351,9 @@ public class MainApplication extends Application {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
-      editor.remove(mSite.mName + SESSION_KEY);
+      editor.remove(mSite.mName + AUTH_TOKEN_KEY);
       editor.remove(mSite.mName + USERNAME_KEY);
+      editor.remove(mSite.mName + USERID_KEY);
       editor.commit();
 
       mUser = null;
@@ -327,7 +366,7 @@ public class MainApplication extends Application {
     */
    public void cancelLogin() {
       // Clear the pending api call if one exists.
-      APIService.getAndRemovePendingApiCall();
+      APIService.getAndRemovePendingApiCall(this);
       setIsLoggingIn(false);
 
       getBus().post(new LoginEvent.Cancel());

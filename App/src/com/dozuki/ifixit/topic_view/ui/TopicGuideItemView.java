@@ -6,7 +6,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
 import com.dozuki.ifixit.R;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;

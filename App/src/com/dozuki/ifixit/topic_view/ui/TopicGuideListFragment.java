@@ -15,7 +15,7 @@ import com.dozuki.ifixit.guide_view.model.GuideInfo;
 import com.dozuki.ifixit.guide_view.ui.GuideViewActivity;
 import com.dozuki.ifixit.topic_view.model.TopicLeaf;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;

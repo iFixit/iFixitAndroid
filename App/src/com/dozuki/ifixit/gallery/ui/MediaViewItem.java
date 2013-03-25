@@ -6,15 +6,16 @@ import android.view.animation.AlphaAnimation;
 import android.widget.RelativeLayout;
 
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.gallery.model.MediaInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
-import com.ifixit.android.imagemanager.ImageManager;
+import com.marczych.androidimagemanager.ImageManager;
 
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.ProgressBar;
 
 public class MediaViewItem extends RelativeLayout {
-   public UserImageInfo mListRef;
+   public MediaInfo mListRef;
    public String mLocalPath;
 
    public FadeInImageView mImageview;

@@ -1,13 +1,14 @@
 package com.dozuki.ifixit.util;
 
-import android.util.Log;
-
-import com.dozuki.ifixit.dozuki.model.Site;
+import java.io.UnsupportedEncodingException;
+import java.net.URLEncoder;
 
 import org.json.JSONException;
 
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
+import android.util.Log;
+
+import com.dozuki.ifixit.dozuki.model.Site;
+import org.json.JSONObject;
 
 /**
  * Defines all APIEndpoints.
@@ -16,7 +17,7 @@ public enum APIEndpoint {
    CATEGORIES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "categories/";
+            return "categories";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -28,15 +29,14 @@ public enum APIEndpoint {
          }
       },
       false,
-      false,
-      false,
+      "GET",
       false
    ),
 
    GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "guide/" + query;
+            return "guides/" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -48,8 +48,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      false,
-      false,
+      "GET",
       false
    ),
 
@@ -57,7 +56,7 @@ public enum APIEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "topic/" + URLEncoder.encode(query, "UTF-8");
+               return "categories/" + URLEncoder.encode(query, "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
@@ -73,15 +72,14 @@ public enum APIEndpoint {
          }
       },
       false,
-      false,
-      false,
+      "GET",
       false
    ),
 
    LOGIN(
       new Endpoint() {
          public String createUrl(String query) {
-            return "login/";
+            return "user/token";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -92,16 +90,34 @@ public enum APIEndpoint {
             return new APIEvent.Login();
          }
       },
-      true,
       false,
-      true,
+      "POST",
       true
+   ),
+
+   LOGOUT(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/token";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Logout();
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Logout();
+         }
+      },
+      true,
+      "DELETE",
+      false
    ),
 
    REGISTER(
       new Endpoint() {
          public String createUrl(String query) {
-            return "register/";
+            return "users";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -112,16 +128,15 @@ public enum APIEndpoint {
             return new APIEvent.Register();
          }
       },
-      true,
       false,
-      true,
+      "POST",
       true
    ),
 
    USER_IMAGES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "image/user" + query;
+            return "user/media/images" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -132,9 +147,44 @@ public enum APIEndpoint {
             return new APIEvent.UserImages();
          }
       },
-      false,
       true,
+      "GET",
+      false
+   ),
+   USER_VIDEOS(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/media/videos" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserVideos().setResult(JSONHelper.parseUserVideos(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserVideos();
+         }
+      },
       true,
+      "GET",
+      false
+   ),
+   USER_EMBEDS(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/media/embeds" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserEmbeds().setResult(JSONHelper.parseUserEmbeds(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserVideos();
+         }
+      },
+      true,
+      "GET",
       false
    ),
 
@@ -150,7 +200,7 @@ public enum APIEndpoint {
                fileName = "uploaded_image.jpg";
             }
 
-            return "image/upload?file=" + fileName;
+            return "user/media/images?file=" + fileName;
          }
 
          private String getFileNameFromFilePath(String filePath) {
@@ -175,16 +225,15 @@ public enum APIEndpoint {
             return new APIEvent.UploadImage();
          }
       },
-      false,
       true,
-      true,
+      "POST",
       false
    ),
 
    DELETE_IMAGE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "image/delete" + query;
+            return "user/media/images" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -196,12 +245,224 @@ public enum APIEndpoint {
             return new APIEvent.DeleteImage();
          }
       },
-      false,
       true,
-      true,
+      "DELETE",
       false
    ),
 
+   USER_GUIDES(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/guides";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserGuides().setResult(JSONHelper.parseUserGuides(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserGuides();
+         }
+      },
+      true,
+      "GET",
+      false
+   ),
+
+   GUIDE_FOR_EDIT(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query + "?edit&noPrereqSteps";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.GuideForEdit().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.GuideForEdit();
+         }
+      },
+      true,
+      "GET",
+      false
+   ),
+
+   CREATE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.CreateGuide();
+         }
+      },
+      true,
+      "POST",
+      false
+   ),
+
+   EDIT_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.EditGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.EditGuide();
+         }
+      },
+      true,
+      "PATCH",
+      false
+   ),
+   DELETE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+           return new APIEvent.DeleteGuide().setResult(json);
+         }
+
+         public APIEvent<?> getEvent() {
+           return new APIEvent.DeleteGuide();
+         }
+      },
+      true,
+      "DELETE",
+      false
+   ),
+   
+   UPDATE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return null;
+            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return null;
+           // return new APIEvent.CreateGuide();
+         }
+      },
+      true,
+      "PATCH",
+      false
+   ),
+   PUBLISH_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" + query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.PublishStatus().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.PublishStatus();
+         }
+      },
+      true,
+      "PUT",
+      false
+   ),
+   
+   UNPUBLISH_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" +  query + "/public";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.PublishStatus().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.PublishStatus();
+         }
+      },
+      true,
+      "DELETE",
+      false
+   ), 
+   
+   REORDER_GUIDE_STEPS(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides/" +  query;
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.StepReorder().setResult(JSONHelper.parseUserGuide(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.StepReorder();
+         }
+      },
+      true,
+      "PUT",
+      false
+   ),
+   
+   ADD_GUIDE_STEP(new Endpoint() {
+      public String createUrl(String query) {
+         return "guides/" + query;
+      }
+
+      public APIEvent<?> parse(String json) throws JSONException {
+         return new APIEvent.StepAdd().setResult(JSONHelper.parseUserGuide(json));
+      }
+
+      public APIEvent<?> getEvent() {
+         return new APIEvent.StepAdd();
+      }
+   }, true, "POST", false),
+   
+   UPDATE_GUIDE_STEP(new Endpoint() {
+      public String createUrl(String query) {
+         return "guides/" + query;
+      }
+
+      public APIEvent<?> parse(String json) throws JSONException {
+         return new APIEvent.StepSave().setResult(JSONHelper.parseStep(new JSONObject(json), 0));
+      }
+
+      public APIEvent<?> getEvent() {
+         return new APIEvent.StepSave();
+      }
+   }, true, "PATCH", false),
+
+   DELETE_GUIDE_STEP(new Endpoint() {
+      public String createUrl(String query) {
+         return "guides/" + query;
+      }
+
+      public APIEvent<?> parse(String json) throws JSONException {
+         return new APIEvent.StepRemove().setResult(JSONHelper.parseUserGuide(json));
+      }
+
+      public APIEvent<?> getEvent() {
+         return new APIEvent.StepRemove();
+      }
+   }, true, "DELETE", false),
+   
    SITES(
       new Endpoint() {
          public String createUrl(String query) {
@@ -217,15 +478,33 @@ public enum APIEndpoint {
          }
       },
       false,
+      "GET",
+      false
+   ),
+
+   USER_INFO(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user";
+         }
+
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.UserInfo().setResult(JSONHelper.parseLoginInfo(json));
+         }
+
+         public APIEvent<?> getEvent() {
+            return new APIEvent.UserInfo();
+         }
+      },
       false,
-      false,
+      "GET",
       false
    );
 
    /**
     * Current version of the API to use.
     */
-   private static final String API_VERSION = "1.0";
+   private static final String API_VERSION = "1.1";
 
    /**
     * Defines various methods that each endpoint must provide.
@@ -257,20 +536,15 @@ public enum APIEndpoint {
    private final Endpoint mEndpoint;
 
    /**
-    * Whether or not to use https://.
-    */
-   public final boolean mHttps;
-
-   /**
     * Whether or not this is an authenticated endpoint. If true, sends the
-    * user's sessionid along in a cookie.
+    * user's auth token along in a header.
     */
    public final boolean mAuthenticated;
 
    /**
-    * True if this endpoint should always perform POST requests.
+    * Request method for this endpoint e.g. GET, POST, DELETE
     */
-   public final boolean mPost;
+   public final String mMethod;
 
    /**
     * True if endpoint must be public. This is primarily for login and register so
@@ -278,12 +552,11 @@ public enum APIEndpoint {
     */
    public final boolean mForcePublic;
 
-   private APIEndpoint(Endpoint endpoint, boolean https, boolean authenticated,
-    boolean post, boolean forcePublic) {
+   private APIEndpoint(Endpoint endpoint, boolean authenticated,
+    String method, boolean forcePublic) {
       mEndpoint = endpoint;
-      mHttps = https;
       mAuthenticated = authenticated;
-      mPost = post;
+      mMethod = method;
       mForcePublic = forcePublic;
    }
 
@@ -318,12 +591,7 @@ public enum APIEndpoint {
          domain = "www.ifixit.com";
       }
 
-      if (mHttps) {
-         protocol = "https://";
-      } else {
-         protocol = "http://";
-      }
-
+      protocol = "https://";
       url = "/api/" + API_VERSION + "/" + mEndpoint.createUrl(query);
 
       return protocol + domain + url;
@@ -351,6 +619,6 @@ public enum APIEndpoint {
    }
 
    public String toString() {
-      return mHttps + " | " + mAuthenticated + " | " + ordinal();
+      return mAuthenticated + " | " + ordinal();
    }
 }
