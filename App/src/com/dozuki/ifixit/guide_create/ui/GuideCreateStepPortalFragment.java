@@ -160,7 +160,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements StepRearr
             GuideCreateStepObject item = new GuideCreateStepObject(STEP_ID++);
             item.setStepNum(mGuide.getSteps().size());
             item.setTitle(DEFAULT_TITLE);
-            item.addLine(new StepLine("black", 0, ""));
+            item.addLine(new StepLine(null, "black", 0, ""));
             launchStepEdit(item);
          }
       });

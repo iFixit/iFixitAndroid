@@ -411,7 +411,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
 
             GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
             item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
-            item.addLine(new StepLine("black", 0, ""));
+            item.addLine(new StepLine(null, "black", 0, ""));
             item.setStepNum(mPagePosition + 1);
             mStepList.add(mPagePosition + 1, item);
             int pos = mPagePosition;
