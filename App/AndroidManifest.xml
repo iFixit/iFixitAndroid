@@ -24,7 +24,10 @@
       <activity android:name=".topic_view.ui.TopicsActivity"
                 android:launchMode="singleTask"
                 android:taskAffinity="com.dozuki.ifixit.topics">
-
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                </intent-filter>
 
          <!--DOZUKI
          <intent-filter>
@@ -41,13 +44,8 @@
 	        <activity android:name=".guide_create.ui.GuideCreateActivity"
 	            android:launchMode="singleTask"
 	            android:taskAffinity="com.dozuki.ifixit.guidecreate">
-
-                <intent-filter>
-                    <action android:name="android.intent.action.MAIN" />
-                    <category android:name="android.intent.category.LAUNCHER" />
-                </intent-filter>
 	            </activity>
-      <activity android:name=".guide_create.ui.GuideCreateStepsActivity" 
+      <activity android:name=".guide_create.ui.GuideCreateStepsActivity"
           android:launchMode="singleTop"></activity>
       <activity android:name=".guide_create.ui.GuideCreateStepsEditActivity"
           android:windowSoftInputMode="adjustResize|stateHidden"></activity>
