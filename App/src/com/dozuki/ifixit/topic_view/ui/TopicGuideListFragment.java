@@ -84,7 +84,7 @@ public class TopicGuideListFragment extends Fragment {
             GuideInfo guide = mTopicLeaf.getGuides().get(position);
             Intent intent = new Intent(getActivity(), GuideViewActivity.class);
 
-            intent.putExtra(GUIDEID, guide.getGuideid());
+            intent.putExtra(GUIDEID, guide.mGuideid);
             startActivity(intent);
          }
       });

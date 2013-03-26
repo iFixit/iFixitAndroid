@@ -297,15 +297,15 @@ public class JSONHelper {
       try {
          GuideInfo guideInfo = new GuideInfo(jGuide.getInt("guideid"));
 
-         guideInfo.setRevisionid(jGuide.optInt("revisionid", NULL_INT));
-         guideInfo.setModifiedDate(jGuide.optInt("modified_date", NULL_INT));
-         guideInfo.setPrereqModifiedDate(jGuide.optInt("prereq_modified_date", NULL_INT));
-         guideInfo.setTopic(jGuide.getString("topic"));
-         guideInfo.setSubject(jGuide.getString("subject"));
-         guideInfo.setType(jGuide.getString("type"));
-         guideInfo.setTitle(jGuide.getString("title"));
-         guideInfo.setPublic(jGuide.getBoolean("public"));
-         guideInfo.setImage(parseImage(jGuide, "image"));
+         guideInfo.mRevisionid = jGuide.optInt("revisionid", NULL_INT);
+         guideInfo.mModifiedDate = jGuide.optInt("modified_date", NULL_INT);
+         guideInfo.mPrereqModifiedDate = jGuide.optInt("prereq_modified_date", NULL_INT);
+         guideInfo.mTopic = jGuide.getString("topic");
+         guideInfo.mSubject = jGuide.getString("subject");
+         guideInfo.mType = jGuide.getString("type");
+         guideInfo.mTitle = jGuide.getString("title");
+         guideInfo.mPublic = jGuide.getBoolean("public");
+         guideInfo.mImage = parseImage(jGuide, "image");
 
          return guideInfo;
       } catch (JSONException e) {
@@ -606,7 +606,7 @@ public class JSONHelper {
    public static APIImage parseImage(JSONObject image, String imageFieldName) {
       try {
          if (imageFieldName != null) {
-            image = image.getJSONObject(imageFieldName);
+            image = image.optJSONObject(imageFieldName);
          }
 
          if (image == null) {

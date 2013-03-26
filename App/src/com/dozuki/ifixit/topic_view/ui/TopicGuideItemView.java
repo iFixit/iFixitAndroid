@@ -37,9 +37,9 @@ public class TopicGuideItemView extends RelativeLayout {
       ImageSizes imageSizes = MainApplication.get().getImageSizes();
       mGuideInfo = guide;
 
-      mTitleView.setText(Html.fromHtml(guide.getTitle()));
+      mTitleView.setText(Html.fromHtml(guide.mTitle));
 
-      mImageManager.displayImage(guide.getImage().getSize(imageSizes.getGrid()),
+      mImageManager.displayImage(guide.mImage.getSize(imageSizes.getGrid()),
        (Activity)activity, mThumbnail);
    }
 }
