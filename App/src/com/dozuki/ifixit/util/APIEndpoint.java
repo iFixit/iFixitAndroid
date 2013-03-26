@@ -1,14 +1,12 @@
 package com.dozuki.ifixit.util;
 
+import android.util.Log;
+import com.dozuki.ifixit.model.dozuki.Site;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
-
-import org.json.JSONException;
-
-import android.util.Log;
-
-import com.dozuki.ifixit.dozuki.model.Site;
-import org.json.JSONObject;
 
 /**
  * Defines all APIEndpoints.

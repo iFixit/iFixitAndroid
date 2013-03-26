@@ -14,15 +14,13 @@ import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.ImageView;
-
-import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.login.model.LoginEvent;
-import com.dozuki.ifixit.login.model.User;
+import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.login.LoginEvent;
+import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Bus;
-
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MainApplication extends Application {

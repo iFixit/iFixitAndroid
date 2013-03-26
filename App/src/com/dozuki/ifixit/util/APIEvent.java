@@ -1,25 +1,25 @@
 package com.dozuki.ifixit.util;
 
-import java.util.ArrayList;
+import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.gallery.UploadedImageInfo;
+import com.dozuki.ifixit.model.gallery.UserEmbedList;
+import com.dozuki.ifixit.model.gallery.UserImageList;
+import com.dozuki.ifixit.model.gallery.UserVideoList;
+import com.dozuki.ifixit.model.guide.GuideCreateObject;
+import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.model.guide.UserGuide;
+import com.dozuki.ifixit.model.login.User;
+import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.dozuki.ifixit.model.topic.TopicNode;
 
-import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
-import com.dozuki.ifixit.gallery.model.UserEmbedList;
-import com.dozuki.ifixit.gallery.model.UserImageList;
-import com.dozuki.ifixit.gallery.model.UserVideoList;
-import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.dozuki.ifixit.guide_create.model.UserGuide;
-import com.dozuki.ifixit.guide_view.model.GuideStep;
-import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.topic_view.model.TopicLeaf;
-import com.dozuki.ifixit.topic_view.model.TopicNode;
+import java.util.ArrayList;
 
 /**
  * Base class for API events that are posted to the otto bus.
  */
 public abstract class APIEvent<T> {
    public static class Categories extends APIEvent<TopicNode> {}
-   public static class Guide extends APIEvent<com.dozuki.ifixit.guide_view.model.Guide> {}
+   public static class Guide extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
    public static class Topic extends APIEvent<TopicLeaf> {}
    public static class Login extends APIEvent<User> {}
    public static class Logout extends APIEvent<String> {}

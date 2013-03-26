@@ -31,7 +31,7 @@
             android:scaleType="centerInside"
             android:src="@drawable/dozuki_splash_logo" />
 
-        <com.dozuki.ifixit.dozuki.ui.SiteListOffsetButton
+        <com.dozuki.ifixit.ui.dozuki.SiteListOffsetButton
             android:id="@+id/list_dialog_btn"
             android:layout_width="@dimen/site_list_button_width"
             android:layout_height="wrap_content"

@@ -11,20 +11,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.dozuki.model.Site;
-import com.dozuki.ifixit.guide_create.model.GuideCreateObject;
-import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
-import com.dozuki.ifixit.guide_create.model.UserGuide;
-import com.dozuki.ifixit.login.model.User;
-import com.dozuki.ifixit.login.ui.LoginFragment;
+import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.guide.GuideCreateObject;
+import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
+import com.dozuki.ifixit.model.guide.UserGuide;
+import com.dozuki.ifixit.model.login.User;
+import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;

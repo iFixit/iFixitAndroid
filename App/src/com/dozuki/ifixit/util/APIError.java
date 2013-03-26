@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.util;
 
 import android.content.Context;
-
 import com.dozuki.ifixit.R;
 
 import java.io.Serializable;
