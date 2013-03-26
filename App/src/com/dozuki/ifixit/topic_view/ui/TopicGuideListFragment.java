@@ -18,6 +18,7 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 public class TopicGuideListFragment extends Fragment {
@@ -122,10 +123,7 @@ public class TopicGuideListFragment extends Fragment {
             itemView = new TopicGuideItemView(getActivity(), mImageManager);
          }
 
-         String subject = mTopic.getGuides().get(position).getSubject();
-         String image = mTopic.getGuides().get(position).getImage() +
-          mImageSizes.getGrid();
-         itemView.setGuideItem(subject, image, getActivity());
+         itemView.setGuideItem(mTopicLeaf.getGuides().get(position), (Activity)getActivity());
 
          return itemView;
       }

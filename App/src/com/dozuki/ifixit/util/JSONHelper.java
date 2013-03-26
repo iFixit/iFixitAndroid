@@ -26,6 +26,11 @@ import java.util.Iterator;
 import java.util.Map;
 
 public class JSONHelper {
+   /**
+    * Used to indicate an integer JSON field that is null.
+    */
+   public static final int NULL_INT = -1;
+
    public static ArrayList<Site> parseSites(String json) {
       ArrayList<Site> sites = new ArrayList<Site>();
 
@@ -292,11 +297,15 @@ public class JSONHelper {
       try {
          GuideInfo guideInfo = new GuideInfo(jGuide.getInt("guideid"));
 
+         guideInfo.setRevisionid(jGuide.optInt("revisionid", NULL_INT));
+         guideInfo.setModifiedDate(jGuide.optInt("modified_date", NULL_INT));
+         guideInfo.setPrereqModifiedDate(jGuide.optInt("prereq_modified_date", NULL_INT));
+         guideInfo.setTopic(jGuide.getString("topic"));
          guideInfo.setSubject(jGuide.getString("subject"));
-         guideInfo.setImage(jGuide.getString("image_url"));
-         guideInfo.setTitle(jGuide.getString("title"));
          guideInfo.setType(jGuide.getString("type"));
-         guideInfo.setUrl(jGuide.getString("url"));
+         guideInfo.setTitle(jGuide.getString("title"));
+         guideInfo.setPublic(jGuide.getBoolean("public"));
+         guideInfo.setImage(parseImage(jGuide, "image"));
 
          return guideInfo;
       } catch (JSONException e) {
