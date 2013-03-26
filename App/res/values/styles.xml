@@ -44,6 +44,10 @@
 
     <style name="step_wrap">
         <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/bg_img</item>
+        <item name="android:padding">@dimen/page_padding</item>
+        <item name="android:paddingBottom">0dp</item>
+        <item name="android:baselineAligned">false</item>
     </style>
 
     <style name="guide_step_media_wrap">
@@ -70,8 +74,7 @@
     </style>
 
     <style name="thumbnail_position">
-        <item name="android:layout_width">@dimen/match_parent</item>
-        <item name="android:layout_height">@dimen/wrap_content</item>
+        <item name="android:layout_marginLeft">@dimen/guide_thumbnail_spacing</item>
         <item name="android:layout_toRightOf">@id/main_image</item>
         <item name="android:layout_gravity">right</item>
     </style>
