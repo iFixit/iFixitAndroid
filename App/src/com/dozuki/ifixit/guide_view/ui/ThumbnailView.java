@@ -7,6 +7,7 @@ import android.widget.ImageView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.guide_view.model.StepImage;
+import com.dozuki.ifixit.util.APIImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 
@@ -52,7 +53,7 @@ public class ThumbnailView extends LinearLayout {
       mImageSizes = imageSizes;
    }
 
-   public void setThumbs(ArrayList<StepImage> images,
+   public void setThumbs(ArrayList<APIImage> images,
     ImageManager imageManager, Context context) {
       if (images.size() <= 1) {
          setVisibility(INVISIBLE);
@@ -65,7 +66,7 @@ public class ThumbnailView extends LinearLayout {
          for (int thumbId = 0; thumbId < images.size(); thumbId++) {
             ImageView thumb = mThumbs.get(thumbId);
             thumb.setVisibility(VISIBLE);
-            thumb.setTag(images.get(thumbId).getText());
+            thumb.setTag(images.get(thumbId).mBaseUrl);
 
             thumb.setOnClickListener(new OnClickListener() {
                @Override
@@ -74,8 +75,8 @@ public class ThumbnailView extends LinearLayout {
                }
             });
 
-            mImageManager.displayImage(images.get(thumbId).getText() +
-             mImageSizes.getThumb(), (Activity)mContext, thumb);
+            mImageManager.displayImage(images.get(thumbId).getSize(
+             mImageSizes.getThumb()), (Activity)mContext, thumb);
          }
       }
    }

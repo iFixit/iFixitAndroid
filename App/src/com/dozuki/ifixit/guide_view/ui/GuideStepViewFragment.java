@@ -34,6 +34,7 @@ import com.dozuki.ifixit.guide_view.model.StepImage;
 import com.dozuki.ifixit.guide_view.model.StepLine;
 import com.dozuki.ifixit.guide_view.model.StepVideo;
 import com.dozuki.ifixit.guide_view.model.StepVideoThumbnail;
+import com.dozuki.ifixit.util.APIImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.marczych.androidimagemanager.ImageManager;
@@ -174,13 +175,13 @@ public class GuideStepViewFragment extends Fragment {
          setVideo();
       } else if (mStep.hasEmbed()) {
          setEmbed();
-      } else if (mStep.hasImage()) {
+      } else if (mStep.hasAPIImage()) {
          setImage();
       }
    }
    
    private void setImage() {
-      ArrayList<StepImage> stepImages = mStep.getImages();
+      ArrayList<APIImage> stepImages = mStep.getAPIImages();
      
       // Size the video preview screenshot within the available screen space
       mMainImage.setOnClickListener(new OnClickListener() {
@@ -206,7 +207,7 @@ public class GuideStepViewFragment extends Fragment {
       mThumbs.setImageSizes(mImageSizes);      
       mThumbs.setMainImage(mMainImage);
       mThumbs.setThumbs(stepImages, mImageManager, mContext);
-      mThumbs.setCurrentThumb(stepImages.get(0).getText());
+      mThumbs.setCurrentThumb(stepImages.get(0).mBaseUrl);
    }
    
    private void setVideo() {

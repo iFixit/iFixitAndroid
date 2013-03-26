@@ -5,6 +5,7 @@ import java.util.ArrayList;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.APIImage;
 
 public class GuideStep implements Serializable {
    private static final long serialVersionUID = 2884598684003517264L;
@@ -38,6 +39,7 @@ public class GuideStep implements Serializable {
 
    protected String mTitle;
    protected ArrayList<StepImage> mImages;
+   protected ArrayList<APIImage> mAPIImages;
    protected ArrayList<StepLine> mLines;
    protected StepVideo mVideo;
    private Embed mEmbed;
@@ -45,6 +47,7 @@ public class GuideStep implements Serializable {
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
       mImages = new ArrayList<StepImage>();
+      mAPIImages = new ArrayList<APIImage>();
       mLines = new ArrayList<StepLine>();
    }
 
@@ -84,12 +87,24 @@ public class GuideStep implements Serializable {
       return mImages.size() > 0;
    }
 
+   public boolean hasAPIImage() {
+      return mAPIImages.size() > 0;
+   }
+
    public void addImage(StepImage image) {
       mImages.add(image);
    }
 
+   public void addAPIImage(APIImage image) {
+      mAPIImages.add(image);
+   }
+
    public ArrayList<StepImage> getImages() {
       return mImages;
+   }
+
+   public ArrayList<APIImage> getAPIImages() {
+      return mAPIImages;
    }
 
    public ArrayList<StepLine> getLines() {

@@ -64,7 +64,7 @@ public class JSONHelper {
    }
 
    private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
-      site.mStandardAuth = jAuth.has("standard") ? jAuth.getBoolean("standard") : false;
+      site.mStandardAuth = jAuth.has("standard") && jAuth.getBoolean("standard");
 
       site.mSsoUrl = jAuth.has("sso") ? jAuth.getString("sso") : null;
 
@@ -81,7 +81,6 @@ public class JSONHelper {
       JSONArray jTools = jGuide.getJSONArray("tools");
       JSONArray jParts = jGuide.getJSONArray("parts");
       JSONObject jAuthor = jGuide.getJSONObject("author");
-      JSONObject jImage = jGuide.getJSONObject("image");
       Guide guide = new Guide(jGuideInfo.getInt("guideid"));
 
       guide.setTitle(jGuide.getString("title"));
@@ -90,10 +89,10 @@ public class JSONHelper {
       guide.setAuthor(jAuthor.getString("text"));
       guide.setTimeRequired(jGuide.getString("time_required"));
       guide.setDifficulty(jGuide.getString("difficulty"));
-      guide.setIntroduction(jGuide.getString("introduction"));
-      guide.setIntroImage(jImage.getString("text"));
+      guide.setIntroduction(jGuide.getString("introduction_rendered"));
+      guide.setIntroImage(parseImage(jGuide, "image"));
       guide.setSummary(jGuide.getString("summary"));
-      guide.setRevisionid(new Integer(jGuide.getInt("revisionid")));
+      guide.setRevisionid(jGuide.getInt("revisionid"));
 
       for (int i = 0; i < jSteps.length(); i++) {
          guide.addStep(parseStep(jSteps.getJSONObject(i), i + 1));
@@ -125,7 +124,7 @@ public class JSONHelper {
 
       step.setGuideid(jStep.getInt("guideid"));
       step.setStepid(jStep.getInt("stepid"));
-      step.setRevisionid(new Integer(jStep.getInt("revisionid")));
+      step.setRevisionid(jStep.getInt("revisionid"));
       step.setOrderby(jStep.getInt("orderby"));
       step.setTitle(jStep.getString("title"));
 
@@ -135,8 +134,9 @@ public class JSONHelper {
 
          if (type.compareTo("image") == 0) {
             JSONArray jImages = jMedia.getJSONArray("data");
-            for (int i = 0; i < jImages.length(); i++)
-               step.addImage(parseImage(jImages.getJSONObject(i)));
+            for (int i = 0; i < jImages.length(); i++) {
+               step.addAPIImage(parseImage(jImages.getJSONObject(i), null));
+            }
          }
 
          if (type.compareTo("video") == 0) {
@@ -176,22 +176,6 @@ public class JSONHelper {
 
       return map;
    }
-
-    private static StepImage parseImage(JSONObject jImage) throws JSONException {
-        StepImage image = new StepImage();
-
-        // last image doesn't have orderby so this is necessary. API bug?
-        try {
-            image.setOrderby(jImage.getInt("orderby"));
-        } catch (JSONException e) {
-            image.setOrderby(1);
-        }
-
-        //  image.setText(jImage.getString("text"));
-        image.setImageObject(new ImageObject(jImage.getInt("id"), jImage.getString("mini"), jImage.getString("thumbnail"), jImage.getString("standard"), jImage.getString("medium"), jImage.getString("large"), jImage.getString("original")));
-
-        return image;
-    }
 
    private static StepVideo parseVideo(JSONObject jVideo) throws JSONException {
       StepVideo video = new StepVideo();
@@ -254,17 +238,15 @@ public class JSONHelper {
    public static TopicNode parseTopics(String json) throws JSONException {
       JSONObject jTopics = new JSONObject(json);
       ArrayList<TopicNode> topics = parseTopicChildren(jTopics);
-      TopicNode root = null;
+      TopicNode root = new TopicNode();
 
-      root = new TopicNode();
       root.addAllTopics(topics);
 
       return root;
    }
 
    /**
-    * Reads through the given JSONObject and adds any topics to the given
-    * topic
+    * Reads through the given JSONObject and adds any topics to the given topic.
     */
    private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic)
     throws JSONException {
@@ -281,17 +263,6 @@ public class JSONHelper {
          currentTopic.addAllTopics(parseTopicChildren(
           jTopic.getJSONObject(topicName)));
          topics.add(currentTopic);
-      }
-
-      return topics;
-   }
-
-   private static ArrayList<TopicNode> parseTopicLeaves(JSONArray jLeaves)
-    throws JSONException {
-      ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
-
-      for (int i = 0; i < jLeaves.length(); i++) {
-         topics.add(new TopicNode(jLeaves.getString(i)));
       }
 
       return topics;
@@ -621,6 +592,25 @@ public class JSONHelper {
       }
 
       return jSteps;
+   }
+
+   public static APIImage parseImage(JSONObject image, String imageFieldName) {
+      try {
+         if (imageFieldName != null) {
+            image = image.getJSONObject(imageFieldName);
+         }
+
+         if (image == null) {
+            return new APIImage();
+         }
+
+         APIImage apiImage = new APIImage(image.getInt("id"), image.getString("original"));
+
+         return apiImage;
+      } catch (JSONException e) {
+         Log.w("iFixit", "APIImage parsing", e);
+         return new APIImage();
+      }
    }
 
 //   private static GuideCreateStepObject parseCreateGuideStep(JSONObject jStep) throws JSONException {

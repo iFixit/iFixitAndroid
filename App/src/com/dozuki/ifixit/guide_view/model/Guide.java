@@ -4,6 +4,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 import com.dozuki.ifixit.guide_create.model.GuideCreateStepObject;
+import com.dozuki.ifixit.util.APIImage;
 
 public class Guide implements Serializable {
    private static final long serialVersionUID = -1965203088124961695L;
@@ -20,7 +21,7 @@ public class Guide implements Serializable {
    protected String mDifficulty;
    protected String mIntroduction;
    protected String mSubject;
-   protected String mIntroImage;
+   protected APIImage mIntroImage;
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
    protected ArrayList<GuideTool> mTools;
@@ -153,11 +154,11 @@ public class Guide implements Serializable {
       return mIntroduction;
    }
 
-   public void setIntroImage(String url) {
-      mIntroImage = url;
+   public void setIntroImage(APIImage image) {
+      mIntroImage = image;
    }
 
-   public String getIntroImage() {
+   public APIImage getIntroImage() {
       return mIntroImage;
    }
 
