@@ -579,7 +579,7 @@ public class APIService extends Service {
                 * Send along the auth token if we found one.
                 */
                if (authToken != null) {
-                  request.header("Authorization", authToken);
+                  request.header("Authorization", "api " + authToken);
                }
 
                /**
