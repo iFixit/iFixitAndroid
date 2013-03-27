@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.GuideCreateObject;
+import com.dozuki.ifixit.model.guide.Guide;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Button;
@@ -33,7 +33,7 @@ public class GuideIntroFragment extends Fragment {
    private TextView mErrorText;
    private Spinner mGuideTypeSpinner;
    private Button mSubmitGuideButton;
-   private GuideCreateObject mGuideObject;
+   private Guide mGuideObject;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -49,7 +49,7 @@ public class GuideIntroFragment extends Fragment {
       savedInstanceState.putString(INRODUCTION_KEY, mIntroduction.getText().toString());
    }
 
-   public void setGuideOBject(GuideCreateObject obj) {
+   public void setGuideOBject(Guide obj) {
       mGuideObject = obj;
    }
 

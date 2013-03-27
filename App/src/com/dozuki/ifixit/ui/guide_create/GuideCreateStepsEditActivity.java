@@ -23,9 +23,8 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
-import com.dozuki.ifixit.model.guide.GuideCreateObject;
-import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
-import com.dozuki.ifixit.model.guide.StepImage;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
@@ -33,6 +32,7 @@ import com.dozuki.ifixit.ui.guide_create.GuideCreateStepEditFragment.GuideStepCh
 import com.dozuki.ifixit.ui.guide_view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIImage;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -54,9 +54,9 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    private static final String LOADING = "LOADING";
 
    private ActionBar mActionBar;
-   private GuideCreateObject mGuide;
+   private Guide mGuide;
    private GuideCreateStepEditFragment mCurStepFragment;
-   private ArrayList<GuideCreateStepObject> mStepList;
+   private ArrayList<GuideStep> mStepList;
    private ImageButton mAddStepButton;
    private Button mSaveStep;
    private ImageButton mDeleteStepButton;
@@ -95,18 +95,18 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       Bundle extras = getIntent().getExtras();
       mPagePosition = 0;
       if (extras != null) {
-         mGuide = (GuideCreateObject) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
+         mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
          mPagePosition = extras.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
-         mStepList = (ArrayList<GuideCreateStepObject>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
+         mStepList = (ArrayList<GuideStep>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
       }
       if (savedInstanceState != null) {
-         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
+         mGuide = (Guide) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
          mPagePosition = savedInstanceState.getInt(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
-         mStepList = (ArrayList<GuideCreateStepObject>) savedInstanceState.getSerializable(GUIDE_STEP_LIST_KEY);
+         mStepList = (ArrayList<GuideStep>) savedInstanceState.getSerializable(GUIDE_STEP_LIST_KEY);
          mIsLoading = savedInstanceState.getBoolean(LOADING);
          if (mShowingHelp) {
             createHelpDialog().show();
@@ -180,7 +180,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    @Subscribe
    public void onStepAdd(APIEvent.StepAdd event) {
       if (!event.hasError()) {
-         mGuide.getSteps().get(mSavePosition).setStepId(event.getResult().getSteps().get(mSavePosition).getStepId());
+         mGuide.getSteps().get(mSavePosition).setStepid(event.getResult().getSteps().get(mSavePosition).getStepid());
          mGuide.getSteps().get(mSavePosition)
             .setRevisionid((event.getResult().getSteps().get(mSavePosition).getRevisionid()));
          mGuide.setRevisionid(event.getResult().getRevisionid());
@@ -240,29 +240,29 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
          if (resultCode == RESULT_OK) {
             // we dont have a reference the the fragment managing the media, so we make the changes to the step manually
             MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-            StepImage mImageInfo = new StepImage(0);
-            mImageInfo.setText(media.getGuid());
-            mImageInfo.setImageId(Integer.valueOf(media.getItemId()));
-            ArrayList<StepImage> list = mStepList.get(mPagePosition).getImages();
+            APIImage mImageInfo = new APIImage();
+            mImageInfo.mBaseUrl = media.getGuid();
+            mImageInfo.mId = Integer.valueOf(media.getItemId());
+            ArrayList<APIImage> list = mStepList.get(mPagePosition).getImages();
             if (requestCode == GuideCreateEditMediaFragment.IMAGE_KEY_1) {
                if (list.size() > 0) {
-                  list.get(0).setText(media.getGuid());
-                  list.get(0).setImageId(Integer.valueOf(media.getItemId()));
+                  list.get(0).mBaseUrl = media.getGuid();
+                  list.get(0).mId = Integer.valueOf(media.getItemId());
                } else {
                   list.add(mImageInfo);
                }
             } else if (requestCode == GuideCreateEditMediaFragment.IMAGE_KEY_2) {
                if (list.size() > 1) {
-                  list.get(1).setText(media.getGuid());
-                  list.get(1).setImageId(Integer.valueOf(media.getItemId()));
+                   list.get(0).mBaseUrl = media.getGuid();
+                   list.get(0).mId = Integer.valueOf(media.getItemId());
                } else {
                   list.add(mImageInfo);
                }
 
             } else if (requestCode == GuideCreateEditMediaFragment.IMAGE_KEY_3) {
                if (list.size() > 2) {
-                  list.get(2).setText(media.getGuid());
-                  list.get(2).setImageId(Integer.valueOf(media.getItemId()));
+                   list.get(0).mBaseUrl = media.getGuid();
+                   list.get(0).mId = Integer.valueOf(media.getItemId());
                } else {
                   list.add(mImageInfo);
                }
@@ -342,7 +342,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
    }
 
    private void save(int savePosition) {
-      GuideCreateStepObject obj = mCurStepFragment.getGuideChanges();
+      GuideStep obj = mCurStepFragment.getGuideChanges();
       if (obj.getLines().size() == 0) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
                  Toast.LENGTH_SHORT).show();
@@ -401,7 +401,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
                return;
             }
 
-            GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+            GuideStep item = new GuideStep(GuideCreateStepPortalFragment.STEP_ID++);
             item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
             item.addLine(new StepLine(null, "black", 0, ""));
             item.setStepNum(mPagePosition + 1);

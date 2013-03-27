@@ -30,26 +30,26 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
    private ImageManager mImageManager;
    private GuidePortalFragment mPortalRef;
    private boolean mEditBarVisible = false;
-   private UserGuide mGuideCreateObject;
+   private UserGuide mGuide;
 
    public GuideCreateListItem(Context context, ImageManager imageManager, final GuidePortalFragment portalRef,
       UserGuide gObject) {
       super(context);
       mPortalRef = portalRef;
       mImageManager = imageManager;
-      mGuideCreateObject = gObject;
+      mGuide = gObject;
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.guide_create_item, this, true);
       mTitleView = (TextView) findViewById(R.id.guide_create_item_title);
       mThumbnail = (ImageView) findViewById(R.id.guide_create_item_thumbnail);
       mEditBar = (LinearLayout) findViewById(R.id.guide_create_item_edit_section);
       mToggleEdit = (ToggleButton) findViewById(R.id.guide_create_toggle_edit);
-      mToggleEdit.setChecked(mGuideCreateObject.getEditMode());
+      mToggleEdit.setChecked(mGuide.getEditMode());
       mToggleEdit.setOnCheckedChangeListener(new OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mGuideCreateObject.setEditMode(isChecked);
-            portalRef.onItemSelected(mGuideCreateObject.getGuideid(), isChecked);
+            mGuide.setEditMode(isChecked);
+            portalRef.onItemSelected(mGuide.getGuideid(), isChecked);
             setEditMode(isChecked, true, mToggleEdit, mEditBar);
          }
       });
@@ -64,7 +64,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
       mDeleteButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            mPortalRef.deleteGuide(mGuideCreateObject);
+            mPortalRef.deleteGuide(mGuide);
          }
       });
       mEditButton = (TextView) findViewById(R.id.guide_create_item_edit);
@@ -72,7 +72,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
          @Override
          public void onClick(View v) {
             Intent intent = new Intent(mPortalRef.getActivity(), GuideCreateStepsActivity.class);
-            intent.putExtra(GuideCreateStepsActivity.GUIDE_KEY, mGuideCreateObject.getGuideid());
+            intent.putExtra(GuideCreateStepsActivity.GUIDE_KEY, mGuide.getGuideid());
             mPortalRef.getActivity().startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
          }
       });
@@ -81,26 +81,26 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
       mPublishButtonText.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            if(!mGuideCreateObject.getPublished())   {
+            if(!mGuide.getPublished())   {
                ((GuideCreateActivity) mPortalRef.getActivity()).showLoading();
-               APIService.call((Activity) mPortalRef.getActivity(), APIService.getPublishGuideAPICall(mGuideCreateObject.getGuideid(), mGuideCreateObject.getRevisionid()));
+               APIService.call((Activity) mPortalRef.getActivity(), APIService.getPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
             }  else {
                ((GuideCreateActivity) mPortalRef.getActivity()).showLoading();
-               APIService.call((Activity) mPortalRef.getActivity(), APIService.getUnPublishGuideAPICall(mGuideCreateObject.getGuideid(), mGuideCreateObject.getRevisionid()));
+               APIService.call((Activity) mPortalRef.getActivity(), APIService.getUnPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
             }
-            setPublished(!mGuideCreateObject.getPublished());
+            setPublished(!mGuide.getPublished());
          }
       });
-      if (mGuideCreateObject.getPublished()) {
+      if (mGuide.getPublished()) {
          setPublished(true);
       }
-      if (mGuideCreateObject.getEditMode()) {
+      if (mGuide.getEditMode()) {
          setEditMode(true, false, mToggleEdit, mEditBar);
       }
    }
 
    public void setGuideObject(UserGuide obj) {
-      mGuideCreateObject = obj;
+      mGuide = obj;
    }
 
    public void setPublished(boolean published) {
@@ -115,7 +115,7 @@ public class GuideCreateListItem extends RelativeLayout implements AnimationList
          setPublishedText(Color.RED, R.string.unpublished);
          setPublishedButton(img, R.string.publish);
       }
-      mGuideCreateObject.setPublished(published);
+      mGuide.setPublished(published);
    }
 
    private void setPublishedText(int color, int text) {

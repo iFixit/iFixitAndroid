@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.model.gallery.ImageObject;
+import com.dozuki.ifixit.util.APIImage;
 
 import java.io.Serializable;
 
@@ -18,7 +18,7 @@ public class UserGuide implements Serializable {
    protected boolean mPublic;
    protected int mUserid;
    protected String mUsername;
-   protected ImageObject mImage = new ImageObject();
+   protected APIImage mImage = new APIImage();
    protected boolean mEditMode; // save state for edit drop down
    protected Integer mRevisionId;
 
@@ -85,11 +85,11 @@ public class UserGuide implements Serializable {
       mUserid = userid;
    }
 
-   public void setImageObject(ImageObject image) {
+   public void setImage(APIImage image) {
       mImage = image;
    }
 
-   public ImageObject getImageObject() {
+   public APIImage getImage() {
       return mImage;
    }
 

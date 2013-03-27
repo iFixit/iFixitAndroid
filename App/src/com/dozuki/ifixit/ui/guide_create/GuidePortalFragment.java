@@ -145,7 +145,7 @@ public class GuidePortalFragment extends Fragment {
          itemView = new GuideCreateListItem(getActivity(), mImageManager, mSelf, listRef);
          itemView.setTag(listRef.getGuideid());
          itemView.setGuideObject(listRef);
-         String image = listRef.getImageObject().mThumbnail;
+         String image = listRef.getImage().getSize(".thumbnail");
          if(image == null) {
             image = "";
          }

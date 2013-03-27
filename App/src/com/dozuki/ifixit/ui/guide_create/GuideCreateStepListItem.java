@@ -12,8 +12,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
-import com.dozuki.ifixit.model.guide.StepImage;
+import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.util.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
@@ -34,11 +34,11 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
    private Context mContext;
    private ImageManager mImageManager;
    private GuideCreateStepPortalFragment mPortalRef;
-   private GuideCreateStepObject mStepObject;
+   private GuideStep mStepObject;
    private int mStepPosition;
 
    public GuideCreateStepListItem(Context context, ImageManager imageManager,
-      final GuideCreateStepPortalFragment portalRef, GuideCreateStepObject sObject, int position) {
+      final GuideCreateStepPortalFragment portalRef, GuideStep sObject, int position) {
       super(context);
       mContext = context;
       mPortalRef = portalRef;
@@ -62,7 +62,7 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mStepObject.setEditMode(isChecked);
-            portalRef.onItemSelected(mStepObject.getStepId(), isChecked);
+            portalRef.onItemSelected(mStepObject.getStepid(), isChecked);
             setEditMode(isChecked, true, mToggleEdit, mEditBar);
          }
       });
@@ -129,13 +129,13 @@ public class GuideCreateStepListItem extends RelativeLayout implements Animation
       }
    }
 
-   private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
+   private void setImageThumb(ArrayList<APIImage> imageList, ImageView imagView) {
       boolean img = false;
-      for (StepImage imageinfo : imageList) {
-         if (imageinfo.getImageObject().mId > 0) {
+      for (APIImage imageinfo : imageList) {
+         if (imageinfo.mId > 0) {
             img = true;
-            imagView.setTag(imageinfo.getImageObject().mThumbnail);
-            mImageManager.displayImage(imageinfo.getImageObject().mThumbnail,
+            imagView.setTag(imageinfo.getSize(".thumbnail"));
+            mImageManager.displayImage(imageinfo.getSize(".thumbnail"),
                mPortalRef.getActivity(), imagView);
             imagView.invalidate();
             return;

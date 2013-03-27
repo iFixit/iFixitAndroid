@@ -16,9 +16,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
+import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.dozuki.ifixit.ui.IfixitActivity;
 import com.squareup.otto.Subscribe;
 import org.holoeverywhere.app.Fragment;
 

@@ -18,8 +18,8 @@ import android.widget.ImageView.ScaleType;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
-import com.dozuki.ifixit.model.guide.StepImage;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
+import com.dozuki.ifixit.util.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import net.londatiga.android.ActionItem;
 import net.londatiga.android.QuickAction;
@@ -51,9 +51,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    private ImageView mImageOne;
    private ImageView mImageTwo;
    private ImageView mImageThree;
-   private StepImage mImageOneInfo = new StepImage(NO_IMAGE);
-   private StepImage mImageTwoInfo = new StepImage(NO_IMAGE);
-   private StepImage mImageThreeInfo = new StepImage(NO_IMAGE);
+   private APIImage mImageOneInfo = new APIImage();
+   private APIImage mImageTwoInfo = new APIImage();
+   private APIImage mImageThreeInfo = new APIImage();
    private int mCurSelectedKey;
 
    // title
@@ -86,9 +86,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       mImageThree.setOnClickListener(this);
 
       if (savedInstanceState != null) {
-         mImageOneInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_1);
-         mImageTwoInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_2);
-         mImageThreeInfo = (StepImage) savedInstanceState.getSerializable("" + IMAGE_KEY_3);
+         mImageOneInfo = (APIImage) savedInstanceState.getSerializable("" + IMAGE_KEY_1);
+         mImageTwoInfo = (APIImage) savedInstanceState.getSerializable("" + IMAGE_KEY_2);
+         mImageThreeInfo = (APIImage) savedInstanceState.getSerializable("" + IMAGE_KEY_3);
          mTitle = savedInstanceState.getString(TITLE_KEY);
          mStepNum = savedInstanceState.getInt(STEP_NUM_KEY);
       }
@@ -213,21 +213,21 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
    public void removeImage() {
       setGuideDirty();
       if (mCurSelectedKey == IMAGE_KEY_1) {
-         mImageOneInfo = new StepImage(NO_IMAGE);
+         mImageOneInfo = new APIImage();
          setImage(IMAGE_KEY_1);
-         setMainImage(mImageTwoInfo.getImageid(), mImageTwo);
+         setMainImage(mImageTwoInfo.mId, mImageTwo);
          return;
       }
       if (mCurSelectedKey == IMAGE_KEY_2) {
-         mImageTwoInfo = new StepImage(NO_IMAGE);
+         mImageTwoInfo = new APIImage();
          setImage(IMAGE_KEY_2);
-         setMainImage(mImageThreeInfo.getImageid(), mImageThree);
+         setMainImage(mImageThreeInfo.mId, mImageThree);
          return;
       }
       if (mCurSelectedKey == IMAGE_KEY_3) {
-         mImageThreeInfo = new StepImage(NO_IMAGE);
+         mImageThreeInfo = new APIImage();
          setImage(IMAGE_KEY_3);
-         setMainImage(mImageOneInfo.getImageid(), mImageOne);
+         setMainImage(mImageOneInfo.mId, mImageOne);
          return;
       }
    }
@@ -288,10 +288,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          case IMAGE_KEY_1:
             if (resultCode == Activity.RESULT_OK) {
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mImageOneInfo.getImageObject().mThumbnail = media.getGuid();
-               mImageOneInfo.getImageObject().mMedium = media.getGuid();
-               mImageOneInfo.setImageId(Integer.valueOf(media.getItemId()));
-               mImageOneInfo.getImageObject().mId = Integer.parseInt(media.getItemId());
+               mImageOneInfo.mBaseUrl = media.getGuid();
+               mImageOneInfo.mId = Integer.parseInt(media.getItemId());
                setGuideDirty();
                setImage(IMAGE_KEY_1);
             }
@@ -299,10 +297,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          case IMAGE_KEY_2:
             if (resultCode == Activity.RESULT_OK) {
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mImageTwoInfo.getImageObject().mThumbnail = media.getGuid();
-               mImageTwoInfo.getImageObject().mMedium = media.getGuid();
-               mImageTwoInfo.setImageId(Integer.valueOf(media.getItemId()));
-               mImageTwoInfo.getImageObject().mId = Integer.parseInt(media.getItemId());
+               mImageTwoInfo.mBaseUrl = media.getGuid();
+               mImageTwoInfo.mId = Integer.parseInt(media.getItemId());
                setGuideDirty();
                setImage(IMAGE_KEY_2);
             }
@@ -310,10 +306,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
          case IMAGE_KEY_3:
             if (resultCode == Activity.RESULT_OK) {
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mImageThreeInfo.getImageObject().mThumbnail = media.getGuid();
-               mImageThreeInfo.getImageObject().mMedium = media.getGuid();
-               mImageThreeInfo.setImageId(Integer.valueOf(media.getItemId()));
-               mImageThreeInfo.getImageObject().mId = Integer.parseInt(media.getItemId());
+               mImageThreeInfo.mBaseUrl = media.getGuid();
+               mImageThreeInfo.mId = Integer.parseInt(media.getItemId());
                setGuideDirty();
                setImage(IMAGE_KEY_3);
             }
@@ -337,8 +331,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       }
    }
 
-   public void setImageThumb(StepImage imageinfo, ImageView imagView) {
-      if (imageinfo.getImageid() == NO_IMAGE) {
+   public void setImageThumb(APIImage imageinfo, ImageView imagView) {
+      if (imageinfo.mId == NO_IMAGE) {
          imagView.setBackgroundColor(getResources().getColor(R.color.fireswing_grey));
          imagView.setScaleType(ScaleType.CENTER);
          imagView.setTag(null);
@@ -347,11 +341,11 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       }
       imagView.setScaleType(ScaleType.FIT_CENTER);
       imagView.setBackgroundColor(Color.TRANSPARENT);
-      mImageManager.displayImage(imageinfo.getImageObject().mThumbnail, getActivity(),
+      mImageManager.displayImage(imageinfo.getSize(".thumbnail"), getActivity(),
          imagView);
-      imagView.setTag(imageinfo.getImageObject().mMedium);
+      imagView.setTag(imageinfo.getSize(".medium"));
       imagView.invalidate();
-      setMainImage(imageinfo.getImageid(), imagView);
+      setMainImage(imageinfo.mId, imagView);
    }
 
    private void setMainImage(int imageID, ImageView image) {
@@ -367,7 +361,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       return;
    }
 
-   public void setImage(int location, StepImage si) {
+   public void setImage(int location, APIImage si) {
       switch (location) {
          case 1:
             mImageOneInfo = si;
@@ -391,7 +385,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       ArrayList<String> ids;
       switch (v.getId()) {
          case R.id.step_edit_thumb_1:
-            if (mImageOneInfo.getImageid() != NO_IMAGE) {
+            if (mImageOneInfo.mId != NO_IMAGE) {
                mCurSelectedKey = IMAGE_KEY_1;
                mQuickAction.show(v);
                return true;
@@ -403,7 +397,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             getActivity().startActivityForResult(intent, IMAGE_KEY_1);
             break;
          case R.id.step_edit_thumb_2:
-            if (mImageTwoInfo.getImageid() != NO_IMAGE) {
+            if (mImageTwoInfo.mId != NO_IMAGE) {
                mCurSelectedKey = IMAGE_KEY_2;
                mQuickAction.show(v);
                return true;
@@ -415,7 +409,7 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
             getActivity().startActivityForResult(intent, IMAGE_KEY_2);
             break;
          case R.id.step_edit_thumb_3:
-            if (mImageThreeInfo.getImageid() != NO_IMAGE) {
+            if (mImageThreeInfo.mId != NO_IMAGE) {
                mCurSelectedKey = IMAGE_KEY_3;
                mQuickAction.show(v);
                return true;
@@ -434,9 +428,9 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
 
    private ArrayList<String> getImageIds() {
       ArrayList<String> ids = new ArrayList<String>();
-      ids.add(mImageOneInfo.getImageid() + "");
-      ids.add(mImageTwoInfo.getImageid() + "");
-      ids.add(mImageThreeInfo.getImageid() + "");
+      ids.add(mImageOneInfo.mId + "");
+      ids.add(mImageTwoInfo.mId + "");
+      ids.add(mImageThreeInfo.mId + "");
       return ids;
    }
 
@@ -444,8 +438,8 @@ public class GuideCreateEditMediaFragment extends Fragment implements TextWatche
       return mTitle;
    }
 
-   public ArrayList<StepImage> getImageIDs() {
-      ArrayList<StepImage> list = new ArrayList<StepImage>();
+   public ArrayList<APIImage> getImageIDs() {
+      ArrayList<APIImage> list = new ArrayList<APIImage>();
       list.add(mImageOneInfo);
       list.add(mImageTwoInfo);
       list.add(mImageThreeInfo);

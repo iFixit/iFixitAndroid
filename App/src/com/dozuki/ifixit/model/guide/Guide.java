@@ -14,6 +14,7 @@ public class Guide implements Serializable {
     */
    protected Integer mRevisionid;
    protected String mTitle;
+   protected boolean mPublic;
    protected String mTopic;
    protected String mAuthor;
    protected String mTimeRequired;
@@ -25,6 +26,7 @@ public class Guide implements Serializable {
    protected ArrayList<GuideStep> mSteps;
    protected ArrayList<GuideTool> mTools;
    protected ArrayList<GuidePart> mParts;
+   protected boolean mEditMode = false;
 
    public Guide(int guideid) {
       mGuideid = guideid;
@@ -63,6 +65,10 @@ public class Guide implements Serializable {
       return mParts.size();
    }
 
+   public void setStepList(ArrayList<GuideStep> steps) {
+      mSteps = steps;
+   }
+
    public GuidePart getPart(int position) {
       return mParts.get(position);
    }
@@ -81,16 +87,41 @@ public class Guide implements Serializable {
       mSteps.add(step);
    }
 
-   public int getNumSteps() {
-      return mSteps.size();
+   public void deleteStep(GuideStep step) {
+      mSteps.remove(step);
    }
 
-   public GuideStep getStep(int position) {
-      return mSteps.get(position);
+   public void setEditMode(boolean editMode) {
+      mEditMode = editMode;
+   }
+
+   public boolean getEditMode() {
+      return mEditMode;
+   }
+
+   public void setPublic(boolean isPublic) {
+      mPublic = isPublic;
+   }
+
+   public boolean getPublic() {
+      return mPublic;
    }
 
    public void setGuideid(int guideid) {
       mGuideid = guideid;
+   }
+
+
+   public int getNumSteps() {
+      return mSteps.size();
+   }
+
+   public ArrayList<GuideStep> getSteps() {
+      return mSteps;
+   }
+
+   public GuideStep getStep(int position) {
+      return mSteps.get(position);
    }
 
    public int getGuideid() {
@@ -187,6 +218,30 @@ public class Guide implements Serializable {
 
    public ArrayList<GuideStep> getStepList() {
       return mSteps;
+   }
+
+   @Override
+   public boolean equals(Object o) {
+      if (this == o) {
+         return true;
+      }
+      if (!(o instanceof Guide)) {
+         return false;
+      }
+      Guide lhs = (Guide) o;
+      return mGuideid == lhs.mGuideid;
+   }
+
+   public void sync(GuideStep changedStep, int position) {
+
+      if(mSteps.contains(changedStep)) {
+         mSteps.get(position).setTitle(changedStep.getTitle());
+         mSteps.get(position).setImages(changedStep.getImages());
+         mSteps.get(position).setLines(changedStep.getLines());
+         return;
+      }
+
+      mSteps.add(position, changedStep);
    }
 
    public String toString() {

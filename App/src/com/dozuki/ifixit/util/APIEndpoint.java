@@ -274,7 +274,7 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.GuideForEdit().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.GuideForEdit().setResult(JSONHelper.parseGuide(json));
          }
 
          public APIEvent<?> getEvent() {
@@ -293,7 +293,7 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.CreateGuide().setResult(JSONHelper.parseGuide(json));
          }
 
          public APIEvent<?> getEvent() {
@@ -312,7 +312,7 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.EditGuide().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.EditGuide().setResult(JSONHelper.parseGuide(json));
          }
 
          public APIEvent<?> getEvent() {
@@ -369,7 +369,7 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.PublishStatus().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
          }
 
          public APIEvent<?> getEvent() {
@@ -388,7 +388,7 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.PublishStatus().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
          }
 
          public APIEvent<?> getEvent() {
@@ -407,7 +407,7 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.StepReorder().setResult(JSONHelper.parseUserGuide(json));
+            return new APIEvent.StepReorder().setResult(JSONHelper.parseGuide(json));
          }
 
          public APIEvent<?> getEvent() {
@@ -425,7 +425,7 @@ public enum APIEndpoint {
       }
 
       public APIEvent<?> parse(String json) throws JSONException {
-         return new APIEvent.StepAdd().setResult(JSONHelper.parseUserGuide(json));
+         return new APIEvent.StepAdd().setResult(JSONHelper.parseGuide(json));
       }
 
       public APIEvent<?> getEvent() {
@@ -453,7 +453,7 @@ public enum APIEndpoint {
       }
 
       public APIEvent<?> parse(String json) throws JSONException {
-         return new APIEvent.StepRemove().setResult(JSONHelper.parseUserGuide(json));
+         return new APIEvent.StepRemove().setResult(JSONHelper.parseGuide(json));
       }
 
       public APIEvent<?> getEvent() {

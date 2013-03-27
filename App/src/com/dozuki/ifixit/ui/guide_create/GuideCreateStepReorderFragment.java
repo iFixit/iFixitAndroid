@@ -12,9 +12,9 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.GuideCreateObject;
-import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
-import com.dozuki.ifixit.model.guide.StepImage;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.util.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
@@ -40,19 +40,19 @@ public class GuideCreateStepReorderFragment extends Fragment {
    private DragSortController mController;
    private StepAdapter mAdapter;
    private ImageManager mImageManager;
-   private GuideCreateObject mGuide;
-   private ArrayList<GuideCreateStepObject> mStepsCopy;
+   private Guide mGuide;
+   private ArrayList<GuideStep> mStepsCopy;
    private boolean mReturnVal;
 
-   public void setGuide(GuideCreateObject guide) {
+   public void setGuide(Guide guide) {
       mGuide = guide;
-      mStepsCopy = new ArrayList<GuideCreateStepObject>(mGuide.getSteps());
+      mStepsCopy = new ArrayList<GuideStep>(mGuide.getSteps());
    }
 
    private DragSortListView.DropListener onDrop = new DragSortListView.DropListener() {
       @Override
       public void drop(int from, int to) {
-         GuideCreateStepObject item = mAdapter.getItem(from);
+         GuideStep item = mAdapter.getItem(from);
          mAdapter.remove(item);
          mAdapter.insert(item, to);
          mDragListView.invalidateViews();
@@ -89,8 +89,8 @@ public class GuideCreateStepReorderFragment extends Fragment {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
       if (savedInstanceState != null) {
-         mGuide = (GuideCreateObject) savedInstanceState.get(GuideCreateStepsActivity.GUIDE_KEY);
-         mStepsCopy = (ArrayList<GuideCreateStepObject>) savedInstanceState.get(STEP_LIST_ID);
+         mGuide = (Guide) savedInstanceState.get(GuideCreateStepsActivity.GUIDE_KEY);
+         mStepsCopy = (ArrayList<GuideStep>) savedInstanceState.get(STEP_LIST_ID);
       }
       mAdapter = new StepAdapter(mStepsCopy);
    }
@@ -166,8 +166,8 @@ public class GuideCreateStepReorderFragment extends Fragment {
       public ImageView mImageView;
    }
 
-   private class StepAdapter extends ArrayAdapter<GuideCreateStepObject> {
-      public StepAdapter(List<GuideCreateStepObject> list) {
+   private class StepAdapter extends ArrayAdapter<GuideStep> {
+      public StepAdapter(List<GuideStep> list) {
          super(getActivity(), R.layout.guide_create_step_list_item_reorder, R.id.step_title_textview_reorder, list);
       }
 
@@ -204,13 +204,13 @@ public class GuideCreateStepReorderFragment extends Fragment {
       }
    }
 
-   private void setImageThumb(ArrayList<StepImage> imageList, ImageView imagView) {
+   private void setImageThumb(ArrayList<APIImage> imageList, ImageView imagView) {
       boolean img = false;
-      for (StepImage imageinfo : imageList) {
-         if (imageinfo.getImageObject().mId > 0) {
-            mImageManager.displayImage(imageinfo.getImageObject().mThumbnail,
+      for (APIImage imageinfo : imageList) {
+         if (imageinfo.mId > 0) {
+            mImageManager.displayImage(imageinfo.getSize(".thumbnail"),
                getActivity(), imagView);
-            imagView.setTag(imageinfo.getText() + MainApplication.get().getImageSizes().getThumb());
+            imagView.setTag(imageinfo.getSize(MainApplication.get().getImageSizes().getThumb()));
             imagView.invalidate();
             return;
          }

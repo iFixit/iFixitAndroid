@@ -10,8 +10,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.GuideCreateObject;
-import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.guide_create.GuideCreateStepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.ui.guide_view.LoadingFragment;
@@ -31,24 +31,24 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideInt
    private static final String LOADING = "LOADING";
    private ActionBar mActionBar;
    private GuideCreateStepPortalFragment mStepPortalFragment;
-   private ArrayList<GuideCreateStepObject> mStepList;
-   private GuideCreateObject mGuide;
+   private ArrayList<GuideStep> mStepList;
+   private Guide mGuide;
    private boolean mShowingHelp;
    private boolean mIsLoading;
 
-   public ArrayList<GuideCreateStepObject> getStepList() {
+   public ArrayList<GuideStep> getStepList() {
       return mStepList;
    }
 
-   public void deleteStep(GuideCreateStepObject step) {
+   public void deleteStep(GuideStep step) {
       mStepList.remove(step);
    }
 
-   public void addStep(GuideCreateStepObject step, int index) {
+   public void addStep(GuideStep step, int index) {
       mStepList.add(index, step);
    }
 
-   public GuideCreateObject getGuide() {
+   public Guide getGuide() {
       return mGuide;
    }
 
@@ -94,7 +94,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideInt
       }
       if (savedInstanceState != null) {
          // to persist mGuide
-         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
+         mGuide = (Guide) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mIsLoading = savedInstanceState.getBoolean(LOADING);
          if (mShowingHelp) {
@@ -184,7 +184,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideInt
       super.onActivityResult(requestCode, resultCode, data);
       if (requestCode == GUIDE_EDIT_STEP_REQUEST) {
          if (resultCode == RESULT_OK) {
-            GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
+            Guide guide = (Guide) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
             if (guide != null) {
                mGuide = guide;
                mStepList = mGuide.getSteps();

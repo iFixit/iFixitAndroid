@@ -3,14 +3,14 @@ package com.dozuki.ifixit.util;
 import java.io.Serializable;
 
 public class APIImage implements Serializable {
-   public final Integer mId;
-   public final String mBaseUrl;
+   public int mId;
+   public String mBaseUrl;
 
    public APIImage() {
-      this(null, null);
+      this(JSONHelper.NULL_INT, null);
    }
 
-   public APIImage(Integer id, String baseUrl) {
+   public APIImage(int id, String baseUrl) {
       mId = id;
       mBaseUrl = baseUrl;
    }

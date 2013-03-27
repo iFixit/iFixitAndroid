@@ -38,16 +38,23 @@ public class GuideStep implements Serializable {
    protected int mStepNum;
 
    protected String mTitle;
-   protected ArrayList<StepImage> mImages;
-   protected ArrayList<APIImage> mAPIImages;
+   protected ArrayList<APIImage> mImages;
    protected ArrayList<StepLine> mLines;
    protected StepVideo mVideo;
    private Embed mEmbed;
+   protected boolean mEditMode; // save state for edit drop down
+
+   public void setEditMode(boolean editMode) {
+      mEditMode = editMode;
+   }
+
+   public boolean getEditMode() {
+      return mEditMode;
+   }
 
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
-      mImages = new ArrayList<StepImage>();
-      mAPIImages = new ArrayList<APIImage>();
+      mImages = new ArrayList<APIImage>();
       mLines = new ArrayList<StepLine>();
    }
 
@@ -57,6 +64,14 @@ public class GuideStep implements Serializable {
 
    public void setStepid(int stepid) {
       mStepid = stepid;
+   }
+
+   public void setStepNum(int stepNum) {
+      mStepNum = stepNum;
+   }
+
+   public int getStepid() {
+      return mStepid;
    }
 
    public void setRevisionid(Integer revisionid) {
@@ -87,24 +102,16 @@ public class GuideStep implements Serializable {
       return mImages.size() > 0;
    }
 
-   public boolean hasAPIImage() {
-      return mAPIImages.size() > 0;
-   }
-
-   public void addImage(StepImage image) {
+   public void addImage(APIImage image) {
       mImages.add(image);
    }
 
-   public void addAPIImage(APIImage image) {
-      mAPIImages.add(image);
-   }
-
-   public ArrayList<StepImage> getImages() {
+   public ArrayList<APIImage> getImages() {
       return mImages;
    }
 
-   public ArrayList<APIImage> getAPIImages() {
-      return mAPIImages;
+   public void setImages(ArrayList<APIImage> imageIDs) {
+      mImages = imageIDs;
    }
 
    public ArrayList<StepLine> getLines() {
@@ -117,6 +124,10 @@ public class GuideStep implements Serializable {
 
    public StepLine getLine(int pos) {
       return mLines.get(pos);
+   }
+
+   public void setLines(ArrayList<StepLine> lines) {
+      mLines = lines;
    }
 
 
@@ -152,9 +163,5 @@ public class GuideStep implements Serializable {
 
    public Integer getRevisionid() {
       return mRevisionid;
-   }
-
-   public Integer getStepid() {
-      return mStepid;
    }
 }

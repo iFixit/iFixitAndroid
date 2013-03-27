@@ -5,8 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
-import com.dozuki.ifixit.model.guide.StepImage;
+import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.util.APIImage;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 
@@ -19,7 +19,7 @@ public class GuideCreateStepEditFragment extends Fragment {
    }
    
    private static final String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
-   private GuideCreateStepObject mStepObject;
+   private GuideStep mStepObject;
    private GuideCreateEditBulletFragment mEditBulletFrag;
    private GuideCreateEditMediaFragment mEditMediaFrag;  
    
@@ -29,12 +29,12 @@ public class GuideCreateStepEditFragment extends Fragment {
 
       View v = inflater.inflate(R.layout.guide_create_step_edit_body_new, container, false);
       Bundle b = getArguments();
-      mStepObject = (GuideCreateStepObject) b.getSerializable(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
+      mStepObject = (GuideStep) b.getSerializable(GuideCreateStepsEditActivity.GUIDE_STEP_KEY);
       if (savedInstanceState != null) {
          mEditMediaFrag = (GuideCreateEditMediaFragment) getChildFragmentManager().findFragmentById(R.id.guide_create_edit_media_fragment_container);
          mEditBulletFrag = (GuideCreateEditBulletFragment) getChildFragmentManager().findFragmentById(R.id.guide_create_edit_bullet_fragment_container);
          
-         mStepObject =  (GuideCreateStepObject) savedInstanceState.getSerializable(GUIDE_STEP_KEY);
+         mStepObject =  (GuideStep) savedInstanceState.getSerializable(GUIDE_STEP_KEY);
          mStepObject.getLines();
           return v;
       }
@@ -77,7 +77,7 @@ public class GuideCreateStepEditFragment extends Fragment {
       
    }
 
-   public GuideCreateStepObject getGuideChanges() {
+   public GuideStep getGuideChanges() {
       //lines
       mStepObject.getLines().clear();
       mStepObject.getLines().addAll(mEditBulletFrag.getLines());
@@ -86,9 +86,9 @@ public class GuideCreateStepEditFragment extends Fragment {
       //media
       //mStepObject.setImages(mEditMediaFrag.getImageIDs());
       mStepObject.getImages().clear();
-      for(StepImage si : mEditMediaFrag.getImageIDs())
+      for(APIImage si : mEditMediaFrag.getImageIDs())
       {  
-         if(si.getImageid() != GuideCreateEditMediaFragment.NO_IMAGE) {
+         if(si.mId != GuideCreateEditMediaFragment.NO_IMAGE) {
               mStepObject.addImage(si);
          }
          
@@ -108,11 +108,11 @@ public class GuideCreateStepEditFragment extends Fragment {
       mEditMediaFrag.onActivityResult(requestCode, resultCode, data);
    }
 
-   public GuideCreateStepObject getStepObject() {
+   public GuideStep getStepObject() {
       return mStepObject;
    }
 
-   public void setGuideStep(GuideCreateStepObject guideCreateStepObject) {
+   public void setGuideStep(GuideStep guideCreateStepObject) {
       mStepObject = guideCreateStepObject;
       setCopiesForEdit();
    }  

@@ -161,13 +161,13 @@ public class GuideStepViewFragment extends Fragment {
          setVideo();
       } else if (mStep.hasEmbed()) {
          setEmbed();
-      } else if (mStep.hasAPIImage()) {
+      } else if (mStep.hasImage()) {
          setImage();
       }
    }
    
    private void setImage() {
-      ArrayList<APIImage> stepImages = mStep.getAPIImages();
+      ArrayList<APIImage> stepImages = mStep.getImages();
      
       // Size the video preview screenshot within the available screen space
       mMainImage.setOnClickListener(new OnClickListener() {

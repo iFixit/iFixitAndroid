@@ -136,7 +136,7 @@ public class JSONHelper {
          if (type.compareTo("image") == 0) {
             JSONArray jImages = jMedia.getJSONArray("data");
             for (int i = 0; i < jImages.length(); i++) {
-               step.addAPIImage(parseImage(jImages.getJSONObject(i), null));
+               step.addImage(parseImage(jImages.getJSONObject(i), null));
             }
          }
 
@@ -151,9 +151,7 @@ public class JSONHelper {
          }
 
       } catch (JSONException e) {
-         StepImage image = new StepImage(0);
-         image.setOrderby(1);
-         image.setText("");
+         APIImage image = new APIImage();
          step.addImage(image);
       }
 
@@ -466,47 +464,6 @@ public class JSONHelper {
       return spantext;
    }
 
-   /**
-    * TODO: This name should be updated.
-    */
-   public static GuideCreateObject parseUserGuide(String json) throws JSONException {
-      GuideCreateObject guideObject = new GuideCreateObject();
-      JSONObject jGuideInfo = new JSONObject(json);
-      JSONObject jGuide = jGuideInfo.getJSONObject("guide");
-      JSONArray jSteps = jGuide.getJSONArray("steps");
-      JSONArray jTools = jGuide.getJSONArray("tools");
-      JSONArray jParts = jGuide.getJSONArray("parts");
-      JSONObject jAuthor = jGuide.getJSONObject("author");
-      // JSONObject jImage = jGuide.getJSONObject("image");
-      JSONObject jImage = null;
-      try {
-         jImage = jGuide.getJSONObject("image");
-         guideObject.setImageObject(new ImageObject(jImage.getInt("id"), jImage.getString("mini"), jImage
-                 .getString("thumbnail"), jImage.getString("standard"), jImage.getString("medium"), jImage
-                 .getString("large"), jImage.getString("original")));
-      } catch (JSONException e) {
-
-      }
-
-      guideObject.setTopic(jGuideInfo.getString("topic"));
-      // guideObject.setURL(jGuideInfo.getString("url"));
-      guideObject.setAuthor(jGuide.getJSONObject("author").getString("text"));
-      guideObject.setGuideid(jGuide.getInt("guideid"));
-      guideObject.setRevisionid(jGuide.getInt("revisionid"));
-      guideObject.setTitle(jGuide.getString("title"));
-      guideObject.setSubject(jGuide.getString("subject"));
-      guideObject.setSummary(jGuide.getString("summary"));
-      guideObject.setIntroduction(jGuide.getString("introduction_raw"));
-     // guideObject.setType(json.getString("type"));
-
-      // parse image;
-
-      for (int i = 0; i < jSteps.length(); i++) {
-         guideObject.addStep(new GuideCreateStepObject(parseStep(jSteps.getJSONObject(i), i)));
-      }
-      return guideObject;
-   }
-
    public static ArrayList<UserGuide> parseUserGuides(String json) throws JSONException {
       JSONArray jGuideInfos = new JSONArray(json);
       ArrayList<UserGuide> guideList = new ArrayList<UserGuide>();
@@ -532,14 +489,7 @@ public class JSONHelper {
       userGuide.setUserid(json.getInt("userid"));
       userGuide.setRevisionid(json.getInt("revisionid"));
 
-      try {
-         JSONObject jImage = json.getJSONObject("image");
-         userGuide.setImageObject(new ImageObject(jImage.getInt("id"), jImage.getString("mini"), jImage
-            .getString("thumbnail"), jImage.getString("standard"), jImage.getString("medium"), jImage
-            .getString("large"), jImage.getString("original")));
-      } catch (JSONException e) {
-
-      }
+       userGuide.setImage(parseImage(json, "image"));
 
       return userGuide;
    }
@@ -555,17 +505,17 @@ public class JSONHelper {
       return array;
    }
 
-   public static JSONArray createImageArray(ArrayList<StepImage> lines) throws JSONException {
+   public static JSONArray createImageArray(ArrayList<APIImage> lines) throws JSONException {
 
       JSONArray array = new JSONArray();
 
-      for (StepImage l : lines) {
-         array.put(l.getImageObject().mId);
+      for (APIImage l : lines) {
+         array.put(l.mId);
       }
       return array;
    }
 
-   public static JSONObject createStepMediaJsonObject(GuideCreateStepObject step) throws JSONException {
+   public static JSONObject createStepMediaJsonObject(GuideStep step) throws JSONException {
       JSONObject jMedia = new JSONObject();
 
       jMedia.put("type", "image");
@@ -590,10 +540,10 @@ public class JSONHelper {
       return lineObject;
    }
 
-   public static JSONArray createStepIdArray(ArrayList<GuideCreateStepObject> steps) throws JSONException {
+   public static JSONArray createStepIdArray(ArrayList<GuideStep> steps) throws JSONException {
       JSONArray jSteps = new JSONArray();
-      for (GuideCreateStepObject step : steps) {
-         jSteps.put(jSteps.length(), step.getStepId());
+      for (GuideStep step : steps) {
+         jSteps.put(jSteps.length(), step.getStepid());
       }
 
       return jSteps;
@@ -618,9 +568,9 @@ public class JSONHelper {
       }
    }
 
-//   private static GuideCreateStepObject parseCreateGuideStep(JSONObject jStep) throws JSONException {
+//   private static GuideStep parseCreateGuideStep(JSONObject jStep) throws JSONException {
 //      JSONArray jLines = jStep.getJSONArray("lines");
-//      GuideCreateStepObject step = new GuideCreateStepObject(jStep.getInt("number"));
+//      GuideStep step = new GuideCreateStepObject(jStep.getInt("number"));
 //
 //      step.setTitle(jStep.getString("title"));
 //
@@ -632,7 +582,7 @@ public class JSONHelper {
 //            step.addImage(parseImage(jImages.getJSONObject(i)));
 //         }
 //      } catch (JSONException e) {
-//         StepImage image = new StepImage(0);
+//         APIImage image = new APIImage(0);
 //         image.setOrderby(1);
 //         image.setText("");
 //         step.addImage(image);

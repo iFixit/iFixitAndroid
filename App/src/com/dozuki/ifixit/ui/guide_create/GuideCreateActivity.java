@@ -13,8 +13,8 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.GuideCreateObject;
-import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.guide.UserGuide;
 import com.dozuki.ifixit.ui.IfixitActivity;
@@ -151,12 +151,12 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    public void onGuideCreated(APIEvent.CreateGuide event) {
       if (!event.hasError()) {
          UserGuide userGuide = new UserGuide();
-         GuideCreateObject guideObject = event.getResult();
+         Guide guideObject = event.getResult();
          mGuidePortal.toggleNoGuidesText(false);
          userGuide.setGuideid(guideObject.getGuideid());
-         userGuide.setImageObject(guideObject.getIntroImage());
+         userGuide.setImage(guideObject.getIntroImage());
          userGuide.setTitle(guideObject.getTitle());
-         userGuide.setPublished(guideObject.getPublished());
+         userGuide.setPublished(guideObject.getPublic());
          userGuide.setRevisionid(guideObject.getRevisionid());
          mGuideList.add(userGuide);
          launchStepEditOnNewGuide(guideObject);
@@ -172,7 +172,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       super.onActivityResult(requestCode, resultCode, data);
       if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
          if (resultCode == RESULT_OK) {
-            GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GUIDE_KEY);
+            Guide guide = (Guide) data.getSerializableExtra(GUIDE_KEY);
             if(guide == null) {
                return;
             }
@@ -190,7 +190,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
       if (!event.hasError()) {
-         GuideCreateObject guide = event.getResult();
+         Guide guide = event.getResult();
          for (UserGuide g : mGuideList) {
             if (g.getGuideid() == guide.getGuideid()) {
                g.setRevisionid(guide.getRevisionid());
@@ -267,14 +267,14 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       APIService.call(this, APIService.getCreateGuideAPICall(guideObject));
    }
 
-   public void launchStepEditOnNewGuide(GuideCreateObject guideObject) {
+   public void launchStepEditOnNewGuide(Guide guideObject) {
       Intent intent = new Intent(this, GuideCreateStepsEditActivity.class);
       intent.putExtra(GuideCreateActivity.GUIDE_KEY,  guideObject);
-      GuideCreateStepObject item = new GuideCreateStepObject(GuideCreateStepPortalFragment.STEP_ID++);
+      GuideStep item = new GuideStep(GuideCreateStepPortalFragment.STEP_ID++);
       item.setStepNum(0);
       item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
       item.addLine(new StepLine(null, "black", 0, ""));
-      ArrayList<GuideCreateStepObject> initialStepList = new ArrayList<GuideCreateStepObject>();
+      ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
       initialStepList.add(item);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_KEY, 0);

@@ -11,8 +11,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.GuideCreateObject;
-import com.dozuki.ifixit.model.guide.GuideCreateStepObject;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -41,11 +41,11 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
    private TextView mAddStepBar;
    private TextView mEditIntroBar;
    private TextView mReorderStepsBar;
-   private GuideCreateObject mGuide;
+   private Guide mGuide;
    private TextView mNoStepsText;
    private GuideCreateStepPortalFragment mSelf;
    private int mCurOpenGuideObjectID;
-   private GuideCreateStepObject mStepForDelete;
+   private GuideStep mStepForDelete;
    private boolean mShowingDelete;
 
 
@@ -63,8 +63,8 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
       if (savedInstanceState != null) {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
-         mStepForDelete = (GuideCreateStepObject) savedInstanceState.getSerializable(STEP_FOR_DELETE);
-         mGuide = (GuideCreateObject) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
+         mStepForDelete = (GuideStep) savedInstanceState.getSerializable(STEP_FOR_DELETE);
+         mGuide = (Guide) savedInstanceState.getSerializable(GuideCreateStepsActivity.GUIDE_KEY);
       }
       if (mGuide == null) {
 
@@ -150,7 +150,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
          public void onClick(View v) {
             if (mNoStepsText.getVisibility() == View.VISIBLE)
                mNoStepsText.setVisibility(View.GONE);
-            GuideCreateStepObject item = new GuideCreateStepObject(STEP_ID++);
+            GuideStep item = new GuideStep(STEP_ID++);
             item.setStepNum(mGuide.getSteps().size());
             item.setTitle(DEFAULT_TITLE);
             item.addLine(new StepLine(null, "black", 0, ""));
@@ -215,9 +215,9 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
          GuideCreateStepListItem itemView = (GuideCreateStepListItem) convertView;
-         GuideCreateStepObject step = (GuideCreateStepObject) getItem(position);
+         GuideStep step = (GuideStep)getItem(position);
          itemView = new GuideCreateStepListItem(getActivity(), mImageManager, mSelf, step, position);
-         itemView.setTag(step.getStepId());
+         itemView.setTag(step.getStepid());
          return itemView;
       }
    }
@@ -244,7 +244,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST) {
          if (resultCode == Activity.RESULT_OK) {
-            GuideCreateObject guide = (GuideCreateObject) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
+            Guide guide = (Guide)data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
             if (guide != null) {
                mGuide = guide;
                mStepAdapter = new StepAdapter();
@@ -258,7 +258,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
       }
    }
 
-   void deleteStep(GuideCreateStepObject step) {
+   void deleteStep(GuideStep step) {
       createDeleteDialog(step).show();
    }
 
@@ -289,7 +289,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
             view.setChecked(false);
          }
          for (int i = 0; i < mGuide.getSteps().size(); i++) {
-            if (mGuide.getSteps().get(i).getStepId() == mCurOpenGuideObjectID) {
+            if (mGuide.getSteps().get(i).getStepid() == mCurOpenGuideObjectID) {
                mGuide.getSteps().get(i).setEditMode(false);
             }
          }
@@ -297,7 +297,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
       mCurOpenGuideObjectID = NO_ID;
    }
 
-   public AlertDialog createDeleteDialog(GuideCreateStepObject item) {
+   public AlertDialog createDeleteDialog(GuideStep item) {
       mStepForDelete = item;
       mShowingDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -340,7 +340,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
       }
    }
 
-   void launchStepEdit(ArrayList<GuideCreateStepObject> stepList, int curStep) {
+   void launchStepEdit(ArrayList<GuideStep> stepList, int curStep) {
       Intent intent = new Intent(getActivity(), GuideCreateStepsEditActivity.class);
       intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
@@ -348,15 +348,15 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
       startActivityForResult(intent, GuideCreateStepsActivity.GUIDE_EDIT_STEP_REQUEST);
    }
 
-   void launchStepEdit(GuideCreateStepObject curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+   void launchStepEdit(GuideStep curStep) {
+      ArrayList<GuideStep> stepList = new ArrayList<GuideStep>();
       stepList.addAll(mGuide.getSteps());
       stepList.add(curStep);
       launchStepEdit(stepList, stepList.size() - 1);
    }
 
    void launchStepEdit(int curStep) {
-      ArrayList<GuideCreateStepObject> stepList = new ArrayList<GuideCreateStepObject>();
+      ArrayList<GuideStep> stepList = new ArrayList<GuideStep>();
       stepList.addAll(mGuide.getSteps());
       launchStepEdit(stepList, curStep);
    }
