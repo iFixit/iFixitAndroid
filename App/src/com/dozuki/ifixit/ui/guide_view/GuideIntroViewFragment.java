@@ -88,7 +88,7 @@ public class GuideIntroViewFragment extends Fragment {
    public void setGuide() {
       mTitle.setText(Html.fromHtml(mGuide.getDisplayTitle()));
       mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
-       .getIntroduction())));
+       .getIntroductionRendered())));
 
       if (!mGuide.getDifficulty().equals("false")) {
          mDifficulty.setText(getActivity().getString(R.string.difficulty) +

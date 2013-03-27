@@ -273,7 +273,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       GuideStep item = new GuideStep(GuideCreateStepPortalFragment.STEP_ID++);
       item.setStepNum(0);
       item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
-      item.addLine(new StepLine(null, "black", 0, ""));
+      item.addLine(new StepLine());
       ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
       initialStepList.add(item);
       intent.putExtra(GuideCreateStepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);

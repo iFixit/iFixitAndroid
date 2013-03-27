@@ -96,7 +96,7 @@ public class GuideIntroFragment extends Fragment {
          mTitle.setText(mGuideObject.getTitle());
          mFocus.setText(mGuideObject.getSubject());
          mSummary.setText(mGuideObject.getSummary());
-         mIntroduction.setText(mGuideObject.getIntroduction());
+         mIntroduction.setText(mGuideObject.getIntroductionRaw());
       }
 
       return view;

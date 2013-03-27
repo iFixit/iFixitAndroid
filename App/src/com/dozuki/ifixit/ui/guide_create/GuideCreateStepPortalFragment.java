@@ -153,7 +153,7 @@ public class GuideCreateStepPortalFragment extends Fragment implements GuideCrea
             GuideStep item = new GuideStep(STEP_ID++);
             item.setStepNum(mGuide.getSteps().size());
             item.setTitle(DEFAULT_TITLE);
-            item.addLine(new StepLine(null, "black", 0, ""));
+            item.addLine(new StepLine());
             launchStepEdit(item);
          }
       });

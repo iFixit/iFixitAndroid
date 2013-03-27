@@ -350,7 +350,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
       }
 
       for(StepLine l : obj.getLines())  {
-         if(l.getText().length() == 0) {
+         if(l.getTextRaw().length() == 0) {
             Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
                     Toast.LENGTH_SHORT).show();
             return;
@@ -403,7 +403,7 @@ public class GuideCreateStepsEditActivity extends IfixitActivity implements OnCl
 
             GuideStep item = new GuideStep(GuideCreateStepPortalFragment.STEP_ID++);
             item.setTitle(GuideCreateStepPortalFragment.DEFAULT_TITLE);
-            item.addLine(new StepLine(null, "black", 0, ""));
+            item.addLine(new StepLine());
             item.setStepNum(mPagePosition + 1);
             mStepList.add(mPagePosition + 1, item);
             int pos = mPagePosition;

@@ -90,7 +90,8 @@ public class JSONHelper {
       guide.setAuthor(jAuthor.getString("text"));
       guide.setTimeRequired(jGuide.getString("time_required"));
       guide.setDifficulty(jGuide.getString("difficulty"));
-      guide.setIntroduction(jGuide.getString("introduction_rendered"));
+      guide.setIntroductionRaw(jGuide.getString("introduction_raw"));
+      guide.setIntroductionRendered(jGuide.getString("introduction_rendered"));
       guide.setIntroImage(parseImage(jGuide, "image"));
       guide.setSummary(jGuide.getString("summary"));
       guide.setRevisionid(jGuide.getInt("revisionid"));
@@ -228,7 +229,7 @@ public class JSONHelper {
     private static StepLine parseLine(JSONObject jLine) throws JSONException {
 
        return new StepLine(jLine.getInt("lineid"), jLine.getString("bullet"),
-        jLine.getInt("level"), jLine.getString("text_raw"));
+        jLine.getInt("level"), jLine.getString("text_raw"), jLine.getString("text_rendered"));
    }
 
    /**
@@ -528,7 +529,7 @@ public class JSONHelper {
 
       JSONObject lineObject = new JSONObject();
 
-      lineObject.put("text", l.getText());
+      lineObject.put("text", l.getTextRaw());
       lineObject.put("bullet", l.getColor());
       lineObject.put("level", l.getLevel());
       if(l.getLineId() != null) {
@@ -568,47 +569,6 @@ public class JSONHelper {
       }
    }
 
-//   private static GuideStep parseCreateGuideStep(JSONObject jStep) throws JSONException {
-//      JSONArray jLines = jStep.getJSONArray("lines");
-//      GuideStep step = new GuideCreateStepObject(jStep.getInt("number"));
-//
-//      step.setTitle(jStep.getString("title"));
-//
-//      try {
-//         JSONObject jMedia = jStep.getJSONObject("media");
-//         JSONArray jImages = jMedia.getJSONArray("image");
-//
-//         for (int i = 0; i < jImages.length(); i++) {
-//            step.addImage(parseImage(jImages.getJSONObject(i)));
-//         }
-//      } catch (JSONException e) {
-//         APIImage image = new APIImage(0);
-//         image.setOrderby(1);
-//         image.setText("");
-//         step.addImage(image);
-//      }
-//
-//      for (int i = 0; i < jLines.length(); i++) {
-//         step.addLine(parseLine(jLines.getJSONObject(i)));
-//      }
-//
-//      return step;
-//   }
-
-   /**
-    * public static UserGuide parseUserGuideInfo(JSONObject json) throws JSONException {
-    * return new UserGuide(
-    * json.getInt("guideid"),
-    * json.getString("subject"),
-    * json.getString("topic"),
-    * json.getString("title"),
-    * json.getBoolean("public"),
-    * json.getInt("userid"),
-    * json.getString("username"),
-    * json.getString("image")
-    * );
-    * }
-    **/
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
       VideoEncoding encoding =
          new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),

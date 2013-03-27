@@ -77,7 +77,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
          @Override
          public void onClick(View v) {
-            mLines.add(new StepLine(null, "black", 0, ""));
+            mLines.add(new StepLine());
             View view = getView(mLines.get(mLines.size() - 1), mLines.size() - 1);
             mBulletContainer.addView(view, mLines.size() - 1);
             // if (mLines.size() == BULLET_LIMIT) {
@@ -112,7 +112,7 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
 
       if (mLines.size() == 0) {
          mNewBulletButton.setVisibility(View.VISIBLE);
-      } else if (mLines.get(mLines.size() - 1).getText().length() != 0 && mLines.size() != BULLET_LIMIT) {
+      } else if (mLines.get(mLines.size() - 1).getTextRaw().length() != 0 && mLines.size() != BULLET_LIMIT) {
          mNewBulletButton.setVisibility(View.VISIBLE);
       }
    }
@@ -139,15 +139,15 @@ public class GuideCreateEditBulletFragment extends Fragment implements BulletDia
       params.setMargins(BULLET_INDENT * line.getLevel(), 0, 0, 0);
       iconFrame.setLayoutParams(params);
       final EditText text = (EditText) v.findViewById(R.id.step_title_textview);
-      text.setText(line.getText());
+      text.setText(line.getTextRaw());
       text.setId(index);
       text.addTextChangedListener(new TextWatcher() {
          @Override
          public void afterTextChanged(Editable s) {
-            if (text.getText().toString().equals(line.getText())) {
+            if (text.getText().toString().equals(line.getTextRaw())) {
                return;
             }
-            mLines.get(mLines.indexOf(line)).setText(text.getText().toString());
+            mLines.get(mLines.indexOf(line)).setTextRaw(text.getText().toString());
 
             if (text.getText().length() == 0 && mLines.indexOf(line) == mLines.size() - 1) {
                mNewBulletButton.setVisibility(View.GONE);

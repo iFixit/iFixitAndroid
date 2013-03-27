@@ -11,10 +11,15 @@ public class StepLine implements Serializable {
    protected Integer mLineid;
    protected String mColor;
    protected int mLevel;
-   protected String mText;
+   protected String mTextRendered;
+   protected String mTextRaw;
    protected boolean hasIcon = false;
 
-   public StepLine(Integer lineid, String color, int level, String text) {
+   public StepLine() {
+      this(null, "black", 0, "", "");
+   }
+
+   public StepLine(Integer lineid, String color, int level, String textRaw, String textRendered) {
       if (color.equals("icon_reminder") ||
           color.equals("icon_caution") ||
           color.equals("icon_note")) {
@@ -26,7 +31,8 @@ public class StepLine implements Serializable {
       mLineid = lineid;
       mColor = color;
       mLevel = level;
-      mText = text;
+      mTextRaw = textRaw;
+      mTextRendered = textRendered;
    }
 
    public void setLineid(Integer lineid) {
@@ -41,12 +47,20 @@ public class StepLine implements Serializable {
       mLevel = level;
    }
 
-   public void setText(String text) {
-      mText = text;
+   public void setTextRendered(String text) {
+      mTextRendered = text;
    }
 
-   public String getText() {
-      return mText;
+   public String getTextRendered() {
+      return mTextRendered;
+   }
+
+   public String getTextRaw() {
+      return mTextRaw;
+   }
+
+   public void setTextRaw(String textRaw) {
+      mTextRaw = textRaw;
    }
 
    public int getLevel() {
@@ -62,7 +76,7 @@ public class StepLine implements Serializable {
    }
 
    public String toString() {
-      return "{StepLine: " + mLineid + ", " + mColor + ", " + mLevel + ", " + mText + "}";
+      return "{StepLine: " + mLineid + ", " + mColor + ", " + mLevel + ", " + mTextRendered + "}";
    }
 
    public Integer getLineId() {

@@ -222,7 +222,7 @@ public class GuideCreateStepsActivity extends IfixitActivity implements GuideInt
       mGuide.setTitle(title);
       mGuide.setTopic(device);
       mGuide.setSummary(summary);
-      mGuide.setIntroduction(intro);
+      mGuide.setIntroductionRendered(intro);
 
       APIService.call(this, APIService.getEditGuideAPICall(mGuide.getGuideid(),
        device, title, summary, intro, guideType, thing, mGuide.getRevisionid()));

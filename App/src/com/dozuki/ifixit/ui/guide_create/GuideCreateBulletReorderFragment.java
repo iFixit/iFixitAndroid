@@ -164,7 +164,7 @@ public class GuideCreateBulletReorderFragment extends DialogFragment {
             holder.mItemHolder = (FrameLayout) v.findViewById(R.id.guide_step_item_frame);
          }
          final ViewHolder holder = (ViewHolder) v.getTag();
-         String step = getItem(position).getText();
+         String step = getItem(position).getTextRaw();
          holder.stepsView.setText(step);
          holder.mImageView.setImageResource(getBulletResource(getItem(position).getColor()));
          LayoutParams params = (LayoutParams) holder.mItemHolder.getLayoutParams();

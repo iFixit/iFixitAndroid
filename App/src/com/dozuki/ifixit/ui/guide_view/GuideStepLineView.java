@@ -36,7 +36,7 @@ public class GuideStepLineView extends LinearLayout {
 
       mStepText = (TextView) findViewById(R.id.step_text);
       mStepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
-       line.getText())));
+       line.getTextRendered())));
       mStepText.setMovementMethod(LinkMovementMethod.getInstance());
 
       LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(

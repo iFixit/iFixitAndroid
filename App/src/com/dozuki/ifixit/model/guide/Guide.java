@@ -19,7 +19,8 @@ public class Guide implements Serializable {
    protected String mAuthor;
    protected String mTimeRequired;
    protected String mDifficulty;
-   protected String mIntroduction;
+   protected String mIntroductionRendered;
+   protected String mIntroductionRaw;
    protected String mSubject;
    protected APIImage mIntroImage;
    protected String mSummary;
@@ -176,12 +177,20 @@ public class Guide implements Serializable {
       return mDifficulty;
    }
 
-   public void setIntroduction(String introduction) {
-      mIntroduction = introduction;
+   public void setIntroductionRendered(String introductionRendered) {
+      mIntroductionRendered = introductionRendered;
    }
 
-   public String getIntroduction() {
-      return mIntroduction;
+   public void setIntroductionRaw(String introductionRaw) {
+      mIntroductionRaw = introductionRaw;
+   }
+
+   public String getIntroductionRaw() {
+      return mIntroductionRaw;
+   }
+
+   public String getIntroductionRendered() {
+      return mIntroductionRendered;
    }
 
    public void setIntroImage(APIImage image) {
@@ -246,7 +255,7 @@ public class Guide implements Serializable {
 
    public String toString() {
       return "{" + mGuideid + "\n" + mRevisionid + "\n" + mTitle + "\n" + mTopic + "\n" +
-       mAuthor + "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroduction + "\n" +
+       mAuthor + "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroductionRendered + "\n" +
        mSummary + "\n\n" + mSteps + "\n" + mSummary + "}";
    }
 }
