@@ -5,6 +5,7 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.dozuki.model.Site;
 import com.dozuki.ifixit.gallery.model.UploadedImageInfo;
 import com.dozuki.ifixit.gallery.model.UserImageInfo;
@@ -420,8 +421,6 @@ public class JSONHelper {
    /**
     * Removes relative a hrefs
     *
-    * TODO: Update domain with the current site's domain.
-    *
     * @param spantext (from Html.fromhtml())
     * @return spanned with fixed links
     */
@@ -431,19 +430,23 @@ public class JSONHelper {
          int start = spantext.getSpanStart(span);
          int end = spantext.getSpanEnd(span);
          int flags = spantext.getSpanFlags(span);
+         
+         Site site = MainApplication.get().getSite();
+         
          if (span instanceof URLSpan) {
             URLSpan urlSpan = (URLSpan) span;
             if (!urlSpan.getURL().startsWith("http")) {
                if (urlSpan.getURL().startsWith("/")) {
-                  urlSpan = new URLSpan("http://www.ifixit.com" +
+                  urlSpan = new URLSpan("http://" + site.mDomain +
                    urlSpan.getURL());
                } else {
-                  urlSpan = new URLSpan("http://www.ifixit.com/" +
+                  urlSpan = new URLSpan("http://" + site.mDomain + "/" +
                    urlSpan.getURL());
                }
             }
             ((Spannable)spantext).removeSpan(span);
             ((Spannable)spantext).setSpan(urlSpan, start, end, flags);
+            
          }
       }
 
