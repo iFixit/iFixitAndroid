@@ -552,14 +552,14 @@ public class APIService extends Service {
                    * suupport PATCH requests.
                    */
                   request = HttpRequest.post(url);
-                  request.header("X-REQUEST-METHOD-OVERRIDE", endpoint.mMethod);
+                  request.header("X-HTTP-Method-Override", endpoint.mMethod);
                }
 
                /**
                 * Uncomment to test HTTPS API calls in development.
                 */
                request.trustAllCerts();
-              request.trustAllHosts();
+               request.trustAllHosts();
 
                String authToken = null;
                /**
