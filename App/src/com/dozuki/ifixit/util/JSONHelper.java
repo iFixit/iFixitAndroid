@@ -208,7 +208,7 @@ public class JSONHelper {
    }
 
    private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
-      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"), 
+      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"),
        jEmbed.getString("type"), jEmbed.getString("url"));
       em.setContentURL(getQueryMap(jEmbed.getString("url")).get("url"));
       return em;
@@ -222,14 +222,14 @@ public class JSONHelper {
          thumbnail = jOEmbed.getString("thumbnail_url");
       }
       Document doc = Jsoup.parse(jOEmbed.getString("html"));
-      return new OEmbed(jOEmbed.getString("html"), 
-         doc.getElementsByAttribute("src").get(0).attr("src"), thumbnail);
+      return new OEmbed(jOEmbed.getString("html"),
+       doc.getElementsByAttribute("src").get(0).attr("src"), thumbnail);
    }
 
-    private static StepLine parseLine(JSONObject jLine) throws JSONException {
+   private static StepLine parseLine(JSONObject jLine) throws JSONException {
 
-       return new StepLine(jLine.getInt("lineid"), jLine.getString("bullet"),
-        jLine.getInt("level"), jLine.getString("text_raw"), jLine.getString("text_rendered"));
+      return new StepLine(jLine.getInt("lineid"), jLine.getString("bullet"),
+       jLine.getInt("level"), jLine.getString("text_raw"), jLine.getString("text_rendered"));
    }
 
    /**
@@ -337,7 +337,7 @@ public class JSONHelper {
 
       return userImageInfo;
    }
-   
+
    public static UserVideoList parseUserVideos(String jVideo) throws JSONException {
       JSONArray jImages = new JSONArray(jVideo);
 
@@ -348,19 +348,19 @@ public class JSONHelper {
       }
       return userVideoList;
    }
-   
-   public static UserVideoInfo parseUserVideoInfo(JSONObject jVideo)
-      throws JSONException {
-        UserVideoInfo userVideoInfo = new UserVideoInfo();
-        userVideoInfo.setItemId(jVideo.getString("imageid"));
-        userVideoInfo.setGuid(jVideo.getString("guid"));
-        userVideoInfo.setHeight(jVideo.getString("height"));
-        userVideoInfo.setWidth(jVideo.getString("width"));
-        userVideoInfo.setRatio(jVideo.getString("ratio"));
 
-        return userVideoInfo;
-     }
-   
+   public static UserVideoInfo parseUserVideoInfo(JSONObject jVideo)
+    throws JSONException {
+      UserVideoInfo userVideoInfo = new UserVideoInfo();
+      userVideoInfo.setItemId(jVideo.getString("imageid"));
+      userVideoInfo.setGuid(jVideo.getString("guid"));
+      userVideoInfo.setHeight(jVideo.getString("height"));
+      userVideoInfo.setWidth(jVideo.getString("width"));
+      userVideoInfo.setRatio(jVideo.getString("ratio"));
+
+      return userVideoInfo;
+   }
+
    public static UserEmbedList parseUserEmbeds(String jEmbed) throws JSONException {
       JSONArray jEmbeds = new JSONArray(jEmbed);
 
@@ -371,19 +371,19 @@ public class JSONHelper {
       }
       return userEmbedList;
    }
-   
+
    public static UserEmbedInfo parseUserEmbedInfo(JSONObject jEmbed)
-      throws JSONException {
-        UserEmbedInfo userEmbedInfo = new UserEmbedInfo();
+    throws JSONException {
+      UserEmbedInfo userEmbedInfo = new UserEmbedInfo();
 //        userEmbedInfo.setItemId(jEmbed.getString("imageid"));
 //        userEmbedInfo.setGuid(jEmbed.getString("guid"));
 //        userEmbedInfo.setHeight(jEmbed.getString("height"));
 //        userEmbedInfo.setWidth(jEmbed.getString("width"));
 //        userEmbedInfo.setRatio(jEmbed.getString("ratio"));
 
-        return userEmbedInfo;
-     }
-   
+      return userEmbedInfo;
+   }
+
 
    public static UploadedImageInfo parseUploadedImageInfo(String image)
     throws JSONException {
@@ -405,7 +405,7 @@ public class JSONHelper {
       User user = new User();
       user.setUserid(jUser.getString("userid"));
       user.setUsername(jUser.getString("username"));
-  //    user.setImageid(jUser.getString("imageid"));
+      //    user.setImageid(jUser.getString("imageid"));
       user.setAuthToken(jUser.getString("authToken"));
 
       return user;
@@ -426,7 +426,7 @@ public class JSONHelper {
          if (jError.getBoolean("error")) {
             error = jError.getString("msg");
          }
-      }catch(JSONException e) {
+      } catch (JSONException e) {
       }
 
       return error;
@@ -457,8 +457,8 @@ public class JSONHelper {
                    urlSpan.getURL());
                }
             }
-            ((Spannable)spantext).removeSpan(span);
-            ((Spannable)spantext).setSpan(urlSpan, start, end, flags);
+            ((Spannable) spantext).removeSpan(span);
+            ((Spannable) spantext).setSpan(urlSpan, start, end, flags);
          }
       }
 
@@ -490,7 +490,7 @@ public class JSONHelper {
       userGuide.setUserid(json.getInt("userid"));
       userGuide.setRevisionid(json.getInt("revisionid"));
 
-       userGuide.setImage(parseImage(json, "image"));
+      userGuide.setImage(parseImage(json, "image"));
 
       return userGuide;
    }
@@ -532,9 +532,9 @@ public class JSONHelper {
       lineObject.put("text", l.getTextRaw());
       lineObject.put("bullet", l.getColor());
       lineObject.put("level", l.getLevel());
-      if(l.getLineId() != null) {
+      if (l.getLineId() != null) {
          lineObject.put("lineid", l.getLineId());
-      }else {
+      } else {
          lineObject.put("lineid", 0);
       }
 
@@ -571,8 +571,8 @@ public class JSONHelper {
 
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
       VideoEncoding encoding =
-         new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
-            jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
+       new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
+        jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
       return encoding;
    }
 }
