@@ -4,13 +4,13 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.*;
 import com.dozuki.ifixit.model.guide.*;
 import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
