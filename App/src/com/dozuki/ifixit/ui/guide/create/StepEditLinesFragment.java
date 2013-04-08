@@ -24,7 +24,7 @@ import org.holoeverywhere.widget.*;
 
 import java.util.ArrayList;
 
-public class StepEditBulletFragment extends Fragment implements BulletDialogListener, BulletRearrangeListener {
+public class StepEditLinesFragment extends Fragment implements BulletDialogListener, BulletRearrangeListener {
    private static final int BULLET_LIMIT = 8;
    private static final int BULLET_INDENT = 25;
    private static final String STEP_LIST_KEY = "STEP_LIST_KEY";
@@ -181,7 +181,7 @@ public class StepEditBulletFragment extends Fragment implements BulletDialogList
          public void onClick(View v) {
             FragmentManager fm = getActivity().getSupportFragmentManager();
             mChooseBulletDialog = new ChooseBulletDialog();
-            mChooseBulletDialog.setTargetFragment(StepEditBulletFragment.this, 0);
+            mChooseBulletDialog.setTargetFragment(StepEditLinesFragment.this, 0);
             mChooseBulletDialog.setStepIndex(mLines.indexOf(line));
             mChooseBulletDialog.show(fm, "fragment_choose_bullet");
             restrictDialogOptions(mChooseBulletDialog, line);

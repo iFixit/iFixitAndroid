@@ -22,7 +22,7 @@ public class StepEditFragment extends Fragment {
 
    private static final String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    private GuideStep mStepObject;
-   private StepEditBulletFragment mEditBulletFrag;
+   private StepEditLinesFragment mEditBulletFrag;
    private StepEditMediaFragment mEditMediaFrag;
 
    @Override
@@ -36,13 +36,13 @@ public class StepEditFragment extends Fragment {
       if (savedInstanceState != null) {
          mEditMediaFrag = (StepEditMediaFragment) getChildFragmentManager()
           .findFragmentById(R.id.guide_create_edit_media_fragment_container);
-         mEditBulletFrag = (StepEditBulletFragment) getChildFragmentManager()
+         mEditBulletFrag = (StepEditLinesFragment) getChildFragmentManager()
           .findFragmentById(R.id.guide_create_edit_bullet_fragment_container);
 
       } else {
 
          mEditMediaFrag = new StepEditMediaFragment();
-         mEditBulletFrag = new StepEditBulletFragment();
+         mEditBulletFrag = new StepEditLinesFragment();
 
          mEditBulletFrag.setRetainInstance(true);
 
