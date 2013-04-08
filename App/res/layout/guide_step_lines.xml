@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1" >
+
+    <TextView
+        android:id="@+id/step_title"
+        style="@style/text.title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true" />
+
+    <ListView
+        android:id="@+id/step_text_list"
+        style="@style/guide_step_list_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/step_title"
+        android:cacheColorHint="@android:color/transparent"
+        android:divider="@color/invisible"
+        android:listSelector="@android:color/transparent"
+        android:overScrollFooter="@null"
+        android:scrollingCache="false" />
+
+</RelativeLayout>

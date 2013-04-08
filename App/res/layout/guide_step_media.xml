@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/guide_step_media_wrap"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content" >
+
+    <ImageView
+        android:id="@+id/main_image"
+        style="@style/guide_main_image_spacing"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height"
+        android:background="@color/image_border"
+        android:contentDescription="@string/main_guide_img_description" />
+
+    <RelativeLayout
+        android:id="@+id/progress_bar_guide_step"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height"
+        android:layout_marginBottom="@dimen/guide_image_spacing_bottom"
+        android:layout_marginRight="@dimen/guide_image_spacing_right"
+        android:background="@color/image_border"
+        android:padding="@dimen/guide_image_padding" >
+
+        <ProgressBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/video_play_button_container"
+        style="@style/guide_main_image_spacing"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height"
+        android:visibility="gone" >
+
+        <ImageButton
+            android:id="@+id/video_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/video_play_button_description"
+            android:src="@drawable/video_play_button_selector" />
+    </RelativeLayout>
+
+    <WebView
+        android:id="@+id/main_web_view"
+        style="@style/guide_main_image_spacing"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height"
+        android:background="@color/image_border"
+        android:padding="@dimen/guide_image_padding"
+        android:visibility="gone" />
+
+    <com.dozuki.ifixit.guide_view.ui.ThumbnailView
+        android:id="@+id/thumbnails"
+        style="@style/thumbnail_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+</RelativeLayout>

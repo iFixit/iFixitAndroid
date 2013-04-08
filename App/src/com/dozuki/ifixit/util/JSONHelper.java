@@ -10,6 +10,7 @@ import com.dozuki.ifixit.model.guide.*;
 import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -434,8 +435,6 @@ public class JSONHelper {
 
    /**
     * Removes relative a hrefs
-    * <p/>
-    * TODO: Update domain with the current site's domain.
     *
     * @param spantext (from Html.fromhtml())
     * @return spanned with fixed links
@@ -446,14 +445,17 @@ public class JSONHelper {
          int start = spantext.getSpanStart(span);
          int end = spantext.getSpanEnd(span);
          int flags = spantext.getSpanFlags(span);
+         
+         Site site = MainApplication.get().getSite();
+         
          if (span instanceof URLSpan) {
             URLSpan urlSpan = (URLSpan) span;
             if (!urlSpan.getURL().startsWith("http")) {
                if (urlSpan.getURL().startsWith("/")) {
-                  urlSpan = new URLSpan("http://www.ifixit.com" +
+                  urlSpan = new URLSpan("http://" + site.mDomain +
                    urlSpan.getURL());
                } else {
-                  urlSpan = new URLSpan("http://www.ifixit.com/" +
+                  urlSpan = new URLSpan("http://" + site.mDomain + "/" +
                    urlSpan.getURL());
                }
             }

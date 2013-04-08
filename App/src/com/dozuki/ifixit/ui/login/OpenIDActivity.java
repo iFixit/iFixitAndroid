@@ -36,6 +36,7 @@ public class OpenIDActivity extends Activity {
       String loginUrl;
       if (mSingleSignOn) {
          loginUrl = mSite.mSsoUrl;
+         mBaseUrl = loginUrl;
       } else {
          mBaseUrl = mSite.getOpenIdLoginUrl();
          final String method = extras.getString(LOGIN_METHOD);

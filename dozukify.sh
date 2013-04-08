@@ -25,7 +25,7 @@ sed -i "" -e "s/_ifixit/_$siteName/" ./AndroidManifest.xml
 
 case "$siteName" in
 "dozuki")
-   domain="www.dozuki.com"
+   domain="*.dozuki.com"
    ;;
 *)
    domain="$siteName.dozuki.com"

@@ -24,7 +24,8 @@ import com.squareup.otto.Bus;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MainApplication extends Application {
-   public static final int SIZE_CUTOFF = 800;
+   public static final int LARGE_SIZE_CUTOFF = 1000;
+   public static final int MEDIUM_SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
    public static final String CURRENT_SITE = "SITE_ifixit";
 
@@ -251,9 +252,14 @@ public class MainApplication extends Application {
          int maxDimension = Math.max(metrics.heightPixels,
           metrics.widthPixels);
 
+         float screenSize = (maxDimension / metrics.density);
+         
          // Larger screen = larger images
-         if ((maxDimension / metrics.density) > SIZE_CUTOFF) {
+         if (screenSize > LARGE_SIZE_CUTOFF) {
             mImageSizes = new ImageSizes(".medium", ".medium", ".large",
+             ".standard");
+         } else if (screenSize <= LARGE_SIZE_CUTOFF && screenSize > MEDIUM_SIZE_CUTOFF) {
+            mImageSizes = new ImageSizes(".standard", ".standard", ".large",
              ".standard");
          } else {
             mImageSizes = new ImageSizes(".standard", ".standard", ".large",
