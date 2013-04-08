@@ -109,12 +109,6 @@
          <version>0.6.1-SNAPSHOT</version>
          <type>apklib</type>
       </dependency>
-      <dependency>
-         <groupId>net.londatiga.android</groupId>
-         <artifactId>new-quick-action-3d</artifactId>
-         <version>1.0.0</version>
-         <type>apklib</type>
-      </dependency>
    </dependencies>
    <build>
       <sourceDirectory>src</sourceDirectory>

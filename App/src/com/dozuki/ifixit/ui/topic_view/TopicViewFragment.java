@@ -13,8 +13,8 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.guide_view.NoGuidesFragment;
-import com.dozuki.ifixit.ui.guide_view.WebViewFragment;
+import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
+import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
@@ -161,7 +161,7 @@ public class TopicViewFragment extends Fragment {
       }
 
       mTitleIndicator.setVisibility(View.VISIBLE);
-      mPageAdapter = new PageAdapter(this.getChildFragmentManager());
+      mPageAdapter = new PageAdapter(getChildFragmentManager());
       mPager.setAdapter(mPageAdapter);
       mTitleIndicator.setViewPager(mPager);
       mPager.setOffscreenPageLimit(2);

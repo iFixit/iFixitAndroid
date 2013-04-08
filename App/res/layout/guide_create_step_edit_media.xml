@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/step_edit_large_image"
+        style="@style/guide_main_image_spacing"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height"
+        android:background="@color/image_border"
+        android:src="@drawable/ic_placeholder_feature_img" />
+
+
+    <com.dozuki.ifixit.ui.guide.view.ThumbnailView
+        android:id="@+id/edit_thumbnails"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/step_edit_large_image" />
+
+</LinearLayout>

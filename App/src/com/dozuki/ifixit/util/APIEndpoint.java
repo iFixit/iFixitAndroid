@@ -38,11 +38,11 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Guide().setResult(JSONHelper.parseGuide(json));
+            return new APIEvent.ViewGuide().setResult(JSONHelper.parseGuide(json));
          }
 
          public APIEvent<?> getEvent() {
-            return new APIEvent.Guide();
+            return new APIEvent.ViewGuide();
          }
       },
       false,

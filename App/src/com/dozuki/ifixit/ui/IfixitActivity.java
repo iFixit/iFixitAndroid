@@ -20,9 +20,9 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.login.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
-import com.dozuki.ifixit.ui.guide_create.GuideCreateActivity;
+import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.login.LogoutDialog;
-import com.dozuki.ifixit.ui.topic_view.TopicsActivity;
+import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.squareup.otto.Subscribe;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -188,12 +188,12 @@ public abstract class IfixitActivity extends Activity {
       switch (position) {
       // view
          case 0:
-            if (Build.VERSION.SDK_INT > 10 && TopicsActivity.TASK_ID != -1) {
+            if (Build.VERSION.SDK_INT > 10 && TopicActivity.TASK_ID != -1) {
                ActivityManager activityManager = (ActivityManager) getSystemService(ACTIVITY_SERVICE);
-               activityManager.moveTaskToFront(TopicsActivity.TASK_ID, ActivityManager.MOVE_TASK_WITH_HOME);
+               activityManager.moveTaskToFront(TopicActivity.TASK_ID, ActivityManager.MOVE_TASK_WITH_HOME);
                return;
             }
-            intent = new Intent(this, TopicsActivity.class);
+            intent = new Intent(this, TopicActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             return;

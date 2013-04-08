@@ -40,15 +40,17 @@
     <dimen name="gallery_grid_column_width">150dp</dimen>
     <dimen name="gallery_top_bar_height">48dp</dimen>
     <dimen name="login_agreement_text_top_padding">3dp</dimen>
+    <dimen name="guide_create_step_edit_bottom_bar_height">@dimen/gallery_top_bar_height</dimen>
     <dimen name="guide_create_edit_button_dim">36dp</dimen>
+    <dimen name="guide_create_list_item_text_right_offset">42dp</dimen>
     <dimen name="guide_create_icon_button_dim">20dp</dimen>
     <dimen name="guide_create_page_padding">16dp</dimen>
     <dimen name="guide_create_intro_spacing">32dp</dimen>
     <dimen name="guide_create_intro_title">5dp</dimen>
-    <dimen name="guide_create_edit_bullets_padding">16dp</dimen>
+    <dimen name="guide_create_step_page_padding">16dp</dimen>
     <dimen name="guide_create_edit_add_bullet_button_padding">16dp</dimen>
     <dimen name="guide_create_edit_add_bullet_button_margin_top">8dp</dimen>
     <dimen name="guide_create_edit_media_horizontal_margin">16dp</dimen>
     <dimen name="guide_create_edit_media_vertical_margin">8dp</dimen>
-   <dimen name="guide_create_edit_media_thumbnail_margin">4dp</dimen>
+    <dimen name="guide_create_edit_media_thumbnail_margin">4dp</dimen>
 </resources>

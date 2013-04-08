@@ -16,19 +16,6 @@
         android:padding="4dp">
 
         <TextView
-            android:id="@+id/guide_create_item_title"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/guide_create_list_item_text_right_offset"
-            android:ellipsize="end"
-            android:paddingTop="4dp"
-            android:paddingBottom="4dp"
-            android:maxLines="2"
-            android:scrollHorizontally="true"
-            android:text="Installing Samsung SGH-E317 SIM Card" />
-
-        <TextView
             android:id="@+id/guide_create_item_publish_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -38,6 +25,15 @@
             android:textColor="@color/dozuki_red"
             android:textSize="12sp"
             android:textStyle="italic" />
+
+        <ImageView
+            android:id="@+id/guide_create_item_thumbnail"
+            android:layout_width="@dimen/guide_thumbnail_width"
+            android:layout_height="@dimen/guide_thumbnail_height"
+            android:layout_marginRight="8dp"
+            android:background="@color/image_border"
+            android:contentDescription="@string/topic_guide_thumbnail"
+            android:padding="1dp" />
 
         <ToggleButton
             android:id="@+id/guide_create_toggle_edit"
@@ -50,6 +46,21 @@
             android:textOff=""
             android:textOn="" />
 
+        <TextView
+            android:id="@+id/guide_create_item_title"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="@dimen/guide_create_list_item_text_right_offset"
+            android:layout_alignBottom="@+id/guide_create_toggle_edit"
+            android:layout_alignLeft="@+id/guide_create_item_publish_status"
+            android:ellipsize="end"
+            android:paddingTop="4dp"
+            android:paddingBottom="4dp"
+            android:maxLines="2"
+            android:scrollHorizontally="true"
+            android:text="@string/default_title" />
+
     </RelativeLayout>
 
     <LinearLayout
@@ -58,51 +69,53 @@
         android:layout_height="@dimen/gallery_top_bar_height"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="-50dp"
-        android:weightSum="3"
         android:background="@color/fireswing_grey"
+        android:gravity="right"
         android:orientation="horizontal"
         android:paddingTop="8dp"
         android:visibility="gone">
 
         <TextView
             android:id="@+id/guide_create_item_publish"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginLeft="14dp"
+            android:layout_marginRight="8dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_list_item_publish"
             android:drawablePadding="4dp"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical"
             android:text="@string/publish"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/dozuki_grey" />
 
         <TextView
             android:id="@+id/guide_create_item_delete"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
             android:clickable="true"
-            android:drawableStart="@drawable/ic_guide_delete"
+            android:drawableLeft="@drawable/ic_guide_delete"
             android:drawablePadding="4dp"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical"
             android:text="@string/action_delete"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/dozuki_grey" />
 
         <TextView
             android:id="@+id/guide_create_item_edit"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="14dp"
             android:clickable="true"
             android:drawableLeft="@drawable/ic_guide_edit"
             android:drawablePadding="4dp"
-            android:gravity="center_vertical|center_horizontal"
+            android:gravity="center_vertical"
             android:text="@string/edit"
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:textColor="@color/dozuki_grey" />
-
     </LinearLayout>
 
 </LinearLayout>

@@ -34,7 +34,7 @@ import com.dozuki.ifixit.model.gallery.UserImageInfo;
 import com.dozuki.ifixit.model.gallery.UserImageList;
 import com.dozuki.ifixit.model.gallery.UserMediaList;
 import com.dozuki.ifixit.model.login.User;
-import com.dozuki.ifixit.ui.guide_view.FullImageViewActivity;
+import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.ui.login.LocalImage;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;

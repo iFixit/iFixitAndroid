@@ -11,21 +11,20 @@
            android:layout_width="fill_parent"
            android:layout_height="wrap_content"
            android:layout_alignParentTop="true"
-           android:background="@color/fireswing_black"/>
+           android:background="@color/fireswing_black" />
 
 
-   <com.dozuki.ifixit.ui.guide_create.LockableViewPager
+   <com.dozuki.ifixit.ui.guide.create.LockableViewPager
            android:id="@+id/guide_edit_body_pager"
            android:layout_width="match_parent"
            android:layout_height="match_parent"
            android:layout_above="@+id/step_edit_bottom_bar"
-           android:layout_below="@+id/step_edit_top_bar">
-   </com.dozuki.ifixit.ui.guide_create.LockableViewPager>
+           android:layout_below="@+id/step_edit_top_bar" />
 
    <RelativeLayout
            android:id="@+id/step_edit_bottom_bar"
            android:layout_width="match_parent"
-           android:layout_height="@dimen/gallery_top_bar_height"
+           android:layout_height="@dimen/guide_create_step_edit_bottom_bar_height"
            android:layout_alignParentBottom="true"
            android:background="@color/fireswing_black"
            android:clickable="true">
@@ -53,19 +52,6 @@
               android:layout_centerVertical="true"
               android:textColor="@color/dark"
               android:background="@color/fireswing_blue"/>
-      <!--
-          <TextView
-          android:id="@+id/step_edit_delete_step"
-          android:layout_width="wrap_content"
-          android:layout_height="wrap_content"
-          android:layout_centerHorizontal="true"
-          android:layout_centerVertical="true"
-          android:clickable="true"
-          android:drawableLeft="@drawable/ic_guide_delete"
-          android:drawablePadding="10dip"
-          android:text="@string/delete_step"
-          android:textColor="@color/gray" />
-      -->
 
       <ImageButton
               android:id="@+id/step_edit_add_step"

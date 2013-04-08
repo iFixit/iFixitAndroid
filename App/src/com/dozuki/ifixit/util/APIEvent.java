@@ -5,6 +5,7 @@ import com.dozuki.ifixit.model.gallery.UploadedImageInfo;
 import com.dozuki.ifixit.model.gallery.UserEmbedList;
 import com.dozuki.ifixit.model.gallery.UserImageList;
 import com.dozuki.ifixit.model.gallery.UserVideoList;
+import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.UserGuide;
 import com.dozuki.ifixit.model.login.User;
@@ -18,7 +19,7 @@ import java.util.ArrayList;
  */
 public abstract class APIEvent<T> {
    public static class Categories extends APIEvent<TopicNode> {}
-   public static class Guide extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
+   public static class ViewGuide extends APIEvent<Guide> {}
    public static class Topic extends APIEvent<TopicLeaf> {}
    public static class Login extends APIEvent<User> {}
    public static class Logout extends APIEvent<String> {}
@@ -29,15 +30,15 @@ public abstract class APIEvent<T> {
    public static class UploadImage extends APIEvent<UploadedImageInfo> {}
    public static class DeleteImage extends APIEvent<String> {}
    public static class DeleteGuide extends APIEvent<String> {}
-   public static class PublishStatus extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
+   public static class PublishStatus extends APIEvent<Guide> {}
    public static class UserGuides extends APIEvent<ArrayList<UserGuide>> {}
-   public static class GuideForEdit extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
-   public static class CreateGuide extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
+   public static class GuideForEdit extends APIEvent<Guide> {}
+   public static class CreateGuide extends APIEvent<Guide> {}
    public static class StepSave extends APIEvent<GuideStep> {}
-   public static class StepReorder extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
-   public static class StepAdd extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
-   public static class StepRemove extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
-   public static class EditGuide extends APIEvent<com.dozuki.ifixit.model.guide.Guide> {}
+   public static class StepReorder extends APIEvent<Guide> {}
+   public static class StepAdd extends APIEvent<Guide> {}
+   public static class StepRemove extends APIEvent<Guide> {}
+   public static class EditGuide extends APIEvent<Guide> {}
    public static class Sites extends APIEvent<ArrayList<Site>> {}
    public static class UserInfo extends APIEvent<User> {}
 

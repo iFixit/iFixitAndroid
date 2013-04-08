@@ -38,16 +38,16 @@ sed -i "" -e "s/www\.ifixit\.com/$domain/" ./AndroidManifest.xml
 # Change the default activity to the site list for Dozuki
 if [ "$siteName" = "dozuki" ]
 then
-   sed -i "" -e "s/topic_view\.ui\.TopicsActivity/topic_view.ui.TopicsActivityTmp/" ./AndroidManifest.xml
-   sed -i "" -e "s/dozuki\.ui\.SiteListActivity/topic_view.ui.TopicsActivity/" ./AndroidManifest.xml
-   sed -i "" -e "s/topic_view\.ui\.TopicsActivityTmp/dozuki.ui.SiteListActivity/" ./AndroidManifest.xml
+   sed -i "" -e "s/ui\.topic_view\.TopicActivity/ui.topic_view.TopicActivityTmp/" ./AndroidManifest.xml
+   sed -i "" -e "s/ui\.dozuki\.SiteListActivity/ui.topic_view.TopicActivity/" ./AndroidManifest.xml
+   sed -i "" -e "s/ui\.topic_view\.TopicActivityTmp/ui.dozuki.SiteListActivity/" ./AndroidManifest.xml
 
    # Remove comments to enable Dozuki specific code
    sed -i "" -e "/<\!--DOZUKI/d" ./AndroidManifest.xml
    sed -i "" -e "/DOZUKI-->/d" ./AndroidManifest.xml
 
    # Turn on flags for Dozuki.
-   sed -i "" -e "s/UP_NAVIGATION_FINISH_ACTIVITY = false/UP_NAVIGATION_FINISH_ACTIVITY = true/" `find ./src -name "TopicsActivity.java"`
+   sed -i "" -e "s/UP_NAVIGATION_FINISH_ACTIVITY = false/UP_NAVIGATION_FINISH_ACTIVITY = true/" `find ./src -name "TopicActivity.java"`
 
    # Update the theme
    sed -i "" -e "s/Theme\.iFixit/Theme.Dozuki/" ./AndroidManifest.xml

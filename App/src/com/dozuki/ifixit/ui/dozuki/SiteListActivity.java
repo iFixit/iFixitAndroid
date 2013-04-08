@@ -16,7 +16,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicsActivity;
+import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -200,7 +200,7 @@ public class SiteListActivity extends IfixitActivity
           long id) {
             MainApplication application = ((MainApplication)getApplication());
             Intent intent = new Intent(SiteListActivity.this,
-             TopicsActivity.class);
+             TopicActivity.class);
 
             application.setSite(siteListAdapter.getSiteList().get(position));
             startActivity(intent);

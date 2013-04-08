@@ -414,7 +414,7 @@ public class JSONHelper {
    /**
     * Returns the error message contained in the given JSON, or null if one
     * does not exist.
-    *
+    * <p/>
     * e.g. Returns "Guide not found" for:
     * "{"error":true,"msg":"Guide not found"}"
     */
@@ -434,7 +434,7 @@ public class JSONHelper {
 
    /**
     * Removes relative a hrefs
-    *
+    * <p/>
     * TODO: Update domain with the current site's domain.
     *
     * @param spantext (from Html.fromhtml())
