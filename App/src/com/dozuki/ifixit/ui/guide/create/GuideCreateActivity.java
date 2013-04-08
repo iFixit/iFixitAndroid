@@ -164,6 +164,10 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       }
    }
 
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
 
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {

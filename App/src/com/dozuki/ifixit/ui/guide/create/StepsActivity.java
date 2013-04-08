@@ -124,6 +124,11 @@ public class StepsActivity extends IfixitActivity
       }
    }
 
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
+
    public void showLoading() {
       mStepPortalFragment =
        (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);

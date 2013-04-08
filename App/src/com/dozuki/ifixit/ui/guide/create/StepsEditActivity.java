@@ -430,6 +430,11 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       }
    }
 
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
+
    public void finishEdit() {
       if (mIsStepDirty) {
          createExitWarningDialog().show();
