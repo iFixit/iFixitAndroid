@@ -19,9 +19,8 @@
         android:layout_toRightOf="@+id/guide_step_item_frame"
         android:hint="@string/step_title_hint"
         android:imeOptions="actionDone"
-        android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
-        android:maxLength="350"
-        android:singleLine="true" />
+        android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
+        android:maxLength="350" />
 
     <FrameLayout
         android:id="@+id/guide_step_item_frame"

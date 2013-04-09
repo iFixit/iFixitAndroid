@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -14,10 +15,9 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
+import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
 import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.*;
@@ -120,9 +120,9 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
             mLines.add(new StepLine());
             View view = getView(mLines.get(mLines.size() - 1), mLines.size() - 1);
             mBulletContainer.addView(view, mLines.size() - 1);
-            // if (mLines.size() == BULLET_LIMIT) {
+
             mNewBulletButton.setVisibility(View.GONE);
-            // }
+
             view.findViewById(mLines.size() - 1).requestFocus();
             ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(
              view.findViewById(mLines.size() - 1), InputMethodManager.SHOW_FORCED);
@@ -190,6 +190,7 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       });
 
       LayoutParams params = (LayoutParams) iconFrame.getLayoutParams();
+
       params.setMargins(BULLET_INDENT * line.getLevel(), 0, 0, 0);
       iconFrame.setLayoutParams(params);
       final EditText text = (EditText) v.findViewById(R.id.step_title_textview);
@@ -219,6 +220,15 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
          @Override
          public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
+      });
+
+      // Override ENTER key on hardware keyboards to prevent newlines in steps
+      text.setOnKeyListener(new View.OnKeyListener() {
+         @Override
+         public boolean onKey(View v, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_ENTER) return true;
+            return false;
+         }
       });
 
       ImageView icon = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail);
@@ -338,14 +348,14 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
       if (color.equals("action_indent")) {
          if (curStep.getLevel() == INDENT_LIMIT) {
-            Toast.makeText(((Activity) getActivity()), R.string.indent_limit_above, Toast.LENGTH_SHORT).show();
+            Toast.makeText((getActivity()), R.string.indent_limit_above, Toast.LENGTH_SHORT).show();
             return;
          }
          indentBullet(index);
          setGuideDirty();
       } else if (color.equals("action_unindent")) {
          if (curStep.getLevel() == 0) {
-            Toast.makeText(((Activity) getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
+            Toast.makeText((getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
             return;
          }
          unIndentBullet(index);
