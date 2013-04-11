@@ -194,4 +194,27 @@
     <string name="video_play_button_description">Video Play Button</string>
     <string name="video_activity_progress_title">Please Wait...</string>
     <string name="video_activity_progress_body">Loading Video...</string>
+
+    <!-- Guide View Menu -->
+    <string name="guide_edit_text">Edit</string>
+    <string name="guide_share_text">Share</string>
+    <string name="guide_comment_text">Comments</string>
+    <string name="guide_favorite_text">Favorite</string>
+    <string name="slide_menu_my_guides">My Guides</string>
+    <string name="slide_menu_search">Search</string>
+    <string name="slide_menu_browse_content">Browse Content</string>
+    <string name="slide_menu_featured_guides">Featured Guides</string>
+    <string name="slide_menu_browse_devices">Browse Devices</string>
+    <string name="slide_menu_favorite_guides">Favorite Guides</string>
+    <string name="slide_menu_create_new_guide">Create New Guide</string>
+    <string name="slide_menu_media_gallery">Media Gallery</string>
+    <string name="slide_menu_logout">Logout</string>
+    <string name="slide_menu_ifixit_everywhere">iFixit Everywhere</string>
+    <string name="slide_menu_youtube">Youtube Channel</string>
+    <string name="slide_menu_facebook">Facebook</string>
+    <string name="slide_menu_twitter">Twitter</string>
+    <string name="slide_menu_more_info">More Information</string>
+    <string name="slide_menu_help">Help</string>
+    <string name="slide_menu_about">About</string>
+
 </resources>

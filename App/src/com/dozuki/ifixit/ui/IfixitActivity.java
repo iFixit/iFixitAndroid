@@ -170,29 +170,30 @@ public abstract class IfixitActivity extends Activity {
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
-      items.add(new Item("Search", R.drawable.ic_action_search, "search"));
+      items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
 
-      items.add(new Category("Browse Content"));
-      items.add(new Item("Featured Guides", R.drawable.ic_action_star_10, "featured_guides"));
-      items.add(new Item("Browse Devices", R.drawable.ic_action_list, "browse_topics"));
+      items.add(new Category(getString(R.string.slide_menu_browse_content)));
+      items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
+      items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list, "browse_topics"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
-      items.add(new Item("My Guides", R.drawable.ic_menu_spinner_guides, "user_guides"));
-      items.add(new Item("Create New Guide", R.drawable.ic_menu_add_guide, "new_guide"));
-      items.add(new Item("Media Gallery", R.drawable.ic_menu_spinner_gallery, "media_gallery"));
+      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
+      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
+      items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, "new_guide"));
+      items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
 
       if (MainApplication.get().isUserLoggedIn()) {
-         items.add(new Item("Logout", R.drawable.ic_action_exit, "logout"));
+         items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, "logout"));
       }
 
-      items.add(new Category("iFixit Everywhere"));
-      items.add(new Item("Youtube Channel", R.drawable.ic_action_youtube, "youtube"));
-      items.add(new Item("Facebook", R.drawable.ic_action_facebook, "facebook"));
-      items.add(new Item("Twitter", R.drawable.ic_action_twitter, "twitter"));
+      items.add(new Category(getString(R.string.slide_menu_ifixit_everywhere)));
+      items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, "youtube"));
+      items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, "facebook"));
+      items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, "twitter"));
 
-      items.add(new Category("More Information"));
-      items.add(new Item("Help", R.drawable.ic_action_help, "help"));
-      items.add(new Item("About", R.drawable.ic_action_info, "about"));
+      items.add(new Category(getString(R.string.slide_menu_more_info)));
+      items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, "help"));
+      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, "about"));
 
       // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
       // of the arrow indicator.
