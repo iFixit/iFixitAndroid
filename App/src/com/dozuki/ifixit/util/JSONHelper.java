@@ -445,9 +445,9 @@ public class JSONHelper {
          int start = spantext.getSpanStart(span);
          int end = spantext.getSpanEnd(span);
          int flags = spantext.getSpanFlags(span);
-         
+
          Site site = MainApplication.get().getSite();
-         
+
          if (span instanceof URLSpan) {
             URLSpan urlSpan = (URLSpan) span;
             if (!urlSpan.getURL().startsWith("http")) {

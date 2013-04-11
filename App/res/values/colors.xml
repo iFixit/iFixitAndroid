@@ -25,4 +25,6 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="fireswing_black">#333333</color>
     <color name="fireswing_dark_grey">#666666</color>
 
+    <color name="md__transparent">#00000000</color>
+    <color name="md__defaultBackground">#FF555555</color>
 </resources>

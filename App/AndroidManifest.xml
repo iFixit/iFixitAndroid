@@ -1,24 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-      package="com.dozuki.ifixit"
-      android:versionCode="14"
-      android:versionName="1.3.2">
-   <uses-sdk android:minSdkVersion="8"
-         android:targetSdkVersion="17"  />
-   <uses-feature android:name="android.hardware.camera" android:required="false" />
+          package="com.dozuki.ifixit"
+          android:versionCode="14"
+          android:versionName="1.3.2">
 
     <uses-sdk
         android:minSdkVersion="8"
-        android:targetSdkVersion="17" />
+        android:targetSdkVersion="17"/>
+
     <uses-feature
         android:name="android.hardware.camera"
-        android:required="false" />
+        android:required="false"/>
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.REORDER_TASKS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.CAMERA"/>
 
     <application
         android:name=".MainApplication"
@@ -26,18 +23,17 @@
         android:icon="@drawable/icon_ifixit"
         android:label="@string/app_name_ifixit"
         android:theme="@style/Theme.iFixit">
-        <service android:name=".util.APIService" />
+        <service android:name=".util.APIService"/>
 
         <activity
             android:name=".ui.dozuki.SiteListActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.topic_view.TopicActivity"
-            android:launchMode="singleTask"
-            android:taskAffinity=".topics">
+            android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
 
             <!--DOZUKI
@@ -51,54 +47,53 @@
             DOZUKI-->
         </activity>
 
-        <activity android:name=".ui.gallery.GalleryActivity" />
+        <activity android:name=".ui.gallery.GalleryActivity"/>
         <activity
             android:name=".ui.guide.create.GuideCreateActivity"
-            android:launchMode="singleTask"
-            android:taskAffinity=".guidecreate" />
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.guide.create.StepsActivity"
-            android:launchMode="singleTop" />
+            android:launchMode="singleTop"/>
         <activity
             android:name=".ui.guide.create.StepsEditActivity"
-            android:windowSoftInputMode="adjustResize|stateHidden" />
-        <activity android:name=".ui.login.OpenIDActivity" />
-        <activity android:name=".ui.topic_view.TopicViewActivity" />
+            android:windowSoftInputMode="adjustResize|stateHidden"/>
+        <activity android:name=".ui.login.OpenIDActivity"/>
+        <activity android:name=".ui.topic_view.TopicViewActivity"/>
         <activity
             android:name=".ui.guide.view.GuideViewActivity"
             android:exported="true"
             android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.VIEW"/>
 
-                <category android:name="android.intent.category.DEFAULT" />
-                <category android:name="android.intent.category.BROWSABLE" />
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
 
                 <data
                     android:scheme="http"
                     android:host="www.ifixit.com"
-                    android:pathPrefix="/Guide/" />
+                    android:pathPrefix="/Guide/"/>
                 <data
                     android:scheme="http"
                     android:host="www.ifixit.com"
-                    android:pathPrefix="/Teardown/" />
+                    android:pathPrefix="/Teardown/"/>
                 <data
                     android:scheme="http"
                     android:host="www.ifixit.com"
-                    android:pathPrefix="/Project/" />
+                    android:pathPrefix="/Project/"/>
             </intent-filter>
         </activity>
         <activity
             android:name=".ui.guide.view.FullImageViewActivity"
-            android:theme="@style/Holo.Theme.Light.NoActionBar" />
+            android:theme="@style/Holo.Theme.Light.NoActionBar"/>
         <activity
             android:name=".ui.guide.view.VideoViewActivity"
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Holo.NoActionBar" />
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
         <activity
             android:name=".ui.guide.view.EmbedViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Holo.NoActionBar" />
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
     </application>
 </manifest>

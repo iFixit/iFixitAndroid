@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.topic_view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
@@ -51,7 +50,7 @@ public class TopicViewActivity extends IfixitActivity {
       }
    }
 
-   @Override
+/*   @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
@@ -60,5 +59,5 @@ public class TopicViewActivity extends IfixitActivity {
          default:
             return super.onOptionsItemSelected(item);
       }
-   }
+   }*/
 }

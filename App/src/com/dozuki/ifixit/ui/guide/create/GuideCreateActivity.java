@@ -8,9 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -30,7 +27,6 @@ import java.util.ArrayList;
 public class GuideCreateActivity extends IfixitActivity implements GuideIntroFragment.GuideCreateIntroListener {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    static int GUIDE_STEP_EDIT_REQUEST = 1;
-   public static int TASK_ID = -1;
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String GUIDE_FOR_DELETE = "GUIDE_FOR_DELETE";
@@ -77,10 +73,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       super.onCreate(savedInstanceState);
       setTheme(((MainApplication) getApplication()).getSiteTheme());
       getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
-      mActionBar = getSupportActionBar();
-      mActionBar.setTitle("");
-      prepareNavigationSpinner(mActionBar, CREATE_GUIDES);
-      TASK_ID = this.getTaskId();
       if (savedInstanceState != null) {
          mGuideList = (ArrayList<UserGuide>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
@@ -111,30 +103,30 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
    }
+   /*
+      @Override
+      public boolean onCreateOptionsMenu(Menu menu) {
 
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
+         MenuInflater inflater = getSupportMenuInflater();
+         inflater.inflate(R.menu.guide_create_menu, menu);
 
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.guide_create_menu, menu);
-
-      return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            finish();
-            return true;
-         case R.id.help_button:
-            createHelpDialog().show();
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
+         return super.onCreateOptionsMenu(menu);
       }
-   }
 
+      @Override
+      public boolean onOptionsItemSelected(MenuItem item) {
+         switch (item.getItemId()) {
+            case android.R.id.home:
+               finish();
+               return true;
+            case R.id.help_button:
+               createHelpDialog().show();
+               return true;
+            default:
+               return super.onOptionsItemSelected(item);
+         }
+      }
+   */
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mGuideList);
@@ -288,19 +280,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    public void onResume() {
       super.onResume();
       hideLoading();
-      this.getSupportActionBar().setSelectedNavigationItem(CREATE_GUIDES);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-   }
-
-
-   @Override
-   protected void onDestroy() {
-      super.onDestroy();
-      TASK_ID = -1;
    }
 
    private AlertDialog createHelpDialog() {

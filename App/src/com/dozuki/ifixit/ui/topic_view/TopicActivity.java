@@ -34,7 +34,6 @@ public class TopicActivity extends IfixitActivity
     * activity and go back to the sites list.
     */
    private static final boolean UP_NAVIGATION_FINISH_ACTIVITY = false;
-   public static int TASK_ID = -1;
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -51,10 +50,8 @@ public class TopicActivity extends IfixitActivity
       getLayoutInflater().setFactory(this);
       
       super.onCreate(savedInstanceState);
+
       setContentView(R.layout.topics);
-      ActionBar actionbar = getSupportActionBar();
-      prepareNavigationSpinner(actionbar, VIEW_GUIDES);
-      TASK_ID =this.getTaskId();
 
       mTopicView = (TopicViewFragment)getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
@@ -216,7 +213,7 @@ public class TopicActivity extends IfixitActivity
       ft.commitAllowingStateLoss();
    }
    
-   
+  /*
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
 
@@ -234,12 +231,12 @@ public class TopicActivity extends IfixitActivity
             // Go up in the hierarchy by popping the back stack.
             boolean poppedStack = getSupportFragmentManager().
              popBackStackImmediate();
-
+/*
             /**
              *  If there is not a previous category to go to and the up navigation
              *  button should finish the activity, finish the activity.
              *  Note: Although this is a warning for iFixit, it is not for Dozuki.
-             */
+             *//*
             if (!poppedStack && UP_NAVIGATION_FINISH_ACTIVITY) {
                finish();
             }
@@ -249,17 +246,6 @@ public class TopicActivity extends IfixitActivity
             return super.onOptionsItemSelected(item);
       }
    }
-   
-   @Override
-   protected void onDestroy () {
-      super.onDestroy();
-      TASK_ID = -1;
-   }
-   
-   @Override
-   public void onResume() {
-      super.onResume();
-      this.getSupportActionBar().setSelectedNavigationItem(0);
-   }
+*/
    
 }
