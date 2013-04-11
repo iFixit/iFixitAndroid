@@ -5,9 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -34,7 +31,6 @@ public class StepsActivity extends IfixitActivity
    private StepPortalFragment mStepPortalFragment;
    private ArrayList<GuideStep> mStepList;
    private Guide mGuide;
-   private boolean mShowingHelp;
    private boolean mIsLoading;
 
    public ArrayList<GuideStep> getStepList() {
@@ -83,30 +79,33 @@ public class StepsActivity extends IfixitActivity
 
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
       setTheme(((MainApplication) getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
+
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
-      Bundle extras = getIntent().getExtras();
-      int guideID = 0;
-      if (extras != null) {
-         guideID = extras.getInt(StepsActivity.GUIDE_KEY);
-      }
+      mActionBar.setDisplayHomeAsUpEnabled(true);
+
       if (savedInstanceState != null) {
          // to persist mGuide
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
-         mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mIsLoading = savedInstanceState.getBoolean(LOADING);
-         if (mShowingHelp) {
-            createHelpDialog().show();
-         }
       }
 
       setContentView(R.layout.guide_create_steps_root);
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       String tag = GUIDE_STEPS_PORTAL_FRAG;
+
       if (findViewById(R.id.guide_create_fragment_steps_container) != null
        && getSupportFragmentManager().findFragmentByTag(tag) == null) {
+
+         Bundle extras = getIntent().getExtras();
+
+         int guideID = 0;
+
+         if (extras != null) {
+            guideID = extras.getInt(StepsActivity.GUIDE_KEY);
+         }
+
          mStepPortalFragment = new StepPortalFragment();
          Bundle fragArgs = new Bundle();
          fragArgs.putInt(GUIDE_KEY, guideID);
@@ -114,10 +113,10 @@ public class StepsActivity extends IfixitActivity
          mStepPortalFragment.setRetainInstance(true);
          getSupportFragmentManager().beginTransaction()
           .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, tag).commit();
+      } else {
+         mStepPortalFragment =
+          (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(tag);
       }
-
-      mStepPortalFragment =
-       (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
 
       if (mIsLoading) {
          getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
@@ -148,30 +147,8 @@ public class StepsActivity extends IfixitActivity
    }
 
    @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.step_create_menu, menu);
-      return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            finish();
-            return true;
-         case R.id.help_button:
-            createHelpDialog().show();
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
-
-   @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
-      savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(LOADING, mIsLoading);
       super.onSaveInstanceState(savedInstanceState);
    }
@@ -181,6 +158,7 @@ public class StepsActivity extends IfixitActivity
       Intent returnIntent = new Intent();
       returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
       setResult(RESULT_OK, returnIntent);
+
       super.finish();
    }
 
@@ -199,26 +177,16 @@ public class StepsActivity extends IfixitActivity
    }
 
    private AlertDialog createHelpDialog() {
-      mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_steps_help))
        .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
 
           public void onClick(DialogInterface dialog, int id) {
-             mShowingHelp = false;
              dialog.cancel();
           }
        });
 
-      AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-            mShowingHelp = false;
-         }
-      });
-
-      return dialog;
+      return builder.create();
    }
 
    @Override

@@ -103,30 +103,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
    }
-   /*
-      @Override
-      public boolean onCreateOptionsMenu(Menu menu) {
 
-         MenuInflater inflater = getSupportMenuInflater();
-         inflater.inflate(R.menu.guide_create_menu, menu);
-
-         return super.onCreateOptionsMenu(menu);
-      }
-
-      @Override
-      public boolean onOptionsItemSelected(MenuItem item) {
-         switch (item.getItemId()) {
-            case android.R.id.home:
-               finish();
-               return true;
-            case R.id.help_button:
-               createHelpDialog().show();
-               return true;
-            default:
-               return super.onOptionsItemSelected(item);
-         }
-      }
-   */
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mGuideList);

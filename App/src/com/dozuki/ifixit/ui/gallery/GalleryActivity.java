@@ -7,21 +7,15 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.TextView;
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.login.LoginEvent;
-import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.holoeverywhere.app.AlertDialog;
@@ -29,7 +23,7 @@ import org.holoeverywhere.app.AlertDialog;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GalleryActivity extends IfixitActivity implements OnClickListener {
+public class GalleryActivity extends IfixitActivity {
 
    public static final String MEDIA_FRAGMENT_PHOTOS = "MEDIA_FRAGMENT_PHOTOS";
    public static final String MEDIA_FRAGMENT_VIDEOS = "MEDIA_FRAGMENT_VIDEOS";
@@ -51,8 +45,6 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
    public static boolean showingDelete;
 
    private ActionBar mActionBar;
-   private boolean mLoginVisible;
-   private boolean mIconsHidden;
 
    private HashMap<String, MediaFragment> mMediaCategoryFragments;
    private MediaFragment mCurrentMediaFragment;
@@ -60,18 +52,13 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
    private StepAdapter mStepAdapter;
    private ViewPager mPager;
    private TitlePageIndicator titleIndicator;
-   private String mUserName;
-   public TextView noImagesText;
 
    private boolean mGetMediaItemForReturn;
-   private ActionMode mMode;
-   private boolean mShowingHelp;
    private ArrayList<String> mFilterList;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication) getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
 
       mActionBar = getSupportActionBar();
       mActionBar.setTitle("");
@@ -93,7 +80,6 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
 
       mGetMediaItemForReturn = false;
       int mReturnValue = -1;
-      mMode = null;
 
       if (getIntent().getExtras() != null) {
          Bundle bundle = getIntent().getExtras();
@@ -105,24 +91,13 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
          if (mReturnValue != -1) {
             mGetMediaItemForReturn = true;
          }
-         mMode = startActionMode(new ContextualMediaSelect(this));
+         startActionMode(new ContextualMediaSelect(this));
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(mMediaReturnValue);
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS).setForReturn(mMediaReturnValue);
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(mMediaReturnValue);
       }
 
       mCurrentMediaFragment.setForReturn(mGetMediaItemForReturn);
-
-      if (savedInstanceState != null) {
-         showingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-         if (showingHelp)
-            createHelpDialog().show();
-         showingLogout = savedInstanceState.getBoolean(SHOWING_LOGOUT);
-         if (showingLogout)
-            // LoginFragment.newInstance();
-            showingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
-
-      }
 
       super.onCreate(savedInstanceState);
 
@@ -134,56 +109,12 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
       titleIndicator.setViewPager(mPager);
       mPager.setCurrentItem(1);
 
-      LoginFragment mLogin = (LoginFragment) getSupportFragmentManager().findFragmentByTag(LOGIN_FRAGMENT);
-      User user = ((MainApplication) getApplication()).getUser();
-      if (user != null) {
-         mIconsHidden = false;
-         supportInvalidateOptionsMenu();
-      } else {
-         mIconsHidden = true;
-         if (mLogin == null) {
-            displayLogin();
-         }
-      }
-
-
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-   }
-
-   @Override
-   public void onStart() {
-      if (!((MainApplication) this.getApplication()).isUserLoggedIn()) {
-      } else {
-         mUserName = ((MainApplication) (this).getApplication()).getUser().getUsername();
-
-      }
-
-      super.onStart();
-   }
-
-   @Override
-   public void onClick(View view) {
-      switch (view.getId()) {
-         case R.id.button_holder:
-            showingLogout = true;
-            // LoginFragment.getLogoutDialog(this).show();
-            break;
-      }
-   }
-
-   private void displayLogin() {
-      mIconsHidden = true;
-      supportInvalidateOptionsMenu();
-      LoginFragment editNameDialog = LoginFragment.newInstance();
-      editNameDialog.show(getSupportFragmentManager(), LOGIN_FRAGMENT);
    }
 
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-      outState.putBoolean(LOGIN_VISIBLE, mLoginVisible);
-      outState.putBoolean(SHOWING_HELP, showingHelp);
-      outState.putBoolean(SHOWING_LOGOUT, showingLogout);
       outState.putBoolean(SHOWING_DELETE, showingDelete);
    }
 
@@ -219,6 +150,7 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
 
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
+
       if (MainApplication.get().isFirstTimeGalleryUser()) {
          createHelpDialog().show();
          MainApplication.get().setFirstTimeGalleryUser(false);
@@ -232,41 +164,9 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
+      getSupportMenuInflater().inflate(R.menu.gallery_menu, menu);
 
-      if (!mIconsHidden) {
-         MenuInflater inflater = getSupportMenuInflater();
-         inflater.inflate(R.menu.gallery_menu, menu);
-      }
       return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onPrepareOptionsMenu(Menu menu) {
-      super.onPrepareOptionsMenu(menu);
-
-      // MenuItem gallery = menu.findItem(R.id.gallery_button);
-      MenuItem help = menu.findItem(R.id.help_button);
-
-      if (help != null) {
-         help.setVisible(true);
-      }
-
-      // if (gallery != null) {
-      // gallery.setVisible(false);
-      // }
-
-      return true;
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-   }
-
-   @Override
-   public void onPause() {
-      try {} catch (IllegalArgumentException e) {}
-      super.onPause();
    }
 
    public class StepAdapter extends FragmentStatePagerAdapter {
@@ -326,27 +226,15 @@ public class GalleryActivity extends IfixitActivity implements OnClickListener {
    }
 
    private AlertDialog createHelpDialog() {
-      mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.media_help_messege))
          .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-            private boolean mShowingHelp;
-
             public void onClick(DialogInterface dialog, int id) {
-               mShowingHelp = false;
                dialog.cancel();
             }
          });
 
-      AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-            mShowingHelp = false;
-         }
-      });
-
-      return dialog;
+      return builder.create();
    }
 
    public final class ContextualMediaSelect implements ActionMode.Callback {

@@ -9,9 +9,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
@@ -48,19 +45,19 @@ public class TopicActivity extends IfixitActivity
       /** hack: when the application dies, some things are reinitialized properly. This fixes that.
        * curtousy of: https://github.com/ChristopheVersieux/HoloEverywhere/issues/127#issuecomment-9208522 **/
       getLayoutInflater().setFactory(this);
-      
+
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.topics);
 
-      mTopicView = (TopicViewFragment)getSupportFragmentManager()
+      mTopicView = (TopicViewFragment) getSupportFragmentManager()
        .findFragmentById(R.id.topic_view_fragment);
-      mTopicViewOverlay = (FrameLayout)findViewById(R.id.topic_view_overlay);
+      mTopicViewOverlay = (FrameLayout) findViewById(R.id.topic_view_overlay);
       mHideTopicList = mTopicViewOverlay != null;
       mDualPane = mTopicView != null && mTopicView.isInLayout();
 
       if (savedInstanceState != null) {
-         mRootTopic = (TopicNode)savedInstanceState.getSerializable(ROOT_TOPIC);
+         mRootTopic = (TopicNode) savedInstanceState.getSerializable(ROOT_TOPIC);
          mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
       } else {
          mTopicListVisible = true;
@@ -117,6 +114,29 @@ public class TopicActivity extends IfixitActivity
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case android.R.id.home:
+            // Go up in the hierarchy by popping the back stack.
+            boolean poppedStack = getSupportFragmentManager().
+             popBackStackImmediate();
+
+            /**
+             *  If there is not a previous category to go to and the up navigation
+             *  button should finish the activity, finish the activity.
+             *  Note: Although this is a warning for iFixit, it is not for Dozuki.
+             */
+            if (!poppedStack && UP_NAVIGATION_FINISH_ACTIVITY) {
+               finish();
+            }
+
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
    }
 
    public void onBackStackChanged() {
@@ -212,40 +232,5 @@ public class TopicActivity extends IfixitActivity
       // fixes the IllegalStateException crash in FragmentManagerImpl.checkStateLoss()
       ft.commitAllowingStateLoss();
    }
-   
-  /*
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
 
-      MenuInflater inflater = getSupportMenuInflater();
-
-      inflater.inflate(R.menu.menu_bar, menu);
-     
-      return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            // Go up in the hierarchy by popping the back stack.
-            boolean poppedStack = getSupportFragmentManager().
-             popBackStackImmediate();
-/*
-            /**
-             *  If there is not a previous category to go to and the up navigation
-             *  button should finish the activity, finish the activity.
-             *  Note: Although this is a warning for iFixit, it is not for Dozuki.
-             *//*
-            if (!poppedStack && UP_NAVIGATION_FINISH_ACTIVITY) {
-               finish();
-            }
-
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
-*/
-   
 }

@@ -16,10 +16,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
@@ -53,7 +49,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    private static final String SHOWING_SAVE = "SHOWING_SAVE";
    private static final String LOADING = "LOADING";
 
-   private ActionBar mActionBar;
    private Guide mGuide;
    private StepEditFragment mCurStepFragment;
    private ArrayList<GuideStep> mStepList;
@@ -66,6 +61,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    private RelativeLayout mBottomBar;
    private int mPagePosition;
    private int mSavePosition;
+
    private boolean mConfirmDelete;
    private boolean mIsStepDirty;
    private boolean mShowingHelp;
@@ -88,9 +84,8 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       }
 
       setTheme(((MainApplication) getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
-      mActionBar = getSupportActionBar();
-      mActionBar.setTitle("");
+      getSupportActionBar().setTitle("");
+
       mConfirmDelete = false;
       Bundle extras = getIntent().getExtras();
       mPagePosition = 0;
@@ -200,27 +195,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
-      }
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuInflater inflater = getSupportMenuInflater();
-      inflater.inflate(R.menu.step_create_menu, menu);
-      return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            finishEdit();
-            return true;
-         case R.id.help_button:
-            createHelpDialog().show();
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
       }
    }
 
@@ -544,27 +518,17 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    }
 
    private AlertDialog createHelpDialog() {
-      mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.media_help_title))
        .setMessage(getString(R.string.guide_create_edit_steps_help))
        .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
 
           public void onClick(DialogInterface dialog, int id) {
-             mShowingHelp = false;
              dialog.cancel();
           }
        });
 
-      AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-            mShowingHelp = false;
-         }
-      });
-
-      return dialog;
+      return builder.create();
    }
 
    private AlertDialog createExitWarningDialog() {

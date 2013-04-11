@@ -12,16 +12,4 @@
         android:showAsAction="always|withText"
         android:title="@string/gallery_tool_tip"/>
 
-    <item
-        android:id="@+id/help_button"
-        android:icon="@drawable/ic_menu_spinner_help"
-        android:showAsAction="never"
-        android:title="Help"/>
-    
-    <item
-        android:id="@+id/logout_button"
-        android:icon="@drawable/ic_action_exit"
-        android:showAsAction="never"
-        android:title="@string/logout_title"/>
-
 </menu>

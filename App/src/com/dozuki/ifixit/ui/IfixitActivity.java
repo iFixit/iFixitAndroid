@@ -17,6 +17,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.login.LoginEvent;
+import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.squareup.otto.Subscribe;
@@ -40,13 +41,6 @@ public abstract class IfixitActivity extends Activity {
 
    private static final String STATE_ACTIVE_POSITION = "com.dozuki.ifixit.ui.ifixitActivity.activePosition";
    private static final String STATE_CONTENT_TEXT = "com.dozuki.ifixit.ui.ifixitActivity.contentText";
-
-
-   /**
-    * Navigation indexes
-    */
-   public int VIEW_GUIDES = 0;
-   public int CREATE_GUIDES = 1;
 
    private static final int MENU_OVERFLOW = 1;
 
@@ -121,7 +115,7 @@ public abstract class IfixitActivity extends Activity {
          mActivePosition = position;
          mMenuDrawer.setActiveView(view, position);
 
-         switch(Navigation.navigate((String)view.getTag())) {
+         switch (Navigation.navigate((String) view.getTag())) {
             case SEARCH:
             case FEATURED_GUIDES:
             case BROWSE_TOPICS:
@@ -138,7 +132,13 @@ public abstract class IfixitActivity extends Activity {
 
             case NEW_GUIDE:
             case MEDIA_GALLERY:
+               intent = new Intent(context, GalleryActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               startActivity(intent);
+               break;
             case LOGOUT:
+               MainApplication.get().logout();
+               break;
 
             case YOUTUBE:
             case FACEBOOK:
@@ -167,18 +167,23 @@ public abstract class IfixitActivity extends Activity {
 
       mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW, Position.RIGHT);
 
+      // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
-      items.add(new Category("Browse Content"));
       items.add(new Item("Search", R.drawable.ic_action_search, "search"));
+
+      items.add(new Category("Browse Content"));
       items.add(new Item("Featured Guides", R.drawable.ic_action_star_10, "featured_guides"));
       items.add(new Item("Browse Devices", R.drawable.ic_action_list, "browse_topics"));
 
-      items.add(new Category("Your Account"));
+      items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item("My Guides", R.drawable.ic_menu_spinner_guides, "user_guides"));
       items.add(new Item("Create New Guide", R.drawable.ic_menu_add_guide, "new_guide"));
       items.add(new Item("Media Gallery", R.drawable.ic_menu_spinner_gallery, "media_gallery"));
-      items.add(new Item("Logout", R.drawable.ic_action_exit, "logout"));
+
+      if (MainApplication.get().isUserLoggedIn()) {
+         items.add(new Item("Logout", R.drawable.ic_action_exit, "logout"));
+      }
 
       items.add(new Category("iFixit Everywhere"));
       items.add(new Item("Youtube Channel", R.drawable.ic_action_youtube, "youtube"));
@@ -248,9 +253,12 @@ public abstract class IfixitActivity extends Activity {
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
+         case android.R.id.home:
+            finish();
+            break;
          case MENU_OVERFLOW:
             mMenuDrawer.toggleMenu();
-            return true;
+            break;
       }
 
       return super.onOptionsItemSelected(item);
@@ -266,106 +274,10 @@ public abstract class IfixitActivity extends Activity {
       return true;
    }
 
-   public void setCustomTitle(String title) {
-      this.getSupportActionBar().setDisplayShowCustomEnabled(true);
-      TextView tv = new TextView(this);
-      tv.setText(title);
-      tv.setTextAppearance(getApplicationContext(), R.style.TextAppearance_iFixit_ActionBar_Title);
-      tv.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-      tv.setGravity(Gravity.CENTER_VERTICAL);
-      this.getSupportActionBar().setCustomView(tv,
-       new ActionBar.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-   }
-
-  /* @Override
-   public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem logout = menu.findItem(R.id.logout_button);
-
-      if (logout != null) {
-         boolean loggedIn = MainApplication.get().isUserLoggedIn();
-         logout.setVisible(loggedIn);
-         if (loggedIn) {
-            String username = ((MainApplication) (this).getApplication()).getUser().getUsername();
-            if (username.length() > 5) {
-               username = username.substring(0, 5) + "...";
-            }
-            logout.setTitle(getResources().getString(R.string.logout_title) + " (" + username + ")");
-         }
-      }
-
-      return super.onPrepareOptionsMenu(menu);
-   }*/
-
-   /**
-    * Finishes the Activity if the user should be logged in but isn't.
-    */
-   private void finishActivityIfPermissionDenied() {
-      MainApplication app = MainApplication.get();
-
-      /**
-       * Never finish if user is logged in or is logging in.
-       */
-      if (app.isUserLoggedIn() || app.isLoggingIn()) {
-         return;
-      }
-
-      /**
-       * Finish if the site is private or activity requires authentication.
-       */
-      if (!neverFinishActivityOnLogout()
-       && (finishActivityIfLoggedOut() || !app.getSite().mPublic)) {
-         finish();
-      }
-   }
-
-   /**
-    * "Settings" methods for derived classes are found below. Decides when to
-    * finish the Activity, what icons to display etc.
-    */
-
-   /**
-    * Return true if the gallery launcher should be in the options menu.
-    */
-   public boolean showGalleryIcon() {
-      return true;
-   }
-
-   /**
-    * Returns true if the Activity should be finished if the user logs out or
-    * cancels authentication.
-    */
-   public boolean finishActivityIfLoggedOut() {
-      return false;
-   }
-
-   /**
-    * Returns true if the Activity should never be finished despite meeting
-    * other conditions.
-    * <p/>
-    * This exists because of a race condition of sorts involving logging out of
-    * private Dozuki sites. SiteListActivity can't reset the current site to
-    * one that is public so it is erroneously finished unless flagged
-    * otherwise.
-    */
-   public boolean neverFinishActivityOnLogout() {
-      return false;
-   }
-
    @Override
    public void onStart() {
       this.overridePendingTransition(0, 0);
       super.onStart();
-   }
-
-   @Override
-   public void onBackPressed() {
-      final int drawerState = mMenuDrawer.getDrawerState();
-      if (drawerState == MenuDrawer.STATE_OPEN || drawerState == MenuDrawer.STATE_OPENING) {
-         mMenuDrawer.closeMenu();
-         return;
-      }
-
-      super.onBackPressed();
    }
 
    private static class Item {
@@ -464,5 +376,86 @@ public abstract class IfixitActivity extends Activity {
 
          return v;
       }
+   }
+
+   public void setCustomTitle(String title) {
+      this.getSupportActionBar().setDisplayShowCustomEnabled(true);
+      TextView tv = new TextView(this);
+      tv.setText(title);
+      tv.setTextAppearance(getApplicationContext(), R.style.TextAppearance_iFixit_ActionBar_Title);
+      tv.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+      tv.setGravity(Gravity.CENTER_VERTICAL);
+      this.getSupportActionBar().setCustomView(tv,
+       new ActionBar.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
+   }
+
+   /**
+    * Finishes the Activity if the user should be logged in but isn't.
+    */
+   private void finishActivityIfPermissionDenied() {
+      MainApplication app = MainApplication.get();
+
+      /**
+       * Never finish if user is logged in or is logging in.
+       */
+      if (app.isUserLoggedIn() || app.isLoggingIn()) {
+         return;
+      }
+
+      /**
+       * Finish if the site is private or activity requires authentication.
+       */
+      if (!neverFinishActivityOnLogout()
+       && (finishActivityIfLoggedOut() || !app.getSite().mPublic)) {
+         finish();
+      }
+   }
+
+   /**
+    * "Settings" methods for derived classes are found below. Decides when to
+    * finish the Activity, what icons to display etc.
+    */
+
+   /**
+    * Return true if the gallery launcher should be in the options menu.
+    */
+   public boolean showGalleryIcon() {
+      return true;
+   }
+
+   /**
+    * Returns true if the Activity should be finished if the user logs out or
+    * cancels authentication.
+    */
+   public boolean finishActivityIfLoggedOut() {
+      return false;
+   }
+
+   /**
+    * Returns true if the Activity should never be finished despite meeting
+    * other conditions.
+    * <p/>
+    * This exists because of a race condition of sorts involving logging out of
+    * private Dozuki sites. SiteListActivity can't reset the current site to
+    * one that is public so it is erroneously finished unless flagged
+    * otherwise.
+    */
+   public boolean neverFinishActivityOnLogout() {
+      return false;
+   }
+
+   private String buildAccountMenuCategoryTitle() {
+      MainApplication app = MainApplication.get();
+      boolean loggedIn = app.isUserLoggedIn();
+      String title;
+
+      if (loggedIn) {
+         String username = app.getUser().getUsername();
+         title = "Account (" + username + ")";
+      } else {
+         title = "Your Account";
+      }
+
+      return title;
    }
 }
