@@ -165,14 +165,15 @@ public class StepsActivity extends IfixitActivity
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
-      if (requestCode == GUIDE_EDIT_STEP_REQUEST) {
-         if (resultCode == RESULT_OK) {
-            Guide guide = (Guide) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
-            if (guide != null) {
-               mGuide = guide;
-               mStepList = mGuide.getSteps();
-            }
+
+      if (requestCode == GUIDE_EDIT_STEP_REQUEST && resultCode == RESULT_OK) {
+
+         Guide guide = (Guide) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
+         if (guide != null) {
+            mGuide = guide;
+            mStepList = mGuide.getSteps();
          }
+
       }
    }
 

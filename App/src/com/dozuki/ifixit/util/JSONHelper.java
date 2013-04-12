@@ -58,11 +58,45 @@ public class JSONHelper {
       site.mTheme = jSite.getString("theme");
       site.mPublic = !jSite.getBoolean("private");
       site.mDescription = jSite.getString("description");
-      site.mAnswers = jSite.getInt("answers") != 0;
+      site.mAnswers = jSite.getBoolean("answers");
 
       setAuthentication(site, jSite.getJSONObject("authentication"));
 
       return site;
+   }
+
+   public static Site parseSiteInfo(String json) {
+      Site site = null;
+
+      try {
+         JSONObject siteInfoObject = new JSONObject(json);
+         site = parseSite(siteInfoObject);
+
+         JSONObject types = (JSONObject)siteInfoObject.get("guide-types");
+         site.mGuideTypes = new ArrayList<GuideType>();
+
+         Iterator<?> keys = types.keys();
+         while (keys.hasNext()) {
+            String key = (String)keys.next();
+            if (types.get(key) instanceof JSONObject) {
+               site.mGuideTypes.add(parseGuideType(key, (JSONObject)types.get(key)));
+            }
+         }
+      } catch (JSONException e) {
+         Log.e("iFixit", "Error parsing site info: " + e);
+      }
+
+      site.mDomain = "tasp.cominor.com";
+
+      return site;
+   }
+
+   private static GuideType parseGuideType(String type, JSONObject object) {
+      try {
+         return new GuideType(type, object.getString("title"), object.getString("prompt"));
+      } catch (JSONException e) {
+         return new GuideType(type, "", "");
+      }
    }
 
    private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
@@ -86,7 +120,7 @@ public class JSONHelper {
       Guide guide = new Guide(jGuideInfo.getInt("guideid"));
 
       guide.setTitle(jGuide.getString("title"));
-      guide.setTopic(jGuideInfo.getString("topic"));
+      guide.setTopic(jGuideInfo.getString("category"));
       guide.setSubject(jGuide.getString("subject"));
       guide.setAuthor(jAuthor.getString("text"));
       guide.setTimeRequired(jGuide.getString("time_required"));
@@ -296,7 +330,7 @@ public class JSONHelper {
          guideInfo.mRevisionid = jGuide.optInt("revisionid", NULL_INT);
          guideInfo.mModifiedDate = jGuide.optInt("modified_date", NULL_INT);
          guideInfo.mPrereqModifiedDate = jGuide.optInt("prereq_modified_date", NULL_INT);
-         guideInfo.mTopic = jGuide.getString("topic");
+         guideInfo.mTopic = jGuide.getString("category");
          guideInfo.mSubject = jGuide.getString("subject");
          guideInfo.mType = jGuide.getString("type");
          guideInfo.mTitle = jGuide.getString("title");
@@ -483,7 +517,7 @@ public class JSONHelper {
       UserGuide userGuide = new UserGuide();
 
       userGuide.setGuideid(json.getInt("guideid"));
-      userGuide.setTopic(json.getString("topic"));
+      userGuide.setTopic(json.getString("category"));
       userGuide.setTitle(json.getString("title"));
       userGuide.setSubject(json.getString("subject"));
       userGuide.setType(json.getString("type"));

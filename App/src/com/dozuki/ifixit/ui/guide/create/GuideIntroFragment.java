@@ -2,7 +2,6 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.os.Bundle;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -41,19 +40,6 @@ public class GuideIntroFragment extends Fragment {
    }
 
    @Override
-   public void onSaveInstanceState(Bundle savedInstanceState) {
-      super.onSaveInstanceState(savedInstanceState);
-      savedInstanceState.putString(DEVICE_TYPE_KEY, mDeviceType.getText().toString());
-      savedInstanceState.putString(TITLE_KEY, mTitle.getText().toString());
-      savedInstanceState.putString(SUMMARY_KEY, mSummary.getText().toString());
-      savedInstanceState.putString(INRODUCTION_KEY, mIntroduction.getText().toString());
-   }
-
-   public void setGuideOBject(Guide obj) {
-      mGuideObject = obj;
-   }
-
-   @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_create_intro, container, false);
       mViewHeader = (TextView) view.findViewById(R.id.guide_intro_header);
@@ -75,7 +61,7 @@ public class GuideIntroFragment extends Fragment {
          mIntroduction.setText(savedInstanceState.getString(INRODUCTION_KEY));
       }
 
-      mSubmitGuideButton.setOnClickListener(new OnClickListener() {
+      mSubmitGuideButton.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
             /*
@@ -86,8 +72,8 @@ public class GuideIntroFragment extends Fragment {
              * else
              */
             confirmCreateGuide(mDeviceType.getText().toString(), mTitle.getText().toString(), mSummary.getText()
-               .toString(), mIntroduction.getText().toString(), (String) mGuideTypeSpinner.getSelectedItem(), mFocus
-               .getText().toString());
+             .toString(), mIntroduction.getText().toString(), (String) mGuideTypeSpinner.getSelectedItem(), mFocus
+             .getText().toString());
          }
       });
 
@@ -100,6 +86,19 @@ public class GuideIntroFragment extends Fragment {
       }
 
       return view;
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+      savedInstanceState.putString(DEVICE_TYPE_KEY, mDeviceType.getText().toString());
+      savedInstanceState.putString(TITLE_KEY, mTitle.getText().toString());
+      savedInstanceState.putString(SUMMARY_KEY, mSummary.getText().toString());
+      savedInstanceState.putString(INRODUCTION_KEY, mIntroduction.getText().toString());
+   }
+
+   public void setGuideOBject(Guide obj) {
+      mGuideObject = obj;
    }
 
    private void confirmCreateGuide(String device, String title, String summary, String intro, String guideType,

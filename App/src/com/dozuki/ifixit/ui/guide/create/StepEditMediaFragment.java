@@ -1,23 +1,22 @@
 package com.dozuki.ifixit.ui.guide.create;
 
-import android.content.DialogInterface;
-import android.content.Intent;
+import android.content.ClipData;
+import android.content.ClipDescription;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.ThumbnailView;
 import com.dozuki.ifixit.util.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 
 import java.util.ArrayList;
@@ -133,11 +132,11 @@ public class StepEditMediaFragment extends Fragment {
    }
 
    public void setGuideDirty() {
-      if (((StepEditFragment.GuideStepChangedListener) getActivity()) == null) {
+      if (((StepChangedListener) getActivity()) == null) {
          return;
       }
 
-      ((StepEditFragment.GuideStepChangedListener) getActivity()).onGuideStepChanged();
+      ((StepChangedListener) getActivity()).onStepChanged();
    }
 
 }

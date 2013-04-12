@@ -216,5 +216,10 @@
     <string name="slide_menu_more_info">More Information</string>
     <string name="slide_menu_help">Help</string>
     <string name="slide_menu_about">About</string>
+    <string name="review">Review</string>
+    <string name="finish">Finish</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+    <string name="topic_name_hint">What is your guide about?</string>
 
 </resources>

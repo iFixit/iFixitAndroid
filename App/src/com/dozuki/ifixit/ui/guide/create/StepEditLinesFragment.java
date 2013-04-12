@@ -462,7 +462,7 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
    }
 
    public void setGuideDirty() {
-      ((StepEditFragment.GuideStepChangedListener) getActivity()).onGuideStepChanged();
+      ((StepChangedListener) getActivity()).onStepChanged();
    }
 
    public boolean isReorderModeActive() {

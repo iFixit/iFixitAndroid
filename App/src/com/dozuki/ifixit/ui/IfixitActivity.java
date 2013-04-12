@@ -20,6 +20,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.login.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
+import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.squareup.otto.Subscribe;
 import net.simonvt.menudrawer.MenuDrawer;
@@ -133,6 +134,11 @@ public abstract class IfixitActivity extends Activity {
                break;
 
             case NEW_GUIDE:
+               intent = new Intent(context, GuideIntroActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               startActivity(intent);
+               break;
+
             case MEDIA_GALLERY:
                intent = new Intent(context, GalleryActivity.class);
                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);

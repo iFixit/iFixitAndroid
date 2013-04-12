@@ -1,9 +1,11 @@
 package com.dozuki.ifixit.model.dozuki;
 
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.util.EditDistance;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class Site implements Serializable {
    private static final long serialVersionUID = -2798641261277805693L;
@@ -19,6 +21,8 @@ public class Site implements Serializable {
    public boolean mStandardAuth;
    public String mSsoUrl;
    public boolean mPublicRegistration;
+
+   public ArrayList<GuideType> mGuideTypes;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -58,11 +62,25 @@ public class Site implements Serializable {
       }
    }
 
+   public ArrayList<String> getGuideTypes() {
+      ArrayList<String> types = new ArrayList<String>();
+
+      for (GuideType type : mGuideTypes) {
+         types.add(capitalize(type.mType));
+      }
+
+      return types;
+   }
+
+   private String capitalize(String word) {
+      return Character.toUpperCase(word.charAt(0)) + word.substring(1);
+   }
+
    public String toString() {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
-       mPublicRegistration + "}";
+       mPublicRegistration + "|" + mGuideTypes.toString() + "}";
    }
 
    public static Site getSite(String siteName) {

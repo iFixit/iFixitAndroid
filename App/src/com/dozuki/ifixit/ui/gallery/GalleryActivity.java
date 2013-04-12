@@ -122,9 +122,6 @@ public class GalleryActivity extends IfixitActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
       boolean isLoggedIn = ((MainApplication) getApplication()).isUserLoggedIn();
       switch (item.getItemId()) {
-         case android.R.id.home:
-            finish();
-            return true;
          case R.id.top_camera_button:
             if (!isLoggedIn) {
                return false;
@@ -136,12 +133,6 @@ public class GalleryActivity extends IfixitActivity {
                return false;
             }
             mCurrentMediaFragment.launchImageChooser();
-            return true;
-         case R.id.help_button:
-            if (!isLoggedIn) {
-               return false;
-            }
-            createHelpDialog().show();
             return true;
          default:
             return super.onOptionsItemSelected(item);

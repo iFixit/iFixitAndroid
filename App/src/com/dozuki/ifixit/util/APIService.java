@@ -426,6 +426,10 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.SITES, NO_QUERY);
    }
 
+   public static APICall getSiteInfoAPICall() {
+      return new APICall(APIEndpoint.SITE_INFO, NO_QUERY);
+   }
+
    public static APICall getUserInfoAPICall(String authToken) {
       APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
 

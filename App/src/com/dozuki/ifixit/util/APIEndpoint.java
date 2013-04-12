@@ -480,6 +480,25 @@ public enum APIEndpoint {
       false
    ),
 
+   SITE_INFO(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "sites/info";
+       }
+
+       public APIEvent<?> parse(String json) throws JSONException {
+          return new APIEvent.SiteInfo().setResult(JSONHelper.parseSiteInfo(json));
+       }
+
+       public APIEvent<?> getEvent() {
+          return new APIEvent.SiteInfo();
+       }
+    },
+    false,
+    "GET",
+    false
+   ),
+
    USER_INFO(
       new Endpoint() {
          public String createUrl(String query) {

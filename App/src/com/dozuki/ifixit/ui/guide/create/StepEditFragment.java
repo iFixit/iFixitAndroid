@@ -12,14 +12,6 @@ import org.holoeverywhere.app.Fragment;
 
 public class StepEditFragment extends Fragment {
 
-   public interface GuideStepChangedListener {
-      public void onGuideStepChanged();
-
-      public void disableSave();
-
-      public void enableSave();
-   }
-
    private static final String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    private GuideStep mStepObject;
    private StepEditLinesFragment mEditBulletFrag;

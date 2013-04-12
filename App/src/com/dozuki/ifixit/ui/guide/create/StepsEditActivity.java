@@ -24,7 +24,6 @@ import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
-import com.dozuki.ifixit.ui.guide.create.StepEditFragment.GuideStepChangedListener;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -37,7 +36,7 @@ import org.holoeverywhere.widget.Toast;
 
 import java.util.ArrayList;
 
-public class StepsEditActivity extends IfixitActivity implements OnClickListener, GuideStepChangedListener {
+public class StepsEditActivity extends IfixitActivity implements OnClickListener, StepChangedListener {
    public static String TAG = "StepsEditActivity";
    public static String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
@@ -113,11 +112,9 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       }
       setContentView(R.layout.guide_create_step_edit);
       mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
-      if (!mIsStepDirty) {
-         disableSave();
-      } else {
-         enableSave();
-      }
+
+      toggleSave(mIsStepDirty);
+
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
       mBottomBar = (RelativeLayout) findViewById(R.id.guide_create_edit_bottom_bar);
@@ -248,7 +245,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
                list.add(mImageInfo);
             }
             mStepList.get(mPagePosition).setImages(list);
-            enableSave();
+            toggleSave(true);
             // recreate pager with updated step:
             mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
             mPager.setAdapter(mStepAdapter);
@@ -313,8 +310,8 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             if (mIsStepDirty) {
                save(mPagePosition);
             }
-            disableSave();
             mIsStepDirty = false;
+            toggleSave(mIsStepDirty);
          }
          mPagePosition = position;
          mCurStepFragment = (StepEditFragment) object;
@@ -346,7 +343,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       for (int i = 0; i < mStepList.size(); i++) {
          mStepList.get(i).setStepNum(i);
       }
-      disableSave();
+      toggleSave(mIsStepDirty);
       mGuide.sync(mCurStepFragment.getGuideChanges(), mSavePosition);
 
       showLoading();
@@ -498,23 +495,19 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    }
 
    @Override
-   public void onGuideStepChanged() {
+   public void onStepChanged() {
       mIsStepDirty = true;
-      enableSave();
+      toggleSave(mIsStepDirty);
    }
 
-   public void enableSave() {
-      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_blue));
-      mSaveStep.setTextColor(getResources().getColor(R.color.white));
+   public void toggleSave(boolean toggle) {
+      int buttonBackgroundColor = toggle ? R.color.blue : R.color.dark;
+      int buttonTextColor = toggle ? R.color.white : R.color.blue;
+
+      mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
+      mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
       mSaveStep.setText(R.string.guide_create_save);
-      mSaveStep.setEnabled(true);
-   }
-
-   public void disableSave() {
-      mSaveStep.setBackgroundColor(getResources().getColor(R.color.dark));
-      mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_disabled));
-      mSaveStep.setText(R.string.guide_create_saved);
-      mSaveStep.setEnabled(false);
+      mSaveStep.setEnabled(toggle);
    }
 
    private AlertDialog createHelpDialog() {

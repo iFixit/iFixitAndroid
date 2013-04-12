@@ -53,4 +53,10 @@
     <dimen name="guide_create_edit_media_horizontal_margin">16dp</dimen>
     <dimen name="guide_create_edit_media_vertical_margin">8dp</dimen>
     <dimen name="guide_create_edit_media_thumbnail_margin">4dp</dimen>
+
+    <!-- Form Wizard -->
+    <dimen name="step_pager_tab_width">32dp</dimen>
+    <dimen name="step_pager_tab_height">3dp</dimen>
+    <dimen name="step_pager_tab_spacing">4dp</dimen>
+
 </resources>

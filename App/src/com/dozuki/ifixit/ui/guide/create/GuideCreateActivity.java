@@ -6,7 +6,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
-import android.support.v4.app.FragmentTransaction;
 import com.actionbarsherlock.app.ActionBar;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -215,12 +214,9 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    }
 
    private void launchGuideCreateIntro() {
-      GuideIntroFragment newFragment = new GuideIntroFragment();
-      newFragment.setGuideOBject(null);
-      FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-      transaction.replace(R.id.guide_create_fragment_container, newFragment);
-      transaction.addToBackStack(GUIDE_INTRO_FRAGMENT_TAG);
-      transaction.commitAllowingStateLoss();
+      Intent intent = new Intent(this, GuideIntroActivity.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+      startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
    }
 
    @Override
