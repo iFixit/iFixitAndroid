@@ -208,10 +208,12 @@ public abstract class IfixitActivity extends Activity {
          items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, "logout"));
       }
 
-      items.add(new Category(getString(R.string.slide_menu_ifixit_everywhere)));
-      items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, "youtube"));
-      items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, "facebook"));
-      items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, "twitter"));
+      if (MainApplication.get().getSite().mName.compareTo("ifixit") == 0) {
+         items.add(new Category(getString(R.string.slide_menu_ifixit_everywhere)));
+         items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, "youtube"));
+         items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, "facebook"));
+         items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, "twitter"));
+      }
 
       items.add(new Category(getString(R.string.slide_menu_more_info)));
       items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, "help"));
