@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -112,6 +113,7 @@ public abstract class IfixitActivity extends Activity {
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
          Intent intent;
          Context context = parent.getContext();
+         String url = "";
          mActivePosition = position;
          mMenuDrawer.setActiveView(view, position);
 
@@ -141,8 +143,28 @@ public abstract class IfixitActivity extends Activity {
                break;
 
             case YOUTUBE:
+               intent = new Intent(Intent.ACTION_VIEW);
+               url = "https://www.youtube.com/user/iFixitYourself";
+
+               intent.setData(Uri.parse(url));
+               startActivity(intent);
+               break;
+
             case FACEBOOK:
+               intent = new Intent(Intent.ACTION_VIEW);
+               url = "https://www.facebook.com/iFixit";
+
+               intent.setData(Uri.parse(url));
+               startActivity(intent);
+               break;
+
             case TWITTER:
+               intent = new Intent(Intent.ACTION_VIEW);
+               url = "https://twitter.com/iFixit";
+
+               intent.setData(Uri.parse(url));
+               startActivity(intent);
+               break;
 
             case HELP:
             case ABOUT:
@@ -178,7 +200,7 @@ public abstract class IfixitActivity extends Activity {
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
-      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
+      //items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_spinner_guides, "favorite_guides"));
       items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, "new_guide"));
       items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
 
