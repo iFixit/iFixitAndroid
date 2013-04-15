@@ -206,7 +206,7 @@ public abstract class IfixitActivity extends Activity {
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
-      items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list, "browse_topics"));
+      items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
@@ -305,7 +305,7 @@ public abstract class IfixitActivity extends Activity {
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
          overflowItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
       }
-      overflowItem.setIcon(R.drawable.ic_action_list_2);
+      overflowItem.setIcon(R.drawable.ic_action_list);
       return true;
    }
 
