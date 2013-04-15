@@ -77,16 +77,20 @@ public abstract class IfixitActivity extends Activity {
       @SuppressWarnings("unused")
       @Subscribe
       public void onLogin(LoginEvent.Login event) {
-         // Update menu icons.
-         supportInvalidateOptionsMenu();
+
+         // Reload app to update the menu to include the User name and logout button
+         finish();
+         startActivity(getIntent());
       }
 
       @SuppressWarnings("unused")
       @Subscribe
       public void onLogout(LoginEvent.Logout event) {
          finishActivityIfPermissionDenied();
-         // Update menu icons.
-         supportInvalidateOptionsMenu();
+
+         // Reload app to remove username and logout button from menu
+         finish();
+         startActivity(getIntent());
       }
 
       @SuppressWarnings("unused")
