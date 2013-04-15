@@ -60,7 +60,7 @@
 
     <style name="guide_thumbnail">
         <item name="android:background">@color/image_border</item>
-        <item name="android:visibility">invisible</item>
+        <item name="android:visibility">gone</item>
         <item name="android:padding">@dimen/guide_thumbnail_padding</item>
         <item name="android:layout_gravity">right</item>
     </style>

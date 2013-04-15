@@ -56,7 +56,7 @@ public class StepEditMediaFragment extends Fragment {
 
       // Initialize the step thumbnails and set the main image to the first thumbnail if it exists
       if (mImages != null && mImages.size() > 0) {
-         mThumbs.setThumbs(mImages, mImageManager, mContext);
+         mThumbs.setThumbs(mImages);
 
          mThumbs.setCurrentThumb(mImages.get(0).mBaseUrl);
       }

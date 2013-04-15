@@ -1,18 +1,24 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.util.APIImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -21,11 +27,14 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    private ArrayList<ImageView> mThumbs;
    private ImageView mMainImage;
+   private ImageView mAddThumbButton;
    private ImageManager mImageManager;
    private Context mContext;
    private String mCurrentURL;
    private ImageSizes mImageSizes;
-   private boolean mShouldHide = false;
+   private boolean mShowSingle = false;
+   private boolean mCanEdit;
+   private ArrayList<APIImage> mThumbnails;
 
    public ThumbnailView(Context context) {
       super(context);
@@ -33,11 +42,54 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public ThumbnailView(Context context, AttributeSet attrs) {
+
       super(context, attrs);
       init(context);
+
+      TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ThumbnailView);
+
+      mShowSingle = a.getBoolean(R.styleable.ThumbnailView_show_single, false);
+      mCanEdit = a.getBoolean(R.styleable.ThumbnailView_can_edit, false);
+
+      if (mCanEdit) {
+         mAddThumbButton = (ImageView) findViewById(R.id.add_thumbnail_icon);
+         mAddThumbButton.setVisibility(VISIBLE);
+         mAddThumbButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+               builder.setTitle("Attach media from")
+                .setItems(R.array.step_image_actions, new DialogInterface.OnClickListener() {
+                   @Override
+                   public void onClick(DialogInterface dialog, int which) {
+                      Intent intent;
+                      switch (which) {
+                         case 0:
+                
+                            break;
+                         case 1:
+                            intent = new Intent(mContext, GalleryActivity.class);
+                            intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+                            mContext.startActivity(intent);
+                            break;
+                      }
+                   }
+                });
+               builder.show();
+            }
+         });
+
+      }
+
+      a.recycle();
    }
 
    private void init(Context context) {
+
+      mImageManager = MainApplication.get().getImageManager();
+      mContext = context;
+
       LayoutInflater inflater = (LayoutInflater) context
        .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
@@ -45,12 +97,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       mThumbs = new ArrayList<ImageView>();
 
-      mThumbs.add((ImageView) findViewById(R.id.thumbnail_1));
-      mThumbs.add((ImageView) findViewById(R.id.thumbnail_2));
-      mThumbs.add((ImageView) findViewById(R.id.thumbnail_3));
-
-      for (ImageView thumb : mThumbs)
-         thumb.setOnClickListener(this);
    }
 
    @Override
@@ -65,23 +111,30 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mImageSizes = imageSizes;
    }
 
-   public void setThumbs(ArrayList<APIImage> images,
-    ImageManager imageManager, Context context) {
-      if (images.size() <= 1 && mShouldHide) {
-         setVisibility(INVISIBLE);
+   public void setThumbs(ArrayList<APIImage> images) {
+
+      if (images.size() <= 1 && !mShowSingle) {
+         setVisibility(GONE);
       }
 
-      mImageManager = imageManager;
-      mContext = context;
-
+      Log.w("ThumbnailView", "Num Images: " + images.size());
       if (!images.isEmpty()) {
-         for (int thumbId = 0; thumbId < images.size(); thumbId++) {
-            ImageView thumb = mThumbs.get(thumbId);
+         if (images.size() > 2 && mAddThumbButton != null) {
+            mAddThumbButton.setVisibility(GONE);
+         }
+         for (APIImage image : images) {
+            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
+            thumb.setOnClickListener(this);
             thumb.setVisibility(VISIBLE);
-            thumb.setTag(images.get(thumbId).mBaseUrl);
+            thumb.setTag(image.mBaseUrl);
 
-            mImageManager.displayImage(images.get(thumbId).getSize(
-             mImageSizes.getThumb()), (Activity) mContext, thumb);
+            mImageManager.displayImage(image.getSize(mImageSizes.getThumb()), (Activity) mContext, thumb);
+
+            mThumbs.add(thumb);
+            Log.w("ThumbnailView", "Num Thumbs: " + mThumbs.size());
+
+            this.addView(thumb, mThumbs.size() - 1);
          }
       }
    }
@@ -109,7 +162,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       padding += viewPadding(R.dimen.guide_thumbnail_padding);
 
       if (inPortraitMode()) {
-         if (hasThumbnail && !mShouldHide) {
+         if (hasThumbnail && mShowSingle) {
             padding += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
             // Main image is 4/5ths of the available screen height
@@ -151,6 +204,11 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       if (hasThumbnail) {
          setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
       }
+
+      if (mAddThumbButton != null) {
+         mAddThumbButton.getLayoutParams().height = (int) (thumbnailHeight + .5f);
+         mAddThumbButton.getLayoutParams().width = (int) (thumbnailWidth + .5f);
+      }
    }
 
    public void setThumbnailDimensions(float height, float width) {
@@ -158,10 +216,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          mThumbs.get(i).getLayoutParams().height = (int) (height + .5f);
          mThumbs.get(i).getLayoutParams().width = (int) (width + .5f);
       }
-   }
-
-   public void setHideThumbnailsSingleImage(boolean shouldHide) {
-      mShouldHide = shouldHide;
    }
 
    public void setMainImage(ImageView mainImg) {

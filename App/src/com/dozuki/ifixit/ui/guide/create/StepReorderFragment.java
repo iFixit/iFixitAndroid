@@ -185,13 +185,10 @@ public class StepReorderFragment extends Fragment {
          }
          final ViewHolder holder = (ViewHolder) v.getTag();
          String step = getItem(position).getTitle();
-         if(step.equals(""))
-         {
+         if (step.equals("")) {
             holder.stepsView.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
             holder.stepNumber.setVisibility(View.GONE);
-         }
-         else
-         {
+         } else {
             holder.stepsView.setText(step);
             holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
             holder.stepNumber.setVisibility(View.VISIBLE);
@@ -204,22 +201,21 @@ public class StepReorderFragment extends Fragment {
       }
    }
 
-   private void setImageThumb(ArrayList<APIImage> imageList, ImageView imagView) {
+   private void setImageThumb(ArrayList<APIImage> imageList, ImageView image) {
       boolean img = false;
-      for (APIImage imageinfo : imageList) {
-         if (imageinfo.mId > 0) {
-            mImageManager.displayImage(imageinfo.getSize(".thumbnail"),
-               getActivity(), imagView);
-            imagView.setTag(imageinfo.getSize(MainApplication.get().getImageSizes().getThumb()));
-            imagView.invalidate();
+      for (APIImage imageInfo : imageList) {
+         if (imageInfo.mId > 0) {
+            mImageManager.displayImage(imageInfo.getSize(".thumbnail"),
+             getActivity(), image);
+            image.setTag(imageInfo.getSize(MainApplication.get().getImageSizes().getThumb()));
+            image.invalidate();
             return;
          }
       }
 
       if (!img) {
-         mImageManager.displayImage("",
-                getActivity(), imagView);
-         imagView.invalidate();
+         mImageManager.displayImage("", getActivity(), image);
+         image.invalidate();
       }
 
    }

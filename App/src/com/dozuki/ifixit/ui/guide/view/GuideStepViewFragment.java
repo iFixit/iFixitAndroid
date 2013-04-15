@@ -171,9 +171,8 @@ public class GuideStepViewFragment extends Fragment {
 
       mThumbs.setImageSizes(mImageSizes);
       mThumbs.setMainImage(mMainImage);
-      mThumbs.setThumbs(stepImages, mImageManager, mContext);
+      mThumbs.setThumbs(stepImages);
       mThumbs.setCurrentThumb(stepImages.get(0).mBaseUrl);
-      mThumbs.setHideThumbnailsSingleImage(true);
 
       // Size the main image and thumbnails to maximize use of screen space
       mThumbs.fitToSpace(mMetrics, navigationHeight());

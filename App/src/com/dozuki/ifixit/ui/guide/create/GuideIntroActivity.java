@@ -206,6 +206,11 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    }
 
    @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
+
+   @Override
    public void onPageDataChanged(Page page) {
       if (page.isRequired()) {
          if (recalculateCutOffPage()) {

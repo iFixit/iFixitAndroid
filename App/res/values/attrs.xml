@@ -6,4 +6,11 @@
     <attr name="topicGuideList" format="reference" />
     <attr name="topicDefaultBackground" format="reference|color" />
 
+
+    <declare-styleable name="ThumbnailView">
+        <attr name="show_single" format="boolean" />
+        <attr name="can_edit" format="boolean" />
+        <attr name="add_thumbnail_icon" format="integer" />
+        <attr name="main_image" format="integer" />
+    </declare-styleable>
 </resources>

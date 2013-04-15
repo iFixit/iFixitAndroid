@@ -4,25 +4,15 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content" >
 
-    <ImageView
-        android:id="@+id/thumbnail_1"
-        style="@style/guide_thumbnail_w_spacing"
-        android:layout_width="@dimen/guide_thumbnail_width"
-        android:layout_height="@dimen/guide_thumbnail_height"
-        android:contentDescription="@string/thumbnail_desc" />
+    <!-- Thumbnails are dynamically inserted into the view -->
 
     <ImageView
-        android:id="@+id/thumbnail_2"
-        style="@style/guide_thumbnail_w_spacing"
+        android:id="@+id/add_thumbnail_icon"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
-        android:contentDescription="@string/thumbnail_desc" />
-
-    <ImageView
-        android:id="@+id/thumbnail_3"
-        style="@style/guide_thumbnail"
-        android:layout_width="@dimen/guide_thumbnail_width"
-        android:layout_height="@dimen/guide_thumbnail_height"
+        android:background="#66888888"
+        android:src="@drawable/ic_action_add"
+        android:visibility="gone"
         android:contentDescription="@string/thumbnail_desc" />
 
 </LinearLayout>
