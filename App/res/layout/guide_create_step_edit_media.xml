@@ -11,7 +11,7 @@
         android:layout_width="@dimen/guide_image_width"
         android:layout_height="@dimen/guide_image_height"
         android:background="@color/image_border"
-        android:src="@drawable/ic_placeholder_feature_img"
+        android:src="@drawable/no_image"
         android:contentDescription="@string/guide_create_step_edit_main_image_description" />
 
     <com.dozuki.ifixit.ui.guide.view.ThumbnailView

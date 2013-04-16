@@ -7,7 +7,7 @@ import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
 import com.dozuki.ifixit.MainApplication;
@@ -24,6 +24,11 @@ import org.holoeverywhere.widget.LinearLayout;
 import java.util.ArrayList;
 
 public class ThumbnailView extends LinearLayout implements View.OnClickListener {
+
+   /**
+    * Used for logging
+    */
+   private static final String TAG = "ThumbnailView";
 
    private ArrayList<ImageView> mThumbs;
    private ImageView mMainImage;
@@ -66,7 +71,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
                       Intent intent;
                       switch (which) {
                          case 0:
-                
+
                             break;
                          case 1:
                             intent = new Intent(mContext, GalleryActivity.class);
@@ -90,8 +95,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mImageManager = MainApplication.get().getImageManager();
       mContext = context;
 
-      LayoutInflater inflater = (LayoutInflater) context
-       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
       inflater.inflate(R.layout.thumbnail_list, this, true);
 
@@ -117,7 +121,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          setVisibility(GONE);
       }
 
-      Log.w("ThumbnailView", "Num Images: " + images.size());
       if (!images.isEmpty()) {
          if (images.size() > 2 && mAddThumbButton != null) {
             mAddThumbButton.setVisibility(GONE);
@@ -212,14 +215,22 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void setThumbnailDimensions(float height, float width) {
-      for (int i = 0; i < mThumbs.size(); i++) {
-         mThumbs.get(i).getLayoutParams().height = (int) (height + .5f);
-         mThumbs.get(i).getLayoutParams().width = (int) (width + .5f);
+      for (ImageView thumb : mThumbs) {
+         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (width + .5f), (int) (height + .5f),
+          Gravity.NO_GRAVITY);
+
+         if (!inPortraitMode()) {
+            lp.setMargins(0, 0, 16, 0);
+         } else {
+            lp.setMargins(0, 0, 0, 16);
+         }
+
+         thumb.setLayoutParams(lp);
       }
    }
 
-   public void setMainImage(ImageView mainImg) {
-      mMainImage = mainImg;
+   public void setMainImage(ImageView image) {
+      mMainImage = image;
 
       mMainImage.setOnClickListener(new View.OnClickListener() {
          @Override
