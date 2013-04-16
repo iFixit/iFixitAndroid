@@ -239,7 +239,7 @@ public abstract class IfixitActivity extends Activity {
       mMenuDrawer.setMenuView(mList);
       mMenuDrawer.setMenuSize(600);
 
-      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_FULLSCREEN);
+      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
    }
 
    @Override
