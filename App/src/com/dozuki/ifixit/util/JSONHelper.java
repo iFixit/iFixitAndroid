@@ -27,6 +27,7 @@ public class JSONHelper {
     * Used to indicate an integer JSON field that is null.
     */
    public static final int NULL_INT = -1;
+   private static final String TAG = "JSONHelper";
 
    public static ArrayList<Site> parseSites(String json) {
       ArrayList<Site> sites = new ArrayList<Site>();
@@ -43,7 +44,7 @@ public class JSONHelper {
             }
          }
       } catch (JSONException e) {
-         Log.e("iFixit", "Error parsing sites: " + e);
+         Log.e(TAG, "Error parsing sites: " + e);
       }
 
       return sites;
@@ -83,7 +84,7 @@ public class JSONHelper {
             }
          }
       } catch (JSONException e) {
-         Log.e("iFixit", "Error parsing site info: " + e);
+         Log.e(TAG, "Error parsing site info: " + e);
       }
 
       site.mDomain = "tasp.cominor.com";
@@ -355,7 +356,7 @@ public class JSONHelper {
 
          return guideInfo;
       } catch (JSONException e) {
-         Log.e("iFixit", "Error parsing guide info: " + e);
+         Log.e(TAG, "Error parsing guide info: " + e);
          return null;
       }
    }
@@ -616,7 +617,7 @@ public class JSONHelper {
 
          return apiImage;
       } catch (JSONException e) {
-         Log.w("iFixit", "APIImage parsing", e);
+         Log.w(TAG, "APIImage parsing", e);
          return new APIImage();
       }
    }
