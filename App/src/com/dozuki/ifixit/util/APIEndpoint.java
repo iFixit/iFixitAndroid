@@ -74,6 +74,30 @@ public enum APIEndpoint {
       false
    ),
 
+   ALL_TOPICS(
+    new Endpoint() {
+       public String createUrl(String query) {
+          try {
+             return "categories/all?limit=100000";
+          } catch (Exception e) {
+             Log.w("iFixit", "Encoding error: " + e.getMessage());
+             return null;
+          }
+       }
+
+       public APIEvent<?> parse(String json) throws JSONException {
+          return new APIEvent.TopicList().setResult(JSONHelper.parseAllTopics(json));
+       }
+
+       public APIEvent<?> getEvent() {
+          return new APIEvent.TopicList();
+       }
+    },
+    false,
+    "GET",
+    false
+   ),
+
    LOGIN(
       new Endpoint() {
          public String createUrl(String query) {

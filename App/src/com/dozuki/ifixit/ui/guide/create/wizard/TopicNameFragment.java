@@ -17,15 +17,20 @@
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
 import android.app.Activity;
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
-import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.ArrayAdapter;
+import org.holoeverywhere.widget.AutoCompleteTextView;
 
 public class TopicNameFragment extends Fragment {
    private static final String ARG_KEY = "key";
@@ -33,7 +38,9 @@ public class TopicNameFragment extends Fragment {
    private PageFragmentCallbacks mCallbacks;
    private String mKey;
    private TopicNamePage mPage;
-   private EditText mTopicNameView;
+   private AutoCompleteTextView mTopicNameView;
+   private TextView mDescription;
+   private ArrayAdapter<String> mAdapter;
 
    public static TopicNameFragment create(String key) {
       Bundle args = new Bundle();
@@ -62,7 +69,17 @@ public class TopicNameFragment extends Fragment {
       View rootView = inflater.inflate(R.layout.guide_create_intro_topic_name, container, false);
       ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-      mTopicNameView = ((EditText) rootView.findViewById(R.id.topic_name));
+      mTopicNameView = (AutoCompleteTextView) rootView.findViewById(R.id.topic_name);
+
+      mDescription = ((TextView) rootView.findViewById(R.id.page_description));
+      mDescription.setText(mPage.getDescription());
+
+      mAdapter = new ArrayAdapter<String>((Activity) mCallbacks, android.R.layout.simple_dropdown_item_1line,
+       mPage.getTopicAutocompleteList());
+
+      mTopicNameView.setAdapter(mAdapter);
+
+      mTopicNameView.setText(mPage.getData().getString(TopicNamePage.TOPIC_DATA_KEY));
 
       return rootView;
    }
@@ -88,11 +105,38 @@ public class TopicNameFragment extends Fragment {
    public void onViewCreated(View view, Bundle savedInstanceState) {
       super.onViewCreated(view, savedInstanceState);
 
+      mTopicNameView.addTextChangedListener(new TextWatcher() {
+         @Override
+         public void beforeTextChanged(CharSequence charSequence, int i, int i1,
+          int i2) {
+         }
+
+         @Override
+         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+         }
+
+         @Override
+         public void afterTextChanged(Editable editable) {
+            mPage.getData().putString(TopicNamePage.TOPIC_DATA_KEY,
+             (editable != null) ? editable.toString() : null);
+            mPage.notifyDataChanged();
+         }
+      });
+
    }
 
    @Override
    public void setMenuVisibility(boolean menuVisible) {
       super.setMenuVisibility(menuVisible);
 
+      // In a future update to the support library, this should override setUserVisibleHint
+      // instead of setMenuVisibility.
+      if (mTopicNameView != null) {
+         InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(
+          Context.INPUT_METHOD_SERVICE);
+         if (!menuVisible) {
+            imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
+         }
+      }
    }
 }

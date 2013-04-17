@@ -422,6 +422,10 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.DELETE_IMAGE, stringBuilder.toString());
    }
 
+   public static APICall getAllTopicsAPICall() {
+      return new APICall(APIEndpoint.ALL_TOPICS, NO_QUERY);
+   }
+
    public static APICall getSitesAPICall() {
       return new APICall(APIEndpoint.SITES, NO_QUERY);
    }

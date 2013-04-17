@@ -21,6 +21,7 @@ public abstract class APIEvent<T> {
    public static class Categories extends APIEvent<TopicNode> {}
    public static class ViewGuide extends APIEvent<Guide> {}
    public static class Topic extends APIEvent<TopicLeaf> {}
+   public static class TopicList extends APIEvent<ArrayList<String>> {}
    public static class Login extends APIEvent<User> {}
    public static class Logout extends APIEvent<String> {}
    public static class Register extends APIEvent<User> {}

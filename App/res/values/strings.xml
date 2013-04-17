@@ -220,7 +220,7 @@
     <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="topic_name_hint">What is your guide about?</string>
+    <string name="topic_name_hint">Topic Name</string>
     <string name="guide_create_step_edit_main_image_description">Main step edit image</string>
 
 </resources>

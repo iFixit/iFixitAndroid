@@ -25,6 +25,7 @@ import org.holoeverywhere.app.Dialog;
 import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.widget.Button;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class GuideIntroActivity extends IfixitActivity implements PageFragmentCallbacks,
@@ -58,7 +59,6 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       } else {
          APIService.call(this, APIService.getSiteInfoAPICall());
       }
-
    }
 
    protected void initWizard() {
@@ -143,6 +143,17 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       } else {
          APIService.getErrorDialog(this, event.getError(),
           APIService.getSitesAPICall()).show();
+      }
+   }
+
+   @Subscribe
+   public void onTopicList(APIEvent.TopicList event) {
+      if (!event.hasError()) {
+         ArrayList<String> topics = new ArrayList<String>(event.getResult());
+         MainApplication.get().setTopics(topics);
+      } else {
+         APIService.getErrorDialog(this, event.getError(),
+          APIService.getAllTopicsAPICall()).show();
       }
    }
 

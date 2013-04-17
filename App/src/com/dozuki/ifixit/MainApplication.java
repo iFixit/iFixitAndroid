@@ -23,6 +23,8 @@ import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Bus;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
+import java.util.ArrayList;
+
 public class MainApplication extends Application {
    public static final int LARGE_SIZE_CUTOFF = 1000;
    public static final int MEDIUM_SIZE_CUTOFF = 800;
@@ -67,6 +69,11 @@ public class MainApplication extends Application {
    private Site mSite;
 
    /**
+    * Full list of available topics/categories available for the site.
+    */
+   private ArrayList<String> mTopics;
+
+   /**
     * True if the user is in the middle of authenticating. Used to determine whether or
     * not to open a new login dialog and for finishing Activities that require the user
     * to be logged in.
@@ -103,6 +110,15 @@ public class MainApplication extends Application {
 
       // Update logged in user based on current site.
       mUser = getUserFromPreferenceFile(site);
+   }
+
+   public void setTopics(ArrayList<String> topics) {
+
+      mTopics = new ArrayList<String>(topics);
+   }
+
+   public ArrayList<String> getTopics() {
+      return mTopics;
    }
 
    /**

@@ -22,6 +22,7 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -240,6 +241,12 @@ public abstract class IfixitActivity extends Activity {
       mMenuDrawer.setMenuSize(600);
 
       mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
+
+      if (MainApplication.get().getTopics() == null) {
+         APIService.call(this, APIService.getAllTopicsAPICall());
+         Log.d("IfixitActivity", "Firing off AllTopicsApi Call");
+      }
+
    }
 
    @Override

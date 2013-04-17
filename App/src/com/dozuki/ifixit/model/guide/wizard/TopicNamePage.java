@@ -27,19 +27,27 @@ import java.util.ArrayList;
  * A page asking for a name and an email.
  */
 public class TopicNamePage extends Page {
-   public static final String NAME_DATA_KEY = "name";
+   public static final String TOPIC_DATA_KEY = "name";
+
+   protected String mTopicName = "Topic";
+   protected String mDescription;
+   protected ArrayList<String> mTopics;
 
    public TopicNamePage(ModelCallbacks callbacks) {
       super(callbacks);
 
       MainApplication app = MainApplication.get();
-      String title = "Topic Name";
 
       if (app.getSite().mName.compareTo("ifixit") == 0) {
-         title = "Device Name";
+         mTopicName = "Device";
       }
 
-      super.setTitle(title);
+      setTitle(mTopicName + " Name");
+
+      setDescription("What " + mTopicName.toLowerCase() + " are you working on? For example, " +
+       "is it a \"iPhone 4\" or a \"Kenmore " +
+       "Washing Machine\"?  If the " + mTopicName.toLowerCase() + " already exists, be sure to select it from the prepopulated " +
+       "list");
    }
 
    @Override
@@ -49,16 +57,29 @@ public class TopicNamePage extends Page {
 
    @Override
    public void getReviewItems(ArrayList<ReviewItem> dest) {
-      dest.add(new ReviewItem(super.getTitle(), mData.getString(NAME_DATA_KEY), getKey(), -1));
+      dest.add(new ReviewItem(super.getTitle(), mData.getString(TOPIC_DATA_KEY), getKey(), -1));
    }
 
    @Override
    public boolean isCompleted() {
-      return !TextUtils.isEmpty(mData.getString(NAME_DATA_KEY));
+      return !TextUtils.isEmpty(mData.getString(TOPIC_DATA_KEY));
    }
 
-   public TopicNamePage setValue(String value) {
-      mData.putString(NAME_DATA_KEY, value);
+   public ArrayList<String> getTopicAutocompleteList() {
+      return mTopics;
+   }
+
+   public TopicNamePage setTopicAutocompleteList(ArrayList<String> topics) {
+      mTopics = new ArrayList<String>(topics);
+
       return this;
+   }
+
+   public void setDescription(String description) {
+      mDescription = description;
+   }
+
+   public String getDescription() {
+      return mDescription;
    }
 }

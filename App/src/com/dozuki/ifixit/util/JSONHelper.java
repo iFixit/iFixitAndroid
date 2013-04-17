@@ -91,6 +91,22 @@ public class JSONHelper {
       return site;
    }
 
+   public static ArrayList<String> parseAllTopics(String json) {
+      ArrayList<String> topics = new ArrayList<String>();
+
+      try {
+         JSONArray topicsJson = new JSONArray(json);
+
+         for (int i = 0; i < topicsJson.length(); i++)
+            topics.add(topicsJson.getString(i));
+
+      } catch (JSONException e) {
+         Log.e(TAG, "Error parsing all topics list: " + e);
+      }
+
+      return topics;
+   }
+
    private static GuideType parseGuideType(String type, JSONObject object) {
       try {
          return new GuideType(type, object.getString("title"), object.getString("prompt"));

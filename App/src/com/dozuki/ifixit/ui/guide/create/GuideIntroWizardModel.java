@@ -25,6 +25,8 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
    @Override
    protected PageList onNewRootPageList() {
       ArrayList<String> types = MainApplication.get().getSite().getGuideTypes();
+
+      ArrayList<String> topics = MainApplication.get().getTopics();
       String[] typesArr = new String[types.size()];
 
       return new PageList(
@@ -32,6 +34,7 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
         .setChoices(types.toArray(typesArr))
         .setRequired(true),
        new TopicNamePage(this)
+        .setTopicAutocompleteList(topics)
         .setRequired(true)
       );
    }
