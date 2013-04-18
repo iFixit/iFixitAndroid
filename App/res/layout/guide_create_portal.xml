@@ -4,48 +4,49 @@
                 android:layout_height="match_parent"
                 android:background="@color/white"
                 android:orientation="vertical">
-   <ListView
-           android:id="@+id/guide_create_listview"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_marginTop="@dimen/topic_list_top_margin"
-           android:dividerHeight="@dimen/topic_list_vertical_spacing"
-           android:divider="@color/white"
-           android:layout_below="@+id/add_guide_bar"
-           android:gravity="center"
-           style="?attr/topicGuideList"
-           />
-   <RelativeLayout
-           android:id="@+id/add_guide_bar"
-           android:layout_width="match_parent"
-           android:layout_height="@dimen/gallery_top_bar_height"
-           android:layout_alignParentTop="true"
-           android:background="@color/fireswing_grey"
-           android:clickable="true">
 
-      <TextView
-              android:id="@+id/add_guide_button"
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:layout_centerHorizontal="true"
-              android:layout_centerVertical="true"
-              android:drawableLeft="@drawable/ic_add_list_item"
-              android:drawablePadding="4dp"
-              android:gravity="center"
-              android:text="@string/add_guide"
-              android:textAppearance="?android:attr/textAppearanceSmall"
-              android:textColor="@color/dozuki_grey"/>
+    <ListView
+        android:id="@+id/guide_create_listview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/topic_list_top_margin"
+        android:dividerHeight="@dimen/topic_list_vertical_spacing"
+        android:divider="@color/white"
+        android:layout_below="@+id/add_guide_bar"
+        android:gravity="center"
+        style="?attr/topicGuideList"/>
 
-   </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/add_guide_bar"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/gallery_top_bar_height"
+        android:layout_alignParentTop="true"
+        android:background="@color/fireswing_grey"
+        android:clickable="true">
 
-   <TextView
-           android:id="@+id/no_guides_text"
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_below="@+id/add_guide_bar"
-           android:layout_marginTop="16dp"
-           android:layout_centerHorizontal="true"
-           android:text="@string/no_guides_text"
-           android:visibility="gone"/>
+        <TextView
+            android:id="@+id/add_guide_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_add_list_item"
+            android:drawablePadding="4dp"
+            android:gravity="center"
+            android:text="@string/add_guide"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:textColor="@color/dozuki_grey"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/no_guides_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/add_guide_bar"
+        android:layout_marginTop="16dp"
+        android:layout_centerHorizontal="true"
+        android:text="@string/no_guides_text"
+        android:visibility="gone"/>
 
 </RelativeLayout>

@@ -16,13 +16,14 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.guide.UserGuide;
 import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+import com.google.gson.Gson;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
@@ -33,9 +34,9 @@ import java.util.List;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
- *
+ * <p/>
  * Future plans: Store the results in a database for later viewing.
- *               Add functionality to download multiple guides including images.
+ * Add functionality to download multiple guides including images.
  */
 public class APIService extends Service {
    private interface Responder {
@@ -131,7 +132,7 @@ public class APIService extends Service {
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
-      final APICall apiCall = (APICall)extras.getSerializable(API_CALL);
+      final APICall apiCall = (APICall) extras.getSerializable(API_CALL);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -244,35 +245,14 @@ public class APIService extends Service {
    }
 
 
-   public static APICall getCreateGuideAPICall(UserGuide guide) {
-      JSONObject requestBody = new JSONObject();
-
-      try {
-         requestBody.put("topic", guide.getTopic());
-         requestBody.put("type", guide.getType());
-         requestBody.put("subject", guide.getSubject());
-         requestBody.put("title", guide.getTitle());
-         requestBody.put("summary", guide.getSummary());
-         requestBody.put("introduction", guide.getIntro());
-      } catch (JSONException e) {
-         return null;
-      }
-
-      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
+   public static APICall getCreateGuideAPICall(GuideInfo guide) {
+      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, new Gson().toJson(guide));
    }
 
-   public static APICall getRemoveGuideAPICall(UserGuide guide) {
-      JSONObject requestBody = new JSONObject();
-
-      try {
-         requestBody.put("revisionid", guide.getRevisionid());
-      } catch (JSONException e) {
-         return null;
-      }
-
-      return new APICall(APIEndpoint.DELETE_GUIDE, guide.getGuideid() + "?revisionid=" + guide.getRevisionid(), requestBody.toString());
+   public static APICall getRemoveGuideAPICall(GuideInfo guide) {
+      return new APICall(APIEndpoint.DELETE_GUIDE, guide.mGuideid + "?revisionid=" + guide.mRevisionid, "");
    }
-   
+
    /**
     * TODO: Pass in entire guide so parameters can easily be changed later.
     */
@@ -292,18 +272,18 @@ public class APIService extends Service {
       }
 
       return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid + "?revisionid="
-              + revisionid, requestBody.toString());
+       + revisionid, requestBody.toString());
    }
 
 
    public static APICall getPublishGuideAPICall(int guideid, int revisionid) {
-      return new APICall(APIEndpoint.PUBLISH_GUIDE, "" + guideid +  "/public" + "?revisionid="
-              + revisionid, "");
+      return new APICall(APIEndpoint.PUBLISH_GUIDE, "" + guideid + "/public" + "?revisionid="
+       + revisionid, "");
    }
 
    public static APICall getUnPublishGuideAPICall(int guideid, int revisionid) {
-      return new APICall(APIEndpoint.UNPUBLISH_GUIDE, "" + guideid +  "/public" + "?revisionid="
-              + revisionid, "");
+      return new APICall(APIEndpoint.UNPUBLISH_GUIDE, "" + guideid + "/public" + "?revisionid="
+       + revisionid, "");
    }
 
    public static APICall getEditStepAPICall(GuideStep step, int guideid) {
@@ -318,7 +298,7 @@ public class APIService extends Service {
       }
 
       return new APICall(APIEndpoint.UPDATE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
-         + step.getRevisionid(), requestBody.toString());
+       + step.getRevisionid(), requestBody.toString());
    }
 
    public static APICall getAddStepAPICall(GuideStep step, int guideid, int stepPosition, int revisionid) {
@@ -334,7 +314,7 @@ public class APIService extends Service {
       }
 
       return new APICall(APIEndpoint.ADD_GUIDE_STEP, "" + guideid + "/steps" + "?revisionid=" + revisionid,
-         requestBody.toString());
+       requestBody.toString());
    }
 
    public static APICall getRemoveStepAPICall(int guideid, int guideRevisionID, GuideStep step) {
@@ -347,7 +327,7 @@ public class APIService extends Service {
       }
 
       return new APICall(APIEndpoint.DELETE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
-         + step.getRevisionid(), requestBody.toString());
+       + step.getRevisionid(), requestBody.toString());
    }
 
    public static APICall getStepReorderAPICall(Guide guide) {
@@ -360,7 +340,7 @@ public class APIService extends Service {
       }
 
       return new APICall(APIEndpoint.REORDER_GUIDE_STEPS, "" + guide.getGuideid() + "/steporder" + "?revisionid="
-         + guide.getRevisionid(), requestBody.toString());
+       + guide.getRevisionid(), requestBody.toString());
    }
 
    /**
@@ -391,11 +371,11 @@ public class APIService extends Service {
    public static APICall getUserImagesAPICall(String query) {
       return new APICall(APIEndpoint.USER_IMAGES, query);
    }
-   
+
    public static APICall getUserVideosAPICall(String query) {
       return new APICall(APIEndpoint.USER_VIDEOS, query);
    }
-   
+
    public static APICall getUserEmbedsAPICall(String query) {
       return new APICall(APIEndpoint.USER_EMBEDS, query);
    }
@@ -454,26 +434,26 @@ public class APIService extends Service {
 
    public static AlertDialog getListMediaErrorDialog(Context context, APIError error,
     APICall apiCall) {
-       switch (error.mType) {
-       case CONNECTION:
-          return getErrorDialog(context, error, apiCall);
-       default:
-          return getListMediaUnknownErrorDialog(context);
-       }
+      switch (error.mType) {
+         case CONNECTION:
+            return getErrorDialog(context, error, apiCall);
+         default:
+            return getListMediaUnknownErrorDialog(context);
+      }
    }
 
    public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext) {
       AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
       builder.setTitle(mContext.getString(R.string.media_error_title))
-         .setPositiveButton(mContext.getString(R.string.error_confirm),
-         new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               //kill the media activity, and have them try again later
-               //incase the server needs some rest
-               ((SherlockFragmentActivity)mContext).finish();
-               dialog.cancel();
-            }
-         });
+       .setPositiveButton(mContext.getString(R.string.error_confirm),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              //kill the media activity, and have them try again later
+              //incase the server needs some rest
+              ((SherlockFragmentActivity) mContext).finish();
+              dialog.cancel();
+           }
+        });
 
       return builder.create();
    }
@@ -482,21 +462,21 @@ public class APIService extends Service {
     final APICall apiCall, APIError error) {
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(error.mTitle)
-             .setMessage(error.mMessage)
-             .setPositiveButton(context.getString(R.string.try_again),
-              new DialogInterface.OnClickListener() {
-                 public void onClick(DialogInterface dialog, int id) {
-                    // Try performing the request again.
-                    context.startService(makeApiIntent(context, apiCall));
-                    dialog.dismiss();
-                 }
-              });
+       .setMessage(error.mMessage)
+       .setPositiveButton(context.getString(R.string.try_again),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              // Try performing the request again.
+              context.startService(makeApiIntent(context, apiCall));
+              dialog.dismiss();
+           }
+        });
 
       AlertDialog d = builder.create();
       d.setOnCancelListener(new OnCancelListener() {
          @Override
          public void onCancel(DialogInterface dialog) {
-            ((Activity)context).finish();
+            ((Activity) context).finish();
          }
       });
       return d;
@@ -506,19 +486,19 @@ public class APIService extends Service {
    private static AlertDialog createFatalErrorDialog(final Context context, APIError error) {
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(error.mTitle)
-              .setMessage(error.mMessage)
-              .setPositiveButton(context.getString(R.string.error_confirm),
-                      new DialogInterface.OnClickListener() {
-                         public void onClick(DialogInterface dialog, int id) {
-                            ((Activity)context).finish();
-                         }
-                      });
+       .setMessage(error.mMessage)
+       .setPositiveButton(context.getString(R.string.error_confirm),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              ((Activity) context).finish();
+           }
+        });
 
       AlertDialog d = builder.create();
       d.setOnCancelListener(new OnCancelListener() {
          @Override
          public void onCancel(DialogInterface dialog) {
-            ((Activity)context).finish();
+            ((Activity) context).finish();
          }
       });
       return d;
@@ -577,7 +557,7 @@ public class APIService extends Service {
                   // This auth token overrides all other requirements/auth tokens.
                   authToken = apiCall.mAuthToken;
                } else if (requireAuthentication(mSite, endpoint)) {
-                  User user = ((MainApplication)getApplicationContext()).getUser();
+                  User user = ((MainApplication) getApplicationContext()).getUser();
                   authToken = user.getAuthToken();
                }
 

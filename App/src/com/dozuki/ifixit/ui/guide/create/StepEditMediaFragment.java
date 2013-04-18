@@ -1,11 +1,10 @@
 package com.dozuki.ifixit.ui.guide.create;
 
-import android.content.ClipData;
-import android.content.ClipDescription;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
@@ -17,6 +16,7 @@ import com.dozuki.ifixit.util.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
 
 import java.util.ArrayList;
@@ -76,13 +76,13 @@ public class StepEditMediaFragment extends Fragment {
 
                     switch (which) {
                        case 0:
-                          intent = new Intent(getActivity(), GalleryActivity.class);
-                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+                          //intent = new Intent(getActivity(), GalleryActivity.class);
+                          //intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
 
                           break;
                        case 1:
-                          intent = new Intent(getActivity(), GalleryActivity.class);
-                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+                          //intent = new Intent(getActivity(), GalleryActivity.class);
+                          //intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
 
                           break;
                        default:
@@ -122,6 +122,11 @@ public class StepEditMediaFragment extends Fragment {
    public void setImages(ArrayList<APIImage> images) {
       mImages = images;
    }
+
+   public ArrayList<APIImage> getImages() {
+      return mImages;
+   }
+
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);

@@ -54,8 +54,9 @@ public abstract class Page implements PageTreeNode {
       return mData;
    }
 
-   public void setTitle(String title) {
+   public Page setTitle(String title) {
       mTitle = title;
+      return this;
    }
 
    public String getTitle() {

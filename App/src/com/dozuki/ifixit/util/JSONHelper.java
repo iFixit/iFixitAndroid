@@ -11,16 +11,16 @@ import com.dozuki.ifixit.model.guide.*;
 import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.lang.reflect.Type;
+import java.util.*;
 
 public class JSONHelper {
    /**
@@ -518,36 +518,33 @@ public class JSONHelper {
       return spantext;
    }
 
-   public static ArrayList<UserGuide> parseUserGuides(String json) throws JSONException {
-      JSONArray jGuideInfos = new JSONArray(json);
-      ArrayList<UserGuide> guideList = new ArrayList<UserGuide>();
+   public static ArrayList<GuideInfo> parseUserGuides(String json) {
 
-      for (int i = 0; i < jGuideInfos.length(); i++) {
-         guideList.add(parseUserGuideInfo(jGuideInfos.getJSONObject(i)));
-      }
+      Type userGuidesType = new TypeToken<Collection<GuideInfo>>(){}.getType();
+      Collection<GuideInfo> guideList = new Gson().fromJson(json, userGuidesType);
 
-      return guideList;
+      return new ArrayList<GuideInfo>(guideList);
    }
 
+   /*
    public static UserGuide parseUserGuideInfo(JSONObject json) throws JSONException {
 
-      UserGuide userGuide = new UserGuide();
+      GuideInfo guideInfo = new GuideInfo(json.getInt("guideid"));
 
-      userGuide.setGuideid(json.getInt("guideid"));
-      userGuide.setTopic(json.getString("category"));
-      userGuide.setTitle(json.getString("title"));
-      userGuide.setSubject(json.getString("subject"));
-      userGuide.setType(json.getString("type"));
-      userGuide.setPublished(json.getBoolean("public"));
-      userGuide.setUserName(json.getString("username"));
-      userGuide.setUserid(json.getInt("userid"));
-      userGuide.setRevisionid(json.getInt("revisionid"));
+      guideInfo.mTopic = json.getString("category");
+      guideInfo.mTitle = json.getString("title");
+      guideInfo.setSubject(json.getString("subject"));
+      guideInfo.setType(json.getString("type"));
+      guideInfo.setPublished(json.getBoolean("public"));
+      guideInfo.setUserName(json.getString("username"));
+      guideInfo.setUserid(json.getInt("userid"));
+      guideInfo.setRevisionid(json.getInt("revisionid"));
 
-      userGuide.setImage(parseImage(json, "image"));
+      guideInfo.setImage(parseImage(json, "image"));
 
-      return userGuide;
+      return guideInfo;
    }
-
+*/
    public static JSONArray createLineArray(ArrayList<StepLine> lines) throws JSONException {
 
       JSONArray array = new JSONArray();

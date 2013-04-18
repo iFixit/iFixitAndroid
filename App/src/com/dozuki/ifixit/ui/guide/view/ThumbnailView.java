@@ -135,7 +135,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
             mImageManager.displayImage(image.getSize(mImageSizes.getThumb()), (Activity) mContext, thumb);
 
             mThumbs.add(thumb);
-            Log.w("ThumbnailView", "Num Thumbs: " + mThumbs.size());
 
             this.addView(thumb, mThumbs.size() - 1);
          }

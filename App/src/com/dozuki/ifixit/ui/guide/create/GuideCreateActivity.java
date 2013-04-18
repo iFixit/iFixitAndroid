@@ -3,129 +3,135 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
-import com.actionbarsherlock.app.ActionBar;
+import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.model.guide.UserGuide;
 import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.app.Activity;
 
 import java.util.ArrayList;
 
 public class GuideCreateActivity extends IfixitActivity implements GuideIntroFragment.GuideCreateIntroListener {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    static int GUIDE_STEP_EDIT_REQUEST = 1;
+   private static final int MENU_CREATE_GUIDE = 3;
+
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String GUIDE_FOR_DELETE = "GUIDE_FOR_DELETE";
    private static String GUIDE_OBJECT_KEY = "GUIDE_OBJECT_KEY";
-   private static String GUIDE_PORTAL_FRAGMENT_TAG = "GUIDE_PORTAL_FRAGMENT_TAG";
-   private static String GUIDE_INTRO_FRAGMENT_TAG = "GUIDE_INTRO_FRAGMENT_TAG";
    public static String GUIDE_KEY = "GUIDE_KEY";
    private static final String LOADING = "LOADING";
-   private ActionBar mActionBar;
-   private GuidePortalFragment mGuidePortal;
-   private ArrayList<UserGuide> mGuideList = new ArrayList<UserGuide>();
+
+   private ArrayList<GuideInfo> mUserGuideList = new ArrayList<GuideInfo>();
    private boolean mShowingHelp;
-   private UserGuide mGuideForDelete;
-   private boolean mShowingDelete;
-   private boolean mIsLoading;
+   private GuideInfo mGuideForDelete;
+   private PullToRefreshListView mGuideListView;
+   private GuideCreateListAdapter mGuideListAdapter;
+   private Activity mActivity;
 
-   private OnBackStackChangedListener getListener() {
-      OnBackStackChangedListener result = new OnBackStackChangedListener() {
-         public void onBackStackChanged() {
-            FragmentManager manager = getSupportFragmentManager();
-
-            if (manager != null) {
-               Fragment currFrag = (Fragment) manager.findFragmentById(R.id.guide_create_fragment_container);
-
-               currFrag.onResume();
-            }
-         }
-      };
-
-      return result;
+   public ArrayList<GuideInfo> getGuideList() {
+      return mUserGuideList;
    }
 
-   public ArrayList<UserGuide> getGuideList() {
-      return mGuideList;
-   }
-
-   public void addGuide(UserGuide guide) {
-      mGuideList.add(guide);
+   public void addGuide(GuideInfo guide) {
+      mUserGuideList.add(guide);
    }
 
    @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setTheme(((MainApplication) getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle(((MainApplication) getApplication()).getSite().mTitle);
-      if (savedInstanceState != null) {
-         mGuideList = (ArrayList<UserGuide>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
-         mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-         mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
-         mGuideForDelete = (UserGuide) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
-         if (mShowingHelp) {
-            createHelpDialog().show();
-         }
-         mIsLoading = savedInstanceState.getBoolean(LOADING);
-      }
+
+      setTheme(MainApplication.get().getSiteTheme());
+      getSupportActionBar().setTitle(MainApplication.get().getSite().mTitle);
 
       setContentView(R.layout.guide_create);
 
-      getSupportFragmentManager().addOnBackStackChangedListener(getListener());
-      if (findViewById(R.id.guide_create_fragment_container) != null
-       && getSupportFragmentManager().findFragmentByTag(GUIDE_PORTAL_FRAGMENT_TAG) == null) {
-         mGuidePortal = new GuidePortalFragment();
-         getSupportFragmentManager().beginTransaction()
-          .add(R.id.guide_create_fragment_container, mGuidePortal, GUIDE_PORTAL_FRAGMENT_TAG).commit();
+      mActivity = this;
+
+      if (savedInstanceState != null) {
+         mUserGuideList = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
+         mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+         mGuideForDelete = (GuideInfo) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
+
+         if (mShowingHelp) {
+            createHelpDialog().show();
+         }
       } else {
-         mGuidePortal = (GuidePortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_PORTAL_FRAGMENT_TAG);
+         APIService.call(this, APIService.getUserGuidesAPICall());
       }
 
-      if (mShowingDelete && mGuideForDelete != null) {
-         createDeleteDialog(mGuideForDelete).show();
-      }
+      mGuideListAdapter = new GuideCreateListAdapter();
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(false);
+      mGuideListView = (PullToRefreshListView) findViewById(R.id.guide_create_listview);
+      mGuideListView.setAdapter(mGuideListAdapter);
 
+      mGuideListView.setEmptyView(findViewById(R.layout.guide_create_empty_guides_view));
+
+      mGuideListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
+         @Override
+         public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+            APIService.call(mActivity, APIService.getUserGuidesAPICall());
+         }
+      });
    }
 
    @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case MENU_CREATE_GUIDE:
+            createGuide();
+            break;
+      }
+
+      return super.onOptionsItemSelected(item);
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      MenuItem overflowItem = menu.add(0, MENU_CREATE_GUIDE, 0, null);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+         overflowItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+      }
+
+      overflowItem.setIcon(R.drawable.ic_menu_add_guide);
+      return true;
+   }
+
+
+   @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
-      savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mGuideList);
+      savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mUserGuideList);
       savedInstanceState.putSerializable(GUIDE_FOR_DELETE, mGuideForDelete);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
-      savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
-      savedInstanceState.putBoolean(LOADING, mIsLoading);
       super.onSaveInstanceState(savedInstanceState);
    }
 
    @Subscribe
    public void onGuideCreated(APIEvent.CreateGuide event) {
       if (!event.hasError()) {
-         UserGuide userGuide = new UserGuide();
-         Guide guideObject = event.getResult();
-         mGuidePortal.toggleNoGuidesText(false);
-         userGuide.setGuideid(guideObject.getGuideid());
-         userGuide.setImage(guideObject.getIntroImage());
-         userGuide.setTitle(guideObject.getTitle());
-         userGuide.setPublished(guideObject.getPublic());
-         userGuide.setRevisionid(guideObject.getRevisionid());
-         mGuideList.add(userGuide);
-         launchStepEditOnNewGuide(guideObject);
+         Guide guide = event.getResult();
+
+         launchStepEditOnNewGuide(guide);
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
@@ -136,7 +142,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    public boolean finishActivityIfLoggedOut() {
       return true;
    }
-
+/*
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
@@ -146,7 +152,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
             if (guide == null) {
                return;
             }
-            for (UserGuide g : mGuideList) {
+            for (GuideInfo g : mUserGuideList) {
                if (g.getGuideid() == guide.getGuideid()) {
                   g.setRevisionid(guide.getRevisionid());
                   g.setTitle(guide.getTitle());
@@ -155,19 +161,34 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
             }
          }
       }
+   }*/
+
+   @Subscribe
+   public void onUserGuides(APIEvent.UserGuides event) {
+      if (!event.hasError()) {
+         mUserGuideList.clear();
+         mUserGuideList.addAll(event.getResult());
+
+         mGuideListAdapter.notifyDataSetChanged();
+
+         mGuideListView.onRefreshComplete();
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(this, event.getError(), null).show();
+      }
    }
 
    @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
       if (!event.hasError()) {
          Guide guide = event.getResult();
-         for (UserGuide g : mGuideList) {
-            if (g.getGuideid() == guide.getGuideid()) {
-               g.setRevisionid(guide.getRevisionid());
+         for (GuideInfo userGuide : mUserGuideList) {
+            if (userGuide.mGuideid == guide.getGuideid()) {
+               userGuide.mRevisionid = guide.getRevisionid();
+               userGuide.mPublic = guide.getPublic();
                break;
             }
          }
-         hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
@@ -178,36 +199,16 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    public void onDeleteGuide(APIEvent.DeleteGuide event) {
       if (!event.hasError()) {
          getGuideList().remove(mGuideForDelete);
-         if (getGuideList().isEmpty()) {
-            mGuidePortal.toggleNoGuidesText(true);
-         }
-         mGuideForDelete = null;
-         hideLoading();
-         mGuidePortal.invalidateViews();
+
+         mGuideListAdapter.notifyDataSetChanged();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
 
-   public void showLoading() {
-      getSupportFragmentManager().beginTransaction()
-       .add(R.id.guide_create_fragment_container, new LoadingFragment(), "loading").addToBackStack("loading")
-       .commit();
-
-      if (mGuidePortal != null) {
-         getSupportFragmentManager().beginTransaction().hide(mGuidePortal).addToBackStack(null).commit();
-      }
-      mIsLoading = true;
-   }
-
-   public void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-      mIsLoading = false;
-   }
-
    public void createGuide() {
-      if (mGuideList == null) {
+      if (mUserGuideList == null) {
          return;
       }
       launchGuideCreateIntro();
@@ -222,37 +223,33 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    @Override
    public void onFinishIntroInput(String device, String title, String summary,
     String intro, String guideType, String subject) {
-      getSupportFragmentManager().popBackStack();
-      showLoading();
-      UserGuide guideObject = new UserGuide();//(GuideItemID++);
-      guideObject.setTitle(title);
-      guideObject.setTopic(device);
-      guideObject.setType(guideType);
-      guideObject.setDevice(device);
-      guideObject.setSummary(summary);
-      guideObject.setSubject(subject);
-      guideObject.setIntroduction(intro);
-      APIService.call(this, APIService.getCreateGuideAPICall(guideObject));
+/*      showLoading();
+      Guide guide = new Guide();//(GuideItemID++);
+      guide.mTitle = (title);
+      guide.(device);
+      guide.setType(guideType);
+      guide.setDevice(device);
+      //guideObject.setSummary(summary);
+      guide.setSubject(subject);
+      guide.setIntroduction(intro);
+      APIService.call(this, APIService.getCreateGuideAPICall(guideObject)); */
    }
 
    public void launchStepEditOnNewGuide(Guide guideObject) {
       Intent intent = new Intent(this, StepsEditActivity.class);
       intent.putExtra(GuideCreateActivity.GUIDE_KEY, guideObject);
+
       GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
       item.setStepNum(0);
       item.setTitle(StepPortalFragment.DEFAULT_TITLE);
       item.addLine(new StepLine());
+
       ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
       initialStepList.add(item);
+
       intent.putExtra(StepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
       intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, 0);
       startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      hideLoading();
    }
 
    private AlertDialog createHelpDialog() {
@@ -278,22 +275,17 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       return dialog;
    }
 
-   public AlertDialog createDeleteDialog(UserGuide item) {
-      mGuideForDelete = item;
-      mShowingDelete = true;
+   public AlertDialog createDeleteDialog(GuideInfo item) {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.confirm_delete_title))
-       .setMessage(getString(R.string.confirm_delete_body) + " \"" + mGuideForDelete.getTitle() + "\"?")
+       .setMessage(getString(R.string.confirm_delete_body) + " \"" + item.mTitle + "\"?")
        .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
              APIService.call(GuideCreateActivity.this, APIService.getRemoveGuideAPICall(mGuideForDelete));
-             showLoading();
-             mShowingDelete = false;
              dialog.cancel();
           }
        }).setNegativeButton(getString(R.string.confirm_delete_cancel), new DialogInterface.OnClickListener() {
          public void onClick(DialogInterface dialog, int id) {
-            mShowingDelete = false;
             mGuideForDelete = null;
          }
       });
@@ -302,11 +294,44 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
-            mShowingDelete = false;
          }
       });
 
       return dialog;
    }
 
+   public class GuideCreateListAdapter extends BaseAdapter {
+
+      @Override
+      public int getCount() {
+         return mUserGuideList.size();
+      }
+
+      @Override
+      public Object getItem(int position) {
+         return mUserGuideList.get(position);
+      }
+
+      @Override
+      public long getItemId(int position) {
+         return position;
+      }
+
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+         GuideListItem itemView;
+         GuideInfo currItem = mUserGuideList.get(position);
+
+         if (convertView != null) {
+            itemView =  (GuideListItem) convertView;
+         } else {
+            Log.w("GuideCreateActivity", mUserGuideList.get(position).mTitle);
+            itemView = new GuideListItem(parent.getContext(), mActivity);
+         }
+
+         itemView.setRowData(currItem);
+
+         return itemView;
+      }
+   }
 }

@@ -1,10 +1,12 @@
 package com.dozuki.ifixit.util;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.io.Serializable;
 
 public class APIImage implements Serializable {
-   public int mId;
-   public String mBaseUrl;
+   @SerializedName("id") public int mId;
+   @SerializedName("original") public String mBaseUrl;
 
    public APIImage() {
       this(JSONHelper.NULL_INT, null);

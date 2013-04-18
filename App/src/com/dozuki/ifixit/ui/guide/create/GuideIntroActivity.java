@@ -28,8 +28,7 @@ import org.holoeverywhere.widget.Button;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideIntroActivity extends IfixitActivity implements PageFragmentCallbacks,
- ReviewFragment.Callbacks,
+public class GuideIntroActivity extends IfixitActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks,
  ModelCallbacks {
    private ViewPager mPager;
    private MyPagerAdapter mPagerAdapter;
@@ -45,6 +44,63 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
 
    private List<Page> mCurrentPageSequence;
    private StepPagerStrip mStepPagerStrip;
+
+   private View.OnClickListener mNextButtonClickListener = new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+         if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
+            DialogFragment dg = new DialogFragment() {
+               @Override
+               public Dialog onCreateDialog(Bundle savedInstanceState) {
+                  return new AlertDialog.Builder(getActivity())
+                   .setMessage(R.string.create_guide_intro_button)
+                   .setPositiveButton(R.string.create_guide_intro_button, null)
+                   .setNegativeButton(android.R.string.cancel, null)
+                   .create();
+               }
+            };
+            dg.show(getSupportFragmentManager(), "place_order_dialog");
+         } else {
+            if (mEditingAfterReview) {
+               mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
+            } else {
+               mPager.setCurrentItem(mPager.getCurrentItem() + 1);
+            }
+         }
+      }
+   };
+
+   private View.OnClickListener mPrevButtonClickListener = new View.OnClickListener() {
+      @Override
+      public void onClick(View view) {
+         mPager.setCurrentItem(mPager.getCurrentItem() - 1);
+      }
+   };
+
+   private ViewPager.SimpleOnPageChangeListener mPageChangeListener = new ViewPager.SimpleOnPageChangeListener() {
+      @Override
+      public void onPageSelected(int position) {
+         mStepPagerStrip.setCurrentPage(position);
+
+         if (mConsumePageSelectedEvent) {
+            mConsumePageSelectedEvent = false;
+            return;
+         }
+
+         mEditingAfterReview = false;
+         updateBottomBar();
+      }
+   };
+
+   private StepPagerStrip.OnPageSelectedListener mPageSelectedListener = new StepPagerStrip.OnPageSelectedListener() {
+      @Override
+      public void onPageStripSelected(int position) {
+         position = Math.min(mPagerAdapter.getCount() - 1, position);
+         if (mPager.getCurrentItem() != position) {
+            mPager.setCurrentItem(position);
+         }
+      }
+   };
 
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -63,72 +119,24 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
 
    protected void initWizard() {
       mWizardModel = new GuideIntroWizardModel(this);
+
       mWizardModel.registerListener(this);
       mCurrentPageSequence = mWizardModel.getCurrentPageSequence();
 
-      mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
       mPager = (ViewPager) findViewById(R.id.pager);
-      mPager.setAdapter(mPagerAdapter);
       mStepPagerStrip = (StepPagerStrip) findViewById(R.id.strip);
-      mStepPagerStrip.setOnPageSelectedListener(new StepPagerStrip.OnPageSelectedListener() {
-         @Override
-         public void onPageStripSelected(int position) {
-            position = Math.min(mPagerAdapter.getCount() - 1, position);
-            if (mPager.getCurrentItem() != position) {
-               mPager.setCurrentItem(position);
-            }
-         }
-      });
 
       mNextButton = (Button) findViewById(R.id.next_button);
       mPrevButton = (Button) findViewById(R.id.prev_button);
 
-      mPager.setOnPageChangeListener(new ViewPager.SimpleOnPageChangeListener() {
-         @Override
-         public void onPageSelected(int position) {
-            mStepPagerStrip.setCurrentPage(position);
+      mStepPagerStrip.setOnPageSelectedListener(mPageSelectedListener);
 
-            if (mConsumePageSelectedEvent) {
-               mConsumePageSelectedEvent = false;
-               return;
-            }
+      mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+      mPager.setAdapter(mPagerAdapter);
+      mPager.setOnPageChangeListener(mPageChangeListener);
 
-            mEditingAfterReview = false;
-            updateBottomBar();
-         }
-      });
-
-      mNextButton.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View view) {
-            if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
-               DialogFragment dg = new DialogFragment() {
-                  @Override
-                  public Dialog onCreateDialog(Bundle savedInstanceState) {
-                     return new AlertDialog.Builder(getActivity())
-                      .setMessage(R.string.create_guide_intro_button)
-                      .setPositiveButton(R.string.create_guide_intro_button, null)
-                      .setNegativeButton(android.R.string.cancel, null)
-                      .create();
-                  }
-               };
-               dg.show(getSupportFragmentManager(), "place_order_dialog");
-            } else {
-               if (mEditingAfterReview) {
-                  mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
-               } else {
-                  mPager.setCurrentItem(mPager.getCurrentItem() + 1);
-               }
-            }
-         }
-      });
-
-      mPrevButton.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View view) {
-            mPager.setCurrentItem(mPager.getCurrentItem() - 1);
-         }
-      });
+      mNextButton.setOnClickListener(mNextButtonClickListener);
+      mPrevButton.setOnClickListener(mPrevButtonClickListener);
 
       onPageTreeChanged();
       updateBottomBar();

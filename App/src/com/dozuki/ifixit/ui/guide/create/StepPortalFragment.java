@@ -224,7 +224,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
 
    private void launchGuideEditIntro() {
       GuideIntroFragment newFragment = new GuideIntroFragment();
-      newFragment.setGuideOBject(mGuide);
+      newFragment.setGuideObject(mGuide);
       FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
       transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
       transaction.addToBackStack(null);

@@ -6,8 +6,8 @@ import com.dozuki.ifixit.model.gallery.UserEmbedList;
 import com.dozuki.ifixit.model.gallery.UserImageList;
 import com.dozuki.ifixit.model.gallery.UserVideoList;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.guide.UserGuide;
 import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
@@ -32,7 +32,7 @@ public abstract class APIEvent<T> {
    public static class DeleteImage extends APIEvent<String> {}
    public static class DeleteGuide extends APIEvent<String> {}
    public static class PublishStatus extends APIEvent<Guide> {}
-   public static class UserGuides extends APIEvent<ArrayList<UserGuide>> {}
+   public static class UserGuides extends APIEvent<ArrayList<GuideInfo>> {}
    public static class GuideForEdit extends APIEvent<Guide> {}
    public static class CreateGuide extends APIEvent<Guide> {}
    public static class StepSave extends APIEvent<GuideStep> {}

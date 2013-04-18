@@ -64,13 +64,7 @@ public class StepEditFragment extends Fragment {
       mStepObject.getLines().addAll(mEditBulletFrag.getLines());
 
       mStepObject.setTitle(mEditBulletFrag.getTitle());
-
-      //mStepObject.setImages(mEditMediaFrag.getImageIDs());
-      //mStepObject.getImages().clear();
-
-      /*for (APIImage si : mEditMediaFrag.getImageIDs()) {
-         mStepObject.addImage(si);
-      }*/
+      mStepObject.setImages(mEditMediaFrag.getImages());
 
       return mStepObject;
    }

@@ -97,7 +97,7 @@ public class GuideIntroFragment extends Fragment {
       savedInstanceState.putString(INRODUCTION_KEY, mIntroduction.getText().toString());
    }
 
-   public void setGuideOBject(Guide obj) {
+   public void setGuideObject(Guide obj) {
       mGuideObject = obj;
    }
 

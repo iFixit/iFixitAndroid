@@ -18,7 +18,6 @@ package com.dozuki.ifixit.model.guide.wizard;
 
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.ui.guide.create.wizard.TopicNameFragment;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import java.util.ArrayList;
 /**
  * A page asking for a name and an email.
  */
-public class TopicNamePage extends Page {
+public class TopicNamePage extends EditTextPage {
    public static final String TOPIC_DATA_KEY = "name";
 
    protected String mTopicName = "Topic";
@@ -35,19 +34,6 @@ public class TopicNamePage extends Page {
 
    public TopicNamePage(ModelCallbacks callbacks) {
       super(callbacks);
-
-      MainApplication app = MainApplication.get();
-
-      if (app.getSite().mName.compareTo("ifixit") == 0) {
-         mTopicName = "Device";
-      }
-
-      setTitle(mTopicName + " Name");
-
-      setDescription("What " + mTopicName.toLowerCase() + " are you working on? For example, " +
-       "is it a \"iPhone 4\" or a \"Kenmore " +
-       "Washing Machine\"?  If the " + mTopicName.toLowerCase() + " already exists, be sure to select it from the prepopulated " +
-       "list");
    }
 
    @Override
@@ -73,13 +59,5 @@ public class TopicNamePage extends Page {
       mTopics = new ArrayList<String>(topics);
 
       return this;
-   }
-
-   public void setDescription(String description) {
-      mDescription = description;
-   }
-
-   public String getDescription() {
-      return mDescription;
    }
 }

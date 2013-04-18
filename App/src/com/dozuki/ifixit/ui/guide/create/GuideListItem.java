@@ -10,126 +10,153 @@ import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
-import android.widget.CompoundButton.OnCheckedChangeListener;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.UserGuide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.app.Activity;
 
 public class GuideListItem extends RelativeLayout implements AnimationListener {
    private static final int ANIMATION_DURATION = 300;
+
+   private static final boolean STATE_OPEN = true;
+   private static final boolean STATE_CLOSED = false;
+
    private TextView mTitleView;
    private ImageView mThumbnail;
    private TextView mDeleteButton;
    private TextView mEditButton;
    private TextView mPublishText;
-   private TextView mPublishButtonText;
+   private TextView mPublishButton;
    private ToggleButton mToggleEdit;
    private LinearLayout mEditBar;
-   private ImageManager mImageManager;
-   private GuidePortalFragment mPortalRef;
-   private boolean mEditBarVisible = false;
-   private UserGuide mGuide;
+   private Activity mActivity;
+   private final RelativeLayout mUpperSection;
 
-   public GuideListItem(Context context, ImageManager imageManager, final GuidePortalFragment portalRef,
-                        UserGuide gObject) {
+   private ImageManager mImageManager;
+
+   private boolean mEditBarVisible = false;
+   private GuideInfo mGuideInfo;
+
+   private OnClickListener mEditClickListener = new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+         Intent intent = new Intent(mActivity, StepsActivity.class);
+         intent.putExtra(StepsActivity.GUIDE_KEY, mGuideInfo.mGuideid);
+         mActivity.startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
+      }
+   };
+
+   private OnClickListener mPublishClickListener = new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+         if (!mGuideInfo.mPublic) {
+            APIService.call(mActivity,
+             APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+         } else {
+            APIService.call(mActivity,
+             APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+         }
+         setPublished(!mGuideInfo.mPublic);
+      }
+   };
+
+   private OnClickListener mDeleteClickListener = new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+         ((GuideCreateActivity)mActivity).createDeleteDialog(mGuideInfo);
+      }
+   };
+
+   private OnClickListener mUpperSectionListener = new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+         mToggleEdit.toggle();
+      }
+   };
+
+
+   public GuideListItem(Context context, Activity activity) {
       super(context);
-      mPortalRef = portalRef;
-      mImageManager = imageManager;
-      mGuide = gObject;
+      mImageManager = MainApplication.get().getImageManager();
+      mActivity = activity;
+
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.guide_create_item, this, true);
+
       mTitleView = (TextView) findViewById(R.id.guide_create_item_title);
       mThumbnail = (ImageView) findViewById(R.id.guide_create_item_thumbnail);
-      mEditBar = (LinearLayout) findViewById(R.id.guide_create_item_edit_section);
       mToggleEdit = (ToggleButton) findViewById(R.id.guide_create_toggle_edit);
-      mToggleEdit.setChecked(mGuide.getEditMode());
-      mToggleEdit.setOnCheckedChangeListener(new OnCheckedChangeListener() {
+      mUpperSection = (RelativeLayout) findViewById(R.id.guide_create_upper_section);
+      mDeleteButton = (TextView) findViewById(R.id.guide_create_item_delete);
+      mEditBar = (LinearLayout) findViewById(R.id.guide_create_item_edit_section);
+      mEditButton = (TextView) findViewById(R.id.guide_create_item_edit);
+      mPublishText = (TextView) findViewById(R.id.guide_create_item_publish_status);
+      mPublishButton = (TextView) findViewById(R.id.guide_create_item_publish);
+
+      mToggleEdit.setChecked(STATE_CLOSED);
+      mToggleEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mGuide.setEditMode(isChecked);
-            portalRef.onItemSelected(mGuide.getGuideid(), isChecked);
-            setEditMode(isChecked, true, mToggleEdit, mEditBar);
+            toggleListItem(isChecked, true, mToggleEdit, mEditBar);
          }
       });
-      RelativeLayout upperSection = (RelativeLayout) findViewById(R.id.guide_create_upper_section);
-      upperSection.setOnClickListener(new OnClickListener() {
+
+      this.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
             mToggleEdit.toggle();
          }
       });
-      mDeleteButton = (TextView) findViewById(R.id.guide_create_item_delete);
-      mDeleteButton.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            mPortalRef.deleteGuide(mGuide);
-         }
-      });
-      mEditButton = (TextView) findViewById(R.id.guide_create_item_edit);
-      mEditButton.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            Intent intent = new Intent(mPortalRef.getActivity(), StepsActivity.class);
-            intent.putExtra(StepsActivity.GUIDE_KEY, mGuide.getGuideid());
-            mPortalRef.getActivity().startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
-         }
-      });
-      mPublishText = (TextView) findViewById(R.id.guide_create_item_publish_status);
-      mPublishButtonText = (TextView) findViewById(R.id.guide_create_item_publish);
-      mPublishButtonText.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            if(!mGuide.getPublished())   {
-               ((GuideCreateActivity) mPortalRef.getActivity()).showLoading();
-               APIService.call((Activity) mPortalRef.getActivity(), APIService.getPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
-            }  else {
-               ((GuideCreateActivity) mPortalRef.getActivity()).showLoading();
-               APIService.call((Activity) mPortalRef.getActivity(), APIService.getUnPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
-            }
-            setPublished(!mGuide.getPublished());
-         }
-      });
-      if (mGuide.getPublished()) {
-         setPublished(true);
-      }
-      if (mGuide.getEditMode()) {
-         setEditMode(true, false, mToggleEdit, mEditBar);
-      }
+
+      mUpperSection.setOnClickListener(mUpperSectionListener);
+      mDeleteButton.setOnClickListener(mDeleteClickListener);
+      mEditButton.setOnClickListener(mEditClickListener);
+      mPublishButton.setOnClickListener(mPublishClickListener);
+
+      //toggleListItem(true, false, mToggleEdit, mEditBar);
    }
 
-   public void setGuideObject(UserGuide obj) {
-      mGuide = obj;
+   public void setRowData(GuideInfo guideInfo) {
+
+      mGuideInfo = guideInfo;
+      setTag(mGuideInfo.mGuideid);
+
+      mTitleView.setText(mGuideInfo.mTitle);
+
+      String image = mGuideInfo.mImage.getSize(".thumbnail");
+
+      if (image != null && mThumbnail != null) {
+         mImageManager.displayImage(image, mActivity, mThumbnail);
+      }
+
+      setPublished(mGuideInfo.mPublic);
    }
 
    public void setPublished(boolean published) {
       if (published) {
-         Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_unpublish);
-         img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-         setPublishedText(Color.rgb(0, 191, 0), R.string.published);
-         setPublishedButton(img, R.string.unpublish);
+         buildPublishView(R.drawable.ic_list_item_unpublish, Color.rgb(0, 191, 0),
+          R.string.published, R.string.unpublish);
       } else {
-          Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
-         img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
-         setPublishedText(Color.RED, R.string.unpublished);
-         setPublishedButton(img, R.string.publish);
+         buildPublishView(R.drawable.ic_list_item_publish, Color.RED,
+          R.string.unpublished, R.string.publish);
       }
-      mGuide.setPublished(published);
    }
 
-   private void setPublishedText(int color, int text) {
-      mPublishText.setText(text);
+   private void buildPublishView(int drawable, int color, int textString, int buttonString) {
+      Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
+      img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
+
+      mPublishText.setText(textString);
       mPublishText.setTextColor(color);
+
+      mPublishButton.setCompoundDrawables(img, null, null, null);
+      mPublishButton.setText(buttonString);
    }
 
-   private void setPublishedButton(Drawable img, int text) {
-      mPublishButtonText.setCompoundDrawables(img, null, null, null);
-      mPublishButtonText.setText(text);
-   }
-
-   public void setEditMode(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
-      final LinearLayout mEditBar) {
+   public void toggleListItem(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
+    final LinearLayout mEditBar) {
       if (isChecked) {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
@@ -157,34 +184,15 @@ public class GuideListItem extends RelativeLayout implements AnimationListener {
       }
    }
 
-   public boolean editEnabled() {
-      return mEditBarVisible;
-   }
-
-   public void setChecked(boolean check) {
-      mToggleEdit.setChecked(check);
-   }
-
-   public void setGuideItem(String title, String image) {   
-      mTitleView.setText(title);
-     /* if(image != null) {
-         mImageManager.displayImage(image, mPortalRef.getActivity(), mThumbnail);
-      }*/
+   @Override
+   public void onAnimationStart(Animation animation) {
    }
 
    @Override
    public void onAnimationEnd(Animation animation) {
-      mPortalRef.invalidateViews();
    }
 
    @Override
    public void onAnimationRepeat(Animation animation) {
-
    }
-
-   @Override
-   public void onAnimationStart(Animation animation) {
-
-   }
-
 }
