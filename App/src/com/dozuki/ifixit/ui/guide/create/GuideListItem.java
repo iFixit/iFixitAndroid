@@ -99,6 +99,8 @@ public class GuideListItem extends RelativeLayout implements AnimationListener {
       mToggleEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            mGuideInfo.mEditMode = isChecked;
+            ((GuideCreateActivity)mActivity).onItemSelected(mGuideInfo.mGuideid, isChecked);
             toggleListItem(isChecked, true, mToggleEdit, mEditBar);
          }
       });
@@ -114,8 +116,6 @@ public class GuideListItem extends RelativeLayout implements AnimationListener {
       mDeleteButton.setOnClickListener(mDeleteClickListener);
       mEditButton.setOnClickListener(mEditClickListener);
       mPublishButton.setOnClickListener(mPublishClickListener);
-
-      //toggleListItem(true, false, mToggleEdit, mEditBar);
    }
 
    public void setRowData(GuideInfo guideInfo) {
@@ -182,6 +182,10 @@ public class GuideListItem extends RelativeLayout implements AnimationListener {
             ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
          }
       }
+   }
+
+   public void setChecked(boolean check) {
+      mToggleEdit.setChecked(check);
    }
 
    @Override

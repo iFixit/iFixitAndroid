@@ -33,6 +33,8 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    static int GUIDE_STEP_EDIT_REQUEST = 1;
    private static final int MENU_CREATE_GUIDE = 3;
+   private static final int NO_ID = -1;
+
 
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
@@ -40,6 +42,7 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    private static String GUIDE_OBJECT_KEY = "GUIDE_OBJECT_KEY";
    public static String GUIDE_KEY = "GUIDE_KEY";
    private static final String LOADING = "LOADING";
+   private int mCurOpenGuideObjectID;
 
    private ArrayList<GuideInfo> mUserGuideList = new ArrayList<GuideInfo>();
    private boolean mShowingHelp;
@@ -333,5 +336,25 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
 
          return itemView;
       }
+   }
+
+   public void onItemSelected(int id, boolean sel) {
+      if (!sel) {
+         mCurOpenGuideObjectID = NO_ID;
+         return;
+      }
+      if (mCurOpenGuideObjectID != NO_ID) {
+         GuideListItem view = ((GuideListItem) mGuideListView.findViewWithTag(mCurOpenGuideObjectID));
+         if (view != null) {
+            view.setChecked(false);
+         }
+         for (int i = 0; i < mUserGuideList.size(); i++) {
+
+            if (mUserGuideList.get(i).mGuideid == mCurOpenGuideObjectID) {
+               mUserGuideList.get(i).mEditMode = false;
+            }
+         }
+      }
+      mCurOpenGuideObjectID = id;
    }
 }

@@ -19,6 +19,8 @@ public class GuideInfo implements Serializable {
    @SerializedName("public") public boolean mPublic;
    @SerializedName("image") public APIImage mImage;
 
+   public transient boolean mEditMode = false;
+
    public GuideInfo(int guideid) {
       mGuideid = guideid;
    }
