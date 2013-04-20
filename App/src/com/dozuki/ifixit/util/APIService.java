@@ -385,6 +385,11 @@ public class APIService extends Service {
        filePath);
    }
 
+   public static APICall getUploadImageToStepAPICall(String filePath) {
+      return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, null, null,
+       filePath);
+   }
+
    public static APICall getDeleteImageAPICall(List<Integer> deleteList) {
       StringBuilder stringBuilder = new StringBuilder();
       String separator = "";

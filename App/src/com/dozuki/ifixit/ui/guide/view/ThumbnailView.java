@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
@@ -12,13 +11,11 @@ import android.view.View;
 import android.widget.ImageView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.util.APIImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.LinearLayout;
 
 import java.util.ArrayList;
@@ -40,6 +37,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private boolean mShowSingle = false;
    private boolean mCanEdit;
    private ArrayList<APIImage> mThumbnails;
+   private DisplayMetrics mDisplayMetrics;
+   private float mNavigationHeight;
 
    public ThumbnailView(Context context) {
       super(context);
@@ -59,32 +58,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       if (mCanEdit) {
          mAddThumbButton = (ImageView) findViewById(R.id.add_thumbnail_icon);
          mAddThumbButton.setVisibility(VISIBLE);
-         mAddThumbButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-
-               builder.setTitle("Attach media from")
-                .setItems(R.array.step_image_actions, new DialogInterface.OnClickListener() {
-                   @Override
-                   public void onClick(DialogInterface dialog, int which) {
-                      Intent intent;
-                      switch (which) {
-                         case 0:
-
-                            break;
-                         case 1:
-                            intent = new Intent(mContext, GalleryActivity.class);
-                            intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-                            mContext.startActivity(intent);
-                            break;
-                      }
-                   }
-                });
-               builder.show();
-            }
-         });
-
       }
 
       a.recycle();
@@ -103,12 +76,19 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    }
 
+   public void setAddThumbButtonOnClick(OnClickListener listener) {
+      if (mCanEdit) {
+         mAddThumbButton.setOnClickListener(listener);
+      }
+   }
+
    @Override
    public void onClick(View v) {
-      for (ImageView image : mThumbs)
+      for (ImageView image : mThumbs) {
          if (v.getId() == image.getId()) {
             setCurrentThumb((String) v.getTag());
          }
+      }
    }
 
    public void setImageSizes(ImageSizes imageSizes) {
@@ -122,23 +102,30 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       }
 
       if (!images.isEmpty()) {
-         if (images.size() > 2 && mAddThumbButton != null) {
-            mAddThumbButton.setVisibility(GONE);
-         }
          for (APIImage image : images) {
-            LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
-            thumb.setOnClickListener(this);
-            thumb.setVisibility(VISIBLE);
-            thumb.setTag(image.mBaseUrl);
-
-            mImageManager.displayImage(image.getSize(mImageSizes.getThumb()), (Activity) mContext, thumb);
-
-            mThumbs.add(thumb);
-
-            this.addView(thumb, mThumbs.size() - 1);
+            addThumb(image);
          }
       }
+   }
+
+   public void addThumb(APIImage image) {
+      LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
+      thumb.setOnClickListener(this);
+      thumb.setVisibility(VISIBLE);
+      thumb.setTag(image.mBaseUrl);
+
+      mImageManager.displayImage(image.getSize(mImageSizes.getThumb()), (Activity) mContext, thumb);
+
+      mThumbs.add(thumb);
+
+      this.addView(thumb, mThumbs.size() - 1);
+
+      if (mThumbs.size() > 2 && mAddThumbButton != null) {
+         mAddThumbButton.setVisibility(GONE);
+      }
+
+      fitToSpace();
    }
 
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
@@ -152,48 +139,52 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mMainImage.setTag(url);
    }
 
-   public void fitToSpace(DisplayMetrics metrics, float padding) {
+   public void setDisplayMetrics(DisplayMetrics metrics) {
+      mDisplayMetrics = metrics;
+   }
+
+   public void fitToSpace() {
       float thumbnailHeight = 0f;
       float thumbnailWidth = 0f;
       float width = 0f;
       float height = 0f;
       boolean hasThumbnail = mThumbs.size() > 0;
 
-      padding += viewPadding(R.dimen.page_padding);
+      mNavigationHeight += viewPadding(R.dimen.page_padding);
 
-      padding += viewPadding(R.dimen.guide_thumbnail_padding);
+      mNavigationHeight += viewPadding(R.dimen.guide_thumbnail_padding);
 
       if (inPortraitMode()) {
          if (hasThumbnail && mShowSingle) {
-            padding += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
+            mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
             // Main image is 4/5ths of the available screen height
-            width = (((metrics.widthPixels - padding) / 5f) * 4f);
+            width = (((mDisplayMetrics.widthPixels - mNavigationHeight) / 5f) * 4f);
             height = width * (3f / 4f);
 
             // Screen height minus everything else that occupies horizontal space
-            thumbnailWidth = (metrics.widthPixels - width - padding);
+            thumbnailWidth = (mDisplayMetrics.widthPixels - width - mNavigationHeight);
             thumbnailHeight = thumbnailWidth * (3f / 4f);
 
             fitProgressIndicator((width - .5f) + thumbnailWidth, height);
          } else {
             setVisibility(View.GONE);
 
-            width = metrics.widthPixels - padding;
+            width = mDisplayMetrics.widthPixels - mNavigationHeight;
             height = width * (3f / 4f);
 
             fitProgressIndicator(width, height);
          }
 
       } else {
-         padding += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
 
          // Main image is 4/5ths of the available screen height
-         height = (((metrics.heightPixels - padding) / 5f) * 4f);
+         height = (((mDisplayMetrics.heightPixels - mNavigationHeight) / 5f) * 4f);
          width = height * (4f / 3f);
 
          // Screen height minus everything else that occupies vertical space
-         thumbnailHeight = (metrics.heightPixels - height - padding);
+         thumbnailHeight = (mDisplayMetrics.heightPixels - height - mNavigationHeight);
          thumbnailWidth = (thumbnailHeight * (4f / 3f));
 
          fitProgressIndicator(width, (height - .5f) + thumbnailHeight);
@@ -213,10 +204,17 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       }
    }
 
+   public void setNavigationHeight(float padding) {
+      mNavigationHeight = padding;
+   }
+
    public void setThumbnailDimensions(float height, float width) {
       for (ImageView thumb : mThumbs) {
-         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams((int) (width + .5f), (int) (height + .5f),
-          Gravity.NO_GRAVITY);
+         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+          (int) (width + .5f),
+          (int) (height + .5f),
+          Gravity.NO_GRAVITY
+         );
 
          if (!inPortraitMode()) {
             lp.setMargins(0, 0, 16, 0);

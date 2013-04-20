@@ -383,7 +383,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             item.addLine(new StepLine());
             item.setStepNum(mPagePosition + 1);
             mStepList.add(mPagePosition + 1, item);
-            int pos = mPagePosition;
             for (int i = 0; i < mStepList.size(); i++) {
                mStepList.get(i).setStepNum(i);
             }
@@ -393,7 +392,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             mPager.invalidate();
             titleIndicator.invalidate();
 
-            mPager.setCurrentItem(pos + 1, false);
+            mPager.setCurrentItem(mPagePosition + 1, false);
             break;
          case android.R.id.home:
             finishEdit();

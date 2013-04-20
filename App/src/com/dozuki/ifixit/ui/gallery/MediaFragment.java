@@ -8,7 +8,6 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
@@ -37,6 +36,7 @@ import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.ui.login.LocalImage;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.CaptureHelper;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
@@ -66,7 +66,6 @@ public abstract class MediaFragment extends Fragment implements
    private static final String USER_IMAGE_LIST = "USER_IMAGE_LIST";
    private static final String USER_SELECTED_LIST = "USER_SELECTED_LIST";
    private static final String IMAGES_DOWNLOADED = "IMAGES_DOWNLOADED";
-   private static final String IMAGE_PREFIX = "IFIXIT_GALLERY";
    private static final String HASH_MAP = "HASH_MAP";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final int MAX_UPLOAD_COUNT = 4;
@@ -244,27 +243,11 @@ public abstract class MediaFragment extends Fragment implements
    private File createImageFile() throws IOException {
       // Create an image file name
       String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-      String imageFileName = IMAGE_PREFIX + timeStamp + "_";
-      File image = File.createTempFile(imageFileName, ".jpg", getAlbumDir());
+      String imageFileName = CaptureHelper.IMAGE_PREFIX + timeStamp + "_";
+      File image = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
+
       mCameraTempFileName = image.getAbsolutePath();
       return image;
-   }
-
-   private File getAlbumDir() {
-      File storageDir = null;
-      if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-         storageDir = new File(Environment.getExternalStoragePublicDirectory(
-          Environment.DIRECTORY_PICTURES), "iFixitImages/");
-
-         if (storageDir != null && !storageDir.mkdirs() && !storageDir.exists()) {
-            Log.w("iFixit", "Failed to create directory iFixitImages");
-            return null;
-         }
-      } else {
-         Log.w("iFixit", "External storage is not mounted READ/WRITE.");
-      }
-
-      return storageDir;
    }
 
    private String getPath(Uri uri) {

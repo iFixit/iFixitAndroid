@@ -169,13 +169,16 @@ public class GuideStepViewFragment extends Fragment {
    private void setImage() {
       ArrayList<APIImage> stepImages = mStep.getImages();
 
+      mThumbs.setDisplayMetrics(mMetrics);
+      mThumbs.setNavigationHeight(navigationHeight());
+
       mThumbs.setImageSizes(mImageSizes);
       mThumbs.setMainImage(mMainImage);
       mThumbs.setThumbs(stepImages);
       mThumbs.setCurrentThumb(stepImages.get(0).mBaseUrl);
 
       // Size the main image and thumbnails to maximize use of screen space
-      mThumbs.fitToSpace(mMetrics, navigationHeight());
+      mThumbs.fitToSpace();
 
       mMainImage.setVisibility(View.VISIBLE);
       mMainWebView.setVisibility(View.GONE);
