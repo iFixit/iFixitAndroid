@@ -448,9 +448,15 @@ public class JSONHelper {
       return userImageInfo;
    }
 
-   /**
-    * Login parsing info
-    */
+   public static APIImage parseUploadedStepImage(String image) throws JSONException {
+
+      Log.w("JSONHelper", "Uploaded Image Response: " + image);
+
+      return parseImage(new JSONObject(image), "image");
+   }
+      /**
+       * Login parsing info
+       */
    public static User parseLoginInfo(String json) throws JSONException {
       JSONObject jUser = new JSONObject(json);
 

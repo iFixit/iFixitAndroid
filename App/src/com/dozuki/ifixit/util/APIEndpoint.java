@@ -252,6 +252,48 @@ public enum APIEndpoint {
       false
    ),
 
+   UPLOAD_STEP_IMAGE(
+    new Endpoint() {
+       public String createUrl(String query) {
+          String fileName;
+
+          try {
+             fileName = URLEncoder.encode(getFileNameFromFilePath(query), "UTF-8");
+          } catch (UnsupportedEncodingException e) {
+             // Provide a default file name.
+             fileName = "uploaded_image.jpg";
+          }
+
+          return "user/media/images?cropToRation=FOUR_THREE&file=" + fileName;
+       }
+
+       private String getFileNameFromFilePath(String filePath) {
+          int index = filePath.lastIndexOf('/');
+
+          if (index == -1) {
+             /**
+              * filePath doesn't have a '/' in it. That's weird but just
+              * return the whole file path.
+              */
+             return filePath;
+          }
+
+          return filePath.substring(index + 1);
+       }
+
+       public APIEvent<?> parse(String json) throws JSONException {
+          return new APIEvent.UploadStepImage().setResult(JSONHelper.parseUploadedStepImage(json));
+       }
+
+       public APIEvent<?> getEvent() {
+          return new APIEvent.UploadStepImage();
+       }
+    },
+    true,
+    "POST",
+    false
+   ),
+
    DELETE_IMAGE(
       new Endpoint() {
          public String createUrl(String query) {

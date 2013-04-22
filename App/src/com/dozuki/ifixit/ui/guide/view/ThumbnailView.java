@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -103,19 +104,27 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       if (!images.isEmpty()) {
          for (APIImage image : images) {
-            addThumb(image);
+            addThumb(image, false);
          }
       }
    }
 
-   public void addThumb(APIImage image) {
+   public void addThumb(APIImage image, boolean fromDisk) {
+      String path;
+
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
       thumb.setOnClickListener(this);
       thumb.setVisibility(VISIBLE);
       thumb.setTag(image.mBaseUrl);
 
-      mImageManager.displayImage(image.getSize(mImageSizes.getThumb()), (Activity) mContext, thumb);
+      if (fromDisk) {
+         path = image.mBaseUrl;
+         thumb.setImageDrawable(Drawable.createFromPath(path));
+      } else {
+         path = image.getSize(mImageSizes.getThumb());
+         mImageManager.displayImage(path, (Activity) mContext, thumb);
+      }
 
       mThumbs.add(thumb);
 

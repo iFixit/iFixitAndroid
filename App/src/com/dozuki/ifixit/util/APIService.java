@@ -386,7 +386,8 @@ public class APIService extends Service {
    }
 
    public static APICall getUploadImageToStepAPICall(String filePath) {
-      return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, null, null,
+      Log.w("APIService", "Calling upload image");
+      return new APICall(APIEndpoint.UPLOAD_STEP_IMAGE, filePath, null, null,
        filePath);
    }
 

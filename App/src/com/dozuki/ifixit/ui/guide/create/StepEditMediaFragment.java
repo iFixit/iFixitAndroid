@@ -2,10 +2,9 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
@@ -15,7 +14,6 @@ import android.widget.ImageView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
-import com.dozuki.ifixit.model.gallery.UploadedImageInfo;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.ThumbnailView;
 import com.dozuki.ifixit.util.APIEvent;
@@ -36,11 +34,11 @@ import java.util.Date;
 
 public class StepEditMediaFragment extends Fragment {
 
+   private static final int DEFAULT_IMAGE_ID = -1;
    private static final int GALLERY_REQUEST_CODE = 1;
-   private static final int CAMERA_REQUEST_CODE = 2;
+   private static final int CAMERA_REQUEST_CODE = 1888;
 
    private Activity mContext;
-   private MainApplication mApp;
 
    // images
    private ThumbnailView mThumbs;
@@ -53,8 +51,19 @@ public class StepEditMediaFragment extends Fragment {
       mContext = (Activity) getActivity();
 
       super.onCreate(savedInstanceState);
+   }
 
-      mApp = (MainApplication) mContext.getApplication();
+
+   @Override
+   public void onResume() {
+      super.onResume();
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+      MainApplication.getBus().unregister(this);
    }
 
    @Override
@@ -70,7 +79,7 @@ public class StepEditMediaFragment extends Fragment {
       mThumbs.setDisplayMetrics(metrics);
       mThumbs.setNavigationHeight(navigationHeight());
 
-      mThumbs.setImageSizes(mApp.getImageSizes());
+      mThumbs.setImageSizes(MainApplication.get().getImageSizes());
       mThumbs.setMainImage(mLargeImage);
 
       // Initialize the step thumbnails and set the main image to the first thumbnail if it exists
@@ -136,17 +145,20 @@ public class StepEditMediaFragment extends Fragment {
                    Intent intent;
                    switch (which) {
                       case 0:
-                         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                          try {
+                            Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
                             // Create an image file name
                             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
                             String imageFileName = CaptureHelper.IMAGE_PREFIX + timeStamp + "_";
 
                             File file = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
                             mTempFileName = file.getAbsolutePath();
+                            Log.w("StepEditMediaFragment", "Filename = " + mTempFileName);
+
 
                             cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                            startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                            mContext.startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
                          } catch (IOException e) {
                             e.printStackTrace();
                          }
@@ -166,53 +178,63 @@ public class StepEditMediaFragment extends Fragment {
    }
 
    @Subscribe
-   public void onUploadImage(APIEvent.UploadImage event) {
+   public void onUploadStepImage(APIEvent.UploadStepImage event) {
       if (!event.hasError()) {
-         UploadedImageInfo imageInfo = event.getResult();
+         APIImage newThumb = event.getResult();
 
-        /* mTempFileName;
-         LocalImage cur = mLocalURL.get(url);
-         if (cur == null)
-            return;
-         cur.mImgid = imageInfo.getImageid();
-         mLocalURL.put(url, cur);
-         mItemsDownloaded++;
-         mGalleryAdapter.invalidatedView();
-      */
+         // Find the temporarily stored image object to update the filename to the image path and
+         // imageid
+         if (newThumb != null) {
+            for (int i = 0; i < mImages.size(); i++) {
+
+               if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
+                  mImages.set(i, newThumb);
+               }
+            }
+         }
       } else {
+         Log.w("Upload Image Error", event.getError().mMessage);
          // TODO
       }
    }
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      APIImage newThumb;
+      Log.w("onActivityResult", Integer.toString(requestCode));
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
             MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-            APIImage newThumb = new APIImage(Integer.parseInt(media.getItemId()), media.getGuid());
+            newThumb = new APIImage(Integer.parseInt(media.getItemId()), media.getGuid());
             mImages.add(newThumb);
-            mThumbs.addThumb(newThumb);
-
-            setGuideDirty();
+            mThumbs.addThumb(newThumb, false);
 
             break;
          case CAMERA_REQUEST_CODE:
+
+            Log.w("StepEditMediaFragment", "Camera returned");
+
             if (mTempFileName == null) {
                Log.w("iFixit", "Error cameraTempFile is null!");
                return;
             }
-            BitmapFactory.Options opt = new BitmapFactory.Options();
-            opt.inSampleSize = 2;
-            opt.inDither = true;
-            opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
+
+            newThumb = new APIImage(DEFAULT_IMAGE_ID, mTempFileName);
+
+            Log.w("StepEditMediaFragment", "Image Path" + newThumb.mBaseUrl);
+            mImages.add(newThumb);
+            mThumbs.addThumb(newThumb, true);
 
             APIService.call((Activity) getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
 
             break;
-         default:
-            return;
       }
+
+      setGuideDirty();
+
+      super.onActivityResult(requestCode, resultCode, data);
+
    }
 
    private float navigationHeight() {
