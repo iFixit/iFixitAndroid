@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
@@ -51,7 +50,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    private Guide mGuide;
    private StepEditFragment mCurStepFragment;
-   private ArrayList<GuideStep> mStepList;
    private ImageButton mAddStepButton;
    private Button mSaveStep;
    private ImageButton mDeleteStepButton;
@@ -68,7 +66,12 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    private boolean mShowingSave;
    private boolean mIsLoading;
 
-   @SuppressWarnings("unchecked")
+
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
+
+   @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
@@ -92,7 +95,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
          mPagePosition = extras.getInt(StepsEditActivity.GUIDE_STEP_KEY);
-         mStepList = (ArrayList<GuideStep>) extras.getSerializable(GUIDE_STEP_LIST_KEY);
       }
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
@@ -101,7 +103,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
-         mStepList = (ArrayList<GuideStep>) savedInstanceState.getSerializable(GUIDE_STEP_LIST_KEY);
          mIsLoading = savedInstanceState.getBoolean(LOADING);
          if (mShowingHelp) {
             createHelpDialog().show();
@@ -141,71 +142,10 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       }
    }
 
-   public void showLoading() {
-      if (mPager != null) {
-         mPager.setVisibility(View.GONE);
-      }
-      getSupportFragmentManager().beginTransaction()
-       .add(R.id.step_edit_loading_screen, new LoadingFragment(), "loading").addToBackStack("loading").commit();
-      mIsLoading = true;
-
-   }
-
-   public void hideLoading() {
-      if (mPager != null) {
-         mPager.setVisibility(View.VISIBLE);
-      }
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-      mIsLoading = false;
-   }
-
-   @Subscribe
-   public void onStepSave(APIEvent.StepSave event) {
-      if (!event.hasError()) {
-         mGuide.getSteps().get(mSavePosition).setRevisionid(event.getResult().getRevisionid());
-         hideLoading();
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
-      }
-   }
-
-   @Subscribe
-   public void onStepAdd(APIEvent.StepAdd event) {
-      if (!event.hasError()) {
-         mGuide.getSteps().get(mSavePosition).setStepid(event.getResult().getSteps().get(mSavePosition).getStepid());
-         mGuide.getSteps().get(mSavePosition)
-          .setRevisionid((event.getResult().getSteps().get(mSavePosition).getRevisionid()));
-         mGuide.setRevisionid(event.getResult().getRevisionid());
-         hideLoading();
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
-      }
-   }
-
-   @Subscribe
-   public void onGuideStepDeleted(APIEvent.StepRemove event) {
-      if (!event.hasError()) {
-         mGuide.setRevisionid(event.getResult().getRevisionid());
-         deleteStep(false);
-         hideLoading();
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
-      }
-   }
-
-   @Override
-   public void finish() {
-      Intent returnIntent = new Intent();
-      returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-      setResult(RESULT_OK, returnIntent);
-      super.finish();
-   }
-
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+      Log.w(TAG, "onActivityResult");
       if (mCurStepFragment != null) {
          mCurStepFragment.setMediaResult(requestCode, resultCode, data);
       } else {
@@ -215,37 +155,15 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             APIImage mImageInfo = new APIImage();
             mImageInfo.mBaseUrl = media.getGuid();
             mImageInfo.mId = Integer.valueOf(media.getItemId());
-            ArrayList<APIImage> list = mStepList.get(mPagePosition).getImages();
-            /*if (requestCode == StepEditMediaFragment.IMAGE_KEY_1) {
-               if (list.size() > 0) {
-                  list.get(0).mBaseUrl = media.getGuid();
-                  list.get(0).mId = Integer.valueOf(media.getItemId());
-               } else {
-                  list.add(mImageInfo);
-               }
-            } else if (requestCode == StepEditMediaFragment.IMAGE_KEY_2) {
-               if (list.size() > 1) {
-                  list.get(0).mBaseUrl = media.getGuid();
-                  list.get(0).mId = Integer.valueOf(media.getItemId());
-               } else {
-                  list.add(mImageInfo);
-               }
+            ArrayList<APIImage> list = mGuide.getStep(mPagePosition).getImages();
 
-            } else if (requestCode == StepEditMediaFragment.IMAGE_KEY_3) {
-               if (list.size() > 2) {
-                  list.get(0).mBaseUrl = media.getGuid();
-                  list.get(0).mId = Integer.valueOf(media.getItemId());
-               } else {
-                  list.add(mImageInfo);
-               }
-            }*/
             if (list.size() > 0) {
                list.get(0).mBaseUrl = media.getGuid();
                list.get(0).mId = Integer.valueOf(media.getItemId());
             } else {
                list.add(mImageInfo);
             }
-            mStepList.get(mPagePosition).setImages(list);
+            mGuide.getStep(mPagePosition).setImages(list);
             toggleSave(true);
             // recreate pager with updated step:
             mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
@@ -266,9 +184,149 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
-      savedInstanceState.putSerializable(GUIDE_STEP_LIST_KEY, mStepList);
       savedInstanceState.putBoolean(LOADING, mIsLoading);
    }
+
+   @Override
+   public void finish() {
+      Intent returnIntent = new Intent();
+      returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+      setResult(RESULT_OK, returnIntent);
+      super.finish();
+   }
+
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
+
+
+   /////////////////////////////////////////////////////
+   // NOTIFICATION LISTENERS
+   /////////////////////////////////////////////////////
+
+   @Subscribe
+   public void onStepSave(APIEvent.StepSave event) {
+      if (!event.hasError()) {
+         Log.w(TAG, "onStepSave: step orderby" + event.getResult().getOrderby());
+         Log.w(TAG, "onStepSave: Page Position " + mPagePosition);
+         Log.w(TAG, "onStepSave: Save Position " + mSavePosition);
+
+         mIsStepDirty = false;
+         toggleSave(mIsStepDirty);
+         hideLoading();
+
+         GuideStep step = event.getResult();
+
+         mGuide.getSteps().set(mSavePosition, step);
+
+         mStepAdapter.notifyDataSetChanged();
+         mPager.setCurrentItem(step.getOrderby());
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+      }
+   }
+
+   @Subscribe
+   public void onStepAdd(APIEvent.StepAdd event) {
+      if (!event.hasError()) {
+         Log.w(TAG, "onStepAdd: revisionid=" + event.getResult().getRevisionid());
+         mGuide = event.getResult();
+         hideLoading();
+
+         mStepAdapter.notifyDataSetChanged();
+         mPager.setCurrentItem(mPagePosition);
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+      }
+   }
+
+   @Subscribe
+   public void onGuideStepDeleted(APIEvent.StepRemove event) {
+      if (!event.hasError()) {
+         mGuide.setRevisionid(event.getResult().getRevisionid());
+         deleteStep(false);
+         hideLoading();
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+      }
+   }
+
+
+   /////////////////////////////////////////////////////
+   // UI EVENT LISTENERS
+   /////////////////////////////////////////////////////
+
+   @Override
+   public void onClick(View v) {
+      switch (v.getId()) {
+         case R.id.step_edit_delete_step:
+            if (!mGuide.getSteps().isEmpty()) {
+               createDeleteDialog(StepsEditActivity.this).show();
+            }
+            break;
+         case R.id.step_edit_view_save:
+            save(mPagePosition);
+            break;
+         case R.id.step_edit_add_step:
+
+            Log.w(TAG, "Add new step");
+
+            Log.w(TAG, "Page Position: " + mPagePosition);
+            int newPosition = mPagePosition + 1;
+            Log.w(TAG, "New Page Position: " + newPosition);
+
+            if ((mGuide.getSteps().size() == (mPagePosition)) && mIsStepDirty) {
+               save(mPagePosition);
+            } else if (mGuide.getSteps().size() < newPosition) {
+               Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
+                Toast.LENGTH_SHORT).show();
+               return;
+            }
+
+            GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
+            item.setTitle(StepPortalFragment.DEFAULT_TITLE);
+            item.addLine(new StepLine());
+            item.setStepNum(newPosition);
+
+            mGuide.addStep(item, newPosition);
+
+            for (int i = 1; i < mGuide.getSteps().size(); i++) {
+               mGuide.getStep(i).setStepNum(i);
+            }
+
+            // The view pager does not recreate the item in the current position unless we force it to:
+            mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+            mPager.setAdapter(mStepAdapter);
+            mPager.invalidate();
+            titleIndicator.invalidate();
+
+            mPager.setCurrentItem(newPosition, false);
+            break;
+         case android.R.id.home:
+            finishEdit();
+            break;
+      }
+   }
+
+   @Override
+   public void onBackPressed() {
+      finishEdit();
+   }
+
+   @Override
+   public void onStepChanged() {
+      mIsStepDirty = true;
+      toggleSave(mIsStepDirty);
+   }
+
+
+   /////////////////////////////////////////////////////
+   // ADAPTERS and PRIVATE CLASSES
+   /////////////////////////////////////////////////////
 
    public class StepAdapter extends FragmentStatePagerAdapter {
 
@@ -278,7 +336,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
       @Override
       public int getCount() {
-         return mStepList.size();
+         return mGuide.getSteps().size();
       }
 
       @Override
@@ -288,181 +346,63 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
       @Override
       public Fragment getItem(int position) {
-         StepEditFragment frag = new StepEditFragment();
-         Bundle args = new Bundle();
-         args.putSerializable(GUIDE_STEP_KEY, mStepList.get(position));
-         frag.setArguments(args);
-         return frag;
+         return StepEditFragment.newInstance(mGuide.getStep(position));
       }
 
+      /**
+       * When you call notifyDataSetChanged(), if it's set to POSITION_NONE, the view pager will remove all views and
+       * reload them all.
+       */
       @Override
       public int getItemPosition(Object object) {
+         /*StepEditFragment page = (StepEditFragment)object;
+         GuideStep step = page.getStepObject();
+         int position = mGuide.getSteps().indexOf(step);
+
+         if (position >= 0) {
+            return position;
+         } else {*/
          return POSITION_NONE;
+         // }
       }
 
       @Override
       public void setPrimaryItem(ViewGroup container, int position, Object object) {
          super.setPrimaryItem(container, position, object);
 
-         if (mPagePosition != position) {
-            /** keyboard */
-            final InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(container.getWindowToken(), 0);
-            if (mIsStepDirty) {
-               save(mPagePosition);
-            }
-            mIsStepDirty = false;
-            toggleSave(mIsStepDirty);
-         }
+         Log.w(TAG, "setPrimaryItem position: " + position);
+
          mPagePosition = position;
          mCurStepFragment = (StepEditFragment) object;
       }
-   }
-
-   private void save(int savePosition) {
-      GuideStep obj = mCurStepFragment.getGuideChanges();
-      if (obj.getLines().size() == 0) {
-         Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
-          Toast.LENGTH_SHORT).show();
-         return;
-      }
-
-      for (StepLine l : obj.getLines()) {
-         if (l.getTextRaw().length() == 0) {
-            Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
-             Toast.LENGTH_SHORT).show();
-            return;
-         }
-      }
-
-      if (!mIsStepDirty) {
-         return;
-      }
-      mIsStepDirty = false;
-
-      mSavePosition = savePosition;
-      for (int i = 0; i < mStepList.size(); i++) {
-         mStepList.get(i).setStepNum(i);
-      }
-      toggleSave(mIsStepDirty);
-      mGuide.sync(mCurStepFragment.getGuideChanges(), mSavePosition);
-
-      showLoading();
-      if (mGuide.getSteps().get(mSavePosition).getRevisionid() != null) {
-         APIService
-          .call(this, APIService.getEditStepAPICall(mGuide.getSteps().get(mSavePosition), mGuide.getGuideid()));
-      } else {
-         APIService.call(this, APIService.getAddStepAPICall(mGuide.getSteps().get(mSavePosition), mGuide.getGuideid(),
-          mPagePosition + 1, mGuide.getRevisionid()));
-      }
-   }
-
-
-   @Override
-   public void onClick(View v) {
-      switch (v.getId()) {
-         case R.id.step_edit_delete_step:
-            if (!mStepList.isEmpty()) {
-               createDeleteDialog(StepsEditActivity.this).show();
-            }
-            break;
-         case R.id.step_edit_view_save:
-            save(mPagePosition);
-            break;
-         case R.id.step_edit_add_step:
-
-            if ((mGuide.getSteps().size() == (mPagePosition)) && mIsStepDirty) {
-               save(mPagePosition);
-            } else if (mGuide.getSteps().size() < mPagePosition + 1) {
-               Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
-                Toast.LENGTH_SHORT).show();
-               return;
-            }
-
-            GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-            item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-            item.addLine(new StepLine());
-            item.setStepNum(mPagePosition + 1);
-            mStepList.add(mPagePosition + 1, item);
-            for (int i = 0; i < mStepList.size(); i++) {
-               mStepList.get(i).setStepNum(i);
-            }
-            // The view pager does not recreate the item in the current position unless we force it to:
-            mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-            mPager.setAdapter(mStepAdapter);
-            mPager.invalidate();
-            titleIndicator.invalidate();
-
-            mPager.setCurrentItem(mPagePosition + 1, false);
-            break;
-         case android.R.id.home:
-            finishEdit();
-            break;
-      }
-   }
-
-   @Override
-   public boolean finishActivityIfLoggedOut() {
-      return true;
-   }
-
-   public void finishEdit() {
-      if (mIsStepDirty) {
-         createExitWarningDialog().show();
-      } else {
-         finish();
-      }
-   }
-
-   private void deleteStep(boolean unsaved) {
-      int curStep = mPagePosition;
-      mStepList.remove(mPagePosition);
-      if (mPagePosition < mGuide.getSteps().size()) {
-         if (!unsaved) {
-            mGuide.getSteps().remove(mPagePosition);
-         }
-      }
-
-      if (mStepList.size() == 0) {
-         finish();
-      }
-
-      for (int i = 0; i < mStepList.size(); i++) {
-         mStepList.get(i).setStepNum(i);
-      }
-      // The view pager does not recreate the item in the current position unless we force it to:
-      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-      mPager.setAdapter(mStepAdapter);
-      mPager.setCurrentItem(curStep);
-      mPager.invalidate();
-      titleIndicator.invalidate();
 
    }
 
-   public void invalidateStepAdapter() {
-      mStepAdapter.notifyDataSetChanged();
-   }
 
-   public AlertDialog createDeleteDialog(final Context context) {
+   /////////////////////////////////////////////////////
+   // DIALOGS
+   /////////////////////////////////////////////////////
+
+   protected AlertDialog createDeleteDialog(final Context context) {
       mConfirmDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder
        .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
        .setMessage(
         context.getString(R.string.step_edit_confirm_delete_message) + " Step "
-         + (mStepList.get(mPagePosition).getStepNum() + 1) + "?")
+         + (mGuide.getStep(mPagePosition).getStepNum() + 1) + "?")
        .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
              mConfirmDelete = false;
              mIsStepDirty = false;
 
-             if (mPagePosition >= mGuide.getSteps().size()) {
-                //step has not been saved and is at end of list
+             //step is at end of list
+             if (mPagePosition >= mGuide.getSteps().size()
+              //step in the middle of the list
+              || mGuide.getStep(mPagePosition).getRevisionid() == null) {
                 deleteStep(true);
-             } else if (mStepList.get(mPagePosition).getRevisionid() == null) {
-                //step in the middle of the list and has not been saved
-                deleteStep(true);
+
              } else {
                 showLoading();
                 APIService.call(StepsEditActivity.this, APIService.getRemoveStepAPICall(
@@ -489,28 +429,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       return dialog;
    }
 
-   public int getIndicatorHeight() {
-      return titleIndicator.getHeight() + mBottomBar.getHeight();
-
-   }
-
-   @Override
-   public void onStepChanged() {
-      mIsStepDirty = true;
-      toggleSave(mIsStepDirty);
-   }
-
-   public void toggleSave(boolean toggle) {
-      int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
-      int buttonTextColor = toggle ? R.color.white : R.color.fireswing_blue;
-
-      mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
-      mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
-      mSaveStep.setText(R.string.guide_create_save);
-      mSaveStep.setEnabled(toggle);
-   }
-
-   private AlertDialog createHelpDialog() {
+   protected AlertDialog createHelpDialog() {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.media_help_title))
        .setMessage(getString(R.string.guide_create_edit_steps_help))
@@ -524,7 +443,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       return builder.create();
    }
 
-   private AlertDialog createExitWarningDialog() {
+   protected AlertDialog createExitWarningDialog() {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
@@ -558,16 +477,128 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       return dialog;
    }
 
-   public void enableViewPager(boolean unlocked) {
+
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
+
+   protected void save(int savePosition) {
+
+      GuideStep obj = mCurStepFragment.getGuideChanges();
+
+      Log.w(TAG, "Saving step #" + savePosition + " from guide #" + mGuide.getGuideid());
+      Log.w(TAG, "Step images count: " + obj.getImages().size());
+
+      if (obj.getLines().size() == 0) {
+         Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
+          Toast.LENGTH_SHORT).show();
+         return;
+      }
+
+      for (StepLine l : obj.getLines()) {
+         if (l.getTextRaw().length() == 0) {
+            Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
+             Toast.LENGTH_SHORT).show();
+            return;
+         }
+      }
+
+      if (!mIsStepDirty) {
+         return;
+      }
+
+      mSavePosition = savePosition;
+
+      showLoading();
+
+      if (obj.getRevisionid() != null) {
+         Log.w(TAG, "Saving edited step");
+         APIService
+          .call(this, APIService.getEditStepAPICall(obj, mGuide.getGuideid()));
+      } else {
+         Log.w(TAG, "Saving new step");
+
+         APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
+          mPagePosition + 1, mGuide.getRevisionid()));
+      }
+   }
+
+   protected void showLoading() {
+      if (mPager != null) {
+         mPager.setVisibility(View.GONE);
+      }
+      getSupportFragmentManager().beginTransaction()
+       .add(R.id.step_edit_loading_screen, new LoadingFragment(), "loading").addToBackStack("loading").commit();
+      mIsLoading = true;
+
+   }
+
+   protected void hideLoading() {
+      if (mPager != null) {
+         mPager.setVisibility(View.VISIBLE);
+      }
+      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      mIsLoading = false;
+   }
+
+   protected void finishEdit() {
+      if (mIsStepDirty) {
+         createExitWarningDialog().show();
+      } else {
+         finish();
+      }
+   }
+
+   protected void deleteStep(boolean unsaved) {
+      int curStep = mPagePosition;
+
+      if (mPagePosition < mGuide.getSteps().size()) {
+         if (!unsaved) {
+            mGuide.getSteps().remove(mPagePosition);
+         }
+      }
+
+      if (mGuide.getSteps().size() == 0) {
+         finish();
+      }
+
+      for (int i = 0; i < mGuide.getSteps().size(); i++) {
+         mGuide.getStep(i).setStepNum(i);
+      }
+
+      // The view pager does not recreate the item in the current position unless we force it to:
+      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+      mPager.setAdapter(mStepAdapter);
+      mPager.setCurrentItem(curStep);
+      mPager.invalidate();
+      titleIndicator.invalidate();
+
+   }
+
+   protected void invalidateStepAdapter() {
+      mStepAdapter.notifyDataSetChanged();
+   }
+
+   protected int getIndicatorHeight() {
+      return titleIndicator.getHeight() + mBottomBar.getHeight();
+
+   }
+
+   public void toggleSave(boolean toggle) {
+      int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
+      int buttonTextColor = toggle ? R.color.white : R.color.fireswing_blue;
+
+      mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
+      mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
+      mSaveStep.setText(R.string.guide_create_save);
+      mSaveStep.setEnabled(toggle);
+   }
+
+   protected void enableViewPager(boolean unlocked) {
       mPager.setPagingEnabled(unlocked);
    }
 
-   @Override
-   public void onBackPressed() {
-      finishEdit();
-   }
-
-   public boolean isScreenLarge() {
+   protected boolean isScreenLarge() {
       final int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
       return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
        || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;

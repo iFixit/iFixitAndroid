@@ -7,7 +7,6 @@ import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
 import com.dozuki.ifixit.MainApplication;
@@ -17,7 +16,7 @@ import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.app.Activity;
 
-public class GuideListItem extends RelativeLayout implements AnimationListener {
+public class GuideListItem extends LinearLayout {
    private static final int ANIMATION_DURATION = 300;
 
    private static final boolean STATE_OPEN = true;
@@ -163,7 +162,6 @@ public class GuideListItem extends RelativeLayout implements AnimationListener {
             mToggleEdit.startAnimation(rotateAnimation);
             // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            expandAni.setAnimationListener(this);
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
          } else {
@@ -175,7 +173,6 @@ public class GuideListItem extends RelativeLayout implements AnimationListener {
             Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_counterclockwise);
             mToggleEdit.startAnimation(rotateAnimation);
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            expandAni.setAnimationListener(this);
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.GONE);
@@ -188,15 +185,4 @@ public class GuideListItem extends RelativeLayout implements AnimationListener {
       mToggleEdit.setChecked(check);
    }
 
-   @Override
-   public void onAnimationStart(Animation animation) {
-   }
-
-   @Override
-   public void onAnimationEnd(Animation animation) {
-   }
-
-   @Override
-   public void onAnimationRepeat(Animation animation) {
-   }
 }

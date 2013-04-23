@@ -88,6 +88,10 @@ public class Guide implements Serializable {
       mSteps.add(step);
    }
 
+   public void addStep(GuideStep step, int position) {
+      mSteps.add(position, step);
+   }
+
    public void deleteStep(GuideStep step) {
       mSteps.remove(step);
    }
@@ -225,10 +229,6 @@ public class Guide implements Serializable {
       return mRevisionid;
    }
 
-   public ArrayList<GuideStep> getStepList() {
-      return mSteps;
-   }
-
    @Override
    public boolean equals(Object o) {
       if (this == o) {
@@ -239,18 +239,6 @@ public class Guide implements Serializable {
       }
       Guide lhs = (Guide) o;
       return mGuideid == lhs.mGuideid;
-   }
-
-   public void sync(GuideStep changedStep, int position) {
-
-      if(mSteps.contains(changedStep)) {
-         mSteps.get(position).setTitle(changedStep.getTitle());
-         mSteps.get(position).setImages(changedStep.getImages());
-         mSteps.get(position).setLines(changedStep.getLines());
-         return;
-      }
-
-      mSteps.add(position, changedStep);
    }
 
    public String toString() {

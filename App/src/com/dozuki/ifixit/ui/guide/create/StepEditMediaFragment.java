@@ -46,24 +46,15 @@ public class StepEditMediaFragment extends Fragment {
    private ArrayList<APIImage> mImages;
    private String mTempFileName;
 
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       mContext = (Activity) getActivity();
 
       super.onCreate(savedInstanceState);
-   }
-
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-      MainApplication.getBus().unregister(this);
    }
 
    @Override
@@ -85,8 +76,9 @@ public class StepEditMediaFragment extends Fragment {
       // Initialize the step thumbnails and set the main image to the first thumbnail if it exists
       if (mImages != null && mImages.size() > 0) {
          mThumbs.setThumbs(mImages);
-
          mThumbs.setCurrentThumb(mImages.get(0).mBaseUrl);
+      } else {
+         mThumbs.fitToSpace();
       }
 
       mThumbs.setThumbsOnLongClickListener(new OnLongClickListener() {
@@ -123,8 +115,19 @@ public class StepEditMediaFragment extends Fragment {
          }
       });
 
-
       return v;
+   }
+
+   @Override
+   public void onResume() {
+      super.onResume();
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+      MainApplication.getBus().unregister(this);
    }
 
    @Override
@@ -177,27 +180,6 @@ public class StepEditMediaFragment extends Fragment {
       });
    }
 
-   @Subscribe
-   public void onUploadStepImage(APIEvent.UploadStepImage event) {
-      if (!event.hasError()) {
-         APIImage newThumb = event.getResult();
-
-         // Find the temporarily stored image object to update the filename to the image path and
-         // imageid
-         if (newThumb != null) {
-            for (int i = 0; i < mImages.size(); i++) {
-
-               if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
-                  mImages.set(i, newThumb);
-               }
-            }
-         }
-      } else {
-         Log.w("Upload Image Error", event.getError().mMessage);
-         // TODO
-      }
-   }
-
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       APIImage newThumb;
@@ -237,7 +219,54 @@ public class StepEditMediaFragment extends Fragment {
 
    }
 
-   private float navigationHeight() {
+   @Override
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+   }
+
+
+   /////////////////////////////////////////////////////
+   // NOTIFICATION LISTENERS
+   /////////////////////////////////////////////////////
+
+   @Subscribe
+   public void onUploadStepImage(APIEvent.UploadStepImage event) {
+      if (!event.hasError()) {
+         APIImage newThumb = event.getResult();
+
+         // Find the temporarily stored image object to update the filename to the image path and
+         // imageid
+         if (newThumb != null) {
+            for (int i = 0; i < mImages.size(); i++) {
+               if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
+                  mImages.set(i, newThumb);
+                  Log.w("StepEditMediaFragment", "Step Image Uploaded: " + mImages.get(i).mBaseUrl);
+               }
+            }
+         }
+      } else {
+         Log.w("Upload Image Error", event.getError().mMessage);
+         // TODO
+      }
+   }
+
+
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
+
+   protected void setImages(ArrayList<APIImage> images) {
+
+      mImages = new ArrayList<APIImage>(images);
+   }
+
+   protected ArrayList<APIImage> getImages() {
+      Log.w("StepEditMediaFragment", "Step images count: " + mImages.size());
+
+      return mImages;
+   }
+
+   protected float navigationHeight() {
       int actionBarHeight = getResources().getDimensionPixelSize(
        com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
 
@@ -247,27 +276,10 @@ public class StepEditMediaFragment extends Fragment {
       int stepPagerBar = getResources().getDimensionPixelSize(
        com.viewpagerindicator.R.dimen.default_title_indicator_footer_indicator_height);
 
-      return actionBarHeight + bottomBarHeight + stepPagerBar + 75f;
+      return actionBarHeight + bottomBarHeight + stepPagerBar;
    }
 
-   public void setImages(ArrayList<APIImage> images) {
-      mImages = images;
-   }
-
-   public ArrayList<APIImage> getImages() {
-      return mImages;
-   }
-
-   @Override
-   public void onSaveInstanceState(Bundle savedInstanceState) {
-      super.onSaveInstanceState(savedInstanceState);
-   }
-
-   public void removeImage() {
-      setGuideDirty();
-   }
-
-   public void setGuideDirty() {
+   protected void setGuideDirty() {
       if (((StepChangedListener) getActivity()) == null) {
          return;
       }

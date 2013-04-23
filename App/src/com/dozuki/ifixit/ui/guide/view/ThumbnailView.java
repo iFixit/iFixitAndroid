@@ -106,6 +106,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          for (APIImage image : images) {
             addThumb(image, false);
          }
+      } else {
+         // If there are no images, we still need to fit the Main Image and "add image" resource
+         fitToSpace();
       }
    }
 

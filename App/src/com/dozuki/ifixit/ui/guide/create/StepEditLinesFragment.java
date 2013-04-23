@@ -53,15 +53,15 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
    private EditText mStepTitle;
 
 
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
    }
 
-   /**
-    * unchecked: we know what we are getting from the from the STEP_LIST_KEY *
-    */
-   @SuppressWarnings("unchecked")
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
@@ -133,6 +133,125 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       return v;
    }
 
+   @Override
+   public void onResume() {
+      super.onResume();
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+      savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
+
+      savedInstanceState.putString(TITLE_KEY, mTitle);
+      savedInstanceState.putInt(STEP_NUM_KEY, mStepNum);
+
+      if (mChooseBulletDialog != null && mShowingChooseBulletDialog) {
+         getSupportFragmentManager().putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog);
+         savedInstanceState.putBoolean(SHOWING_BULLET_FRAG, mShowingChooseBulletDialog);
+      }
+      savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
+
+      if (mReorderFragment != null && mReorderModeActive) {
+         getSupportFragmentManager().putFragment(savedInstanceState, REORDER_FRAG_ID, mReorderFragment);
+         savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
+      }
+
+   }
+
+   @Override
+   public void onFinishBulletDialog(int index, String color) {
+      mShowingChooseBulletDialog = false;
+      StepLine curStep = mLines.get(index);
+
+      if (color.equals("action_indent")) {
+         if (curStep.getLevel() == INDENT_LIMIT) {
+            Toast.makeText((getActivity()), R.string.indent_limit_above, Toast.LENGTH_SHORT).show();
+            return;
+         }
+         indentBullet(index);
+         setGuideDirty();
+      } else if (color.equals("action_unindent")) {
+         if (curStep.getLevel() == 0) {
+            Toast.makeText((getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
+            return;
+         }
+         unIndentBullet(index);
+         setGuideDirty();
+      } else if (color.equals("action_reorder")) {
+         launchBulletReorder();
+      } else if (color.equals("action_delete")) {
+         createDeleteDialog(getActivity(), index).show();
+      } else if (color.equals("action_cancel")) {
+         return;
+      } else {
+         curStep.setColor(color);
+         mBulletContainer.removeViewAt(index);
+         mBulletContainer.addView(getView(mLines.get(index), index), index);
+         setGuideDirty();
+      }
+   }
+
+   @Override
+   public void onReorderComplete(boolean canceled, ArrayList<StepLine> list) {
+      mReorderModeActive = false;
+      if (!canceled) {
+         mLines.clear();
+         mLines.addAll(list);
+         removeBullets();
+         initilizeBulletContainer();
+         if (!isIndentionStateValid()) {
+            fixIndentionState();
+         }
+         // ((GuideStepChangedListener) getActivity()).enableSave();
+         setGuideDirty();
+      }
+   }
+
+   /////////////////////////////////////////////////////
+   // DIALOGS
+   /////////////////////////////////////////////////////
+
+   public AlertDialog createDeleteDialog(final Context context, final int index) {
+      mConfirmDelete = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      builder.setTitle(context.getString(R.string.step_delete_dialog_title))
+       .setMessage(context.getString(R.string.step_delete_dialog_body))
+       .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+             mConfirmDelete = false;
+             removeBullet(index);
+             if (!isIndentionStateValid()) {
+                fixIndentionState();
+             }
+             setGuideDirty();
+             dialog.dismiss();
+          }
+       }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
+         @Override
+         public void onClick(DialogInterface dialog, int which) {
+            mConfirmDelete = false;
+            dialog.dismiss();
+         }
+      });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mConfirmDelete = false;
+         }
+      });
+
+      return dialog;
+   }
+
+
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
+
    public void setStepTitle(String title) {
       mTitle = title;
       if (mStepTitle != null && title.length() > 0) {
@@ -140,17 +259,12 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       }
    }
 
-   public void setStepNumber(int num) {
-      mStepNum = num;
-   }
-
    public String getTitle() {
       return mTitle;
    }
 
-   @Override
-   public void onResume() {
-      super.onResume();
+   public void setStepNumber(int num) {
+      mStepNum = num;
    }
 
    public void setSteps(ArrayList<StepLine> lines) {
@@ -320,60 +434,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       return iconRes;
    }
 
-   @Override
-   public void onSaveInstanceState(Bundle savedInstanceState) {
-      super.onSaveInstanceState(savedInstanceState);
-      savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
-
-      savedInstanceState.putString(TITLE_KEY, mTitle);
-      savedInstanceState.putInt(STEP_NUM_KEY, mStepNum);
-
-      if (mChooseBulletDialog != null && mShowingChooseBulletDialog) {
-         getSupportFragmentManager().putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog);
-         savedInstanceState.putBoolean(SHOWING_BULLET_FRAG, mShowingChooseBulletDialog);
-      }
-      savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
-
-      if (mReorderFragment != null && mReorderModeActive) {
-         getSupportFragmentManager().putFragment(savedInstanceState, REORDER_FRAG_ID, mReorderFragment);
-         savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
-      }
-
-   }
-
-   @Override
-   public void onFinishBulletDialog(int index, String color) {
-      mShowingChooseBulletDialog = false;
-      StepLine curStep = mLines.get(index);
-
-      if (color.equals("action_indent")) {
-         if (curStep.getLevel() == INDENT_LIMIT) {
-            Toast.makeText((getActivity()), R.string.indent_limit_above, Toast.LENGTH_SHORT).show();
-            return;
-         }
-         indentBullet(index);
-         setGuideDirty();
-      } else if (color.equals("action_unindent")) {
-         if (curStep.getLevel() == 0) {
-            Toast.makeText((getActivity()), R.string.indent_limit_below, Toast.LENGTH_SHORT).show();
-            return;
-         }
-         unIndentBullet(index);
-         setGuideDirty();
-      } else if (color.equals("action_reorder")) {
-         launchBulletReorder();
-      } else if (color.equals("action_delete")) {
-         createDeleteDialog(getActivity(), index).show();
-      } else if (color.equals("action_cancel")) {
-         return;
-      } else {
-         curStep.setColor(color);
-         mBulletContainer.removeViewAt(index);
-         mBulletContainer.addView(getView(mLines.get(index), index), index);
-         setGuideDirty();
-      }
-   }
-
    private void unIndentBullet(int index) {
       StepLine curStep = mLines.get(index);
       if (curStep.getLevel() == 0) {
@@ -445,22 +505,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       mReorderModeActive = true;
    }
 
-   @Override
-   public void onReorderComplete(boolean canceled, ArrayList<StepLine> list) {
-      mReorderModeActive = false;
-      if (!canceled) {
-         mLines.clear();
-         mLines.addAll(list);
-         removeBullets();
-         initilizeBulletContainer();
-         if (!isIndentionStateValid()) {
-            fixIndentionState();
-         }
-         // ((GuideStepChangedListener) getActivity()).enableSave();
-         setGuideDirty();
-      }
-   }
-
    public void setGuideDirty() {
       ((StepChangedListener) getActivity()).onStepChanged();
    }
@@ -471,41 +515,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
    public void removeBullets() {
       mBulletContainer.removeViewsInLayout(0, mLines.size());
-   }
-
-   public AlertDialog createDeleteDialog(final Context context, final int index) {
-      mConfirmDelete = true;
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
-      builder.setTitle(context.getString(R.string.step_delete_dialog_title))
-       .setMessage(context.getString(R.string.step_delete_dialog_body))
-       .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
-          @Override
-          public void onClick(DialogInterface dialog, int id) {
-             mConfirmDelete = false;
-             removeBullet(index);
-             if (!isIndentionStateValid()) {
-                fixIndentionState();
-             }
-             setGuideDirty();
-             dialog.dismiss();
-          }
-       }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
-         @Override
-         public void onClick(DialogInterface dialog, int which) {
-            mConfirmDelete = false;
-            dialog.dismiss();
-         }
-      });
-
-      AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-            mConfirmDelete = false;
-         }
-      });
-
-      return dialog;
    }
 
    private void removeBullet(int index) {

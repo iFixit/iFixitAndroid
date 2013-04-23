@@ -336,7 +336,7 @@ public enum APIEndpoint {
    GUIDE_FOR_EDIT(
       new Endpoint() {
          public String createUrl(String query) {
-            return "guides/" + query + "?edit&noPrereqSteps";
+            return "guides/" + query + "?unpatrolled&noPrerequisiteSteps";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
