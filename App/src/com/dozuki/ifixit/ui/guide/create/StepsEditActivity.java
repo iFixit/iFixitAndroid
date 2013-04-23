@@ -586,7 +586,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    public void toggleSave(boolean toggle) {
       int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
-      int buttonTextColor = toggle ? R.color.white : R.color.fireswing_blue;
+      int buttonTextColor = toggle ? R.color.white : R.color.fireswing_grey;
 
       mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
       mSaveStep.setTextColor(getResources().getColor(buttonTextColor));

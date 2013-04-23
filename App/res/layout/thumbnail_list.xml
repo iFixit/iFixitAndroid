@@ -10,6 +10,7 @@
         android:id="@+id/add_thumbnail_icon"
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
+        android:layout_gravity="right"
         android:background="#66888888"
         android:src="@drawable/ic_action_add"
         android:visibility="gone"

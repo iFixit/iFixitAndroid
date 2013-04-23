@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
@@ -119,6 +120,10 @@ public class MainApplication extends Application {
 
    public ArrayList<String> getTopics() {
       return mTopics;
+   }
+
+   public boolean inPortraitMode() {
+      return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
    }
 
    /**

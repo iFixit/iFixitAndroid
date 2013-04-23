@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
@@ -65,6 +66,10 @@ public class StepEditMediaFragment extends Fragment {
       mThumbs = (ThumbnailView) v.findViewById(R.id.edit_thumbnails);
       mLargeImage = (ImageView) v.findViewById(R.id.step_edit_large_image);
       DisplayMetrics metrics = new DisplayMetrics();
+
+      if (MainApplication.get().inPortraitMode()) {
+         ((LinearLayout)v).setOrientation(LinearLayout.HORIZONTAL);
+      }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
       mThumbs.setDisplayMetrics(metrics);

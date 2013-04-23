@@ -2,7 +2,6 @@ package com.dozuki.ifixit.ui.guide.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
@@ -70,11 +69,11 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mContext = context;
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
       inflater.inflate(R.layout.thumbnail_list, this, true);
 
-      mThumbs = new ArrayList<ImageView>();
+      setOrientation(MainApplication.get().inPortraitMode() ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
 
+      mThumbs = new ArrayList<ImageView>();
    }
 
    public void setAddThumbButtonOnClick(OnClickListener listener) {
@@ -166,7 +165,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       mNavigationHeight += viewPadding(R.dimen.guide_thumbnail_padding);
 
-      if (inPortraitMode()) {
+      if (MainApplication.get().inPortraitMode()) {
          if (hasThumbnail && mShowSingle) {
             mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
@@ -207,12 +206,14 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mMainImage.getLayoutParams().width = (int) (width - .5f);
 
       if (hasThumbnail) {
-         setThumbnailDimensions(thumbnailHeight, thumbnailWidth);
+         for (ImageView thumb : mThumbs) {
+            setThumbnailDimensions(thumb, thumbnailHeight, thumbnailWidth);
+         }
+
       }
 
       if (mAddThumbButton != null) {
-         mAddThumbButton.getLayoutParams().height = (int) (thumbnailHeight + .5f);
-         mAddThumbButton.getLayoutParams().width = (int) (thumbnailWidth + .5f);
+         setThumbnailDimensions(mAddThumbButton, thumbnailHeight, thumbnailWidth);
       }
    }
 
@@ -220,22 +221,21 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mNavigationHeight = padding;
    }
 
-   public void setThumbnailDimensions(float height, float width) {
-      for (ImageView thumb : mThumbs) {
-         LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-          (int) (width + .5f),
-          (int) (height + .5f),
-          Gravity.NO_GRAVITY
-         );
+   public void setThumbnailDimensions(ImageView thumb, float height, float width) {
+      LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
+       (int) (width + .5f),
+       (int) (height + .5f)
+      );
 
-         if (!inPortraitMode()) {
-            lp.setMargins(0, 0, 16, 0);
-         } else {
-            lp.setMargins(0, 0, 0, 16);
-         }
-
-         thumb.setLayoutParams(lp);
+      if (!MainApplication.get().inPortraitMode()) {
+         lp.gravity = Gravity.NO_GRAVITY;
+         lp.setMargins(0, 0, 16, 0);
+      } else {
+         lp.gravity = Gravity.RIGHT;
+         lp.setMargins(0, 0, 0, 16);
       }
+
+      thumb.setLayoutParams(lp);
    }
 
    public void setMainImage(ImageView image) {
@@ -258,10 +258,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private void fitProgressIndicator(float width, float height) {
       //mMainProgress.getLayoutParams().height = (int) (height - .5f);
       //mMainProgress.getLayoutParams().width = (int) (width - .5f);
-   }
-
-   private boolean inPortraitMode() {
-      return getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT;
    }
 
    private float viewPadding(int view) {
