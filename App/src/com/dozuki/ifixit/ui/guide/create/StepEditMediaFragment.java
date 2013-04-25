@@ -278,8 +278,8 @@ public class StepEditMediaFragment extends Fragment {
       int bottomBarHeight = getResources().getDimensionPixelSize(
        R.dimen.guide_create_step_edit_bottom_bar_height);
 
-      int stepPagerBar = getResources().getDimensionPixelSize(
-       com.viewpagerindicator.R.dimen.default_title_indicator_footer_indicator_height);
+      // Hardcoded because I haven't found a way to get the height programmatically.
+      int stepPagerBar = 112;
 
       return actionBarHeight + bottomBarHeight + stepPagerBar;
    }

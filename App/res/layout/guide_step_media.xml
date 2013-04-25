@@ -13,6 +13,14 @@
         android:background="@color/image_border"
         android:contentDescription="@string/main_guide_img_description"/>
 
+    <com.dozuki.ifixit.ui.guide.view.ThumbnailView
+        android:id="@+id/thumbnails"
+        style="@style/thumbnail_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        dozuki:can_edit="false"
+        dozuki:show_single="false" />
+
     <RelativeLayout
         android:id="@+id/progress_bar_guide_step"
         android:layout_width="@dimen/guide_image_width"
@@ -53,10 +61,5 @@
         android:padding="@dimen/guide_image_padding"
         android:visibility="gone"/>
 
-    <com.dozuki.ifixit.ui.guide.view.ThumbnailView
-        android:id="@+id/thumbnails"
-        style="@style/thumbnail_position"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
 
 </RelativeLayout>

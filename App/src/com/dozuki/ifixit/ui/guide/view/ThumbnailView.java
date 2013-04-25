@@ -99,6 +99,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       if (images.size() <= 1 && !mShowSingle) {
          setVisibility(GONE);
+      } else {
+         setVisibility(VISIBLE);
       }
 
       if (!images.isEmpty()) {
@@ -109,6 +111,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          // If there are no images, we still need to fit the Main Image and "add image" resource
          fitToSpace();
       }
+
+      fitToSpace();
    }
 
    public void addThumb(APIImage image, boolean fromDisk) {
@@ -135,8 +139,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       if (mThumbs.size() > 2 && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(GONE);
       }
-
-      fitToSpace();
    }
 
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
@@ -161,31 +163,18 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       float height = 0f;
       boolean hasThumbnail = mThumbs.size() > 0;
 
-      mNavigationHeight += viewPadding(R.dimen.page_padding);
-
-      mNavigationHeight += viewPadding(R.dimen.guide_thumbnail_padding);
-
       if (MainApplication.get().inPortraitMode()) {
-         if (hasThumbnail && mShowSingle) {
-            mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
+         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
 
-            // Main image is 4/5ths of the available screen height
-            width = (((mDisplayMetrics.widthPixels - mNavigationHeight) / 5f) * 4f);
-            height = width * (3f / 4f);
+         // Main image is 4/5ths of the available screen height
+         width = (((mDisplayMetrics.widthPixels - mNavigationHeight) / 5f) * 4f);
+         height = width * (3f / 4f);
 
-            // Screen height minus everything else that occupies horizontal space
-            thumbnailWidth = (mDisplayMetrics.widthPixels - width - mNavigationHeight);
-            thumbnailHeight = thumbnailWidth * (3f / 4f);
+         // Screen height minus everything else that occupies horizontal space
+         thumbnailWidth = (mDisplayMetrics.widthPixels - width - mNavigationHeight);
+         thumbnailHeight = thumbnailWidth * (3f / 4f);
 
-            fitProgressIndicator((width - .5f) + thumbnailWidth, height);
-         } else {
-            setVisibility(View.GONE);
-
-            width = mDisplayMetrics.widthPixels - mNavigationHeight;
-            height = width * (3f / 4f);
-
-            fitProgressIndicator(width, height);
-         }
+         fitProgressIndicator((width - .5f) + thumbnailWidth, height);
 
       } else {
          mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
@@ -209,7 +198,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          for (ImageView thumb : mThumbs) {
             setThumbnailDimensions(thumb, thumbnailHeight, thumbnailWidth);
          }
-
       }
 
       if (mAddThumbButton != null) {
@@ -223,8 +211,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    public void setThumbnailDimensions(ImageView thumb, float height, float width) {
       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-       (int) (width + .5f),
-       (int) (height + .5f)
+       (int) (width - .5f),
+       (int) (height - .5f)
       );
 
       if (!MainApplication.get().inPortraitMode()) {
@@ -258,9 +246,5 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private void fitProgressIndicator(float width, float height) {
       //mMainProgress.getLayoutParams().height = (int) (height - .5f);
       //mMainProgress.getLayoutParams().width = (int) (width - .5f);
-   }
-
-   private float viewPadding(int view) {
-      return getResources().getDimensionPixelSize(view) * 2f;
    }
 }

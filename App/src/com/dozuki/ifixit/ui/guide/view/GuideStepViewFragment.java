@@ -66,7 +66,7 @@ public class GuideStepViewFragment extends Fragment {
    public void onCreate(Bundle savedState) {
       mContext = getActivity();
 
-      MainApplication app = (MainApplication)mContext.getApplication();
+      MainApplication app = (MainApplication) mContext.getApplication();
 
       mContext.setTheme(app.getSiteTheme());
 
@@ -94,15 +94,15 @@ public class GuideStepViewFragment extends Fragment {
 
       View view = inflater.inflate(R.layout.guide_step, container, false);
 
-      mLineList = (ListView)view.findViewById(R.id.step_text_list);
-      mTitle = (TextView)view.findViewById(R.id.step_title);
+      mLineList = (ListView) view.findViewById(R.id.step_text_list);
+      mTitle = (TextView) view.findViewById(R.id.step_title);
 
       mMainProgress = (RelativeLayout) view.findViewById(R.id.progress_bar_guide_step);
       mVideoPlayButtonContainer = (RelativeLayout) view.findViewById(R.id.video_play_button_container);
       mVideoPlayButton = (ImageButton) view.findViewById(R.id.video_play_button);
       mMainImage = (ImageView) view.findViewById(R.id.main_image);
       mMainWebView = (WebView) view.findViewById(R.id.main_web_view);
-      mThumbs = (ThumbnailView)view.findViewById(R.id.thumbnails);
+      mThumbs = (ThumbnailView) view.findViewById(R.id.thumbnails);
 
       if (savedInstanceState != null) {
          mMainWebView.restoreState(savedInstanceState);
@@ -225,7 +225,7 @@ public class GuideStepViewFragment extends Fragment {
       Embed embed = mStep.getEmbed();
 
       mMainWebView.setLayoutParams(
-         fitToSpace(mMainWebView, (float)embed.getWidth(), (float)embed.getHeight())
+       fitToSpace(mMainWebView, (float) embed.getWidth(), (float) embed.getHeight())
       );
 
       WebSettings settings = mMainWebView.getSettings();
@@ -323,7 +323,7 @@ public class GuideStepViewFragment extends Fragment {
 
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-         GuideStepLineView stepLine = (GuideStepLineView)convertView;
+         GuideStepLineView stepLine = (GuideStepLineView) convertView;
 
          if (stepLine == null) {
             stepLine = new GuideStepLineView(mContext);
@@ -367,7 +367,7 @@ public class GuideStepViewFragment extends Fragment {
          if (embed != null) {
             // TODO: decide if this is ok. Most likely because the setStep
             // function isnt intensive
-            if(!isCancelled()) {
+            if (!isCancelled()) {
                String url = mStep.getEmbed().getOembed().getURL();
                mMainWebView.loadUrl(url);
                mMainWebView.setTag(url);
@@ -379,11 +379,19 @@ public class GuideStepViewFragment extends Fragment {
    // Helper functions
 
    private float navigationHeight() {
-      int actionBarHeight = mResources.getDimensionPixelSize(
-         com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
-      int indicatorHeight = ((GuideViewActivity)mContext).getIndicatorHeight();
+      int actionBarHeight = 0, indicatorHeight = 0;
 
-      return actionBarHeight + indicatorHeight;
+      if (!MainApplication.get().inPortraitMode()) {
+         actionBarHeight = mResources.getDimensionPixelSize(
+          com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
+         indicatorHeight = ((GuideViewActivity) mContext).getIndicatorHeight();
+      }
+
+      float pagePadding = viewPadding(R.dimen.page_padding);
+
+      float thumbnailPadding = viewPadding(R.dimen.guide_thumbnail_padding);
+
+      return actionBarHeight + indicatorHeight + pagePadding + thumbnailPadding;
    }
 
    private boolean inPortraitMode() {
