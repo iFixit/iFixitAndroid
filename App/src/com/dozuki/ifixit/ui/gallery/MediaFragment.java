@@ -642,7 +642,7 @@ public abstract class MediaFragment extends Fragment implements
       builder
             .setTitle(getString(R.string.confirm_delete_title))
             .setMessage(msg)
-            .setPositiveButton(getString(R.string.logout_confirm),
+            .setPositiveButton(getString(R.string.yes),
                new DialogInterface.OnClickListener() {
                   @Override
                   public void onClick(DialogInterface dialog, int id) {
@@ -651,7 +651,7 @@ public abstract class MediaFragment extends Fragment implements
                      dialog.cancel();
                   }
                })
-            .setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
+            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                @Override
                public void onClick(DialogInterface dialog, int which) {
                   mShowingDelete = false;

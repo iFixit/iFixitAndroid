@@ -44,7 +44,7 @@
               android:layout_height="32dp"
               android:paddingRight="18dp"
               android:paddingLeft="18dp"
-              android:text="@string/step_edit_save_step"
+              android:text="@string/save"
               android:textSize="14sp"
               android:textStyle="bold"
               android:layout_margin="4dp"

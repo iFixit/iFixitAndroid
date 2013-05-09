@@ -8,22 +8,23 @@
         android:id="@+id/username"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="User Name"
+        android:text="@string/username"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
         android:id="@+id/edit_username"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:ems="10" >
-        <requestFocus />
+        android:inputType="text"
+        android:ems="10">
+        <requestFocus />
     </EditText>
 
     <TextView
         android:id="@+id/password"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Password"
+        android:text="@string/password"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <EditText
@@ -38,13 +39,13 @@
         android:layout_width="73dp"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Login" />
+        android:text="@string/login" />
 
     <Button
         android:id="@+id/register_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:text="Register" />
+        android:text="@string/register" />
 
 </LinearLayout>

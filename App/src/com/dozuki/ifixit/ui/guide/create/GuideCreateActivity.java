@@ -282,12 +282,12 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.confirm_delete_body) + " \"" + item.mTitle + "\"?")
-       .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
+       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
              APIService.call(GuideCreateActivity.this, APIService.getRemoveGuideAPICall(mGuideForDelete));
              dialog.cancel();
           }
-       }).setNegativeButton(getString(R.string.confirm_delete_cancel), new DialogInterface.OnClickListener() {
+       }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
          public void onClick(DialogInterface dialog, int id) {
             mGuideForDelete = null;
          }

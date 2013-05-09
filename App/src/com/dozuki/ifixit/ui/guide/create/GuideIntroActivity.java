@@ -53,8 +53,8 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
                @Override
                public Dialog onCreateDialog(Bundle savedInstanceState) {
                   return new AlertDialog.Builder(getActivity())
-                   .setMessage(R.string.create_guide_intro_button)
-                   .setPositiveButton(R.string.create_guide_intro_button, null)
+                   .setMessage(R.string.save)
+                   .setPositiveButton(R.string.save, null)
                    .setNegativeButton(android.R.string.cancel, null)
                    .create();
                }

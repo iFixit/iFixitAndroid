@@ -194,7 +194,7 @@
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
                     android:singleLine="true"
-                    android:text="Indent bullet"
+                    android:text="@string/indent_bullet"
                     android:textColor="@color/white"/>
 
             <TextView
@@ -206,7 +206,7 @@
                     android:drawableLeft="@drawable/ic_dialog_unindent"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
-                    android:text="Unindent bullet"
+                    android:text="@string/unindent_bullet"
                     android:textColor="@color/white"/>
 
             <TextView
@@ -218,7 +218,7 @@
                     android:drawableLeft="@drawable/ic_dialog_arrange_bullets_light"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
-                    android:text="Rearrange bullets"
+                    android:text="@string/rearrange_bullet"
                     android:textColor="@color/white"/>
 
             <TextView
@@ -230,7 +230,7 @@
                     android:drawableLeft="@drawable/ic_menu_bot_step_delete"
                     android:drawablePadding="10dp"
                     android:gravity="center_vertical"
-                    android:text="Delete bullet"
+                    android:text="@string/delete_bullet"
                     android:textColor="@color/white"/>
 
             <TextView
@@ -239,7 +239,7 @@
                     android:layout_height="48dp"
                     android:background="@drawable/view_border"
                     android:gravity="center"
-                    android:text="Cancel"
+                    android:text="@string/cancel"
                     android:textColor="@color/white"/>
          </LinearLayout>
       </LinearLayout>

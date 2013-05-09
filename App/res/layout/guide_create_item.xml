@@ -26,7 +26,7 @@
             android:paddingBottom="4dp"
             android:maxLines="2"
             android:scrollHorizontally="true"
-            android:text="Installing Samsung SGH-E317 SIM Card" />
+            android:text="@string/example_guide_item_title" />
 
         <TextView
             android:id="@+id/guide_create_item_publish_status"

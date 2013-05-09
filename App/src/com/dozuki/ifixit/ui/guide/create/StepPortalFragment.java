@@ -303,7 +303,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
          .setMessage(getString(R.string.confirm_delete_body) + " Step " + (mStepForDelete.getStepNum() + 1) + "?")
-         .setPositiveButton(getString(R.string.confirm_delete_confirm), new DialogInterface.OnClickListener() {
+         .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                mShowingDelete = false;
 
@@ -313,7 +313,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
                dialog.cancel();
 
             }
-         }).setNegativeButton(getString(R.string.confirm_delete_cancel), new DialogInterface.OnClickListener() {
+         }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                mShowingDelete = false;
                mStepForDelete = null;

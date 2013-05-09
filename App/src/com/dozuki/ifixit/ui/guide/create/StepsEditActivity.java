@@ -391,7 +391,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
        .setMessage(
         context.getString(R.string.step_edit_confirm_delete_message) + " Step "
          + (mGuide.getStep(mPagePosition).getStepNum() + 1) + "?")
-       .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
+       .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
              mConfirmDelete = false;
@@ -410,7 +410,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
              }
              dialog.cancel();
           }
-       }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
+       }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
          @Override
          public void onClick(DialogInterface dialog, int which) {
             mConfirmDelete = false;
@@ -449,7 +449,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       builder
        .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
        .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
-       .setNegativeButton(getString(R.string.guide_create_confirm_leave_without_save_confirm),
+       .setNegativeButton(getString(R.string.save),
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
               save(mPagePosition);
@@ -590,7 +590,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
       mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
       mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
-      mSaveStep.setText(R.string.guide_create_save);
+      mSaveStep.setText(R.string.save);
       mSaveStep.setEnabled(toggle);
    }
 

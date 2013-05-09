@@ -217,7 +217,7 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(context.getString(R.string.step_delete_dialog_title))
        .setMessage(context.getString(R.string.step_delete_dialog_body))
-       .setPositiveButton(context.getString(R.string.logout_confirm), new DialogInterface.OnClickListener() {
+       .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
              mConfirmDelete = false;
@@ -228,7 +228,7 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
              setGuideDirty();
              dialog.dismiss();
           }
-       }).setNegativeButton(R.string.logout_cancel, new DialogInterface.OnClickListener() {
+       }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
          @Override
          public void onClick(DialogInterface dialog, int which) {
             mConfirmDelete = false;

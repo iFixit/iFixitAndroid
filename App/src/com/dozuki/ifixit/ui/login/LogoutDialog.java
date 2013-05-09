@@ -14,10 +14,10 @@ public class LogoutDialog {
    public static AlertDialog create(Activity activity) {
       return createLogoutDialog(
          activity,
-         R.string.logout_title,
+         R.string.logout,
          R.string.logout_messege,
-         R.string.logout_confirm,
-         R.string.logout_cancel
+         R.string.yes,
+         R.string.no
       );
    }
 

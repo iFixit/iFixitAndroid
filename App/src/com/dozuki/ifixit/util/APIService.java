@@ -181,13 +181,9 @@ public class APIService extends Service {
    private APIEvent<?> parseResult(String response, APIEndpoint endpoint) {
       String error = JSONHelper.parseError(response);
       if (error != null) {
-         if (error.equals(INVALID_LOGIN_STRING)) {
-            return endpoint.getEvent().setError(new APIError(getString(
-             R.string.error_dialog_title), error, ErrorType.INVALID_USER));
-         } else {
-            return endpoint.getEvent().setError(new APIError(getString(
-             R.string.error_dialog_title), error, ErrorType.OTHER));
-         }
+         ErrorType type = error.equals(INVALID_LOGIN_STRING) ? ErrorType.INVALID_USER : ErrorType.OTHER;
+
+         return endpoint.getEvent().setError(new APIError(getString(R.string.error), error, type));
       }
 
       try {
