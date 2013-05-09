@@ -629,7 +629,7 @@ public abstract class MediaFragment extends Fragment implements
          }
       }
 
-      String msg = getString(R.string.confirm_delete_message) + " " +
+      String msg = getString(R.string.confirm_delete_body) + " " +
        selectedCount + " ";
       if (selectedCount > 1) {
          msg += getString(R.string.images);

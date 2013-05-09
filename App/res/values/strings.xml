@@ -41,15 +41,6 @@
     <string name="fatal_error">It looks like an error occurred. Please reload your guide.</string>
     <string name="media_error_title">Something went wrong. Try again later.</string>
     <string name="error_confirm">OK</string>
-    <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are
-        .png, .jpg, .jpeg, and .gif.
-    </string>
-    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to
-        finish to upload another file.
-    </string>
-    <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the
-        server.
-    </string>
 
     <!-- Navigation -->
     <string name="slide_menu_my_guides">My Guides</string>
@@ -117,7 +108,15 @@
     <string name="image_chooser_title">Select Picture</string>
     <string name="image">image</string>
     <string name="images">images</string>
-    <string name="confirm_delete_message">Are you sure you want to delete</string>
+    <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are
+        .png, .jpg, .jpeg, and .gif.
+    </string>
+    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to
+        finish to upload another file.
+    </string>
+    <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the
+        server.
+    </string>
 
     <!-- Topic List -->
     <string name="generalInformation">General Information</string>
