@@ -10,7 +10,8 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:id="@+id/step_edit_title_label"
@@ -28,7 +29,6 @@
             android:layout_toRightOf="@+id/step_edit_title_label"
             android:layout_marginLeft="8dp"
             android:textSize="24sp"
-            android:hint="@string/default_step_title"
             android:imeOptions="actionDone"
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
             android:selectAllOnFocus="true"

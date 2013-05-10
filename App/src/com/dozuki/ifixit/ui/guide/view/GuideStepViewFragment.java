@@ -149,7 +149,9 @@ public class GuideStepViewFragment extends Fragment {
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
 
       // Set the guide title text, defaults to Step #
-      mTitle.setText(mStep.getTitle());
+      mTitle.setText(mStep.getTitle().length() == 0
+       ? MainApplication.get().getResources().getText(R.string.step) + " " + mStep.getStepNum()
+       : mStep.getTitle());
       mTitle.setTypeface(mFont);
 
       // Initialize the step instructions text and bullets

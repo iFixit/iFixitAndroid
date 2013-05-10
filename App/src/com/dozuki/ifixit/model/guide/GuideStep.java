@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.MainApplication;
-import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIImage;
 
 import java.io.Serializable;
@@ -91,10 +89,6 @@ public class GuideStep implements Serializable {
    }
 
    public String getTitle() {
-      if (mTitle.length() == 0) {
-         mTitle = MainApplication.get().getResources().getString(R.string.step) + " " + mStepNum;
-      }
-      
       return mTitle;
    }
 
