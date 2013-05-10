@@ -124,9 +124,8 @@ public class GuideListItem extends LinearLayout {
 
       mTitleView.setText(mGuideInfo.mTitle);
 
-      String image = mGuideInfo.mImage.getSize(".thumbnail");
-
-      if (image != null && mThumbnail != null) {
+      if (mGuideInfo.mImage != null && mThumbnail != null) {
+         String image = mGuideInfo.mImage.getSize(".thumbnail");
          mImageManager.displayImage(image, mActivity, mThumbnail);
       }
 

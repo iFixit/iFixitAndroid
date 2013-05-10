@@ -39,6 +39,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private ArrayList<APIImage> mThumbnails;
    private DisplayMetrics mDisplayMetrics;
    private float mNavigationHeight;
+   private float mThumbnailWidth;
+   private float mThumbnailHeight;
+   private float mMainWidth;
+   private float mMainHeight;
 
    public ThumbnailView(Context context) {
       super(context);
@@ -107,9 +111,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          for (APIImage image : images) {
             addThumb(image, false);
          }
-      } else {
-         // If there are no images, we still need to fit the Main Image and "add image" resource
-         fitToSpace();
       }
 
       fitToSpace();
@@ -127,6 +128,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       if (fromDisk) {
          path = image.mBaseUrl;
          thumb.setImageDrawable(Drawable.createFromPath(path));
+         setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
       } else {
          path = image.getSize(mImageSizes.getThumb());
          mImageManager.displayImage(path, (Activity) mContext, thumb);
@@ -147,8 +149,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void setCurrentThumb(String url) {
-      mImageManager.displayImage(url + mImageSizes.getMain(),
-       (Activity) mContext, mMainImage);
+      if (url.startsWith("http")) {
+         url += mImageSizes.getMain();
+         mImageManager.displayImage(url, (Activity) mContext, mMainImage);
+      } else {
+         mMainImage.setImageDrawable(Drawable.createFromPath(url));
+         setMainImageDimensions(mMainHeight, mMainWidth);
+      }
       mMainImage.setTag(url);
    }
 
@@ -157,56 +164,34 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void fitToSpace() {
-      float thumbnailHeight = 0f;
-      float thumbnailWidth = 0f;
-      float width = 0f;
-      float height = 0f;
-      boolean hasThumbnail = mThumbs.size() > 0;
 
       if (MainApplication.get().inPortraitMode()) {
-         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
-
-         // Main image is 4/5ths of the available screen height
-         width = (((mDisplayMetrics.widthPixels - mNavigationHeight) / 5f) * 4f);
-         height = width * (3f / 4f);
-
-         // Screen height minus everything else that occupies horizontal space
-         thumbnailWidth = (mDisplayMetrics.widthPixels - width - mNavigationHeight);
-         thumbnailHeight = thumbnailWidth * (3f / 4f);
-
-         fitProgressIndicator((width - .5f) + thumbnailWidth, height);
-
+         fitProgressIndicator(mMainWidth + mThumbnailWidth, mMainHeight);
       } else {
-         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
-
-         // Main image is 4/5ths of the available screen height
-         height = (((mDisplayMetrics.heightPixels - mNavigationHeight) / 5f) * 4f);
-         width = height * (4f / 3f);
-
-         // Screen height minus everything else that occupies vertical space
-         thumbnailHeight = (mDisplayMetrics.heightPixels - height - mNavigationHeight);
-         thumbnailWidth = (thumbnailHeight * (4f / 3f));
-
-         fitProgressIndicator(width, (height - .5f) + thumbnailHeight);
+         fitProgressIndicator(mMainWidth, mMainHeight + mThumbnailHeight);
       }
 
-      // Set the width and height of the main image
-      mMainImage.getLayoutParams().height = (int) (height - .5f);
-      mMainImage.getLayoutParams().width = (int) (width - .5f);
+      setMainImageDimensions(mMainHeight, mMainWidth);
 
-      if (hasThumbnail) {
+      if (mThumbs.size() > 0) {
          for (ImageView thumb : mThumbs) {
-            setThumbnailDimensions(thumb, thumbnailHeight, thumbnailWidth);
+            setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
          }
       }
 
       if (mAddThumbButton != null) {
-         setThumbnailDimensions(mAddThumbButton, thumbnailHeight, thumbnailWidth);
+         setThumbnailDimensions(mAddThumbButton, mThumbnailHeight, mThumbnailWidth);
       }
    }
 
    public void setNavigationHeight(float padding) {
       mNavigationHeight = padding;
+   }
+
+   public void setMainImageDimensions(float height, float width) {
+      // Set the width and height of the main image
+      mMainImage.getLayoutParams().height = (int)(height-0.5f);
+      mMainImage.getLayoutParams().width = (int)(width-0.5f);
    }
 
    public void setThumbnailDimensions(ImageView thumb, float height, float width) {
@@ -237,11 +222,51 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
             if (url != null && (url.equals("") || url.indexOf(".") == 0)) return;
 
             Intent intent = new Intent(mContext, FullImageViewActivity.class);
+
+            if (!url.startsWith("http")) {
+               intent.putExtra(FullImageViewActivity.LOCAL_URL, true);
+            }
             intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
             mContext.startActivity(intent);
          }
       });
+
+      mainImageDimensions();
+      thumbnailDimensions();
    }
+
+   private void mainImageDimensions() {
+      if (MainApplication.get().inPortraitMode()) {
+         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
+
+         // Main image is 4/5ths of the available screen height
+         mMainWidth = (((mDisplayMetrics.widthPixels - mNavigationHeight) / 5f) * 4f);
+         mMainHeight = mMainWidth * (3f / 4f);
+
+      } else {
+         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+
+         // Main image is 4/5ths of the available screen height
+         mMainHeight = (((mDisplayMetrics.heightPixels - mNavigationHeight) / 5f) * 4f);
+         mMainWidth = mMainHeight * (4f / 3f);
+      }
+   }
+
+   private void thumbnailDimensions() {
+      float height = 0f;
+      float width = 0f;
+
+      if (MainApplication.get().inPortraitMode()) {
+         // Screen height minus everything else that occupies horizontal space
+         mThumbnailWidth = (mDisplayMetrics.widthPixels - mMainWidth - mNavigationHeight);
+         mThumbnailHeight = width * (3f / 4f);
+      } else {
+         // Screen height minus everything else that occupies vertical space
+         mThumbnailHeight = (mDisplayMetrics.heightPixels - mMainHeight - mNavigationHeight);
+         mThumbnailWidth = (mThumbnailHeight * (4f / 3f));
+      }
+   }
+
 
    private void fitProgressIndicator(float width, float height) {
       //mMainProgress.getLayoutParams().height = (int) (height - .5f);
