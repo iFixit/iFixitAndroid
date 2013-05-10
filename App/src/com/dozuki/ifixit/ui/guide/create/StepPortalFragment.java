@@ -17,7 +17,6 @@ import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
@@ -36,7 +35,6 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    private static final int NO_ID = -1;
    private static final String CURRENT_OPEN_ITEM = "CURRENT_OPEN_ITEM";
    private ListView mStepList;
-   private ImageManager mImageManager;
    private StepAdapter mStepAdapter;
    private TextView mAddStepBar;
    private TextView mEditIntroBar;
@@ -48,26 +46,77 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    private GuideStep mStepForDelete;
    private boolean mShowingDelete;
 
+   /////////////////////////////////////////////////////
+   // EVENT LISTENERS
+   /////////////////////////////////////////////////////
+
+   private OnClickListener addStepClickListener = new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+         if (mNoStepsText.getVisibility() == View.VISIBLE) {
+            mNoStepsText.setVisibility(View.GONE);
+         }
+         int newStepPosition = mGuide.getSteps().size();
+         GuideStep newStep = new GuideStep(newStepPosition + 1);
+         newStep.addLine(new StepLine());
+         mGuide.addStep(newStep);
+         launchStepEdit(mGuide.getSteps(), newStepPosition);
+      }
+   };
+
+   private OnClickListener editIntroClickListener = new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+         GuideIntroFragment newFragment = new GuideIntroFragment();
+         newFragment.setGuideObject(mGuide);
+         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+         transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
+         transaction.addToBackStack(null);
+         transaction.commitAllowingStateLoss();
+      }
+   };
+
+   private OnClickListener reorderStepsClickListener = new OnClickListener() {
+      @Override
+      public void onClick(View v) {
+         if (mGuide.getSteps().size() < 2) {
+            Toast.makeText(getActivity(), R.string.step_reorder_insufficient_steps, Toast.LENGTH_SHORT).show();
+            return;
+         }
+         closeSelectedStep();
+
+         // Launch the Step reorder fragment
+         StepReorderFragment mGuideCreateReOrder = new StepReorderFragment();
+         mGuideCreateReOrder.setGuide(mGuide);
+         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
+         transaction.add(R.id.guide_create_fragment_steps_container, mGuideCreateReOrder);
+         transaction.addToBackStack(null);
+         transaction.commitAllowingStateLoss();
+      }
+   };
+
+
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      if (mImageManager == null) {
-         mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
-      }
 
       int guidid = this.getArguments().getInt(StepsActivity.GUIDE_KEY);
       mSelf = this;
       mStepAdapter = new StepAdapter();
       mCurOpenGuideObjectID = NO_ID;
+
       if (savedInstanceState != null) {
          mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
          mStepForDelete = (GuideStep) savedInstanceState.getSerializable(STEP_FOR_DELETE);
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
       }
-      if (mGuide == null) {
 
+      if (mGuide == null) {
          ((StepsActivity) getActivity()).showLoading();
          APIService.call((Activity) getActivity(), APIService.getGuideForEditAPICall(guidid));
       }
@@ -76,50 +125,73 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_create_steps_portal, container, false);
+
       mStepList = (ListView) view.findViewById(R.id.steps_portal_list);
       mAddStepBar = (TextView) view.findViewById(R.id.add_step_bar);
-      mAddStepBar.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            if (mNoStepsText.getVisibility() == View.VISIBLE)
-               mNoStepsText.setVisibility(View.GONE);
-            GuideStep item = new GuideStep(STEP_ID++);
-            item.setStepNum(mGuide.getSteps().size());
-            item.setTitle(DEFAULT_TITLE);
-            item.addLine(new StepLine());
-            launchStepEdit(item);
-         }
-      });
       mEditIntroBar = (TextView) view.findViewById(R.id.edit_intro_bar);
-      mEditIntroBar.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            launchGuideEditIntro();
-         }
-      });
       mReorderStepsBar = (TextView) view.findViewById(R.id.reorder_steps_bar);
-      mReorderStepsBar.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            if(mGuide.getSteps().size() < 2) {
-               Toast.makeText(getActivity(), R.string.step_reorder_insufficient_steps, Toast.LENGTH_SHORT).show();
-               return;
-            }
-            closeSelectedStep();
-            launchStepReorder();
-         }
-      });
-
       mNoStepsText = (TextView) view.findViewById(R.id.no_steps_text);
+
+      mStepList.setAdapter(mStepAdapter);
+
+      mAddStepBar.setOnClickListener(addStepClickListener);
+      mEditIntroBar.setOnClickListener(editIntroClickListener);
+      mReorderStepsBar.setOnClickListener(reorderStepsClickListener);
+
       if (mGuide == null || mGuide.getSteps().isEmpty()) {
          toggleNoStepsText(true);
       }
-      mStepList.setAdapter(mStepAdapter);
-      if( mShowingDelete) {
+
+      if (mShowingDelete) {
          createDeleteDialog(mStepForDelete).show();
       }
       return view;
    }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+      MainApplication.getBus().unregister(this);
+   }
+
+   @Override
+   public void onResume() {
+      super.onResume();
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
+      savedInstanceState.putSerializable(STEP_FOR_DELETE, mStepForDelete);
+      savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
+      savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY,
+       mGuide);
+
+      super.onSaveInstanceState(savedInstanceState);
+   }
+
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (requestCode == StepsActivity.GUIDE_EDIT_STEP_REQUEST) {
+         if (resultCode == Activity.RESULT_OK) {
+            Guide guide = (Guide) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
+            if (guide != null) {
+               mGuide = guide;
+               mStepAdapter = new StepAdapter();
+               mStepList.setAdapter(mStepAdapter);
+               if (mGuide.getSteps().isEmpty()) {
+                  mNoStepsText.setVisibility(View.VISIBLE);
+               }
+               mStepList.invalidateViews();
+            }
+         }
+      }
+   }
+
+   /////////////////////////////////////////////////////
+   // NOTIFICATION LISTENERS
+   /////////////////////////////////////////////////////
 
    @Subscribe
    public void onGuideForEdit(APIEvent.GuideForEdit event) {
@@ -176,29 +248,47 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       }
    }
 
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
+   /////////////////////////////////////////////////////
+   // EVENT LISTENERS
+   /////////////////////////////////////////////////////
 
    @Override
-   public void onPause() {
-      super.onPause();
-      MainApplication.getBus().unregister(this);
+   public void onReorderComplete(boolean reOrdered) {
+      if (reOrdered) {
+         mStepAdapter.notifyDataSetChanged();
+         ((StepsActivity) getActivity()).showLoading();
+         APIService.call((Activity) getActivity(), APIService.getStepReorderAPICall(mGuide));
+      }
    }
 
-   public void invalidateViews() {
-      mStepList.invalidateViews();
+
+   /////////////////////////////////////////////////////
+   // NAVIGATION
+   /////////////////////////////////////////////////////
+
+   public void launchStepEdit(ArrayList<GuideStep> stepList, int curStep) {
+      Intent intent = new Intent(getActivity(), StepsEditActivity.class);
+      intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+      intent.putExtra(StepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
+      intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, curStep);
+      startActivityForResult(intent, StepsActivity.GUIDE_EDIT_STEP_REQUEST);
    }
+
+   public void launchStepEdit(int curStep) {
+      launchStepEdit(mGuide.getSteps(), curStep);
+   }
+
+   /////////////////////////////////////////////////////
+   // ADAPTERS
+   /////////////////////////////////////////////////////
 
    private class StepAdapter extends BaseAdapter {
 
       @Override
       public int getCount() {
-          if(mGuide == null) {
-              return 0;
-          }
+         if (mGuide == null) {
+            return 0;
+         }
          return mGuide.getSteps().size();
       }
 
@@ -215,65 +305,60 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
          StepListItem itemView = (StepListItem) convertView;
-         GuideStep step = (GuideStep)getItem(position);
-         itemView = new StepListItem(getActivity(), mImageManager, mSelf, step, position);
+         GuideStep step = (GuideStep) getItem(position);
+         itemView = new StepListItem(getActivity(), MainApplication.get().getImageManager(), mSelf, step, position);
          itemView.setTag(step.getStepid());
          return itemView;
       }
    }
 
-   private void launchGuideEditIntro() {
-      GuideIntroFragment newFragment = new GuideIntroFragment();
-      newFragment.setGuideObject(mGuide);
-      FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-      transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
-      transaction.addToBackStack(null);
-      transaction.commitAllowingStateLoss();
-   }
+   /////////////////////////////////////////////////////
+   // DIALOGS
+   /////////////////////////////////////////////////////
 
-   void launchStepReorder() {
-      StepReorderFragment mGuideCreateReOrder = new StepReorderFragment();
-      mGuideCreateReOrder.setGuide(mGuide);
-      FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-      transaction.add(R.id.guide_create_fragment_steps_container, mGuideCreateReOrder);
-      transaction.addToBackStack(null);
-      transaction.commitAllowingStateLoss();
-   }
+   protected AlertDialog createDeleteDialog(GuideStep item) {
+      mStepForDelete = item;
+      mShowingDelete = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      builder.setTitle(getString(R.string.confirm_delete_title))
+       .setMessage(getString(R.string.confirm_delete_body) + " Step " + (mStepForDelete.getStepNum() + 1) + "?")
+       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+             mShowingDelete = false;
 
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == StepsActivity.GUIDE_EDIT_STEP_REQUEST) {
-         if (resultCode == Activity.RESULT_OK) {
-            Guide guide = (Guide)data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
-            if (guide != null) {
-               mGuide = guide;
-               mStepAdapter = new StepAdapter();
-               mStepList.setAdapter(mStepAdapter);
-               if (mGuide.getSteps().isEmpty()) {
-                  mNoStepsText.setVisibility(View.VISIBLE);
-               }
-               mStepList.invalidateViews();
-            }
+             ((StepsActivity) getActivity()).showLoading();
+             APIService.call((Activity) getActivity(),
+              APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(), mStepForDelete));
+             dialog.cancel();
+
+          }
+       }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+         public void onClick(DialogInterface dialog, int id) {
+            mShowingDelete = false;
+            mStepForDelete = null;
          }
-      }
+      });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingDelete = false;
+         }
+      });
+
+      return dialog;
    }
 
-   void deleteStep(GuideStep step) {
-      createDeleteDialog(step).show();
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
+
+   protected void invalidateViews() {
+      mStepList.invalidateViews();
    }
 
-   @Override
-   public void onSaveInstanceState(Bundle savedInstanceState) {
-      savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
-      savedInstanceState.putSerializable(STEP_FOR_DELETE, mStepForDelete);
-      savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
-      savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY,
-               mGuide);
-
-      super.onSaveInstanceState(savedInstanceState);
-   }
-
-   public void onItemSelected(int id, boolean sel) {
+   protected void onItemSelected(int id, boolean sel) {
       if (!sel) {
          mCurOpenGuideObjectID = NO_ID;
          return;
@@ -297,80 +382,9 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       mCurOpenGuideObjectID = NO_ID;
    }
 
-   public AlertDialog createDeleteDialog(GuideStep item) {
-      mStepForDelete = item;
-      mShowingDelete = true;
-      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-      builder.setTitle(getString(R.string.confirm_delete_title))
-         .setMessage(getString(R.string.confirm_delete_body) + " Step " + (mStepForDelete.getStepNum() + 1) + "?")
-         .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               mShowingDelete = false;
+   private void toggleNoStepsText(boolean show) {
+      if (mNoStepsText == null) return;
 
-               ((StepsActivity)getActivity()).showLoading();
-               APIService.call((Activity) getActivity(),
-                  APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(), mStepForDelete));
-               dialog.cancel();
-
-            }
-         }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               mShowingDelete = false;
-               mStepForDelete = null;
-            }
-         });
-
-      AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-            mShowingDelete = false;
-         }
-      });
-
-      return dialog;
-   }
-
-   @Override
-   public void onReorderComplete(boolean reOrdered) {
-      if (reOrdered) {
-         mStepAdapter.notifyDataSetChanged();
-         ((StepsActivity)getActivity()).showLoading();
-         APIService.call((Activity) getActivity(), APIService.getStepReorderAPICall(mGuide));
-      }
-   }
-
-   void launchStepEdit(ArrayList<GuideStep> stepList, int curStep) {
-      Intent intent = new Intent(getActivity(), StepsEditActivity.class);
-      intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-      intent.putExtra(StepsEditActivity.GUIDE_STEP_LIST_KEY, stepList);
-      intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, curStep);
-      startActivityForResult(intent, StepsActivity.GUIDE_EDIT_STEP_REQUEST);
-   }
-
-   void launchStepEdit(GuideStep curStep) {
-      ArrayList<GuideStep> stepList = new ArrayList<GuideStep>();
-      stepList.addAll(mGuide.getSteps());
-      stepList.add(curStep);
-      launchStepEdit(stepList, stepList.size() - 1);
-   }
-
-   void launchStepEdit(int curStep) {
-      ArrayList<GuideStep> stepList = new ArrayList<GuideStep>();
-      stepList.addAll(mGuide.getSteps());
-      launchStepEdit(stepList, curStep);
-   }
-
-
-   public void toggleNoStepsText(boolean show) {
-      if (mNoStepsText == null) {
-         return;
-      }
-
-      if (show) {
-         mNoStepsText.setVisibility(View.VISIBLE);
-      } else {
-         mNoStepsText.setVisibility(View.GONE);
-      }
+      mNoStepsText.setVisibility(show ? View.VISIBLE : View.GONE);
    }
 }

@@ -38,7 +38,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
    private int mStepPosition;
 
    public StepListItem(Context context, ImageManager imageManager,
-                       final StepPortalFragment portalRef, GuideStep sObject, int position) {
+    final StepPortalFragment portalRef, GuideStep sObject, int position) {
       super(context);
       mContext = context;
       mPortalRef = portalRef;
@@ -75,7 +75,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mDeleteButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            mPortalRef.deleteStep(mStepObject);
+            mPortalRef.createDeleteDialog(mStepObject);
          }
       });
       mEditButton.setOnClickListener(new OnClickListener() {
@@ -84,24 +84,21 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
             mPortalRef.launchStepEdit(mStepPosition);
          }
       });
-      if(mStepObject.getTitle().equals(""))
-      {
+      if (mStepObject.getTitle().equals("")) {
          mStepsView.setText("Step " + (mStepPosition + 1));
          mStepNumber.setVisibility(View.GONE);
-      }
-      else
-      {
+      } else {
          mStepsView.setText(mStepObject.getTitle());
          mStepNumber.setText("Step " + (mStepPosition + 1));
          mStepNumber.setVisibility(View.VISIBLE);
       }
- 
+
       setImageThumb(mStepObject.getImages(), mImageView);
       setEditMode(isEdit, false, mToggleEdit, mEditBar);
    }
 
    public void setEditMode(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
-      final LinearLayout mEditBar) {
+    final LinearLayout mEditBar) {
       if (isChecked) {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
@@ -136,16 +133,15 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
             img = true;
             imagView.setTag(imageinfo.getSize(".thumbnail"));
             mImageManager.displayImage(imageinfo.getSize(".thumbnail"),
-               mPortalRef.getActivity(), imagView);
+             mPortalRef.getActivity(), imagView);
             imagView.invalidate();
             return;
          }
       }
-      
-      if(!img)
-      {
+
+      if (!img) {
          mImageManager.displayImage("",
-            mPortalRef.getActivity(), imagView);
+          mPortalRef.getActivity(), imagView);
          imagView.invalidate();
       }
 
