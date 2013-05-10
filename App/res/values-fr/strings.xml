@@ -10,7 +10,7 @@
     <string name="site_list_button">Explorer les Sites</string>
     <string name="site_list_title">Sélectionner un Site</string>
     <string name="site_list_image_description">Dozuki: Où la documentation technique prend vie</string>
-    <string name="site_list_background">Dozuki scie sur l'établi</string>
+    <string name="site_list_background">Dozuki scie sur l\'établi</string>
     <string name="site_list_search_title">Rechercher les Sites</string>
     <string name="lock_description">Site Privé</string>
     <string name="empty_site_list">Pas de des sites trouvés.</string>
@@ -25,17 +25,20 @@
     <string name="confirm_delete_body">Êtes-vous sûr de vouloir supprimer</string>
 
     <!-- Error Messages -->
-    <string name="parse_error_title">Eh bien, c'est embarrassant</string>
-    <string name="parse_error_message">Une erreur s'est produite en essayant de charger le contenu de nos serveurs.</string>
+    <string name="parse_error_title">Eh bien, c\'est embarrassant</string>
+    <string name="parse_error_message">Une erreur s\'est produite en essayant de charger le contenu de nos
+        serveurs.</string>
     <string name="no_connection">Pas de connexion</string>
     <string name="no_connection_title">Erreur de Connexion</string>
     <string name="invalid_revision_error_title">Erreur de Révision</string>
-    <string name="invalid_revision_error">On dirait que vous êtes en train d'éditer une version de ce guide qui est mis à jour.
-Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharger ce guide.
+    <string name="invalid_revision_error">On dirait que vous êtes en train d\'éditer une version de ce guide qui est
+        mis à jour.
+Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recharger ce guide.
     </string>
     <string name="fatal_error_title">Erreur Inconnue</string>
-    <string name="fatal_error">On dirait que une erreur s'est produite. S'il vous plaît recharger votre guide.</string>
-    <string name="media_error_title">Quelque chose s'est mal passé. Réessayez plus tard.</string>
+    <string name="fatal_error">On dirait que une erreur s\'est produite. S\'il vous plaît recharger votre
+        guide.</string>
+    <string name="media_error_title">Quelque chose s\'est mal passé. Réessayez plus tard.</string>
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
@@ -52,21 +55,21 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
     <string name="slide_menu_youtube">Youtube Channel</string>
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
-    <string name="slide_menu_more_info">Plus D'informations</string>
+    <string name="slide_menu_more_info">Plus D\'informations</string>
     <string name="slide_menu_help">Aide</string>
     <string name="slide_menu_about">Propos</string>
 
     <!-- Log-In / Log-Out -->
-    <string name="username">Nom d'utilisateur</string>
+    <string name="username">Nom d\'utilisateur</string>
     <string name="password">Mot de passe</string>
     <string name="login">Connecter</string>
     <string name="logout">Déconnexion</string>
-    <string name="register">S'inscrire</string>
+    <string name="register">S\'inscrire</string>
 
     <string name="logout_messege">Etes-vous sûr de vouloir vous déconnecter?</string>
-    <string name="login_error"> Uh oh! Détails de connexion invalide, essayez à nouveau s'il vous plaît..</string>
+    <string name="login_error"> Uh oh! Détails de connexion invalide, essayez à nouveau s\'il vous plaît..</string>
     <string name="try_again"> Essayez à nouveau </string>
-    <string name="register_agreement"> J'accepte 
+    <string name="register_agreement"> J\'accepte
         <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">libérer mes contributions</a>
         sous<a href="http://www.ifixit.com/Info/Licensing">notre licence publique</a>.
     </string>
@@ -79,8 +82,8 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
     <string name="email_hint">Email</string>
 
     <string name="signin_description">Connecter à iFixit.com</string>
-    <string name="register_description">S'inscrire sur iFixit.com</string>
-    <string name="cancel_register_description">Annuler L'enregistrement</string>
+    <string name="register_description">S\'inscrire sur iFixit.com</string>
+    <string name="cancel_register_description">Annuler L\'enregistrement</string>
     <string name="cancel_register_button">Annuler</string>
     <string name="google_signin_description">Connectez-vous avec Google</string>
     <string name="yahoo_signin_description">Connectez-vous avec Yahoo!</string>
@@ -90,7 +93,9 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
 
     <!-- Gallery -->
     <string name="media_help_title">Quel est ceci?</string>
-    <string name="media_help_messege">Cette galerie est directement liée à votre compte iFixit. Toutes les photos que vous chargez ici sera à votre disposition pendant votre création de guide. Restez à l'écoute et vous serez capable de créer des guides n'importe quand!
+    <string name="media_help_messege">Cette galerie est directement liée à votre compte iFixit. Toutes les photos que
+        vous chargez ici sera à votre disposition pendant votre création de guide. Restez à l\'écoute et vous serez
+        capable de créer des guides n\'importe quand!
     </string>
     <string name="media_gallery_title">Galerie Média</string>
     <string name="media_help_confirm"> Bon à savoir!</string>
@@ -99,13 +104,14 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
     <string name="no_images_text"> Ajouter des images avec les icônes ci-dessus!</string>
     <string name="no_embeds_text"> Ajouter du code HTML à iFixit.com!</string>
     <string name="no_videos_text"> Ajouter des vidéos avec les icônes ci-dessus!</string>
-    <string name="image_chooser_title">Sélectionnez l'image</string>
+    <string name="image_chooser_title">Sélectionnez l\'image</string>
     <string name="image">image</string>
     <string name="images">images</string>
     <string name="non_image_error">Les images doivent être au moins 800x600 pixels et locales sur votre appareil. Les formats valides sont
         .png, .jpg, .jpeg, and .gif.
     </string>
-    <string name="too_many_image_error">Vous pouvez seulement télécharger 4 fichiers à la fois. S'il vous plaît attendez que vos ajouts actuels se terminent pour télécharger un autre fichier.
+    <string name="too_many_image_error">Vous pouvez seulement télécharger 4 fichiers à la fois. S\'il vous plaît
+        attendez que vos ajouts actuels se terminent pour télécharger un autre fichier.
     </string>
     <string name="delete_loading_image_error"> Une ou plusieurs images sont toujours en chargement et ne sera pas supprimé de le serveur</string>
 
@@ -134,7 +140,7 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
     <string name="next_page_image_desc"> Page Suivante</string>
 
     <string name="video_play_button_description">Bouton de Lecture de la Vidéo</string>
-    <string name="video_activity_progress_title">Attendez s'il vous plaît ...</string>
+    <string name="video_activity_progress_title">Attendez s\'il vous plaît ...</string>
     <string name="video_activity_progress_body"> Chargement Video ...</string>
 
     <!-- Guide View Menu -->
@@ -161,7 +167,7 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
     <string name="no_guides_text"> Ajouter guides avec la barre ci-dessus !</string>
 
     <!-- Guide Steps Edit List -->
-    <string name="step_edit_confirm_delete_title">Supprimer L'étape</string>
+    <string name="step_edit_confirm_delete_title">Supprimer L\'étape</string>
     <string name="step_edit_confirm_delete_message"> Etes-vous sûr que vous voulez supprimer </string>
     <string name="edit">Modifier</string>
     <string name="edit_step_intro">Intro</string>
@@ -172,13 +178,13 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
     <!-- Guide Step Rearrange Dialog -->
     <string name="step_rearrange_title">Réorganiser</string>
     <string name="step_rearrange_confirm">Confirmez</string>
-    <string name="step_reorder_insufficient_steps">Pas assez d'étape pour réorganiser.</string>
+    <string name="step_reorder_insufficient_steps">Pas assez d\'étape pour réorganiser.</string>
 
     <!-- Guide Introduction Edit -->
     <string name="default_title">Titre par Défaut</string>
     <string name="create_guide_error">Vous devez entrer le type de dispositif !</string>
     <string name="create_guide_header"> Créer un guide </string>
-    <string name="create_guide_header_edit">Éditer l'introduction</string>
+    <string name="create_guide_header_edit">Éditer l\'introduction</string>
     <string name="create_guide_title">Titre</string>
     <string name="create_guide_device">Dispositif</string>
     <string name="create_guide_device_subject">Sujet</string>
@@ -198,18 +204,20 @@ Pour vous assurer que vous ne perdez pas d'information, s'il vous plaît recharg
     <string name="guide_create_steps_help">help text</string>
     <string name="guide_create_edit_steps_help">aide texte</string>
     <string name="guide_create_step_media_add_dialog_title"> Ajouter une Image </string>
-    <string name="guide_create_edit_step_media_cannot_add_step">Ajouter du contenu à l'étape actuelle avant de créer une nouvelle étape.</string>
-    <string name="guide_create_edit_must_add_line_content">Impossible d'enregistrer étape jusqu'à ce que le contenu de la ligne est ajouté.</string>
+    <string name="guide_create_edit_step_media_cannot_add_step">Ajouter du contenu à l\'étape actuelle avant de créer
+        une nouvelle étape.</string>
+    <string name="guide_create_edit_must_add_line_content">Impossible d\'enregistrer étape jusqu\'à ce que le contenu
+        de la ligne est ajouté.</string>
     <string name="guide_create_confirm_leave_without_save_title">Quitter sans Sauvegarder?</string>
     <string name="guide_create_confirm_leave_without_save_body">Quitter annulera les modifications que vous avez faites.</string>
     <string name="guide_create_confirm_leave_without_save_cancel">Quitter</string>
-    <string name="guide_create_step_edit_main_image_description">Image principale de l'étape</string>
+    <string name="guide_create_step_edit_main_image_description">Image principale de l\'étape</string>
     <string name="default_step_title">Étape sans titre</string>
     <string name="step_title_hint">Insérez sagesse ici.</string>
 
     <!-- Guide Step Bullet Context Menu -->
     <string name="bullet_desc">Guider étape balle</string>
-    <string name="bullet_icon_desc">Avis de l'étape, étape importante</string>
+    <string name="bullet_icon_desc">Avis de l\'étape, étape importante</string>
     <string name="indent_bullet">Tiret balle</string>
     <string name="unindent_bullet">Retirer balle</string> <!-- Je n'ai aucune idée… -->
     <string name="rearrange_bullet"> Réorganiser les balles </string>
