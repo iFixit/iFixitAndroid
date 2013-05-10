@@ -52,6 +52,7 @@ public class GuideStep implements Serializable {
 
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
+      mTitle = "";
       mImages = new ArrayList<APIImage>();
       mLines = new ArrayList<StepLine>();
    }
@@ -95,7 +96,7 @@ public class GuideStep implements Serializable {
    public int getStepNum() {
       return mStepNum;
    }
-   
+
    public boolean hasImage() {
       return mImages.size() > 0;
    }
@@ -157,7 +158,7 @@ public class GuideStep implements Serializable {
 
    public String toString() {
       return "{GuideStep: " + mGuideid + ", " + mStepid + ", " + mRevisionid + ", " +
-       mOrderby + ", " + mStepNum + ", " + mTitle +  ", " + mLines + ", " + mImages + "}";
+       mOrderby + ", " + mStepNum + ", " + mTitle + ", " + mLines + ", " + mImages + "}";
    }
 
 
