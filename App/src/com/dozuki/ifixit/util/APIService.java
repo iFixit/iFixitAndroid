@@ -513,6 +513,10 @@ public class APIService extends Service {
          return;
       }
 
+      if (mSite == null) {
+         mSite = MainApplication.get().getSite();
+      }
+
       final String url = endpoint.getUrl(mSite, apiCall.mQuery);
 
       Log.i("iFixit", "Performing API call: " + endpoint.mMethod + " " + url);
