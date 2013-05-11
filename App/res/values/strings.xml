@@ -179,8 +179,7 @@
     <string name="no_steps_text">Add steps with the bar above!</string>
 
     <!-- Guide Step Rearrange Dialog -->
-    <string name="step_rearrange_title">Rearrange</string>
-    <string name="step_rearrange_confirm">Confirm</string>
+    <string name="step_rearrange_title">Rearrange Steps</string>
     <string name="step_reorder_insufficient_steps">Not enough steps to reorder.</string>
 
     <!-- Guide Introduction Edit -->

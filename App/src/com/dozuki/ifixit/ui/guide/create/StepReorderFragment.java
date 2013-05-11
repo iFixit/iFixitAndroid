@@ -144,13 +144,16 @@ public class StepReorderFragment extends Fragment {
       @Override
       public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
          switch (item.getItemId()) {
-            case R.id.cab_action_confirm:
+            case R.id.cab_action_save:
                for (int i = 0; i < mStepsCopy.size(); i++) {
                   mStepsCopy.get(i).setStepNum(i);
                }
                mGuide.setStepList(mStepsCopy);
                mReturnVal = true;
                mode.finish(); // Action picked, so close the CAB
+               return true;
+            case R.id.cab_action_cancel:
+               mode.finish();
                return true;
             default:
                mReturnVal = false;

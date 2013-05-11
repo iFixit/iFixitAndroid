@@ -11,6 +11,7 @@ import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.util.APIImage;
@@ -37,12 +38,12 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
    private GuideStep mStepObject;
    private int mStepPosition;
 
-   public StepListItem(Context context, ImageManager imageManager,
-    final StepPortalFragment portalRef, GuideStep sObject, int position) {
+   public StepListItem(Context context, final StepPortalFragment portalRef, GuideStep sObject, int position) {
       super(context);
       mContext = context;
       mPortalRef = portalRef;
-      mImageManager = imageManager;
+
+      mImageManager = MainApplication.get().getImageManager();
       mStepObject = sObject;
       mStepPosition = position;
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -84,6 +85,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
             mPortalRef.launchStepEdit(mStepPosition);
          }
       });
+
       if (mStepObject.getTitle().equals("")) {
          mStepsView.setText("Step " + (mStepPosition + 1));
          mStepNumber.setVisibility(View.GONE);

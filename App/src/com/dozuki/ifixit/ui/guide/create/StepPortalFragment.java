@@ -240,7 +240,10 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    @Subscribe
    public void onStepReorder(APIEvent.StepReorder event) {
       if (!event.hasError()) {
-         mGuide.setRevisionid(event.getResult().getRevisionid());
+         mGuide = event.getResult();
+
+         mStepAdapter.notifyDataSetChanged();
+         mStepList.invalidate();
          ((StepsActivity) getActivity()).hideLoading();
       } else {
          event.setError(APIError.getFatalError(getActivity()));
@@ -306,7 +309,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       public View getView(int position, View convertView, ViewGroup parent) {
          StepListItem itemView = (StepListItem) convertView;
          GuideStep step = (GuideStep) getItem(position);
-         itemView = new StepListItem(getActivity(), MainApplication.get().getImageManager(), mSelf, step, position);
+         itemView = new StepListItem(getActivity(), mSelf, step, position);
          itemView.setTag(step.getStepid());
          return itemView;
       }
