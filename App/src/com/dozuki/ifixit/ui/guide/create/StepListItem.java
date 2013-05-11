@@ -128,23 +128,20 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       }
    }
 
-   private void setImageThumb(ArrayList<APIImage> imageList, ImageView imagView) {
+   private void setImageThumb(ArrayList<APIImage> imageList, ImageView imageView) {
       boolean img = false;
-      for (APIImage imageinfo : imageList) {
-         if (imageinfo.mId > 0) {
-            img = true;
-            imagView.setTag(imageinfo.getSize(".thumbnail"));
-            mImageManager.displayImage(imageinfo.getSize(".thumbnail"),
-             mPortalRef.getActivity(), imagView);
-            imagView.invalidate();
+      for (APIImage imageInfo : imageList) {
+         if (imageInfo.mId > 0) {
+            imageView.setTag(imageInfo.getSize(".thumbnail"));
+            mImageManager.displayImage(imageInfo.getSize(".thumbnail"), mPortalRef.getActivity(), imageView);
+            imageView.invalidate();
             return;
          }
       }
 
       if (!img) {
-         mImageManager.displayImage("",
-          mPortalRef.getActivity(), imagView);
-         imagView.invalidate();
+         mImageManager.displayImage("", mPortalRef.getActivity(), imageView);
+         imageView.invalidate();
       }
 
    }

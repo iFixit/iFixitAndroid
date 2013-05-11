@@ -323,12 +323,11 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
          GuideListItem itemView;
-         GuideInfo currItem = mUserGuideList.get(position);
+         GuideInfo currItem = (GuideInfo)getItem(position);
 
          if (convertView != null) {
             itemView =  (GuideListItem) convertView;
          } else {
-            Log.w("GuideCreateActivity", mUserGuideList.get(position).mTitle);
             itemView = new GuideListItem(parent.getContext(), mActivity);
          }
 
