@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.util.APIImage;
+import com.dozuki.ifixit.model.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;

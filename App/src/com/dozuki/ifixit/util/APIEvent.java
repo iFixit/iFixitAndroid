@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util;
 
+import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.UploadedImageInfo;
 import com.dozuki.ifixit.model.gallery.UserEmbedList;

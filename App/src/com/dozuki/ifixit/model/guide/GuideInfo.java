@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.util.APIImage;
+import com.dozuki.ifixit.model.APIImage;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

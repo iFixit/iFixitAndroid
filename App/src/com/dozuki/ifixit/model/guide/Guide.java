@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.util.APIImage;
+import com.dozuki.ifixit.model.APIImage;
 
 import java.io.Serializable;
 import java.util.ArrayList;

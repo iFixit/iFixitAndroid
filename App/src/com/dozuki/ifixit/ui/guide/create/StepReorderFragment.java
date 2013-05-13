@@ -14,7 +14,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.util.APIImage;
+import com.dozuki.ifixit.model.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;

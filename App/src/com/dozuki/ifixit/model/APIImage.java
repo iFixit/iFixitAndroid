@@ -1,5 +1,6 @@
-package com.dozuki.ifixit.util;
+package com.dozuki.ifixit.model;
 
+import com.dozuki.ifixit.util.JSONHelper;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;

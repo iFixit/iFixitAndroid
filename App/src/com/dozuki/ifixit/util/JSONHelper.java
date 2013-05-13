@@ -5,6 +5,7 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.*;
 import com.dozuki.ifixit.model.guide.*;

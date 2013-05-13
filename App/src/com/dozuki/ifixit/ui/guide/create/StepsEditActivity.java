@@ -27,7 +27,7 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIImage;
+import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;

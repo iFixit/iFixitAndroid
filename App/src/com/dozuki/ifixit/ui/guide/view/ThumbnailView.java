@@ -11,7 +11,7 @@ import android.view.View;
 import android.widget.ImageView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.util.APIImage;
+import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
