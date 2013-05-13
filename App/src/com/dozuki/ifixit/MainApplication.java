@@ -1,6 +1,6 @@
 package com.dozuki.ifixit;
 
-import android.app.Application;
+import org.holoeverywhere.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;

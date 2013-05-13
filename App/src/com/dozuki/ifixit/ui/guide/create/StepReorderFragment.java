@@ -84,7 +84,7 @@ public class StepReorderFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      getSherlockActivity().startActionMode(new ContextualStepReorder());
+      getSupportActivity().startActionMode(new ContextualStepReorder());
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }

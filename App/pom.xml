@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
-            <version>r7</version>
+            <version>r12</version>
             <scope>provided</scope>
         </dependency>
 
@@ -72,7 +72,13 @@
         <dependency>
             <groupId>org.holoeverywhere</groupId>
             <artifactId>library</artifactId>
-            <version>1.4.2</version>
+            <version>${holoeverywhere.version}</version>
+            <type>apklib</type>
+        </dependency>
+        <dependency>
+            <groupId>org.holoeverywhere</groupId>
+            <artifactId>addon-preferences</artifactId>
+            <version>${holoeverywhere.version}</version>
             <type>apklib</type>
         </dependency>
         <dependency>
