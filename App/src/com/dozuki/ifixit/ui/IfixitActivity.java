@@ -311,10 +311,12 @@ public abstract class IfixitActivity extends Activity {
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuItem overflowItem = menu.add(0, MENU_OVERFLOW, 0, null);
+      overflowItem.setIcon(R.drawable.ic_action_list);
+
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
          overflowItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
       }
-      overflowItem.setIcon(R.drawable.ic_action_list);
+
       return true;
    }
 

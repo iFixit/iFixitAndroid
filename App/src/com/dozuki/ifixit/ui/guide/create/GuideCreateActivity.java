@@ -111,13 +111,13 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      MenuItem overflowItem = menu.add(0, MENU_CREATE_GUIDE, 0, null);
+      MenuItem createGuideItem = menu.add(0, MENU_CREATE_GUIDE, 0, R.string.add_guide);
+      createGuideItem.setIcon(R.drawable.ic_menu_add_guide);
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-         overflowItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
+         createGuideItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
       }
 
-      overflowItem.setIcon(R.drawable.ic_menu_add_guide);
-      return true;
+      return super.onCreateOptionsMenu(menu);
    }
 
 
