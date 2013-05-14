@@ -29,7 +29,6 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
-import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import org.holoeverywhere.ArrayAdapter;
 import org.holoeverywhere.widget.AutoCompleteTextView;
 import org.holoeverywhere.widget.EditText;
@@ -61,6 +60,9 @@ public class EditTextFragment extends Fragment {
 
       Bundle args = getArguments();
       mKey = args.getString(ARG_KEY);
+      if (mKey == null && savedInstanceState != null) {
+         mKey = savedInstanceState.getString(ARG_KEY);
+      }
       mPage = (EditTextPage) mCallbacks.onGetPage(mKey);
    }
 
@@ -75,9 +77,17 @@ public class EditTextFragment extends Fragment {
       mDescription = ((TextView) rootView.findViewById(R.id.page_description));
       mDescription.setText(mPage.getDescription());
 
-      mField.setText(mPage.getData().getString(TopicNamePage.TOPIC_DATA_KEY));
+      mField.setText(mPage.getData().getString(EditTextPage.TEXT_DATA_KEY));
 
       return rootView;
+
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      outState.putString(ARG_KEY, mKey);
    }
 
    @Override
@@ -113,7 +123,7 @@ public class EditTextFragment extends Fragment {
 
          @Override
          public void afterTextChanged(Editable editable) {
-            mPage.getData().putString(TopicNamePage.TOPIC_DATA_KEY,
+            mPage.getData().putString(EditTextPage.TEXT_DATA_KEY,
              (editable != null) ? editable.toString() : null);
             mPage.notifyDataChanged();
          }

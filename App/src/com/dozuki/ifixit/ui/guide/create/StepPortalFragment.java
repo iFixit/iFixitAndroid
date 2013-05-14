@@ -16,6 +16,7 @@ import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -101,7 +102,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      int guideid = this.getArguments().getInt(StepsActivity.GUIDE_ID_KEY);
+      int guideid = getArguments().getInt(StepsActivity.GUIDE_ID_KEY);
       mSelf = this;
       mStepAdapter = new StepAdapter();
       mCurOpenGuideObjectID = NO_ID;
@@ -290,25 +291,25 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       MainApplication app = MainApplication.get();
 
       Bundle topicBundle = new Bundle();
-      topicBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getTopic());
+      topicBundle.putString(TopicNamePage.TOPIC_DATA_KEY, mGuide.getTopic());
 
       Bundle typeBundle = new Bundle();
       typeBundle.putString(Page.SIMPLE_DATA_KEY, mGuide.getType());
 
       Bundle titleBundle = new Bundle();
-      titleBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getTitle());
+      titleBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getTitle());
 
       Bundle subjectBundle = new Bundle();
-      subjectBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getSubject());
+      subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
 
       Bundle summaryBundle = new Bundle();
-      summaryBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getSummary());
+      summaryBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSummary());
 
       Bundle introductionBundle = new Bundle();
-      introductionBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getIntroductionRaw());
+      introductionBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getIntroductionRaw());
 
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_type_title), typeBundle);
-      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_topic_title), topicBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_topic_title, app.getTopicName()), topicBundle);
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_title_title), titleBundle);
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_introduction_title), introductionBundle);
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_subject_title), subjectBundle);

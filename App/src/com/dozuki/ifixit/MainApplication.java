@@ -116,7 +116,7 @@ public class MainApplication extends Application {
    public String getTopicName() {
       String topicName = getString(R.string.topic);
 
-      if (mSite.mName.compareTo("ifixit") == 0) {
+      if (mSite.mName.equals("ifixit")) {
          topicName = getString(R.string.device);
       }
 
