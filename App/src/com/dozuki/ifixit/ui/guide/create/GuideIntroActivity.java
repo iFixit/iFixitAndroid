@@ -59,6 +59,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    private StepPagerStrip mStepPagerStrip;
 
    private Bundle mWizardModelBundle;
+   private Guide mGuide;
 
    private View.OnClickListener mNextButtonClickListener = new View.OnClickListener() {
       @Override
@@ -73,7 +74,12 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
                       @Override
                       public void onClick(DialogInterface dialog, int which) {
                          Bundle bundle = mWizardModel.save();
-                         APIService.call(mSelf, APIService.getCreateGuideAPICall(bundle));
+                         if (EDIT_INTRO_STATE) {
+                           APIService.call(mSelf, APIService.getEditGuideAPICall(bundle, mGuide.getGuideid(),
+                            mGuide.getRevisionid()));
+                         } else {
+                           APIService.call(mSelf, APIService.getCreateGuideAPICall(bundle));
+                         }
                       }
                    })
                    .setNegativeButton(android.R.string.cancel, null)
@@ -123,6 +129,10 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       }
    };
 
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -132,7 +142,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mWizardModelBundle = extras.getBundle("model");
-         Log.w("GuideIntroActivity", mWizardModelBundle.toString());
+         mGuide = (Guide)extras.getSerializable(StepsActivity.GUIDE_KEY);
          EDIT_INTRO_STATE = true;
       }
 
@@ -147,11 +157,10 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       mWizardModel = new GuideIntroWizardModel(this);
 
       if (mWizardModelBundle != null) {
-         Log.w("GuideIntroActivity extras", mWizardModelBundle.toString());
          mWizardModel.load(mWizardModelBundle);
       } else if (savedInstanceState != null) {
-         Log.w("GuideIntroActivity savedinstancestate", savedInstanceState.getBundle("model").toString());
          mWizardModel.load(savedInstanceState.getBundle("model"));
+         mGuide = (Guide)savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
       }
 
       mWizardModel.registerListener(this);
@@ -243,6 +252,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    protected void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
       outState.putBundle("model", mWizardModel.save());
+      outState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
    }
 
    @Override

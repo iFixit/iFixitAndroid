@@ -239,22 +239,15 @@ public class APIService extends Service {
       return apiCall;
    }
 
-
    public static APICall getCreateGuideAPICall(Bundle introWizardModel) {
-      JSONObject requestBody = new JSONObject();
-      try {
-         Log.w("APIService", introWizardModel.toString());
-         requestBody.put("type", introWizardModel.getBundle("Guide Type").getString("_"));
-         requestBody.put("category", introWizardModel.getBundle("Category Name").getString("name"));
-         requestBody.put("title", introWizardModel.getBundle("Guide Title").getString("name"));
-         requestBody.put("introduction", introWizardModel.getBundle("Introduction").getString("name"));
-         requestBody.put("subject", introWizardModel.getBundle("Part").getString("name"));
-         requestBody.put("summary", introWizardModel.getBundle("Guide Summary").getString("name"));
-         requestBody.put("public", false);
+      JSONObject requestBody = guideBundleToRequestBody(introWizardModel);
 
+      try {
+         requestBody.put("public", false);
       } catch (JSONException e) {
          return null;
       }
+
       Log.w("APIService", requestBody.toString());
       return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
@@ -263,28 +256,39 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.DELETE_GUIDE, guide.mGuideid + "?revisionid=" + guide.mRevisionid, "");
    }
 
-   /**
-    * TODO: Pass in entire guide so parameters can easily be changed later.
-    */
-   public static APICall getEditGuideAPICall(int guideid, String device, String title,
-    String summary, String intro, String guideType, String subject, int revisionid) {
-      JSONObject requestBody = new JSONObject();
-
-      try {
-         requestBody.put("topic", device);
-         requestBody.put("type", guideType);
-         requestBody.put("subject", subject);
-         requestBody.put("title", title);
-         requestBody.put("summary", summary);
-         requestBody.put("introduction", intro);
-      } catch (JSONException e) {
-         return null;
-      }
+   public static APICall getEditGuideAPICall(Bundle bundle, int guideid, int revisionid) {
+      JSONObject requestBody = guideBundleToRequestBody(bundle);
+      Log.w("APIService", requestBody.toString());
 
       return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid + "?revisionid="
        + revisionid, requestBody.toString());
    }
 
+   private static JSONObject guideBundleToRequestBody(Bundle bundle) {
+      JSONObject requestBody = new JSONObject();
+      MainApplication app = MainApplication.get();
+      try {
+         Log.w("APIService", bundle.toString());
+         requestBody.put("type", bundle.getBundle(app.getString(R.string
+          .guide_intro_wizard_guide_type_title)).getString("_"));
+         requestBody.put("category", bundle.getBundle(app.getString(R.string
+          .guide_intro_wizard_guide_topic_title)).getString("name"));
+         requestBody.put("title", bundle.getBundle(app.getString(R.string
+          .guide_intro_wizard_guide_title_title)).getString("name"));
+         requestBody.put("introduction", bundle.getBundle(app.getString(R.string
+          .guide_intro_wizard_guide_introduction_title)).getString("name"));
+         requestBody.put("subject", bundle.getBundle(app.getString(R.string
+          .guide_intro_wizard_guide_subject_title)).getString("name"));
+         requestBody.put("summary", bundle.getBundle(app.getString(R.string
+          .guide_intro_wizard_guide_summary_title)
+         ).getString("name"));
+
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return requestBody;
+   }
 
    public static APICall getPublishGuideAPICall(int guideid, int revisionid) {
       return new APICall(APIEndpoint.PUBLISH_GUIDE, "" + guideid + "/public" + "?revisionid="

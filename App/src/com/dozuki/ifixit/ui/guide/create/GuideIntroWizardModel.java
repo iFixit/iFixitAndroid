@@ -7,6 +7,7 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.content.Context;
 import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.*;
 
 import java.util.ArrayList;
@@ -27,40 +28,37 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
       ArrayList<String> topics = app.getTopics();
       String[] typesArr = new String[types.size()];
 
-      String topicName = "Topic";
+      String topicName = app.getString(R.string.topic);
 
       if (app.getSite().mName.compareTo("ifixit") == 0) {
-         topicName = "Device";
+         topicName = app.getString(R.string.device);
       }
 
       return new PageList(
-       new SingleFixedChoicePage(this, "Guide Type")
+       new SingleFixedChoicePage(this, app.getString(R.string.guide_intro_wizard_guide_type_title))
         .setChoices(types.toArray(typesArr))
         .setRequired(true),
        new TopicNamePage(this)
         .setTopicAutocompleteList(topics)
-        .setDescription("What " + topicName.toLowerCase() + " are you working on? For example, " +
-         "is it a \"iPhone 4\" or a \"Kenmore " +
-         "Washing Machine\"?  If the " + topicName.toLowerCase() + " already exists, " +
-         "be sure to select it from the prepopulated " +
-         "list")
-        .setTitle(topicName + " Name")
+        .setDescription(app.getString(R.string.guide_intro_wizard_guide_topic_description,
+         topicName.toLowerCase(), topicName.toLowerCase()))
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_topic_title, topicName))
         .setRequired(true),
        new EditTextPage(this)
-        .setDescription("What is this guide specifically about?  Describe the component, " +
-         "thing or idea that you are describing about this " + topicName.toLowerCase())
-        .setTitle("Part"),
+        .setDescription(app.getString(R.string.guide_intro_wizard_guide_subject_description,
+         topicName.toLowerCase()))
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_subject_title)),
        new EditTextPage(this)
-        .setDescription("Generated title from the type, " + topicName.toLowerCase() + " and focus.  Only edit if you " +
-         "aren't happy with what's there.")
-        .setTitle("Guide Title"),
+        .setDescription(app.getString(R.string.guide_intro_wizard_guide_title_description,
+          topicName.toLowerCase()))
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_title_title)),
        new EditTextPage(this)
-        .setDescription("In a sentence or two, describe what this guide is about.")
-        .setTitle("Guide Summary"),
+        .setDescription(app.getString(R.string.guide_intro_wizard_guide_summary_description))
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_summary_title)),
        new EditTextPage(this)
-        .setDescription("What is this guide specifically about?  Describe the component, " +
-         "thing or idea that you are describing about this " + topicName.toLowerCase())
-        .setTitle("Introduction")
+        .setDescription(app.getString(R.string.guide_intro_wizard_guide_introduction_description,
+         topicName.toLowerCase()))
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_introduction_title))
       );
    }
 }
