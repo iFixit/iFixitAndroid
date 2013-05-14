@@ -27,7 +27,7 @@ import org.holoeverywhere.app.Activity;
 
 import java.util.ArrayList;
 
-public class GuideCreateActivity extends IfixitActivity implements GuideIntroFragment.GuideCreateIntroListener {
+public class GuideCreateActivity extends IfixitActivity {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    static int GUIDE_STEP_EDIT_REQUEST = 1;
    private static final int MENU_CREATE_GUIDE = 3;
@@ -206,21 +206,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       Intent intent = new Intent(this, GuideIntroActivity.class);
       intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
       startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
-   }
-
-   @Override
-   public void onFinishIntroInput(String device, String title, String summary,
-    String intro, String guideType, String subject) {
-/*      showLoading();
-      Guide guide = new Guide();//(GuideItemID++);
-      guide.mTitle = (title);
-      guide.(device);
-      guide.setType(guideType);
-      guide.setDevice(device);
-      //guideObject.setSummary(summary);
-      guide.setSubject(subject);
-      guide.setIntroduction(intro);
-      APIService.call(this, APIService.getCreateGuideAPICall(guideObject)); */
    }
 
    private AlertDialog createHelpDialog() {

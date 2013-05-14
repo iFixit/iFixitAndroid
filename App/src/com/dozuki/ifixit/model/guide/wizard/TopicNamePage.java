@@ -28,8 +28,6 @@ import java.util.ArrayList;
 public class TopicNamePage extends EditTextPage {
    public static final String TOPIC_DATA_KEY = "name";
 
-   protected String mTopicName = "Topic";
-   protected String mDescription;
    protected ArrayList<String> mTopics;
 
    public TopicNamePage(ModelCallbacks callbacks) {

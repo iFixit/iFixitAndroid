@@ -20,8 +20,7 @@ import org.holoeverywhere.app.AlertDialog;
 
 import java.util.ArrayList;
 
-public class StepsActivity extends IfixitActivity
- implements GuideIntroFragment.GuideCreateIntroListener, StepRearrangeListener {
+public class StepsActivity extends IfixitActivity implements StepRearrangeListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
@@ -32,23 +31,6 @@ public class StepsActivity extends IfixitActivity
    private ArrayList<GuideStep> mStepList;
    private Guide mGuide;
    private boolean mIsLoading;
-
-   public ArrayList<GuideStep> getStepList() {
-      return mStepList;
-   }
-
-   public void deleteStep(GuideStep step) {
-      mStepList.remove(step);
-   }
-
-   public void addStep(GuideStep step, int index) {
-      mStepList.add(index, step);
-   }
-
-   public Guide getGuide() {
-      return mGuide;
-   }
-
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -92,8 +74,7 @@ public class StepsActivity extends IfixitActivity
          getSupportFragmentManager().beginTransaction()
           .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, tag).commit();
       } else {
-         mStepPortalFragment =
-          (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(tag);
+         mStepPortalFragment = (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(tag);
       }
 
       if (mIsLoading) {
@@ -130,20 +111,6 @@ public class StepsActivity extends IfixitActivity
          }
 
       }
-   }
-
-   @Override
-   public void onFinishIntroInput(String device, String title, String summary, String intro, String guideType,
-    String thing) {
-      mGuide.setTitle(title);
-      mGuide.setTopic(device);
-      mGuide.setSummary(summary);
-      mGuide.setIntroductionRendered(intro);
-
-      APIService.call(this, APIService.getEditGuideAPICall(mGuide.getGuideid(),
-       device, title, summary, intro, guideType, thing, mGuide.getRevisionid()));
-      getSupportFragmentManager().popBackStack();
-      showLoading();
    }
 
    @Override

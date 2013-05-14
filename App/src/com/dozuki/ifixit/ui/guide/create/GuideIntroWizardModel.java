@@ -28,11 +28,7 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
       ArrayList<String> topics = app.getTopics();
       String[] typesArr = new String[types.size()];
 
-      String topicName = app.getString(R.string.topic);
-
-      if (app.getSite().mName.compareTo("ifixit") == 0) {
-         topicName = app.getString(R.string.device);
-      }
+      String topicName = app.getTopicName();
 
       return new PageList(
        new SingleFixedChoicePage(this, app.getString(R.string.guide_intro_wizard_guide_type_title))

@@ -65,28 +65,15 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       @Override
       public void onClick(View view) {
          if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
-            DialogFragment dg = new DialogFragment() {
-               @Override
-               public Dialog onCreateDialog(Bundle savedInstanceState) {
-                  return new AlertDialog.Builder(getActivity())
-                   .setMessage(R.string.save)
-                   .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
-                      @Override
-                      public void onClick(DialogInterface dialog, int which) {
-                         Bundle bundle = mWizardModel.save();
-                         if (EDIT_INTRO_STATE) {
-                           APIService.call(mSelf, APIService.getEditGuideAPICall(bundle, mGuide.getGuideid(),
-                            mGuide.getRevisionid()));
-                         } else {
-                           APIService.call(mSelf, APIService.getCreateGuideAPICall(bundle));
-                         }
-                      }
-                   })
-                   .setNegativeButton(android.R.string.cancel, null)
-                   .create();
-               }
-            };
-            dg.show(getSupportFragmentManager(), "place_order_dialog");
+
+            Bundle bundle = mWizardModel.save();
+            if (EDIT_INTRO_STATE) {
+               APIService.call(mSelf, APIService.getEditGuideAPICall(bundle, mGuide.getGuideid(),
+                mGuide.getRevisionid()));
+            } else {
+               APIService.call(mSelf, APIService.getCreateGuideAPICall(bundle));
+            }
+
          } else {
             if (mEditingAfterReview) {
                mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
@@ -136,13 +123,13 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.guide_create_intro_main);
+      setContentView(R.layout.guide_create_intro);
       mSelf = this;
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mWizardModelBundle = extras.getBundle("model");
-         mGuide = (Guide)extras.getSerializable(StepsActivity.GUIDE_KEY);
+         mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
          EDIT_INTRO_STATE = true;
       }
 
@@ -160,7 +147,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          mWizardModel.load(mWizardModelBundle);
       } else if (savedInstanceState != null) {
          mWizardModel.load(savedInstanceState.getBundle("model"));
-         mGuide = (Guide)savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
+         mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
       }
 
       mWizardModel.registerListener(this);
@@ -183,55 +170,13 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
 
       onPageTreeChanged();
       updateBottomBar();
-   }
 
-   @Subscribe
-   public void onSiteInfo(APIEvent.SiteInfo event) {
-      if (!event.hasError()) {
-         MainApplication.get().setSite(event.getResult());
-         initWizard(null);
-      } else {
-         APIService.getErrorDialog(this, event.getError(),
-          APIService.getSitesAPICall()).show();
+      // If we're editing an existing guide, jump to the review page for an overview of the content
+      if (EDIT_INTRO_STATE) {
+         mPager.setCurrentItem(mCurrentPageSequence.size());
       }
    }
 
-   @Subscribe
-   public void onTopicList(APIEvent.TopicList event) {
-      if (!event.hasError()) {
-         ArrayList<String> topics = new ArrayList<String>(event.getResult());
-         MainApplication.get().setTopics(topics);
-      } else {
-         APIService.getErrorDialog(this, event.getError(),
-          APIService.getAllTopicsAPICall()).show();
-      }
-   }
-
-   @Subscribe
-   public void onGuideCreated(APIEvent.CreateGuide event) {
-      if (!event.hasError()) {
-         Guide guide = event.getResult();
-
-         GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-         item.setStepNum(0);
-         item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-         item.addLine(new StepLine());
-
-         ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
-         initialStepList.add(item);
-
-         guide.setStepList(initialStepList);
-
-         Intent intent = new Intent(this, StepsEditActivity.class);
-         intent.putExtra(GuideCreateActivity.GUIDE_KEY, guide);
-         intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, 0);
-         startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
-
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
-      }
-   }
 
    @Override
    public void onPageTreeChanged() {
@@ -292,6 +237,59 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    public Page onGetPage(String key) {
       return mWizardModel.findByKey(key);
    }
+
+   /////////////////////////////////////////////////////
+   // NOTIFICATION LISTENERS
+   /////////////////////////////////////////////////////
+
+   @Subscribe
+   public void onSiteInfo(APIEvent.SiteInfo event) {
+      if (!event.hasError()) {
+         MainApplication.get().setSite(event.getResult());
+         initWizard(null);
+      } else {
+         APIService.getErrorDialog(this, event.getError(),
+          APIService.getSitesAPICall()).show();
+      }
+   }
+
+   @Subscribe
+   public void onTopicList(APIEvent.TopicList event) {
+      if (!event.hasError()) {
+         ArrayList<String> topics = new ArrayList<String>(event.getResult());
+         MainApplication.get().setTopics(topics);
+      } else {
+         APIService.getErrorDialog(this, event.getError(),
+          APIService.getAllTopicsAPICall()).show();
+      }
+   }
+
+   @Subscribe
+   public void onGuideCreated(APIEvent.CreateGuide event) {
+      if (!event.hasError()) {
+         Guide guide = event.getResult();
+
+         GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
+         item.setStepNum(0);
+         item.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         item.addLine(new StepLine());
+
+         ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
+         initialStepList.add(item);
+
+         guide.setStepList(initialStepList);
+
+         Intent intent = new Intent(this, StepsEditActivity.class);
+         intent.putExtra(GuideCreateActivity.GUIDE_KEY, guide);
+         intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, 0);
+         startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
+
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(this, event.getError(), null).show();
+      }
+   }
+
 
    private boolean recalculateCutOffPage() {
       // Cut off the pager adapter at first required page that isn't completed

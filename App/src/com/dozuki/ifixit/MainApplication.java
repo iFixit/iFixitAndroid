@@ -113,6 +113,16 @@ public class MainApplication extends Application {
       mUser = getUserFromPreferenceFile(site);
    }
 
+   public String getTopicName() {
+      String topicName = getString(R.string.topic);
+
+      if (mSite.mName.compareTo("ifixit") == 0) {
+         topicName = getString(R.string.device);
+      }
+
+      return topicName;
+   }
+
    public void setTopics(ArrayList<String> topics) {
       mTopics = new ArrayList<String>(topics);
    }
