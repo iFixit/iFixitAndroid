@@ -100,7 +100,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      int guidid = this.getArguments().getInt(StepsActivity.GUIDE_KEY);
+      int guideid = this.getArguments().getInt(StepsActivity.GUIDE_ID_KEY);
       mSelf = this;
       mStepAdapter = new StepAdapter();
       mCurOpenGuideObjectID = NO_ID;
@@ -114,7 +114,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
 
       if (mGuide == null) {
          ((StepsActivity) getActivity()).showLoading();
-         APIService.call((Activity) getActivity(), APIService.getGuideForEditAPICall(guidid));
+         APIService.call((Activity) getActivity(), APIService.getGuideForEditAPICall(guideid));
       }
    }
 

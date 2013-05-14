@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import com.actionbarsherlock.app.ActionBar;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -25,6 +24,8 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
    public static String GUIDE_KEY = "GUIDE_KEY";
+   public static String GUIDE_ID_KEY = "GUIDE_ID_KEY";
+
    private static final String LOADING = "LOADING";
    private ActionBar mActionBar;
    private StepPortalFragment mStepPortalFragment;
@@ -38,12 +39,11 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      int guideid = 0;
+
       super.onCreate(savedInstanceState);
 
-      setTheme(((MainApplication) getApplication()).getSiteTheme());
-
       mActionBar = getSupportActionBar();
-      mActionBar.setTitle("");
       mActionBar.setDisplayHomeAsUpEnabled(true);
 
       if (savedInstanceState != null) {
@@ -52,29 +52,32 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
          mIsLoading = savedInstanceState.getBoolean(LOADING);
       }
 
+      Bundle extras = getIntent().getExtras();
+      if (extras != null) {
+         mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
+         guideid = extras.getInt(StepsActivity.GUIDE_ID_KEY);
+         if (guideid == 0) {
+            guideid = mGuide.getGuideid();
+         }
+      }
+
       setContentView(R.layout.guide_create_steps_root);
-      String tag = GUIDE_STEPS_PORTAL_FRAG;
 
       if (findViewById(R.id.guide_create_fragment_steps_container) != null
-       && getSupportFragmentManager().findFragmentByTag(tag) == null) {
-
-         Bundle extras = getIntent().getExtras();
-
-         int guideID = 0;
-
-         if (extras != null) {
-            guideID = extras.getInt(StepsActivity.GUIDE_KEY);
-         }
+       && getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG) == null) {
 
          mStepPortalFragment = new StepPortalFragment();
          Bundle fragArgs = new Bundle();
-         fragArgs.putInt(GUIDE_KEY, guideID);
+         fragArgs.putInt(GUIDE_ID_KEY, guideid);
+         if (mGuide != null) {
+            fragArgs.putSerializable(GUIDE_KEY, mGuide);
+         }
          mStepPortalFragment.setArguments(fragArgs);
          mStepPortalFragment.setRetainInstance(true);
          getSupportFragmentManager().beginTransaction()
-          .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, tag).commit();
+          .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, GUIDE_STEPS_PORTAL_FRAG).commit();
       } else {
-         mStepPortalFragment = (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(tag);
+         mStepPortalFragment = (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
       }
 
       if (mIsLoading) {

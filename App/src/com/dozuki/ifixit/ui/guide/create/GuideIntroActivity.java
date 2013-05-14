@@ -290,45 +290,24 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       }
    }
 
+   @Subscribe
+   public void onGuideEdited(APIEvent.EditGuide event) {
+      if (!event.hasError()) {
+         Guide guide = event.getResult();
 
-   private boolean recalculateCutOffPage() {
-      // Cut off the pager adapter at first required page that isn't completed
-      int cutOffPage = mCurrentPageSequence.size() + 1;
-      for (int i = 0; i < mCurrentPageSequence.size(); i++) {
-         Page page = mCurrentPageSequence.get(i);
-         if (page.isRequired() && !page.isCompleted()) {
-            cutOffPage = i;
-            break;
-         }
-      }
+         Intent intent = new Intent(this, StepsActivity.class);
+         intent.putExtra(StepsActivity.GUIDE_KEY, guide);
+         startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
 
-      if (mPagerAdapter.getCutOffPage() != cutOffPage) {
-         mPagerAdapter.setCutOffPage(cutOffPage);
-         return true;
-      }
-
-      return false;
-   }
-
-   private void updateBottomBar() {
-      int position = mPager.getCurrentItem();
-      if (position == mCurrentPageSequence.size()) {
-         mNextButton.setText(R.string.finish);
-         mNextButton.setBackgroundResource(R.drawable.wizard_finish_background);
-         //mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
       } else {
-         mNextButton.setText(mEditingAfterReview
-          ? R.string.review
-          : R.string.next);
-         mNextButton.setBackgroundResource(R.drawable.wizard_selectable_item_background);
-         TypedValue v = new TypedValue();
-         getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v, true);
-         mNextButton.setTextAppearance(this, v.resourceId);
-         mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(this, event.getError(), null).show();
       }
-
-      mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
    }
+
+   /////////////////////////////////////////////////////
+   // ADAPTERS
+   /////////////////////////////////////////////////////
 
    public class MyPagerAdapter extends FragmentStatePagerAdapter {
       private int mCutOffPage;
@@ -380,4 +359,48 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          return mCutOffPage;
       }
    }
+
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
+
+   private boolean recalculateCutOffPage() {
+      // Cut off the pager adapter at first required page that isn't completed
+      int cutOffPage = mCurrentPageSequence.size() + 1;
+      for (int i = 0; i < mCurrentPageSequence.size(); i++) {
+         Page page = mCurrentPageSequence.get(i);
+         if (page.isRequired() && !page.isCompleted()) {
+            cutOffPage = i;
+            break;
+         }
+      }
+
+      if (mPagerAdapter.getCutOffPage() != cutOffPage) {
+         mPagerAdapter.setCutOffPage(cutOffPage);
+         return true;
+      }
+
+      return false;
+   }
+
+   private void updateBottomBar() {
+      int position = mPager.getCurrentItem();
+      if (position == mCurrentPageSequence.size()) {
+         mNextButton.setText(R.string.finish);
+         mNextButton.setBackgroundResource(R.drawable.wizard_finish_background);
+         //mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+      } else {
+         mNextButton.setText(mEditingAfterReview
+          ? R.string.review
+          : R.string.next);
+         mNextButton.setBackgroundResource(R.drawable.wizard_selectable_item_background);
+         TypedValue v = new TypedValue();
+         getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v, true);
+         mNextButton.setTextAppearance(this, v.resourceId);
+         mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
+      }
+
+      mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
+   }
+
 }
