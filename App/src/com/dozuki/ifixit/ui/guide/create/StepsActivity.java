@@ -159,6 +159,10 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
       }
    }
 
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
+
    public void showLoading() {
       mStepPortalFragment =
        (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
@@ -175,7 +179,6 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
    }
-
 
    private AlertDialog createHelpDialog() {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);

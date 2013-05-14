@@ -14,6 +14,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -286,30 +287,32 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
 
    private Bundle buildIntroBundle() {
       Bundle bundle = new Bundle();
+      MainApplication app = MainApplication.get();
+
       Bundle topicBundle = new Bundle();
-      topicBundle.putString("name", mGuide.getTopic());
+      topicBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getTopic());
 
       Bundle typeBundle = new Bundle();
       typeBundle.putString(Page.SIMPLE_DATA_KEY, mGuide.getType());
-      Log.w("Guide Type", mGuide.getType());
-      Bundle titleBundle = new Bundle();
-      titleBundle.putString("name", mGuide.getTitle());
 
-      Bundle partBundle = new Bundle();
-      partBundle.putString("name", mGuide.getSubject());
+      Bundle titleBundle = new Bundle();
+      titleBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getTitle());
+
+      Bundle subjectBundle = new Bundle();
+      subjectBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getSubject());
 
       Bundle summaryBundle = new Bundle();
-      summaryBundle.putString("name", mGuide.getSummary());
+      summaryBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getSummary());
 
       Bundle introductionBundle = new Bundle();
-      introductionBundle.putString("name", mGuide.getIntroductionRaw());
+      introductionBundle.putString(EditTextPage.SIMPLE_DATA_KEY, mGuide.getIntroductionRaw());
 
-      bundle.putBundle("Guide Type", typeBundle);
-      bundle.putBundle("Device Name", topicBundle);
-      bundle.putBundle("Guide Title", titleBundle);
-      bundle.putBundle("Introduction", introductionBundle);
-      bundle.putBundle("Part", partBundle);
-      bundle.putBundle("Guide Summary", summaryBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_type_title), typeBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_topic_title), topicBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_title_title), titleBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_introduction_title), introductionBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_subject_title), subjectBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_summary_title), summaryBundle);
 
       return bundle;
    }
