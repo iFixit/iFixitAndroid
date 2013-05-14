@@ -114,7 +114,6 @@ public class MainApplication extends Application {
    }
 
    public void setTopics(ArrayList<String> topics) {
-
       mTopics = new ArrayList<String>(topics);
    }
 

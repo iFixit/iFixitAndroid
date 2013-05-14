@@ -14,6 +14,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -67,12 +68,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    private OnClickListener editIntroClickListener = new OnClickListener() {
       @Override
       public void onClick(View v) {
-         GuideIntroFragment newFragment = new GuideIntroFragment();
-         newFragment.setGuideObject(mGuide);
-         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-         transaction.replace(R.id.guide_create_fragment_steps_container, newFragment);
-         transaction.addToBackStack(null);
-         transaction.commitAllowingStateLoss();
+         launchGuideIntroEdit();
       }
    };
 
@@ -264,7 +260,6 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       }
    }
 
-
    /////////////////////////////////////////////////////
    // NAVIGATION
    /////////////////////////////////////////////////////
@@ -279,6 +274,43 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
 
    public void launchStepEdit(int curStep) {
       launchStepEdit(mGuide.getSteps(), curStep);
+   }
+
+   public void launchGuideIntroEdit() {
+      Intent intent = new Intent(getActivity(), GuideIntroActivity.class);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+      intent.putExtra("model", buildIntroBundle());
+      startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_EDIT_REQUEST);
+   }
+
+   private Bundle buildIntroBundle() {
+      Bundle bundle = new Bundle();
+      Bundle topicBundle = new Bundle();
+      topicBundle.putString("name", mGuide.getTopic());
+
+      Bundle typeBundle = new Bundle();
+      typeBundle.putString(Page.SIMPLE_DATA_KEY, mGuide.getType());
+      Log.w("Guide Type", mGuide.getType());
+      Bundle titleBundle = new Bundle();
+      titleBundle.putString("name", mGuide.getTitle());
+
+      Bundle partBundle = new Bundle();
+      partBundle.putString("name", mGuide.getSubject());
+
+      Bundle summaryBundle = new Bundle();
+      summaryBundle.putString("name", mGuide.getSummary());
+
+      Bundle introductionBundle = new Bundle();
+      introductionBundle.putString("name", mGuide.getIntroductionRaw());
+
+      bundle.putBundle("Guide Type", typeBundle);
+      bundle.putBundle("Device Name", topicBundle);
+      bundle.putBundle("Guide Title", titleBundle);
+      bundle.putBundle("Introduction", introductionBundle);
+      bundle.putBundle("Part", partBundle);
+      bundle.putBundle("Guide Summary", summaryBundle);
+
+      return bundle;
    }
 
    /////////////////////////////////////////////////////

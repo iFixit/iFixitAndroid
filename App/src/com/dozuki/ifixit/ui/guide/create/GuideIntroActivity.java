@@ -1,15 +1,21 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
 import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
 import com.dozuki.ifixit.model.guide.wizard.Page;
@@ -17,6 +23,7 @@ import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
 import com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -30,6 +37,10 @@ import java.util.List;
 
 public class GuideIntroActivity extends IfixitActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks,
  ModelCallbacks {
+   public static final int GUIDE_STEP_EDIT_REQUEST = 1;
+
+   private boolean EDIT_INTRO_STATE = false;
+
    private ViewPager mPager;
    private MyPagerAdapter mPagerAdapter;
 
@@ -42,8 +53,12 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    private Button mNextButton;
    private Button mPrevButton;
 
+   private GuideIntroActivity mSelf;
+
    private List<Page> mCurrentPageSequence;
    private StepPagerStrip mStepPagerStrip;
+
+   private Bundle mWizardModelBundle;
 
    private View.OnClickListener mNextButtonClickListener = new View.OnClickListener() {
       @Override
@@ -54,7 +69,13 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
                public Dialog onCreateDialog(Bundle savedInstanceState) {
                   return new AlertDialog.Builder(getActivity())
                    .setMessage(R.string.save)
-                   .setPositiveButton(R.string.save, null)
+                   .setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
+                      @Override
+                      public void onClick(DialogInterface dialog, int which) {
+                         Bundle bundle = mWizardModel.save();
+                         APIService.call(mSelf, APIService.getCreateGuideAPICall(bundle));
+                      }
+                   })
                    .setNegativeButton(android.R.string.cancel, null)
                    .create();
                }
@@ -102,23 +123,36 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       }
    };
 
+   @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_create_intro_main);
+      mSelf = this;
+
+      Bundle extras = getIntent().getExtras();
+      if (extras != null) {
+         mWizardModelBundle = extras.getBundle("model");
+         Log.w("GuideIntroActivity", mWizardModelBundle.toString());
+         EDIT_INTRO_STATE = true;
+      }
 
       if (MainApplication.get().getSite().mGuideTypes != null) {
-         initWizard();
-
-         if (savedInstanceState != null) {
-            mWizardModel.load(savedInstanceState.getBundle("model"));
-         }
+         initWizard(savedInstanceState);
       } else {
          APIService.call(this, APIService.getSiteInfoAPICall());
       }
    }
 
-   protected void initWizard() {
+   protected void initWizard(Bundle savedInstanceState) {
       mWizardModel = new GuideIntroWizardModel(this);
+
+      if (mWizardModelBundle != null) {
+         Log.w("GuideIntroActivity extras", mWizardModelBundle.toString());
+         mWizardModel.load(mWizardModelBundle);
+      } else if (savedInstanceState != null) {
+         Log.w("GuideIntroActivity savedinstancestate", savedInstanceState.getBundle("model").toString());
+         mWizardModel.load(savedInstanceState.getBundle("model"));
+      }
 
       mWizardModel.registerListener(this);
       mCurrentPageSequence = mWizardModel.getCurrentPageSequence();
@@ -140,14 +174,13 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
 
       onPageTreeChanged();
       updateBottomBar();
-
    }
 
    @Subscribe
    public void onSiteInfo(APIEvent.SiteInfo event) {
       if (!event.hasError()) {
          MainApplication.get().setSite(event.getResult());
-         initWizard();
+         initWizard(null);
       } else {
          APIService.getErrorDialog(this, event.getError(),
           APIService.getSitesAPICall()).show();
@@ -165,6 +198,32 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       }
    }
 
+   @Subscribe
+   public void onGuideCreated(APIEvent.CreateGuide event) {
+      if (!event.hasError()) {
+         Guide guide = event.getResult();
+
+         GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
+         item.setStepNum(0);
+         item.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         item.addLine(new StepLine());
+
+         ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
+         initialStepList.add(item);
+
+         guide.setStepList(initialStepList);
+
+         Intent intent = new Intent(this, StepsEditActivity.class);
+         intent.putExtra(GuideCreateActivity.GUIDE_KEY, guide);
+         intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, 0);
+         startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
+
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(this, event.getError(), null).show();
+      }
+   }
+
    @Override
    public void onPageTreeChanged() {
       mCurrentPageSequence = mWizardModel.getCurrentPageSequence();
@@ -172,26 +231,6 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       mStepPagerStrip.setPageCount(mCurrentPageSequence.size() + 1); // + 1 = review step
       mPagerAdapter.notifyDataSetChanged();
       updateBottomBar();
-   }
-
-   private void updateBottomBar() {
-      int position = mPager.getCurrentItem();
-      if (position == mCurrentPageSequence.size()) {
-         mNextButton.setText(R.string.finish);
-         mNextButton.setBackgroundResource(R.drawable.wizard_finish_background);
-         //mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
-      } else {
-         mNextButton.setText(mEditingAfterReview
-          ? R.string.review
-          : R.string.next);
-         mNextButton.setBackgroundResource(R.drawable.wizard_selectable_item_background);
-         TypedValue v = new TypedValue();
-         getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v, true);
-         mNextButton.setTextAppearance(this, v.resourceId);
-         mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
-      }
-
-      mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
    }
 
    @Override
@@ -263,6 +302,26 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       return false;
    }
 
+   private void updateBottomBar() {
+      int position = mPager.getCurrentItem();
+      if (position == mCurrentPageSequence.size()) {
+         mNextButton.setText(R.string.finish);
+         mNextButton.setBackgroundResource(R.drawable.wizard_finish_background);
+         //mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+      } else {
+         mNextButton.setText(mEditingAfterReview
+          ? R.string.review
+          : R.string.next);
+         mNextButton.setBackgroundResource(R.drawable.wizard_selectable_item_background);
+         TypedValue v = new TypedValue();
+         getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v, true);
+         mNextButton.setTextAppearance(this, v.resourceId);
+         mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
+      }
+
+      mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
+   }
+
    public class MyPagerAdapter extends FragmentStatePagerAdapter {
       private int mCutOffPage;
       private Fragment mPrimaryItem;
@@ -313,5 +372,4 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          return mCutOffPage;
       }
    }
-
 }

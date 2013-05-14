@@ -23,8 +23,8 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
    protected PageList onNewRootPageList() {
       MainApplication app = MainApplication.get();
 
-      ArrayList<String> types = MainApplication.get().getSite().getGuideTypes();
-      ArrayList<String> topics = MainApplication.get().getTopics();
+      ArrayList<String> types = app.getSite().getGuideTypes();
+      ArrayList<String> topics = app.getTopics();
       String[] typesArr = new String[types.size()];
 
       String topicName = "Topic";

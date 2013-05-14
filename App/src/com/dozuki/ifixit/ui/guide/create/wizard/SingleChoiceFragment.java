@@ -88,7 +88,7 @@ public class SingleChoiceFragment extends ListFragment {
          public void run() {
             String selection = mPage.getData().getString(Page.SIMPLE_DATA_KEY);
             for (int i = 0; i < mChoices.size(); i++) {
-               if (mChoices.get(i).equals(selection)) {
+               if (mChoices.get(i).toLowerCase().equals(selection)) {
                   listView.setItemChecked(i, true);
                   break;
                }

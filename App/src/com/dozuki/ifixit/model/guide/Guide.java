@@ -17,6 +17,7 @@ public class Guide implements Serializable {
    protected boolean mPublic;
    protected String mTopic;
    protected String mAuthor;
+   protected String mType;
    protected String mTimeRequired;
    protected String mDifficulty;
    protected String mIntroductionRendered;
@@ -56,6 +57,14 @@ public class Guide implements Serializable {
       }
 
       return formattedTools;
+   }
+
+   public void setType(String type) {
+      mType = type;
+   }
+
+   public String getType() {
+      return mType;
    }
 
    public void addPart(GuidePart part) {

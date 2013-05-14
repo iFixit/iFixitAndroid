@@ -49,34 +49,12 @@ public class StepsActivity extends IfixitActivity
       return mGuide;
    }
 
-   @Subscribe
-   public void onRetrievedGuide(APIEvent.GuideForEdit event) {
-      if (!event.hasError()) {
-         mGuide = event.getResult();
-         mStepList = mGuide.getSteps();
-         if (mGuide.getSteps() != null && mGuide.getSteps().size() == 0) {
 
-         }
-         hideLoading();
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
-      }
-   }
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
 
-   @Subscribe
-   public void onIntroSavedGuide(APIEvent.EditGuide event) {
-      if (!event.hasError()) {
-         mGuide = event.getResult();
-         mStepList = mGuide.getSteps();
-         hideLoading();
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
-
-      }
-   }
-
+   @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
@@ -124,29 +102,6 @@ public class StepsActivity extends IfixitActivity
    }
 
    @Override
-   public boolean finishActivityIfLoggedOut() {
-      return true;
-   }
-
-   public void showLoading() {
-      mStepPortalFragment =
-       (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
-      getSupportFragmentManager().beginTransaction()
-       .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading")
-       .commit();
-      if (mStepPortalFragment != null) {
-         getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
-      }
-      mIsLoading = true;
-   }
-
-
-   public void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-      mIsLoading = false;
-   }
-
-   @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
       savedInstanceState.putBoolean(LOADING, mIsLoading);
@@ -177,19 +132,6 @@ public class StepsActivity extends IfixitActivity
       }
    }
 
-   private AlertDialog createHelpDialog() {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_steps_help))
-       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-
-          public void onClick(DialogInterface dialog, int id) {
-             dialog.cancel();
-          }
-       });
-
-      return builder.create();
-   }
-
    @Override
    public void onFinishIntroInput(String device, String title, String summary, String intro, String guideType,
     String thing) {
@@ -209,4 +151,73 @@ public class StepsActivity extends IfixitActivity
       ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
        .onReorderComplete(val);
    }
+
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
+
+   /////////////////////////////////////////////////////
+   // NOTIFICATION LISTENERS
+   /////////////////////////////////////////////////////
+
+   @Subscribe
+   public void onRetrievedGuide(APIEvent.GuideForEdit event) {
+      if (!event.hasError()) {
+         mGuide = event.getResult();
+         mStepList = mGuide.getSteps();
+         if (mGuide.getSteps() != null && mGuide.getSteps().size() == 0) {
+
+         }
+         hideLoading();
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+      }
+   }
+
+   @Subscribe
+   public void onIntroSavedGuide(APIEvent.EditGuide event) {
+      if (!event.hasError()) {
+         mGuide = event.getResult();
+         mStepList = mGuide.getSteps();
+         hideLoading();
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+
+      }
+   }
+
+   public void showLoading() {
+      mStepPortalFragment =
+       (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
+      getSupportFragmentManager().beginTransaction()
+       .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading")
+       .commit();
+      if (mStepPortalFragment != null) {
+         getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
+      }
+      mIsLoading = true;
+   }
+
+   public void hideLoading() {
+      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      mIsLoading = false;
+   }
+
+
+   private AlertDialog createHelpDialog() {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_steps_help))
+       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
+
+          public void onClick(DialogInterface dialog, int id) {
+             dialog.cancel();
+          }
+       });
+
+      return builder.create();
+   }
+
 }

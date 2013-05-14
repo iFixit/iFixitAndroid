@@ -23,7 +23,6 @@ import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-import com.google.gson.Gson;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
@@ -241,8 +240,23 @@ public class APIService extends Service {
    }
 
 
-   public static APICall getCreateGuideAPICall(GuideInfo guide) {
-      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, new Gson().toJson(guide));
+   public static APICall getCreateGuideAPICall(Bundle introWizardModel) {
+      JSONObject requestBody = new JSONObject();
+      try {
+         Log.w("APIService", introWizardModel.toString());
+         requestBody.put("type", introWizardModel.getBundle("Guide Type").getString("_"));
+         requestBody.put("category", introWizardModel.getBundle("Category Name").getString("name"));
+         requestBody.put("title", introWizardModel.getBundle("Guide Title").getString("name"));
+         requestBody.put("introduction", introWizardModel.getBundle("Introduction").getString("name"));
+         requestBody.put("subject", introWizardModel.getBundle("Part").getString("name"));
+         requestBody.put("summary", introWizardModel.getBundle("Guide Summary").getString("name"));
+         requestBody.put("public", false);
+
+      } catch (JSONException e) {
+         return null;
+      }
+      Log.w("APIService", requestBody.toString());
+      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
 
    public static APICall getRemoveGuideAPICall(GuideInfo guide) {

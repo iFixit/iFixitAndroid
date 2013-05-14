@@ -16,8 +16,6 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -51,15 +49,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
    private GuideCreateListAdapter mGuideListAdapter;
    private Activity mActivity;
 
-   public ArrayList<GuideInfo> getGuideList() {
-      return mUserGuideList;
-   }
-
-   public void addGuide(GuideInfo guide) {
-      mUserGuideList.add(guide);
-   }
-
-   @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -127,18 +116,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       savedInstanceState.putSerializable(GUIDE_FOR_DELETE, mGuideForDelete);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       super.onSaveInstanceState(savedInstanceState);
-   }
-
-   @Subscribe
-   public void onGuideCreated(APIEvent.CreateGuide event) {
-      if (!event.hasError()) {
-         Guide guide = event.getResult();
-
-         launchStepEditOnNewGuide(guide);
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
-      }
    }
 
    @Override
@@ -210,6 +187,14 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       }
    }
 
+   public ArrayList<GuideInfo> getGuideList() {
+      return mUserGuideList;
+   }
+
+   public void addGuide(GuideInfo guide) {
+      mUserGuideList.add(guide);
+   }
+
    public void createGuide() {
       if (mUserGuideList == null) {
          return;
@@ -236,23 +221,6 @@ public class GuideCreateActivity extends IfixitActivity implements GuideIntroFra
       guide.setSubject(subject);
       guide.setIntroduction(intro);
       APIService.call(this, APIService.getCreateGuideAPICall(guideObject)); */
-   }
-
-   public void launchStepEditOnNewGuide(Guide guideObject) {
-      Intent intent = new Intent(this, StepsEditActivity.class);
-      intent.putExtra(GuideCreateActivity.GUIDE_KEY, guideObject);
-
-      GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-      item.setStepNum(0);
-      item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-      item.addLine(new StepLine());
-
-      ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
-      initialStepList.add(item);
-
-      intent.putExtra(StepsEditActivity.GUIDE_STEP_LIST_KEY, initialStepList);
-      intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, 0);
-      startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
    }
 
    private AlertDialog createHelpDialog() {
