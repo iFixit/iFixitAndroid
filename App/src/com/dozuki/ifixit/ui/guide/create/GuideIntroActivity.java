@@ -280,7 +280,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          guide.setStepList(initialStepList);
 
          Intent intent = new Intent(this, StepsEditActivity.class);
-         intent.putExtra(GuideCreateActivity.GUIDE_KEY, guide);
+         intent.putExtra(StepsActivity.GUIDE_KEY, guide);
          intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, 0);
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
 

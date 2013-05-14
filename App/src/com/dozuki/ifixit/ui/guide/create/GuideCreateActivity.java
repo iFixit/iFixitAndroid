@@ -53,8 +53,7 @@ public class GuideCreateActivity extends IfixitActivity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      setTheme(MainApplication.get().getSiteTheme());
-      getSupportActionBar().setTitle(MainApplication.get().getSite().mTitle);
+      getSupportActionBar().setTitle(getString(R.string.my_guides));
 
       setContentView(R.layout.guide_create);
 
