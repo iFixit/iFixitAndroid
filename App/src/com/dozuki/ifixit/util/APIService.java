@@ -18,7 +18,12 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
+import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.login.User;
+import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
@@ -270,18 +275,20 @@ public class APIService extends Service {
       try {
          Log.w("APIService", bundle.toString());
          requestBody.put("type", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_type_title)).getString("_"));
+          .guide_intro_wizard_guide_type_title)).getString(Page.SIMPLE_DATA_KEY));
          requestBody.put("category", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_topic_title, app.getTopicName())).getString("name"));
+          .guide_intro_wizard_guide_topic_title, app.getTopicName())).getString(TopicNamePage.TOPIC_DATA_KEY));
          requestBody.put("title", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_title_title)).getString("name"));
+          .guide_intro_wizard_guide_title_title)).getString(GuideTitlePage.TITLE_DATA_KEY));
          requestBody.put("introduction", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_introduction_title)).getString("name"));
-         requestBody.put("subject", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_subject_title)).getString("name"));
+          .guide_intro_wizard_guide_introduction_title)).getString(EditTextPage.TEXT_DATA_KEY));
+         String subjectKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R
+          .string.guide_intro_wizard_guide_subject_title);
+         if (bundle.containsKey(subjectKey)) {
+            requestBody.put("subject", bundle.getBundle(subjectKey).getString(EditTextPage.TEXT_DATA_KEY));
+         }
          requestBody.put("summary", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_summary_title)
-         ).getString("name"));
+          .guide_intro_wizard_guide_summary_title)).getString(EditTextPage.TEXT_DATA_KEY));
 
       } catch (JSONException e) {
          return null;

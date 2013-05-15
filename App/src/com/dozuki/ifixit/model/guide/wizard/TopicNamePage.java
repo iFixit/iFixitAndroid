@@ -17,14 +17,10 @@
 package com.dozuki.ifixit.model.guide.wizard;
 
 import android.support.v4.app.Fragment;
-import android.text.TextUtils;
 import com.dozuki.ifixit.ui.guide.create.wizard.TopicNameFragment;
 
 import java.util.ArrayList;
 
-/**
- * A page asking for a name and an email.
- */
 public class TopicNamePage extends EditTextPage {
    public static final String TOPIC_DATA_KEY = "name";
 
@@ -37,16 +33,6 @@ public class TopicNamePage extends EditTextPage {
    @Override
    public Fragment createFragment() {
       return TopicNameFragment.create(getKey());
-   }
-
-   @Override
-   public void getReviewItems(ArrayList<ReviewItem> dest) {
-      dest.add(new ReviewItem(super.getTitle(), mData.getString(TOPIC_DATA_KEY), getKey(), -1));
-   }
-
-   @Override
-   public boolean isCompleted() {
-      return !TextUtils.isEmpty(mData.getString(TOPIC_DATA_KEY));
    }
 
    public ArrayList<String> getTopicAutocompleteList() {

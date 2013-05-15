@@ -30,7 +30,6 @@ import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
 import org.holoeverywhere.ArrayAdapter;
-import org.holoeverywhere.widget.AutoCompleteTextView;
 import org.holoeverywhere.widget.EditText;
 
 public class EditTextFragment extends Fragment {
@@ -42,6 +41,7 @@ public class EditTextFragment extends Fragment {
    private EditText mField;
    private TextView mDescription;
    private ArrayAdapter<String> mAdapter;
+   private TextView mTitle;
 
    public static EditTextFragment create(String key) {
       Bundle args = new Bundle();
@@ -69,15 +69,15 @@ public class EditTextFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-      View rootView = inflater.inflate(R.layout.guide_create_intro_topic_name, container, false);
-      ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
+      View rootView = inflater.inflate(R.layout.guide_create_intro_edit_text, container, false);
+      mTitle = (TextView) rootView.findViewById(android.R.id.title);
 
-      mField = (AutoCompleteTextView) rootView.findViewById(R.id.topic_name);
-
+      mField = (EditText) rootView.findViewById(R.id.edit_text_field);
       mDescription = ((TextView) rootView.findViewById(R.id.page_description));
-      mDescription.setText(mPage.getDescription());
 
+      mTitle.setText(mPage.getTitle());
       mField.setText(mPage.getData().getString(EditTextPage.TEXT_DATA_KEY));
+      mDescription.setText(mPage.getDescription());
 
       return rootView;
 

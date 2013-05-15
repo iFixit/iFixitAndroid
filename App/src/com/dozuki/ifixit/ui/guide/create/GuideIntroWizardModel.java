@@ -14,6 +14,8 @@ import java.util.ArrayList;
 
 public class GuideIntroWizardModel extends AbstractWizardModel {
    Context mContext;
+   public static String HAS_SUBJECT_KEY = "hasSubject";
+   public static String NO_SUBJECT_KEY = "noSubject";
 
    public GuideIntroWizardModel(Context context) {
       super(context);
@@ -30,31 +32,47 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
 
       String topicName = app.getTopicName();
 
-      return new PageList(
-       new SingleFixedChoicePage(this, app.getString(R.string.guide_intro_wizard_guide_type_title))
-        .setChoices(types.toArray(typesArr))
-        .setRequired(true),
-       new TopicNamePage(this)
-        .setTopicAutocompleteList(topics)
-        .setDescription(app.getString(R.string.guide_intro_wizard_guide_topic_description,
-         topicName.toLowerCase(), topicName.toLowerCase()))
-        .setTitle(app.getString(R.string.guide_intro_wizard_guide_topic_title, topicName))
-        .setRequired(true),
-       new EditTextPage(this)
+      String[] hasSubject = {"Repair", "Installation", "Disassembly"};
+      String[] noSubject = {"Technique", "Maintenance", "Teardown"};
+
+      Page topicPage = new TopicNamePage(this)
+       .setTopicAutocompleteList(topics)
+       .setDescription(app.getString(R.string.guide_intro_wizard_guide_topic_description,
+        topicName.toLowerCase(), topicName.toLowerCase()))
+       .setTitle(app.getString(R.string.guide_intro_wizard_guide_topic_title, topicName))
+       .setRequired(true);
+
+      Page subjectPage = new EditTextPage(this)
         .setDescription(app.getString(R.string.guide_intro_wizard_guide_subject_description,
          topicName.toLowerCase()))
-        .setTitle(app.getString(R.string.guide_intro_wizard_guide_subject_title)),
-       new EditTextPage(this)
-        .setDescription(app.getString(R.string.guide_intro_wizard_guide_title_description,
-          topicName.toLowerCase()))
-        .setTitle(app.getString(R.string.guide_intro_wizard_guide_title_title)),
-       new EditTextPage(this)
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_subject_title));
+
+      Page titlePage = new GuideTitlePage(this)
+       .setDescription(app.getString(R.string.guide_intro_wizard_guide_title_description,
+        topicName.toLowerCase()))
+       .setTitle(app.getString(R.string.guide_intro_wizard_guide_title_title));
+
+      Page summaryPage = new EditTextPage(this)
         .setDescription(app.getString(R.string.guide_intro_wizard_guide_summary_description))
-        .setTitle(app.getString(R.string.guide_intro_wizard_guide_summary_title)),
-       new EditTextPage(this)
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_summary_title));
+
+      Page introductionPage = new EditTextPage(this)
         .setDescription(app.getString(R.string.guide_intro_wizard_guide_introduction_description,
          topicName.toLowerCase()))
-        .setTitle(app.getString(R.string.guide_intro_wizard_guide_introduction_title))
+        .setTitle(app.getString(R.string.guide_intro_wizard_guide_introduction_title));
+
+      Page typePage = new BranchPage(this, app.getString(R.string.guide_intro_wizard_guide_type_title))
+       .addBranch(hasSubject, HAS_SUBJECT_KEY, subjectPage)
+       .addBranch(noSubject, NO_SUBJECT_KEY)
+       .setChoices(types.toArray(typesArr))
+       .setRequired(true);
+
+      return new PageList(
+       topicPage,
+       typePage,
+       titlePage,
+       summaryPage,
+       introductionPage
       );
    }
 }

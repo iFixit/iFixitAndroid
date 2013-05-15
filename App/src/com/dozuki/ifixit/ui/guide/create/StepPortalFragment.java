@@ -15,6 +15,7 @@ import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.util.APIError;
@@ -209,9 +210,12 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    }
 
    @Subscribe
-   public void onIntroSavedGuide(APIEvent.EditGuide event) {
+   public void onGuideIntroSaved(APIEvent.EditGuide event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
+      } else {
+         event.setError(APIError.getFatalError(getActivity()));
+         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
 
@@ -289,18 +293,17 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    private Bundle buildIntroBundle() {
       Bundle bundle = new Bundle();
       MainApplication app = MainApplication.get();
+      String type = mGuide.getType().toLowerCase();
+      String subjectBundleKey;
 
       Bundle topicBundle = new Bundle();
       topicBundle.putString(TopicNamePage.TOPIC_DATA_KEY, mGuide.getTopic());
 
       Bundle typeBundle = new Bundle();
-      typeBundle.putString(Page.SIMPLE_DATA_KEY, mGuide.getType());
+      typeBundle.putString(Page.SIMPLE_DATA_KEY, type);
 
       Bundle titleBundle = new Bundle();
-      titleBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getTitle());
-
-      Bundle subjectBundle = new Bundle();
-      subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
+      titleBundle.putString(GuideTitlePage.TITLE_DATA_KEY, mGuide.getTitle());
 
       Bundle summaryBundle = new Bundle();
       summaryBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSummary());
@@ -308,11 +311,23 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       Bundle introductionBundle = new Bundle();
       introductionBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getIntroductionRaw());
 
+      Bundle subjectBundle = new Bundle();
+      subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
+
+      if (type.equals("installation") || type.equals("disassembly") || type.equals("repair"))
+         subjectBundleKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R.string
+          .guide_intro_wizard_guide_subject_title);
+      else
+         subjectBundleKey = GuideIntroWizardModel.NO_SUBJECT_KEY + ":" + app.getString(R.string
+          .guide_intro_wizard_guide_subject_title);
+
+      String topicBundleKey = app.getString(R.string.guide_intro_wizard_guide_topic_title, app.getTopicName());
+
+      bundle.putBundle(subjectBundleKey, subjectBundle);
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_type_title), typeBundle);
-      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_topic_title, app.getTopicName()), topicBundle);
+      bundle.putBundle(topicBundleKey, topicBundle);
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_title_title), titleBundle);
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_introduction_title), introductionBundle);
-      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_subject_title), subjectBundle);
       bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_summary_title), summaryBundle);
 
       return bundle;
