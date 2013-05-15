@@ -16,10 +16,6 @@
 
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
-import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.wizard.Page;
-import com.dozuki.ifixit.model.guide.wizard.SingleFixedChoicePage;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +26,9 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.SingleFixedChoicePage;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -89,9 +88,11 @@ public class SingleChoiceFragment extends ListFragment {
          public void run() {
             String selection = mPage.getData().getString(Page.SIMPLE_DATA_KEY);
             for (int i = 0; i < mChoices.size(); i++) {
-               if (mChoices.get(i).toLowerCase().equals(selection)) {
-                  mListView.setItemChecked(i, true);
-                  break;
+               if (selection != null) {
+                  if (mChoices.get(i).toLowerCase().equals(selection.toLowerCase())) {
+                     mListView.setItemChecked(i, true);
+                     break;
+                  }
                }
             }
          }

@@ -35,6 +35,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    public static final int GUIDE_STEP_EDIT_REQUEST = 1;
 
    private boolean EDIT_INTRO_STATE = false;
+   private static final String STATE_KEY = "STATE_KEY";
 
    private ViewPager mPager;
    private MyPagerAdapter mPagerAdapter;
@@ -125,7 +126,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       if (extras != null) {
          mWizardModelBundle = extras.getBundle("model");
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
-         EDIT_INTRO_STATE = true;
+         EDIT_INTRO_STATE = extras.getBoolean(GuideIntroActivity.STATE_KEY);
       }
 
       if (MainApplication.get().getSite().mGuideTypes != null) {
@@ -193,6 +194,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       super.onSaveInstanceState(outState);
       outState.putBundle("model", mWizardModel.save());
       outState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
+      outState.putBoolean(GuideIntroActivity.STATE_KEY, EDIT_INTRO_STATE);
    }
 
    @Override
