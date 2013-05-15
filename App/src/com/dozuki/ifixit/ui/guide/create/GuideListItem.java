@@ -64,7 +64,7 @@ public class GuideListItem extends LinearLayout {
    private OnClickListener mDeleteClickListener = new OnClickListener() {
       @Override
       public void onClick(View v) {
-         ((GuideCreateActivity)mActivity).createDeleteDialog(mGuideInfo);
+         ((GuideCreateActivity)mActivity).createDeleteDialog(mGuideInfo).show();
       }
    };
 
@@ -104,12 +104,8 @@ public class GuideListItem extends LinearLayout {
          }
       });
 
-      this.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            mToggleEdit.toggle();
-         }
-      });
+
+      this.setOnClickListener(mUpperSectionListener);
 
       mUpperSection.setOnClickListener(mUpperSectionListener);
       mDeleteButton.setOnClickListener(mDeleteClickListener);

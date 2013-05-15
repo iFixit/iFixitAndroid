@@ -177,21 +177,13 @@ public class GuideCreateActivity extends IfixitActivity {
    @Subscribe
    public void onDeleteGuide(APIEvent.DeleteGuide event) {
       if (!event.hasError()) {
-         getGuideList().remove(mGuideForDelete);
+         mUserGuideList.remove(mGuideForDelete);
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
-   }
-
-   public ArrayList<GuideInfo> getGuideList() {
-      return mUserGuideList;
-   }
-
-   public void addGuide(GuideInfo guide) {
-      mUserGuideList.add(guide);
    }
 
    public void createGuide() {
@@ -231,6 +223,7 @@ public class GuideCreateActivity extends IfixitActivity {
    }
 
    public AlertDialog createDeleteDialog(GuideInfo item) {
+      mGuideForDelete = item;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.confirm_delete_body) + " \"" + item.mTitle + "\"?")
@@ -246,6 +239,7 @@ public class GuideCreateActivity extends IfixitActivity {
       });
 
       AlertDialog dialog = builder.create();
+
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
@@ -275,10 +269,10 @@ public class GuideCreateActivity extends IfixitActivity {
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
          GuideListItem itemView;
-         GuideInfo currItem = (GuideInfo)getItem(position);
+         GuideInfo currItem = (GuideInfo) getItem(position);
 
          if (convertView != null) {
-            itemView =  (GuideListItem) convertView;
+            itemView = (GuideListItem) convertView;
          } else {
             itemView = new GuideListItem(parent.getContext(), mActivity);
          }
