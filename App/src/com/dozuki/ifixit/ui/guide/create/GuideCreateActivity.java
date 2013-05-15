@@ -168,6 +168,8 @@ public class GuideCreateActivity extends IfixitActivity {
                break;
             }
          }
+
+         mGuideListAdapter.notifyDataSetChanged();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();

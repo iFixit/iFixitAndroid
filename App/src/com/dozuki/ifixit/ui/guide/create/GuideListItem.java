@@ -57,7 +57,6 @@ public class GuideListItem extends LinearLayout {
             APIService.call(mActivity,
              APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
          }
-         setPublished(!mGuideInfo.mPublic);
       }
    };
 
