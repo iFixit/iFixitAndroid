@@ -22,13 +22,11 @@ import com.dozuki.ifixit.ui.guide.create.wizard.EditTextFragment;
 
 import java.util.ArrayList;
 
-/**
- * A page asking for a name and an email.
- */
 public class EditTextPage extends Page {
    public static final String TEXT_DATA_KEY = "name";
 
-   protected String mDescription;
+   protected String mDescription = "";
+   private String mHint = "";
 
    public EditTextPage(ModelCallbacks callbacks) {
       super(callbacks);
@@ -52,6 +50,15 @@ public class EditTextPage extends Page {
    public EditTextPage setDescription(String description) {
       mDescription = description;
       return this;
+   }
+
+   public EditTextPage setHint(String hint) {
+      mHint = hint;
+      return this;
+   }
+
+   public String getHint() {
+      return mHint;
    }
 
    public String getDescription() {

@@ -76,6 +76,7 @@ public class EditTextFragment extends Fragment {
       mDescription = ((TextView) rootView.findViewById(R.id.page_description));
 
       mTitle.setText(mPage.getTitle());
+      mTitle.setHint(mPage.getHint());
       mField.setText(mPage.getData().getString(EditTextPage.TEXT_DATA_KEY));
       mDescription.setText(mPage.getDescription());
 
