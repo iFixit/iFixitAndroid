@@ -16,12 +16,6 @@
 
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
-import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
-import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
-import com.dozuki.ifixit.model.guide.wizard.Page;
-import com.dozuki.ifixit.model.guide.wizard.ReviewItem;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -32,10 +26,13 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
+import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
+import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.ReviewItem;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
 public class ReviewFragment extends ListFragment implements ModelCallbacks {
@@ -103,12 +100,7 @@ public class ReviewFragment extends ListFragment implements ModelCallbacks {
       for (Page page : mWizardModel.getCurrentPageSequence()) {
          page.getReviewItems(reviewItems);
       }
-      Collections.sort(reviewItems, new Comparator<ReviewItem>() {
-         @Override
-         public int compare(ReviewItem a, ReviewItem b) {
-            return a.getWeight() > b.getWeight() ? +1 : a.getWeight() < b.getWeight() ? -1 : 0;
-         }
-      });
+
       mCurrentReviewItems = reviewItems;
 
       if (mReviewAdapter != null) {

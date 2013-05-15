@@ -41,6 +41,7 @@ public class SingleChoiceFragment extends ListFragment {
    private List<String> mChoices;
    private String mKey;
    private Page mPage;
+   private ListView mListView;
 
    public static SingleChoiceFragment create(String key) {
       Bundle args = new Bundle();
@@ -75,12 +76,12 @@ public class SingleChoiceFragment extends ListFragment {
       View rootView = inflater.inflate(R.layout.wizard_fragment_page, container, false);
       ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
-      final ListView listView = (ListView) rootView.findViewById(android.R.id.list);
+      mListView = (ListView) rootView.findViewById(android.R.id.list);
       setListAdapter(new ArrayAdapter<String>(getActivity(),
        android.R.layout.simple_list_item_single_choice,
        android.R.id.text1,
        mChoices));
-      listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+      mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 
       // Pre-select currently selected item.
       new Handler().post(new Runnable() {
@@ -89,7 +90,7 @@ public class SingleChoiceFragment extends ListFragment {
             String selection = mPage.getData().getString(Page.SIMPLE_DATA_KEY);
             for (int i = 0; i < mChoices.size(); i++) {
                if (mChoices.get(i).toLowerCase().equals(selection)) {
-                  listView.setItemChecked(i, true);
+                  mListView.setItemChecked(i, true);
                   break;
                }
             }
@@ -118,8 +119,7 @@ public class SingleChoiceFragment extends ListFragment {
 
    @Override
    public void onListItemClick(ListView l, View v, int position, long id) {
-      mPage.getData().putString(Page.SIMPLE_DATA_KEY,
-       getListAdapter().getItem(position).toString());
+      mPage.getData().putString(Page.SIMPLE_DATA_KEY, getListAdapter().getItem(position).toString());
       mPage.notifyDataChanged();
    }
 }

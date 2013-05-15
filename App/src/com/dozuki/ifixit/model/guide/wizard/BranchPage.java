@@ -42,7 +42,6 @@ public class BranchPage extends SingleFixedChoicePage {
       }
 
       for (Branch branch : mBranches) {
-         Log.w("BranchPage", key);
          Page found = branch.childPageList.findByKey(key);
          if (found != null) {
             return found;
@@ -56,7 +55,8 @@ public class BranchPage extends SingleFixedChoicePage {
    public void flattenCurrentPageSequence(ArrayList<Page> destination) {
       super.flattenCurrentPageSequence(destination);
       for (Branch branch : mBranches) {
-         if (branch.choice.equals(mData.getString(SIMPLE_DATA_KEY))) {
+         if (branch.choice.equals(mData.getString(SIMPLE_DATA_KEY)) || branch.choice.toLowerCase().equals(mData
+          .getString(SIMPLE_DATA_KEY))) {
             branch.childPageList.flattenCurrentPageSequence(destination);
             break;
          }
@@ -75,7 +75,6 @@ public class BranchPage extends SingleFixedChoicePage {
    public BranchPage addBranch(String[] choices, String parentKey, Page... childPages) {
       PageList childPageList = new PageList(childPages);
       for (Page page : childPageList) {
-         Log.w("BranchPage addBranch", page.getTitle());
          page.setParentKey(parentKey);
       }
 

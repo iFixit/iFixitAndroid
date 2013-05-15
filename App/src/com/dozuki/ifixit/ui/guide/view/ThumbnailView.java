@@ -219,7 +219,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          public void onClick(View v) {
             String url = (String) v.getTag();
 
-            if (url != null && (url.equals("") || url.indexOf(".") == 0)) return;
+            if (url == null || url != null && (url.equals("") || url.indexOf(".") == 0)) return;
 
             Intent intent = new Intent(mContext, FullImageViewActivity.class);
 
