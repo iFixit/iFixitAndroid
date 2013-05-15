@@ -76,7 +76,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mDeleteButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            mPortalRef.createDeleteDialog(mStepObject);
+            mPortalRef.createDeleteDialog(mStepObject).show();
          }
       });
       mEditButton.setOnClickListener(new OnClickListener() {

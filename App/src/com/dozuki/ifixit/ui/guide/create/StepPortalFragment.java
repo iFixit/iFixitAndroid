@@ -314,12 +314,13 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       Bundle subjectBundle = new Bundle();
       subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
 
-      if (type.equals("installation") || type.equals("disassembly") || type.equals("repair"))
+      if (type.equals("installation") || type.equals("disassembly") || type.equals("repair")) {
          subjectBundleKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R.string
           .guide_intro_wizard_guide_subject_title);
-      else
+      } else {
          subjectBundleKey = GuideIntroWizardModel.NO_SUBJECT_KEY + ":" + app.getString(R.string
           .guide_intro_wizard_guide_subject_title);
+      }
 
       String topicBundleKey = app.getString(R.string.guide_intro_wizard_guide_topic_title, app.getTopicName());
 
@@ -376,7 +377,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       mShowingDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
-       .setMessage(getString(R.string.confirm_delete_body) + " Step " + (mStepForDelete.getStepNum() + 1) + "?")
+       .setMessage(getString(R.string.confirm_delete_body) + " Step " + (mStepForDelete.getStepNum()) + "?")
        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
              mShowingDelete = false;
@@ -392,17 +393,14 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
             mShowingDelete = false;
             mStepForDelete = null;
          }
-      });
-
-      AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      }).setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingDelete = false;
          }
       });
 
-      return dialog;
+      return builder.create();
    }
 
    /////////////////////////////////////////////////////
