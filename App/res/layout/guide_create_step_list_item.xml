@@ -8,62 +8,57 @@
               android:orientation="vertical"
               android:padding="1dp">
 
-   <FrameLayout
+   <RelativeLayout
            android:id="@+id/guide_step_edit_frame"
            android:layout_width="match_parent"
-           android:layout_height="wrap_content">
+           android:layout_height="wrap_content"
+           android:background="@drawable/border"
+           android:padding="4dp">
 
-      <RelativeLayout
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:background="@drawable/border"
-              android:padding="4dp">
+       <ImageView
+           android:id="@+id/guide_step_item_thumbnail"
+           android:layout_width="@dimen/guide_thumbnail_width"
+           android:layout_height="@dimen/guide_thumbnail_height"
+           android:layout_marginRight="8dp"
+           android:background="@color/image_border"
+           android:contentDescription="@string/topic_guide_thumbnail"
+           android:padding="1dp"/>
 
-         <ImageView
-                 android:id="@+id/guide_step_item_thumbnail"
-                 android:layout_width="@dimen/guide_thumbnail_width"
-                 android:layout_height="@dimen/guide_thumbnail_height"
-                 android:layout_marginRight="8dp"
-                 android:background="@color/image_border"
-                 android:contentDescription="@string/topic_guide_thumbnail"
-                 android:padding="1dp"/>
+       <ToggleButton
+           android:id="@+id/step_item_toggle_edit"
+           android:layout_width="@dimen/guide_create_edit_button_dim"
+           android:layout_height="@dimen/guide_create_edit_button_dim"
+           android:layout_alignParentRight="true"
+           android:layout_centerVertical="true"
+           android:layout_marginRight="12dp"
+           android:background="@drawable/ic_guide_expand"
+           android:textOff=""
+           android:textOn=""/>
 
-         <ToggleButton
-                 android:id="@+id/step_item_toggle_edit"
-                 android:layout_width="@dimen/guide_create_edit_button_dim"
-                 android:layout_height="@dimen/guide_create_edit_button_dim"
-                 android:layout_alignParentRight="true"
-                 android:layout_centerVertical="true"
-                 android:layout_marginRight="12dp"
-                 android:background="@drawable/ic_guide_expand"
-                 android:textOff=""
-                 android:textOn=""/>
+       <TextView
+           android:id="@+id/step_line_text_view"
+           style="@android:style/TextAppearance.Medium"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_alignBottom="@+id/step_item_toggle_edit"
+           android:layout_toLeftOf="@+id/step_item_toggle_edit"
+           android:layout_toRightOf="@+id/guide_step_item_thumbnail"
+           android:ellipsize="end"
+           android:maxLines="1"
+           android:scrollHorizontally="true"
+           android:text=""/>
 
-         <TextView
-                 android:id="@+id/step_title_textview"
-                 style="@android:style/TextAppearance.Medium"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_alignBottom="@+id/step_item_toggle_edit"
-                 android:layout_toLeftOf="@+id/step_item_toggle_edit"
-                 android:layout_toRightOf="@+id/guide_step_item_thumbnail"
-                 android:ellipsize="end"
-                 android:maxLines="1"
-                 android:scrollHorizontally="true"
-                 android:text=""/>
-
-         <TextView
-                 android:id="@+id/guide_create_step_item_number"
-                 android:layout_width="match_parent"
-                 android:layout_height="wrap_content"
-                 android:layout_below="@+id/step_title_textview"
-                 android:layout_toRightOf="@+id/guide_step_item_thumbnail"
-                 android:text=""
-                 android:textColor="@color/fireswing_dark_grey"
-                 android:textSize="12sp"
-                 android:textStyle="italic"/>
-      </RelativeLayout>
-   </FrameLayout>
+       <TextView
+           android:id="@+id/guide_create_step_item_number"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content"
+           android:layout_below="@+id/step_line_text_view"
+           android:layout_toRightOf="@+id/guide_step_item_thumbnail"
+           android:text=""
+           android:textColor="@color/fireswing_dark_grey"
+           android:textSize="12sp"
+           android:textStyle="italic"/>
+   </RelativeLayout>
 
    <LinearLayout
            android:id="@+id/step_create_item_edit_section"
