@@ -25,7 +25,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:saveEnabled="false"
-                android:inputType="text"
+                android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
                 android:layout_marginBottom="16dp"/>
 
         </LinearLayout>
