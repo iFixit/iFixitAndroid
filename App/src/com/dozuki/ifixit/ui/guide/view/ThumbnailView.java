@@ -44,6 +44,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private float mMainWidth;
    private float mMainHeight;
 
+   private OnLongClickListener mLongClickListener;
+
    public ThumbnailView(Context context) {
       super(context);
       init(context);
@@ -90,7 +92,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    public void onClick(View v) {
       for (ImageView image : mThumbs) {
          if (v.getId() == image.getId()) {
-            setCurrentThumb((String) v.getTag());
+            APIImage imageView = (APIImage)v.getTag();
+            setCurrentThumb(imageView.mBaseUrl);
          }
       }
    }
@@ -123,16 +126,16 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
       thumb.setOnClickListener(this);
       thumb.setVisibility(VISIBLE);
-      thumb.setTag(image.mBaseUrl);
+      thumb.setTag(image);
 
       if (fromDisk) {
          path = image.mBaseUrl;
          thumb.setImageDrawable(Drawable.createFromPath(path));
-         setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
       } else {
          path = image.getSize(mImageSizes.getThumb());
          mImageManager.displayImage(path, (Activity) mContext, thumb);
       }
+      setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
 
       mThumbs.add(thumb);
 
@@ -143,9 +146,19 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       }
    }
 
+   public void removeThumb(ImageView view) {
+      mThumbs.remove(view);
+      removeView(view);
+      if (mThumbs.size() < 3 && mAddThumbButton != null) {
+         mAddThumbButton.setVisibility(VISIBLE);
+      }
+      invalidate();
+   }
+
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
+      mLongClickListener = listener;
       for (ImageView thumb : mThumbs)
-         thumb.setOnLongClickListener(listener);
+         thumb.setOnLongClickListener(mLongClickListener);
    }
 
    public void setCurrentThumb(String url) {

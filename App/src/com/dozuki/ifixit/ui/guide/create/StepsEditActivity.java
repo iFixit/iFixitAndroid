@@ -16,8 +16,10 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -27,7 +29,6 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -255,7 +256,17 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       }
    }
 
+   @Subscribe
+   public void onImageCopy(APIEvent.CopyImage event) {
+      if (!event.hasError()) {
+         Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
+          Toast.LENGTH_LONG).show();
 
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+      }
+   }
    /////////////////////////////////////////////////////
    // UI EVENT LISTENERS
    /////////////////////////////////////////////////////
@@ -323,7 +334,16 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       toggleSave(mIsStepDirty);
    }
 
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case android.R.id.home:
+            finishEdit();
+            return(true);
+      }
 
+      return(super.onOptionsItemSelected(item));
+   }
    /////////////////////////////////////////////////////
    // ADAPTERS and PRIVATE CLASSES
    /////////////////////////////////////////////////////
@@ -388,9 +408,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder
        .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
-       .setMessage(
-        context.getString(R.string.step_edit_confirm_delete_message) + " Step "
-         + (mGuide.getStep(mPagePosition).getStepNum() + 1) + "?")
+       .setMessage(context.getString(R.string.step_edit_confirm_delete_message, mPagePosition + 1))
        .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {

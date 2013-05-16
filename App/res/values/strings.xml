@@ -173,7 +173,7 @@
 
     <!-- Guide Steps Edit List -->
     <string name="step_edit_confirm_delete_title">Delete Step</string>
-    <string name="step_edit_confirm_delete_message">Are you sure you want to delete</string>
+    <string name="step_edit_confirm_delete_message">Are you sure you want to delete Step %1$d?</string>
     <string name="edit">Edit</string>
     <string name="edit_step_intro">Intro</string>
     <string name="add_step">Add step</string>
@@ -240,6 +240,12 @@
     <string name="default_step_title">Untitled step</string>
     <string name="step_title_hint">Insert wisdom here.</string>
 
+    <!-- Guide Step Edit Media -->
+    <string name="step_edit_new_thumb_actions_title">Attach Image</string>
+    <string name="step_edit_existing_image_actions_title">Image Actions</string>
+    <string name="image_saved_to_media_manager_toast">Image saved to your media manager.</string>
+
+
     <!-- Guide Step Bullet Context Menu -->
     <string name="bullet_desc">Guide step bullet</string>
     <string name="bullet_icon_desc">Guide Step notice, important step</string>
@@ -267,9 +273,15 @@
         <item>Disassembly</item>
     </string-array>
 
-    <string-array name="step_image_actions">
+    <string-array name="new_image_actions">
         <item>Camera</item>
         <item>Gallery</item>
+    </string-array>
+
+    <string-array name="existing_image_actions">
+        <item>Copy to Media Manager</item>
+        <item>Detach to Media Manager</item>
+        <item>Delete</item>
     </string-array>
 
 </resources>

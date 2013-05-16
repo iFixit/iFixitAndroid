@@ -294,6 +294,26 @@ public enum APIEndpoint {
     false
    ),
 
+   COPY_IMAGE(
+       new Endpoint() {
+          public String createUrl(String query) {
+             return "user/media/images/" + query;
+          }
+
+          public APIEvent<?> parse(String json) throws JSONException {
+             // TODO: Actually look at the response?
+             return new APIEvent.DeleteImage().setResult("");
+          }
+
+          public APIEvent<?> getEvent() {
+             return new APIEvent.DeleteImage();
+          }
+       },
+       true,
+       "POST",
+       false
+   ),
+
    DELETE_IMAGE(
       new Endpoint() {
          public String createUrl(String query) {

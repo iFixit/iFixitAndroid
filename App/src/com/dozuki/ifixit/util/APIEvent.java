@@ -29,6 +29,7 @@ public abstract class APIEvent<T> {
    public static class UserImages extends APIEvent<UserImageList> {}
    public static class UserVideos extends APIEvent<UserVideoList> {}
    public static class UserEmbeds extends APIEvent<UserEmbedList> {}
+   public static class CopyImage extends APIEvent<APIImage> {}
    public static class UploadImage extends APIEvent<UploadedImageInfo> {}
    public static class UploadStepImage extends APIEvent<APIImage> {}
    public static class DeleteImage extends APIEvent<String> {}

@@ -38,6 +38,9 @@ public class StepEditMediaFragment extends Fragment {
    private static final int DEFAULT_IMAGE_ID = -1;
    private static final int GALLERY_REQUEST_CODE = 1;
    private static final int CAMERA_REQUEST_CODE = 1888;
+   private static final int COPY_TO_MEDIA_MANAGER = 0;
+   private static final int DETACH_TO_MEDIA_MANAGER = 1;
+   private static final int DELETE_FROM_STEP = 2;
 
    private Activity mContext;
 
@@ -86,40 +89,6 @@ public class StepEditMediaFragment extends Fragment {
          mThumbs.fitToSpace();
       }
 
-      mThumbs.setThumbsOnLongClickListener(new OnLongClickListener() {
-         @Override
-         public boolean onLongClick(View v) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-
-            builder.setMessage(R.string.guide_create_step_media_add_dialog_title)
-             .setTitle(R.string.guide_create_step_media_add_dialog_title)
-             .setItems(R.array.step_image_actions, new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                   Intent intent = null;
-
-                   switch (which) {
-                      case 0:
-                         //intent = new Intent(getActivity(), GalleryActivity.class);
-                         //intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-
-                         break;
-                      case 1:
-                         //intent = new Intent(getActivity(), GalleryActivity.class);
-                         //intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-                         break;
-                      default:
-                         return;
-
-                   }
-                   //getActivity().startActivityForResult(intent, imageKey);
-                }
-             });
-
-            return true;
-         }
-      });
-
       return v;
    }
 
@@ -139,15 +108,13 @@ public class StepEditMediaFragment extends Fragment {
    public void onActivityCreated(Bundle savedInstanceState) {
       super.onActivityCreated(savedInstanceState);
 
-      StepsEditActivity activity = (StepsEditActivity) getActivity();
-
       mThumbs.setAddThumbButtonOnClick(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-            builder.setTitle("Attach media from")
-             .setItems(R.array.step_image_actions, new DialogInterface.OnClickListener() {
+            builder.setTitle(MainApplication.get().getString(R.string.step_edit_new_thumb_actions_title))
+             .setItems(R.array.new_image_actions, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                    Intent intent;
@@ -180,7 +147,44 @@ public class StepEditMediaFragment extends Fragment {
                    }
                 }
              });
-            builder.show();
+            builder.create().show();
+         }
+      });
+
+      mThumbs.setThumbsOnLongClickListener(new OnLongClickListener() {
+         @Override
+         public boolean onLongClick(final View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder
+             .setTitle(mContext.getString(R.string.step_edit_existing_image_actions_title))
+             .setItems(R.array.existing_image_actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                   Intent intent = null;
+                   APIImage thumbImage = (APIImage)v.getTag();
+
+                   switch (which) {
+                      case COPY_TO_MEDIA_MANAGER:
+                         APIService.call((Activity) getActivity(),
+                          APIService.getCopyImageAPICall(Integer.toString(thumbImage.mId)));
+                         break;
+                      case DETACH_TO_MEDIA_MANAGER:
+                         APIService.call((Activity) getActivity(),
+                          APIService.getCopyImageAPICall(Integer.toString(thumbImage.mId)));
+                      case DELETE_FROM_STEP:
+                         mThumbs.removeThumb((ImageView)v);
+                         mImages.remove(thumbImage);
+                         setGuideDirty();
+                         break;
+
+                      default:
+                         return;
+                   }
+                }
+             });
+            builder.create().show();
+
+            return true;
          }
       });
    }
@@ -196,6 +200,7 @@ public class StepEditMediaFragment extends Fragment {
             newThumb = new APIImage(Integer.parseInt(media.getItemId()), media.getGuid());
             mImages.add(newThumb);
             mThumbs.addThumb(newThumb, false);
+            setGuideDirty();
 
             break;
          case CAMERA_REQUEST_CODE:
@@ -212,13 +217,12 @@ public class StepEditMediaFragment extends Fragment {
             Log.w("StepEditMediaFragment", "Image Path" + newThumb.mBaseUrl);
             mImages.add(newThumb);
             mThumbs.addThumb(newThumb, true);
+            mThumbs.setCurrentThumb(mTempFileName);
 
             APIService.call((Activity) getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
 
             break;
       }
-
-      setGuideDirty();
 
       super.onActivityResult(requestCode, resultCode, data);
 
@@ -249,6 +253,9 @@ public class StepEditMediaFragment extends Fragment {
                }
             }
          }
+
+         // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
+         setGuideDirty();
       } else {
          Log.w("Upload Image Error", event.getError().mMessage);
          // TODO
@@ -285,10 +292,6 @@ public class StepEditMediaFragment extends Fragment {
    }
 
    protected void setGuideDirty() {
-      if (((StepChangedListener) getActivity()) == null) {
-         return;
-      }
-
       ((StepChangedListener) getActivity()).onStepChanged();
    }
 

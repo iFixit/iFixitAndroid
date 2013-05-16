@@ -35,7 +35,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    public static final int GUIDE_STEP_EDIT_REQUEST = 1;
 
    private boolean EDIT_INTRO_STATE = false;
-   private static final String STATE_KEY = "STATE_KEY";
+   public static final String STATE_KEY = "STATE_KEY";
 
    private ViewPager mPager;
    private MyPagerAdapter mPagerAdapter;
@@ -167,7 +167,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       onPageTreeChanged();
       updateBottomBar();
 
-      // If we're editing an existing guide, jump to the review page for an overview of the content
+      // If we're editing an existing guide, jump to the review page for an overview of the guide details
       if (EDIT_INTRO_STATE) {
          mPager.setCurrentItem(mCurrentPageSequence.size());
       }
@@ -280,6 +280,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          intent.putExtra(StepsActivity.GUIDE_KEY, guide);
          intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, 0);
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
+         finish();
 
       } else {
          event.setError(APIError.getFatalError(this));

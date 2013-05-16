@@ -388,6 +388,9 @@ public class APIService extends Service {
 
       return new APICall(APIEndpoint.REGISTER, NO_QUERY, requestBody.toString());
    }
+   public static APICall getCopyImageAPICall(String query) {
+      return new APICall(APIEndpoint.COPY_IMAGE, query);
+   }
 
    public static APICall getUserImagesAPICall(String query) {
       return new APICall(APIEndpoint.USER_IMAGES, query);
