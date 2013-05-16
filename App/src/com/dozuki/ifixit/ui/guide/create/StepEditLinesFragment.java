@@ -307,7 +307,7 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
       params.setMargins(BULLET_INDENT * line.getLevel(), 0, 0, 0);
       iconFrame.setLayoutParams(params);
-      final EditText text = (EditText) v.findViewById(R.id.step_title_textview);
+      final EditText text = (EditText) v.findViewById(R.id.step_line_text_view);
       text.setText(line.getTextRaw());
       text.setId(index);
       text.addTextChangedListener(new TextWatcher() {

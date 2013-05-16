@@ -9,7 +9,7 @@
     android:padding="1dp" >
 
     <EditText
-        android:id="@+id/step_title_textview"
+        android:id="@+id/step_line_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"

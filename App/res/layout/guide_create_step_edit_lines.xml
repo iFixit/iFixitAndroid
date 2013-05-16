@@ -20,7 +20,7 @@
             android:layout_marginTop="7dp"
             android:textStyle="bold"
             android:text="Title -"
-            android:textSize="24sp" />
+            android:textSize="24sp"/>
 
         <EditText
             android:id="@+id/step_edit_title_text"
@@ -32,7 +32,7 @@
             android:imeOptions="actionDone"
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
             android:selectAllOnFocus="true"
-            android:singleLine="true" />
+            android:singleLine="true"/>
     </RelativeLayout>
 
     <LinearLayout
