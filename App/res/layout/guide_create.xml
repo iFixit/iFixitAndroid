@@ -12,7 +12,6 @@
         android:layout_marginTop="@dimen/topic_list_top_margin"
         android:dividerHeight="@dimen/topic_list_vertical_spacing"
         android:divider="@color/white"
-        android:layout_below="@+id/add_guide_bar"
         android:gravity="center"
         style="?attr/topicGuideList"/>
 

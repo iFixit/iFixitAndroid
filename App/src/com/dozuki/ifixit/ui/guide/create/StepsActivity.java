@@ -5,6 +5,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -23,6 +25,9 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
+   public static final int MENU_STEP_ADD = 2;
+   public static final int MENU_EDIT_INTRO = 3;
+   public static final int MENU_REARRANGE_STEPS = 4;
    public static String GUIDE_KEY = "GUIDE_KEY";
    public static String GUIDE_ID_KEY = "GUIDE_ID_KEY";
 
@@ -125,6 +130,24 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    @Override
    public boolean finishActivityIfLoggedOut() {
       return true;
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      menu
+       .add(1, MENU_STEP_ADD, 0, R.string.add_step)
+       .setIcon(R.drawable.ic_add_list_item)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      menu
+       .add(2, MENU_EDIT_INTRO, 0, R.string.edit_step_intro)
+       .setIcon(R.drawable.ic_guide_edit)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      menu
+       .add(3, MENU_REARRANGE_STEPS, 0, R.string.reorder_steps)
+       .setIcon(R.drawable.ic_dialog_arrange_bullets_light)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+      return super.onCreateOptionsMenu(menu);
    }
 
    /////////////////////////////////////////////////////
