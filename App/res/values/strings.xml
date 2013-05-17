@@ -203,7 +203,7 @@
     <string name="guide_type_prompt">What type of guide is this?</string>
 
     <string name="guide_intro_wizard_guide_type_title">Guide Type</string>
-    <string name="guide_intro_wizard_guide_subject_title">Part</string>
+    <string name="guide_intro_wizard_guide_subject_title">Guide Subject</string>
     <string name="guide_intro_wizard_guide_title_title">Guide Title</string>
     <string name="guide_intro_wizard_guide_summary_title">Guide Summary</string>
     <string name="guide_intro_wizard_guide_introduction_title">Introduction</string>
