@@ -136,11 +136,11 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    public boolean onCreateOptionsMenu(Menu menu) {
       menu
        .add(1, MENU_STEP_ADD, 0, R.string.add_step)
-       .setIcon(R.drawable.ic_add_list_item)
+       .setIcon(R.drawable.ic_action_add)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       menu
        .add(2, MENU_EDIT_INTRO, 0, R.string.edit_step_intro)
-       .setIcon(R.drawable.ic_guide_edit)
+       .setIcon(R.drawable.ic_action_edit)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       menu
        .add(3, MENU_REARRANGE_STEPS, 0, R.string.reorder_steps)
