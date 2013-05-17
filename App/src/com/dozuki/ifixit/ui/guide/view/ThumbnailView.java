@@ -125,6 +125,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
       thumb.setOnClickListener(this);
+      if (mLongClickListener != null)
+         thumb.setOnLongClickListener(mLongClickListener);
+
       thumb.setVisibility(VISIBLE);
       thumb.setTag(image);
 
