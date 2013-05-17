@@ -16,8 +16,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
@@ -26,6 +26,7 @@ import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -39,6 +40,8 @@ import org.holoeverywhere.widget.Toast;
 import java.util.ArrayList;
 
 public class StepsEditActivity extends IfixitActivity implements OnClickListener, StepChangedListener {
+   public static final int MENU_VIEW_GUIDE = 2;
+
    public static String TAG = "StepsEditActivity";
    public static String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
@@ -204,6 +207,12 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       return true;
    }
 
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      menu.add(1, MENU_VIEW_GUIDE, 0, "View Guide")
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      return super.onCreateOptionsMenu(menu);
+   }
 
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
@@ -270,6 +279,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
       }
    }
+
    /////////////////////////////////////////////////////
    // UI EVENT LISTENERS
    /////////////////////////////////////////////////////
@@ -338,11 +348,17 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       switch (item.getItemId()) {
          case android.R.id.home:
             finishEdit();
-            return(true);
+            return true;
+         case MENU_VIEW_GUIDE:
+            Intent intent = new Intent(this, GuideViewActivity.class);
+            intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
+            intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition);
+            startActivity(intent);
       }
 
       return(super.onOptionsItemSelected(item));
    }
+
    /////////////////////////////////////////////////////
    // ADAPTERS and PRIVATE CLASSES
    /////////////////////////////////////////////////////

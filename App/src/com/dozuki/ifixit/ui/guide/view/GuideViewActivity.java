@@ -13,11 +13,14 @@ import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
-import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
+import com.dozuki.ifixit.ui.guide.create.StepsEditActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -29,18 +32,18 @@ import org.holoeverywhere.widget.ProgressBar;
 
 import java.util.List;
 
-public class GuideViewActivity extends IfixitActivity
- implements OnPageChangeListener {
+public class GuideViewActivity extends IfixitActivity implements OnPageChangeListener {
    private static final int MAX_LOADING_IMAGES = 9;
    private static final int MAX_STORED_IMAGES = 9;
    private static final int MAX_WRITING_IMAGES = 10;
-   private static final String CURRENT_PAGE = "CURRENT_PAGE";
-   private static final String SAVED_GUIDE = "SAVED_GUIDE";
-   private static final String SAVED_GUIDEID = "SAVED_GUIDEID";
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
    private static final String PACKAGE_NAME = "com.dozuki.ifixit";
+   public static final String CURRENT_PAGE = "CURRENT_PAGE";
+   public static final String SAVED_GUIDE = "SAVED_GUIDE";
+   public static final String SAVED_GUIDEID = "SAVED_GUIDEID";
+   public static final int MENU_EDIT_GUIDE = 2;
 
    private GuideViewAdapter mGuideAdapter;
    private int mGuideid;
@@ -75,10 +78,11 @@ public class GuideViewActivity extends IfixitActivity
 
       setContentView(R.layout.guide_main);
 
-      mImageManager = ((MainApplication)getApplication()).getImageManager();
+      mImageManager = MainApplication.get().getImageManager();
       mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
       mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
+
       mPager = (ViewPager)findViewById(R.id.guide_pager);
       mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
       mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
@@ -86,15 +90,20 @@ public class GuideViewActivity extends IfixitActivity
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
-         Guide guide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
-         if (guide != null) {
-            setGuide(guide, savedInstanceState.getInt(CURRENT_PAGE));
-            mIndicator.setCurrentItem(savedInstanceState.getInt(CURRENT_PAGE));
+         mGuide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
+         if (mGuide != null) {
+            setGuide(mGuide, savedInstanceState.getInt(CURRENT_PAGE));
+            mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
+            mIndicator.setCurrentItem(mCurrentPage);
+            mPager.setCurrentItem(mCurrentPage);
          } else {
             getGuide(mGuideid);
          }
       } else {
          Intent intent = getIntent();
+         Bundle extras = intent.getExtras();
+         int curPage = 0;
+
          mGuideid = -1;
 
          if (Intent.ACTION_VIEW.equals(intent.getAction())) {
@@ -107,11 +116,21 @@ public class GuideViewActivity extends IfixitActivity
                Log.e("iFixit", "Problem parsing guide");
             }
          } else {
-            Bundle extras = intent.getExtras();
-            mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
+            if (extras != null) {
+               if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
+                  mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
+               }
+               if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
+                  mGuide = (Guide)extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
+               }
+               curPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0) + 1; // Account for introduction page
+            }
          }
-
-         getGuide(mGuideid);
+         if (mGuide == null) {
+            getGuide(mGuideid);
+         } else {
+            setGuide(mGuide, curPage);
+         }
       }
 
       mNextPageImage.setOnTouchListener(new View.OnTouchListener() {
@@ -144,6 +163,28 @@ public class GuideViewActivity extends IfixitActivity
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }
 
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      menu.add(1, MENU_EDIT_GUIDE, 0, "Edit Guide")
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case android.R.id.home:
+            return true;
+         case MENU_EDIT_GUIDE:
+            Intent intent = new Intent(this, StepsEditActivity.class);
+            intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+            intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, mCurrentPage - 1); // account for introduction page
+            startActivity(intent);
+      }
+
+      return(super.onOptionsItemSelected(item));
+   }
+
    public void setGuide(Guide guide, int page) {
       if (guide == null) {
          displayError();
@@ -153,8 +194,7 @@ public class GuideViewActivity extends IfixitActivity
       mProgressBar.setVisibility(View.GONE);
       mGuide = guide;
 
-      ActionBar actionBar = getSupportActionBar();
-      actionBar.setTitle(mGuide.getTitle());
+      getSupportActionBar().setTitle(mGuide.getTitle());
 
       mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(),
        mImageManager, mGuide);
@@ -172,6 +212,9 @@ public class GuideViewActivity extends IfixitActivity
       mIndicator.setStrokeWidth((int)(1.5 * density));
 
       mPager.setVisibility(View.VISIBLE);
+
+      mPager.setCurrentItem(page);
+      mIndicator.setCurrentItem(page);
 
       onPageSelected(page);
    }
