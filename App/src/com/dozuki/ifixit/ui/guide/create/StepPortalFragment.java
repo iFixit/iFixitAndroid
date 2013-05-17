@@ -19,6 +19,7 @@ import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
 import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -28,8 +29,6 @@ import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.ListView;
 import org.holoeverywhere.widget.Toast;
-
-import java.util.ArrayList;
 
 public class StepPortalFragment extends Fragment implements StepReorderFragment.StepRearrangeListener {
    public static int STEP_ID = 0;
@@ -152,6 +151,13 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
             mGuide.addStep(newStep);
             launchStepEdit(mGuide.getSteps().size());
             break;
+         case StepsEditActivity.MENU_VIEW_GUIDE:
+            Intent intent = new Intent(getActivity(), GuideViewActivity.class);
+            intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
+            intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
+            startActivity(intent);
+            break;
+
       }
 
       return true;

@@ -267,6 +267,8 @@
     <string name="example_guide_item_title">Installing Samsung SGH-E317 SIM Card</string>
     <string name="fist_background_desc">Fist background image</string>
     <string name="my_guides">My Guides</string>
+    <string name="edit_guide">Edit Guide</string>
+    <string name="view_guide">View Guide</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

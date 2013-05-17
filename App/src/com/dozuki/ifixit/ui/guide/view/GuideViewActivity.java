@@ -165,7 +165,8 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      menu.add(1, MENU_EDIT_GUIDE, 0, "Edit Guide")
+      menu.add(1, MENU_EDIT_GUIDE, 0, R.string.edit_guide)
+       .setIcon(R.drawable.ic_action_edit)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       return super.onCreateOptionsMenu(menu);
    }

@@ -40,7 +40,7 @@ import org.holoeverywhere.widget.Toast;
 import java.util.ArrayList;
 
 public class StepsEditActivity extends IfixitActivity implements OnClickListener, StepChangedListener {
-   public static final int MENU_VIEW_GUIDE = 2;
+   public static final int MENU_VIEW_GUIDE = 12;
 
    public static String TAG = "StepsEditActivity";
    public static String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
@@ -209,7 +209,8 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      menu.add(1, MENU_VIEW_GUIDE, 0, "View Guide")
+      menu.add(1, MENU_VIEW_GUIDE, 0, R.string.view_guide)
+       .setIcon(R.drawable.ic_action_book)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       return super.onCreateOptionsMenu(menu);
    }
