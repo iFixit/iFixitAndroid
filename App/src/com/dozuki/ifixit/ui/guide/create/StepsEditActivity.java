@@ -32,6 +32,7 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Toast;
 
@@ -45,7 +46,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    private static final String SHOWING_HELP = "SHOWING_HELP";
 
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
-   public static final String GUIDE_STEP_LIST_KEY = "GUIDE_STEP_LIST_KEY";
    private static final String SHOWING_SAVE = "SHOWING_SAVE";
    private static final String LOADING = "LOADING";
 
@@ -87,9 +87,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
       }
 
-      setTheme(((MainApplication) getApplication()).getSiteTheme());
-      getSupportActionBar().setTitle("");
-
       mConfirmDelete = false;
       Bundle extras = getIntent().getExtras();
       mPagePosition = 0;
@@ -113,7 +110,13 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             createExitWarningDialog().show();
          }
       }
+
+      if (mGuide != null) {
+         getSupportActionBar().setTitle(mGuide.getTitle());
+      }
+
       setContentView(R.layout.guide_create_step_edit);
+
       mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
 
       toggleSave(mIsStepDirty);
@@ -283,14 +286,10 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
-
-            Log.w(TAG, "Add new step");
-
-            Log.w(TAG, "Page Position: " + mPagePosition);
             int newPosition = mPagePosition + 1;
-            Log.w(TAG, "New Page Position: " + newPosition);
 
-            if ((mGuide.getSteps().size() == (mPagePosition)) && mIsStepDirty) {
+            // Last step and step has edits, save first
+            if (mGuide.getSteps().size() == mPagePosition && mIsStepDirty) {
                save(mPagePosition);
             } else if (mGuide.getSteps().size() < newPosition) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
@@ -309,7 +308,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
                mGuide.getStep(i).setStepNum(i);
             }
 
-            // The view pager does not recreate the item in the current position unless we force it to:
+            // The view pager does not recreate the item in the current position unless we force it
             mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
             mPager.setAdapter(mStepAdapter);
             mPager.invalidate();
@@ -361,7 +360,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
       @Override
       public CharSequence getPageTitle(int position) {
-         return "Step " + (position + 1);
+         return getString(R.string.step_number, position + 1);
       }
 
       @Override
@@ -390,8 +389,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       public void setPrimaryItem(ViewGroup container, int position, Object object) {
          super.setPrimaryItem(container, position, object);
 
-         Log.w(TAG, "setPrimaryItem position: " + position);
-
          mPagePosition = position;
          mCurStepFragment = (StepEditFragment) object;
       }
@@ -417,9 +414,9 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
              //step is at end of list
              if (mPagePosition >= mGuide.getSteps().size()
-              //step in the middle of the list
+              // or it's a new step
               || mGuide.getStep(mPagePosition).getRevisionid() == null) {
-                deleteStep(true);
+                deleteStep(mIsStepDirty);
 
              } else {
                 showLoading();
@@ -479,8 +476,9 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
         new DialogInterface.OnClickListener() {
 
            public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = false;
               dialog.dismiss();
-              finish();
+              finishEdit();
            }
         });
 
@@ -560,15 +558,31 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    }
 
    protected void finishEdit() {
+
       if (mIsStepDirty) {
          createExitWarningDialog().show();
       } else {
+         // Clean out steps unsaved steps
+         for (GuideStep step : mGuide.getSteps()) {
+            if (step.getRevisionid() == null) {
+               mGuide.getSteps().remove(step);
+            }
+         }
+
+         Intent data = new Intent();
+         data.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+
+         if (getParent() == null) {
+            setResult(Activity.RESULT_OK, data);
+         } else {
+            getParent().setResult(Activity.RESULT_OK, data);
+         }
+
          finish();
       }
    }
 
    protected void deleteStep(boolean unsaved) {
-      int curStep = mPagePosition;
 
       if (mPagePosition < mGuide.getSteps().size()) {
          if (!unsaved) {
@@ -587,7 +601,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       // The view pager does not recreate the item in the current position unless we force it to:
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager.setAdapter(mStepAdapter);
-      mPager.setCurrentItem(curStep);
+      mPager.setCurrentItem(mPagePosition);
       mPager.invalidate();
       titleIndicator.invalidate();
 

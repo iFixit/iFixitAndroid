@@ -189,11 +189,13 @@ public class StepReorderFragment extends Fragment {
          final ViewHolder holder = (ViewHolder) v.getTag();
          String step = getItem(position).getTitle();
          if (step.equals("")) {
-            holder.stepsView.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+            holder.stepsView.setText(getString(R.string.step_number, (mGuide.getSteps().indexOf(mStepsCopy
+             .get(position)) + 1)));
             holder.stepNumber.setVisibility(View.GONE);
          } else {
             holder.stepsView.setText(step);
-            holder.stepNumber.setText("Step " + (mGuide.getSteps().indexOf(mStepsCopy.get(position)) + 1));
+            holder.stepNumber.setText(getString(R.string.step_number, (mGuide.getSteps().indexOf(mStepsCopy.get
+             (position)) + 1)));
             holder.stepNumber.setVisibility(View.VISIBLE);
          }
          holder.mImageView.setTag("");

@@ -223,6 +223,7 @@
     </string>
 
     <!-- Guide Step Edit -->
+    <string name="step_number">Step %1$d</string>
     <string name="step_delete_dialog_title">Delete Line</string>
     <string name="step_delete_dialog_body">Are you sure you want to delete this line?</string>
     <string name="guide_create_help">help text</string>

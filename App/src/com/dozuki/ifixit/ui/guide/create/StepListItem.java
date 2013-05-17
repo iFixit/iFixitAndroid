@@ -85,12 +85,13 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
          }
       });
 
+      String stepText = MainApplication.get().getString(R.string.step_number, mStepPosition + 1);
       if (mStepObject.getTitle().equals("")) {
-         mStepsView.setText("Step " + (mStepPosition + 1));
+         mStepsView.setText(stepText);
          mStepNumber.setVisibility(View.GONE);
       } else {
          mStepsView.setText(mStepObject.getTitle());
-         mStepNumber.setText("Step " + (mStepPosition + 1));
+         mStepNumber.setText(stepText);
          mStepNumber.setVisibility(View.VISIBLE);
       }
 
