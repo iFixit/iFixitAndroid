@@ -11,14 +11,15 @@
 
         <FrameLayout
             android:id="@+id/guide_create_edit_media_fragment_container"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
 
         <FrameLayout
             android:id="@+id/guide_create_edit_bullet_fragment_container"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1" />
+
     </LinearLayout>
 </ScrollView>

@@ -33,7 +33,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class StepEditMediaFragment extends Fragment {
+public class StepEditImageFragment extends Fragment {
 
    private static final int DEFAULT_IMAGE_ID = -1;
    private static final int GALLERY_REQUEST_CODE = 1;
@@ -64,7 +64,7 @@ public class StepEditMediaFragment extends Fragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       // Inflate the layout for this fragment
-      View v = inflater.inflate(R.layout.guide_create_step_edit_media, container, false);
+      View v = inflater.inflate(R.layout.guide_create_step_edit_image, container, false);
 
       mThumbs = (ThumbnailView) v.findViewById(R.id.edit_thumbnails);
       mLargeImage = (ImageView) v.findViewById(R.id.step_edit_large_image);
@@ -172,7 +172,7 @@ public class StepEditMediaFragment extends Fragment {
                          APIService.call((Activity) getActivity(),
                           APIService.getCopyImageAPICall(Integer.toString(thumbImage.mId)));
                       case DELETE_FROM_STEP:
-                         mThumbs.removeThumb((ImageView)v);
+                         mThumbs.removeThumb((ImageView) v);
                          mImages.remove(thumbImage);
                          setGuideDirty();
                          break;

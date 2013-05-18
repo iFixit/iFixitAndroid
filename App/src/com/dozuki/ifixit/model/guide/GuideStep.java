@@ -57,6 +57,16 @@ public class GuideStep implements Serializable {
       mLines = new ArrayList<StepLine>();
    }
 
+   public String type() {
+      if (mVideo != null) {
+         return "video";
+      } else if (mEmbed != null) {
+         return "embed";
+      } else {
+         return "image";
+      }
+   }
+
    public void setGuideid(int guideid) {
       mGuideid = guideid;
    }

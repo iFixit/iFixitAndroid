@@ -189,19 +189,15 @@ public class JSONHelper {
          JSONObject jMedia = jStep.getJSONObject("media");
          String type = jMedia.getString("type");
 
-         if (type.compareTo("image") == 0) {
+         if (type.equals("image")) {
             JSONArray jImages = jMedia.getJSONArray("data");
             for (int i = 0; i < jImages.length(); i++) {
                step.addImage(parseImage(jImages.getJSONObject(i), null));
             }
-         }
-
-         if (type.compareTo("video") == 0) {
+         } else if (type.equals("video")) {
             JSONObject jVideo = jMedia.getJSONObject("data");
             step.addVideo(parseVideo(jVideo));
-         }
-
-         if (type.compareTo("embed") == 0) {
+         } else if (type.equals("embed")) {
             JSONObject jEmbed = jMedia.getJSONObject("data");
             step.addEmbed(parseEmbed(jEmbed));
          }
@@ -240,12 +236,14 @@ public class JSONHelper {
          for (int i = 0; i < jEncodings.length(); i++) {
             video.addEncoding(parseVideoEncoding(jEncodings.getJSONObject(i)));
          }
+
+         video.setThumbnail(parseVideoThumbnail(jVideo.getJSONObject("thumbnail")));
+
       } catch (JSONException e) {
          e.printStackTrace();
          Log.e("JSONHelper parseVideo", "Error parsing video API response");
       }
 
-      video.setThumbnail(parseVideoThumbnail(jVideo.getJSONObject("thumbnail")));
       return video;
    }
 

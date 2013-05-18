@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/step_edit_video_poster"
+        style="@style/guide_main_image_spacing"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height"
+        android:background="@color/image_border"
+        android:src="@drawable/no_image"
+        android:contentDescription="@string/guide_create_step_edit_main_image_description" />
+
+</LinearLayout>
