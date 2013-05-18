@@ -1,21 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="150dp" >
+    android:layout_height="@dimen/gallery_grid_item_height" >
 
     <com.dozuki.ifixit.ui.gallery.FadeInImageView
         android:id="@+id/media_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="centerCrop" >
-    </com.dozuki.ifixit.ui.gallery.FadeInImageView>
+        android:scaleType="centerCrop" />
 
     <RelativeLayout
         android:id="@+id/selected_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/frame_gallery_thumb_selected" >
-    </RelativeLayout>
+        android:background="@drawable/frame_gallery_thumb_selected" />
 
     <RelativeLayout
         android:layout_width="match_parent"

@@ -16,10 +16,6 @@
         android:id="@+id/gallery_view_body_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button_holder"
-        android:layout_below="@+id/gallery_view_top_bar" >
-    </android.support.v4.view.ViewPager>
-
-     
+        android:layout_below="@+id/gallery_view_top_bar" />
 
 </RelativeLayout>

@@ -9,20 +9,18 @@
         android:id="@+id/gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_above="@+id/button_holder"
         android:alwaysDrawnWithCache="true"
         android:clipChildren="true"
-        android:columnWidth="@dimen/gallery_grid_column_width"
         android:drawSelectorOnTop="false"
         android:gravity="center_horizontal"
-        android:horizontalSpacing="4dp"
+        android:columnWidth="@dimen/gallery_grid_column_width"
+        android:horizontalSpacing="1dp"
         android:numColumns="auto_fit"
         android:orientation="vertical"
-        android:padding="4dp"
+        android:padding="1dp"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
         android:stretchMode="columnWidth"
-        android:verticalSpacing="4dp" >
-    </GridView>
+        android:verticalSpacing="1dp" />
 
 </RelativeLayout>

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <!-- Helper dimens: -->
+    <!-- Helper dimens -->
     <dimen name="match_parent">-1dp</dimen>
     <dimen name="wrap_content">-2dp</dimen>
     <dimen name="site_list_button_width">340dp</dimen>
@@ -10,6 +10,8 @@
     <dimen name="body_text_top_spacing">8dp</dimen>
     <dimen name="progress_bar_width_height">80dp</dimen>
     <dimen name="page_padding">8dp</dimen>
+
+    <!-- Guide View -->
     <dimen name="guide_step_content_width">@dimen/match_parent</dimen>
     <dimen name="guide_step_content_height">@dimen/wrap_content</dimen>
     <dimen name="guide_step_section_seperator">8dp</dimen>
@@ -35,10 +37,15 @@
     <dimen name="step_icon_left_spacing">10dp</dimen>
     <dimen name="progress_bar_height">80dp</dimen>
     <dimen name="progress_bar_width">80dp</dimen>
+
+    <!-- Media Manager -->
     <dimen name="gallery_login_text_padding">8dp</dimen>
     <dimen name="gallery_bottom_bar_height">30dp</dimen>
-    <dimen name="gallery_grid_column_width">150dp</dimen>
+    <dimen name="gallery_grid_column_width">200dp</dimen>
+    <dimen name="gallery_grid_item_height">150dp</dimen>
     <dimen name="gallery_top_bar_height">48dp</dimen>
+
+
     <dimen name="login_agreement_text_top_padding">3dp</dimen>
     <dimen name="guide_create_step_edit_bottom_bar_height">@dimen/gallery_top_bar_height</dimen>
     <dimen name="guide_create_edit_button_dim">36dp</dimen>
