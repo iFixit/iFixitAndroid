@@ -35,6 +35,13 @@ public class PhotoMediaFragment extends MediaFragment {
       return super.onCreateView(inflater, container, savedInstanceState);
    }
 
+   @Override
+   protected void retrieveUserMedia() {
+      mNextPageRequestInProgress = true;
+      APIService.call((Activity) getActivity(),
+       APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));
+   }
+
    @Subscribe
    public void onUserImages(APIEvent.UserImages event) {
       if (!event.hasError()) {
@@ -52,7 +59,6 @@ public class PhotoMediaFragment extends MediaFragment {
             mItemsDownloaded += (mMediaList.getItems().size() - oldImageSize);
             mGalleryAdapter.invalidatedView();
             mLastPage = false;
-            updateNoImagesText();
          } else {
             mLastPage = true;
          }
@@ -94,10 +100,4 @@ public class PhotoMediaFragment extends MediaFragment {
       setupUser(event.getUser());
    }
 
-   @Override
-   protected void retrieveUserMedia() {
-      mNextPageRequestInProgress = true;
-      APIService.call((Activity) getActivity(),
-         APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));
-   }
 }

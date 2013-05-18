@@ -25,14 +25,4 @@
         android:verticalSpacing="4dp" >
     </GridView>
 
-    <TextView
-        android:id="@+id/no_images_text"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="40dp"
-        android:text="@string/no_images_text"
-        android:visibility="gone" />
-
 </RelativeLayout>

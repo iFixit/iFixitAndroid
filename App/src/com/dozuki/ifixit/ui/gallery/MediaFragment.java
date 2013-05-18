@@ -43,7 +43,6 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.Toast;
 
 import java.io.File;
@@ -53,8 +52,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public abstract class MediaFragment extends Fragment implements
- OnItemClickListener, OnItemLongClickListener {
+public abstract class MediaFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
 
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;
@@ -71,7 +69,6 @@ public abstract class MediaFragment extends Fragment implements
    private static final int MAX_UPLOAD_COUNT = 4;
    private static final String RETURNING_VAL = "RETURNING_VAL";
 
-   protected TextView mNoMediaText;
    private GridView mGridView;
    protected MediaAdapter mGalleryAdapter;
    private String mUserName;
@@ -114,11 +111,11 @@ public abstract class MediaFragment extends Fragment implements
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
 
          mItemsDownloaded = savedInstanceState.getInt(IMAGES_DOWNLOADED);
-         mMediaList = (UserImageList)savedInstanceState.getSerializable(USER_IMAGE_LIST);
+         mMediaList = (UserImageList) savedInstanceState.getSerializable(USER_IMAGE_LIST);
 
-         mSelectedList = (ArrayList<Boolean>)savedInstanceState.getSerializable(USER_SELECTED_LIST);
+         mSelectedList = (ArrayList<Boolean>) savedInstanceState.getSerializable(USER_SELECTED_LIST);
          mSelectForReturn = savedInstanceState.getBoolean(RETURNING_VAL);
-         
+
          if (mShowingDelete) {
             createDeleteConfirmDialog().show();
          }
@@ -127,7 +124,7 @@ public abstract class MediaFragment extends Fragment implements
             mCameraTempFileName = savedInstanceState.getString(CAMERA_PATH);
          }
 
-         mLocalURL = (HashMap<String, LocalImage>)savedInstanceState.getSerializable(HASH_MAP);
+         mLocalURL = (HashMap<String, LocalImage>) savedInstanceState.getSerializable(HASH_MAP);
          for (LocalImage li : mLocalURL.values()) {
             if (li.mPath.contains(".jpg")) {
                mLimages.put(li.mPath, buildBitmap(li.mPath));
@@ -151,13 +148,13 @@ public abstract class MediaFragment extends Fragment implements
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.gallery_view, container, false);
 
-      mGridView = (GridView)view.findViewById(R.id.gridview);
-      mNoMediaText = (TextView)view.findViewById(R.id.no_images_text);
-    
+      mGridView = (GridView) view.findViewById(R.id.gridview);
+
       mGridView.setAdapter(mGalleryAdapter);
       mGridView.setOnScrollListener(new GalleryOnScrollListener());
       mGridView.setOnItemClickListener(this);
       mGridView.setOnItemLongClickListener(this);
+      mGridView.setEmptyView(view.findViewById(R.layout.gallery_empty_view));
 
       if (MainApplication.get().isUserLoggedIn()) {
          setupUser(MainApplication.get().getUser());
@@ -213,10 +210,8 @@ public abstract class MediaFragment extends Fragment implements
       }
    }
 
-   
 
    protected abstract void retrieveUserMedia();
-
 
 
    protected void launchImageChooser() {
@@ -251,7 +246,7 @@ public abstract class MediaFragment extends Fragment implements
    }
 
    private String getPath(Uri uri) {
-      String[] projection = { MediaStore.Images.Media.DATA };
+      String[] projection = {MediaStore.Images.Media.DATA};
       Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
       if (cursor != null) {
          int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
@@ -295,9 +290,8 @@ public abstract class MediaFragment extends Fragment implements
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(
+            APIService.call((Activity) getActivity(), APIService.getUploadImageAPICall(
              getPath(selectedImageUri), key));
-            updateNoImagesText();
          } else if (requestCode == CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
                Log.w("iFixit", "Error cameraTempFile is null!");
@@ -309,8 +303,7 @@ public abstract class MediaFragment extends Fragment implements
             opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
-            updateNoImagesText();
-            APIService.call((Activity)getActivity(), APIService.getUploadImageAPICall(
+            APIService.call((Activity) getActivity(), APIService.getUploadImageAPICall(
              mCameraTempFileName, key));
          }
       }
@@ -369,7 +362,7 @@ public abstract class MediaFragment extends Fragment implements
       }
 
       public View getView(int position, View convertView, ViewGroup parent) {
-         MediaViewItem itemView = (MediaViewItem)convertView;
+         MediaViewItem itemView = (MediaViewItem) convertView;
 
          if (convertView == null) {
             itemView = new MediaViewItem(getActivity(), mImageManager);
@@ -432,7 +425,7 @@ public abstract class MediaFragment extends Fragment implements
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         MenuInflater inflater = ((Activity)getActivity()).getSupportMenuInflater();
+         MenuInflater inflater = ((Activity) getActivity()).getSupportMenuInflater();
          inflater.inflate(R.menu.contextual_delete, menu);
          return true;
       }
@@ -487,25 +480,14 @@ public abstract class MediaFragment extends Fragment implements
          }
       }
 
-      APIService.call((Activity)getActivity(),
+      APIService.call((Activity) getActivity(),
        APIService.getDeleteImageAPICall(deleteList));
-
-      updateNoImagesText();
 
       mMode.finish();
    }
 
    protected void setupUser(User user) {
       mUserName = user.getUsername();
-      updateNoImagesText();
-   }
-
-   protected void updateNoImagesText() {
-      if (mMediaList.getItems().size() < 1 && MainApplication.get().isUserLoggedIn()) {
-         mNoMediaText.setVisibility(View.VISIBLE);
-      } else {
-         mNoMediaText.setVisibility(View.GONE);
-      }
    }
 
    @Override
@@ -522,7 +504,7 @@ public abstract class MediaFragment extends Fragment implements
          animHide.setAnimationListener(new AnimationListener() {
             @Override
             public void onAnimationEnd(Animation arg0) {
-              
+
             }
 
             @Override
@@ -533,51 +515,36 @@ public abstract class MediaFragment extends Fragment implements
             public void onAnimationStart(Animation arg0) {
             }
          });
-         mMode = ((Activity)getActivity()).startActionMode(new ModeCallback());
+         mMode = ((Activity) getActivity()).startActionMode(new ModeCallback());
       }
    }
 
    public void onItemClick(AdapterView<?> adapterView, View view, int position,
     long id) {
-      MediaViewItem cell = (MediaViewItem)view;
+      MediaViewItem cell = (MediaViewItem) view;
       if (mSelectForReturn) {
-			String url = (String) view.getTag();
+         String url = (String) view.getTag();
 
-			if (url == null) {
-				return;
-			} else if (url.equals("") || url.indexOf(".") == 0) {
-				return;
-			}
-			String imageUrl;
-			boolean isLocal;
-			if (mLocalURL.get(url) != null) {
-				imageUrl = mLocalURL.get(url).mPath;
-				isLocal = true;
-			} else {
-				imageUrl = url;
-				isLocal = false;
-			}
+         if (url == null || (url.equals("") || url.indexOf(".") == 0)) {
+            return;
+         }
 
-			Intent selectResult = new Intent();
-			selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY,
-			   cell.mListRef);
-			getActivity().setResult(Activity.RESULT_OK, selectResult);
-			getActivity().finish();
-		} 
-      else if (mMode != null) {
+         Intent selectResult = new Intent();
+         selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY, cell.mListRef);
+         getActivity().setResult(Activity.RESULT_OK, selectResult);
+         getActivity().finish();
+      } else if (mMode != null) {
          if (cell == null) {
             Log.i("iFixit", "Delete cell null!");
             return;
          }
 
-         mSelectedList.set(position, mSelectedList.get(position) ? false : true);
+         mSelectedList.set(position, !mSelectedList.get(position));
          mGalleryAdapter.invalidatedView();
       } else {
-         String url = (String)view.getTag();
+         String url = (String) view.getTag();
 
-         if (url == null) {
-            return;
-         } else if (url.equals("") || url.indexOf(".") == 0) {
+         if (url == null || (url.equals("") || url.indexOf(".") == 0)) {
             return;
          }
 
@@ -640,24 +607,24 @@ public abstract class MediaFragment extends Fragment implements
 
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder
-            .setTitle(getString(R.string.confirm_delete_title))
-            .setMessage(msg)
-            .setPositiveButton(getString(R.string.yes),
-               new DialogInterface.OnClickListener() {
-                  @Override
-                  public void onClick(DialogInterface dialog, int id) {
-                     mShowingDelete = false;
-                     deleteSelectedPhotos();
-                     dialog.cancel();
-                  }
-               })
-            .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-               @Override
-               public void onClick(DialogInterface dialog, int which) {
-                  mShowingDelete = false;
-                  dialog.cancel();
-               }
-            });
+       .setTitle(getString(R.string.confirm_delete_title))
+       .setMessage(msg)
+       .setPositiveButton(getString(R.string.yes),
+        new DialogInterface.OnClickListener() {
+           @Override
+           public void onClick(DialogInterface dialog, int id) {
+              mShowingDelete = false;
+              deleteSelectedPhotos();
+              dialog.cancel();
+           }
+        })
+       .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+             mShowingDelete = false;
+             dialog.cancel();
+          }
+       });
 
       AlertDialog dialog = builder.create();
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
@@ -681,7 +648,7 @@ public abstract class MediaFragment extends Fragment implements
    }
 
    public void setForReturn(boolean returnItem) {
-		mSelectForReturn = returnItem;
-	}
+      mSelectForReturn = returnItem;
+   }
 
 }

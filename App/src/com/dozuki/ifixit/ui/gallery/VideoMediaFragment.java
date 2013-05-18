@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.gallery;
 import android.os.Bundle;
 import android.view.View;
 import android.view.ViewGroup;
-import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.UserVideoList;
 import com.dozuki.ifixit.model.login.LoginEvent;
 import com.dozuki.ifixit.util.APIEvent;
@@ -26,7 +25,6 @@ public class VideoMediaFragment extends MediaFragment {
     Bundle savedInstanceState) {
       
       View v = super.onCreateView(inflater, container, savedInstanceState);
-         mNoMediaText.setText(R.string.no_videos_text);
       return v;
    }
    
@@ -44,7 +42,6 @@ public class VideoMediaFragment extends MediaFragment {
             mItemsDownloaded += (mMediaList.getItems().size() - oldImageSize);
             mGalleryAdapter.invalidatedView();
             mLastPage = false;
-            updateNoImagesText();
          } else {
             mLastPage = true;
          }
