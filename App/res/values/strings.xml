@@ -52,7 +52,7 @@
     <string name="slide_menu_browse_devices">Browse Devices</string>
     <string name="slide_menu_favorite_guides">Favorite Guides</string>
     <string name="slide_menu_create_new_guide">Create New Guide</string>
-    <string name="slide_menu_media_gallery">Media Gallery</string>
+    <string name="slide_menu_media_gallery">Media Manager</string>
     <string name="slide_menu_logout">Logout</string>
     <string name="slide_menu_ifixit_everywhere">iFixit Everywhere</string>
     <string name="slide_menu_youtube">Youtube Channel</string>
@@ -96,11 +96,12 @@
 
     <!-- Gallery -->
     <string name="media_help_title">What\'s this?</string>
-    <string name="media_help_messege">This gallery is linked directly to your iFixit account. Any pictures you load into
+    <string name="media_help_messege">This media manager is linked directly to your iFixit account. Any pictures you
+        load into
         here will be available to you in your guide creation
         endeavors. Stay tuned and you will be able to create guides on the go!
     </string>
-    <string name="media_gallery_title">Media Gallery</string>
+    <string name="media_gallery_title">Media Manager</string>
     <string name="media_help_confirm">Good to know!</string>
     <string name="gallery_tool_tip">Add Image</string>
     <string name="camera_tool_tip">Camera</string>
@@ -278,7 +279,7 @@
 
     <string-array name="new_image_actions">
         <item>Camera</item>
-        <item>Gallery</item>
+        <item>Media Manager</item>
     </string-array>
 
     <string-array name="existing_image_actions">
