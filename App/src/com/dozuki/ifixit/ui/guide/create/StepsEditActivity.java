@@ -353,7 +353,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          case MENU_VIEW_GUIDE:
             Intent intent = new Intent(this, GuideViewActivity.class);
             intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
-            intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition);
+            intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
             startActivity(intent);
       }
 
