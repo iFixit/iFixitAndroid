@@ -18,7 +18,7 @@ import org.holoeverywhere.app.ProgressDialog;
 
 public class VideoViewActivity extends Activity {
 
-   protected static final String VIDEO_URL = "VIDEO_URL";
+   public static final String VIDEO_URL = "VIDEO_URL";
    private String mVideoUrl;
    private VideoView mVideoView;
    private ProgressDialog mProgressDialog;

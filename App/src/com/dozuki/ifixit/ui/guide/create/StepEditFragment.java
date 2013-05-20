@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.ui.guide.StepVideoFragment;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
 
@@ -19,10 +20,15 @@ public class StepEditFragment extends Fragment {
    private static final String STEP_VIDEO_FRAGMENT_TAG = "STEP_VIDEO_FRAGMENT_TAG";
    private static final String STEP_IMAGE_FRAGMENT_TAG = "STEP_IMAGE_FRAGMENT_TAG";
 
+   private static final String VIDEO_TYPE = "video";
+   private static final String IMAGE_TYPE = "image";
+   private static final String EMBED_TYPE = "embed";
+
    private GuideStep mStepObject;
+   private String mStepType;
    private StepEditLinesFragment mEditBulletFrag;
    private StepEditImageFragment mEditImageFrag;
-   private StepEditVideoFragment mEditVideoFrag;
+   private StepVideoFragment mEditVideoFrag;
    private StepEditEmbedFragment mEditEmbedFrag;
 
 
@@ -45,19 +51,20 @@ public class StepEditFragment extends Fragment {
       View v = inflater.inflate(R.layout.guide_create_step_edit_body, container, false);
       Bundle b = getArguments();
       mStepObject = (GuideStep) b.getSerializable(StepsEditActivity.GUIDE_STEP_KEY);
-      String stepType = mStepObject.type();
-      Log.w("StepEditFragment", stepType);
+      mStepType = mStepObject.type();
+      Log.w("StepEditFragment", mStepType);
+      mEditEmbedFrag =  new StepEditEmbedFragment();
 
       if (savedInstanceState != null) {
          mStepObject = (GuideStep) savedInstanceState.getSerializable(GUIDE_STEP_KEY);
 
-         if (stepType.equals("video")) {
-            mEditVideoFrag = (StepEditVideoFragment) getChildFragmentManager().findFragmentByTag(
+         if (mStepType.equals(VIDEO_TYPE)) {
+            mEditVideoFrag = (StepVideoFragment) getChildFragmentManager().findFragmentByTag(
              STEP_VIDEO_FRAGMENT_TAG);
-         } else if (stepType.equals("embed")) {
+         } else if (mStepType.equals(EMBED_TYPE)) {
             mEditEmbedFrag = (StepEditEmbedFragment) getChildFragmentManager().findFragmentByTag(
              STEP_EMBED_FRAGMENT_TAG);
-         } else if (stepType.equals("image")) {
+         } else if (mStepType.equals(IMAGE_TYPE)) {
             mEditImageFrag = (StepEditImageFragment) getChildFragmentManager().findFragmentByTag(
              STEP_IMAGE_FRAGMENT_TAG);
          }
@@ -74,21 +81,29 @@ public class StepEditFragment extends Fragment {
           .beginTransaction()
           .add(R.id.guide_create_edit_bullet_fragment_container, mEditBulletFrag);
 
-         if (stepType.equals("video")) {
-            ft.add(R.id.guide_create_edit_media_fragment_container, new StepEditVideoFragment(),
+         if (mStepType.equals(VIDEO_TYPE)) {
+            Bundle videoArgs = new Bundle();
+
+            Log.w("StepEditFragment", mStepObject.toString());
+            videoArgs.putSerializable(StepVideoFragment.GUIDE_VIDEO_KEY, mStepObject.getVideo());
+            mEditVideoFrag = new StepVideoFragment();
+            mEditVideoFrag.setArguments(videoArgs);
+
+            ft.add(R.id.guide_create_edit_media_fragment_container, mEditVideoFrag,
              STEP_VIDEO_FRAGMENT_TAG);
-         } else if (stepType.equals("embed")) {
-            ft.add(R.id.guide_create_edit_media_fragment_container, new StepEditEmbedFragment(),
+         } else if (mStepType.equals(EMBED_TYPE)) {
+            ft.add(R.id.guide_create_edit_media_fragment_container, mEditEmbedFrag,
              STEP_IMAGE_FRAGMENT_TAG);
-         } else if (stepType.equals("image")) {
-            ft.add(R.id.guide_create_edit_media_fragment_container, new StepEditImageFragment(),
+         } else if (mStepType.equals(IMAGE_TYPE)) {
+            mEditImageFrag = new StepEditImageFragment();
+            ft.add(R.id.guide_create_edit_media_fragment_container, mEditImageFrag,
              STEP_IMAGE_FRAGMENT_TAG);
          }
 
          ft.commit();
       }
 
-      setCopiesForEdit(stepType);
+      setCopiesForEdit();
 
       return v;
    }
@@ -104,13 +119,11 @@ public class StepEditFragment extends Fragment {
    // HELPERS
    /////////////////////////////////////////////////////
 
-   private void setCopiesForEdit(String stepType) {
+   private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditBulletFrag.setStepTitle(mStepObject.getTitle());
       mEditBulletFrag.setStepNumber(mStepObject.getStepNum());
-      if (stepType.equals("video")) {
-         mEditVideoFrag.setVideo(mStepObject.getVideo());
-      } else if (stepType.equals("image")) {
+      if (mStepType.equals(IMAGE_TYPE)) {
          mEditImageFrag.setImages(mStepObject.getImages());
       }
    }
@@ -119,7 +132,9 @@ public class StepEditFragment extends Fragment {
 
       mStepObject.setLines(mEditBulletFrag.getLines());
       mStepObject.setTitle(mEditBulletFrag.getTitle());
-      mStepObject.setImages(mEditImageFrag.getImages());
+      if (mStepType.equals(IMAGE_TYPE)) {
+         mStepObject.setImages(mEditImageFrag.getImages());
+      }
 
       return mStepObject;
    }

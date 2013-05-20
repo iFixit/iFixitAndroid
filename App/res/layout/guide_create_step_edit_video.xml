@@ -1,16 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_marginRight="16dp"
+                android:layout_marginTop="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
     <ImageView
         android:id="@+id/step_edit_video_poster"
         style="@style/guide_main_image_spacing"
         android:layout_width="@dimen/guide_image_width"
         android:layout_height="@dimen/guide_image_height"
         android:background="@color/image_border"
-        android:src="@drawable/no_image"
-        android:contentDescription="@string/guide_create_step_edit_main_image_description" />
+        android:contentDescription="@string/guide_create_step_video_description"/>
 
-</LinearLayout>
+    <RelativeLayout
+        android:id="@+id/video_play_button_container"
+        style="@style/guide_main_image_spacing"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height">
+
+        <ImageButton
+            android:id="@+id/video_play_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:contentDescription="@string/video_play_button_description"
+            android:src="@drawable/video_play_button_selector"/>
+    </RelativeLayout>
+
+</RelativeLayout>
