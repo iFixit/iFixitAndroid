@@ -68,17 +68,17 @@ public class VideoViewActivity extends Activity {
          public void onCompletion(MediaPlayer mp) {
             mMediaPlayer = mp;
             AlertDialog.Builder restartDialog = new AlertDialog.Builder(mContext);
-            restartDialog.setTitle("Restart Video");
+            restartDialog.setTitle(getString(R.string.restart_video));
             restartDialog
-               .setMessage("Play this video again?")
+               .setMessage(getString(R.string.restart_video_message))
                .setCancelable(true)
-               .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+               .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int id) {
                      // Reset the video player and restart the clip
                      mMediaPlayer.seekTo(0);
                      mMediaPlayer.start();
                   }})
-               .setNegativeButton("No", new DialogInterface.OnClickListener() {
+               .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog,int id) {
                      // close the dialog box and go back to the guide step
                      dialog.cancel();
