@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
@@ -136,7 +137,15 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
    @Override
    public void onResume() {
       super.onResume();
+      MainApplication.getBus().register(this);
    }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+      MainApplication.getBus().unregister(this);
+   }
+
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -505,8 +514,8 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       mReorderModeActive = true;
    }
 
-   public void setGuideDirty() {
-      ((StepChangedListener) getActivity()).onStepChanged();
+   private void setGuideDirty() {
+      MainApplication.getBus().post(new StepChangedEvent());
    }
 
    public boolean isReorderModeActive() {

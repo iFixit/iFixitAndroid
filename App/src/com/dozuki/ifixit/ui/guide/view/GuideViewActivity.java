@@ -8,7 +8,6 @@ import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
@@ -56,25 +55,13 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    private ProgressBar mProgressBar;
    private ImageView mNextPageImage;
 
-   @Subscribe
-   public void onGuide(APIEvent.ViewGuide event) {
-      if (!event.hasError()) {
-         if (mGuide == null) {
-            setGuide(event.getResult(), 0);
-         }
-      } else {
-         APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
-          APIService.getGuideAPICall(mGuideid)).show();
-      }
-   }
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setTitle("");
       super.onCreate(savedInstanceState);
-
-      getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
-       WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
       setContentView(R.layout.guide_main);
 
@@ -167,7 +154,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    public boolean onCreateOptionsMenu(Menu menu) {
       menu.add(1, MENU_EDIT_GUIDE, 0, R.string.edit_guide)
        .setIcon(R.drawable.ic_action_edit)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -185,6 +172,27 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
 
       return(super.onOptionsItemSelected(item));
    }
+
+
+   /////////////////////////////////////////////////////
+   // NOTIFICATION LISTENERS
+   /////////////////////////////////////////////////////
+
+   @Subscribe
+   public void onGuide(APIEvent.ViewGuide event) {
+      if (!event.hasError()) {
+         if (mGuide == null) {
+            setGuide(event.getResult(), 0);
+         }
+      } else {
+         APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
+          APIService.getGuideAPICall(mGuideid)).show();
+      }
+   }
+
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
 
    public void setGuide(Guide guide, int page) {
       if (guide == null) {

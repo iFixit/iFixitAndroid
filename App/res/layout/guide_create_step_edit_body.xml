@@ -7,7 +7,7 @@
         android:id="@+id/guide_create_edit_edit_container"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/guide_create_step_page_padding"
+        android:padding="@dimen/page_padding"
         android:orientation="vertical">
 
         <FrameLayout

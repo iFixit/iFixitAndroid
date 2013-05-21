@@ -24,5 +24,8 @@
     <dimen name="gallery_grid_column_width">334dp</dimen>
     <dimen name="gallery_grid_item_height">252dp</dimen>
     <dimen name="login_agreement_text_top_padding">9dp</dimen>
+    <dimen name="add_thumbnail_icon_inner_padding">16dp</dimen>
+
+    <dimen name="guide_create_step_edit_video__marginRight">0dp</dimen>
 
 </resources>

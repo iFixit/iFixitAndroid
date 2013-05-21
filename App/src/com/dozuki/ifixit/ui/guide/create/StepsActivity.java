@@ -82,7 +82,8 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
          getSupportFragmentManager().beginTransaction()
           .add(R.id.guide_create_fragment_steps_container, mStepPortalFragment, GUIDE_STEPS_PORTAL_FRAG).commit();
       } else {
-         mStepPortalFragment = (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
+         mStepPortalFragment = (StepPortalFragment) getSupportFragmentManager()
+          .findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
       }
 
       if (mIsLoading) {

@@ -128,10 +128,11 @@ public class StepVideoFragment extends Fragment {
    private ViewGroup.LayoutParams fitToSpace(View view, float width, float height) {
       float newWidth = 0f;
       float newHeight = 0f;
-
-      float padding = viewPadding(R.dimen.page_padding);
+      float padding = 0f;
 
       if (MainApplication.get().inPortraitMode()) {
+         padding = viewPadding(R.dimen.page_padding);
+
          newWidth = mMetrics.widthPixels - padding;
          newHeight = newWidth * (height / width);
       } else {
@@ -139,6 +140,9 @@ public class StepVideoFragment extends Fragment {
 
          newHeight = ((mMetrics.heightPixels - padding) * 3f) / 5f;
          newWidth = (newHeight * (width / height));
+
+         // Correct height to match ratio of image
+         newHeight = newWidth * (height / width);
       }
 
       //fitProgressIndicator(newWidth, newHeight);
@@ -151,18 +155,14 @@ public class StepVideoFragment extends Fragment {
    }
 
    private float navigationHeight() {
-      int actionBarHeight = 0, indicatorHeight = 0;
+      int actionBarHeight = 0, indicatorHeight = 50;
 
-      if (!MainApplication.get().inPortraitMode()) {
-         actionBarHeight = mResources.getDimensionPixelSize(
-          com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
-      }
+      actionBarHeight = mResources.getDimensionPixelSize(
+       com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
 
       float pagePadding = viewPadding(R.dimen.page_padding);
 
-      float thumbnailPadding = viewPadding(R.dimen.guide_thumbnail_padding);
-
-      return actionBarHeight + indicatorHeight + pagePadding + thumbnailPadding;
+      return actionBarHeight + indicatorHeight + pagePadding;
    }
 
    private float viewPadding(int view) {

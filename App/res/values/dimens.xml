@@ -26,11 +26,15 @@
     <dimen name="guide_thumbnail_padding">1dp</dimen>
     <dimen name="guide_micro_thumbnail_width">53dp</dimen>
     <dimen name="guide_micro_thumbnail_height">42.67dp</dimen>
+
+    <!-- Topic List -->
     <dimen name="topic_list_column_width">270dp</dimen>
     <dimen name="topic_list_vertical_spacing">4dp</dimen>
     <dimen name="topic_list_horizontal_spacing">2dp</dimen>
     <dimen name="topic_list_top_margin">4dp</dimen>
     <dimen name="topic_list_right_divider">0dp</dimen>
+
+
     <dimen name="circle_page_indicator_padding">6dp</dimen>
     <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>
@@ -54,12 +58,13 @@
     <dimen name="guide_create_page_padding">16dp</dimen>
     <dimen name="guide_create_intro_spacing">32dp</dimen>
     <dimen name="guide_create_intro_title">5dp</dimen>
-    <dimen name="guide_create_step_page_padding">16dp</dimen>
     <dimen name="guide_create_edit_add_bullet_button_padding">16dp</dimen>
     <dimen name="guide_create_edit_add_bullet_button_margin_top">8dp</dimen>
     <dimen name="guide_create_edit_media_horizontal_margin">16dp</dimen>
     <dimen name="guide_create_edit_media_vertical_margin">8dp</dimen>
     <dimen name="guide_create_edit_media_thumbnail_margin">4dp</dimen>
+    <dimen name="add_thumbnail_icon_inner_padding">8dp</dimen>
+    <dimen name="guide_create_step_edit_video__marginRight">0dp</dimen>
 
     <!-- Form Wizard -->
     <dimen name="step_pager_tab_width">32dp</dimen>

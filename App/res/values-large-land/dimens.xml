@@ -5,4 +5,5 @@
     <dimen name="topic_list_image_height">240dp</dimen>
     <dimen name="guide_image_spacing_bottom">4dp</dimen>
 
+    <dimen name="guide_create_step_edit_video__marginRight">12dp</dimen>
 </resources>

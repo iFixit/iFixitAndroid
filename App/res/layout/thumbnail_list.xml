@@ -11,8 +11,10 @@
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
         android:layout_gravity="right"
-        android:background="#66888888"
-        android:src="@drawable/ic_action_add"
+        android:background="#FFF3F3F3"
+        android:src="@drawable/add_photos"
+        android:cropToPadding="true"
+        android:padding="@dimen/add_thumbnail_icon_inner_padding"
         android:visibility="gone"
         android:contentDescription="@string/thumbnail_desc" />
 

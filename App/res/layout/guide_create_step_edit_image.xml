@@ -10,8 +10,9 @@
         style="@style/guide_main_image_spacing"
         android:layout_width="@dimen/guide_image_width"
         android:layout_height="@dimen/guide_image_height"
-        android:background="@color/image_border"
-        android:src="@drawable/no_image"
+        android:background="@color/step_edit_add_photo_background"
+        android:src="@drawable/add_photos"
+        android:scaleType="centerInside"
         android:contentDescription="@string/guide_create_step_edit_main_image_description" />
 
     <com.dozuki.ifixit.ui.guide.view.ThumbnailView

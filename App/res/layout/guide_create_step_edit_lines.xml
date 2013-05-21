@@ -1,63 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:descendantFocusability="beforeDescendants"
-              android:focusable="true"
-              android:focusableInTouchMode="true"
-              android:orientation="vertical"
-              android:gravity="center_horizontal">
-
-    <RelativeLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="16dp">
-
-        <TextView
-            android:id="@+id/step_edit_title_label"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="7dp"
-            android:textStyle="bold"
-            android:text="Title -"
-            android:textSize="24sp"/>
-
-        <EditText
-            android:id="@+id/step_edit_title_text"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_toRightOf="@+id/step_edit_title_label"
-            android:layout_marginLeft="8dp"
-            android:textSize="24sp"
-            android:imeOptions="actionDone"
-            android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
-            android:selectAllOnFocus="true"
-            android:singleLine="true"/>
-    </RelativeLayout>
+            android:layout_height="match_parent">
 
     <LinearLayout
-        android:id="@+id/edit_step_bullet_container"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+                  android:layout_width="match_parent"
+                  android:layout_height="wrap_content"
+                  android:descendantFocusability="beforeDescendants"
+                  android:focusable="true"
+                  android:focusableInTouchMode="true"
+                  android:orientation="vertical"
+                  android:gravity="center_horizontal">
 
-        <Button
-            android:id="@+id/add_new_bullet_button"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="@dimen/guide_create_edit_add_bullet_button_margin_top"
-            android:background="@color/fireswing_grey"
-            android:contentDescription="@string/topic_guide_thumbnail"
-            android:padding="@dimen/guide_create_edit_add_bullet_button_padding"
-            android:text="@string/create_bullets"
-            android:textColor="@color/fireswing_dark_grey"
-            android:textStyle="bold"/>
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/step_edit_title_label"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="7dp"
+                android:textStyle="bold"
+                android:text="Title -"
+                android:textSize="24sp"/>
+
+            <EditText
+                android:id="@+id/step_edit_title_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/step_edit_title_label"
+                android:layout_marginLeft="8dp"
+                android:textSize="24sp"
+                android:imeOptions="actionDone"
+                android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+                android:selectAllOnFocus="true"
+                android:singleLine="true"/>
+        </RelativeLayout>
+
+        <LinearLayout
+            android:id="@+id/edit_step_bullet_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/add_new_bullet_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="@dimen/guide_create_edit_add_bullet_button_margin_top"
+                android:background="@color/fireswing_grey"
+                android:contentDescription="@string/topic_guide_thumbnail"
+                android:padding="@dimen/guide_create_edit_add_bullet_button_padding"
+                android:text="@string/create_bullets"
+                android:textColor="@color/fireswing_dark_grey"
+                android:textStyle="bold"/>
+        </LinearLayout>
+
+        <FrameLayout
+            android:id="@+id/guide_create_edit_bullet_reorder_fragment_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
     </LinearLayout>
 
-    <FrameLayout
-        android:id="@+id/guide_create_edit_bullet_reorder_fragment_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-
-</LinearLayout>
+</ScrollView>

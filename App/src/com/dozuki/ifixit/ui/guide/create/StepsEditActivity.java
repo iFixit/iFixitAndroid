@@ -39,7 +39,7 @@ import org.holoeverywhere.widget.Toast;
 
 import java.util.ArrayList;
 
-public class StepsEditActivity extends IfixitActivity implements OnClickListener, StepChangedListener {
+public class StepsEditActivity extends IfixitActivity implements OnClickListener {
    public static final int MENU_VIEW_GUIDE = 12;
 
    public static String TAG = "StepsEditActivity";
@@ -69,6 +69,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    private boolean mShowingHelp;
    private boolean mShowingSave;
    private boolean mIsLoading;
+   private boolean mLockSave; // Flag to prevent saving a guide while we're waiting for an image to upload and return
 
 
    /////////////////////////////////////////////////////
@@ -222,9 +223,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    @Subscribe
    public void onStepSave(APIEvent.StepSave event) {
       if (!event.hasError()) {
-         Log.w(TAG, "onStepSave: step orderby" + event.getResult().getOrderby());
-         Log.w(TAG, "onStepSave: Page Position " + mPagePosition);
-         Log.w(TAG, "onStepSave: Save Position " + mSavePosition);
 
          mIsStepDirty = false;
          toggleSave(mIsStepDirty);
@@ -235,7 +233,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          mGuide.getSteps().set(mSavePosition, step);
 
          mStepAdapter.notifyDataSetChanged();
-         mPager.setCurrentItem(step.getOrderby());
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
@@ -245,7 +242,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    @Subscribe
    public void onStepAdd(APIEvent.StepAdd event) {
       if (!event.hasError()) {
-         Log.w(TAG, "onStepAdd: revisionid=" + event.getResult().getRevisionid());
          mGuide = event.getResult();
          hideLoading();
 
@@ -279,6 +275,13 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
       }
+   }
+
+   @Subscribe
+   public void onGuideChanged(StepChangedEvent event) {
+      Log.w("STepsEditActivity", "guide changed");
+      mIsStepDirty = true;
+      toggleSave(mIsStepDirty);
    }
 
    /////////////////////////////////////////////////////
@@ -336,12 +339,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    @Override
    public void onBackPressed() {
       finishEdit();
-   }
-
-   @Override
-   public void onStepChanged() {
-      mIsStepDirty = true;
-      toggleSave(mIsStepDirty);
    }
 
    @Override
@@ -536,7 +533,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          }
       }
 
-      if (!mIsStepDirty) {
+      if (!mIsStepDirty || mLockSave) {
          return;
       }
 
@@ -545,12 +542,8 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       showLoading();
 
       if (obj.getRevisionid() != null) {
-         Log.w(TAG, "Saving edited step");
-         APIService
-          .call(this, APIService.getEditStepAPICall(obj, mGuide.getGuideid()));
+         APIService.call(this, APIService.getEditStepAPICall(obj, mGuide.getGuideid()));
       } else {
-         Log.w(TAG, "Saving new step");
-
          APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
           mPagePosition + 1, mGuide.getRevisionid()));
       }
@@ -651,5 +644,13 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       final int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
       return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
        || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
+   }
+
+   public void lockSave() {
+      mLockSave = true;
+   }
+
+   public void unlockSave() {
+      mLockSave = false;
    }
 }

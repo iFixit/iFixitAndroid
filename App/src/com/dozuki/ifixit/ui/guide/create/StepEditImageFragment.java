@@ -71,7 +71,7 @@ public class StepEditImageFragment extends Fragment {
       DisplayMetrics metrics = new DisplayMetrics();
 
       if (MainApplication.get().inPortraitMode()) {
-         ((LinearLayout)v).setOrientation(LinearLayout.HORIZONTAL);
+         ((LinearLayout) v).setOrientation(LinearLayout.HORIZONTAL);
       }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -129,8 +129,6 @@ public class StepEditImageFragment extends Fragment {
 
                             File file = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
                             mTempFileName = file.getAbsolutePath();
-                            Log.w("StepEditMediaFragment", "Filename = " + mTempFileName);
-
 
                             cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             mContext.startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
@@ -161,7 +159,7 @@ public class StepEditImageFragment extends Fragment {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                    Intent intent = null;
-                   APIImage thumbImage = (APIImage)v.getTag();
+                   APIImage thumbImage = (APIImage) v.getTag();
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
@@ -193,36 +191,40 @@ public class StepEditImageFragment extends Fragment {
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       APIImage newThumb;
       Log.w("onActivityResult", Integer.toString(requestCode));
+      MainApplication.getBus().register(this);
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
-            MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-            newThumb = new APIImage(Integer.parseInt(media.getItemId()), media.getGuid());
-            mImages.add(newThumb);
-            mThumbs.addThumb(newThumb, false);
-            setGuideDirty();
+            if (data != null) {
+
+               MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
+               newThumb = new APIImage(Integer.parseInt(media.getItemId()), media.getGuid());
+               mImages.add(newThumb);
+               mThumbs.addThumb(newThumb, false);
+               setGuideDirty();
+            }
 
             break;
          case CAMERA_REQUEST_CODE:
+            if (resultCode == Activity.RESULT_OK) {
 
-            Log.w("StepEditMediaFragment", "Camera returned");
+               if (mTempFileName == null) {
+                  Log.w("iFixit", "Error cameraTempFile is null!");
+                  return;
+               }
+               // Prevent a save from being called until the image uploads and returns with the imageid
+               ((StepsEditActivity) getActivity()).lockSave();
 
-            if (mTempFileName == null) {
-               Log.w("iFixit", "Error cameraTempFile is null!");
-               return;
+               newThumb = new APIImage(DEFAULT_IMAGE_ID, mTempFileName);
+
+               mImages.add(newThumb);
+               mThumbs.addThumb(newThumb, true);
+               APIService.call((Activity) getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
+
             }
-
-            newThumb = new APIImage(DEFAULT_IMAGE_ID, mTempFileName);
-
-            Log.w("StepEditMediaFragment", "Image Path" + newThumb.mBaseUrl);
-            mImages.add(newThumb);
-            mThumbs.addThumb(newThumb, true);
-            mThumbs.setCurrentThumb(mTempFileName);
-
-            APIService.call((Activity) getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
-
             break;
       }
+
 
       super.onActivityResult(requestCode, resultCode, data);
 
@@ -232,7 +234,6 @@ public class StepEditImageFragment extends Fragment {
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
    }
-
 
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
@@ -249,10 +250,11 @@ public class StepEditImageFragment extends Fragment {
             for (int i = 0; i < mImages.size(); i++) {
                if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
                   mImages.set(i, newThumb);
-                  Log.w("StepEditMediaFragment", "Step Image Uploaded: " + mImages.get(i).mBaseUrl);
+                  mThumbs.setThumbs(mImages);
                }
             }
          }
+         ((StepsEditActivity) getActivity()).unlockSave();
 
          // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
          setGuideDirty();
@@ -273,8 +275,6 @@ public class StepEditImageFragment extends Fragment {
    }
 
    protected ArrayList<APIImage> getImages() {
-      Log.w("StepEditMediaFragment", "Step images count: " + mImages.size());
-
       return mImages;
    }
 
@@ -291,8 +291,7 @@ public class StepEditImageFragment extends Fragment {
       return actionBarHeight + bottomBarHeight + stepPagerBar;
    }
 
-   protected void setGuideDirty() {
-      ((StepChangedListener) getActivity()).onStepChanged();
+   private void setGuideDirty() {
+      MainApplication.getBus().post(new StepChangedEvent());
    }
-
 }

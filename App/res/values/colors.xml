@@ -11,7 +11,6 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dark">#222222</color>
     <color name="black">#444444</color>
     <color name="red">#FFff0000</color>
-    <color name="image_border">#AAAAAA</color>
     <color name="ifixit_blue">#336DA8</color>
     <color name="invisible">#00000000</color>
     <color name="dozuki_red">#DD4124</color>
@@ -36,5 +35,8 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="review_green">#ff669900</color>
 
     <color name="text_light">#66000000</color>
+
+    <color name="image_border">#FFF3F3F3</color>
+    <color name="step_edit_add_photo_background">@color/image_border</color>
 
 </resources>
