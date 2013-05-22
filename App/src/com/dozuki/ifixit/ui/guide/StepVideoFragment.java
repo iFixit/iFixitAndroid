@@ -107,19 +107,6 @@ public class StepVideoFragment extends Fragment {
       savedInstanceState.putSerializable(GUIDE_VIDEO_KEY, mVideo);
 
    }
-/*
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-      MainApplication.getBus().unregister(this);
-   }
-*/
 
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
