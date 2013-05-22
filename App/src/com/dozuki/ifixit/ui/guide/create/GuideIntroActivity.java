@@ -291,7 +291,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          Intent intent = new Intent(this, StepsActivity.class);
          intent.putExtra(StepsActivity.GUIDE_KEY, guide);
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
-
+         finish();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();

@@ -152,6 +152,9 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      //MainApplication.getBus().register(this);
+
+      super.onActivityResult(requestCode, resultCode, data);
 
       Log.w(TAG, "onActivityResult");
       if (mCurStepFragment != null) {
