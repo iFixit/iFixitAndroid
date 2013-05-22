@@ -38,7 +38,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    public static final String STATE_KEY = "STATE_KEY";
 
    private ViewPager mPager;
-   private MyPagerAdapter mPagerAdapter;
+   private FormWizardPagerAdapter mPagerAdapter;
 
    private boolean mEditingAfterReview;
 
@@ -158,7 +158,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
 
       mStepPagerStrip.setOnPageSelectedListener(mPageSelectedListener);
 
-      mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
+      mPagerAdapter = new FormWizardPagerAdapter(getSupportFragmentManager());
       mPager.setAdapter(mPagerAdapter);
       mPager.setOnPageChangeListener(mPageChangeListener);
 
@@ -299,11 +299,11 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    // ADAPTERS
    /////////////////////////////////////////////////////
 
-   public class MyPagerAdapter extends FragmentStatePagerAdapter {
+   public class FormWizardPagerAdapter extends FragmentStatePagerAdapter {
       private int mCutOffPage;
       private Fragment mPrimaryItem;
 
-      public MyPagerAdapter(FragmentManager fm) {
+      public FormWizardPagerAdapter(FragmentManager fm) {
          super(fm);
       }
 
