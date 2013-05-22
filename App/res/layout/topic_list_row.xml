@@ -1,14 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal"
-    android:weightSum="100" >
 
-    <TextView
-        android:id="@+id/topic_title"
-        style="@style/text.list"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/topic_title"
+          style="@style/text.list"
+          android:layout_width="match_parent"
+          android:layout_height="wrap_content"/>
 
-</LinearLayout>

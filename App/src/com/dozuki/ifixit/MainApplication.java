@@ -278,7 +278,7 @@ public class MainApplication extends Application {
              ".standard");
          } else {
             mImageSizes = new ImageSizes(".standard", ".standard", ".large",
-             ".thumbnail");
+             ".standard");
          }
       }
 
