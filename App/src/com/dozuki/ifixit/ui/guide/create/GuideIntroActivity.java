@@ -187,7 +187,10 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    @Override
    protected void onDestroy() {
       super.onDestroy();
-      mWizardModel.unregisterListener(this);
+      // Null check is required to prevent null pointer exceptions when a user is not logged in and cancels login.
+      if (mWizardModel != null) {
+         mWizardModel.unregisterListener(this);
+      }
    }
 
    @Override
