@@ -35,7 +35,7 @@ import java.util.Date;
 
 public class StepEditImageFragment extends Fragment {
 
-   private static final int DEFAULT_IMAGE_ID = -1;
+   public static final int DEFAULT_IMAGE_ID = -1;
    private static final int GALLERY_REQUEST_CODE = 1;
    private static final int CAMERA_REQUEST_CODE = 1888;
    private static final int COPY_TO_MEDIA_MANAGER = 0;
@@ -49,6 +49,9 @@ public class StepEditImageFragment extends Fragment {
    private ImageView mLargeImage;
    private ArrayList<APIImage> mImages;
    private String mTempFileName;
+
+   // Position of the temporary image captured on the phone
+   private int mTempThumbPosition;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -191,7 +194,7 @@ public class StepEditImageFragment extends Fragment {
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       APIImage newThumb;
       Log.w("onActivityResult", Integer.toString(requestCode));
-      MainApplication.getBus().register(this);
+      //MainApplication.getBus().register(this);
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
@@ -218,7 +221,8 @@ public class StepEditImageFragment extends Fragment {
                newThumb = new APIImage(DEFAULT_IMAGE_ID, mTempFileName);
 
                mImages.add(newThumb);
-               mThumbs.addThumb(newThumb, true);
+               mTempThumbPosition = mThumbs.addThumb(newThumb, true);
+
                APIService.call((Activity) getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
 
             }
@@ -250,7 +254,8 @@ public class StepEditImageFragment extends Fragment {
             for (int i = 0; i < mImages.size(); i++) {
                if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
                   mImages.set(i, newThumb);
-                  mThumbs.setThumbs(mImages);
+                  mThumbs.updateThumb(newThumb, mTempThumbPosition);
+
                }
             }
          }

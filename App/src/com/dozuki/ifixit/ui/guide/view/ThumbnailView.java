@@ -12,6 +12,7 @@ import android.widget.ImageView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.ui.guide.create.StepEditImageFragment;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
@@ -103,9 +104,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void setThumbs(ArrayList<APIImage> images) {
-      if (mThumbs.size() > 0) {
-         mThumbs.clear();
-      }
 
       if (images.size() <= 1 && !mShowSingle) {
          setVisibility(GONE);
@@ -126,7 +124,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       fitToSpace();
    }
 
-   public void addThumb(APIImage image, boolean fromDisk) {
+   public int addThumb(APIImage image, boolean fromDisk) {
       String path;
 
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -149,13 +147,16 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
 
       mThumbs.add(thumb);
-      setCurrentThumb(path);
-
       this.addView(thumb, mThumbs.size() - 1);
+
+      setCurrentThumb(path);
 
       if ((mThumbs.size() > 2 || mThumbs.size() < 1) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(GONE);
       }
+
+      // Return the position of the newly added thumbnail
+      return mThumbs.size() - 1;
    }
 
    public void removeThumb(ImageView view) {
@@ -169,13 +170,31 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
          mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
          mMainImage.setTag(null);
-
       } else {
          APIImage image = (APIImage) mThumbs.get(mThumbs.size() - 1).getTag();
          setCurrentThumb(image.mBaseUrl);
       }
+
       invalidate();
    }
+
+   public void updateThumb(APIImage newImage) {
+      for (ImageView thumb : mThumbs) {
+         APIImage thumbImage = (APIImage)thumb.getTag();
+
+         if (thumbImage.mId == StepEditImageFragment.DEFAULT_IMAGE_ID) {
+            thumb.setTag(newImage);
+            invalidate();
+            break;
+         }
+      }
+   }
+
+   public void updateThumb(APIImage newImage, int position) {
+      removeViewAt(position);
+      addThumb(newImage, false);
+   }
+
 
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
       mLongClickListener = listener;

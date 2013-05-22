@@ -264,7 +264,7 @@ public enum APIEndpoint {
              fileName = "uploaded_image.jpg";
           }
 
-          return "user/media/images?cropToRation=FOUR_THREE&file=" + fileName;
+          return "user/media/images?cropToRatio=FOUR_THREE&file=" + fileName;
        }
 
        private String getFileNameFromFilePath(String filePath) {
