@@ -192,7 +192,7 @@ public abstract class IfixitActivity extends Activity {
        * inflating views.
        */
       setTheme(MainApplication.get().getSiteTheme());
-      getSupportActionBar().setTitle(MainApplication.get().getSite().mTitle);
+      setTitle("");
 
       super.onCreate(savedState);
 
