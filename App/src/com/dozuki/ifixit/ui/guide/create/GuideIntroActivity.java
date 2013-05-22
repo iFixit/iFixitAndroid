@@ -247,7 +247,6 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    public void onSiteInfo(APIEvent.SiteInfo event) {
       if (!event.hasError()) {
          MainApplication.get().setSite(event.getResult());
-         Log.w("GuideIntroActivity onSiteInfo", MainApplication.get().getSite().getGuideTypes().toString());
 
          initWizard(null);
        } else {

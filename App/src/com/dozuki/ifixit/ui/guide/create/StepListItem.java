@@ -132,8 +132,8 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       boolean img = false;
       for (APIImage imageInfo : imageList) {
          if (imageInfo.mId > 0) {
-            imageView.setTag(imageInfo.getSize(".thumbnail"));
-            mImageManager.displayImage(imageInfo.getSize(".thumbnail"), mPortalRef.getActivity(), imageView);
+            imageView.setTag(imageInfo.getSize(".standard"));
+            mImageManager.displayImage(imageInfo.getSize(".standard"), mPortalRef.getActivity(), imageView);
             imageView.invalidate();
             return;
          }
