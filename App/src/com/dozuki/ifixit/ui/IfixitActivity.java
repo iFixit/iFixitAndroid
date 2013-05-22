@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
@@ -458,13 +457,6 @@ public abstract class IfixitActivity extends Activity {
     * "Settings" methods for derived classes are found below. Decides when to
     * finish the Activity, what icons to display etc.
     */
-
-   /**
-    * Return true if the gallery launcher should be in the options menu.
-    */
-   public boolean showGalleryIcon() {
-      return true;
-   }
 
    /**
     * Returns true if the Activity should be finished if the user logs out or
