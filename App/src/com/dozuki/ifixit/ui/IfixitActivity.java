@@ -494,9 +494,9 @@ public abstract class IfixitActivity extends Activity {
 
       if (loggedIn) {
          String username = app.getUser().getUsername();
-         title = "Account (" + username + ")";
+         title = getString(R.string.account_username_title, username);
       } else {
-         title = "Your Account";
+         title = getString(R.string.account_menu_title);
       }
 
       return title;

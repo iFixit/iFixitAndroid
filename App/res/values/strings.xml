@@ -45,6 +45,9 @@
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
+    <string name="account_menu_title">Your Account</string>
+    <string name="account_username_title">Account (%1$s)</string>
+
     <string name="slide_menu_my_guides">My Guides</string>
     <string name="slide_menu_search">Search</string>
     <string name="slide_menu_browse_content">Browse Content</string>
