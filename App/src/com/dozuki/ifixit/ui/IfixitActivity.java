@@ -78,10 +78,9 @@ public abstract class IfixitActivity extends Activity {
       @SuppressWarnings("unused")
       @Subscribe
       public void onLogin(LoginEvent.Login event) {
-
          // Reload app to update the menu to include the User name and logout button
-         finish();
-         startActivity(getIntent());
+         buildSliderMenu();
+         mMenuDrawer.invalidate();
       }
 
       @SuppressWarnings("unused")
@@ -90,8 +89,10 @@ public abstract class IfixitActivity extends Activity {
          finishActivityIfPermissionDenied();
 
          // Reload app to remove username and logout button from menu
-         finish();
-         startActivity(getIntent());
+         buildSliderMenu();
+
+         mMenuDrawer.closeMenu(true);
+         mMenuDrawer.invalidate();
       }
 
       @SuppressWarnings("unused")
@@ -198,9 +199,12 @@ public abstract class IfixitActivity extends Activity {
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
-
       mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW, Position.RIGHT);
 
+      buildSliderMenu();
+   }
+
+   private void buildSliderMenu() {
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
