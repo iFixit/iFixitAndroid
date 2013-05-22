@@ -19,12 +19,8 @@ package com.dozuki.ifixit.model.guide.wizard;
 import android.support.v4.app.Fragment;
 import com.dozuki.ifixit.ui.guide.create.wizard.TopicNameFragment;
 
-import java.util.ArrayList;
-
 public class TopicNamePage extends EditTextPage {
    public static final String TOPIC_DATA_KEY = "name";
-
-   protected ArrayList<String> mTopics;
 
    public TopicNamePage(ModelCallbacks callbacks) {
       super(callbacks);
@@ -33,15 +29,5 @@ public class TopicNamePage extends EditTextPage {
    @Override
    public Fragment createFragment() {
       return TopicNameFragment.create(getKey());
-   }
-
-   public ArrayList<String> getTopicAutocompleteList() {
-      return mTopics;
-   }
-
-   public TopicNamePage setTopicAutocompleteList(ArrayList<String> topics) {
-      mTopics = new ArrayList<String>(topics);
-
-      return this;
    }
 }

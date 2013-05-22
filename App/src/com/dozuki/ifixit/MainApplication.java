@@ -24,8 +24,6 @@ import com.squareup.otto.Bus;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 import org.holoeverywhere.app.Application;
 
-import java.util.ArrayList;
-
 public class MainApplication extends Application {
    public static final int LARGE_SIZE_CUTOFF = 1000;
    public static final int MEDIUM_SIZE_CUTOFF = 800;
@@ -68,11 +66,6 @@ public class MainApplication extends Application {
     * Current site. Shouldn't ever be null. Set to "dozuki" for dozuki splash screen.
     */
    private Site mSite;
-
-   /**
-    * Full list of available topics/categories available for the site.
-    */
-   private ArrayList<String> mTopics;
 
    /**
     * True if the user is in the middle of authenticating. Used to determine whether or
@@ -121,14 +114,6 @@ public class MainApplication extends Application {
       }
 
       return topicName;
-   }
-
-   public void setTopics(ArrayList<String> topics) {
-      mTopics = new ArrayList<String>(topics);
-   }
-
-   public ArrayList<String> getTopics() {
-      return mTopics;
    }
 
    public boolean inPortraitMode() {

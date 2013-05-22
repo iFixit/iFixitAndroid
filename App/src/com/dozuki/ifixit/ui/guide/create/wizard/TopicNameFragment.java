@@ -22,41 +22,50 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
+import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
+import com.squareup.otto.Subscribe;
 import org.holoeverywhere.ArrayAdapter;
 import org.holoeverywhere.widget.AutoCompleteTextView;
 
+import java.util.ArrayList;
+
 public class TopicNameFragment extends Fragment {
    private static final String ARG_KEY = "key";
+   public static final String TOPIC_LIST_KEY = "TOPIC_LIST_KEY";
 
    private PageFragmentCallbacks mCallbacks;
    private String mKey;
    private TopicNamePage mPage;
    private AutoCompleteTextView mTopicNameView;
-   private TextView mDescription;
    private ArrayAdapter<String> mAdapter;
+   private ArrayList<String> mTopics;
 
    public static TopicNameFragment create(String key) {
       Bundle args = new Bundle();
       args.putString(ARG_KEY, key);
+      Log.w("TopicNameFragment", "create");
 
       TopicNameFragment fragment = new TopicNameFragment();
       fragment.setArguments(args);
       return fragment;
    }
 
-   public TopicNameFragment() {
-   }
+   public TopicNameFragment() { }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      Log.w("TopicNameFragment", "onCreate");
 
       Bundle args = getArguments();
       mKey = args.getString(ARG_KEY);
@@ -64,22 +73,32 @@ public class TopicNameFragment extends Fragment {
    }
 
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
+   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
+      if (savedInstanceState != null) {
+         mTopics = savedInstanceState.getStringArrayList(TOPIC_LIST_KEY);
+      }
+
       View rootView = inflater.inflate(R.layout.guide_create_intro_topic_name, container, false);
+      Log.w("TopicNameFragment", "onCreateView");
+
+      // Set page title
       ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
+      // Set page description
+      ((TextView) rootView.findViewById(R.id.page_description)).setText(mPage.getDescription());
+
       mTopicNameView = (AutoCompleteTextView) rootView.findViewById(R.id.topic_name);
+      Log.w("TopicNameFragment", "topicNameView initialized");
 
-      mDescription = ((TextView) rootView.findViewById(R.id.page_description));
-      mDescription.setText(mPage.getDescription());
-
-      mAdapter = new ArrayAdapter<String>((Activity) mCallbacks, android.R.layout.simple_dropdown_item_1line,
-       mPage.getTopicAutocompleteList());
-
-      mTopicNameView.setAdapter(mAdapter);
+      if (mTopics != null) {
+         setTopicArrayAdapter();
+      } else {
+         APIService.call(getActivity(), APIService.getAllTopicsAPICall());
+      }
 
       mTopicNameView.setText(mPage.getData().getString(TopicNamePage.TOPIC_DATA_KEY));
+      Log.w("TopicNameFragment", "topic nave value set");
 
       return rootView;
    }
@@ -87,6 +106,7 @@ public class TopicNameFragment extends Fragment {
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
+      Log.w("TopicNameFragment", "onAttach");
 
       if (!(activity instanceof PageFragmentCallbacks)) {
          throw new ClassCastException("Activity must implement PageFragmentCallbacks");
@@ -99,6 +119,29 @@ public class TopicNameFragment extends Fragment {
    public void onDetach() {
       super.onDetach();
       mCallbacks = null;
+   }
+
+   @Override
+   public void onResume() {
+      super.onResume();
+      Log.w("TopicNameFragment", "onResume");
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+      Log.w("TopicNameFragment", "onPause");
+
+      MainApplication.getBus().unregister(this);
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+      Log.w("TopicNameFragment", "onSaveInstanceState");
+
+      outState.putStringArrayList(TOPIC_LIST_KEY, mTopics);
    }
 
    @Override
@@ -137,6 +180,28 @@ public class TopicNameFragment extends Fragment {
          if (!menuVisible) {
             imm.hideSoftInputFromWindow(getView().getWindowToken(), 0);
          }
+      }
+   }
+
+   private void setTopicArrayAdapter() {
+      mAdapter = new ArrayAdapter<String>((Activity) mCallbacks, android.R.layout.simple_dropdown_item_1line,
+       mTopics);
+
+      mTopicNameView.setAdapter(mAdapter);
+      Log.w("TopicNameFragment", "Topic list Array adapter set");
+
+   }
+
+   @Subscribe
+   public void onTopicList(APIEvent.TopicList event) {
+      if (!event.hasError()) {
+         mTopics = new ArrayList<String>(event.getResult());
+         Log.w("TopicNameFragment onTopicList", mTopics.toString());
+
+         setTopicArrayAdapter();
+      } else {
+         APIService.getErrorDialog(getActivity(), event.getError(),
+          APIService.getAllTopicsAPICall()).show();
       }
    }
 }

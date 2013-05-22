@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util;
 
+import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -28,7 +29,6 @@ import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -98,7 +98,7 @@ public class APIService extends Service {
 
          // Don't display the login dialog twice.
          if (!MainApplication.get().isLoggingIn()) {
-            LoginFragment.newInstance().show(activity.getSupportFragmentManager());
+            LoginFragment.newInstance().show((org.holoeverywhere.app.Activity) activity);
          }
       } else {
          activity.startService(makeApiIntent(activity, apiCall));

@@ -127,12 +127,14 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          mWizardModelBundle = extras.getBundle("model");
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
          EDIT_INTRO_STATE = extras.getBoolean(GuideIntroActivity.STATE_KEY);
+      } else if (savedInstanceState != null) {
+         mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
       }
 
-      if (MainApplication.get().getSite().mGuideTypes != null) {
-         initWizard(savedInstanceState);
-      } else {
+      if (MainApplication.get().getSite().mGuideTypes == null) {
          APIService.call(this, APIService.getSiteInfoAPICall());
+      } else {
+         initWizard(savedInstanceState);
       }
    }
 
@@ -143,7 +145,6 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
          mWizardModel.load(mWizardModelBundle);
       } else if (savedInstanceState != null) {
          mWizardModel.load(savedInstanceState.getBundle("model"));
-         mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
       }
 
       mWizardModel.registerListener(this);
@@ -243,21 +244,12 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    public void onSiteInfo(APIEvent.SiteInfo event) {
       if (!event.hasError()) {
          MainApplication.get().setSite(event.getResult());
+         Log.w("GuideIntroActivity onSiteInfo", MainApplication.get().getSite().getGuideTypes().toString());
+
          initWizard(null);
-      } else {
+       } else {
          APIService.getErrorDialog(this, event.getError(),
           APIService.getSitesAPICall()).show();
-      }
-   }
-
-   @Subscribe
-   public void onTopicList(APIEvent.TopicList event) {
-      if (!event.hasError()) {
-         ArrayList<String> topics = new ArrayList<String>(event.getResult());
-         MainApplication.get().setTopics(topics);
-      } else {
-         APIService.getErrorDialog(this, event.getError(),
-          APIService.getAllTopicsAPICall()).show();
       }
    }
 
@@ -400,5 +392,4 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
 
       mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
    }
-
 }
