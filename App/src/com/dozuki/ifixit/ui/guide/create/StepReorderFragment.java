@@ -210,9 +210,9 @@ public class StepReorderFragment extends Fragment {
       boolean img = false;
       for (APIImage imageInfo : imageList) {
          if (imageInfo.mId > 0) {
-            mImageManager.displayImage(imageInfo.getSize(".thumbnail"),
+            mImageManager.displayImage(imageInfo.getPath(".thumbnail"),
              getActivity(), image);
-            image.setTag(imageInfo.getSize(MainApplication.get().getImageSizes().getThumb()));
+            image.setTag(imageInfo.getPath(MainApplication.get().getImageSizes().getThumb()));
             image.invalidate();
             return;
          }

@@ -3,9 +3,11 @@ package com.dozuki.ifixit.ui.guide.view;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.graphics.BitmapFactory;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.ImageView;
@@ -139,11 +141,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       if (fromDisk) {
          path = image.mBaseUrl;
-         thumb.setImageDrawable(Drawable.createFromPath(path));
+         Log.w("thumbnailview", path);
+         thumb.setImageBitmap(BitmapFactory.decodeFile(path));
       } else {
-         path = image.getSize(mImageSizes.getThumb());
+         path = image.getPath(mImageSizes.getThumb());
          mImageManager.displayImage(path, (Activity) mContext, thumb);
       }
+      thumbnailDimensions();
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
 
       mThumbs.add(thumb);

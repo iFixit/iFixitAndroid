@@ -41,6 +41,7 @@ public class StepEditImageFragment extends Fragment {
    private static final int COPY_TO_MEDIA_MANAGER = 0;
    private static final int DETACH_TO_MEDIA_MANAGER = 1;
    private static final int DELETE_FROM_STEP = 2;
+   private static final String IMAGES_KEY = "IMAGES_KEY";
 
    private Activity mContext;
 
@@ -52,6 +53,7 @@ public class StepEditImageFragment extends Fragment {
 
    // Position of the temporary image captured on the phone
    private int mTempThumbPosition;
+   private String images_key;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -75,6 +77,10 @@ public class StepEditImageFragment extends Fragment {
 
       if (MainApplication.get().inPortraitMode()) {
          ((LinearLayout) v).setOrientation(LinearLayout.HORIZONTAL);
+      }
+
+      if (savedInstanceState != null) {
+         mImages = (ArrayList<APIImage>)savedInstanceState.getSerializable(IMAGES_KEY);
       }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -194,17 +200,18 @@ public class StepEditImageFragment extends Fragment {
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       APIImage newThumb;
       Log.w("onActivityResult", Integer.toString(requestCode));
-      //MainApplication.getBus().register(this);
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
             if (data != null) {
-
                MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                newThumb = new APIImage(Integer.parseInt(media.getItemId()), media.getGuid());
                mImages.add(newThumb);
                mThumbs.addThumb(newThumb, false);
                setGuideDirty();
+            } else {
+               Log.e("StepEditImageFragment", "Error cameraTempFile is null!");
+               return;
             }
 
             break;
@@ -212,7 +219,7 @@ public class StepEditImageFragment extends Fragment {
             if (resultCode == Activity.RESULT_OK) {
 
                if (mTempFileName == null) {
-                  Log.w("iFixit", "Error cameraTempFile is null!");
+                  Log.e("StepEditImageFragment", "Error cameraTempFile is null!");
                   return;
                }
                // Prevent a save from being called until the image uploads and returns with the imageid
@@ -236,7 +243,11 @@ public class StepEditImageFragment extends Fragment {
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
+      savedInstanceState.putSerializable(IMAGES_KEY, mImages);
+
       super.onSaveInstanceState(savedInstanceState);
+
+
    }
 
    /////////////////////////////////////////////////////

@@ -18,6 +18,7 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
@@ -41,6 +42,11 @@ import java.util.ArrayList;
 
 public class StepsEditActivity extends IfixitActivity implements OnClickListener {
    public static final int MENU_VIEW_GUIDE = 12;
+   private static final int STEP_VIEW = 1;
+   private static final int FOR_RESULT = 2;
+   private static final int HOME_UP = 3;
+
+   public static final String EXIT_CODE = "EXIT_CODE_KEY";
 
    public static String TAG = "StepsEditActivity";
    public static String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
@@ -69,7 +75,11 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    private boolean mShowingHelp;
    private boolean mShowingSave;
    private boolean mIsLoading;
-   private boolean mLockSave; // Flag to prevent saving a guide while we're waiting for an image to upload and return
+
+   // Flag to prevent saving a guide while we're waiting for an image to upload and return
+   private boolean mLockSave;
+
+   private int mExitCode;
 
 
    /////////////////////////////////////////////////////
@@ -106,12 +116,13 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
          mIsLoading = savedInstanceState.getBoolean(LOADING);
+         mExitCode = savedInstanceState.getInt(EXIT_CODE);
          if (mShowingHelp) {
             createHelpDialog().show();
          }
 
          if (mShowingSave) {
-            createExitWarningDialog().show();
+            createExitWarningDialog(mExitCode).show();
          }
       }
 
@@ -153,6 +164,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       //MainApplication.getBus().register(this);
+      MainApplication.getBus().register(this);
 
       super.onActivityResult(requestCode, resultCode, data);
 
@@ -196,6 +208,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
       savedInstanceState.putBoolean(LOADING, mIsLoading);
+      savedInstanceState.putInt(EXIT_CODE, mExitCode);
    }
 
    @Override
@@ -215,7 +228,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    public boolean onCreateOptionsMenu(Menu menu) {
       menu.add(1, MENU_VIEW_GUIDE, 0, R.string.view_guide)
        .setIcon(R.drawable.ic_action_book)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -334,30 +347,27 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             mPager.setCurrentItem(newPosition, false);
             break;
          case android.R.id.home:
-            finishEdit();
+            finishEdit(FOR_RESULT);
             break;
       }
    }
 
    @Override
    public void onBackPressed() {
-      finishEdit();
+      finishEdit(FOR_RESULT);
    }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
-            finishEdit();
+            finishEdit(HOME_UP);
             return true;
          case MENU_VIEW_GUIDE:
-            Intent intent = new Intent(this, GuideViewActivity.class);
-            intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
-            intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition);
-            startActivity(intent);
+            finishEdit(STEP_VIEW);
       }
 
-      return(super.onOptionsItemSelected(item));
+      return (super.onOptionsItemSelected(item));
    }
 
    /////////////////////////////////////////////////////
@@ -434,7 +444,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
               // or it's a new step
               || mGuide.getStep(mPagePosition).getRevisionid() == null) {
                 deleteStep(mIsStepDirty);
-
              } else {
                 showLoading();
                 APIService.call(StepsEditActivity.this, APIService.getRemoveStepAPICall(
@@ -475,7 +484,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       return builder.create();
    }
 
-   protected AlertDialog createExitWarningDialog() {
+   protected AlertDialog createExitWarningDialog(final int exitCode) {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
@@ -484,18 +493,23 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
        .setNegativeButton(getString(R.string.save),
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = true;
               save(mPagePosition);
               dialog.dismiss();
-              finish();
+
+              if (mExitCode == STEP_VIEW) {
+                 navigateToStepView();
+              } else {
+                 finish();
+              }
            }
         })
        .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
         new DialogInterface.OnClickListener() {
-
            public void onClick(DialogInterface dialog, int id) {
               mIsStepDirty = false;
               dialog.dismiss();
-              finishEdit();
+              finishEdit(exitCode);
            }
         });
 
@@ -570,10 +584,17 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       mIsLoading = false;
    }
 
-   protected void finishEdit() {
+   protected void navigateToStepView() {
+      Intent intent = new Intent(this, GuideViewActivity.class);
+      intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
+      intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition);
+      startActivity(intent);
+   }
 
+   protected void finishEdit(int exitCode) {
+      mExitCode = exitCode;
       if (mIsStepDirty) {
-         createExitWarningDialog().show();
+         createExitWarningDialog(exitCode).show();
       } else {
          // Clean out steps unsaved steps
          for (GuideStep step : mGuide.getSteps()) {
@@ -581,18 +602,38 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
                mGuide.getSteps().remove(step);
             }
          }
+         Intent data;
+         switch (exitCode) {
+            case HOME_UP:
+               data = new Intent(this, StepsActivity.class);
+               data.putExtra(StepsActivity.GUIDE_KEY, mGuide);
 
-         Intent data = new Intent();
-         data.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+               if (getParent() == null) {
+                  setResult(Activity.RESULT_OK, data);
+               } else {
+                  getParent().setResult(Activity.RESULT_OK, data);
+               }
+               startActivityForResult(data, StepsActivity.GUIDE_EDIT_STEP_REQUEST);
+               break;
+            case FOR_RESULT:
+               data = new Intent();
+               data.putExtra(StepsActivity.GUIDE_KEY, mGuide);
 
-         if (getParent() == null) {
-            setResult(Activity.RESULT_OK, data);
-         } else {
-            getParent().setResult(Activity.RESULT_OK, data);
+               if (getParent() == null) {
+                  setResult(Activity.RESULT_OK, data);
+               } else {
+                  getParent().setResult(Activity.RESULT_OK, data);
+               }
+
+               finish();
+               break;
+            case STEP_VIEW:
+               navigateToStepView();
+               break;
+
          }
-
-         finish();
       }
+      return;
    }
 
    protected void deleteStep(boolean unsaved) {

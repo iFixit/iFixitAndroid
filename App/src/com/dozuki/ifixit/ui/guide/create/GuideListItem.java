@@ -121,7 +121,7 @@ public class GuideListItem extends LinearLayout {
       mTitleView.setText(mGuideInfo.mTitle);
 
       if (mGuideInfo.mImage != null) {
-         image = mGuideInfo.mImage.getSize(".standard");
+         image = mGuideInfo.mImage.getPath(".standard");
       } else {
          image = "";
       }

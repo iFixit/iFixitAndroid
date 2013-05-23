@@ -18,7 +18,7 @@ public class APIImage implements Serializable {
       mBaseUrl = baseUrl;
    }
 
-   public String getSize(String size) {
+   public String getPath(String size) {
       if (mBaseUrl == null) {
          return "";
       }
