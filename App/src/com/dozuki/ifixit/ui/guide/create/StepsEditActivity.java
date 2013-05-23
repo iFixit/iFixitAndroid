@@ -607,13 +607,14 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
             case HOME_UP:
                data = new Intent(this, StepsActivity.class);
                data.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
                if (getParent() == null) {
                   setResult(Activity.RESULT_OK, data);
                } else {
                   getParent().setResult(Activity.RESULT_OK, data);
                }
-               startActivityForResult(data, StepsActivity.GUIDE_EDIT_STEP_REQUEST);
+               startActivity(data);
                break;
             case FOR_RESULT:
                data = new Intent();

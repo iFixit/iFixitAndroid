@@ -134,6 +134,9 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
+         case android.R.id.home:
+            getActivity().finish();
+            return true;
          case StepsActivity.MENU_EDIT_INTRO:
             launchGuideIntroEdit();
             break;
@@ -157,10 +160,9 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
             intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
             startActivity(intent);
             break;
-
       }
 
-      return true;
+      return super.onOptionsItemSelected(item);
    }
 
    /////////////////////////////////////////////////////
@@ -190,8 +192,9 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
          mGuide = event.getResult();
 
          // Update the page title if the title changed
-         if (!mActionBar.getTitle().equals(mGuide.getTitle()))
+         if (!mActionBar.getTitle().equals(mGuide.getTitle())) {
             mActionBar.setTitle(mGuide.getTitle());
+         }
 
       } else {
          event.setError(APIError.getFatalError(getActivity()));
