@@ -353,7 +353,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          case MENU_VIEW_GUIDE:
             Intent intent = new Intent(this, GuideViewActivity.class);
             intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
-            intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
+            intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition);
             startActivity(intent);
       }
 
@@ -626,7 +626,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    protected int getIndicatorHeight() {
       return titleIndicator.getHeight() + mBottomBar.getHeight();
-
    }
 
    public void toggleSave(boolean toggle) {
