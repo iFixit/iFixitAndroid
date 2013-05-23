@@ -60,7 +60,7 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
-         guideid = extras.getInt(StepsActivity.GUIDE_ID_KEY);
+         guideid = extras.getInt(StepsActivity.GUIDE_ID_KEY, 0);
          if (guideid == 0) {
             guideid = mGuide.getGuideid();
          }

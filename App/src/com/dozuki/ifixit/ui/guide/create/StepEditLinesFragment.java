@@ -165,7 +165,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
          getSupportFragmentManager().putFragment(savedInstanceState, REORDER_FRAG_ID, mReorderFragment);
          savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
       }
-
    }
 
    @Override
@@ -255,7 +254,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
       return dialog;
    }
-
 
    /////////////////////////////////////////////////////
    // HELPERS
