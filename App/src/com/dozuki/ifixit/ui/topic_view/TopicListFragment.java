@@ -117,6 +117,7 @@ public class TopicListFragment extends Fragment
       outState.putSerializable(CURRENT_TOPIC, mTopic);
    }
 
+   @Override
    public void onItemClick(AdapterView<?> adapterView, View view, int position,
     long id) {
       mTopicAdapter.onItemClick(null, view, position, id);

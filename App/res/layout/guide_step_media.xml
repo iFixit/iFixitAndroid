@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:dozuki="http://schemas.android.com/apk/res/com.dozuki.ifixit"
-                style="@style/guide_step_media_wrap"
+                style="@style/guideStepMediaWrap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
     <ImageView
         android:id="@+id/main_image"
-        style="@style/guide_main_image_spacing"
+        style="@style/guideMediaMain"
         android:layout_width="@dimen/guide_image_width"
         android:layout_height="@dimen/guide_image_height"
         android:background="@color/image_border"
@@ -15,7 +15,7 @@
 
     <com.dozuki.ifixit.ui.guide.view.ThumbnailView
         android:id="@+id/thumbnails"
-        style="@style/thumbnail_position"
+        style="@style/guideViewThumbnails"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         dozuki:can_edit="false"
@@ -38,7 +38,7 @@
 
     <RelativeLayout
         android:id="@+id/video_play_button_container"
-        style="@style/guide_main_image_spacing"
+        style="@style/guideMediaMain"
         android:layout_width="@dimen/guide_image_width"
         android:layout_height="@dimen/guide_image_height"
         android:visibility="gone">
@@ -54,7 +54,7 @@
 
     <WebView
         android:id="@+id/main_web_view"
-        style="@style/guide_main_image_spacing"
+        style="@style/guideMediaMain"
         android:layout_width="@dimen/guide_image_width"
         android:layout_height="@dimen/guide_image_height"
         android:background="@color/image_border"

@@ -69,7 +69,7 @@ public class TopicGuideListFragment extends Fragment {
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_guide_list, container, false);
 
-      mGridView = (GridView)view.findViewById(R.id.gridview);
+      mGridView = (GridView)view.findViewById(R.id.topic_guide_grid);
 
       mGuideAdapter = new TopicGuideListAdapter();
       mGuideAdapter.setTopic(mTopicLeaf);

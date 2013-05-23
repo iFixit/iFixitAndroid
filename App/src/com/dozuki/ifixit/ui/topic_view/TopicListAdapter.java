@@ -3,10 +3,13 @@ package com.dozuki.ifixit.ui.topic_view;
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.marczych.androidsectionheaders.Section;
+import org.holoeverywhere.LayoutInflater;
+import android.widget.AdapterView;
+import org.holoeverywhere.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -15,7 +18,6 @@ public class TopicListAdapter extends Section {
    private ArrayList<TopicNode> mTopicList;
    private String mHeader;
    private TopicSelectedListener mTopicListener;
-   private TopicListRowView prevSelected = null;
 
    public TopicListAdapter(Context context, String header,
     ArrayList<TopicNode> topicList) {
@@ -44,18 +46,23 @@ public class TopicListAdapter extends Section {
       return position;
    }
 
-   public View getView(int position, View convertView, ViewGroup parent) {
-      TopicListRowView topicRow;
+   public View getView(int position, View view, ViewGroup parent) {
+      TextView topicName;
+      View row;
 
-      if (convertView == null) {
-         topicRow = new TopicListRowView(mContext);
+      if (view == null) {
+         LayoutInflater inflater = (LayoutInflater)mContext.getSystemService(
+          Context.LAYOUT_INFLATER_SERVICE);
+         row = inflater.inflate(R.layout.topic_list_row, null);
       } else {
-         topicRow = (TopicListRowView)convertView;
+         row = view;
       }
 
-      topicRow.setTopic(mTopicList.get(position));
+      topicName = (TextView)row.findViewById(R.id.topic_title);
 
-      return topicRow;
+      topicName.setText(mTopicList.get(position).getName());
+
+      return row;
    }
 
    @Override
@@ -81,13 +88,6 @@ public class TopicListAdapter extends Section {
     long id) {
       if (mTopicListener != null) {
          mTopicListener.onTopicSelected(mTopicList.get(position));
-
-         if (prevSelected != null) {
-            ((TopicListRowView) prevSelected).clearCurrentTopicStyle();
-         }
-
-         ((TopicListRowView) view).setCurrentTopicStyle();
-         prevSelected = (TopicListRowView)view;
       }
    }
 }

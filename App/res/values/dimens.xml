@@ -5,8 +5,9 @@
     <dimen name="match_parent">-1dp</dimen>
     <dimen name="wrap_content">-2dp</dimen>
     <dimen name="site_list_button_width">340dp</dimen>
+
     <dimen name="title_text_size">24sp</dimen>
-    <dimen name="body_text_size">14sp</dimen>
+    <dimen name="body_text_size">16sp</dimen>
     <dimen name="body_text_top_spacing">8dp</dimen>
     <dimen name="progress_bar_width_height">80dp</dimen>
     <dimen name="page_padding">8dp</dimen>
@@ -20,8 +21,8 @@
     <dimen name="guide_image_padding">1dp</dimen>
     <dimen name="guide_image_spacing_right">8dp</dimen>
     <dimen name="guide_image_spacing_bottom">8dp</dimen>
-    <dimen name="guide_thumbnail_width">80dp</dimen>
-    <dimen name="guide_thumbnail_height">60dp</dimen>
+    <dimen name="guide_thumbnail_width">120dp</dimen>
+    <dimen name="guide_thumbnail_height">90dp</dimen>
     <dimen name="guide_thumbnail_spacing">6dp</dimen>
     <dimen name="guide_thumbnail_padding">1dp</dimen>
     <dimen name="guide_micro_thumbnail_width">53dp</dimen>

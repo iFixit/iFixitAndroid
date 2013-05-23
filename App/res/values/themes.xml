@@ -7,7 +7,7 @@
     <!-- iFixit -->
     <style name="Widget.iFixit"></style>
 
-    <style name="Widget.iFixit.ListViewStyle" parent="android:Widget.ListView">
+    <style name="Widget.iFixit.ListViewStyle" parent="android:Widget.Holo.Light.ListView">
         <item name="android:cacheColorHint">#00000000</item>
     </style>
 
@@ -79,7 +79,7 @@
 
     <style name="Widget.Dozuki.ListViewStyle" parent="android:Widget.ListView">
         <item name="android:cacheColorHint">#00000000</item>
-        <item name="android:divider">#FFDDDDDD</item>
+        <item name="android:divider">#FFEFEFEF</item>
         <item name="android:dividerHeight">1dp</item>
         <item name="android:fadingEdge">none</item>
     </style>

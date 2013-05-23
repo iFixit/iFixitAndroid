@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="step_wrap">
+    <style name="guideStepWrap">
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@color/white</item>
         <item name="android:padding">@dimen/page_padding</item>
@@ -9,37 +9,33 @@
         <item name="android:baselineAligned">false</item>
     </style>
 
-    <style name="thumbnail_orientation">
+    <style name="thumbnailList">
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="guide_thumbnail">
+    <style name="thumbnail">
         <item name="android:background">@color/image_border</item>
         <item name="android:visibility">invisible</item>
         <item name="android:padding">@dimen/guide_thumbnail_padding</item>
         <item name="android:layout_gravity">bottom</item>
     </style>
 
-    <style name="guide_thumbnail_w_spacing" parent="guide_thumbnail">
-        <item name="android:layout_marginRight">@dimen/guide_thumbnail_spacing</item>
-    </style>
-
-    <style name="guide_step_media_wrap">
+    <style name="guideStepMediaWrap">
         <item name="android:layout_marginRight">@dimen/guide_step_section_seperator</item>
     </style>
 
-    <style name="guide_main_image_spacing">
+    <style name="guideMediaMain">
         <item name="android:padding">@dimen/guide_image_padding</item>
         <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
     </style>
 
-    <style name="thumbnail_position">
+    <style name="guideViewThumbnails">
         <item name="android:layout_below">@id/main_image</item>
         <item name="android:layout_gravity">bottom</item>
     </style>
 
-    <style name="guide_step_list_view">
+    <style name="guideStepLines">
         <item name="android:background">@android:color/transparent</item>
     </style>
 

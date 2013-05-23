@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="text">
+    <style name="text" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/black</item>
     </style>
 
@@ -30,19 +30,56 @@
         <item name="android:lineSpacingExtra">2dp</item>
     </style>
 
-    <style name="text.list">
-        <item name="android:padding">8dp</item>
+    <style name="text.list" parent="Holo.TextAppearance.Medium.Inverse">
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+
         <item name="android:textSize">18sp</item>
-        <item name="android:textColor">#444444</item>
     </style>
 
-    <style name="text.list.header">
-        <item name="android:padding">4dp</item>
-        <item name="android:layout_marginLeft">4dp</item>
-        <item name="android:textColor">@color/white</item>
+    <style name="text.list.header" parent="android:Widget.Holo.Light.TextView">
+        <item name="android:drawableBottom">@drawable/section_header</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingLeft">4dp</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:textColor">@color/emphasis</item>
+        <item name="android:textSize">14sp</item>
+        <item name="android:background">@color/white</item>
     </style>
 
-    <style name="step_wrap">
+    <style name="SectionListView">
+        <item name="android:layout_marginRight">16dp</item>
+        <item name="android:layout_marginLeft">16dp</item>
+    </style>
+
+    <!-- topic_guide_list.xml -->
+
+    <style name="topicGuideGrid">
+
+    </style>
+
+    <!-- topic_guide_item.xml -->
+
+    <style name="topicGuideItem">
+        <item name="android:background">@color/topic_guide_item_background</item>
+        <item name="android:layout_margin">4dp</item>
+    </style>
+
+    <style name="topicGuideThumbnail">
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:background">@color/image_border</item>
+    </style>
+
+    <style name="topicGuideTitle" parent="Holo.TextAppearance.Medium.Inverse">
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+    </style>
+
+    <style name="guideStepWrap">
         <item name="android:orientation">vertical</item>
         <item name="android:background">@color/white</item>
         <item name="android:padding">@dimen/page_padding</item>
@@ -50,36 +87,32 @@
         <item name="android:baselineAligned">false</item>
     </style>
 
-    <style name="guide_step_media_wrap">
+    <style name="guideStepMediaWrap">
         <item name="android:layout_marginBottom">@dimen/guide_step_section_seperator</item>
     </style>
 
-    <style name="guide_step_list_view">
+    <style name="guideStepLines">
         <item name="android:background">@color/white</item>
     </style>
 
-    <style name="guide_thumbnail">
+    <style name="thumbnail">
         <item name="android:background">@color/image_border</item>
         <item name="android:visibility">gone</item>
         <item name="android:padding">@dimen/guide_thumbnail_padding</item>
         <item name="android:layout_gravity">right</item>
     </style>
 
-    <style name="guide_thumbnail_w_spacing" parent="guide_thumbnail">
-        <item name="android:layout_marginBottom">@dimen/guide_thumbnail_spacing</item>
-    </style>
-
-    <style name="thumbnail_orientation">
+    <style name="thumbnailList">
         <item name="android:orientation">vertical</item>
     </style>
 
-    <style name="thumbnail_position">
+    <style name="guideViewThumbnails">
         <item name="android:layout_marginLeft">@dimen/guide_thumbnail_spacing</item>
         <item name="android:layout_toRightOf">@id/main_image</item>
         <item name="android:layout_gravity">right</item>
     </style>
 
-    <style name="guide_main_image_spacing">
+    <style name="guideMediaMain">
         <item name="android:padding">@dimen/guide_image_padding</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
     </style>
