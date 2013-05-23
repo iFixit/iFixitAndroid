@@ -17,6 +17,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.ThumbnailView;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.util.APIService;
@@ -275,8 +276,9 @@ public class StepEditImageFragment extends Fragment {
          // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
          setGuideDirty();
       } else {
-         Log.w("Upload Image Error", event.getError().mMessage);
-         // TODO
+         Log.e("Upload Image Error", event.getError().mMessage);
+         event.setError(APIError.getFatalError(getActivity()));
+         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
       }
    }
 

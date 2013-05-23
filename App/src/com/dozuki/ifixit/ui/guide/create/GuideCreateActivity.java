@@ -12,7 +12,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
