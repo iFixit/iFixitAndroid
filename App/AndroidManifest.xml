@@ -53,11 +53,9 @@
             android:screenOrientation="landscape"
             android:launchMode="singleTop"/>
         <activity
-            android:name=".ui.guide.create.GuideCreateActivity"
-            android:launchMode="singleTop"/>
+            android:name=".ui.guide.create.GuideCreateActivity"/>
         <activity
-            android:name=".ui.guide.create.StepsActivity"
-            android:launchMode="singleTop"/>
+            android:name=".ui.guide.create.StepsActivity"/>
         <activity
             android:name=".ui.guide.create.StepsEditActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"/>

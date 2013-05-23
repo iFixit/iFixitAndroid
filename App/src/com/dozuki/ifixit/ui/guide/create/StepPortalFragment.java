@@ -118,15 +118,16 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == StepsActivity.GUIDE_EDIT_STEP_REQUEST) {
-         if (resultCode == Activity.RESULT_OK) {
-            Guide guide = (Guide) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
-            if (guide != null) {
-               mGuide = guide;
-               mStepAdapter = new StepAdapter();
-               mStepList.setAdapter(mStepAdapter);
-               mStepList.invalidateViews();
-            }
+      super.onActivityResult(requestCode, resultCode, data);
+
+      if (requestCode == StepsActivity.GUIDE_EDIT_STEP_REQUEST && resultCode == Activity.RESULT_OK) {
+         Guide guide = (Guide) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
+
+         if (guide != null) {
+            mGuide = guide;
+            mStepAdapter = new StepAdapter();
+            mStepList.setAdapter(mStepAdapter);
+            mStepList.invalidateViews();
          }
       }
    }
@@ -136,7 +137,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       switch (item.getItemId()) {
          case android.R.id.home:
             getActivity().finish();
-            return true;
+            break;
          case StepsActivity.MENU_EDIT_INTRO:
             launchGuideIntroEdit();
             break;
@@ -150,8 +151,10 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
             break;
          case StepsActivity.MENU_STEP_ADD:
             GuideStep newStep = new GuideStep(mGuide.getSteps().size() + 1);
+
             newStep.addLine(new StepLine());
             mGuide.addStep(newStep);
+
             launchStepEdit(mGuide.getSteps().size());
             break;
          case StepsEditActivity.MENU_VIEW_GUIDE:
@@ -160,10 +163,12 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
             intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
             startActivity(intent);
             break;
-      }
+         default:
+            return super.onOptionsItemSelected(item);
 
-      return super.onOptionsItemSelected(item);
-   }
+      }
+      return true;
+}
 
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS

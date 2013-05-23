@@ -9,7 +9,6 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.guide.create.StepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
@@ -18,8 +17,6 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 import org.holoeverywhere.app.AlertDialog;
-
-import java.util.ArrayList;
 
 public class StepsActivity extends IfixitActivity implements StepRearrangeListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
@@ -34,7 +31,6 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    private static final String LOADING = "LOADING";
    private ActionBar mActionBar;
    private StepPortalFragment mStepPortalFragment;
-   private ArrayList<GuideStep> mStepList;
    private Guide mGuide;
    private boolean mIsLoading;
 
@@ -112,13 +108,11 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
       super.onActivityResult(requestCode, resultCode, data);
 
       if (requestCode == GUIDE_EDIT_STEP_REQUEST && resultCode == RESULT_OK) {
-
          Guide guide = (Guide) data.getSerializableExtra(GuideCreateActivity.GUIDE_KEY);
+
          if (guide != null) {
             mGuide = guide;
-            mStepList = mGuide.getSteps();
          }
-
       }
    }
 
@@ -163,10 +157,6 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    public void onRetrievedGuide(APIEvent.GuideForEdit event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
-         mStepList = mGuide.getSteps();
-         if (mGuide.getSteps() != null && mGuide.getSteps().size() == 0) {
-
-         }
          hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));
@@ -178,7 +168,6 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    public void onIntroSavedGuide(APIEvent.EditGuide event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
-         mStepList = mGuide.getSteps();
          hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));

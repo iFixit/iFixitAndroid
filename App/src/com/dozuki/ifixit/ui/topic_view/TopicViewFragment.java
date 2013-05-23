@@ -13,6 +13,7 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
 import com.dozuki.ifixit.util.APIEvent;
@@ -76,11 +77,13 @@ public class TopicViewFragment extends Fragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_view_fragment, container, false);
 
+      Bundle args = getArguments();
+
       mPager = (ViewPager) view.findViewById(R.id.topic_view_view_pager);
       mTitleIndicator = (TitlePageIndicator) view.findViewById(R.id.topic_view_indicator);
 
       if (savedInstanceState != null) {
-         mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE);
+         mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE, 0); // Default to Guide page
          mTopicNode = (TopicNode) savedInstanceState.getSerializable(CURRENT_TOPIC_NODE);
          TopicLeaf topicLeaf = (TopicLeaf) savedInstanceState.getSerializable(CURRENT_TOPIC_LEAF);
 
@@ -88,6 +91,10 @@ public class TopicViewFragment extends Fragment {
             setTopicLeaf(topicLeaf);
          } else if (mTopicNode != null) {
             getTopicLeaf(mTopicNode.getName());
+         }
+      } else if (args != null) {
+         if (args.containsKey(GuideViewActivity.TOPIC_NAME_KEY)) {
+            getTopicLeaf(args.getString(GuideViewActivity.TOPIC_NAME_KEY));
          }
       }
       return view;
@@ -105,11 +112,6 @@ public class TopicViewFragment extends Fragment {
       super.onPause();
 
       MainApplication.getBus().unregister(this);
-   }
-
-   @Override
-   public void onAttach(Activity activity) {
-      super.onAttach(activity);
    }
 
    @Override

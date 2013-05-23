@@ -55,6 +55,7 @@ public class GuideStep implements Serializable {
       mTitle = "";
       mImages = new ArrayList<APIImage>();
       mLines = new ArrayList<StepLine>();
+      mRevisionid = null;
    }
 
    public String type() {

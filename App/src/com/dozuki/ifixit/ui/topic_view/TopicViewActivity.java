@@ -27,6 +27,12 @@ public class TopicViewActivity extends IfixitActivity {
 
       if (savedState == null) {
          mTopicView = new TopicViewFragment();
+         Bundle extras = getIntent().getExtras();
+
+         if (extras != null) {
+            mTopicView.setArguments(extras);
+         }
+
          FragmentTransaction ft = getSupportFragmentManager()
           .beginTransaction();
          ft.replace(R.id.topic_view_fragment, mTopicView);

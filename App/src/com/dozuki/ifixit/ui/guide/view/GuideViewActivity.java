@@ -42,6 +42,9 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String SAVED_GUIDEID = "SAVED_GUIDEID";
+   public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
+   public static final String FROM_EDIT = "FROM_EDIT_KEY";
+
    public static final int MENU_EDIT_GUIDE = 2;
 
    private GuideViewAdapter mGuideAdapter;
@@ -54,6 +57,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    private CirclePageIndicator mIndicator;
    private ProgressBar mProgressBar;
    private ImageView mNextPageImage;
+   private boolean mFromEdit = false;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -104,6 +108,9 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
             }
          } else {
             if (extras != null) {
+               if (extras.containsKey(FROM_EDIT)) {
+                  mFromEdit = extras.getBoolean(FROM_EDIT);
+               }
                if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
                   mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
                }
@@ -132,7 +139,9 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
          }
       });
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      if (!mFromEdit) {
+         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      }
 
       //initSpeechRecognizer();
    }
@@ -160,17 +169,18 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
+      Intent intent;
       switch (item.getItemId()) {
-         case android.R.id.home:
-            return true;
          case MENU_EDIT_GUIDE:
-            Intent intent = new Intent(this, StepsEditActivity.class);
+            intent = new Intent(this, StepsEditActivity.class);
             intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
             intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, mCurrentPage - 1); // account for introduction page
             startActivity(intent);
+            break;
+         default:
+            return(super.onOptionsItemSelected(item));
       }
-
-      return(super.onOptionsItemSelected(item));
+      return true;
    }
 
 

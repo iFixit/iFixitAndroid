@@ -39,6 +39,7 @@ import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.widget.Toast;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class StepsEditActivity extends IfixitActivity implements OnClickListener {
    public static final int MENU_VIEW_GUIDE = 12;
@@ -346,9 +347,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
             mPager.setCurrentItem(newPosition, false);
             break;
-         case android.R.id.home:
-            finishEdit(FOR_RESULT);
-            break;
       }
    }
 
@@ -588,6 +586,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       Intent intent = new Intent(this, GuideViewActivity.class);
       intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
       intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition);
+      intent.putExtra(GuideViewActivity.FROM_EDIT, true);
       startActivity(intent);
    }
 
@@ -596,29 +595,25 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       if (mIsStepDirty) {
          createExitWarningDialog(exitCode).show();
       } else {
-         // Clean out steps unsaved steps
-         for (GuideStep step : mGuide.getSteps()) {
-            if (step.getRevisionid() == null) {
-               mGuide.getSteps().remove(step);
+         // Clean out unsaved, new steps
+         for (Iterator<GuideStep> it=mGuide.getSteps().iterator(); it.hasNext();) {
+            if (it.next().getRevisionid() == null) {
+               Log.w("StepsEditActivity", "new step");
+               it.remove();
             }
          }
          Intent data;
          switch (exitCode) {
             case HOME_UP:
                data = new Intent(this, StepsActivity.class);
-               data.putExtra(StepsActivity.GUIDE_KEY, mGuide);
-               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+               data.putExtra(StepsActivity.GUIDE_ID_KEY, mGuide.getGuideid());
+               data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
 
-               if (getParent() == null) {
-                  setResult(Activity.RESULT_OK, data);
-               } else {
-                  getParent().setResult(Activity.RESULT_OK, data);
-               }
                startActivity(data);
                break;
             case FOR_RESULT:
                data = new Intent();
-               data.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+               data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
 
                if (getParent() == null) {
                   setResult(Activity.RESULT_OK, data);
