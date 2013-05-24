@@ -36,12 +36,14 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
       Page topicPage = new TopicNamePage(this)
        .setDescription(app.getString(R.string.guide_intro_wizard_guide_topic_description,
         topicName.toLowerCase(), topicName.toLowerCase()))
+       .setHint(app.getString(R.string.guide_intro_wizard_guide_topic_hint, topicName))
        .setTitle(app.getString(R.string.guide_intro_wizard_guide_topic_title, topicName))
        .setRequired(true);
 
       Page subjectPage = new EditTextPage(this)
        .setDescription(app.getString(R.string.guide_intro_wizard_guide_subject_description,
         topicName.toLowerCase()))
+       .setHint(app.getString(R.string.guide_intro_wizard_guide_subject_hint))
        .setTitle(app.getString(R.string.guide_intro_wizard_guide_subject_title));
 
       Page titlePage = new GuideTitlePage(this)
