@@ -85,12 +85,12 @@ public class GuideStepLineView extends LinearLayout {
          iconRes = R.drawable.bullet_orange;
       } else if (color.equals("blue")) {
          iconRes = R.drawable.bullet_blue;
-      } else if (color.equals("purple")) {
+      } else if (color.equals("violet")) {
          iconRes = R.drawable.bullet_purple;
+      } else if (color.equals("green")) {
+         iconRes = R.drawable.bullet_green;
       } else if (color.equals("red")) {
          iconRes = R.drawable.bullet_red;
-      } else if (color.equals("teal")) {
-         iconRes = R.drawable.bullet_teal;
       } else if (color.equals("white")) {
          iconRes = R.drawable.bullet_white;
       } else if (color.equals("yellow")) {
