@@ -133,7 +133,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
       setContentView(R.layout.guide_create_step_edit);
 
-      mSaveStep = (Button) findViewById(R.id.step_edit_view_save);
+      mSaveStep = (Button) findViewById(R.id.step_edit_save);
 
       toggleSave(mIsStepDirty);
 
@@ -313,7 +313,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
                createDeleteDialog(StepsEditActivity.this).show();
             }
             break;
-         case R.id.step_edit_view_save:
+         case R.id.step_edit_save:
             save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
