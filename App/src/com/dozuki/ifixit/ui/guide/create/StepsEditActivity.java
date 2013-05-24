@@ -595,13 +595,19 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       if (mIsStepDirty) {
          createExitWarningDialog(exitCode).show();
       } else {
-         // Clean out unsaved, new steps
+
+         // Clean out unsaved, new steps.
          for (Iterator<GuideStep> it=mGuide.getSteps().iterator(); it.hasNext();) {
             if (it.next().getRevisionid() == null) {
-               Log.w("StepsEditActivity", "new step");
                it.remove();
             }
          }
+
+         // Make sure the step numbers are correct after removing steps.
+         for (int i = 1; i <= mGuide.getSteps().size(); i++) {
+            mGuide.getStep(i-1).setStepNum(i);
+         }
+
          Intent data;
          switch (exitCode) {
             case HOME_UP:
