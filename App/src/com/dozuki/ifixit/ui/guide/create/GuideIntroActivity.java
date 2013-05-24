@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.guide.create;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -121,6 +122,12 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_create_intro);
       mSelf = this;
+
+      if (MainApplication.get().isScreenLarge()) {
+         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+      } else {
+         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      }
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {

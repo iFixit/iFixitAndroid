@@ -390,4 +390,10 @@ public class MainApplication extends Application {
 
       getBus().post(new LoginEvent.Cancel());
    }
+
+   public boolean isScreenLarge() {
+      final int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
+      return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
+       || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
+   }
 }

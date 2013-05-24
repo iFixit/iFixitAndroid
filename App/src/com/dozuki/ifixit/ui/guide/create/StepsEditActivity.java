@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -95,7 +94,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
        * Courtesy:
        * http://stackoverflow.com/questions/10491531/android-restrict-activity-orientation-based-on-screen-size
        **/
-      if (isScreenLarge()) {
+      if (MainApplication.get().isScreenLarge()) {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
       } else {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -676,12 +675,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    protected void enableViewPager(boolean unlocked) {
       mPager.setPagingEnabled(unlocked);
-   }
-
-   protected boolean isScreenLarge() {
-      final int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-      return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
-       || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
    }
 
    public void lockSave() {

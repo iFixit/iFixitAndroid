@@ -50,7 +50,6 @@
         <activity android:name=".ui.gallery.GalleryActivity"/>
         <activity
             android:name=".ui.guide.create.GuideIntroActivity"
-            android:screenOrientation="landscape"
             android:launchMode="singleTop"/>
         <activity
             android:name=".ui.guide.create.GuideCreateActivity"/>
