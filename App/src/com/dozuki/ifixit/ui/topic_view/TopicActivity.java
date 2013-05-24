@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.SystemClock;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
@@ -14,6 +15,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -64,6 +66,7 @@ public class TopicActivity extends IfixitActivity
       }
 
       if (mRootTopic == null) {
+         showLoading();
          APIService.call(this, APIService.getCategoriesAPICall());
       }
 
@@ -97,6 +100,7 @@ public class TopicActivity extends IfixitActivity
 
    @Subscribe
    public void onCategories(APIEvent.Categories event) {
+      hideLoading();
       if (!event.hasError()) {
          if (mRootTopic == null) {
             mRootTopic = event.getResult();
@@ -233,4 +237,22 @@ public class TopicActivity extends IfixitActivity
       ft.commitAllowingStateLoss();
    }
 
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
+
+   private void showLoading() {
+      mTopicView =
+       (TopicViewFragment) getSupportFragmentManager().findFragmentById(R.id.topic_view_fragment);;
+      getSupportFragmentManager().beginTransaction()
+       .add(R.id.topic_list_fragment, new LoadingFragment(), "loading").addToBackStack("loading")
+       .commit();
+      if (mTopicView != null) {
+         getSupportFragmentManager().beginTransaction().hide(mTopicView).addToBackStack(null).commit();
+      }
+   }
+
+   private void hideLoading() {
+      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+   }
 }
