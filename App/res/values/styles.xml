@@ -117,6 +117,10 @@
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
     </style>
 
+    <style name="TextAppearanceFinish">
+        <item name="android:color">@color/white</item>
+    </style>
+
     <style name="MenuDrawer"/>
 
     <style name="MenuDrawer.Widget"/>
