@@ -664,13 +664,15 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    }
 
    public void toggleSave(boolean toggle) {
-      int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
-      int buttonTextColor = toggle ? R.color.white : R.color.fireswing_grey;
+      if (!mLockSave) {
+         int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
+         int buttonTextColor = toggle ? R.color.white : R.color.fireswing_grey;
 
-      mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
-      mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
-      mSaveStep.setText(R.string.save);
-      mSaveStep.setEnabled(toggle);
+         mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
+         mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
+         mSaveStep.setText(R.string.save);
+         mSaveStep.setEnabled(toggle);
+      }
    }
 
    protected void enableViewPager(boolean unlocked) {
@@ -679,6 +681,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    public void lockSave() {
       mLockSave = true;
+      mSaveStep.setText(R.string.loading_image);
    }
 
    public void unlockSave() {
