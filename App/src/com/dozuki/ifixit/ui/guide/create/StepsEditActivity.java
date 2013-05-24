@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -164,12 +163,10 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      //MainApplication.getBus().register(this);
       MainApplication.getBus().register(this);
 
       super.onActivityResult(requestCode, resultCode, data);
 
-      Log.w(TAG, "onActivityResult");
       if (mCurStepFragment != null) {
          mCurStepFragment.setMediaResult(requestCode, resultCode, data);
       } else {
@@ -296,7 +293,6 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    @Subscribe
    public void onGuideChanged(StepChangedEvent event) {
-      Log.w("STepsEditActivity", "guide changed");
       mIsStepDirty = true;
       toggleSave(mIsStepDirty);
    }
@@ -528,11 +524,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
    /////////////////////////////////////////////////////
 
    protected void save(int savePosition) {
-
       GuideStep obj = mCurStepFragment.getGuideChanges();
-
-      Log.w(TAG, "Saving step #" + savePosition + " from guide #" + mGuide.getGuideid());
-      Log.w(TAG, "Step images count: " + obj.getImages().size());
 
       if (obj.getLines().size() == 0) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
@@ -615,7 +607,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
                data.putExtra(StepsActivity.GUIDE_ID_KEY, mGuide.getGuideid());
                data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
                data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
-               
+
                startActivity(data);
                break;
             case FOR_RESULT:

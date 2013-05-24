@@ -52,7 +52,6 @@ public class TopicNameFragment extends Fragment {
    public static TopicNameFragment create(String key) {
       Bundle args = new Bundle();
       args.putString(ARG_KEY, key);
-      Log.w("TopicNameFragment", "create");
 
       TopicNameFragment fragment = new TopicNameFragment();
       fragment.setArguments(args);
@@ -64,7 +63,6 @@ public class TopicNameFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      Log.w("TopicNameFragment", "onCreate");
 
       Bundle args = getArguments();
       mKey = args.getString(ARG_KEY);
@@ -79,7 +77,6 @@ public class TopicNameFragment extends Fragment {
       }
 
       View rootView = inflater.inflate(R.layout.guide_create_intro_topic_name, container, false);
-      Log.w("TopicNameFragment", "onCreateView");
 
       // Set page title
       ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
@@ -88,7 +85,6 @@ public class TopicNameFragment extends Fragment {
       ((TextView) rootView.findViewById(R.id.page_description)).setText(mPage.getDescription());
 
       mTopicNameView = (AutoCompleteTextView) rootView.findViewById(R.id.topic_name);
-      Log.w("TopicNameFragment", "topicNameView initialized");
 
       if (mTopics != null) {
          setTopicArrayAdapter();
@@ -97,7 +93,6 @@ public class TopicNameFragment extends Fragment {
       }
 
       mTopicNameView.setText(mPage.getData().getString(TopicNamePage.TOPIC_DATA_KEY));
-      Log.w("TopicNameFragment", "topic nave value set");
 
       return rootView;
    }
@@ -105,7 +100,6 @@ public class TopicNameFragment extends Fragment {
    @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
-      Log.w("TopicNameFragment", "onAttach");
 
       if (!(activity instanceof PageFragmentCallbacks)) {
          throw new ClassCastException("Activity must implement PageFragmentCallbacks");
@@ -123,14 +117,12 @@ public class TopicNameFragment extends Fragment {
    @Override
    public void onResume() {
       super.onResume();
-      Log.w("TopicNameFragment", "onResume");
       MainApplication.getBus().register(this);
    }
 
    @Override
    public void onPause() {
       super.onPause();
-      Log.w("TopicNameFragment", "onPause");
 
       MainApplication.getBus().unregister(this);
    }
@@ -138,7 +130,6 @@ public class TopicNameFragment extends Fragment {
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-      Log.w("TopicNameFragment", "onSaveInstanceState");
 
       outState.putStringArrayList(TOPIC_LIST_KEY, mTopics);
    }
@@ -187,7 +178,6 @@ public class TopicNameFragment extends Fragment {
        mTopics);
 
       mTopicNameView.setAdapter(mAdapter);
-      Log.w("TopicNameFragment", "Topic list Array adapter set");
 
    }
 
@@ -195,7 +185,6 @@ public class TopicNameFragment extends Fragment {
    public void onTopicList(APIEvent.TopicList event) {
       if (!event.hasError()) {
          mTopics = new ArrayList<String>(event.getResult());
-         Log.w("TopicNameFragment onTopicList", mTopics.toString());
 
          setTopicArrayAdapter();
       } else {

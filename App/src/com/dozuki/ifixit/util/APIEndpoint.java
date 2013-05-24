@@ -77,12 +77,7 @@ public enum APIEndpoint {
    ALL_TOPICS(
     new Endpoint() {
        public String createUrl(String query) {
-          try {
-             return "categories/all?limit=100000";
-          } catch (Exception e) {
-             Log.w("iFixit", "Encoding error: " + e.getMessage());
-             return null;
-          }
+          return "categories/all?limit=100000";
        }
 
        public APIEvent<?> parse(String json) throws JSONException {
