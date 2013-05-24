@@ -608,7 +608,8 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
                data = new Intent(this, StepsActivity.class);
                data.putExtra(StepsActivity.GUIDE_ID_KEY, mGuide.getGuideid());
                data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-
+               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+               
                startActivity(data);
                break;
             case FOR_RESULT:
