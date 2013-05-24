@@ -26,7 +26,6 @@
                 android:layout_height="wrap_content"
                 android:saveEnabled="false"
                 android:inputType="textCapWords"
-                android:hint="@string/topic_name_hint"
                 android:layout_marginBottom="16dp"/>
 
         </LinearLayout>
