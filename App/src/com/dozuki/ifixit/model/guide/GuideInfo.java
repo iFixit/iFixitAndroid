@@ -41,7 +41,7 @@ public class GuideInfo implements Serializable {
    }
 
    public boolean hasSubject() {
-      return contains(mSubject, hasSubject);
+      return !mSubject.equals("") && contains(mSubject, hasSubject);
    }
 
    public boolean hasFlag(String flagid) {

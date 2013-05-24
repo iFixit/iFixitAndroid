@@ -86,7 +86,7 @@ public class GuideIntroViewFragment extends Fragment {
    }
 
    public void setGuide() {
-      mTitle.setText(Html.fromHtml(mGuide.getDisplayTitle()));
+      mTitle.setText(Html.fromHtml(mGuide.getTitle()));
       mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
        .getIntroductionRendered())));
 
