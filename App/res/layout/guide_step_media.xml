@@ -10,6 +10,7 @@
         style="@style/guideMediaMain"
         android:layout_width="@dimen/guide_image_width"
         android:layout_height="@dimen/guide_image_height"
+        android:src="@drawable/no_image"
         android:background="@color/image_border"
         android:contentDescription="@string/main_guide_img_description"/>
 

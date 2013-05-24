@@ -215,8 +215,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
 
       getSupportActionBar().setTitle(mGuide.getTitle());
 
-      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(),
-       mImageManager, mGuide);
+      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide);
 
       mPager.setAdapter(mGuideAdapter);
       mIndicator.setOnPageChangeListener(this);

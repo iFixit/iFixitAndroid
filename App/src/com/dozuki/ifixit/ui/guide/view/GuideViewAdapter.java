@@ -4,7 +4,6 @@ package com.dozuki.ifixit.ui.guide.view;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.app.Fragment;
 
 public class GuideViewAdapter extends FragmentStatePagerAdapter {
@@ -12,11 +11,9 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
    private static final int STEP_OFFSET = 1;
 
    private Guide mGuide;
-   private ImageManager mImageManager;
 
-   public GuideViewAdapter(FragmentManager fm, ImageManager im, Guide guide) {
+   public GuideViewAdapter(FragmentManager fm, Guide guide) {
       super(fm);
-      mImageManager = im;
       mGuide = guide;
    }
 
@@ -39,8 +36,7 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
 
          return introView;
       } else {
-         stepView = new GuideStepViewFragment(mImageManager,
-          mGuide.getStep(position - STEP_OFFSET));
+         stepView = new GuideStepViewFragment(mGuide.getStep(position - STEP_OFFSET));
 
          return stepView;
       }

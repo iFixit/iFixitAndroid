@@ -20,8 +20,8 @@ import android.webkit.WebViewClient;
 import android.widget.*;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.*;
 import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.guide.*;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.marczych.androidimagemanager.ImageManager;
@@ -57,16 +57,15 @@ public class GuideStepViewFragment extends Fragment {
 
    public GuideStepViewFragment() { }
 
-   public GuideStepViewFragment(ImageManager im, GuideStep step) {
+   public GuideStepViewFragment(GuideStep step) {
       mStep = step;
-      mImageManager = im;
    }
 
    @Override
    public void onCreate(Bundle savedState) {
       mContext = getActivity();
 
-      MainApplication app = (MainApplication) mContext.getApplication();
+      MainApplication app = MainApplication.get();
 
       mContext.setTheme(app.getSiteTheme());
 
@@ -163,7 +162,7 @@ public class GuideStepViewFragment extends Fragment {
          setVideo();
       } else if (mStep.hasEmbed()) {
          setEmbed();
-      } else if (mStep.hasImage()) {
+      } else {
          setImage();
       }
    }
@@ -176,8 +175,12 @@ public class GuideStepViewFragment extends Fragment {
 
       mThumbs.setImageSizes(mImageSizes);
       mThumbs.setMainImage(mMainImage);
-      mThumbs.setThumbs(stepImages);
-      mThumbs.setCurrentThumb(stepImages.get(0).mBaseUrl);
+
+      if (stepImages.size() > 0) {
+
+         mThumbs.setThumbs(stepImages);
+         mThumbs.setCurrentThumb(stepImages.get(0).mBaseUrl);
+      }
 
       // Size the main image and thumbnails to maximize use of screen space
       mThumbs.fitToSpace();

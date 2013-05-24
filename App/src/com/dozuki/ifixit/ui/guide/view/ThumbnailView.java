@@ -141,13 +141,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       if (fromDisk) {
          path = image.mBaseUrl;
-         Log.w("thumbnailview", path);
          thumb.setImageBitmap(BitmapFactory.decodeFile(path));
       } else {
          path = image.getPath(mImageSizes.getThumb());
          mImageManager.displayImage(path, (Activity) mContext, thumb);
       }
-      thumbnailDimensions();
+
+      getThumbnailDimensions();
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
 
       mThumbs.add(thumb);
@@ -184,7 +184,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    public void updateThumb(APIImage newImage) {
       for (ImageView thumb : mThumbs) {
-         APIImage thumbImage = (APIImage)thumb.getTag();
+         APIImage thumbImage = (APIImage) thumb.getTag();
 
          if (thumbImage.mId == StepEditImageFragment.DEFAULT_IMAGE_ID) {
             thumb.setTag(newImage);
@@ -198,7 +198,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       removeViewAt(position);
       addThumb(newImage, false);
    }
-
 
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
       mLongClickListener = listener;
@@ -283,7 +282,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          public void onClick(View v) {
             String url = (String) v.getTag();
 
-            if (url == null || url != null && (url.equals("") || url.indexOf(".") == 0)) return;
+            if (url == null || (url != null && (url.equals("") || url.startsWith(".")))) return;
 
             Intent intent = new Intent(mContext, FullImageViewActivity.class);
 
@@ -295,11 +294,11 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          }
       });
 
-      mainImageDimensions();
-      thumbnailDimensions();
+      getMainImageDimensions();
+      getThumbnailDimensions();
    }
 
-   private void mainImageDimensions() {
+   private void getMainImageDimensions() {
       if (MainApplication.get().inPortraitMode()) {
          float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f)
           + getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
@@ -319,7 +318,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       }
    }
 
-   private void thumbnailDimensions() {
+   private void getThumbnailDimensions() {
       if (MainApplication.get().inPortraitMode()) {
          float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f)
           + getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
