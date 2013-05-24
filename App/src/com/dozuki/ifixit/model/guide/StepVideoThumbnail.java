@@ -28,7 +28,11 @@ public class StepVideoThumbnail implements Serializable {
    }
 
    public String getUrl(String size) {
-      return mUrl + "." + size;
+      if (!size.startsWith(".")) {
+         mUrl += ".";
+      }
+
+      return mUrl + size;
    }
 
    public int getWidth() {

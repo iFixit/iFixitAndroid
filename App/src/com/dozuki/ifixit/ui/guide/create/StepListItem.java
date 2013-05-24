@@ -14,6 +14,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.model.guide.StepVideoThumbnail;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.widget.LinearLayout;
 import org.holoeverywhere.widget.TextView;
@@ -95,7 +96,11 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
          mStepNumber.setVisibility(View.VISIBLE);
       }
 
-      setImageThumb(mStepObject.getImages(), mImageView);
+      if (mStepObject.hasVideo()) {
+         setStepThumbnail(mStepObject.getVideo().getThumbnail(), mImageView);
+      } else {
+         setStepThumbnail(mStepObject.getImages(), mImageView);
+      }
       setEditMode(isEdit, false, mToggleEdit, mEditBar);
    }
 
@@ -128,7 +133,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       }
    }
 
-   private void setImageThumb(ArrayList<APIImage> imageList, ImageView imageView) {
+   private void setStepThumbnail(ArrayList<APIImage> imageList, ImageView imageView) {
       boolean img = false;
       for (APIImage imageInfo : imageList) {
          if (imageInfo.mId > 0) {
@@ -143,7 +148,21 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
          mImageManager.displayImage("", mPortalRef.getActivity(), imageView);
          imageView.invalidate();
       }
+   }
 
+   private void setStepThumbnail(StepVideoThumbnail thumb, ImageView imageView) {
+      boolean img = false;
+      if (!thumb.getUrl().equals("")) {
+         // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
+         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+         imageView.setTag(thumb.getUrl(".standard"));
+
+         mImageManager.displayImage(thumb.getUrl(".standard"), mPortalRef.getActivity(), imageView);
+         imageView.invalidate();
+      } else {
+         mImageManager.displayImage("", mPortalRef.getActivity(), imageView);
+         imageView.invalidate();
+      }
    }
 
    public void setChecked(boolean check) {
