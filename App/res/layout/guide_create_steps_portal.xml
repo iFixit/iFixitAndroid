@@ -5,15 +5,12 @@
                 android:background="@color/white"
                 android:orientation="vertical">
 
-   <ListView
-           xmlns:android="http://schemas.android.com/apk/res/android"
-           android:id="@+id/steps_portal_list"
-           android:layout_width="match_parent"
-           android:layout_height="match_parent"
-           android:layout_below="@+id/guide_create_top_bar"
-           android:layout_margin="3dp"
-           android:dividerHeight="@dimen/topic_list_vertical_spacing"
-           android:divider="@color/white"
-           android:padding="3dp"/>
+    <ListView
+        android:id="@+id/steps_portal_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="4dp"
+        android:dividerHeight="@dimen/topic_list_vertical_spacing"
+        android:divider="@color/white"/>
 
 </RelativeLayout>

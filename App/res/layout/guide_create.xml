@@ -9,10 +9,8 @@
         android:id="@+id/guide_create_listview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/topic_list_top_margin"
+        android:layout_margin="4dp"
         android:dividerHeight="@dimen/topic_list_vertical_spacing"
-        android:divider="@color/white"
-        android:gravity="center"
-        style="?attr/topicGuideList"/>
+        android:divider="@color/white"/>
 
 </RelativeLayout>
