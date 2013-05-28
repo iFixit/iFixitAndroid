@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -16,6 +15,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.login.LoginEvent;
 import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.holoeverywhere.app.AlertDialog;
@@ -44,8 +44,6 @@ public class GalleryActivity extends IfixitActivity {
    public static boolean showingHelp;
    public static boolean showingDelete;
 
-   private ActionBar mActionBar;
-
    private HashMap<String, MediaFragment> mMediaCategoryFragments;
    private MediaFragment mCurrentMediaFragment;
 
@@ -59,9 +57,6 @@ public class GalleryActivity extends IfixitActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication) getApplication()).getSiteTheme());
-
-      mActionBar = getSupportActionBar();
-      mActionBar.setTitle("");
 
       mMediaCategoryFragments = new HashMap<String, MediaFragment>();
       mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS, new PhotoMediaFragment());
@@ -258,5 +253,15 @@ public class GalleryActivity extends IfixitActivity {
 
          return true;
       }
-   };
+   }
+
+   protected void showLoading() {
+      getSupportFragmentManager().beginTransaction()
+       .add(new LoadingFragment(), "loading").addToBackStack("loading")
+       .commit();
+   }
+
+   protected void hideLoading() {
+      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+   }
 }

@@ -38,12 +38,16 @@ public class PhotoMediaFragment extends MediaFragment {
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
+      ((GalleryActivity)getActivity()).showLoading();
+
       APIService.call((Activity) getActivity(),
        APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));
    }
 
    @Subscribe
    public void onUserImages(APIEvent.UserImages event) {
+      ((GalleryActivity)getActivity()).hideLoading();
+
       if (!event.hasError()) {
          UserImageList imageList = event.getResult();
          if (imageList.getItems().size() > 0) {

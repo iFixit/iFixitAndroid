@@ -53,8 +53,7 @@ public class FullImageViewActivity extends Activity {
           BitmapFactory.decodeFile(mImageUrl, opt), true);
          mImageZoom.setVisibility(View.VISIBLE);
       } else {
-         mImageManager.displayImage(mImageUrl + mImageSizes.getFull(), this,
-          mImageZoom);
+         mImageManager.displayImage(mImageUrl, this, mImageZoom);
       }
 
       mCloseFullScreen = (ImageView)findViewById(R.id.fullScreenClose);

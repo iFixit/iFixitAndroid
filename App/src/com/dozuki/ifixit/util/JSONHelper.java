@@ -383,7 +383,7 @@ public class JSONHelper {
       // TODO: Make a function to parse the image format and return an object
       // that UserImageInfo uses. All other image parsing should use that too.
       userImageInfo.setItemId(jImage.getJSONObject("image").getString("id"));
-      userImageInfo.setGuid(jImage.getJSONObject("image").getString("medium"));
+      userImageInfo.setGuid(jImage.getJSONObject("image").getString("original"));
       userImageInfo.setWidth(jImage.getString("width"));
       userImageInfo.setHeight(jImage.getString("height"));
       userImageInfo.setRatio(jImage.getString("ratio"));

@@ -210,9 +210,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
       }
    }
 
-
    protected abstract void retrieveUserMedia();
-
 
    protected void launchImageChooser() {
       Intent intent = new Intent();

@@ -152,7 +152,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mThumbs.add(thumb);
       this.addView(thumb, mThumbs.size() - 1);
 
-      setCurrentThumb(path);
+      setCurrentThumb(image.mBaseUrl);
 
       if ((mThumbs.size() > 2 || mThumbs.size() < 1) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(GONE);
@@ -206,8 +206,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    public void setCurrentThumb(String url) {
       if (url.startsWith("http")) {
-         url += mImageSizes.getMain();
-         mImageManager.displayImage(url, (Activity) mContext, mMainImage);
+         String mainUrl = url + mImageSizes.getMain();
+         mImageManager.displayImage(mainUrl, (Activity) mContext, mMainImage);
       } else {
          mMainImage.setImageDrawable(Drawable.createFromPath(url));
          setMainImageDimensions(mMainHeight, mMainWidth);
