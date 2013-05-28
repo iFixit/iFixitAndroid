@@ -48,9 +48,14 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
 
    public static String TAG = "StepEditActivity";
-   public static String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
+   public static String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
    public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
-   public static String DeleteGuideDialogKey = "DeleteGuideDialog";
+   public static String DELETE_GUIDE_DIALOG_KEY = "DeleteGuideDialog";
+   public static final String GUIDE_ID_KEY = "GUIDE_ID_KEY";
+   public static final String GUIDE_STEP_ID = "GUIDE_STEP_ID";
+   public static final String PARENT_GUIDE_ID_KEY = "PARENT_GUIDE_ID_KEY";
+   public static final int NO_PARENT_GUIDE = -1;
+
    private static final String SHOWING_HELP = "SHOWING_HELP";
 
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
@@ -68,6 +73,12 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    private RelativeLayout mBottomBar;
    private int mPagePosition;
    private int mSavePosition;
+
+   // Necessary for editing prerequisite guides from the view interface in order to navigate back to the parent guide.
+   private int mParentGuideId = NO_PARENT_GUIDE;
+
+   // Used to navigate to the correct step when coming from GuideViewActivity.
+   private int mInboundStepId;
 
    private boolean mConfirmDelete;
    private boolean mIsStepDirty;
@@ -105,12 +116,23 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       mPagePosition = 0;
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
-         mPagePosition = extras.getInt(StepEditActivity.GUIDE_STEP_KEY);
+         mPagePosition = extras.getInt(GUIDE_STEP_NUM_KEY, 0);
+
+         if (mGuide == null) {
+            int guideid = extras.getInt(GUIDE_ID_KEY);
+
+            mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
+            mInboundStepId = extras.getInt(GUIDE_STEP_ID);
+
+            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(guideid));
+            showLoading();
+         }
       }
+
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
-         mPagePosition = savedInstanceState.getInt(StepEditActivity.GUIDE_STEP_KEY);
-         mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
+         mPagePosition = savedInstanceState.getInt(GUIDE_STEP_NUM_KEY);
+         mConfirmDelete = savedInstanceState.getBoolean(DELETE_GUIDE_DIALOG_KEY);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
@@ -126,8 +148,12 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       }
 
       if (mGuide != null) {
-         getSupportActionBar().setTitle(mGuide.getTitle());
+         initPage(mPagePosition);
       }
+   }
+
+   private void initPage(int startPage) {
+      getSupportActionBar().setTitle(mGuide.getTitle());
 
       setContentView(R.layout.guide_create_step_edit);
 
@@ -142,7 +168,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
       mPager.setAdapter(mStepAdapter);
-      mPager.setCurrentItem(mPagePosition);
+      mPager.setCurrentItem(startPage);
 
       titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
       titleIndicator.setViewPager(mPager);
@@ -158,6 +184,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
       }
+
    }
 
    @Override
@@ -199,8 +226,8 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
-      savedInstanceState.putBoolean(DeleteGuideDialogKey, mConfirmDelete);
-      savedInstanceState.putInt(StepEditActivity.GUIDE_STEP_KEY, mPagePosition);
+      savedInstanceState.putBoolean(DELETE_GUIDE_DIALOG_KEY, mConfirmDelete);
+      savedInstanceState.putInt(StepEditActivity.GUIDE_STEP_NUM_KEY, mPagePosition);
       savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
@@ -232,6 +259,25 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
    /////////////////////////////////////////////////////
+
+   @Subscribe
+   public void onGuideGet(APIEvent.GuideForEdit event) {
+      if (!event.hasError()) {
+         int startPagePosition = 0;
+         mGuide = event.getResult();
+         for (int i = 0; i < mGuide.getSteps().size(); i++) {
+            if (mGuide.getStep(i).getStepid() == mInboundStepId) {
+               startPagePosition = i;
+               break;
+            }
+         }
+         hideLoading();
+         initPage(startPagePosition);
+      } else {
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+      }
+   }
 
    @Subscribe
    public void onStepSave(APIEvent.StepSave event) {
@@ -354,7 +400,11 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
-            finishEdit(HOME_UP);
+            if (mParentGuideId == NO_PARENT_GUIDE) {
+               finishEdit(HOME_UP);
+            } else {
+               finishEdit(STEP_VIEW);
+            }
             return true;
          case MENU_VIEW_GUIDE:
             finishEdit(STEP_VIEW);
@@ -412,9 +462,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          mPagePosition = position;
          mCurStepFragment = (StepEditFragment) object;
       }
-
    }
-
 
    /////////////////////////////////////////////////////
    // DIALOGS
@@ -560,7 +608,8 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          mPager.setVisibility(View.GONE);
       }
       getSupportFragmentManager().beginTransaction()
-       .add(R.id.step_edit_loading_screen, new LoadingFragment(), "loading").addToBackStack("loading").commit();
+       .add(new LoadingFragment(), "loading").addToBackStack("loading")
+       .commit();
       mIsLoading = true;
 
    }
@@ -575,8 +624,13 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    protected void navigateToStepView() {
       Intent intent = new Intent(this, GuideViewActivity.class);
-      intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
-      intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition);
+      if (mParentGuideId != NO_PARENT_GUIDE) {
+         intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mParentGuideId);
+      } else {
+         intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mGuide.getGuideid());
+      }
+      intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
+      intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());
       intent.putExtra(GuideViewActivity.FROM_EDIT, true);
       startActivity(intent);
    }

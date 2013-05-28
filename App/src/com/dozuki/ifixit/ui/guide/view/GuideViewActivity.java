@@ -18,7 +18,6 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
@@ -44,6 +43,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    public static final String SAVED_GUIDEID = "SAVED_GUIDEID";
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
+   public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
 
    public static final int MENU_EDIT_GUIDE = 2;
 
@@ -58,6 +58,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    private ProgressBar mProgressBar;
    private ImageView mNextPageImage;
    private boolean mFromEdit = false;
+   private int mInboundStepId = -1;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -74,17 +75,19 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
       mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
 
-      mPager = (ViewPager)findViewById(R.id.guide_pager);
-      mIndicator = (CirclePageIndicator)findViewById(R.id.indicator);
-      mProgressBar = (ProgressBar)findViewById(R.id.progress_bar);
-      mNextPageImage = (ImageView)findViewById(R.id.next_page_image);
+      mPager = (ViewPager) findViewById(R.id.guide_pager);
+      mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
+      mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
+      mNextPageImage = (ImageView) findViewById(R.id.next_page_image);
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
-         mGuide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
+         mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+
          if (mGuide != null) {
-            setGuide(mGuide, savedInstanceState.getInt(CURRENT_PAGE));
             mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
+
+            setGuide(mGuide, mCurrentPage);
             mIndicator.setCurrentItem(mCurrentPage);
             mPager.setCurrentItem(mCurrentPage);
          } else {
@@ -92,11 +95,10 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
          }
       } else {
          Intent intent = getIntent();
-         Bundle extras = intent.getExtras();
-         int curPage = 0;
 
          mGuideid = -1;
 
+         // Handle when the activity is started from an external app.  (like a link)
          if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             List<String> segments = intent.getData().getPathSegments();
 
@@ -107,23 +109,33 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
                Log.e("iFixit", "Problem parsing guide");
             }
          } else {
+            Bundle extras = intent.getExtras();
+
             if (extras != null) {
                if (extras.containsKey(FROM_EDIT)) {
                   mFromEdit = extras.getBoolean(FROM_EDIT);
                }
+               // We're coming from the Topics GuideList
                if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
                   mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
+
+               // We're coming from StepEdit
+               } else if (extras.containsKey(GuideViewActivity.SAVED_GUIDEID)) {
+                  mGuideid = extras.getInt(GuideViewActivity.SAVED_GUIDEID);
                }
+
                if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
-                  mGuide = (Guide)extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
+                  mGuide = (Guide) extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
                }
-               curPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0) + 1; // Account for introduction page
+
+               mInboundStepId = extras.getInt(INBOUND_STEP_ID);
+               mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE);
             }
          }
          if (mGuide == null) {
             getGuide(mGuideid);
          } else {
-            setGuide(mGuide, curPage);
+            setGuide(mGuide, mCurrentPage);
          }
       }
 
@@ -173,16 +185,28 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       switch (item.getItemId()) {
          case MENU_EDIT_GUIDE:
             intent = new Intent(this, StepEditActivity.class);
-            intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-            intent.putExtra(StepEditActivity.GUIDE_STEP_KEY, mCurrentPage - 1); // account for introduction page
+            int stepNum = 0;
+
+            // Take into account the introduction page.
+            if (mCurrentPage != 0) {
+               stepNum = mCurrentPage - 1;
+            }
+            int stepGuideid = mGuide.getStep(stepNum).getGuideid();
+            // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
+            // editing this prerequisite.
+            if (stepGuideid != mGuide.getGuideid()) {
+               intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
+            }
+            // We have to pass along the steps guideid to account for prerequisite guides.
+            intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
+            intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
             startActivity(intent);
             break;
          default:
-            return(super.onOptionsItemSelected(item));
+            return (super.onOptionsItemSelected(item));
       }
       return true;
    }
-
 
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
@@ -192,7 +216,15 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    public void onGuide(APIEvent.ViewGuide event) {
       if (!event.hasError()) {
          if (mGuide == null) {
-            setGuide(event.getResult(), 0);
+            Guide guide = event.getResult();
+            if (mInboundStepId != -1) {
+               for (int i = 0; i < guide.getSteps().size(); i++) {
+                  if (mInboundStepId == guide.getStep(i).getStepid()) {
+                     mCurrentPage = i;
+                  }
+               }
+            }
+            setGuide(event.getResult(), mCurrentPage + 1); // Account for the introduction page
          }
       } else {
          APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
@@ -204,9 +236,10 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    // HELPERS
    /////////////////////////////////////////////////////
 
-   public void setGuide(Guide guide, int page) {
+   private void setGuide(Guide guide, int currentPage) {
       if (guide == null) {
          displayError();
+         Log.e("GuideViewActivity", "Guide is not set");
          return;
       }
 
@@ -227,22 +260,23 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       mIndicator.setPageColor(0xFFFFFFFF);
       mIndicator.setFillColor(0xFF444444);
       mIndicator.setStrokeColor(0xFF000000);
-      mIndicator.setStrokeWidth((int)(1.5 * density));
+      mIndicator.setStrokeWidth((int) (1.5 * density));
 
       mPager.setVisibility(View.VISIBLE);
 
-      mPager.setCurrentItem(page);
-      mIndicator.setCurrentItem(page);
+      mPager.setCurrentItem(currentPage);
+      mIndicator.setCurrentItem(currentPage);
 
-      onPageSelected(page);
+      onPageSelected(currentPage);
    }
 
    @Override
    public void onDestroy() {
       super.onDestroy();
 
-      if (mSpeechCommander != null)
+      if (mSpeechCommander != null) {
          mSpeechCommander.destroy();
+      }
    }
 
    @Override
@@ -287,9 +321,9 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       mIndicator.setCurrentItem(0);
    }
 
-   public int getIndicatorHeight() {
+   protected int getIndicatorHeight() {
       int indicatorHeight = mIndicator.getHeight();
-      
+
       // Unbelievably horrible hack that fixes a problem when
       // getIndicatorHeight() returns 0 after a orientation change, causing the
       // Main image view to calculate to large and the thumbnails are hidden by
@@ -299,7 +333,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       if (indicatorHeight == 0) {
          indicatorHeight = 49;
       }
-      
+
       return indicatorHeight;
    }
 
@@ -319,10 +353,10 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
 
       mSpeechCommander.addCommand(PREVIOUS_COMMAND,
        new SpeechCommander.Command() {
-         public void performCommand() {
-            previousStep();
-         }
-      });
+          public void performCommand() {
+             previousStep();
+          }
+       });
 
       mSpeechCommander.addCommand(HOME_COMMAND, new SpeechCommander.Command() {
          public void performCommand() {

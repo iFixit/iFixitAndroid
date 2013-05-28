@@ -68,6 +68,10 @@ public class GuideStep implements Serializable {
       }
    }
 
+   public int getGuideid() {
+      return mGuideid;
+   }
+
    public void setGuideid(int guideid) {
       mGuideid = guideid;
    }

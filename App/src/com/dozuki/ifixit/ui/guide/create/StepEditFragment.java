@@ -15,7 +15,7 @@ import org.holoeverywhere.app.Fragment;
 
 public class StepEditFragment extends Fragment {
 
-   private static final String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
+   private static final String GUIDE_STEP_KEY = "GUIDE_STEP_NUM_KEY";
    private static final String STEP_EMBED_FRAGMENT_TAG = "STEP_EMBED_FRAGMENT_TAG";
    private static final String STEP_VIDEO_FRAGMENT_TAG = "STEP_VIDEO_FRAGMENT_TAG";
    private static final String STEP_IMAGE_FRAGMENT_TAG = "STEP_IMAGE_FRAGMENT_TAG";
@@ -50,7 +50,7 @@ public class StepEditFragment extends Fragment {
 
       View v = inflater.inflate(R.layout.guide_create_step_edit_body, container, false);
       Bundle b = getArguments();
-      mStepObject = (GuideStep) b.getSerializable(StepEditActivity.GUIDE_STEP_KEY);
+      mStepObject = (GuideStep) b.getSerializable(StepEditActivity.GUIDE_STEP_NUM_KEY);
       mStepType = mStepObject.type();
       Log.w("StepEditFragment", mStepType);
       mEditEmbedFrag =  new StepEditEmbedFragment();
