@@ -39,7 +39,7 @@ import org.holoeverywhere.widget.Toast;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class StepsEditActivity extends IfixitActivity implements OnClickListener {
+public class StepEditActivity extends IfixitActivity implements OnClickListener {
    public static final int MENU_VIEW_GUIDE = 12;
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
@@ -47,7 +47,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
 
-   public static String TAG = "StepsEditActivity";
+   public static String TAG = "StepEditActivity";
    public static String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
    public static String DeleteGuideDialogKey = "DeleteGuideDialog";
@@ -105,11 +105,11 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       mPagePosition = 0;
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
-         mPagePosition = extras.getInt(StepsEditActivity.GUIDE_STEP_KEY);
+         mPagePosition = extras.getInt(StepEditActivity.GUIDE_STEP_KEY);
       }
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
-         mPagePosition = savedInstanceState.getInt(StepsEditActivity.GUIDE_STEP_KEY);
+         mPagePosition = savedInstanceState.getInt(StepEditActivity.GUIDE_STEP_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DeleteGuideDialogKey);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
@@ -200,7 +200,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
       savedInstanceState.putBoolean(DeleteGuideDialogKey, mConfirmDelete);
-      savedInstanceState.putInt(StepsEditActivity.GUIDE_STEP_KEY, mPagePosition);
+      savedInstanceState.putInt(StepEditActivity.GUIDE_STEP_KEY, mPagePosition);
       savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
@@ -248,7 +248,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          mStepAdapter.notifyDataSetChanged();
       } else {
          event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
       }
    }
 
@@ -262,7 +262,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          mPager.setCurrentItem(mPagePosition);
       } else {
          event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
       }
    }
 
@@ -274,7 +274,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
          hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
       }
    }
 
@@ -286,7 +286,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
 
       } else {
          event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
       }
    }
 
@@ -305,7 +305,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
       switch (v.getId()) {
          case R.id.step_edit_delete_step:
             if (!mGuide.getSteps().isEmpty()) {
-               createDeleteDialog(StepsEditActivity.this).show();
+               createDeleteDialog(StepEditActivity.this).show();
             }
             break;
          case R.id.step_edit_save:
@@ -439,7 +439,7 @@ public class StepsEditActivity extends IfixitActivity implements OnClickListener
                 deleteStep(mIsStepDirty);
              } else {
                 showLoading();
-                APIService.call(StepsEditActivity.this, APIService.getRemoveStepAPICall(
+                APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
                  mGuide.getGuideid(), mGuide.getRevisionid(), mGuide.getSteps().get(mPagePosition)));
              }
              dialog.cancel();

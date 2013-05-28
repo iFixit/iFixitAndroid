@@ -142,7 +142,7 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
        .setIcon(R.drawable.ic_dialog_arrange_bullets_light)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       menu
-       .add(4, StepsEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
+       .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
        .setIcon(R.drawable.ic_action_book)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 

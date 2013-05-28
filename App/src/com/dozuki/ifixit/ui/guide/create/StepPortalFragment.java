@@ -157,7 +157,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
 
             launchStepEdit(mGuide.getSteps().size());
             break;
-         case StepsEditActivity.MENU_VIEW_GUIDE:
+         case StepEditActivity.MENU_VIEW_GUIDE:
             Intent intent = new Intent(getActivity(), GuideViewActivity.class);
             intent.putExtra(GuideViewActivity.SAVED_GUIDE, mGuide);
             intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
@@ -257,9 +257,9 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
    /////////////////////////////////////////////////////
 
    protected void launchStepEdit(int curStep) {
-      Intent intent = new Intent(getActivity(), StepsEditActivity.class);
+      Intent intent = new Intent(getActivity(), StepEditActivity.class);
       intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-      intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, curStep);
+      intent.putExtra(StepEditActivity.GUIDE_STEP_KEY, curStep);
       startActivityForResult(intent, StepsActivity.GUIDE_EDIT_STEP_REQUEST);
    }
 

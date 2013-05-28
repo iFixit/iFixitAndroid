@@ -19,7 +19,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
-import com.dozuki.ifixit.ui.guide.create.StepsEditActivity;
+import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -172,9 +172,9 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       Intent intent;
       switch (item.getItemId()) {
          case MENU_EDIT_GUIDE:
-            intent = new Intent(this, StepsEditActivity.class);
+            intent = new Intent(this, StepEditActivity.class);
             intent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-            intent.putExtra(StepsEditActivity.GUIDE_STEP_KEY, mCurrentPage - 1); // account for introduction page
+            intent.putExtra(StepEditActivity.GUIDE_STEP_KEY, mCurrentPage - 1); // account for introduction page
             startActivity(intent);
             break;
          default:

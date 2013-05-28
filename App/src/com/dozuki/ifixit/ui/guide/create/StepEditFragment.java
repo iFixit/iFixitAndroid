@@ -50,7 +50,7 @@ public class StepEditFragment extends Fragment {
 
       View v = inflater.inflate(R.layout.guide_create_step_edit_body, container, false);
       Bundle b = getArguments();
-      mStepObject = (GuideStep) b.getSerializable(StepsEditActivity.GUIDE_STEP_KEY);
+      mStepObject = (GuideStep) b.getSerializable(StepEditActivity.GUIDE_STEP_KEY);
       mStepType = mStepObject.type();
       Log.w("StepEditFragment", mStepType);
       mEditEmbedFrag =  new StepEditEmbedFragment();

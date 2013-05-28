@@ -224,7 +224,7 @@ public class StepEditImageFragment extends Fragment {
                   return;
                }
                // Prevent a save from being called until the image uploads and returns with the imageid
-               ((StepsEditActivity) getActivity()).lockSave();
+               ((StepEditActivity) getActivity()).lockSave();
 
                newThumb = new APIImage(DEFAULT_IMAGE_ID, mTempFileName);
 
@@ -271,7 +271,7 @@ public class StepEditImageFragment extends Fragment {
                }
             }
          }
-         ((StepsEditActivity) getActivity()).unlockSave();
+         ((StepEditActivity) getActivity()).unlockSave();
 
          // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
          setGuideDirty();
