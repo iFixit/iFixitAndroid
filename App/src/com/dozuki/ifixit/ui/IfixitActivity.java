@@ -207,10 +207,11 @@ public abstract class IfixitActivity extends Activity {
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
-      items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
+      //items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
-      items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
+      //items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10,
+      // "featured_guides"));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
@@ -230,9 +231,9 @@ public abstract class IfixitActivity extends Activity {
          items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, "twitter"));
       }
 
-      items.add(new Category(getString(R.string.slide_menu_more_info)));
+      /*items.add(new Category(getString(R.string.slide_menu_more_info)));
       items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, "help"));
-      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, "about"));
+      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, "about")); */
 
       // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
       // of the arrow indicator.
