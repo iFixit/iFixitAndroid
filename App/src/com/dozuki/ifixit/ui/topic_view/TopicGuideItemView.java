@@ -39,7 +39,9 @@ public class TopicGuideItemView extends RelativeLayout {
          mTitleView.setText(Html.fromHtml(guide.mTitle));
       }
 
-      mImageManager.displayImage(guide.mImage.getPath(imageSizes.getGrid()),
-       (Activity)activity, mThumbnail);
+      if (guide.mImage != null) {
+         mImageManager.displayImage(guide.mImage.getPath(imageSizes.getGrid()),
+          (Activity)activity, mThumbnail);
+      }
    }
 }

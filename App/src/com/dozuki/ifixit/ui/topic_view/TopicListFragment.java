@@ -85,7 +85,7 @@ public class TopicListFragment extends Fragment
       Collections.sort(nonLeaves, comparator);
       Collections.sort(leaves, comparator);
 
-      if (!mTopic.isRoot()) {
+      if (!mTopic.isRoot() && !((TopicActivity)getActivity()).isDualPane()) {
          generalInfo.add(new TopicNode(mTopic.getName()));
          adapter = new TopicListAdapter(mContext, mContext.getString(
           R.string.generalInformation), generalInfo);

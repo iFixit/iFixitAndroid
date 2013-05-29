@@ -174,8 +174,15 @@ public class TopicActivity extends IfixitActivity
             startActivity(intent);
          }
       } else {
+         if (mDualPane) {
+            mTopicView.setTopicNode(topic);
+         }
          changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
       }
+   }
+
+   protected boolean isDualPane() {
+      return mDualPane;
    }
 
    private void hideTopicList() {

@@ -184,6 +184,7 @@ public class TopicViewFragment extends Fragment {
       }
 
       mPager.setCurrentItem(tab, false);
+      mTitleIndicator.setCurrentItem(tab);
       mPager.invalidate();
       mTitleIndicator.invalidate();
    }
