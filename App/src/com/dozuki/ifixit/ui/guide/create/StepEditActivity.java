@@ -60,6 +60,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
    private static final String SHOWING_SAVE = "SHOWING_SAVE";
+   private static final String LOCK_SAVE = "LOCK_SAVE";
    private static final String LOADING = "LOADING";
 
    private Guide mGuide;
@@ -136,6 +137,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
+         mLockSave = savedInstanceState.getBoolean(LOCK_SAVE);
          mIsLoading = savedInstanceState.getBoolean(LOADING);
          mExitCode = savedInstanceState.getInt(EXIT_CODE);
          if (mShowingHelp) {
@@ -232,6 +234,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
       savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
       savedInstanceState.putBoolean(LOADING, mIsLoading);
+      savedInstanceState.putBoolean(LOCK_SAVE, mLockSave);
       savedInstanceState.putInt(EXIT_CODE, mExitCode);
    }
 
@@ -642,7 +645,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       } else {
 
          // Clean out unsaved, new steps.
-         for (Iterator<GuideStep> it=mGuide.getSteps().iterator(); it.hasNext();) {
+         for (Iterator<GuideStep> it = mGuide.getSteps().iterator(); it.hasNext(); ) {
             if (it.next().getRevisionid() == null) {
                it.remove();
             }
@@ -650,7 +653,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
          // Make sure the step numbers are correct after removing steps.
          for (int i = 1; i <= mGuide.getSteps().size(); i++) {
-            mGuide.getStep(i-1).setStepNum(i);
+            mGuide.getStep(i - 1).setStepNum(i);
          }
 
          Intent data;
@@ -726,19 +729,25 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
          mSaveStep.setText(R.string.save);
          mSaveStep.setEnabled(toggle);
+         // Lock the pager if save is enabled
+         enableViewPager(!toggle);
       }
    }
 
    protected void enableViewPager(boolean unlocked) {
-      mPager.setPagingEnabled(unlocked);
+      if (mPager != null) {
+         mPager.setPagingEnabled(unlocked);
+      }
    }
 
    public void lockSave() {
       mLockSave = true;
       mSaveStep.setText(R.string.loading_image);
+      enableViewPager(false);
    }
 
    public void unlockSave() {
       mLockSave = false;
+      enableViewPager(true);
    }
 }
