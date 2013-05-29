@@ -217,25 +217,26 @@ public class TopicViewFragment extends Fragment {
       public int getCount() {
          if (mSite.mAnswers) {
             return 3;
-         } else
+         } else {
             return 2;
+         }
       }
 
       @Override
       public CharSequence getPageTitle(int position) {
          switch (position) {
-            case 0:
+            case GUIDES_TAB:
                return getActivity().getString(R.string.guides);
-            case 1:
 
+            case MORE_INFO_TAB:
+               return getActivity().getString(R.string.info);
+
+            case ANSWERS_TAB:
                if (mSite.mAnswers) {
                   return getActivity().getString(R.string.answers);
                } else {
                   return getActivity().getString(R.string.info);
                }
-
-            case 2:
-               return getActivity().getString(R.string.info);
          }
          return "";
       }
@@ -245,7 +246,7 @@ public class TopicViewFragment extends Fragment {
 
          Fragment selectedFragment;
          switch (position) {
-            case 0:
+            case GUIDES_TAB:
                if (mTopicLeaf.getGuides().size() == 0) {
                   selectedFragment = new NoGuidesFragment();
                } else {
@@ -253,29 +254,7 @@ public class TopicViewFragment extends Fragment {
                }
                mSelectedTab = GUIDES_TAB;
                return selectedFragment;
-            case 1:
-               if (mSite.mAnswers) {
-                  WebViewFragment webView = new WebViewFragment();
-
-                  webView.loadUrl(mTopicLeaf.getSolutionsUrl());
-
-                  selectedFragment = webView;
-                  mSelectedTab = ANSWERS_TAB;
-               } else {
-                  WebViewFragment webView = new WebViewFragment();
-
-                  try {
-                     webView.loadUrl("http://" + mSite.mDomain + "/c/"
-                        + URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
-                  } catch (Exception e) {
-                     Log.w("iFixit", "Encoding error: " + e.getMessage());
-                  }
-
-                  selectedFragment = webView;
-                  mSelectedTab = MORE_INFO_TAB;
-               }
-               return selectedFragment;
-            case 2:
+            case MORE_INFO_TAB:
                WebViewFragment webView = new WebViewFragment();
 
                try {
@@ -286,6 +265,28 @@ public class TopicViewFragment extends Fragment {
 
                selectedFragment = webView;
                mSelectedTab = MORE_INFO_TAB;
+               return selectedFragment;
+            case ANSWERS_TAB:
+               webView = new WebViewFragment();
+
+               if (mSite.mAnswers) {
+
+                  webView.loadUrl(mTopicLeaf.getSolutionsUrl());
+
+                  selectedFragment = webView;
+                  mSelectedTab = ANSWERS_TAB;
+               } else {
+
+                  try {
+                     webView.loadUrl("http://" + mSite.mDomain + "/c/"
+                      + URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
+                  } catch (Exception e) {
+                     Log.w("iFixit", "Encoding error: " + e.getMessage());
+                  }
+
+                  selectedFragment = webView;
+                  mSelectedTab = MORE_INFO_TAB;
+               }
                return selectedFragment;
             default:
                return null;

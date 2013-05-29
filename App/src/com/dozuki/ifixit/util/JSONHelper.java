@@ -331,35 +331,17 @@ public class JSONHelper {
       JSONObject jInfo = jTopic.getJSONObject("topic_info");
       TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
 
+
       for (int i = 0; i < jGuides.length(); i++) {
-         topicLeaf.addGuide(parseGuideInfo(jGuides.getJSONObject(i)));
+         String guideJson = jGuides.getJSONObject(i).toString();
+         GuideInfo guide = new Gson().fromJson(guideJson, GuideInfo.class);
+         topicLeaf.addGuide(guide);
       }
 
       topicLeaf.setNumSolutions(Integer.parseInt(jSolutions.getString("count")));
       topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
 
       return topicLeaf;
-   }
-
-   private static GuideInfo parseGuideInfo(JSONObject jGuide) {
-      try {
-         GuideInfo guideInfo = new GuideInfo(jGuide.getInt("guideid"));
-
-         guideInfo.mRevisionid = jGuide.optInt("revisionid", NULL_INT);
-         guideInfo.mModifiedDate = jGuide.optInt("modified_date", NULL_INT);
-         guideInfo.mPrereqModifiedDate = jGuide.optInt("prereq_modified_date", NULL_INT);
-         guideInfo.mTopic = jGuide.getString("category");
-         guideInfo.mSubject = jGuide.getString("subject");
-         guideInfo.mType = jGuide.getString("type");
-         guideInfo.mTitle = jGuide.getString("title");
-         guideInfo.mPublic = jGuide.getBoolean("public");
-         guideInfo.mImage = parseImage(jGuide, "image");
-
-         return guideInfo;
-      } catch (JSONException e) {
-         Log.e(TAG, "Error parsing guide info: " + e);
-         return null;
-      }
    }
 
    /**
