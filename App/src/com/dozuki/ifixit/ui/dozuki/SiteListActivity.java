@@ -213,11 +213,12 @@ public class SiteListActivity extends IfixitActivity
    }
 
    private void showSiteListDialog() {
-       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-       ft.addToBackStack(null);
+      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      ft.addToBackStack(null);
 
-       // Create and show the dialog.
-       DialogFragment siteListFragment = SiteListDialogFragment.newInstance();
-       siteListFragment.show(ft);
+      // Create and show the dialog.
+      DialogFragment siteListFragment = SiteListDialogFragment.newInstance();
+      siteListFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_Dialog_Light);
+      siteListFragment.show(ft);
    }
 }

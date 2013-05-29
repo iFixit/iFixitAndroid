@@ -3,6 +3,22 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical" >
+    <TextView
+        android:id="@+id/site_list_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="22sp"
+        android:textColor="@color/background_holo_dark"
+        android:text="@string/site_list_title"
+        android:paddingTop="16dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:paddingBottom="16dp"/>
+
+    <View android:id="@+id/titleDivider"
+          android:layout_width="match_parent"
+          android:layout_height="2dip"
+          android:background="@color/dozuki_red" />
 
     <com.actionbarsherlock.widget.SearchView
         android:id="@+id/dozuki_search_view"
