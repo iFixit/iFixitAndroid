@@ -129,7 +129,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
                }
 
                mInboundStepId = extras.getInt(INBOUND_STEP_ID);
-               mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE);
+               mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
             }
          }
          if (mGuide == null) {
@@ -220,11 +220,11 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
             if (mInboundStepId != -1) {
                for (int i = 0; i < guide.getSteps().size(); i++) {
                   if (mInboundStepId == guide.getStep(i).getStepid()) {
-                     mCurrentPage = i;
+                     mCurrentPage = i + 1;
                   }
                }
             }
-            setGuide(event.getResult(), mCurrentPage + 1); // Account for the introduction page
+            setGuide(event.getResult(), mCurrentPage); // Account for the introduction page
          }
       } else {
          APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
