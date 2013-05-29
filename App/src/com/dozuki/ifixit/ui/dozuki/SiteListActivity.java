@@ -53,8 +53,8 @@ public class SiteListActivity extends IfixitActivity
          getSiteList();
       }
 
-      mSiteListButton = (Button)findViewById(R.id.list_dialog_btn);
-      Typeface btnType = Typeface.createFromAsset(getAssets(), "fonts/ProximaNovaRegular.otf");
+      mSiteListButton = (Button) findViewById(R.id.list_dialog_btn);
+      Typeface btnType = Typeface.createFromAsset(getAssets(), "fonts/ProximaNovaRegular.ttf");
       mSiteListButton.setTypeface(btnType);
 
       mSiteListButton.setOnClickListener(new OnClickListener() {
