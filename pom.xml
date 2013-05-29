@@ -42,7 +42,7 @@
       <android.version>4.2.2_r2</android.version>
       <android.platform>17</android.platform>
       <scm.branch>master</scm.branch>
-      <holoeverywhere.version>1.5.0</holoeverywhere.version>
+      <holoeverywhere.version>1.6.0</holoeverywhere.version>
    </properties>
 
    <scm>
