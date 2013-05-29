@@ -266,8 +266,7 @@ public class StepEditImageFragment extends Fragment {
             for (int i = 0; i < mImages.size(); i++) {
                if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
                   mImages.set(i, newThumb);
-                  mThumbs.updateThumb(newThumb, mTempThumbPosition);
-
+                  //mThumbs.updateThumb(newThumb, mTempThumbPosition);
                }
             }
          }
