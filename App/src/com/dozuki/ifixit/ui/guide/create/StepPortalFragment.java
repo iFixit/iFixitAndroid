@@ -83,7 +83,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       View view = inflater.inflate(R.layout.guide_create_steps_portal, container, false);
 
       mStepList = (ListView) view.findViewById(R.id.steps_portal_list);
-      mStepList.setEmptyView(view.findViewById(R.layout.guide_create_steps_empty_view));
+      mStepList.setEmptyView(view.findViewById(R.id.no_steps_text));
       mStepList.setAdapter(mStepAdapter);
 
       if (mShowingDelete) {

@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.View;
@@ -34,6 +33,7 @@ import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.Fragment;
 import org.holoeverywhere.widget.Toast;
 
 import java.util.ArrayList;

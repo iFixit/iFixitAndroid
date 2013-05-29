@@ -154,7 +154,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
       mGridView.setOnScrollListener(new GalleryOnScrollListener());
       mGridView.setOnItemClickListener(this);
       mGridView.setOnItemLongClickListener(this);
-      mGridView.setEmptyView(view.findViewById(R.layout.gallery_empty_view));
+      mGridView.setEmptyView(view.findViewById(R.id.no_images_text));
 
       if (MainApplication.get().isUserLoggedIn()) {
          setupUser(MainApplication.get().getUser());

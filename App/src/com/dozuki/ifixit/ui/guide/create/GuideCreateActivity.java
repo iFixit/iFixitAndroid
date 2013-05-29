@@ -75,7 +75,7 @@ public class GuideCreateActivity extends IfixitActivity {
       mGuideListView = (PullToRefreshListView) findViewById(R.id.guide_create_listview);
       mGuideListView.setAdapter(mGuideListAdapter);
 
-      mGuideListView.setEmptyView(findViewById(R.layout.guide_create_empty_guides_view));
+      mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
 
       mGuideListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
          @Override
