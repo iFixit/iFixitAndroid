@@ -95,8 +95,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    public void onClick(View v) {
       for (ImageView image : mThumbs) {
          if (v.getId() == image.getId()) {
-            APIImage imageView = (APIImage) v.getTag();
-            setCurrentThumb(imageView.mBaseUrl);
+            if (v.getTag() instanceof APIImage) {
+               APIImage imageView = (APIImage) v.getTag();
+               setCurrentThumb(imageView.mBaseUrl);
+            }
          }
       }
    }
