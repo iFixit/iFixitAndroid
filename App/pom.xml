@@ -25,7 +25,7 @@
         <dependency>
             <groupId>android.support</groupId>
             <artifactId>compatibility-v4</artifactId>
-            <version>12</version>
+            <version>13</version>
         </dependency>
         <!--
         We require a newer version of the support library that ActionBarSherlock
@@ -48,7 +48,7 @@
         <dependency>
             <groupId>com.google.android</groupId>
             <artifactId>support-v4</artifactId>
-            <version>r12</version>
+            <version>r13</version>
             <scope>provided</scope>
         </dependency>
 
@@ -72,13 +72,13 @@
         <dependency>
             <groupId>org.holoeverywhere</groupId>
             <artifactId>library</artifactId>
-            <version>${holoeverywhere.version}</version>
+            <version>1.6.0</version>
             <type>apklib</type>
         </dependency>
         <dependency>
             <groupId>org.holoeverywhere</groupId>
             <artifactId>addon-preferences</artifactId>
-            <version>${holoeverywhere.version}</version>
+            <version>1.6.0</version>
             <type>apklib</type>
         </dependency>
         <dependency>
