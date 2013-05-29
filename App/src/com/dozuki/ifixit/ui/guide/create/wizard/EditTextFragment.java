@@ -76,8 +76,8 @@ public class EditTextFragment extends Fragment {
       mDescription = ((TextView) rootView.findViewById(R.id.page_description));
 
       mTitle.setText(mPage.getTitle());
-      mTitle.setHint(mPage.getHint());
       mField.setText(mPage.getData().getString(EditTextPage.TEXT_DATA_KEY));
+      mField.setHint(mPage.getHint());
       mDescription.setText(mPage.getDescription());
 
       return rootView;
@@ -115,12 +115,10 @@ public class EditTextFragment extends Fragment {
       mField.addTextChangedListener(new TextWatcher() {
          @Override
          public void beforeTextChanged(CharSequence charSequence, int i, int i1,
-          int i2) {
-         }
+          int i2) { }
 
          @Override
-         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-         }
+         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
 
          @Override
          public void afterTextChanged(Editable editable) {
