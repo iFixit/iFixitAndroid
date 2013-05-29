@@ -10,10 +10,7 @@
         android:textSize="22sp"
         android:textColor="@color/background_holo_dark"
         android:text="@string/site_list_title"
-        android:paddingTop="16dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingBottom="16dp"/>
+        android:padding="16dp"/>
 
     <View android:id="@+id/titleDivider"
           android:layout_width="match_parent"
@@ -39,8 +36,20 @@
     <TextView
         android:id="@+id/emptyView"
         style="@style/text.list"
+        android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:visibility="gone"
         android:text="@string/empty_site_list" />
+
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:visibility="gone"
+        android:indeterminate="true"
+        android:minHeight="@dimen/progress_bar_width_height"
+        android:minWidth="@dimen/progress_bar_width_height" />
 
 </LinearLayout>

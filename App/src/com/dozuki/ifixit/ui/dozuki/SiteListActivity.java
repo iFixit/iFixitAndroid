@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui.dozuki;
 
 import android.app.SearchManager;
-import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -9,17 +8,11 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
-import com.squareup.otto.Subscribe;
 import org.holoeverywhere.app.DialogFragment;
 import org.holoeverywhere.widget.Button;
 import org.holoeverywhere.widget.ListView;
@@ -28,10 +21,9 @@ import java.util.ArrayList;
 
 public class SiteListActivity extends IfixitActivity
  implements SearchView.OnQueryTextListener {
-   private static final String SITE_LIST = "SITE_LIST";
 
    private Button mSiteListButton;
-   private ArrayList<Site> mSiteList;
+   private SiteListDialogFragment mSiteListDialog;
    private ListView mSiteListView;
    private SearchView mSearchView;
 
@@ -44,29 +36,20 @@ public class SiteListActivity extends IfixitActivity
 
       setContentView(R.layout.site_list);
 
-      if (savedInstanceState != null) {
-         mSiteList = (ArrayList<Site>)savedInstanceState.getSerializable(
-          SITE_LIST);
-      }
-
-      if (mSiteList == null) {
-         getSiteList();
-      }
-
       mSiteListButton = (Button) findViewById(R.id.list_dialog_btn);
       Typeface btnType = Typeface.createFromAsset(getAssets(), "fonts/ProximaNovaRegular.ttf");
       mSiteListButton.setTypeface(btnType);
 
       mSiteListButton.setOnClickListener(new OnClickListener() {
          public void onClick(View view) {
-            /**
-             * TODO: It should probably always open up the list dialog even if
-             * we don't have the site list yet. Then once we get it we can
-             * update the list.
-             */
-            if (mSiteList != null) {
-               showSiteListDialog();
-            }
+            // Show site list dialog
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            ft.addToBackStack(null);
+
+            // Create and show the dialog.
+            mSiteListDialog = SiteListDialogFragment.newInstance();
+            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_Dialog_Light);
+            mSiteListDialog.show(ft);
          }
       });
 
@@ -87,70 +70,6 @@ public class SiteListActivity extends IfixitActivity
    }
 
    @Override
-   public boolean neverFinishActivityOnLogout() {
-      return true;
-   }
-
-   @Override
-   public void onResume() {
-      MainApplication.get().setSite(Site.getSite("dozuki"));
-
-      super.onResume();
-   }
-
-   private void search(String query) {
-      String lowerQuery = query.toLowerCase();
-      ArrayList<Site> matchedSites = new ArrayList<Site>();
-
-      for (Site site : mSiteList) {
-         if (site.search(lowerQuery)) {
-            matchedSites.add(site);
-         }
-      }
-
-      setSiteList(matchedSites);
-   }
-
-   private void cancelSearch() {
-      setSiteList(mSiteList);
-   }
-
-   @Override
-   public void onSaveInstanceState(Bundle outState) {
-      super.onSaveInstanceState(outState);
-
-      outState.putSerializable(SITE_LIST, mSiteList);
-   }
-
-   @Subscribe
-   public void onSites(APIEvent.Sites event) {
-      if (!event.hasError()) {
-         mSiteList = event.getResult();
-         setSiteList(mSiteList);
-      } else {
-         APIService.getErrorDialog(SiteListActivity.this, event.getError(),
-          APIService.getSitesAPICall()).show();
-      }
-   }
-
-   /**
-    * Sets the ListView and SearchView so this Activity can proxy searches through.
-    */
-   protected void setSiteListViews(ListView siteListView, SearchView searchView) {
-      mSiteListView = siteListView;
-      mSearchView = searchView;
-
-      SearchManager searchManager = (SearchManager)getSystemService(
-       Context.SEARCH_SERVICE);
-
-      searchView.setSearchableInfo(searchManager.getSearchableInfo(
-       getComponentName()));
-      searchView.setIconifiedByDefault(false);
-      searchView.setOnQueryTextListener(this);
-
-      setSiteList(mSiteList);
-   }
-
    public boolean onQueryTextChange(String newText) {
       if (newText.length() == 0) {
          cancelSearch();
@@ -162,16 +81,26 @@ public class SiteListActivity extends IfixitActivity
       return false;
    }
 
+   @Override
    public boolean onQueryTextSubmit(String query) {
       return false;
    }
 
-   public boolean onClose() {
-      return false;
+   private void search(String query) {
+      String lowerQuery = query.toLowerCase();
+      ArrayList<Site> matchedSites = new ArrayList<Site>();
+
+      for (Site site : mSiteListDialog.getSiteList()) {
+         if (site.search(lowerQuery)) {
+            matchedSites.add(site);
+         }
+      }
+
+      mSiteListDialog.setSiteList(matchedSites);
    }
 
-   protected boolean isAlwaysExpanded() {
-      return false;
+   private void cancelSearch() {
+      //mSiteListDialog.setSiteList(mSiteList);
    }
 
    @Override
@@ -186,39 +115,15 @@ public class SiteListActivity extends IfixitActivity
       }
    }
 
-   private void setSiteList(ArrayList<Site> sites) {
-      if (mSiteListView == null || mSiteList == null) {
-         return;
-      }
-
-      final SiteListAdapter siteListAdapter = new SiteListAdapter(sites);
-      mSiteListView.setAdapter(siteListAdapter);
-
-      mSiteListView.setOnItemClickListener(new OnItemClickListener() {
-         @Override
-         public void onItemClick(AdapterView<?> arg0, View view, int position,
-          long id) {
-            MainApplication application = ((MainApplication)getApplication());
-            Intent intent = new Intent(SiteListActivity.this,
-             TopicActivity.class);
-
-            application.setSite(siteListAdapter.getSiteList().get(position));
-            startActivity(intent);
-         }
-      });
+   @Override
+   public boolean neverFinishActivityOnLogout() {
+      return true;
    }
 
-   private void getSiteList() {
-      APIService.call(this, APIService.getSitesAPICall());
-   }
+   @Override
+   public void onResume() {
+      MainApplication.get().setSite(Site.getSite("dozuki"));
 
-   private void showSiteListDialog() {
-      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-      ft.addToBackStack(null);
-
-      // Create and show the dialog.
-      DialogFragment siteListFragment = SiteListDialogFragment.newInstance();
-      siteListFragment.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_Dialog_Light);
-      siteListFragment.show(ft);
+      super.onResume();
    }
 }

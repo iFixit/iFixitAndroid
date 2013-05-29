@@ -83,6 +83,35 @@ public class Site implements Serializable {
        mPublicRegistration + "|" + mGuideTypes.toString() + "}";
    }
 
+   public String getDomain() {
+      return mDomain;
+   }
+
+   public int theme() {
+      // Put custom site themes here.
+      if (mName.equals("ifixit")) {
+         return R.style.Theme_iFixit;
+      } else {
+         // We don't have a custom theme for the site - check for generic theme.
+         if (mTheme.equals("custom")) {
+            // Site has a custom theme but we don't have one implemented yet.
+            return R.style.Theme_Dozuki;
+         } else if (mTheme.equals("green")) {
+            return R.style.Theme_Dozuki_Green;
+         } else if (mTheme.equals("blue")) {
+            return R.style.Theme_Dozuki_Blue;
+         } else if (mTheme.equals("white")) {
+            return R.style.Theme_Dozuki_White;
+         } else if (mTheme.equals("orange")) {
+            return R.style.Theme_Dozuki_Orange;
+         } else if (mTheme.equals("black")) {
+            return R.style.Theme_Dozuki_Grey;
+         }
+      }
+
+      return R.style.Theme_Dozuki;
+   }
+
    public static Site getSite(String siteName) {
       Site site = null;
 

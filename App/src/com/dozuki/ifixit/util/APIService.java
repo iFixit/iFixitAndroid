@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import android.app.Activity;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -29,7 +28,9 @@ import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
+import org.holoeverywhere.app.DialogFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,15 +65,6 @@ public class APIService extends Service {
     */
    private static APICall sPendingApiCall;
 
-   /**
-    * Current site.
-    */
-   private static Site mSite;
-
-   public static void setSite(Site site) {
-      mSite = site;
-   }
-
    @Override
    public IBinder onBind(Intent intent) {
       return null; // Do nothing.
@@ -82,7 +74,7 @@ public class APIService extends Service {
     * Returns true if the the user needs to be authenticated for the given site and endpoint.
     */
    private static boolean requireAuthentication(Site site, APIEndpoint endpoint) {
-      return (endpoint.mAuthenticated || !mSite.mPublic) && !endpoint.mForcePublic;
+      return (endpoint.mAuthenticated || !MainApplication.get().getSite().mPublic) && !endpoint.mForcePublic;
    }
 
    /**
@@ -93,12 +85,14 @@ public class APIService extends Service {
       APIEndpoint endpoint = apiCall.mEndpoint;
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
-      if (requireAuthentication(mSite, endpoint) && !MainApplication.get().isUserLoggedIn()) {
+      if (requireAuthentication(MainApplication.get().getSite(), endpoint) && !MainApplication.get().isUserLoggedIn()) {
          sPendingApiCall = apiCall;
 
          // Don't display the login dialog twice.
          if (!MainApplication.get().isLoggingIn()) {
-            LoginFragment.newInstance().show((org.holoeverywhere.app.Activity) activity);
+            LoginFragment fragment = LoginFragment.newInstance();
+            fragment.setStyle(DialogFragment.STYLE_NO_TITLE, MainApplication.get().getSiteTheme());
+            fragment.show(activity);
          }
       } else {
          activity.startService(makeApiIntent(activity, apiCall));
@@ -388,6 +382,7 @@ public class APIService extends Service {
 
       return new APICall(APIEndpoint.REGISTER, NO_QUERY, requestBody.toString());
    }
+
    public static APICall getCopyImageAPICall(String query) {
       return new APICall(APIEndpoint.COPY_IMAGE, query);
    }
@@ -541,11 +536,7 @@ public class APIService extends Service {
          return;
       }
 
-      if (mSite == null) {
-         mSite = MainApplication.get().getSite();
-      }
-
-      final String url = endpoint.getUrl(mSite, apiCall.mQuery);
+      final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
 
       Log.i("iFixit", "Performing API call: " + endpoint.mMethod + " " + url);
       Log.i("iFixit", "Request body: " + apiCall.mRequestBody);
@@ -590,7 +581,7 @@ public class APIService extends Service {
                if (apiCall.mAuthToken != null) {
                   // This auth token overrides all other requirements/auth tokens.
                   authToken = apiCall.mAuthToken;
-               } else if (requireAuthentication(mSite, endpoint)) {
+               } else if (requireAuthentication(MainApplication.get().getSite(), endpoint)) {
                   User user = ((MainApplication) getApplicationContext()).getUser();
                   authToken = user.getAuthToken();
                }

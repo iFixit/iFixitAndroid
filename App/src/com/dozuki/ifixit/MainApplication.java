@@ -100,7 +100,6 @@ public class MainApplication extends Application {
 
    public void setSite(Site site) {
       mSite = site;
-      APIService.setSite(site);
 
       // Update logged in user based on current site.
       mUser = getUserFromPreferenceFile(site);
@@ -140,31 +139,8 @@ public class MainApplication extends Application {
    public int getSiteTheme() {
       if (mSite == null) {
          return R.style.Theme_Dozuki;
-
-      // Put custom site themes here.
-      } else if (mSite.mName.equals("ifixit")) {
-         return R.style.Theme_iFixit;
-      } else {
-         // We don't have a custom theme for the site - check for generic theme.
-         String theme = mSite.mTheme;
-
-         if (theme.equals("custom")) {
-            // Site has a custom theme but we don't have one implemented yet.
-            return R.style.Theme_Dozuki;
-         } else if (theme.equals("green")) {
-            return R.style.Theme_Dozuki_Green;
-         } else if (theme.equals("blue")) {
-            return R.style.Theme_Dozuki_Blue;
-         } else if (theme.equals("white")) {
-            return R.style.Theme_Dozuki_White;
-         } else if (theme.equals("orange")) {
-            return R.style.Theme_Dozuki_Orange;
-         } else if (theme.equals("black")) {
-            return R.style.Theme_Dozuki_Grey;
-         }
       }
-
-      return R.style.Theme_Dozuki;
+      return mSite.theme();
    }
 
    public String getUserAgent() {

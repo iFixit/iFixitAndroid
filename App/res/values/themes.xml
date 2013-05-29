@@ -7,7 +7,7 @@
     <!-- iFixit -->
     <style name="Widget.iFixit"></style>
 
-    <style name="Widget.iFixit.ListViewStyle" parent="android:Widget.Holo.Light.ListView">
+    <style name="Widget.iFixit.ListViewStyle" parent="Holo.ListView.Light">
         <item name="android:cacheColorHint">#00000000</item>
     </style>
 
@@ -59,7 +59,7 @@
         <item name="background">@drawable/tab_indicator_grey</item>
     </style>
 
-    <style name="Widget.Dozuki.ListViewStyle" parent="android:Widget.ListView">
+    <style name="Widget.Dozuki.ListViewStyle" parent="Holo.ListView.Light">
         <item name="android:cacheColorHint">#00000000</item>
         <item name="android:divider">#FFEFEFEF</item>
         <item name="android:dividerHeight">1dp</item>
@@ -96,7 +96,7 @@
         <!-- Override for SectionHeader ListView style -->
         <item name="sectionListViewStyle">@style/Widget.iFixit.ListViewStyle</item>
         <item name="topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
-        <item name="android:dialogTheme">@style/Holo.Theme.Dialog</item>
+        <item name="android:dialogTheme">@style/Holo.Theme.DialogWhenLarge.Light.DarkActionBar</item>
     </style>
 
     <style name="Theme.Dozuki" parent="Holo.Theme.Light.DarkActionBar">
