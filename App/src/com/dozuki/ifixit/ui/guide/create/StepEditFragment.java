@@ -122,7 +122,6 @@ public class StepEditFragment extends Fragment {
    private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditBulletFrag.setStepTitle(mStepObject.getTitle());
-      mEditBulletFrag.setStepNumber(mStepObject.getStepNum());
       if (mStepType.equals(IMAGE_TYPE)) {
          mEditImageFrag.setImages(mStepObject.getImages());
       }

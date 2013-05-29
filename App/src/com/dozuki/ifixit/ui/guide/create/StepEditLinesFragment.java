@@ -50,7 +50,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
    // title
    private String mTitle = NO_TITLE;
-   private int mStepNum = 0;
    private EditText mStepTitle;
 
 
@@ -96,7 +95,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
       if (savedInstanceState != null) {
          mTitle = savedInstanceState.getString(TITLE_KEY);
-         mStepNum = savedInstanceState.getInt(STEP_NUM_KEY);
 
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
          mChooseBulletDialog =
@@ -153,7 +151,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
 
       savedInstanceState.putString(TITLE_KEY, mTitle);
-      savedInstanceState.putInt(STEP_NUM_KEY, mStepNum);
 
       if (mChooseBulletDialog != null && mShowingChooseBulletDialog) {
          getSupportFragmentManager().putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog);
@@ -268,10 +265,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
    public String getTitle() {
       return mTitle;
-   }
-
-   public void setStepNumber(int num) {
-      mStepNum = num;
    }
 
    public void setSteps(ArrayList<StepLine> lines) {

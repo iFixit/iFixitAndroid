@@ -247,8 +247,6 @@ public class StepEditImageFragment extends Fragment {
       savedInstanceState.putSerializable(IMAGES_KEY, mImages);
 
       super.onSaveInstanceState(savedInstanceState);
-
-
    }
 
    /////////////////////////////////////////////////////
