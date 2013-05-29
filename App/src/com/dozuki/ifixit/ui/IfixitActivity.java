@@ -5,14 +5,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -190,6 +187,7 @@ public abstract class IfixitActivity extends Activity {
        * Set the current site's theme. Must be before onCreate because of
        * inflating views.
        */
+
       setTheme(MainApplication.get().getSiteTheme());
       setTitle("");
 
@@ -419,17 +417,6 @@ public abstract class IfixitActivity extends Activity {
 
          return v;
       }
-   }
-
-   public void setCustomTitle(String title) {
-      this.getSupportActionBar().setDisplayShowCustomEnabled(true);
-      TextView tv = new TextView(this);
-      tv.setText(title);
-      tv.setTextAppearance(getApplicationContext(), R.style.TextAppearance_iFixit_ActionBar_Title);
-      tv.setLayoutParams(new ViewGroup.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
-      tv.setGravity(Gravity.CENTER_VERTICAL);
-      this.getSupportActionBar().setCustomView(tv,
-       new ActionBar.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT));
    }
 
    /**

@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
@@ -27,6 +25,7 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.Fragment;
 
 import java.io.BufferedInputStream;
@@ -35,7 +34,6 @@ import java.net.URL;
 import java.net.URLConnection;
 import java.util.ArrayList;
 
-@SuppressLint("ValidFragment")
 public class GuideStepViewFragment extends Fragment {
 
    private TextView mTitle;
@@ -64,7 +62,7 @@ public class GuideStepViewFragment extends Fragment {
 
    @Override
    public void onCreate(Bundle savedState) {
-      mContext = getActivity();
+      mContext = (Activity) getActivity();
 
       MainApplication app = MainApplication.get();
 

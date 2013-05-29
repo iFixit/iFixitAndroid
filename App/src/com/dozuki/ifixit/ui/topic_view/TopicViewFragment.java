@@ -12,7 +12,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.ui.IfixitActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
@@ -156,7 +155,8 @@ public class TopicViewFragment extends Fragment {
 
       mTopicLeaf = topicLeaf;
 
-      ((IfixitActivity) getActivity()).setCustomTitle(mTopicLeaf.getName());
+      getActivity().setTitle(mTopicLeaf.getName());
+
       if (mTopicLeaf == null) {
          // display error message
          return;
