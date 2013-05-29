@@ -22,6 +22,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.guide.*;
+import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.marczych.androidimagemanager.ImageManager;

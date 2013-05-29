@@ -16,7 +16,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
-import com.dozuki.ifixit.ui.guide.view.ThumbnailView;
+import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.model.APIImage;

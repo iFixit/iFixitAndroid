@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.guide.view;
+package com.dozuki.ifixit.ui.guide;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,6 +14,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.ui.guide.create.StepEditImageFragment;
+import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import org.holoeverywhere.LayoutInflater;
@@ -94,7 +95,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    public void onClick(View v) {
       for (ImageView image : mThumbs) {
          if (v.getId() == image.getId()) {
-            APIImage imageView = (APIImage)v.getTag();
+            APIImage imageView = (APIImage) v.getTag();
             setCurrentThumb(imageView.mBaseUrl);
          }
       }

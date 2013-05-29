@@ -15,7 +15,7 @@
         android:scaleType="centerInside"
         android:contentDescription="@string/guide_create_step_edit_main_image_description" />
 
-    <com.dozuki.ifixit.ui.guide.view.ThumbnailView
+    <com.dozuki.ifixit.ui.guide.ThumbnailView
         android:id="@+id/edit_thumbnails"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
