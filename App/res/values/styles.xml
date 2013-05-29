@@ -64,17 +64,17 @@
 
     <!-- topic_guide_item.xml -->
 
-    <style name="topicGuideItem">
+    <style name="TopicGuideItem">
         <item name="android:background">@color/topic_guide_item_background</item>
         <item name="android:layout_margin">4dp</item>
     </style>
 
-    <style name="topicGuideThumbnail">
+    <style name="TopicGuideThumbnail">
         <item name="android:layout_marginLeft">8dp</item>
         <item name="android:background">@color/image_border</item>
     </style>
 
-    <style name="topicGuideTitle" parent="Holo.TextAppearance.Medium.Inverse">
+    <style name="TopicGuideTitle" parent="Holo.TextAppearance.Medium.Inverse">
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
     </style>

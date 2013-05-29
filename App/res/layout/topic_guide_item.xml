@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                style="@style/topicGuideItem">
+                style="@style/TopicGuideItem">
 
     <TextView
         android:id="@+id/topic_guide_title"
@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_toLeftOf="@+id/topic_guide_thumbnail"
         android:layout_alignParentLeft="true"
-        style="@style/topicGuideTitle"
+        style="@style/TopicGuideTitle"
         android:layout_centerVertical="true"/>
 
     <ImageView
@@ -18,7 +18,7 @@
         android:layout_width="@dimen/guide_thumbnail_width"
         android:layout_height="@dimen/guide_thumbnail_height"
 
-        style="@style/topicGuideThumbnail"
+        style="@style/TopicGuideThumbnail"
         android:layout_alignParentRight="true"
         android:contentDescription="@string/topic_guide_thumbnail"/>
 
