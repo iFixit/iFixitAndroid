@@ -117,7 +117,7 @@ public class Guide implements Serializable {
       mPublic = isPublic;
    }
 
-   public boolean getPublic() {
+   public boolean isPublic() {
       return mPublic;
    }
 

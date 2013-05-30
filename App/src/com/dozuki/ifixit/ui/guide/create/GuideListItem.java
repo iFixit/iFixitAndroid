@@ -43,6 +43,7 @@ public class GuideListItem extends LinearLayout {
       public void onClick(View v) {
          Intent intent = new Intent(mActivity, StepsActivity.class);
          intent.putExtra(StepsActivity.GUIDE_ID_KEY, mGuideInfo.mGuideid);
+         intent.putExtra(StepsActivity.GUIDE_PUBLIC_KEY, mGuideInfo.mPublic);
          mActivity.startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
       }
    };

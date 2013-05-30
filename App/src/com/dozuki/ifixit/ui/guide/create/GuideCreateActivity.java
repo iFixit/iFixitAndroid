@@ -163,7 +163,7 @@ public class GuideCreateActivity extends IfixitActivity {
          for (GuideInfo userGuide : mUserGuideList) {
             if (userGuide.mGuideid == guide.getGuideid()) {
                userGuide.mRevisionid = guide.getRevisionid();
-               userGuide.mPublic = guide.getPublic();
+               userGuide.mPublic = guide.isPublic();
                break;
             }
          }

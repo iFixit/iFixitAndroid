@@ -199,6 +199,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
             }
             // We have to pass along the steps guideid to account for prerequisite guides.
             intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
+            intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
             intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
             startActivity(intent);
             break;

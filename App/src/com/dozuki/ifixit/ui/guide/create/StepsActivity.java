@@ -27,12 +27,14 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
    public static final int MENU_REARRANGE_STEPS = 4;
    public static String GUIDE_KEY = "GUIDE_KEY";
    public static String GUIDE_ID_KEY = "GUIDE_ID_KEY";
+   public static String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
    private static final String LOADING = "LOADING";
    private ActionBar mActionBar;
    private StepPortalFragment mStepPortalFragment;
    private Guide mGuide;
    private boolean mIsLoading;
+   private boolean mGuidePublic;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -50,12 +52,17 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
       if (savedInstanceState != null) {
          // to persist mGuide
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
+         mGuidePublic = mGuide.isPublic();
          mIsLoading = savedInstanceState.getBoolean(LOADING);
       }
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
+         mGuidePublic = extras.getBoolean(StepEditActivity.GUIDE_PUBLIC_KEY);
+         if (mGuide != null) {
+            mGuidePublic = mGuide.isPublic();
+         }
          guideid = extras.getInt(StepsActivity.GUIDE_ID_KEY, 0);
          if (guideid == 0) {
             guideid = mGuide.getGuideid();
@@ -112,6 +119,9 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
 
          if (guide != null) {
             mGuide = guide;
+            mGuidePublic = mGuide.isPublic();
+         } else {
+            mGuidePublic = data.getBooleanExtra(StepEditActivity.GUIDE_PUBLIC_KEY, guide.isPublic());
          }
       }
    }
@@ -141,10 +151,13 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
        .add(3, MENU_REARRANGE_STEPS, 0, R.string.reorder_steps)
        .setIcon(R.drawable.ic_dialog_arrange_bullets_light)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-      menu
-       .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
-       .setIcon(R.drawable.ic_action_book)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+      if (mGuidePublic) {
+         menu
+          .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
+          .setIcon(R.drawable.ic_action_book)
+          .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      }
 
       return super.onCreateOptionsMenu(menu);
    }

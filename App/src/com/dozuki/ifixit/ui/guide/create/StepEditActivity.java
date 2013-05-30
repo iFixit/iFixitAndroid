@@ -46,6 +46,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    private static final int HOME_UP = 3;
 
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
+   public static final String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
    public static String TAG = "StepEditActivity";
    public static String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
@@ -91,6 +92,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    private boolean mLockSave;
 
    private int mExitCode;
+   private boolean mGuidePublic;
 
 
    /////////////////////////////////////////////////////
@@ -121,17 +123,20 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
          if (mGuide == null) {
             int guideid = extras.getInt(GUIDE_ID_KEY);
-
+            mGuidePublic = extras.getBoolean(GUIDE_PUBLIC_KEY);
             mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
             mInboundStepId = extras.getInt(GUIDE_STEP_ID);
 
             APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(guideid));
             showLoading();
+         } else {
+            mGuidePublic = mGuide.isPublic();
          }
       }
 
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
+         mGuidePublic = mGuide.isPublic();
          mPagePosition = savedInstanceState.getInt(GUIDE_STEP_NUM_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DELETE_GUIDE_DIALOG_KEY);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
@@ -253,9 +258,11 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      menu.add(1, MENU_VIEW_GUIDE, 0, R.string.view_guide)
-       .setIcon(R.drawable.ic_action_book)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      if (mGuidePublic) {
+         menu.add(1, MENU_VIEW_GUIDE, 0, R.string.view_guide)
+          .setIcon(R.drawable.ic_action_book)
+          .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      }
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -634,6 +641,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       }
       intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
       intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());
+      intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
       intent.putExtra(GuideViewActivity.FROM_EDIT, true);
       startActivity(intent);
    }
