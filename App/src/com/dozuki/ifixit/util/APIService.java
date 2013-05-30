@@ -269,7 +269,7 @@ public class APIService extends Service {
       try {
          Log.w("APIService", bundle.toString());
          requestBody.put("type", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_type_title)).getString(Page.SIMPLE_DATA_KEY));
+          .guide_intro_wizard_guide_type_title)).getString(Page.SIMPLE_DATA_KEY).toLowerCase());
          requestBody.put("category", bundle.getBundle(app.getString(R.string
           .guide_intro_wizard_guide_topic_title, app.getTopicName())).getString(TopicNamePage.TOPIC_DATA_KEY));
          requestBody.put("title", bundle.getBundle(app.getString(R.string
