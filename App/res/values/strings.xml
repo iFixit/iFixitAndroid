@@ -278,7 +278,7 @@
     <string name="restart_video_message">Play this video again?</string>
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Name</string>
     <string name="guide_intro_wizard_guide_subject_hint">For example - Screen, Battery, Spark Plugs, etc</string>
-    <string name="loading_image">Downloading Image</string>
+    <string name="loading_image">Loading...</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>
