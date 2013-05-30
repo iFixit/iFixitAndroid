@@ -312,6 +312,10 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    public void onStepAdd(APIEvent.StepAdd event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
+
+         mIsStepDirty = false;
+         toggleSave(mIsStepDirty);
+
          hideLoading();
 
          mStepAdapter.notifyDataSetChanged();
