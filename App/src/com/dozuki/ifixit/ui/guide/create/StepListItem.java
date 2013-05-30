@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.guide.create;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -91,7 +92,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
          mStepsView.setText(stepText);
          mStepNumber.setVisibility(View.GONE);
       } else {
-         mStepsView.setText(mStepObject.getTitle());
+         mStepsView.setText(Html.fromHtml(mStepObject.getTitle()));
          mStepNumber.setText(stepText);
          mStepNumber.setVisibility(View.VISIBLE);
       }

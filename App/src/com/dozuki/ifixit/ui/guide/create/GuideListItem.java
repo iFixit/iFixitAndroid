@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
@@ -119,13 +120,9 @@ public class GuideListItem extends LinearLayout {
       mGuideInfo = guideInfo;
       setTag(mGuideInfo.mGuideid);
 
-      mTitleView.setText(mGuideInfo.mTitle);
+      mTitleView.setText(Html.fromHtml(mGuideInfo.mTitle));
 
-      if (mGuideInfo.mImage != null) {
-         image = mGuideInfo.mImage.getPath(".standard");
-      } else {
-         image = "";
-      }
+      image = mGuideInfo.mImage != null ? mGuideInfo.mImage.getPath(".standard") : "";
 
       if (mThumbnail != null) {
          mImageManager.displayImage(image, mActivity, mThumbnail);
