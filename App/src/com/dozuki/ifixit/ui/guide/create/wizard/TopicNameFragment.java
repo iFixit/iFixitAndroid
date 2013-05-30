@@ -168,7 +168,7 @@ public class TopicNameFragment extends Fragment {
    }
 
    private void setTopicArrayAdapter() {
-      mAdapter = new ArrayAdapter<String>((Activity) mCallbacks, android.R.layout.simple_dropdown_item_1line,
+      mAdapter = new ArrayAdapter<String>((Activity) mCallbacks, R.layout.topic_name_autocomplete_dropdown_item,
        mTopics);
 
       mTopicNameView.setAdapter(mAdapter);

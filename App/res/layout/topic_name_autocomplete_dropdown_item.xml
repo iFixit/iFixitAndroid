@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/topic_name_suggestion"
+          android:layout_width="fill_parent"
+          android:layout_height="wrap_content"
+          android:textSize="18sp"
+          android:paddingTop="16dp"
+          android:paddingBottom="16dp"
+          android:paddingLeft="8dp"
+          android:textColor="@color/black"/>
