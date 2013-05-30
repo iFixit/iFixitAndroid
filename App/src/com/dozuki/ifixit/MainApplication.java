@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
@@ -224,6 +225,11 @@ public class MainApplication extends Application {
       }
 
       return mImageManager;
+   }
+
+   // Returns true if the app is in debug mode (not in production)
+   public static boolean inDebug() {
+      return (0 != (get().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
    }
 
    public static Bus getBus() {

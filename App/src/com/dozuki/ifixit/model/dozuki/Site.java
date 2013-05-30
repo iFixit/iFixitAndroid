@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.model.dozuki;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.util.EditDistance;
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 
 public class Site implements Serializable {
    private static final long serialVersionUID = -2798641261277805693L;
+
+   private static final String DEV_SERVER = "";
 
    public int mSiteid;
    public String mName;
@@ -21,6 +24,8 @@ public class Site implements Serializable {
    public boolean mStandardAuth;
    public String mSsoUrl;
    public boolean mPublicRegistration;
+   public String mCustomDomain;
+   public String mStoreUrl;
 
    public ArrayList<GuideType> mGuideTypes;
 
@@ -76,15 +81,23 @@ public class Site implements Serializable {
       return Character.toUpperCase(word.charAt(0)) + word.substring(1);
    }
 
-   public String toString() {
-      return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
-       " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
-       mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
-       mPublicRegistration + "|" + mGuideTypes.toString() + "}";
+   public String getDomain() {
+      return mCustomDomain.equals("") ? mDomain : mCustomDomain;
    }
 
-   public String getDomain() {
-      return mDomain;
+   public String getAPIDomain() {
+      String domain;
+      if (MainApplication.inDebug()) {
+         if (mName.equals("ifixit")) {
+            domain = DEV_SERVER;
+         } else {
+            domain = mName + "." + DEV_SERVER;
+         }
+      } else {
+         domain = mDomain;
+      }
+
+      return domain;
    }
 
    public int theme() {
@@ -112,6 +125,7 @@ public class Site implements Serializable {
       return R.style.Theme_Dozuki;
    }
 
+   // Used only for custom apps, where we don't have a call to get the site info.
    public static Site getSite(String siteName) {
       Site site = null;
 
@@ -157,5 +171,13 @@ public class Site implements Serializable {
       }
 
       return site;
+   }
+
+   @Override
+   public String toString() {
+      return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
+       " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
+       mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
+       mPublicRegistration + "|" + mGuideTypes.toString() + "}";
    }
 }

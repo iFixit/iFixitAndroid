@@ -51,22 +51,6 @@ public class JSONHelper {
       return sites;
    }
 
-   private static Site parseSite(JSONObject jSite) throws JSONException {
-      Site site = new Site(jSite.getInt("siteid"));
-
-      site.mName = jSite.getString("name");
-      site.mDomain = jSite.getString("domain");
-      site.mTitle = jSite.getString("title");
-      site.mTheme = jSite.getString("theme");
-      site.mPublic = !jSite.getBoolean("private");
-      site.mDescription = jSite.getString("description");
-      site.mAnswers = jSite.getBoolean("answers");
-
-      setAuthentication(site, jSite.getJSONObject("authentication"));
-
-      return site;
-   }
-
    public static Site parseSiteInfo(String json) {
       Site site = null;
 
@@ -88,9 +72,33 @@ public class JSONHelper {
          Log.e(TAG, "Error parsing site info: " + e);
       }
 
-      site.mDomain = "tasp.cominor.com";
+      return site;
+   }
+
+   private static Site parseSite(JSONObject jSite) throws JSONException {
+      Site site = new Site(jSite.getInt("siteid"));
+
+      site.mName = jSite.getString("name");
+      site.mDomain = jSite.getString("domain");
+      site.mCustomDomain = jSite.has("custom_domain") ? jSite.getString("custom_domain") : "";
+      site.mTitle = jSite.getString("title");
+      site.mTheme = jSite.getString("theme");
+      site.mPublic = !jSite.getBoolean("private");
+      site.mDescription = jSite.getString("description");
+      site.mAnswers = jSite.getBoolean("answers");
+      site.mStoreUrl = jSite.has("store") ? jSite.getString("store") : "";
+
+      setAuthentication(site, jSite.getJSONObject("authentication"));
 
       return site;
+   }
+
+   private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
+      site.mStandardAuth = jAuth.has("standard") && jAuth.getBoolean("standard");
+
+      site.mSsoUrl = jAuth.has("sso") ? jAuth.getString("sso") : null;
+
+      site.mPublicRegistration = jAuth.getBoolean("public-registration");
    }
 
    public static ArrayList<String> parseAllTopics(String json) {
@@ -115,14 +123,6 @@ public class JSONHelper {
       } catch (JSONException e) {
          return new GuideType(type, "", "");
       }
-   }
-
-   private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
-      site.mStandardAuth = jAuth.has("standard") && jAuth.getBoolean("standard");
-
-      site.mSsoUrl = jAuth.has("sso") ? jAuth.getString("sso") : null;
-
-      site.mPublicRegistration = jAuth.getBoolean("public-registration");
    }
 
    /**

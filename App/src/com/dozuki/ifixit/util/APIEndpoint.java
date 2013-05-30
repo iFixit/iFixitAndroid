@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.dozuki.Site;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -684,15 +685,19 @@ public enum APIEndpoint {
       String url;
 
       if (site != null) {
-         domain = site.mDomain;
+         domain = site.getAPIDomain();
       } else {
          domain = "www.ifixit.com";
       }
 
-      protocol = "https://";
-      url = "/api/" + API_VERSION + "/" + mEndpoint.createUrl(query);
+      protocol = "https";
+      url = String.format("%s://%s/api/%s/%s", protocol, domain, API_VERSION, mEndpoint.createUrl(query));
 
-      return protocol + domain + url;
+      if (MainApplication.inDebug()) {
+         Log.d("APIEndpoint", "Absolute URL for API query: " + url);
+      }
+
+      return url;
    }
 
    public APIEvent<?> parseResult(String json) throws JSONException {
