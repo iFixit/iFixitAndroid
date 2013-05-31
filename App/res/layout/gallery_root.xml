@@ -18,4 +18,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/gallery_view_top_bar" />
 
+    <FrameLayout
+        android:id="@+id/gallery_loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>

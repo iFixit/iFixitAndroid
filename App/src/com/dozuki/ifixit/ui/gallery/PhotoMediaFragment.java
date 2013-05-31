@@ -47,6 +47,7 @@ public class PhotoMediaFragment extends MediaFragment {
    @Subscribe
    public void onUserImages(APIEvent.UserImages event) {
       ((GalleryActivity)getActivity()).hideLoading();
+      this.setEmptyListView();
 
       if (!event.hasError()) {
          UserImageList imageList = event.getResult();
@@ -61,7 +62,9 @@ public class PhotoMediaFragment extends MediaFragment {
                }
             }
             mItemsDownloaded += (mMediaList.getItems().size() - oldImageSize);
+            mGalleryAdapter.notifyDataSetChanged();
             mGalleryAdapter.invalidatedView();
+
             mLastPage = false;
          } else {
             mLastPage = true;
@@ -102,6 +105,7 @@ public class PhotoMediaFragment extends MediaFragment {
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
       setupUser(event.getUser());
+      retrieveUserMedia();
    }
 
 }

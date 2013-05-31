@@ -108,7 +108,7 @@
     <string name="media_help_confirm">Good to know!</string>
     <string name="gallery_tool_tip">Add Image</string>
     <string name="camera_tool_tip">Camera</string>
-    <string name="no_images_text">Add images with the icons above!</string>
+    <string name="no_images_text">No images in your Media Manager. Add images with the icons above!</string>
     <string name="no_embeds_text">Add HTML embeds online at iFixit.com!</string>
     <string name="no_videos_text">Add videos with the icons above!</string>
     <string name="image_chooser_title">Select Picture</string>

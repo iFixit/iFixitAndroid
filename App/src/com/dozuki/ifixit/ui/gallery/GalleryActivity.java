@@ -257,11 +257,13 @@ public class GalleryActivity extends IfixitActivity {
 
    protected void showLoading() {
       getSupportFragmentManager().beginTransaction()
-       .add(new LoadingFragment(), "loading").addToBackStack("loading")
+       .add(R.id.gallery_loading_container, new LoadingFragment(), "loading")
+       .addToBackStack("loading")
        .commit();
    }
 
    protected void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager()
+       .popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 }

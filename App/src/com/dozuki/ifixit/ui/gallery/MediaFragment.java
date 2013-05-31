@@ -43,6 +43,7 @@ import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
+import org.holoeverywhere.widget.TextView;
 import org.holoeverywhere.widget.Toast;
 
 import java.io.File;
@@ -86,6 +87,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
    private boolean mShowingHelp;
    private boolean mShowingDelete;
    private boolean mSelectForReturn;
+   private TextView mNoMediaView;
 
    @SuppressWarnings("unchecked")
    @Override
@@ -149,12 +151,12 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
       View view = inflater.inflate(R.layout.gallery_view, container, false);
 
       mGridView = (GridView) view.findViewById(R.id.gridview);
+      mNoMediaView = (TextView)view.findViewById(R.id.no_images_text);
 
       mGridView.setAdapter(mGalleryAdapter);
       mGridView.setOnScrollListener(new GalleryOnScrollListener());
       mGridView.setOnItemClickListener(this);
       mGridView.setOnItemLongClickListener(this);
-      mGridView.setEmptyView(view.findViewById(R.id.no_images_text));
 
       if (MainApplication.get().isUserLoggedIn()) {
          setupUser(MainApplication.get().getUser());
@@ -165,6 +167,10 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
       }
 
       return view;
+   }
+
+   protected void setEmptyListView() {
+      mGridView.setEmptyView(mNoMediaView);
    }
 
    @Override
