@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -16,6 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -67,6 +68,7 @@ public class GuideCreateActivity extends IfixitActivity {
             createHelpDialog().show();
          }
       } else {
+         showLoading();
          APIService.call(this, APIService.getUserGuidesAPICall());
       }
 
@@ -75,14 +77,18 @@ public class GuideCreateActivity extends IfixitActivity {
       mGuideListView = (PullToRefreshListView) findViewById(R.id.guide_create_listview);
       mGuideListView.setAdapter(mGuideListAdapter);
 
-      mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
-
       mGuideListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
          @Override
          public void onRefresh(PullToRefreshBase<ListView> refreshView) {
             APIService.call(mActivity, APIService.getUserGuidesAPICall());
          }
       });
+   }
+
+   @Override
+   public void onContentChanged() {
+      super.onContentChanged();
+      mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
    }
 
    @Override
@@ -107,7 +113,6 @@ public class GuideCreateActivity extends IfixitActivity {
       return super.onCreateOptionsMenu(menu);
    }
 
-
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mUserGuideList);
@@ -120,26 +125,6 @@ public class GuideCreateActivity extends IfixitActivity {
    public boolean finishActivityIfLoggedOut() {
       return true;
    }
-/*
-   @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-      super.onActivityResult(requestCode, resultCode, data);
-      if (requestCode == GUIDE_STEP_LIST_REQUEST || requestCode == GUIDE_STEP_EDIT_REQUEST) {
-         if (resultCode == RESULT_OK) {
-            Guide guide = (Guide) data.getSerializableExtra(GUIDE_KEY);
-            if (guide == null) {
-               return;
-            }
-            for (GuideInfo g : mUserGuideList) {
-               if (g.getGuideid() == guide.getGuideid()) {
-                  g.setRevisionid(guide.getRevisionid());
-                  g.setTitle(guide.getTitle());
-                  break;
-               }
-            }
-         }
-      }
-   }*/
 
    @Subscribe
    public void onUserGuides(APIEvent.UserGuides event) {
@@ -150,6 +135,7 @@ public class GuideCreateActivity extends IfixitActivity {
          mGuideListAdapter.notifyDataSetChanged();
 
          mGuideListView.onRefreshComplete();
+         hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
@@ -302,5 +288,16 @@ public class GuideCreateActivity extends IfixitActivity {
          }
       }
       mCurOpenGuideObjectID = id;
+   }
+
+   protected void showLoading() {
+      getSupportFragmentManager().beginTransaction()
+       .add(R.id.loading_container, new LoadingFragment(), "loading").addToBackStack("loading")
+       .commit();
+
+   }
+
+   protected void hideLoading() {
+      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 }

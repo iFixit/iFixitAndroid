@@ -17,9 +17,14 @@
         android:id="@+id/no_guides_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/add_guide_bar"
         android:layout_marginTop="16dp"
         android:layout_centerHorizontal="true"
+        android:textSize="18sp"
         android:text="@string/no_guides_text"
         android:visibility="gone"/>
+
+    <FrameLayout
+        android:id="@+id/loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
 </RelativeLayout>
