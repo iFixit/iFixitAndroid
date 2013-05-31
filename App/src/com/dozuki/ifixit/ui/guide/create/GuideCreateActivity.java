@@ -88,7 +88,9 @@ public class GuideCreateActivity extends IfixitActivity {
    @Override
    public void onContentChanged() {
       super.onContentChanged();
-      mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
+
+      if (mGuideListView != null)
+         mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
    }
 
    @Override

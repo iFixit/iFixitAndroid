@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
@@ -52,7 +51,6 @@ public class StepEditFragment extends Fragment {
       Bundle b = getArguments();
       mStepObject = (GuideStep) b.getSerializable(StepEditActivity.GUIDE_STEP_NUM_KEY);
       mStepType = mStepObject.type();
-      Log.w("StepEditFragment", mStepType);
       mEditEmbedFrag =  new StepEditEmbedFragment();
 
       if (savedInstanceState != null) {
@@ -84,7 +82,6 @@ public class StepEditFragment extends Fragment {
          if (mStepType.equals(VIDEO_TYPE)) {
             Bundle videoArgs = new Bundle();
 
-            Log.w("StepEditFragment", mStepObject.toString());
             videoArgs.putSerializable(StepVideoFragment.GUIDE_VIDEO_KEY, mStepObject.getVideo());
             mEditVideoFrag = new StepVideoFragment();
             mEditVideoFrag.setArguments(videoArgs);

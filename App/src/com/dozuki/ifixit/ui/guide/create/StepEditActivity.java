@@ -622,7 +622,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          mPager.setVisibility(View.GONE);
       }
       getSupportFragmentManager().beginTransaction()
-       .add(new LoadingFragment(), "loading").addToBackStack("loading")
+       .add(R.id.step_edit_loading_screen, new LoadingFragment(), "loading").addToBackStack("loading")
        .commit();
       mIsLoading = true;
 

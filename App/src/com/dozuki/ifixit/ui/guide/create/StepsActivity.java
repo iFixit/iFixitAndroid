@@ -185,7 +185,6 @@ public class StepsActivity extends IfixitActivity implements StepRearrangeListen
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
-
       }
    }
 
