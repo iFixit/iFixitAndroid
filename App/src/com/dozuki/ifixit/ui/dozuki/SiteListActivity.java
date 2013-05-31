@@ -1,7 +1,9 @@
 package com.dozuki.ifixit.ui.dozuki;
 
+import android.support.v4.app.Fragment;
 import android.app.SearchManager;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -44,16 +46,28 @@ public class SiteListActivity extends IfixitActivity
          public void onClick(View view) {
             // Show site list dialog
             FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+            Fragment prev = getSupportFragmentManager().findFragmentByTag("SiteListDialog");
+            if (prev != null) {
+               ft.remove(prev);
+            }
             ft.addToBackStack(null);
 
-            // Create and show the dialog.
             mSiteListDialog = SiteListDialogFragment.newInstance();
-            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_Dialog_Light);
-            mSiteListDialog.show(ft);
+            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_DialogWhenLarge_Light);
+
+            mSiteListDialog.show(ft, "SiteListDialog");
          }
       });
 
       handleIntent(getIntent());
+   }
+
+   @Override
+   public void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
+      if (mSiteListDialog != null && !mSiteListDialog.isHidden()) {
+         mSiteListDialog.dismiss();
+      }
    }
 
    @Override
@@ -71,11 +85,13 @@ public class SiteListActivity extends IfixitActivity
 
    @Override
    public boolean onQueryTextChange(String newText) {
-      if (newText.length() == 0) {
-         mSiteListDialog.cancelSearch();
-      } else {
-         // Perform search on every key press.
-         search(newText);
+      if (mSiteListDialog != null) {
+         if (newText.length() == 0) {
+            mSiteListDialog.cancelSearch();
+         } else {
+            // Perform search on every key press.
+            search(newText);
+         }
       }
 
       return false;
