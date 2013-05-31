@@ -77,8 +77,8 @@ public class Site implements Serializable {
       return types;
    }
 
-   private String capitalize(String word) {
-      return Character.toUpperCase(word.charAt(0)) + word.substring(1);
+   public String siteName() {
+      return capitalize(mName);
    }
 
    public String getDomain() {
@@ -179,5 +179,9 @@ public class Site implements Serializable {
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
        mPublicRegistration + "|" + mGuideTypes.toString() + "}";
+   }
+
+   private String capitalize(String word) {
+      return Character.toUpperCase(word.charAt(0)) + word.substring(1);
    }
 }

@@ -99,10 +99,9 @@
 
     <!-- Gallery -->
     <string name="media_help_title">What\'s this?</string>
-    <string name="media_help_messege">This media manager is linked directly to your iFixit account. Any pictures you
-        load into
-        here will be available to you in your guide creation
-        endeavors. Stay tuned and you will be able to create guides on the go!
+    <string name="media_help_messege">
+        This media manager is linked directly to your %1$s account. Any pictures you
+        load into here will be available to you in your guide creation endeavors.
     </string>
     <string name="media_gallery_title">Media Manager</string>
     <string name="media_help_confirm">Good to know!</string>
