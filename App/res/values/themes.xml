@@ -96,7 +96,7 @@
         <!-- Override for SectionHeader ListView style -->
         <item name="sectionListViewStyle">@style/Widget.iFixit.ListViewStyle</item>
         <item name="topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
-        <item name="android:dialogTheme">@style/Holo.Theme.DialogWhenLarge.Light.DarkActionBar</item>
+        <item name="android:dialogTheme">@style/Holo.Theme.Dialog.Light</item>
     </style>
 
     <style name="Theme.Dozuki" parent="Holo.Theme.Light.DarkActionBar">

@@ -3,14 +3,14 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
+import android.widget.TextView;
 import com.dozuki.ifixit.R;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.TextView;
 
 public class ChooseBulletDialog extends DialogFragment implements OnClickListener {
 
