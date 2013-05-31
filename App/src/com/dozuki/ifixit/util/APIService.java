@@ -91,7 +91,7 @@ public class APIService extends Service {
          // Don't display the login dialog twice.
          if (!MainApplication.get().isLoggingIn()) {
             LoginFragment fragment = LoginFragment.newInstance();
-            fragment.setStyle(DialogFragment.STYLE_NO_TITLE, MainApplication.get().getSiteTheme());
+            fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Holo_Theme_DialogWhenLarge_Light_DarkActionBar);
             fragment.show(activity);
          }
       } else {

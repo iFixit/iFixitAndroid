@@ -464,10 +464,11 @@ public class JSONHelper {
 
       try {
          JSONObject jError = new JSONObject(json);
-         if (jError.getBoolean("error")) {
-            error = jError.getString("msg");
-         }
+
+         if (jError.has("message"))
+            error = jError.getString("message");
       } catch (JSONException e) {
+         Log.e("JSONHelper", "Unable to parse error message");
       }
 
       return error;

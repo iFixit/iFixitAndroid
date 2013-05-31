@@ -66,6 +66,8 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          if (error.mType == APIError.ErrorType.CONNECTION ||
           error.mType == APIError.ErrorType.PARSE) {
             APIService.getErrorDialog(getActivity(), error, mCurAPICall).show();
+         } else if (error.mType == APIError.ErrorType.INVALID_USER) {
+            error.mMessage = "Invalid login. Check your email address and password to verify they are correct.";
          }
 
          mLoadingSpinner.setVisibility(View.GONE);
