@@ -155,7 +155,7 @@ public class TopicViewFragment extends Fragment {
 
       mTopicLeaf = topicLeaf;
 
-      getActivity().setTitle(mTopicLeaf.getName());
+      getActivity().setTitle(mTopicLeaf.getName().equals("ROOT") ? "" : mTopicLeaf.getName());
 
       if (mTopicLeaf == null) {
          // display error message

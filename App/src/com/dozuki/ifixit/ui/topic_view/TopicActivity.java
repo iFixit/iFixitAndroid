@@ -174,7 +174,7 @@ public class TopicActivity extends IfixitActivity
             startActivity(intent);
          }
       } else {
-         if (mDualPane) {
+         if (mDualPane && !topic.isRoot()) {
             mTopicView.setTopicNode(topic);
          }
          changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
