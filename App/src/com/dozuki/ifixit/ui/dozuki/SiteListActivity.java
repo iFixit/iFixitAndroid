@@ -72,7 +72,7 @@ public class SiteListActivity extends IfixitActivity
    @Override
    public boolean onQueryTextChange(String newText) {
       if (newText.length() == 0) {
-         cancelSearch();
+         mSiteListDialog.cancelSearch();
       } else {
          // Perform search on every key press.
          search(newText);
@@ -97,10 +97,6 @@ public class SiteListActivity extends IfixitActivity
       }
 
       mSiteListDialog.setSiteList(matchedSites);
-   }
-
-   private void cancelSearch() {
-      //mSiteListDialog.setSiteList(mSiteList);
    }
 
    @Override

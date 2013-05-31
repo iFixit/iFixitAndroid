@@ -134,6 +134,10 @@ public class SiteListDialogFragment extends DialogFragment {
       }
    }
 
+   protected void cancelSearch() {
+      setSiteList(mSiteList);
+   }
+
    public void setSiteList(ArrayList<Site> sites) {
       if (mSiteListView == null || mSiteList == null) {
          return;
