@@ -154,6 +154,11 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          }
       }
 
+      setContentView(R.layout.guide_create_step_edit);
+
+      mSaveStep = (Button) findViewById(R.id.step_edit_save);
+      toggleSave(mIsStepDirty);
+
       if (mGuide != null) {
          initPage(mPagePosition);
       }
@@ -161,12 +166,6 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    private void initPage(int startPage) {
       getSupportActionBar().setTitle(mGuide.getTitle());
-
-      setContentView(R.layout.guide_create_step_edit);
-
-      mSaveStep = (Button) findViewById(R.id.step_edit_save);
-
-      toggleSave(mIsStepDirty);
 
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
