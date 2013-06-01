@@ -10,6 +10,7 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -61,8 +62,9 @@ public class SiteListDialogFragment extends DialogFragment {
 
       if (mSiteList == null) {
          mSiteListView.setVisibility(View.GONE);
-         mLoadingIndicator.setVisibility(View.VISIBLE);
          mSiteListView.getEmptyView().setVisibility(View.GONE);
+         mSearchView.setVisibility(View.GONE);
+         mLoadingIndicator.setVisibility(View.VISIBLE);
 
          APIService.call((Activity)getActivity(), APIService.getSitesAPICall());
       } else {
@@ -80,7 +82,16 @@ public class SiteListDialogFragment extends DialogFragment {
       mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
        getActivity().getComponentName()));
       mSearchView.setIconifiedByDefault(false);
-      mSearchView.setOnQueryTextListener((SiteListActivity)getActivity());
+      mSearchView.setOnQueryTextListener((SiteListActivity) getActivity());
+
+      View searchPlate = mSearchView.findViewById(R.id.abs__search_plate);
+      searchPlate.setBackgroundResource(R.drawable.textfield_search_view_holo_light);
+
+      ImageView searchExit = (ImageView)mSearchView.findViewById(R.id.abs__search_close_btn);
+      searchExit.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_exit));
+
+      ImageView searchMag = (ImageView)mSearchView.findViewById(R.id.abs__search_mag_icon);
+      searchMag.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_dark));
    }
 
    @Override
@@ -126,8 +137,9 @@ public class SiteListDialogFragment extends DialogFragment {
          mSiteList = event.getResult();
          initDialog(mSiteList);
 
-         mSiteListView.setVisibility(View.VISIBLE);
          mLoadingIndicator.setVisibility(View.GONE);
+         mSearchView.setVisibility(View.VISIBLE);
+         mSiteListView.setVisibility(View.VISIBLE);
       } else {
          APIService.getErrorDialog(getActivity(), event.getError(),
           APIService.getSitesAPICall()).show();

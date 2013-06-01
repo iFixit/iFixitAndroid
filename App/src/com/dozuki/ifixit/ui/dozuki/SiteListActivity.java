@@ -53,7 +53,7 @@ public class SiteListActivity extends IfixitActivity
             ft.addToBackStack(null);
 
             mSiteListDialog = SiteListDialogFragment.newInstance();
-            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_DialogWhenLarge_Light);
+            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_DialogWhenLarge_Light_DarkActionBar);
 
             mSiteListDialog.show(ft, "SiteListDialog");
          }
