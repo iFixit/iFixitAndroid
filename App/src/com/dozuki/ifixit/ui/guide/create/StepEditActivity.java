@@ -271,6 +271,8 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    @Subscribe
    public void onGuideGet(APIEvent.GuideForEdit event) {
+      hideLoading();
+
       if (!event.hasError()) {
          int startPagePosition = 0;
          mGuide = event.getResult();
@@ -280,7 +282,6 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
                break;
             }
          }
-         hideLoading();
          initPage(startPagePosition);
       } else {
          event.setError(APIError.getFatalError(this));
@@ -290,11 +291,9 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    @Subscribe
    public void onStepSave(APIEvent.StepSave event) {
-      if (!event.hasError()) {
+      hideLoading();
 
-         mIsStepDirty = false;
-         toggleSave(mIsStepDirty);
-         hideLoading();
+      if (!event.hasError()) {
 
          GuideStep step = event.getResult();
 
@@ -302,6 +301,10 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
          mStepAdapter.notifyDataSetChanged();
       } else {
+
+         mIsStepDirty = true;
+         toggleSave(mIsStepDirty);
+
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
       }
@@ -309,17 +312,18 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    @Subscribe
    public void onStepAdd(APIEvent.StepAdd event) {
+
+      hideLoading();
+
       if (!event.hasError()) {
          mGuide = event.getResult();
-
-         mIsStepDirty = false;
-         toggleSave(mIsStepDirty);
-
-         hideLoading();
 
          mStepAdapter.notifyDataSetChanged();
          mPager.setCurrentItem(mPagePosition);
       } else {
+         mIsStepDirty = true;
+         toggleSave(mIsStepDirty);
+
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
       }
@@ -327,10 +331,11 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
    @Subscribe
    public void onGuideStepDeleted(APIEvent.StepRemove event) {
+      hideLoading();
+
       if (!event.hasError()) {
          mGuide.setRevisionid(event.getResult().getRevisionid());
          deleteStep(false);
-         hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
@@ -578,13 +583,19 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       return dialog;
    }
 
-
    /////////////////////////////////////////////////////
    // HELPERS
    /////////////////////////////////////////////////////
 
    protected void save(int savePosition) {
-      GuideStep obj = mCurStepFragment.getGuideChanges();
+      GuideStep obj = mGuide.getStep(savePosition);
+      obj.setLines(mCurStepFragment.getLines());
+      if (!obj.hasVideo() && !obj.hasEmbed()) {
+         obj.setImages(mCurStepFragment.getImages());
+      }
+      obj.setTitle(mCurStepFragment.getTitle());
+
+      mGuide.getSteps().set(savePosition, obj);
 
       if (obj.getLines().size() == 0) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
@@ -605,8 +616,10 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       }
 
       mSavePosition = savePosition;
+      mIsStepDirty = false;
 
       showLoading();
+      toggleSave(mIsStepDirty);
 
       if (obj.getRevisionid() != null) {
          APIService.call(this, APIService.getEditStepAPICall(obj, mGuide.getGuideid()));

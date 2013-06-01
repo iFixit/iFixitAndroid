@@ -6,10 +6,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.Fragment;
+
+import java.util.ArrayList;
 
 
 public class StepEditFragment extends Fragment {
@@ -115,6 +119,18 @@ public class StepEditFragment extends Fragment {
    /////////////////////////////////////////////////////
    // HELPERS
    /////////////////////////////////////////////////////
+
+   public ArrayList<StepLine> getLines() {
+      return mEditBulletFrag.getLines();
+   }
+
+   public String getTitle() {
+      return mEditBulletFrag.getTitle();
+   }
+
+   public ArrayList<APIImage> getImages() {
+      return mEditImageFrag.getImages();
+   }
 
    private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
