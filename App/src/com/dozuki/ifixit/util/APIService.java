@@ -538,8 +538,10 @@ public class APIService extends Service {
 
       final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
 
-      Log.i("iFixit", "Performing API call: " + endpoint.mMethod + " " + url);
-      Log.i("iFixit", "Request body: " + apiCall.mRequestBody);
+      if (MainApplication.inDebug()) {
+         Log.i("APIService", "Performing API call: " + endpoint.mMethod + " " + url);
+         Log.i("APIService", "Request body: " + apiCall.mRequestBody);
+      }
 
       new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
@@ -612,8 +614,10 @@ public class APIService extends Service {
                String responseBody = request.body();
                int code = request.code();
 
-               Log.i("iFixit", "Response code: " + code);
-               Log.i("iFixit", "Response body: " + responseBody);
+               if (MainApplication.inDebug()) {
+                  Log.i("APIService", "Response code: " + code);
+                  Log.i("APIService", "Response body: " + responseBody);
+               }
 
                return endpoint.getEvent().setResponse(responseBody);
             } catch (HttpRequestException e) {
