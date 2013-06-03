@@ -378,33 +378,39 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          case R.id.step_edit_add_step:
             int newPosition = mPagePosition + 1;
 
-            // Last step and step has edits, save first
-            if (mGuide.getSteps().size() == mPagePosition && mIsStepDirty) {
+            Log.d("StepEditActivity", "mPagePosition: " + mPagePosition);
+            Log.d("StepEditActivity", "newPosition: " + newPosition);
+
+            Log.d("StepEditActivity", "# of Steps: " + mGuide.getSteps().size());
+
+            // If the step has changes, save it first.
+            if (mIsStepDirty) {
                save(mPagePosition);
-            } else if (mGuide.getSteps().size() < newPosition) {
+            } else if (!stepHasLineContent(mGuide.getStep(mPagePosition))) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
                 Toast.LENGTH_SHORT).show();
                return;
+            } else {
+               GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
+               item.setTitle(StepPortalFragment.DEFAULT_TITLE);
+               item.addLine(new StepLine());
+               item.setStepNum(newPosition);
+
+               mGuide.addStep(item, newPosition);
+
+               for (int i = 1; i < mGuide.getSteps().size(); i++) {
+                  mGuide.getStep(i).setStepNum(i);
+               }
+
+               // The view pager does not recreate the item in the current position unless we force it
+               mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+               mPager.setAdapter(mStepAdapter);
+               mPager.invalidate();
+               titleIndicator.invalidate();
+
+               mPager.setCurrentItem(newPosition, false);
             }
 
-            GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-            item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-            item.addLine(new StepLine());
-            item.setStepNum(newPosition);
-
-            mGuide.addStep(item, newPosition);
-
-            for (int i = 1; i < mGuide.getSteps().size(); i++) {
-               mGuide.getStep(i).setStepNum(i);
-            }
-
-            // The view pager does not recreate the item in the current position unless we force it
-            mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-            mPager.setAdapter(mStepAdapter);
-            mPager.invalidate();
-            titleIndicator.invalidate();
-
-            mPager.setCurrentItem(newPosition, false);
             break;
       }
    }
@@ -590,25 +596,20 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    protected void save(int savePosition) {
       GuideStep obj = mGuide.getStep(savePosition);
       obj.setLines(mCurStepFragment.getLines());
+
       if (!obj.hasVideo() && !obj.hasEmbed()) {
          obj.setImages(mCurStepFragment.getImages());
       }
+
       obj.setTitle(mCurStepFragment.getTitle());
 
       mGuide.getSteps().set(savePosition, obj);
 
-      if (obj.getLines().size() == 0) {
+      if (!stepHasLineContent(obj)) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
           Toast.LENGTH_SHORT).show();
-         return;
-      }
 
-      for (StepLine l : obj.getLines()) {
-         if (l.getTextRaw().length() == 0) {
-            Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
-             Toast.LENGTH_SHORT).show();
-            return;
-         }
+         return;
       }
 
       if (!mIsStepDirty || mLockSave) {
@@ -627,6 +628,21 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
           mPagePosition + 1, mGuide.getRevisionid()));
       }
+   }
+
+   private boolean stepHasLineContent(GuideStep obj) {
+      if (obj.getLines().size() == 0) {
+         return false;
+      }
+
+      for (StepLine l : obj.getLines()) {
+         if (l.getTextRaw().length() == 0) {
+            return false;
+         }
+      }
+
+
+      return true;
    }
 
    protected void showLoading() {
