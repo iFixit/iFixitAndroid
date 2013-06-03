@@ -136,7 +136,11 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
 
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
-         mGuidePublic = mGuide.isPublic();
+
+         if (mGuide != null) {
+            mGuidePublic = mGuide.isPublic();
+         }
+
          mPagePosition = savedInstanceState.getInt(GUIDE_STEP_NUM_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DELETE_GUIDE_DIALOG_KEY);
          mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
