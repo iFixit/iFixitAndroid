@@ -88,6 +88,7 @@ public class PhotoMediaFragment extends MediaFragment {
          mLocalURL.put(url, cur);
          mItemsDownloaded++;
          mGalleryAdapter.invalidatedView();
+         mGalleryAdapter.notifyDataSetChanged();
       } else {
          // TODO
       }
@@ -96,7 +97,7 @@ public class PhotoMediaFragment extends MediaFragment {
    @Subscribe
    public void onDeleteImage(APIEvent.DeleteImage event) {
       if (!event.hasError()) {
-         // TODO
+         mGalleryAdapter.notifyDataSetChanged();
       } else {
          // TODO
       }

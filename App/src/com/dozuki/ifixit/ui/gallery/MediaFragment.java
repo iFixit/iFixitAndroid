@@ -331,6 +331,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
          mSelectedList.add(false);
 
          mLocalURL.put(key, new LocalImage(getPath(uri)));
+         notifyDataSetChanged();
          invalidatedView();
          return key;
       }
@@ -347,6 +348,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
 
          mLocalURL.put(key, new LocalImage(path));
          mLimages.put(url, buildBitmap(url));
+         notifyDataSetChanged();
          invalidatedView();
          return key;
       }
