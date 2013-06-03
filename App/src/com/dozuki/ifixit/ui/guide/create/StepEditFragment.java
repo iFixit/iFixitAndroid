@@ -140,17 +140,6 @@ public class StepEditFragment extends Fragment {
       }
    }
 
-   public GuideStep getGuideChanges() {
-
-      mStepObject.setLines(mEditBulletFrag.getLines());
-      mStepObject.setTitle(mEditBulletFrag.getTitle());
-      if (mStepType.equals(IMAGE_TYPE)) {
-         mStepObject.setImages(mEditImageFrag.getImages());
-      }
-
-      return mStepObject;
-   }
-
    public void setMediaResult(int requestCode, int resultCode, Intent data) {
       mEditImageFrag.onActivityResult(requestCode, resultCode, data);
    }
