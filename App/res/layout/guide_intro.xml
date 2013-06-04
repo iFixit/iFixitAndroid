@@ -11,14 +11,14 @@
 
         <TextView
             android:id="@+id/guide_title"
-            style="@style/text.title"
+            style="@style/TitleText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top" />
 
         <TextView
             android:id="@+id/guide_intro_text"
-            style="@style/text.body"
+            style="@style/BodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
@@ -30,14 +30,14 @@
 
             <TextView
                 android:id="@+id/guide_difficulty"
-                style="@style/text.body"
+                style="@style/BodyText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
 
             <TextView
                 android:id="@+id/guide_author"
-                style="@style/text.body"
+                style="@style/BodyText"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1" />
@@ -45,13 +45,13 @@
 
         <TextView
             android:id="@+id/guide_tools"
-            style="@style/text.body"
+            style="@style/BodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
         <TextView
             android:id="@+id/guide_parts"
-            style="@style/text.body"
+            style="@style/BodyText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

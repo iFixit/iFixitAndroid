@@ -1,11 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <attr name="topicHeaderColor" format="reference|color" />
-    <attr name="sectionHeader" format="reference" />
-    <attr name="listViewStyle" format="reference" />
-    <attr name="topicGuideList" format="reference" />
-    <attr name="topicDefaultBackground" format="reference|color" />
+    <!-- Base Style Attributes -->
+    <attr name="doz__textColorPrimary" format="color" />
+    <attr name="doz__textColorSecondary" format="color" />
+    <attr name="doz__textColorPrimaryEmphasis" format="color" />
+    <attr name="doz__textColorSecondaryEmphasis" format="color" />
+
+    <attr name="doz__background" format="reference|color" />
+    <attr name="doz__imageBorder" format="reference|color" />
+
+    <attr name="doz__topicHeaderColor" format="reference|color" />
+    <attr name="doz__sectionHeader" format="reference" />
+    <attr name="doz__listViewStyle" format="reference" />
+    <attr name="doz__topicGuideList" format="reference" />
+    <attr name="doz__topicDefaultBackground" format="reference|color" />
 
     <declare-styleable name="ThumbnailView">
         <attr name="show_single" format="boolean" />

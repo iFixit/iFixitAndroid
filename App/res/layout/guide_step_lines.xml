@@ -6,14 +6,14 @@
 
     <TextView
         android:id="@+id/step_title"
-        style="@style/text.title"
+        style="@style/TitleText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:textIsSelectable="true" />
 
     <ListView
         android:id="@+id/step_text_list"
-        style="@style/guideStepLines"
+        style="@style/GuideStepLines"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/step_title"

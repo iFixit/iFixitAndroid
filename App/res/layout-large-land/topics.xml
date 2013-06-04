@@ -25,7 +25,7 @@
         android:layout_weight="75" >
 
         <ImageView
-            style="?attr/topicDefaultBackground"
+            style="?attr/doz__topicDefaultBackground"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="guideStepWrap">
+    <style name="GuideStepWrap">
         <item name="android:orientation">horizontal</item>
         <item name="android:background">@color/white</item>
         <item name="android:padding">@dimen/page_padding</item>
@@ -9,33 +9,33 @@
         <item name="android:baselineAligned">false</item>
     </style>
 
-    <style name="thumbnailList">
+    <style name="ThumbnailList">
         <item name="android:orientation">horizontal</item>
     </style>
 
-    <style name="thumbnail">
+    <style name="Thumbnail">
         <item name="android:background">@color/image_border</item>
         <item name="android:visibility">invisible</item>
         <item name="android:padding">@dimen/guide_thumbnail_padding</item>
         <item name="android:layout_gravity">bottom</item>
     </style>
 
-    <style name="guideStepMediaWrap">
+    <style name="GuideStepMediaWrap">
         <item name="android:layout_marginRight">@dimen/guide_step_section_seperator</item>
     </style>
 
-    <style name="guideMediaMain">
+    <style name="GuideMediaMain">
         <item name="android:padding">@dimen/guide_image_padding</item>
         <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
     </style>
 
-    <style name="guideViewThumbnails">
+    <style name="GuideViewThumbnails">
         <item name="android:layout_below">@id/main_image</item>
         <item name="android:layout_gravity">bottom</item>
     </style>
 
-    <style name="guideStepLines">
+    <style name="GuideStepLines">
         <item name="android:background">@android:color/transparent</item>
     </style>
 

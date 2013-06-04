@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical" >
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
+
     <TextView
         android:id="@+id/site_list_title"
         android:layout_width="match_parent"
@@ -12,10 +13,11 @@
         android:text="@string/site_list_title"
         android:padding="16dp"/>
 
-    <View android:id="@+id/titleDivider"
-          android:layout_width="match_parent"
-          android:layout_height="2dip"
-          android:background="@color/dozuki_red" />
+    <View
+        android:id="@+id/titleDivider"
+        android:layout_width="match_parent"
+        android:layout_height="2dip"
+        android:background="@color/dozuki_red"/>
 
     <com.actionbarsherlock.widget.SearchView
         android:id="@+id/dozuki_search_view"
@@ -28,27 +30,32 @@
 
     <ListView
         android:id="@+id/siteListView"
-        style="?attr/listViewStyle"
+        style="?attr/doz__listViewStyle"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"/>
 
     <TextView
         android:id="@+id/emptyView"
-        style="@style/text.list"
+        style="@style/ListText"
         android:layout_gravity="center_horizontal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:visibility="gone"
-        android:text="@string/empty_site_list" />
+        android:text="@string/empty_site_list"/>
 
-    <ProgressBar
-        android:id="@+id/loading_progress"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:visibility="gone"
-        android:indeterminate="true"
-        android:minHeight="@dimen/progress_bar_width_height"
-        android:minWidth="@dimen/progress_bar_width_height" />
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <ProgressBar
+            android:id="@+id/loading_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:visibility="gone"
+            android:indeterminate="true"
+            android:minHeight="@dimen/progress_bar_width_height"
+            android:minWidth="@dimen/progress_bar_width_height"/>
+    </FrameLayout>
 
 </LinearLayout>

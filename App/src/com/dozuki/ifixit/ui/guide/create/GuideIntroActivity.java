@@ -387,7 +387,7 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
       if (position == mCurrentPageSequence.size()) {
          mNextButton.setText(R.string.finish);
          mNextButton.setBackgroundResource(R.drawable.wizard_finish_background);
-         mNextButton.setTextAppearance(this, R.style.TextAppearanceFinish);
+         mNextButton.setTextAppearance(this, R.style.WizardFinishTextAppearance);
       } else {
          mNextButton.setText(mEditingAfterReview
           ? R.string.review
