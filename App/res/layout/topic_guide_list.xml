@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <GridView xmlns:android="http://schemas.android.com/apk/res/android"
           android:id="@+id/topic_guide_grid"
-          style="?attr/topicGuideList"
+          style="?android:attr/gridViewStyle"
           android:layout_width="match_parent"
           android:layout_height="match_parent"
-          android:layout_marginTop="@dimen/topic_list_top_margin"
+          android:paddingTop="@dimen/topic_list_top_margin"
           android:columnWidth="@dimen/topic_list_column_width"
           android:gravity="center"
           android:horizontalSpacing="@dimen/topic_list_horizontal_spacing"
