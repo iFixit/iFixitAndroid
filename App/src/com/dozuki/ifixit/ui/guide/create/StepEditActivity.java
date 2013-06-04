@@ -382,11 +382,6 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
          case R.id.step_edit_add_step:
             int newPosition = mPagePosition + 1;
 
-            Log.d("StepEditActivity", "mPagePosition: " + mPagePosition);
-            Log.d("StepEditActivity", "newPosition: " + newPosition);
-
-            Log.d("StepEditActivity", "# of Steps: " + mGuide.getSteps().size());
-
             // If the step has changes, save it first.
             if (mIsStepDirty) {
                save(mPagePosition);
