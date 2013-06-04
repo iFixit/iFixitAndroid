@@ -2,8 +2,8 @@
 
 <selector xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:state_focused="true"
-          android:drawable="@drawable/textfield_focused_holo_light"/>
+          android:drawable="@drawable/textfield_search_focused_holo_light"/>
     <item android:state_activated="true" android:state_enabled="true"
-          android:drawable="@drawable/textfield_activated_holo_light"/>
-    <item android:drawable="@drawable/textfield_default_holo_light"/>
+          android:drawable="@drawable/textfield_search_activated_holo_light"/>
+    <item android:drawable="@drawable/textfield_search_default_holo_light"/>
 </selector>
