@@ -405,7 +405,6 @@ public class APIService extends Service {
    }
 
    public static APICall getUploadImageToStepAPICall(String filePath) {
-      Log.w("APIService", "Calling upload image");
       return new APICall(APIEndpoint.UPLOAD_STEP_IMAGE, filePath, null, null,
        filePath);
    }
@@ -619,7 +618,7 @@ public class APIService extends Service {
                   Log.i("APIService", "Response body: " + responseBody);
                }
 
-               return endpoint.getEvent().setResponse(responseBody);
+               return endpoint.getEvent().setCode(code).setResponse(responseBody);
             } catch (HttpRequestException e) {
                Log.e("iFixit", "API error", e);
                return endpoint.getEvent().setError(APIError.getParseError(APIService.this));

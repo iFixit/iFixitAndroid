@@ -51,6 +51,7 @@ public abstract class APIEvent<T> {
    public T mResult;
    public APIError mError;
    public String mExtraInfo;
+   public int mCode;
 
    public APIEvent<T> setResult(T result) {
       mResult = result;
@@ -81,6 +82,15 @@ public abstract class APIEvent<T> {
 
    public String getResponse() {
       return mResponse;
+   }
+
+   public APIEvent<T> setCode(int code) {
+      mCode = code;
+      return this;
+   }
+
+   public int getCode() {
+      return mCode;
    }
 
    public APIError getError() {
