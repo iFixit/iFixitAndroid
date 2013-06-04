@@ -1,17 +1,17 @@
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.*;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
 import org.holoeverywhere.widget.EditText;
 
 public class GuideTitleFragment extends EditTextFragment {

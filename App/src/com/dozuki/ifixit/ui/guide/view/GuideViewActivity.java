@@ -184,24 +184,27 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       Intent intent;
       switch (item.getItemId()) {
          case MENU_EDIT_GUIDE:
-            intent = new Intent(this, StepEditActivity.class);
-            int stepNum = 0;
+            if (mGuide != null) {
+               intent = new Intent(this, StepEditActivity.class);
+               int stepNum = 0;
 
-            // Take into account the introduction page.
-            if (mCurrentPage != 0) {
-               stepNum = mCurrentPage - 1;
+               // Take into account the introduction page.
+               if (mCurrentPage != 0) {
+                  stepNum = mCurrentPage - 1;
+               }
+
+               int stepGuideid = mGuide.getStep(stepNum).getGuideid();
+               // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
+               // editing this prerequisite.
+               if (stepGuideid != mGuide.getGuideid()) {
+                  intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
+               }
+               // We have to pass along the steps guideid to account for prerequisite guides.
+               intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
+               intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
+               intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
+               startActivity(intent);
             }
-            int stepGuideid = mGuide.getStep(stepNum).getGuideid();
-            // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
-            // editing this prerequisite.
-            if (stepGuideid != mGuide.getGuideid()) {
-               intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
-            }
-            // We have to pass along the steps guideid to account for prerequisite guides.
-            intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
-            intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
-            intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
-            startActivity(intent);
             break;
          default:
             return (super.onOptionsItemSelected(item));

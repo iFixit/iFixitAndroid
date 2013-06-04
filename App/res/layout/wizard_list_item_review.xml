@@ -3,11 +3,11 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              android:minHeight="?android:listPreferredItemHeightSmall"
+              android:minHeight="?listPreferredItemHeightSmall"
               android:orientation="horizontal"
               android:baselineAligned="true"
-              android:paddingLeft="?android:listPreferredItemPaddingLeft"
-              android:paddingRight="?android:listPreferredItemPaddingRight"
+              android:paddingLeft="?listPreferredItemPaddingLeft"
+              android:paddingRight="?listPreferredItemPaddingRight"
               android:paddingTop="12dp"
               android:paddingBottom="12dp">
 

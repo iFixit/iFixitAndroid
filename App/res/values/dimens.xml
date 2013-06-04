@@ -35,7 +35,6 @@
     <dimen name="topic_list_top_margin">4dp</dimen>
     <dimen name="topic_list_right_divider">0dp</dimen>
 
-
     <dimen name="circle_page_indicator_padding">6dp</dimen>
     <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>

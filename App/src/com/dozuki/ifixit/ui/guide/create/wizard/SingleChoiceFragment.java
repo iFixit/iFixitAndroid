@@ -16,19 +16,19 @@
 
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.ListFragment;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.SingleFixedChoicePage;
+import org.holoeverywhere.LayoutInflater;
+import org.holoeverywhere.app.Activity;
+import org.holoeverywhere.app.ListFragment;
+import org.holoeverywhere.widget.ListView;
+import org.holoeverywhere.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
