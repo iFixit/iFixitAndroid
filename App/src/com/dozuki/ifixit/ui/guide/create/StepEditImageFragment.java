@@ -300,8 +300,7 @@ public class StepEditImageFragment extends Fragment {
       int bottomBarHeight = getResources().getDimensionPixelSize(
        R.dimen.guide_create_step_edit_bottom_bar_height);
 
-      // Hardcoded because I haven't found a way to get the height programmatically.
-      int stepPagerBar = 112;
+      int stepPagerBar = getActivity().getResources().getDimensionPixelSize(R.dimen.step_pager_bar_height);
 
       return actionBarHeight + bottomBarHeight + stepPagerBar;
    }

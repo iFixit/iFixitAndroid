@@ -48,6 +48,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private float mMainHeight;
 
    private OnLongClickListener mLongClickListener;
+   private OnClickListener mAddThumbListener;
 
    public ThumbnailView(Context context) {
       super(context);
@@ -87,7 +88,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    public void setAddThumbButtonOnClick(OnClickListener listener) {
       if (mCanEdit) {
+         mAddThumbListener = listener;
          mAddThumbButton.setOnClickListener(listener);
+         mMainImage.setOnClickListener(listener);
       }
    }
 
@@ -175,6 +178,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       if (mThumbs.size() < 1) {
          mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
          mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+         mMainImage.setOnClickListener(mAddThumbListener);
          mMainImage.setTag(null);
       } else {
          APIImage image = (APIImage) mThumbs.get(mThumbs.size() - 1).getTag();
@@ -310,8 +314,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          mMainHeight = mMainWidth * (3f / 4f);
 
       } else {
-         mNavigationHeight += 50f;
-
+         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.landscape_navigation_height);
          mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
 
          // Main image is 4/5ths of the available screen height
