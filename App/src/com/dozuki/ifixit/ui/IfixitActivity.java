@@ -198,15 +198,6 @@ public abstract class IfixitActivity extends Activity {
       }
       mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW, Position.RIGHT);
 
-      if (MainApplication.get().isScreenLarge()) {
-         mMenuDrawer.setMenuSize(600);
-      } else {
-         mMenuDrawer.setMenuSize(325);
-      }
-
-      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
-      mMenuDrawer.setTouchBezelSize(10);
-
       buildSliderMenu();
    }
 
@@ -250,6 +241,11 @@ public abstract class IfixitActivity extends Activity {
       mList.setOnItemClickListener(mItemClickListener);
 
       mMenuDrawer.setMenuView(mList);
+
+      mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
+
+      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
+      mMenuDrawer.setTouchBezelSize(10);
    }
 
    @Override
