@@ -53,6 +53,12 @@
         </dependency>
 
         <dependency>
+            <groupId>com.google.android.analytics</groupId>
+            <artifactId>analytics</artifactId>
+            <version>3</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.actionbarsherlock</groupId>
             <artifactId>actionbarsherlock</artifactId>
             <version>4.3.1</version>
@@ -118,7 +124,7 @@
         <dependency>
             <groupId>net.simonvt</groupId>
             <artifactId>android-menudrawer</artifactId>
-            <version>2.0.2</version>
+            <version>2.0.3</version>
             <type>apklib</type>
         </dependency>
         <dependency>
