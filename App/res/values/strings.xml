@@ -289,6 +289,7 @@
     <string name="caution_bullet_description">Warning / Caution bullet</string>
     <string name="important_bullet_description">Important note bullet</string>
     <string name="bullet_reorder_description">Reminder bullet</string>
+    <string name="default_step_number">Step #</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>
