@@ -279,6 +279,16 @@
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Name</string>
     <string name="guide_intro_wizard_guide_subject_hint">For example - Screen, Battery, Spark Plugs, etc</string>
     <string name="loading_image">Loading...</string>
+    <string name="black_bullet_description">Black bullet</string>
+    <string name="red_bullet_description">Red bullet</string>
+    <string name="orange_bullet_description">Orange bullet</string>
+    <string name="yellow_bullet_description">Yellow bullet</string>
+    <string name="green_bullet_description">Green bullet</string>
+    <string name="blue_bullet_description">Blue bullet</string>
+    <string name="purple_bullet_description">Purple bullet</string>
+    <string name="caution_bullet_description">Warning / Caution bullet</string>
+    <string name="important_bullet_description">Important note bullet</string>
+    <string name="bullet_reorder_description">Reminder bullet</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

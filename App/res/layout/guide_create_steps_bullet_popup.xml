@@ -1,248 +1,211 @@
 <?xml version="1.0" encoding="utf-8"?>
+
+
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="fill_parent"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
-   <ScrollView
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:layout_centerHorizontal="true">
+    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true">
 
-      <LinearLayout
-              android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:background="@color/dark"
-              android:orientation="vertical">
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@color/dark"
+            android:orientation="vertical">
 
-         <TableLayout
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content">
+            <TableLayout
+                android:id="@+id/bullets_grid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content">
 
-            <TableRow
+                <TableRow
                     android:id="@+id/tableRow1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_black"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/black_bullet_description"
+                        android:src="@drawable/ic_dialog_bullet_black"/>
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_color_black"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_black"/>
-               </FrameLayout>
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_red"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/red_bullet_description"
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                        android:src="@drawable/ic_dialog_bullet_red"/>
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_color_red"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_red"/>
-               </FrameLayout>
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_orange"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/orange_bullet_description"
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_color_orange"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_orange"/>
-               </FrameLayout>
+                        android:src="@drawable/ic_dialog_bullet_orange"/>
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_color_yellow"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_yellow"/>
-               </FrameLayout>
-            </TableRow>
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_yellow"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/yellow_bullet_description"
 
-            <TableRow
+                        android:src="@drawable/ic_dialog_bullet_yellow"/>
+
+                </TableRow>
+
+                <TableRow
                     android:id="@+id/tableRow2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_green"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/green_bullet_description"
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_color_green"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_green"/>
-               </FrameLayout>
+                        android:src="@drawable/ic_dialog_bullet_green"/>
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_blue"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/blue_bullet_description"
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_color_blue"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_blue"/>
-               </FrameLayout>
+                        android:src="@drawable/ic_dialog_bullet_blue"/>
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_purple"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/purple_bullet_description"
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_color_purple"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_pink"/>
-               </FrameLayout>
+                        android:src="@drawable/ic_dialog_bullet_pink"/>
+                </TableRow>
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
-               </FrameLayout>
-            </TableRow>
-
-            <TableRow
+                <TableRow
                     android:id="@+id/tableRow3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_caution"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/caution_bullet_description"
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_caution"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_caution"/>
-               </FrameLayout>
+                        android:src="@drawable/ic_dialog_bullet_caution"/>
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_note"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
+                        android:contentDescription="@string/important_bullet_description"
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_note"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_note_light"/>
-               </FrameLayout>
+                        android:src="@drawable/ic_dialog_bullet_note_light"/>
 
-               <FrameLayout
-                       android:layout_width="wrap_content"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
+                    <ImageView
+                        android:id="@+id/bullet_dialog_reminder"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_margin="8dp"
 
-                  <ImageView
-                          android:id="@+id/bullet_dialog_reminder"
-                          android:layout_width="wrap_content"
-                          android:layout_height="wrap_content"
-                          android:layout_gravity="center"
-                          android:src="@drawable/ic_dialog_bullet_reminder_light"/>
-               </FrameLayout>
+                        android:contentDescription="@string/bullet_reorder_description"
+                        android:src="@drawable/ic_dialog_bullet_reminder_light"/>
 
-               <FrameLayout
-                       android:layout_width="0dp"
-                       android:layout_height="wrap_content"
-                       android:layout_margin="15dp">
-               </FrameLayout>
-            </TableRow>
-         </TableLayout>
-
-         <LinearLayout
-                 android:layout_width="fill_parent"
-                 android:layout_height="wrap_content"
-                 android:orientation="vertical">
+                </TableRow>
+            </TableLayout>
 
             <TextView
-                    android:id="@+id/bullet_dialog_indent"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/view_border"
-                    android:drawableLeft="@drawable/ic_dialog_indent"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:singleLine="true"
-                    android:text="@string/indent_bullet"
-                    android:textColor="@color/white"/>
+                android:id="@+id/bullet_dialog_indent"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/view_border"
+                android:drawableLeft="@drawable/ic_dialog_indent"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:singleLine="true"
+                android:text="@string/indent_bullet"
+                android:textColor="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
 
             <TextView
-                    android:id="@+id/bullet_dialog_unindent"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/view_border"
-                    android:drawableLeft="@drawable/ic_dialog_unindent"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/unindent_bullet"
-                    android:textColor="@color/white"/>
+                android:id="@+id/bullet_dialog_unindent"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/view_border"
+                android:drawableLeft="@drawable/ic_dialog_unindent"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/unindent_bullet"
+                android:textColor="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
 
             <TextView
-                    android:id="@+id/bullet_dialog_rearrange"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/view_border"
-                    android:drawableLeft="@drawable/ic_dialog_arrange_bullets_light"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/rearrange_bullet"
-                    android:textColor="@color/white"/>
+                android:id="@+id/bullet_dialog_rearrange"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/view_border"
+                android:drawableLeft="@drawable/ic_dialog_arrange_bullets_light"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/rearrange_bullet"
+                android:textColor="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
 
             <TextView
-                    android:id="@+id/bullet_dialog_delete"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:layout_marginRight="4dp"
-                    android:background="@drawable/view_border"
-                    android:drawableLeft="@drawable/ic_menu_bot_step_delete"
-                    android:drawablePadding="10dp"
-                    android:gravity="center_vertical"
-                    android:text="@string/delete_bullet"
-                    android:textColor="@color/white"/>
+                android:id="@+id/bullet_dialog_delete"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/view_border"
+                android:drawableLeft="@drawable/ic_menu_bot_step_delete"
+                android:drawablePadding="10dp"
+                android:gravity="center_vertical"
+                android:text="@string/delete_bullet"
+                android:textColor="@color/white"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"/>
 
             <TextView
-                    android:id="@+id/bullet_dialog_cancel"
-                    android:layout_width="fill_parent"
-                    android:layout_height="48dp"
-                    android:background="@drawable/view_border"
-                    android:gravity="center"
-                    android:text="@string/cancel"
-                    android:textColor="@color/white"/>
-         </LinearLayout>
-      </LinearLayout>
-   </ScrollView>
+                android:id="@+id/bullet_dialog_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:background="@drawable/view_border"
+                android:gravity="center"
+                android:text="@string/cancel"
+                android:textColor="@color/white"/>
+        </LinearLayout>
+
+    </ScrollView>
 
 </RelativeLayout>
