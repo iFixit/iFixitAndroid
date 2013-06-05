@@ -203,7 +203,9 @@ public class GuideIntroActivity extends IfixitActivity implements PageFragmentCa
    @Override
    protected void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
-      outState.putBundle("model", mWizardModel.save());
+      if (mWizardModel != null) {
+         outState.putBundle("model", mWizardModel.save());
+      }
       outState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
       outState.putBoolean(GuideIntroActivity.STATE_KEY, EDIT_INTRO_STATE);
    }
