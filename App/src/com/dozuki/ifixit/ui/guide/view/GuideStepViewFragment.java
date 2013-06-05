@@ -75,7 +75,6 @@ public class GuideStepViewFragment extends Fragment {
       }
 
       mImageSizes = app.getImageSizes();
-      mFont = Typeface.createFromAsset(mContext.getAssets(), "fonts/Ubuntu-B.ttf");
       mResources = mContext.getResources();
 
       mMetrics = new DisplayMetrics();
@@ -150,7 +149,6 @@ public class GuideStepViewFragment extends Fragment {
       mTitle.setText(mStep.getTitle().length() == 0
        ? MainApplication.get().getResources().getText(R.string.step) + " " + mStep.getStepNum()
        : mStep.getTitle());
-      mTitle.setTypeface(mFont);
 
       // Initialize the step instructions text and bullets
       mTextAdapter = new StepTextArrayAdapter(mContext, R.id.step_text_list, mStep.getLines());

@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
@@ -27,7 +26,6 @@ public class GuideIntroViewFragment extends Fragment {
    private TextView mParts;
    private ImageManager mImageManager;
    private Guide mGuide;
-   private Typeface mBoldFont;
 
    public GuideIntroViewFragment() {
 
@@ -60,8 +58,6 @@ public class GuideIntroViewFragment extends Fragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_intro, container, false);
-      mBoldFont = Typeface.createFromAsset(getActivity().getAssets(),
-       "fonts/Ubuntu-B.ttf");
 
       mTitle = (TextView)view.findViewById(R.id.guide_title);
       mIntro = (TextView)view.findViewById(R.id.guide_intro_text);
@@ -75,8 +71,6 @@ public class GuideIntroViewFragment extends Fragment {
       mIntro.setMovementMethod(method);
       mTools.setMovementMethod(method);
       mParts.setMovementMethod(method);
-
-      mTitle.setTypeface(mBoldFont);
 
       if (mGuide != null) {
          setGuide();
