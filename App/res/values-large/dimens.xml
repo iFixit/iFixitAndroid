@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="menu_size">325dp</dimen>
+    <dimen name="menu_bezel_size">15dp</dimen>
 
     <dimen name="site_list_button_width">400dp</dimen>
     <dimen name="title_text_size">42sp</dimen>

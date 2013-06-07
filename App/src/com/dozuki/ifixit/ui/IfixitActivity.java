@@ -245,7 +245,7 @@ public abstract class IfixitActivity extends Activity {
       mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
 
       mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
-      mMenuDrawer.setTouchBezelSize(10);
+      mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
    }
 
    @Override
