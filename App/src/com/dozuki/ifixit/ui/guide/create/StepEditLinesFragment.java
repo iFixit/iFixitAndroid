@@ -4,8 +4,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,7 +19,10 @@ import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener
 import org.holoeverywhere.LayoutInflater;
 import org.holoeverywhere.app.AlertDialog;
 import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.*;
+import org.holoeverywhere.widget.Button;
+import org.holoeverywhere.widget.EditText;
+import org.holoeverywhere.widget.LinearLayout;
+import org.holoeverywhere.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -287,10 +288,10 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
 
    public View getView(final StepLine line, int index) {
       LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      View v = vi.inflate(R.layout.guide_create_step_edit_list_item, null);
-      FrameLayout iconFrame = (FrameLayout) v.findViewById(R.id.guide_step_item_frame);
+      View v = vi.inflate(R.layout.guide_create_step_edit_line, null);
+      ImageView bullet = (ImageView) v.findViewById(R.id.guide_step_item_bullet_thumbnail);
 
-      iconFrame.setOnClickListener(new OnClickListener() {
+      bullet.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
             FragmentManager fm = getActivity().getSupportFragmentManager();
@@ -303,26 +304,32 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
          }
       });
 
-      LayoutParams params = (LayoutParams) iconFrame.getLayoutParams();
+      LayoutParams params = (LayoutParams) bullet.getLayoutParams();
+      bullet.setImageResource(getBulletResource(line.getColor()));
 
       params.setMargins(BULLET_INDENT * line.getLevel(), 0, 0, 0);
-      iconFrame.setLayoutParams(params);
+      bullet.setLayoutParams(params);
       final EditText text = (EditText) v.findViewById(R.id.step_line_text_view);
       text.setText(line.getTextRaw());
       text.setId(index);
       text.addTextChangedListener(new TextWatcher() {
          @Override
          public void afterTextChanged(Editable s) {
-            if (text.getText().toString().equals(line.getTextRaw())) {
-               return;
-            }
-            mLines.get(mLines.indexOf(line)).setTextRaw(text.getText().toString());
+            if (s.length() > 0) {
+               String lineText = s.toString();
 
-            if (text.getText().length() == 0 && mLines.indexOf(line) == mLines.size() - 1) {
+               if (lineText.equals(line.getTextRaw())) {
+                  return;
+               }
+               mLines.get(mLines.indexOf(line)).setTextRaw(lineText);
+
+               if (mLines.size() != BULLET_LIMIT && mLines.indexOf(line) == mLines.size() - 1) {
+                  mNewBulletButton.setVisibility(View.VISIBLE);
+               }
+
+               setGuideDirty();
+            } else if (mLines.indexOf(line) == mLines.size() - 1) {
                mNewBulletButton.setVisibility(View.GONE);
-            } else if (text.getText().length() != 0 && mLines.size() != BULLET_LIMIT
-             && mLines.indexOf(line) == mLines.size() - 1) {
-               mNewBulletButton.setVisibility(View.VISIBLE);
             }
 
             setGuideDirty();
@@ -344,9 +351,6 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
             return false;
          }
       });
-
-      ImageView icon = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail);
-      icon.setImageResource(getBulletResource(line.getColor()));
 
       return v;
    }

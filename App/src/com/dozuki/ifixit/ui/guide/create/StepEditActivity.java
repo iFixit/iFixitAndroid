@@ -194,7 +194,6 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
       }
-
    }
 
    @Override

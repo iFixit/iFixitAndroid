@@ -158,7 +158,7 @@ public class BulletReorderFragment extends DialogFragment {
             TextView tv = (TextView) v.findViewById(R.id.bullet_text_textview);
             holder.stepsView = tv;
 
-            holder.mImageView = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail);
+            holder.mImageView = (ImageView) v.findViewById(R.id.guide_step_item_bullet_thumbnail);
             v.setTag(holder);
 
             holder.mItemHolder = (FrameLayout) v.findViewById(R.id.guide_step_item_frame);

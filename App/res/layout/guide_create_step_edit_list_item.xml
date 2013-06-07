@@ -31,7 +31,7 @@
         android:clickable="true" >
 
         <ImageView
-            android:id="@+id/guide_step_item_thumbnail"
+            android:id="@+id/guide_step_item_bullet_thumbnail"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

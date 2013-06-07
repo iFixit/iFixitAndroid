@@ -19,33 +19,25 @@ public class GuideStepLineView extends LinearLayout {
    private TextView mStepText;
    private ImageView mBulletView;
    private ImageView mIconView;
-   private LinearLayout mRow;
 
    public GuideStepLineView(Context context) {
       super(context);
 
-      LayoutInflater inflater = (LayoutInflater)context
-       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      inflater.inflate(R.layout.guide_step_row, this, true);
+      setOrientation(HORIZONTAL);
+      setWeightSum(100);
 
-      mRow = (LinearLayout) findViewById(R.id.step_row);
+      LayoutInflater.from(context).inflate(R.layout.guide_step_row, this, true);
    }
 
    public void setLine(StepLine line) {
       int iconRes, bulletRes;
 
+      setPadding(LINE_INDENT * line.getLevel(), MARGIN, 0, MARGIN);
+
       mStepText = (TextView) findViewById(R.id.step_text);
       mStepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
        line.getTextRendered())));
       mStepText.setMovementMethod(LinkMovementMethod.getInstance());
-
-      LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-       LinearLayout.LayoutParams.MATCH_PARENT,
-       LinearLayout.LayoutParams.WRAP_CONTENT);
-
-      layoutParams.setMargins(LINE_INDENT * line.getLevel(), MARGIN, 0,
-       MARGIN);
-      mRow.setLayoutParams(layoutParams);
 
       mBulletView = (ImageView)findViewById(R.id.bullet);
       bulletRes = getBulletResource(line.getColor());
