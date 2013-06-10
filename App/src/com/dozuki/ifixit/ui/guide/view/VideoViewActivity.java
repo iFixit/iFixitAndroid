@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.media.MediaPlayer;
@@ -13,8 +15,6 @@ import android.widget.MediaController;
 import android.widget.VideoView;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.R;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.ProgressDialog;
 
 public class VideoViewActivity extends Activity {
 

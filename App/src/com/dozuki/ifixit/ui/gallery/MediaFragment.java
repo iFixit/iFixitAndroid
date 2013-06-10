@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.ui.gallery;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,18 +12,17 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.AbsListView;
+import android.widget.*;
 import android.widget.AbsListView.OnScrollListener;
-import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -39,12 +40,6 @@ import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.TextView;
-import org.holoeverywhere.widget.Toast;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +48,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
-public abstract class MediaFragment extends Fragment implements OnItemClickListener, OnItemLongClickListener {
+public abstract class MediaFragment extends SherlockFragment implements OnItemClickListener, OnItemLongClickListener {
 
    private static final int MAX_LOADING_IMAGES = 15;
    private static final int MAX_STORED_IMAGES = 20;
@@ -294,7 +289,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            APIService.call((Activity) getActivity(), APIService.getUploadImageAPICall(
+            APIService.call(getSherlockActivity(), APIService.getUploadImageAPICall(
              getPath(selectedImageUri), key));
          } else if (requestCode == CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
@@ -307,7 +302,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
             opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
-            APIService.call((Activity) getActivity(), APIService.getUploadImageAPICall(
+            APIService.call(getSherlockActivity(), APIService.getUploadImageAPICall(
              mCameraTempFileName, key));
          }
       }
@@ -371,7 +366,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
          MediaViewItem itemView = (MediaViewItem) convertView;
 
          if (convertView == null) {
-            itemView = new MediaViewItem(getActivity(), mImageManager);
+            itemView = new MediaViewItem(getSherlockActivity(), mImageManager);
          }
 
          itemView.setLoading(false);
@@ -383,7 +378,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
             if (mMediaList.getItems().get(position).getItemId() != null &&
              mMediaList.getItems().get(position).getKey() == null) {
                String imageUrl = image.getGuid() + mImageSizes.getThumb();
-               itemView.setImageItem(imageUrl, getActivity(), !image.getLoaded());
+               itemView.setImageItem(imageUrl, getSherlockActivity(), !image.getLoaded());
                itemView.mListRef = image;
                image.setLoaded(true);
                itemView.setTag(image.getGuid());
@@ -397,7 +392,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
                } else {
                   // gallery image
                   bitmap = MediaStore.Images.Thumbnails.getThumbnail(
-                   getActivity().getContentResolver(), ContentUris.parseId(temp),
+                   getSherlockActivity().getContentResolver(), ContentUris.parseId(temp),
                    MediaStore.Images.Thumbnails.MINI_KIND, null);
                }
 
@@ -431,7 +426,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         MenuInflater inflater = ((Activity) getActivity()).getSupportMenuInflater();
+         MenuInflater inflater = getSherlockActivity().getSupportMenuInflater();
          inflater.inflate(R.menu.contextual_delete, menu);
          return true;
       }
@@ -477,7 +472,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
             String imageid = mMediaList.getItems().get(i).getItemId();
 
             if (mMediaList.getItems().get(i).getItemId() == null) {
-               Toast.makeText(getActivity(), getString(R.string.delete_loading_image_error),
+               Toast.makeText(getSherlockActivity(), getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
             } else {
                deleteList.add(Integer.parseInt(imageid));
@@ -486,7 +481,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
          }
       }
 
-      APIService.call((Activity) getActivity(),
+      APIService.call(getSherlockActivity(),
        APIService.getDeleteImageAPICall(deleteList));
 
       mMode.finish();
@@ -505,7 +500,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
 
    private void setDeleteMode() {
       if (mMode == null) {
-         Animation animHide = AnimationUtils.loadAnimation(getActivity(),
+         Animation animHide = AnimationUtils.loadAnimation(getSherlockActivity(),
           R.anim.slide_out_bottom_slow);
          animHide.setAnimationListener(new AnimationListener() {
             @Override
@@ -521,7 +516,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
             public void onAnimationStart(Animation arg0) {
             }
          });
-         mMode = ((Activity) getActivity()).startActionMode(new ModeCallback());
+         mMode = getSherlockActivity().startActionMode(new ModeCallback());
       }
    }
 
@@ -537,8 +532,8 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
 
          Intent selectResult = new Intent();
          selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY, cell.mListRef);
-         getActivity().setResult(Activity.RESULT_OK, selectResult);
-         getActivity().finish();
+         getSherlockActivity().setResult(Activity.RESULT_OK, selectResult);
+         getSherlockActivity().finish();
       } else if (mMode != null) {
          if (cell == null) {
             Log.i("iFixit", "Delete cell null!");
@@ -611,7 +606,7 @@ public abstract class MediaFragment extends Fragment implements OnItemClickListe
       }
       msg += "?";
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+      AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity());
       builder
        .setTitle(getString(R.string.confirm_delete_title))
        .setMessage(msg)

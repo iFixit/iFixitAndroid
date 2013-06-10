@@ -1,10 +1,10 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import com.dozuki.ifixit.model.guide.Guide;
-import org.holoeverywhere.app.Fragment;
 
 public class GuideViewAdapter extends FragmentStatePagerAdapter {
    private static final int GUIDE_INTRO_POSITION = 0;

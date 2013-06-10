@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.gallery;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -14,16 +15,14 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.login.LoginEvent;
-import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
-import org.holoeverywhere.app.AlertDialog;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GalleryActivity extends IfixitActivity {
+public class GalleryActivity extends BaseActivity {
 
    public static final String MEDIA_FRAGMENT_PHOTOS = "MEDIA_FRAGMENT_PHOTOS";
    public static final String MEDIA_FRAGMENT_VIDEOS = "MEDIA_FRAGMENT_VIDEOS";
@@ -254,17 +253,5 @@ public class GalleryActivity extends IfixitActivity {
 
          return true;
       }
-   }
-
-   protected void showLoading() {
-      getSupportFragmentManager().beginTransaction()
-       .add(R.id.gallery_loading_container, new LoadingFragment(), "loading")
-       .addToBackStack("loading")
-       .commit();
-   }
-
-   protected void hideLoading() {
-      getSupportFragmentManager()
-       .popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 }

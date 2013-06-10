@@ -1,15 +1,15 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.R;
 
-public class EmbedViewActivity extends Activity {
+public class EmbedViewActivity extends SherlockActivity {
    protected static final String HTML = "HTML";
    private String mHTML;
    private WebView mWebView;

@@ -4,20 +4,20 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.*;
+import android.widget.ProgressBar;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
 import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.ProgressBar;
 
-public class WebViewFragment extends Fragment
+public class WebViewFragment extends SherlockFragment
  implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;

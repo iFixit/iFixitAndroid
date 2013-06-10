@@ -1,8 +1,11 @@
 package com.dozuki.ifixit.ui.gallery;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.UploadedImageInfo;
 import com.dozuki.ifixit.model.gallery.UserImageList;
 import com.dozuki.ifixit.model.login.LoginEvent;
@@ -10,8 +13,6 @@ import com.dozuki.ifixit.ui.login.LocalImage;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
 
 import java.util.ArrayList;
 
@@ -38,7 +39,7 @@ public class PhotoMediaFragment extends MediaFragment {
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
-      ((GalleryActivity)getActivity()).showLoading();
+      ((GalleryActivity)getActivity()).showLoading(R.id.gallery_loading_container);
 
       APIService.call((Activity) getActivity(),
        APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));

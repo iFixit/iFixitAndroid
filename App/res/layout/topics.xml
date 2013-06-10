@@ -3,16 +3,9 @@
      Layout for list of topics, opening the device in a new Activity
      Note: the FrameLayout is replaced with a TopicListFragment
 -->
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/topic_list_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:baselineAligned="false"
-    android:orientation="horizontal" >
-
-    <FrameLayout
-        android:id="@+id/topic_list_fragment"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </FrameLayout>
-
-</LinearLayout>
+    android:background="?doz__background"/>

@@ -16,8 +16,6 @@
 
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
-import com.dozuki.ifixit.R;
-
 import android.content.Context;
 import android.content.res.Resources;
 import android.content.res.TypedArray;
@@ -28,6 +26,7 @@ import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.MotionEvent;
 import android.view.View;
+import com.dozuki.ifixit.R;
 
 public class StepPagerStrip extends View {
     private static final int[] ATTRS = new int[]{

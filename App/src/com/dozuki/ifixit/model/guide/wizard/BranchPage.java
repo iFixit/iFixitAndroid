@@ -16,10 +16,9 @@
 
 package com.dozuki.ifixit.model.guide.wizard;
 
-import com.dozuki.ifixit.ui.guide.create.wizard.SingleChoiceFragment;
-
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+import com.dozuki.ifixit.ui.guide.create.wizard.SingleChoiceFragment;
 
 import java.util.ArrayList;
 import java.util.List;

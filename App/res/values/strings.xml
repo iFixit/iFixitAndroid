@@ -77,7 +77,7 @@
     <string name="try_again">Try again</string>
     <string name="register_agreement">I agree to
         <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
-        under<a href="http://www.ifixit.com/Info/Licensing">our open license</a>.
+        under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.
     </string>
     <string name="terms_unchecked_error">You must agree to the terms.</string>
     <string name="login_dialog_title">Login</string>
@@ -290,6 +290,7 @@
     <string name="important_bullet_description">Important note bullet</string>
     <string name="bullet_reorder_description">Reminder bullet</string>
     <string name="default_step_number">Step #</string>
+    <string name="loading">Loading...</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

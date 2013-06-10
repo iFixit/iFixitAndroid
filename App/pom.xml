@@ -76,18 +76,6 @@
             <version>3.1</version>
         </dependency>
         <dependency>
-            <groupId>org.holoeverywhere</groupId>
-            <artifactId>library</artifactId>
-            <version>1.6.0</version>
-            <type>apklib</type>
-        </dependency>
-        <dependency>
-            <groupId>org.holoeverywhere</groupId>
-            <artifactId>addon-preferences</artifactId>
-            <version>1.6.0</version>
-            <type>apklib</type>
-        </dependency>
-        <dependency>
             <groupId>com.marczych.androidimagemanager</groupId>
             <artifactId>android-image-manager</artifactId>
             <version>1.0.1</version>

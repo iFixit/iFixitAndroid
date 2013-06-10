@@ -1,10 +1,13 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.View;
@@ -13,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -22,24 +26,19 @@ import com.dozuki.ifixit.model.gallery.MediaInfo;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class StepEditActivity extends IfixitActivity implements OnClickListener {
+public class StepEditActivity extends BaseActivity implements OnClickListener {
    public static final int MENU_VIEW_GUIDE = 12;
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
@@ -94,6 +93,8 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
    private int mExitCode;
    private boolean mGuidePublic;
 
+   private static int mLoadingContainer = R.id.step_edit_loading_screen;
+
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -128,7 +129,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
             mInboundStepId = extras.getInt(GUIDE_STEP_ID);
 
             APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(guideid));
-            showLoading();
+            showLoading(mLoadingContainer);
          } else {
             mGuidePublic = mGuide.isPublic();
          }
@@ -508,7 +509,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
               || mGuide.getStep(mPagePosition).getRevisionid() == null) {
                 deleteStep(mIsStepDirty);
              } else {
-                showLoading();
+                showLoading(mLoadingContainer);
                 APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
                  mGuide.getGuideid(), mGuide.getRevisionid(), mGuide.getSteps().get(mPagePosition)));
              }
@@ -617,7 +618,7 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       mSavePosition = savePosition;
       mIsStepDirty = false;
 
-      showLoading();
+      showLoading(mLoadingContainer);
       toggleSave(mIsStepDirty);
 
       if (obj.getRevisionid() != null) {
@@ -643,18 +644,18 @@ public class StepEditActivity extends IfixitActivity implements OnClickListener 
       return true;
    }
 
-   protected void showLoading() {
+   @Override
+   public void showLoading(int container) {
       if (mPager != null) {
          mPager.setVisibility(View.GONE);
       }
-      getSupportFragmentManager().beginTransaction()
-       .add(R.id.step_edit_loading_screen, new LoadingFragment(), "loading").addToBackStack("loading")
-       .commit();
       mIsLoading = true;
 
+      super.showLoading(container);
    }
 
-   protected void hideLoading() {
+   @Override
+   public void hideLoading() {
       if (mPager != null) {
          mPager.setVisibility(View.VISIBLE);
       }

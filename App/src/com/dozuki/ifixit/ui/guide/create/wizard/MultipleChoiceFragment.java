@@ -16,27 +16,27 @@
 
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.SparseBooleanArray;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.MultipleFixedChoicePage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.ListFragment;
-import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MultipleChoiceFragment extends ListFragment {
+public class MultipleChoiceFragment extends SherlockListFragment {
     private static final String ARG_KEY = "key";
 
     private PageFragmentCallbacks mCallbacks;

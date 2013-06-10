@@ -17,7 +17,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
@@ -26,11 +26,10 @@ import com.dozuki.ifixit.util.SpeechCommander;
 import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
-import org.holoeverywhere.widget.ProgressBar;
 
 import java.util.List;
 
-public class GuideViewActivity extends IfixitActivity implements OnPageChangeListener {
+public class GuideViewActivity extends BaseActivity implements OnPageChangeListener {
    private static final int MAX_LOADING_IMAGES = 9;
    private static final int MAX_STORED_IMAGES = 9;
    private static final int MAX_WRITING_IMAGES = 10;
@@ -55,7 +54,6 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    private ImageManager mImageManager;
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
-   private ProgressBar mProgressBar;
    private ImageView mNextPageImage;
    private boolean mFromEdit = false;
    private int mInboundStepId = -1;
@@ -75,9 +73,9 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
       mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
       mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
 
+      showLoading(R.id.loading_container);
       mPager = (ViewPager) findViewById(R.id.guide_pager);
       mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
-      mProgressBar = (ProgressBar) findViewById(R.id.progress_bar);
       mNextPageImage = (ImageView) findViewById(R.id.next_page_image);
 
       if (savedInstanceState != null) {
@@ -247,8 +245,8 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
          return;
       }
 
-      mProgressBar.setVisibility(View.GONE);
       mGuide = guide;
+      hideLoading();
 
       getSupportActionBar().setTitle(mGuide.getTitle());
 
@@ -309,7 +307,7 @@ public class GuideViewActivity extends IfixitActivity implements OnPageChangeLis
    }
 
    private void displayError() {
-      mProgressBar.setVisibility(View.GONE);
+      hideLoading();
       // TODO Display error
    }
 

@@ -1,7 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.iFixit" parent="Holo.Theme.Light.DarkActionBar">
+    <style name="Theme.Base" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="doz__textColorPrimary">@color/black</item>
+        <item name="doz__textColorSecondary">@color/gray</item>
+        <item name="doz__background">@color/white</item>
+        <item name="doz__imageBorder">@color/image_border</item>
+
+        <!-- Holo Theme -->
+        <item name="dividerHorizontal">?android:listDivider</item>
+        <item name="dividerVertical">?android:listDivider</item>
+        <item name="listPreferredItemHeightSmall">48dp</item>
+        <item name="listPreferredItemPaddingLeft">8dp</item>
+        <item name="listPreferredItemPaddingRight">8dp</item>
+
+        <item name="android:colorBackground">?doz__background</item>
+        <item name="android:windowBackground">?doz__background</item>
+
+        <item name="android:listViewStyle">@style/Base.ListView</item>
+        <item name="android:progressBarStyle">@style/Base.ProgressBar</item>
+
+        <item name="buttonBarStyle">@style/Base.ButtonBar</item>
+        <item name="buttonBarButtonStyle">@style/Base.Button.Borderless</item>
+
+        <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
+        <item name="mdMenuBackground">@color/menu_background</item>
+    </style>
+
+    <style name="Theme.iFixit" parent="Theme.Base">
         <!-- Action Bar Logo -->
         <item name="logo">@drawable/logo_ifixit</item>
         <item name="android:logo">@drawable/logo_ifixit</item>
@@ -12,22 +38,15 @@
         <item name="actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
         <item name="android:actionBarTabStyle">@style/Widget.iFixit.ActionBar.TabView</item>
 
-        <!-- Default Android style overrides -->
-        <item name="android:dialogTheme">@style/Holo.Theme.Dialog.Light</item>
-
         <!-- iFixit Custom Attributes / Styles -->
-        <item name="doz__textColorPrimary">@color/black</item>
-        <item name="doz__textColorSecondary">@color/gray</item>
-        <item name="doz__background">@color/white</item>
-        <item name="doz__imageBorder">@color/image_border</item>
-
+        <item name="doz__topicGuideList">@style/Widget.Dozuki.ListViewStyle</item>
         <item name="doz__topicHeaderColor">@color/ifixit_blue</item>
         <item name="doz__listViewStyle">@style/Widget.iFixit.ListViewStyle</item>
         <item name="doz__sectionHeader">@drawable/section_header__blue</item>
         <item name="doz__topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
     </style>
 
-    <style name="Theme.Dozuki" parent="Holo.Theme.Light.DarkActionBar">
+    <style name="Theme.Dozuki" parent="Theme.Base">
 
         <!-- Action Bar Logo -->
         <item name="logo">@drawable/logo_dozuki</item>
@@ -42,14 +61,7 @@
         <item name="android:actionBarTabStyle">@style/Widget.Dozuki.ActionBar.TabView</item>
         <item name="android:homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_dark</item>
 
-        <!-- Default Android style overrides -->
-        <item name="android:dialogTheme">@style/Holo.Theme.Dialog.Light</item>
-
         <!-- Custom Attributes / Styles for Dozuki -->
-        <item name="doz__textColorPrimary">@color/black</item>
-        <item name="doz__textColorSecondary">@color/gray</item>
-        <item name="doz__background">@color/white</item>
-        <item name="doz__imageBorder">@color/image_border</item>
 
         <item name="doz__listViewStyle">@style/Widget.Dozuki.ListViewStyle</item>
         <item name="doz__topicHeaderColor">@color/dozuki_red</item>

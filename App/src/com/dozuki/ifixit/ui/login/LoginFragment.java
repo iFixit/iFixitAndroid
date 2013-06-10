@@ -1,16 +1,19 @@
 package com.dozuki.ifixit.ui.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageButton;
+import android.widget.*;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -20,13 +23,6 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.ProgressBar;
-import org.holoeverywhere.widget.TextView;
 
 public class LoginFragment extends DialogFragment implements OnClickListener {
    private static final int OPEN_ID_RESULT_CODE = 4;
@@ -176,7 +172,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
          mCurAPICall = APIService.getLoginAPICall(login, password);
-         APIService.call((Activity)getActivity(), mCurAPICall);
+         APIService.call(getActivity(), mCurAPICall);
       } else {
          if (login.length() < 1) {
             mLoginId.requestFocus();
@@ -226,7 +222,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
              break;
     
           case R.id.register_button:
-             FragmentManager fragmentManager = getSupportFragmentManager();
+             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
            
              fragmentManager.beginTransaction()
               .remove(this)

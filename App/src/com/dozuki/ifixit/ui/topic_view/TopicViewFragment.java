@@ -1,17 +1,21 @@
 package com.dozuki.ifixit.ui.topic_view;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
@@ -20,13 +24,10 @@ import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
 
 import java.net.URLEncoder;
 
-public class TopicViewFragment extends Fragment {
+public class TopicViewFragment extends SherlockFragment {
    private static final int GUIDES_TAB = 0;
    private static final int MORE_INFO_TAB = 1;
    private static final int ANSWERS_TAB = 2;
@@ -142,6 +143,7 @@ public class TopicViewFragment extends Fragment {
       if (getActivity() == null) {
          return;
       }
+      ((BaseActivity)getActivity()).hideLoading();
 
       if (mTopicLeaf != null && topicLeaf != null) {
          if (mTopicLeaf.equals(topicLeaf)) {
@@ -197,7 +199,7 @@ public class TopicViewFragment extends Fragment {
          mTitleIndicator.setVisibility(View.VISIBLE);
       }
 
-      APIService.call((Activity) getActivity(), APIService.getTopicAPICall(topicName));
+      APIService.call(getActivity(), APIService.getTopicAPICall(topicName));
    }
 
    public TopicLeaf getTopicLeaf() {

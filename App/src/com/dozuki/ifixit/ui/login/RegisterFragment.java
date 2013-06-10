@@ -1,15 +1,19 @@
 package com.dozuki.ifixit.ui.login;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.*;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.login.User;
@@ -18,10 +22,6 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.*;
 
 public class RegisterFragment extends DialogFragment implements OnClickListener {
    private Button mRegister;
@@ -176,7 +176,7 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
             break;
 
           case R.id.cancel_register_button:
-             FragmentManager fragmentManager = getSupportFragmentManager();
+             FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
 
               // Go back to login.
              fragmentManager.beginTransaction()

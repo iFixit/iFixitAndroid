@@ -6,11 +6,15 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.ProgressBar;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -19,11 +23,6 @@ import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -66,7 +65,7 @@ public class SiteListDialogFragment extends DialogFragment {
          mSearchView.setVisibility(View.GONE);
          mLoadingIndicator.setVisibility(View.VISIBLE);
 
-         APIService.call((Activity)getActivity(), APIService.getSitesAPICall());
+         APIService.call(getActivity(), APIService.getSitesAPICall());
       } else {
          initDialog(mSiteList);
       }
@@ -76,8 +75,7 @@ public class SiteListDialogFragment extends DialogFragment {
 
    private void initDialog(ArrayList<Site> sites) {
       setSiteList(sites);
-      SearchManager searchManager = (SearchManager) getSystemService(
-       Context.SEARCH_SERVICE);
+      SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
 
       mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
        getActivity().getComponentName()));

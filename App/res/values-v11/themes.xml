@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme"></style>
+    <style name="Theme.Base" parent="Theme.Sherlock.Light.DarkActionBar">
+        <item name="doz__textColorPrimary">@color/black</item>
+        <item name="doz__textColorSecondary">@color/gray</item>
+        <item name="doz__background">@color/white</item>
+        <item name="doz__imageBorder">@color/image_border</item>
+
+        <!-- Holo Theme -->
+        <item name="dividerHorizontal">?android:dividerHorizontal</item>
+        <item name="dividerVertical">?android:dividerVertical</item>
+        <item name="listPreferredItemHeightSmall">48dp</item>
+        <item name="listPreferredItemPaddingLeft">8dp</item>
+        <item name="listPreferredItemPaddingRight">8dp</item>
+
+        <item name="android:colorBackground">?doz__background</item>
+        <item name="android:windowBackground">?doz__background</item>
+
+        <item name="android:listViewStyle">@style/Base.ListView</item>
+        <item name="android:progressBarStyle">@style/Base.ProgressBar</item>
+
+        <item name="buttonBarStyle">@style/Base.ButtonBar</item>
+        <item name="buttonBarButtonStyle">@style/Base.Button.Borderless</item>
+
+        <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
+        <item name="mdMenuBackground">@color/menu_background</item>
+    </style>
+</resources>

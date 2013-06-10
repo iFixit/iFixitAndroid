@@ -1,15 +1,15 @@
 package com.dozuki.ifixit.ui.topic_view;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.marczych.androidsectionheaders.Section;
-import org.holoeverywhere.LayoutInflater;
-import android.widget.AdapterView;
-import org.holoeverywhere.widget.TextView;
 
 import java.util.ArrayList;
 

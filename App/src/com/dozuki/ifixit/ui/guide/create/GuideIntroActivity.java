@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -18,7 +19,7 @@ import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
 import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
 import com.dozuki.ifixit.model.guide.wizard.Page;
-import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
 import com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip;
@@ -26,12 +27,11 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.widget.Button;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideIntroActivity extends IfixitActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks,
+public class GuideIntroActivity extends BaseActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks,
  ModelCallbacks {
    public static final int GUIDE_STEP_EDIT_REQUEST = 1;
 

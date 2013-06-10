@@ -16,9 +16,8 @@
 
 package com.dozuki.ifixit.model.guide.wizard;
 
-import com.dozuki.ifixit.ui.guide.create.wizard.MultipleChoiceFragment;
-
 import android.support.v4.app.Fragment;
+import com.dozuki.ifixit.ui.guide.create.wizard.MultipleChoiceFragment;
 
 import java.util.ArrayList;
 

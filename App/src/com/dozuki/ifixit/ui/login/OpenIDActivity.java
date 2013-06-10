@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.login;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -8,7 +9,6 @@ import android.webkit.*;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
-import org.holoeverywhere.app.Activity;
 
 public class OpenIDActivity extends Activity {
    public static String SESSION = "SESSION";

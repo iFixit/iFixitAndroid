@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -15,7 +16,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.APIService;
 import com.marczych.androidimagemanager.ImageManager;
-import org.holoeverywhere.app.Activity;
 
 public class GuideListItem extends LinearLayout {
    private static final int ANIMATION_DURATION = 300;

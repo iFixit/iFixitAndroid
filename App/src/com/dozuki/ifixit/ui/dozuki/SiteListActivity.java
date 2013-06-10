@@ -1,33 +1,30 @@
 package com.dozuki.ifixit.ui.dozuki;
 
-import android.support.v4.app.Fragment;
 import android.app.SearchManager;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
-import com.dozuki.ifixit.ui.IfixitActivity;
-import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.ListView;
+import com.dozuki.ifixit.ui.BaseActivity;
 
 import java.util.ArrayList;
 
-public class SiteListActivity extends IfixitActivity
+public class SiteListActivity extends BaseActivity
  implements SearchView.OnQueryTextListener {
 
    private Button mSiteListButton;
    private SiteListDialogFragment mSiteListDialog;
-   private ListView mSiteListView;
-   private SearchView mSearchView;
 
    @SuppressWarnings("unchecked")
    @Override
@@ -53,7 +50,7 @@ public class SiteListActivity extends IfixitActivity
             ft.addToBackStack(null);
 
             mSiteListDialog = SiteListDialogFragment.newInstance();
-            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Holo_Theme_DialogWhenLarge_Light_DarkActionBar);
+            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_Sherlock_Light_DarkActionBar);
 
             mSiteListDialog.show(ft, "SiteListDialog");
          }

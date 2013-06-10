@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,16 +10,15 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.StepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.app.AlertDialog;
 
-public class StepsActivity extends IfixitActivity implements StepRearrangeListener {
+public class StepsActivity extends BaseActivity implements StepRearrangeListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
    private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";

@@ -1,17 +1,17 @@
 package com.dozuki.ifixit.ui.topic_view;
 
+import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.widget.TextView;
 
 public class TopicGuideItemView extends RelativeLayout {
    private TextView mTitleView;

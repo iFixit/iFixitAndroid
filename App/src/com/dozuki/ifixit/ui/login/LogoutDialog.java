@@ -1,11 +1,11 @@
 package com.dozuki.ifixit.ui.login;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.DialogInterface;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.APIService;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
 
 /**
  * Creates a logout dialog that logs the user out.

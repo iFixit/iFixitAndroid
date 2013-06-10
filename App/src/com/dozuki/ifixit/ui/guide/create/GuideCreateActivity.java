@@ -1,11 +1,11 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -15,19 +15,17 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.ui.IfixitActivity;
-import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.app.Activity;
 
 import java.util.ArrayList;
 
-public class GuideCreateActivity extends IfixitActivity {
+public class GuideCreateActivity extends BaseActivity {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    static int GUIDE_STEP_EDIT_REQUEST = 1;
    private static final int MENU_CREATE_GUIDE = 3;
@@ -68,7 +66,7 @@ public class GuideCreateActivity extends IfixitActivity {
             createHelpDialog().show();
          }
       } else {
-         showLoading();
+         showLoading(R.id.loading_container);
          APIService.call(this, APIService.getUserGuidesAPICall());
       }
 
@@ -290,16 +288,5 @@ public class GuideCreateActivity extends IfixitActivity {
          }
       }
       mCurOpenGuideObjectID = id;
-   }
-
-   protected void showLoading() {
-      getSupportFragmentManager().beginTransaction()
-       .add(R.id.loading_container, new LoadingFragment(), "loading").addToBackStack("loading")
-       .commit();
-
-   }
-
-   protected void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 }

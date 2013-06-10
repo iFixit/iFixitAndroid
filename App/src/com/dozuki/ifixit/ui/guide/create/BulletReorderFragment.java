@@ -3,11 +3,12 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.R.color;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
-import android.widget.ImageView;
+import android.widget.*;
 import android.widget.RelativeLayout.LayoutParams;
 import com.actionbarsherlock.view.ActionMode;
 import com.dozuki.ifixit.MainApplication;
@@ -16,11 +17,6 @@ import com.dozuki.ifixit.model.guide.StepLine;
 import com.marczych.androidimagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.DialogFragment;
-import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.FrameLayout;
-import org.holoeverywhere.widget.TextView;
 
 import java.util.ArrayList;
 

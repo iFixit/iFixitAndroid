@@ -16,26 +16,26 @@
 
 package com.dozuki.ifixit.ui.guide.create.wizard;
 
+import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextUtils;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+import com.actionbarsherlock.app.SherlockListFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
 import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.ReviewItem;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.ListFragment;
-import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewFragment extends ListFragment implements ModelCallbacks {
+public class ReviewFragment extends SherlockListFragment implements ModelCallbacks {
    private Callbacks mCallbacks;
    private AbstractWizardModel mWizardModel;
    private List<ReviewItem> mCurrentReviewItems;

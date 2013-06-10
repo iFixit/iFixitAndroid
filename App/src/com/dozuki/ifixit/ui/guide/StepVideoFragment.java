@@ -1,25 +1,25 @@
 package com.dozuki.ifixit.ui.guide;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepVideo;
 import com.dozuki.ifixit.model.guide.StepVideoThumbnail;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
 import com.marczych.androidimagemanager.ImageManager;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
 
-public class StepVideoFragment extends Fragment {
+public class StepVideoFragment extends SherlockFragment {
 
    public static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
    private Activity mContext;

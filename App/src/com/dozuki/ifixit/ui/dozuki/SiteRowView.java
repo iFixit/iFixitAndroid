@@ -1,12 +1,12 @@
 package com.dozuki.ifixit.ui.dozuki;
 
 import android.content.Context;
+import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.widget.TextView;
 
 public class SiteRowView extends RelativeLayout {
    protected Site mSite;

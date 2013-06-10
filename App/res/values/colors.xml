@@ -5,6 +5,9 @@ Taken from @Lars from Stack Overflow - thanks!
 -->
 <resources>
 
+    <color name="transparent">#00000000</color>
+
+    <color name="menu_background">#FF555555</color>
     <color name="white">#FFFFFF</color>
     <color name="translucent_white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>

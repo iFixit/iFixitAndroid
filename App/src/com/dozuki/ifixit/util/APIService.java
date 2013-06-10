@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.util;
 
+import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -14,7 +16,6 @@ import android.util.Log;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -28,9 +29,6 @@ import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.DialogFragment;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -73,7 +71,7 @@ public class APIService extends Service {
    /**
     * Returns true if the the user needs to be authenticated for the given site and endpoint.
     */
-   private static boolean requireAuthentication(Site site, APIEndpoint endpoint) {
+   private static boolean requireAuthentication(APIEndpoint endpoint) {
       return (endpoint.mAuthenticated || !MainApplication.get().getSite().mPublic) && !endpoint.mForcePublic;
    }
 
@@ -85,14 +83,12 @@ public class APIService extends Service {
       APIEndpoint endpoint = apiCall.mEndpoint;
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
-      if (requireAuthentication(MainApplication.get().getSite(), endpoint) && !MainApplication.get().isUserLoggedIn()) {
+      if (requireAuthentication(endpoint) && !MainApplication.get().isUserLoggedIn()) {
          sPendingApiCall = apiCall;
 
          // Don't display the login dialog twice.
          if (!MainApplication.get().isLoggingIn()) {
-            LoginFragment fragment = LoginFragment.newInstance();
-            fragment.setStyle(DialogFragment.STYLE_NORMAL, R.style.Holo_Theme_DialogWhenLarge_Light_DarkActionBar);
-            fragment.show(activity);
+            LoginFragment.newInstance().show(((SherlockFragmentActivity)activity).getSupportFragmentManager(), "LoginFragment");
          }
       } else {
          activity.startService(makeApiIntent(activity, apiCall));
@@ -582,7 +578,7 @@ public class APIService extends Service {
                if (apiCall.mAuthToken != null) {
                   // This auth token overrides all other requirements/auth tokens.
                   authToken = apiCall.mAuthToken;
-               } else if (requireAuthentication(MainApplication.get().getSite(), endpoint)) {
+               } else if (requireAuthentication(endpoint)) {
                   User user = ((MainApplication) getApplicationContext()).getUser();
                   authToken = user.getAuthToken();
                }

@@ -4,18 +4,18 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.marczych.androidimagemanager.ImageManager;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.TextView;
 
-public class GuideIntroViewFragment extends Fragment {
+public class GuideIntroViewFragment extends SherlockFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
 
    private TextView mTitle;
@@ -44,8 +44,7 @@ public class GuideIntroViewFragment extends Fragment {
       }
 
       if (mImageManager == null) {
-         mImageManager = ((MainApplication)getActivity().getApplication())
-          .getImageManager();
+         mImageManager = MainApplication.get().getImageManager();
       }
    }
 

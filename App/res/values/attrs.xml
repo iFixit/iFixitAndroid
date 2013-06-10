@@ -16,6 +16,13 @@
     <attr name="doz__topicGuideList" format="reference" />
     <attr name="doz__topicDefaultBackground" format="reference|color" />
 
+
+    <attr name="buttonBarButtonStyle" format="reference"/>
+    <attr name="buttonBarStyle" format="reference"/>
+    <attr name="borderlessButtonStyle" format="reference"/>
+
+    <attr name="dividerHorizontal" format="reference"/>
+
     <declare-styleable name="ThumbnailView">
         <attr name="show_single" format="boolean" />
         <attr name="can_edit" format="boolean" />

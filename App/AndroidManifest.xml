@@ -28,7 +28,6 @@
 
         <activity
             android:name=".ui.dozuki.SiteListActivity"
-            android:theme="@style/Holo.Theme.Light.NoActionBar"
             android:launchMode="singleTop"/>
         <activity
             android:name=".ui.topic_view.TopicActivity"
@@ -88,7 +87,7 @@
         </activity>
         <activity
             android:name=".ui.guide.view.FullImageViewActivity"
-            android:theme="@style/Holo.Theme.Light.NoActionBar"/>
+            android:theme="@android:style/Theme.Holo.NoActionBar"/>
         <activity
             android:name=".ui.guide.view.VideoViewActivity"
             android:screenOrientation="landscape"

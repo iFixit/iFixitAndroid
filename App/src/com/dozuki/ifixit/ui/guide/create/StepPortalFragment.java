@@ -1,14 +1,19 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
+import android.widget.Toast;
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -24,13 +29,8 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.ListView;
-import org.holoeverywhere.widget.Toast;
 
-public class StepPortalFragment extends Fragment implements StepReorderFragment.StepRearrangeListener {
+public class StepPortalFragment extends SherlockFragment implements StepReorderFragment.StepRearrangeListener {
    public static int STEP_ID = 0;
    public static final String DEFAULT_TITLE = "";
 
@@ -57,7 +57,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
       super.onCreate(savedInstanceState);
 
       int guideid = getArguments().getInt(StepsActivity.GUIDE_ID_KEY);
-      mActionBar = getSupportActionBar();
+      mActionBar = getSherlockActivity().getSupportActionBar();
       setHasOptionsMenu(true);
       mSelf = this;
       mStepAdapter = new StepAdapter();
@@ -72,7 +72,7 @@ public class StepPortalFragment extends Fragment implements StepReorderFragment.
 
       if (mGuide == null) {
          ((StepsActivity) getActivity()).showLoading();
-         APIService.call((Activity) getActivity(), APIService.getGuideForEditAPICall(guideid));
+         APIService.call(getActivity(), APIService.getGuideForEditAPICall(guideid));
       } else {
          mActionBar.setTitle(mGuide.getTitle());
       }

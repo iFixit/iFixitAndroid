@@ -7,15 +7,15 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.ImageView;
+import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import org.holoeverywhere.app.Activity;
 
-public class FullImageViewActivity extends Activity {
+public class FullImageViewActivity extends SherlockActivity {
    public static final String IMAGE_URL = "IMAGE_URL";
    public static final String LOCAL_URL = "LOCAL_URL";
 
@@ -35,7 +35,7 @@ public class FullImageViewActivity extends Activity {
 
       Bundle extras = getIntent().getExtras();
       mImageUrl = (String)extras.get(IMAGE_URL);
-      MainApplication application = ((MainApplication)getApplication());
+      MainApplication application = MainApplication.get();
       mImageManager = application.getImageManager();
       mImageSizes = application.getImageSizes();
 

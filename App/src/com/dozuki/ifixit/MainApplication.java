@@ -1,5 +1,6 @@
 package com.dozuki.ifixit;
 
+import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -23,7 +24,6 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Bus;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
-import org.holoeverywhere.app.Application;
 
 public class MainApplication extends Application {
    public static final int LARGE_SIZE_CUTOFF = 1000;

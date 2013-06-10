@@ -2,12 +2,14 @@ package com.dozuki.ifixit.ui.topic_view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
@@ -15,11 +17,8 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.marczych.androidimagemanager.ImageManager;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
 
-public class TopicGuideListFragment extends Fragment {
+public class TopicGuideListFragment extends SherlockFragment {
    private static final int MAX_LOADING_IMAGES = 20;
    private static final int MAX_STORED_IMAGES = 30;
    private static final int MAX_WRITING_IMAGES = 20;
@@ -55,13 +54,11 @@ public class TopicGuideListFragment extends Fragment {
       }
 
       if (mImageManager == null) {
-         mImageManager = ((MainApplication)getActivity().getApplication())
-          .getImageManager();
+         mImageManager = MainApplication.get().getImageManager();
          mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
       }
 
-      mImageSizes = ((MainApplication)getActivity().getApplication()).
-       getImageSizes();
+      mImageSizes = MainApplication.get().getImageSizes();
    }
 
    @Override
@@ -121,7 +118,7 @@ public class TopicGuideListFragment extends Fragment {
             itemView = new TopicGuideItemView(getActivity(), mImageManager);
          }
 
-         itemView.setGuideItem(mTopicLeaf.getGuides().get(position), (Activity)getActivity());
+         itemView.setGuideItem(mTopicLeaf.getGuides().get(position), getActivity());
 
          return itemView;
       }

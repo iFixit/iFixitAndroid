@@ -6,10 +6,10 @@ import android.support.v4.app.FragmentTransaction;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.ui.IfixitActivity;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.marczych.androidimagemanager.ImageManager;
 
-public class TopicViewActivity extends IfixitActivity {
+public class TopicViewActivity extends BaseActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;
@@ -22,6 +22,7 @@ public class TopicViewActivity extends IfixitActivity {
 
       setContentView(R.layout.topic_view);
 
+      showLoading(R.id.topic_view_fragment);
       mImageManager = ((MainApplication)getApplication()).getImageManager();
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

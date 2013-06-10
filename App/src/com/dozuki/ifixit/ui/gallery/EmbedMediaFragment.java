@@ -1,18 +1,16 @@
 package com.dozuki.ifixit.ui.gallery;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.model.gallery.UserEmbedList;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
 
 public class EmbedMediaFragment extends MediaFragment {
-   
-   
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -51,7 +49,7 @@ public class EmbedMediaFragment extends MediaFragment {
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
-      APIService.call((Activity) getActivity(),
+      APIService.call(getActivity(),
          APIService.getUserEmbedsAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));
    }
 }

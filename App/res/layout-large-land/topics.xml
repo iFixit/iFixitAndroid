@@ -10,14 +10,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:baselineAligned="false"
-    android:orientation="horizontal" >
+    android:orientation="horizontal"
+    android:background="?attr/doz__background" >
 
     <FrameLayout
         android:id="@+id/topic_list_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="25" >
-    </FrameLayout>
+        android:layout_weight="25" />
 
     <FrameLayout
         android:layout_width="0dp"

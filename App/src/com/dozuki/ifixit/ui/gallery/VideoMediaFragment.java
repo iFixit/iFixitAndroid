@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.gallery;
 
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.model.gallery.UserVideoList;
@@ -8,8 +9,6 @@ import com.dozuki.ifixit.model.login.LoginEvent;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
 
 
 
@@ -86,7 +85,7 @@ public class VideoMediaFragment extends MediaFragment {
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
-      APIService.call((Activity) getActivity(),
+      APIService.call(getActivity(),
       APIService.getUserVideosAPICall("?limit=" + (IMAGE_PAGE_SIZE) + "&offset=" + mItemsDownloaded));
    }
    

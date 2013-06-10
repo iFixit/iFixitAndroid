@@ -2,31 +2,30 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.R.color;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.TextView;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.APIImage;
 import com.marczych.androidimagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.Activity;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepReorderFragment extends Fragment {
+public class StepReorderFragment extends SherlockFragment {
 
    public interface StepRearrangeListener {
 
@@ -84,7 +83,7 @@ public class StepReorderFragment extends Fragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      getSupportActivity().startActionMode(new ContextualStepReorder());
+      getSherlockActivity().startActionMode(new ContextualStepReorder());
       if (mImageManager == null) {
          mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
       }
@@ -124,7 +123,7 @@ public class StepReorderFragment extends Fragment {
 
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-         MenuInflater inflater = ((Activity) getActivity()).getSupportMenuInflater();
+         MenuInflater inflater = getSherlockActivity().getSupportMenuInflater();
          inflater.inflate(R.menu.contextual_rearrange, menu);
          mode.setTitle(R.string.step_rearrange_title);
          return true;

@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
@@ -7,28 +8,23 @@ import android.support.v4.app.FragmentManager;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ImageView;
+import android.widget.*;
 import android.widget.RelativeLayout.LayoutParams;
+import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
 import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
-import org.holoeverywhere.LayoutInflater;
-import org.holoeverywhere.app.AlertDialog;
-import org.holoeverywhere.app.Fragment;
-import org.holoeverywhere.widget.Button;
-import org.holoeverywhere.widget.EditText;
-import org.holoeverywhere.widget.LinearLayout;
-import org.holoeverywhere.widget.Toast;
 
 import java.util.ArrayList;
 
-public class StepEditLinesFragment extends Fragment implements BulletDialogListener, BulletRearrangeListener {
+public class StepEditLinesFragment extends SherlockFragment implements BulletDialogListener, BulletRearrangeListener {
    private static final int BULLET_LIMIT = 8;
    private static final int BULLET_INDENT = 25;
    private static final String STEP_LIST_KEY = "STEP_LIST_KEY";
@@ -99,12 +95,12 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       if (savedInstanceState != null) {
          mTitle = savedInstanceState.getString(TITLE_KEY);
 
+         FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
          mChooseBulletDialog =
-          (ChooseBulletDialog) getSupportFragmentManager().getFragment(savedInstanceState, BULLET_FRAG_ID);
+          (ChooseBulletDialog) fm.getFragment(savedInstanceState, BULLET_FRAG_ID);
          mReorderFragment =
-          (BulletReorderFragment) getSupportFragmentManager().getFragment(savedInstanceState,
-           REORDER_FRAG_ID);
+          (BulletReorderFragment) fm.getFragment(savedInstanceState, REORDER_FRAG_ID);
 
          mShowingChooseBulletDialog = savedInstanceState.getBoolean(SHOWING_BULLET_FRAG, false);
          if (mChooseBulletDialog != null && mShowingChooseBulletDialog) {
@@ -126,7 +122,7 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
             mNewBulletButton.setVisibility(View.GONE);
 
             view.findViewById(mLines.size() - 1).requestFocus();
-            ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(
+            ((InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE)).showSoftInput(
              view.findViewById(mLines.size() - 1), InputMethodManager.SHOW_FORCED);
          }
       });
@@ -154,15 +150,15 @@ public class StepEditLinesFragment extends Fragment implements BulletDialogListe
       savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
 
       savedInstanceState.putString(TITLE_KEY, mTitle);
-
+      FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
       if (mChooseBulletDialog != null && mShowingChooseBulletDialog) {
-         getSupportFragmentManager().putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog);
+         fm.putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog);
          savedInstanceState.putBoolean(SHOWING_BULLET_FRAG, mShowingChooseBulletDialog);
       }
       savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
 
       if (mReorderFragment != null && mReorderModeActive) {
-         getSupportFragmentManager().putFragment(savedInstanceState, REORDER_FRAG_ID, mReorderFragment);
+         fm.putFragment(savedInstanceState, REORDER_FRAG_ID, mReorderFragment);
          savedInstanceState.putBoolean(SHOWING_REORDER_FRAG, mReorderModeActive);
       }
    }
