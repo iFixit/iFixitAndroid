@@ -29,6 +29,7 @@ public class Guide implements Serializable {
    protected ArrayList<GuideTool> mTools;
    protected ArrayList<GuidePart> mParts;
    protected boolean mEditMode = false;
+   protected boolean mCanEdit = true;
 
    public Guide(int guideid) {
       mGuideid = guideid;
@@ -57,6 +58,14 @@ public class Guide implements Serializable {
       }
 
       return formattedTools;
+   }
+
+   public void setCanEdit(boolean canEdit) {
+      mCanEdit = canEdit;
+   }
+
+   public boolean canEdit() {
+      return mCanEdit;
    }
 
    public void setType(String type) {

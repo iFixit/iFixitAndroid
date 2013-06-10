@@ -151,6 +151,9 @@ public class JSONHelper {
       guide.setPublic(jGuide.getBoolean("public"));
       guide.setType(jGuide.getString("type"));
 
+      if (jGuide.has("canEdit"))
+         guide.setCanEdit(jGuide.getBoolean("canEdit"));
+
       for (int i = 0; i < jSteps.length(); i++) {
          guide.addStep(parseStep(jSteps.getJSONObject(i), i + 1));
       }
@@ -182,7 +185,7 @@ public class JSONHelper {
       step.setGuideid(jStep.getInt("guideid"));
       step.setStepid(jStep.getInt("stepid"));
       step.setRevisionid(jStep.getInt("revisionid"));
-      step.setOrderby(jStep.getInt("orderby"));
+      step.setOrderby(jStep.isNull("orderby") ? stepNumber : jStep.getInt("orderby"));
       step.setTitle(jStep.getString("title"));
 
       try {
@@ -280,8 +283,9 @@ public class JSONHelper {
    }
 
    private static StepLine parseLine(JSONObject jLine) throws JSONException {
+      int lineid = jLine.isNull("lineid") ? 0 : jLine.getInt("lineid");
 
-      return new StepLine(jLine.getInt("lineid"), jLine.getString("bullet"),
+      return new StepLine(lineid, jLine.getString("bullet"),
        jLine.getInt("level"), jLine.getString("text_raw"), jLine.getString("text_rendered"));
    }
 
