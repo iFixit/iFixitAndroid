@@ -78,7 +78,7 @@ public class TopicListFragment extends SherlockFragment
 
       Comparator<TopicNode> comparator = new Comparator<TopicNode>() {
          public int compare(TopicNode first, TopicNode second) {
-            return first.getName().compareTo(second.getName());
+            return first.getName().compareToIgnoreCase(second.getName());
          }
       };
 
