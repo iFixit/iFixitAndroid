@@ -51,8 +51,7 @@ public class TopicListFragment extends SherlockFragment
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.topic_list_fragment, container,
-       false);
+      View view = inflater.inflate(R.layout.topic_list_fragment, container, false);
 
       mListView = (SectionListView)view.findViewById(R.id.topicList);
       mListView.getListView().setOnItemClickListener(this);
@@ -143,6 +142,9 @@ public class TopicListFragment extends SherlockFragment
 
    private void setTopic(TopicNode topic) {
       mTopic = topic;
+
+      getSherlockActivity().setTitle(mTopic.getName().equals("ROOT") ? "" : mTopic.getName());
+
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);
    }

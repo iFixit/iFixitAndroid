@@ -120,8 +120,7 @@ public class TopicActivity extends BaseActivity
       switch (item.getItemId()) {
          case android.R.id.home:
             // Go up in the hierarchy by popping the back stack.
-            boolean poppedStack = getSupportFragmentManager().
-             popBackStackImmediate();
+            boolean poppedStack = getSupportFragmentManager().popBackStackImmediate();
 
             /**
              *  If there is not a previous category to go to and the up navigation
@@ -138,6 +137,7 @@ public class TopicActivity extends BaseActivity
       }
    }
 
+   @Override
    public void onBackStackChanged() {
       int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
 
