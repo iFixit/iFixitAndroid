@@ -1,8 +1,8 @@
-package com.dozuki.ifixit.model.guide;
+package com.dozuki.ifixit.model;
 
 import java.io.Serializable;
 
-public class GuidePart implements Serializable {
+public class Part implements Serializable {
    private static final long serialVersionUID = 2884598684003517264L;
 
    protected String mNote;
@@ -10,7 +10,7 @@ public class GuidePart implements Serializable {
    protected String mUrl;
    protected String mThumb;
 
-   public GuidePart(String title, String url, String thumb, String notes) {
+   public Part(String title, String url, String thumb, String notes) {
       mNote = notes;
       mTitle = title;
       mUrl = url;
@@ -50,7 +50,7 @@ public class GuidePart implements Serializable {
    }
 
    public String toString() {
-      return "{GuidePart: " + mTitle + ", " + mThumb +  ", " + mUrl +
+      return "{Part: " + mTitle + ", " + mThumb +  ", " + mUrl +
        ", " + mNote + "}";
    }
 }

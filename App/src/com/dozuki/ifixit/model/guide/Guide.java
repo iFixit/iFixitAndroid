@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.model.guide;
 
 import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Part;
+import com.dozuki.ifixit.model.Tool;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -26,19 +28,19 @@ public class Guide implements Serializable {
    protected APIImage mIntroImage;
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
-   protected ArrayList<GuideTool> mTools;
-   protected ArrayList<GuidePart> mParts;
+   protected ArrayList<Tool> mTools;
+   protected ArrayList<Part> mParts;
    protected boolean mEditMode = false;
    protected boolean mCanEdit = true;
 
    public Guide(int guideid) {
       mGuideid = guideid;
       mSteps = new ArrayList<GuideStep>();
-      mTools = new ArrayList<GuideTool>();
-      mParts = new ArrayList<GuidePart>();
+      mTools = new ArrayList<Tool>();
+      mParts = new ArrayList<Part>();
    }
 
-   public void addTool(GuideTool tool) {
+   public void addTool(Tool tool) {
       mTools.add(tool);
    }
 
@@ -46,13 +48,13 @@ public class Guide implements Serializable {
       return mTools.size();
    }
 
-   public GuideTool getTool(int position) {
+   public Tool getTool(int position) {
       return mTools.get(position);
    }
 
    public String getToolsFormatted(String title) {
       String formattedTools = title + ": <br />";
-      for (GuideTool t : mTools) {
+      for (Tool t : mTools) {
          formattedTools += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
           "</a><br />";
       }
@@ -76,7 +78,7 @@ public class Guide implements Serializable {
       return mType;
    }
 
-   public void addPart(GuidePart part) {
+   public void addPart(Part part) {
       mParts.add(part);
    }
 
@@ -88,13 +90,13 @@ public class Guide implements Serializable {
       mSteps = steps;
    }
 
-   public GuidePart getPart(int position) {
+   public Part getPart(int position) {
       return mParts.get(position);
    }
 
    public String getPartsFormatted(String title) {
       String formattedPart = title + ": <br />";
-      for (GuidePart t : mParts) {
+      for (Part t : mParts) {
          formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
           "</a><br />";
       }

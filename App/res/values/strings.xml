@@ -291,6 +291,7 @@
     <string name="bullet_reorder_description">Reminder bullet</string>
     <string name="default_step_number">Step #</string>
     <string name="loading">Loading...</string>
+    <string name="topic_info_image">Main topic image</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

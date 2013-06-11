@@ -9,6 +9,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.webkit.WebView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -258,22 +259,13 @@ public class TopicViewFragment extends SherlockFragment {
                mSelectedTab = GUIDES_TAB;
                return selectedFragment;
             case MORE_INFO_TAB:
-               WebViewFragment webView = new WebViewFragment();
-
-               try {
-                  webView.loadUrl("http://" + mSite.mDomain + "/c/" + URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
-               } catch (Exception e) {
-                  Log.w("iFixit", "Encoding error: " + e.getMessage());
-               }
-
-               selectedFragment = webView;
+               selectedFragment = TopicInfoFragment.newInstance(mTopicLeaf);
                mSelectedTab = MORE_INFO_TAB;
                return selectedFragment;
             case ANSWERS_TAB:
-               webView = new WebViewFragment();
+               WebViewFragment webView = new WebViewFragment();
 
                if (mSite.mAnswers) {
-
                   webView.loadUrl(mTopicLeaf.getSolutionsUrl());
 
                   selectedFragment = webView;

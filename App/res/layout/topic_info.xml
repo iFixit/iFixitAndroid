@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/doz__background">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/topic_info_image"
+            android:layout_height="250dp"
+            android:layout_width="334dp"
+            android:scaleType="fitCenter"
+            android:layout_margin="16dp"
+            android:contentDescription="@string/topic_info_image"/>
+
+        <TextView
+            android:id="@+id/topic_info_title"
+            style="@style/TitleText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="Camera Repair"
+            android:layout_toRightOf="@+id/topic_info_image"
+            android:layout_marginTop="68dp"/>
+
+        <TextView
+            android:id="@+id/topic_info_summary"
+            style="@style/BodyText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="asdjkfha sdlkfj ahsdlfk jashdlkfjha sldkfhal ksdqf"
+            android:layout_below="@+id/topic_info_title"
+            android:layout_toRightOf="@+id/topic_info_image"
+            android:layout_marginTop="12dp"/>
+
+        <TextView
+            android:id="@+id/topic_info_content"
+            style="@style/BodyText"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/topic_info_image"
+            android:padding="16dp"
+            android:paddingTop="24dp"/>
+
+    </RelativeLayout>
+</ScrollView>

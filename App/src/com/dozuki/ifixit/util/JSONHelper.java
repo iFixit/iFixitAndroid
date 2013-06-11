@@ -6,6 +6,8 @@ import android.text.style.URLSpan;
 import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Part;
+import com.dozuki.ifixit.model.Tool;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.*;
 import com.dozuki.ifixit.model.guide.*;
@@ -169,13 +171,13 @@ public class JSONHelper {
       return guide;
    }
 
-   private static GuidePart parsePart(JSONObject jPart) throws JSONException {
-      return new GuidePart(jPart.getString("text"), jPart.getString("url"),
+   private static Part parsePart(JSONObject jPart) throws JSONException {
+      return new Part(jPart.getString("text"), jPart.getString("url"),
        jPart.getString("thumbnail"), jPart.getString("notes"));
    }
 
-   private static GuideTool parseTool(JSONObject jTool) throws JSONException {
-      return new GuideTool(jTool.getString("text"), jTool.getString("url"),
+   private static Tool parseTool(JSONObject jTool) throws JSONException {
+      return new Tool(jTool.getString("text"), jTool.getString("url"),
        jTool.getString("thumbnail"), jTool.getString("notes"));
    }
 
@@ -331,10 +333,12 @@ public class JSONHelper {
    public static TopicLeaf parseTopicLeaf(String json) throws JSONException {
       JSONObject jTopic = new JSONObject(json);
       JSONArray jGuides = jTopic.getJSONArray("guides");
+      JSONObject jParts = jTopic.getJSONObject("parts");
+      JSONArray jTools = jTopic.getJSONArray("tools");
+      JSONArray jFlags = jTopic.getJSONArray("flags");
       JSONObject jSolutions = jTopic.getJSONObject("solutions");
       JSONObject jInfo = jTopic.getJSONObject("topic_info");
       TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
-
 
       for (int i = 0; i < jGuides.length(); i++) {
          String guideJson = jGuides.getJSONObject(i).toString();
@@ -344,6 +348,12 @@ public class JSONHelper {
 
       topicLeaf.setNumSolutions(Integer.parseInt(jSolutions.getString("count")));
       topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
+      topicLeaf.setDescription(jTopic.getString("description"));
+      topicLeaf.setImage(parseImage(jTopic.getJSONObject("image"), null));
+      topicLeaf.setLocale(jTopic.getString("locale"));
+      topicLeaf.setContentsRaw(jTopic.getString("contents_raw"));
+      topicLeaf.setContentsRendered(jTopic.getString("contents_rendered"));
+      topicLeaf.setTitle(jTopic.getString("title"));
 
       return topicLeaf;
    }
