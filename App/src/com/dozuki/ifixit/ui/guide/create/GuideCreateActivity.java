@@ -213,7 +213,7 @@ public class GuideCreateActivity extends BaseActivity {
       mGuideForDelete = item;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.confirm_delete_title))
-       .setMessage(getString(R.string.confirm_delete_body) + " \"" + item.mTitle + "\"?")
+       .setMessage(getString(R.string.confirm_delete_body, item.mTitle))
        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
              APIService.call(GuideCreateActivity.this, APIService.getRemoveGuideAPICall(mGuideForDelete));
