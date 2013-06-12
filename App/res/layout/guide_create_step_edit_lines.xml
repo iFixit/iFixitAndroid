@@ -12,32 +12,17 @@
         android:orientation="vertical"
         android:gravity="center_horizontal">
 
-        <RelativeLayout
+        <EditText
+            android:id="@+id/step_edit_title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="16dp">
-
-            <TextView
-                android:id="@+id/step_edit_title_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="7dp"
-                android:textStyle="bold"
-                android:text="Title -"
-                android:textSize="24sp"/>
-
-            <EditText
-                android:id="@+id/step_edit_title_text"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_toRightOf="@+id/step_edit_title_label"
-                android:layout_marginLeft="8dp"
-                android:textSize="24sp"
-                android:imeOptions="actionDone"
-                android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
-                android:selectAllOnFocus="true"
-                android:singleLine="true"/>
-        </RelativeLayout>
+            android:textSize="24sp"
+            android:imeOptions="actionDone"
+            android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
+            android:selectAllOnFocus="true"
+            android:hint="@string/step_title_hint"
+            android:layout_marginBottom="16dp"
+            android:singleLine="true"/>
 
         <LinearLayout
             android:id="@+id/edit_step_bullet_container"

@@ -17,7 +17,7 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/guide_step_item_frame"
-        android:hint="@string/step_title_hint"
+        android:hint="@string/step_text_default"
         android:imeOptions="actionDone"
         android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
         android:maxLength="350" />

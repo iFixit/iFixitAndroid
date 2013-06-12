@@ -243,7 +243,8 @@
     <string name="guide_create_confirm_leave_without_save_cancel">Exit</string>
     <string name="guide_create_step_edit_main_image_description">Main step edit image</string>
     <string name="default_step_title">Untitled step</string>
-    <string name="step_title_hint">Insert wisdom here.</string>
+    <string name="step_title_hint">Step Title (optional)</string>
+    <string name="step_text_default">Insert Wisdom Here</string>
 
     <!-- Guide Step Edit Media -->
     <string name="step_edit_new_thumb_actions_title">Attach Image</string>

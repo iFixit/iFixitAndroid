@@ -23,7 +23,7 @@
               android:layout_toLeftOf="@+id/guide_step_drag_handle"
               android:layout_toRightOf="@+id/guide_step_item_frame"
               android:ellipsize="end"
-              android:hint="@string/step_title_hint"
+              android:hint="@string/step_text_default"
               android:singleLine="true"/>
 
       <FrameLayout
