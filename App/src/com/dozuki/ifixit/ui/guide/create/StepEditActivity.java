@@ -190,7 +190,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          createDeleteDialog(this).show();
       }
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);

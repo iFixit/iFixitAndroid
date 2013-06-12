@@ -149,10 +149,7 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
          }
       });
 
-      if (!mFromEdit) {
-         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      }
-
+      //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //initSpeechRecognizer();
    }
 
