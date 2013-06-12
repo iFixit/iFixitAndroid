@@ -22,22 +22,23 @@ import org.xml.sax.XMLReader;
 public class TopicInfoFragment extends SherlockFragment {
 
    private static final float HEADER_SIZE = 1.5f;
-   private static final String IMAGE_SIZE = ".large";
+   private static final String IMAGE_SIZE = ".medium";
    private static final String TOPIC_KEY = "TOPIC_KEY";
 
    private TopicLeaf mTopic;
 
-   public static TopicInfoFragment newInstance(TopicLeaf topic) {
-      return new TopicInfoFragment(topic);
-   }
+   /**
+    * Required for restoring fragments
+    */
+   public TopicInfoFragment() {}
 
    public TopicInfoFragment(TopicLeaf topic) {
       mTopic = topic;
    }
-
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      View v = inflater.inflate(R.layout.topic_info, container, false);
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+
       Bundle b = getArguments();
 
       if (savedInstanceState != null) {
@@ -45,6 +46,11 @@ public class TopicInfoFragment extends SherlockFragment {
       } else if (b != null) {
          mTopic = (TopicLeaf) b.getSerializable(TOPIC_KEY);
       }
+   }
+
+   @Override
+   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+      View v = inflater.inflate(R.layout.topic_info, container, false);
 
       ((TextView) v.findViewById(R.id.topic_info_title)).setText(Html.fromHtml(mTopic.getTitle()));
       ((TextView) v.findViewById(R.id.topic_info_summary)).setText(mTopic.getDescription());
@@ -67,6 +73,7 @@ public class TopicInfoFragment extends SherlockFragment {
    }
 
    private Spanned getStyledContent() {
+      // Remove anchor elements from html
       String topicContent = mTopic.getContentRendered().replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
       Spanned topicHtml = Html.fromHtml(topicContent, null,
        new Html.TagHandler() {

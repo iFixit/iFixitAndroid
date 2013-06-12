@@ -3,39 +3,45 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:padding="16dp"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
         <ImageView
             android:id="@+id/topic_info_image"
-            android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_width="334dp"
             android:scaleType="fitCenter"
+            android:layout_margin="16dp"
             android:contentDescription="@string/topic_info_image"/>
 
         <TextView
             android:id="@+id/topic_info_title"
             style="@style/TitleText"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_toRightOf="@+id/topic_info_image"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="16dp"/>
 
         <TextView
             android:id="@+id/topic_info_summary"
             style="@style/BodyText"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/topic_info_title"
+            android:layout_toRightOf="@+id/topic_info_image"
+            android:layout_marginRight="16dp"
             android:layout_marginTop="12dp"/>
 
         <TextView
             android:id="@+id/topic_info_content"
             style="@style/BodyText"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
-            android:layout_marginTop="24dp"/>
+            android:layout_width="wrap_content"
+            android:layout_below="@+id/topic_info_image"
+            android:padding="16dp"
+            android:paddingTop="24dp"/>
 
-    </LinearLayout>
+    </RelativeLayout>
 </ScrollView>

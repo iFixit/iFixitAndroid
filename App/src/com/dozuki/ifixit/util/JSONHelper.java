@@ -335,7 +335,7 @@ public class JSONHelper {
       JSONArray jGuides = jTopic.getJSONArray("guides");
       JSONObject jParts = jTopic.getJSONObject("parts");
       JSONArray jTools = jTopic.getJSONArray("tools");
-      JSONArray jFlags = jTopic.getJSONArray("flags");
+      //JSONArray jFlags = jTopic.getJSONArray("flags");
       JSONObject jSolutions = jTopic.getJSONObject("solutions");
       JSONObject jInfo = jTopic.getJSONObject("topic_info");
       TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));

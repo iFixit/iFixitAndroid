@@ -8,8 +8,7 @@
         android:id="@+id/topic_view_fragment"
         android:name="com.dozuki.ifixit.ui.topic_view.TopicViewFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
-    </fragment>
+        android:layout_height="match_parent"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -21,15 +20,13 @@
             android:id="@+id/topic_list_fragment"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="50" >
-        </FrameLayout>
+            android:layout_weight="50" />
 
         <FrameLayout
             android:id="@+id/topic_view_overlay"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            android:layout_weight="50" >
-        </FrameLayout>
+            android:layout_weight="50" />
     </LinearLayout>
 
 </FrameLayout>

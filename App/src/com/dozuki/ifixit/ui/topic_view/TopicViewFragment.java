@@ -257,7 +257,7 @@ public class TopicViewFragment extends SherlockFragment {
                mSelectedTab = GUIDES_TAB;
                return selectedFragment;
             case MORE_INFO_TAB:
-               selectedFragment = TopicInfoFragment.newInstance(mTopicLeaf);
+               selectedFragment = new TopicInfoFragment(mTopicLeaf);
                mSelectedTab = MORE_INFO_TAB;
                return selectedFragment;
             case ANSWERS_TAB:
