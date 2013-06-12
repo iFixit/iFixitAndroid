@@ -45,6 +45,34 @@
         <item name="android:paddingRight">4dip</item>
     </style>
 
+    <style name="Base.BottomBar"/>
+
+    <style name="Base.BottomBar.Button">
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:background">@drawable/icon_selector</item>
+        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="Base.BulletIcon">
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">@drawable/icon_selector</item>
+    </style>
+
+    <style name="Base.BulletItem">
+        <item name="android:layout_height">48dp</item>
+        <item name="android:background">@drawable/bullet_item</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:drawablePadding">10dp</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
+
     <style name="TitleText" parent="android:TextAppearance.Medium">
         <item name="android:typeface">sans</item>
         <item name="android:textSize">@dimen/title_text_size</item>

@@ -262,7 +262,7 @@
     <string name="indent_limit_above">Cannot indent any further.</string>
     <string name="confirm_reorder_bullets">Confirm</string>
     <string name="reorder_bullets_title">Reorder Bullets</string>
-    <string name="create_bullets">Add new bullet</string>
+    <string name="add_new_bullet">Add new bullet</string>
     <string name="cancel_reorder_bullets">Cancel</string>
 
 

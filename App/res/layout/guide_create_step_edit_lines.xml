@@ -47,16 +47,14 @@
 
             <Button
                 android:id="@+id/add_new_bullet_button"
+                style="@style/Base.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/guide_create_edit_add_bullet_button_margin_top"
-                android:background="@color/fireswing_grey"
-                android:contentDescription="@string/topic_guide_thumbnail"
                 android:padding="@dimen/guide_create_edit_add_bullet_button_padding"
-                android:text="@string/create_bullets"
-                android:textColor="@color/fireswing_dark_grey"
-                android:textStyle="bold"/>
+                android:text="@string/add_new_bullet"
+                android:contentDescription="@string/topic_guide_thumbnail"/>
         </LinearLayout>
 
         <FrameLayout
