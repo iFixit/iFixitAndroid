@@ -13,7 +13,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
-        android:background="@drawable/ic_dialog_bullet_arrow_spinner"
+        android:background="@drawable/spinner_background_holo_light"
         android:contentDescription="@string/topic_guide_thumbnail"
         android:scaleType="center"
         android:clickable="true"
