@@ -17,20 +17,16 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepVideo;
 import com.dozuki.ifixit.model.guide.StepVideoThumbnail;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
-import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.picasso.Picasso;
 
 public class StepVideoFragment extends SherlockFragment {
 
    public static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
    private Activity mContext;
-   private ImageView mPoster;
    private StepVideoThumbnail mVideoPoster;
    private StepVideo mVideo;
-   private ImageManager mImageManager;
    private Resources mResources;
    private DisplayMetrics mMetrics;
-   private RelativeLayout mVideoPlayButtonContainer;
-   private ImageButton mVideoPlayButton;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -38,15 +34,9 @@ public class StepVideoFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      mContext = (Activity) getActivity();
-
-      MainApplication app = (MainApplication) mContext.getApplication();
+      mContext = getActivity();
 
       super.onCreate(savedInstanceState);
-
-      if (mImageManager == null) {
-         mImageManager = app.getImageManager();
-      }
 
       mResources = mContext.getResources();
 
@@ -74,19 +64,22 @@ public class StepVideoFragment extends SherlockFragment {
          mVideoPoster = mVideo.getThumbnail();
       }
 
-      mPoster = (ImageView) v.findViewById(R.id.step_edit_video_poster);
-      mVideoPlayButtonContainer = (RelativeLayout) v.findViewById(R.id.video_play_button_container);
-      mVideoPlayButton = (ImageButton) v.findViewById(R.id.video_play_button);
+      ImageView poster = (ImageView) v.findViewById(R.id.step_edit_video_poster);
+      RelativeLayout playButtonContainer = (RelativeLayout) v.findViewById(R.id.video_play_button_container);
+      ImageButton playButton = (ImageButton) v.findViewById(R.id.video_play_button);
 
       // Size the video preview screenshot within the available screen space
-      ViewGroup.LayoutParams params = fitToSpace(mPoster, mVideoPoster.getWidth(), mVideoPoster.getHeight());
-      mPoster.setLayoutParams(params);
-      mVideoPlayButtonContainer.setLayoutParams(params);
+      ViewGroup.LayoutParams params = fitToSpace(poster, mVideoPoster.getWidth(), mVideoPoster.getHeight());
+      poster.setLayoutParams(params);
+      playButtonContainer.setLayoutParams(params);
 
-      mImageManager.displayImage(mVideoPoster.getUrl(), mContext, mPoster);
+      Picasso.with(mContext)
+       .load(mVideoPoster.getUrl())
+       .error(R.drawable.no_image)
+       .into(poster);
 
-      mVideoPlayButton.setTag(R.id.guide_step_view_video_url, mVideo.getEncodings().get(0).getURL());
-      mVideoPlayButton.setOnClickListener(new View.OnClickListener() {
+      playButton.setTag(R.id.guide_step_view_video_url, mVideo.getEncodings().get(0).getURL());
+      playButton.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
             String url = (String) v.getTag(R.id.guide_step_view_video_url);

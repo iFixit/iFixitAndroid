@@ -1,7 +1,7 @@
 package com.dozuki.ifixit.ui.gallery;
 
-import android.app.Activity;
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AlphaAnimation;
@@ -9,39 +9,45 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
-import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.picasso.Picasso;
 
 public class MediaViewItem extends RelativeLayout {
-   public MediaInfo mListRef;
-   public String mLocalPath;
+   private MediaInfo mListRef;
+   private String mLocalPath;
 
-   public FadeInImageView mImageview;
-   public RelativeLayout mSelectImage;
+   private RelativeLayout mSelectImage;
+   private FadeInImageView mImageView;
    private ProgressBar mLoadingBar;
    private Context mContext;
-   private ImageManager mImageManager;
 
-   public MediaViewItem(Context context, ImageManager imageManager) {
+   public MediaViewItem(Context context) {
       super(context);
       mContext = context;
-      mImageManager = imageManager;
       mListRef = null;
       mLocalPath = null;
-      LayoutInflater inflater = (LayoutInflater)context.getSystemService(
-       Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.gallery_cell, this, true);
 
-      mImageview = (FadeInImageView)findViewById(R.id.media_image);
-      mSelectImage = (RelativeLayout)findViewById(R.id.selected_image);
-      mSelectImage.setVisibility(View.INVISIBLE);
+      mImageView = (FadeInImageView)findViewById(R.id.media_image);
+      mSelectImage = ((RelativeLayout)findViewById(R.id.selected_image));
       mLoadingBar = (ProgressBar)findViewById(R.id.gallery_cell_progress_bar);
+
+      mSelectImage.setVisibility(View.INVISIBLE);
       mLoadingBar.setVisibility(View.GONE);
    }
 
-   public void setImageItem(String image, Context context, boolean fade) {
-      mContext = context;
-      mImageview.setFadeIn(fade);
-      mImageManager.displayImage(image, (Activity)mContext, mImageview);
+   public void setImageItem(String image) {
+      Picasso
+       .with(mContext)
+       .load(image)
+       .into(mImageView);
+   }
+
+   public void setImageItem(Uri image) {
+      Picasso
+       .with(mContext)
+       .load(image)
+       .into(mImageView);
    }
 
    public void setLoading(boolean loading) {
@@ -50,10 +56,22 @@ public class MediaViewItem extends RelativeLayout {
          AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
          alpha.setDuration(0); // Make animation instant.
          alpha.setFillAfter(true); // Persist after the animation ends.
-         mImageview.startAnimation(alpha);
+         mImageView.startAnimation(alpha);
       } else {
          mLoadingBar.setVisibility(View.GONE);
-         mImageview.clearAnimation();
+         mImageView.clearAnimation();
       }
+   }
+
+   public void setListRef(MediaInfo listRef) {
+      mListRef = listRef;
+   }
+
+   public MediaInfo getListRef() {
+      return mListRef;
+   }
+
+   public void toggleSelected(boolean selected) {
+      mSelectImage.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
    }
 }

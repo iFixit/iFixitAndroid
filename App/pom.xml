@@ -73,13 +73,7 @@
         <dependency>
             <groupId>com.github.kevinsawicki</groupId>
             <artifactId>http-request</artifactId>
-            <version>3.1</version>
-        </dependency>
-        <dependency>
-            <groupId>com.marczych.androidimagemanager</groupId>
-            <artifactId>android-image-manager</artifactId>
-            <version>1.0.1</version>
-            <type>apklib</type>
+            <version>5.2</version>
         </dependency>
         <dependency>
             <groupId>com.marczych.androidsectionheaders</groupId>
@@ -127,6 +121,12 @@
             <version>2.1.1</version>
             <type>apklib</type>
         </dependency>
+        <dependency>
+            <groupId>com.squareup.picasso</groupId>
+            <artifactId>picasso</artifactId>
+            <version>1.1.0</version>
+        </dependency>
+
     </dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>

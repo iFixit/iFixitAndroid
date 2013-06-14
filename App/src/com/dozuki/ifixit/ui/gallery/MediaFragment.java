@@ -39,7 +39,6 @@ import com.dozuki.ifixit.ui.login.LocalImage;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.marczych.androidimagemanager.ImageManager;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,7 +67,6 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
    private GridView mGridView;
    protected MediaAdapter mGalleryAdapter;
    private String mUserName;
-   private ImageManager mImageManager;
    protected ArrayList<Boolean> mSelectedList;
    protected HashMap<String, LocalImage> mLocalURL;
    private HashMap<String, Bitmap> mLimages;
@@ -90,13 +88,6 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
       super.onCreate(savedInstanceState);
 
       setHasOptionsMenu(true);
-
-      if (mImageManager == null) {
-         mImageManager = MainApplication.get().getImageManager();
-         mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
-         mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
-         mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
-      }
 
       mImageSizes = MainApplication.get().getImageSizes();
       mMode = null;
@@ -146,7 +137,7 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
       View view = inflater.inflate(R.layout.gallery_view, container, false);
 
       mGridView = (GridView) view.findViewById(R.id.gridview);
-      mNoMediaView = (TextView)view.findViewById(R.id.no_images_text);
+      mNoMediaView = (TextView) view.findViewById(R.id.no_images_text);
 
       mGridView.setAdapter(mGalleryAdapter);
       mGridView.setOnScrollListener(new GalleryOnScrollListener());
@@ -366,57 +357,37 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
          MediaViewItem itemView = (MediaViewItem) convertView;
 
          if (convertView == null) {
-            itemView = new MediaViewItem(getSherlockActivity(), mImageManager);
+            itemView = new MediaViewItem(getSherlockActivity());
          }
 
          itemView.setLoading(false);
 
          if (mMediaList != null) {
             MediaInfo image = mMediaList.getItems().get(position);
+            itemView.setListRef(image);
 
             // image was pulled from the server
             if (mMediaList.getItems().get(position).getItemId() != null &&
              mMediaList.getItems().get(position).getKey() == null) {
                String imageUrl = image.getGuid() + mImageSizes.getThumb();
-               itemView.setImageItem(imageUrl, getSherlockActivity(), !image.getLoaded());
-               itemView.mListRef = image;
-               image.setLoaded(true);
+               itemView.setImageItem(imageUrl);
                itemView.setTag(image.getGuid());
-               // image was added locally
             } else {
                Uri temp = Uri.parse(image.getGuid());
-               Bitmap bitmap;
+
                if (temp.toString().contains(".jpg")) {
-                  // camera image
-                  bitmap = mLimages.get(image.getGuid());
+                  // image was added locally from camera
+                  itemView.setImageItem(temp);
                } else {
                   // gallery image
-                  bitmap = MediaStore.Images.Thumbnails.getThumbnail(
-                   getSherlockActivity().getContentResolver(), ContentUris.parseId(temp),
-                   MediaStore.Images.Thumbnails.MINI_KIND, null);
-               }
-
-               itemView.mImageview.setImageBitmap(bitmap);
-               itemView.mListRef = image;
-               if (image.getKey() != null) {
-                  if (mLocalURL.get(image.getKey()).mImgid == null) {
-                     // Has not received an imageID so is still uploading
-                     itemView.setLoading(true);
-                  } else {
-                     image.setItemId(mLocalURL.get(image.getKey()).mImgid);
-                     itemView.setLoading(false);
-                  }
+                  itemView.setImageItem(MediaStore.Images.Media.getContentUri(temp.toString()));
                }
 
                itemView.setTag(image.getKey());
             }
          }
 
-         if (mSelectedList.get(position)) {
-            itemView.mSelectImage.setVisibility(View.VISIBLE);
-         } else {
-            itemView.mSelectImage.setVisibility(View.INVISIBLE);
-         }
+         itemView.toggleSelected(mSelectedList.get(position));
 
          return itemView;
       }
@@ -492,8 +463,7 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
    }
 
    @Override
-   public boolean onItemLongClick(AdapterView<?> parent, View view,
-    int position, long id) {
+   public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
       setDeleteMode();
       return false;
    }
@@ -531,7 +501,7 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
          }
 
          Intent selectResult = new Intent();
-         selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY, cell.mListRef);
+         selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY, cell.getListRef());
          getSherlockActivity().setResult(Activity.RESULT_OK, selectResult);
          getSherlockActivity().finish();
       } else if (mMode != null) {
@@ -590,26 +560,14 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
 
    private AlertDialog createDeleteConfirmDialog() {
       mShowingDelete = true;
-      int selectedCount = 0;
-      for (boolean selected : mSelectedList) {
-         if (selected) {
-            selectedCount++;
-         }
-      }
 
-      String msg = getString(R.string.confirm_delete_body) + " " +
-       selectedCount + " ";
-      if (selectedCount > 1) {
-         msg += getString(R.string.images);
-      } else {
-         msg += getString(R.string.image);
-      }
-      msg += "?";
+      int selectedCount = countSelected();
 
       AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity());
       builder
        .setTitle(getString(R.string.confirm_delete_title))
-       .setMessage(msg)
+       .setMessage(getString(R.string.media_delete_body, selectedCount,
+        selectedCount > 1 ? getString(R.string.images) : getString(R.string.image)))
        .setPositiveButton(getString(R.string.yes),
         new DialogInterface.OnClickListener() {
            @Override
@@ -650,6 +608,17 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
 
    public void setForReturn(boolean returnItem) {
       mSelectForReturn = returnItem;
+   }
+
+   private int countSelected() {
+      int selectedCount = 0;
+      for (boolean selected : mSelectedList) {
+         if (selected) {
+            selectedCount++;
+         }
+      }
+
+      return selectedCount;
    }
 
 }

@@ -14,9 +14,9 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.squareup.picasso.Picasso;
 import org.xml.sax.XMLReader;
 
 public class TopicInfoFragment extends SherlockFragment {
@@ -35,6 +35,7 @@ public class TopicInfoFragment extends SherlockFragment {
    public TopicInfoFragment(TopicLeaf topic) {
       mTopic = topic;
    }
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
@@ -58,10 +59,12 @@ public class TopicInfoFragment extends SherlockFragment {
       content.setMovementMethod(LinkMovementMethod.getInstance());
       content.setText(getStyledContent());
 
-      MainApplication.get().getImageManager().displayImage(
-       mTopic.getImage().mBaseUrl + IMAGE_SIZE,
-       getSherlockActivity(),
-       (ImageView) v.findViewById(R.id.topic_info_image));
+      String url = mTopic.getImage().mBaseUrl + IMAGE_SIZE;
+
+      Picasso.with(getSherlockActivity())
+       .load(url)
+       .error(R.drawable.no_image)
+       .into((ImageView) v.findViewById(R.id.topic_info_image));
 
       return v;
    }

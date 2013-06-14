@@ -3,18 +3,15 @@ package com.dozuki.ifixit.ui.topic_view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
-import com.marczych.androidimagemanager.ImageManager;
 
 public class TopicViewActivity extends BaseActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;
    private TopicNode mTopicNode;
-   protected ImageManager mImageManager;
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -23,7 +20,6 @@ public class TopicViewActivity extends BaseActivity {
       setContentView(R.layout.topic_view);
 
       showLoading(R.id.topic_view_fragment);
-      mImageManager = ((MainApplication)getApplication()).getImageManager();
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       if (savedState == null) {

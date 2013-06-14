@@ -11,17 +11,17 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.APIService;
-import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.picasso.Picasso;
 
 public class GuideListItem extends LinearLayout {
    private static final int ANIMATION_DURATION = 300;
 
    private static final boolean STATE_OPEN = true;
    private static final boolean STATE_CLOSED = false;
+   private Context mContext;
 
    private TextView mTitleView;
    private ImageView mThumbnail;
@@ -33,8 +33,6 @@ public class GuideListItem extends LinearLayout {
    private LinearLayout mEditBar;
    private Activity mActivity;
    private final RelativeLayout mUpperSection;
-
-   private ImageManager mImageManager;
 
    private boolean mEditBarVisible = false;
    private GuideInfo mGuideInfo;
@@ -79,8 +77,8 @@ public class GuideListItem extends LinearLayout {
 
    public GuideListItem(Context context, Activity activity) {
       super(context);
-      mImageManager = MainApplication.get().getImageManager();
       mActivity = activity;
+      mContext = context;
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.guide_create_item, this, true);
@@ -115,17 +113,19 @@ public class GuideListItem extends LinearLayout {
    }
 
    public void setRowData(GuideInfo guideInfo) {
-      String image;
 
       mGuideInfo = guideInfo;
       setTag(mGuideInfo.mGuideid);
 
       mTitleView.setText(Html.fromHtml(mGuideInfo.mTitle));
 
-      image = mGuideInfo.mImage != null ? mGuideInfo.mImage.getPath(".standard") : "";
+      String image = mGuideInfo.hasImage() ? mGuideInfo.getImagePath(".standard") : "noimage.jpg";
 
       if (mThumbnail != null) {
-         mImageManager.displayImage(image, mActivity, mThumbnail);
+         Picasso.with(mContext)
+          .load(image)
+          .error(R.drawable.no_image)
+          .into(mThumbnail);
       }
 
       setPublished(mGuideInfo.mPublic);
@@ -142,7 +142,7 @@ public class GuideListItem extends LinearLayout {
    }
 
    private void buildPublishView(int drawable, int color, int textString, int buttonString) {
-      Drawable img = getContext().getResources().getDrawable(R.drawable.ic_list_item_publish);
+      Drawable img = getContext().getResources().getDrawable(drawable);
       img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
 
       mPublishText.setText(textString);

@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.topic_view;
 
-import android.app.Activity;
 import android.content.Context;
 import android.text.Html;
 import android.view.LayoutInflater;
@@ -11,37 +10,33 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.picasso.Picasso;
 
 public class TopicGuideItemView extends RelativeLayout {
    private TextView mTitleView;
    private ImageView mThumbnail;
-   private ImageManager mImageManager;
+   private Context mContext;
 
-   public TopicGuideItemView(Context context, ImageManager imageManager) {
+   public TopicGuideItemView(Context context) {
       super(context);
-      mImageManager = imageManager;
+      mContext = context;
 
-      LayoutInflater inflater = (LayoutInflater)context
-       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      inflater.inflate(R.layout.topic_guide_item, this, true);
+      LayoutInflater.from(mContext).inflate(R.layout.topic_guide_item, this, true);
 
       mTitleView = (TextView)findViewById(R.id.topic_guide_title);
       mThumbnail = (ImageView)findViewById(R.id.topic_guide_thumbnail);
    }
 
-   public void setGuideItem(GuideInfo guide, Activity activity) {
+   public void setGuideItem(GuideInfo guide) {
       ImageSizes imageSizes = MainApplication.get().getImageSizes();
 
-      if (guide.hasSubject()) {
-         mTitleView.setText(guide.mSubject);
-      } else {
-         mTitleView.setText(Html.fromHtml(guide.mTitle));
-      }
+      mTitleView.setText(guide.hasSubject() ? guide.mSubject : Html.fromHtml(guide.mTitle));
 
-      if (guide.mImage != null) {
-         mImageManager.displayImage(guide.mImage.getPath(imageSizes.getGrid()),
-          (Activity)activity, mThumbnail);
+      if (guide.hasImage()) {
+         Picasso.with(mContext)
+          .load(guide.getImagePath(imageSizes.getGrid()))
+          .error(R.drawable.no_image)
+          .into(mThumbnail);
       }
    }
 }

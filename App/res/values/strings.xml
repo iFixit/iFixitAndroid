@@ -123,6 +123,10 @@
         server.
     </string>
 
+    <string name="media_delete_body">
+        Are you sure you want to delete %1$d %2$s?
+    </string>
+
     <!-- Topic List -->
     <string name="generalInformation">General Information</string>
     <string name="categories">Categories</string>

@@ -11,10 +11,8 @@ import android.view.ViewGroup;
 import android.widget.*;
 import android.widget.RelativeLayout.LayoutParams;
 import com.actionbarsherlock.view.ActionMode;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.marczych.androidimagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
@@ -33,7 +31,6 @@ public class BulletReorderFragment extends DialogFragment {
    private DragSortListView mDragListView;
    private DragSortController mController;
    private StepAdapter mAdapter;
-   private ImageManager mImageManager;
    private Button mCancel;
    private Button mConfirm;
 
@@ -92,9 +89,7 @@ public class BulletReorderFragment extends DialogFragment {
 
       // mActionMode = (getSherlockActivity().startActionMode(new ContextualStepReorder()));
       getDialog().setTitle(getActivity().getResources().getString(R.string.reorder_bullets_title));
-      if (mImageManager == null) {
-         mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
-      }
+
       if (savedInstanceState != null) {
          mLines = (ArrayList<StepLine>) savedInstanceState.get(LINES_KEY);
       }

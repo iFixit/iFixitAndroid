@@ -1,11 +1,8 @@
 package com.dozuki.ifixit.ui.guide;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -19,7 +16,7 @@ import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.ui.guide.create.StepEditImageFragment;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -33,13 +30,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private ArrayList<ImageView> mThumbs;
    private ImageView mMainImage;
    private ImageView mAddThumbButton;
-   private ImageManager mImageManager;
    private Context mContext;
-   private String mCurrentURL;
    private ImageSizes mImageSizes;
    private boolean mShowSingle = false;
    private boolean mCanEdit;
-   private ArrayList<APIImage> mThumbnails;
    private DisplayMetrics mDisplayMetrics;
    private float mNavigationHeight;
    private float mThumbnailWidth;
@@ -75,7 +69,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    private void init(Context context) {
 
-      mImageManager = MainApplication.get().getImageManager();
       mContext = context;
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -146,11 +139,14 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       if (fromDisk) {
          path = image.mBaseUrl;
-         thumb.setImageBitmap(BitmapFactory.decodeFile(path));
       } else {
          path = image.getPath(mImageSizes.getThumb());
-         mImageManager.displayImage(path, (Activity) mContext, thumb);
       }
+
+      Picasso.with(mContext)
+       .load(path)
+       .error(R.drawable.no_image)
+       .into(thumb);
 
       getThumbnailDimensions();
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
@@ -213,12 +209,15 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    public void setCurrentThumb(String url) {
       if (url.startsWith("http")) {
-         String mainUrl = url + mImageSizes.getMain();
-         mImageManager.displayImage(mainUrl, (Activity) mContext, mMainImage);
-      } else {
-         mMainImage.setImageDrawable(Drawable.createFromPath(url));
-         setMainImageDimensions(mMainHeight, mMainWidth);
+         url = url + mImageSizes.getMain();
       }
+
+      Picasso.with(mContext)
+       .load(url)
+       .error(R.drawable.no_image)
+       .into(mMainImage);
+
+      setMainImageDimensions(mMainHeight, mMainWidth);
       mMainImage.setTag(url);
    }
 
@@ -288,13 +287,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          public void onClick(View v) {
             String url = (String) v.getTag();
 
-            if (url == null || (url != null && (url.equals("") || url.startsWith(".")))) return;
+            if (url == null || (url.equals("") || url.startsWith("."))) return;
 
             Intent intent = new Intent(mContext, FullImageViewActivity.class);
-
-            if (!url.startsWith("http")) {
-               intent.putExtra(FullImageViewActivity.LOCAL_URL, true);
-            }
             intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
             mContext.startActivity(intent);
          }

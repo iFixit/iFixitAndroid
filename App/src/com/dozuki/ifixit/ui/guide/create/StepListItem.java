@@ -14,7 +14,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepVideoThumbnail;
-import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
@@ -29,7 +29,6 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
    private ImageView mImageView;
    private RelativeLayout mStepFrame;
    private Context mContext;
-   private ImageManager mImageManager;
    private StepPortalFragment mPortalRef;
    private GuideStep mStepObject;
    private int mStepPosition;
@@ -39,7 +38,6 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mContext = context;
       mPortalRef = portalRef;
 
-      mImageManager = MainApplication.get().getImageManager();
       mStepObject = sObject;
       mStepPosition = position;
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -130,35 +128,34 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
    }
 
    private void setStepThumbnail(ArrayList<APIImage> imageList, ImageView imageView) {
-      boolean img = false;
       for (APIImage imageInfo : imageList) {
          if (imageInfo.mId > 0) {
-            imageView.setTag(imageInfo.getPath(".standard"));
-            mImageManager.displayImage(imageInfo.getPath(".standard"), mPortalRef.getActivity(), imageView);
-            imageView.invalidate();
+            String url = imageInfo.getPath(".standard");
+            setStepThumbnail(url, imageView);
             return;
          }
-      }
-
-      if (!img) {
-         mImageManager.displayImage("", mPortalRef.getActivity(), imageView);
-         imageView.invalidate();
       }
    }
 
    private void setStepThumbnail(StepVideoThumbnail thumb, ImageView imageView) {
-      boolean img = false;
-      if (!thumb.getUrl().equals("")) {
-         // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
-         imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-         imageView.setTag(thumb.getUrl(".standard"));
+      String url = thumb.getUrl(".standard");
 
-         mImageManager.displayImage(thumb.getUrl(".standard"), mPortalRef.getActivity(), imageView);
-         imageView.invalidate();
-      } else {
-         mImageManager.displayImage("", mPortalRef.getActivity(), imageView);
-         imageView.invalidate();
-      }
+      // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
+      imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+      setStepThumbnail(url, imageView);
+   }
+
+   private void setStepThumbnail(String url, ImageView imageView) {
+      imageView.setTag(url);
+
+      Picasso
+       .with(mContext)
+       .load(url)
+       .error(R.drawable.no_image)
+       .into(imageView);
+
+      imageView.invalidate();
    }
 
    public void setChecked(boolean check) {

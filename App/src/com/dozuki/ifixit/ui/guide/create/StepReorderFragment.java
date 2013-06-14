@@ -18,9 +18,9 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.APIImage;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.marczych.androidimagemanager.ImageManager;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,6 @@ public class StepReorderFragment extends SherlockFragment {
    private DragSortListView mDragListView;
    private DragSortController mController;
    private StepAdapter mAdapter;
-   private ImageManager mImageManager;
    private Guide mGuide;
    private ArrayList<GuideStep> mStepsCopy;
    private boolean mReturnVal;
@@ -84,9 +83,6 @@ public class StepReorderFragment extends SherlockFragment {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       getSherlockActivity().startActionMode(new ContextualStepReorder());
-      if (mImageManager == null) {
-         mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
-      }
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.get(StepsActivity.GUIDE_KEY);
          mStepsCopy = (ArrayList<GuideStep>) savedInstanceState.get(STEP_LIST_ID);
@@ -197,31 +193,27 @@ public class StepReorderFragment extends SherlockFragment {
              (position)) + 1)));
             holder.stepNumber.setVisibility(View.VISIBLE);
          }
-         holder.mImageView.setTag("");
+
          setImageThumb(getItem(position).getImages(), holder.mImageView);
-         holder.mImageView.invalidate();
 
          return v;
       }
    }
 
    private void setImageThumb(ArrayList<APIImage> imageList, ImageView image) {
-      boolean img = false;
+      String url = "";
+
       for (APIImage imageInfo : imageList) {
          if (imageInfo.mId > 0) {
-            mImageManager.displayImage(imageInfo.getPath(".thumbnail"),
-             getActivity(), image);
-            image.setTag(imageInfo.getPath(MainApplication.get().getImageSizes().getThumb()));
-            image.invalidate();
-            return;
+            url = imageInfo.getPath(MainApplication.get().getImageSizes().getThumb());
+            image.setTag(url);
+            break;
          }
       }
 
-      if (!img) {
-         mImageManager.displayImage("", getActivity(), image);
-         image.invalidate();
-      }
-
+      Picasso.with(getSherlockActivity())
+       .load(url)
+       .error(R.drawable.no_image)
+       .into(image);
    }
-
 }

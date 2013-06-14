@@ -1,7 +1,5 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -12,52 +10,31 @@ import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.marczych.androidimagemanager.ImageManager;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+import com.squareup.picasso.Picasso;
 
 public class FullImageViewActivity extends SherlockActivity {
    public static final String IMAGE_URL = "IMAGE_URL";
    public static final String LOCAL_URL = "LOCAL_URL";
 
-   private String mImageUrl;
-   private ImageViewTouch mImageZoom;
-   private ImageView mCloseFullScreen;
-   private ImageManager mImageManager;
-   private ImageSizes mImageSizes;
-
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      requestWindowFeature((int)Window.FEATURE_NO_TITLE);
+      requestWindowFeature((int) Window.FEATURE_NO_TITLE);
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-      Bundle extras = getIntent().getExtras();
-      mImageUrl = (String)extras.get(IMAGE_URL);
-      MainApplication application = MainApplication.get();
-      mImageManager = application.getImageManager();
-      mImageSizes = application.getImageSizes();
+      String url = (String) getIntent().getExtras().get(IMAGE_URL);
+      ImageSizes sizes = MainApplication.get().getImageSizes();
 
       setContentView(R.layout.full_screen_image);
 
-      mImageZoom = (ImageViewTouch)findViewById(R.id.imageZoom);
-      boolean localUri = extras.getBoolean(LOCAL_URL, false);
+      Picasso.with(this)
+       .load(url + sizes.getFull())
+       .error(R.drawable.no_image)
+       .into((ImageView)findViewById(R.id.imageZoom));
 
-      if (localUri) {
-         BitmapFactory.Options opt = new BitmapFactory.Options();
-         opt.inSampleSize = 2;
-         opt.inDither = false;
-         opt.inPreferredConfig = Bitmap.Config.ARGB_8888;
-         mImageZoom.setImageBitmap(
-          BitmapFactory.decodeFile(mImageUrl, opt), true);
-         mImageZoom.setVisibility(View.VISIBLE);
-      } else {
-         mImageManager.displayImage(mImageUrl, this, mImageZoom);
-      }
-
-      mCloseFullScreen = (ImageView)findViewById(R.id.fullScreenClose);
-      mCloseFullScreen.setOnClickListener(new OnClickListener() {
+      findViewById(R.id.fullScreenClose).setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
             finish();

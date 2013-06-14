@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.APIImage;
 import com.google.gson.annotations.SerializedName;
 
@@ -41,13 +42,25 @@ public class GuideInfo implements Serializable {
    }
 
    public boolean hasSubject() {
-      List<String> hasSubject = Arrays.asList(new String[]{"repair", "installation", "disassembly"});
-      List<String> noSubject = Arrays.asList(new String[]{"technique", "maintenance", "teardown"});
+      List<String> hasSubject = Arrays.asList("repair", "installation", "disassembly");
+      List<String> noSubject = Arrays.asList("technique", "maintenance", "teardown");
 
       if (mSubject == null) {
          return false;
       }
       return !mSubject.equals("") && hasSubject.contains(mType.toLowerCase());
+   }
+
+   public boolean hasImage() {
+      return mImage != null;
+   }
+
+   public String getImagePath(String size) {
+      String path = mImage.getPath(size);
+      if (MainApplication.inDebug() && path.startsWith("https"))
+         path = path.replace("https", "http");
+
+      return path;
    }
 
    public boolean hasFlag(String flagid) {

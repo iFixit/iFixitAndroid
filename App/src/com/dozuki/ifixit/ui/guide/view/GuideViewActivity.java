@@ -14,7 +14,6 @@ import android.view.animation.Animation.AnimationListener;
 import android.widget.ImageView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseActivity;
@@ -23,7 +22,6 @@ import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
-import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.CirclePageIndicator;
 
@@ -51,7 +49,6 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage = -1;
-   private ImageManager mImageManager;
    private ViewPager mPager;
    private CirclePageIndicator mIndicator;
    private ImageView mNextPageImage;
@@ -67,11 +64,6 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.guide_main);
-
-      mImageManager = MainApplication.get().getImageManager();
-      mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
-      mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
-      mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
 
       showLoading(R.id.loading_container);
       mPager = (ViewPager) findViewById(R.id.guide_pager);

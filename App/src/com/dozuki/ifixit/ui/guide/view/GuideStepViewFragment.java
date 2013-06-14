@@ -26,7 +26,7 @@ import com.dozuki.ifixit.model.guide.*;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.JSONHelper;
-import com.marczych.androidimagemanager.ImageManager;
+import com.squareup.picasso.Picasso;
 
 import java.io.BufferedInputStream;
 import java.io.InputStream;
@@ -43,7 +43,6 @@ public class GuideStepViewFragment extends SherlockFragment {
    private RelativeLayout mMainProgress;
    private RelativeLayout mVideoPlayButtonContainer;
    private GuideStep mStep;
-   private ImageManager mImageManager;
    private StepTextArrayAdapter mTextAdapter;
    private ListView mLineList;
    private Typeface mFont;
@@ -69,10 +68,6 @@ public class GuideStepViewFragment extends SherlockFragment {
       mContext.setTheme(app.getSiteTheme());
 
       super.onCreate(savedState);
-
-      if (mImageManager == null) {
-         mImageManager = app.getImageManager();
-      }
 
       mImageSizes = app.getImageSizes();
       mResources = mContext.getResources();
@@ -174,7 +169,6 @@ public class GuideStepViewFragment extends SherlockFragment {
       mThumbs.setMainImage(mMainImage);
 
       if (stepImages.size() > 0) {
-
          mThumbs.setThumbs(stepImages);
          mThumbs.setCurrentThumb(stepImages.get(0).mBaseUrl);
       }
@@ -203,7 +197,10 @@ public class GuideStepViewFragment extends SherlockFragment {
       mMainWebView.setVisibility(View.GONE);
       mMainProgress.setVisibility(View.GONE);
 
-      mImageManager.displayImage(thumb.getUrl(), mContext, mMainImage);
+      Picasso.with(mContext)
+       .load(thumb.getUrl())
+       .error(R.drawable.no_image)
+       .into(mMainImage);
 
       // Resize the image view to fit the available space.
       String videoURL = video.getEncodings().get(0).getURL();

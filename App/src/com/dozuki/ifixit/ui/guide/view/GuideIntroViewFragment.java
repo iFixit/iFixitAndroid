@@ -9,11 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.util.JSONHelper;
-import com.marczych.androidimagemanager.ImageManager;
 
 public class GuideIntroViewFragment extends SherlockFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
@@ -24,12 +22,9 @@ public class GuideIntroViewFragment extends SherlockFragment {
    private TextView mAuthor;
    private TextView mTools;
    private TextView mParts;
-   private ImageManager mImageManager;
    private Guide mGuide;
 
-   public GuideIntroViewFragment() {
-
-   }
+   public GuideIntroViewFragment() { }
 
    public GuideIntroViewFragment(Guide guide) {
       mGuide = guide;
@@ -41,10 +36,6 @@ public class GuideIntroViewFragment extends SherlockFragment {
 
       if (savedInstanceState != null && mGuide == null) {
          mGuide = (Guide)savedInstanceState.getSerializable(SAVED_GUIDE);
-      }
-
-      if (mImageManager == null) {
-         mImageManager = MainApplication.get().getImageManager();
       }
    }
 

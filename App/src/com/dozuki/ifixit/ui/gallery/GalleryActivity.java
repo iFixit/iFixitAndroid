@@ -46,13 +46,6 @@ public class GalleryActivity extends BaseActivity {
    private HashMap<String, MediaFragment> mMediaCategoryFragments;
    private MediaFragment mCurrentMediaFragment;
 
-   private StepAdapter mStepAdapter;
-   private ViewPager mPager;
-   private TitlePageIndicator titleIndicator;
-
-   private boolean mGetMediaItemForReturn;
-   private ArrayList<String> mFilterList;
-
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication) getApplication()).getSiteTheme());
@@ -72,18 +65,18 @@ public class GalleryActivity extends BaseActivity {
       showingLogout = false;
       showingDelete = false;
 
-      mGetMediaItemForReturn = false;
+      boolean getMediaItemForReturn = false;
       int mReturnValue = -1;
 
       if (getIntent().getExtras() != null) {
          Bundle bundle = getIntent().getExtras();
          mReturnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
-         mFilterList = bundle.getStringArrayList(FILTER_LIST_KEY);
+         ArrayList<String> filterList = bundle.getStringArrayList(FILTER_LIST_KEY);
          Bundle args = new Bundle();
-         args.putStringArrayList(PhotoMediaFragment.FILTERED_MEDIA, mFilterList);
+         args.putStringArrayList(PhotoMediaFragment.FILTERED_MEDIA, filterList);
          mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setArguments(args);
          if (mReturnValue != -1) {
-            mGetMediaItemForReturn = true;
+            getMediaItemForReturn = true;
          }
          startActionMode(new ContextualMediaSelect(this));
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(mMediaReturnValue);
@@ -91,17 +84,17 @@ public class GalleryActivity extends BaseActivity {
 //         mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(mMediaReturnValue);
       }
 
-      mCurrentMediaFragment.setForReturn(mGetMediaItemForReturn);
+      mCurrentMediaFragment.setForReturn(getMediaItemForReturn);
 
       super.onCreate(savedInstanceState);
 
       setContentView(R.layout.gallery_root);
-      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-      mPager = (ViewPager) findViewById(R.id.gallery_view_body_pager);
-      mPager.setAdapter(mStepAdapter);
-      titleIndicator = (TitlePageIndicator) findViewById(R.id.gallery_view_top_bar);
-      titleIndicator.setViewPager(mPager);
-      mPager.setCurrentItem(1);
+      StepAdapter stepAdapter = new StepAdapter(this.getSupportFragmentManager());
+      ViewPager pager = (ViewPager) findViewById(R.id.gallery_view_body_pager);
+      pager.setAdapter(stepAdapter);
+      TitlePageIndicator titleIndicator = (TitlePageIndicator) findViewById(R.id.gallery_view_top_bar);
+      titleIndicator.setViewPager(pager);
+      pager.setCurrentItem(1);
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
    }

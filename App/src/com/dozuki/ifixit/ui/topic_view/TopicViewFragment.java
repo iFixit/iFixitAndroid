@@ -22,7 +22,6 @@ import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -38,7 +37,6 @@ public class TopicViewFragment extends SherlockFragment {
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
-   private ImageManager mImageManager;
    private Site mSite;
    private PageAdapter mPageAdapter;
    private ViewPager mPager;
@@ -62,12 +60,7 @@ public class TopicViewFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      getActivity().setTitle("");
       super.onCreate(savedInstanceState);
-
-      if (mImageManager == null) {
-         mImageManager = ((MainApplication) getActivity().getApplication()).getImageManager();
-      }
 
       if (mSite == null) {
          mSite = ((MainApplication) getActivity().getApplication()).getSite();
@@ -252,7 +245,7 @@ public class TopicViewFragment extends SherlockFragment {
                if (mTopicLeaf.getGuides().size() == 0) {
                   selectedFragment = new NoGuidesFragment();
                } else {
-                  selectedFragment = new TopicGuideListFragment(mImageManager, mTopicLeaf);
+                  selectedFragment = new TopicGuideListFragment(mTopicLeaf);
                }
                mSelectedTab = GUIDES_TAB;
                return selectedFragment;

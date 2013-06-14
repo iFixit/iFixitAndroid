@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.model;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.google.gson.annotations.SerializedName;
 
@@ -10,17 +11,24 @@ public class APIImage implements Serializable {
    @SerializedName("original") public String mBaseUrl;
 
    public APIImage() {
-      this(JSONHelper.NULL_INT, null);
+      this(JSONHelper.NULL_INT);
+   }
+
+   public APIImage(int id) {
+      this(id, "");
    }
 
    public APIImage(int id, String baseUrl) {
       mId = id;
+      if (MainApplication.inDebug() && !baseUrl.isEmpty())
+         baseUrl = baseUrl.replaceFirst("https","http");
+
       mBaseUrl = baseUrl;
    }
 
    public String getPath(String size) {
-      if (mBaseUrl == null) {
-         return "";
+      if (!size.startsWith(".")) {
+         size = size + ".";
       }
 
       return mBaseUrl + size;

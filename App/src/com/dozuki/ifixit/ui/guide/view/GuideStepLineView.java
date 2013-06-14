@@ -16,10 +16,6 @@ public class GuideStepLineView extends LinearLayout {
    private static final int LINE_INDENT = 50;
    private static final int MARGIN = 10;
 
-   private TextView mStepText;
-   private ImageView mBulletView;
-   private ImageView mIconView;
-
    public GuideStepLineView(Context context) {
       super(context);
 
@@ -34,18 +30,18 @@ public class GuideStepLineView extends LinearLayout {
 
       setPadding(LINE_INDENT * line.getLevel(), MARGIN, 0, MARGIN);
 
-      mStepText = (TextView) findViewById(R.id.step_text);
-      mStepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
+      TextView stepText = (TextView) findViewById(R.id.step_text);
+      stepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
        line.getTextRendered())));
-      mStepText.setMovementMethod(LinkMovementMethod.getInstance());
+      stepText.setMovementMethod(LinkMovementMethod.getInstance());
 
-      mBulletView = (ImageView)findViewById(R.id.bullet);
+      ImageView bullet = (ImageView)findViewById(R.id.bullet);
       bulletRes = getBulletResource(line.getColor());
-      mBulletView.setImageResource(bulletRes);
-      mBulletView.setLayoutParams(new LinearLayout.LayoutParams(
+      bullet.setImageResource(bulletRes);
+      bullet.setLayoutParams(new LinearLayout.LayoutParams(
        LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
 
-      mIconView = (ImageView) findViewById(R.id.bullet_icon);
+      ImageView icon = (ImageView) findViewById(R.id.bullet_icon);
 
       if (line.hasIcon()) {
          if (line.getColor().equals("icon_reminder")) {
@@ -59,12 +55,12 @@ public class GuideStepLineView extends LinearLayout {
             iconRes = 0;
          }
 
-         mIconView.setImageResource(iconRes);
-         mIconView.setVisibility(VISIBLE);
-         mIconView.setLayoutParams(new LinearLayout.LayoutParams(
+         icon.setImageResource(iconRes);
+         icon.setVisibility(VISIBLE);
+         icon.setLayoutParams(new LinearLayout.LayoutParams(
           LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
       } else {
-         mIconView.setVisibility(INVISIBLE);
+         icon.setVisibility(INVISIBLE);
       }
    }
 

@@ -231,8 +231,7 @@ public class StepEditImageFragment extends SherlockFragment {
                mImages.add(newThumb);
                mTempThumbPosition = mThumbs.addThumb(newThumb, true);
 
-               APIService.call((Activity) getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
-
+               APIService.call(getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
             }
             break;
       }
@@ -264,10 +263,12 @@ public class StepEditImageFragment extends SherlockFragment {
             for (int i = 0; i < mImages.size(); i++) {
                if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
                   mImages.set(i, newThumb);
-                  //mThumbs.updateThumb(newThumb, mTempThumbPosition);
+                  mThumbs.updateThumb(newThumb, mTempThumbPosition);
+                  break;
                }
             }
          }
+
          ((StepEditActivity) getActivity()).unlockSave();
 
          // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
@@ -279,13 +280,11 @@ public class StepEditImageFragment extends SherlockFragment {
       }
    }
 
-
    /////////////////////////////////////////////////////
    // HELPERS
    /////////////////////////////////////////////////////
 
    protected void setImages(ArrayList<APIImage> images) {
-
       mImages = new ArrayList<APIImage>(images);
    }
 

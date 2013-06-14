@@ -9,21 +9,15 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageView;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.login.LoginEvent;
 import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.marczych.androidimagemanager.ImageManager;
 import com.squareup.otto.Bus;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
 public class MainApplication extends Application {
    public static final int LARGE_SIZE_CUTOFF = 1000;
@@ -47,11 +41,6 @@ public class MainApplication extends Application {
     * Singleton for Bus (Otto).
     */
    private static Bus sBus;
-
-   /**
-    * Singleton for ImageManager.
-    */
-   private ImageManager mImageManager;
 
    /**
     * Singleton for ImageSizes.
@@ -173,58 +162,6 @@ public class MainApplication extends Application {
 
    public boolean isLoggingIn() {
       return mIsLoggingIn;
-   }
-
-   public ImageManager getImageManager() {
-      if (mImageManager == null) {
-         mImageManager = new ImageManager(this);
-
-         // Uncomment to view images in development.
-         mImageManager.trustAllCerts(true);
-         mImageManager.trustAllHosts(true);
-
-         mImageManager.setController(new ImageManager.Controller() {
-            public boolean overrideDisplay(String url, ImageView imageView) {
-               if (url.equals("") || url.indexOf(".") == 0) {
-                  fail(imageView);
-
-                  return true;
-               }
-
-               return false;
-            }
-
-            public void loading(ImageView imageView) {
-               imageView.setImageBitmap(null);
-            }
-
-            public boolean displayImage(ImageView imageView, Bitmap bitmap,
-             String url) {
-               if (imageView instanceof ImageViewTouch) {
-                  ((ImageViewTouch)imageView).setImageBitmap(bitmap, true);
-                  ((ImageViewTouch)imageView).setVisibility(View.VISIBLE);
-                  return true;
-               }
-
-               return false;
-            }
-
-            public void fail(final ImageView imageView) {
-               if (imageView instanceof ImageViewTouch) {
-                  Bitmap noImage = BitmapFactory.decodeResource(getResources(),
-                   R.drawable.no_image);
-
-                  ((ImageViewTouch)imageView).setImageBitmap(noImage, true);
-               } else {
-                  imageView.setImageResource(R.drawable.no_image);
-               }
-
-               imageView.setTag("");
-            }
-         });
-      }
-
-      return mImageManager;
    }
 
    // Returns true if the app is in debug mode (not in production)

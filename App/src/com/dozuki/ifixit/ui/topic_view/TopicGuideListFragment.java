@@ -10,13 +10,10 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.util.ImageSizes;
-import com.marczych.androidimagemanager.ImageManager;
 
 public class TopicGuideListFragment extends SherlockFragment {
    private static final int MAX_LOADING_IMAGES = 20;
@@ -28,21 +25,14 @@ public class TopicGuideListFragment extends SherlockFragment {
    private TopicGuideListAdapter mGuideAdapter;
    private TopicLeaf mTopicLeaf;
    private GridView mGridView;
-   private ImageManager mImageManager;
-   private ImageSizes mImageSizes;
 
    /**
     * Required for restoring fragments
     */
    public TopicGuideListFragment() {}
 
-   public TopicGuideListFragment(ImageManager imageManager,
-    TopicLeaf topicLeaf) {
+   public TopicGuideListFragment(TopicLeaf topicLeaf) {
       mTopicLeaf = topicLeaf;
-      mImageManager = imageManager;
-      mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
-      mImageManager.setMaxStoredImages(MAX_STORED_IMAGES);
-      mImageManager.setMaxWritingImages(MAX_WRITING_IMAGES);
    }
 
    @Override
@@ -52,13 +42,6 @@ public class TopicGuideListFragment extends SherlockFragment {
       if (savedState != null && mTopicLeaf == null) {
          mTopicLeaf = (TopicLeaf)savedState.getSerializable(SAVED_TOPIC);
       }
-
-      if (mImageManager == null) {
-         mImageManager = MainApplication.get().getImageManager();
-         mImageManager.setMaxLoadingImages(MAX_LOADING_IMAGES);
-      }
-
-      mImageSizes = MainApplication.get().getImageSizes();
    }
 
    @Override
@@ -77,7 +60,7 @@ public class TopicGuideListFragment extends SherlockFragment {
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
             GuideInfo guide = mTopicLeaf.getGuides().get(position);
-            Intent intent = new Intent(getActivity(), GuideViewActivity.class);
+            Intent intent = new Intent(getSherlockActivity(), GuideViewActivity.class);
 
             intent.putExtra(GUIDEID, guide.mGuideid);
             startActivity(intent);
@@ -115,10 +98,10 @@ public class TopicGuideListFragment extends SherlockFragment {
          TopicGuideItemView itemView = (TopicGuideItemView)convertView;
 
          if (convertView == null) {
-            itemView = new TopicGuideItemView(getActivity(), mImageManager);
+            itemView = new TopicGuideItemView(getSherlockActivity());
          }
 
-         itemView.setGuideItem(mTopicLeaf.getGuides().get(position), getActivity());
+         itemView.setGuideItem(mTopicLeaf.getGuides().get(position));
 
          return itemView;
       }
