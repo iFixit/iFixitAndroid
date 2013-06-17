@@ -136,6 +136,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
          Picasso
           .with(mContext)
           .load(R.drawable.no_image)
+          .noFade()
           .into(imageView);
       } else {
          for (APIImage imageInfo : imageList) {
@@ -163,6 +164,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       Picasso
        .with(mContext)
        .load(url)
+       .noFade()
        .error(R.drawable.no_image)
        .into(imageView);
 

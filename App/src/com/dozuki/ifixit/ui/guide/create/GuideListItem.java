@@ -123,11 +123,13 @@ public class GuideListItem extends LinearLayout {
          if (mGuideInfo.hasImage()) {
             Picasso.with(mContext)
              .load(mGuideInfo.getImagePath(".standard"))
+             .noFade()
              .error(R.drawable.no_image)
              .into(mThumbnail);
          } else {
             Picasso.with(mContext)
              .load(R.drawable.no_image)
+             .noFade()
              .into(mThumbnail);
          }
       }
@@ -162,9 +164,9 @@ public class GuideListItem extends LinearLayout {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
             mToggleEdit.startAnimation(rotateAnimation);
-// Creating the expand animation for the item
+            // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-// Start the animation on the toolbar
+            // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.VISIBLE);

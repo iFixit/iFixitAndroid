@@ -199,7 +199,6 @@ public class StepEditImageFragment extends SherlockFragment {
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       APIImage newThumb;
-      Log.w("onActivityResult", Integer.toString(requestCode));
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
