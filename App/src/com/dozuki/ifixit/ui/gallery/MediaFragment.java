@@ -505,19 +505,10 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
             return;
          }
 
-         String imageUrl;
-         boolean isLocal;
-         if (mLocalURL.get(url) != null) {
-            imageUrl = mLocalURL.get(url).mPath;
-            isLocal = true;
-         } else {
-            imageUrl = url;
-            isLocal = false;
-         }
+         String imageUrl = (mLocalURL.get(url) != null) ? mLocalURL.get(url).mPath : url;
 
          Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
          intent.putExtra(FullImageViewActivity.IMAGE_URL, imageUrl);
-         intent.putExtra(FullImageViewActivity.LOCAL_URL, isLocal);
          startActivity(intent);
       }
    }
