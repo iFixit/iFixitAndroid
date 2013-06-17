@@ -2,8 +2,6 @@
 <resources>
 
     <!-- Helper dimens -->
-    <dimen name="match_parent">-1dp</dimen>
-    <dimen name="wrap_content">-2dp</dimen>
     <dimen name="site_list_button_width">340dp</dimen>
 
     <dimen name="title_text_size">24sp</dimen>
@@ -19,8 +17,6 @@
     <dimen name="menu_bezel_size">10dp</dimen>
 
     <!-- Guide View -->
-    <dimen name="guide_step_content_width">@dimen/match_parent</dimen>
-    <dimen name="guide_step_content_height">@dimen/wrap_content</dimen>
     <dimen name="guide_step_section_seperator">8dp</dimen>
     <dimen name="guide_image_width">256dp</dimen>
     <dimen name="guide_image_height">192dp</dimen>
