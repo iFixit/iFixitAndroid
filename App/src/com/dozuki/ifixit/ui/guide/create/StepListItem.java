@@ -33,13 +33,11 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
    private GuideStep mStepObject;
    private int mStepPosition;
 
-   public StepListItem(Context context, final StepPortalFragment portalRef, GuideStep sObject, int position) {
+   public StepListItem(Context context, final StepPortalFragment portalRef) {
       super(context);
       mContext = context;
       mPortalRef = portalRef;
 
-      mStepObject = sObject;
-      mStepPosition = position;
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.guide_create_step_list_item, this, true);
       mStepsView = (TextView) findViewById(R.id.step_line_text_view);
@@ -50,9 +48,8 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mEditButton = (TextView) findViewById(R.id.step_create_item_edit);
       mEditBar = (LinearLayout) findViewById(R.id.step_create_item_edit_section);
       mStepFrame = (RelativeLayout) findViewById(R.id.guide_step_edit_frame);
-      boolean isEdit = sObject.getEditMode();
+
       mToggleEdit.setOnCheckedChangeListener(null);
-      mToggleEdit.setChecked(isEdit);
       mToggleEdit.setOnCheckedChangeListener(new OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -79,7 +76,14 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
             mPortalRef.launchStepEdit(mStepPosition);
          }
       });
+   }
 
+   public void setRowData(GuideStep step, int position) {
+      mStepObject = step;
+      mStepPosition = position;
+
+      boolean isEdit = step.getEditMode();
+      mToggleEdit.setChecked(isEdit);
       String stepText = MainApplication.get().getString(R.string.step_number, mStepPosition + 1);
       if (mStepObject.getTitle().equals("")) {
          mStepsView.setText(stepText);
@@ -128,12 +132,18 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
    }
 
    private void setStepThumbnail(ArrayList<APIImage> imageList, ImageView imageView) {
-      for (APIImage imageInfo : imageList) {
-         if (imageInfo.mId > 0) {
-            String url = imageInfo.getPath(".thumbnail");
-            setStepThumbnail(url, imageView);
-            return;
-
+      if (imageList.size() == 0) {
+         Picasso
+          .with(mContext)
+          .load(R.drawable.no_image)
+          .into(imageView);
+      } else {
+         for (APIImage imageInfo : imageList) {
+            if (imageInfo.mId > 0) {
+               String url = imageInfo.getPath(".thumbnail");
+               setStepThumbnail(url, imageView);
+               return;
+            }
          }
       }
    }

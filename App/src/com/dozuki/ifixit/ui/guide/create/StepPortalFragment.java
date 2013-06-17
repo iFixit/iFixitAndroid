@@ -352,10 +352,17 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
 
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-         StepListItem itemView = (StepListItem) convertView;
+         StepListItem itemView;
          GuideStep step = (GuideStep) getItem(position);
-         itemView = new StepListItem(getActivity(), mSelf, step, position);
+         if (convertView != null) {
+            itemView = (StepListItem) convertView;
+         } else {
+            itemView = new StepListItem(getActivity(), mSelf);
+         }
+
+         itemView.setRowData(step, position);
          itemView.setTag(step.getStepid());
+
          return itemView;
       }
    }

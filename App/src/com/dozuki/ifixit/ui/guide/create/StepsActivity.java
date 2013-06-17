@@ -64,7 +64,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
             mGuidePublic = mGuide.isPublic();
          }
          guideid = extras.getInt(StepsActivity.GUIDE_ID_KEY, 0);
-         if (guideid == 0) {
+         if (guideid == 0 && mGuide != null) {
             guideid = mGuide.getGuideid();
          }
       }
@@ -121,7 +121,8 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
             mGuide = guide;
             mGuidePublic = mGuide.isPublic();
          } else {
-            mGuidePublic = data.getBooleanExtra(StepEditActivity.GUIDE_PUBLIC_KEY, guide.isPublic());
+            // Assume the guide is private, it's better than the user trying to view the guide and getting an error
+            mGuidePublic = data.getBooleanExtra(StepEditActivity.GUIDE_PUBLIC_KEY, false);
          }
       }
    }
@@ -193,10 +194,15 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
    /////////////////////////////////////////////////////
 
    public void showLoading() {
+      showLoading(R.id.guide_create_fragment_steps_container);
+   }
+
+   @Override
+   public void showLoading(int container) {
       mStepPortalFragment =
        (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
       getSupportFragmentManager().beginTransaction()
-       .add(R.id.guide_create_fragment_steps_container, new LoadingFragment(), "loading").addToBackStack("loading")
+       .add(container, new LoadingFragment(), "loading").addToBackStack("loading")
        .commit();
       if (mStepPortalFragment != null) {
          getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
@@ -204,6 +210,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
       mIsLoading = true;
    }
 
+   @Override
    public void hideLoading() {
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
