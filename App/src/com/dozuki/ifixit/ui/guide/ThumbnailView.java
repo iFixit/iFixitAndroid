@@ -141,10 +141,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
          thumb.setOnLongClickListener(mLongClickListener);
       }
 
+      getThumbnailDimensions();
+
       if (fromDisk) {
          File file = new File(image.mBaseUrl);
          Picasso.with(mContext)
           .load(file)
+          .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
           .error(R.drawable.no_image)
           .into(thumb);
 
@@ -153,14 +156,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
          String url = image.getPath(mImageSizes.getThumb());
          Picasso.with(mContext)
           .load(url)
+          .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
           .error(R.drawable.no_image)
           .into(thumb);
          setCurrentThumb(url);
       }
 
-      getThumbnailDimensions();
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
-
       thumb.setVisibility(VISIBLE);
       thumb.setTag(image);
 
@@ -213,7 +215,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
        .into(mThumbs.get(position));
 
       mThumbs.get(position).setTag(newImage.getPath(mImageSizes.getThumb()));
-      //invalidate();
+      invalidate();
    }
 
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
