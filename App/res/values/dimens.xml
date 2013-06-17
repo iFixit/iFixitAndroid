@@ -12,6 +12,8 @@
     <dimen name="progress_bar_width_height">120dp</dimen>
     <dimen name="page_padding">8dp</dimen>
 
+    <dimen name="loading_fragment_text_margin_bottom">8dp</dimen>
+
     <!-- Menu Drawer -->
     <dimen name="menu_size">250dp</dimen>
     <dimen name="menu_bezel_size">10dp</dimen>

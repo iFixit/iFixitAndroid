@@ -509,7 +509,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
               || mGuide.getStep(mPagePosition).getRevisionid() == null) {
                 deleteStep(mIsStepDirty);
              } else {
-                showLoading(mLoadingContainer);
+                showLoading(mLoadingContainer, getString(R.string.deleting));
                 APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
                  mGuide.getGuideid(), mGuide.getRevisionid(), mGuide.getSteps().get(mPagePosition)));
              }
@@ -618,7 +618,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mSavePosition = savePosition;
       mIsStepDirty = false;
 
-      showLoading(mLoadingContainer);
+      showLoading(mLoadingContainer, getString(R.string.saving));
       toggleSave(mIsStepDirty);
 
       if (obj.getRevisionid() != null) {
@@ -652,6 +652,16 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mIsLoading = true;
 
       super.showLoading(container);
+   }
+
+   @Override
+   public void showLoading(int container, String message) {
+      if (mPager != null) {
+         mPager.setVisibility(View.GONE);
+      }
+      mIsLoading = true;
+
+      super.showLoading(container, message);
    }
 
    @Override

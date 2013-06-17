@@ -299,6 +299,9 @@
     <string name="loading">Loading...</string>
     <string name="topic_info_image">Main topic image</string>
     <string name="delete_step">Delete step</string>
+    <string name="deleting">Deleting...</string>
+    <string name="saving">Saving...</string>
+
 
     <string-array name="guide_type_array">
         <item>Installation</item>

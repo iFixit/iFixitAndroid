@@ -4,12 +4,13 @@
     android:layout_height="match_parent" >
 
     <TextView
+        android:id="@+id/loading_text"
         style="@style/BodyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/loading_fragment_progress"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="18dp"
+        android:layout_marginBottom="@dimen/loading_fragment_text_margin_bottom"
         android:text="@string/loading" />
 
     <ProgressBar

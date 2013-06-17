@@ -493,10 +493,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void showLoading(int container) {
-      getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(), "loading").addToBackStack("loading")
-       .commit();
+      showLoading(container, getString(R.string.loading));
+   }
 
+   public void showLoading(int container, String message) {
+      getSupportFragmentManager().beginTransaction()
+       .add(container, new LoadingFragment(message), "loading").addToBackStack("loading")
+       .commit();
    }
 
    public void hideLoading() {
