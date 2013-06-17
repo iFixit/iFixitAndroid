@@ -11,6 +11,8 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.MediaInfo;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
+
 public class MediaViewItem extends RelativeLayout {
    private MediaInfo mListRef;
    private String mLocalPath;
@@ -37,6 +39,13 @@ public class MediaViewItem extends RelativeLayout {
    }
 
    public void setImageItem(String image) {
+      Picasso
+       .with(mContext)
+       .load(image)
+       .into(mImageView);
+   }
+
+   public void setImageItem(File image) {
       Picasso
        .with(mContext)
        .load(image)

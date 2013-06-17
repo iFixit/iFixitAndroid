@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.model.gallery;
 
+import com.dozuki.ifixit.MainApplication;
+
 import java.io.Serializable;
 
 public abstract class MediaInfo implements Serializable {
@@ -51,6 +53,9 @@ public abstract class MediaInfo implements Serializable {
    }
 
    public void setGuid(String guid) {
+      if (MainApplication.inDebug() && guid.startsWith("https")) {
+         guid = guid.replace("https", "http");
+      }
       mGuid = guid;
    }
 

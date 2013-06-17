@@ -2,7 +2,6 @@ package com.dozuki.ifixit.ui.gallery;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ContentUris;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -306,26 +305,12 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
       }
 
       public String addUri(Uri uri) {
-         String key = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-         UserImageInfo userImageInfo = new UserImageInfo();
-         String url = uri.toString();
-
-         userImageInfo.setGuid(url);
-         userImageInfo.setItemId(null);
-         userImageInfo.setKey(key);
-         mMediaList.addItem(userImageInfo);
-         mSelectedList.add(false);
-
-         mLocalURL.put(key, new LocalImage(getPath(uri)));
-         notifyDataSetChanged();
-         invalidatedView();
-         return key;
+         return addFile(uri.toString());
       }
 
       public String addFile(String path) {
          String key = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
          UserImageInfo userImageInfo = new UserImageInfo();
-         String url = path;
          userImageInfo.setGuid(path);
          userImageInfo.setItemId(null);
          userImageInfo.setKey(key);
@@ -333,7 +318,7 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
          mSelectedList.add(false);
 
          mLocalURL.put(key, new LocalImage(path));
-         mLimages.put(url, buildBitmap(url));
+         mLimages.put(path, buildBitmap(path));
          notifyDataSetChanged();
          invalidatedView();
          return key;
@@ -371,13 +356,14 @@ public abstract class MediaFragment extends SherlockFragment implements OnItemCl
              mMediaList.getItems().get(position).getKey() == null) {
                String imageUrl = image.getGuid() + mImageSizes.getThumb();
                itemView.setImageItem(imageUrl);
+               image.setLoaded(true);
                itemView.setTag(image.getGuid());
             } else {
                Uri temp = Uri.parse(image.getGuid());
 
                if (temp.toString().contains(".jpg")) {
                   // image was added locally from camera
-                  itemView.setImageItem(temp);
+                  itemView.setImageItem(new File(temp.toString()));
                } else {
                   // gallery image
                   itemView.setImageItem(MediaStore.Images.Media.getContentUri(temp.toString()));

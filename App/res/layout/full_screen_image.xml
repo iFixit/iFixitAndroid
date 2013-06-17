@@ -15,8 +15,7 @@
         android:id="@+id/imageZoom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:scaleType="center"
-        android:visibility="gone" />
+        android:scaleType="center"/>
 
     <ImageView
         android:id="@+id/fullScreenClose"

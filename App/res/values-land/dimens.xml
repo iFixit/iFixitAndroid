@@ -1,7 +1,0 @@
-<?xml version="1.0" encoding="utf-8"?>
-<resources>
-
-    <dimen name="guide_step_content_width">@dimen/wrap_content</dimen>
-    <dimen name="guide_step_content_height">@dimen/match_parent</dimen>
-
-</resources>

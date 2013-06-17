@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.guide;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -18,9 +19,10 @@ import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 
-public class ThumbnailView extends LinearLayout implements View.OnClickListener {
+public class ThumbnailView extends LinearLayout implements View.OnClickListener, Picasso.Listener {
 
    /**
     * Used for logging
@@ -43,6 +45,12 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    private OnLongClickListener mLongClickListener;
    private OnClickListener mAddThumbListener;
+
+   @Override
+   public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
+      Log.w("ThumbnailView", "image load failed, trying again");
+      picasso.load(uri).into(mMainImage);
+   }
 
    public ThumbnailView(Context context) {
       super(context);
@@ -83,7 +91,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       if (mCanEdit) {
          mAddThumbListener = listener;
          mAddThumbButton.setOnClickListener(listener);
-         mMainImage.setOnClickListener(listener);
+         if (mThumbs.isEmpty())
+            mMainImage.setOnClickListener(listener);
       }
    }
 
@@ -125,8 +134,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public int addThumb(APIImage image, boolean fromDisk) {
-      String path;
-
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
       thumb.setOnClickListener(this);
@@ -134,27 +141,31 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          thumb.setOnLongClickListener(mLongClickListener);
       }
 
-      thumb.setVisibility(VISIBLE);
-      thumb.setTag(image);
-
       if (fromDisk) {
-         path = image.mBaseUrl;
-      } else {
-         path = image.getPath(mImageSizes.getThumb());
-      }
+         File file = new File(image.mBaseUrl);
+         Picasso.with(mContext)
+          .load(file)
+          .error(R.drawable.no_image)
+          .into(thumb);
 
-      Picasso.with(mContext)
-       .load(path)
-       .error(R.drawable.no_image)
-       .into(thumb);
+         setCurrentThumb(file);
+      } else {
+         String url = image.getPath(mImageSizes.getThumb());
+         Picasso.with(mContext)
+          .load(url)
+          .error(R.drawable.no_image)
+          .into(thumb);
+         setCurrentThumb(url);
+      }
 
       getThumbnailDimensions();
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
 
+      thumb.setVisibility(VISIBLE);
+      thumb.setTag(image);
+
       mThumbs.add(thumb);
       this.addView(thumb, mThumbs.size() - 1);
-
-      setCurrentThumb(image.mBaseUrl);
 
       if ((mThumbs.size() > 2 || mThumbs.size() < 1) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(GONE);
@@ -197,8 +208,12 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void updateThumb(APIImage newImage, int position) {
-      removeViewAt(position);
-      addThumb(newImage, false);
+      Picasso.with(mContext)
+       .load(newImage.getPath(mImageSizes.getThumb()))
+       .into(mThumbs.get(position));
+
+      mThumbs.get(position).setTag(newImage.getPath(mImageSizes.getThumb()));
+      //invalidate();
    }
 
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
@@ -208,17 +223,29 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void setCurrentThumb(String url) {
+      // Set the images tag as the url before we append .{size} to it, otherwise FullImageView is passed a smaller
+      // version of the image.
+      mMainImage.setTag(url);
+
       if (url.startsWith("http")) {
          url = url + mImageSizes.getMain();
       }
 
       Picasso.with(mContext)
        .load(url)
+       .resize((int)mMainWidth, (int)mMainHeight)
        .error(R.drawable.no_image)
        .into(mMainImage);
+   }
 
-      setMainImageDimensions(mMainHeight, mMainWidth);
-      mMainImage.setTag(url);
+   public void setCurrentThumb(File file) {
+      mMainImage.setTag(file.getPath());
+
+      Picasso.with(mContext)
+       .load(file)
+       .resize((int) mMainWidth, (int) mMainHeight)
+       .error(R.drawable.no_image)
+       .into(mMainImage);
    }
 
    public void setDisplayMetrics(DisplayMetrics metrics) {

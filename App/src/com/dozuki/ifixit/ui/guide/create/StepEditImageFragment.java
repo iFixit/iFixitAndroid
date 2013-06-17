@@ -168,16 +168,15 @@ public class StepEditImageFragment extends SherlockFragment {
              .setItems(R.array.existing_image_actions, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                   Intent intent = null;
                    APIImage thumbImage = (APIImage) v.getTag();
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
-                         APIService.call((Activity) getActivity(),
+                         APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(Integer.toString(thumbImage.mId)));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
-                         APIService.call((Activity) getActivity(),
+                         APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(Integer.toString(thumbImage.mId)));
                       case DELETE_FROM_STEP:
                          mThumbs.removeThumb((ImageView) v);
@@ -257,8 +256,7 @@ public class StepEditImageFragment extends SherlockFragment {
       if (!event.hasError()) {
          APIImage newThumb = event.getResult();
 
-         // Find the temporarily stored image object to update the filename to the image path and
-         // imageid
+         // Find the temporarily stored image object to update the filename to the image path and imageid
          if (newThumb != null) {
             for (int i = 0; i < mImages.size(); i++) {
                if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {

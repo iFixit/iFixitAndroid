@@ -63,7 +63,7 @@ public class GuideListItem extends LinearLayout {
    private OnClickListener mDeleteClickListener = new OnClickListener() {
       @Override
       public void onClick(View v) {
-         ((GuideCreateActivity)mActivity).createDeleteDialog(mGuideInfo).show();
+         ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
       }
    };
 
@@ -98,7 +98,7 @@ public class GuideListItem extends LinearLayout {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             mGuideInfo.mEditMode = isChecked;
-            ((GuideCreateActivity)mActivity).onItemSelected(mGuideInfo.mGuideid, isChecked);
+            ((GuideCreateActivity) mActivity).onItemSelected(mGuideInfo.mGuideid, isChecked);
             toggleListItem(isChecked, true, mToggleEdit, mEditBar);
          }
       });
@@ -119,13 +119,17 @@ public class GuideListItem extends LinearLayout {
 
       mTitleView.setText(Html.fromHtml(mGuideInfo.mTitle));
 
-      String image = mGuideInfo.hasImage() ? mGuideInfo.getImagePath(".standard") : "noimage.jpg";
-
       if (mThumbnail != null) {
-         Picasso.with(mContext)
-          .load(image)
-          .error(R.drawable.no_image)
-          .into(mThumbnail);
+         if (mGuideInfo.hasImage()) {
+            Picasso.with(mContext)
+             .load(mGuideInfo.getImagePath(".standard"))
+             .error(R.drawable.no_image)
+             .into(mThumbnail);
+         } else {
+            Picasso.with(mContext)
+             .load(R.drawable.no_image)
+             .into(mThumbnail);
+         }
       }
 
       setPublished(mGuideInfo.mPublic);
@@ -158,9 +162,9 @@ public class GuideListItem extends LinearLayout {
          if (animate) {
             Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
             mToggleEdit.startAnimation(rotateAnimation);
-            // Creating the expand animation for the item
+// Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            // Start the animation on the toolbar
+// Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.VISIBLE);

@@ -130,15 +130,16 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
    private void setStepThumbnail(ArrayList<APIImage> imageList, ImageView imageView) {
       for (APIImage imageInfo : imageList) {
          if (imageInfo.mId > 0) {
-            String url = imageInfo.getPath(".standard");
+            String url = imageInfo.getPath(".thumbnail");
             setStepThumbnail(url, imageView);
             return;
+
          }
       }
    }
 
    private void setStepThumbnail(StepVideoThumbnail thumb, ImageView imageView) {
-      String url = thumb.getUrl(".standard");
+      String url = thumb.getUrl(".thumbnail");
 
       // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
       imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

@@ -28,7 +28,8 @@
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
     <string name="confirm_delete_title">Confirm Delete</string>
-    <string name="confirm_delete_body">Deleting a guide CANNOT be undone. Are you sure you want to delete "%1$s"?</string>
+    <string name="confirm_delete_body">Deleting a guide CANNOT be undone. Are you sure you want to delete
+        \"%1$s\"?</string>
 
     <!-- Error Messages -->
     <string name="parse_error_title">Well, this is embarrassing</string>
