@@ -1,7 +1,7 @@
 package com.dozuki.ifixit.model.guide;
 
 import com.dozuki.ifixit.MainApplication;
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Image;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -32,7 +32,7 @@ public class GuideInfo implements Serializable {
    @SerializedName("flags")
    public String[] mFlags;
    @SerializedName("image")
-   public APIImage mImage;
+   public Image mImage;
 
    public transient boolean mEditMode = false;
 

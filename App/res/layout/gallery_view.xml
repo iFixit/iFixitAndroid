@@ -12,24 +12,27 @@
         android:alwaysDrawnWithCache="true"
         android:clipChildren="true"
         android:drawSelectorOnTop="false"
-        android:gravity="center_horizontal"
+        android:gravity="center"
         android:columnWidth="@dimen/gallery_grid_column_width"
-        android:horizontalSpacing="1dp"
+        android:horizontalSpacing="@dimen/gallery_grid_spacing"
+        android:verticalSpacing="@dimen/gallery_grid_spacing"
+        android:padding="@dimen/gallery_grid_spacing"
         android:numColumns="auto_fit"
         android:orientation="vertical"
-        android:padding="1dp"
         android:scrollingCache="true"
         android:smoothScrollbar="true"
-        android:stretchMode="columnWidth"
-        android:verticalSpacing="1dp" />
+        android:stretchMode="columnWidth" />
 
     <TextView
         android:id="@+id/no_images_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
+        style="@style/BodyText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
         android:text="@string/no_images_text"
         android:visibility="gone" />
 </RelativeLayout>

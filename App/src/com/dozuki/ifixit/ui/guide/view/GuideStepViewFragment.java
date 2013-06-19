@@ -21,7 +21,10 @@ import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Embed;
+import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.model.Video;
+import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.*;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.ImageSizes;
@@ -160,7 +163,7 @@ public class GuideStepViewFragment extends SherlockFragment {
    }
 
    private void setImage() {
-      ArrayList<APIImage> stepImages = mStep.getImages();
+      ArrayList<Image> stepImages = mStep.getImages();
 
       mThumbs.setDisplayMetrics(mMetrics);
       mThumbs.setNavigationHeight(navigationHeight());
@@ -170,7 +173,7 @@ public class GuideStepViewFragment extends SherlockFragment {
 
       if (stepImages.size() > 0) {
          mThumbs.setThumbs(stepImages);
-         mThumbs.setCurrentThumb(stepImages.get(0).mBaseUrl);
+         mThumbs.setCurrentThumb(stepImages.get(0).getPath());
       }
 
       // Size the main image and thumbnails to maximize use of screen space
@@ -182,8 +185,8 @@ public class GuideStepViewFragment extends SherlockFragment {
    }
 
    private void setVideo() {
-      StepVideo video = mStep.getVideo();
-      StepVideoThumbnail thumb = video.getThumbnail();
+      Video video = mStep.getVideo();
+      VideoThumbnail thumb = video.getThumbnail();
 
       // Size the video preview screenshot within the available screen space
       ViewGroup.LayoutParams params = fitToSpace(mMainImage, thumb.getWidth(), thumb.getHeight());

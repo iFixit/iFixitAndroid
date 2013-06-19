@@ -1,23 +1,27 @@
-package com.dozuki.ifixit.model.guide;
+package com.dozuki.ifixit.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class StepVideo implements Serializable {
+public class Video implements Serializable {
 
    private static final long serialVersionUID = 2L;
    protected ArrayList<VideoEncoding> mEncodings = new ArrayList<VideoEncoding>();
-   protected StepVideoThumbnail mThumbnail;
+   protected VideoThumbnail mThumbnail;
+
+   public Video() {
+      mEncodings = new ArrayList<VideoEncoding>();
+   }
 
    public void addEncoding(VideoEncoding parseVideoEncoding) {
       mEncodings.add(parseVideoEncoding);
    }
 
-   public void setThumbnail(StepVideoThumbnail thumb) {
+   public void setThumbnail(VideoThumbnail thumb) {
       mThumbnail = thumb;
    }
 
-   public StepVideoThumbnail getThumbnail() {
+   public VideoThumbnail getThumbnail() {
       return mThumbnail;
    }
 

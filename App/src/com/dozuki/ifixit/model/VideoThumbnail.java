@@ -1,9 +1,9 @@
-package com.dozuki.ifixit.model.guide;
+package com.dozuki.ifixit.model;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 
-public class StepVideoThumbnail implements Serializable {
+public class VideoThumbnail extends Image implements Serializable {
    private static final long serialVersionUID = 0L;
 
    private String mGuid;
@@ -14,7 +14,7 @@ public class StepVideoThumbnail implements Serializable {
    private int mWidth;
    private int mHeight;
 
-   public StepVideoThumbnail(String guid, int imageid, String url, String ratio, int width, int height) {
+   public VideoThumbnail(String guid, int imageid, String url, String ratio, int width, int height) {
       mGuid = guid;
       mImageid = imageid;
       mUrl = url;

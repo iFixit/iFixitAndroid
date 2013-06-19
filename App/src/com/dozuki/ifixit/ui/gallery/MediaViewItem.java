@@ -1,86 +1,72 @@
 package com.dozuki.ifixit.ui.gallery;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.net.Uri;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
+import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.gallery.MediaInfo;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestBuilder;
 
 import java.io.File;
 
 public class MediaViewItem extends RelativeLayout {
-   private MediaInfo mListRef;
-   private String mLocalPath;
-
+   private static final String TAG = "MediaViewItem";
    private RelativeLayout mSelectImage;
-   private FadeInImageView mImageView;
+   private ImageView mImageView;
    private ProgressBar mLoadingBar;
    private Context mContext;
+   private int mTargetWidth;
+   private int mTargetHeight;
+   private Picasso mPicasso;
 
    public MediaViewItem(Context context) {
       super(context);
       mContext = context;
-      mListRef = null;
-      mLocalPath = null;
+      mPicasso = Picasso.with(mContext);
+
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.gallery_cell, this, true);
 
-      mImageView = (FadeInImageView)findViewById(R.id.media_image);
+      mImageView = (ImageView)findViewById(R.id.media_image);
       mSelectImage = ((RelativeLayout)findViewById(R.id.selected_image));
       mLoadingBar = (ProgressBar)findViewById(R.id.gallery_cell_progress_bar);
 
       mSelectImage.setVisibility(View.INVISIBLE);
       mLoadingBar.setVisibility(View.GONE);
+      Resources res = mContext.getResources();
+      mTargetWidth = res.getDimensionPixelSize(R.dimen.gallery_grid_column_width);
+      mTargetHeight = res.getDimensionPixelSize(R.dimen.gallery_grid_item_height);
    }
 
    public void setImageItem(String image) {
-      Picasso
-       .with(mContext)
-       .load(image)
-       .into(mImageView);
+      Log.w(TAG, image);
+      buildImage(mPicasso.load(image));
    }
 
    public void setImageItem(File image) {
-      Picasso
-       .with(mContext)
-       .load(image)
-       .into(mImageView);
+      buildImage(mPicasso.load(image));
    }
 
    public void setImageItem(Uri image) {
-      Picasso
-       .with(mContext)
-       .load(image)
+      Log.w(TAG, image.toString());
+      buildImage(mPicasso.load(image));
+   }
+
+   private void buildImage(RequestBuilder builder) {
+      builder
+       .resize(mTargetWidth, mTargetHeight)
+       .centerCrop()
+       .error(R.drawable.no_image)
        .into(mImageView);
    }
 
-   public void setLoading(boolean loading) {
-      if (loading) {
-         mLoadingBar.setVisibility(View.VISIBLE);
-         AlphaAnimation alpha = new AlphaAnimation(0.5F, 0.5F);
-         alpha.setDuration(0); // Make animation instant.
-         alpha.setFillAfter(true); // Persist after the animation ends.
-         mImageView.startAnimation(alpha);
-      } else {
-         mLoadingBar.setVisibility(View.GONE);
-         mImageView.clearAnimation();
-      }
-   }
-
-   public void setListRef(MediaInfo listRef) {
-      mListRef = listRef;
-   }
-
-   public MediaInfo getListRef() {
-      return mListRef;
-   }
-
-   public void toggleSelected(boolean selected) {
+   public void setSelected(boolean selected) {
       mSelectImage.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
    }
 }

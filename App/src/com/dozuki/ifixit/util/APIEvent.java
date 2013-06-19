@@ -1,17 +1,16 @@
 package com.dozuki.ifixit.util;
 
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.dozuki.Site;
-import com.dozuki.ifixit.model.gallery.UploadedImageInfo;
-import com.dozuki.ifixit.model.gallery.UserEmbedList;
-import com.dozuki.ifixit.model.gallery.UserImageList;
-import com.dozuki.ifixit.model.gallery.UserVideoList;
+import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
+import com.dozuki.ifixit.model.gallery.GalleryVideoList;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.model.user.UserImage;
 
 import java.util.ArrayList;
 
@@ -20,19 +19,25 @@ import java.util.ArrayList;
  */
 public abstract class APIEvent<T> {
    public static class Categories extends APIEvent<TopicNode> {}
-   public static class ViewGuide extends APIEvent<Guide> {}
+
    public static class Topic extends APIEvent<TopicLeaf> {}
    public static class TopicList extends APIEvent<ArrayList<String>> {}
+
    public static class Login extends APIEvent<User> {}
    public static class Logout extends APIEvent<String> {}
    public static class Register extends APIEvent<User> {}
-   public static class UserImages extends APIEvent<UserImageList> {}
-   public static class UserVideos extends APIEvent<UserVideoList> {}
-   public static class UserEmbeds extends APIEvent<UserEmbedList> {}
-   public static class CopyImage extends APIEvent<APIImage> {}
-   public static class UploadImage extends APIEvent<UploadedImageInfo> {}
-   public static class UploadStepImage extends APIEvent<APIImage> {}
+
+   public static class UserImages extends APIEvent<ArrayList<UserImage>> {}
+   public static class UserVideos extends APIEvent<GalleryVideoList> {}
+   public static class UserEmbeds extends APIEvent<GalleryEmbedList> {}
+   public static class UserInfo extends APIEvent<User> {}
+
+   public static class CopyImage extends APIEvent<Image> {}
+   public static class UploadImage extends APIEvent<Image> {}
+   public static class UploadStepImage extends APIEvent<Image> {}
    public static class DeleteImage extends APIEvent<String> {}
+
+   public static class ViewGuide extends APIEvent<Guide> {}
    public static class DeleteGuide extends APIEvent<String> {}
    public static class PublishStatus extends APIEvent<Guide> {}
    public static class UserGuides extends APIEvent<ArrayList<GuideInfo>> {}
@@ -43,9 +48,9 @@ public abstract class APIEvent<T> {
    public static class StepAdd extends APIEvent<Guide> {}
    public static class StepRemove extends APIEvent<Guide> {}
    public static class EditGuide extends APIEvent<Guide> {}
+
    public static class Sites extends APIEvent<ArrayList<Site>> {}
    public static class SiteInfo extends APIEvent<Site> {}
-   public static class UserInfo extends APIEvent<User> {}
 
    public String mResponse;
    public T mResult;

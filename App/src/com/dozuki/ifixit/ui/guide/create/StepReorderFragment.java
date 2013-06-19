@@ -15,7 +15,7 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.mobeta.android.dslv.DragSortController;
@@ -200,11 +200,11 @@ public class StepReorderFragment extends SherlockFragment {
       }
    }
 
-   private void setImageThumb(ArrayList<APIImage> imageList, ImageView image) {
+   private void setImageThumb(ArrayList<Image> imageList, ImageView image) {
       String url = "";
 
-      for (APIImage imageInfo : imageList) {
-         if (imageInfo.mId > 0) {
+      for (Image imageInfo : imageList) {
+         if (imageInfo.getId() > 0) {
             url = imageInfo.getPath(MainApplication.get().getImageSizes().getThumb());
             image.setTag(url);
             break;

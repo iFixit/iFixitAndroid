@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Part;
 import com.dozuki.ifixit.model.Tool;
 
@@ -25,7 +25,7 @@ public class Guide implements Serializable {
    protected String mIntroductionRendered;
    protected String mIntroductionRaw;
    protected String mSubject;
-   protected APIImage mIntroImage;
+   protected Image mIntroImage;
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
    protected ArrayList<Tool> mTools;
@@ -217,11 +217,11 @@ public class Guide implements Serializable {
       return mIntroductionRendered;
    }
 
-   public void setIntroImage(APIImage image) {
+   public void setIntroImage(Image image) {
       mIntroImage = image;
    }
 
-   public APIImage getIntroImage() {
+   public Image getIntroImage() {
       return mIntroImage;
    }
 

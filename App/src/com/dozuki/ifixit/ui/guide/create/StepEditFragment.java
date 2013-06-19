@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
@@ -128,7 +128,7 @@ public class StepEditFragment extends SherlockFragment {
       return mEditBulletFrag.getTitle();
    }
 
-   public ArrayList<APIImage> getImages() {
+   public ArrayList<Image> getImages() {
       return mEditImageFrag.getImages();
    }
 

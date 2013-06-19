@@ -301,6 +301,7 @@
     <string name="delete_step">Delete step</string>
     <string name="deleting">Deleting...</string>
     <string name="saving">Saving...</string>
+    <string name="gallery_image_content_description">Gallery Image</string>
 
 
     <string-array name="guide_type_array">

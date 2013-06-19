@@ -1,4 +1,6 @@
-package com.dozuki.ifixit.model.guide;
+package com.dozuki.ifixit.model;
+
+import com.dozuki.ifixit.model.guide.OEmbed;
 
 import java.io.Serializable;
 

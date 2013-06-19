@@ -14,12 +14,11 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.login.LoginEvent;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GalleryActivity extends BaseActivity {
@@ -71,10 +70,6 @@ public class GalleryActivity extends BaseActivity {
       if (getIntent().getExtras() != null) {
          Bundle bundle = getIntent().getExtras();
          mReturnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
-         ArrayList<String> filterList = bundle.getStringArrayList(FILTER_LIST_KEY);
-         Bundle args = new Bundle();
-         args.putStringArrayList(PhotoMediaFragment.FILTERED_MEDIA, filterList);
-         mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setArguments(args);
          if (mReturnValue != -1) {
             getMediaItemForReturn = true;
          }

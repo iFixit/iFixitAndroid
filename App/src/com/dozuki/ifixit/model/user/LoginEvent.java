@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.model.login;
+package com.dozuki.ifixit.model.user;
 
 /**
  * Defines events regarding login.

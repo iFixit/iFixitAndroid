@@ -13,11 +13,11 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.APIImage;
-import com.dozuki.ifixit.ui.guide.create.StepEditImageFragment;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestBuilder;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -45,6 +45,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
 
    private OnLongClickListener mLongClickListener;
    private OnClickListener mAddThumbListener;
+   private Picasso mPicasso;
 
    @Override
    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
@@ -76,8 +77,12 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    }
 
    private void init(Context context) {
-
       mContext = context;
+      mPicasso = Picasso.with(mContext);
+
+      if (MainApplication.inDebug()) {
+         mPicasso.setDebugging(true);
+      }
 
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.thumbnail_list, this, true);
@@ -87,23 +92,12 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       mThumbs = new ArrayList<ImageView>();
    }
 
-   public void setAddThumbButtonOnClick(OnClickListener listener) {
-      if (mCanEdit) {
-         mAddThumbListener = listener;
-         mAddThumbButton.setOnClickListener(listener);
-         if (mThumbs.isEmpty())
-            mMainImage.setOnClickListener(listener);
-      }
-   }
-
    @Override
    public void onClick(View v) {
       for (ImageView image : mThumbs) {
-         if (v.getId() == image.getId()) {
-            if (v.getTag() instanceof APIImage) {
-               APIImage imageView = (APIImage) v.getTag();
-               setCurrentThumb(imageView.mBaseUrl);
-            }
+         if (v.getId() == image.getId() && v.getTag() instanceof Image) {
+            Image imageView = (Image) v.getTag();
+            setCurrentThumb(imageView.getPath());
          }
       }
    }
@@ -112,16 +106,14 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       mImageSizes = imageSizes;
    }
 
-   public void setThumbs(ArrayList<APIImage> images) {
+   public void setThumbs(ArrayList<Image> images) {
 
-      if (images.size() <= 1 && !mShowSingle) {
-         setVisibility(GONE);
-      } else {
-         setVisibility(VISIBLE);
-      }
+      boolean hideOnSingleThumb = (images.size() <= 1 && !mShowSingle);
+
+      setVisibility(hideOnSingleThumb ? GONE : VISIBLE);
 
       if (!images.isEmpty()) {
-         for (APIImage image : images) {
+         for (Image image : images) {
             addThumb(image, false);
          }
       } else {
@@ -133,7 +125,17 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       fitToSpace();
    }
 
-   public int addThumb(APIImage image, boolean fromDisk) {
+   public void setAddThumbButtonOnClick(OnClickListener listener) {
+      if (mCanEdit) {
+         mAddThumbListener = listener;
+         mAddThumbButton.setOnClickListener(listener);
+         if (mThumbs.isEmpty()) {
+            mMainImage.setOnClickListener(listener);
+         }
+      }
+   }
+
+   public int addThumb(Image image, boolean fromDisk) {
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
       thumb.setOnClickListener(this);
@@ -144,21 +146,12 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       getThumbnailDimensions();
 
       if (fromDisk) {
-         File file = new File(image.mBaseUrl);
-         Picasso.with(mContext)
-          .load(file)
-          .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
-          .error(R.drawable.no_image)
-          .into(thumb);
-
+         File file = new File(image.getPath());
+         buildImage(mPicasso.load(file), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
          setCurrentThumb(file);
       } else {
          String url = image.getPath(mImageSizes.getThumb());
-         Picasso.with(mContext)
-          .load(url)
-          .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
-          .error(R.drawable.no_image)
-          .into(thumb);
+         buildImage(mPicasso.load(url), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
          setCurrentThumb(url);
       }
 
@@ -167,14 +160,16 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       thumb.setTag(image);
 
       mThumbs.add(thumb);
-      this.addView(thumb, mThumbs.size() - 1);
+
+      int thumbnailPosition = mThumbs.size() - 1;
+      this.addView(thumb, thumbnailPosition);
 
       if ((mThumbs.size() > 2 || mThumbs.size() < 1) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(GONE);
       }
 
       // Return the position of the newly added thumbnail
-      return mThumbs.size() - 1;
+      return thumbnailPosition;
    }
 
    public void removeThumb(ImageView view) {
@@ -190,18 +185,18 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
          mMainImage.setOnClickListener(mAddThumbListener);
          mMainImage.setTag(null);
       } else {
-         APIImage image = (APIImage) mThumbs.get(mThumbs.size() - 1).getTag();
-         setCurrentThumb(image.mBaseUrl);
+         Image image = (Image) mThumbs.get(mThumbs.size() - 1).getTag();
+         setCurrentThumb(image.getPath());
       }
 
       invalidate();
    }
 
-   public void updateThumb(APIImage newImage) {
+   public void updateThumb(Image newImage) {
       for (ImageView thumb : mThumbs) {
-         APIImage thumbImage = (APIImage) thumb.getTag();
+         Image thumbImage = (Image) thumb.getTag();
 
-         if (thumbImage.mId == StepEditImageFragment.DEFAULT_IMAGE_ID) {
+         if (thumbImage.isLocal()) {
             thumb.setTag(newImage);
             invalidate();
             break;
@@ -209,7 +204,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       }
    }
 
-   public void updateThumb(APIImage newImage, int position) {
+   public void updateThumb(Image newImage, int position) {
       Picasso.with(mContext)
        .load(newImage.getPath(mImageSizes.getThumb()))
        .into(mThumbs.get(position));
@@ -233,21 +228,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
          url = url + mImageSizes.getMain();
       }
 
-      Picasso.with(mContext)
-       .load(url)
-       .resize((int)mMainWidth, (int)mMainHeight)
-       .error(R.drawable.no_image)
-       .into(mMainImage);
+      buildImage(mPicasso.load(url), (int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f), mMainImage);
    }
 
    public void setCurrentThumb(File file) {
       mMainImage.setTag(file.getPath());
 
-      Picasso.with(mContext)
-       .load(file)
-       .resize((int) mMainWidth, (int) mMainHeight)
-       .error(R.drawable.no_image)
-       .into(mMainImage);
+      buildImage(mPicasso.load(file), (int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f), mMainImage);
    }
 
    public void setDisplayMetrics(DisplayMetrics metrics) {
@@ -326,6 +313,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
 
       getMainImageDimensions();
       getThumbnailDimensions();
+   }
+
+   private void buildImage(RequestBuilder builder, int width, int height, ImageView image) {
+      builder
+       .resize(width, height)
+       .error(R.drawable.no_image)
+       .into(image);
    }
 
    private void getMainImageDimensions() {

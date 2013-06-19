@@ -14,8 +14,8 @@ import android.widget.RelativeLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.StepVideo;
-import com.dozuki.ifixit.model.guide.StepVideoThumbnail;
+import com.dozuki.ifixit.model.Video;
+import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
 import com.squareup.picasso.Picasso;
 
@@ -23,8 +23,8 @@ public class StepVideoFragment extends SherlockFragment {
 
    public static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
    private Activity mContext;
-   private StepVideoThumbnail mVideoPoster;
-   private StepVideo mVideo;
+   private VideoThumbnail mVideoPoster;
+   private Video mVideo;
    private Resources mResources;
    private DisplayMetrics mMetrics;
 
@@ -53,11 +53,11 @@ public class StepVideoFragment extends SherlockFragment {
 
       Bundle extras = getArguments();
       if (extras != null) {
-         mVideo = (StepVideo)extras.getSerializable(GUIDE_VIDEO_KEY);
+         mVideo = (Video)extras.getSerializable(GUIDE_VIDEO_KEY);
       }
 
       if (savedInstanceState != null) {
-         mVideo = (StepVideo)savedInstanceState.getSerializable(GUIDE_VIDEO_KEY);
+         mVideo = (Video)savedInstanceState.getSerializable(GUIDE_VIDEO_KEY);
       }
 
       if (mVideo != null) {

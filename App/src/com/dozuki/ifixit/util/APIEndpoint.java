@@ -236,7 +236,7 @@ public enum APIEndpoint {
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UploadImage().setResult(JSONHelper.parseUploadedImageInfo(json));
+            return new APIEvent.UploadImage().setResult(JSONHelper.parseUploadedImage(json));
          }
 
          public APIEvent<?> getEvent() {
@@ -278,7 +278,7 @@ public enum APIEndpoint {
        }
 
        public APIEvent<?> parse(String json) throws JSONException {
-          return new APIEvent.UploadStepImage().setResult(JSONHelper.parseUploadedStepImage(json));
+          return new APIEvent.UploadStepImage().setResult(JSONHelper.parseUploadedImage(json));
        }
 
        public APIEvent<?> getEvent() {

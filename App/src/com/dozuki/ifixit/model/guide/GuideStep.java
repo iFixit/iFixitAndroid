@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Embed;
+import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.model.Video;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -36,9 +38,9 @@ public class GuideStep implements Serializable {
    protected int mStepNum;
 
    protected String mTitle;
-   protected ArrayList<APIImage> mImages;
+   protected ArrayList<Image> mImages;
    protected ArrayList<StepLine> mLines;
-   protected StepVideo mVideo;
+   protected Video mVideo;
    private Embed mEmbed;
    protected boolean mEditMode; // save state for edit drop down
 
@@ -53,7 +55,7 @@ public class GuideStep implements Serializable {
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
       mTitle = "";
-      mImages = new ArrayList<APIImage>();
+      mImages = new ArrayList<Image>();
       mLines = new ArrayList<StepLine>();
       mRevisionid = null;
    }
@@ -116,17 +118,17 @@ public class GuideStep implements Serializable {
       return mImages.size() > 0;
    }
 
-   public void addImage(APIImage image) {
+   public void addImage(Image image) {
       mImages.add(image);
    }
 
-   public ArrayList<APIImage> getImages() {
+   public ArrayList<Image> getImages() {
       return mImages;
    }
 
-   public void setImages(ArrayList<APIImage> images) {
+   public void setImages(ArrayList<Image> images) {
       mImages.clear();
-      mImages = new ArrayList<APIImage>(images);
+      mImages = new ArrayList<Image>(images);
    }
 
    public ArrayList<StepLine> getLines() {
@@ -147,7 +149,7 @@ public class GuideStep implements Serializable {
    }
 
 
-   public void addVideo(StepVideo stepvid) {
+   public void addVideo(Video stepvid) {
       mVideo = stepvid;
    }
 
@@ -155,7 +157,7 @@ public class GuideStep implements Serializable {
       return mVideo != null;
    }
 
-   public StepVideo getVideo() {
+   public Video getVideo() {
       return mVideo;
    }
 

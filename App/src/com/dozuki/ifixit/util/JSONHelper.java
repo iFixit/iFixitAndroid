@@ -5,15 +5,15 @@ import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
-import com.dozuki.ifixit.model.APIImage;
-import com.dozuki.ifixit.model.Part;
-import com.dozuki.ifixit.model.Tool;
+import com.dozuki.ifixit.model.*;
 import com.dozuki.ifixit.model.dozuki.Site;
-import com.dozuki.ifixit.model.gallery.*;
+import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
+import com.dozuki.ifixit.model.gallery.GalleryVideoList;
 import com.dozuki.ifixit.model.guide.*;
-import com.dozuki.ifixit.model.login.User;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.model.user.UserImage;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
@@ -60,14 +60,14 @@ public class JSONHelper {
          JSONObject siteInfoObject = new JSONObject(json);
          site = parseSite(siteInfoObject);
 
-         JSONObject types = (JSONObject)siteInfoObject.get("guide-types");
+         JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
          site.mGuideTypes = new ArrayList<GuideType>();
 
          Iterator<?> keys = types.keys();
          while (keys.hasNext()) {
-            String key = (String)keys.next();
+            String key = (String) keys.next();
             if (types.get(key) instanceof JSONObject) {
-               site.mGuideTypes.add(parseGuideType(key, (JSONObject)types.get(key)));
+               site.mGuideTypes.add(parseGuideType(key, (JSONObject) types.get(key)));
             }
          }
       } catch (JSONException e) {
@@ -153,8 +153,9 @@ public class JSONHelper {
       guide.setPublic(jGuide.getBoolean("public"));
       guide.setType(jGuide.getString("type"));
 
-      if (jGuide.has("canEdit"))
+      if (jGuide.has("canEdit")) {
          guide.setCanEdit(jGuide.getBoolean("canEdit"));
+      }
 
       for (int i = 0; i < jSteps.length(); i++) {
          guide.addStep(parseStep(jSteps.getJSONObject(i), i + 1));
@@ -208,7 +209,7 @@ public class JSONHelper {
          }
 
       } catch (JSONException e) {
-         APIImage image = new APIImage();
+         Image image = new Image();
          step.addImage(image);
       }
 
@@ -233,8 +234,8 @@ public class JSONHelper {
       return map;
    }
 
-   private static StepVideo parseVideo(JSONObject jVideo) throws JSONException {
-      StepVideo video = new StepVideo();
+   private static Video parseVideo(JSONObject jVideo) throws JSONException {
+      Video video = new Video();
 
       try {
          JSONArray jEncodings = jVideo.getJSONArray("encoding");
@@ -252,7 +253,7 @@ public class JSONHelper {
       return video;
    }
 
-   private static StepVideoThumbnail parseVideoThumbnail(JSONObject jVideoThumb) throws JSONException {
+   private static VideoThumbnail parseVideoThumbnail(JSONObject jVideoThumb) throws JSONException {
       String guid = jVideoThumb.getString("guid");
       int imageid = jVideoThumb.getInt("imageid");
       String ratio = jVideoThumb.getString("ratio");
@@ -262,7 +263,7 @@ public class JSONHelper {
       String url = jVideoThumb.getString("medium");
       url = url.substring(0, url.lastIndexOf("."));
 
-      return new StepVideoThumbnail(guid, imageid, url, ratio, width, height);
+      return new VideoThumbnail(guid, imageid, url, ratio, width, height);
    }
 
    private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
@@ -361,45 +362,46 @@ public class JSONHelper {
    /**
     * Parsing list of UserImageInfo.
     */
-   public static UserImageList parseUserImages(String json) throws JSONException {
+   public static ArrayList<UserImage> parseUserImages(String json) throws JSONException {
       JSONArray jImages = new JSONArray(json);
 
-      UserImageList userImageList = new UserImageList();
+      ArrayList<UserImage> userImageList = new ArrayList<UserImage>();
 
       for (int i = 0; i < jImages.length(); i++) {
-         userImageList.addItem((parseUserImageInfo(jImages.getJSONObject(i))));
+         userImageList.add(parseUserImage(jImages.getJSONObject(i)));
       }
 
       return userImageList;
    }
 
-   public static UserImageInfo parseUserImageInfo(JSONObject jImage)
-    throws JSONException {
-      UserImageInfo userImageInfo = new UserImageInfo();
-      // TODO: Make a function to parse the image format and return an object
-      // that UserImageInfo uses. All other image parsing should use that too.
-      userImageInfo.setItemId(jImage.getJSONObject("image").getString("id"));
-      userImageInfo.setGuid(jImage.getJSONObject("image").getString("original"));
-      userImageInfo.setWidth(jImage.getString("width"));
-      userImageInfo.setHeight(jImage.getString("height"));
-      userImageInfo.setRatio(jImage.getString("ratio"));
+   private static UserImage parseUserImage(JSONObject jImage) throws JSONException {
+      JSONObject img = jImage.getJSONObject("image");
 
-      return userImageInfo;
+      int id = img.getInt("id");
+      int width = jImage.getInt("width");
+      int height = jImage.getInt("height");
+      String path = img.getString("original");
+      String ratio = jImage.getString("ratio");
+      String markup = jImage.isNull("markup") ? "" : jImage.getString("markup");
+      // TODO: add exif
+      String exif = "";
+
+      return new UserImage(id, path, width, height, ratio, markup, exif);
    }
 
-   public static UserVideoList parseUserVideos(String jVideo) throws JSONException {
+   public static GalleryVideoList parseUserVideos(String jVideo) throws JSONException {
       JSONArray jImages = new JSONArray(jVideo);
 
-      UserVideoList userVideoList = new UserVideoList();
+      GalleryVideoList userVideoList = new GalleryVideoList();
 
       for (int i = 0; i < jImages.length(); i++) {
-         userVideoList.addItem((parseUserVideoInfo(jImages.getJSONObject(i))));
+         //userVideoList.addItem((parseUserVideoInfo(jImages.getJSONObject(i))));
       }
       return userVideoList;
    }
 
-   public static UserVideoInfo parseUserVideoInfo(JSONObject jVideo)
-    throws JSONException {
+   public static Video parseUserVideoInfo(JSONObject jVideo) throws JSONException {
+      /*
       UserVideoInfo userVideoInfo = new UserVideoInfo();
       userVideoInfo.setItemId(jVideo.getString("imageid"));
       userVideoInfo.setGuid(jVideo.getString("guid"));
@@ -407,20 +409,21 @@ public class JSONHelper {
       userVideoInfo.setWidth(jVideo.getString("width"));
       userVideoInfo.setRatio(jVideo.getString("ratio"));
 
-      return userVideoInfo;
+      return userVideoInfo; */
+      return new Video();
    }
 
-   public static UserEmbedList parseUserEmbeds(String jEmbed) throws JSONException {
+   public static GalleryEmbedList parseUserEmbeds(String jEmbed) throws JSONException {
       JSONArray jEmbeds = new JSONArray(jEmbed);
 
-      UserEmbedList userEmbedList = new UserEmbedList();
+      GalleryEmbedList userEmbedList = new GalleryEmbedList();
 
       for (int i = 0; i < jEmbed.length(); i++) {
-         userEmbedList.addItem((parseUserVideoInfo(jEmbeds.getJSONObject(i))));
+         //userEmbedList.addItem((parseUserVideoInfo(jEmbeds.getJSONObject(i))));
       }
       return userEmbedList;
    }
-
+/*
    public static UserEmbedInfo parseUserEmbedInfo(JSONObject jEmbed)
     throws JSONException {
       UserEmbedInfo userEmbedInfo = new UserEmbedInfo();
@@ -432,38 +435,42 @@ public class JSONHelper {
 
       return userEmbedInfo;
    }
+*/
 
-
-   public static UploadedImageInfo parseUploadedImageInfo(String image)
-    throws JSONException {
-      JSONObject jImage = new JSONObject(image);
-
-      UploadedImageInfo userImageInfo = new UploadedImageInfo();
-      userImageInfo.setImageid(jImage.getJSONObject("image").getString("id"));
-      userImageInfo.setGuid(jImage.getJSONObject("image").getString("original"));
-
-      return userImageInfo;
-   }
-
-   public static APIImage parseUploadedStepImage(String image) throws JSONException {
-
-      Log.w("JSONHelper", "Uploaded Image Response: " + image);
-
+   public static Image parseUploadedImage(String image) throws JSONException {
       return parseImage(new JSONObject(image), "image");
    }
-      /**
-       * Login parsing info
-       */
+
+   /**
+    * Login parsing info
+    */
    public static User parseLoginInfo(String json) throws JSONException {
       JSONObject jUser = new JSONObject(json);
 
       User user = new User();
-      user.setUserid(jUser.getString("userid"));
+      user.setUserid(jUser.getInt("userid"));
       user.setUsername(jUser.getString("username"));
-      //    user.setImageid(jUser.getString("imageid"));
+      user.setAvatar(parseImage(jUser.getJSONObject("image"), null));
+      user.setAboutRaw(jUser.getString("about_raw"));
+      user.setAboutRendered(jUser.getString("about_rendered"));
+      user.setSummary(jUser.getString("summary"));
+      user.setJoinDate(jUser.getInt("join_date"));
+      user.setLocation(jUser.getString("location"));
+      user.setBadges(parseBadges(jUser.getJSONObject("badge_counts")));
+      user.setReputation(jUser.getInt("reputation"));
+      user.setCertificationCount(jUser.getInt("certification_count"));
       user.setAuthToken(jUser.getString("authToken"));
 
       return user;
+   }
+
+   public static Badges parseBadges(JSONObject json) throws JSONException {
+
+      int gold = json.getInt("gold");
+      int silver = json.getInt("silver");
+      int bronze = json.getInt("bronze");
+
+      return new Badges(bronze, silver, gold);
    }
 
    /**
@@ -479,8 +486,9 @@ public class JSONHelper {
       try {
          JSONObject jError = new JSONObject(json);
 
-         if (jError.has("message"))
+         if (jError.has("message")) {
             error = jError.getString("message");
+         }
       } catch (JSONException e) {
          Log.e("JSONHelper", "Unable to parse error message");
       }
@@ -524,7 +532,7 @@ public class JSONHelper {
 
    public static ArrayList<GuideInfo> parseUserGuides(String json) {
 
-      Type userGuidesType = new TypeToken<Collection<GuideInfo>>(){}.getType();
+      Type userGuidesType = new TypeToken<Collection<GuideInfo>>() {}.getType();
       Collection<GuideInfo> guideList = new Gson().fromJson(json, userGuidesType);
 
       return new ArrayList<GuideInfo>(guideList);
@@ -560,12 +568,12 @@ public class JSONHelper {
       return array;
    }
 
-   public static JSONArray createImageArray(ArrayList<APIImage> lines) throws JSONException {
+   public static JSONArray createImageArray(ArrayList<Image> lines) throws JSONException {
 
       JSONArray array = new JSONArray();
 
-      for (APIImage l : lines) {
-         array.put(l.mId);
+      for (Image l : lines) {
+         array.put(l.getId());
       }
       return array;
    }
@@ -586,11 +594,7 @@ public class JSONHelper {
       lineObject.put("text", l.getTextRaw());
       lineObject.put("bullet", l.getColor());
       lineObject.put("level", l.getLevel());
-      if (l.getLineId() != null) {
-         lineObject.put("lineid", l.getLineId());
-      } else {
-         lineObject.put("lineid", 0);
-      }
+      lineObject.put("lineid", (l.getLineId() != null ? l.getLineId() : 0));
 
       return lineObject;
    }
@@ -604,22 +608,20 @@ public class JSONHelper {
       return jSteps;
    }
 
-   public static APIImage parseImage(JSONObject image, String imageFieldName) {
+   public static Image parseImage(JSONObject image, String imageFieldName) {
       try {
          if (imageFieldName != null) {
             image = image.optJSONObject(imageFieldName);
          }
 
          if (image == null) {
-            return new APIImage();
+            return new Image();
          }
 
-         APIImage apiImage = new APIImage(image.getInt("id"), image.getString("original"));
-
-         return apiImage;
+         return new Image(image.getInt("id"), image.getString("original"));
       } catch (JSONException e) {
-         Log.w(TAG, "APIImage parsing", e);
-         return new APIImage();
+         Log.w(TAG, "Image parsing", e);
+         return new Image();
       }
    }
 

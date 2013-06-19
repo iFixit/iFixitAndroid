@@ -14,7 +14,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
-import com.dozuki.ifixit.model.login.User;
+import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 
 public class WebViewFragment extends SherlockFragment
@@ -158,9 +158,9 @@ public class WebViewFragment extends SherlockFragment
                   return true;
                } 
             } catch (ArrayIndexOutOfBoundsException e) {
-               Log.w("GuideWebView ArrayIndexOutOfBoundsException", e.toString());
+               Log.e("GuideWebView ArrayIndexOutOfBoundsException", e.toString());
             } catch (NumberFormatException e) {
-               Log.w("GuideWebView NumberFormatException", e.toString());
+               Log.e("GuideWebView NumberFormatException", e.toString());
             }
          }
          

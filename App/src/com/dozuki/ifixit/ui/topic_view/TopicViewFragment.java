@@ -165,20 +165,16 @@ public class TopicViewFragment extends SherlockFragment {
    }
 
    private void selectDefaultTab() {
-      int tab;
 
       if (mTopicLeaf == null) {
          return;
       }
 
-      if (mTopicLeaf.getGuides().size() == 0) {
-         tab = MORE_INFO_TAB;
-      } else {
-         tab = GUIDES_TAB;
-      }
+      boolean noGuides = (mTopicLeaf.getGuides().size() == 0);
+      int defaultTab = noGuides ? MORE_INFO_TAB : GUIDES_TAB;
 
-      mPager.setCurrentItem(tab, false);
-      mTitleIndicator.setCurrentItem(tab);
+      mPager.setCurrentItem(defaultTab, false);
+      mTitleIndicator.setCurrentItem(defaultTab);
       mPager.invalidate();
       mTitleIndicator.invalidate();
    }

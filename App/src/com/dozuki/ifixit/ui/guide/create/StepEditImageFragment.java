@@ -18,8 +18,7 @@ import android.widget.LinearLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.APIImage;
-import com.dozuki.ifixit.model.gallery.MediaInfo;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIError;
@@ -36,7 +35,6 @@ import java.util.Date;
 
 public class StepEditImageFragment extends SherlockFragment {
 
-   public static final int DEFAULT_IMAGE_ID = -1;
    private static final int GALLERY_REQUEST_CODE = 1;
    private static final int CAMERA_REQUEST_CODE = 1888;
    private static final int COPY_TO_MEDIA_MANAGER = 0;
@@ -49,7 +47,7 @@ public class StepEditImageFragment extends SherlockFragment {
    // images
    private ThumbnailView mThumbs;
    private ImageView mLargeImage;
-   private ArrayList<APIImage> mImages;
+   private ArrayList<Image> mImages;
    private String mTempFileName;
 
    // Position of the temporary image captured on the phone
@@ -81,7 +79,7 @@ public class StepEditImageFragment extends SherlockFragment {
       }
 
       if (savedInstanceState != null) {
-         mImages = (ArrayList<APIImage>)savedInstanceState.getSerializable(IMAGES_KEY);
+         mImages = (ArrayList<Image>)savedInstanceState.getSerializable(IMAGES_KEY);
       }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -94,7 +92,7 @@ public class StepEditImageFragment extends SherlockFragment {
       // Initialize the step thumbnails and set the main image to the first thumbnail if it exists
       if (mImages != null && mImages.size() > 0) {
          mThumbs.setThumbs(mImages);
-         mThumbs.setCurrentThumb(mImages.get(0).mBaseUrl);
+         mThumbs.setCurrentThumb(mImages.get(0).getPath());
       } else {
          mThumbs.fitToSpace();
       }
@@ -168,16 +166,16 @@ public class StepEditImageFragment extends SherlockFragment {
              .setItems(R.array.existing_image_actions, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-                   APIImage thumbImage = (APIImage) v.getTag();
+                   Image thumbImage = (Image) v.getTag();
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
                          APIService.call(getActivity(),
-                          APIService.getCopyImageAPICall(Integer.toString(thumbImage.mId)));
+                          APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
                          APIService.call(getActivity(),
-                          APIService.getCopyImageAPICall(Integer.toString(thumbImage.mId)));
+                          APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
                          mThumbs.removeThumb((ImageView) v);
                          mImages.remove(thumbImage);
@@ -198,13 +196,12 @@ public class StepEditImageFragment extends SherlockFragment {
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      APIImage newThumb;
+      Image newThumb;
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
             if (data != null) {
-               MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               newThumb = new APIImage(Integer.parseInt(media.getItemId()), media.getGuid());
+               newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mImages.add(newThumb);
                mThumbs.addThumb(newThumb, false);
                setGuideDirty();
@@ -224,7 +221,8 @@ public class StepEditImageFragment extends SherlockFragment {
                // Prevent a save from being called until the image uploads and returns with the imageid
                ((StepEditActivity) getActivity()).lockSave();
 
-               newThumb = new APIImage(DEFAULT_IMAGE_ID, mTempFileName);
+               newThumb = new Image();
+               newThumb.setLocalImage(mTempFileName);
 
                mImages.add(newThumb);
                mTempThumbPosition = mThumbs.addThumb(newThumb, true);
@@ -253,12 +251,12 @@ public class StepEditImageFragment extends SherlockFragment {
    @Subscribe
    public void onUploadStepImage(APIEvent.UploadStepImage event) {
       if (!event.hasError()) {
-         APIImage newThumb = event.getResult();
+         Image newThumb = event.getResult();
 
          // Find the temporarily stored image object to update the filename to the image path and imageid
          if (newThumb != null) {
             for (int i = 0; i < mImages.size(); i++) {
-               if (mImages.get(i).mId == DEFAULT_IMAGE_ID) {
+               if (mImages.get(i).isLocal()) {
                   mImages.set(i, newThumb);
                   mThumbs.updateThumb(newThumb, mTempThumbPosition);
                   break;
@@ -281,11 +279,11 @@ public class StepEditImageFragment extends SherlockFragment {
    // HELPERS
    /////////////////////////////////////////////////////
 
-   protected void setImages(ArrayList<APIImage> images) {
-      mImages = new ArrayList<APIImage>(images);
+   protected void setImages(ArrayList<Image> images) {
+      mImages = new ArrayList<Image>(images);
    }
 
-   protected ArrayList<APIImage> getImages() {
+   protected ArrayList<Image> getImages() {
       return mImages;
    }
 

@@ -11,9 +11,9 @@ import android.widget.*;
 import android.widget.CompoundButton.OnCheckedChangeListener;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.guide.StepVideoThumbnail;
+import com.dozuki.ifixit.model.VideoThumbnail;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -131,7 +131,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       }
    }
 
-   private void setStepThumbnail(ArrayList<APIImage> imageList, ImageView imageView) {
+   private void setStepThumbnail(ArrayList<Image> imageList, ImageView imageView) {
       if (imageList.size() == 0) {
          Picasso
           .with(mContext)
@@ -139,8 +139,8 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
           .noFade()
           .into(imageView);
       } else {
-         for (APIImage imageInfo : imageList) {
-            if (imageInfo.mId > 0) {
+         for (Image imageInfo : imageList) {
+            if (imageInfo.getId() > 0) {
                String url = imageInfo.getPath(".thumbnail");
                setStepThumbnail(url, imageView);
                return;
@@ -149,7 +149,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       }
    }
 
-   private void setStepThumbnail(StepVideoThumbnail thumb, ImageView imageView) {
+   private void setStepThumbnail(VideoThumbnail thumb, ImageView imageView) {
       String url = thumb.getUrl(".thumbnail");
 
       // Videos are not guaranteed to be 4:3 ratio, so let's fake it.

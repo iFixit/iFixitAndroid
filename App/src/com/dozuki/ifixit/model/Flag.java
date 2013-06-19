@@ -4,7 +4,7 @@ public class Flag {
    private String mTitle;
    private int mId;
    private String mText;
-   private APIImage mThumbnail;
+   private Image mThumbnail;
 
    public Flag(int id) {
       mId = id;

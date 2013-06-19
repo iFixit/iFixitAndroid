@@ -59,7 +59,7 @@ public class TopicInfoFragment extends SherlockFragment {
       content.setMovementMethod(LinkMovementMethod.getInstance());
       content.setText(getStyledContent());
 
-      String url = mTopic.getImage().mBaseUrl + IMAGE_SIZE;
+      String url = mTopic.getImage().getPath(IMAGE_SIZE);
 
       Picasso.with(getSherlockActivity())
        .load(url)

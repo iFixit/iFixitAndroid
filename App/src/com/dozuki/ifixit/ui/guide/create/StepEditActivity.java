@@ -21,8 +21,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.APIImage;
-import com.dozuki.ifixit.model.gallery.MediaInfo;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
@@ -208,18 +207,15 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       } else {
          if (resultCode == RESULT_OK) {
             // we dont have a reference the the fragment managing the media, so we make the changes to the step manually
-            MediaInfo media = (MediaInfo) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-            APIImage mImageInfo = new APIImage();
-            mImageInfo.mBaseUrl = media.getGuid();
-            mImageInfo.mId = Integer.valueOf(media.getItemId());
-            ArrayList<APIImage> list = mGuide.getStep(mPagePosition).getImages();
+            Image image = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
+            ArrayList<Image> list = mGuide.getStep(mPagePosition).getImages();
 
             if (list.size() > 0) {
-               list.get(0).mBaseUrl = media.getGuid();
-               list.get(0).mId = Integer.valueOf(media.getItemId());
+               list.set(0, image);
             } else {
-               list.add(mImageInfo);
+               list.add(image);
             }
+
             mGuide.getStep(mPagePosition).setImages(list);
             toggleSave(true);
             // recreate pager with updated step:

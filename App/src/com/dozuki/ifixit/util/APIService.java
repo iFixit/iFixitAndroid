@@ -23,7 +23,7 @@ import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
 import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
-import com.dozuki.ifixit.model.login.User;
+import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;

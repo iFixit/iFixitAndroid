@@ -16,7 +16,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.login.LoginEvent;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
@@ -75,7 +75,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       @SuppressWarnings("unused")
       @Subscribe
       public void onLogin(LoginEvent.Login event) {
-         // Reload app to update the menu to include the User name and logout button
+         // Reload app to update the menu to include the user name and logout button
          buildSliderMenu();
          mMenuDrawer.invalidate();
       }

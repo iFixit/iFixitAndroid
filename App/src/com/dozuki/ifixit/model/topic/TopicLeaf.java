@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model.topic;
 
-import com.dozuki.ifixit.model.APIImage;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Flag;
 import com.dozuki.ifixit.model.Part;
 import com.dozuki.ifixit.model.Tool;
@@ -16,7 +16,7 @@ public class TopicLeaf implements Serializable {
    private String mName;
    private String mTitle;
    private String mLocale;
-   private APIImage mImage;
+   private Image mImage;
    private String mDescription;
    private ArrayList<Flag> mFlags;
    private ArrayList<GuideInfo> mGuides;
@@ -47,7 +47,7 @@ public class TopicLeaf implements Serializable {
       return mGuides;
    }
 
-   public void setImage(APIImage image) {
+   public void setImage(Image image) {
       mImage = image;
    }
 
@@ -128,7 +128,7 @@ public class TopicLeaf implements Serializable {
       return mContentsRendered;
    }
 
-   public APIImage getImage() {
+   public Image getImage() {
       return mImage;
    }
 }

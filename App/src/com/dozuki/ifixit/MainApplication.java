@@ -13,8 +13,8 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 import com.dozuki.ifixit.model.dozuki.Site;
-import com.dozuki.ifixit.model.login.LoginEvent;
-import com.dozuki.ifixit.model.login.User;
+import com.dozuki.ifixit.model.user.LoginEvent;
+import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.otto.Bus;
@@ -213,7 +213,7 @@ public class MainApplication extends Application {
        MODE_PRIVATE);
       String authToken = preferenceFile.getString(site.mName + AUTH_TOKEN_KEY, null);
       String username = preferenceFile.getString(site.mName + USERNAME_KEY, null);
-      String userid = preferenceFile.getString(site.mName + USERID_KEY, null);
+      int userid = preferenceFile.getInt(site.mName + USERID_KEY, 0);
       User user = null;
 
       if (username != null && authToken != null) {
@@ -264,7 +264,7 @@ public class MainApplication extends Application {
       Editor editor = prefs.edit();
       editor.putString(mSite.mName + AUTH_TOKEN_KEY, user.getAuthToken());
       editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
-      editor.putString(mSite.mName + USERID_KEY, user.getUserId());
+      editor.putInt(mSite.mName + USERID_KEY, user.getUserid());
       editor.commit();
       mUser = user;
 

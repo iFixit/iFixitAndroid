@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.model.guide;
+package com.dozuki.ifixit.model;
 
 import java.io.Serializable;
 

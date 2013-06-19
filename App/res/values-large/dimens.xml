@@ -22,7 +22,6 @@
     <dimen name="step_icon_left_spacing">20dp</dimen>
     <dimen name="topic_list_image_height">270dp</dimen>
     <dimen name="topic_list_column_width">270dp</dimen>
-    <dimen name="gallery_bottom_bar_height">50dp</dimen>
     <dimen name="gallery_grid_column_width">334dp</dimen>
     <dimen name="gallery_grid_item_height">252dp</dimen>
     <dimen name="login_agreement_text_top_padding">9dp</dimen>
