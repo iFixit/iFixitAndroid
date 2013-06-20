@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.guide;
+package com.dozuki.ifixit.ui.guide.view;
 
 import android.app.Activity;
 import android.os.Bundle;
@@ -11,6 +11,7 @@ import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.ui.guide.ThumbnailView;
 
 import java.util.ArrayList;
 
