@@ -38,10 +38,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    private boolean mCanEdit = false;
    private DisplayMetrics mDisplayMetrics;
    private float mNavigationHeight;
-   private float mThumbnailWidth;
-   private float mThumbnailHeight;
-   private float mMainWidth;
-   private float mMainHeight;
+   private float mThumbnailWidth = 0;
+   private float mThumbnailHeight = 0;
+   private float mMainWidth = 0;
+   private float mMainHeight = 0;
 
    private OnLongClickListener mLongClickListener;
    private OnClickListener mAddThumbListener;
@@ -170,11 +170,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       if (fromDisk) {
          File file = new File(image.getPath());
          buildImage(mPicasso.load(file), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
-         setCurrentThumb(file);
       } else {
          String url = image.getPath(mImageSizes.getThumb());
          buildImage(mPicasso.load(url), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
-         setCurrentThumb(url);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
@@ -196,7 +194,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
 
    public void removeThumb(ImageView view) {
       mThumbs.remove(view);
-      removeView(view);
+      mThumbnailContainer.removeView(view);
       if ((mThumbs.size() < 3 && mThumbs.size() > 0) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(VISIBLE);
       }
@@ -314,14 +312,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       thumb.setLayoutParams(lp);
    }
 
-   public void setMainImage(ImageView image) {
-      mMainImage = image;
-
-   }
-
    private void buildImage(RequestBuilder builder, int width, int height, ImageView image) {
       builder
-       .resize(width, height)
+       .fit()
        .error(R.drawable.no_image)
        .into(image);
    }

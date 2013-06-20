@@ -151,11 +151,6 @@
     </style>
 
     <style name="ThumbnailAddButton">
-        <item name="android:layout_gravity">right</item>
-        <item name="android:background">#FFF3F3F3</item>
-        <item name="android:cropToPadding">true</item>
-        <item name="android:padding">@dimen/add_thumbnail_icon_inner_padding</item>
-        <item name="android:src">@drawable/add_photos</item>
     </style>
 
     <style name="ThumbnailContainer">
@@ -169,6 +164,7 @@
     <style name="GuideMediaMain">
         <item name="android:padding">@dimen/guide_image_padding</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
+        <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
     </style>
 
 
