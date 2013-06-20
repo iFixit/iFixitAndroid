@@ -21,7 +21,6 @@
             <version>${android.version}</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>android.support</groupId>
             <artifactId>compatibility-v4</artifactId>
@@ -51,13 +50,16 @@
             <version>r13</version>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>com.google.android.analytics</groupId>
             <artifactId>analytics</artifactId>
             <version>3</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.squareup.okhttp</groupId>
+            <artifactId>okhttp</artifactId>
+            <version>1.1.0</version>
+        </dependency>
         <dependency>
             <groupId>com.actionbarsherlock</groupId>
             <artifactId>actionbarsherlock</artifactId>
@@ -126,7 +128,6 @@
             <artifactId>picasso</artifactId>
             <version>1.1.1</version>
         </dependency>
-
     </dependencies>
     <build>
         <sourceDirectory>src</sourceDirectory>
