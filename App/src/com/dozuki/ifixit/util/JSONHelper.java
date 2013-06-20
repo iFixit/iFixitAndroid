@@ -354,7 +354,7 @@ public class JSONHelper {
       topicLeaf.setLocale(jTopic.getString("locale"));
       topicLeaf.setContentsRaw(jTopic.getString("contents_raw"));
       topicLeaf.setContentsRendered(jTopic.getString("contents_rendered"));
-      topicLeaf.setTitle(jTopic.getString("title"));
+      topicLeaf.setTitle(jTopic.getString("display_title"));
 
       return topicLeaf;
    }
