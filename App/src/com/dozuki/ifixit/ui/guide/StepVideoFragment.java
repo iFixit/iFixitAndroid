@@ -49,7 +49,7 @@ public class StepVideoFragment extends SherlockFragment {
 
       // Inflate the layout for this fragment
       View v = LayoutInflater.from(mContext)
-       .inflate(R.layout.guide_create_step_edit_video, container, false);
+       .inflate(R.layout.guide_step_video, container, false);
 
       Bundle extras = getArguments();
       if (extras != null) {

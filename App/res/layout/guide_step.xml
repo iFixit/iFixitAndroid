@@ -4,14 +4,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-    <include
+    <FrameLayout
+        android:id="@+id/guide_step_media"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/guide_step_media" />
+        android:layout_height="wrap_content"/>
 
-    <include
+    <FrameLayout
+        android:id="@+id/guide_step_lines"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        layout="@layout/guide_step_lines" />
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

@@ -10,7 +10,7 @@ import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.R;
 
 public class EmbedViewActivity extends SherlockActivity {
-   protected static final String HTML = "HTML";
+   public static final String HTML = "HTML";
    private String mHTML;
    private WebView mWebView;
 

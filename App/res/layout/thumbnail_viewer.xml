@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+       android:layout_width="match_parent"
+       android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/thumbnail_main_image"
+        style="@style/GuideMediaMain"
+        android:layout_width="@dimen/guide_image_width"
+        android:layout_height="@dimen/guide_image_height"
+        android:background="@color/step_edit_add_photo_background"
+        android:scaleType="centerInside"
+        android:contentDescription="@string/guide_create_step_edit_main_image_description"/>
+
+    <LinearLayout
+        android:id="@+id/thumbnail_list"
+        style="@style/ThumbnailList"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content">
+
+        <!-- Thumbnails are dynamically inserted into the view -->
+
+        <ImageView
+            android:id="@+id/add_thumbnail_icon"
+            android:layout_width="@dimen/guide_thumbnail_width"
+            android:layout_height="@dimen/guide_thumbnail_height"
+            style="ThumbnailAddButton"
+            android:visibility="gone"
+            android:contentDescription="@string/thumbnail_desc"/>
+
+    </LinearLayout>
+</merge>

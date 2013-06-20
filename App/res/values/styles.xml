@@ -150,14 +150,20 @@
         <item name="android:layout_gravity">right</item>
     </style>
 
-    <style name="ThumbnailList">
-        <item name="android:orientation">vertical</item>
+    <style name="ThumbnailAddButton">
+        <item name="android:layout_gravity">right</item>
+        <item name="android:background">#FFF3F3F3</item>
+        <item name="android:cropToPadding">true</item>
+        <item name="android:padding">@dimen/add_thumbnail_icon_inner_padding</item>
+        <item name="android:src">@drawable/add_photos</item>
     </style>
 
-    <style name="GuideViewThumbnails">
-        <item name="android:layout_marginLeft">@dimen/guide_thumbnail_spacing</item>
-        <item name="android:layout_toRightOf">@id/main_image</item>
-        <item name="android:layout_gravity">right</item>
+    <style name="ThumbnailContainer">
+        <item name="android:orientation">horizontal</item>
+    </style>
+
+    <style name="ThumbnailList">
+        <item name="android:orientation">vertical</item>
     </style>
 
     <style name="GuideMediaMain">

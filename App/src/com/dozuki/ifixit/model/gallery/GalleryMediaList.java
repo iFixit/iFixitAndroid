@@ -68,7 +68,6 @@ public class GalleryMediaList implements Serializable {
 
    public void findAndReplaceByKey(String key, Image replacement) {
       for (GalleryImage image : mImages) {
-         Log.w("GalleryMediaList", image.getPath() + " = " + key);
          if (image.getPath().equals(key)) {
             replacement.setPath(image.getPath());
             replacement.setId(image.getId());

@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
+
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:dozuki="http://schemas.android.com/apk/res/com.dozuki.ifixit"
+              style="@style/ThumbnailContainer"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              style="@style/ThumbnailContainer">
+              android:layout_height="match_parent">
 
     <com.dozuki.ifixit.ui.guide.ThumbnailView
         android:id="@+id/thumbnail_viewer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        dozuki:can_edit="true"
-        dozuki:show_single="true"/>
+        dozuki:can_edit="false"
+        dozuki:show_single="false"/>
+
 </LinearLayout>

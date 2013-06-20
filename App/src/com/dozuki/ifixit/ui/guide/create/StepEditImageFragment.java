@@ -46,13 +46,11 @@ public class StepEditImageFragment extends SherlockFragment {
 
    // images
    private ThumbnailView mThumbs;
-   private ImageView mLargeImage;
    private ArrayList<Image> mImages;
    private String mTempFileName;
 
    // Position of the temporary image captured on the phone
    private int mTempThumbPosition;
-   private String images_key;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -61,7 +59,6 @@ public class StepEditImageFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       mContext = (Activity) getActivity();
-
       super.onCreate(savedInstanceState);
    }
 
@@ -70,8 +67,7 @@ public class StepEditImageFragment extends SherlockFragment {
       // Inflate the layout for this fragment
       View v = inflater.inflate(R.layout.guide_create_step_edit_image, container, false);
 
-      mThumbs = (ThumbnailView) v.findViewById(R.id.edit_thumbnails);
-      mLargeImage = (ImageView) v.findViewById(R.id.step_edit_large_image);
+      mThumbs = (ThumbnailView) v.findViewById(R.id.thumbnail_viewer);
       DisplayMetrics metrics = new DisplayMetrics();
 
       if (MainApplication.get().inPortraitMode()) {
@@ -79,20 +75,16 @@ public class StepEditImageFragment extends SherlockFragment {
       }
 
       if (savedInstanceState != null) {
-         mImages = (ArrayList<Image>)savedInstanceState.getSerializable(IMAGES_KEY);
+         mImages = (ArrayList<Image>) savedInstanceState.getSerializable(IMAGES_KEY);
       }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
       mThumbs.setDisplayMetrics(metrics);
       mThumbs.setNavigationHeight(navigationHeight());
 
-      mThumbs.setImageSizes(MainApplication.get().getImageSizes());
-      mThumbs.setMainImage(mLargeImage);
-
       // Initialize the step thumbnails and set the main image to the first thumbnail if it exists
       if (mImages != null && mImages.size() > 0) {
          mThumbs.setThumbs(mImages);
-         mThumbs.setCurrentThumb(mImages.get(0).getPath());
       } else {
          mThumbs.fitToSpace();
       }

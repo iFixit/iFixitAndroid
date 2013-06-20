@@ -9,6 +9,10 @@
         <item name="android:baselineAligned">false</item>
     </style>
 
+    <style name="ThumbnailContainer">
+        <item name="android:orientation">vertical</item>
+    </style>
+
     <style name="ThumbnailList">
         <item name="android:orientation">horizontal</item>
     </style>
@@ -28,11 +32,6 @@
         <item name="android:padding">@dimen/guide_image_padding</item>
         <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
-    </style>
-
-    <style name="GuideViewThumbnails">
-        <item name="android:layout_below">@id/main_image</item>
-        <item name="android:layout_gravity">bottom</item>
     </style>
 
     <style name="GuideStepLines">

@@ -28,7 +28,7 @@ public class StepEditEmbedFragment extends SherlockFragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       // Inflate the layout for this fragment
-      View v = inflater.inflate(R.layout.guide_create_step_edit_video, container, false);
+      View v = inflater.inflate(R.layout.guide_step_video, container, false);
 
       mPoster = (ImageView) v.findViewById(R.id.step_edit_video_poster);
 

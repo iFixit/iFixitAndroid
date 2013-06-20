@@ -55,7 +55,6 @@ public class StepEditFragment extends SherlockFragment {
       Bundle b = getArguments();
       mStepObject = (GuideStep) b.getSerializable(StepEditActivity.GUIDE_STEP_NUM_KEY);
       mStepType = mStepObject.type();
-      mEditEmbedFrag =  new StepEditEmbedFragment();
 
       if (savedInstanceState != null) {
          mStepObject = (GuideStep) savedInstanceState.getSerializable(GUIDE_STEP_KEY);
@@ -90,15 +89,13 @@ public class StepEditFragment extends SherlockFragment {
             mEditVideoFrag = new StepVideoFragment();
             mEditVideoFrag.setArguments(videoArgs);
 
-            ft.add(R.id.guide_create_edit_media_fragment_container, mEditVideoFrag,
-             STEP_VIDEO_FRAGMENT_TAG);
+            ft.add(R.id.guide_create_edit_media_fragment_container, mEditVideoFrag, STEP_VIDEO_FRAGMENT_TAG);
          } else if (mStepType.equals(EMBED_TYPE)) {
-            ft.add(R.id.guide_create_edit_media_fragment_container, mEditEmbedFrag,
-             STEP_IMAGE_FRAGMENT_TAG);
+            mEditEmbedFrag =  new StepEditEmbedFragment();
+            ft.add(R.id.guide_create_edit_media_fragment_container, mEditEmbedFrag, STEP_EMBED_FRAGMENT_TAG);
          } else if (mStepType.equals(IMAGE_TYPE)) {
             mEditImageFrag = new StepEditImageFragment();
-            ft.add(R.id.guide_create_edit_media_fragment_container, mEditImageFrag,
-             STEP_IMAGE_FRAGMENT_TAG);
+            ft.add(R.id.guide_create_edit_media_fragment_container, mEditImageFrag, STEP_IMAGE_FRAGMENT_TAG);
          }
 
          ft.commit();

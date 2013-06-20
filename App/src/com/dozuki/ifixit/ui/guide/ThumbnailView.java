@@ -35,7 +35,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    private Context mContext;
    private ImageSizes mImageSizes;
    private boolean mShowSingle = false;
-   private boolean mCanEdit;
+   private boolean mCanEdit = false;
    private DisplayMetrics mDisplayMetrics;
    private float mNavigationHeight;
    private float mThumbnailWidth;
@@ -46,10 +46,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    private OnLongClickListener mLongClickListener;
    private OnClickListener mAddThumbListener;
    private Picasso mPicasso;
+   private LinearLayout mThumbnailContainer;
 
    @Override
    public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
-      Log.w("ThumbnailView", "image load failed, trying again");
       picasso.load(uri).into(mMainImage);
    }
 
@@ -59,37 +59,61 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    }
 
    public ThumbnailView(Context context, AttributeSet attrs) {
-
       super(context, attrs);
-      init(context);
+      init(context, attrs);
+   }
 
-      TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ThumbnailView);
+   public ThumbnailView(Context context, AttributeSet attrs, int defStyle) {
+      super(context, attrs, defStyle);
+      init(context, attrs);
+   }
 
-      mShowSingle = a.getBoolean(R.styleable.ThumbnailView_show_single, false);
-      mCanEdit = a.getBoolean(R.styleable.ThumbnailView_can_edit, false);
+   private void init(Context context) {
+      LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      inflater.inflate(R.layout.thumbnail_viewer, this, true);
+
+      mContext = context;
+      mPicasso = Picasso.with(mContext);
+      mImageSizes = MainApplication.get().getImageSizes();
+
+      if (MainApplication.inDebug()) {
+         mPicasso.setDebugging(true);
+      }
 
       if (mCanEdit) {
          mAddThumbButton = (ImageView) findViewById(R.id.add_thumbnail_icon);
          mAddThumbButton.setVisibility(VISIBLE);
       }
 
-      a.recycle();
-   }
+      mThumbnailContainer = (LinearLayout) findViewById(R.id.thumbnail_list);
 
-   private void init(Context context) {
-      mContext = context;
-      mPicasso = Picasso.with(mContext);
+      mMainImage = (ImageView) findViewById(R.id.thumbnail_main_image);
+      mMainImage.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            String url = (String) v.getTag();
 
-      if (MainApplication.inDebug()) {
-         mPicasso.setDebugging(true);
-      }
+            if (url == null || (url.equals("") || url.startsWith("."))) return;
 
-      LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      inflater.inflate(R.layout.thumbnail_list, this, true);
-
-      setOrientation(MainApplication.get().inPortraitMode() ? LinearLayout.VERTICAL : LinearLayout.HORIZONTAL);
+            Intent intent = new Intent(mContext, FullImageViewActivity.class);
+            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
+            mContext.startActivity(intent);
+         }
+      });
 
       mThumbs = new ArrayList<ImageView>();
+      setOrientation(MainApplication.get().inPortraitMode() ? HORIZONTAL : VERTICAL);
+   }
+
+   private void init(Context context, AttributeSet attrs) {
+      TypedArray a = context.obtainStyledAttributes(attrs, R.styleable.ThumbnailView);
+
+      mShowSingle = a.getBoolean(R.styleable.ThumbnailView_show_single, false);
+      mCanEdit = a.getBoolean(R.styleable.ThumbnailView_can_edit, false);
+
+      a.recycle();
+
+      init(context);
    }
 
    @Override
@@ -102,15 +126,12 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       }
    }
 
-   public void setImageSizes(ImageSizes imageSizes) {
-      mImageSizes = imageSizes;
-   }
-
    public void setThumbs(ArrayList<Image> images) {
+      calculateDimensions();
 
       boolean hideOnSingleThumb = (images.size() <= 1 && !mShowSingle);
 
-      setVisibility(hideOnSingleThumb ? GONE : VISIBLE);
+      mThumbnailContainer.setVisibility(hideOnSingleThumb ? GONE : VISIBLE);
 
       if (!images.isEmpty()) {
          for (Image image : images) {
@@ -122,6 +143,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
          }
       }
 
+      setCurrentThumb(((Image)mThumbs.get(0).getTag()).getPath());
       fitToSpace();
    }
 
@@ -138,12 +160,12 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    public int addThumb(Image image, boolean fromDisk) {
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
+
       thumb.setOnClickListener(this);
+
       if (mLongClickListener != null) {
          thumb.setOnLongClickListener(mLongClickListener);
       }
-
-      getThumbnailDimensions();
 
       if (fromDisk) {
          File file = new File(image.getPath());
@@ -162,7 +184,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       mThumbs.add(thumb);
 
       int thumbnailPosition = mThumbs.size() - 1;
-      this.addView(thumb, thumbnailPosition);
+      mThumbnailContainer.addView(thumb, thumbnailPosition);
 
       if ((mThumbs.size() > 2 || mThumbs.size() < 1) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(GONE);
@@ -242,6 +264,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    }
 
    public void fitToSpace() {
+      calculateDimensions();
 
       if (MainApplication.get().inPortraitMode()) {
          fitProgressIndicator(mMainWidth + mThumbnailWidth, mMainHeight);
@@ -262,20 +285,16 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       }
    }
 
-   public void setNavigationHeight(float padding) {
-      mNavigationHeight = padding;
+   public void setNavigationHeight(float navHeight) {
+      mNavigationHeight = navHeight;
    }
 
    public void setMainImageDimensions(float height, float width) {
       // Set the width and height of the main image
       mMainImage.getLayoutParams().height = (int) (height - 0.5f);
       mMainImage.getLayoutParams().width = (int) (width - 0.5f);
-      if (mThumbs.size() == 0) {
-         mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
 
-      } else {
-         mMainImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
-      }
+      mMainImage.setScaleType((mThumbs.size() == 0) ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.FIT_CENTER);
    }
 
    public void setThumbnailDimensions(ImageView thumb, float height, float width) {
@@ -298,21 +317,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    public void setMainImage(ImageView image) {
       mMainImage = image;
 
-      mMainImage.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            String url = (String) v.getTag();
-
-            if (url == null || (url.equals("") || url.startsWith("."))) return;
-
-            Intent intent = new Intent(mContext, FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-            mContext.startActivity(intent);
-         }
-      });
-
-      getMainImageDimensions();
-      getThumbnailDimensions();
    }
 
    private void buildImage(RequestBuilder builder, int width, int height, ImageView image) {
@@ -320,6 +324,14 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
        .resize(width, height)
        .error(R.drawable.no_image)
        .into(image);
+   }
+
+   public void calculateDimensions() {
+      if (mMainWidth == 0 || mMainHeight == 0)
+         getMainImageDimensions();
+
+      if (mThumbnailWidth == 0 || mThumbnailHeight == 0)
+         getThumbnailDimensions();
    }
 
    private void getMainImageDimensions() {
@@ -354,7 +366,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
          mThumbnailWidth = (mThumbnailHeight * (4f / 3f));
       }
    }
-
 
    private void fitProgressIndicator(float width, float height) {
       //mMainProgress.getLayoutParams().height = (int) (height - .5f);
