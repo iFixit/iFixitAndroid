@@ -6,65 +6,62 @@
     <string name="app_name_ifixit">iFixit</string>
 
     <!-- Main Application -->
-    <string name="devices">Devices</string>
-    <string name="topics">Topics</string>
-    <string name="device">Device</string>
-    <string name="topic">Topic</string>
+    <string name="devices">Geräte</string>
+    <string name="topics">Themen</string>
+    <string name="device">Gerät</string>
+    <string name="topic">Thema</string>
 
     <!-- Dozuki Site List -->
-    <string name="dozuki_search_hint">Search sites</string>
-    <string name="site_list_button">Explore Sites</string>
-    <string name="site_list_title">Select a site</string>
-    <string name="site_list_image_description">Dozuki: We make technical documentation come to life</string>
-    <string name="site_list_background">Dozuki handsaw on workbench</string>
-    <string name="site_list_search_title">Search Sites</string>
-    <string name="lock_description">Private Site</string>
-    <string name="empty_site_list">No sites found.</string>
+    <string name="dozuki_search_hint">Websites suchen</string>
+    <string name="site_list_button">Websites erkunden</string>
+    <string name="site_list_title">Website wählen</string>
+    <string name="site_list_image_description">Dozuki: Wir machen technische Dokumentation lebendig</string>
+    <string name="site_list_background">Dozuki Handsäge auf Werkbank</string>
+    <string name="site_list_search_title">Websites suchen</string>
+    <string name="lock_description">Nichtöffentliche Website</string>
+    <string name="empty_site_list">Keine Websites gefunden.</string>
 
     <!-- General -->
-    <string name="save">Save</string>
-    <string name="error">Error</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
-    <string name="cancel">Cancel</string>
-    <string name="confirm_delete_title">Confirm Delete</string>
-    <string name="confirm_delete_body">Deleting a guide CANNOT be undone. Are you sure you want to delete
-        \"%1$s\"?</string>
+    <string name="save">Speichern</string>
+    <string name="error">Fehler</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nein</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="confirm_delete_title">Löschen bestätigen</string>
+    <string name="confirm_delete_body">Das Löschen einer Anleitung lässt sich NICHT widerrufen. Sind Sie sicher, dass Sie \"%1$s\" löschen möchten?</string>
 
     <!-- Error Messages -->
-    <string name="parse_error_title">Well, this is embarrassing</string>
-    <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
-    <string name="no_connection">No connection</string>
-    <string name="no_connection_title">Connection error</string>
-    <string name="invalid_revision_error_title">Revision error</string>
-    <string name="invalid_revision_error">It looks like you may be editing a version of this guide that is out of date.
-        To ensure you do not lose any information, please reload this guide.
-    </string>
-    <string name="fatal_error_title">Unknown Error</string>
-    <string name="fatal_error">It looks like an error occurred. Please reload your guide.</string>
-    <string name="media_error_title">Something went wrong. Try again later.</string>
+    <string name="parse_error_title">Also das ist jetzt wirklich blamabel</string>
+    <string name="parse_error_message">Beim Versuch, Inhalte vom Server zu laden, ist ein Fehler aufgetreten.</string>
+    <string name="no_connection">Keine Verbindung</string>
+    <string name="no_connection_title">Verbindungsfehler</string>
+    <string name="invalid_revision_error_title">Versionierungsfehler</string>
+    <string name="invalid_revision_error">Sie scheinen eine veraltete Version dieser Anleitung zu bearbeiten. Bitte laden Sie die Anleitung neu, um keine Informationen zu verlieren.</string>
+    <string name="fatal_error_title">Unbekannter Fehler</string>
+    <string name="fatal_error">Es ist ein Fehler aufgetreten. Bitte laden Sie die Anleitung neu.</string>
+    <string name="media_error_title">Etwas ist schiefgegangen. Versuchen Sie es später wieder.</string>
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
-    <string name="account_menu_title">Your Account</string>
-    <string name="account_username_title">Account (%1$s)</string>
+    <string name="account_menu_title">Ihr Benutzerkonto</string>
+    <string name="account_username_title">Benutzerkonto (%1$s)</string>
 
-    <string name="slide_menu_my_guides">My Guides</string>
-    <string name="slide_menu_search">Search</string>
-    <string name="slide_menu_browse_content">Browse Content</string>
-    <string name="slide_menu_featured_guides">Featured Guides</string>
-    <string name="slide_menu_browse_devices">Browse Devices</string>
-    <string name="slide_menu_favorite_guides">Favorite Guides</string>
-    <string name="slide_menu_create_new_guide">Create New Guide</string>
-    <string name="slide_menu_media_gallery">Media Manager</string>
-    <string name="slide_menu_logout">Logout</string>
+    <string name="slide_menu_my_guides">Meine Anleitungen</string>
+    <string name="slide_menu_search">Suche</string>
+    <string name="slide_menu_browse_content">Inhalte durchsuchen</string>
+    <string name="slide_menu_featured_guides">Beachtenswerte Anleitungen</string>
+    <string name="slide_menu_browse_devices">Geräte durchsuchen</string>
+    <string name="slide_menu_favorite_guides">Anleitungsfavoriten</string>
+    <string name="slide_menu_create_new_guide">Neue Anleitung erstellen</string>
+    <string name="slide_menu_media_gallery">Medienverwaltung</string>
+    <string name="slide_menu_logout">Ausloggen</string>
     <string name="slide_menu_ifixit_everywhere">iFixit Everywhere</string>
     <string name="slide_menu_youtube">Youtube Channel</string>
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
-    <string name="slide_menu_more_info">More Information</string>
-    <string name="slide_menu_help">Help</string>
-    <string name="slide_menu_about">About</string>
+    <string name="slide_menu_more_info">Mehr Info</string>
+    <string name="slide_menu_help">Hilfe</string>
+    <string name="slide_menu_about">Über</string>
 
     <!-- Log-In / Log-Out -->
     <string name="username">User Name</string>
