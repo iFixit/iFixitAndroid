@@ -55,7 +55,7 @@
     <string name="slide_menu_create_new_guide">Neue Anleitung erstellen</string>
     <string name="slide_menu_media_gallery">Medienverwaltung</string>
     <string name="slide_menu_logout">Ausloggen</string>
-    <string name="slide_menu_ifixit_everywhere">iFixit Everywhere</string>
+    <string name="slide_menu_ifixit_everywhere">iFixit auf allen Kanälen</string>
     <string name="slide_menu_youtube">Youtube Channel</string>
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
@@ -64,74 +64,61 @@
     <string name="slide_menu_about">Über</string>
 
     <!-- Log-In / Log-Out -->
-    <string name="username">User Name</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
-    <string name="register">Register</string>
+    <string name="username">Benutzername</string>
+    <string name="password">Passwort</string>
+    <string name="login">Einloggen</string>
+    <string name="logout">Abmelden</string>
+    <string name="register">Registrieren</string>
 
-    <string name="logout_messege">Are you sure you want to logout?</string>
-    <string name="login_error">Uh oh! Invalid login info, try again please.</string>
-    <string name="try_again">Try again</string>
-    <string name="register_agreement">I agree to
-        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
-        under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.
-    </string>
-    <string name="terms_unchecked_error">You must agree to the terms.</string>
-    <string name="login_dialog_title">Login</string>
-    <string name="register_dialog_title">Register</string>
-    <string name="login_password_hint">Password</string>
-    <string name="login_email_hint">Email</string>
-    <string name="password_confirm_hint">Confirm Password</string>
-    <string name="email_hint">Email</string>
+    <string name="logout_messege">Möchten Sie sich wirklich abmelden?</string>
+    <string name="login_error">Hoppla! Ungültige Login-Informationen, bitte versuchen Sie es noch einmal.</string>
+    <string name="try_again">Nochmal versuchen</string>
+    <string name="register_agreement">Ich stimme zu, dass meine Beiträge unter unserer<a href="http://www.ifixit.com/Info/Licensing">freien Lizenz</a> <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">veröffentlicht werden</a>.</string>
+    <string name="terms_unchecked_error">Sie müssen den Bedingungen zustimmen.</string>
+    <string name="login_dialog_title">Einloggen</string>
+    <string name="register_dialog_title">Registrieren</string>
+    <string name="login_password_hint">Passwort</string>
+    <string name="login_email_hint">E-Mail</string>
+    <string name="password_confirm_hint">Passwort bestätigen</string>
+    <string name="email_hint">E-Mail</string>
 
-    <string name="signin_description">Login to iFixit.com</string>
-    <string name="register_description">Register for iFixit.com</string>
-    <string name="cancel_register_description">Cancel Registration</string>
-    <string name="cancel_register_button">Cancel</string>
-    <string name="google_signin_description">Sign-in with Google</string>
-    <string name="yahoo_signin_description">Sign-in with Yahoo!</string>
+    <string name="signin_description">Bei iFixit.com anmelden</string>
+    <string name="register_description">Bei iFixit.com registrieren</string>
+    <string name="cancel_register_description">Registrierung abbrechen</string>
+    <string name="cancel_register_button">Abbrechen</string>
+    <string name="google_signin_description">Mit Google Benutzerdaten anmelden</string>
+    <string name="yahoo_signin_description">Mit Yahoo! Benutzerdaten anmelden</string>
 
-    <string name="empty_field_error">One or more fields are still empty.</string>
-    <string name="passwords_do_not_match_error">Passwords do not match.</string>
+    <string name="empty_field_error">Eines oder mehrere Felder sind noch leer.</string>
+    <string name="passwords_do_not_match_error">Die Passwörter stimmen nicht überein.</string>
 
     <!-- Gallery -->
-    <string name="media_help_title">What\'s this?</string>
-    <string name="media_help_messege">
-        This media manager is linked directly to your %1$s account. Any pictures you
-        load into here will be available to you in your guide creation endeavors.
-    </string>
-    <string name="media_gallery_title">Media Manager</string>
-    <string name="media_help_confirm">Good to know!</string>
-    <string name="gallery_tool_tip">Add Image</string>
-    <string name="camera_tool_tip">Camera</string>
-    <string name="no_images_text">No images in your Media Manager. Add images with the icons above!</string>
-    <string name="no_embeds_text">Add HTML embeds online at iFixit.com!</string>
-    <string name="no_videos_text">Add videos with the icons above!</string>
-    <string name="image_chooser_title">Select Picture</string>
-    <string name="image">image</string>
-    <string name="images">images</string>
-    <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are
-        .png, .jpg, .jpeg, and .gif.
-    </string>
-    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to
-        finish to upload another file.
-    </string>
-    <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the
-        server.
-    </string>
-
-    <string name="media_delete_body">
-        Are you sure you want to delete %1$d %2$s?
-    </string>
+    <string name="media_help_title">Was ist das hier?</string>
+    <string name="media_help_messege">Dieser Medienmanager ist direkt mit Ihrem %1$s Benutzerkonto verbunden. Alle Bilder, die Sie hier hochladen, stehen Ihnen für die Erstellung Ihrer Anleitungen zur Verfügung.</string>
+    <string name="media_gallery_title">Medienmanager</string>
+    <string name="media_help_confirm">Gut zu wissen!</string>
+    <string name="gallery_tool_tip">Bild hinzufügen</string>
+    <string name="camera_tool_tip">Kamera</string>
+    <string name="no_images_text">Es befinden sich keine Bilder in Ihrem Medienmanager. Fügen Sie Bilder hinzu, indem Sie auf die Symbole oben klicken!</string>
+    <string name="no_embeds_text">HTML-Elemente können Sie auf iFixit.com einbetten!</string>
+    <string name="no_videos_text">Fügen Sie Videos hinzu, indem Sie auf die Symbole oben klicken!</string>
+    <string name="image_chooser_title">Bild wählen</string>
+    <string name="image">Bild</string>
+    <string name="images">Bilder</string>
+    <string name="non_image_error">Bilder müssen eine Größe von mindestens 800x600 Pixel haben and lokal auf Ihrem Gerät gespeichert sein. Gültige Formate sind .png, .jpg, .jpeg, und .gif.</string>
+    <string name="too_many_image_error">Sie können höchstens vier Dateien gleichzeitig hochladen. Warten Sie bitte, bis der Upload der aktuellen Dateien abgeschlossen ist, bevor Sie weitere Dateien hochladen.</string>
+    <string name="delete_loading_image_error">Eines oder mehrere Bilder laden noch und werden daher nicht vom Server gelöscht.</string>
+    
+	<!-- HELP NEEDED FOR TRANSLATION: Please provide example content for these two variables -->
+    <string name="media_delete_body">Are you sure you want to delete %1$d %2$s?</string>
 
     <!-- Topic List -->
-    <string name="generalInformation">General Information</string>
-    <string name="categories">Categories</string>
+    <string name="generalInformation">Allgemeine Informationen</string>
+    <string name="categories">Kategorien</string>
 
     <!-- Topic View -->
-    <string name="guides">Guides</string>
-    <string name="answers">Answers</string>
+    <string name="guides">Anleitungen</string>
+    <string name="answers">Antworten</string>
     <string name="info">Info</string>
 
     <!-- Guide View Introduction -->
