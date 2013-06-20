@@ -190,14 +190,14 @@ public class MainApplication extends Application {
          
          // Larger screen = larger images
          if (screenSize > LARGE_SIZE_CUTOFF) {
-            mImageSizes = new ImageSizes(".medium", ".medium", ".large",
+            mImageSizes = new ImageSizes(".standard", ".medium", ".huge",
              ".standard");
          } else if (screenSize <= LARGE_SIZE_CUTOFF && screenSize > MEDIUM_SIZE_CUTOFF) {
             mImageSizes = new ImageSizes(".standard", ".standard", ".large",
              ".standard");
          } else {
-            mImageSizes = new ImageSizes(".standard", ".standard", ".large",
-             ".standard");
+            mImageSizes = new ImageSizes(".thumbnail", ".thumbnail", ".large",
+             ".thumbnail");
          }
       }
 
