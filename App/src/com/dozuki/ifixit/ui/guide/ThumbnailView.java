@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.guide;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -22,7 +21,7 @@ import com.squareup.picasso.RequestBuilder;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ThumbnailView extends LinearLayout implements View.OnClickListener, Picasso.Listener {
+public class ThumbnailView extends LinearLayout implements View.OnClickListener {
 
    /**
     * Used for logging
@@ -47,11 +46,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    private OnClickListener mAddThumbListener;
    private Picasso mPicasso;
    private LinearLayout mThumbnailContainer;
-
-   @Override
-   public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
-      picasso.load(uri).into(mMainImage);
-   }
 
    public ThumbnailView(Context context) {
       super(context);
@@ -296,7 +290,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       mMainImage.getLayoutParams().height = (int) (height - 0.5f);
       mMainImage.getLayoutParams().width = (int) (width - 0.5f);
 
-      mMainImage.setScaleType((mThumbs.size() == 0) ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.FIT_CENTER);
+      mMainImage.setScaleType(
+       (mThumbs.size() == 0) ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.FIT_CENTER);
    }
 
    public void setThumbnailDimensions(ImageView thumb, float height, float width) {
@@ -318,7 +313,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
 
    private void buildImage(RequestBuilder builder, int width, int height, ImageView image) {
       builder
-       .fit()
        .error(R.drawable.no_image)
        .into(image);
    }
