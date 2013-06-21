@@ -497,6 +497,9 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void showLoading(int container, String message) {
+      if (findViewById(container).getVisibility() == View.GONE)
+         findViewById(container).setVisibility(View.VISIBLE);
+
       getSupportFragmentManager().beginTransaction()
        .add(container, new LoadingFragment(message), "loading").addToBackStack("loading")
        .commit();
