@@ -64,6 +64,7 @@ public class StepImageFragment extends SherlockFragment {
       if (mImages != null && mImages.size() > 0) {
          mThumbs.setThumbs(mImages);
       } else {
+         mThumbs.setAddImageMain();
          mThumbs.fitToSpace();
       }
 

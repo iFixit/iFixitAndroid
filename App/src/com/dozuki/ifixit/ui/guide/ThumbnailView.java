@@ -147,6 +147,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       fitToSpace();
    }
 
+   public void setAddImageMain() {
+      mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
+      mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+      mMainImage.setOnClickListener(mAddThumbListener);
+      mMainImage.setTag(null);
+   }
+
    public void setAddThumbButtonOnClick(OnClickListener listener) {
       if (mCanEdit) {
          mAddThumbListener = listener;
@@ -200,10 +207,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       }
 
       if (mThumbs.size() < 1) {
-         mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
-         mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-         mMainImage.setOnClickListener(mAddThumbListener);
-         mMainImage.setTag(null);
+         setAddImageMain();
       } else {
          Image image = (Image) mThumbs.get(mThumbs.size() - 1).getTag();
          setCurrentThumb(image.getPath());

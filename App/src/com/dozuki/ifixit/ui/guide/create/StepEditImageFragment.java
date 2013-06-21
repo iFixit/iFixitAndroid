@@ -86,6 +86,8 @@ public class StepEditImageFragment extends SherlockFragment {
       if (mImages != null && mImages.size() > 0) {
          mThumbs.setThumbs(mImages);
       } else {
+         mThumbs.setAddImageMain();
+
          mThumbs.fitToSpace();
       }
 
