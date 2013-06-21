@@ -284,7 +284,7 @@
     <string name="restart_video_message">Play this video again?</string>
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Name</string>
     <string name="guide_intro_wizard_guide_subject_hint">For example - Screen, Battery, Spark Plugs, etc</string>
-    <string name="loading_image">Loading...</string>
+    <string name="loading_image">@string/loading</string>
     <string name="black_bullet_description">Black bullet</string>
     <string name="red_bullet_description">Red bullet</string>
     <string name="orange_bullet_description">Orange bullet</string>
