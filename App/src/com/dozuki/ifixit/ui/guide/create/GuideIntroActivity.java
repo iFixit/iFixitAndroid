@@ -421,6 +421,10 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    @Override
    public void showLoading(int container, String message) {
       hideChildren(true);
+
+      if (findViewById(container).getVisibility() == View.GONE)
+         findViewById(container).setVisibility(View.VISIBLE);
+
       super.showLoading(container, message);
    }
 }
