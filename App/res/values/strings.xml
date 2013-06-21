@@ -6,119 +6,135 @@
     <string name="app_name_ifixit">iFixit</string>
 
     <!-- Main Application -->
-    <string name="devices">Geräte</string>
-    <string name="topics">Themen</string>
-    <string name="device">Gerät</string>
-    <string name="topic">Thema</string>
+    <string name="devices">Devices</string>
+    <string name="topics">Topics</string>
+    <string name="device">Device</string>
+    <string name="topic">Topic</string>
 
     <!-- Dozuki Site List -->
-    <string name="dozuki_search_hint">Websites suchen</string>
-    <string name="site_list_button">Websites erkunden</string>
-    <string name="site_list_title">Website wählen</string>
-    <string name="site_list_image_description">Dozuki: Wir machen technische Dokumentation lebendig</string>
-    <string name="site_list_background">Dozuki Handsäge auf Werkbank</string>
-    <string name="site_list_search_title">Websites suchen</string>
-    <string name="lock_description">Nichtöffentliche Website</string>
-    <string name="empty_site_list">Keine Websites gefunden.</string>
+    <string name="dozuki_search_hint">Search sites</string>
+    <string name="site_list_button">Explore Sites</string>
+    <string name="site_list_title">Select a site</string>
+    <string name="site_list_image_description">Dozuki: We make technical documentation come to life</string>
+    <string name="site_list_background">Dozuki handsaw on workbench</string>
+    <string name="site_list_search_title">Search Sites</string>
+    <string name="lock_description">Private Site</string>
+    <string name="empty_site_list">No sites found.</string>
 
     <!-- General -->
-    <string name="save">Speichern</string>
-    <string name="error">Fehler</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nein</string>
-    <string name="cancel">Abbrechen</string>
-    <string name="confirm_delete_title">Löschen bestätigen</string>
-    <string name="confirm_delete_body">Das Löschen einer Anleitung lässt sich NICHT widerrufen. Sind Sie sicher, dass Sie \"%1$s\" löschen möchten?</string>
+    <string name="save">Save</string>
+    <string name="error">Error</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="cancel">Cancel</string>
+    <string name="confirm_delete_title">Confirm Delete</string>
+    <string name="confirm_delete_body">Deleting a guide CANNOT be undone. Are you sure you want to delete
+        \"%1$s\"?</string>
 
     <!-- Error Messages -->
-    <string name="parse_error_title">Also das ist jetzt wirklich blamabel</string>
-    <string name="parse_error_message">Beim Versuch, Inhalte vom Server zu laden, ist ein Fehler aufgetreten.</string>
-    <string name="no_connection">Keine Verbindung</string>
-    <string name="no_connection_title">Verbindungsfehler</string>
-    <string name="invalid_revision_error_title">Versionierungsfehler</string>
-    <string name="invalid_revision_error">Sie scheinen eine veraltete Version dieser Anleitung zu bearbeiten. Bitte laden Sie die Anleitung neu, um keine Informationen zu verlieren.</string>
-    <string name="fatal_error_title">Unbekannter Fehler</string>
-    <string name="fatal_error">Es ist ein Fehler aufgetreten. Bitte laden Sie die Anleitung neu.</string>
-    <string name="media_error_title">Etwas ist schiefgegangen. Versuchen Sie es später wieder.</string>
+    <string name="parse_error_title">Well, this is embarrassing</string>
+    <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
+    <string name="no_connection">No connection</string>
+    <string name="no_connection_title">Connection error</string>
+    <string name="invalid_revision_error_title">Revision error</string>
+    <string name="invalid_revision_error">It looks like you may be editing a version of this guide that is out of date.
+        To ensure you do not lose any information, please reload this guide.
+    </string>
+    <string name="fatal_error_title">Unknown Error</string>
+    <string name="fatal_error">It looks like an error occurred. Please reload your guide.</string>
+    <string name="media_error_title">Something went wrong. Try again later.</string>
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
-    <string name="account_menu_title">Ihr Benutzerkonto</string>
-    <string name="account_username_title">Benutzerkonto (%1$s)</string>
+    <string name="account_menu_title">Your Account</string>
+    <string name="account_username_title">Account (%1$s)</string>
 
-    <string name="slide_menu_my_guides">Meine Anleitungen</string>
-    <string name="slide_menu_search">Suche</string>
-    <string name="slide_menu_browse_content">Inhalte durchsuchen</string>
-    <string name="slide_menu_featured_guides">Beachtenswerte Anleitungen</string>
-    <string name="slide_menu_browse_devices">Geräte durchsuchen</string>
-    <string name="slide_menu_favorite_guides">Anleitungsfavoriten</string>
-    <string name="slide_menu_create_new_guide">Neue Anleitung erstellen</string>
-    <string name="slide_menu_media_gallery">Medienverwaltung</string>
-    <string name="slide_menu_logout">Ausloggen</string>
-    <string name="slide_menu_ifixit_everywhere">iFixit auf allen Kanälen</string>
+    <string name="slide_menu_my_guides">My Guides</string>
+    <string name="slide_menu_search">Search</string>
+    <string name="slide_menu_browse_content">Browse Content</string>
+    <string name="slide_menu_featured_guides">Featured Guides</string>
+    <string name="slide_menu_browse_devices">Browse Devices</string>
+    <string name="slide_menu_favorite_guides">Favorite Guides</string>
+    <string name="slide_menu_create_new_guide">Create New Guide</string>
+    <string name="slide_menu_media_gallery">Media Manager</string>
+    <string name="slide_menu_logout">Logout</string>
+    <string name="slide_menu_ifixit_everywhere">iFixit Everywhere</string>
     <string name="slide_menu_youtube">Youtube Channel</string>
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
-    <string name="slide_menu_more_info">Mehr Info</string>
-    <string name="slide_menu_help">Hilfe</string>
-    <string name="slide_menu_about">Über</string>
+    <string name="slide_menu_more_info">More Information</string>
+    <string name="slide_menu_help">Help</string>
+    <string name="slide_menu_about">About</string>
 
     <!-- Log-In / Log-Out -->
-    <string name="username">Benutzername</string>
-    <string name="password">Passwort</string>
-    <string name="login">Einloggen</string>
-    <string name="logout">Abmelden</string>
-    <string name="register">Registrieren</string>
+    <string name="username">User Name</string>
+    <string name="password">Password</string>
+    <string name="login">Login</string>
+    <string name="logout">Logout</string>
+    <string name="register">Register</string>
 
-    <string name="logout_messege">Möchten Sie sich wirklich abmelden?</string>
-    <string name="login_error">Hoppla! Ungültige Login-Informationen, bitte versuchen Sie es noch einmal.</string>
-    <string name="try_again">Nochmal versuchen</string>
-    <string name="register_agreement">Ich stimme zu, dass meine Beiträge unter unserer<a href="http://www.ifixit.com/Info/Licensing">freien Lizenz</a> <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">veröffentlicht werden</a>.</string>
-    <string name="terms_unchecked_error">Sie müssen den Bedingungen zustimmen.</string>
-    <string name="login_dialog_title">Einloggen</string>
-    <string name="register_dialog_title">Registrieren</string>
-    <string name="login_password_hint">Passwort</string>
-    <string name="login_email_hint">E-Mail</string>
-    <string name="password_confirm_hint">Passwort bestätigen</string>
-    <string name="email_hint">E-Mail</string>
+    <string name="logout_messege">Are you sure you want to logout?</string>
+    <string name="login_error">Uh oh! Invalid login info, try again please.</string>
+    <string name="try_again">Try again</string>
+    <string name="register_agreement">I agree to
+        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
+        under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.
+    </string>
+    <string name="terms_unchecked_error">You must agree to the terms.</string>
+    <string name="login_dialog_title">Login</string>
+    <string name="register_dialog_title">Register</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_email_hint">Email</string>
+    <string name="password_confirm_hint">Confirm Password</string>
+    <string name="email_hint">Email</string>
 
-    <string name="signin_description">Bei iFixit.com anmelden</string>
-    <string name="register_description">Bei iFixit.com registrieren</string>
-    <string name="cancel_register_description">Registrierung abbrechen</string>
-    <string name="cancel_register_button">Abbrechen</string>
-    <string name="google_signin_description">Mit Google Benutzerdaten anmelden</string>
-    <string name="yahoo_signin_description">Mit Yahoo! Benutzerdaten anmelden</string>
+    <string name="signin_description">Login to iFixit.com</string>
+    <string name="register_description">Register for iFixit.com</string>
+    <string name="cancel_register_description">Cancel Registration</string>
+    <string name="cancel_register_button">Cancel</string>
+    <string name="google_signin_description">Sign-in with Google</string>
+    <string name="yahoo_signin_description">Sign-in with Yahoo!</string>
 
-    <string name="empty_field_error">Eines oder mehrere Felder sind noch leer.</string>
-    <string name="passwords_do_not_match_error">Die Passwörter stimmen nicht überein.</string>
+    <string name="empty_field_error">One or more fields are still empty.</string>
+    <string name="passwords_do_not_match_error">Passwords do not match.</string>
 
     <!-- Gallery -->
-    <string name="media_help_title">Was ist das hier?</string>
-    <string name="media_help_messege">Dieser Medienmanager ist direkt mit Ihrem %1$s Benutzerkonto verbunden. Alle Bilder, die Sie hier hochladen, stehen Ihnen für die Erstellung Ihrer Anleitungen zur Verfügung.</string>
-    <string name="media_gallery_title">Medienmanager</string>
-    <string name="media_help_confirm">Gut zu wissen!</string>
-    <string name="gallery_tool_tip">Bild hinzufügen</string>
-    <string name="camera_tool_tip">Kamera</string>
-    <string name="no_images_text">Es befinden sich keine Bilder in Ihrem Medienmanager. Fügen Sie Bilder hinzu, indem Sie auf die Symbole oben klicken!</string>
-    <string name="no_embeds_text">HTML-Elemente können Sie auf iFixit.com einbetten!</string>
-    <string name="no_videos_text">Fügen Sie Videos hinzu, indem Sie auf die Symbole oben klicken!</string>
-    <string name="image_chooser_title">Bild wählen</string>
-    <string name="image">Bild</string>
-    <string name="images">Bilder</string>
-    <string name="non_image_error">Bilder müssen eine Größe von mindestens 800x600 Pixel haben and lokal auf Ihrem Gerät gespeichert sein. Gültige Formate sind .png, .jpg, .jpeg, und .gif.</string>
-    <string name="too_many_image_error">Sie können höchstens vier Dateien gleichzeitig hochladen. Warten Sie bitte, bis der Upload der aktuellen Dateien abgeschlossen ist, bevor Sie weitere Dateien hochladen.</string>
-    <string name="delete_loading_image_error">Eines oder mehrere Bilder laden noch und werden daher nicht vom Server gelöscht.</string>
-    
-	<!-- HELP NEEDED FOR TRANSLATION: Please provide example content for these two variables -->
-    <string name="media_delete_body">Are you sure you want to delete %1$d %2$s?</string>
+    <string name="media_help_title">What\'s this?</string>
+    <string name="media_help_messege">
+        This media manager is linked directly to your %1$s account. Any pictures you
+        load into here will be available to you in your guide creation endeavors.
+    </string>
+    <string name="media_gallery_title">Media Manager</string>
+    <string name="media_help_confirm">Good to know!</string>
+    <string name="gallery_tool_tip">Add Image</string>
+    <string name="camera_tool_tip">Camera</string>
+    <string name="no_images_text">No images in your Media Manager. Add images with the icons above!</string>
+    <string name="no_embeds_text">Add HTML embeds online at iFixit.com!</string>
+    <string name="no_videos_text">Add videos with the icons above!</string>
+    <string name="image_chooser_title">Select Picture</string>
+    <string name="image">image</string>
+    <string name="images">images</string>
+    <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are
+        .png, .jpg, .jpeg, and .gif.
+    </string>
+    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to
+        finish to upload another file.
+    </string>
+    <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the
+        server.
+    </string>
+
+    <string name="media_delete_body">
+        Are you sure you want to delete %1$d %2$s?
+    </string>
 
     <!-- Topic List -->
-    <string name="generalInformation">Allgemeine Informationen</string>
-    <string name="categories">Kategorien</string>
+    <string name="generalInformation">General Information</string>
+    <string name="categories">Categories</string>
 
     <!-- Topic View -->
-    <string name="guides">Anleitungen</string>
-    <string name="answers">Antworten</string>
+    <string name="guides">Guides</string>
+    <string name="answers">Answers</string>
     <string name="info">Info</string>
 
     <!-- Guide View Introduction -->
