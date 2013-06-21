@@ -50,7 +50,7 @@ public class SiteListActivity extends BaseActivity
             ft.addToBackStack(null);
 
             mSiteListDialog = SiteListDialogFragment.newInstance();
-            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, R.style.Theme_Sherlock_Light_DarkActionBar);
+            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_DialogWhenLarge);
 
             mSiteListDialog.show(ft, "SiteListDialog");
          }
