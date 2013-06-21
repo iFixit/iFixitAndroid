@@ -204,7 +204,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       buildSliderMenu();
 
-      ViewServer.get(this).addWindow(this);
+      //ViewServer.get(this).addWindow(this);
    }
 
    private void buildSliderMenu() {
@@ -282,14 +282,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
-      ViewServer.get(this).setFocusedWindow(this);
+      //ViewServer.get(this).setFocusedWindow(this);
    }
 
    @Override
    protected void onDestroy() {
       super.onDestroy();
 
-      ViewServer.get(this).removeWindow(this);
+      //ViewServer.get(this).removeWindow(this);
    }
 
    @Override
