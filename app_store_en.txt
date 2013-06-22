@@ -1,0 +1,47 @@
+iFixit — the free repair manual! Thousands of step-by-step guides and gorgeous images that make it easy to repair your stuff.
+
+● Included Devices ●
+Repair manuals show you how to fix:
+✓ MacBook Repair
+✓ MacBook Pro Repair
+✓ PowerBook & iBook Repair
+✓ iPad Repair
+✓ iPhone Repair
+✓ iPod Repair
+✓ Xbox Repair
+✓ PlayStation Repair
+✓ PC Laptop Repair
+✓ Dozens of digital camera repair manuals
+✓ Hundreds of cell phone repair manuals
+✓ Harley Davidson Repair
+✓ Honda Accord Repair
+✓ More manuals added every week
+
+● Praise from the Press ●
+"Empowers you to fix things yourself. From troubleshooting to parts and tools, to repair guides, they have your back." — TreeHugger
+
+"Demonstrates the old-fashioned virtue of repair and extending the lifespan of devices." — Reuters
+
+"The robots of the future will see this and murder us all. Thanks iFixit. Thanks a lot." — Engadget
+
+"Illustrated repair guides that take you step by step through the process." — Dallas Morning News
+
+● Testimonials ●
+"You guys rule and have saved me many many times. Thank you!" – Ralph in North Carolina
+
+"I love your repair guides. You've saved me hundreds of dollars over the last few years." – David in Maryland
+
+"Great, clean and easy to navigate."– Serge in New Brunswick
+
+"Shipping time was superb. I will come back to your store the next time I am looking for parts. THANK YOU VERY MUCH!" – Ramia in Nebraska
+
+"Quick and straightforward." – Owen in New York
+
+"The installation went smoothly thanks to your excellent guides. We got my son's MacBook Pro running and saved $$$$$." – Christopher in New Mexico
+
+● Support iFixit ●
+We fund these manuals by selling parts and tools. If you use our manual to fix something, support our work by buying the parts from us. We offer thousands of MacBook, iMac, iPod, iPhone, and game console parts.
+
+This app is open source! You can improve or fork it here: https://github.com/iFixit/iFixitAndroid
+
+Repair your Apple, Nintendo, Microsoft or Sony hardware yourself!
