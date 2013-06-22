@@ -62,6 +62,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       @Override
       public void onClick(View view) {
          if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
+            showLoading(R.id.intro_loading_container, getString(R.string.saving));
 
             Bundle bundle = mWizardModel.save();
             if (EDIT_INTRO_STATE) {
@@ -278,6 +279,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          initialStepList.add(item);
 
          guide.setStepList(initialStepList);
+         hideLoading();
 
          Intent intent = new Intent(this, StepEditActivity.class);
          intent.putExtra(StepsActivity.GUIDE_KEY, guide);
@@ -286,6 +288,8 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          finish();
 
       } else {
+
+         hideChildren(false);
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
@@ -295,12 +299,14 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    public void onGuideEdited(APIEvent.EditGuide event) {
       if (!event.hasError()) {
          Guide guide = event.getResult();
+         hideLoading();
 
          Intent intent = new Intent(this, StepsActivity.class);
          intent.putExtra(StepsActivity.GUIDE_KEY, guide);
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
          finish();
       } else {
+         hideChildren(false);
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
@@ -402,5 +408,23 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       }
 
       mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);
+   }
+
+   private void hideChildren(boolean hide) {
+      int visibility = hide ? View.GONE : View.VISIBLE;
+
+      mStepPagerStrip.setVisibility(visibility);
+      mNextButton.setVisibility(visibility);
+      mPrevButton.setVisibility(visibility);
+   }
+
+   @Override
+   public void showLoading(int container, String message) {
+      hideChildren(true);
+
+      if (findViewById(container).getVisibility() == View.GONE)
+         findViewById(container).setVisibility(View.VISIBLE);
+
+      super.showLoading(container, message);
    }
 }

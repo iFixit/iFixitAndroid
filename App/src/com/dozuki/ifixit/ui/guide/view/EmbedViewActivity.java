@@ -31,7 +31,7 @@ public class EmbedViewActivity extends SherlockActivity {
       settings.setLoadWithOverviewMode(true);
       settings.setBuiltInZoomControls(true);
       settings.setAppCacheEnabled(true);
-      settings.setCacheMode(WebSettings.LOAD_NORMAL);
+      settings.setCacheMode(WebSettings.LOAD_DEFAULT);
       mWebView.setWebChromeClient(new WebChromeClient() {});
       if (savedInstanceState != null) {
          mWebView.restoreState(savedInstanceState);

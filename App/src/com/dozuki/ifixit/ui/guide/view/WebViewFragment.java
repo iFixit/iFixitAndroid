@@ -51,7 +51,7 @@ public class WebViewFragment extends SherlockFragment
       settings.setLoadWithOverviewMode(true);
       settings.setUseWideViewPort(true);
       settings.setAppCacheEnabled(true);
-      settings.setCacheMode(WebSettings.LOAD_NORMAL);
+      settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
       mWebView.setWebViewClient(new GuideWebView(this));
 

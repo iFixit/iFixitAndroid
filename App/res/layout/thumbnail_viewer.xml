@@ -24,7 +24,11 @@
             android:id="@+id/add_thumbnail_icon"
             android:layout_width="@dimen/guide_thumbnail_width"
             android:layout_height="@dimen/guide_thumbnail_height"
-            style="ThumbnailAddButton"
+            android:layout_gravity="right"
+            android:background="#FFF3F3F3"
+            android:cropToPadding="true"
+            android:padding="@dimen/add_thumbnail_icon_inner_padding"
+            android:src="@drawable/add_photos"
             android:visibility="gone"
             android:contentDescription="@string/thumbnail_desc"/>
 

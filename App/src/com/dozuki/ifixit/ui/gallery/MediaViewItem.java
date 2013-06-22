@@ -69,4 +69,9 @@ public class MediaViewItem extends RelativeLayout {
    public void setSelected(boolean selected) {
       mSelectImage.setVisibility(selected ? View.VISIBLE : View.INVISIBLE);
    }
+
+   public void clearImage() {
+      mImageView.setImageDrawable(null);
+      mImageView.setImageResource(R.color.image_border);
+   }
 }

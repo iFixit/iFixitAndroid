@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -26,7 +26,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class SiteListDialogFragment extends DialogFragment {
+public class SiteListDialogFragment extends SherlockDialogFragment {
    private static final String SITE_LIST = "SITE_LIST";
 
    private ListView mSiteListView;

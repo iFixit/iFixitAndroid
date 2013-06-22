@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.guide;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.TypedArray;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -22,7 +21,7 @@ import com.squareup.picasso.RequestBuilder;
 import java.io.File;
 import java.util.ArrayList;
 
-public class ThumbnailView extends LinearLayout implements View.OnClickListener, Picasso.Listener {
+public class ThumbnailView extends LinearLayout implements View.OnClickListener {
 
    /**
     * Used for logging
@@ -38,20 +37,15 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
    private boolean mCanEdit = false;
    private DisplayMetrics mDisplayMetrics;
    private float mNavigationHeight;
-   private float mThumbnailWidth;
-   private float mThumbnailHeight;
-   private float mMainWidth;
-   private float mMainHeight;
+   private float mThumbnailWidth = 0;
+   private float mThumbnailHeight = 0;
+   private float mMainWidth = 0;
+   private float mMainHeight = 0;
 
    private OnLongClickListener mLongClickListener;
    private OnClickListener mAddThumbListener;
    private Picasso mPicasso;
    private LinearLayout mThumbnailContainer;
-
-   @Override
-   public void onImageLoadFailed(Picasso picasso, Uri uri, Exception e) {
-      picasso.load(uri).into(mMainImage);
-   }
 
    public ThumbnailView(Context context) {
       super(context);
@@ -147,6 +141,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       fitToSpace();
    }
 
+   public void setAddImageMain() {
+      mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
+      mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+      mMainImage.setOnClickListener(mAddThumbListener);
+      mMainImage.setTag(null);
+   }
+
    public void setAddThumbButtonOnClick(OnClickListener listener) {
       if (mCanEdit) {
          mAddThumbListener = listener;
@@ -170,11 +171,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       if (fromDisk) {
          File file = new File(image.getPath());
          buildImage(mPicasso.load(file), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
-         setCurrentThumb(file);
       } else {
          String url = image.getPath(mImageSizes.getThumb());
          buildImage(mPicasso.load(url), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
-         setCurrentThumb(url);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
@@ -196,16 +195,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
 
    public void removeThumb(ImageView view) {
       mThumbs.remove(view);
-      removeView(view);
+      mThumbnailContainer.removeView(view);
       if ((mThumbs.size() < 3 && mThumbs.size() > 0) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(VISIBLE);
       }
 
       if (mThumbs.size() < 1) {
-         mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
-         mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
-         mMainImage.setOnClickListener(mAddThumbListener);
-         mMainImage.setTag(null);
+         setAddImageMain();
       } else {
          Image image = (Image) mThumbs.get(mThumbs.size() - 1).getTag();
          setCurrentThumb(image.getPath());
@@ -294,7 +290,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       mMainImage.getLayoutParams().height = (int) (height - 0.5f);
       mMainImage.getLayoutParams().width = (int) (width - 0.5f);
 
-      mMainImage.setScaleType((mThumbs.size() == 0) ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.FIT_CENTER);
+      mMainImage.setScaleType(
+       (mThumbs.size() == 0) ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.FIT_CENTER);
    }
 
    public void setThumbnailDimensions(ImageView thumb, float height, float width) {
@@ -314,14 +311,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener,
       thumb.setLayoutParams(lp);
    }
 
-   public void setMainImage(ImageView image) {
-      mMainImage = image;
-
-   }
-
    private void buildImage(RequestBuilder builder, int width, int height, ImageView image) {
       builder
-       .resize(width, height)
        .error(R.drawable.no_image)
        .into(image);
    }

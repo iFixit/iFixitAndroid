@@ -1,50 +1,15 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
-import android.content.res.Configuration;
-import android.content.res.Resources;
-import android.graphics.Typeface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebSettings;
-import android.webkit.WebView;
-import android.webkit.WebViewClient;
-import android.widget.*;
 import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.Embed;
-import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.model.Video;
-import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.guide.OEmbed;
-import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.StepEmbedFragment;
-import com.dozuki.ifixit.ui.guide.StepImageFragment;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
-import com.dozuki.ifixit.ui.guide.ThumbnailView;
-import com.dozuki.ifixit.ui.guide.create.StepEditEmbedFragment;
-import com.dozuki.ifixit.ui.guide.create.StepEditImageFragment;
-import com.dozuki.ifixit.ui.guide.create.StepEditLinesFragment;
-import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.JSONHelper;
-import com.squareup.picasso.Picasso;
-
-import java.io.BufferedInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.ArrayList;
 
 public class GuideStepViewFragment extends SherlockFragment {
 

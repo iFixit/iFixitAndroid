@@ -85,7 +85,7 @@ public class StepEmbedFragment extends SherlockFragment {
       settings.setSupportZoom(false);
       settings.setLoadWithOverviewMode(true);
       settings.setAppCacheEnabled(true);
-      settings.setCacheMode(WebSettings.LOAD_NORMAL);
+      settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
       mMainWebView.setWebViewClient(new WebViewClient() {
 

@@ -354,7 +354,7 @@ public class JSONHelper {
       topicLeaf.setLocale(jTopic.getString("locale"));
       topicLeaf.setContentsRaw(jTopic.getString("contents_raw"));
       topicLeaf.setContentsRendered(jTopic.getString("contents_rendered"));
-      topicLeaf.setTitle(jTopic.getString("title"));
+      topicLeaf.setTitle(jTopic.getString("display_title"));
 
       return topicLeaf;
    }
@@ -450,12 +450,19 @@ public class JSONHelper {
       User user = new User();
       user.setUserid(jUser.getInt("userid"));
       user.setUsername(jUser.getString("username"));
-      user.setAvatar(parseImage(jUser.getJSONObject("image"), null));
+
+      if (!jUser.isNull("image"))
+         user.setAvatar(parseImage(jUser.getJSONObject("image"), null));
+
       user.setAboutRaw(jUser.getString("about_raw"));
       user.setAboutRendered(jUser.getString("about_rendered"));
-      user.setSummary(jUser.getString("summary"));
+
+      if (!jUser.isNull("summary"))
+         user.setSummary(jUser.getString("summary"));
       user.setJoinDate(jUser.getInt("join_date"));
-      user.setLocation(jUser.getString("location"));
+      if (!jUser.isNull("location"))
+         user.setLocation(jUser.getString("location"));
+
       user.setBadges(parseBadges(jUser.getJSONObject("badge_counts")));
       user.setReputation(jUser.getInt("reputation"));
       user.setCertificationCount(jUser.getInt("certification_count"));

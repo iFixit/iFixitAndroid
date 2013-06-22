@@ -33,6 +33,9 @@ public class TopicGuideItemView extends RelativeLayout {
       mTitleView.setText(guide.hasSubject() ? guide.mSubject : Html.fromHtml(guide.mTitle));
 
       if (guide.hasImage()) {
+         // Clear image before setting it to make sure the old image isn't the background while the new one is loading
+         mThumbnail.setImageDrawable(null);
+
          Picasso.with(mContext)
           .load(guide.getImagePath(imageSizes.getGrid()))
           .error(R.drawable.no_image)

@@ -425,6 +425,8 @@ public abstract class MediaFragment extends SherlockFragment
 
          GalleryImage image = (GalleryImage) getItem(position);
 
+         itemView.clearImage();
+
          // image was pulled from the server
          if (image.isLocal()) {
             Uri temp = Uri.parse(image.getPath());

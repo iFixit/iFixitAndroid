@@ -88,7 +88,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          // Reload app to remove username and logout button from menu
          buildSliderMenu();
 
-         mMenuDrawer.closeMenu(true);
          mMenuDrawer.invalidate();
       }
 
@@ -199,9 +198,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       }
       mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW, Position.RIGHT);
 
+      mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
+      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
+      mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
+
       buildSliderMenu();
 
-      ViewServer.get(this).addWindow(this);
+      //ViewServer.get(this).addWindow(this);
    }
 
    private void buildSliderMenu() {
@@ -244,11 +247,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mList.setOnItemClickListener(mItemClickListener);
 
       mMenuDrawer.setMenuView(mList);
-
-      mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
-
-      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
-      mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
    }
 
    @Override
@@ -284,14 +282,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
-      ViewServer.get(this).setFocusedWindow(this);
+      //ViewServer.get(this).setFocusedWindow(this);
    }
 
    @Override
    protected void onDestroy() {
       super.onDestroy();
 
-      ViewServer.get(this).removeWindow(this);
+      //ViewServer.get(this).removeWindow(this);
    }
 
    @Override
