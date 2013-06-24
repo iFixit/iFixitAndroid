@@ -303,6 +303,7 @@
     <string name="saving">Saving...</string>
     <string name="gallery_image_content_description">Gallery Image</string>
     <string name="optional">Optional</string>
+    <string name="teardowns">Teardowns</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

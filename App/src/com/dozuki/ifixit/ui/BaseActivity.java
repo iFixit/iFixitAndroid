@@ -21,6 +21,7 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
+import com.dozuki.ifixit.ui.topic_view.TeardownsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.squareup.otto.Subscribe;
 import net.simonvt.menudrawer.MenuDrawer;
@@ -100,7 +101,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    public enum Navigation {
       SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY, LOGOUT,
-      YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE;
+      YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS;
 
       public static Navigation navigate(String str) {
          try {
@@ -125,6 +126,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
             case FEATURED_GUIDES:
             case BROWSE_TOPICS:
                intent = new Intent(context, TopicActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               startActivity(intent);
+               break;
+
+            case TEARDOWNS:
+               intent = new Intent(context, TeardownsActivity.class);
                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                startActivity(intent);
                break;
@@ -217,6 +224,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       //items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10,
       // "featured_guides"));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
+      items.add(new Item("Teardowns", R.drawable.ic_action_list, "teardowns"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));

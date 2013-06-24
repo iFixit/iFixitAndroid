@@ -196,6 +196,10 @@ public class APIService extends Service {
       // db.close();
    }
 
+   public static APICall getTeardowns(int limit, int offset) {
+      return new APICall(APIEndpoint.GUIDES, "?filter=teardown&limit=" + limit + "&offset=" + offset);
+   }
+
    public static APICall getCategoriesAPICall() {
       return new APICall(APIEndpoint.CATEGORIES, NO_QUERY);
    }

@@ -5,7 +5,7 @@
              android:background="@drawable/border">
 
     <ImageView
-        android:id="@+id/topic_guide_thumbnail"
+        android:id="@+id/guide_grid_item_thumbnail"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="fill"
@@ -16,10 +16,10 @@
         android:scaleType="centerCrop"/>
 
     <TextView
-        android:id="@+id/topic_guide_title"
+        android:id="@+id/guide_grid_item_title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        style="@style/TopicGuideTitle"
+        style="@style/GuideGridItemTitle"
         android:layout_gravity="bottom"
         android:background="@color/topic_guide_title_background"
         android:textColor="@color/white"

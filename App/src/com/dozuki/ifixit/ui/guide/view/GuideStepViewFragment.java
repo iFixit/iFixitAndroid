@@ -70,7 +70,6 @@ public class GuideStepViewFragment extends SherlockFragment {
 
          linesArgs.putSerializable(StepLinesFragment.GUIDE_STEP, mStep);
 
-
          mLinesFrag.setArguments(linesArgs);
 
          FragmentTransaction ft = getChildFragmentManager()

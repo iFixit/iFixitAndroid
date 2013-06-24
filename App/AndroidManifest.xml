@@ -47,6 +47,7 @@
                android:value=".SiteListActivity" />
             DOZUKI-->
         </activity>
+        <activity android:name=".ui.topic_view.TeardownsActivity"/>
 
         <activity android:name=".ui.gallery.GalleryActivity"/>
         <activity

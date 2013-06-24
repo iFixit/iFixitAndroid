@@ -538,9 +538,12 @@ public class JSONHelper {
    }
 
    public static ArrayList<GuideInfo> parseUserGuides(String json) {
+      return parseGuides(json);
+   }
 
-      Type userGuidesType = new TypeToken<Collection<GuideInfo>>() {}.getType();
-      Collection<GuideInfo> guideList = new Gson().fromJson(json, userGuidesType);
+   public static ArrayList<GuideInfo> parseGuides(String json) {
+      Type guidesType = new TypeToken<Collection<GuideInfo>>() {}.getType();
+      Collection<GuideInfo> guideList = new Gson().fromJson(json, guidesType);
 
       return new ArrayList<GuideInfo>(guideList);
    }

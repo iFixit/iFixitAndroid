@@ -37,6 +37,7 @@ public abstract class APIEvent<T> {
    public static class UploadStepImage extends APIEvent<Image> {}
    public static class DeleteImage extends APIEvent<String> {}
 
+   public static class Guides extends APIEvent<ArrayList<GuideInfo>> {}
    public static class ViewGuide extends APIEvent<Guide> {}
    public static class DeleteGuide extends APIEvent<String> {}
    public static class PublishStatus extends APIEvent<Guide> {}

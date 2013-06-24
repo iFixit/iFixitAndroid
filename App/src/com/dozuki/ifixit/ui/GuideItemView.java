@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui;
 
 import android.content.Context;
 import android.text.Html;
@@ -12,19 +12,19 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.picasso.Picasso;
 
-public class TopicGuideItemView extends RelativeLayout {
+public class GuideItemView extends RelativeLayout {
    private TextView mTitleView;
    private ImageView mThumbnail;
    private Context mContext;
 
-   public TopicGuideItemView(Context context) {
+   public GuideItemView(Context context) {
       super(context);
       mContext = context;
 
-      LayoutInflater.from(mContext).inflate(R.layout.topic_guide_item, this, true);
+      LayoutInflater.from(mContext).inflate(R.layout.guide_grid_item, this, true);
 
-      mTitleView = (TextView)findViewById(R.id.topic_guide_title);
-      mThumbnail = (ImageView)findViewById(R.id.topic_guide_thumbnail);
+      mTitleView = (TextView)findViewById(R.id.guide_grid_item_title);
+      mThumbnail = (ImageView)findViewById(R.id.guide_grid_item_thumbnail);
    }
 
    public void setGuideItem(GuideInfo guide) {
