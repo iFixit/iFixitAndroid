@@ -45,7 +45,7 @@ public class TopicGuideListFragment extends SherlockFragment {
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.topic_guide_list, container, false);
 
-      GridView gridView = (GridView)view.findViewById(R.id.topic_guide_grid);
+      GridView gridView = (GridView)view.findViewById(R.id.guide_grid);
 
       gridView.setAdapter(new GuideListAdapter(getSherlockActivity(), mTopicLeaf.getGuides()));
       gridView.setOnItemClickListener(new OnItemClickListener() {
