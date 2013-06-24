@@ -2,8 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@color/white"
-                android:orientation="vertical">
+                android:background="?attr/doz__background">
 
     <com.handmark.pulltorefresh.library.PullToRefreshListView
         android:id="@+id/guide_create_listview"
@@ -15,11 +14,12 @@
 
     <TextView
         android:id="@+id/no_guides_text"
+        style="@style/BodyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="18sp"
         android:text="@string/no_guides_text"
         android:visibility="gone"/>
 
