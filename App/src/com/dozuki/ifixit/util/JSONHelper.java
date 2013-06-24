@@ -238,12 +238,18 @@ public class JSONHelper {
       Video video = new Video();
 
       try {
-         JSONArray jEncodings = jVideo.getJSONArray("encoding");
-         for (int i = 0; i < jEncodings.length(); i++) {
+         JSONArray jEncodings = jVideo.getJSONArray("encodings");
+
+         int numEncodings = jEncodings.length();
+         for (int i = 0; i < numEncodings; i++) {
             video.addEncoding(parseVideoEncoding(jEncodings.getJSONObject(i)));
          }
 
-         video.setThumbnail(parseVideoThumbnail(jVideo.getJSONObject("thumbnail")));
+         video.setHeight(jVideo.getInt("width"));
+         video.setWidth(jVideo.getInt("height"));
+         video.setDuration(jVideo.getInt("duration"));
+         video.setFilename(jVideo.getString("filename"));
+         video.setThumbnail(parseVideoThumbnail(jVideo.getJSONObject("image")));
 
       } catch (JSONException e) {
          e.printStackTrace();
@@ -254,16 +260,21 @@ public class JSONHelper {
    }
 
    private static VideoThumbnail parseVideoThumbnail(JSONObject jVideoThumb) throws JSONException {
-      String guid = jVideoThumb.getString("guid");
-      int imageid = jVideoThumb.getInt("imageid");
+
+      Image image = parseImage(jVideoThumb.getJSONObject("image"), null);
+
       String ratio = jVideoThumb.getString("ratio");
       int width = jVideoThumb.getInt("width");
       int height = jVideoThumb.getInt("height");
 
-      String url = jVideoThumb.getString("medium");
-      url = url.substring(0, url.lastIndexOf("."));
+      return new VideoThumbnail(image.getId(), image.getPath(), ratio, width, height);
+   }
 
-      return new VideoThumbnail(guid, imageid, url, ratio, width, height);
+   private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
+      VideoEncoding encoding =
+       new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
+        jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
+      return encoding;
    }
 
    private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
@@ -633,12 +644,5 @@ public class JSONHelper {
          Log.w(TAG, "Image parsing", e);
          return new Image();
       }
-   }
-
-   private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
-      VideoEncoding encoding =
-       new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
-        jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
-      return encoding;
    }
 }

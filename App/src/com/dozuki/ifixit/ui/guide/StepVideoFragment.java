@@ -73,7 +73,7 @@ public class StepVideoFragment extends SherlockFragment {
       playButtonContainer.setLayoutParams(params);
 
       Picasso.with(mContext)
-       .load(mVideoPoster.getUrl())
+       .load(mVideoPoster.getPath(MainApplication.get().getImageSizes().getMain()))
        .error(R.drawable.no_image)
        .into(poster);
 
