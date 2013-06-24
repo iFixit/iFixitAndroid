@@ -34,6 +34,8 @@ public class GuideInfo implements Serializable {
    @SerializedName("image")
    public Image mImage;
 
+   @SerializedName("locale") public String mLocale;
+
    public transient boolean mEditMode = false;
 
 

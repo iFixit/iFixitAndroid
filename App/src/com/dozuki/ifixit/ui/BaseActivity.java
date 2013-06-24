@@ -100,7 +100,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    };
 
    public enum Navigation {
-      SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY, LOGOUT,
+      SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY, LOGOUT, USER_FAVORITES,
       YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS;
 
       public static Navigation navigate(String str) {
@@ -132,6 +132,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
             case TEARDOWNS:
                intent = new Intent(context, TeardownsActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               startActivity(intent);
+               break;
+
+            case USER_FAVORITES:
+               intent = new Intent(context, FavoritesActivity.class);
                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                startActivity(intent);
                break;
@@ -228,7 +234,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
-      //items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_spinner_guides, "favorite_guides"));
+      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_spinner_favorites, "user_favorites"));
       items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, "new_guide"));
       items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
 

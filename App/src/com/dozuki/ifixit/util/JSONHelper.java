@@ -548,6 +548,28 @@ public class JSONHelper {
       return spantext;
    }
 
+   public static ArrayList<GuideInfo> parseUserFavorites(String json) {
+      ArrayList<GuideInfo> result = new ArrayList<GuideInfo>();
+
+      Log.w("JSONHelper", json);
+      try {
+         JSONArray jFavorites = new JSONArray(json);
+
+         int length = jFavorites.length();
+         for (int i = 0; i < length; i++) {
+            JSONObject jGuide = jFavorites.getJSONObject(i).getJSONObject("guide");
+            Log.w("JSONHelper", i+"");
+
+            GuideInfo guide = new Gson().fromJson(jGuide.toString(), GuideInfo.class);
+            result.add(guide);
+         }
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
+
+      return result;
+   }
+
    public static ArrayList<GuideInfo> parseUserGuides(String json) {
       return parseGuides(json);
    }

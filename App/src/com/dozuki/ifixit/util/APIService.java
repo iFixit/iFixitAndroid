@@ -238,6 +238,10 @@ public class APIService extends Service {
       return apiCall;
    }
 
+   public static APICall getUserFavorites(int limit, int offset) {
+      return new APICall(APIEndpoint.USER_FAVORITES, "?limit=" + limit + "&offset=" + offset);
+   }
+
    public static APICall getCreateGuideAPICall(Bundle introWizardModel) {
       JSONObject requestBody = guideBundleToRequestBody(introWizardModel);
 

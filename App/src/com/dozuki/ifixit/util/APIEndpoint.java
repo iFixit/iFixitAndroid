@@ -206,6 +206,26 @@ public enum APIEndpoint {
       "GET",
       false
    ),
+
+   USER_FAVORITES(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "user/favorites/guides";
+       }
+
+       public APIEvent<?> parse(String json) throws JSONException {
+          return new APIEvent.UserFavorites().setResult(JSONHelper.parseUserFavorites(json));
+       }
+
+       public APIEvent<?> getEvent() {
+          return new APIEvent.UserFavorites();
+       }
+    },
+    true,
+    "GET",
+    false
+   ),
+
    USER_EMBEDS(
       new Endpoint() {
          public String createUrl(String query) {
@@ -442,7 +462,7 @@ public enum APIEndpoint {
       "DELETE",
       false
    ),
-   
+
    UPDATE_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
@@ -481,7 +501,7 @@ public enum APIEndpoint {
       "PUT",
       false
    ),
-   
+
    UNPUBLISH_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
@@ -499,8 +519,8 @@ public enum APIEndpoint {
       true,
       "DELETE",
       false
-   ), 
-   
+   ),
+
    REORDER_GUIDE_STEPS(
       new Endpoint() {
          public String createUrl(String query) {
@@ -519,7 +539,7 @@ public enum APIEndpoint {
       "PUT",
       false
    ),
-   
+
    ADD_GUIDE_STEP(new Endpoint() {
       public String createUrl(String query) {
          return "guides/" + query;
@@ -533,7 +553,7 @@ public enum APIEndpoint {
          return new APIEvent.StepAdd();
       }
    }, true, "POST", false),
-   
+
    UPDATE_GUIDE_STEP(new Endpoint() {
       public String createUrl(String query) {
          return "guides/" + query;
@@ -561,7 +581,7 @@ public enum APIEndpoint {
          return new APIEvent.StepRemove();
       }
    }, true, "DELETE", false),
-   
+
    SITES(
       new Endpoint() {
          public String createUrl(String query) {
