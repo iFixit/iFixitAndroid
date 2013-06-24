@@ -135,6 +135,8 @@ public class GuideCreateActivity extends BaseActivity {
          mGuideListAdapter.notifyDataSetChanged();
 
          mGuideListView.onRefreshComplete();
+         mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
+
          hideLoading();
       } else {
          event.setError(APIError.getFatalError(this));
