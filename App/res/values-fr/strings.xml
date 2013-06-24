@@ -1,4 +1,4 @@
-< ?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
 
     <!-- Main Application -->
@@ -217,10 +217,10 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
         Décrivez le composant, ou chose / idée que vous décrivez à propos de %1$s.</string>
     <string name="guide_intro_wizard_guide_summary_description">Dans une phrase ou deux, décrivez ce guide.</string>
     <string name="guide_intro_wizard_guide_title_description">Titre généré par le type, %1$s... Only edit
-        Seulement modifier si vous n'êtes pas heureux avec ce qui est là.
+        Seulement modifier si vous n\'êtes pas heureux avec ce qui est là.
     </string>
     <string name="guide_intro_wizard_guide_subject_description">Quel est ce guide ?
-        Décrivez l'élément, une chose ou idée dont vous parlez à propos de %1$s.
+        Décrivez l\'élément, une chose ou idée dont vous parlez à propos de %1$s.
     </string>
     <string name="guide_intro_wizard_guide_topic_description">Sur quelle %1$s travaillez-vous?
         Par exemple, est-ce un \"iPhone 4\" ou une \"Machine à laver Kenmore\" ?
@@ -289,11 +289,11 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="bullet_reorder_description">Point Centré de Rappel</string>
     <string name="default_step_number">Étape #</string>
     <string name="loading">Chargement...</string>
-    <string name="topic_info_image">L'image principale de sujet</string>
+    <string name="topic_info_image">L\'image principale de sujet</string>
     <string name="delete_step">Efacer Étape</string>
     <string name="deleting">Suppression...</string>
     <string name="saving">Sauver...</string>
-    <string name="gallery_image_content_description">Gallerie d'images</string>
+    <string name="gallery_image_content_description">Gallerie d\'images</string>
     <string name="optional">Optionnel</string>
     <string name="favorites">Favoris</string>
     <string name="favorites_empty_text">Vous n\'avez pas encore de guides préférés.</string>
