@@ -35,11 +35,14 @@ public class FavoritesActivity extends BaseActivity {
 
       if (savedInstanceState != null) {
          mGuides = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDES_KEY);
+         initGridView();
       } else {
          showLoading(R.id.favorites_loading);
          APIService.call(this, APIService.getUserFavorites(LIMIT, OFFSET));
       }
+   }
 
+   private void initGridView() {
       mGridView = (GridView) findViewById(R.id.guide_grid);
       mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
          @Override
@@ -52,6 +55,9 @@ public class FavoritesActivity extends BaseActivity {
             startActivity(intent);
          }
       });
+
+      mGridView.setAdapter(new GuideListAdapter(this, mGuides));
+      mGridView.setEmptyView(findViewById(R.id.favorites_empty_view));
    }
 
    @Subscribe
@@ -65,8 +71,7 @@ public class FavoritesActivity extends BaseActivity {
             mGuides = new ArrayList<GuideInfo>(event.getResult());
          }
 
-         mGridView.setAdapter(new GuideListAdapter(this, mGuides));
-         mGridView.setEmptyView(findViewById(R.id.favorites_empty_view));
+         initGridView();
       } else {
          APIService.getErrorDialog(this, event.getError(), null).show();
       }

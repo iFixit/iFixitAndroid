@@ -41,10 +41,13 @@ public class TeardownsActivity extends BaseActivity {
 
       if (savedInstanceState != null) {
          mGuides = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDES_KEY);
+         initGridView();
       } else {
          APIService.call(this, APIService.getTeardowns(LIMIT, OFFSET));
       }
+   }
 
+   private void initGridView() {
       mGridView = (GridView) findViewById(R.id.guide_grid);
       mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
          @Override
@@ -66,6 +69,8 @@ public class TeardownsActivity extends BaseActivity {
             APIService.call((TeardownsActivity) mContext, APIService.getTeardowns(LIMIT, OFFSET));
          }
       }));
+
+      mGridView.setAdapter(new GuideListAdapter(this, mGuides));
    }
 
    @Subscribe
@@ -76,8 +81,7 @@ public class TeardownsActivity extends BaseActivity {
          } else {
             mGuides = new ArrayList<GuideInfo>(event.getResult());
          }
-
-         mGridView.setAdapter(new GuideListAdapter(this, mGuides));
+         initGridView();
       } else {
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
