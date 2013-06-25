@@ -81,7 +81,11 @@ public class TeardownsActivity extends BaseActivity {
          } else {
             mGuides = new ArrayList<GuideInfo>(event.getResult());
          }
-         initGridView();
+
+         if (mGridView == null)
+            initGridView();
+         else
+            mGridView.invalidateViews();
       } else {
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
