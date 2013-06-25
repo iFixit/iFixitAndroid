@@ -232,7 +232,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       //items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10,
       // "featured_guides"));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
-      if (onIfixit) items.add(new Item(getString(R.string.teardowns), R.drawable.ic_action_list, "teardowns"));
+      if (onIfixit) items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, "teardowns"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
