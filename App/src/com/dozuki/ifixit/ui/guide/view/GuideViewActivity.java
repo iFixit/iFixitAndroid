@@ -28,9 +28,7 @@ import com.viewpagerindicator.CirclePageIndicator;
 import java.util.List;
 
 public class GuideViewActivity extends BaseActivity implements OnPageChangeListener {
-   private static final int MAX_LOADING_IMAGES = 9;
-   private static final int MAX_STORED_IMAGES = 9;
-   private static final int MAX_WRITING_IMAGES = 10;
+
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
@@ -141,7 +139,7 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
          }
       });
 
-      //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //initSpeechRecognizer();
    }
 

@@ -189,7 +189,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          createDeleteDialog(this).show();
       }
 
-      //getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
@@ -419,11 +419,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
-            if (mParentGuideId == NO_PARENT_GUIDE) {
-               finishEdit(HOME_UP);
-            } else {
-               finishEdit(STEP_VIEW);
-            }
+            onBackPressed();
             return true;
          case MENU_VIEW_GUIDE:
             finishEdit(STEP_VIEW);
