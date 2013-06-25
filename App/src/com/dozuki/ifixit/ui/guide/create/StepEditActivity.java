@@ -734,17 +734,20 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    protected void deleteStep(boolean unsaved) {
 
-      if (mPagePosition < mGuide.getSteps().size()) {
-         if (!unsaved) {
-            mGuide.getSteps().remove(mPagePosition);
-         }
+      // Delete the step if it hasn't been saved yet.
+      if (mPagePosition < mGuide.getSteps().size() && !unsaved) {
+         mGuide.getSteps().remove(mPagePosition);
       }
 
+      // If it's the last step in the guide, finish the activity.
       if (mGuide.getSteps().size() == 0) {
          finish();
+         return;
       }
 
-      for (int i = 0; i < mGuide.getSteps().size(); i++) {
+      int guideSize = mGuide.getSteps().size();
+
+      for (int i = 0; i < guideSize; i++) {
          mGuide.getStep(i).setStepNum(i);
       }
 
@@ -755,14 +758,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mPager.invalidate();
       titleIndicator.invalidate();
 
-   }
-
-   protected void invalidateStepAdapter() {
-      mStepAdapter.notifyDataSetChanged();
-   }
-
-   protected int getIndicatorHeight() {
-      return titleIndicator.getHeight() + mBottomBar.getHeight();
    }
 
    public void toggleSave(boolean toggle) {
