@@ -78,6 +78,13 @@ public class StepImageFragment extends SherlockFragment {
       super.onSaveInstanceState(savedInstanceState);
    }
 
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      mThumbs.destroy();
+   }
+
    /////////////////////////////////////////////////////
    // HELPERS
    /////////////////////////////////////////////////////

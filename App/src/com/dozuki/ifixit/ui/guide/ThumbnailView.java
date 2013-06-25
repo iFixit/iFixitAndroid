@@ -15,6 +15,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestBuilder;
 
@@ -60,6 +61,16 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    public ThumbnailView(Context context, AttributeSet attrs, int defStyle) {
       super(context, attrs, defStyle);
       init(context, attrs);
+   }
+
+   public void destroy() {
+      mPicasso.cancelRequest(mMainImage);
+
+      Utils.stripImageView(mMainImage);
+      for (ImageView image : mThumbs) {
+         mPicasso.cancelRequest(image);
+         Utils.stripImageView(image);
+      }
    }
 
    private void init(Context context) {

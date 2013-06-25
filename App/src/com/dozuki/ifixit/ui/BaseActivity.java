@@ -221,6 +221,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    private void buildSliderMenu() {
+      boolean onIfixit = MainApplication.get().getSite().mName.equals("ifixit");
+
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
@@ -230,7 +232,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       //items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10,
       // "featured_guides"));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
-      items.add(new Item("Teardowns", R.drawable.ic_action_list, "teardowns"));
+      if (onIfixit) items.add(new Item(getString(R.string.teardowns), R.drawable.ic_action_list, "teardowns"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
@@ -242,7 +244,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, "logout"));
       }
 
-      if (MainApplication.get().getSite().mName.compareTo("ifixit") == 0) {
+      if (onIfixit) {
          items.add(new Category(getString(R.string.slide_menu_ifixit_everywhere)));
          items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, "youtube"));
          items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, "facebook"));

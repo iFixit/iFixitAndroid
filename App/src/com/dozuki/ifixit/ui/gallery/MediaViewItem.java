@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestBuilder;
 
@@ -71,7 +72,7 @@ public class MediaViewItem extends RelativeLayout {
    }
 
    public void clearImage() {
-      mImageView.setImageDrawable(null);
+      Utils.stripImageView(mImageView);
       mImageView.setImageResource(R.color.image_border);
    }
 }
