@@ -1,0 +1,45 @@
+++++++++++++
+
+Android App Store
+
+++++++++++++
+
+iFixit — Das kostenlose Reparaturhandbuch! Tausende Anleitungen mit
+großformatigen, attraktiven Abbildungen machen es dir leicht, all deine Sachen
+zu reparieren. 
+
+● Enthaltene Geräte ●
+
+Die Reparaturhandbücher behandeln folgende Themen:
+
+✓ MacBook Reparatur
+✓ MacBook Pro Reparatur
+✓ PowerBook & iBook Reparatur
+✓ iPad Reparatur
+✓ iPhone Reparatur
+✓ iPod Reparatur
+✓ Xbox Reparatur
+✓ PlayStation Reparatur
+✓ PC- & Laptop Reparatur
+✓ Dutzende Handbücher zur Reparatur von Digitalkameras
+✓ Hunderte Handbücher zur Reparatur von Handys
+✓ Harley Davidson Reparatur
+✓ Honda Accord Reparatur
+✓ Wöchentlich werden neue Handbücher ergänzt
+● Pressestimmen ●
+● Referenzen ●
+● Unterstütze iFixit ●
+
+Hilf mit, damit unsere Handbücher kostenlos bleiben: Wir leben vom Verkauf von
+Ersatzteilen und Werkzeugen. Wenn du ein Handbuch verwendest, um etwas zu
+reparieren, freuen wir uns über die Unterstützung unserer Arbeit durch den Kauf
+von Ersatzteilen.
+
+Wir verkaufen tausende Ersatzteile für MacBooks, iPods, iPhones, iPads und
+Spielkonsolen sowie Spezialwerkzeug zur Reparatur von Elektronikgeräten.
+
+Diese App ist quelloffen! Du kannst sie verbessern oder einen Software-Fork
+erzeugen unter: https://github.com/iFixit
+
+Repariere deine Apple, Nintendo, Microsoft oder Sony Hardware einfach selbst!
+
