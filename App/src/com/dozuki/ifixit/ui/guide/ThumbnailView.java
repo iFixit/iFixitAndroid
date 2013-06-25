@@ -71,6 +71,8 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          mPicasso.cancelRequest(image);
          Utils.stripImageView(image);
       }
+      mMainImage = null;
+      mThumbs = null;
    }
 
    private void init(Context context) {
