@@ -6,31 +6,31 @@
     <string name="app_name_ifixit">iFixit</string>
 
     <!-- Main Application -->
-    <string name="devices">Devices</string>
-    <string name="topics">Topics</string>
-    <string name="device">Device</string>
-    <string name="topic">Topic</string>
+    <string name="devices">Dispositivos</string>
+    <string name="topics">Temas</string>
+    <string name="device">Dispositivo</string>
+    <string name="topic">Tema</string>
 
     <!-- Dozuki Site List -->
-    <string name="dozuki_search_hint">Search sites</string>
-    <string name="site_list_button">Explore Sites</string>
-    <string name="site_list_title">Select a site</string>
-    <string name="site_list_image_description">Dozuki: We make technical documentation come to life</string>
-    <string name="site_list_background">Dozuki handsaw on workbench</string>
-    <string name="site_list_search_title">Search Sites</string>
-    <string name="lock_description">Private Site</string>
-    <string name="empty_site_list">No sites found.</string>
+    <string name="dozuki_search_hint">Buscar sitios</string>
+    <string name="site_list_button">Explorar sitios</string>
+    <string name="site_list_title">Seleccione un sitio</string>
+    <string name="site_list_image_description">Dozuki: Le damos vida a la documentación técnica</string>
+    <string name="site_list_background">Serrucho de costilla Dozuki en la mesa de trabajo</string>
+    <string name="site_list_search_title">Buscar Sitios</string>
+    <string name="lock_description">Sitio Privado</string>
+    <string name="empty_site_list">No se encontraron sitios.</string>
 
     <!-- General -->
-    <string name="save">Save</string>
+    <string name="save">Guardar</string>
     <string name="error">Error</string>
-    <string name="yes">Yes</string>
+    <string name="yes">Si</string>
     <string name="no">No</string>
-    <string name="cancel">Cancel</string>
-    <string name="confirm_delete_title">Confirm Delete</string>
-    <string name="confirm_delete_body">Deleting a guide CANNOT be undone. Are you sure you want to delete
+    <string name="cancel">Cancelar</string>
+    <string name="confirm_delete_title">Confirmar Eliminación</string>
+    <string name="confirm_delete_body">La eliminación de una guía es IRREVERSIBLE. Desea eliminar
         \"%1$s\"?</string>
-
+        
     <!-- Error Messages -->
     <string name="parse_error_title">Well, this is embarrassing</string>
     <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
