@@ -31,72 +31,72 @@
     <string name="confirm_delete_body">La eliminación de una guía es IRREVERSIBLE. Desea eliminar
         \"%1$s\"?</string>
         
-    <!-- Error Messages -->
-    <string name="parse_error_title">Well, this is embarrassing</string>
-    <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
-    <string name="no_connection">No connection</string>
-    <string name="no_connection_title">Connection error</string>
-    <string name="invalid_revision_error_title">Revision error</string>
-    <string name="invalid_revision_error">It looks like you may be editing a version of this guide that is out of date.
-        To ensure you do not lose any information, please reload this guide.
+        <!-- Error Messages -->
+    <string name="parse_error_title">Bueno, esto es vergonzoso</string>
+    <string name="parse_error_message">Ha ocurrido un error al intentar cargar el contenido de nuestros servidores.</string>
+    <string name="no_connection">No hay conexión</string>
+    <string name="no_connection_title">Error de conexión</string>
+    <string name="invalid_revision_error_title">Error de revisión</string>
+    <string name="invalid_revision_error">Parece que es posible que esté editando una versión antigua de esta guía.
+        Para prevenir una perdida de información, por favor recarge esta guía.
     </string>
-    <string name="fatal_error_title">Unknown Error</string>
-    <string name="fatal_error">It looks like an error occurred. Please reload your guide.</string>
-    <string name="media_error_title">Something went wrong. Try again later.</string>
+    <string name="fatal_error_title">Error Desconocido</string>
+    <string name="fatal_error">Ha ocurrido un error. Por favor recarge su guía.</string>
+    <string name="media_error_title">Algo salió mal. Intente de nuevo más tarde.</string>
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
-    <string name="account_menu_title">Your Account</string>
-    <string name="account_username_title">Account (%1$s)</string>
+    <string name="account_menu_title">Tu Cuenta</string>
+    <string name="account_username_title">Cuenta (%1$s)</string>
 
-    <string name="slide_menu_my_guides">My Guides</string>
-    <string name="slide_menu_search">Search</string>
-    <string name="slide_menu_browse_content">Browse Content</string>
-    <string name="slide_menu_featured_guides">Featured Guides</string>
-    <string name="slide_menu_browse_devices">Browse Devices</string>
-    <string name="slide_menu_favorite_guides">Favorite Guides</string>
-    <string name="slide_menu_create_new_guide">Create New Guide</string>
-    <string name="slide_menu_media_gallery">Media Manager</string>
-    <string name="slide_menu_logout">Logout</string>
-    <string name="slide_menu_ifixit_everywhere">iFixit Everywhere</string>
-    <string name="slide_menu_youtube">Youtube Channel</string>
+    <string name="slide_menu_my_guides">Mis Guías</string>
+    <string name="slide_menu_search">Buscar</string>
+    <string name="slide_menu_browse_content">Navegar Contenido</string>
+    <string name="slide_menu_featured_guides">Guías Destacadas</string>
+    <string name="slide_menu_browse_devices">Navegar Dispositivos</string>
+    <string name="slide_menu_favorite_guides">Guías Favoritas</string>
+    <string name="slide_menu_create_new_guide">Crear Nueva Guía</string>
+    <string name="slide_menu_media_gallery">Administrador de Medios</string>
+    <string name="slide_menu_logout">Cerrar Sesión</string>
+    <string name="slide_menu_ifixit_everywhere">iFixit En Todas Partes</string>
+    <string name="slide_menu_youtube">Canal de YouTube</string>
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
-    <string name="slide_menu_more_info">More Information</string>
-    <string name="slide_menu_help">Help</string>
-    <string name="slide_menu_about">About</string>
+    <string name="slide_menu_more_info">Más Información</string>
+    <string name="slide_menu_help">Ayuda</string>
+    <string name="slide_menu_about">Acerca De</string>
 
     <!-- Log-In / Log-Out -->
-    <string name="username">User Name</string>
-    <string name="password">Password</string>
-    <string name="login">Login</string>
-    <string name="logout">Logout</string>
-    <string name="register">Register</string>
+    <string name="username">Nombre de Usuario</string>
+    <string name="password">Contraseña</string>
+    <string name="login">Ingresar</string>
+    <string name="logout">Cerrar Sesión</string>
+    <string name="register">Registrarse</string>
 
-    <string name="logout_messege">Are you sure you want to logout?</string>
-    <string name="login_error">Uh oh! Invalid login info, try again please.</string>
-    <string name="try_again">Try again</string>
-    <string name="register_agreement">I agree to
-        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
-        under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.
+    <string name="logout_messege">Está seguro que desea cerrar la sesión?</string>
+    <string name="login_error">Uh oh! Información de ingresó es invalida, por favor intente otra vez.</string>
+    <string name="try_again">Intente otra vez</string>
+    <string name="register_agreement">Estoy de acuerdo
+        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">de liberar mis contribuciones</a>
+        bajo <a href="http://www.ifixit.com/Info/Licensing">nuestra licencia libre.</a>.
     </string>
-    <string name="terms_unchecked_error">You must agree to the terms.</string>
-    <string name="login_dialog_title">Login</string>
-    <string name="register_dialog_title">Register</string>
-    <string name="login_password_hint">Password</string>
+    <string name="terms_unchecked_error">Debe aceptar los términos.</string>
+    <string name="login_dialog_title">Ingresar</string>
+    <string name="register_dialog_title">Registrarse</string>
+    <string name="login_password_hint">Contraseña</string>
     <string name="login_email_hint">Email</string>
-    <string name="password_confirm_hint">Confirm Password</string>
+    <string name="password_confirm_hint">Confirmar Contraseña</string>
     <string name="email_hint">Email</string>
 
-    <string name="signin_description">Login to iFixit.com</string>
-    <string name="register_description">Register for iFixit.com</string>
-    <string name="cancel_register_description">Cancel Registration</string>
-    <string name="cancel_register_button">Cancel</string>
-    <string name="google_signin_description">Sign-in with Google</string>
-    <string name="yahoo_signin_description">Sign-in with Yahoo!</string>
+    <string name="signin_description">Ingresar a iFixit.com</string>
+    <string name="register_description">Registrarse con iFixit.com</string>
+    <string name="cancel_register_description">Cancelar Registracion</string>
+    <string name="cancel_register_button">Cancelar</string>
+    <string name="google_signin_description">Ingresar con Google</string>
+    <string name="yahoo_signin_description">Ingresar con Yahoo!</string>
 
-    <string name="empty_field_error">One or more fields are still empty.</string>
-    <string name="passwords_do_not_match_error">Passwords do not match.</string>
+    <string name="empty_field_error">Uno o mas campos aun están vacios.</string>
+    <string name="passwords_do_not_match_error">Contraseñas no coinciden.</string>
 
     <!-- Gallery -->
     <string name="media_help_title">What\'s this?</string>
