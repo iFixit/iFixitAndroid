@@ -303,20 +303,20 @@
     <string name="favorites_empty_text">Aun no has favorecido ninguna guía..</string>
 
     <string-array name="guide_type_array">
-        <item>Installation</item>
-        <item>Repair</item>
-        <item>Disassembly</item>
+        <item>Instalación</item>
+        <item>Reparar</item>
+        <item>Desmontar</item>
     </string-array>
 
     <string-array name="new_image_actions">
-        <item>Camera</item>
-        <item>Media Manager</item>
+        <item>Cámara</item>
+        <item>Administrador de Medios</item>
     </string-array>
 
     <string-array name="existing_image_actions">
-        <item>Copy to Media Manager</item>
-        <item>Detach to Media Manager</item>
-        <item>Delete</item>
+        <item>Copiar a Administrador de Medios</item>
+        <item>Despegar a Administrador de Medios</item>
+        <item>Eliminar</item>
     </string-array>
 
 </resources>
