@@ -197,7 +197,7 @@ public class APIService extends Service {
    }
 
    public static APICall getTeardowns(int limit, int offset) {
-      return new APICall(APIEndpoint.GUIDES, "?filter=teardown&limit=" + limit + "&offset=" + offset);
+      return new APICall(APIEndpoint.GUIDES, "?filter=teardown&order=DESC&limit=" + limit + "&offset=" + offset);
    }
 
    public static APICall getCategoriesAPICall() {
