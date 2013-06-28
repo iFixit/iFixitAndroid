@@ -376,7 +376,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
       mShowingDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
-       .setMessage(getString(R.string.step_edit_confirm_delete_message, mStepForDelete.getStepNum() + 1))
+       .setMessage(getString(R.string.step_edit_confirm_delete_message, mStepForDelete.getStepNum()))
        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
              mShowingDelete = false;
