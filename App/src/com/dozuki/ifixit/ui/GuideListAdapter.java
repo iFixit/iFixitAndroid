@@ -17,6 +17,10 @@ public class GuideListAdapter extends BaseAdapter {
       setGuides(guides);
    }
 
+   public void addGuides(ArrayList<GuideInfo> guides) {
+      mGuides.addAll(guides);
+   }
+
    public void setGuides(ArrayList<GuideInfo> guides) {
       mGuides = new ArrayList<GuideInfo>(guides);
    }
