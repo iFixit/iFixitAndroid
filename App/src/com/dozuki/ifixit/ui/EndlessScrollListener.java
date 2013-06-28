@@ -1,11 +1,10 @@
 package com.dozuki.ifixit.ui;
 
 import android.widget.AbsListView;
-import android.widget.GridView;
 
 public class EndlessScrollListener implements AbsListView.OnScrollListener {
 
-   private GridView gridView;
+   private AbsListView listView;
    private boolean isLoading;
    private boolean hasMorePages;
    private int pageNumber = 0;
@@ -14,8 +13,8 @@ public class EndlessScrollListener implements AbsListView.OnScrollListener {
 
    private boolean isRefreshing;
 
-   public EndlessScrollListener(GridView gridView, RefreshList refreshList) {
-      this.gridView = gridView;
+   public EndlessScrollListener(AbsListView listView, RefreshList refreshList) {
+      this.listView = listView;
       this.isRefreshing = false;
       this.isLoading = false;
       this.hasMorePages = true;
@@ -27,7 +26,7 @@ public class EndlessScrollListener implements AbsListView.OnScrollListener {
       // List hasn't been populated yet, don't do anything
       if (totalItemCount == 0) return;
 
-      if (gridView.getLastVisiblePosition() + 1 == totalItemCount && !isLoading) {
+      if (listView.getLastVisiblePosition() + 1 == totalItemCount && !isLoading) {
          isLoading = true;
          if (hasMorePages && !isRefreshing) {
             isRefreshing = true;
