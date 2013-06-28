@@ -154,9 +154,18 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       fitToSpace();
    }
 
+   public void setDefaultMainImage() {
+      mMainImage.setTag(null);
+
+      mPicasso.load(R.drawable.no_image)
+       .fit()
+       .into(mMainImage);
+   }
+
    public void setAddImageMain() {
+
       mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
-      mMainImage.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+      mMainImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
       mMainImage.setOnClickListener(mAddThumbListener);
       mMainImage.setTag(null);
    }
