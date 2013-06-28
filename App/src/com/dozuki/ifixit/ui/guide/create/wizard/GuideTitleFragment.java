@@ -50,11 +50,13 @@ public class GuideTitleFragment extends EditTextFragment {
 
       mField = (EditText) rootView.findViewById(R.id.edit_text_field);
 
-      Log.w("GuideTitleFragment", mField.getText().toString());
       // If there isn't a title already, suggest one.  Example: {{Guide Type}} {{Guide Topic}} {{Guide Subject}}
       if (mField.getText().toString().length() == 0) {
          mField.setText(buildTitle());
       }
+
+      // Move cursor to end of text field
+      mField.setSelection(mField.getText().length());
 
       return rootView;
    }
