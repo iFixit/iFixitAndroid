@@ -32,12 +32,17 @@ public class Guide implements Serializable {
    protected ArrayList<Part> mParts;
    protected boolean mEditMode = false;
    protected boolean mCanEdit = true;
+   protected int mPatrolThreshold = 0;
 
    public Guide(int guideid) {
       mGuideid = guideid;
       mSteps = new ArrayList<GuideStep>();
       mTools = new ArrayList<Tool>();
       mParts = new ArrayList<Part>();
+   }
+
+   public void setPatrolThreshold(int threshold) {
+      mPatrolThreshold = threshold;
    }
 
    public void addTool(Tool tool) {

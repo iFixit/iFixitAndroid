@@ -152,6 +152,7 @@ public class JSONHelper {
       guide.setRevisionid(jGuide.getInt("revisionid"));
       guide.setPublic(jGuide.getBoolean("public"));
       guide.setType(jGuide.getString("type"));
+      guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
 
       if (jGuide.has("canEdit")) {
          guide.setCanEdit(jGuide.getBoolean("canEdit"));
