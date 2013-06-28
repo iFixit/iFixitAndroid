@@ -40,6 +40,10 @@ public class TopicViewActivity extends BaseActivity {
       }
 
       mTopicNode = (TopicNode)getIntent().getSerializableExtra(TOPIC_KEY);
+
+      if (mTopicNode != null) {
+         getSupportActionBar().setTitle(mTopicNode.getName());
+      }
    }
 
    @Override
