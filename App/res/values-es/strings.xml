@@ -279,7 +279,7 @@
     <string name="restart_video_message">Reproducir este vídeo otra vez?</string>
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Nombre</string>
     <string name="guide_intro_wizard_guide_subject_hint">Por ejemplo - Pantalla, Batería, Bujías, etc</string>
-    <string name="loading_image">@string/cargando</string>
+    <string name="loading_image">@string/loading</string>
     <string name="black_bullet_description">Bala negra</string>
     <string name="red_bullet_description">Bala roja</string>
     <string name="orange_bullet_description">Bala naranja</string>
