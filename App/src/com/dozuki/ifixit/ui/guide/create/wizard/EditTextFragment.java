@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
@@ -39,9 +38,6 @@ public class EditTextFragment extends SherlockFragment {
    private String mKey;
    private EditTextPage mPage;
    private EditText mField;
-   private TextView mDescription;
-   private ArrayAdapter<String> mAdapter;
-   private TextView mTitle;
 
    public static EditTextFragment create(String key) {
       Bundle args = new Bundle();
@@ -70,15 +66,13 @@ public class EditTextFragment extends SherlockFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       View rootView = inflater.inflate(R.layout.guide_create_intro_edit_text, container, false);
-      mTitle = (TextView) rootView.findViewById(android.R.id.title);
+
+      ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
+      ((TextView) rootView.findViewById(R.id.page_description)).setText(mPage.getDescription());
 
       mField = (EditText) rootView.findViewById(R.id.edit_text_field);
-      mDescription = ((TextView) rootView.findViewById(R.id.page_description));
-
-      mTitle.setText(mPage.getTitle());
       mField.setText(mPage.getData().getString(EditTextPage.TEXT_DATA_KEY));
       mField.setHint(mPage.getHint());
-      mDescription.setText(mPage.getDescription());
 
       return rootView;
 

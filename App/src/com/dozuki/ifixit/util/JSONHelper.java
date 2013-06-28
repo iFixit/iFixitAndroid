@@ -147,7 +147,7 @@ public class JSONHelper {
       guide.setIntroductionRaw(jGuide.getString("introduction_raw"));
       guide.setIntroductionRendered(jGuide.getString("introduction_rendered"));
       guide.setIntroImage(parseImage(jGuide, "image"));
-      guide.setSummary(jGuide.getString("summary"));
+      guide.setSummary(jGuide.isNull("summary") ? "" : jGuide.getString("summary"));
       guide.setRevisionid(jGuide.getInt("revisionid"));
       guide.setPublic(jGuide.getBoolean("public"));
       guide.setType(jGuide.getString("type"));
