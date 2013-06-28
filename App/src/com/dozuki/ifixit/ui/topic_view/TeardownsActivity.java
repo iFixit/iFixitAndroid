@@ -55,7 +55,7 @@ public class TeardownsActivity extends BaseActivity {
          @Override
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
-            GuideInfo guide = mGuides.get(position);
+            GuideInfo guide = (GuideInfo)mAdapter.getItem(position);
             Intent intent = new Intent(mContext, GuideViewActivity.class);
 
             intent.putExtra(GuideViewActivity.SAVED_GUIDEID, guide.mGuideid);
@@ -83,6 +83,7 @@ public class TeardownsActivity extends BaseActivity {
          if (mGuides != null) {
             ArrayList<GuideInfo> guides = event.getResult();
             if (guides.size() > 0) {
+               mGuides.addAll(guides);
                mAdapter.addGuides(guides);
                mAdapter.notifyDataSetChanged();
 
