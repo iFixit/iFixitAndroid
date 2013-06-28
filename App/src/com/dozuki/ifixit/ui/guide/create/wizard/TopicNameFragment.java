@@ -37,10 +37,14 @@ import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.regex.Pattern;
 
 public class TopicNameFragment extends SherlockFragment {
    private static final String ARG_KEY = "key";
    public static final String TOPIC_LIST_KEY = "TOPIC_LIST_KEY";
+
+   private static final String INVALID_DEVICE_NAME_PATTERN = "[^#<>\\[\\]\\|\\{\\},\\+\\?&\\/\\\\\\%:;]+";
+
 
    private PageFragmentCallbacks mCallbacks;
    private String mKey;
@@ -102,6 +106,9 @@ public class TopicNameFragment extends SherlockFragment {
 
          @Override
          public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            if (!Pattern.matches(INVALID_DEVICE_NAME_PATTERN, charSequence)) {
+               mTopicNameView.setError("Device name contains invalid characters.");
+            }
          }
 
          @Override
