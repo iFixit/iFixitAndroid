@@ -131,18 +131,17 @@ public class JSONHelper {
     * Guide parsing
     */
    public static Guide parseGuide(String json) throws JSONException {
-      JSONObject jGuideInfo = new JSONObject(json);
-      JSONObject jGuide = jGuideInfo.getJSONObject("guide");
+      JSONObject jGuide = new JSONObject(json);
       JSONArray jSteps = jGuide.getJSONArray("steps");
       JSONArray jTools = jGuide.getJSONArray("tools");
       JSONArray jParts = jGuide.getJSONArray("parts");
       JSONObject jAuthor = jGuide.getJSONObject("author");
-      Guide guide = new Guide(jGuideInfo.getInt("guideid"));
+      Guide guide = new Guide(jGuide.getInt("guideid"));
 
       guide.setTitle(jGuide.getString("title"));
-      guide.setTopic(jGuideInfo.getString("category"));
+      guide.setTopic(jGuide.getString("category"));
       guide.setSubject(jGuide.getString("subject"));
-      guide.setAuthor(jAuthor.getString("text"));
+      guide.setAuthor(jAuthor.getString("username"));
       guide.setTimeRequired(jGuide.getString("time_required"));
       guide.setDifficulty(jGuide.getString("difficulty"));
       guide.setIntroductionRaw(jGuide.getString("introduction_raw"));
@@ -154,8 +153,8 @@ public class JSONHelper {
       guide.setType(jGuide.getString("type"));
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
 
-      if (jGuide.has("canEdit")) {
-         guide.setCanEdit(jGuide.getBoolean("canEdit"));
+      if (jGuide.has("can_edit")) {
+         guide.setCanEdit(jGuide.getBoolean("can_edit"));
       }
 
       for (int i = 0; i < jSteps.length(); i++) {

@@ -372,7 +372,7 @@ public enum APIEndpoint {
    USER_GUIDES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "user/guides";
+            return "user/guides?limit=10000";
          }
 
          public APIEvent<?> parse(String json) throws JSONException {
@@ -642,7 +642,7 @@ public enum APIEndpoint {
    /**
     * Current version of the API to use.
     */
-   private static final String API_VERSION = "1.1";
+   private static final String API_VERSION = "2.0";
 
    /**
     * Defines various methods that each endpoint must provide.
@@ -733,7 +733,7 @@ public enum APIEndpoint {
       url = String.format("%s://%s/api/%s/%s", protocol, domain, API_VERSION, mEndpoint.createUrl(query));
 
       if (MainApplication.inDebug()) {
-         Log.d("APIEndpoint", "Absolute URL for API query: " + url);
+         Log.d("APIEndpoint", "API Request URL: " + url);
       }
 
       return url;

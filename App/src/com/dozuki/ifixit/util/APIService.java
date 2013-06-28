@@ -600,6 +600,8 @@ public class APIService extends Service {
                   request.header("Authorization", "api " + authToken);
                }
 
+               request.header("X-App-Id", "1234");
+
                /**
                 * Continue with constructing the request body.
                 */
