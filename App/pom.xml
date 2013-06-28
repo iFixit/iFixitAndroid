@@ -106,9 +106,9 @@
             <type>apklib</type>
         </dependency>
         <dependency>
-            <groupId>net.simonvt</groupId>
-            <artifactId>android-menudrawer</artifactId>
-            <version>2.0.3</version>
+            <groupId>net.simonvt.menudrawer</groupId>
+            <artifactId>menudrawer</artifactId>
+            <version>3.0.2</version>
             <type>apklib</type>
         </dependency>
         <dependency>

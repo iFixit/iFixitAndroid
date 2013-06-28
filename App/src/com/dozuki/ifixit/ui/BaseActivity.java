@@ -209,7 +209,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
-      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.MENU_DRAG_WINDOW, Position.RIGHT);
+      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.RIGHT, MenuDrawer.MENU_DRAG_WINDOW);
 
       mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
       mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
