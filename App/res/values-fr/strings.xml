@@ -297,6 +297,7 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="optional">Optionnel</string>
     <string name="favorites">Favoris</string>
     <string name="favorites_empty_text">Vous n\'avez pas encore de guides préférés.</string>
+    <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

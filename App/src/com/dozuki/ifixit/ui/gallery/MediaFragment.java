@@ -159,19 +159,26 @@ public abstract class MediaFragment extends SherlockFragment
 
                return;
             }
+            
+            File file = new File(path);
+
+            if (file.length() == 0) {
+               Toast.makeText(getActivity(), getString(R.string.empty_image_error),
+                Toast.LENGTH_LONG).show();
+               return;
+            }
 
             if (mMediaList.countUploadingImages() >= MAX_UPLOAD_COUNT) {
-               Toast.makeText(getActivity(), this.getString(R.string.too_many_image_error),
+               Toast.makeText(getActivity(), getString(R.string.too_many_image_error),
                 Toast.LENGTH_LONG).show();
                return;
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            APIService.call(getSherlockActivity(), APIService.getUploadImageAPICall(
-             getPath(selectedImageUri), key));
+            APIService.call(getSherlockActivity(), APIService.getUploadImageAPICall(path, key));
          } else if (requestCode == CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
-               Log.w("iFixit", "Error cameraTempFile is null!");
+               Log.e("iFixit", "Error cameraTempFile is null!");
                return;
             }
 
