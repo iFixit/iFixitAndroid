@@ -34,7 +34,13 @@ public class FullImageViewActivity extends SherlockActivity {
 
       if (url.startsWith("http")) {
          url += sizes.getFull();
+
          picasso.load(url)
+          .error(R.drawable.no_image)
+          .into(image);
+      } else if(url.startsWith("content://")) {
+         picasso.load(url)
+          .scale(0.5f)
           .error(R.drawable.no_image)
           .into(image);
       } else {
