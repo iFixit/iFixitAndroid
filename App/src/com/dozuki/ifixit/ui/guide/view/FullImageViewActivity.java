@@ -12,6 +12,8 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.picasso.Picasso;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
+import java.io.File;
+
 public class FullImageViewActivity extends SherlockActivity {
    public static final String IMAGE_URL = "IMAGE_URL";
 
@@ -25,14 +27,22 @@ public class FullImageViewActivity extends SherlockActivity {
       ImageSizes sizes = MainApplication.get().getImageSizes();
 
       String url = (String) getIntent().getExtras().get(IMAGE_URL);
-      url += sizes.getFull();
+      Picasso picasso = Picasso.with(this);
 
       setContentView(R.layout.full_screen_image);
-      ImageViewTouch image = (ImageViewTouch)findViewById(R.id.imageZoom);
-      Picasso.with(this)
-       .load(url)
-       .error(R.drawable.no_image)
-       .into(image);
+      ImageViewTouch image = (ImageViewTouch) findViewById(R.id.imageZoom);
+
+      if (url.startsWith("http")) {
+         url += sizes.getFull();
+         picasso.load(url)
+          .error(R.drawable.no_image)
+          .into(image);
+      } else {
+         picasso.load(new File(url))
+          .scale(0.5f)
+          .error(R.drawable.no_image)
+          .into(image);
+      }
 
       findViewById(R.id.fullScreenClose).setOnClickListener(new OnClickListener() {
          @Override
