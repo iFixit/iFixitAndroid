@@ -265,6 +265,22 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mMenuDrawer.setMenuView(mList);
    }
 
+   /**
+    * Close the menu drawer if back is pressed and the menu is open.
+    */
+
+   @Override
+   public void onBackPressed() {
+      final int drawerState = mMenuDrawer.getDrawerState();
+      if (drawerState == MenuDrawer.STATE_OPEN
+       || drawerState == MenuDrawer.STATE_OPENING) {
+         mMenuDrawer.closeMenu();
+         return;
+      }
+
+      super.onBackPressed();
+   }
+
    @Override
    protected void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
