@@ -192,10 +192,17 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       if (fromDisk) {
          File file = new File(image.getPath());
-         buildImage(mPicasso.load(file), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
+         buildImage(mPicasso.load(file)
+          .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
+          .centerCrop(),
+          thumb);
+         buildImage(mPicasso.load(file)
+          .resize((int)(mMainWidth - 0.5f), (int)(mMainHeight - 0.5f))
+          .centerCrop(),
+          mMainImage);
       } else {
          String url = image.getPath(mImageSizes.getThumb());
-         buildImage(mPicasso.load(url), (int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f), thumb);
+         buildImage(mPicasso.load(url), thumb);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
@@ -268,13 +275,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          url = url + mImageSizes.getMain();
       }
 
-      buildImage(mPicasso.load(url), (int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f), mMainImage);
+      buildImage(mPicasso.load(url), mMainImage);
    }
 
    public void setCurrentThumb(File file) {
       mMainImage.setTag(file.getPath());
 
-      buildImage(mPicasso.load(file), (int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f), mMainImage);
+      buildImage(mPicasso.load(file), mMainImage);
    }
 
    public void setDisplayMetrics(DisplayMetrics metrics) {
@@ -333,7 +340,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       thumb.setLayoutParams(lp);
    }
 
-   private void buildImage(RequestBuilder builder, int width, int height, ImageView image) {
+   private void buildImage(RequestBuilder builder, ImageView image) {
       builder
        .error(R.drawable.no_image)
        .into(image);
