@@ -88,7 +88,8 @@ public class APIService extends Service {
 
          // Don't display the login dialog twice.
          if (!MainApplication.get().isLoggingIn()) {
-            LoginFragment.newInstance().show(((SherlockFragmentActivity)activity).getSupportFragmentManager(), "LoginFragment");
+            LoginFragment.newInstance()
+             .show(((SherlockFragmentActivity) activity).getSupportFragmentManager(), "LoginFragment");
          }
       } else {
          activity.startService(makeApiIntent(activity, apiCall));
@@ -183,7 +184,7 @@ public class APIService extends Service {
       try {
          return endpoint.parseResult(response);
       } catch (JSONException e) {
-         Log.e("iFixit", "API parse error", e);
+         Log.e("APIService", "API parse error", e);
          return endpoint.getEvent().setError(APIError.getParseError(this));
       }
    }
@@ -549,6 +550,9 @@ public class APIService extends Service {
       new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
          protected APIEvent<?> doInBackground(String... dummy) {
+
+            HttpRequest.setConnectionFactory(new OkConnectionFactory());
+
             /**
              * Unfortunately we must split the creation of the HttpRequest
              * object and the appropriate actions to take for a GET vs. a POST
@@ -559,6 +563,7 @@ public class APIService extends Service {
             HttpRequest request;
 
             try {
+
                String requestMethod;
                if (endpoint.mMethod.equals("GET")) {
                   request = HttpRequest.get(url);
@@ -573,13 +578,8 @@ public class APIService extends Service {
                   request.header("X-HTTP-Method-Override", endpoint.mMethod);
                }
 
-               /**
-                * Uncomment to test HTTPS API calls in development.
-                */
-               request.trustAllCerts();
-               request.trustAllHosts();
-
                String authToken = null;
+
                /**
                 * Get an appropriate auth token.
                 */
@@ -602,6 +602,12 @@ public class APIService extends Service {
 
                request.header("X-App-Id", "1234");
 
+               // Trust all certs and hosts in development
+               if (MainApplication.inDebug()) {
+                  request.trustAllCerts();
+                  request.trustAllHosts();
+               }
+
                /**
                 * Continue with constructing the request body.
                 */
@@ -620,14 +626,21 @@ public class APIService extends Service {
                int code = request.code();
 
                if (MainApplication.inDebug()) {
-                  Log.i("APIService", "Response code: " + code);
-                  Log.i("APIService", "Response body: " + responseBody);
+                  Log.d("APIService", "Response code: " + code);
+                  Log.d("APIService", "Response body: " + responseBody);
                }
 
                return endpoint.getEvent().setCode(code).setResponse(responseBody);
             } catch (HttpRequestException e) {
-               Log.e("iFixit", "API error", e);
-               return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
+               if (e.getCause() != null) {
+                  e.getCause().printStackTrace();
+                  Log.e("iFixit::APIService", "IOException from request", e.getCause());
+                  return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
+               } else {
+                  e.printStackTrace();
+                  Log.e("iFixit::APIService", "API error", e);
+                  return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
+               }
             }
          }
 

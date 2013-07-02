@@ -89,15 +89,15 @@
         </activity>
         <activity
             android:name=".ui.guide.view.FullImageViewActivity"
-            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
         <activity
             android:name=".ui.guide.view.VideoViewActivity"
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
         <activity
             android:name=".ui.guide.view.EmbedViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@android:style/Theme.Holo.NoActionBar"/>
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
     </application>
 </manifest>
