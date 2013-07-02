@@ -179,10 +179,11 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                int stepNum = 0;
 
                // Take into account the introduction, parts and tools page.
-               if (mCurrentPage != 0) {
+               if (mCurrentPage >= mAdapter.getStepOffset()) {
                   stepNum = mCurrentPage - mAdapter.getStepOffset();
                   Log.d("GuideViewActivity", stepNum+"");
-                  intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum);
+                  // Account for array indexed starting at 1
+                  intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
                }
 
                int stepGuideid = mGuide.getStep(stepNum).getGuideid();
