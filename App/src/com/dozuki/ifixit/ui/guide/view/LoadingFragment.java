@@ -14,7 +14,7 @@ public class LoadingFragment extends SherlockFragment {
    public LoadingFragment() { }
 
    public LoadingFragment(String text) {
-      mLoadingText = (text.isEmpty()) ? getString(R.string.loading) : text;
+      mLoadingText = (text.length() == 0) ? getString(R.string.loading) : text;
    }
 
    public View onCreateView(LayoutInflater inflater, ViewGroup container,

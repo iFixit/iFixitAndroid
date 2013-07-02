@@ -58,7 +58,7 @@ public class Image implements Serializable {
    }
 
    public String getPath(String size) {
-      if (!size.isEmpty() && !size.startsWith(".")) {
+      if (size.length() != 0 && !size.startsWith(".")) {
          size = size + ".";
       }
 
@@ -92,7 +92,7 @@ public class Image implements Serializable {
 
    private String cleanPath(String path) {
 
-      if (MainApplication.inDebug() && !path.isEmpty())
+      if (MainApplication.inDebug() && path.length() != 0)
          path = path.replaceFirst("https","http");
 
       return path;

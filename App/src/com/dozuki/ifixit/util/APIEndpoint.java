@@ -711,6 +711,9 @@ public enum APIEndpoint {
       return ordinal();
    }
 
+   /**
+    * Returns an absolute URL for this endpoint for the given site, no query needed.
+    */
    public String getUrl(Site site) {
       return getUrl(site, null);
    }
