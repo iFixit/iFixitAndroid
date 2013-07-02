@@ -11,7 +11,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.util.JSONHelper;
+import com.dozuki.ifixit.util.Utils;
 
 public class GuideIntroViewFragment extends SherlockFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
@@ -20,8 +20,6 @@ public class GuideIntroViewFragment extends SherlockFragment {
    private TextView mIntro;
    private TextView mDifficulty;
    private TextView mAuthor;
-   private TextView mTools;
-   private TextView mParts;
    private Guide mGuide;
 
    public GuideIntroViewFragment() { }
@@ -53,14 +51,10 @@ public class GuideIntroViewFragment extends SherlockFragment {
       mIntro = (TextView)view.findViewById(R.id.guide_intro_text);
       mDifficulty = (TextView)view.findViewById(R.id.guide_difficulty);
       mAuthor = (TextView)view.findViewById(R.id.guide_author);
-      mTools = (TextView)view.findViewById(R.id.guide_tools);
-      mParts = (TextView)view.findViewById(R.id.guide_parts);
 
       MovementMethod method = LinkMovementMethod.getInstance();
 
       mIntro.setMovementMethod(method);
-      mTools.setMovementMethod(method);
-      mParts.setMovementMethod(method);
 
       if (mGuide != null) {
          setGuide();
@@ -71,26 +65,15 @@ public class GuideIntroViewFragment extends SherlockFragment {
 
    public void setGuide() {
       mTitle.setText(Html.fromHtml(mGuide.getTitle()));
-      mIntro.setText(JSONHelper.correctLinkPaths(Html.fromHtml(mGuide
+      mIntro.setText(Utils.correctLinkPaths(Html.fromHtml(mGuide
        .getIntroductionRendered())));
 
       if (!mGuide.getDifficulty().equals("false")) {
          mDifficulty.setText(getActivity().getString(R.string.difficulty) +
-          ": " + JSONHelper.correctLinkPaths(Html.fromHtml(
-          mGuide.getDifficulty())));
+          ": " + Utils.correctLinkPaths(Html.fromHtml(mGuide.getDifficulty())));
       }
 
       mAuthor.setText(getActivity().getString(R.string.author) + ": " +
-       JSONHelper.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
-
-      if (mGuide.getNumTools() != 0) {
-         mTools.setText(Html.fromHtml(mGuide.getToolsFormatted(
-          getActivity().getString(R.string.requiredTools))));
-      }
-
-      if (mGuide.getNumParts() != 0) {
-         mParts.setText(Html.fromHtml(mGuide.getPartsFormatted(
-          getActivity().getString(R.string.requiredParts))));
-      }
+       Utils.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
    }
 }

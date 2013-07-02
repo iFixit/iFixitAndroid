@@ -1,9 +1,8 @@
 package com.dozuki.ifixit.model.topic;
 
-import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Flag;
-import com.dozuki.ifixit.model.Part;
-import com.dozuki.ifixit.model.Tool;
+import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.model.Item;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import org.json.JSONArray;
 
@@ -22,16 +21,16 @@ public class TopicLeaf implements Serializable {
    private ArrayList<GuideInfo> mGuides;
    private int mSolutions;
    private String mSolutionsUrl;
-   private ArrayList<Part> mParts;
-   private ArrayList<Tool> mTools;
+   private ArrayList<Item> mParts;
+   private ArrayList<Item> mTools;
    private String mContentsRaw;
    private String mContentsRendered;
 
    public TopicLeaf(String name) {
       mName = name;
       mGuides = new ArrayList<GuideInfo>();
-      mParts = new ArrayList<Part>();
-      mTools = new ArrayList<Tool>();
+      mParts = new ArrayList<Item>();
+      mTools = new ArrayList<Item>();
       mFlags = new ArrayList<Flag>();
    }
 
@@ -75,7 +74,7 @@ public class TopicLeaf implements Serializable {
       return mDescription;
    }
 
-   public void addPart(Part part) {
+   public void addPart(Item part) {
       mParts.add(part);
    }
 
@@ -87,7 +86,7 @@ public class TopicLeaf implements Serializable {
       }
    }
 
-   public void addTool(Tool tool) {
+   public void addTool(Item tool) {
       mTools.add(tool);
    }
 

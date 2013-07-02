@@ -203,7 +203,7 @@
 
     <string name="create_guide_device_subject">Subject</string>
     <string name="create_guide_summary">Summary</string>
-    <string name="create_guide_intro">Introduction</string>
+    <string name="create_guide_intro">@string/introduction</string>
     <string name="device_hint">What are you working on?</string>
     <string name="device_focus_hint">What part of the device are you focusing on?</string>
     <string name="title_hint">Add guide title.</string>
@@ -306,7 +306,9 @@
     <string name="teardowns">Teardowns</string>
     <string name="favorites">Favorites</string>
     <string name="favorites_empty_text">You haven\'t favorited any guides yet.</string>
+    <string name="introduction">Introduction</string>
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
+    <string name="link_to_item">Link to %1$s</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

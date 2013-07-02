@@ -73,6 +73,10 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
+    <style name="Base.TitleIndicator">
+        <item name="android:background">@color/black</item>
+    </style>
+
     <style name="TitleText" parent="android:TextAppearance.Medium">
         <item name="android:typeface">sans</item>
         <item name="android:textSize">@dimen/title_text_size</item>
@@ -83,6 +87,10 @@
         <item name="android:textColor">?attr/doz__textColorPrimary</item>
         <item name="android:textSize">@dimen/body_text_size</item>
         <item name="android:layout_marginTop">@dimen/body_text_top_spacing</item>
+    </style>
+
+    <style name="BodyText.EqualSpacing">
+        <item name="android:layout_marginBottom">@dimen/body_text_top_spacing</item>
     </style>
 
     <style name="ListText" parent="android:TextAppearance.Medium">

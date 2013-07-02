@@ -1,10 +1,6 @@
 package com.dozuki.ifixit.util;
 
-import android.text.Spannable;
-import android.text.Spanned;
-import android.text.style.URLSpan;
 import android.util.Log;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.*;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
@@ -172,14 +168,24 @@ public class JSONHelper {
       return guide;
    }
 
-   private static Part parsePart(JSONObject jPart) throws JSONException {
-      return new Part(jPart.getString("text"), jPart.getString("url"),
-       jPart.getString("thumbnail"), jPart.getString("notes"));
+   private static Item parsePart(JSONObject jPart) throws JSONException {
+      return new Item(
+       Item.ItemType.PART,
+       jPart.getString("text"),
+       jPart.getInt("quantity"),
+       jPart.getString("url"),
+       jPart.getString("thumbnail"),
+       jPart.getString("notes"));
    }
 
-   private static Tool parseTool(JSONObject jTool) throws JSONException {
-      return new Tool(jTool.getString("text"), jTool.getString("url"),
-       jTool.getString("thumbnail"), jTool.getString("notes"));
+   private static Item parseTool(JSONObject jTool) throws JSONException {
+      return new Item(
+       Item.ItemType.TOOL,
+       jTool.getString("text"),
+       jTool.getInt("quantity"),
+       jTool.getString("url"),
+       jTool.getString("thumbnail"),
+       jTool.getString("notes"));
    }
 
    public static GuideStep parseStep(JSONObject jStep, int stepNumber) throws JSONException {
@@ -512,40 +518,6 @@ public class JSONHelper {
       }
 
       return error;
-   }
-
-   /**
-    * Removes relative a hrefs
-    *
-    * @param spantext (from Html.fromhtml())
-    * @return spanned with fixed links
-    */
-   public static Spanned correctLinkPaths(Spanned spantext) {
-      Object[] spans = spantext.getSpans(0, spantext.length(), Object.class);
-      for (Object span : spans) {
-         int start = spantext.getSpanStart(span);
-         int end = spantext.getSpanEnd(span);
-         int flags = spantext.getSpanFlags(span);
-
-         Site site = MainApplication.get().getSite();
-
-         if (span instanceof URLSpan) {
-            URLSpan urlSpan = (URLSpan) span;
-            if (!urlSpan.getURL().startsWith("http")) {
-               if (urlSpan.getURL().startsWith("/")) {
-                  urlSpan = new URLSpan("http://" + site.mDomain +
-                   urlSpan.getURL());
-               } else {
-                  urlSpan = new URLSpan("http://" + site.mDomain + "/" +
-                   urlSpan.getURL());
-               }
-            }
-            ((Spannable) spantext).removeSpan(span);
-            ((Spannable) spantext).setSpan(urlSpan, start, end, flags);
-         }
-      }
-
-      return spantext;
    }
 
    public static ArrayList<GuideInfo> parseUserFavorites(String json) {

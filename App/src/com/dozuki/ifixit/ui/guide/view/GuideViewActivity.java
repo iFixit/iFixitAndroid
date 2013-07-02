@@ -4,14 +4,8 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.widget.ImageView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
@@ -23,11 +17,11 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
 import com.squareup.otto.Subscribe;
-import com.viewpagerindicator.CirclePageIndicator;
+import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.List;
 
-public class GuideViewActivity extends BaseActivity implements OnPageChangeListener {
+public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
 
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
@@ -42,16 +36,14 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
 
    public static final int MENU_EDIT_GUIDE = 2;
 
-   private GuideViewAdapter mGuideAdapter;
    private int mGuideid;
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage = -1;
    private ViewPager mPager;
-   private CirclePageIndicator mIndicator;
-   private ImageView mNextPageImage;
-   private boolean mFromEdit = false;
+   private TitlePageIndicator mIndicator;
    private int mInboundStepId = -1;
+   private GuideViewAdapter mAdapter;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -65,8 +57,7 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
 
       showLoading(R.id.loading_container);
       mPager = (ViewPager) findViewById(R.id.guide_pager);
-      mIndicator = (CirclePageIndicator) findViewById(R.id.indicator);
-      mNextPageImage = (ImageView) findViewById(R.id.next_page_image);
+      mIndicator = (TitlePageIndicator) findViewById(R.id.guide_step_title_indicator);
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
@@ -93,16 +84,15 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
             try {
                mGuideid = Integer.parseInt(segments.get(2));
             } catch (Exception e) {
-               displayError();
-               Log.e("iFixit", "Problem parsing guide");
+               hideLoading();
+               Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments");
+               return;
             }
          } else {
             Bundle extras = intent.getExtras();
 
             if (extras != null) {
-               if (extras.containsKey(FROM_EDIT)) {
-                  mFromEdit = extras.getBoolean(FROM_EDIT);
-               }
+
                // We're coming from the Topics GuideList
                if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
                   mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
@@ -127,20 +117,36 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
          }
       }
 
-      mNextPageImage.setOnTouchListener(new View.OnTouchListener() {
-         public boolean onTouch(View v, MotionEvent event) {
-            if (mCurrentPage == 0) {
-               nextStep();
-
-               return true;
-            }
-
-            return false;
-         }
-      });
-
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //initSpeechRecognizer();
+   }
+
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      if (mSpeechCommander != null) {
+         mSpeechCommander.destroy();
+      }
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      if (mSpeechCommander != null) {
+         mSpeechCommander.stopListening();
+         mSpeechCommander.cancel();
+      }
+   }
+
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      if (mSpeechCommander != null) {
+         mSpeechCommander.startListening();
+      }
    }
 
    @Override
@@ -166,16 +172,17 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
-      Intent intent;
       switch (item.getItemId()) {
          case MENU_EDIT_GUIDE:
             if (mGuide != null) {
-               intent = new Intent(this, StepEditActivity.class);
+               Intent intent = new Intent(this, StepEditActivity.class);
                int stepNum = 0;
 
-               // Take into account the introduction page.
+               // Take into account the introduction, parts and tools page.
                if (mCurrentPage != 0) {
-                  stepNum = mCurrentPage - 1;
+                  stepNum = mCurrentPage - mAdapter.getStepOffset();
+                  Log.d("GuideViewActivity", stepNum+"");
+                  intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum);
                }
 
                int stepGuideid = mGuide.getStep(stepNum).getGuideid();
@@ -209,11 +216,17 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
             if (mInboundStepId != -1) {
                for (int i = 0; i < guide.getSteps().size(); i++) {
                   if (mInboundStepId == guide.getStep(i).getStepid()) {
-                     mCurrentPage = i + 1;
+                     int stepOffset = 1;
+                     if (guide.getNumTools() != 0) stepOffset++;
+                     if (guide.getNumParts() != 0) stepOffset++;
+
+                     // Account for the introduction, parts and tools pages
+                     mCurrentPage = i + stepOffset;
+                     break;
                   }
                }
             }
-            setGuide(event.getResult(), mCurrentPage); // Account for the introduction page
+            setGuide(event.getResult(), mCurrentPage);
          }
       } else {
          APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
@@ -226,76 +239,32 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
    /////////////////////////////////////////////////////
 
    private void setGuide(Guide guide, int currentPage) {
+      hideLoading();
+
       if (guide == null) {
-         displayError();
-         Log.e("GuideViewActivity", "Guide is not set");
+         Log.wtf("GuideViewActivity", "Guide is not set.  This should be impossible");
          return;
       }
 
       mGuide = guide;
-      hideLoading();
 
       getSupportActionBar().setTitle(mGuide.getTitle());
 
-      mGuideAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide);
+      mAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide);
 
-      mPager.setAdapter(mGuideAdapter);
-      mIndicator.setOnPageChangeListener(this);
+      mPager.setAdapter(mAdapter);
+      mPager.setVisibility(View.VISIBLE);
+      mPager.setCurrentItem(currentPage);
+
       mIndicator.setViewPager(mPager);
 
-      final float density = getResources().getDisplayMetrics().density;
-      mIndicator.setBackgroundColor(0x00FFFFFF);
-      mIndicator.setRadius(6 * density);
-      mIndicator.setPageColor(0xFFFFFFFF);
-      mIndicator.setFillColor(0xFF444444);
-      mIndicator.setStrokeColor(0xFF000000);
-      mIndicator.setStrokeWidth((int) (1.5 * density));
-
-      mPager.setVisibility(View.VISIBLE);
-
-      mPager.setCurrentItem(currentPage);
+      // listen for page changes so we can track the current index
+      mIndicator.setOnPageChangeListener(this);
       mIndicator.setCurrentItem(currentPage);
-
-      onPageSelected(currentPage);
    }
 
-   @Override
-   public void onDestroy() {
-      super.onDestroy();
-
-      if (mSpeechCommander != null) {
-         mSpeechCommander.destroy();
-      }
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      if (mSpeechCommander != null) {
-         mSpeechCommander.stopListening();
-         mSpeechCommander.cancel();
-      }
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      if (mSpeechCommander != null) {
-         mSpeechCommander.startListening();
-      }
-   }
-
-   public void getGuide(final int guideid) {
-      mNextPageImage.setVisibility(View.GONE);
-
+   public void getGuide(int guideid) {
       APIService.call(this, APIService.getGuideAPICall(guideid));
-   }
-
-   private void displayError() {
-      hideLoading();
-      // TODO Display error
    }
 
    private void nextStep() {
@@ -308,22 +277,6 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
 
    private void guideHome() {
       mIndicator.setCurrentItem(0);
-   }
-
-   protected int getIndicatorHeight() {
-      int indicatorHeight = mIndicator.getHeight();
-
-      // Unbelievably horrible hack that fixes a problem when
-      // getIndicatorHeight() returns 0 after a orientation change, causing the
-      // Main image view to calculate to large and the thumbnails are hidden by
-      // the CircleIndicator.
-      // TODO: Figure out why this is actually happening and the right way to do
-      //       this.
-      if (indicatorHeight == 0) {
-         indicatorHeight = 49;
-      }
-
-      return indicatorHeight;
    }
 
    @SuppressWarnings("unused")
@@ -356,47 +309,16 @@ public class GuideViewActivity extends BaseActivity implements OnPageChangeListe
       mSpeechCommander.startListening();
    }
 
-   @Override
-   public void onPageScrollStateChanged(int arg0) {}
+   public void onPageScrollStateChanged(int arg0) { }
 
-   @Override
-   public void onPageScrolled(int arg0, float arg1, int arg2) {}
-
-   @Override
-   public void onPageSelected(int page) {
-      if (mCurrentPage == page) {
-         return;
-      }
-
-      mCurrentPage = page;
-      final int visibility;
-      Animation anim;
-
-      if (mCurrentPage == 0) {
-         anim = new AlphaAnimation(0.00f, 1.00f);
-         visibility = View.VISIBLE;
-      } else if (mCurrentPage == 1) {
-         anim = new AlphaAnimation(1.00f, 0.00f);
-         visibility = View.GONE;
-      } else {
-         mNextPageImage.setVisibility(View.GONE);
-         return;
-      }
-
-      if (anim != null && mNextPageImage.getVisibility() != visibility) {
-         anim.setDuration(400);
-         anim.setAnimationListener(new AnimationListener() {
-            public void onAnimationStart(Animation animation) {}
-
-            public void onAnimationRepeat(Animation animation) {}
-
-            public void onAnimationEnd(Animation animation) {
-               mNextPageImage.setVisibility(visibility);
-            }
-         });
-
-         mNextPageImage.startAnimation(anim);
-      }
+   public void onPageScrolled(int arg0, float arg1, int arg2) {
    }
 
+   public void onPageSelected(int currentPage) {
+      Log.d("GuideViewActivity", currentPage+"");
+
+      if (mCurrentPage == currentPage) return;
+
+      mCurrentPage = currentPage;
+   }
 }

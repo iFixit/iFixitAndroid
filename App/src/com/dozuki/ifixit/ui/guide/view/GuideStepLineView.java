@@ -10,7 +10,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.util.JSONHelper;
+import com.dozuki.ifixit.util.Utils;
 
 public class GuideStepLineView extends LinearLayout {
    private static final int LINE_INDENT = 50;
@@ -31,8 +31,7 @@ public class GuideStepLineView extends LinearLayout {
       setPadding(LINE_INDENT * line.getLevel(), MARGIN, 0, MARGIN);
 
       TextView stepText = (TextView) findViewById(R.id.step_text);
-      stepText.setText(JSONHelper.correctLinkPaths(Html.fromHtml(
-       line.getTextRendered())));
+      stepText.setText(Utils.correctLinkPaths(Html.fromHtml(line.getTextRendered())));
       stepText.setMovementMethod(LinkMovementMethod.getInstance());
 
       ImageView bullet = (ImageView)findViewById(R.id.bullet);
@@ -51,7 +50,7 @@ public class GuideStepLineView extends LinearLayout {
          } else if (line.getColor().equals("icon_note")) {
             iconRes = R.drawable.icon_note;
          } else {
-            Log.e("setLine", "Step icon resource not there");
+            Log.e("GuideStepLineView", "Step icon resource not there");
             iconRes = 0;
          }
 

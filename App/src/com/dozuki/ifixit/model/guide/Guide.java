@@ -1,8 +1,7 @@
 package com.dozuki.ifixit.model.guide;
 
 import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.model.Part;
-import com.dozuki.ifixit.model.Tool;
+import com.dozuki.ifixit.model.Item;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,8 +27,8 @@ public class Guide implements Serializable {
    protected Image mIntroImage;
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
-   protected ArrayList<Tool> mTools;
-   protected ArrayList<Part> mParts;
+   protected ArrayList<Item> mTools;
+   protected ArrayList<Item> mParts;
    protected boolean mEditMode = false;
    protected boolean mCanEdit = true;
    protected int mPatrolThreshold = 0;
@@ -37,15 +36,15 @@ public class Guide implements Serializable {
    public Guide(int guideid) {
       mGuideid = guideid;
       mSteps = new ArrayList<GuideStep>();
-      mTools = new ArrayList<Tool>();
-      mParts = new ArrayList<Part>();
+      mTools = new ArrayList<Item>();
+      mParts = new ArrayList<Item>();
    }
 
    public void setPatrolThreshold(int threshold) {
       mPatrolThreshold = threshold;
    }
 
-   public void addTool(Tool tool) {
+   public void addTool(Item tool) {
       mTools.add(tool);
    }
 
@@ -53,13 +52,21 @@ public class Guide implements Serializable {
       return mTools.size();
    }
 
-   public Tool getTool(int position) {
+   public Item getTool(int position) {
       return mTools.get(position);
+   }
+
+   public ArrayList<Item> getTools() {
+      return mTools;
+   }
+
+   public ArrayList<Item> getParts() {
+      return mParts;
    }
 
    public String getToolsFormatted(String title) {
       String formattedTools = title + ": <br />";
-      for (Tool t : mTools) {
+      for (Item t : mTools) {
          formattedTools += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
           "</a><br />";
       }
@@ -83,7 +90,7 @@ public class Guide implements Serializable {
       return mType;
    }
 
-   public void addPart(Part part) {
+   public void addPart(Item part) {
       mParts.add(part);
    }
 
@@ -95,13 +102,13 @@ public class Guide implements Serializable {
       mSteps = steps;
    }
 
-   public Part getPart(int position) {
+   public Item getPart(int position) {
       return mParts.get(position);
    }
 
    public String getPartsFormatted(String title) {
       String formattedPart = title + ": <br />";
-      for (Part t : mParts) {
+      for (Item t : mParts) {
          formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
           "</a><br />";
       }
