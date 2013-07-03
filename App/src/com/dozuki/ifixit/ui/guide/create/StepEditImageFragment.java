@@ -25,6 +25,7 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 
 import java.io.File;
@@ -113,6 +114,7 @@ public class StepEditImageFragment extends SherlockFragment {
       mThumbs.setAddThumbButtonOnClick(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
             builder.setTitle(MainApplication.get().getString(R.string.step_edit_new_thumb_actions_title))
@@ -122,6 +124,8 @@ public class StepEditImageFragment extends SherlockFragment {
                    Intent intent;
                    switch (which) {
                       case 0:
+                         EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_camera", null);
+
                          try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -140,6 +144,8 @@ public class StepEditImageFragment extends SherlockFragment {
 
                          break;
                       case 1:
+                         EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_gallery", null);
+
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                          mContext.startActivityForResult(intent, GALLERY_REQUEST_CODE);
@@ -164,13 +170,21 @@ public class StepEditImageFragment extends SherlockFragment {
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
+                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "copy_to_media_manager",
+                          null);
                          APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
+                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "detach_to_media_manager",
+                          null);
+
                          APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
+                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "delete_from_step",
+                          null);
+
                          mThumbs.removeThumb((ImageView) v);
                          mImages.remove(thumbImage);
                          setGuideDirty();
@@ -226,9 +240,7 @@ public class StepEditImageFragment extends SherlockFragment {
             break;
       }
 
-
       super.onActivityResult(requestCode, resultCode, data);
-
    }
 
    @Override

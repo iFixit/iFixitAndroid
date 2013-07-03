@@ -18,6 +18,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 import com.squareup.picasso.Picasso;
@@ -82,6 +83,9 @@ public class StepReorderFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      EasyTracker.getInstance().setContext(getActivity());
+
       getSherlockActivity().startActionMode(new ContextualStepReorder());
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.get(StepsActivity.GUIDE_KEY);
@@ -112,6 +116,13 @@ public class StepReorderFragment extends SherlockFragment {
       view.requestFocus();
 
       return view;
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+
+      EasyTracker.getTracker().sendView(mGuide.getTitle() + " Step Reorder");
    }
 
    public final class ContextualStepReorder implements ActionMode.Callback {

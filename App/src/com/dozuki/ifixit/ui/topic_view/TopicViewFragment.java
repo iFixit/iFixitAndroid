@@ -22,6 +22,7 @@ import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -61,6 +62,8 @@ public class TopicViewFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      EasyTracker.getInstance().setContext(getActivity());
 
       if (mSite == null) {
          mSite = ((MainApplication) getActivity().getApplication()).getSite();
@@ -251,6 +254,8 @@ public class TopicViewFragment extends SherlockFragment {
                return selectedFragment;
             case ANSWERS_TAB:
                WebViewFragment webView = new WebViewFragment();
+
+               EasyTracker.getTracker().sendView(mTopicLeaf.getName() + " Answers");
 
                if (mSite.mAnswers) {
                   webView.loadUrl(mTopicLeaf.getSolutionsUrl());

@@ -31,6 +31,8 @@ import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -169,7 +171,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    private void initPage(int startPage) {
-      getSupportActionBar().setTitle(mGuide.getTitle());
+      String guideTitle = mGuide.getTitle();
+
+      getSupportActionBar().setTitle(guideTitle);
+
+      EasyTracker.getTracker().sendView(guideTitle + " Edit View");
 
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
@@ -366,17 +372,24 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    @Override
    public void onClick(View v) {
+      Tracker gaTracker = EasyTracker.getTracker();
       switch (v.getId()) {
          case R.id.step_edit_delete_step:
+            gaTracker.sendEvent("ui_action", "button_press", "step_edit_delete_step",
+             (long)mGuide.getStep(mPagePosition).getStepid());
             if (!mGuide.getSteps().isEmpty()) {
                createDeleteDialog(StepEditActivity.this).show();
             }
             break;
          case R.id.step_edit_save:
+            gaTracker.sendEvent("ui_action", "button_press", "step_edit_save_step",
+             (long)mGuide.getStep(mPagePosition).getStepid());
             save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
             int newPosition = mPagePosition + 1;
+
+            gaTracker.sendEvent("ui_action", "button_press", "step_edit_add_step", null);
 
             // If the step has changes, save it first.
             if (mIsStepDirty) {
@@ -422,6 +435,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             onBackPressed();
             return true;
          case MENU_VIEW_GUIDE:
+            EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long)mGuide.getGuideid());
+
             finishEdit(STEP_VIEW);
       }
 

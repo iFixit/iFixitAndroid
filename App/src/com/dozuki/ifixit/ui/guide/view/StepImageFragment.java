@@ -36,8 +36,9 @@ public class StepImageFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      mContext = (Activity) getActivity();
       super.onCreate(savedInstanceState);
+
+      mContext = (Activity) getActivity();
    }
 
    @Override

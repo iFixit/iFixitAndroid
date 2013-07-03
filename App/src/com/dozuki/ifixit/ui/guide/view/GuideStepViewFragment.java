@@ -10,6 +10,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.guide.StepEmbedFragment;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class GuideStepViewFragment extends SherlockFragment {
 
@@ -36,11 +37,6 @@ public class GuideStepViewFragment extends SherlockFragment {
    public GuideStepViewFragment(GuideStep step) {
       mStep = step;
       mStepType = mStep.type();
-   }
-
-   @Override
-   public void onCreate(Bundle savedState) {
-      super.onCreate(savedState);
    }
 
    @Override

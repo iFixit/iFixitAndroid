@@ -14,6 +14,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.VideoThumbnail;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -61,18 +62,24 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mStepFrame.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
+            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "toggle_step_item", null);
+
             mToggleEdit.toggle();
          }
       });
       mDeleteButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
+            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "delete_step", null);
+
             mPortalRef.createDeleteDialog(mStepObject).show();
          }
       });
       mEditButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
+            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "edit_step", null);
+
             mPortalRef.launchStepEdit(mStepPosition);
          }
       });

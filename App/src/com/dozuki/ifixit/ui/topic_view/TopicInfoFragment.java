@@ -16,6 +16,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.picasso.Picasso;
 import org.xml.sax.XMLReader;
 
@@ -39,6 +40,8 @@ public class TopicInfoFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      EasyTracker.getInstance().setContext(getActivity());
 
       Bundle b = getArguments();
 
@@ -67,6 +70,12 @@ public class TopicInfoFragment extends SherlockFragment {
        .into((ImageView) v.findViewById(R.id.topic_info_image));
 
       return v;
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+      EasyTracker.getTracker().sendView(mTopic.getName() + " Info");
    }
 
    @Override

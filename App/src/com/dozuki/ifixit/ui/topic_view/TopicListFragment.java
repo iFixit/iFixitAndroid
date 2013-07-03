@@ -13,6 +13,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.marczych.androidsectionheaders.SectionHeadersAdapter;
 import com.marczych.androidsectionheaders.SectionListView;
 
@@ -43,6 +44,8 @@ public class TopicListFragment extends SherlockFragment
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      EasyTracker.getInstance().setContext(getActivity());
+
       if (savedInstanceState != null) {
          mTopic = (TopicNode)savedInstanceState.getSerializable(CURRENT_TOPIC);
       }
@@ -59,6 +62,12 @@ public class TopicListFragment extends SherlockFragment
       setTopic(mTopic);
 
       return view;
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+      EasyTracker.getTracker().sendView("Topic/" + mTopic.getName());
    }
 
    private void setupTopicAdapter() {

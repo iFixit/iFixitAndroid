@@ -23,6 +23,7 @@ import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.ui.topic_view.TeardownsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -121,6 +122,9 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          mActivePosition = position;
          mMenuDrawer.setActiveView(view, position);
 
+         EasyTracker.getTracker().sendEvent("menu_action", "drawer_item_click", ((String) view.getTag()).toLowerCase(),
+          null);
+
          switch (Navigation.navigate((String) view.getTag())) {
             case SEARCH:
             case FEATURED_GUIDES:
@@ -205,6 +209,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       setTitle("");
 
       super.onCreate(savedState);
+
+      EasyTracker.getInstance().setContext(this);
 
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
@@ -300,6 +306,25 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    @Override
+   public void onStart() {
+      super.onStart();
+
+      this.overridePendingTransition(0, 0);
+
+      // Start analytics tracking
+      EasyTracker.getInstance().activityStart(this);
+   }
+
+   @Override
+   public void onStop() {
+      super.onStop();
+
+      // Stop analytics tracking
+      EasyTracker.getInstance().activityStop(this);
+   }
+
+
+   @Override
    public void onRestart() {
       super.onRestart();
       finishActivityIfPermissionDenied();
@@ -353,12 +378,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       overflowItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
       return true;
-   }
-
-   @Override
-   public void onStart() {
-      this.overridePendingTransition(0, 0);
-      super.onStart();
    }
 
    private static class Item {

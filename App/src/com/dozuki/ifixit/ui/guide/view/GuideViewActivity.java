@@ -16,6 +16,7 @@ import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -175,6 +176,10 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
       switch (item.getItemId()) {
          case MENU_EDIT_GUIDE:
             if (mGuide != null) {
+
+               EasyTracker.getTracker().sendEvent("menu_action", "button_press", "edit_guide",
+                (long)mGuide.getGuideid());
+
                Intent intent = new Intent(this, StepEditActivity.class);
                int stepNum = 0;
 
@@ -249,7 +254,9 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
 
       mGuide = guide;
 
-      getSupportActionBar().setTitle(mGuide.getTitle());
+      String guideTitle = mGuide.getTitle();
+      getSupportActionBar().setTitle(guideTitle);
+      EasyTracker.getTracker().sendView(guideTitle + " View");
 
       mAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide);
 
