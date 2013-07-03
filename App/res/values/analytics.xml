@@ -6,9 +6,6 @@
     <!-- iFixit Tracking ID -->
     <string name="ga_trackingId">UA-30506-14</string>
 
-    <!-- Dozuki Tracking ID -->
-    <string name="ga_trackingId">UA-30506-14</string>
-
     <!--Enable automatic activity tracking-->
     <bool name="ga_autoActivityTracking">true</bool>
 
@@ -17,7 +14,6 @@
 
     <!-- Disable when released -->
     <bool name="ga_debug">true</bool>
-
 
     <!-- The screen names that will appear in your reporting -->
     <string name="com.dozuki.ifixit.ui.topic_view.TopicActivity">Topic List</string>
