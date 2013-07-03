@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.*;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.APIService;
@@ -107,7 +108,11 @@ public class GuideListItem extends LinearLayout {
       this.setOnClickListener(mUpperSectionListener);
 
       mUpperSection.setOnClickListener(mUpperSectionListener);
-      mDeleteButton.setOnClickListener(mDeleteClickListener);
+      if (MainApplication.get().getSite().mName.equals("ifixit")) {
+         mDeleteButton.setVisibility(View.GONE);
+      } else {
+         mDeleteButton.setOnClickListener(mDeleteClickListener);
+      }
       mEditButton.setOnClickListener(mEditClickListener);
       mPublishButton.setOnClickListener(mPublishClickListener);
    }
