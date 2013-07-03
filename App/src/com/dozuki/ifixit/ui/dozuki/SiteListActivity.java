@@ -33,6 +33,8 @@ public class SiteListActivity extends BaseActivity
 
       super.onCreate(savedInstanceState);
 
+      setTheme(R.style.Theme_Sherlock_Light);
+
       setContentView(R.layout.site_list);
 
       mSiteListButton = (Button) findViewById(R.id.list_dialog_btn);
