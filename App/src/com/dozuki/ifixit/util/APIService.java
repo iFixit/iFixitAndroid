@@ -44,6 +44,9 @@ import java.util.List;
  * Add functionality to download multiple guides including images.
  */
 public class APIService extends Service {
+   private boolean mUrlStreamFactorySet = false;
+   private boolean mConnectionFactorySet = false;
+
    private interface Responder {
       public void setResult(APIEvent<?> result);
    }
@@ -545,11 +548,17 @@ public class APIService extends Service {
       // OkHttp changes the global SSL context, breaks other HTTP clients.  Google Analytics uses a different http
       // client, which OkHttp doesn't handle well.
       // https://github.com/square/okhttp/issues/184
-      URL.setURLStreamHandlerFactory(new OkHttpClient());
+      if (!mUrlStreamFactorySet) {
+         URL.setURLStreamHandlerFactory(new OkHttpClient());
+         mUrlStreamFactorySet = true;
+      }
 
       // Use OkHttp instead of HttpUrlConnection to handle HTTP requests, OkHttp supports 2.2 while HttpURLConnection
       // is a bit buggy on froyo.
-      HttpRequest.setConnectionFactory(new OkConnectionFactory());
+      if (!mConnectionFactorySet) {
+         HttpRequest.setConnectionFactory(new OkConnectionFactory());
+         mConnectionFactorySet = true;
+      }
 
       final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
 
