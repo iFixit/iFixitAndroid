@@ -29,10 +29,12 @@ import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+import com.squareup.okhttp.OkHttpClient;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -540,6 +542,15 @@ public class APIService extends Service {
          return;
       }
 
+      // OkHttp changes the global SSL context, breaks other HTTP clients.  Google Analytics uses a different http
+      // client, which OkHttp doesn't handle well.
+      // https://github.com/square/okhttp/issues/184
+      URL.setURLStreamHandlerFactory(new OkHttpClient());
+
+      // Use OkHttp instead of HttpUrlConnection to handle HTTP requests, OkHttp supports 2.2 while HttpURLConnection
+      // is a bit buggy on froyo.
+      HttpRequest.setConnectionFactory(new OkConnectionFactory());
+
       final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
 
       if (MainApplication.inDebug()) {
@@ -550,9 +561,6 @@ public class APIService extends Service {
       new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
          protected APIEvent<?> doInBackground(String... dummy) {
-
-            HttpRequest.setConnectionFactory(new OkConnectionFactory());
-
             /**
              * Unfortunately we must split the creation of the HttpRequest
              * object and the appropriate actions to take for a GET vs. a POST
