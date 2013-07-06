@@ -195,7 +195,7 @@ public class MainApplication extends Application {
          if (screenSize > LARGE_SIZE_CUTOFF) {
             mImageSizes = new ImageSizes(".medium", ".medium", ".huge",
              ".standard");
-         } else if (screenSize <= LARGE_SIZE_CUTOFF && screenSize > MEDIUM_SIZE_CUTOFF) {
+         } else if (screenSize > MEDIUM_SIZE_CUTOFF) {
             mImageSizes = new ImageSizes(".standard", ".standard", ".large",
              ".standard");
          } else {
