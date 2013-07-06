@@ -100,6 +100,9 @@ public class APIService extends Service {
    private static APIEvent<?> getUnauthorizedEvent(APICall apiCall) {
       sPendingApiCall = apiCall;
 
+      // We aren't logged in anymore so lets make s ure we don't think we are.
+      MainApplication.get().shallowLogout();
+
       // The APIError doesn't matter as long as one exists.
       return new APIEvent.Unauthorized().setCode(INVALID_LOGIN_CODE).
        setError(new APIError("", "", APIError.ErrorType.UNAUTHORIZED));

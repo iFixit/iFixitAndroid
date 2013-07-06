@@ -285,10 +285,10 @@ public class MainApplication extends Application {
    }
 
    /**
-    * Logs the currently logged in user out by deleting it from SharedPreferences and
-    * resetting mUser.
+    * Light version of logout that doesn't fire any events or perform any API calls.
+    * logout, bleow, should almost always be the one to use.
     */
-   public void logout(Activity activity) {
+   public void shallowLogout() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
@@ -297,13 +297,21 @@ public class MainApplication extends Application {
       editor.remove(mSite.mName + USERID_KEY);
       editor.commit();
 
+      mUser = null;
+   }
+
+   /**
+    * Logs the currently logged in user out by deleting it from SharedPreferences, making
+    * the logout API call to delete the auth token, and * resetting mUser.
+    */
+   public void logout(Activity activity) {
       // Check if the user is null because we're paranoid.
-      if (mUser != null) {
+      if (mUser != null && activity != null) {
          // Perform the API call to delete the user's authToken.
          APIService.call((SherlockFragmentActivity) activity, APIService.getLogoutAPICall(mUser));
       }
 
-      mUser = null;
+      shallowLogout();
 
       getBus().post(new LoginEvent.Logout());
    }
