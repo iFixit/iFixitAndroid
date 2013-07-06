@@ -18,6 +18,8 @@ import java.util.ArrayList;
  * Base class for API events that are posted to the otto bus.
  */
 public abstract class APIEvent<T> {
+   public static class Unauthorized extends APIEvent<String> {}
+
    public static class Categories extends APIEvent<TopicNode> {}
 
    public static class Topic extends APIEvent<TopicLeaf> {}

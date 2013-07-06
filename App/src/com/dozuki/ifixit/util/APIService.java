@@ -25,10 +25,10 @@ import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
-import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +49,8 @@ public class APIService extends Service {
    private static final String API_CALL = "API_CALL";
 
    public static final String INVALID_LOGIN_STRING = "Invalid login";
+
+   private static final int INVALID_LOGIN_CODE = 401;
 
    private static final String NO_QUERY = "";
 
@@ -72,7 +74,8 @@ public class APIService extends Service {
     * Returns true if the the user needs to be authenticated for the given site and endpoint.
     */
    private static boolean requireAuthentication(APIEndpoint endpoint) {
-      return (endpoint.mAuthenticated || !MainApplication.get().getSite().mPublic) && !endpoint.mForcePublic;
+      return (endpoint.mAuthenticated || !MainApplication.get().getSite().mPublic) &&
+       !endpoint.mForcePublic;
    }
 
    /**
@@ -84,16 +87,22 @@ public class APIService extends Service {
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(endpoint) && !MainApplication.get().isUserLoggedIn()) {
-         sPendingApiCall = apiCall;
-
-         // Don't display the login dialog twice.
-         if (!MainApplication.get().isLoggingIn()) {
-            LoginFragment.newInstance()
-             .show(((SherlockFragmentActivity) activity).getSupportFragmentManager(), "LoginFragment");
-         }
+         MainApplication.getBus().post(getUnauthorizedEvent(apiCall));
       } else {
          activity.startService(makeApiIntent(activity, apiCall));
       }
+   }
+
+   /**
+    * Returns an APIEvent that triggers a login dialog and sets up the APICall to be performed
+    * once the user successfully logs in.
+    */
+   private static APIEvent<?> getUnauthorizedEvent(APICall apiCall) {
+      sPendingApiCall = apiCall;
+
+      // The APIError doesn't matter as long as one exists.
+      return new APIEvent.Unauthorized().setCode(INVALID_LOGIN_CODE).
+       setError(new APIError("", "", APIError.ErrorType.UNAUTHORIZED));
    }
 
    /**
@@ -127,7 +136,7 @@ public class APIService extends Service {
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
-      final APICall apiCall = (APICall) extras.getSerializable(API_CALL);
+      final APICall apiCall = (APICall)extras.getSerializable(API_CALL);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);
@@ -630,7 +639,17 @@ public class APIService extends Service {
                   Log.d("APIService", "Response body: " + responseBody);
                }
 
-               return endpoint.getEvent().setCode(code).setResponse(responseBody);
+               /**
+                * If the server responds with a 401, the user is logged out even though we
+                * think that they are logged in. Return an Unauthorized event to prompt the
+                * user to log in. Don't do this if we are logging in because the login dialog
+                * will automatically handle these errors.
+                */
+               if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
+                  return getUnauthorizedEvent(apiCall);
+               } else {
+                  return endpoint.getEvent().setCode(code).setResponse(responseBody);
+               }
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {
                   e.getCause().printStackTrace();

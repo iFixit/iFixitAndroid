@@ -21,9 +21,12 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
+import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.ui.topic_view.TeardownsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.dozuki.ifixit.util.APIEvent;
 import com.squareup.otto.Subscribe;
+
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -97,6 +100,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       public void onCancel(LoginEvent.Cancel event) {
          finishActivityIfPermissionDenied();
       }
+
+      @SuppressWarnings("unused")
+      @Subscribe
+      public void onUnauthorized(APIEvent.Unauthorized event) {
+         LoginFragment.newInstance().show(getSupportFragmentManager(), "LoginFragment");
+      }
    };
 
    public enum Navigation {
@@ -160,7 +169,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
                startActivity(intent);
                break;
             case LOGOUT:
-               MainApplication.get().logout();
+               MainApplication.get().logout(BaseActivity.this);
                break;
 
             case YOUTUBE:
@@ -205,6 +214,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       setTitle("");
 
       super.onCreate(savedState);
+
+      /**
+       * There is another register call in onResume but we also need it here for the onUnauthorized
+       * call that is usually triggered in onCreate of derived Activities.
+       */
+      MainApplication.getBus().register(this);
+      MainApplication.getBus().register(loginEventListener);
 
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);

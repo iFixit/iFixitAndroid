@@ -8,7 +8,9 @@ import java.io.Serializable;
 
 public class APIError implements Serializable {
    private static final long serialVersionUID = 1L;
-   public static enum ErrorType {OTHER, INVALID_USER, PARSE, CONNECTION, INVALID_REVISION, FATAL};
+   public static enum ErrorType {
+      OTHER, INVALID_USER, PARSE, CONNECTION, INVALID_REVISION, FATAL, UNAUTHORIZED
+   };
    public String mTitle;
    public String mMessage;
    public ErrorType mType;
