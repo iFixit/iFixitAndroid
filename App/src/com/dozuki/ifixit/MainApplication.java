@@ -1,5 +1,6 @@
 package com.dozuki.ifixit;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -12,6 +13,8 @@ import android.content.res.Configuration;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
+
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
@@ -285,7 +288,7 @@ public class MainApplication extends Application {
     * Logs the currently logged in user out by deleting it from SharedPreferences and
     * resetting mUser.
     */
-   public void logout() {
+   public void logout(Activity activity) {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
@@ -293,6 +296,12 @@ public class MainApplication extends Application {
       editor.remove(mSite.mName + USERNAME_KEY);
       editor.remove(mSite.mName + USERID_KEY);
       editor.commit();
+
+      // Check if the user is null because we're paranoid.
+      if (mUser != null) {
+         // Perform the API call to delete the user's authToken.
+         APIService.call((SherlockFragmentActivity) activity, APIService.getLogoutAPICall(mUser));
+      }
 
       mUser = null;
 
