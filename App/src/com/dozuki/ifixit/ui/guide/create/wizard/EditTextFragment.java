@@ -59,13 +59,14 @@ public class EditTextFragment extends SherlockFragment {
       if (mKey == null && savedInstanceState != null) {
          mKey = savedInstanceState.getString(ARG_KEY);
       }
-      mPage = (EditTextPage) mCallbacks.onGetPage(mKey);
    }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       View rootView = inflater.inflate(R.layout.guide_create_intro_edit_text, container, false);
+
+      mPage = (EditTextPage) mCallbacks.onGetPage(mKey);
 
       ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
       ((TextView) rootView.findViewById(R.id.page_description)).setText(mPage.getDescription());

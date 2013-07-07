@@ -137,22 +137,21 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          EDIT_INTRO_STATE = extras.getBoolean(GuideIntroActivity.STATE_KEY);
       } else if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
+         mWizardModelBundle = savedInstanceState.getBundle("model");
       }
 
       if (MainApplication.get().getSite().mGuideTypes == null) {
          APIService.call(this, APIService.getSiteInfoAPICall());
       } else {
-         initWizard(savedInstanceState);
+         initWizard();
       }
    }
 
-   protected void initWizard(Bundle savedInstanceState) {
+   protected void initWizard() {
       mWizardModel = new GuideIntroWizardModel(this);
 
       if (mWizardModelBundle != null) {
          mWizardModel.load(mWizardModelBundle);
-      } else if (savedInstanceState != null) {
-         mWizardModel.load(savedInstanceState.getBundle("model"));
       }
 
       mWizardModel.registerListener(this);
@@ -258,8 +257,8 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       if (!event.hasError()) {
          MainApplication.get().setSite(event.getResult());
 
-         initWizard(null);
-       } else {
+         initWizard();
+      } else {
          APIService.getErrorDialog(this, event.getError(),
           APIService.getSitesAPICall()).show();
       }
@@ -422,8 +421,9 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    public void showLoading(int container, String message) {
       hideChildren(true);
 
-      if (findViewById(container).getVisibility() == View.GONE)
+      if (findViewById(container).getVisibility() == View.GONE) {
          findViewById(container).setVisibility(View.VISIBLE);
+      }
 
       super.showLoading(container, message);
    }

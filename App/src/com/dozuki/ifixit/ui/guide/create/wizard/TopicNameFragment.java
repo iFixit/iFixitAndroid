@@ -70,7 +70,6 @@ public class TopicNameFragment extends SherlockFragment {
 
       Bundle args = getArguments();
       mKey = args.getString(ARG_KEY);
-      mPage = (TopicNamePage) mCallbacks.onGetPage(mKey);
    }
 
    @Override
@@ -79,6 +78,7 @@ public class TopicNameFragment extends SherlockFragment {
       if (savedInstanceState != null) {
          mTopics = savedInstanceState.getStringArrayList(TOPIC_LIST_KEY);
       }
+      mPage = (TopicNamePage) mCallbacks.onGetPage(mKey);
 
       View rootView = inflater.inflate(R.layout.guide_create_intro_topic_name, container, false);
 
@@ -179,7 +179,6 @@ public class TopicNameFragment extends SherlockFragment {
        mTopics);
 
       mTopicNameView.setAdapter(mAdapter);
-
    }
 
    @Subscribe

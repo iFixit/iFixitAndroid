@@ -54,6 +54,14 @@ public class ReviewFragment extends SherlockListFragment implements ModelCallbac
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+      mWizardModel = mCallbacks.onGetModel();
+
+      if (mWizardModel != null) {
+         mWizardModel.registerListener(this);
+      }
+
+      onPageTreeChanged();
+
       View rootView = inflater.inflate(R.layout.wizard_fragment_page, container, false);
 
       TextView titleView = (TextView) rootView.findViewById(android.R.id.title);
@@ -75,10 +83,6 @@ public class ReviewFragment extends SherlockListFragment implements ModelCallbac
       }
 
       mCallbacks = (Callbacks) activity;
-
-      mWizardModel = mCallbacks.onGetModel();
-      mWizardModel.registerListener(this);
-      onPageTreeChanged();
    }
 
    @Override

@@ -40,13 +40,14 @@ public class GuideTitleFragment extends EditTextFragment {
 
       Bundle args = getArguments();
       mKey = args.getString(ARG_KEY);
-      mPage = (GuideTitlePage) mCallbacks.onGetPage(mKey);
    }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       View rootView = super.onCreateView(inflater, container, savedInstanceState);
+
+      mPage = (GuideTitlePage) mCallbacks.onGetPage(mKey);
 
       mField = (EditText) rootView.findViewById(R.id.edit_text_field);
 
