@@ -34,7 +34,6 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
    private StepPortalFragment mStepPortalFragment;
    private Guide mGuide;
    private boolean mIsLoading;
-   private boolean mGuidePublic;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -52,17 +51,12 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
       if (savedInstanceState != null) {
          // to persist mGuide
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
-         mGuidePublic = mGuide.isPublic();
          mIsLoading = savedInstanceState.getBoolean(LOADING);
       }
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
-         mGuidePublic = extras.getBoolean(StepEditActivity.GUIDE_PUBLIC_KEY);
-         if (mGuide != null) {
-            mGuidePublic = mGuide.isPublic();
-         }
          guideid = extras.getInt(StepsActivity.GUIDE_ID_KEY, 0);
          if (guideid == 0 && mGuide != null) {
             guideid = mGuide.getGuideid();
@@ -119,10 +113,6 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
          if (guide != null) {
             mGuide = guide;
-            mGuidePublic = mGuide.isPublic();
-         } else {
-            // Assume the guide is private, it's better than the user trying to view the guide and getting an error
-            mGuidePublic = data.getBooleanExtra(StepEditActivity.GUIDE_PUBLIC_KEY, false);
          }
       }
    }
@@ -152,13 +142,10 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
        .add(3, MENU_REARRANGE_STEPS, 0, R.string.reorder_steps)
        .setIcon(R.drawable.ic_dialog_arrange_bullets_light)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-      if (mGuidePublic) {
-         menu
-          .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
-          .setIcon(R.drawable.ic_action_book)
-          .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-      }
+      menu
+       .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
+       .setIcon(R.drawable.ic_action_book)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
       return super.onCreateOptionsMenu(menu);
    }

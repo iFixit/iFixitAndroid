@@ -598,8 +598,9 @@ public class APIService extends Service {
                if (apiCall.mAuthToken != null) {
                   // This auth token overrides all other requirements/auth tokens.
                   authToken = apiCall.mAuthToken;
-               } else if (requireAuthentication(endpoint)) {
-                  User user = ((MainApplication) getApplicationContext()).getUser();
+               } else if (MainApplication.get().isUserLoggedIn()) {
+                  // Always include it if the user is logged in.
+                  User user = MainApplication.get().getUser();
                   authToken = user.getAuthToken();
                }
 
