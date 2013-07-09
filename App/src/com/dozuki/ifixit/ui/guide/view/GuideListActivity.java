@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui.guide.view;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,14 +11,13 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.EndlessScrollListener;
 import com.dozuki.ifixit.ui.GuideListAdapter;
-import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class TeardownsActivity extends BaseActivity {
+public class GuideListActivity extends BaseActivity {
 
    private static final int LIMIT = 20;
    private int OFFSET = 0;
@@ -53,7 +52,7 @@ public class TeardownsActivity extends BaseActivity {
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
             GuideInfo guide = (GuideInfo)mAdapter.getItem(position);
-            Intent intent = new Intent(TeardownsActivity.this, GuideViewActivity.class);
+            Intent intent = new Intent(GuideListActivity.this, GuideViewActivity.class);
 
             intent.putExtra(GuideViewActivity.SAVED_GUIDEID, guide.mGuideid);
             startActivity(intent);
@@ -65,7 +64,7 @@ public class TeardownsActivity extends BaseActivity {
          public void onRefresh(int pageNumber) {
             OFFSET += LIMIT;
 
-            APIService.call((TeardownsActivity)TeardownsActivity.this, APIService.getTeardowns(LIMIT, OFFSET));
+            APIService.call((GuideListActivity)GuideListActivity.this, APIService.getTeardowns(LIMIT, OFFSET));
          }
       });
 
