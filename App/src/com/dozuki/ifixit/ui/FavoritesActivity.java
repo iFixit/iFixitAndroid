@@ -19,7 +19,6 @@ public class FavoritesActivity extends BaseActivity {
    private int OFFSET = 0;
    private static final String GUIDES_KEY = "GUIDES_KEY";
 
-   private FavoritesActivity mContext;
    private ArrayList<GuideInfo> mGuides;
    private GridView mGridView;
 
@@ -28,8 +27,6 @@ public class FavoritesActivity extends BaseActivity {
       super.onCreate(savedInstanceState);
 
       setTitle(getString(R.string.favorites));
-
-      mContext = this;
 
       setContentView(R.layout.favorites);
 
@@ -49,7 +46,7 @@ public class FavoritesActivity extends BaseActivity {
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
             GuideInfo guide = mGuides.get(position);
-            Intent intent = new Intent(mContext, GuideViewActivity.class);
+            Intent intent = new Intent(FavoritesActivity.this, GuideViewActivity.class);
 
             intent.putExtra(GuideViewActivity.SAVED_GUIDEID, guide.mGuideid);
             startActivity(intent);
