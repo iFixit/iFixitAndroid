@@ -476,9 +476,10 @@ public class JSONHelper {
 
       if (!jUser.isNull("summary"))
          user.setSummary(jUser.getString("summary"));
-      user.setJoinDate(jUser.getInt("join_date"));
       if (!jUser.isNull("location"))
          user.setLocation(jUser.getString("location"));
+      if (!jUser.isNull("join_date"))
+         user.setJoinDate(jUser.getInt("join_date"));
 
       user.setBadges(parseBadges(jUser.getJSONObject("badge_counts")));
       user.setReputation(jUser.getInt("reputation"));
