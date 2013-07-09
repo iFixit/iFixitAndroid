@@ -15,7 +15,6 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -70,8 +69,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private StepAdapter mStepAdapter;
    private LockableViewPager mPager;
    private TitlePageIndicator titleIndicator;
-   private RelativeLayout mBottomBar;
-   private int mPagePosition;
+   private int mPagePosition = 0;
    private int mSavePosition;
 
    // Necessary for editing prerequisite guides from the view interface in order to navigate back to the parent guide.
@@ -80,7 +78,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    // Used to navigate to the correct step when coming from GuideViewActivity.
    private int mInboundStepId;
 
-   private boolean mConfirmDelete;
+   private boolean mConfirmDelete = false;
    private boolean mIsStepDirty;
    private boolean mShowingHelp;
    private boolean mShowingSave;
@@ -113,22 +111,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
       }
 
-      mConfirmDelete = false;
-      Bundle extras = getIntent().getExtras();
-      mPagePosition = 0;
-      if (extras != null) {
-         mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
-         mPagePosition = extras.getInt(GUIDE_STEP_NUM_KEY, 0);
-
-         if (mGuide == null) {
-            int guideid = extras.getInt(GUIDE_ID_KEY);
-            mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
-            mInboundStepId = extras.getInt(GUIDE_STEP_ID);
-
-            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(guideid));
-            showLoading(mLoadingContainer);
-         }
-      }
+      extractExtras(getIntent().getExtras());
 
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
@@ -165,7 +148,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
-      mBottomBar = (RelativeLayout) findViewById(R.id.guide_create_edit_bottom_bar);
 
       mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
@@ -186,6 +168,29 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
       }
+   }
+
+   private void extractExtras(Bundle extras) {
+      if (extras != null) {
+         mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
+         mPagePosition = extras.getInt(GUIDE_STEP_NUM_KEY, 0);
+
+         if (mGuide == null) {
+            mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
+            mInboundStepId = extras.getInt(GUIDE_STEP_ID);
+
+            showLoading(mLoadingContainer);
+            APIService.call(StepEditActivity.this,
+             APIService.getGuideForEditAPICall(extras.getInt(GUIDE_ID_KEY)));
+         }
+      }
+   }
+
+   @Override
+   public void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+
+      extractExtras(intent.getExtras());
    }
 
    @Override

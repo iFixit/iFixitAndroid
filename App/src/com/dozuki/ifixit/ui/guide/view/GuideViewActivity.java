@@ -89,36 +89,56 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                return;
             }
          } else {
-            Bundle extras = intent.getExtras();
-
-            if (extras != null) {
-
-               // We're coming from the Topics GuideList
-               if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
-                  mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
-
-               // We're coming from StepEdit
-               } else if (extras.containsKey(GuideViewActivity.SAVED_GUIDEID)) {
-                  mGuideid = extras.getInt(GuideViewActivity.SAVED_GUIDEID);
-               }
-
-               if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
-                  mGuide = (Guide) extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
-               }
-
-               mInboundStepId = extras.getInt(INBOUND_STEP_ID);
-               mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
-            }
-         }
-         if (mGuide == null) {
-            getGuide(mGuideid);
-         } else {
-            setGuide(mGuide, mCurrentPage);
+            extractExtras(intent.getExtras());
          }
       }
 
+      if (mGuide == null) {
+         getGuide(mGuideid);
+      } else {
+         setGuide(mGuide, mCurrentPage);
+      }
+
+
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //initSpeechRecognizer();
+   }
+
+   private void extractExtras(Bundle extras) {
+      if (extras != null) {
+
+         // We're coming from the Topics GuideList
+         if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
+            mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
+
+            // We're coming from StepEdit
+         } else if (extras.containsKey(GuideViewActivity.SAVED_GUIDEID)) {
+            mGuideid = extras.getInt(GuideViewActivity.SAVED_GUIDEID);
+         }
+
+         if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
+            mGuide = (Guide) extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
+         }
+
+         mInboundStepId = extras.getInt(INBOUND_STEP_ID);
+         mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
+
+      }
+   }
+
+   @Override
+   protected void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+
+      Log.d("GuideViewActivity", "onNewIntent");
+
+      extractExtras(intent.getExtras());
+
+      if (mGuide == null) {
+         getGuide(mGuideid);
+      } else {
+         setGuide(mGuide, mCurrentPage);
+      }
    }
 
    @Override
