@@ -130,8 +130,6 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
 
-      Log.d("GuideViewActivity", "onNewIntent");
-
       extractExtras(intent.getExtras());
 
       if (mGuide == null) {
