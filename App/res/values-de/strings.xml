@@ -316,6 +316,7 @@
     <string name="gallery_image_content_description">Galleriebild</string>
     <string name="optional">Optional</string>
     <string name="teardowns">Teardowns</string>
+    <string name="featured_guides">Beachtenswerte Anleitungen</string>
     <string name="favorites">Favorites</string>
     <string name="favorites_empty_text">You haven\'t favorited any guides yet.</string>
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>

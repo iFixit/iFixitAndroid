@@ -50,7 +50,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="slide_menu_my_guides">Mes Guides</string>
     <string name="slide_menu_search">Chercher</string>
     <string name="slide_menu_browse_content">Navigation du contenu</string>
-    <string name="slide_menu_featured_guides">Guides Présentés</string>
     <string name="slide_menu_browse_devices">Recherchez Dispositifs</string>
     <string name="slide_menu_favorite_guides">Guides Favoris</string>
     <string name="slide_menu_create_new_guide">Créer un nouveau Guide</string>
@@ -294,6 +293,7 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="deleting">Suppression...</string>
     <string name="saving">Sauver...</string>
     <string name="gallery_image_content_description">Gallerie d\'images</string>
+    <string name="featured_guides">Guides Présentés</string>
     <string name="optional">Optionnel</string>
     <string name="favorites">Favoris</string>
     <string name="favorites_empty_text">Vous n\'avez pas encore de guides préférés.</string>

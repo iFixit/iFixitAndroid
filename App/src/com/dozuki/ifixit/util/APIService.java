@@ -214,6 +214,11 @@ public class APIService extends Service {
        "?filter=teardown&order=DESC&limit=" + limit + "&offset=" + offset);
    }
 
+   public static APICall getFeaturedGuides(int limit, int offset) {
+      return new APICall(APIEndpoint.GUIDES,
+       "/featured?limit=" + limit + "&offset=" + offset);
+   }
+
    public static APICall getCategoriesAPICall() {
       return new APICall(APIEndpoint.CATEGORIES, NO_QUERY);
    }

@@ -52,7 +52,6 @@
     <string name="slide_menu_my_guides">Mis Guías</string>
     <string name="slide_menu_search">Buscar</string>
     <string name="slide_menu_browse_content">Navegar Contenido</string>
-    <string name="slide_menu_featured_guides">Guías Destacadas</string>
     <string name="slide_menu_browse_devices">Navegar Dispositivos</string>
     <string name="slide_menu_favorite_guides">Guías Favoritas</string>
     <string name="slide_menu_create_new_guide">Crear Nueva Guía</string>
@@ -299,6 +298,7 @@
     <string name="gallery_image_content_description">Galería de Imágenes</string>
     <string name="optional">Opcional</string>
     <string name="teardowns">Teardowns</string>
+    <string name="featured_guides">Guías Destacadas</string>
     <string name="favorites">Favoritos</string>
     <string name="favorites_empty_text">Aun no has favorecido ninguna guía..</string>
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>

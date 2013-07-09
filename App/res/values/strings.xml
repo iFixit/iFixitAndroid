@@ -52,7 +52,6 @@
     <string name="slide_menu_my_guides">My Guides</string>
     <string name="slide_menu_search">Search</string>
     <string name="slide_menu_browse_content">Browse Content</string>
-    <string name="slide_menu_featured_guides">Featured Guides</string>
     <string name="slide_menu_browse_devices">Browse Devices</string>
     <string name="slide_menu_favorite_guides">Favorite Guides</string>
     <string name="slide_menu_create_new_guide">Create New Guide</string>
@@ -304,6 +303,7 @@
     <string name="gallery_image_content_description">Gallery Image</string>
     <string name="optional">Optional</string>
     <string name="teardowns">Teardowns</string>
+    <string name="featured_guides">Featured Guides</string>
     <string name="favorites">Favorites</string>
     <string name="favorites_empty_text">You haven\'t favorited any guides yet.</string>
     <string name="introduction">Introduction</string>

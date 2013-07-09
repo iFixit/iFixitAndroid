@@ -21,6 +21,7 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
+import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.login.LoginFragment;
@@ -133,9 +134,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          switch (Navigation.navigate((String) view.getTag())) {
             case SEARCH:
-            case FEATURED_GUIDES:
             case BROWSE_TOPICS:
                intent = new Intent(context, TopicActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               startActivity(intent);
+               break;
+
+            case FEATURED_GUIDES:
+               intent = new Intent(context, FeaturedGuidesActivity.class);
                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                startActivity(intent);
                break;
@@ -246,9 +252,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       //items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
-      //items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10,
-      // "featured_guides"));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
+      items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
       if (onIfixit) items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, "teardowns"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
