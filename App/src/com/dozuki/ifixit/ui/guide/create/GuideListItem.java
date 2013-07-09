@@ -14,6 +14,7 @@ import android.widget.*;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.picasso.Picasso;
 
@@ -94,6 +95,16 @@ public class GuideListItem extends LinearLayout {
       mPublishText = (TextView) findViewById(R.id.guide_create_item_publish_status);
       mPublishButton = (TextView) findViewById(R.id.guide_create_item_publish);
 
+      findViewById(R.id.guide_create_item_view).setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            Intent intent = new Intent(mActivity, GuideViewActivity.class);
+            intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mGuideInfo.mGuideid);
+            intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
+            mActivity.startActivity(intent);
+         }
+      });
+
       mToggleEdit.setChecked(STATE_CLOSED);
       mToggleEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
@@ -103,7 +114,6 @@ public class GuideListItem extends LinearLayout {
             toggleListItem(isChecked, true, mToggleEdit, mEditBar);
          }
       });
-
 
       this.setOnClickListener(mUpperSectionListener);
 

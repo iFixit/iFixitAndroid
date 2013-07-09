@@ -300,6 +300,7 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
     <string name="link_to_item">Link to %1$s</string>
     <string name="no_items">No Items</string>
+    <string name="view">View</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>
