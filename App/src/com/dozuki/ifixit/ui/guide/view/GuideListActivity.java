@@ -11,13 +11,14 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.EndlessScrollListener;
 import com.dozuki.ifixit.ui.GuideListAdapter;
+import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class GuideListActivity extends BaseActivity {
+public abstract class GuideListActivity extends BaseActivity {
 
    private static final int LIMIT = 20;
    private int OFFSET = 0;
@@ -29,24 +30,27 @@ public class GuideListActivity extends BaseActivity {
    private EndlessScrollListener mScrollListener;
    private GuideListAdapter mAdapter;
 
+   protected abstract int getGuideListTitle();
+   protected abstract APICall getApiCall(int limit, int offset);
+
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      setTitle(getString(R.string.teardowns));
+      setTitle(getGuideListTitle());
 
-      setContentView(R.layout.teardowns);
+      setContentView(R.layout.guide_list);
 
       if (savedInstanceState != null) {
-         mGuides = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDES_KEY);
+         mGuides = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDES_KEY);
          initGridView();
       } else {
-         APIService.call(this, APIService.getTeardowns(LIMIT, OFFSET));
+         APIService.call(this, getApiCall(LIMIT, OFFSET));
       }
    }
 
    private void initGridView() {
-      mGridView = (GridView) findViewById(R.id.guide_grid);
+      mGridView = (GridView)findViewById(R.id.guide_grid);
       mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
          @Override
          public void onItemClick(AdapterView<?> arg0, View view, int position,
@@ -64,7 +68,8 @@ public class GuideListActivity extends BaseActivity {
          public void onRefresh(int pageNumber) {
             OFFSET += LIMIT;
 
-            APIService.call((GuideListActivity)GuideListActivity.this, APIService.getTeardowns(LIMIT, OFFSET));
+            APIService.call((GuideListActivity)GuideListActivity.this,
+             getApiCall(LIMIT, OFFSET));
          }
       });
 
@@ -73,8 +78,7 @@ public class GuideListActivity extends BaseActivity {
       mGridView.setAdapter(mAdapter);
    }
 
-   @Subscribe
-   public void onGuides(APIEvent.Guides event) {
+   protected void setGuides(APIEvent.Guides event) {
       if (!event.hasError()) {
          if (mGuides != null) {
             ArrayList<GuideInfo> guides = event.getResult();

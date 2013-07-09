@@ -52,22 +52,22 @@ public enum APIEndpoint {
    ),
 
    GUIDES(
-    new Endpoint() {
-       public String createUrl(String query) {
-          return "guides" + query;
-       }
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "guides" + query;
+         }
 
-       public APIEvent<?> parse(String json) throws JSONException {
-          return new APIEvent.Guides().setResult(JSONHelper.parseGuides(json));
-       }
+         public APIEvent<?> parse(String json) throws JSONException {
+            return new APIEvent.Guides().setResult(JSONHelper.parseGuides(json));
+         }
 
-       public APIEvent<?> getEvent() {
-          return new APIEvent.Guides();
-       }
-    },
-    false,
-    "GET",
-    false
+         public APIEvent<?> getEvent() {
+            return new APIEvent.Guides();
+         }
+      },
+      false,
+      "GET",
+      false
    ),
 
    TOPIC(
