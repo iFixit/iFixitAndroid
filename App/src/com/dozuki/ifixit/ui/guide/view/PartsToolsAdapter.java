@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.guide.view;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -52,7 +53,7 @@ public class PartsToolsAdapter extends BaseAdapter {
       Item item = (Item)getItem(position);
       final String link = item.getUrl();
 
-      ((TextView)row.findViewById(R.id.item_name)).setText(item.getTitle());
+      ((TextView)row.findViewById(R.id.item_name)).setText(Html.fromHtml(item.getTitle()));
       ((TextView)row.findViewById(R.id.item_quantity)).setText(item.getQuantity() + "");
       row.findViewById(R.id.item_link).setContentDescription(mContext.getString(R.string.link_to_item,
        item.getTitle()));
