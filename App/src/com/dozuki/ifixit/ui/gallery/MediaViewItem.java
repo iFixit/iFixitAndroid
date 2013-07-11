@@ -46,7 +46,6 @@ public class MediaViewItem extends RelativeLayout {
    }
 
    public void setImageItem(String image) {
-      Log.w(TAG, image);
       buildImage(mPicasso.load(image));
    }
 
@@ -55,7 +54,6 @@ public class MediaViewItem extends RelativeLayout {
    }
 
    public void setImageItem(Uri image) {
-      Log.w(TAG, image.toString());
       buildImage(mPicasso.load(image));
    }
 

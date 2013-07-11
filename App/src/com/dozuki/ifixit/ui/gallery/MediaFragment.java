@@ -248,8 +248,6 @@ public abstract class MediaFragment extends SherlockFragment
             return;
          }
 
-         Log.w("MediaFragment", "Full Image Url: " + url);
-
          Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
          intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
          startActivity(intent);

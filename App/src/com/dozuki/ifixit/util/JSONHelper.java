@@ -67,7 +67,7 @@ public class JSONHelper {
             }
          }
       } catch (JSONException e) {
-         Log.e(TAG, "Error parsing site info: " + e);
+         Log.e(TAG, "Error parsing site info", e);
       }
 
       return site;
@@ -109,7 +109,7 @@ public class JSONHelper {
             topics.add(topicsJson.getString(i));
 
       } catch (JSONException e) {
-         Log.e(TAG, "Error parsing all topics list: " + e);
+         Log.e(TAG, "Error parsing all topics list: ", e);
       }
 
       return topics;
@@ -524,14 +524,12 @@ public class JSONHelper {
    public static ArrayList<GuideInfo> parseUserFavorites(String json) {
       ArrayList<GuideInfo> result = new ArrayList<GuideInfo>();
 
-      Log.w("JSONHelper", json);
       try {
          JSONArray jFavorites = new JSONArray(json);
 
          int length = jFavorites.length();
          for (int i = 0; i < length; i++) {
             JSONObject jGuide = jFavorites.getJSONObject(i).getJSONObject("guide");
-            Log.w("JSONHelper", i+"");
 
             GuideInfo guide = new Gson().fromJson(jGuide.toString(), GuideInfo.class);
             result.add(guide);

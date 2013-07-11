@@ -106,7 +106,6 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
 
    private void extractExtras(Bundle extras) {
       if (extras != null) {
-
          // We're coming from the Topics GuideList
          if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
             mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
@@ -122,7 +121,6 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
 
          mInboundStepId = extras.getInt(INBOUND_STEP_ID);
          mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
-
       }
    }
 
@@ -199,7 +197,6 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                // Take into account the introduction, parts and tools page.
                if (mCurrentPage >= mAdapter.getStepOffset()) {
                   stepNum = mCurrentPage - mAdapter.getStepOffset();
-                  Log.d("GuideViewActivity", stepNum+"");
                   // Account for array indexed starting at 1
                   intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
                }
@@ -334,10 +331,6 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
    }
 
    public void onPageSelected(int currentPage) {
-      Log.d("GuideViewActivity", currentPage+"");
-
-      if (mCurrentPage == currentPage) return;
-
       mCurrentPage = currentPage;
    }
 }

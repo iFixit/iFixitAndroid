@@ -96,7 +96,6 @@ public class GuideTitleFragment extends EditTextFragment {
          guideType = transformTypeToAction(guideType);
          String subjectKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + getString(R.string
           .guide_intro_wizard_guide_subject_title);
-         Log.w("GuideTitleFragment", subjectKey);
          String guideSubject = getPageData(subjectKey, EditTextPage.TEXT_DATA_KEY);
 
          title = String.format("%s %s %s", guideType.substring(0, 1).toUpperCase() + guideType.substring(1),
@@ -138,10 +137,8 @@ public class GuideTitleFragment extends EditTextFragment {
       Page page = mCallbacks.onGetPage(pageKey);
 
       if (page != null) {
-         Log.w("GuideTitleFragment title", page.getTitle());
          Bundle pageData = page.getData();
          if (pageData.containsKey(dataKey)) {
-            Log.w("GuideTitleFragment pageData", pageData.toString());
             return pageData.getString(dataKey);
          }
       }

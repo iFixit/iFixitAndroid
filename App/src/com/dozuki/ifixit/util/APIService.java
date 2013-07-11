@@ -270,7 +270,6 @@ public class APIService extends Service {
          return null;
       }
 
-      Log.w("APIService", requestBody.toString());
       return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
 
@@ -280,7 +279,6 @@ public class APIService extends Service {
 
    public static APICall getEditGuideAPICall(Bundle bundle, int guideid, int revisionid) {
       JSONObject requestBody = guideBundleToRequestBody(bundle);
-      Log.w("APIService", requestBody.toString());
 
       return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid + "?revisionid="
        + revisionid, requestBody.toString());
@@ -290,7 +288,6 @@ public class APIService extends Service {
       JSONObject requestBody = new JSONObject();
       MainApplication app = MainApplication.get();
       try {
-         Log.w("APIService", bundle.toString());
          requestBody.put("type", bundle.getBundle(app.getString(R.string
           .guide_intro_wizard_guide_type_title)).getString(Page.SIMPLE_DATA_KEY).toLowerCase());
          requestBody.put("category", bundle.getBundle(app.getString(R.string

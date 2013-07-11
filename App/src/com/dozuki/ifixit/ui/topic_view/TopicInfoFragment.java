@@ -99,7 +99,6 @@ public class TopicInfoFragment extends SherlockFragment {
       for (int i = 0; i < spans.length; i++) {
          int start = topicHtml.getSpanStart(spans[i]);
          int end = topicHtml.getSpanEnd(spans[i]);
-         Log.w("TopicInfoFragment", spans[i].toString());
 
          if (spans[i] instanceof RelativeSizeSpan) {
             RelativeSizeSpan header = new RelativeSizeSpan(HEADER_SIZE);
