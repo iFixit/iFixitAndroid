@@ -317,7 +317,7 @@ public class JSONHelper {
       ArrayList<TopicNode> topics = parseTopicChildren(jTopics);
       TopicNode root = new TopicNode();
 
-      root.addAllTopics(topics);
+      root.setChildren(topics);
 
       return root;
    }
@@ -327,6 +327,11 @@ public class JSONHelper {
     */
    private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic)
     throws JSONException {
+      // Don't allocate any lists if it's empty.
+      if (jTopic.length() == 0) {
+         return null;
+      }
+
       @SuppressWarnings("unchecked")
       Iterator<String> iterator = jTopic.keys();
       String topicName;
@@ -337,8 +342,8 @@ public class JSONHelper {
          topicName = iterator.next();
 
          currentTopic = new TopicNode(topicName);
-         currentTopic.addAllTopics(parseTopicChildren(
-          jTopic.getJSONObject(topicName)));
+         currentTopic.setChildren(parseTopicChildren(jTopic.getJSONObject(topicName)));
+
          topics.add(currentTopic);
       }
 
