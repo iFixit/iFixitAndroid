@@ -82,7 +82,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       public void onLogin(LoginEvent.Login event) {
          // Reload app to update the menu to include the user name and logout button
          buildSliderMenu();
-         mMenuDrawer.invalidate();
       }
 
       @SuppressWarnings("unused")
@@ -92,8 +91,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          // Reload app to remove username and logout button from menu
          buildSliderMenu();
-
-         mMenuDrawer.invalidate();
       }
 
       @SuppressWarnings("unused")
@@ -238,8 +235,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
 
       buildSliderMenu();
-
-      //ViewServer.get(this).addWindow(this);
    }
 
    private void buildSliderMenu() {
@@ -284,12 +279,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mList.setOnItemClickListener(mItemClickListener);
 
       mMenuDrawer.setMenuView(mList);
+      mMenuDrawer.invalidate();
    }
 
    /**
     * Close the menu drawer if back is pressed and the menu is open.
     */
-
    @Override
    public void onBackPressed() {
       final int drawerState = mMenuDrawer.getDrawerState();
@@ -324,25 +319,17 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void onRestart() {
       super.onRestart();
       finishActivityIfPermissionDenied();
+
+      // Invalidate the options menu in case the user logged in/out in a child Activity.
+      buildSliderMenu();
    }
 
    @Override
    public void onResume() {
       super.onResume();
 
-      // Invalidate the options menu in case the user has logged in or out.
-      //supportInvalidateOptionsMenu();
-
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
-      //ViewServer.get(this).setFocusedWindow(this);
-   }
-
-   @Override
-   protected void onDestroy() {
-      super.onDestroy();
-
-      //ViewServer.get(this).removeWindow(this);
    }
 
    @Override
@@ -376,14 +363,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       return true;
    }
 
-   @Override
-   public void onStart() {
-      this.overridePendingTransition(0, 0);
-      super.onStart();
-   }
-
    private static class Item {
-
       String mTitle;
       int mIconRes;
       String mTag;
@@ -396,7 +376,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    private static class Category {
-
       String mTitle;
 
       Category(String title) {
@@ -405,7 +384,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    private class MenuAdapter extends BaseAdapter {
-
       private List<Object> mItems;
 
       MenuAdapter(List<Object> items) {

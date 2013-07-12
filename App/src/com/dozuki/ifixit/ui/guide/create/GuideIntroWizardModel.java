@@ -12,14 +12,12 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.*;
 
 public class GuideIntroWizardModel extends AbstractWizardModel {
-   Context mContext;
    public static String HAS_SUBJECT_KEY = "hasSubject";
    public static String NO_SUBJECT_KEY = "noSubject";
 
 
    public GuideIntroWizardModel(Context context) {
       super(context);
-      mContext = context;
    }
 
    @Override
