@@ -46,7 +46,6 @@ import java.util.List;
 public abstract class BaseActivity extends SherlockFragmentActivity {
 
    private static final String STATE_ACTIVE_POSITION = "com.dozuki.ifixit.ui.ifixitActivity.activePosition";
-   private static final String STATE_CONTENT_TEXT = "com.dozuki.ifixit.ui.ifixitActivity.contentText";
 
    private static final int MENU_OVERFLOW = 1;
 
@@ -128,7 +127,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
          Intent intent;
          Context context = parent.getContext();
-         String url = "";
+         String url;
          mActivePosition = position;
          mMenuDrawer.setActiveView(view, position);
 

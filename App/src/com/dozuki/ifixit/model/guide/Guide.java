@@ -29,7 +29,6 @@ public class Guide implements Serializable {
    protected ArrayList<GuideStep> mSteps;
    protected ArrayList<Item> mTools;
    protected ArrayList<Item> mParts;
-   protected boolean mEditMode = false;
    protected boolean mCanEdit = true;
    protected int mPatrolThreshold = 0;
 
@@ -52,10 +51,6 @@ public class Guide implements Serializable {
       return mTools.size();
    }
 
-   public Item getTool(int position) {
-      return mTools.get(position);
-   }
-
    public ArrayList<Item> getTools() {
       return mTools;
    }
@@ -64,22 +59,8 @@ public class Guide implements Serializable {
       return mParts;
    }
 
-   public String getToolsFormatted(String title) {
-      String formattedTools = title + ": <br />";
-      for (Item t : mTools) {
-         formattedTools += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
-          "</a><br />";
-      }
-
-      return formattedTools;
-   }
-
    public void setCanEdit(boolean canEdit) {
       mCanEdit = canEdit;
-   }
-
-   public boolean canEdit() {
-      return mCanEdit;
    }
 
    public void setType(String type) {
@@ -102,20 +83,6 @@ public class Guide implements Serializable {
       mSteps = steps;
    }
 
-   public Item getPart(int position) {
-      return mParts.get(position);
-   }
-
-   public String getPartsFormatted(String title) {
-      String formattedPart = title + ": <br />";
-      for (Item t : mParts) {
-         formattedPart += "<a href=\"" + t.getUrl() + "\">"+ t.getTitle() +
-          "</a><br />";
-      }
-
-      return formattedPart;
-   }
-
    public void addStep(GuideStep step) {
       mSteps.add(step);
    }
@@ -128,14 +95,6 @@ public class Guide implements Serializable {
       mSteps.remove(step);
    }
 
-   public void setEditMode(boolean editMode) {
-      mEditMode = editMode;
-   }
-
-   public boolean getEditMode() {
-      return mEditMode;
-   }
-
    public void setPublic(boolean isPublic) {
       mPublic = isPublic;
    }
@@ -143,11 +102,6 @@ public class Guide implements Serializable {
    public boolean isPublic() {
       return mPublic;
    }
-
-   public void setGuideid(int guideid) {
-      mGuideid = guideid;
-   }
-
 
    public int getNumSteps() {
       return mSteps.size();
@@ -173,14 +127,6 @@ public class Guide implements Serializable {
       return mTitle;
    }
 
-   public String getDisplayTitle() {
-      if (!(mSubject.equals("null") || mSubject.length() == 0)) {
-         return mSubject;
-      } else {
-         return mTitle;
-      }
-   }
-
    public void setTopic(String topic) {
       mTopic = topic;
    }
@@ -199,10 +145,6 @@ public class Guide implements Serializable {
 
    public void setTimeRequired(String timeRequired) {
       mTimeRequired = timeRequired;
-   }
-
-   public String getTimeRequired() {
-      return mTimeRequired;
    }
 
    public void setDifficulty(String difficulty) {
@@ -231,10 +173,6 @@ public class Guide implements Serializable {
 
    public void setIntroImage(Image image) {
       mIntroImage = image;
-   }
-
-   public Image getIntroImage() {
-      return mIntroImage;
    }
 
    public void setSummary(String summary) {

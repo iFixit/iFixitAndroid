@@ -14,7 +14,6 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.WindowManager;
 
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
@@ -141,7 +140,7 @@ public class MainApplication extends Application {
          int versionCode = -1;
 
          try {
-            PackageInfo packageInfo = null;
+            PackageInfo packageInfo;
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
             versionCode = packageInfo.versionCode;
          } catch (PackageManager.NameNotFoundException e) {
@@ -308,7 +307,7 @@ public class MainApplication extends Application {
       // Check if the user is null because we're paranoid.
       if (mUser != null && activity != null) {
          // Perform the API call to delete the user's authToken.
-         APIService.call((SherlockFragmentActivity) activity, APIService.getLogoutAPICall(mUser));
+         APIService.call(activity, APIService.getLogoutAPICall(mUser));
       }
 
       shallowLogout();

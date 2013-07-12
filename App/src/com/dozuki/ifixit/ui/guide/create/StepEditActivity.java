@@ -45,9 +45,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
    public static final String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
-   public static String TAG = "StepEditActivity";
    public static String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
-   public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
    public static String DELETE_GUIDE_DIALOG_KEY = "DeleteGuideDialog";
    public static final String GUIDE_ID_KEY = "GUIDE_ID_KEY";
    public static final String GUIDE_STEP_ID = "GUIDE_STEP_ID";
@@ -499,7 +497,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
              } else {
                 showLoading(mLoadingContainer, getString(R.string.deleting));
                 APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
-                 mGuide.getGuideid(), mGuide.getRevisionid(), mGuide.getSteps().get(mPagePosition)));
+                 mGuide.getGuideid(), mGuide.getSteps().get(mPagePosition)));
              }
              dialog.cancel();
           }
@@ -721,7 +719,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
          }
       }
-      return;
    }
 
    protected void deleteStep(boolean unsaved) {

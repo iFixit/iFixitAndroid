@@ -19,7 +19,6 @@ public class Image implements Serializable {
 
    @SerializedName("id") private int mId;
    @SerializedName("original") private String mPath;
-   private ArrayList<String> mAvailableSizes;
 
    public Image() {
       this(LOCAL_IMAGE_ID);
@@ -32,8 +31,6 @@ public class Image implements Serializable {
    public Image(int id, String path) {
       mId = id;
       mPath = cleanPath(path);
-      //mSizes = MainApplication.get().getImageSizes();
-      mAvailableSizes = new ArrayList<String>();
    }
 
    public void setLocalImage(String path) {
@@ -63,10 +60,6 @@ public class Image implements Serializable {
       }
 
       return mPath + size;
-   }
-
-   public void addSize(String size) {
-      mAvailableSizes.add(size);
    }
 
    public boolean isLocal() {

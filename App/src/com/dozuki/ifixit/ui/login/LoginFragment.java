@@ -251,7 +251,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
          mCurAPICall = APIService.getUserInfoAPICall(session);
-         APIService.call((Activity)getActivity(), mCurAPICall);
+         APIService.call(getActivity(), mCurAPICall);
       } else if (!MainApplication.get().getSite().mStandardAuth) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need

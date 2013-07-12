@@ -248,7 +248,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
       if (reOrdered) {
          mStepAdapter.notifyDataSetChanged();
          ((StepsActivity) getActivity()).showLoading();
-         APIService.call((Activity) getActivity(), APIService.getStepReorderAPICall(mGuide));
+         APIService.call(getActivity(), APIService.getStepReorderAPICall(mGuide));
       }
    }
 
@@ -382,8 +382,8 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
              mShowingDelete = false;
 
              ((StepsActivity) getActivity()).showLoading();
-             APIService.call((Activity) getActivity(),
-              APIService.getRemoveStepAPICall(mGuide.getGuideid(), mGuide.getRevisionid(), mStepForDelete));
+             APIService.call(getActivity(),
+              APIService.getRemoveStepAPICall(mGuide.getGuideid(), mStepForDelete));
              dialog.cancel();
 
           }

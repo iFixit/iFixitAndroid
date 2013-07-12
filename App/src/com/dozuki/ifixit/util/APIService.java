@@ -13,7 +13,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -53,10 +53,6 @@ public class APIService extends Service {
    private static final int INVALID_LOGIN_CODE = 401;
 
    private static final String NO_QUERY = "";
-
-   public static final String RESULT = "RESULT";
-
-   public static final String BASE_USER_AGENT = "iFixitAndroid/";
 
    /**
     * Pending API call. This is set when an authenticated request is performed
@@ -352,7 +348,7 @@ public class APIService extends Service {
        requestBody.toString());
    }
 
-   public static APICall getRemoveStepAPICall(int guideid, int guideRevisionID, GuideStep step) {
+   public static APICall getRemoveStepAPICall(int guideid, GuideStep step) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -476,32 +472,6 @@ public class APIService extends Service {
       }
    }
 
-   public static AlertDialog getListMediaErrorDialog(Context context, APIError error,
-    APICall apiCall) {
-      switch (error.mType) {
-         case CONNECTION:
-            return getErrorDialog(context, error, apiCall);
-         default:
-            return getListMediaUnknownErrorDialog(context);
-      }
-   }
-
-   public static AlertDialog getListMediaUnknownErrorDialog(final Context mContext) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-      builder.setTitle(mContext.getString(R.string.media_error_title))
-       .setPositiveButton(mContext.getString(R.string.error_confirm),
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              //kill the media activity, and have them try again later
-              //incase the server needs some rest
-              ((SherlockFragmentActivity) mContext).finish();
-              dialog.cancel();
-           }
-        });
-
-      return builder.create();
-   }
-
    private static AlertDialog createErrorDialog(final Context context,
     final APICall apiCall, APIError error) {
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
@@ -578,8 +548,6 @@ public class APIService extends Service {
             HttpRequest request;
 
             try {
-
-               String requestMethod;
                if (endpoint.mMethod.equals("GET")) {
                   request = HttpRequest.get(url);
                } else {
@@ -587,7 +555,7 @@ public class APIService extends Service {
                    * For all methods other than get we actually perform a POST but send
                    * a header indicating the actual request we are performing. This is
                    * because http-request's underlying HTTPRequest library doesn't
-                   * suupport PATCH requests.
+                   * support PATCH requests.
                    */
                   request = HttpRequest.post(url);
                   request.header("X-HTTP-Method-Override", endpoint.mMethod);

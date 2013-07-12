@@ -22,10 +22,6 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class JSONHelper {
-   /**
-    * Used to indicate an integer JSON field that is null.
-    */
-   public static final int NULL_INT = -1;
    private static final String TAG = "JSONHelper";
 
    public static ArrayList<Site> parseSites(String json) {
@@ -277,10 +273,8 @@ public class JSONHelper {
    }
 
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
-      VideoEncoding encoding =
-       new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
+      return new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
         jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
-      return encoding;
    }
 
    private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
@@ -356,9 +350,6 @@ public class JSONHelper {
    public static TopicLeaf parseTopicLeaf(String json) throws JSONException {
       JSONObject jTopic = new JSONObject(json);
       JSONArray jGuides = jTopic.getJSONArray("guides");
-      JSONObject jParts = jTopic.getJSONObject("parts");
-      JSONArray jTools = jTopic.getJSONArray("tools");
-      //JSONArray jFlags = jTopic.getJSONArray("flags");
       JSONObject jSolutions = jTopic.getJSONObject("solutions");
       JSONObject jInfo = jTopic.getJSONObject("topic_info");
       TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));

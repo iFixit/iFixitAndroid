@@ -15,7 +15,7 @@ public class CaptureHelper {
          storageDir = new File(Environment.getExternalStoragePublicDirectory(
           Environment.DIRECTORY_PICTURES), "iFixitImages/");
 
-         if (storageDir != null && !storageDir.mkdirs() && !storageDir.exists()) {
+         if (!storageDir.mkdirs() && !storageDir.exists()) {
             Log.w("iFixit", "Failed to create directory iFixitImages");
             return null;
          }

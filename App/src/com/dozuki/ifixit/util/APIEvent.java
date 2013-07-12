@@ -98,10 +98,6 @@ public abstract class APIEvent<T> {
       return this;
    }
 
-   public int getCode() {
-      return mCode;
-   }
-
    public APIError getError() {
       return mError;
    }

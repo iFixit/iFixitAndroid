@@ -1,10 +1,9 @@
 package com.dozuki.ifixit.ui.guide.create;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -20,7 +19,6 @@ import com.squareup.otto.Subscribe;
 
 public class StepsActivity extends BaseActivity implements StepRearrangeListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
-   private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
    public static final int MENU_STEP_ADD = 2;
    public static final int MENU_EDIT_INTRO = 3;
@@ -30,7 +28,6 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
    public static String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
    private static final String LOADING = "LOADING";
-   private ActionBar mActionBar;
    private StepPortalFragment mStepPortalFragment;
    private Guide mGuide;
    private boolean mIsLoading;
@@ -45,8 +42,8 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
       super.onCreate(savedInstanceState);
 
-      mActionBar = getSupportActionBar();
-      mActionBar.setDisplayHomeAsUpEnabled(true);
+      ActionBar actionBar = getSupportActionBar();
+      actionBar.setDisplayHomeAsUpEnabled(true);
 
       if (savedInstanceState != null) {
          // to persist mGuide
@@ -202,18 +199,4 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
       getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
    }
-
-   private AlertDialog createHelpDialog() {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_steps_help))
-       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-
-          public void onClick(DialogInterface dialog, int id) {
-             dialog.cancel();
-          }
-       });
-
-      return builder.create();
-   }
-
 }

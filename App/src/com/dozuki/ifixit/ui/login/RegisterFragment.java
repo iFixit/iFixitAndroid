@@ -126,10 +126,6 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
       super.onAttach(activity);
    }
 
-   public static RegisterFragment newInstance() {
-      return new RegisterFragment();
-   }
-
    @Override
    public void onClick(View v) {
       switch (v.getId()) {
@@ -150,7 +146,7 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
                mCurAPICall = APIService.getRegisterAPICall(login, password, name);
-               APIService.call((Activity)getActivity(), mCurAPICall);
+               APIService.call(getActivity(), mCurAPICall);
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);

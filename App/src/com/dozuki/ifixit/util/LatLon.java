@@ -21,10 +21,10 @@ public class LatLon {
    }
 
    public Double getLatitude() {
-      return this.latitude;
+      return latitude;
    }
 
    public Double getLongitude() {
-      return this.longitude;
+      return longitude;
    }
 }

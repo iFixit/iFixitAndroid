@@ -14,7 +14,6 @@ import com.dozuki.ifixit.ui.GuideListAdapter;
 import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -68,8 +67,7 @@ public abstract class GuideListActivity extends BaseActivity {
          public void onRefresh(int pageNumber) {
             OFFSET += LIMIT;
 
-            APIService.call((GuideListActivity)GuideListActivity.this,
-             getApiCall(LIMIT, OFFSET));
+            APIService.call(GuideListActivity.this, getApiCall(LIMIT, OFFSET));
          }
       });
 

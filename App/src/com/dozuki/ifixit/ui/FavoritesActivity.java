@@ -31,7 +31,7 @@ public class FavoritesActivity extends BaseActivity {
       setContentView(R.layout.favorites);
 
       if (savedInstanceState != null) {
-         mGuides = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDES_KEY);
+         mGuides = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDES_KEY);
          initGridView();
       } else {
          showLoading(R.id.favorites_loading);

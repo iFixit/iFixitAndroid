@@ -132,7 +132,7 @@ public class TopicListFragment extends SherlockFragment
 
       try {
          topicSelectedListener = (TopicSelectedListener)activity;
-         mContext = (Context)activity;
+         mContext = activity;
       } catch (ClassCastException e) {
          throw new ClassCastException(activity.toString() +
           " must implement TopicSelectedListener");

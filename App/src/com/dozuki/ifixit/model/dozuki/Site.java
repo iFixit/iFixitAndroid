@@ -34,8 +34,7 @@ public class Site implements Serializable {
    }
 
    public boolean search(String query) {
-      if (mName.indexOf(query) != -1 ||
-       mTitle.toLowerCase().indexOf(query) != -1) {
+      if (mTitle.toLowerCase().contains(query)) {
          // Query is somewhere in title or name.
          return true;
       }
@@ -46,10 +45,6 @@ public class Site implements Serializable {
        * longer the string and less room for error the shorter the string.
        */
       return EditDistance.editDistance(mName, query) <= (mName.length() / 2);
-   }
-
-   public String getDomainForCookie() {
-      return "." + mDomain;
    }
 
    public String getOpenIdLoginUrl() {
@@ -79,10 +74,6 @@ public class Site implements Serializable {
 
    public String siteName() {
       return capitalize(mName);
-   }
-
-   public String getDomain() {
-      return mCustomDomain.equals("") ? mDomain : mCustomDomain;
    }
 
    public String getAPIDomain() {

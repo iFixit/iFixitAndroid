@@ -31,7 +31,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    private static final String SHOWING_BULLET_FRAG = "SHOWING_BULLET_FRAG";
    private static final String BULLET_FRAG_ID = "BULLET_FRAG_ID";
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
-   private static final int NONE = -1;
    private static final int INDENT_LIMIT = 2;
    private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
    private LinearLayout mBulletContainer;
@@ -41,11 +40,9 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    private boolean mShowingChooseBulletDialog;
    private boolean mReorderModeActive;
    private BulletReorderFragment mReorderFragment;
-   private boolean mConfirmDelete;
 
    private static String NO_TITLE = "";
    private static final String TITLE_KEY = "TITLE_KEY";
-   private static final String STEP_NUM_KEY = null;
 
    // title
    private String mTitle = NO_TITLE;
@@ -55,11 +52,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    /////////////////////////////////////////////////////
    // LIFECYCLE
    /////////////////////////////////////////////////////
-
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-   }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -96,7 +88,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
          mTitle = savedInstanceState.getString(TITLE_KEY);
 
          FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
-         mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
+         mLines = (ArrayList<StepLine>)savedInstanceState.getSerializable(STEP_LIST_KEY);
          mChooseBulletDialog =
           (ChooseBulletDialog) fm.getFragment(savedInstanceState, BULLET_FRAG_ID);
          mReorderFragment =
@@ -186,9 +178,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
          launchBulletReorder();
       } else if (color.equals("action_delete")) {
          createDeleteDialog(getActivity(), index).show();
-      } else if (color.equals("action_cancel")) {
-         return;
-      } else {
+      } else if (!color.equals("action_cancel")) {
          curStep.setColor(color);
          mBulletContainer.removeViewAt(index);
          mBulletContainer.addView(getView(mLines.get(index), index), index);
@@ -217,14 +207,12 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    /////////////////////////////////////////////////////
 
    public AlertDialog createDeleteDialog(final Context context, final int index) {
-      mConfirmDelete = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(context.getString(R.string.step_delete_dialog_title))
        .setMessage(context.getString(R.string.step_delete_dialog_body))
        .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int id) {
-             mConfirmDelete = false;
              removeBullet(index);
              if (!isIndentionStateValid()) {
                 fixIndentionState();
@@ -235,20 +223,11 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
        }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
          @Override
          public void onClick(DialogInterface dialog, int which) {
-            mConfirmDelete = false;
             dialog.dismiss();
          }
       });
 
-      AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-            mConfirmDelete = false;
-         }
-      });
-
-      return dialog;
+      return builder.create();
    }
 
    /////////////////////////////////////////////////////
@@ -345,8 +324,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       text.setOnKeyListener(new View.OnKeyListener() {
          @Override
          public boolean onKey(View v, int keyCode, KeyEvent event) {
-            if (keyCode == KeyEvent.KEYCODE_ENTER) return true;
-            return false;
+            return keyCode == KeyEvent.KEYCODE_ENTER;
          }
       });
 
@@ -362,20 +340,20 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
          dialog.disableUnIndent();
       }
 
-      if (!canDelete(line)) {
+      if (!canDelete()) {
          dialog.disableDelete();
       }
 
-      if (!canRearrange(line)) {
+      if (!canRearrange()) {
          dialog.disableRearrange();
       }
    }
 
-   private boolean canRearrange(StepLine line) {
+   private boolean canRearrange() {
       return (mLines.size() > 1);
    }
 
-   private boolean canDelete(StepLine line) {
+   private boolean canDelete() {
       return (mLines.size() > 1);
    }
 
@@ -509,10 +487,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
 
    private void setGuideDirty() {
       MainApplication.getBus().post(new StepChangedEvent());
-   }
-
-   public boolean isReorderModeActive() {
-      return mReorderModeActive;
    }
 
    public void removeBullets() {

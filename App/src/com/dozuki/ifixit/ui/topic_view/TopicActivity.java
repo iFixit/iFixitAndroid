@@ -246,7 +246,7 @@ public class TopicActivity extends BaseActivity
    @Override
    public void showLoading(int container) {
       mTopicView =
-       (TopicViewFragment) getSupportFragmentManager().findFragmentById(R.id.topic_view_fragment);;
+       (TopicViewFragment) getSupportFragmentManager().findFragmentById(R.id.topic_view_fragment);
       getSupportFragmentManager().beginTransaction()
        .add(R.id.topic_list_fragment, new LoadingFragment(), "loading").addToBackStack("loading")
        .commit();

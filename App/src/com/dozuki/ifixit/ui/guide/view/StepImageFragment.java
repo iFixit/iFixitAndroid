@@ -36,7 +36,7 @@ public class StepImageFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      mContext = (Activity) getActivity();
+      mContext = getActivity();
       super.onCreate(savedInstanceState);
    }
 
@@ -53,7 +53,7 @@ public class StepImageFragment extends SherlockFragment {
       }
 
       if (savedInstanceState != null) {
-         mImages = (ArrayList<Image>) savedInstanceState.getSerializable(IMAGES_KEY);
+         mImages = (ArrayList<Image>)savedInstanceState.getSerializable(IMAGES_KEY);
       }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);

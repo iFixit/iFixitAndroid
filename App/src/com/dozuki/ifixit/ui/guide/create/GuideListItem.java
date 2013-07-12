@@ -21,7 +21,6 @@ import com.squareup.picasso.Picasso;
 public class GuideListItem extends LinearLayout {
    private static final int ANIMATION_DURATION = 300;
 
-   private static final boolean STATE_OPEN = true;
    private static final boolean STATE_CLOSED = false;
    private Context mContext;
 
@@ -35,8 +34,6 @@ public class GuideListItem extends LinearLayout {
    private LinearLayout mEditBar;
    private Activity mActivity;
    private final RelativeLayout mUpperSection;
-
-   private boolean mEditBarVisible = false;
    private GuideInfo mGuideInfo;
 
    private OnClickListener mEditClickListener = new OnClickListener() {

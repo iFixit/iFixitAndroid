@@ -48,7 +48,7 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
     Bundle savedInstanceState) {
 
       if (savedInstanceState != null) {
-         mSiteList = (ArrayList<Site>) savedInstanceState.getSerializable(SITE_LIST);
+         mSiteList = (ArrayList<Site>)savedInstanceState.getSerializable(SITE_LIST);
       }
 
       View view = inflater.inflate(R.layout.site_dialog_list, container, false);

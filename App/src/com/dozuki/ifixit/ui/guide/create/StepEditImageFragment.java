@@ -58,7 +58,7 @@ public class StepEditImageFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      mContext = (Activity) getActivity();
+      mContext = getActivity();
       super.onCreate(savedInstanceState);
    }
 
@@ -75,7 +75,7 @@ public class StepEditImageFragment extends SherlockFragment {
       }
 
       if (savedInstanceState != null) {
-         mImages = (ArrayList<Image>) savedInstanceState.getSerializable(IMAGES_KEY);
+         mImages = (ArrayList<Image>)savedInstanceState.getSerializable(IMAGES_KEY);
       }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -175,9 +175,6 @@ public class StepEditImageFragment extends SherlockFragment {
                          mImages.remove(thumbImage);
                          setGuideDirty();
                          break;
-
-                      default:
-                         return;
                    }
                 }
              });

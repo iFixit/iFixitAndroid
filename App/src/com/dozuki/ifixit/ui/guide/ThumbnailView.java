@@ -23,12 +23,6 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ThumbnailView extends LinearLayout implements View.OnClickListener {
-
-   /**
-    * Used for logging
-    */
-   private static final String TAG = "ThumbnailView";
-
    private ArrayList<ImageView> mThumbs;
    private ImageView mMainImage;
    private ImageView mAddThumbButton;

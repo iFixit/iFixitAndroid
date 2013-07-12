@@ -712,13 +712,6 @@ public enum APIEndpoint {
    }
 
    /**
-    * Returns an absolute URL for this endpoint for the given site, no query needed.
-    */
-   public String getUrl(Site site) {
-      return getUrl(site, null);
-   }
-
-   /**
     * Returns an absolute URL for this endpoint for the given site and query.
     */
    public String getUrl(Site site, String query) {
@@ -751,16 +744,6 @@ public enum APIEndpoint {
     */
    public APIEvent<?> getEvent() {
       return mEndpoint.getEvent();
-   }
-
-   public static APIEndpoint getByTarget(int target) {
-      for (APIEndpoint endpoint : APIEndpoint.values()) {
-         if (endpoint.ordinal() == target) {
-            return endpoint;
-         }
-      }
-
-      return null;
    }
 
    public String toString() {

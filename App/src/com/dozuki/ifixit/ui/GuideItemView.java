@@ -17,17 +17,15 @@ public class GuideItemView extends RelativeLayout {
    private final Picasso mPicasso;
    private TextView mTitleView;
    private ImageView mThumbnail;
-   private Context mContext;
 
    public GuideItemView(Context context) {
       super(context);
-      mContext = context;
 
-      LayoutInflater.from(mContext).inflate(R.layout.guide_grid_item, this, true);
+      LayoutInflater.from(context).inflate(R.layout.guide_grid_item, this, true);
 
       mTitleView = (TextView) findViewById(R.id.guide_grid_item_title);
       mThumbnail = (ImageView) findViewById(R.id.guide_grid_item_thumbnail);
-      mPicasso = Picasso.with(mContext);
+      mPicasso = Picasso.with(context);
    }
 
    public void setGuideItem(GuideInfo guide) {

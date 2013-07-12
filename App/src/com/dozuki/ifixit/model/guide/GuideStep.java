@@ -98,10 +98,6 @@ public class GuideStep implements Serializable {
       mOrderby = orderby;
    }
 
-   public int getOrderby() {
-      return mOrderby;
-   }
-
    public void setTitle(String title) {
       mTitle = title;
    }
@@ -112,10 +108,6 @@ public class GuideStep implements Serializable {
 
    public int getStepNum() {
       return mStepNum;
-   }
-
-   public boolean hasImage() {
-      return mImages.size() > 0;
    }
 
    public void addImage(Image image) {
@@ -139,15 +131,10 @@ public class GuideStep implements Serializable {
       mLines.add(line);
    }
 
-   public StepLine getLine(int pos) {
-      return mLines.get(pos);
-   }
-
    public void setLines(ArrayList<StepLine> lines) {
       mLines.clear();
       mLines = new ArrayList<StepLine>(lines);
    }
-
 
    public void addVideo(Video stepvid) {
       mVideo = stepvid;

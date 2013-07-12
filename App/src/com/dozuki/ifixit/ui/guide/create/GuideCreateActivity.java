@@ -33,11 +33,9 @@ public class GuideCreateActivity extends BaseActivity {
 
 
    private static final String SHOWING_HELP = "SHOWING_HELP";
-   private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String GUIDE_FOR_DELETE = "GUIDE_FOR_DELETE";
    private static String GUIDE_OBJECT_KEY = "GUIDE_OBJECT_KEY";
    public static String GUIDE_KEY = "GUIDE_KEY";
-   private static final String LOADING = "LOADING";
    private int mCurOpenGuideObjectID;
 
    private ArrayList<GuideInfo> mUserGuideList = new ArrayList<GuideInfo>();
@@ -58,7 +56,7 @@ public class GuideCreateActivity extends BaseActivity {
       mActivity = this;
 
       if (savedInstanceState != null) {
-         mUserGuideList = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
+         mUserGuideList = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mGuideForDelete = (GuideInfo) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
 
@@ -282,10 +280,9 @@ public class GuideCreateActivity extends BaseActivity {
          if (view != null) {
             view.setChecked(false);
          }
-         for (int i = 0; i < mUserGuideList.size(); i++) {
-
-            if (mUserGuideList.get(i).mGuideid == mCurOpenGuideObjectID) {
-               mUserGuideList.get(i).mEditMode = false;
+         for (GuideInfo guide : mUserGuideList) {
+            if (guide.mGuideid == mCurOpenGuideObjectID) {
+               guide.mEditMode = false;
             }
          }
       }

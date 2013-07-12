@@ -85,7 +85,7 @@ public class StepReorderFragment extends SherlockFragment {
       getSherlockActivity().startActionMode(new ContextualStepReorder());
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.get(StepsActivity.GUIDE_KEY);
-         mStepsCopy = (ArrayList<GuideStep>) savedInstanceState.get(STEP_LIST_ID);
+         mStepsCopy = (ArrayList<GuideStep>)savedInstanceState.get(STEP_LIST_ID);
       }
       mAdapter = new StepAdapter(mStepsCopy);
    }
@@ -156,7 +156,7 @@ public class StepReorderFragment extends SherlockFragment {
                return true;
          }
       }
-   };
+   }
 
    private class ViewHolder {
       public TextView stepsView;
@@ -175,13 +175,12 @@ public class StepReorderFragment extends SherlockFragment {
          if (v != convertView && v != null) {
             final ViewHolder holder = new ViewHolder();
 
-            TextView tv = (TextView) v.findViewById(R.id.step_title_textview_reorder);
-            holder.stepsView = tv;
-            holder.stepNumber = (TextView) v.findViewById(R.id.guide_create_step_item_number_reorder);
-            holder.mImageView = (ImageView) v.findViewById(R.id.guide_step_item_thumbnail_reorder);
+            holder.stepsView = (TextView)v.findViewById(R.id.step_title_textview_reorder);
+            holder.stepNumber = (TextView)v.findViewById(R.id.guide_create_step_item_number_reorder);
+            holder.mImageView = (ImageView)v.findViewById(R.id.guide_step_item_thumbnail_reorder);
             v.setTag(holder);
          }
-         final ViewHolder holder = (ViewHolder) v.getTag();
+         final ViewHolder holder = (ViewHolder)v.getTag();
          String step = getItem(position).getTitle();
          if (step.equals("")) {
             holder.stepsView.setText(getString(R.string.step_number, (mGuide.getSteps().indexOf(mStepsCopy
