@@ -24,49 +24,21 @@ import java.util.*;
 public class JSONHelper {
    private static final String TAG = "JSONHelper";
 
-   public static ArrayList<Site> parseSites(String json) {
+   public static ArrayList<Site> parseSites(String json) throws JSONException {
       ArrayList<Site> sites = new ArrayList<Site>();
 
-      try {
-         JSONArray jSites = new JSONArray(json);
-         Site site;
+      JSONArray jSites = new JSONArray(json);
+      Site site;
 
-         for (int i = 0; i < jSites.length(); i++) {
-            site = parseSite(jSites.getJSONObject(i));
+      for (int i = 0; i < jSites.length(); i++) {
+         site = parseSite(jSites.getJSONObject(i));
 
-            if (site != null) {
-               sites.add(site);
-            }
+         if (site != null) {
+            sites.add(site);
          }
-      } catch (JSONException e) {
-         Log.e(TAG, "Error parsing sites: " + e);
       }
 
       return sites;
-   }
-
-   public static Site parseSiteInfo(String json) {
-      Site site = null;
-
-      try {
-         JSONObject siteInfoObject = new JSONObject(json);
-         site = parseSite(siteInfoObject);
-
-         JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
-         site.mGuideTypes = new ArrayList<GuideType>();
-
-         Iterator<?> keys = types.keys();
-         while (keys.hasNext()) {
-            String key = (String) keys.next();
-            if (types.get(key) instanceof JSONObject) {
-               site.mGuideTypes.add(parseGuideType(key, (JSONObject) types.get(key)));
-            }
-         }
-      } catch (JSONException e) {
-         Log.e(TAG, "Error parsing site info", e);
-      }
-
-      return site;
    }
 
    private static Site parseSite(JSONObject jSite) throws JSONException {
@@ -83,6 +55,26 @@ public class JSONHelper {
       site.mStoreUrl = jSite.has("store") ? jSite.getString("store") : "";
 
       setAuthentication(site, jSite.getJSONObject("authentication"));
+
+      return site;
+   }
+
+   public static Site parseSiteInfo(String json) throws JSONException {
+      Site site = null;
+
+      JSONObject siteInfoObject = new JSONObject(json);
+      site = parseSite(siteInfoObject);
+
+      JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
+      site.mGuideTypes = new ArrayList<GuideType>();
+
+      Iterator<?> keys = types.keys();
+      while (keys.hasNext()) {
+         String key = (String) keys.next();
+         if (types.get(key) instanceof JSONObject) {
+            site.mGuideTypes.add(parseGuideType(key, (JSONObject)types.get(key)));
+         }
+      }
 
       return site;
    }
