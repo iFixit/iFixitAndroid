@@ -83,10 +83,15 @@
                     android:scheme="http"
                     android:host="www.ifixit.com"
                     android:pathPrefix="/Teardown/"/>
+                <!-- Duplicates for https. -->
                 <data
-                    android:scheme="http"
+                    android:scheme="https"
                     android:host="www.ifixit.com"
-                    android:pathPrefix="/Project/"/>
+                    android:pathPrefix="/Guide/"/>
+                <data
+                    android:scheme="https"
+                    android:host="www.ifixit.com"
+                    android:pathPrefix="/Teardown/"/>
             </intent-filter>
         </activity>
         <activity
