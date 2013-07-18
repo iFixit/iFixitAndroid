@@ -15,6 +15,7 @@ import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -29,9 +30,7 @@ import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class StepEditImageFragment extends SherlockFragment {
 
@@ -125,9 +124,7 @@ public class StepEditImageFragment extends SherlockFragment {
                          try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                            // Create an image file name
-                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                            String imageFileName = CaptureHelper.IMAGE_PREFIX + timeStamp + "_";
+                            String imageFileName = CaptureHelper.getFileName();
 
                             File file = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
                             mTempFileName = file.getAbsolutePath();
