@@ -12,10 +12,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
+
 import org.xml.sax.XMLReader;
 
 public class TopicInfoFragment extends SherlockFragment {
@@ -75,8 +78,12 @@ public class TopicInfoFragment extends SherlockFragment {
    }
 
    private Spanned getStyledContent() {
+      String topicContent = mTopic.getContentRendered();
+
       // Remove anchor elements from html
-      String topicContent = mTopic.getContentRendered().replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
+      topicContent = topicContent.replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
+      topicContent = topicContent.replaceAll("<span class=\\\"editLink headerLink\\\".+?<\\/span>", "");
+
       Spanned topicHtml = Html.fromHtml(topicContent, null,
        new Html.TagHandler() {
           private String parent = "";
@@ -91,7 +98,9 @@ public class TopicInfoFragment extends SherlockFragment {
                 output.append("\n");
              }
           }
-       });
+      });
+
+      topicHtml = Utils.correctLinkPaths(topicHtml);
 
       Object[] spans = topicHtml.getSpans(0, topicHtml.length(), Object.class);
 
