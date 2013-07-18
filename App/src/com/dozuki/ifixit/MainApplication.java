@@ -138,11 +138,14 @@ public class MainApplication extends Application {
    public String getUserAgent() {
       if (mUserAgent == null) {
          int versionCode = -1;
+         String versionName = "";
 
          try {
             PackageInfo packageInfo;
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
             versionCode = packageInfo.versionCode;
+            versionName = packageInfo.versionName;
          } catch (PackageManager.NameNotFoundException e) {
             Log.e("iFixit", "Can't get application version", e);
          }
@@ -152,7 +155,8 @@ public class MainApplication extends Application {
           * is currently viewing a different nanosite.
           */
          Site currentApp = getDefaultSite();
-         mUserAgent = currentApp.mTitle + "Android/" + versionCode;
+         mUserAgent = currentApp.mTitle + "Android/" + versionName +
+          " (" + versionCode + ") | " + System.getProperty("http.agent");
       }
 
       return mUserAgent;
