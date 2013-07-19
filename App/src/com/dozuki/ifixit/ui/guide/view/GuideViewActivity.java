@@ -101,8 +101,6 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
          setGuide(mGuide, mCurrentPage);
       }
 
-
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       //initSpeechRecognizer();
    }
 
@@ -130,13 +128,14 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
 
-      extractExtras(intent.getExtras());
+      showLoading(R.id.loading_container);
+      // Reset everything to default values since we're getting a new intent - forces the view to refresh.
+      mGuide = null;
+      mCurrentPage = -1;
+      mInboundStepId = -1;
 
-      if (mGuide == null) {
-         getGuide(mGuideid);
-      } else {
-         setGuide(mGuide, mCurrentPage);
-      }
+      extractExtras(intent.getExtras());
+      getGuide(mGuideid);
    }
 
    @Override
@@ -253,7 +252,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                   }
                }
             }
-            setGuide(event.getResult(), mCurrentPage);
+            setGuide(guide, mCurrentPage);
          }
       } else {
          APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
@@ -343,5 +342,17 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
 
    public void onPageSelected(int currentPage) {
       mCurrentPage = currentPage;
+   }
+
+   @Override
+   public void showLoading(int container) {
+      findViewById(container).setVisibility(View.VISIBLE);
+      super.showLoading(container);
+   }
+
+   @Override
+   public void hideLoading() {
+      super.hideLoading();
+      findViewById(R.id.loading_container).setVisibility(View.GONE);
    }
 }
