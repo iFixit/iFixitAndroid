@@ -20,10 +20,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
-import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
-import com.dozuki.ifixit.model.guide.wizard.Page;
-import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -266,7 +262,6 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
    private void launchGuideIntroEdit() {
       Intent intent = new Intent(getActivity(), GuideIntroActivity.class);
       intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-      intent.putExtra("model", buildIntroBundle());
       intent.putExtra(GuideIntroActivity.STATE_KEY, true);
       intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
       startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_EDIT_REQUEST);
@@ -280,50 +275,6 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
       transaction.add(R.id.guide_create_fragment_steps_container, mGuideCreateReOrder);
       transaction.addToBackStack(null);
       transaction.commitAllowingStateLoss();
-   }
-
-   private Bundle buildIntroBundle() {
-      Bundle bundle = new Bundle();
-      MainApplication app = MainApplication.get();
-      String type = mGuide.getType().toLowerCase();
-      String subjectBundleKey;
-
-      Bundle topicBundle = new Bundle();
-      topicBundle.putString(TopicNamePage.TOPIC_DATA_KEY, mGuide.getTopic());
-
-      Bundle typeBundle = new Bundle();
-      typeBundle.putString(Page.SIMPLE_DATA_KEY, type);
-
-      Bundle titleBundle = new Bundle();
-      titleBundle.putString(GuideTitlePage.TITLE_DATA_KEY, mGuide.getTitle());
-
-      Bundle summaryBundle = new Bundle();
-      summaryBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSummary());
-
-      Bundle introductionBundle = new Bundle();
-      introductionBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getIntroductionRaw());
-
-      Bundle subjectBundle = new Bundle();
-      subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
-
-      if (type.equals("installation") || type.equals("disassembly") || type.equals("repair")) {
-         subjectBundleKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R.string
-          .guide_intro_wizard_guide_subject_title);
-      } else {
-         subjectBundleKey = GuideIntroWizardModel.NO_SUBJECT_KEY + ":" + app.getString(R.string
-          .guide_intro_wizard_guide_subject_title);
-      }
-
-      String topicBundleKey = app.getString(R.string.guide_intro_wizard_guide_topic_title, app.getTopicName());
-
-      bundle.putBundle(subjectBundleKey, subjectBundle);
-      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_type_title), typeBundle);
-      bundle.putBundle(topicBundleKey, topicBundle);
-      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_title_title), titleBundle);
-      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_introduction_title), introductionBundle);
-      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_summary_title), summaryBundle);
-
-      return bundle;
    }
 
    /////////////////////////////////////////////////////

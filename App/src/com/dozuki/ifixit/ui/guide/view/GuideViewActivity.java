@@ -11,7 +11,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
+import com.dozuki.ifixit.ui.guide.create.StepsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -191,27 +193,36 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
       switch (item.getItemId()) {
          case MENU_EDIT_GUIDE:
             if (mGuide != null) {
-               Intent intent = new Intent(this, StepEditActivity.class);
-               int stepNum = 0;
+               Intent intent;
+               // If the user is on the introduction, take them to edit the introduction fields.
+               if (mCurrentPage == 0) {
+                  intent = new Intent(this, GuideIntroActivity.class);
+                  intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+                  intent.putExtra(GuideIntroActivity.STATE_KEY, true);
+                  startActivity(intent);
+               } else {
+                  intent = new Intent(this, StepEditActivity.class);
+                  int stepNum = 0;
 
-               // Take into account the introduction, parts and tools page.
-               if (mCurrentPage >= mAdapter.getStepOffset()) {
-                  stepNum = mCurrentPage - mAdapter.getStepOffset();
-                  // Account for array indexed starting at 1
-                  intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
-               }
+                  // Take into account the introduction, parts and tools page.
+                  if (mCurrentPage >= mAdapter.getStepOffset()) {
+                     stepNum = mCurrentPage - mAdapter.getStepOffset();
+                     // Account for array indexed starting at 1
+                     intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
+                  }
 
-               int stepGuideid = mGuide.getStep(stepNum).getGuideid();
-               // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
-               // editing this prerequisite.
-               if (stepGuideid != mGuide.getGuideid()) {
-                  intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
+                  int stepGuideid = mGuide.getStep(stepNum).getGuideid();
+                  // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
+                  // editing this prerequisite.
+                  if (stepGuideid != mGuide.getGuideid()) {
+                     intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
+                  }
+                  // We have to pass along the steps guideid to account for prerequisite guides.
+                  intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
+                  intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
+                  intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
+                  startActivity(intent);
                }
-               // We have to pass along the steps guideid to account for prerequisite guides.
-               intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
-               intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
-               intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
-               startActivity(intent);
             }
             break;
          default:

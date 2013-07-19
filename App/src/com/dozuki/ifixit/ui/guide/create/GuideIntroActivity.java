@@ -16,9 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
-import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
-import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.*;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
@@ -35,7 +33,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
  ModelCallbacks {
    public static final int GUIDE_STEP_EDIT_REQUEST = 1;
 
-   private boolean EDIT_INTRO_STATE = false;
+   private boolean mEditIntroState = false;
    public static final String STATE_KEY = "STATE_KEY";
 
    private ViewPager mPager;
@@ -65,7 +63,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
             showLoading(R.id.intro_loading_container, getString(R.string.saving));
 
             Bundle bundle = mWizardModel.save();
-            if (EDIT_INTRO_STATE) {
+            if (mEditIntroState) {
                APIService.call(mSelf, APIService.getEditGuideAPICall(bundle, mGuide.getGuideid(),
                 mGuide.getRevisionid()));
             } else {
@@ -132,9 +130,9 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
-         mWizardModelBundle = extras.getBundle("model");
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
-         EDIT_INTRO_STATE = extras.getBoolean(GuideIntroActivity.STATE_KEY);
+         mWizardModelBundle = buildIntroBundle();
+         mEditIntroState = extras.getBoolean(GuideIntroActivity.STATE_KEY);
       } else if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
          mWizardModelBundle = savedInstanceState.getBundle("model");
@@ -146,6 +144,51 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          initWizard();
       }
    }
+
+   private Bundle buildIntroBundle() {
+      Bundle bundle = new Bundle();
+      MainApplication app = MainApplication.get();
+      String type = mGuide.getType().toLowerCase();
+      String subjectBundleKey;
+
+      Bundle topicBundle = new Bundle();
+      topicBundle.putString(TopicNamePage.TOPIC_DATA_KEY, mGuide.getTopic());
+
+      Bundle typeBundle = new Bundle();
+      typeBundle.putString(Page.SIMPLE_DATA_KEY, type);
+
+      Bundle titleBundle = new Bundle();
+      titleBundle.putString(GuideTitlePage.TITLE_DATA_KEY, mGuide.getTitle());
+
+      Bundle summaryBundle = new Bundle();
+      summaryBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSummary());
+
+      Bundle introductionBundle = new Bundle();
+      introductionBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getIntroductionRaw());
+
+      Bundle subjectBundle = new Bundle();
+      subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
+
+      if (type.equals("installation") || type.equals("disassembly") || type.equals("repair")) {
+         subjectBundleKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R.string
+          .guide_intro_wizard_guide_subject_title);
+      } else {
+         subjectBundleKey = GuideIntroWizardModel.NO_SUBJECT_KEY + ":" + app.getString(R.string
+          .guide_intro_wizard_guide_subject_title);
+      }
+
+      String topicBundleKey = app.getString(R.string.guide_intro_wizard_guide_topic_title, app.getTopicName());
+
+      bundle.putBundle(subjectBundleKey, subjectBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_type_title), typeBundle);
+      bundle.putBundle(topicBundleKey, topicBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_title_title), titleBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_introduction_title), introductionBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_summary_title), summaryBundle);
+
+      return bundle;
+   }
+
 
    protected void initWizard() {
       mWizardModel = new GuideIntroWizardModel(this);
@@ -176,7 +219,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       updateBottomBar();
 
       // If we're editing an existing guide, jump to the review page for an overview of the guide details
-      if (EDIT_INTRO_STATE) {
+      if (mEditIntroState) {
          mPager.setCurrentItem(mCurrentPageSequence.size());
       }
    }
@@ -207,7 +250,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          outState.putBundle("model", mWizardModel.save());
       }
       outState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
-      outState.putBoolean(GuideIntroActivity.STATE_KEY, EDIT_INTRO_STATE);
+      outState.putBoolean(GuideIntroActivity.STATE_KEY, mEditIntroState);
    }
 
    @Override
