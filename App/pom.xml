@@ -108,7 +108,7 @@
         <dependency>
             <groupId>net.simonvt.menudrawer</groupId>
             <artifactId>menudrawer</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
             <type>apklib</type>
         </dependency>
         <dependency>

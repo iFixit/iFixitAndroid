@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -11,9 +12,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -28,7 +27,6 @@ import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.squareup.otto.Subscribe;
-
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -228,7 +226,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
-      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.RIGHT, MenuDrawer.MENU_DRAG_WINDOW);
+
+      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      }
 
       mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
       mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
@@ -279,6 +282,9 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mList.setOnItemClickListener(mItemClickListener);
 
       mMenuDrawer.setMenuView(mList);
+      mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
+      mMenuDrawer.setDrawerIndicatorEnabled(true);
+
       mMenuDrawer.invalidate();
    }
 
@@ -344,23 +350,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
-            finish();
-            break;
-         case MENU_OVERFLOW:
             mMenuDrawer.toggleMenu();
-            break;
+            return true;
       }
 
       return super.onOptionsItemSelected(item);
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuItem overflowItem = menu.add(0, MENU_OVERFLOW, 0, null);
-      overflowItem.setIcon(R.drawable.ic_action_list);
-      overflowItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-      return true;
    }
 
    private static class Item {

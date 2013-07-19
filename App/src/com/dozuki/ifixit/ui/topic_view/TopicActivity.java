@@ -11,7 +11,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
@@ -116,28 +115,6 @@ public class TopicActivity extends BaseActivity
    }
 
    @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            // Go up in the hierarchy by popping the back stack.
-            boolean poppedStack = getSupportFragmentManager().popBackStackImmediate();
-
-            /**
-             *  If there is not a previous category to go to and the up navigation
-             *  button should finish the activity, finish the activity.
-             *  Note: Although this is a warning for iFixit, it is not for Dozuki.
-             */
-            if (!poppedStack && UP_NAVIGATION_FINISH_ACTIVITY) {
-               finish();
-            }
-
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
-
-   @Override
    public void onBackStackChanged() {
       int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
 
@@ -146,9 +123,6 @@ public class TopicActivity extends BaseActivity
       }
 
       mBackStackSize = backStackSize;
-
-      getSupportActionBar().setDisplayHomeAsUpEnabled(mBackStackSize != 0 ||
-       UP_NAVIGATION_FINISH_ACTIVITY);
    }
 
    @Override
@@ -185,7 +159,6 @@ public class TopicActivity extends BaseActivity
    }
 
    private void hideTopicList(boolean delay) {
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       mTopicViewOverlay.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
       changeTopicListView(new Fragment(), true, delay);
