@@ -22,12 +22,11 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.otto.Bus;
 
 public class MainApplication extends Application {
-   public static final int LARGE_SIZE_CUTOFF = 1000;
-   public static final int MEDIUM_SIZE_CUTOFF = 800;
+   private static final int LARGE_SIZE_CUTOFF = 1000;
    // The current version of the app (this is replaced by dozukify.sh).
-   public static final String CURRENT_SITE = "SITE_ifixit";
+   private static final String CURRENT_SITE = "SITE_ifixit";
 
-   public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
+   private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
     "FIRST_TIME_GALLERY_USER";
    private static final String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
@@ -193,17 +192,12 @@ public class MainApplication extends Application {
           metrics.widthPixels);
 
          float screenSize = (maxDimension / metrics.density);
-         
+
          // Larger screen = larger images
          if (screenSize > LARGE_SIZE_CUTOFF) {
-            mImageSizes = new ImageSizes(".medium", ".medium", ".huge",
-             ".standard");
-         } else if (screenSize > MEDIUM_SIZE_CUTOFF) {
-            mImageSizes = new ImageSizes(".standard", ".standard", ".large",
-             ".standard");
+            mImageSizes = new ImageSizes(".medium", ".medium", ".large", ".standard");
          } else {
-            mImageSizes = new ImageSizes(".thumbnail", ".standard", ".large",
-             ".thumbnail");
+            mImageSizes = new ImageSizes(".standard", ".standard", ".large", ".standard");
          }
       }
 
