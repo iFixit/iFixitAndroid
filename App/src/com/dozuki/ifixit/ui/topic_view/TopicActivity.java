@@ -221,7 +221,7 @@ public class TopicActivity extends BaseActivity
       mTopicView =
        (TopicViewFragment) getSupportFragmentManager().findFragmentById(R.id.topic_view_fragment);
       getSupportFragmentManager().beginTransaction()
-       .add(R.id.topic_list_fragment, new LoadingFragment(), "loading").addToBackStack("loading")
+       .add(R.id.topic_list_fragment, new LoadingFragment(), LOADING).addToBackStack(LOADING)
        .commit();
       if (mTopicView != null) {
          getSupportFragmentManager().beginTransaction().hide(mTopicView).addToBackStack(null).commit();
@@ -230,6 +230,6 @@ public class TopicActivity extends BaseActivity
 
    @Override
    public void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 }

@@ -27,7 +27,6 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
    public static String GUIDE_ID_KEY = "GUIDE_ID_KEY";
    public static String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
-   private static final String LOADING = "LOADING";
    private StepPortalFragment mStepPortalFragment;
    private Guide mGuide;
    private boolean mIsLoading;
@@ -186,7 +185,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
       mStepPortalFragment =
        (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
       getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(), "loading").addToBackStack("loading")
+       .add(container, new LoadingFragment(), LOADING).addToBackStack(LOADING)
        .commit();
       if (mStepPortalFragment != null) {
          getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
@@ -196,7 +195,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
    @Override
    public void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
    }
 }

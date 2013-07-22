@@ -62,7 +62,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
    private static final String SHOWING_SAVE = "SHOWING_SAVE";
    private static final String LOCK_SAVE = "LOCK_SAVE";
-   private static final String LOADING = "LOADING";
 
    private Guide mGuide;
    private StepEditFragment mCurStepFragment;
@@ -731,7 +730,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (mPager != null) {
          mPager.setVisibility(View.VISIBLE);
       }
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
    }
 
