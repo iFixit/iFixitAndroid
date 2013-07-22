@@ -662,9 +662,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    protected void navigateToStepView() {
       Intent intent = new Intent(this, GuideViewActivity.class);
       if (mParentGuideId != NO_PARENT_GUIDE) {
-         intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mParentGuideId);
+         intent.putExtra(GuideViewActivity.GUIDEID, mParentGuideId);
       } else {
-         intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mGuide.getGuideid());
+         intent.putExtra(GuideViewActivity.GUIDEID, mGuide.getGuideid());
       }
       intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
       intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());

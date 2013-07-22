@@ -43,7 +43,7 @@ import java.util.List;
  */
 public abstract class BaseActivity extends SherlockFragmentActivity {
 
-   private static final String STATE_ACTIVE_POSITION = "com.dozuki.ifixit.ui.ifixitActivity.activePosition";
+   private static final String STATE_ACTIVE_POSITION = "com.dozuki.ifixit.ui.BaseActivity.activePosition";
 
    private static final int MENU_OVERFLOW = 1;
 

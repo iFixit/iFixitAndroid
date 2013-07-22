@@ -57,7 +57,7 @@ public abstract class GuideListActivity extends BaseActivity {
             GuideInfo guide = (GuideInfo)mAdapter.getItem(position);
             Intent intent = new Intent(GuideListActivity.this, GuideViewActivity.class);
 
-            intent.putExtra(GuideViewActivity.SAVED_GUIDEID, guide.mGuideid);
+            intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
             startActivity(intent);
          }
       });

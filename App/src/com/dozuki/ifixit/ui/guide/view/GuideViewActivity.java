@@ -31,7 +31,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
    private static final String PACKAGE_NAME = "com.dozuki.ifixit";
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
-   public static final String SAVED_GUIDEID = "SAVED_GUIDEID";
+   public static final String GUIDEID = "GUIDEID";
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
@@ -62,7 +62,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
       mIndicator = (TitlePageIndicator) findViewById(R.id.guide_step_title_indicator);
 
       if (savedInstanceState != null) {
-         mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
+         mGuideid = savedInstanceState.getInt(GUIDEID);
          mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
 
          if (mGuide != null) {
@@ -106,13 +106,8 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
 
    private void extractExtras(Bundle extras) {
       if (extras != null) {
-         // We're coming from the Topics GuideList
-         if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
-            mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
-
-            // We're coming from StepEdit
-         } else if (extras.containsKey(GuideViewActivity.SAVED_GUIDEID)) {
-            mGuideid = extras.getInt(GuideViewActivity.SAVED_GUIDEID);
+         if (extras.containsKey(GuideViewActivity.GUIDEID)) {
+            mGuideid = extras.getInt(GuideViewActivity.GUIDEID);
          }
 
          if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
@@ -174,7 +169,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
        * changes (selected thumbnail). However, I remember this failing with a
        * call to super.onSavInstanceState(). Investigate.
        */
-      state.putSerializable(SAVED_GUIDEID, mGuideid);
+      state.putSerializable(GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }

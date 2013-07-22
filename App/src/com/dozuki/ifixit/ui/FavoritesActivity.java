@@ -48,7 +48,7 @@ public class FavoritesActivity extends BaseActivity {
             GuideInfo guide = mGuides.get(position);
             Intent intent = new Intent(FavoritesActivity.this, GuideViewActivity.class);
 
-            intent.putExtra(GuideViewActivity.SAVED_GUIDEID, guide.mGuideid);
+            intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
             startActivity(intent);
          }
       });

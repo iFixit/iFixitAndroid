@@ -96,7 +96,7 @@ public class GuideListItem extends LinearLayout {
          @Override
          public void onClick(View v) {
             Intent intent = new Intent(mActivity, GuideViewActivity.class);
-            intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mGuideInfo.mGuideid);
+            intent.putExtra(GuideViewActivity.GUIDEID, mGuideInfo.mGuideid);
             intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
             mActivity.startActivity(intent);
          }

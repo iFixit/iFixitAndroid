@@ -17,7 +17,6 @@ import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 
 public class TopicGuideListFragment extends SherlockFragment {
 
-   public static final String GUIDEID = "guideid";
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
 
    private TopicLeaf mTopicLeaf;
@@ -57,7 +56,7 @@ public class TopicGuideListFragment extends SherlockFragment {
             GuideInfo guide = mTopicLeaf.getGuides().get(position);
             Intent intent = new Intent(getSherlockActivity(), GuideViewActivity.class);
 
-            intent.putExtra(GUIDEID, guide.mGuideid);
+            intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
             startActivity(intent);
          }
       });
