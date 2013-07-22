@@ -412,9 +412,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
-         case android.R.id.home:
-            onBackPressed();
-            return true;
          case MENU_VIEW_GUIDE:
             finishEdit(STEP_VIEW);
       }
