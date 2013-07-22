@@ -45,6 +45,7 @@ public abstract class GuideListActivity extends BaseActivity {
          initGridView();
       } else {
          APIService.call(this, getApiCall(LIMIT, OFFSET));
+         showLoading(R.id.loading_container);
       }
    }
 
@@ -77,6 +78,8 @@ public abstract class GuideListActivity extends BaseActivity {
    }
 
    protected void setGuides(APIEvent.Guides event) {
+      hideLoading();
+
       if (!event.hasError()) {
          if (mGuides != null) {
             ArrayList<GuideInfo> guides = event.getResult();

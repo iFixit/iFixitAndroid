@@ -42,8 +42,8 @@ import java.util.List;
  * Displaying various menu icons.
  */
 public abstract class BaseActivity extends SherlockFragmentActivity {
-
    private static final String STATE_ACTIVE_POSITION = "com.dozuki.ifixit.ui.BaseActivity.activePosition";
+   private static final String LOADING = "LOADING_FRAGMENT";
 
    private static final int MENU_OVERFLOW = 1;
 
@@ -521,11 +521,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    public void showLoading(int container, String message) {
       getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(message), "loading").addToBackStack("loading")
+       .add(container, new LoadingFragment(message), LOADING).addToBackStack(LOADING)
        .commit();
    }
 
    public void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 }
