@@ -227,7 +227,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
 
-      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
+      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
 
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
          getSupportActionBar().setDisplayHomeAsUpEnabled(true);
