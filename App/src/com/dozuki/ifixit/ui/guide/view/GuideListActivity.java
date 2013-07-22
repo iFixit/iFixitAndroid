@@ -73,7 +73,7 @@ public abstract class GuideListActivity extends BaseActivity {
       });
 
       mGridView.setOnScrollListener(mScrollListener);
-      mAdapter = new GuideListAdapter(this, mGuides);
+      mAdapter = new GuideListAdapter(this, mGuides, false);
       mGridView.setAdapter(mAdapter);
    }
 

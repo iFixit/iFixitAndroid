@@ -11,9 +11,11 @@ import java.util.ArrayList;
 public class GuideListAdapter extends BaseAdapter {
    private final Context mContext;
    private ArrayList<GuideInfo> mGuides;
+   private boolean mShortTitle;
 
-   public GuideListAdapter(Context context, ArrayList<GuideInfo> guides) {
+   public GuideListAdapter(Context context, ArrayList<GuideInfo> guides, boolean shortTitle) {
       mContext = context;
+      mShortTitle = shortTitle;
       setGuides(guides);
    }
 
@@ -41,7 +43,7 @@ public class GuideListAdapter extends BaseAdapter {
       GuideItemView itemView;
 
       if (convertView == null) {
-         itemView = new GuideItemView(mContext);
+         itemView = new GuideItemView(mContext, mShortTitle);
       } else {
          itemView = (GuideItemView) convertView;
       }

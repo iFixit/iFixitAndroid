@@ -53,7 +53,7 @@ public class FavoritesActivity extends BaseActivity {
          }
       });
 
-      mGridView.setAdapter(new GuideListAdapter(this, mGuides));
+      mGridView.setAdapter(new GuideListAdapter(this, mGuides, false));
       mGridView.setEmptyView(findViewById(R.id.favorites_empty_view));
    }
 
