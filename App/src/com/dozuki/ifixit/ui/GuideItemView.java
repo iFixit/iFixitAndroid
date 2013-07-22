@@ -45,6 +45,10 @@ public class GuideItemView extends RelativeLayout {
           .load(guide.getImagePath(imageSizes.getGrid()))
           .error(R.drawable.no_image)
           .into(mThumbnail);
+      } else {
+         mPicasso
+          .load(R.drawable.no_image)
+          .into(mThumbnail);
       }
    }
 }
