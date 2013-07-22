@@ -42,10 +42,6 @@ public class StepEditImageFragment extends SherlockFragment {
    // images
    private ThumbnailView mThumbs;
    private ArrayList<Image> mImages;
-   private String mTempFileName;
-
-   // Position of the temporary image captured on the phone
-   private int mTempThumbPosition;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
