@@ -135,8 +135,13 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mThumbnailContainer.setVisibility(hideOnSingleThumb ? GONE : VISIBLE);
 
       if (!images.isEmpty()) {
+         for (ImageView img : mThumbs) {
+            mThumbnailContainer.removeView(img);
+         }
+         mThumbs.clear();
+
          for (Image image : images) {
-            addThumb(image, false);
+            addThumb(image, image.isLocal());
          }
       } else {
          if (mAddThumbButton != null) {
@@ -144,7 +149,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          }
       }
 
-      setCurrentThumb(((Image)mThumbs.get(0).getTag()).getPath());
+      if (!((Image)mThumbs.get(0).getTag()).isLocal()) {
+         setCurrentThumb(((Image)mThumbs.get(0).getTag()).getPath());
+      }
+
       fitToSpace();
    }
 
@@ -157,7 +165,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void setAddImageMain() {
-
       mMainImage.setImageDrawable(getResources().getDrawable(R.drawable.add_photos));
       mMainImage.setScaleType(ImageView.ScaleType.FIT_CENTER);
       mMainImage.setOnClickListener(mAddThumbListener);
@@ -308,7 +315,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mNavigationHeight = navHeight;
    }
 
-   public void setMainImageDimensions(float height, float width) {
+   private void setMainImageDimensions(float height, float width) {
       // Set the width and height of the main image
       mMainImage.getLayoutParams().height = (int) (height - 0.5f);
       mMainImage.getLayoutParams().width = (int) (width - 0.5f);
@@ -317,7 +324,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
        (mThumbs.size() == 0) ? ImageView.ScaleType.CENTER_INSIDE : ImageView.ScaleType.FIT_CENTER);
    }
 
-   public void setThumbnailDimensions(ImageView thumb, float height, float width) {
+   private void setThumbnailDimensions(ImageView thumb, float height, float width) {
       LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
        (int) (width - .5f),
        (int) (height - .5f)
@@ -340,7 +347,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
        .into(image);
    }
 
-   public void calculateDimensions() {
+   private void calculateDimensions() {
       if (mMainWidth == 0 || mMainHeight == 0)
          getMainImageDimensions();
 

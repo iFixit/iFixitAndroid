@@ -152,8 +152,8 @@
     <string name="next_page_image_desc">Next page</string>
 
     <string name="video_play_button_description">Video Play Button</string>
-    <string name="video_activity_progress_title">Please Wait...</string>
-    <string name="video_activity_progress_body">Loading Video...</string>
+    <string name="video_activity_progress_title">Please Wait…</string>
+    <string name="video_activity_progress_body">Loading Video…</string>
 
     <!-- Guide View Menu -->
     <string name="guide_edit_text">Edit</string>
@@ -283,7 +283,7 @@
     <string name="restart_video_message">Play this video again?</string>
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Name</string>
     <string name="guide_intro_wizard_guide_subject_hint">For example - Screen, Battery, Spark Plugs, etc</string>
-    <string name="loading_image">@string/loading</string>
+    <string name="loading_image">Uploading Images…</string>
     <string name="black_bullet_description">Black bullet</string>
     <string name="red_bullet_description">Red bullet</string>
     <string name="orange_bullet_description">Orange bullet</string>
@@ -295,11 +295,11 @@
     <string name="important_bullet_description">Important note bullet</string>
     <string name="bullet_reorder_description">Reminder bullet</string>
     <string name="default_step_number">Step #</string>
-    <string name="loading">Loading...</string>
+    <string name="loading">Loading…</string>
     <string name="topic_info_image">Main topic image</string>
     <string name="delete_step">Delete step</string>
-    <string name="deleting">Deleting...</string>
-    <string name="saving">Saving...</string>
+    <string name="deleting">Deleting…</string>
+    <string name="saving">Saving…</string>
     <string name="gallery_image_content_description">Gallery Image</string>
     <string name="optional">Optional</string>
     <string name="teardowns">Teardowns</string>

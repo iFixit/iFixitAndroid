@@ -129,6 +129,10 @@ public class StepEditFragment extends SherlockFragment {
       return mEditImageFrag.getImages();
    }
 
+   public void setImages(ArrayList<Image> images) {
+      mEditImageFrag.setImages(images);
+   }
+
    private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditBulletFrag.setStepTitle(mStepObject.getTitle());

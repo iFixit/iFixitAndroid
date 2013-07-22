@@ -135,7 +135,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       MainApplication.getBus().unregister(this);
    }
 
-
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);

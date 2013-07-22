@@ -70,6 +70,23 @@ public class GuideStep implements Serializable {
       }
    }
 
+   public boolean hasLocalImages() {
+      for (Image image : mImages) {
+         if (image.isLocal()) return true;
+      }
+
+      return false;
+   }
+
+   public int localImageCount() {
+      int count = 0;
+
+      for (Image image : mImages) {
+         if (image.isLocal()) count++;
+      }
+      return count;
+   }
+
    public int getGuideid() {
       return mGuideid;
    }

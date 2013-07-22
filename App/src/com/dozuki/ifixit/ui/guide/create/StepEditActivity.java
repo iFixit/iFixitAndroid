@@ -5,11 +5,13 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -41,7 +43,10 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
+   public static final int GALLERY_REQUEST_CODE = 1;
+   public static final int CAMERA_REQUEST_CODE = 1888;
 
+   public static final String TEMP_FILE_NAME_KEY = "TEMP_FILE_NAME_KEY";
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
    public static final String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
@@ -147,9 +152,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
 
-      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
-      mPager.setAdapter(mStepAdapter);
+      initPager();
       mPager.setCurrentItem(startPage);
 
       titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
@@ -166,6 +170,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
       }
+   }
+
+   private void initPager() {
+      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+      mPager.setAdapter(mStepAdapter);
    }
 
    private void extractExtras(Bundle extras) {
@@ -193,14 +202,53 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      MainApplication.getBus().register(this);
+      //MainApplication.getBus().register(this);
 
       super.onActivityResult(requestCode, resultCode, data);
 
       if (mCurStepFragment != null) {
-         mCurStepFragment.setMediaResult(requestCode, resultCode, data);
+         Image newThumb;
+
+         switch (requestCode) {
+            case GALLERY_REQUEST_CODE:
+               if (data != null) {
+                  newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
+                  mGuide.getStep(mPagePosition).addImage(newThumb);
+                  mCurStepFragment.setImages(mGuide.getStep(mPagePosition).getImages());
+               } else {
+                  Log.e("StepEditActivity", "Error data is null!");
+                  return;
+               }
+
+               break;
+            case CAMERA_REQUEST_CODE:
+               if (resultCode == Activity.RESULT_OK) {
+
+                  SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
+                  String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
+
+                  if (tempFileName == null) {
+                     Log.e("StepEditActivity", "Error cameraTempFile is null!");
+                     return;
+                  }
+
+                  // Prevent a save from being called until the image uploads and returns with the imageid
+                  lockSave();
+
+                  newThumb = new Image();
+                  newThumb.setLocalImage(tempFileName);
+
+                  mGuide.getStep(mPagePosition).addImage(newThumb);
+                  mCurStepFragment.setImages(mGuide.getStep(mPagePosition).getImages());
+
+                  APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
+               }
+               break;
+         }
+
       } else {
          if (resultCode == RESULT_OK) {
+
             // we dont have a reference the the fragment managing the media, so we make the changes to the step manually
             Image image = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
             ArrayList<Image> list = mGuide.getStep(mPagePosition).getImages();
@@ -214,8 +262,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             mGuide.getStep(mPagePosition).setImages(list);
             toggleSave(true);
             // recreate pager with updated step:
-            mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-            mPager.setAdapter(mStepAdapter);
+            initPager();
             mPager.invalidate();
             titleIndicator.invalidate();
             mPager.setCurrentItem(mPagePosition, false);
@@ -305,6 +352,44 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    @Subscribe
+   public void onUploadStepImage(APIEvent.UploadStepImage event) {
+      if (!event.hasError()) {
+         Image newThumb = event.getResult();
+
+         // Find the temporarily stored image object to update the filename to the image path and imageid
+         if (newThumb != null) {
+            ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(mPagePosition).getImages());
+
+            for (Image image : images) {
+               if (image.isLocal()) {
+                  images.set(images.indexOf(image), newThumb);
+                  break;
+               }
+            }
+
+            mCurStepFragment.setImages(images);
+            mGuide.getStep(mPagePosition).setImages(images);
+         }
+
+         if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
+            unlockSave();
+
+            // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
+            MainApplication.getBus().post(new StepChangedEvent());
+         }
+      } else {
+         Log.e("Upload Image Error", event.getError().mMessage);
+         event.setError(APIError.getFatalError(this));
+         APIService.getErrorDialog(this, event.getError(), null).show();
+      }
+   }
+
+   @Subscribe
+   public void onStepImageDelete(StepImageDeleteEvent event) {
+      mGuide.getStep(mPagePosition).getImages().remove(event.image);
+   }
+
+   @Subscribe
    public void onStepAdd(APIEvent.StepAdd event) {
 
       hideLoading();
@@ -341,7 +426,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (!event.hasError()) {
          Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
           Toast.LENGTH_LONG).show();
-
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
@@ -392,8 +476,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                }
 
                // The view pager does not recreate the item in the current position unless we force it
-               mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-               mPager.setAdapter(mStepAdapter);
+               initPager();
                mPager.invalidate();
                titleIndicator.invalidate();
 
@@ -577,12 +660,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    protected void save(int savePosition) {
       GuideStep obj = mGuide.getStep(savePosition);
+
       obj.setLines(mCurStepFragment.getLines());
-
-      if (!obj.hasVideo() && !obj.hasEmbed()) {
-         obj.setImages(mCurStepFragment.getImages());
-      }
-
       obj.setTitle(mCurStepFragment.getTitle());
 
       mGuide.getSteps().set(savePosition, obj);
@@ -738,8 +817,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       }
 
       // The view pager does not recreate the item in the current position unless we force it to:
-      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-      mPager.setAdapter(mStepAdapter);
+      initPager();
       mPager.setCurrentItem(mPagePosition);
       mPager.invalidate();
       titleIndicator.invalidate();
@@ -768,7 +846,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    public void lockSave() {
       mLockSave = true;
-      mSaveStep.setText(R.string.loading_image);
+
+      mSaveStep.setText(getString(R.string.loading_image));
+      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_dark_grey));
+      mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_grey));
+
       enableViewPager(false);
    }
 
