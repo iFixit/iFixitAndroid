@@ -758,9 +758,18 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             }
          }
 
+         int guideSize = mGuide.getSteps().size();
+
          // Make sure the step numbers are correct after removing steps.
-         for (int i = 1; i <= mGuide.getSteps().size(); i++) {
+         for (int i = 1; i <= guideSize; i++) {
             mGuide.getStep(i - 1).setStepNum(i);
+         }
+
+         // If the current position is equal to or greater than the number of steps in the guide,
+         // there was a new step at the end of the guide and that position no longer exists.  Set the page position
+         // to the new last step.
+         if (mPagePosition >= guideSize) {
+            mPagePosition = guideSize - 1;
          }
 
          Intent data;
