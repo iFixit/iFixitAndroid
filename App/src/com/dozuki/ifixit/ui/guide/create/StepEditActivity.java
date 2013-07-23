@@ -196,6 +196,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    public void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
 
+      mGuide = null;
+      mPagePosition = 0;
+
       extractExtras(intent.getExtras());
    }
 

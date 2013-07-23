@@ -236,8 +236,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          Image image = (Image) mThumbs.get(mThumbs.size() - 1).getTag();
          setCurrentThumb(image.getPath());
       }
-
-      invalidate();
    }
 
    public void updateThumb(Image newImage) {

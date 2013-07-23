@@ -125,10 +125,6 @@ public class StepEditFragment extends SherlockFragment {
       return mEditBulletFrag.getTitle();
    }
 
-   public ArrayList<Image> getImages() {
-      return mEditImageFrag.getImages();
-   }
-
    public void setImages(ArrayList<Image> images) {
       mEditImageFrag.setImages(images);
    }
