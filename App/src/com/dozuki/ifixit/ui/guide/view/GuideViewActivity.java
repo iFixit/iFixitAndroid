@@ -14,7 +14,6 @@ import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
@@ -215,6 +214,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                   intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
                   intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
                   intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
+                  intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                   startActivity(intent);
                }
             }

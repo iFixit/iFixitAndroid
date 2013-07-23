@@ -86,9 +86,10 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
       savedInstanceState.putBoolean(LOADING, mIsLoading);
-      super.onSaveInstanceState(savedInstanceState);
    }
 
    @Override

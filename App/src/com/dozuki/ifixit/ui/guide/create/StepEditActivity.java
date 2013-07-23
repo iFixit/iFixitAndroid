@@ -289,12 +289,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       savedInstanceState.putInt(EXIT_CODE, mExitCode);
    }
 
-   @Override
-   public void finish() {
+   public void navigateBack() {
       Intent returnIntent = new Intent();
       returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
       setResult(RESULT_OK, returnIntent);
-      super.finish();
+      finish();
    }
 
    @Override
@@ -491,7 +490,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    @Override
    public void onBackPressed() {
-      finishEdit(FOR_RESULT);
+      finishEdit(HOME_UP);
    }
 
    @Override
@@ -632,7 +631,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
               if (mExitCode == STEP_VIEW) {
                  navigateToStepView();
               } else {
-                 finish();
+                 navigateBack();
               }
            }
         })
@@ -748,12 +747,13 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());
       intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
       intent.putExtra(GuideViewActivity.FROM_EDIT, true);
+      intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
       startActivity(intent);
    }
 
    protected void finishEdit(int exitCode) {
       mExitCode = exitCode;
-      if (mIsStepDirty) {
+      if (mIsStepDirty || mLockSave) {
          createExitWarningDialog(exitCode).show();
       } else {
 
@@ -784,7 +784,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                data = new Intent(this, StepsActivity.class);
                data.putExtra(StepsActivity.GUIDE_ID_KEY, mGuide.getGuideid());
                data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
                startActivity(data);
                break;
