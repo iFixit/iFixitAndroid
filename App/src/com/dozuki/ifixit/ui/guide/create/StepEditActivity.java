@@ -200,6 +200,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mPagePosition = 0;
 
       extractExtras(intent.getExtras());
+      if (mGuide != null) {
+         initPage(mPagePosition);
+      }
    }
 
    @Override
