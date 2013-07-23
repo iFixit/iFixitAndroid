@@ -86,6 +86,20 @@ public class StepEditImageFragment extends SherlockFragment {
    }
 
    @Override
+   public void onResume() {
+      super.onResume();
+
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      MainApplication.getBus().unregister(this);
+   }
+
+   @Override
    public void onActivityCreated(Bundle savedInstanceState) {
       super.onActivityCreated(savedInstanceState);
 
@@ -156,6 +170,7 @@ public class StepEditImageFragment extends SherlockFragment {
                          bus.post(new StepChangedEvent());
 
                          mThumbs.removeThumb((ImageView) v);
+                         mImages.remove(v);
                          break;
                    }
                 }
@@ -181,12 +196,9 @@ public class StepEditImageFragment extends SherlockFragment {
    protected void setImages(ArrayList<Image> images) {
       mImages = new ArrayList<Image>(images);
 
-      if (mThumbs != null)
+      if (mThumbs != null) {
          mThumbs.setThumbs(mImages);
-   }
-
-   protected ArrayList<Image> getImages() {
-      return mImages;
+      }
    }
 
    protected float navigationHeight() {

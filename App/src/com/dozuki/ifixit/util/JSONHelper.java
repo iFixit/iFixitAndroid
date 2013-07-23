@@ -570,12 +570,12 @@ public class JSONHelper {
       return array;
    }
 
-   public static JSONArray createImageArray(ArrayList<Image> lines) throws JSONException {
+   public static JSONArray createImageArray(ArrayList<Image> images) throws JSONException {
 
       JSONArray array = new JSONArray();
 
-      for (Image l : lines) {
-         array.put(l.getId());
+      for (Image image : images) {
+         array.put(image.getId());
       }
       return array;
    }

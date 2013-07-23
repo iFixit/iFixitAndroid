@@ -334,12 +334,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       hideLoading();
 
       if (!event.hasError()) {
-
          GuideStep step = event.getResult();
-
          mGuide.getSteps().set(mSavePosition, step);
 
-         mStepAdapter.notifyDataSetChanged();
       } else {
 
          mIsStepDirty = true;
