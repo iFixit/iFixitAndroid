@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -120,89 +121,99 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-         Intent intent;
+         String tag = (String) view.getTag();
          Context context = parent.getContext();
-         String url;
-         mActivePosition = position;
-         mMenuDrawer.setActiveView(view, position);
+         if (alertOnNavigation()) {
+            navigationAlertDialog(tag, context).show();
+         } else {
+            mActivePosition = position;
+            mMenuDrawer.setActiveView(view, position);
 
-         switch (Navigation.navigate((String) view.getTag())) {
-            case SEARCH:
-            case BROWSE_TOPICS:
-               intent = new Intent(context, TopicActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case FEATURED_GUIDES:
-               intent = new Intent(context, FeaturedGuidesActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case TEARDOWNS:
-               intent = new Intent(context, TeardownsActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case USER_FAVORITES:
-               intent = new Intent(context, FavoritesActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case USER_GUIDES:
-               intent = new Intent(context, GuideCreateActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case NEW_GUIDE:
-               intent = new Intent(context, GuideIntroActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case MEDIA_GALLERY:
-               intent = new Intent(context, GalleryActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-            case LOGOUT:
-               MainApplication.get().logout(BaseActivity.this);
-               break;
-
-            case YOUTUBE:
-               intent = new Intent(Intent.ACTION_VIEW);
-               url = "https://www.youtube.com/user/iFixitYourself";
-
-               intent.setData(Uri.parse(url));
-               startActivity(intent);
-               break;
-
-            case FACEBOOK:
-               intent = new Intent(Intent.ACTION_VIEW);
-               url = "https://www.facebook.com/iFixit";
-
-               intent.setData(Uri.parse(url));
-               startActivity(intent);
-               break;
-
-            case TWITTER:
-               intent = new Intent(Intent.ACTION_VIEW);
-               url = "https://twitter.com/iFixit";
-
-               intent.setData(Uri.parse(url));
-               startActivity(intent);
-               break;
-
-            case HELP:
-            case ABOUT:
+            navigateMenuDrawer(tag, context);
          }
-         mMenuDrawer.closeMenu();
       }
    };
+
+   public void navigateMenuDrawer(String tag, Context context) {
+      Intent intent;
+      String url;
+
+      switch (Navigation.navigate(tag)) {
+         case SEARCH:
+         case BROWSE_TOPICS:
+            intent = new Intent(context, TopicActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case FEATURED_GUIDES:
+            intent = new Intent(context, FeaturedGuidesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case TEARDOWNS:
+            intent = new Intent(context, TeardownsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case USER_FAVORITES:
+            intent = new Intent(context, FavoritesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case USER_GUIDES:
+            intent = new Intent(context, GuideCreateActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case NEW_GUIDE:
+            intent = new Intent(context, GuideIntroActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case MEDIA_GALLERY:
+            intent = new Intent(context, GalleryActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+         case LOGOUT:
+            MainApplication.get().logout(BaseActivity.this);
+            break;
+
+         case YOUTUBE:
+            intent = new Intent(Intent.ACTION_VIEW);
+            url = "https://www.youtube.com/user/iFixitYourself";
+
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+            break;
+
+         case FACEBOOK:
+            intent = new Intent(Intent.ACTION_VIEW);
+            url = "https://www.facebook.com/iFixit";
+
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+            break;
+
+         case TWITTER:
+            intent = new Intent(Intent.ACTION_VIEW);
+            url = "https://twitter.com/iFixit";
+
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+            break;
+
+         case HELP:
+         case ABOUT:
+      }
+      mMenuDrawer.closeMenu();
+   }
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -450,6 +461,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          return v;
       }
+   }
+
+   /**
+    * Whether the activity show warn the user before navigating away using the MenuDrawer.
+    * @return
+    */
+   public boolean alertOnNavigation() {
+      return false;
+   }
+
+   public AlertDialog navigationAlertDialog(String tag, Context context) {
+      return null;
    }
 
    /**

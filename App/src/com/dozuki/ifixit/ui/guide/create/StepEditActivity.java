@@ -312,6 +312,49 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    @Override
+   public boolean alertOnNavigation() {
+      return true;
+   }
+
+   @Override
+   public AlertDialog navigationAlertDialog(final String tag, final Context context) {
+      mShowingSave = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+       .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
+       .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
+       .setNegativeButton(getString(R.string.save),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = true;
+              save(mPagePosition);
+              dialog.dismiss();
+
+              navigateMenuDrawer(tag, context);
+           }
+        })
+       .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = false;
+              dialog.dismiss();
+
+              navigateMenuDrawer(tag, context);
+           }
+        });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingSave = false;
+         }
+      });
+
+      return dialog;
+   }
+
+   @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       menu.add(1, MENU_VIEW_GUIDE, 0, R.string.view_guide)
        .setIcon(R.drawable.ic_action_book)
