@@ -207,7 +207,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      //MainApplication.getBus().register(this);
+      MainApplication.getBus().register(this);
 
       super.onActivityResult(requestCode, resultCode, data);
 
@@ -220,6 +220,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                   newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                   mGuide.getStep(mPagePosition).addImage(newThumb);
                   mCurStepFragment.setImages(mGuide.getStep(mPagePosition).getImages());
+                  MainApplication.getBus().post(new StepChangedEvent());
                } else {
                   Log.e("StepEditActivity", "Error data is null!");
                   return;
