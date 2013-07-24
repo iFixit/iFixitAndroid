@@ -16,6 +16,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.util.Utils;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -141,7 +142,7 @@ public class GalleryActivity extends BaseActivity {
 
       @Override
       public CharSequence getPageTitle(int position) {
-         return "Images";
+         return Utils.capitalize(getString(R.string.images));
          /*
           * switch (position) {
           * case 0:

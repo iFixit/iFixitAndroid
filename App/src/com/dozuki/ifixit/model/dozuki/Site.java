@@ -4,6 +4,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.util.EditDistance;
+import com.dozuki.ifixit.util.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -66,14 +67,14 @@ public class Site implements Serializable {
       ArrayList<String> types = new ArrayList<String>();
 
       for (GuideType type : mGuideTypes) {
-         types.add(capitalize(type.mType));
+         types.add(Utils.capitalize(type.mType));
       }
 
       return types;
    }
 
    public String siteName() {
-      return capitalize(mName);
+      return Utils.capitalize(mName);
    }
 
    public String getAPIDomain() {
@@ -170,9 +171,5 @@ public class Site implements Serializable {
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
        mPublicRegistration + "|" + mGuideTypes.toString() + "}";
-   }
-
-   private String capitalize(String word) {
-      return Character.toUpperCase(word.charAt(0)) + word.substring(1);
    }
 }
