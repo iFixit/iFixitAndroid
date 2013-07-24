@@ -56,6 +56,7 @@ public abstract class MediaFragment extends SherlockFragment
    protected MediaAdapter mGalleryAdapter;
    protected GalleryMediaList mMediaList;
    protected boolean mNextPageRequestInProgress;
+   protected ArrayList<Integer> mAlreadyAttachedImages;
    private GridView mGridView;
    private String mUserName;
    private ImageSizes mImageSizes;
@@ -256,6 +257,10 @@ public abstract class MediaFragment extends SherlockFragment
 
    public void setForReturn(boolean returnItem) {
       mSelectForReturn = returnItem;
+   }
+
+   public void setAlreadyAttachedImages(ArrayList<Integer> imageids) {
+      mAlreadyAttachedImages = new ArrayList<Integer>(imageids);
    }
 
    protected void setEmptyListView() {

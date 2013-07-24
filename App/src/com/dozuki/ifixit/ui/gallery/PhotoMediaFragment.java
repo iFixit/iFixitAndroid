@@ -44,6 +44,9 @@ public class PhotoMediaFragment extends MediaFragment {
          ArrayList<UserImage> imageList = new ArrayList<UserImage>(event.getResult());
          if (imageList.size() > 0) {
             mMediaList.setItems(imageList);
+            if (mAlreadyAttachedImages != null) {
+               mMediaList.removeImagesWithIds(mAlreadyAttachedImages);
+            }
             mGalleryAdapter.notifyDataSetChanged();
             mGalleryAdapter.invalidatedView();
          }

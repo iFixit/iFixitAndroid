@@ -8,7 +8,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
-
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -20,6 +19,7 @@ import com.dozuki.ifixit.util.Utils;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GalleryActivity extends BaseActivity {
@@ -29,6 +29,7 @@ public class GalleryActivity extends BaseActivity {
 
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    public static final String MEDIA_RETURN_KEY = "MEDIA_RETURN_KEY";
+   public static final String ATTACHED_MEDIA_IDS = "ATTACHED_MEDIA_IDS";
 
    public static boolean showingLogout;
    public static boolean showingHelp;
@@ -61,6 +62,8 @@ public class GalleryActivity extends BaseActivity {
       if (getIntent().getExtras() != null) {
          Bundle bundle = getIntent().getExtras();
          int returnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
+         ArrayList<Integer> alreadyAttachedImages = bundle.getIntegerArrayList(ATTACHED_MEDIA_IDS);
+         mCurrentMediaFragment.setAlreadyAttachedImages(alreadyAttachedImages);
          if (returnValue != -1) {
             getMediaItemForReturn = true;
          }

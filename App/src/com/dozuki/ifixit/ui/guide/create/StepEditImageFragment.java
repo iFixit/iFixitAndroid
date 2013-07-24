@@ -36,6 +36,8 @@ public class StepEditImageFragment extends SherlockFragment {
    private static final int DETACH_TO_MEDIA_MANAGER = 1;
    private static final int DELETE_FROM_STEP = 2;
    private static final String IMAGES_KEY = "IMAGES_KEY";
+   private static final int CAPTURE_IMAGE = 0;
+   private static final int MEDIA_MANAGER = 1;
 
    private Activity mContext;
 
@@ -114,7 +116,7 @@ public class StepEditImageFragment extends SherlockFragment {
                 public void onClick(DialogInterface dialog, int which) {
                    Intent intent;
                    switch (which) {
-                      case 0:
+                      case CAPTURE_IMAGE:
                          try {
 
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -133,9 +135,14 @@ public class StepEditImageFragment extends SherlockFragment {
                          }
 
                          break;
-                      case 1:
+                      case MEDIA_MANAGER:
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
+                         ArrayList<Integer> attachedMediaIds = new ArrayList<Integer>();
+                         for (Image image : mImages) {
+                            attachedMediaIds.add(image.getId());
+                         }
+                         intent.putIntegerArrayListExtra(GalleryActivity.ATTACHED_MEDIA_IDS, attachedMediaIds);
                          mContext.startActivityForResult(intent, StepEditActivity.GALLERY_REQUEST_CODE);
                          break;
                    }
