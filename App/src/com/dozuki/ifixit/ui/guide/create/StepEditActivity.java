@@ -33,7 +33,6 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
-import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -43,6 +42,12 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
+
+   private enum ConfirmSave {
+      NEW_STEP,
+      NEXT_STEP
+   }
+
    public static final int GALLERY_REQUEST_CODE = 1;
    public static final int CAMERA_REQUEST_CODE = 1888;
 
@@ -70,7 +75,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private ImageButton mDeleteStepButton;
    private StepAdapter mStepAdapter;
    private LockableViewPager mPager;
-   private TitlePageIndicator titleIndicator;
+   private LockableTitlePageIndicator mTitleIndicator;
    private int mPagePosition = 0;
    private int mSavePosition;
 
@@ -85,6 +90,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private boolean mShowingHelp;
    private boolean mShowingSave;
    private boolean mIsLoading;
+
+   // Should a new step be created after a step POST response (creating a new step)
+   private boolean mAddStepAfterSave = false;
 
    // Flag to prevent saving a guide while we're waiting for an image to upload and return
    private boolean mLockSave;
@@ -155,8 +163,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       initPager();
       mPager.setCurrentItem(startPage);
 
-      titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
-      titleIndicator.setViewPager(mPager);
+      mTitleIndicator = (LockableTitlePageIndicator) findViewById(R.id.step_edit_top_bar);
+      mTitleIndicator.setViewPager(mPager);
+
       mSaveStep.setOnClickListener(this);
       mAddStepButton.setOnClickListener(this);
       mDeleteStepButton.setOnClickListener(this);
@@ -270,7 +279,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             // recreate pager with updated step:
             initPager();
             mPager.invalidate();
-            titleIndicator.invalidate();
+            mTitleIndicator.invalidate();
             mPager.setCurrentItem(mPagePosition, false);
          }
       }
@@ -342,9 +351,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (!event.hasError()) {
          GuideStep step = event.getResult();
          mGuide.getSteps().set(mSavePosition, step);
-
       } else {
-
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
@@ -393,15 +400,20 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    @Subscribe
    public void onStepAdd(APIEvent.StepAdd event) {
-
       hideLoading();
 
       if (!event.hasError()) {
          mGuide = event.getResult();
 
          mStepAdapter.notifyDataSetChanged();
-         mPager.setCurrentItem(mPagePosition);
+         mPager.setCurrentItem(mSavePosition);
+
+         if (mAddStepAfterSave) {
+            addNewStep(mSavePosition + 1);
+            mAddStepAfterSave = false;
+         }
       } else {
+         mAddStepAfterSave = false;
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
@@ -460,33 +472,37 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
             // If the step has changes, save it first.
             if (mIsStepDirty) {
-               save(mPagePosition);
+               createSaveChangesDialog(ConfirmSave.NEW_STEP).show();
             } else if (!stepHasLineContent(mGuide.getStep(mPagePosition))) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
                 Toast.LENGTH_SHORT).show();
                return;
             } else {
-               GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-               item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-               item.addLine(new StepLine());
-               item.setStepNum(newPosition);
-
-               mGuide.addStep(item, newPosition);
-
-               for (int i = 1; i < mGuide.getSteps().size(); i++) {
-                  mGuide.getStep(i).setStepNum(i);
-               }
-
-               // The view pager does not recreate the item in the current position unless we force it
-               initPager();
-               mPager.invalidate();
-               titleIndicator.invalidate();
-
-               mPager.setCurrentItem(newPosition, false);
+               addNewStep(newPosition);
             }
 
             break;
       }
+   }
+
+   public void addNewStep(int newPosition) {
+      GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
+      item.setTitle(StepPortalFragment.DEFAULT_TITLE);
+      item.addLine(new StepLine());
+      item.setStepNum(newPosition);
+
+      mGuide.addStep(item, newPosition);
+
+      for (int i = 1; i < mGuide.getSteps().size(); i++) {
+         mGuide.getStep(i).setStepNum(i);
+      }
+
+      // The view pager does not recreate the item in the current position unless we force it
+      initPager();
+      mPager.invalidate();
+      mTitleIndicator.invalidate();
+
+      mPager.setCurrentItem(newPosition, false);
    }
 
    @Override
@@ -614,6 +630,46 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
        });
 
       return builder.create();
+   }
+
+   protected AlertDialog createSaveChangesDialog(final ConfirmSave dialogType) {
+      mShowingSave = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+       .setTitle("Save changes to this step?")
+       .setPositiveButton(getString(R.string.yes),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              save(mPagePosition);
+              dialog.dismiss();
+              switch (dialogType) {
+                 case NEW_STEP:
+                    addNewStep(mPagePosition + 1);
+                    mAddStepAfterSave = true;
+                    break;
+                 case NEXT_STEP:
+                    break;
+              }
+           }
+        })
+       .setNegativeButton(getString(R.string.no),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = false;
+              dialog.dismiss();
+           }
+        });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingSave = false;
+         }
+      });
+
+      return dialog;
+
    }
 
    protected AlertDialog createExitWarningDialog(final int exitCode) {
@@ -833,7 +889,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       initPager();
       mPager.setCurrentItem(mPagePosition);
       mPager.invalidate();
-      titleIndicator.invalidate();
+      mTitleIndicator.invalidate();
 
    }
 
@@ -854,6 +910,10 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    protected void enableViewPager(boolean unlocked) {
       if (mPager != null) {
          mPager.setPagingEnabled(unlocked);
+      }
+
+      if (mTitleIndicator != null) {
+         mTitleIndicator.setPagingEnabled(unlocked);
       }
    }
 
