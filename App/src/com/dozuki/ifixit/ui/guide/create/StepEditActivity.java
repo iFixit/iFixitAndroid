@@ -87,9 +87,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private int mInboundStepId;
 
    private boolean mConfirmDelete = false;
-   private boolean mIsStepDirty;
-   private boolean mShowingHelp;
-   private boolean mShowingSave;
+   private boolean mIsStepDirty = false;
+   private boolean mShowingHelp = false;
+   private boolean mShowingSave = false;
    private boolean mIsLoading;
 
    // Should a new step be created after a step POST response (creating a new step)
@@ -314,7 +314,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    @Override
    public boolean alertOnNavigation() {
-      return true;
+      return mIsStepDirty;
    }
 
    @Override
