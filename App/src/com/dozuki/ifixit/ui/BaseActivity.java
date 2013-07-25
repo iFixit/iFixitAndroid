@@ -265,8 +265,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       if (onIfixit) items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, "teardowns"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
-      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
       items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, "user_favorites"));
+      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
       items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, "new_guide"));
       items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
 
