@@ -687,7 +687,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
-       .setTitle("Save changes to this step?")
+       .setTitle(getString(R.string.save_changes_to_step))
        .setPositiveButton(getString(R.string.yes),
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
