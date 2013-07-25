@@ -888,6 +888,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                 | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
                startActivity(data);
+               finish();
                break;
             case FOR_RESULT:
                data = new Intent();
