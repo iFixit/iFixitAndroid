@@ -695,10 +695,10 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
               }
            }
         })
-       .setNegativeButton(getString(R.string.no),
+       .setNegativeButton(getString(R.string.cancel),
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
-              mIsStepDirty = false;
+              mIsStepDirty = true;
               dialog.dismiss();
            }
         });
