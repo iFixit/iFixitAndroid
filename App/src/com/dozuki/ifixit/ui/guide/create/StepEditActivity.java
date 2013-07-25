@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -471,7 +472,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       if (!event.hasError()) {
          mGuide.setRevisionid(event.getResult().getRevisionid());
-         deleteStep(false);
+         deleteStep();
       } else {
          event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
@@ -601,7 +602,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          if (position >= 0) {
             return position;
          } else {*/
-         return POSITION_NONE;
+         return PagerAdapter.POSITION_NONE;
          // }
       }
 
@@ -634,7 +635,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
              if (mPagePosition >= mGuide.getSteps().size()
               // or it's a new step
               || mGuide.getStep(mPagePosition).getRevisionid() == null) {
-                deleteStep(mIsStepDirty);
+                deleteStep();
              } else {
                 showLoading(mLoadingContainer, getString(R.string.deleting));
                 APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
@@ -910,16 +911,14 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       }
    }
 
-   protected void deleteStep(boolean unsaved) {
-
-      // Delete the step if it hasn't been saved yet.
-      if (mPagePosition < mGuide.getSteps().size() && !unsaved) {
-         mGuide.getSteps().remove(mPagePosition);
-      }
+   protected void deleteStep() {
+      mGuide.getSteps().remove(mPagePosition);
 
       // If it's the last step in the guide, finish the activity.
       if (mGuide.getSteps().size() == 0) {
-         finish();
+         mStepAdapter.notifyDataSetChanged();
+
+         navigateBack();
          return;
       }
 
@@ -929,12 +928,14 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mGuide.getStep(i).setStepNum(i);
       }
 
-      // The view pager does not recreate the item in the current position unless we force it to:
-      initPager();
-      mPager.setCurrentItem(mPagePosition);
-      mPager.invalidate();
-      mTitleIndicator.invalidate();
+      int newPosition = mPagePosition - 1;
 
+      // The view pager does not recreate the item in the current position unless we force it to.
+      initPager();
+      mPager.invalidate();
+      mTitleIndicator.notifyDataSetChanged();
+      mStepAdapter.notifyDataSetChanged();
+      mPager.setCurrentItem(newPosition, false);
    }
 
    public void toggleSave(boolean toggle) {
