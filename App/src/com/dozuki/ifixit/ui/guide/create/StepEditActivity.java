@@ -514,9 +514,10 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          case R.id.step_edit_add_step:
             int newPosition = mPagePosition + 1;
 
-            // If the step has changes, save it first.
+            // If the step has changes, prompt the user to save or continue editing.
             if (mIsStepDirty) {
                createSaveChangesDialog(ConfirmSave.NEW_STEP).show();
+            // If the step doesn't have any bullet content, prompt them to add some.
             } else if (!stepHasLineContent(mGuide.getStep(mPagePosition))) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
                 Toast.LENGTH_SHORT).show();
@@ -530,23 +531,29 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    public void addNewStep(int newPosition) {
-      GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-      item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-      item.addLine(new StepLine());
-      item.setStepNum(newPosition);
+      if (!mGuide.hasNewStep()) {
+         GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
+         item.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         item.addLine(new StepLine());
+         item.setStepNum(newPosition);
 
-      mGuide.addStep(item, newPosition);
+         mGuide.addStep(item, newPosition);
 
-      for (int i = 1; i < mGuide.getSteps().size(); i++) {
-         mGuide.getStep(i).setStepNum(i);
+         for (int i = 1; i < mGuide.getSteps().size(); i++) {
+            mGuide.getStep(i).setStepNum(i);
+         }
+
+         // The view pager does not recreate the item in the current position unless we force it
+         initPager();
+         mPager.invalidate();
+         mTitleIndicator.invalidate();
+
+         mPager.setCurrentItem(newPosition, false);
+      } else {
+         // Show "Must add content to step" toast
+         Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
+          Toast.LENGTH_SHORT).show();
       }
-
-      // The view pager does not recreate the item in the current position unless we force it
-      initPager();
-      mPager.invalidate();
-      mTitleIndicator.invalidate();
-
-      mPager.setCurrentItem(newPosition, false);
    }
 
    @Override

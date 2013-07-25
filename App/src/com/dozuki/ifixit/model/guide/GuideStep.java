@@ -78,6 +78,10 @@ public class GuideStep implements Serializable {
       return false;
    }
 
+   public boolean isNewStep() {
+      return mRevisionid == null;
+   }
+
    public int localImageCount() {
       int count = 0;
 
@@ -109,6 +113,10 @@ public class GuideStep implements Serializable {
 
    public void setRevisionid(Integer revisionid) {
       mRevisionid = revisionid;
+   }
+
+   public Integer getRevisionid() {
+      return mRevisionid;
    }
 
    public void setOrderby(int orderby) {
@@ -180,10 +188,5 @@ public class GuideStep implements Serializable {
    public String toString() {
       return "{GuideStep: " + mGuideid + ", " + mStepid + ", " + mRevisionid + ", " +
        mOrderby + ", " + mStepNum + ", " + mTitle + ", " + mLines + ", " + mImages + "}";
-   }
-
-
-   public Integer getRevisionid() {
-      return mRevisionid;
    }
 }

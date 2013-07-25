@@ -115,6 +115,15 @@ public class Guide implements Serializable {
       return mSteps.get(position);
    }
 
+   public boolean hasNewStep() {
+      for (GuideStep step : mSteps) {
+         if (step.isNewStep()) {
+            return true;
+         }
+      }
+      return false;
+   }
+
    public int getGuideid() {
       return mGuideid;
    }
