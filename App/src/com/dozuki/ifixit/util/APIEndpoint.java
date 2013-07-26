@@ -463,26 +463,6 @@ public enum APIEndpoint {
       false
    ),
 
-   UPDATE_GUIDE(
-      new Endpoint() {
-         public String createUrl(String query) {
-            return "guides/" + query;
-         }
-
-         public APIEvent<?> parse(String json) throws JSONException {
-            return null;
-            //return new APIEvent.CreateGuide().setResult(JSONHelper.parseUserGuide(json));
-         }
-
-         public APIEvent<?> getEvent() {
-            return null;
-           // return new APIEvent.CreateGuide();
-         }
-      },
-      true,
-      "PATCH",
-      false
-   ),
    PUBLISH_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
