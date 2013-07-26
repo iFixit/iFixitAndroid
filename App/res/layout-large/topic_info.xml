@@ -32,8 +32,7 @@
             android:layout_width="wrap_content"
             android:layout_below="@+id/topic_info_title"
             android:layout_toRightOf="@+id/topic_info_image"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="12dp"/>
+            android:layout_marginRight="16dp"/>
 
         <TextView
             android:id="@+id/topic_info_content"
@@ -41,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@+id/topic_info_image"
-            android:padding="16dp"
+            android:layout_margin="16dp"
             android:paddingTop="24dp"/>
 
     </RelativeLayout>

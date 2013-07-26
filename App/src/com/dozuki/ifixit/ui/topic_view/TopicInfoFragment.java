@@ -1,33 +1,37 @@
 package com.dozuki.ifixit.ui.topic_view;
 
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
+import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 import com.squareup.picasso.Picasso;
 
-import org.xml.sax.XMLReader;
+import java.util.ArrayList;
 
 public class TopicInfoFragment extends SherlockFragment {
 
-   private static final float HEADER_SIZE = 1.5f;
+   private static final float HEADER_SIZE = 1.3f;
    private static final String IMAGE_SIZE = ".medium";
    private static final String TOPIC_KEY = "TOPIC_KEY";
 
    private TopicLeaf mTopic;
+   private TextView mContent;
+   private ArrayList<ImageView> mImages = new ArrayList<ImageView>();
 
    /**
     * Required for restoring fragments
@@ -55,11 +59,21 @@ public class TopicInfoFragment extends SherlockFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View v = inflater.inflate(R.layout.topic_info, container, false);
 
-      ((TextView) v.findViewById(R.id.topic_info_title)).setText(Html.fromHtml(mTopic.getTitle()));
+      // Wrap the title in <h1> tags so it has the same style as the headers in the topic content html
+      Spanned title = Html.fromHtml("<h1>" + mTopic.getTitle() + "</h1>");
+      ((TextView) v.findViewById(R.id.topic_info_title)).setText(title);
       ((TextView) v.findViewById(R.id.topic_info_summary)).setText(mTopic.getDescription());
-      TextView content = ((TextView) v.findViewById(R.id.topic_info_content));
-      content.setMovementMethod(LinkMovementMethod.getInstance());
-      content.setText(getStyledContent());
+      mContent = ((TextView) v.findViewById(R.id.topic_info_content));
+      mContent.setMovementMethod(LinkMovementMethod.getInstance());
+      mContent.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
+      mContent.setText(getStyledContent());
+
+      if (mImages.size() > 0) {
+         for (ImageView image : mImages) {
+            container.addView(image);
+         }
+         container.invalidate();
+      }
 
       String url = mTopic.getImage().getPath(IMAGE_SIZE);
 
@@ -73,8 +87,9 @@ public class TopicInfoFragment extends SherlockFragment {
 
    @Override
    public void onSaveInstanceState(Bundle outState) {
-      outState.putSerializable(TOPIC_KEY, mTopic);
       super.onSaveInstanceState(outState);
+
+      outState.putSerializable(TOPIC_KEY, mTopic);
    }
 
    private Spanned getStyledContent() {
@@ -84,21 +99,12 @@ public class TopicInfoFragment extends SherlockFragment {
       topicContent = topicContent.replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
       topicContent = topicContent.replaceAll("<span class=\\\"editLink headerLink\\\".+?<\\/span>", "");
 
-      Spanned topicHtml = Html.fromHtml(topicContent, null,
-       new Html.TagHandler() {
-          private String parent = "";
-
-          @Override
-          public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-             if (tag.equals("ul") || tag.equals("ol")) {
-                parent = tag;
-             }
-
-             if (tag.equals("li") && (parent.equals("ul") || parent.equals("ol"))) {
-                output.append("\n");
-             }
-          }
-      });
+      Spanned topicHtml = Html.fromHtml(topicContent,
+       // Handle images in the wiki text
+       new UrlImageGetter(mContent, getActivity()),
+       // Handle list items, videos, and other html elements that Html.fromHtml does not handle and parse them into
+       // styled android views
+       new WikiHtmlTagHandler());
 
       topicHtml = Utils.correctLinkPaths(topicHtml);
 
@@ -111,6 +117,16 @@ public class TopicInfoFragment extends SherlockFragment {
          if (spans[i] instanceof RelativeSizeSpan) {
             RelativeSizeSpan header = new RelativeSizeSpan(HEADER_SIZE);
             ((SpannableStringBuilder) topicHtml).setSpan(header, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+         } else if (spans[i] instanceof ImageSpan) {
+            Drawable drawable = ((ImageSpan) spans[i]).getDrawable();
+            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
+            ((SpannableStringBuilder) topicHtml).removeSpan(spans[i]);
+            char[] result = new char[end-start];
+            ((SpannableStringBuilder) topicHtml).getChars(start, end, result, 0);
+            ((SpannableStringBuilder) topicHtml).delete(start, end);
+            ((SpannableStringBuilder) topicHtml).append(result[0]);
+            ((SpannableStringBuilder) topicHtml).setSpan(imageSpan, topicHtml.length() - 1, topicHtml.length(),
+             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
          }
       }
 

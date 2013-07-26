@@ -57,4 +57,13 @@ public class Utils {
    public static String capitalize(String word) {
       return Character.toUpperCase(word.charAt(0)) + word.substring(1);
    }
+
+   public static String repeat(String string, int times) {
+      StringBuilder builder = new StringBuilder(string);
+      for (int i = 1; i < times; i++) {
+         builder.append(string);
+      }
+
+      return builder.toString();
+   }
 }
