@@ -82,6 +82,14 @@ public class GuideCreateActivity extends BaseActivity {
    }
 
    @Override
+   public void onRestart() {
+      super.onRestart();
+
+      // Perform the API call again because data may have changed in child Activities.
+      APIService.call(this, APIService.getUserGuidesAPICall());
+   }
+
+   @Override
    public void onContentChanged() {
       super.onContentChanged();
 
