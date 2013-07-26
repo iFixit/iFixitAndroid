@@ -220,7 +220,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
             }
             break;
          default:
-            return (super.onOptionsItemSelected(item));
+            return super.onOptionsItemSelected(item);
       }
       return true;
    }

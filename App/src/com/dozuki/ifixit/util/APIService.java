@@ -185,18 +185,19 @@ public class APIService extends Service {
       String response = result.getResponse();
       String error = JSONHelper.parseError(response);
       if (error != null) {
-         ErrorType type = error.equals(INVALID_LOGIN_STRING) ? ErrorType.INVALID_USER : ErrorType.OTHER;
+         ErrorType type = error.equals(INVALID_LOGIN_STRING) ? ErrorType.INVALID_USER :
+          ErrorType.OTHER;
 
          return endpoint.getEvent().setError(new APIError(getString(R.string.error), error, type));
       }
 
       try {
          APIEvent<?> event = endpoint.parseResult(response);
-         event.setCode(result.mCode);
+         int code = result.mCode;
+         event.setCode(code);
 
-         if (result.mCode < 200 || result.mCode >= 300) {
-            // TODO: Get an appropriate error e.g. getRevisionError for 409.
-            event.setError(APIError.getParseError(this));
+         if (code < 200 || code >= 300) {
+            event.setError(APIError.getByStatusCode(code, this));
          }
 
          return event;
@@ -475,6 +476,7 @@ public class APIService extends Service {
     APICall apiCall) {
       switch (error.mType) {
          case FATAL:
+         case CONFLICT:
             return createFatalErrorDialog(context, error);
          default:
             return createErrorDialog(context, apiCall, error);
@@ -504,7 +506,6 @@ public class APIService extends Service {
       });
       return d;
    }
-
 
    private static AlertDialog createFatalErrorDialog(final Context context, APIError error) {
       AlertDialog.Builder builder = new AlertDialog.Builder(context);

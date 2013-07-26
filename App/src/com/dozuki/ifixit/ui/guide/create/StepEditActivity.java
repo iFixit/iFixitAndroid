@@ -85,6 +85,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    // Used to navigate to the correct step when coming from GuideViewActivity.
    private int mInboundStepId;
+   private int mGuideid;
 
    private boolean mConfirmDelete = false;
    private boolean mIsStepDirty = false;
@@ -193,11 +194,12 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
          if (mGuide == null) {
             mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
+            mGuideid = extras.getInt(GUIDE_ID_KEY);
             mInboundStepId = extras.getInt(GUIDE_STEP_ID);
 
             showLoading(mLoadingContainer);
             APIService.call(StepEditActivity.this,
-             APIService.getGuideForEditAPICall(extras.getInt(GUIDE_ID_KEY)));
+             APIService.getGuideForEditAPICall(mGuideid));
          }
       }
    }
@@ -383,8 +385,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          }
          initPage(startPagePosition);
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event.getError(),
+          APIService.getGuideForEditAPICall(mGuideid)).show();
       }
    }
 
@@ -399,8 +401,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
 
@@ -431,8 +432,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             MainApplication.getBus().post(new StepChangedEvent());
          }
       } else {
-         Log.e("Upload Image Error", event.getError().mMessage);
-         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
@@ -461,8 +460,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
 
@@ -474,8 +472,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mGuide.setRevisionid(event.getResult().getRevisionid());
          deleteStep();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
 
@@ -485,8 +482,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
           Toast.LENGTH_LONG).show();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
 

@@ -101,7 +101,7 @@ public class TopicActivity extends BaseActivity
             onTopicSelected(mRootTopic);
          }
       } else {
-         APIService.getErrorDialog(TopicActivity.this, event.getError(),
+         APIService.getErrorDialog(this, event.getError(),
           APIService.getCategoriesAPICall()).show();
       }
    }

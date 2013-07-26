@@ -10,21 +10,6 @@ import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
 public class EmbedMediaFragment extends MediaFragment {
-
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-   }
- 
-   @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
-      
-      View v = super.onCreateView(inflater, container, savedInstanceState);
-      return v;
-   }
-   
-   
    @Subscribe
    public void onUserVideos(APIEvent.UserEmbeds event) {
       if (!event.hasError()) {
@@ -39,13 +24,14 @@ public class EmbedMediaFragment extends MediaFragment {
          }
          mNextPageRequestInProgress = false;
       } else {
-         // TODO
+         APIService.getErrorDialog(getActivity(), event.getError(),
+          APIService.getUserEmbedsAPICall("?limit=" + IMAGE_PAGE_SIZE)).show();
       }
    }
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
       APIService.call(getActivity(),
-         APIService.getUserEmbedsAPICall("?limit=" + (IMAGE_PAGE_SIZE)));
+       APIService.getUserEmbedsAPICall("?limit=" + IMAGE_PAGE_SIZE));
    }
 }

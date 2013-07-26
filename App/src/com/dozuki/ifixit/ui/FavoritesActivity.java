@@ -70,7 +70,8 @@ public class FavoritesActivity extends BaseActivity {
 
          initGridView();
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event.getError(),
+          APIService.getUserFavorites(LIMIT, OFFSET)).show();
       }
    }
 

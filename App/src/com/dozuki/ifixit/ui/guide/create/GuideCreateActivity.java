@@ -145,8 +145,8 @@ public class GuideCreateActivity extends BaseActivity {
 
          hideLoading();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event.getError(),
+          APIService.getUserGuidesAPICall()).show();
       }
    }
 
@@ -164,7 +164,6 @@ public class GuideCreateActivity extends BaseActivity {
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
-         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
@@ -176,7 +175,6 @@ public class GuideCreateActivity extends BaseActivity {
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
-         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }

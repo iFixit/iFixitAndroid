@@ -303,7 +303,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          initWizard();
       } else {
          APIService.getErrorDialog(this, event.getError(),
-          APIService.getSitesAPICall()).show();
+          APIService.getSiteInfoAPICall()).show();
       }
    }
 
@@ -330,9 +330,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          finish();
 
       } else {
-
          hideChildren(false);
-         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
@@ -349,7 +347,6 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          finish();
       } else {
          hideChildren(false);
-         event.setError(APIError.getFatalError(this));
          APIService.getErrorDialog(this, event.getError(), null).show();
       }
    }
