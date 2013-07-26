@@ -385,8 +385,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          }
          initPage(startPagePosition);
       } else {
-         APIService.getErrorDialog(this, event.getError(),
-          APIService.getGuideForEditAPICall(mGuideid)).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -401,7 +400,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -432,7 +431,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             MainApplication.getBus().post(new StepChangedEvent());
          }
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -460,7 +459,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -472,7 +471,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mGuide.setRevisionid(event.getResult().getRevisionid());
          deleteStep();
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -482,7 +481,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
           Toast.LENGTH_LONG).show();
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 

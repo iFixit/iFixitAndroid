@@ -145,8 +145,7 @@ public class GuideCreateActivity extends BaseActivity {
 
          hideLoading();
       } else {
-         APIService.getErrorDialog(this, event.getError(),
-          APIService.getUserGuidesAPICall()).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -164,7 +163,7 @@ public class GuideCreateActivity extends BaseActivity {
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -175,7 +174,7 @@ public class GuideCreateActivity extends BaseActivity {
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 

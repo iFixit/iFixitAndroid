@@ -93,8 +93,7 @@ public class SiteListActivity extends BaseActivity
             mSiteListDialog.setSites(mSiteList, true);
          }
       } else {
-         APIService.getErrorDialog(this, event.getError(),
-          APIService.getSitesAPICall()).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 

@@ -186,7 +186,7 @@ public class APIService extends Service {
          ErrorType type = error.equals(INVALID_LOGIN_STRING) ? ErrorType.INVALID_USER :
           ErrorType.OTHER;
 
-         return endpoint.getEvent().setError(new APIError(getString(R.string.error), error, type));
+         return result.setError(new APIError(getString(R.string.error), error, type));
       }
 
       try {
@@ -476,19 +476,11 @@ public class APIService extends Service {
       return apiCall;
    }
 
-   public static AlertDialog getErrorDialog(Context context, APIError error,
-    APICall apiCall) {
-      switch (error.mType) {
-         case FATAL:
-         case CONFLICT:
-            return createFatalErrorDialog(context, error);
-         default:
-            return createErrorDialog(context, apiCall, error);
-      }
-   }
+   public static AlertDialog getErrorDialog(final Context context,
+    final APIEvent<?> event) {
+      // TODO: Update dialog contents to more accurately describe 'event'.
 
-   private static AlertDialog createErrorDialog(final Context context,
-    final APICall apiCall, APIError error) {
+      APIError error = event.getError();
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(error.mTitle)
        .setMessage(error.mMessage)
@@ -496,8 +488,11 @@ public class APIService extends Service {
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
               // Try performing the request again.
-              context.startService(makeApiIntent(context, apiCall));
+              context.startService(makeApiIntent(context, event.mApiCall));
               dialog.dismiss();
+
+              // For "fatal" errors.
+              //((Activity) context).finish();
            }
         });
 
@@ -510,28 +505,6 @@ public class APIService extends Service {
       });
       return d;
    }
-
-   private static AlertDialog createFatalErrorDialog(final Context context, APIError error) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
-      builder.setTitle(error.mTitle)
-       .setMessage(error.mMessage)
-       .setPositiveButton(context.getString(R.string.error_confirm),
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              ((Activity) context).finish();
-           }
-        });
-
-      AlertDialog d = builder.create();
-      d.setOnCancelListener(new OnCancelListener() {
-         @Override
-         public void onCancel(DialogInterface dialog) {
-            ((Activity) context).finish();
-         }
-      });
-      return d;
-   }
-
 
    private void performRequest(final APICall apiCall, final Responder responder) {
       final APIEndpoint endpoint = apiCall.mEndpoint;

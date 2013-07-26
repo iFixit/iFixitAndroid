@@ -24,8 +24,7 @@ public class VideoMediaFragment extends MediaFragment {
          }
          mNextPageRequestInProgress = false;
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getUserVideosAPICall("?limit=" + IMAGE_PAGE_SIZE)).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 

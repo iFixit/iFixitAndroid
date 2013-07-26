@@ -42,8 +42,7 @@ public class PhotoMediaFragment extends MediaFragment {
 
          mNextPageRequestInProgress = false;
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getUserImagesAPICall("?limit=" + IMAGE_PAGE_SIZE)).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -58,7 +57,7 @@ public class PhotoMediaFragment extends MediaFragment {
          mGalleryAdapter.notifyDataSetChanged();
          mGalleryAdapter.invalidatedView();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -67,7 +66,7 @@ public class PhotoMediaFragment extends MediaFragment {
       if (!event.hasError()) {
          mGalleryAdapter.notifyDataSetChanged();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 

@@ -157,8 +157,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
          mGuide = event.getResult();
          hideLoading();
       } else {
-         // TODO: We can probably pass along an APICall to retry...
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 
@@ -168,7 +167,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
          mGuide = event.getResult();
          hideLoading();
       } else {
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 

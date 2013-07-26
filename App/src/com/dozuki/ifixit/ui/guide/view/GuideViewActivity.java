@@ -250,8 +250,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
             setGuide(guide, mCurrentPage);
          }
       } else {
-         APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
-          APIService.getGuideAPICall(mGuideid)).show();
+         APIService.getErrorDialog(GuideViewActivity.this, event).show();
       }
    }
 

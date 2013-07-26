@@ -182,7 +182,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
 
          ((StepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -196,7 +196,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
             mActionBar.setTitle(mGuide.getTitle());
          }
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -213,7 +213,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
          invalidateViews();
          ((StepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -226,7 +226,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
          invalidateViews();
          ((StepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 

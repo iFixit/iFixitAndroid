@@ -188,8 +188,7 @@ public class TopicNameFragment extends SherlockFragment {
 
          setTopicArrayAdapter();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getAllTopicsAPICall()).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 }

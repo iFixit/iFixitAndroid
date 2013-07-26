@@ -24,8 +24,7 @@ public class EmbedMediaFragment extends MediaFragment {
          }
          mNextPageRequestInProgress = false;
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getUserEmbedsAPICall("?limit=" + IMAGE_PAGE_SIZE)).show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
    @Override
