@@ -157,7 +157,7 @@ public class APIService extends Service {
          public void setResult(APIEvent<?> result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
-               result = parseResult(result.getResponse(), apiCall.mEndpoint);
+               result = parseResult(result, apiCall.mEndpoint);
             }
 
             // Don't save if there a parse error.
@@ -181,7 +181,8 @@ public class APIService extends Service {
    /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private APIEvent<?> parseResult(String response, APIEndpoint endpoint) {
+   private APIEvent<?> parseResult(APIEvent<?> result, APIEndpoint endpoint) {
+      String response = result.getResponse();
       String error = JSONHelper.parseError(response);
       if (error != null) {
          ErrorType type = error.equals(INVALID_LOGIN_STRING) ? ErrorType.INVALID_USER : ErrorType.OTHER;
@@ -190,7 +191,15 @@ public class APIService extends Service {
       }
 
       try {
-         return endpoint.parseResult(response);
+         APIEvent<?> event = endpoint.parseResult(response);
+         event.setCode(result.mCode);
+
+         if (result.mCode < 200 || result.mCode >= 300) {
+            // TODO: Get an appropriate error e.g. getRevisionError for 409.
+            event.setError(APIError.getParseError(this));
+         }
+
+         return event;
       } catch (JSONException e) {
          Log.e("APIService", "API parse error", e);
          return endpoint.getEvent().setError(APIError.getParseError(this));
@@ -629,12 +638,12 @@ public class APIService extends Service {
                if (e.getCause() != null) {
                   e.getCause().printStackTrace();
                   Log.e("iFixit::APIService", "IOException from request", e.getCause());
-                  return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
                } else {
                   e.printStackTrace();
                   Log.e("iFixit::APIService", "API error", e);
-                  return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
                }
+
+               return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
             }
          }
 

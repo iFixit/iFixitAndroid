@@ -24,12 +24,12 @@ public class APIError implements Serializable {
 
    public static APIError getParseError(Context context) {
       return new APIError(context.getString(R.string.parse_error_title),
-       context.getString(R.string.parse_error_message), ErrorType.OTHER);
+       context.getString(R.string.parse_error_message), ErrorType.PARSE);
    }
 
    public static APIError getConnectionError(Context context) {
       return new APIError(context.getString(R.string.no_connection_title),
-       context.getString(R.string.no_connection), ErrorType.OTHER);
+       context.getString(R.string.no_connection), ErrorType.CONNECTION);
    }
 
 
