@@ -165,8 +165,6 @@ public class APIService extends Service {
                saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
             }
 
-            result.setExtraInfo(apiCall.mExtraInfo);
-
             /**
              * Always post the result despite any errors. This actually sends it off
              * to Activities etc. that care about API calls.
@@ -192,9 +190,15 @@ public class APIService extends Service {
       }
 
       try {
+         // We don't know the type of APIEvent it is so we must let the endpoint's
+         // parseResult return the correct one...
          APIEvent<?> event = endpoint.parseResult(response);
          int code = result.mCode;
-         event.setCode(code);
+
+         // ... and then we can copy over the other values we need.
+         event.mCode = code;
+         event.mApiCall = result.mApiCall;
+         event.mResponse = result.mResponse;
 
          if (code < 200 || code >= 300) {
             event.setError(APIError.getByStatusCode(code, this));
@@ -203,7 +207,7 @@ public class APIService extends Service {
          return event;
       } catch (JSONException e) {
          Log.e("APIService", "API parse error", e);
-         return endpoint.getEvent().setError(APIError.getParseError(this));
+         return result.setError(APIError.getParseError(this));
       }
    }
 
@@ -531,7 +535,7 @@ public class APIService extends Service {
 
    private void performRequest(final APICall apiCall, final Responder responder) {
       final APIEndpoint endpoint = apiCall.mEndpoint;
-      if (!checkConnectivity(responder, endpoint)) {
+      if (!checkConnectivity(responder, endpoint, apiCall)) {
          return;
       }
 
@@ -545,7 +549,8 @@ public class APIService extends Service {
       new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
          protected APIEvent<?> doInBackground(String... dummy) {
-
+            APIEvent<?> event = endpoint.getEvent();
+            event.setApiCall(apiCall);
             HttpRequest.setConnectionFactory(new OkConnectionFactory());
 
             /**
@@ -633,7 +638,7 @@ public class APIService extends Service {
                if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
                   return getUnauthorizedEvent(apiCall);
                } else {
-                  return endpoint.getEvent().setCode(code).setResponse(responseBody);
+                  return event.setCode(code).setResponse(responseBody);
                }
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {
@@ -644,7 +649,7 @@ public class APIService extends Service {
                   Log.e("iFixit::APIService", "API error", e);
                }
 
-               return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
+               return event.setError(APIError.getParseError(APIService.this));
             }
          }
 
@@ -655,13 +660,16 @@ public class APIService extends Service {
       }.execute();
    }
 
-   private boolean checkConnectivity(Responder responder, APIEndpoint endpoint) {
+   private boolean checkConnectivity(Responder responder, APIEndpoint endpoint,
+    APICall apiCall) {
       ConnectivityManager cm = (ConnectivityManager)
        getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(endpoint.getEvent().setError(APIError.getConnectionError(this)));
+         responder.setResult(endpoint.getEvent()
+          .setApiCall(apiCall)
+          .setError(APIError.getConnectionError(this)));
          return false;
       }
 
