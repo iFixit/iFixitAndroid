@@ -483,21 +483,23 @@ public class APIService extends Service {
 
    public static AlertDialog getErrorDialog(final Context context,
     final APIEvent<?> event) {
-      // TODO: Update dialog contents to more accurately describe 'event'.
-
       APIError error = event.getError();
+
+      int positiveButton = error.mType.mTryAgain ?
+       R.string.try_again : R.string.error_confirm;
+
       AlertDialog.Builder builder = new AlertDialog.Builder(context);
       builder.setTitle(error.mTitle)
        .setMessage(error.mMessage)
-       .setPositiveButton(context.getString(R.string.try_again),
+       .setPositiveButton(positiveButton,
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
               // Try performing the request again.
-              context.startService(makeApiIntent(context, event.mApiCall));
-              dialog.dismiss();
+              if (event.mError.mType.mTryAgain) {
+                 context.startService(makeApiIntent(context, event.mApiCall));
+              }
 
-              // For "fatal" errors.
-              //((Activity) context).finish();
+              dialog.dismiss();
            }
         });
 

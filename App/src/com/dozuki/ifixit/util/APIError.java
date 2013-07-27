@@ -26,15 +26,18 @@ public class APIError implements Serializable {
       ),
       FORBIDDEN( // 403
          R.string.error,
-         R.string.forbidden_error
+         R.string.forbidden_error,
+         false
       ),
       NOT_FOUND( // 404
          R.string.error,
-         R.string.not_found_error
+         R.string.not_found_error,
+         false
       ),
       CONFLICT( // 409
          R.string.invalid_revision_error_title,
-         R.string.invalid_revision_error
+         R.string.invalid_revision_error,
+         false
       ),
       UNAUTHORIZED(
          // These values shouldn't ever be used because this is merely a signal
@@ -45,14 +48,20 @@ public class APIError implements Serializable {
 
       protected int mTitle;
       protected int mMessage;
+      protected boolean mTryAgain;
 
       private ErrorType() {
-         mTitle = mMessage = -1;
+         this(-1, -1, true);
       }
 
       private ErrorType(int title, int message) {
+         this(title, message, true);
+      }
+
+      private ErrorType(int title, int message, boolean tryAgain) {
          mTitle = title;
          mMessage = message;
+         mTryAgain = tryAgain;
       }
    }
 
