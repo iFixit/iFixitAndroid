@@ -500,6 +500,10 @@ public class APIService extends Service {
               }
 
               dialog.dismiss();
+
+              if (event.mError.mType.mFinishActivity) {
+                 ((Activity)context).finish();
+              }
            }
         });
 
