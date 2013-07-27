@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 public class APIError implements Serializable {
    private static final long serialVersionUID = 1L;
-   public static enum ErrorType {
+   public static enum Type {
       OTHER(
          R.string.fatal_error_title,
          R.string.fatal_error
@@ -54,15 +54,15 @@ public class APIError implements Serializable {
       protected boolean mTryAgain;
       protected boolean mFinishActivity;
 
-      private ErrorType() {
+      private Type() {
          this(-1, -1, true, false);
       }
 
-      private ErrorType(int title, int message) {
+      private Type(int title, int message) {
          this(title, message, true, false);
       }
 
-      private ErrorType(int title, int message, boolean tryAgain, boolean finishActivity) {
+      private Type(int title, int message, boolean tryAgain, boolean finishActivity) {
          mTitle = title;
          mMessage = message;
          mTryAgain = tryAgain;
@@ -72,30 +72,30 @@ public class APIError implements Serializable {
 
    public String mTitle;
    public String mMessage;
-   public ErrorType mType;
+   public Type mType;
 
-   public APIError(ErrorType type, Context context) {
+   public APIError(Type type, Context context) {
       this(type.mTitle, type.mMessage, type, context);
    }
 
-   public APIError(int title, int message, ErrorType type, Context context) {
+   public APIError(int title, int message, Type type, Context context) {
       this(context.getString(title), context.getString(message), type);
    }
 
-   public APIError(String title, String message, ErrorType type) {
+   public APIError(String title, String message, Type type) {
       mTitle = title;
       mMessage = message;
       mType = type;
    }
 
    public static APIError getByStatusCode(int code, Context context) {
-      ErrorType error;
+      Type error;
 
       switch (code) {
-         case 403: error = ErrorType.FORBIDDEN; break;
-         case 404: error = ErrorType.NOT_FOUND; break;
-         case 409: error = ErrorType.CONFLICT;  break;
-         default:  error = ErrorType.OTHER;
+         case 403: error = Type.FORBIDDEN; break;
+         case 404: error = Type.NOT_FOUND; break;
+         case 409: error = Type.CONFLICT;  break;
+         default:  error = Type.OTHER;
       }
 
       return new APIError(error, context);

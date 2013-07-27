@@ -25,7 +25,6 @@ import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
-import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
@@ -101,7 +100,7 @@ public class APIService extends Service {
 
       // The APIError doesn't matter as long as one exists.
       return new APIEvent.Unauthorized().setCode(INVALID_LOGIN_CODE).
-       setError(new APIError("", "", APIError.ErrorType.UNAUTHORIZED));
+       setError(new APIError("", "", APIError.Type.UNAUTHORIZED));
    }
 
    /**
@@ -185,8 +184,8 @@ public class APIService extends Service {
 
       String error = JSONHelper.parseError(response);
       if (error != null) {
-         ErrorType type = error.equals(INVALID_LOGIN_STRING) ?
-          ErrorType.INVALID_USER : APIError.getByStatusCode(code, this).mType;
+         APIError.Type type = error.equals(INVALID_LOGIN_STRING) ?
+          APIError.Type.INVALID_USER : APIError.getByStatusCode(code, this).mType;
 
          return result.setError(new APIError(getString(R.string.error), error, type));
       }
@@ -204,7 +203,7 @@ public class APIService extends Service {
          event.mResponse = result.mResponse;
       } catch (JSONException e) {
          Log.e("APIService", "API parse error", e);
-         result.setError(new APIError(APIError.ErrorType.PARSE, this));
+         result.setError(new APIError(APIError.Type.PARSE, this));
 
          event = result;
       }
@@ -633,7 +632,7 @@ public class APIService extends Service {
                   Log.e("iFixit::APIService", "API error", e);
                }
 
-               return event.setError(new APIError(APIError.ErrorType.PARSE, APIService.this));
+               return event.setError(new APIError(APIError.Type.PARSE, APIService.this));
             }
          }
 
@@ -653,7 +652,7 @@ public class APIService extends Service {
       if (netInfo == null || !netInfo.isConnected()) {
          responder.setResult(endpoint.getEvent()
           .setApiCall(apiCall)
-          .setError(new APIError(APIError.ErrorType.CONNECTION, this)));
+          .setError(new APIError(APIError.Type.CONNECTION, this)));
          return false;
       }
 
