@@ -23,7 +23,7 @@
 
     <!-- General -->
     <string name="save">Save</string>
-    <string name="error">Error</string>
+    <string name="error">An Error Has Occurred</string>
     <string name="yes">Yes</string>
     <string name="no">No</string>
     <string name="cancel">Cancel</string>
@@ -40,6 +40,9 @@
     <string name="invalid_revision_error">It looks like you may be editing a version of this guide that is out of date.</string>
     <string name="fatal_error_title">Unknown Error</string>
     <string name="fatal_error">It looks like an error occurred.</string>
+    <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
+    <string name="login_error">Invalid login. Check your email address and password to verify they are correct.</string>
+    <string name="not_found_error">The requested data does not exist.</string>
     <string name="media_error_title">Something went wrong. Try again later.</string>
     <string name="error_confirm">OK</string>
 

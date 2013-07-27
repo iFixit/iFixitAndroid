@@ -5,25 +5,64 @@ import com.dozuki.ifixit.R;
 
 import java.io.Serializable;
 
-
 public class APIError implements Serializable {
    private static final long serialVersionUID = 1L;
    public static enum ErrorType {
-      OTHER,
-      PARSE,
-      CONNECTION,
-      INVALID_USER,
-      FATAL,
+      OTHER(
+         R.string.fatal_error_title,
+         R.string.fatal_error
+      ),
+      PARSE(
+         R.string.parse_error_title,
+         R.string.parse_error_message
+      ),
+      CONNECTION(
+         R.string.no_connection_title,
+         R.string.no_connection
+      ),
+      INVALID_USER(
+         R.string.error,
+         R.string.login_error
+      ),
+      FORBIDDEN( // 403
+         R.string.error,
+         R.string.forbidden_error
+      ),
+      NOT_FOUND( // 404
+         R.string.error,
+         R.string.not_found_error
+      ),
+      CONFLICT( // 409
+         R.string.invalid_revision_error_title,
+         R.string.invalid_revision_error
+      ),
+      UNAUTHORIZED(
+         // These values shouldn't ever be used because this is merely a signal
+         // to open the login dialog.
+         R.string.fatal_error_title,
+         R.string.fatal_error
+      );
 
-      UNAUTHORIZED, // 401
-      FORBIDDEN, // 403
-      NOT_FOUND, // 404
-      CONFLICT // 409
+      protected int mTitle;
+      protected int mMessage;
+
+      private ErrorType() {
+         mTitle = mMessage = -1;
+      }
+
+      private ErrorType(int title, int message) {
+         mTitle = title;
+         mMessage = message;
+      }
    }
 
    public String mTitle;
    public String mMessage;
    public ErrorType mType;
+
+   public APIError(ErrorType type, Context context) {
+      this(type.mTitle, type.mMessage, type, context);
+   }
 
    public APIError(int title, int message, ErrorType type, Context context) {
       this(context.getString(title), context.getString(message), type);
@@ -36,36 +75,15 @@ public class APIError implements Serializable {
    }
 
    public static APIError getByStatusCode(int code, Context context) {
+      ErrorType error;
+
       switch (code) {
-      case 409:
-         return getRevisionError(context);
-      default:
-         return getUnknownError(context);
+         case 403: error = ErrorType.FORBIDDEN; break;
+         case 404: error = ErrorType.NOT_FOUND; break;
+         case 409: error = ErrorType.CONFLICT;  break;
+         default:  error = ErrorType.OTHER;
       }
-   }
 
-   public static APIError getParseError(Context context) {
-      return new APIError(R.string.parse_error_title,
-       R.string.parse_error_message, ErrorType.PARSE, context);
-   }
-
-   public static APIError getConnectionError(Context context) {
-      return new APIError(R.string.no_connection_title,
-       R.string.no_connection, ErrorType.CONNECTION, context);
-   }
-
-   public static APIError getRevisionError(Context context) {
-      return new APIError(R.string.invalid_revision_error_title,
-       R.string.invalid_revision_error, ErrorType.CONFLICT, context);
-   }
-
-   public static APIError getFatalError(Context context) {
-      return new APIError(R.string.fatal_error_title,
-       R.string.fatal_error, ErrorType.FATAL, context);
-   }
-
-   public static APIError getUnknownError(Context context) {
-      return new APIError(R.string.fatal_error_title,
-       R.string.fatal_error, ErrorType.OTHER, context);
+      return new APIError(error, context);
    }
 }

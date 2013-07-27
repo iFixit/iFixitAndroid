@@ -96,7 +96,7 @@ public class APIService extends Service {
    private static APIEvent<?> getUnauthorizedEvent(APICall apiCall) {
       sPendingApiCall = apiCall;
 
-      // We aren't logged in anymore so lets make s ure we don't think we are.
+      // We aren't logged in anymore so lets make sure we don't think we are.
       MainApplication.get().shallowLogout();
 
       // The APIError doesn't matter as long as one exists.
@@ -180,35 +180,40 @@ public class APIService extends Service {
     * Parse the response in the given result with the given requestTarget.
     */
    private APIEvent<?> parseResult(APIEvent<?> result, APIEndpoint endpoint) {
+      int code = result.mCode;
       String response = result.getResponse();
+
       String error = JSONHelper.parseError(response);
       if (error != null) {
-         ErrorType type = error.equals(INVALID_LOGIN_STRING) ? ErrorType.INVALID_USER :
-          ErrorType.OTHER;
+         ErrorType type = error.equals(INVALID_LOGIN_STRING) ?
+          ErrorType.INVALID_USER : APIError.getByStatusCode(code, this).mType;
 
          return result.setError(new APIError(getString(R.string.error), error, type));
       }
 
+      APIEvent<?> event;
+
       try {
          // We don't know the type of APIEvent it is so we must let the endpoint's
          // parseResult return the correct one...
-         APIEvent<?> event = endpoint.parseResult(response);
-         int code = result.mCode;
+         event = endpoint.parseResult(response);
 
          // ... and then we can copy over the other values we need.
          event.mCode = code;
          event.mApiCall = result.mApiCall;
          event.mResponse = result.mResponse;
-
-         if (code < 200 || code >= 300) {
-            event.setError(APIError.getByStatusCode(code, this));
-         }
-
-         return event;
       } catch (JSONException e) {
          Log.e("APIService", "API parse error", e);
-         return result.setError(APIError.getParseError(this));
+         result.setError(new APIError(APIError.ErrorType.PARSE, this));
+
+         event = result;
       }
+
+      if (code < 200 || code >= 300) {
+         event.setError(APIError.getByStatusCode(code, this));
+      }
+
+      return event;
    }
 
    private void saveResult(APIEvent<?> result, int requestTarget,
@@ -622,7 +627,7 @@ public class APIService extends Service {
                   Log.e("iFixit::APIService", "API error", e);
                }
 
-               return event.setError(APIError.getParseError(APIService.this));
+               return event.setError(new APIError(APIError.ErrorType.PARSE, APIService.this));
             }
          }
 
@@ -642,7 +647,7 @@ public class APIService extends Service {
       if (netInfo == null || !netInfo.isConnected()) {
          responder.setResult(endpoint.getEvent()
           .setApiCall(apiCall)
-          .setError(APIError.getConnectionError(this)));
+          .setError(new APIError(APIError.ErrorType.CONNECTION, this)));
          return false;
       }
 
