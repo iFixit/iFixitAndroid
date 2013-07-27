@@ -54,10 +54,6 @@ public class APIError implements Serializable {
       protected boolean mTryAgain;
       protected boolean mFinishActivity;
 
-      private Type() {
-         this(-1, -1, true, false);
-      }
-
       private Type(int title, int message) {
          this(title, message, true, false);
       }

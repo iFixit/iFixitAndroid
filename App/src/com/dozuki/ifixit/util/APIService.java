@@ -480,14 +480,14 @@ public class APIService extends Service {
       return apiCall;
    }
 
-   public static AlertDialog getErrorDialog(final Context context,
+   public static AlertDialog getErrorDialog(final Activity activity,
     final APIEvent<?> event) {
       APIError error = event.getError();
 
       int positiveButton = error.mType.mTryAgain ?
        R.string.try_again : R.string.error_confirm;
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      AlertDialog.Builder builder = new AlertDialog.Builder(activity);
       builder.setTitle(error.mTitle)
        .setMessage(error.mMessage)
        .setPositiveButton(positiveButton,
@@ -495,25 +495,26 @@ public class APIService extends Service {
            public void onClick(DialogInterface dialog, int id) {
               // Try performing the request again.
               if (event.mError.mType.mTryAgain) {
-                 context.startService(makeApiIntent(context, event.mApiCall));
+                 activity.startService(makeApiIntent(activity, event.mApiCall));
               }
 
               dialog.dismiss();
 
               if (event.mError.mType.mFinishActivity) {
-                 ((Activity)context).finish();
+                 activity.finish();
               }
            }
         });
 
-      AlertDialog d = builder.create();
-      d.setOnCancelListener(new OnCancelListener() {
+      AlertDialog dialog = builder.create();
+      dialog.setOnCancelListener(new OnCancelListener() {
          @Override
          public void onCancel(DialogInterface dialog) {
-            ((Activity) context).finish();
+            activity.finish();
          }
       });
-      return d;
+
+      return dialog;
    }
 
    private void performRequest(final APICall apiCall, final Responder responder) {
