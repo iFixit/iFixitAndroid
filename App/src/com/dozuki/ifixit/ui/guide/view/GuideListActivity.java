@@ -100,7 +100,7 @@ public abstract class GuideListActivity extends BaseActivity {
          if (mGridView == null)
             initGridView();
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 

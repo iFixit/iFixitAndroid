@@ -48,8 +48,7 @@ public class TopicViewFragment extends SherlockFragment {
       if (!event.hasError()) {
          setTopicLeaf(event.getResult());
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), APIService.getTopicAPICall(mTopicNode.getName()))
-            .show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 

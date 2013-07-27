@@ -46,12 +46,12 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
       } else {
          enable(true);
          APIError error = event.getError();
-         if (error.mType == APIError.ErrorType.CONNECTION ||
-          error.mType == APIError.ErrorType.PARSE) {
-            APIService.getErrorDialog(getActivity(), error, mCurAPICall).show();
+         if (error.mType == APIError.Type.CONNECTION ||
+          error.mType == APIError.Type.PARSE) {
+            APIService.getErrorDialog(getActivity(), event).show();
          }
          mLoadingSpinner.setVisibility(View.GONE);
-       
+
          mLoginId.setVisibility(View.VISIBLE);
          mPassword.setVisibility(View.VISIBLE);
          mConfirmPassword.setVisibility(View.VISIBLE);

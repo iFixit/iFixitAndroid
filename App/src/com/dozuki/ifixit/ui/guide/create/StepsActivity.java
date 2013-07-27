@@ -157,8 +157,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
          mGuide = event.getResult();
          hideLoading();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 
@@ -168,8 +167,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
          mGuide = event.getResult();
          hideLoading();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 

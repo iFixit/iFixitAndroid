@@ -15,30 +15,19 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 
 public class PhotoMediaFragment extends MediaFragment {
-
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-   }
-
-   @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-      return super.onCreateView(inflater, container, savedInstanceState);
-   }
-
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
       ((GalleryActivity)getActivity()).showLoading(R.id.gallery_loading_container);
 
       APIService.call(getActivity(),
-       APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE)));
+       APIService.getUserImagesAPICall("?limit=" + IMAGE_PAGE_SIZE));
    }
 
    @Subscribe
    public void onUserImages(APIEvent.UserImages event) {
       ((GalleryActivity)getActivity()).hideLoading();
-      this.setEmptyListView();
+      setEmptyListView();
 
       if (!event.hasError()) {
          ArrayList<UserImage> imageList = new ArrayList<UserImage>(event.getResult());
@@ -53,8 +42,7 @@ public class PhotoMediaFragment extends MediaFragment {
 
          mNextPageRequestInProgress = false;
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getUserImagesAPICall("?limit=" + (IMAGE_PAGE_SIZE)));
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -69,7 +57,7 @@ public class PhotoMediaFragment extends MediaFragment {
          mGalleryAdapter.notifyDataSetChanged();
          mGalleryAdapter.invalidatedView();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null);
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -78,7 +66,7 @@ public class PhotoMediaFragment extends MediaFragment {
       if (!event.hasError()) {
          mGalleryAdapter.notifyDataSetChanged();
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), null);
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 

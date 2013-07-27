@@ -25,7 +25,6 @@ import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
-import com.dozuki.ifixit.util.APIError.ErrorType;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 
@@ -96,12 +95,12 @@ public class APIService extends Service {
    private static APIEvent<?> getUnauthorizedEvent(APICall apiCall) {
       sPendingApiCall = apiCall;
 
-      // We aren't logged in anymore so lets make s ure we don't think we are.
+      // We aren't logged in anymore so lets make sure we don't think we are.
       MainApplication.get().shallowLogout();
 
       // The APIError doesn't matter as long as one exists.
       return new APIEvent.Unauthorized().setCode(INVALID_LOGIN_CODE).
-       setError(new APIError("", "", APIError.ErrorType.UNAUTHORIZED));
+       setError(new APIError("", "", APIError.Type.UNAUTHORIZED));
    }
 
    /**
@@ -157,15 +156,13 @@ public class APIService extends Service {
          public void setResult(APIEvent<?> result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
-               result = parseResult(result.getResponse(), apiCall.mEndpoint);
+               result = parseResult(result, apiCall.mEndpoint);
             }
 
             // Don't save if there a parse error.
             if (!result.hasError()) {
                saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
             }
-
-            result.setExtraInfo(apiCall.mExtraInfo);
 
             /**
              * Always post the result despite any errors. This actually sends it off
@@ -181,20 +178,41 @@ public class APIService extends Service {
    /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private APIEvent<?> parseResult(String response, APIEndpoint endpoint) {
+   private APIEvent<?> parseResult(APIEvent<?> result, APIEndpoint endpoint) {
+      int code = result.mCode;
+      String response = result.getResponse();
+
       String error = JSONHelper.parseError(response);
       if (error != null) {
-         ErrorType type = error.equals(INVALID_LOGIN_STRING) ? ErrorType.INVALID_USER : ErrorType.OTHER;
+         APIError.Type type = error.equals(INVALID_LOGIN_STRING) ?
+          APIError.Type.INVALID_USER : APIError.getByStatusCode(code, this).mType;
 
-         return endpoint.getEvent().setError(new APIError(getString(R.string.error), error, type));
+         return result.setError(new APIError(getString(R.string.error), error, type));
       }
+
+      APIEvent<?> event;
 
       try {
-         return endpoint.parseResult(response);
+         // We don't know the type of APIEvent it is so we must let the endpoint's
+         // parseResult return the correct one...
+         event = endpoint.parseResult(response);
+
+         // ... and then we can copy over the other values we need.
+         event.mCode = code;
+         event.mApiCall = result.mApiCall;
+         event.mResponse = result.mResponse;
       } catch (JSONException e) {
          Log.e("APIService", "API parse error", e);
-         return endpoint.getEvent().setError(APIError.getParseError(this));
+         result.setError(new APIError(APIError.Type.PARSE, this));
+
+         event = result;
       }
+
+      if (code < 200 || code >= 300) {
+         event.setError(APIError.getByStatusCode(code, this));
+      }
+
+      return event;
    }
 
    private void saveResult(APIEvent<?> result, int requestTarget,
@@ -462,66 +480,46 @@ public class APIService extends Service {
       return apiCall;
    }
 
-   public static AlertDialog getErrorDialog(Context context, APIError error,
-    APICall apiCall) {
-      switch (error.mType) {
-         case FATAL:
-            return createFatalErrorDialog(context, error);
-         default:
-            return createErrorDialog(context, apiCall, error);
-      }
-   }
+   public static AlertDialog getErrorDialog(final Activity activity,
+    final APIEvent<?> event) {
+      APIError error = event.getError();
 
-   private static AlertDialog createErrorDialog(final Context context,
-    final APICall apiCall, APIError error) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      int positiveButton = error.mType.mTryAgain ?
+       R.string.try_again : R.string.error_confirm;
+
+      AlertDialog.Builder builder = new AlertDialog.Builder(activity);
       builder.setTitle(error.mTitle)
        .setMessage(error.mMessage)
-       .setPositiveButton(context.getString(R.string.try_again),
+       .setPositiveButton(positiveButton,
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
               // Try performing the request again.
-              context.startService(makeApiIntent(context, apiCall));
+              if (event.mError.mType.mTryAgain) {
+                 activity.startService(makeApiIntent(activity, event.mApiCall));
+              }
+
               dialog.dismiss();
+
+              if (event.mError.mType.mFinishActivity) {
+                 activity.finish();
+              }
            }
         });
 
-      AlertDialog d = builder.create();
-      d.setOnCancelListener(new OnCancelListener() {
+      AlertDialog dialog = builder.create();
+      dialog.setOnCancelListener(new OnCancelListener() {
          @Override
          public void onCancel(DialogInterface dialog) {
-            ((Activity) context).finish();
+            activity.finish();
          }
       });
-      return d;
+
+      return dialog;
    }
-
-
-   private static AlertDialog createFatalErrorDialog(final Context context, APIError error) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(context);
-      builder.setTitle(error.mTitle)
-       .setMessage(error.mMessage)
-       .setPositiveButton(context.getString(R.string.error_confirm),
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              ((Activity) context).finish();
-           }
-        });
-
-      AlertDialog d = builder.create();
-      d.setOnCancelListener(new OnCancelListener() {
-         @Override
-         public void onCancel(DialogInterface dialog) {
-            ((Activity) context).finish();
-         }
-      });
-      return d;
-   }
-
 
    private void performRequest(final APICall apiCall, final Responder responder) {
       final APIEndpoint endpoint = apiCall.mEndpoint;
-      if (!checkConnectivity(responder, endpoint)) {
+      if (!checkConnectivity(responder, endpoint, apiCall)) {
          return;
       }
 
@@ -535,7 +533,8 @@ public class APIService extends Service {
       new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
          protected APIEvent<?> doInBackground(String... dummy) {
-
+            APIEvent<?> event = endpoint.getEvent();
+            event.setApiCall(apiCall);
             HttpRequest.setConnectionFactory(new OkConnectionFactory());
 
             /**
@@ -623,18 +622,18 @@ public class APIService extends Service {
                if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
                   return getUnauthorizedEvent(apiCall);
                } else {
-                  return endpoint.getEvent().setCode(code).setResponse(responseBody);
+                  return event.setCode(code).setResponse(responseBody);
                }
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {
                   e.getCause().printStackTrace();
                   Log.e("iFixit::APIService", "IOException from request", e.getCause());
-                  return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
                } else {
                   e.printStackTrace();
                   Log.e("iFixit::APIService", "API error", e);
-                  return endpoint.getEvent().setError(APIError.getParseError(APIService.this));
                }
+
+               return event.setError(new APIError(APIError.Type.PARSE, APIService.this));
             }
          }
 
@@ -645,13 +644,16 @@ public class APIService extends Service {
       }.execute();
    }
 
-   private boolean checkConnectivity(Responder responder, APIEndpoint endpoint) {
+   private boolean checkConnectivity(Responder responder, APIEndpoint endpoint,
+    APICall apiCall) {
       ConnectivityManager cm = (ConnectivityManager)
        getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(endpoint.getEvent().setError(APIError.getConnectionError(this)));
+         responder.setResult(endpoint.getEvent()
+          .setApiCall(apiCall)
+          .setError(new APIError(APIError.Type.CONNECTION, this)));
          return false;
       }
 
