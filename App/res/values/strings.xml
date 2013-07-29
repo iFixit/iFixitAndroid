@@ -36,8 +36,8 @@
     <string name="parse_error_message">An error has occurred while trying to load content from our servers.</string>
     <string name="no_connection">No connection</string>
     <string name="no_connection_title">Connection error</string>
-    <string name="invalid_revision_error_title">Revision error</string>
-    <string name="invalid_revision_error">It looks like you may be editing a version of this guide that is out of date.</string>
+    <string name="invalid_revision_error_title">Edit conflict</string>
+    <string name="invalid_revision_error">Your changes could not be saved because the content you are editing has changed since you last opened it. Please remake your changes and try again.</string>
     <string name="fatal_error_title">Unknown Error</string>
     <string name="fatal_error">It looks like an error occurred.</string>
     <string name="forbidden_error">You have insufficient privileges to perform this action.</string>

@@ -393,10 +393,19 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    public void onStepSave(APIEvent.StepSave event) {
       hideLoading();
 
-      if (!event.hasError()) {
-         GuideStep step = event.getResult();
-         mGuide.getSteps().set(mSavePosition, step);
-      } else {
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+         // Update the guide on successful save or conflict.
+         mGuide.getSteps().set(mSavePosition, event.getResult());
+
+         // The view pager does not recreate the item in the current position unless we force it
+         initPager();
+         mPager.invalidate();
+         mTitleIndicator.invalidate();
+
+         mPager.setCurrentItem(mSavePosition, false);
+      }
+
+      if (event.hasError()) {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
@@ -409,7 +418,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (!event.hasError()) {
          Image newThumb = event.getResult();
 
-         // Find the temporarily stored image object to update the filename to the image path and imageid
+         // Find the temporarily stored image object to update the filename to
+         // the image path and imageid.
          if (newThumb != null) {
             ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(mPagePosition).getImages());
 
@@ -427,7 +437,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
             unlockSave();
 
-            // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
+            // Set guide dirty after the image is uploaded so the user can't
+            // save the guide before we have the imageid.
             MainApplication.getBus().post(new StepChangedEvent());
          }
       } else {
@@ -534,10 +545,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
          mGuide.addStep(item, newPosition);
 
-         for (int i = 1; i < mGuide.getSteps().size(); i++) {
-            mGuide.getStep(i).setStepNum(i);
-         }
-
          // The view pager does not recreate the item in the current position unless we force it
          initPager();
          mPager.invalidate();
@@ -563,7 +570,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             finishEdit(STEP_VIEW);
       }
 
-      return (super.onOptionsItemSelected(item));
+      return super.onOptionsItemSelected(item);
    }
 
    /////////////////////////////////////////////////////
