@@ -21,8 +21,6 @@ import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-
 public class TopicInfoFragment extends SherlockFragment {
 
    private static final float HEADER_SIZE = 1.3f;
@@ -31,7 +29,6 @@ public class TopicInfoFragment extends SherlockFragment {
 
    private TopicLeaf mTopic;
    private TextView mContent;
-   private ArrayList<ImageView> mImages = new ArrayList<ImageView>();
 
    /**
     * Required for restoring fragments
@@ -65,15 +62,7 @@ public class TopicInfoFragment extends SherlockFragment {
       ((TextView) v.findViewById(R.id.topic_info_summary)).setText(mTopic.getDescription());
       mContent = ((TextView) v.findViewById(R.id.topic_info_content));
       mContent.setMovementMethod(LinkMovementMethod.getInstance());
-      mContent.setTextAlignment(View.TEXT_ALIGNMENT_VIEW_END);
       mContent.setText(getStyledContent());
-
-      if (mImages.size() > 0) {
-         for (ImageView image : mImages) {
-            container.addView(image);
-         }
-         container.invalidate();
-      }
 
       String url = mTopic.getImage().getPath(IMAGE_SIZE);
 
