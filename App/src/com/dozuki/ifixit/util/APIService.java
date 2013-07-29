@@ -326,13 +326,13 @@ public class APIService extends Service {
    }
 
    public static APICall getPublishGuideAPICall(int guideid, int revisionid) {
-      return new APICall(APIEndpoint.PUBLISH_GUIDE, "" + guideid + "/public" + "?revisionid="
-       + revisionid, "");
+      return new APICall(APIEndpoint.PUBLISH_GUIDE,
+       guideid + "/public" + "?revisionid=" + revisionid, "");
    }
 
    public static APICall getUnPublishGuideAPICall(int guideid, int revisionid) {
-      return new APICall(APIEndpoint.UNPUBLISH_GUIDE, "" + guideid + "/public" + "?revisionid="
-       + revisionid, "");
+      return new APICall(APIEndpoint.UNPUBLISH_GUIDE,
+       guideid + "/public" + "?revisionid=" + revisionid, "");
    }
 
    public static APICall getEditStepAPICall(GuideStep step, int guideid) {
