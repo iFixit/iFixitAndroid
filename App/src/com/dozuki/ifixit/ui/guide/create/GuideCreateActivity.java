@@ -151,7 +151,8 @@ public class GuideCreateActivity extends BaseActivity {
 
    @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
-      if (!event.hasError()) {
+      // Update guide even if there is a conflict.
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
          Guide guide = event.getResult();
          for (GuideInfo userGuide : mUserGuideList) {
             if (userGuide.mGuideid == guide.getGuideid()) {
@@ -162,7 +163,9 @@ public class GuideCreateActivity extends BaseActivity {
          }
 
          mGuideListAdapter.notifyDataSetChanged();
-      } else {
+      }
+
+      if (event.hasError()) {
          APIService.getErrorDialog(this, event).show();
       }
    }
