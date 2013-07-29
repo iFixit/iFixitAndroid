@@ -45,6 +45,7 @@ public class TopicViewFragment extends SherlockFragment {
 
    @Subscribe
    public void onTopic(APIEvent.Topic event) {
+      ((TopicViewActivity)getActivity()).hideLoading();
       if (!event.hasError()) {
          setTopicLeaf(event.getResult());
       } else {
@@ -184,6 +185,8 @@ public class TopicViewFragment extends SherlockFragment {
       if (mTitleIndicator != null) {
          mTitleIndicator.setVisibility(View.VISIBLE);
       }
+
+      ((TopicViewActivity)getActivity()).showLoading(R.id.topic_view_fragment);
 
       APIService.call(getActivity(), APIService.getTopicAPICall(topicName));
    }
