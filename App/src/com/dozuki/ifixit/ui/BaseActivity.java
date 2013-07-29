@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -291,6 +292,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mAdapter = new MenuAdapter(items);
       mList.setAdapter(mAdapter);
       mList.setOnItemClickListener(mItemClickListener);
+      mList.setCacheColorHint(Color.TRANSPARENT);
 
       mMenuDrawer.setMenuView(mList);
       mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
