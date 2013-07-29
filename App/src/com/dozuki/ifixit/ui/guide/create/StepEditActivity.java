@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -33,7 +34,11 @@ import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -394,15 +399,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       hideLoading();
 
       if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
-         // Update the guide on successful save or conflict.
-         mGuide.getSteps().set(mSavePosition, event.getResult());
-
-         // The view pager does not recreate the item in the current position unless we force it
-         initPager();
-         mPager.invalidate();
-         mTitleIndicator.invalidate();
-
-         mPager.setCurrentItem(mSavePosition, false);
+         updateCurrentStep(event.getResult());
       }
 
       if (event.hasError()) {
@@ -482,6 +479,16 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mGuide.setRevisionid(event.getResult().getRevisionid());
          deleteStep();
       } else {
+         // Try to update the step on a conflict.
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            try {
+               updateCurrentStep(JSONHelper.parseStep(
+                new JSONObject(event.getResponse()), 0));
+            } catch (JSONException e) {
+               Log.w("StepEditActivity", "Error parsing step delete conflict", e);
+            }
+         }
+
          APIService.getErrorDialog(this, event).show();
       }
    }
@@ -918,6 +925,18 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
          }
       }
+   }
+
+   private void updateCurrentStep(GuideStep step) {
+      // Update the guide on successful save or conflict.
+      mGuide.getSteps().set(mSavePosition, step);
+
+      // The view pager does not recreate the item in the current position unless we force it
+      initPager();
+      mPager.invalidate();
+      mTitleIndicator.invalidate();
+
+      mPager.setCurrentItem(mSavePosition, false);
    }
 
    protected void deleteStep() {
