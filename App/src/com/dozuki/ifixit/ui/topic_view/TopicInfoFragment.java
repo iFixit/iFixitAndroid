@@ -57,7 +57,7 @@ public class TopicInfoFragment extends SherlockFragment {
       View v = inflater.inflate(R.layout.topic_info, container, false);
 
       // Wrap the title in <h1> tags so it has the same style as the headers in the topic content html
-      Spanned title = Html.fromHtml("<h1>" + mTopic.getTitle() + "</h1>");
+      Spanned title = Html.fromHtml(mTopic.getTitle());
       ((TextView) v.findViewById(R.id.topic_info_title)).setText(title);
       ((TextView) v.findViewById(R.id.topic_info_summary)).setText(mTopic.getDescription());
       mContent = ((TextView) v.findViewById(R.id.topic_info_content));
