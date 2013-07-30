@@ -102,7 +102,7 @@ public class GuideListItem extends LinearLayout {
          }
       });
 
-      mToggleEdit.setChecked(STATE_CLOSED);
+      mToggleEdit.setOnCheckedChangeListener(null);
       mToggleEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -125,11 +125,11 @@ public class GuideListItem extends LinearLayout {
    }
 
    public void setRowData(GuideInfo guideInfo) {
-
       mGuideInfo = guideInfo;
       setTag(mGuideInfo.mGuideid);
 
       mTitleView.setText(Html.fromHtml(mGuideInfo.mTitle));
+      mToggleEdit.setChecked(mGuideInfo.mEditMode);
 
       if (mThumbnail != null) {
          if (mGuideInfo.hasImage()) {
@@ -147,6 +147,7 @@ public class GuideListItem extends LinearLayout {
       }
 
       setPublished(mGuideInfo.mPublic);
+      toggleListItem(mGuideInfo.mEditMode, false, mToggleEdit, mEditBar);
    }
 
    public void setPublished(boolean published) {
