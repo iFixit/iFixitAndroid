@@ -36,6 +36,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
 
    public static final int MENU_EDIT_GUIDE = 2;
+   private static final int MENU_REFRESH_GUIDE = 3;
 
    private int mGuideid;
    private Guide mGuide;
@@ -178,6 +179,11 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
       menu.add(1, MENU_EDIT_GUIDE, 0, R.string.edit_guide)
        .setIcon(R.drawable.ic_action_edit)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+      menu.add(2, MENU_REFRESH_GUIDE, 0, "Reload Guide")
+       .setIcon(R.drawable.ic_action_refresh_dark)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -218,6 +224,10 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                }
             }
             break;
+         case MENU_REFRESH_GUIDE:
+            // Set guide to null to force a refresh of the guide object.
+            mGuide = null;
+            getGuide(mGuideid);
          default:
             return super.onOptionsItemSelected(item);
       }
