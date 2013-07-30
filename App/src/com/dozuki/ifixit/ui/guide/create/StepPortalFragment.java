@@ -219,13 +219,16 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
 
    @Subscribe
    public void onStepReorder(APIEvent.StepReorder event) {
-      if (!event.hasError()) {
+      ((StepsActivity)getActivity()).hideLoading();
+
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
          mGuide = event.getResult();
 
          mStepAdapter.notifyDataSetChanged();
          invalidateViews();
-         ((StepsActivity) getActivity()).hideLoading();
-      } else {
+      }
+
+      if (event.hasError()) {
          APIService.getErrorDialog(getActivity(), event).show();
       }
    }
