@@ -850,7 +850,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());
       intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
       intent.putExtra(GuideViewActivity.FROM_EDIT, true);
-      intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
       startActivity(intent);
    }
 

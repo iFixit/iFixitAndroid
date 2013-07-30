@@ -214,7 +214,6 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                   intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
                   intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
                   intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
-                  intent.setFlags(Intent.FLAG_ACTIVITY_NO_HISTORY);
                   startActivity(intent);
                }
             }
