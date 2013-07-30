@@ -2,7 +2,9 @@ package com.dozuki.ifixit.ui;
 
 import android.content.Context;
 import android.text.Html;
+import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -48,7 +50,17 @@ public class GuideItemView extends RelativeLayout {
       } else {
          mPicasso
           .load(R.drawable.no_image)
+          .fit()
           .into(mThumbnail);
+
+         // .fit() resizes the ImageView to fit its parent, but it resets the gravity,
+         // causing the guide item title to appear below the image.  So we have to reset layout_gravity to FILL to
+         // get the title floating over the bottom of the "no_image" image.
+         FrameLayout.LayoutParams params = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT,
+          LayoutParams.WRAP_CONTENT);
+         params.gravity = Gravity.FILL;
+         mThumbnail.setLayoutParams(params);
+
       }
    }
 }
