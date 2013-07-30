@@ -81,6 +81,7 @@
         <item name="android:typeface">sans</item>
         <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:textColor">?attr/doz__textColorPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BodyText">

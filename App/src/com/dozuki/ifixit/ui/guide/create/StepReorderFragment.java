@@ -181,19 +181,32 @@ public class StepReorderFragment extends SherlockFragment {
             v.setTag(holder);
          }
          final ViewHolder holder = (ViewHolder)v.getTag();
-         String step = getItem(position).getTitle();
+         GuideStep step = getItem(position);
+
+         String title = getItem(position).getTitle();
          if (step.equals("")) {
             holder.stepsView.setText(getString(R.string.step_number, (mGuide.getSteps().indexOf(mStepsCopy
              .get(position)) + 1)));
             holder.stepNumber.setVisibility(View.GONE);
          } else {
-            holder.stepsView.setText(step);
+            holder.stepsView.setText(title);
             holder.stepNumber.setText(getString(R.string.step_number, (mGuide.getSteps().indexOf(mStepsCopy.get
              (position)) + 1)));
             holder.stepNumber.setVisibility(View.VISIBLE);
          }
 
-         setImageThumb(getItem(position).getImages(), holder.mImageView);
+         if (step.hasVideo()) {
+            Picasso.with(getSherlockActivity())
+             .load(step.getVideo().getThumbnail().getPath(MainApplication.get().getImageSizes().getThumb()))
+             .error(R.drawable.no_image)
+             .into(holder.mImageView);
+
+            // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
+            holder.mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+
+         } else {
+            setImageThumb(step.getImages(), holder.mImageView);
+         }
 
          return v;
       }
@@ -201,18 +214,25 @@ public class StepReorderFragment extends SherlockFragment {
 
    private void setImageThumb(ArrayList<Image> imageList, ImageView image) {
       String url = "";
-
-      for (Image imageInfo : imageList) {
-         if (imageInfo.getId() > 0) {
-            url = imageInfo.getPath(MainApplication.get().getImageSizes().getThumb());
-            image.setTag(url);
-            break;
+      if (imageList.size() == 0) {
+         Picasso
+          .with(getSherlockActivity())
+          .load(R.drawable.no_image)
+          .noFade()
+          .into(image);
+      } else {
+         for (Image imageInfo : imageList) {
+            if (imageInfo.getId() > 0) {
+               url = imageInfo.getPath(MainApplication.get().getImageSizes().getThumb());
+               image.setTag(url);
+               break;
+            }
          }
-      }
 
-      Picasso.with(getSherlockActivity())
-       .load(url)
-       .error(R.drawable.no_image)
-       .into(image);
+         Picasso.with(getSherlockActivity())
+          .load(url)
+          .error(R.drawable.no_image)
+          .into(image);
+      }
    }
 }
