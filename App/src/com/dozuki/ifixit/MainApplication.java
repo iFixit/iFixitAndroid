@@ -10,9 +10,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.util.DisplayMetrics;
+import android.content.res.TypedArray;
 import android.util.Log;
-import android.view.WindowManager;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
@@ -21,7 +20,7 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.otto.Bus;
 
 public class MainApplication extends Application {
-   private static final int LARGE_SIZE_CUTOFF = 1000;
+   private static final int LARGE_SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
    private static final String CURRENT_SITE = "SITE_ifixit";
 
@@ -183,21 +182,12 @@ public class MainApplication extends Application {
 
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {
-         WindowManager wm = (WindowManager)getSystemService(
-          Context.WINDOW_SERVICE);
-         DisplayMetrics metrics = new DisplayMetrics();
-         wm.getDefaultDisplay().getMetrics(metrics);
-         int maxDimension = Math.max(metrics.heightPixels,
-          metrics.widthPixels);
-
-         float screenSize = (maxDimension / metrics.density);
-
-         // Larger screen = larger images
-         if (screenSize > LARGE_SIZE_CUTOFF) {
-            mImageSizes = new ImageSizes(".medium", ".medium", ".large", ".standard");
-         } else {
-            mImageSizes = new ImageSizes(".standard", ".standard", ".large", ".standard");
-         }
+         TypedArray imageSizes = getResources().obtainTypedArray(R.array.image_sizes);
+         mImageSizes = new ImageSizes(
+          imageSizes.getString(0),
+          imageSizes.getString(1),
+          imageSizes.getString(2),
+          imageSizes.getString(3));
       }
 
       return mImageSizes;

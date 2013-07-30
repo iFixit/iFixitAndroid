@@ -392,6 +392,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    private class MenuAdapter extends BaseAdapter {
       private List<Object> mItems;
+      private static final int VIEW_TYPE_COUNT = 2;
 
       MenuAdapter(List<Object> items) {
          mItems = items;
@@ -419,7 +420,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       @Override
       public int getViewTypeCount() {
-         return 2;
+         return VIEW_TYPE_COUNT;
       }
 
       @Override

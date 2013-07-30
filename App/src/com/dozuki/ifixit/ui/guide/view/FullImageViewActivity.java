@@ -8,9 +8,10 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.ui.guide.FullScreenImageView;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.picasso.Picasso;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 
@@ -30,27 +31,28 @@ public class FullImageViewActivity extends SherlockActivity {
       Picasso picasso = Picasso.with(this);
 
       setContentView(R.layout.full_screen_image);
-      ImageViewTouch image = (ImageViewTouch) findViewById(R.id.imageZoom);
+      final FullScreenImageView image = (FullScreenImageView) findViewById(R.id.image_zoom);
+      image.setImageUrl(url);
 
       if (url.startsWith("http")) {
          url += sizes.getFull();
 
          picasso.load(url)
           .error(R.drawable.no_image)
-          .into(image);
+          .into((Target) image);
       } else if(url.startsWith("content://")) {
          picasso.load(url)
           .scale(0.5f)
           .error(R.drawable.no_image)
-          .into(image);
+          .into((Target) image);
       } else {
          picasso.load(new File(url))
           .scale(0.5f)
           .error(R.drawable.no_image)
-          .into(image);
+          .into((Target) image);
       }
 
-      findViewById(R.id.fullScreenClose).setOnClickListener(new OnClickListener() {
+      findViewById(R.id.full_screen_close).setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
             finish();

@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <array name="image_sizes">
+        <!-- Guide Image Thumbnail -->
+        <item>.standard</item>
+        <!-- Guide Main Image -->
+        <item>.standard</item>
+        <!-- Guide Image Fullsize -->
+        <item>.large</item>
+        <!-- Grid Images -->
+        <item>.standard</item>
+    </array>
+</resources>

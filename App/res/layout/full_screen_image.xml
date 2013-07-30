@@ -11,14 +11,14 @@
         android:minHeight="@dimen/progress_bar_width_height"
         android:minWidth="@dimen/progress_bar_width_height" />
 
-    <it.sephiroth.android.library.imagezoom.ImageViewTouch
-        android:id="@+id/imageZoom"
+    <com.dozuki.ifixit.ui.guide.FullScreenImageView
+        android:id="@+id/image_zoom"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scaleType="center"/>
 
     <ImageView
-        android:id="@+id/fullScreenClose"
+        android:id="@+id/full_screen_close"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/close_full_screen_desc"
