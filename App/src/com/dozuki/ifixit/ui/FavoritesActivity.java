@@ -19,7 +19,7 @@ public class FavoritesActivity extends BaseActivity {
    private int OFFSET = 0;
    private static final String GUIDES_KEY = "GUIDES_KEY";
 
-   private ArrayList<GuideInfo> mGuides;
+   private ArrayList<GuideInfo> mGuides = new ArrayList<GuideInfo>();
    private GridView mGridView;
 
    @Override
@@ -76,6 +76,8 @@ public class FavoritesActivity extends BaseActivity {
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      super.onSaveInstanceState(state);
+
       state.putSerializable(GUIDES_KEY, mGuides);
    }
 
