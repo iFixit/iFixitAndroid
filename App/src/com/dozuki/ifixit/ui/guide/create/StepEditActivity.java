@@ -924,6 +924,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          return;
       }
 
+      // Disable the save button.
+      toggleSave(false);
+
       int guideSize = mGuide.getSteps().size();
 
       for (int i = 0; i < guideSize; i++) {
@@ -940,6 +943,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mPager.setCurrentItem(newPosition, false);
    }
 
+   /**
+    * Toggle the save button state
+    *
+    * @param toggle true to enable, false to disable
+    */
    public void toggleSave(boolean toggle) {
       if (!mLockSave) {
          int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
