@@ -302,6 +302,7 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="no_items">No Items</string>
     <string name="view">View</string>
     <string name="save_changes_to_step">Save changes to this step?</string>
+    <string name="new_line">New line</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>
