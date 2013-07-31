@@ -485,7 +485,7 @@ public enum APIEndpoint {
    UNPUBLISH_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
-            return "guides/" +  query + "/public";
+            return "guides/" + query;
          }
 
          public APIEvent<?> parse(String json) throws JSONException {

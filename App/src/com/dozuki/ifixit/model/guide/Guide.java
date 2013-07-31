@@ -89,6 +89,10 @@ public class Guide implements Serializable {
 
    public void addStep(GuideStep step, int position) {
       mSteps.add(position, step);
+
+      for (int i = 1; i < mSteps.size(); i++) {
+         mSteps.get(i).setStepNum(i);
+      }
    }
 
    public void deleteStep(GuideStep step) {

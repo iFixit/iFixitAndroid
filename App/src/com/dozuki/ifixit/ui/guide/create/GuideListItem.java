@@ -112,7 +112,7 @@ public class GuideListItem extends LinearLayout {
          }
       });
 
-      this.setOnClickListener(mUpperSectionListener);
+      setOnClickListener(mUpperSectionListener);
 
       mUpperSection.setOnClickListener(mUpperSectionListener);
       if (MainApplication.get().getSite().mName.equals("ifixit")) {

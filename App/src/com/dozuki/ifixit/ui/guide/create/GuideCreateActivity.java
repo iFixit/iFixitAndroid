@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
@@ -19,9 +21,12 @@ import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -151,7 +156,8 @@ public class GuideCreateActivity extends BaseActivity {
 
    @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
-      if (!event.hasError()) {
+      // Update guide even if there is a conflict.
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
          Guide guide = event.getResult();
          for (GuideInfo userGuide : mUserGuideList) {
             if (userGuide.mGuideid == guide.getGuideid()) {
@@ -162,7 +168,9 @@ public class GuideCreateActivity extends BaseActivity {
          }
 
          mGuideListAdapter.notifyDataSetChanged();
-      } else {
+      }
+
+      if (event.hasError()) {
          APIService.getErrorDialog(this, event).show();
       }
    }
@@ -174,6 +182,17 @@ public class GuideCreateActivity extends BaseActivity {
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
+         // Try to update the guide's revisionid on a conflict.
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            try {
+               Guide updatedGuide = JSONHelper.parseGuide(event.getResponse());
+               GuideInfo guideToUpdate = mUserGuideList.get(mUserGuideList.indexOf(mGuideForDelete));
+
+               guideToUpdate.mRevisionid = updatedGuide.getRevisionid();
+            } catch (JSONException e) {
+               Log.w("GuideCreateActivity", "Error parsing guide delete conflict", e);
+            }
+         }
          APIService.getErrorDialog(this, event).show();
       }
    }
@@ -221,7 +240,7 @@ public class GuideCreateActivity extends BaseActivity {
        .setMessage(getString(R.string.confirm_delete_body, item.mTitle))
        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
-             APIService.call(GuideCreateActivity.this, APIService.getRemoveGuideAPICall(mGuideForDelete));
+             APIService.call(GuideCreateActivity.this, APIService.getDeleteGuideAPICall(mGuideForDelete));
              dialog.cancel();
           }
        }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {

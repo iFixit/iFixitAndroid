@@ -19,6 +19,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -33,7 +34,11 @@ import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -393,10 +398,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    public void onStepSave(APIEvent.StepSave event) {
       hideLoading();
 
-      if (!event.hasError()) {
-         GuideStep step = event.getResult();
-         mGuide.getSteps().set(mSavePosition, step);
-      } else {
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+         updateCurrentStep(event.getResult());
+      }
+
+      if (event.hasError()) {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
@@ -409,7 +415,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (!event.hasError()) {
          Image newThumb = event.getResult();
 
-         // Find the temporarily stored image object to update the filename to the image path and imageid
+         // Find the temporarily stored image object to update the filename to
+         // the image path and imageid.
          if (newThumb != null) {
             ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(mPagePosition).getImages());
 
@@ -427,7 +434,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
             unlockSave();
 
-            // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
+            // Set guide dirty after the image is uploaded so the user can't
+            // save the guide before we have the imageid.
             MainApplication.getBus().post(new StepChangedEvent());
          }
       } else {
@@ -471,6 +479,16 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mGuide.setRevisionid(event.getResult().getRevisionid());
          deleteStep();
       } else {
+         // Try to update the step on a conflict.
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            try {
+               updateCurrentStep(JSONHelper.parseStep(
+                new JSONObject(event.getResponse()), 0));
+            } catch (JSONException e) {
+               Log.w("StepEditActivity", "Error parsing step delete conflict", e);
+            }
+         }
+
          APIService.getErrorDialog(this, event).show();
       }
    }
@@ -534,10 +552,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
          mGuide.addStep(item, newPosition);
 
-         for (int i = 1; i < mGuide.getSteps().size(); i++) {
-            mGuide.getStep(i).setStepNum(i);
-         }
-
          // The view pager does not recreate the item in the current position unless we force it
          initPager();
          mPager.invalidate();
@@ -563,7 +577,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             finishEdit(STEP_VIEW);
       }
 
-      return (super.onOptionsItemSelected(item));
+      return super.onOptionsItemSelected(item);
    }
 
    /////////////////////////////////////////////////////
@@ -910,6 +924,18 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
          }
       }
+   }
+
+   private void updateCurrentStep(GuideStep step) {
+      // Update the guide on successful save or conflict.
+      mGuide.getSteps().set(mSavePosition, step);
+
+      // The view pager does not recreate the item in the current position unless we force it
+      initPager();
+      mPager.invalidate();
+      mTitleIndicator.invalidate();
+
+      mPager.setCurrentItem(mSavePosition, false);
    }
 
    protected void deleteStep() {
