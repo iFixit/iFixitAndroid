@@ -15,6 +15,8 @@ import com.squareup.picasso.Target;
 
 import java.io.File;
 
+import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
+
 public class FullImageViewActivity extends SherlockActivity {
    public static final String IMAGE_URL = "IMAGE_URL";
 
@@ -33,6 +35,7 @@ public class FullImageViewActivity extends SherlockActivity {
       setContentView(R.layout.full_screen_image);
       final FullScreenImageView image = (FullScreenImageView) findViewById(R.id.image_zoom);
       image.setImageUrl(url);
+      image.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
       if (url.startsWith("http")) {
          url += sizes.getFull();
