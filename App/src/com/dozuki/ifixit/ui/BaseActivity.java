@@ -241,9 +241,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
 
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      }
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
       mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);

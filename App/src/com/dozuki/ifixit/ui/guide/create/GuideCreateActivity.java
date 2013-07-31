@@ -117,9 +117,7 @@ public class GuideCreateActivity extends BaseActivity {
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuItem createGuideItem = menu.add(0, MENU_CREATE_GUIDE, 0, R.string.add_guide);
       createGuideItem.setIcon(R.drawable.ic_menu_add_guide);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-         createGuideItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-      }
+      createGuideItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
       return super.onCreateOptionsMenu(menu);
    }
