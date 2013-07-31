@@ -14,13 +14,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
+import com.dozuki.ifixit.ui.guide.FallbackImageView;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
@@ -176,7 +176,7 @@ public class StepEditImageFragment extends SherlockFragment {
                          bus.post(new StepImageDeleteEvent(thumbImage));
                          bus.post(new StepChangedEvent());
 
-                         mThumbs.removeThumb((ImageView) v);
+                         mThumbs.removeThumb((FallbackImageView) v);
                          mImages.remove(v);
                          break;
                    }

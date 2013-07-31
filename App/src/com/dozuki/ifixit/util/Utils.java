@@ -14,6 +14,15 @@ public class Utils {
          ((BitmapDrawable)view.getDrawable()).getBitmap().recycle();
       }
 
+      safeStripImageView(view);
+   }
+
+   /**
+    * ImageView stripping without the "dangerous" bitmap recycle.
+    *
+    * @param view ImageView to clean memory
+    */
+   public static void safeStripImageView(ImageView view) {
       if (view.getDrawable() != null)
          view.getDrawable().setCallback(null);
 

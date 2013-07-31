@@ -18,13 +18,14 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestBuilder;
+import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
 
 public class ThumbnailView extends LinearLayout implements View.OnClickListener {
-   private ArrayList<ImageView> mThumbs;
-   private ImageView mMainImage;
+   private ArrayList<FallbackImageView> mThumbs;
+   private FallbackImageView mMainImage;
    private ImageView mAddThumbButton;
    private Context mContext;
    private ImageSizes mImageSizes;
@@ -58,13 +59,14 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void destroy() {
-      mPicasso.cancelRequest(mMainImage);
+      mPicasso.cancelRequest((Target)mMainImage);
 
-      Utils.stripImageView(mMainImage);
-      for (ImageView image : mThumbs) {
-         mPicasso.cancelRequest(image);
-         Utils.stripImageView(image);
+      Utils.safeStripImageView(mMainImage);
+      for (FallbackImageView image : mThumbs) {
+         mPicasso.cancelRequest((Target) image);
+         Utils.safeStripImageView(image);
       }
+
       mMainImage = null;
       mThumbs = null;
    }
@@ -88,7 +90,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       mThumbnailContainer = (LinearLayout) findViewById(R.id.thumbnail_list);
 
-      mMainImage = (ImageView) findViewById(R.id.thumbnail_main_image);
+      mMainImage = (FallbackImageView) findViewById(R.id.thumbnail_main_image);
       mMainImage.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
@@ -102,7 +104,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          }
       });
 
-      mThumbs = new ArrayList<ImageView>();
+      mThumbs = new ArrayList<FallbackImageView>();
       setOrientation(MainApplication.get().inPortraitMode() ? HORIZONTAL : VERTICAL);
    }
 
@@ -119,7 +121,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    @Override
    public void onClick(View v) {
-      for (ImageView image : mThumbs) {
+      for (FallbackImageView image : mThumbs) {
          if (v.getId() == image.getId() && v.getTag() instanceof Image) {
             Image imageView = (Image) v.getTag();
             setCurrentThumb(imageView.getPath());
@@ -135,7 +137,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       mThumbnailContainer.setVisibility(hideOnSingleThumb ? GONE : VISIBLE);
 
       if (!images.isEmpty()) {
-         for (ImageView img : mThumbs) {
+         for (FallbackImageView img : mThumbs) {
             mThumbnailContainer.removeView(img);
          }
          mThumbs.clear();
@@ -161,7 +163,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       mPicasso.load(R.drawable.no_image)
        .fit()
-       .into(mMainImage);
+       .into((Target)mMainImage);
    }
 
    public void setAddImageMain() {
@@ -183,7 +185,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    public int addThumb(Image image, boolean fromDisk) {
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-      ImageView thumb = (ImageView) inflater.inflate(R.layout.thumbnail, null);
+      FallbackImageView thumb = (FallbackImageView) inflater.inflate(R.layout.thumbnail, null);
 
       thumb.setOnClickListener(this);
 
@@ -204,6 +206,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       } else {
          String url = image.getPath(mImageSizes.getThumb());
          buildImage(mPicasso.load(url), thumb);
+         thumb.setImageUrl(image.getPath());
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
@@ -223,7 +226,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       return thumbnailPosition;
    }
 
-   public void removeThumb(ImageView view) {
+   public void removeThumb(FallbackImageView view) {
       mThumbs.remove(view);
       mThumbnailContainer.removeView(view);
       if ((mThumbs.size() < 3 && mThumbs.size() > 0) && mAddThumbButton != null) {
@@ -239,7 +242,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void updateThumb(Image newImage) {
-      for (ImageView thumb : mThumbs) {
+      for (FallbackImageView thumb : mThumbs) {
          Image thumbImage = (Image) thumb.getTag();
 
          if (thumbImage.isLocal()) {
@@ -253,7 +256,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    public void updateThumb(Image newImage, int position) {
       Picasso.with(mContext)
        .load(newImage.getPath(mImageSizes.getThumb()))
-       .into(mThumbs.get(position));
+       .into((Target)mThumbs.get(position));
 
       mThumbs.get(position).setTag(newImage.getPath(mImageSizes.getThumb()));
       invalidate();
@@ -261,7 +264,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
    public void setThumbsOnLongClickListener(View.OnLongClickListener listener) {
       mLongClickListener = listener;
-      for (ImageView thumb : mThumbs)
+      for (FallbackImageView thumb : mThumbs)
          thumb.setOnLongClickListener(mLongClickListener);
    }
 
@@ -269,6 +272,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       // Set the images tag as the url before we append .{size} to it, otherwise FullImageView is passed a smaller
       // version of the image.
       mMainImage.setTag(url);
+      mMainImage.setImageUrl(url);
 
       if (url.startsWith("http")) {
          url = url + mImageSizes.getMain();
@@ -294,16 +298,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    public void fitToSpace() {
       calculateDimensions();
 
-      if (MainApplication.get().inPortraitMode()) {
-         fitProgressIndicator(mMainWidth + mThumbnailWidth, mMainHeight);
-      } else {
-         fitProgressIndicator(mMainWidth, mMainHeight + mThumbnailHeight);
-      }
-
       setMainImageDimensions(mMainHeight, mMainWidth);
 
       if (mThumbs.size() > 0) {
-         for (ImageView thumb : mThumbs) {
+         for (FallbackImageView thumb : mThumbs) {
             setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
          }
       }
@@ -343,10 +341,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       thumb.setLayoutParams(lp);
    }
 
-   private void buildImage(RequestBuilder builder, ImageView image) {
+   private void buildImage(RequestBuilder builder, FallbackImageView image) {
       builder
        .error(R.drawable.no_image)
-       .into(image);
+       .into((Target)image);
    }
 
    private void calculateDimensions() {
@@ -388,10 +386,5 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          mThumbnailHeight = (mDisplayMetrics.heightPixels - mMainHeight - mNavigationHeight);
          mThumbnailWidth = (mThumbnailHeight * (4f / 3f));
       }
-   }
-
-   private void fitProgressIndicator(float width, float height) {
-      //mMainProgress.getLayoutParams().height = (int) (height - .5f);
-      //mMainProgress.getLayoutParams().width = (int) (width - .5f);
    }
 }

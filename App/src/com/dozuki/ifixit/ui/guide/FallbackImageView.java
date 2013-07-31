@@ -4,16 +4,16 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.widget.ImageView;
 import com.dozuki.ifixit.R;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
-import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
-public class FullScreenImageView extends ImageViewTouch implements Target {
+public class FallbackImageView extends ImageView implements Target {
    private final Context mContext;
    private String mImageUrl = "";
 
-   public FullScreenImageView(Context context, AttributeSet attrs) {
+   public FallbackImageView(Context context, AttributeSet attrs) {
       super(context, attrs);
       mContext = context;
    }
