@@ -54,6 +54,7 @@ public class GuideStep implements Serializable {
 
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
+      mOrderby = stepNum;
       mTitle = "";
       mImages = new ArrayList<Image>();
       mLines = new ArrayList<StepLine>();
@@ -121,6 +122,10 @@ public class GuideStep implements Serializable {
 
    public void setOrderby(int orderby) {
       mOrderby = orderby;
+   }
+
+   public int getOrderby() {
+      return mOrderby;
    }
 
    public void setTitle(String title) {

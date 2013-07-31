@@ -28,6 +28,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    private static final int BULLET_LIMIT = 8;
    private static final int BULLET_INDENT = 25;
    private static final String STEP_LIST_KEY = "STEP_LIST_KEY";
+   private static final String STEP_ORDERBY = "STEP_ORDERBY";
    private static final String SHOWING_BULLET_FRAG = "SHOWING_BULLET_FRAG";
    private static final String BULLET_FRAG_ID = "BULLET_FRAG_ID";
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
@@ -36,6 +37,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    private LinearLayout mBulletContainer;
    private Button mNewBulletButton;
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
+   private int mOrderby;
    private ChooseBulletDialog mChooseBulletDialog;
    private boolean mShowingChooseBulletDialog;
    private boolean mReorderModeActive;
@@ -55,12 +57,16 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-
       View v = inflater.inflate(R.layout.guide_create_step_edit_lines, container, false);
 
       mStepTitle = (EditText) v.findViewById(R.id.step_edit_title_text);
       mNewBulletButton = (Button) v.findViewById(R.id.add_new_bullet_button);
       mBulletContainer = (LinearLayout) v.findViewById(R.id.edit_step_bullet_container);
+
+      // Hide the step title input on the first step because it shouldn't ever be titled.
+      if (mOrderby == 1) {
+         mStepTitle.setVisibility(View.GONE);
+      }
 
       mStepTitle.addTextChangedListener(new TextWatcher() {
          @Override
@@ -89,6 +95,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
 
          FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
          mLines = (ArrayList<StepLine>)savedInstanceState.getSerializable(STEP_LIST_KEY);
+         mOrderby = savedInstanceState.getInt(STEP_ORDERBY);
          mChooseBulletDialog =
           (ChooseBulletDialog) fm.getFragment(savedInstanceState, BULLET_FRAG_ID);
          mReorderFragment =
@@ -139,6 +146,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(STEP_LIST_KEY, mLines);
+      savedInstanceState.putSerializable(STEP_ORDERBY, mOrderby);
 
       savedInstanceState.putString(TITLE_KEY, mTitle);
       FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
@@ -248,10 +256,13 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       mLines.addAll(lines);
    }
 
-   private void initilizeBulletContainer() {
+   public void setStepOrderby(int orderby) {
+      mOrderby = orderby;
+   }
 
-      if (mLines.size() == 0 || (mLines.get(mLines.size() - 1).getTextRaw().length() != 0 && mLines.size() !=
-       BULLET_LIMIT)) {
+   private void initilizeBulletContainer() {
+      if (mLines.size() == 0 || (mLines.get(mLines.size() - 1).getTextRaw().length() != 0 &&
+       mLines.size() != BULLET_LIMIT)) {
          mNewBulletButton.setVisibility(View.VISIBLE);
       } else {
          mNewBulletButton.setVisibility(View.GONE);

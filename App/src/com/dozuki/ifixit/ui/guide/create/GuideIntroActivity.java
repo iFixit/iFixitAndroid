@@ -308,13 +308,14 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       if (!event.hasError()) {
          Guide guide = event.getResult();
 
-         GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-         item.setStepNum(0);
-         item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-         item.addLine(new StepLine());
+         GuideStep step = new GuideStep(StepPortalFragment.STEP_ID++);
+         step.setStepNum(1);
+         step.setOrderby(1);
+         step.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         step.addLine(new StepLine());
 
          ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
-         initialStepList.add(item);
+         initialStepList.add(step);
 
          guide.setStepList(initialStepList);
          hideLoading();

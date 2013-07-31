@@ -121,7 +121,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
        * lock screen for small sizes to portrait.
        * Courtesy:
        * http://stackoverflow.com/questions/10491531/android-restrict-activity-orientation-based-on-screen-size
-       **/
+       */
       if (MainApplication.get().isScreenLarge()) {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
       } else {
@@ -188,7 +188,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    private void initPager() {
-      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
+      mStepAdapter = new StepAdapter(getSupportFragmentManager());
       mPager.setAdapter(mStepAdapter);
    }
 
@@ -545,12 +545,13 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    public void addNewStep(int newPosition) {
       if (!mGuide.hasNewStep()) {
-         GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-         item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-         item.addLine(new StepLine());
-         item.setStepNum(newPosition);
+         GuideStep step = new GuideStep(StepPortalFragment.STEP_ID++);
+         step.setOrderby(newPosition);
+         step.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         step.addLine(new StepLine());
+         step.setStepNum(newPosition);
 
-         mGuide.addStep(item, newPosition);
+         mGuide.addStep(step, newPosition);
 
          // The view pager does not recreate the item in the current position unless we force it
          initPager();
