@@ -54,7 +54,6 @@ public class GuideItemView extends RelativeLayout {
           .into(mThumbnail);
 
          if (mThumbnail.getParent() instanceof FrameLayout) {
-            Log.d("GuideItemView", "parent is a FrameLayout");
             // .fit() resizes the ImageView to fit its parent, but it resets the gravity,
             // causing the guide item title to appear below the image.  So we have to reset layout_gravity to FILL to
             // get the title floating over the bottom of the "no_image" image.
