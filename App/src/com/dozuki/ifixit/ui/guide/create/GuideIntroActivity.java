@@ -48,8 +48,6 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    private Button mNextButton;
    private Button mPrevButton;
 
-   private GuideIntroActivity mSelf;
-
    private List<Page> mCurrentPageSequence;
    private StepPagerStrip mStepPagerStrip;
 
@@ -64,10 +62,10 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
 
             Bundle bundle = mWizardModel.save();
             if (mEditIntroState) {
-               APIService.call(mSelf, APIService.getEditGuideAPICall(bundle, mGuide.getGuideid(),
-                mGuide.getRevisionid()));
+               APIService.call(GuideIntroActivity.this, APIService.getEditGuideAPICall(bundle,
+                mGuide.getGuideid(), mGuide.getRevisionid()));
             } else {
-               APIService.call(mSelf, APIService.getCreateGuideAPICall(bundle));
+               APIService.call(GuideIntroActivity.this, APIService.getCreateGuideAPICall(bundle));
             }
 
          } else {
@@ -120,7 +118,6 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_create_intro);
-      mSelf = this;
 
       if (MainApplication.get().isScreenLarge()) {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -327,7 +324,6 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, 0);
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
          finish();
-
       } else {
          hideChildren(false);
          APIService.getErrorDialog(this, event).show();
@@ -345,7 +341,15 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
          finish();
       } else {
-         hideChildren(false);
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            mGuide = event.getResult();
+            mWizardModelBundle = buildIntroBundle();
+            mWizardModel.load(mWizardModelBundle);
+            onPageTreeChanged();
+
+            hideLoading();
+         }
+
          APIService.getErrorDialog(this, event).show();
       }
    }
@@ -465,5 +469,14 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       }
 
       super.showLoading(container, message);
+   }
+
+   @Override
+   public void hideLoading() {
+      super.hideLoading();
+
+      findViewById(R.id.intro_loading_container).setVisibility(View.GONE);
+
+      hideChildren(false);
    }
 }
