@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -8,6 +7,7 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class GuideViewAdapter extends FragmentStatePagerAdapter {
    private static final int GUIDE_INTRO_POSITION = 0;
@@ -48,13 +48,20 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
    @Override
    public Fragment getItem(int position) {
       if (position == GUIDE_INTRO_POSITION) {
+         EasyTracker.getTracker().sendView(mGuide.getTitle() + " Introduction");
          return new GuideIntroViewFragment(mGuide);
       } else if (position == mToolsPosition) {
+         EasyTracker.getTracker().sendView(mGuide.getTitle() + " Tools");
          return new GuidePartsToolsViewFragment(mGuide.getTools());
       } else if (position == mPartsPosition) {
+         EasyTracker.getTracker().sendView(mGuide.getTitle() + " Parts");
          return new GuidePartsToolsViewFragment(mGuide.getParts());
       } else {
-         return new GuideStepViewFragment(mGuide.getStep(position - mStepOffset));
+         int stepNumber = (position - mStepOffset);
+         EasyTracker.getTracker()
+          .sendView(mGuide.getTitle() + " Step #" + (stepNumber + 1)); // Step title # should be 1 indexed.
+
+         return new GuideStepViewFragment(mGuide.getStep(stepNumber));
       }
    }
 

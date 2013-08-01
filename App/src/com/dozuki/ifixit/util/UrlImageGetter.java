@@ -112,7 +112,7 @@ public class UrlImageGetter implements Html.ImageGetter {
             source = source.replace("https", "http");
          }
 
-         OkHttpClient client = new OkHttpClient();
+         OkHttpClient client = Utils.createOkHttpClient();
          HttpURLConnection connection = client.open(new URL(source));
          return connection.getInputStream();
       }

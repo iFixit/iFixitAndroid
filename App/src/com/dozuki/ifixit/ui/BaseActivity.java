@@ -27,6 +27,7 @@ import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.dozuki.ifixit.util.APIEvent;
 import com.squareup.otto.Subscribe;
 import net.simonvt.menudrawer.MenuDrawer;
@@ -124,9 +125,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
          String tag = (String) view.getTag();
          Context context = parent.getContext();
+
          if (alertOnNavigation()) {
             navigationAlertDialog(tag, context).show();
          } else {
+            EasyTracker.getTracker().sendEvent("menu_action", "drawer_item_click", ((String) view.getTag()).toLowerCase(),
+             null);
+
             mActivePosition = position;
             mMenuDrawer.setActiveView(view, position);
 
@@ -227,6 +232,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       setTitle("");
 
       super.onCreate(savedState);
+
+      EasyTracker.getInstance().setContext(this);
 
       /**
        * There is another register call in onResume but we also need it here for the onUnauthorized
@@ -331,6 +338,25 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       super.onRestoreInstanceState(savedState);
       finishActivityIfPermissionDenied();
    }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+
+      this.overridePendingTransition(0, 0);
+
+      // Start analytics tracking
+      EasyTracker.getInstance().activityStart(this);
+   }
+
+   @Override
+   public void onStop() {
+      super.onStop();
+
+      // Stop analytics tracking
+      EasyTracker.getInstance().activityStop(this);
+   }
+
 
    @Override
    public void onRestart() {

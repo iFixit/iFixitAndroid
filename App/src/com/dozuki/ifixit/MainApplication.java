@@ -17,7 +17,12 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.OkConnectionFactory;
+import com.dozuki.ifixit.util.Utils;
+import com.github.kevinsawicki.http.HttpRequest;
 import com.squareup.otto.Bus;
+
+import java.net.URL;
 
 public class MainApplication extends Application {
    private static final int LARGE_SIZE_CUTOFF = 800;
@@ -67,9 +72,26 @@ public class MainApplication extends Application {
     * User agent singleton.
     */
    private String mUserAgent = null;
+   private boolean mUrlStreamFactorySet = false;
+   private boolean mConnectionFactorySet = false;
 
    @Override
    public void onCreate() {
+      // OkHttp changes the global SSL context, breaks other HTTP clients.  Google Analytics uses a different http
+      // client, which OkHttp doesn't handle well.
+      // https://github.com/square/okhttp/issues/184
+      if (!mUrlStreamFactorySet) {
+         URL.setURLStreamHandlerFactory(Utils.createOkHttpClient());
+         mUrlStreamFactorySet = true;
+      }
+
+      // Use OkHttp instead of HttpUrlConnection to handle HTTP requests, OkHttp supports 2.2 while HttpURLConnection
+      // is a bit buggy on froyo.
+      if (!mConnectionFactorySet) {
+         HttpRequest.setConnectionFactory(new OkConnectionFactory());
+         mConnectionFactorySet = true;
+      }
+
       super.onCreate();
 
       sMainApplication = this;

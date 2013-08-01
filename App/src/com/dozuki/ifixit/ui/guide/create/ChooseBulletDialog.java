@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
 import com.dozuki.ifixit.R;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class ChooseBulletDialog extends DialogFragment implements OnClickListener {
 
@@ -44,8 +45,11 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      setStyle(STYLE_NO_TITLE, 0);
       super.onCreate(savedInstanceState);
+
+      setStyle(STYLE_NO_TITLE, 0);
+
+      EasyTracker.getInstance().setContext(getActivity());
 
    }
 
@@ -120,51 +124,82 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
    @Override
    public void onClick(View v) {
       BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
+
       switch (v.getId()) {
          case R.id.bullet_dialog_color_black:
             frag.onFinishBulletDialog(mStepIndex, "black");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_black", null);
+
             break;
          case R.id.bullet_dialog_color_red:
             frag.onFinishBulletDialog(mStepIndex, "red");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_red", null);
+
             break;
          case R.id.bullet_dialog_color_orange:
             frag.onFinishBulletDialog(mStepIndex, "orange");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_orange", null);
+
             break;
          case R.id.bullet_dialog_color_yellow:
             frag.onFinishBulletDialog(mStepIndex, "yellow");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_yellow", null);
+
             break;
          case R.id.bullet_dialog_color_blue:
             frag.onFinishBulletDialog(mStepIndex, "blue");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_blue", null);
+
             break;
          case R.id.bullet_dialog_color_purple:
             frag.onFinishBulletDialog(mStepIndex, "violet");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_purple", null);
+
             break;
          case R.id.bullet_dialog_color_green:
             frag.onFinishBulletDialog(mStepIndex, "green");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_green", null);
+
             break;
          case R.id.bullet_dialog_caution:
             frag.onFinishBulletDialog(mStepIndex, "icon_caution");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_caution", null);
+
             break;
          case R.id.bullet_dialog_note:
             frag.onFinishBulletDialog(mStepIndex, "icon_note");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_note", null);
+
             break;
          case R.id.bullet_dialog_reminder:
             frag.onFinishBulletDialog(mStepIndex, "icon_reminder");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_reminder", null);
+
             break;
          case R.id.bullet_dialog_indent:
             frag.onFinishBulletDialog(mStepIndex, "action_indent");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_indent", null);
+
             break;
          case R.id.bullet_dialog_unindent:
             frag.onFinishBulletDialog(mStepIndex, "action_unindent");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_unindent", null);
+
             break;
          case R.id.bullet_dialog_rearrange:
             frag.onFinishBulletDialog(mStepIndex, "action_reorder");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_rearrange", null);
+
             break;
          case R.id.bullet_dialog_delete:
             frag.onFinishBulletDialog(mStepIndex, "action_delete");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_delete", null);
+
             break;
          case R.id.bullet_dialog_cancel:
             frag.onFinishBulletDialog(mStepIndex, "action_cancel");
+            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_cancel", null);
+
             break;
       }
       this.dismiss();
@@ -175,6 +210,13 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
       BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
       frag.onFinishBulletDialog(mStepIndex, "action_cancel");
       super.onCancel(d);
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+
+      EasyTracker.getTracker().sendView("Step Edit Bullet Chooser");
    }
 
    public void disableUnIndent() {

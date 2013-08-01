@@ -21,6 +21,7 @@ import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 
 public class RegisterFragment extends DialogFragment implements OnClickListener {
@@ -68,6 +69,13 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
    public RegisterFragment() {}
 
    @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+
+      EasyTracker.getInstance().setContext(getActivity());
+   }
+
+   @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.register_fragment, container, false);
@@ -102,6 +110,12 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
       getDialog().setTitle(R.string.register_dialog_title);
       
       return view;
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+      EasyTracker.getTracker().sendView("User Registration");
    }
 
    private void showKeyboard() {

@@ -51,6 +51,9 @@ then
 
    # Update the theme
    sed -i "" -e "s/Theme\.iFixit/Theme.Dozuki/" ./AndroidManifest.xml
+
+   # Update Analytics profile id
+   sed -i "" -e "s/30506\-14/30506\-18/" `find ./res -name "analytics.xml"`
 fi
 
 cd -

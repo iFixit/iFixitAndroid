@@ -22,6 +22,7 @@ import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 
 public class LoginFragment extends DialogFragment implements OnClickListener {
@@ -83,6 +84,8 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      EasyTracker.getInstance().setContext(getActivity());
+
       MainApplication.get().setIsLoggingIn(true);
 
       Site site = MainApplication.get().getSite();
@@ -132,6 +135,12 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
       getDialog().setTitle(R.string.login_dialog_title);
       
       return view;
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+      EasyTracker.getTracker().sendView("User Login");
    }
 
    @Override

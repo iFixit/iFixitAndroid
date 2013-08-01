@@ -6,7 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
 import com.dozuki.ifixit.R;
-import com.squareup.picasso.Picasso;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.squareup.picasso.Target;
 
 public class FallbackImageView extends ImageView implements Target {
@@ -33,7 +33,7 @@ public class FallbackImageView extends ImageView implements Target {
          Log.e("FallbackImageView", "You must set the base Image url using setImageUrl.");
       }
 
-      Picasso.with(mContext)
+      PicassoUtils.with(mContext)
        .load(mImageUrl)
        .error(R.drawable.no_image)
        .into((Target) this);

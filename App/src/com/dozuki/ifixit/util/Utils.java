@@ -7,11 +7,30 @@ import android.text.style.URLSpan;
 import android.widget.ImageView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.squareup.okhttp.OkHttpClient;
+
+import javax.net.ssl.SSLContext;
+import java.security.GeneralSecurityException;
 
 public class Utils {
+
+   public static OkHttpClient createOkHttpClient() {
+      OkHttpClient client = new OkHttpClient();
+      SSLContext sslContext;
+      try {
+         sslContext = SSLContext.getInstance("TLS");
+         sslContext.init(null, null, null);
+      } catch (GeneralSecurityException e) {
+         throw new AssertionError(); // The system has no TLS. Just give up.
+      }
+      client.setSslSocketFactory(sslContext.getSocketFactory());
+
+      return client;
+   }
+
    public static void stripImageView(ImageView view) {
-      if ( view.getDrawable() instanceof BitmapDrawable) {
-         ((BitmapDrawable)view.getDrawable()).getBitmap().recycle();
+      if (view.getDrawable() instanceof BitmapDrawable) {
+         ((BitmapDrawable) view.getDrawable()).getBitmap().recycle();
       }
 
       safeStripImageView(view);
@@ -23,8 +42,9 @@ public class Utils {
     * @param view ImageView to clean memory
     */
    public static void safeStripImageView(ImageView view) {
-      if (view.getDrawable() != null)
+      if (view.getDrawable() != null) {
          view.getDrawable().setCallback(null);
+      }
 
       view.setImageDrawable(null);
       view.getResources().flushLayoutCache();

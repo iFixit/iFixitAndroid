@@ -21,6 +21,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
 import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
+import com.google.analytics.tracking.android.EasyTracker;
 
 import java.util.ArrayList;
 
@@ -114,6 +115,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       mNewBulletButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
+            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "new_bullet_button", null);
             mLines.add(new StepLine());
             View view = getView(mLines.get(mLines.size() - 1), mLines.size() - 1);
             mBulletContainer.addView(view, mLines.size() - 1);

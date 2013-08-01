@@ -17,7 +17,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
-import com.squareup.picasso.Picasso;
+import com.dozuki.ifixit.util.PicassoUtils;
 
 public class StepVideoFragment extends SherlockFragment {
 
@@ -72,7 +72,7 @@ public class StepVideoFragment extends SherlockFragment {
       poster.setLayoutParams(params);
       playButtonContainer.setLayoutParams(params);
 
-      Picasso.with(mContext)
+      PicassoUtils.with(mContext)
        .load(mVideoPoster.getPath(MainApplication.get().getImageSizes().getMain()))
        .error(R.drawable.no_image)
        .into(poster);

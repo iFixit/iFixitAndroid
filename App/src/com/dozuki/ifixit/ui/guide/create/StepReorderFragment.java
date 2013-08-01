@@ -18,9 +18,10 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.util.PicassoUtils;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
-import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,6 +83,9 @@ public class StepReorderFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      EasyTracker.getInstance().setContext(getActivity());
+
       getSherlockActivity().startActionMode(new ContextualStepReorder());
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.get(StepsActivity.GUIDE_KEY);
@@ -112,6 +116,13 @@ public class StepReorderFragment extends SherlockFragment {
       view.requestFocus();
 
       return view;
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+
+      EasyTracker.getTracker().sendView(mGuide.getTitle() + " Step Reorder");
    }
 
    public final class ContextualStepReorder implements ActionMode.Callback {
@@ -196,7 +207,7 @@ public class StepReorderFragment extends SherlockFragment {
          }
 
          if (step.hasVideo()) {
-            Picasso.with(getSherlockActivity())
+            PicassoUtils.with(getSherlockActivity())
              .load(step.getVideo().getThumbnail().getPath(MainApplication.get().getImageSizes().getThumb()))
              .error(R.drawable.no_image)
              .into(holder.mImageView);
@@ -215,7 +226,7 @@ public class StepReorderFragment extends SherlockFragment {
    private void setImageThumb(ArrayList<Image> imageList, ImageView image) {
       String url = "";
       if (imageList.size() == 0) {
-         Picasso
+         PicassoUtils
           .with(getSherlockActivity())
           .load(R.drawable.no_image)
           .noFade()
@@ -229,7 +240,7 @@ public class StepReorderFragment extends SherlockFragment {
             }
          }
 
-         Picasso.with(getSherlockActivity())
+         PicassoUtils.with(getSherlockActivity())
           .load(url)
           .error(R.drawable.no_image)
           .into(image);

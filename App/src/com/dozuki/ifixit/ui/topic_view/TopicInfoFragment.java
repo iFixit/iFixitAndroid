@@ -16,10 +16,11 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
-import com.squareup.picasso.Picasso;
+import com.google.analytics.tracking.android.EasyTracker;
 
 public class TopicInfoFragment extends SherlockFragment {
 
@@ -42,6 +43,8 @@ public class TopicInfoFragment extends SherlockFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+
+      EasyTracker.getInstance().setContext(getActivity());
 
       Bundle b = getArguments();
 
@@ -66,11 +69,17 @@ public class TopicInfoFragment extends SherlockFragment {
 
       String url = mTopic.getImage().getPath(IMAGE_SIZE);
 
-      Picasso.with(getSherlockActivity())
+      PicassoUtils.with(getSherlockActivity())
        .load(url)
        .into((ImageView) v.findViewById(R.id.topic_info_image));
 
       return v;
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+      EasyTracker.getTracker().sendView(mTopic.getName() + " Info");
    }
 
    @Override

@@ -24,6 +24,8 @@ import com.dozuki.ifixit.ui.guide.FallbackImageView;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
+import com.google.analytics.tracking.android.EasyTracker;
+import com.squareup.otto.Subscribe;
 import com.squareup.otto.Bus;
 
 import java.io.File;
@@ -108,6 +110,7 @@ public class StepEditImageFragment extends SherlockFragment {
       mThumbs.setAddThumbButtonOnClick(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
+
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
             builder.setTitle(MainApplication.get().getString(R.string.step_edit_new_thumb_actions_title))
@@ -117,8 +120,8 @@ public class StepEditImageFragment extends SherlockFragment {
                    Intent intent;
                    switch (which) {
                       case CAPTURE_IMAGE:
+                         EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_camera", null);
                          try {
-
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
                             String imageFileName = CaptureHelper.getFileName();
@@ -136,6 +139,7 @@ public class StepEditImageFragment extends SherlockFragment {
 
                          break;
                       case MEDIA_MANAGER:
+                         EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_gallery", null);
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                          ArrayList<Integer> attachedMediaIds = new ArrayList<Integer>();
@@ -165,13 +169,19 @@ public class StepEditImageFragment extends SherlockFragment {
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
+                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "copy_to_media_manager",
+                          null);
                          APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
+                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "detach_to_media_manager",
+                          null);
+
                          APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
+                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "delete_from_step", null);
                          Bus bus = MainApplication.getBus();
                          bus.post(new StepImageDeleteEvent(thumbImage));
                          bus.post(new StepChangedEvent());

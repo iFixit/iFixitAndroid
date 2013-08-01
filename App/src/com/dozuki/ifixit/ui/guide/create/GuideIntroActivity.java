@@ -24,6 +24,7 @@ import com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -217,7 +218,10 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
 
       // If we're editing an existing guide, jump to the review page for an overview of the guide details
       if (mEditIntroState) {
+         EasyTracker.getTracker().sendView("Edit Guide Intro");
          mPager.setCurrentItem(mCurrentPageSequence.size());
+      } else {
+         EasyTracker.getTracker().sendView("Create New Guide");
       }
    }
 

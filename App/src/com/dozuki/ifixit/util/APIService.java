@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -27,7 +26,6 @@ import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -41,6 +39,9 @@ import java.util.List;
  * Add functionality to download multiple guides including images.
  */
 public class APIService extends Service {
+   private boolean mUrlStreamFactorySet = false;
+   private boolean mConnectionFactorySet = false;
+
    private interface Responder {
       public void setResult(APIEvent<?> result);
    }

@@ -12,6 +12,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 
@@ -29,7 +30,7 @@ public class GuideItemView extends RelativeLayout {
       mShortTitle = shortTitle;
       mTitleView = (TextView)findViewById(R.id.guide_grid_item_title);
       mThumbnail = (ImageView)findViewById(R.id.guide_grid_item_thumbnail);
-      mPicasso = Picasso.with(context);
+      mPicasso = PicassoUtils.with(context);
    }
 
    public void setGuideItem(GuideInfo guide) {
