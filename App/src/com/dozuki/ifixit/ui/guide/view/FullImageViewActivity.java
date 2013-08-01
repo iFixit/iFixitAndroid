@@ -12,10 +12,9 @@ import com.dozuki.ifixit.ui.guide.FullScreenImageView;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
+import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 import java.io.File;
-
-import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
 public class FullImageViewActivity extends SherlockActivity {
    public static final String IMAGE_URL = "IMAGE_URL";
@@ -43,7 +42,7 @@ public class FullImageViewActivity extends SherlockActivity {
          picasso.load(url)
           .error(R.drawable.no_image)
           .into((Target) image);
-      } else if(url.startsWith("content://")) {
+      } else if (url.startsWith("content://")) {
          picasso.load(url)
           .scale(0.5f)
           .error(R.drawable.no_image)
