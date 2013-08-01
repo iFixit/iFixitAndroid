@@ -42,6 +42,9 @@ public abstract class GuideListActivity extends BaseActivity {
 
       if (savedInstanceState != null) {
          mGuides = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDES_KEY);
+      }
+
+      if (mGuides != null) {
          initGridView();
       } else {
          APIService.call(this, getApiCall(LIMIT, OFFSET));
