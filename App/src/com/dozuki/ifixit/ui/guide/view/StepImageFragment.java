@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -18,9 +17,7 @@ import java.util.ArrayList;
 public class StepImageFragment extends SherlockFragment {
    private static final String IMAGES_KEY = "IMAGES_KEY";
 
-   private Activity mContext;
-
-   // images
+   // Step Images
    private ThumbnailView mThumbs;
    private ArrayList<Image> mImages;
 
@@ -35,12 +32,7 @@ public class StepImageFragment extends SherlockFragment {
    /////////////////////////////////////////////////////
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      mContext = getActivity();
-      super.onCreate(savedInstanceState);
-   }
-
-   @Override
+   @SuppressWarnings("unchecked")
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       // Inflate the layout for this fragment
       View v = inflater.inflate(R.layout.guide_step_image, container, false);
@@ -53,10 +45,11 @@ public class StepImageFragment extends SherlockFragment {
       }
 
       if (savedInstanceState != null) {
-         mImages = (ArrayList<Image>)savedInstanceState.getSerializable(IMAGES_KEY);
+         mImages.clear();
+         mImages.addAll((ArrayList<Image>)savedInstanceState.getSerializable(IMAGES_KEY));
       }
 
-      mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
+      getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
       mThumbs.setDisplayMetrics(metrics);
       mThumbs.setNavigationHeight(navigationHeight());
 
@@ -73,9 +66,9 @@ public class StepImageFragment extends SherlockFragment {
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
-      savedInstanceState.putSerializable(IMAGES_KEY, mImages);
-
       super.onSaveInstanceState(savedInstanceState);
+
+      savedInstanceState.putSerializable(IMAGES_KEY, mImages);
    }
 
    @Override
