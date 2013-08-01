@@ -911,6 +911,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             mGuide.getStep(i - 1).setStepNum(i);
          }
 
+         // Necessary because if there were any new steps that were deleted, we need to let the adapters know about
+         // it.  Otherwise we get IllegalStateExceptions.
+         mStepAdapter.notifyDataSetChanged();
+         mTitleIndicator.notifyDataSetChanged();
+
          // If the current position is equal to or greater than the number of steps in the guide,
          // there was a new step at the end of the guide and that position no longer exists.  Set the page position
          // to the new last step.
@@ -943,6 +948,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                finish();
                break;
             case STEP_VIEW:
+               mIsStepDirty = false;
+               toggleSave(false);
                navigateToStepView();
                break;
 
