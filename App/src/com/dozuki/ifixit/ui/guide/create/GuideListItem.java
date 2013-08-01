@@ -16,6 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.picasso.Picasso;
 
@@ -141,14 +142,16 @@ public class GuideListItem extends LinearLayout {
       mToggleEdit.setChecked(mGuideInfo.mEditMode);
 
       if (mThumbnail != null) {
+         Picasso picasso = PicassoUtils.with(mContext);
+
          if (mGuideInfo.hasImage()) {
-            Picasso.with(mContext)
+            picasso
              .load(mGuideInfo.getImagePath(".standard"))
              .noFade()
              .error(R.drawable.no_image)
              .into(mThumbnail);
          } else {
-            Picasso.with(mContext)
+            picasso
              .load(R.drawable.no_image)
              .noFade()
              .into(mThumbnail);

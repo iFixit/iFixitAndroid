@@ -18,7 +18,7 @@ public class OkConnectionFactory implements HttpRequest.ConnectionFactory {
    private final OkHttpClient client;
 
    public OkConnectionFactory() {
-      this(new OkHttpClient());
+      this(Utils.createOkHttpClient());
    }
 
    public OkConnectionFactory(OkHttpClient client) {

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestBuilder;
@@ -25,7 +26,7 @@ public class MediaViewItem extends RelativeLayout {
 
    public MediaViewItem(Context context) {
       super(context);
-      mPicasso = Picasso.with(context);
+      mPicasso = PicassoUtils.with(context);
 
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.gallery_cell, this, true);

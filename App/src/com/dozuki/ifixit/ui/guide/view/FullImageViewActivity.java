@@ -10,6 +10,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.guide.FullScreenImageView;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
@@ -29,7 +30,7 @@ public class FullImageViewActivity extends SherlockActivity {
       ImageSizes sizes = MainApplication.get().getImageSizes();
 
       String url = (String) getIntent().getExtras().get(IMAGE_URL);
-      Picasso picasso = Picasso.with(this);
+      Picasso picasso = PicassoUtils.with(this);
 
       setContentView(R.layout.full_screen_image);
       final FullScreenImageView image = (FullScreenImageView) findViewById(R.id.image_zoom);

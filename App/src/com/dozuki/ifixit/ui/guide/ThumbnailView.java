@@ -15,6 +15,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestBuilder;
@@ -76,7 +77,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       inflater.inflate(R.layout.thumbnail_viewer, this, true);
 
       mContext = context;
-      mPicasso = Picasso.with(mContext);
+      mPicasso = PicassoUtils.with(mContext);
       mImageSizes = MainApplication.get().getImageSizes();
 
       if (MainApplication.inDebug()) {
@@ -254,7 +255,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void updateThumb(Image newImage, int position) {
-      Picasso.with(mContext)
+      mPicasso
        .load(newImage.getPath(mImageSizes.getThumb()))
        .into((Target)mThumbs.get(position));
 

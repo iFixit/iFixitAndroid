@@ -13,7 +13,6 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -27,13 +26,10 @@ import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
-import com.squareup.okhttp.OkHttpClient;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -526,21 +522,6 @@ public class APIService extends Service {
       final APIEndpoint endpoint = apiCall.mEndpoint;
       if (!checkConnectivity(responder, endpoint, apiCall)) {
          return;
-      }
-
-      // OkHttp changes the global SSL context, breaks other HTTP clients.  Google Analytics uses a different http
-      // client, which OkHttp doesn't handle well.
-      // https://github.com/square/okhttp/issues/184
-      if (!mUrlStreamFactorySet) {
-         URL.setURLStreamHandlerFactory(new OkHttpClient());
-         mUrlStreamFactorySet = true;
-      }
-
-      // Use OkHttp instead of HttpUrlConnection to handle HTTP requests, OkHttp supports 2.2 while HttpURLConnection
-      // is a bit buggy on froyo.
-      if (!mConnectionFactorySet) {
-         HttpRequest.setConnectionFactory(new OkConnectionFactory());
-         mConnectionFactorySet = true;
       }
 
       final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
