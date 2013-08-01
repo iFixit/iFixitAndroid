@@ -4,7 +4,7 @@
            tools:ignore="TypographyDashes">
 
     <!-- iFixit Tracking ID -->
-    <string name="ga_trackingId">UA-30506-14</string>
+    <string name="ga_trackingId">UA-30506-1</string>
 
     <!--Enable automatic activity tracking-->
     <bool name="ga_autoActivityTracking">true</bool>
@@ -13,7 +13,7 @@
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
     <!-- Disable when released -->
-    <bool name="ga_debug">true</bool>
+    <bool name="ga_debug">false</bool>
 
     <!-- The screen names that will appear in your reporting -->
     <string name="com.dozuki.ifixit.ui.topic_view.TopicActivity">Topic List</string>
