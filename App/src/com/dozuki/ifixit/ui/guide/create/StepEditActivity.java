@@ -128,8 +128,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
       }
 
-      extractExtras(getIntent().getExtras());
-
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
 
@@ -148,6 +146,13 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          if (mShowingSave) {
             createExitWarningDialog(mExitCode).show();
          }
+
+         if (mConfirmDelete) {
+            createDeleteDialog(this).show();
+         }
+
+      } else {
+         extractExtras(getIntent().getExtras());
       }
 
       setContentView(R.layout.guide_create_step_edit);
@@ -176,9 +181,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mSaveStep.setOnClickListener(this);
       mAddStepButton.setOnClickListener(this);
       mDeleteStepButton.setOnClickListener(this);
-      if (mConfirmDelete) {
-         createDeleteDialog(this).show();
-      }
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
