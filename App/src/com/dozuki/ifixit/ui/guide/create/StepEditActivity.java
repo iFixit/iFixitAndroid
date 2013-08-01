@@ -857,6 +857,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    protected void navigateToStepView() {
+      // Bail early if somehow the user is able to click view guide before the guide is retrieved.
+      if (mGuide == null) {
+         return;
+      }
+
       Intent intent = new Intent(this, GuideViewActivity.class);
       if (mParentGuideId != NO_PARENT_GUIDE) {
          intent.putExtra(GuideViewActivity.GUIDEID, mParentGuideId);
