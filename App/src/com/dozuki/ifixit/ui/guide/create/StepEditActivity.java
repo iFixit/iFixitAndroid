@@ -48,6 +48,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
+   private static final int MENU_DISCARD_CHANGES = 14;
 
    private enum ConfirmSave {
       NEW_STEP,
@@ -366,11 +367,36 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      menu.add(1, MENU_VIEW_GUIDE, 0, R.string.view_guide)
+      menu.add(2, MENU_VIEW_GUIDE, 0, R.string.view_guide)
        .setIcon(R.drawable.ic_action_book)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
+      menu.add(1, MENU_DISCARD_CHANGES, 0, R.string.discard_changes)
+       .setIcon(R.drawable.ic_action_undo)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
       return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case MENU_VIEW_GUIDE:
+            finishEdit(STEP_VIEW);
+            break;
+         case MENU_DISCARD_CHANGES:
+            if (!mIsStepDirty) break; // Bail early if there aren't any changes
+
+            toggleSave(false);
+            mIsStepDirty = false;
+            // Set the inbound stepid so the Step pager will navigate to the current step after updating
+            mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
+            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(mGuideid));
+
+            break;
+      }
+
+      return super.onOptionsItemSelected(item);
    }
 
    /////////////////////////////////////////////////////
@@ -571,16 +597,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    @Override
    public void onBackPressed() {
       finishEdit(HOME_UP);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case MENU_VIEW_GUIDE:
-            finishEdit(STEP_VIEW);
-      }
-
-      return super.onOptionsItemSelected(item);
    }
 
    /////////////////////////////////////////////////////

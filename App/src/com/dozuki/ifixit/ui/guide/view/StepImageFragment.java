@@ -45,8 +45,7 @@ public class StepImageFragment extends SherlockFragment {
       }
 
       if (savedInstanceState != null) {
-         mImages.clear();
-         mImages.addAll((ArrayList<Image>)savedInstanceState.getSerializable(IMAGES_KEY));
+         mImages = (ArrayList<Image>) savedInstanceState.getSerializable(IMAGES_KEY);
       }
 
       getActivity().getWindowManager().getDefaultDisplay().getMetrics(metrics);
