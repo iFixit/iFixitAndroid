@@ -160,7 +160,7 @@ public class JSONHelper {
       return new Item(
        Item.ItemType.PART,
        jPart.getString("text"),
-       jPart.getInt("quantity"),
+       jPart.getString("quantity"),
        jPart.getString("url"),
        jPart.getString("thumbnail"),
        jPart.getString("notes"));
@@ -170,7 +170,7 @@ public class JSONHelper {
       return new Item(
        Item.ItemType.TOOL,
        jTool.getString("text"),
-       jTool.getInt("quantity"),
+       jTool.getString("quantity"),
        jTool.getString("url"),
        jTool.getString("thumbnail"),
        jTool.getString("notes"));
