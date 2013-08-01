@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.gallery;
 import android.content.Context;
 import android.content.res.Resources;
 import android.net.Uri;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
@@ -17,19 +16,16 @@ import com.squareup.picasso.RequestBuilder;
 import java.io.File;
 
 public class MediaViewItem extends RelativeLayout {
-   private static final String TAG = "MediaViewItem";
    private RelativeLayout mSelectImage;
    private ImageView mImageView;
    private ProgressBar mLoadingBar;
-   private Context mContext;
    private int mTargetWidth;
    private int mTargetHeight;
    private Picasso mPicasso;
 
    public MediaViewItem(Context context) {
       super(context);
-      mContext = context;
-      mPicasso = Picasso.with(mContext);
+      mPicasso = Picasso.with(context);
 
       LayoutInflater inflater = (LayoutInflater)context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.gallery_cell, this, true);
@@ -40,13 +36,12 @@ public class MediaViewItem extends RelativeLayout {
 
       mSelectImage.setVisibility(View.INVISIBLE);
       mLoadingBar.setVisibility(View.GONE);
-      Resources res = mContext.getResources();
+      Resources res = context.getResources();
       mTargetWidth = res.getDimensionPixelSize(R.dimen.gallery_grid_column_width);
       mTargetHeight = res.getDimensionPixelSize(R.dimen.gallery_grid_item_height);
    }
 
    public void setImageItem(String image) {
-      Log.w(TAG, image);
       buildImage(mPicasso.load(image));
    }
 
@@ -55,7 +50,6 @@ public class MediaViewItem extends RelativeLayout {
    }
 
    public void setImageItem(Uri image) {
-      Log.w(TAG, image.toString());
       buildImage(mPicasso.load(image));
    }
 

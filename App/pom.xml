@@ -87,7 +87,6 @@
             <groupId>it.sephiroth.android.library.imagezoom</groupId>
             <artifactId>image-view-zoom</artifactId>
             <version>1.0.0</version>
-            <type>apklib</type>
         </dependency>
         <dependency>
             <groupId>com.squareup</groupId>
@@ -108,7 +107,7 @@
         <dependency>
             <groupId>net.simonvt.menudrawer</groupId>
             <artifactId>menudrawer</artifactId>
-            <version>3.0.2</version>
+            <version>3.0.3</version>
             <type>apklib</type>
         </dependency>
         <dependency>

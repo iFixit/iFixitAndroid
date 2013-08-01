@@ -6,7 +6,7 @@
                 android:background="?attr/doz__background"
                 android:orientation="vertical">
 
-    <com.viewpagerindicator.TitlePageIndicator
+    <com.dozuki.ifixit.ui.guide.create.LockableTitlePageIndicator
         android:id="@+id/step_edit_top_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

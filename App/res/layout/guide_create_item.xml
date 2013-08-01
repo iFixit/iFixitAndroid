@@ -73,46 +73,39 @@
         android:visibility="gone">
 
         <TextView
+            android:id="@+id/guide_create_item_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/GuideCreateItemIcon"
+            android:drawableLeft="@drawable/ic_action_book_dark"
+            android:text="@string/view"/>
+
+        <TextView
             android:id="@+id/guide_create_item_publish"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="14dp"
-            android:layout_marginRight="8dp"
-            android:clickable="true"
+            style="@style/GuideCreateItemIcon"
+
             android:drawableLeft="@drawable/ic_list_item_publish"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:text="@string/publish"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/dozuki_grey"/>
+            android:text="@string/publish"/>
 
         <TextView
             android:id="@+id/guide_create_item_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="8dp"
-            android:clickable="true"
+            style="@style/GuideCreateItemIcon"
+
             android:drawableLeft="@drawable/ic_guide_delete"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:text="@string/action_delete"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/dozuki_grey"/>
+            android:text="@string/action_delete"/>
 
         <TextView
             android:id="@+id/guide_create_item_edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="8dp"
-            android:layout_marginRight="14dp"
-            android:clickable="true"
+            style="@style/GuideCreateItemIcon"
+
             android:drawableLeft="@drawable/ic_guide_edit"
-            android:drawablePadding="4dp"
-            android:gravity="center_vertical"
-            android:text="@string/edit"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:textColor="@color/dozuki_grey"/>
+            android:text="@string/edit"/>
     </LinearLayout>
 
 </LinearLayout>

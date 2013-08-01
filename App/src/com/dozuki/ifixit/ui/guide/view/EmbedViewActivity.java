@@ -37,7 +37,6 @@ public class EmbedViewActivity extends SherlockActivity {
          mWebView.restoreState(savedInstanceState);
       }
       mWebView.loadUrl(mHTML);
-
    }
 
    @Override
@@ -54,5 +53,4 @@ public class EmbedViewActivity extends SherlockActivity {
       final WebView webview = (WebView) findViewById(R.id.full_screen_web_view);
       webview.loadData("", "text/html", "utf-8");
    }
-
 }

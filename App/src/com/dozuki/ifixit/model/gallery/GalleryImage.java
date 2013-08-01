@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.model.gallery;
 
-import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.UserImage;
 
 import java.io.Serializable;
@@ -12,13 +11,6 @@ public class GalleryImage extends UserImage implements Serializable {
 
    public GalleryImage() {
       super();
-
-      mSelected = false;
-   }
-   public GalleryImage(Image image) {
-      super();
-      super.setId(image.getId());
-      super.setPath(image.getPath());
 
       mSelected = false;
    }

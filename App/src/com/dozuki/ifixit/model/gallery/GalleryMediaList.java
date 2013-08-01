@@ -6,7 +6,6 @@ import com.dozuki.ifixit.model.user.UserImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 
 public class GalleryMediaList implements Serializable {
    private static final long serialVersionUID = -771269428461585511L;
@@ -114,29 +113,19 @@ public class GalleryMediaList implements Serializable {
       return count;
    }
 
+   public void removeImagesWithIds(ArrayList<Integer> alreadyAttachedImages) {
+      int numImages = mImages.size();
+
+      for (int i = 0; i < numImages; i++) {
+         if (alreadyAttachedImages.contains(mImages.get(i).getId())) {
+            mImages.remove(i);
+            numImages--;
+         }
+      }
+   }
+
    private boolean isInvalid(UserImage image) {
       return (!image.isLocal() &&
        (mImages.contains(image) || image.getWidth() < MIN_WIDTH || image.getHeight() < MIN_HEIGHT));
    }
-
-   private static class UserImageComparator implements Comparator<GalleryImage> {
-      public int compare(GalleryImage e1, GalleryImage e2) {
-         if (e1.isLocal() && e2.isLocal()) {
-            return 0;
-         }
-
-         // Keep local images first
-         if (e1.isLocal()) {
-            return -1;
-         }
-
-         if (e2.isLocal()) {
-            return 1;
-         }
-
-         // Otherwise sort by age
-         return e1.getId() - e2.getId();
-      }
-   }
-
 }

@@ -18,7 +18,6 @@ import com.google.analytics.tracking.android.EasyTracker;
 
 public class TopicGuideListFragment extends SherlockFragment {
 
-   public static final String GUIDEID = "guideid";
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
 
    private TopicLeaf mTopicLeaf;
@@ -50,7 +49,8 @@ public class TopicGuideListFragment extends SherlockFragment {
 
       GridView gridView = (GridView)view.findViewById(R.id.topic_guide_grid);
 
-      GuideListAdapter adapter = new GuideListAdapter(getSherlockActivity(), mTopicLeaf.getGuides());
+      GuideListAdapter adapter = new GuideListAdapter(getSherlockActivity(),
+       mTopicLeaf.getGuides(), true);
 
       gridView.setAdapter(adapter);
       gridView.setOnItemClickListener(new OnItemClickListener() {
@@ -60,7 +60,7 @@ public class TopicGuideListFragment extends SherlockFragment {
             GuideInfo guide = mTopicLeaf.getGuides().get(position);
             Intent intent = new Intent(getSherlockActivity(), GuideViewActivity.class);
 
-            intent.putExtra(GUIDEID, guide.mGuideid);
+            intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
             startActivity(intent);
          }
       });

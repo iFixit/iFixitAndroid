@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.WebView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -50,8 +49,7 @@ public class TopicViewFragment extends SherlockFragment {
       if (!event.hasError()) {
          setTopicLeaf(event.getResult());
       } else {
-         APIService.getErrorDialog(getActivity(), event.getError(), APIService.getTopicAPICall(mTopicNode.getName()))
-            .show();
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 

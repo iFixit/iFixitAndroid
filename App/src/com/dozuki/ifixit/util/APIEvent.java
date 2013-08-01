@@ -18,6 +18,8 @@ import java.util.ArrayList;
  * Base class for API events that are posted to the otto bus.
  */
 public abstract class APIEvent<T> {
+   public static class Unauthorized extends APIEvent<String> {}
+
    public static class Categories extends APIEvent<TopicNode> {}
 
    public static class Topic extends APIEvent<TopicLeaf> {}
@@ -56,13 +58,12 @@ public abstract class APIEvent<T> {
 
    public String mResponse;
    public T mResult;
+   public APICall mApiCall;
    public APIError mError;
-   public String mExtraInfo;
    public int mCode;
 
    public APIEvent<T> setResult(T result) {
       mResult = result;
-
       return this;
    }
 
@@ -70,12 +71,8 @@ public abstract class APIEvent<T> {
       return mResult;
    }
 
-   public void setExtraInfo(String info) {
-      mExtraInfo = info;
-   }
-
    public String getExtraInfo() {
-      return mExtraInfo;
+      return mApiCall.mExtraInfo;
    }
 
    public boolean hasError() {
@@ -96,12 +93,13 @@ public abstract class APIEvent<T> {
       return this;
    }
 
-   public int getCode() {
-      return mCode;
-   }
-
    public APIError getError() {
       return mError;
+   }
+
+   public APIEvent<T> setApiCall(APICall apiCall) {
+      mApiCall = apiCall;
+      return this;
    }
 
    public APIEvent<T> setError(APIError error) {

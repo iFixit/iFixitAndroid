@@ -47,12 +47,12 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
       } else {
          enable(true);
          APIError error = event.getError();
-         if (error.mType == APIError.ErrorType.CONNECTION ||
-          error.mType == APIError.ErrorType.PARSE) {
-            APIService.getErrorDialog(getActivity(), error, mCurAPICall).show();
+         if (error.mType == APIError.Type.CONNECTION ||
+          error.mType == APIError.Type.PARSE) {
+            APIService.getErrorDialog(getActivity(), event).show();
          }
          mLoadingSpinner.setVisibility(View.GONE);
-       
+
          mLoginId.setVisibility(View.VISIBLE);
          mPassword.setVisibility(View.VISIBLE);
          mConfirmPassword.setVisibility(View.VISIBLE);
@@ -140,10 +140,6 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
       super.onAttach(activity);
    }
 
-   public static RegisterFragment newInstance() {
-      return new RegisterFragment();
-   }
-
    @Override
    public void onClick(View v) {
       switch (v.getId()) {
@@ -164,7 +160,7 @@ public class RegisterFragment extends DialogFragment implements OnClickListener 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
                mCurAPICall = APIService.getRegisterAPICall(login, password, name);
-               APIService.call((Activity)getActivity(), mCurAPICall);
+               APIService.call(getActivity(), mCurAPICall);
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);

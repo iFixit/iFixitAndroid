@@ -38,7 +38,7 @@
                 android:layout_gravity="center"
                 android:layout_marginTop="@dimen/guide_create_edit_add_bullet_button_margin_top"
                 android:padding="@dimen/guide_create_edit_add_bullet_button_padding"
-                android:text="@string/add_new_bullet"
+                android:text="@string/new_line"
                 android:contentDescription="@string/topic_guide_thumbnail"/>
         </LinearLayout>
 

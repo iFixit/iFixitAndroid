@@ -22,55 +22,23 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 public class JSONHelper {
-   /**
-    * Used to indicate an integer JSON field that is null.
-    */
-   public static final int NULL_INT = -1;
    private static final String TAG = "JSONHelper";
 
-   public static ArrayList<Site> parseSites(String json) {
+   public static ArrayList<Site> parseSites(String json) throws JSONException {
       ArrayList<Site> sites = new ArrayList<Site>();
 
-      try {
-         JSONArray jSites = new JSONArray(json);
-         Site site;
+      JSONArray jSites = new JSONArray(json);
+      Site site;
 
-         for (int i = 0; i < jSites.length(); i++) {
-            site = parseSite(jSites.getJSONObject(i));
+      for (int i = 0; i < jSites.length(); i++) {
+         site = parseSite(jSites.getJSONObject(i));
 
-            if (site != null) {
-               sites.add(site);
-            }
+         if (site != null) {
+            sites.add(site);
          }
-      } catch (JSONException e) {
-         Log.e(TAG, "Error parsing sites: " + e);
       }
 
       return sites;
-   }
-
-   public static Site parseSiteInfo(String json) {
-      Site site = null;
-
-      try {
-         JSONObject siteInfoObject = new JSONObject(json);
-         site = parseSite(siteInfoObject);
-
-         JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
-         site.mGuideTypes = new ArrayList<GuideType>();
-
-         Iterator<?> keys = types.keys();
-         while (keys.hasNext()) {
-            String key = (String) keys.next();
-            if (types.get(key) instanceof JSONObject) {
-               site.mGuideTypes.add(parseGuideType(key, (JSONObject) types.get(key)));
-            }
-         }
-      } catch (JSONException e) {
-         Log.e(TAG, "Error parsing site info: " + e);
-      }
-
-      return site;
    }
 
    private static Site parseSite(JSONObject jSite) throws JSONException {
@@ -87,6 +55,26 @@ public class JSONHelper {
       site.mStoreUrl = jSite.has("store") ? jSite.getString("store") : "";
 
       setAuthentication(site, jSite.getJSONObject("authentication"));
+
+      return site;
+   }
+
+   public static Site parseSiteInfo(String json) throws JSONException {
+      Site site = null;
+
+      JSONObject siteInfoObject = new JSONObject(json);
+      site = parseSite(siteInfoObject);
+
+      JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
+      site.mGuideTypes = new ArrayList<GuideType>();
+
+      Iterator<?> keys = types.keys();
+      while (keys.hasNext()) {
+         String key = (String) keys.next();
+         if (types.get(key) instanceof JSONObject) {
+            site.mGuideTypes.add(parseGuideType(key, (JSONObject)types.get(key)));
+         }
+      }
 
       return site;
    }
@@ -109,7 +97,7 @@ public class JSONHelper {
             topics.add(topicsJson.getString(i));
 
       } catch (JSONException e) {
-         Log.e(TAG, "Error parsing all topics list: " + e);
+         Log.e(TAG, "Error parsing all topics list: ", e);
       }
 
       return topics;
@@ -277,10 +265,8 @@ public class JSONHelper {
    }
 
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
-      VideoEncoding encoding =
-       new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
+      return new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
         jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
-      return encoding;
    }
 
    private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
@@ -317,7 +303,7 @@ public class JSONHelper {
       ArrayList<TopicNode> topics = parseTopicChildren(jTopics);
       TopicNode root = new TopicNode();
 
-      root.addAllTopics(topics);
+      root.setChildren(topics);
 
       return root;
    }
@@ -327,6 +313,11 @@ public class JSONHelper {
     */
    private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic)
     throws JSONException {
+      // Don't allocate any lists if it's empty.
+      if (jTopic.length() == 0) {
+         return null;
+      }
+
       @SuppressWarnings("unchecked")
       Iterator<String> iterator = jTopic.keys();
       String topicName;
@@ -337,8 +328,8 @@ public class JSONHelper {
          topicName = iterator.next();
 
          currentTopic = new TopicNode(topicName);
-         currentTopic.addAllTopics(parseTopicChildren(
-          jTopic.getJSONObject(topicName)));
+         currentTopic.setChildren(parseTopicChildren(jTopic.getJSONObject(topicName)));
+
          topics.add(currentTopic);
       }
 
@@ -351,9 +342,6 @@ public class JSONHelper {
    public static TopicLeaf parseTopicLeaf(String json) throws JSONException {
       JSONObject jTopic = new JSONObject(json);
       JSONArray jGuides = jTopic.getJSONArray("guides");
-      JSONObject jParts = jTopic.getJSONObject("parts");
-      JSONArray jTools = jTopic.getJSONArray("tools");
-      //JSONArray jFlags = jTopic.getJSONArray("flags");
       JSONObject jSolutions = jTopic.getJSONObject("solutions");
       JSONObject jInfo = jTopic.getJSONObject("topic_info");
       TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
@@ -476,9 +464,10 @@ public class JSONHelper {
 
       if (!jUser.isNull("summary"))
          user.setSummary(jUser.getString("summary"));
-      user.setJoinDate(jUser.getInt("join_date"));
       if (!jUser.isNull("location"))
          user.setLocation(jUser.getString("location"));
+      if (!jUser.isNull("join_date"))
+         user.setJoinDate(jUser.getInt("join_date"));
 
       user.setBadges(parseBadges(jUser.getJSONObject("badge_counts")));
       user.setReputation(jUser.getInt("reputation"));
@@ -523,14 +512,12 @@ public class JSONHelper {
    public static ArrayList<GuideInfo> parseUserFavorites(String json) {
       ArrayList<GuideInfo> result = new ArrayList<GuideInfo>();
 
-      Log.w("JSONHelper", json);
       try {
          JSONArray jFavorites = new JSONArray(json);
 
          int length = jFavorites.length();
          for (int i = 0; i < length; i++) {
             JSONObject jGuide = jFavorites.getJSONObject(i).getJSONObject("guide");
-            Log.w("JSONHelper", i+"");
 
             GuideInfo guide = new Gson().fromJson(jGuide.toString(), GuideInfo.class);
             result.add(guide);
@@ -583,12 +570,12 @@ public class JSONHelper {
       return array;
    }
 
-   public static JSONArray createImageArray(ArrayList<Image> lines) throws JSONException {
+   public static JSONArray createImageArray(ArrayList<Image> images) throws JSONException {
 
       JSONArray array = new JSONArray();
 
-      for (Image l : lines) {
-         array.put(l.getId());
+      for (Image image : images) {
+         array.put(image.getId());
       }
       return array;
    }

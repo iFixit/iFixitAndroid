@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui.gallery;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -16,27 +15,21 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.util.Utils;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class GalleryActivity extends BaseActivity {
 
    public static final String MEDIA_FRAGMENT_PHOTOS = "MEDIA_FRAGMENT_PHOTOS";
-   public static final String MEDIA_FRAGMENT_VIDEOS = "MEDIA_FRAGMENT_VIDEOS";
-   public static final String MEDIA_FRAGMENT_EMBEDS = "MEDIA_FRAGMENT_EMBEDS";
-   // for return values
    public static final String ACTIVITY_RETURN_MODE = "ACTIVITY_RETURN_ID";
 
-   private static final String LOGIN_VISIBLE = "LOGIN_VISIBLE";
-   private static final String LOGIN_FRAGMENT = "LOGIN_FRAGMENT";
-
-   private static final String SHOWING_HELP = "SHOWING_HELP";
-   private static final String SHOWING_LOGOUT = "SHOWING_LOGOUT";
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    public static final String MEDIA_RETURN_KEY = "MEDIA_RETURN_KEY";
-   public static final String FILTER_LIST_KEY = "FILTER_LIST_KEY";
+   public static final String ATTACHED_MEDIA_IDS = "ATTACHED_MEDIA_IDS";
 
    public static boolean showingLogout;
    public static boolean showingHelp;
@@ -65,18 +58,16 @@ public class GalleryActivity extends BaseActivity {
       showingDelete = false;
 
       boolean getMediaItemForReturn = false;
-      int mReturnValue = -1;
 
       if (getIntent().getExtras() != null) {
          Bundle bundle = getIntent().getExtras();
-         mReturnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
-         if (mReturnValue != -1) {
+         int returnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
+         ArrayList<Integer> alreadyAttachedImages = bundle.getIntegerArrayList(ATTACHED_MEDIA_IDS);
+         mCurrentMediaFragment.setAlreadyAttachedImages(alreadyAttachedImages);
+         if (returnValue != -1) {
             getMediaItemForReturn = true;
          }
-         startActionMode(new ContextualMediaSelect(this));
-//         mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS).setForReturn(mMediaReturnValue);
-//         mMediaCategoryFragments.get(MEDIA_FRAGMENT_VIDEOS).setForReturn(mMediaReturnValue);
-//         mMediaCategoryFragments.get(MEDIA_FRAGMENT_EMBEDS).setForReturn(mMediaReturnValue);
+         startActionMode(new ContextualMediaSelect());
       }
 
       mCurrentMediaFragment.setForReturn(getMediaItemForReturn);
@@ -123,7 +114,6 @@ public class GalleryActivity extends BaseActivity {
 
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
-
       if (MainApplication.get().isFirstTimeGalleryUser()) {
          createHelpDialog().show();
          MainApplication.get().setFirstTimeGalleryUser(false);
@@ -155,7 +145,7 @@ public class GalleryActivity extends BaseActivity {
 
       @Override
       public CharSequence getPageTitle(int position) {
-         return "Images";
+         return Utils.capitalize(getString(R.string.images));
          /*
           * switch (position) {
           * case 0:
@@ -172,23 +162,7 @@ public class GalleryActivity extends BaseActivity {
 
       @Override
       public Fragment getItem(int position) {
-         return (PhotoMediaFragment) mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
-         /*
-          * switch (position) {
-          * case 0:
-          * return (VideoMediaFragment) mMediaCategoryFragments
-          * .get(MEDIA_FRAGMENT_VIDEOS);
-          * case 1:
-          * return (PhotoMediaFragment) mMediaCategoryFragments
-          * .get(MEDIA_FRAGMENT_PHOTOS);
-          * case 2:
-          * return (EmbedMediaFragment) mMediaCategoryFragments
-          * .get(MEDIA_FRAGMENT_EMBEDS);
-          * default:
-          * return (PhotoMediaFragment) mMediaCategoryFragments
-          * .get(MEDIA_FRAGMENT_PHOTOS);
-          * }
-          */
+         return mMediaCategoryFragments.get(MEDIA_FRAGMENT_PHOTOS);
       }
 
       @Override
@@ -212,12 +186,6 @@ public class GalleryActivity extends BaseActivity {
    }
 
    public final class ContextualMediaSelect implements ActionMode.Callback {
-      private Context mParentContext;
-
-      public ContextualMediaSelect(Context parentContext) {
-         mParentContext = parentContext;
-      }
-
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file

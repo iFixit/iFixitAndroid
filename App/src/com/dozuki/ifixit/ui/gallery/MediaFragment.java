@@ -56,6 +56,7 @@ public abstract class MediaFragment extends SherlockFragment
    protected MediaAdapter mGalleryAdapter;
    protected GalleryMediaList mMediaList;
    protected boolean mNextPageRequestInProgress;
+   protected ArrayList<Integer> mAlreadyAttachedImages;
    private GridView mGridView;
    private String mUserName;
    private ImageSizes mImageSizes;
@@ -248,8 +249,6 @@ public abstract class MediaFragment extends SherlockFragment
             return;
          }
 
-         Log.w("MediaFragment", "Full Image Url: " + url);
-
          Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
          intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
          startActivity(intent);
@@ -258,6 +257,10 @@ public abstract class MediaFragment extends SherlockFragment
 
    public void setForReturn(boolean returnItem) {
       mSelectForReturn = returnItem;
+   }
+
+   public void setAlreadyAttachedImages(ArrayList<Integer> imageids) {
+      mAlreadyAttachedImages = new ArrayList<Integer>(imageids);
    }
 
    protected void setEmptyListView() {
@@ -288,7 +291,7 @@ public abstract class MediaFragment extends SherlockFragment
    private File createImageFile() throws IOException {
       // Create an image file name
       String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-      String imageFileName = CaptureHelper.IMAGE_PREFIX + timeStamp + "_";
+      String imageFileName = CaptureHelper.getFileName();
       File image = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
 
       mCameraTempFileName = image.getAbsolutePath();

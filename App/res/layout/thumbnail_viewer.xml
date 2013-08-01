@@ -3,7 +3,7 @@
        android:layout_width="match_parent"
        android:layout_height="match_parent">
 
-    <ImageView
+    <com.dozuki.ifixit.ui.guide.FallbackImageView
         android:id="@+id/thumbnail_main_image"
         style="@style/GuideMediaMain"
         android:layout_width="@dimen/guide_image_width"

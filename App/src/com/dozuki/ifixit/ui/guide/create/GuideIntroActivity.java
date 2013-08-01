@@ -16,9 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
-import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
-import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.*;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
@@ -36,7 +34,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
  ModelCallbacks {
    public static final int GUIDE_STEP_EDIT_REQUEST = 1;
 
-   private boolean EDIT_INTRO_STATE = false;
+   private boolean mEditIntroState = false;
    public static final String STATE_KEY = "STATE_KEY";
 
    private ViewPager mPager;
@@ -51,8 +49,6 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    private Button mNextButton;
    private Button mPrevButton;
 
-   private GuideIntroActivity mSelf;
-
    private List<Page> mCurrentPageSequence;
    private StepPagerStrip mStepPagerStrip;
 
@@ -66,11 +62,11 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
             showLoading(R.id.intro_loading_container, getString(R.string.saving));
 
             Bundle bundle = mWizardModel.save();
-            if (EDIT_INTRO_STATE) {
-               APIService.call(mSelf, APIService.getEditGuideAPICall(bundle, mGuide.getGuideid(),
-                mGuide.getRevisionid()));
+            if (mEditIntroState) {
+               APIService.call(GuideIntroActivity.this, APIService.getEditGuideAPICall(bundle,
+                mGuide.getGuideid(), mGuide.getRevisionid()));
             } else {
-               APIService.call(mSelf, APIService.getCreateGuideAPICall(bundle));
+               APIService.call(GuideIntroActivity.this, APIService.getCreateGuideAPICall(bundle));
             }
 
          } else {
@@ -123,7 +119,6 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_create_intro);
-      mSelf = this;
 
       if (MainApplication.get().isScreenLarge()) {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
@@ -133,27 +128,71 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
-         mWizardModelBundle = extras.getBundle("model");
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
-         EDIT_INTRO_STATE = extras.getBoolean(GuideIntroActivity.STATE_KEY);
+         mWizardModelBundle = buildIntroBundle();
+         mEditIntroState = extras.getBoolean(GuideIntroActivity.STATE_KEY);
       } else if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
+         mWizardModelBundle = savedInstanceState.getBundle("model");
       }
 
       if (MainApplication.get().getSite().mGuideTypes == null) {
          APIService.call(this, APIService.getSiteInfoAPICall());
       } else {
-         initWizard(savedInstanceState);
+         initWizard();
       }
    }
 
-   protected void initWizard(Bundle savedInstanceState) {
+   private Bundle buildIntroBundle() {
+      Bundle bundle = new Bundle();
+      MainApplication app = MainApplication.get();
+      String type = mGuide.getType().toLowerCase();
+      String subjectBundleKey;
+
+      Bundle topicBundle = new Bundle();
+      topicBundle.putString(TopicNamePage.TOPIC_DATA_KEY, mGuide.getTopic());
+
+      Bundle typeBundle = new Bundle();
+      typeBundle.putString(Page.SIMPLE_DATA_KEY, type);
+
+      Bundle titleBundle = new Bundle();
+      titleBundle.putString(GuideTitlePage.TITLE_DATA_KEY, mGuide.getTitle());
+
+      Bundle summaryBundle = new Bundle();
+      summaryBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSummary());
+
+      Bundle introductionBundle = new Bundle();
+      introductionBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getIntroductionRaw());
+
+      Bundle subjectBundle = new Bundle();
+      subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
+
+      if (type.equals("installation") || type.equals("disassembly") || type.equals("repair")) {
+         subjectBundleKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R.string
+          .guide_intro_wizard_guide_subject_title);
+      } else {
+         subjectBundleKey = GuideIntroWizardModel.NO_SUBJECT_KEY + ":" + app.getString(R.string
+          .guide_intro_wizard_guide_subject_title);
+      }
+
+      String topicBundleKey = app.getString(R.string.guide_intro_wizard_guide_topic_title, app.getTopicName());
+
+      bundle.putBundle(subjectBundleKey, subjectBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_type_title), typeBundle);
+      bundle.putBundle(topicBundleKey, topicBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_title_title), titleBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_introduction_title), introductionBundle);
+      bundle.putBundle(app.getString(R.string.guide_intro_wizard_guide_summary_title), summaryBundle);
+
+      return bundle;
+   }
+
+
+   protected void initWizard() {
       mWizardModel = new GuideIntroWizardModel(this);
 
       if (mWizardModelBundle != null) {
          mWizardModel.load(mWizardModelBundle);
-      } else if (savedInstanceState != null) {
-         mWizardModel.load(savedInstanceState.getBundle("model"));
       }
 
       mWizardModel.registerListener(this);
@@ -178,7 +217,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       updateBottomBar();
 
       // If we're editing an existing guide, jump to the review page for an overview of the guide details
-      if (EDIT_INTRO_STATE) {
+      if (mEditIntroState) {
          EasyTracker.getTracker().sendView("Edit Guide Intro");
          mPager.setCurrentItem(mCurrentPageSequence.size());
       } else {
@@ -212,7 +251,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          outState.putBundle("model", mWizardModel.save());
       }
       outState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
-      outState.putBoolean(GuideIntroActivity.STATE_KEY, EDIT_INTRO_STATE);
+      outState.putBoolean(GuideIntroActivity.STATE_KEY, mEditIntroState);
    }
 
    @Override
@@ -262,10 +301,9 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       if (!event.hasError()) {
          MainApplication.get().setSite(event.getResult());
 
-         initWizard(null);
-       } else {
-         APIService.getErrorDialog(this, event.getError(),
-          APIService.getSitesAPICall()).show();
+         initWizard();
+      } else {
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -274,13 +312,14 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       if (!event.hasError()) {
          Guide guide = event.getResult();
 
-         GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-         item.setStepNum(0);
-         item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-         item.addLine(new StepLine());
+         GuideStep step = new GuideStep(StepPortalFragment.STEP_ID++);
+         step.setStepNum(1);
+         step.setOrderby(1);
+         step.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         step.addLine(new StepLine());
 
          ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();
-         initialStepList.add(item);
+         initialStepList.add(step);
 
          guide.setStepList(initialStepList);
          hideLoading();
@@ -290,12 +329,9 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, 0);
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
          finish();
-
       } else {
-
          hideChildren(false);
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -310,9 +346,16 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
          finish();
       } else {
-         hideChildren(false);
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            mGuide = event.getResult();
+            mWizardModelBundle = buildIntroBundle();
+            mWizardModel.load(mWizardModelBundle);
+            onPageTreeChanged();
+
+            hideLoading();
+         }
+
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -426,9 +469,19 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    public void showLoading(int container, String message) {
       hideChildren(true);
 
-      if (findViewById(container).getVisibility() == View.GONE)
+      if (findViewById(container).getVisibility() == View.GONE) {
          findViewById(container).setVisibility(View.VISIBLE);
+      }
 
       super.showLoading(container, message);
+   }
+
+   @Override
+   public void hideLoading() {
+      super.hideLoading();
+
+      findViewById(R.id.intro_loading_container).setVisibility(View.GONE);
+
+      hideChildren(false);
    }
 }

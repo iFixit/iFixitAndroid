@@ -5,18 +5,21 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -33,8 +36,11 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Tracker;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.squareup.otto.Subscribe;
-import com.viewpagerindicator.TitlePageIndicator;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -44,13 +50,21 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
+   private static final int MENU_DISCARD_CHANGES = 14;
 
+   private enum ConfirmSave {
+      NEW_STEP,
+      NEXT_STEP
+   }
+
+   public static final int GALLERY_REQUEST_CODE = 1;
+   public static final int CAMERA_REQUEST_CODE = 1888;
+
+   public static final String TEMP_FILE_NAME_KEY = "TEMP_FILE_NAME_KEY";
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
    public static final String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
-   public static String TAG = "StepEditActivity";
    public static String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
-   public static String MEDIA_SLOT_RETURN_KEY = "MediaSlotReturnKey";
    public static String DELETE_GUIDE_DIALOG_KEY = "DeleteGuideDialog";
    public static final String GUIDE_ID_KEY = "GUIDE_ID_KEY";
    public static final String GUIDE_STEP_ID = "GUIDE_STEP_ID";
@@ -62,7 +76,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
    private static final String SHOWING_SAVE = "SHOWING_SAVE";
    private static final String LOCK_SAVE = "LOCK_SAVE";
-   private static final String LOADING = "LOADING";
 
    private Guide mGuide;
    private StepEditFragment mCurStepFragment;
@@ -71,9 +84,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private ImageButton mDeleteStepButton;
    private StepAdapter mStepAdapter;
    private LockableViewPager mPager;
-   private TitlePageIndicator titleIndicator;
-   private RelativeLayout mBottomBar;
-   private int mPagePosition;
+   private LockableTitlePageIndicator mTitleIndicator;
+   private int mPagePosition = 0;
    private int mSavePosition;
 
    // Necessary for editing prerequisite guides from the view interface in order to navigate back to the parent guide.
@@ -81,18 +93,21 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    // Used to navigate to the correct step when coming from GuideViewActivity.
    private int mInboundStepId;
+   private int mGuideid;
 
-   private boolean mConfirmDelete;
-   private boolean mIsStepDirty;
-   private boolean mShowingHelp;
-   private boolean mShowingSave;
+   private boolean mConfirmDelete = false;
+   private boolean mIsStepDirty = false;
+   private boolean mShowingHelp = false;
+   private boolean mShowingSave = false;
    private boolean mIsLoading;
+
+   // Should a new step be created after a step POST response (creating a new step)
+   private boolean mAddStepAfterSave = false;
 
    // Flag to prevent saving a guide while we're waiting for an image to upload and return
    private boolean mLockSave;
 
    private int mExitCode;
-   private boolean mGuidePublic;
 
    private static int mLoadingContainer = R.id.step_edit_loading_screen;
 
@@ -109,39 +124,15 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
        * lock screen for small sizes to portrait.
        * Courtesy:
        * http://stackoverflow.com/questions/10491531/android-restrict-activity-orientation-based-on-screen-size
-       **/
+       */
       if (MainApplication.get().isScreenLarge()) {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
       } else {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
       }
 
-      mConfirmDelete = false;
-      Bundle extras = getIntent().getExtras();
-      mPagePosition = 0;
-      if (extras != null) {
-         mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
-         mPagePosition = extras.getInt(GUIDE_STEP_NUM_KEY, 0);
-
-         if (mGuide == null) {
-            int guideid = extras.getInt(GUIDE_ID_KEY);
-            mGuidePublic = extras.getBoolean(GUIDE_PUBLIC_KEY);
-            mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
-            mInboundStepId = extras.getInt(GUIDE_STEP_ID);
-
-            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(guideid));
-            showLoading(mLoadingContainer);
-         } else {
-            mGuidePublic = mGuide.isPublic();
-         }
-      }
-
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
-
-         if (mGuide != null) {
-            mGuidePublic = mGuide.isPublic();
-         }
 
          mPagePosition = savedInstanceState.getInt(GUIDE_STEP_NUM_KEY);
          mConfirmDelete = savedInstanceState.getBoolean(DELETE_GUIDE_DIALOG_KEY);
@@ -158,6 +149,13 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          if (mShowingSave) {
             createExitWarningDialog(mExitCode).show();
          }
+
+         if (mConfirmDelete) {
+            createDeleteDialog(this).show();
+         }
+
+      } else {
+         extractExtras(getIntent().getExtras());
       }
 
       setContentView(R.layout.guide_create_step_edit);
@@ -179,26 +177,57 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
-      mBottomBar = (RelativeLayout) findViewById(R.id.guide_create_edit_bottom_bar);
 
-      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
       mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
-      mPager.setAdapter(mStepAdapter);
+      initPager();
       mPager.setCurrentItem(startPage);
 
-      titleIndicator = (TitlePageIndicator) findViewById(R.id.step_edit_top_bar);
-      titleIndicator.setViewPager(mPager);
+      mTitleIndicator = (LockableTitlePageIndicator) findViewById(R.id.step_edit_top_bar);
+      mTitleIndicator.setViewPager(mPager);
+
       mSaveStep.setOnClickListener(this);
       mAddStepButton.setOnClickListener(this);
       mDeleteStepButton.setOnClickListener(this);
-      if (mConfirmDelete) {
-         createDeleteDialog(this).show();
-      }
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
+      }
+   }
+
+   private void initPager() {
+      mStepAdapter = new StepAdapter(getSupportFragmentManager());
+      mPager.setAdapter(mStepAdapter);
+   }
+
+   private void extractExtras(Bundle extras) {
+      if (extras != null) {
+         mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
+         mPagePosition = extras.getInt(GUIDE_STEP_NUM_KEY, 0);
+
+         if (mGuide == null) {
+            mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
+            mGuideid = extras.getInt(GUIDE_ID_KEY);
+            mInboundStepId = extras.getInt(GUIDE_STEP_ID);
+
+            showLoading(mLoadingContainer);
+            APIService.call(StepEditActivity.this,
+             APIService.getGuideForEditAPICall(mGuideid));
+         }
+      }
+   }
+
+   @Override
+   public void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+
+      mGuide = null;
+      mPagePosition = 0;
+
+      extractExtras(intent.getExtras());
+      if (mGuide != null) {
+         initPage(mPagePosition);
       }
    }
 
@@ -209,9 +238,49 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       super.onActivityResult(requestCode, resultCode, data);
 
       if (mCurStepFragment != null) {
-         mCurStepFragment.setMediaResult(requestCode, resultCode, data);
+         Image newThumb;
+
+         switch (requestCode) {
+            case GALLERY_REQUEST_CODE:
+               if (data != null) {
+                  newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
+                  mGuide.getStep(mPagePosition).addImage(newThumb);
+                  mCurStepFragment.setImages(mGuide.getStep(mPagePosition).getImages());
+                  MainApplication.getBus().post(new StepChangedEvent());
+               } else {
+                  Log.e("StepEditActivity", "Error data is null!");
+                  return;
+               }
+
+               break;
+            case CAMERA_REQUEST_CODE:
+               if (resultCode == Activity.RESULT_OK) {
+
+                  SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
+                  String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
+
+                  if (tempFileName == null) {
+                     Log.e("StepEditActivity", "Error cameraTempFile is null!");
+                     return;
+                  }
+
+                  // Prevent a save from being called until the image uploads and returns with the imageid
+                  lockSave();
+
+                  newThumb = new Image();
+                  newThumb.setLocalImage(tempFileName);
+
+                  mGuide.getStep(mPagePosition).addImage(newThumb);
+                  mCurStepFragment.setImages(mGuide.getStep(mPagePosition).getImages());
+
+                  APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
+               }
+               break;
+         }
+
       } else {
          if (resultCode == RESULT_OK) {
+
             // we dont have a reference the the fragment managing the media, so we make the changes to the step manually
             Image image = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
             ArrayList<Image> list = mGuide.getStep(mPagePosition).getImages();
@@ -225,10 +294,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             mGuide.getStep(mPagePosition).setImages(list);
             toggleSave(true);
             // recreate pager with updated step:
-            mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-            mPager.setAdapter(mStepAdapter);
+            initPager();
             mPager.invalidate();
-            titleIndicator.invalidate();
+            mTitleIndicator.invalidate();
             mPager.setCurrentItem(mPagePosition, false);
          }
       }
@@ -248,12 +316,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       savedInstanceState.putInt(EXIT_CODE, mExitCode);
    }
 
-   @Override
-   public void finish() {
+   public void navigateBack() {
       Intent returnIntent = new Intent();
       returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
       setResult(RESULT_OK, returnIntent);
-      super.finish();
+      finish();
    }
 
    @Override
@@ -262,13 +329,80 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    @Override
+   public boolean alertOnNavigation() {
+      return mIsStepDirty;
+   }
+
+   @Override
+   public AlertDialog navigationAlertDialog(final String tag, final Context context) {
+      mShowingSave = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+       .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
+       .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
+       .setNegativeButton(getString(R.string.save),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = true;
+              save(mPagePosition);
+              dialog.dismiss();
+
+              navigateMenuDrawer(tag, context);
+           }
+        })
+       .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = false;
+              dialog.dismiss();
+
+              navigateMenuDrawer(tag, context);
+           }
+        });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingSave = false;
+         }
+      });
+
+      return dialog;
+   }
+
+   @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      if (mGuidePublic) {
-         menu.add(1, MENU_VIEW_GUIDE, 0, R.string.view_guide)
-          .setIcon(R.drawable.ic_action_book)
-          .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-      }
+      menu.add(2, MENU_VIEW_GUIDE, 0, R.string.view_guide)
+       .setIcon(R.drawable.ic_action_book)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+      menu.add(1, MENU_DISCARD_CHANGES, 0, R.string.discard_changes)
+       .setIcon(R.drawable.ic_action_undo)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
       return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case MENU_VIEW_GUIDE:
+            finishEdit(STEP_VIEW);
+            break;
+         case MENU_DISCARD_CHANGES:
+            if (!mIsStepDirty) break; // Bail early if there aren't any changes
+
+            toggleSave(false);
+            mIsStepDirty = false;
+            // Set the inbound stepid so the Step pager will navigate to the current step after updating
+            mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
+            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(mGuideid));
+
+            break;
+      }
+
+      return super.onOptionsItemSelected(item);
    }
 
    /////////////////////////////////////////////////////
@@ -290,8 +424,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          }
          initPage(startPagePosition);
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -299,39 +432,76 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    public void onStepSave(APIEvent.StepSave event) {
       hideLoading();
 
-      if (!event.hasError()) {
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+         updateCurrentStep(event.getResult());
+      }
 
-         GuideStep step = event.getResult();
-
-         mGuide.getSteps().set(mSavePosition, step);
-
-         mStepAdapter.notifyDataSetChanged();
-      } else {
-
+      if (event.hasError()) {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onStepAdd(APIEvent.StepAdd event) {
+   public void onUploadStepImage(APIEvent.UploadStepImage event) {
+      if (!event.hasError()) {
+         Image newThumb = event.getResult();
 
+         // Find the temporarily stored image object to update the filename to
+         // the image path and imageid.
+         if (newThumb != null) {
+            ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(mPagePosition).getImages());
+
+            for (Image image : images) {
+               if (image.isLocal()) {
+                  images.set(images.indexOf(image), newThumb);
+                  break;
+               }
+            }
+
+            mCurStepFragment.setImages(images);
+            mGuide.getStep(mPagePosition).setImages(images);
+         }
+
+         if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
+            unlockSave();
+
+            // Set guide dirty after the image is uploaded so the user can't
+            // save the guide before we have the imageid.
+            MainApplication.getBus().post(new StepChangedEvent());
+         }
+      } else {
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
+
+   @Subscribe
+   public void onStepImageDelete(StepImageDeleteEvent event) {
+      mGuide.getStep(mPagePosition).getImages().remove(event.image);
+   }
+
+   @Subscribe
+   public void onStepAdd(APIEvent.StepAdd event) {
       hideLoading();
 
       if (!event.hasError()) {
          mGuide = event.getResult();
 
          mStepAdapter.notifyDataSetChanged();
-         mPager.setCurrentItem(mPagePosition);
+         mPager.setCurrentItem(mSavePosition);
+
+         if (mAddStepAfterSave) {
+            addNewStep(mSavePosition + 1);
+            mAddStepAfterSave = false;
+         }
       } else {
+         mAddStepAfterSave = false;
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -341,10 +511,19 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       if (!event.hasError()) {
          mGuide.setRevisionid(event.getResult().getRevisionid());
-         deleteStep(false);
+         deleteStep();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         // Try to update the step on a conflict.
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            try {
+               updateCurrentStep(JSONHelper.parseStep(
+                new JSONObject(event.getResponse()), 0));
+            } catch (JSONException e) {
+               Log.w("StepEditActivity", "Error parsing step delete conflict", e);
+            }
+         }
+
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -353,10 +532,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (!event.hasError()) {
          Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
           Toast.LENGTH_LONG).show();
-
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepEditActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -387,60 +564,52 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
-            int newPosition = mPagePosition + 1;
-
             gaTracker.sendEvent("ui_action", "button_press", "step_edit_add_step", null);
 
-            // If the step has changes, save it first.
+            int newPosition = mPagePosition + 1;
+
+            // If the step has changes, prompt the user to save or continue editing.
             if (mIsStepDirty) {
-               save(mPagePosition);
+               createSaveChangesDialog(ConfirmSave.NEW_STEP).show();
+            // If the step doesn't have any bullet content, prompt them to add some.
             } else if (!stepHasLineContent(mGuide.getStep(mPagePosition))) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
                 Toast.LENGTH_SHORT).show();
                return;
             } else {
-               GuideStep item = new GuideStep(StepPortalFragment.STEP_ID++);
-               item.setTitle(StepPortalFragment.DEFAULT_TITLE);
-               item.addLine(new StepLine());
-               item.setStepNum(newPosition);
-
-               mGuide.addStep(item, newPosition);
-
-               for (int i = 1; i < mGuide.getSteps().size(); i++) {
-                  mGuide.getStep(i).setStepNum(i);
-               }
-
-               // The view pager does not recreate the item in the current position unless we force it
-               mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-               mPager.setAdapter(mStepAdapter);
-               mPager.invalidate();
-               titleIndicator.invalidate();
-
-               mPager.setCurrentItem(newPosition, false);
+               addNewStep(newPosition);
             }
 
             break;
       }
    }
 
-   @Override
-   public void onBackPressed() {
-      finishEdit(FOR_RESULT);
+   public void addNewStep(int newPosition) {
+      if (!mGuide.hasNewStep()) {
+         GuideStep step = new GuideStep(StepPortalFragment.STEP_ID++);
+         step.setOrderby(newPosition);
+         step.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         step.addLine(new StepLine());
+         step.setStepNum(newPosition);
+
+         mGuide.addStep(step, newPosition);
+
+         // The view pager does not recreate the item in the current position unless we force it
+         initPager();
+         mPager.invalidate();
+         mTitleIndicator.invalidate();
+
+         mPager.setCurrentItem(newPosition, false);
+      } else {
+         // Show "Must add content to step" toast
+         Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
+          Toast.LENGTH_SHORT).show();
+      }
    }
 
    @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            onBackPressed();
-            return true;
-         case MENU_VIEW_GUIDE:
-            EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long)mGuide.getGuideid());
-
-            finishEdit(STEP_VIEW);
-      }
-
-      return (super.onOptionsItemSelected(item));
+   public void onBackPressed() {
+      finishEdit(HOME_UP);
    }
 
    /////////////////////////////////////////////////////
@@ -481,7 +650,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          if (position >= 0) {
             return position;
          } else {*/
-         return POSITION_NONE;
+         return PagerAdapter.POSITION_NONE;
          // }
       }
 
@@ -514,11 +683,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
              if (mPagePosition >= mGuide.getSteps().size()
               // or it's a new step
               || mGuide.getStep(mPagePosition).getRevisionid() == null) {
-                deleteStep(mIsStepDirty);
+                deleteStep();
              } else {
                 showLoading(mLoadingContainer, getString(R.string.deleting));
                 APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
-                 mGuide.getGuideid(), mGuide.getRevisionid(), mGuide.getSteps().get(mPagePosition)));
+                 mGuide.getGuideid(), mGuide.getSteps().get(mPagePosition)));
              }
              dialog.cancel();
           }
@@ -555,6 +724,46 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       return builder.create();
    }
 
+   protected AlertDialog createSaveChangesDialog(final ConfirmSave dialogType) {
+      mShowingSave = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+       .setTitle(getString(R.string.save_changes_to_step))
+       .setPositiveButton(getString(R.string.yes),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              save(mPagePosition);
+              dialog.dismiss();
+              switch (dialogType) {
+                 case NEW_STEP:
+                    addNewStep(mPagePosition + 1);
+                    mAddStepAfterSave = true;
+                    break;
+                 case NEXT_STEP:
+                    break;
+              }
+           }
+        })
+       .setNegativeButton(getString(R.string.cancel),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = true;
+              dialog.dismiss();
+           }
+        });
+
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingSave = false;
+         }
+      });
+
+      return dialog;
+
+   }
+
    protected AlertDialog createExitWarningDialog(final int exitCode) {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -571,7 +780,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
               if (mExitCode == STEP_VIEW) {
                  navigateToStepView();
               } else {
-                 finish();
+                 navigateBack();
               }
            }
         })
@@ -601,12 +810,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    protected void save(int savePosition) {
       GuideStep obj = mGuide.getStep(savePosition);
+
       obj.setLines(mCurStepFragment.getLines());
-
-      if (!obj.hasVideo() && !obj.hasEmbed()) {
-         obj.setImages(mCurStepFragment.getImages());
-      }
-
       obj.setTitle(mCurStepFragment.getTitle());
 
       mGuide.getSteps().set(savePosition, obj);
@@ -676,16 +881,23 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (mPager != null) {
          mPager.setVisibility(View.VISIBLE);
       }
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
    }
 
    protected void navigateToStepView() {
+      // Bail early if somehow the user is able to click view guide before the guide is retrieved.
+      if (mGuide == null) {
+         return;
+      }
+
+      EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long)mGuide.getGuideid());
+
       Intent intent = new Intent(this, GuideViewActivity.class);
       if (mParentGuideId != NO_PARENT_GUIDE) {
-         intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mParentGuideId);
+         intent.putExtra(GuideViewActivity.GUIDEID, mParentGuideId);
       } else {
-         intent.putExtra(GuideViewActivity.SAVED_GUIDEID, mGuide.getGuideid());
+         intent.putExtra(GuideViewActivity.GUIDEID, mGuide.getGuideid());
       }
       intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
       intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());
@@ -696,7 +908,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    protected void finishEdit(int exitCode) {
       mExitCode = exitCode;
-      if (mIsStepDirty) {
+      if (mIsStepDirty || mLockSave) {
          createExitWarningDialog(exitCode).show();
       } else {
 
@@ -707,9 +919,23 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             }
          }
 
+         int guideSize = mGuide.getSteps().size();
+
          // Make sure the step numbers are correct after removing steps.
-         for (int i = 1; i <= mGuide.getSteps().size(); i++) {
+         for (int i = 1; i <= guideSize; i++) {
             mGuide.getStep(i - 1).setStepNum(i);
+         }
+
+         // Necessary because if there were any new steps that were deleted, we need to let the adapters know about
+         // it.  Otherwise we get IllegalStateExceptions.
+         mStepAdapter.notifyDataSetChanged();
+         mTitleIndicator.notifyDataSetChanged();
+
+         // If the current position is equal to or greater than the number of steps in the guide,
+         // there was a new step at the end of the guide and that position no longer exists.  Set the page position
+         // to the new last step.
+         if (mPagePosition >= guideSize) {
+            mPagePosition = guideSize - 1;
          }
 
          Intent data;
@@ -718,9 +944,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                data = new Intent(this, StepsActivity.class);
                data.putExtra(StepsActivity.GUIDE_ID_KEY, mGuide.getGuideid());
                data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_NO_ANIMATION);
 
                startActivity(data);
+               finish();
                break;
             case FOR_RESULT:
                data = new Intent();
@@ -735,26 +963,40 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                finish();
                break;
             case STEP_VIEW:
+               mIsStepDirty = false;
+               toggleSave(false);
                navigateToStepView();
                break;
 
          }
       }
-      return;
    }
 
-   protected void deleteStep(boolean unsaved) {
+   private void updateCurrentStep(GuideStep step) {
+      // Update the guide on successful save or conflict.
+      mGuide.getSteps().set(mSavePosition, step);
 
-      // Delete the step if it hasn't been saved yet.
-      if (mPagePosition < mGuide.getSteps().size() && !unsaved) {
-         mGuide.getSteps().remove(mPagePosition);
-      }
+      // The view pager does not recreate the item in the current position unless we force it
+      initPager();
+      mPager.invalidate();
+      mTitleIndicator.invalidate();
+
+      mPager.setCurrentItem(mSavePosition, false);
+   }
+
+   protected void deleteStep() {
+      mGuide.getSteps().remove(mPagePosition);
 
       // If it's the last step in the guide, finish the activity.
       if (mGuide.getSteps().size() == 0) {
-         finish();
+         mStepAdapter.notifyDataSetChanged();
+
+         navigateBack();
          return;
       }
+
+      // Disable the save button.
+      toggleSave(false);
 
       int guideSize = mGuide.getSteps().size();
 
@@ -762,15 +1004,21 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mGuide.getStep(i).setStepNum(i);
       }
 
-      // The view pager does not recreate the item in the current position unless we force it to:
-      mStepAdapter = new StepAdapter(this.getSupportFragmentManager());
-      mPager.setAdapter(mStepAdapter);
-      mPager.setCurrentItem(mPagePosition);
-      mPager.invalidate();
-      titleIndicator.invalidate();
+      int newPosition = mPagePosition - 1;
 
+      // The view pager does not recreate the item in the current position unless we force it to.
+      initPager();
+      mPager.invalidate();
+      mTitleIndicator.notifyDataSetChanged();
+      mStepAdapter.notifyDataSetChanged();
+      mPager.setCurrentItem(newPosition, false);
    }
 
+   /**
+    * Toggle the save button state
+    *
+    * @param toggle true to enable, false to disable
+    */
    public void toggleSave(boolean toggle) {
       if (!mLockSave) {
          int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
@@ -789,11 +1037,19 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (mPager != null) {
          mPager.setPagingEnabled(unlocked);
       }
+
+      if (mTitleIndicator != null) {
+         mTitleIndicator.setPagingEnabled(unlocked);
+      }
    }
 
    public void lockSave() {
       mLockSave = true;
-      mSaveStep.setText(R.string.loading_image);
+
+      mSaveStep.setText(getString(R.string.loading_image));
+      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_dark_grey));
+      mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_grey));
+
       enableViewPager(false);
    }
 

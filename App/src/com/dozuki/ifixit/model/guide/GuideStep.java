@@ -54,6 +54,7 @@ public class GuideStep implements Serializable {
 
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
+      mOrderby = stepNum;
       mTitle = "";
       mImages = new ArrayList<Image>();
       mLines = new ArrayList<StepLine>();
@@ -68,6 +69,27 @@ public class GuideStep implements Serializable {
       } else {
          return "image";
       }
+   }
+
+   public boolean hasLocalImages() {
+      for (Image image : mImages) {
+         if (image.isLocal()) return true;
+      }
+
+      return false;
+   }
+
+   public boolean isNewStep() {
+      return mRevisionid == null;
+   }
+
+   public int localImageCount() {
+      int count = 0;
+
+      for (Image image : mImages) {
+         if (image.isLocal()) count++;
+      }
+      return count;
    }
 
    public int getGuideid() {
@@ -94,6 +116,10 @@ public class GuideStep implements Serializable {
       mRevisionid = revisionid;
    }
 
+   public Integer getRevisionid() {
+      return mRevisionid;
+   }
+
    public void setOrderby(int orderby) {
       mOrderby = orderby;
    }
@@ -112,10 +138,6 @@ public class GuideStep implements Serializable {
 
    public int getStepNum() {
       return mStepNum;
-   }
-
-   public boolean hasImage() {
-      return mImages.size() > 0;
    }
 
    public void addImage(Image image) {
@@ -139,15 +161,10 @@ public class GuideStep implements Serializable {
       mLines.add(line);
    }
 
-   public StepLine getLine(int pos) {
-      return mLines.get(pos);
-   }
-
    public void setLines(ArrayList<StepLine> lines) {
       mLines.clear();
       mLines = new ArrayList<StepLine>(lines);
    }
-
 
    public void addVideo(Video stepvid) {
       mVideo = stepvid;
@@ -176,10 +193,5 @@ public class GuideStep implements Serializable {
    public String toString() {
       return "{GuideStep: " + mGuideid + ", " + mStepid + ", " + mRevisionid + ", " +
        mOrderby + ", " + mStepNum + ", " + mTitle + ", " + mLines + ", " + mImages + "}";
-   }
-
-
-   public Integer getRevisionid() {
-      return mRevisionid;
    }
 }

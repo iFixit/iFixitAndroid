@@ -20,13 +20,9 @@ public class StepLine implements Serializable {
    }
 
    public StepLine(Integer lineid, String color, int level, String textRaw, String textRendered) {
-      if (color.equals("icon_reminder") ||
-          color.equals("icon_caution") ||
-          color.equals("icon_note")) {
-         hasIcon = true;
-      } else {
-         hasIcon = false;
-      }
+       hasIcon = color.equals("icon_reminder") ||
+                 color.equals("icon_caution") ||
+                 color.equals("icon_note");
 
       mLineid = lineid;
       mColor = color;
@@ -35,20 +31,12 @@ public class StepLine implements Serializable {
       mTextRendered = textRendered;
    }
 
-   public void setLineid(Integer lineid) {
-      mLineid = lineid;
-   }
-
    public void setColor(String color) {
       mColor = color;
    }
 
    public void setLevel(int level) {
       mLevel = level;
-   }
-
-   public void setTextRendered(String text) {
-      mTextRendered = text;
    }
 
    public String getTextRendered() {

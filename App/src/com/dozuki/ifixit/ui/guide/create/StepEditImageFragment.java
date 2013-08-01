@@ -2,56 +2,50 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
+import com.dozuki.ifixit.ui.guide.FallbackImageView;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
+import com.squareup.otto.Bus;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class StepEditImageFragment extends SherlockFragment {
 
-   private static final int GALLERY_REQUEST_CODE = 1;
-   private static final int CAMERA_REQUEST_CODE = 1888;
    private static final int COPY_TO_MEDIA_MANAGER = 0;
    private static final int DETACH_TO_MEDIA_MANAGER = 1;
    private static final int DELETE_FROM_STEP = 2;
    private static final String IMAGES_KEY = "IMAGES_KEY";
+   private static final int CAPTURE_IMAGE = 0;
+   private static final int MEDIA_MANAGER = 1;
 
    private Activity mContext;
 
    // images
    private ThumbnailView mThumbs;
    private ArrayList<Image> mImages;
-   private String mTempFileName;
-
-   // Position of the temporary image captured on the phone
-   private int mTempThumbPosition;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -59,7 +53,7 @@ public class StepEditImageFragment extends SherlockFragment {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      mContext = (Activity) getActivity();
+      mContext = getActivity();
       super.onCreate(savedInstanceState);
    }
 
@@ -98,12 +92,14 @@ public class StepEditImageFragment extends SherlockFragment {
    @Override
    public void onResume() {
       super.onResume();
+
       MainApplication.getBus().register(this);
    }
 
    @Override
    public void onPause() {
       super.onPause();
+
       MainApplication.getBus().unregister(this);
    }
 
@@ -123,32 +119,35 @@ public class StepEditImageFragment extends SherlockFragment {
                 public void onClick(DialogInterface dialog, int which) {
                    Intent intent;
                    switch (which) {
-                      case 0:
+                      case CAPTURE_IMAGE:
                          EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_camera", null);
-
                          try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
-                            // Create an image file name
-                            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-                            String imageFileName = CaptureHelper.IMAGE_PREFIX + timeStamp + "_";
+                            String imageFileName = CaptureHelper.getFileName();
 
                             File file = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
-                            mTempFileName = file.getAbsolutePath();
+                            String tempFileName = file.getAbsolutePath();
+                            SharedPreferences prefs = getActivity().getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
+                            prefs.edit().putString(StepEditActivity.TEMP_FILE_NAME_KEY, tempFileName).commit();
 
                             cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
-                            mContext.startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                            mContext.startActivityForResult(cameraIntent, StepEditActivity.CAMERA_REQUEST_CODE);
                          } catch (IOException e) {
                             e.printStackTrace();
                          }
 
                          break;
-                      case 1:
+                      case MEDIA_MANAGER:
                          EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_gallery", null);
-
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-                         mContext.startActivityForResult(intent, GALLERY_REQUEST_CODE);
+                         ArrayList<Integer> attachedMediaIds = new ArrayList<Integer>();
+                         for (Image image : mImages) {
+                            attachedMediaIds.add(image.getId());
+                         }
+                         intent.putIntegerArrayListExtra(GalleryActivity.ATTACHED_MEDIA_IDS, attachedMediaIds);
+                         mContext.startActivityForResult(intent, StepEditActivity.GALLERY_REQUEST_CODE);
                          break;
                    }
                 }
@@ -182,16 +181,14 @@ public class StepEditImageFragment extends SherlockFragment {
                          APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
-                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "delete_from_step",
-                          null);
+                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "delete_from_step", null);
+                         Bus bus = MainApplication.getBus();
+                         bus.post(new StepImageDeleteEvent(thumbImage));
+                         bus.post(new StepChangedEvent());
 
-                         mThumbs.removeThumb((ImageView) v);
-                         mImages.remove(thumbImage);
-                         setGuideDirty();
+                         mThumbs.removeThumb((FallbackImageView) v);
+                         mImages.remove(v);
                          break;
-
-                      default:
-                         return;
                    }
                 }
              });
@@ -203,82 +200,10 @@ public class StepEditImageFragment extends SherlockFragment {
    }
 
    @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      Image newThumb;
-
-      switch (requestCode) {
-         case GALLERY_REQUEST_CODE:
-            if (data != null) {
-               newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mImages.add(newThumb);
-               mThumbs.addThumb(newThumb, false);
-               setGuideDirty();
-            } else {
-               Log.e("StepEditImageFragment", "Error cameraTempFile is null!");
-               return;
-            }
-
-            break;
-         case CAMERA_REQUEST_CODE:
-            if (resultCode == Activity.RESULT_OK) {
-
-               if (mTempFileName == null) {
-                  Log.e("StepEditImageFragment", "Error cameraTempFile is null!");
-                  return;
-               }
-               // Prevent a save from being called until the image uploads and returns with the imageid
-               ((StepEditActivity) getActivity()).lockSave();
-
-               newThumb = new Image();
-               newThumb.setLocalImage(mTempFileName);
-
-               mImages.add(newThumb);
-               mTempThumbPosition = mThumbs.addThumb(newThumb, true);
-
-               APIService.call(getActivity(), APIService.getUploadImageToStepAPICall(mTempFileName));
-            }
-            break;
-      }
-
-      super.onActivityResult(requestCode, resultCode, data);
-   }
-
-   @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
-      savedInstanceState.putSerializable(IMAGES_KEY, mImages);
-
       super.onSaveInstanceState(savedInstanceState);
-   }
 
-   /////////////////////////////////////////////////////
-   // NOTIFICATION LISTENERS
-   /////////////////////////////////////////////////////
-
-   @Subscribe
-   public void onUploadStepImage(APIEvent.UploadStepImage event) {
-      if (!event.hasError()) {
-         Image newThumb = event.getResult();
-
-         // Find the temporarily stored image object to update the filename to the image path and imageid
-         if (newThumb != null) {
-            for (int i = 0; i < mImages.size(); i++) {
-               if (mImages.get(i).isLocal()) {
-                  mImages.set(i, newThumb);
-                  mThumbs.updateThumb(newThumb, mTempThumbPosition);
-                  break;
-               }
-            }
-         }
-
-         ((StepEditActivity) getActivity()).unlockSave();
-
-         // Set guide dirty after the image is uploaded so the user can't save the guide before we have the imageid
-         setGuideDirty();
-      } else {
-         Log.e("Upload Image Error", event.getError().mMessage);
-         event.setError(APIError.getFatalError(getActivity()));
-         APIService.getErrorDialog(getActivity(), event.getError(), null).show();
-      }
+      savedInstanceState.putSerializable(IMAGES_KEY, mImages);
    }
 
    /////////////////////////////////////////////////////
@@ -287,10 +212,10 @@ public class StepEditImageFragment extends SherlockFragment {
 
    protected void setImages(ArrayList<Image> images) {
       mImages = new ArrayList<Image>(images);
-   }
 
-   protected ArrayList<Image> getImages() {
-      return mImages;
+      if (mThumbs != null) {
+         mThumbs.setThumbs(mImages);
+      }
    }
 
    protected float navigationHeight() {
@@ -303,9 +228,5 @@ public class StepEditImageFragment extends SherlockFragment {
       int stepPagerBar = getActivity().getResources().getDimensionPixelSize(R.dimen.step_pager_bar_height);
 
       return actionBarHeight + bottomBarHeight + stepPagerBar;
-   }
-
-   private void setGuideDirty() {
-      MainApplication.getBus().post(new StepChangedEvent());
    }
 }

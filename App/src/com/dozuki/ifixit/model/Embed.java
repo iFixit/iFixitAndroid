@@ -56,5 +56,4 @@ public class Embed implements Serializable {
    public String getContentURL() {
       return mContentURL;
    }
-
 }

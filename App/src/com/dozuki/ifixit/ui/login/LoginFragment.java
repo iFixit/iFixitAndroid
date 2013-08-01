@@ -60,13 +60,6 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          enable(true);
          APIError error = event.getError();
 
-         if (error.mType == APIError.ErrorType.CONNECTION ||
-          error.mType == APIError.ErrorType.PARSE) {
-            APIService.getErrorDialog(getActivity(), error, mCurAPICall).show();
-         } else if (error.mType == APIError.ErrorType.INVALID_USER) {
-            error.mMessage = "Invalid login. Check your email address and password to verify they are correct.";
-         }
-
          mLoadingSpinner.setVisibility(View.GONE);
 
          // Show input fields
@@ -260,7 +253,7 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
          String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
          mCurAPICall = APIService.getUserInfoAPICall(session);
-         APIService.call((Activity)getActivity(), mCurAPICall);
+         APIService.call(getActivity(), mCurAPICall);
       } else if (!MainApplication.get().getSite().mStandardAuth) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need

@@ -16,7 +16,6 @@ public class TopicNode implements Serializable {
 
    public TopicNode(String name) {
       mName = name;
-      mChildren = new ArrayList<TopicNode>();
    }
 
    public String getName() {
@@ -27,20 +26,16 @@ public class TopicNode implements Serializable {
       return mChildren;
    }
 
-   public void addAllTopics(ArrayList<TopicNode> topics) {
-      mChildren.addAll(topics);
+   public void setChildren(ArrayList<TopicNode> children) {
+      mChildren = children;
    }
 
    public boolean isLeaf() {
-      return mChildren.size() == 0;
+      return mChildren == null;
    }
 
    public boolean isRoot() {
       return mName.equals(ROOT_NAME);
-   }
-
-   public String toString() {
-      return "{Name: " + mName + ", Topics: " + mChildren + "}";
    }
 
    public boolean equals(Object other) {

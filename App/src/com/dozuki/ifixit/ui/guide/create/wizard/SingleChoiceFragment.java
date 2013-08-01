@@ -60,6 +60,13 @@ public class SingleChoiceFragment extends SherlockListFragment {
 
       Bundle args = getArguments();
       mKey = args.getString(ARG_KEY);
+   }
+
+   @Override
+   public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    Bundle savedInstanceState) {
+      View rootView = inflater.inflate(R.layout.wizard_fragment_page, container, false);
+
       mPage = mCallbacks.onGetPage(mKey);
 
       SingleFixedChoicePage fixedChoicePage = (SingleFixedChoicePage) mPage;
@@ -67,12 +74,7 @@ public class SingleChoiceFragment extends SherlockListFragment {
       for (int i = 0; i < fixedChoicePage.getOptionCount(); i++) {
          mChoices.add(fixedChoicePage.getOptionAt(i));
       }
-   }
 
-   @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
-      View rootView = inflater.inflate(R.layout.wizard_fragment_page, container, false);
       ((TextView) rootView.findViewById(android.R.id.title)).setText(mPage.getTitle());
 
       mListView = (ListView) rootView.findViewById(android.R.id.list);

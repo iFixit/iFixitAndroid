@@ -81,6 +81,7 @@
         <item name="android:typeface">sans</item>
         <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:textColor">?attr/doz__textColorPrimary</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
     <style name="BodyText">
@@ -173,6 +174,16 @@
         <item name="android:padding">@dimen/guide_image_padding</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
         <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
+    </style>
+
+    <style name="GuideCreateItemIcon">
+        <item name="android:layout_marginLeft">14dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:drawablePadding">4dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textAppearance">?android:attr/textAppearanceSmall</item>
+        <item name="android:textColor">@color/dozuki_grey</item>
     </style>
 
 

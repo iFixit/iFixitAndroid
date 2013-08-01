@@ -11,8 +11,9 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
+import com.dozuki.ifixit.ui.guide.create.StepsActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
@@ -30,12 +31,13 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
    private static final String PACKAGE_NAME = "com.dozuki.ifixit";
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
-   public static final String SAVED_GUIDEID = "SAVED_GUIDEID";
+   public static final String GUIDEID = "GUIDEID";
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
 
    public static final int MENU_EDIT_GUIDE = 2;
+   private static final int MENU_REFRESH_GUIDE = 3;
 
    private int mGuideid;
    private Guide mGuide;
@@ -61,7 +63,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
       mIndicator = (TitlePageIndicator) findViewById(R.id.guide_step_title_indicator);
 
       if (savedInstanceState != null) {
-         mGuideid = savedInstanceState.getInt(SAVED_GUIDEID);
+         mGuideid = savedInstanceState.getInt(GUIDEID);
          mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
 
          if (mGuide != null) {
@@ -90,36 +92,46 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                return;
             }
          } else {
-            Bundle extras = intent.getExtras();
-
-            if (extras != null) {
-
-               // We're coming from the Topics GuideList
-               if (extras.containsKey(TopicGuideListFragment.GUIDEID)) {
-                  mGuideid = extras.getInt(TopicGuideListFragment.GUIDEID);
-
-               // We're coming from StepEdit
-               } else if (extras.containsKey(GuideViewActivity.SAVED_GUIDEID)) {
-                  mGuideid = extras.getInt(GuideViewActivity.SAVED_GUIDEID);
-               }
-
-               if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
-                  mGuide = (Guide) extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
-               }
-
-               mInboundStepId = extras.getInt(INBOUND_STEP_ID);
-               mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
-            }
-         }
-         if (mGuide == null) {
-            getGuide(mGuideid);
-         } else {
-            setGuide(mGuide, mCurrentPage);
+            extractExtras(intent.getExtras());
          }
       }
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      if (mGuide == null) {
+         getGuide(mGuideid);
+      } else {
+         setGuide(mGuide, mCurrentPage);
+      }
+
       //initSpeechRecognizer();
+   }
+
+   private void extractExtras(Bundle extras) {
+      if (extras != null) {
+         if (extras.containsKey(GuideViewActivity.GUIDEID)) {
+            mGuideid = extras.getInt(GuideViewActivity.GUIDEID);
+         }
+
+         if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
+            mGuide = (Guide) extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
+         }
+
+         mInboundStepId = extras.getInt(INBOUND_STEP_ID);
+         mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
+      }
+   }
+
+   @Override
+   protected void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+
+      showLoading(R.id.loading_container);
+      // Reset everything to default values since we're getting a new intent - forces the view to refresh.
+      mGuide = null;
+      mCurrentPage = -1;
+      mInboundStepId = -1;
+
+      extractExtras(intent.getExtras());
+      getGuide(mGuideid);
    }
 
    @Override
@@ -158,7 +170,7 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
        * changes (selected thumbnail). However, I remember this failing with a
        * call to super.onSavInstanceState(). Investigate.
        */
-      state.putSerializable(SAVED_GUIDEID, mGuideid);
+      state.putSerializable(GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }
@@ -168,6 +180,11 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
       menu.add(1, MENU_EDIT_GUIDE, 0, R.string.edit_guide)
        .setIcon(R.drawable.ic_action_edit)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
+      menu.add(2, MENU_REFRESH_GUIDE, 0, "Reload Guide")
+       .setIcon(R.drawable.ic_action_refresh_dark)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -176,36 +193,46 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
       switch (item.getItemId()) {
          case MENU_EDIT_GUIDE:
             if (mGuide != null) {
-
                EasyTracker.getTracker().sendEvent("menu_action", "button_press", "edit_guide",
                 (long)mGuide.getGuideid());
+               Intent intent;
+               // If the user is on the introduction, take them to edit the introduction fields.
+               if (mCurrentPage == 0) {
+                  intent = new Intent(this, GuideIntroActivity.class);
+                  intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+                  intent.putExtra(GuideIntroActivity.STATE_KEY, true);
+                  startActivity(intent);
+               } else {
+                  intent = new Intent(this, StepEditActivity.class);
+                  int stepNum = 0;
 
-               Intent intent = new Intent(this, StepEditActivity.class);
-               int stepNum = 0;
+                  // Take into account the introduction, parts and tools page.
+                  if (mCurrentPage >= mAdapter.getStepOffset()) {
+                     stepNum = mCurrentPage - mAdapter.getStepOffset();
+                     // Account for array indexed starting at 1
+                     intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
+                  }
 
-               // Take into account the introduction, parts and tools page.
-               if (mCurrentPage >= mAdapter.getStepOffset()) {
-                  stepNum = mCurrentPage - mAdapter.getStepOffset();
-                  Log.d("GuideViewActivity", stepNum+"");
-                  // Account for array indexed starting at 1
-                  intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
+                  int stepGuideid = mGuide.getStep(stepNum).getGuideid();
+                  // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
+                  // editing this prerequisite.
+                  if (stepGuideid != mGuide.getGuideid()) {
+                     intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
+                  }
+                  // We have to pass along the steps guideid to account for prerequisite guides.
+                  intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
+                  intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
+                  intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
+                  startActivity(intent);
                }
-
-               int stepGuideid = mGuide.getStep(stepNum).getGuideid();
-               // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
-               // editing this prerequisite.
-               if (stepGuideid != mGuide.getGuideid()) {
-                  intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
-               }
-               // We have to pass along the steps guideid to account for prerequisite guides.
-               intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
-               intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
-               intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
-               startActivity(intent);
             }
             break;
+         case MENU_REFRESH_GUIDE:
+            // Set guide to null to force a refresh of the guide object.
+            mGuide = null;
+            getGuide(mGuideid);
          default:
-            return (super.onOptionsItemSelected(item));
+            return super.onOptionsItemSelected(item);
       }
       return true;
    }
@@ -232,11 +259,10 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
                   }
                }
             }
-            setGuide(event.getResult(), mCurrentPage);
+            setGuide(guide, mCurrentPage);
          }
       } else {
-         APIService.getErrorDialog(GuideViewActivity.this, event.getError(),
-          APIService.getGuideAPICall(mGuideid)).show();
+         APIService.getErrorDialog(GuideViewActivity.this, event).show();
       }
    }
 
@@ -323,10 +349,18 @@ public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageC
    }
 
    public void onPageSelected(int currentPage) {
-      Log.d("GuideViewActivity", currentPage+"");
-
-      if (mCurrentPage == currentPage) return;
-
       mCurrentPage = currentPage;
+   }
+
+   @Override
+   public void showLoading(int container) {
+      findViewById(container).setVisibility(View.VISIBLE);
+      super.showLoading(container);
+   }
+
+   @Override
+   public void hideLoading() {
+      super.hideLoading();
+      findViewById(R.id.loading_container).setVisibility(View.GONE);
    }
 }

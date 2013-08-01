@@ -1,14 +1,11 @@
 package com.dozuki.ifixit.model.user;
 
 import com.dozuki.ifixit.model.Badges;
-import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.util.LatLon;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class User implements Serializable {
    private static final long serialVersionUID = 6209686573978334361L;
@@ -25,19 +22,8 @@ public class User implements Serializable {
    @SerializedName("about_raw") private String mAboutRaw;
    @SerializedName("about_rendered") private String mAboutRendered;
    @SerializedName("authToken") private String mAuthToken;
-   private ArrayList<UserImage> mUserImages;
-   private ArrayList<Video> mUserVideos;
-   private ArrayList<Embed> mUserEmbeds;
 
    public User() {}
-
-   public void addImage(UserImage image) {
-      mUserImages.add(image);
-   }
-
-   public ArrayList<UserImage> getImages() {
-      return mUserImages;
-   }
 
    public int getUserid() {
       return mUserid;

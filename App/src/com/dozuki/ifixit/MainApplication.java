@@ -1,5 +1,6 @@
 package com.dozuki.ifixit;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
@@ -9,9 +10,8 @@ import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.util.DisplayMetrics;
+import android.content.res.TypedArray;
 import android.util.Log;
-import android.view.WindowManager;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
@@ -20,12 +20,11 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.otto.Bus;
 
 public class MainApplication extends Application {
-   public static final int LARGE_SIZE_CUTOFF = 1000;
-   public static final int MEDIUM_SIZE_CUTOFF = 800;
+   private static final int LARGE_SIZE_CUTOFF = 800;
    // The current version of the app (this is replaced by dozukify.sh).
-   public static final String CURRENT_SITE = "SITE_ifixit";
+   private static final String CURRENT_SITE = "SITE_ifixit";
 
-   public static final String PREFERENCE_FILE = "PREFERENCE_FILE";
+   private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
     "FIRST_TIME_GALLERY_USER";
    private static final String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
@@ -136,11 +135,14 @@ public class MainApplication extends Application {
    public String getUserAgent() {
       if (mUserAgent == null) {
          int versionCode = -1;
+         String versionName = "";
 
          try {
-            PackageInfo packageInfo = null;
+            PackageInfo packageInfo;
             packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+
             versionCode = packageInfo.versionCode;
+            versionName = packageInfo.versionName;
          } catch (PackageManager.NameNotFoundException e) {
             Log.e("iFixit", "Can't get application version", e);
          }
@@ -150,7 +152,8 @@ public class MainApplication extends Application {
           * is currently viewing a different nanosite.
           */
          Site currentApp = getDefaultSite();
-         mUserAgent = currentApp.mTitle + "Android/" + versionCode;
+         mUserAgent = currentApp.mTitle + "Android/" + versionName +
+          " (" + versionCode + ") | " + System.getProperty("http.agent");
       }
 
       return mUserAgent;
@@ -179,26 +182,12 @@ public class MainApplication extends Application {
 
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {
-         WindowManager wm = (WindowManager)getSystemService(
-          Context.WINDOW_SERVICE);
-         DisplayMetrics metrics = new DisplayMetrics();
-         wm.getDefaultDisplay().getMetrics(metrics);
-         int maxDimension = Math.max(metrics.heightPixels,
-          metrics.widthPixels);
-
-         float screenSize = (maxDimension / metrics.density);
-         
-         // Larger screen = larger images
-         if (screenSize > LARGE_SIZE_CUTOFF) {
-            mImageSizes = new ImageSizes(".medium", ".medium", ".huge",
-             ".standard");
-         } else if (screenSize <= LARGE_SIZE_CUTOFF && screenSize > MEDIUM_SIZE_CUTOFF) {
-            mImageSizes = new ImageSizes(".standard", ".standard", ".large",
-             ".standard");
-         } else {
-            mImageSizes = new ImageSizes(".thumbnail", ".standard", ".large",
-             ".thumbnail");
-         }
+         TypedArray imageSizes = getResources().obtainTypedArray(R.array.image_sizes);
+         mImageSizes = new ImageSizes(
+          imageSizes.getString(0),
+          imageSizes.getString(1),
+          imageSizes.getString(2),
+          imageSizes.getString(3));
       }
 
       return mImageSizes;
@@ -282,10 +271,10 @@ public class MainApplication extends Application {
    }
 
    /**
-    * Logs the currently logged in user out by deleting it from SharedPreferences and
-    * resetting mUser.
+    * Light version of logout that doesn't fire any events or perform any API calls.
+    * logout, bleow, should almost always be the one to use.
     */
-   public void logout() {
+   public void shallowLogout() {
       final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
        Context.MODE_PRIVATE);
       Editor editor = prefs.edit();
@@ -295,6 +284,20 @@ public class MainApplication extends Application {
       editor.commit();
 
       mUser = null;
+   }
+
+   /**
+    * Logs the currently logged in user out by deleting it from SharedPreferences, making
+    * the logout API call to delete the auth token, and * resetting mUser.
+    */
+   public void logout(Activity activity) {
+      // Check if the user is null because we're paranoid.
+      if (mUser != null && activity != null) {
+         // Perform the API call to delete the user's authToken.
+         APIService.call(activity, APIService.getLogoutAPICall(mUser));
+      }
+
+      shallowLogout();
 
       getBus().post(new LoginEvent.Logout());
    }

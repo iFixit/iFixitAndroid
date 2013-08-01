@@ -14,6 +14,15 @@ public class Utils {
          ((BitmapDrawable)view.getDrawable()).getBitmap().recycle();
       }
 
+      safeStripImageView(view);
+   }
+
+   /**
+    * ImageView stripping without the "dangerous" bitmap recycle.
+    *
+    * @param view ImageView to clean memory
+    */
+   public static void safeStripImageView(ImageView view) {
       if (view.getDrawable() != null)
          view.getDrawable().setCallback(null);
 
@@ -52,5 +61,18 @@ public class Utils {
       }
 
       return spantext;
+   }
+
+   public static String capitalize(String word) {
+      return Character.toUpperCase(word.charAt(0)) + word.substring(1);
+   }
+
+   public static String repeat(String string, int times) {
+      StringBuilder builder = new StringBuilder(string);
+      for (int i = 1; i < times; i++) {
+         builder.append(string);
+      }
+
+      return builder.toString();
    }
 }

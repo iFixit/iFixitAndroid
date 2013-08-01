@@ -33,4 +33,8 @@ public class LockableViewPager extends ViewPager {
    public void setPagingEnabled(boolean enabled) {
       this.isPagingEnabled = enabled;
    }
+
+   public boolean isEnabled() {
+      return this.isPagingEnabled;
+   }
 }

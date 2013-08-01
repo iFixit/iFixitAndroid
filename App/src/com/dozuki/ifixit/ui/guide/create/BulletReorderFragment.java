@@ -8,9 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.*;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
-import com.actionbarsherlock.view.ActionMode;
+import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -57,7 +61,6 @@ public class BulletReorderFragment extends DialogFragment {
          mAdapter.remove(mAdapter.getItem(which));
       }
    };
-   private ActionMode mActionMode;
    private BulletRearrangeListener mRListenener;
 
    private void confirmRearrange() {
@@ -99,7 +102,7 @@ public class BulletReorderFragment extends DialogFragment {
       getDialog().setTitle(getActivity().getResources().getString(R.string.reorder_bullets_title));
 
       if (savedInstanceState != null) {
-         mLines = (ArrayList<StepLine>) savedInstanceState.get(LINES_KEY);
+         mLines = (ArrayList<StepLine>)savedInstanceState.get(LINES_KEY);
       }
       mAdapter = new StepAdapter(mLines);
       View view = inflater.inflate(R.layout.guide_create_step_edit_bullet_reorder, container, false);
@@ -153,16 +156,13 @@ public class BulletReorderFragment extends DialogFragment {
          View v = super.getView(position, convertView, parent);
          if (v != convertView && v != null) {
             final ViewHolder holder = new ViewHolder();
-
-            TextView tv = (TextView) v.findViewById(R.id.bullet_text_textview);
-            holder.stepsView = tv;
-
-            holder.mImageView = (ImageView) v.findViewById(R.id.guide_step_item_bullet_thumbnail);
             v.setTag(holder);
 
-            holder.mItemHolder = (FrameLayout) v.findViewById(R.id.guide_step_item_frame);
+            holder.stepsView = (TextView)v.findViewById(R.id.bullet_text_textview);
+            holder.mImageView = (ImageView)v.findViewById(R.id.guide_step_item_bullet_thumbnail);
+            holder.mItemHolder = (FrameLayout)v.findViewById(R.id.guide_step_item_frame);
          }
-         final ViewHolder holder = (ViewHolder) v.getTag();
+         final ViewHolder holder = (ViewHolder)v.getTag();
          String step = getItem(position).getTextRaw();
          holder.stepsView.setText(step);
          holder.mImageView.setImageResource(getBulletResource(getItem(position).getColor()));
@@ -177,9 +177,6 @@ public class BulletReorderFragment extends DialogFragment {
    @Override
    public void onDetach() {
       super.onDetach();
-      if (mActionMode != null) {
-         mActionMode.finish();
-      }
    }
 
    @Override

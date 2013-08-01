@@ -13,6 +13,7 @@
             android:layout_height="250dp"
             android:layout_width="334dp"
             android:scaleType="fitCenter"
+            android:layout_alignParentRight="true"
             android:layout_margin="16dp"
             android:contentDescription="@string/topic_info_image"/>
 
@@ -21,8 +22,9 @@
             style="@style/TitleText"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_toRightOf="@+id/topic_info_image"
-            android:layout_marginRight="16dp"
+            android:layout_toLeftOf="@+id/topic_info_image"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"/>
 
         <TextView
@@ -31,9 +33,9 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@+id/topic_info_title"
-            android:layout_toRightOf="@+id/topic_info_image"
-            android:layout_marginRight="16dp"
-            android:layout_marginTop="12dp"/>
+            android:layout_alignParentLeft="true"
+            android:layout_toLeftOf="@+id/topic_info_image"
+            android:layout_marginLeft="16dp"/>
 
         <TextView
             android:id="@+id/topic_info_content"
@@ -41,7 +43,7 @@
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
             android:layout_below="@+id/topic_info_image"
-            android:padding="16dp"
+            android:layout_margin="16dp"
             android:paddingTop="24dp"/>
 
     </RelativeLayout>

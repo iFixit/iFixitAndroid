@@ -14,15 +14,13 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
-import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -39,48 +37,42 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
    }
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-   }
-
-   @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
-
       if (savedInstanceState != null) {
-         mSiteList = (ArrayList<Site>) savedInstanceState.getSerializable(SITE_LIST);
+         mSiteList = (ArrayList<Site>)savedInstanceState.getSerializable(SITE_LIST);
       }
 
       View view = inflater.inflate(R.layout.site_dialog_list, container, false);
 
       mLoadingIndicator = (ProgressBar)view.findViewById(R.id.loading_progress);
-      mSiteListView = (ListView) view.findViewById(R.id.siteListView);
+      mSiteListView = (ListView)view.findViewById(R.id.siteListView);
       mSiteListView.setEmptyView(view.findViewById(R.id.emptyView));
 
-      mSearchView = (SearchView) view.findViewById(R.id.dozuki_search_view);
+      mSearchView = (SearchView)view.findViewById(R.id.dozuki_search_view);
 
+      initDialog();
+
+      return view;
+   }
+
+   private void initDialog() {
+      initializeAdapter();
       if (mSiteList == null) {
          mSiteListView.setVisibility(View.GONE);
          mSiteListView.getEmptyView().setVisibility(View.GONE);
          mSearchView.setVisibility(View.GONE);
          mLoadingIndicator.setVisibility(View.VISIBLE);
 
-         APIService.call(getActivity(), APIService.getSitesAPICall());
-      } else {
-         initDialog(mSiteList);
+         return;
       }
 
-      return view;
-   }
-
-   private void initDialog(ArrayList<Site> sites) {
-      setSiteList(sites);
-      SearchManager searchManager = (SearchManager) getActivity().getSystemService(Context.SEARCH_SERVICE);
+      SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 
       mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
        getActivity().getComponentName()));
       mSearchView.setIconifiedByDefault(false);
-      mSearchView.setOnQueryTextListener((SiteListActivity) getActivity());
+      mSearchView.setOnQueryTextListener((SiteListActivity)getActivity());
 
       View searchPlate = mSearchView.findViewById(R.id.abs__search_plate);
       searchPlate.setBackgroundResource(R.drawable.textfield_search_view_holo_light);
@@ -99,19 +91,19 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
       MainApplication.getBus().register(this);
 
       getDialog().setOnKeyListener(new OnKeyListener() {
-         public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-            if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-               /**
-                * Phones with a hardware search button open up the SearchDialog by
-                * default. This overrides that by setting focus on the SearchView.
-                * Unfortunately it does not open the soft keyboard as of now.
-                */
-               mSearchView.requestFocus();
-               return true;
-            } else {
-               return false;
-            }
-         }
+          public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+              if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+                  /**
+                   * Phones with a hardware search button open up the SearchDialog by
+                   * default. This overrides that by setting focus on the SearchView.
+                   * Unfortunately it does not open the soft keyboard as of now.
+                   */
+                  mSearchView.requestFocus();
+                  return true;
+              } else {
+                  return false;
+              }
+          }
       });
    }
 
@@ -129,31 +121,20 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
       outState.putSerializable(SITE_LIST, mSiteList);
    }
 
-   @Subscribe
-   public void onSites(APIEvent.Sites event) {
-      if (!event.hasError()) {
-         mSiteList = event.getResult();
-         initDialog(mSiteList);
+   public void setSites(ArrayList<Site> sites, boolean initDialog) {
+      mSiteList = sites;
 
-         mLoadingIndicator.setVisibility(View.GONE);
-         mSearchView.setVisibility(View.VISIBLE);
-         mSiteListView.setVisibility(View.VISIBLE);
-      } else {
-         APIService.getErrorDialog(getActivity(), event.getError(),
-          APIService.getSitesAPICall()).show();
+      if (initDialog) {
+         initDialog();
       }
    }
 
-   protected void cancelSearch() {
-      setSiteList(mSiteList);
-   }
-
-   public void setSiteList(ArrayList<Site> sites) {
+   private void initializeAdapter() {
       if (mSiteListView == null || mSiteList == null) {
          return;
       }
 
-      final SiteListAdapter siteListAdapter = new SiteListAdapter(sites);
+      final SiteListAdapter siteListAdapter = new SiteListAdapter(mSiteList);
       mSiteListView.setAdapter(siteListAdapter);
 
       mSiteListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -166,9 +147,5 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
             startActivity(intent);
          }
       });
-   }
-
-   public ArrayList<Site> getSiteList() {
-      return mSiteList;
    }
 }

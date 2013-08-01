@@ -1,8 +1,11 @@
 package com.dozuki.ifixit.ui;
 
+import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -12,7 +15,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -20,10 +22,13 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
+import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
-import com.dozuki.ifixit.ui.topic_view.TeardownsActivity;
+import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
+import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.dozuki.ifixit.util.APIEvent;
 import com.squareup.otto.Subscribe;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -40,9 +45,8 @@ import java.util.List;
  * Displaying various menu icons.
  */
 public abstract class BaseActivity extends SherlockFragmentActivity {
-
-   private static final String STATE_ACTIVE_POSITION = "com.dozuki.ifixit.ui.ifixitActivity.activePosition";
-   private static final String STATE_CONTENT_TEXT = "com.dozuki.ifixit.ui.ifixitActivity.contentText";
+   private static final String STATE_ACTIVE_POSITION = "com.dozuki.ifixit.ui.BaseActivity.activePosition";
+   protected static final String LOADING = "LOADING_FRAGMENT";
 
    private static final int MENU_OVERFLOW = 1;
 
@@ -79,7 +83,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       public void onLogin(LoginEvent.Login event) {
          // Reload app to update the menu to include the user name and logout button
          buildSliderMenu();
-         mMenuDrawer.invalidate();
       }
 
       @SuppressWarnings("unused")
@@ -89,14 +92,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          // Reload app to remove username and logout button from menu
          buildSliderMenu();
-
-         mMenuDrawer.invalidate();
       }
 
       @SuppressWarnings("unused")
       @Subscribe
       public void onCancel(LoginEvent.Cancel event) {
          finishActivityIfPermissionDenied();
+      }
+
+      @SuppressWarnings("unused")
+      @Subscribe
+      public void onUnauthorized(APIEvent.Unauthorized event) {
+         LoginFragment.newInstance().show(getSupportFragmentManager(), "LoginFragment");
       }
    };
 
@@ -116,87 +123,103 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    private AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
       @Override
       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-         Intent intent;
+         String tag = (String) view.getTag();
          Context context = parent.getContext();
-         String url = "";
-         mActivePosition = position;
-         mMenuDrawer.setActiveView(view, position);
 
-         EasyTracker.getTracker().sendEvent("menu_action", "drawer_item_click", ((String) view.getTag()).toLowerCase(),
-          null);
+         if (alertOnNavigation()) {
+            navigationAlertDialog(tag, context).show();
+         } else {
+            EasyTracker.getTracker().sendEvent("menu_action", "drawer_item_click", ((String) view.getTag()).toLowerCase(),
+             null);
 
-         switch (Navigation.navigate((String) view.getTag())) {
-            case SEARCH:
-            case FEATURED_GUIDES:
-            case BROWSE_TOPICS:
-               intent = new Intent(context, TopicActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
+            mActivePosition = position;
+            mMenuDrawer.setActiveView(view, position);
 
-            case TEARDOWNS:
-               intent = new Intent(context, TeardownsActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case USER_FAVORITES:
-               intent = new Intent(context, FavoritesActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case USER_GUIDES:
-               intent = new Intent(context, GuideCreateActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case NEW_GUIDE:
-               intent = new Intent(context, GuideIntroActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-
-            case MEDIA_GALLERY:
-               intent = new Intent(context, GalleryActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivity(intent);
-               break;
-            case LOGOUT:
-               MainApplication.get().logout();
-               break;
-
-            case YOUTUBE:
-               intent = new Intent(Intent.ACTION_VIEW);
-               url = "https://www.youtube.com/user/iFixitYourself";
-
-               intent.setData(Uri.parse(url));
-               startActivity(intent);
-               break;
-
-            case FACEBOOK:
-               intent = new Intent(Intent.ACTION_VIEW);
-               url = "https://www.facebook.com/iFixit";
-
-               intent.setData(Uri.parse(url));
-               startActivity(intent);
-               break;
-
-            case TWITTER:
-               intent = new Intent(Intent.ACTION_VIEW);
-               url = "https://twitter.com/iFixit";
-
-               intent.setData(Uri.parse(url));
-               startActivity(intent);
-               break;
-
-            case HELP:
-            case ABOUT:
+            navigateMenuDrawer(tag, context);
          }
-         mMenuDrawer.closeMenu();
       }
    };
+
+   public void navigateMenuDrawer(String tag, Context context) {
+      Intent intent;
+      String url;
+
+      switch (Navigation.navigate(tag)) {
+         case SEARCH:
+         case BROWSE_TOPICS:
+            intent = new Intent(context, TopicActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case FEATURED_GUIDES:
+            intent = new Intent(context, FeaturedGuidesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case TEARDOWNS:
+            intent = new Intent(context, TeardownsActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case USER_FAVORITES:
+            intent = new Intent(context, FavoritesActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case USER_GUIDES:
+            intent = new Intent(context, GuideCreateActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case NEW_GUIDE:
+            intent = new Intent(context, GuideIntroActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+
+         case MEDIA_GALLERY:
+            intent = new Intent(context, GalleryActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
+         case LOGOUT:
+            MainApplication.get().logout(BaseActivity.this);
+            break;
+
+         case YOUTUBE:
+            intent = new Intent(Intent.ACTION_VIEW);
+            url = "https://www.youtube.com/user/iFixitYourself";
+
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+            break;
+
+         case FACEBOOK:
+            intent = new Intent(Intent.ACTION_VIEW);
+            url = "https://www.facebook.com/iFixit";
+
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+            break;
+
+         case TWITTER:
+            intent = new Intent(Intent.ACTION_VIEW);
+            url = "https://twitter.com/iFixit";
+
+            intent.setData(Uri.parse(url));
+            startActivity(intent);
+            break;
+
+         case HELP:
+         case ABOUT:
+      }
+      mMenuDrawer.closeMenu();
+   }
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -212,18 +235,26 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       EasyTracker.getInstance().setContext(this);
 
+      /**
+       * There is another register call in onResume but we also need it here for the onUnauthorized
+       * call that is usually triggered in onCreate of derived Activities.
+       */
+      MainApplication.getBus().register(this);
+      MainApplication.getBus().register(loginEventListener);
+
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
-      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.RIGHT, MenuDrawer.MENU_DRAG_WINDOW);
+
+      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
+
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
       mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
       mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
 
       buildSliderMenu();
-
-      //ViewServer.get(this).addWindow(this);
    }
 
    private void buildSliderMenu() {
@@ -235,14 +266,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       //items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
-      //items.add(new Item(getString(R.string.slide_menu_featured_guides), R.drawable.ic_action_star_10,
-      // "featured_guides"));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
+      items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
       if (onIfixit) items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, "teardowns"));
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
+      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, "user_favorites"));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
-      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_spinner_favorites, "user_favorites"));
       items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, "new_guide"));
       items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
 
@@ -267,14 +297,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mAdapter = new MenuAdapter(items);
       mList.setAdapter(mAdapter);
       mList.setOnItemClickListener(mItemClickListener);
+      mList.setCacheColorHint(Color.TRANSPARENT);
 
       mMenuDrawer.setMenuView(mList);
+      mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
+      mMenuDrawer.setDrawerIndicatorEnabled(true);
+
+      mMenuDrawer.invalidate();
    }
 
    /**
     * Close the menu drawer if back is pressed and the menu is open.
     */
-
    @Override
    public void onBackPressed() {
       final int drawerState = mMenuDrawer.getDrawerState();
@@ -328,25 +362,17 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void onRestart() {
       super.onRestart();
       finishActivityIfPermissionDenied();
+
+      // Invalidate the options menu in case the user logged in/out in a child Activity.
+      buildSliderMenu();
    }
 
    @Override
    public void onResume() {
       super.onResume();
 
-      // Invalidate the options menu in case the user has logged in or out.
-      //supportInvalidateOptionsMenu();
-
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
-      //ViewServer.get(this).setFocusedWindow(this);
-   }
-
-   @Override
-   protected void onDestroy() {
-      super.onDestroy();
-
-      //ViewServer.get(this).removeWindow(this);
    }
 
    @Override
@@ -361,27 +387,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
-            finish();
-            break;
-         case MENU_OVERFLOW:
             mMenuDrawer.toggleMenu();
-            break;
+            return true;
       }
 
       return super.onOptionsItemSelected(item);
    }
 
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuItem overflowItem = menu.add(0, MENU_OVERFLOW, 0, null);
-      overflowItem.setIcon(R.drawable.ic_action_list);
-      overflowItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-
-      return true;
-   }
-
    private static class Item {
-
       String mTitle;
       int mIconRes;
       String mTag;
@@ -394,7 +407,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    private static class Category {
-
       String mTitle;
 
       Category(String title) {
@@ -403,8 +415,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    private class MenuAdapter extends BaseAdapter {
-
       private List<Object> mItems;
+      private static final int VIEW_TYPE_COUNT = 2;
 
       MenuAdapter(List<Object> items) {
          mItems = items;
@@ -432,7 +444,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       @Override
       public int getViewTypeCount() {
-         return 2;
+         return VIEW_TYPE_COUNT;
       }
 
       @Override
@@ -476,6 +488,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          return v;
       }
+   }
+
+   /**
+    * Whether the activity show warn the user before navigating away using the MenuDrawer.
+    * @return
+    */
+   public boolean alertOnNavigation() {
+      return false;
+   }
+
+   public AlertDialog navigationAlertDialog(String tag, Context context) {
+      return null;
    }
 
    /**
@@ -547,11 +571,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    public void showLoading(int container, String message) {
       getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(message), "loading").addToBackStack("loading")
+       .add(container, new LoadingFragment(message), LOADING).addToBackStack(LOADING)
        .commit();
    }
 
    public void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
    }
 }

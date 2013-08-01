@@ -13,12 +13,11 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Embed;
-import com.dozuki.ifixit.model.Video;
-import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.OEmbed;
 import com.dozuki.ifixit.ui.guide.view.EmbedViewActivity;
 import com.dozuki.ifixit.util.JSONHelper;
@@ -32,8 +31,6 @@ public class StepEmbedFragment extends SherlockFragment {
 
    public static final String GUIDE_EMBED_KEY = "GUIDE_EMBED_KEY";
    private Activity mContext;
-   private VideoThumbnail mVideoPoster;
-   private Video mVideo;
    private Resources mResources;
    private DisplayMetrics mMetrics;
    private WebView mMainWebView;
@@ -166,8 +163,8 @@ public class StepEmbedFragment extends SherlockFragment {
    /////////////////////////////////////////////////////
 
    private ViewGroup.LayoutParams fitToSpace(View view, float width, float height) {
-      float newWidth = 0f;
-      float newHeight = 0f;
+      float newWidth;
+      float newHeight;
       float padding = 0f;
 
       if (MainApplication.get().inPortraitMode()) {
@@ -195,9 +192,8 @@ public class StepEmbedFragment extends SherlockFragment {
    }
 
    private float navigationHeight() {
-      int actionBarHeight = 0, indicatorHeight = 50;
-
-      actionBarHeight = mResources.getDimensionPixelSize(
+      int indicatorHeight = 50;
+      int actionBarHeight = mResources.getDimensionPixelSize(
        com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
 
       float pagePadding = viewPadding(R.dimen.page_padding);
@@ -215,16 +211,16 @@ public class StepEmbedFragment extends SherlockFragment {
          OEmbed oe = null;
          try {
             URL url = new URL(embed[0].getURL());
-            URLConnection urlConnection = null;
-            InputStream in = null;
-            StringBuilder x = null;
+            URLConnection urlConnection;
+            InputStream in;
+            StringBuilder x;
             urlConnection = url.openConnection();
             in = new BufferedInputStream(urlConnection.getInputStream());
             byte[] bytes = new byte[1000];
 
             x = new StringBuilder();
 
-            int numRead = 0;
+            int numRead;
             while ((numRead = in.read(bytes)) >= 0) {
                x.append(new String(bytes, 0, numRead));
             }

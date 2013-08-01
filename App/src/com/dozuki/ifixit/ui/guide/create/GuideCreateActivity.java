@@ -6,10 +6,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
@@ -19,9 +21,12 @@ import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
+
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -33,11 +38,9 @@ public class GuideCreateActivity extends BaseActivity {
 
 
    private static final String SHOWING_HELP = "SHOWING_HELP";
-   private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String GUIDE_FOR_DELETE = "GUIDE_FOR_DELETE";
    private static String GUIDE_OBJECT_KEY = "GUIDE_OBJECT_KEY";
    public static String GUIDE_KEY = "GUIDE_KEY";
-   private static final String LOADING = "LOADING";
    private int mCurOpenGuideObjectID;
 
    private ArrayList<GuideInfo> mUserGuideList = new ArrayList<GuideInfo>();
@@ -58,7 +61,7 @@ public class GuideCreateActivity extends BaseActivity {
       mActivity = this;
 
       if (savedInstanceState != null) {
-         mUserGuideList = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
+         mUserGuideList = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mGuideForDelete = (GuideInfo) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
 
@@ -84,6 +87,14 @@ public class GuideCreateActivity extends BaseActivity {
    }
 
    @Override
+   public void onRestart() {
+      super.onRestart();
+
+      // Perform the API call again because data may have changed in child Activities.
+      APIService.call(this, APIService.getUserGuidesAPICall());
+   }
+
+   @Override
    public void onContentChanged() {
       super.onContentChanged();
 
@@ -106,9 +117,7 @@ public class GuideCreateActivity extends BaseActivity {
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuItem createGuideItem = menu.add(0, MENU_CREATE_GUIDE, 0, R.string.add_guide);
       createGuideItem.setIcon(R.drawable.ic_menu_add_guide);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-         createGuideItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
-      }
+      createGuideItem.setShowAsAction(MenuItem.SHOW_AS_ACTION_ALWAYS);
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -139,14 +148,14 @@ public class GuideCreateActivity extends BaseActivity {
 
          hideLoading();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
-      if (!event.hasError()) {
+      // Update guide even if there is a conflict.
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
          Guide guide = event.getResult();
          for (GuideInfo userGuide : mUserGuideList) {
             if (userGuide.mGuideid == guide.getGuideid()) {
@@ -157,9 +166,10 @@ public class GuideCreateActivity extends BaseActivity {
          }
 
          mGuideListAdapter.notifyDataSetChanged();
-      } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
+      }
+
+      if (event.hasError()) {
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -170,8 +180,18 @@ public class GuideCreateActivity extends BaseActivity {
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         // Try to update the guide's revisionid on a conflict.
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            try {
+               Guide updatedGuide = JSONHelper.parseGuide(event.getResponse());
+               GuideInfo guideToUpdate = mUserGuideList.get(mUserGuideList.indexOf(mGuideForDelete));
+
+               guideToUpdate.mRevisionid = updatedGuide.getRevisionid();
+            } catch (JSONException e) {
+               Log.w("GuideCreateActivity", "Error parsing guide delete conflict", e);
+            }
+         }
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
@@ -218,7 +238,7 @@ public class GuideCreateActivity extends BaseActivity {
        .setMessage(getString(R.string.confirm_delete_body, item.mTitle))
        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
-             APIService.call(GuideCreateActivity.this, APIService.getRemoveGuideAPICall(mGuideForDelete));
+             APIService.call(GuideCreateActivity.this, APIService.getDeleteGuideAPICall(mGuideForDelete));
              dialog.cancel();
           }
        }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
@@ -282,10 +302,9 @@ public class GuideCreateActivity extends BaseActivity {
          if (view != null) {
             view.setChecked(false);
          }
-         for (int i = 0; i < mUserGuideList.size(); i++) {
-
-            if (mUserGuideList.get(i).mGuideid == mCurOpenGuideObjectID) {
-               mUserGuideList.get(i).mEditMode = false;
+         for (GuideInfo guide : mUserGuideList) {
+            if (guide.mGuideid == mCurOpenGuideObjectID) {
+               guide.mEditMode = false;
             }
          }
       }

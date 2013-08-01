@@ -1,10 +1,9 @@
 package com.dozuki.ifixit.ui.guide.create;
 
-import android.app.AlertDialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -20,7 +19,6 @@ import com.squareup.otto.Subscribe;
 
 public class StepsActivity extends BaseActivity implements StepRearrangeListener {
    static final int GUIDE_EDIT_STEP_REQUEST = 0;
-   private static final String SHOWING_HELP = "SHOWING_HELP";
    private static final String GUIDE_STEPS_PORTAL_FRAG = "GUIDE_STEPS_PORTAL_FRAG";
    public static final int MENU_STEP_ADD = 2;
    public static final int MENU_EDIT_INTRO = 3;
@@ -29,12 +27,9 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
    public static String GUIDE_ID_KEY = "GUIDE_ID_KEY";
    public static String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
-   private static final String LOADING = "LOADING";
-   private ActionBar mActionBar;
    private StepPortalFragment mStepPortalFragment;
    private Guide mGuide;
    private boolean mIsLoading;
-   private boolean mGuidePublic;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -46,23 +41,18 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
       super.onCreate(savedInstanceState);
 
-      mActionBar = getSupportActionBar();
-      mActionBar.setDisplayHomeAsUpEnabled(true);
+      ActionBar actionBar = getSupportActionBar();
+      actionBar.setDisplayHomeAsUpEnabled(true);
 
       if (savedInstanceState != null) {
          // to persist mGuide
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
-         mGuidePublic = mGuide.isPublic();
          mIsLoading = savedInstanceState.getBoolean(LOADING);
       }
 
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
-         mGuidePublic = extras.getBoolean(StepEditActivity.GUIDE_PUBLIC_KEY);
-         if (mGuide != null) {
-            mGuidePublic = mGuide.isPublic();
-         }
          guideid = extras.getInt(StepsActivity.GUIDE_ID_KEY, 0);
          if (guideid == 0 && mGuide != null) {
             guideid = mGuide.getGuideid();
@@ -96,9 +86,10 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
       savedInstanceState.putBoolean(LOADING, mIsLoading);
-      super.onSaveInstanceState(savedInstanceState);
    }
 
    @Override
@@ -119,10 +110,6 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
          if (guide != null) {
             mGuide = guide;
-            mGuidePublic = mGuide.isPublic();
-         } else {
-            // Assume the guide is private, it's better than the user trying to view the guide and getting an error
-            mGuidePublic = data.getBooleanExtra(StepEditActivity.GUIDE_PUBLIC_KEY, false);
          }
       }
    }
@@ -152,13 +139,10 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
        .add(3, MENU_REARRANGE_STEPS, 0, R.string.reorder_steps)
        .setIcon(R.drawable.ic_dialog_arrange_bullets_light)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-      if (mGuidePublic) {
-         menu
-          .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
-          .setIcon(R.drawable.ic_action_book)
-          .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-      }
+      menu
+       .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
+       .setIcon(R.drawable.ic_action_book)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -173,8 +157,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
          mGuide = event.getResult();
          hideLoading();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 
@@ -184,8 +167,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
          mGuide = event.getResult();
          hideLoading();
       } else {
-         event.setError(APIError.getFatalError(this));
-         APIService.getErrorDialog(StepsActivity.this, event.getError(), null).show();
+         APIService.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 
@@ -202,7 +184,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
       mStepPortalFragment =
        (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
       getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(), "loading").addToBackStack("loading")
+       .add(container, new LoadingFragment(), LOADING).addToBackStack(LOADING)
        .commit();
       if (mStepPortalFragment != null) {
          getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
@@ -212,21 +194,7 @@ public class StepsActivity extends BaseActivity implements StepRearrangeListener
 
    @Override
    public void hideLoading() {
-      getSupportFragmentManager().popBackStack("loading", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
    }
-
-   private AlertDialog createHelpDialog() {
-      AlertDialog.Builder builder = new AlertDialog.Builder(this);
-      builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_steps_help))
-       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-
-          public void onClick(DialogInterface dialog, int id) {
-             dialog.cancel();
-          }
-       });
-
-      return builder.create();
-   }
-
 }

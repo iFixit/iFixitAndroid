@@ -20,7 +20,7 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class StepListItem extends RelativeLayout implements AnimationListener {
-   private static int ANIMATION_DURATION = 300;
+   private static final int ANIMATION_DURATION = 300;
    private TextView mStepsView;
    private TextView mStepNumber;
    private ToggleButton mToggleEdit;

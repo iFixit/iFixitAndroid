@@ -4,6 +4,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.util.EditDistance;
+import com.dozuki.ifixit.util.Utils;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -34,8 +35,7 @@ public class Site implements Serializable {
    }
 
    public boolean search(String query) {
-      if (mName.indexOf(query) != -1 ||
-       mTitle.toLowerCase().indexOf(query) != -1) {
+      if (mTitle.toLowerCase().contains(query)) {
          // Query is somewhere in title or name.
          return true;
       }
@@ -46,10 +46,6 @@ public class Site implements Serializable {
        * longer the string and less room for error the shorter the string.
        */
       return EditDistance.editDistance(mName, query) <= (mName.length() / 2);
-   }
-
-   public String getDomainForCookie() {
-      return "." + mDomain;
    }
 
    public String getOpenIdLoginUrl() {
@@ -71,18 +67,14 @@ public class Site implements Serializable {
       ArrayList<String> types = new ArrayList<String>();
 
       for (GuideType type : mGuideTypes) {
-         types.add(capitalize(type.mType));
+         types.add(Utils.capitalize(type.mType));
       }
 
       return types;
    }
 
    public String siteName() {
-      return capitalize(mName);
-   }
-
-   public String getDomain() {
-      return mCustomDomain.equals("") ? mDomain : mCustomDomain;
+      return Utils.capitalize(mName);
    }
 
    public String getAPIDomain() {
@@ -179,9 +171,5 @@ public class Site implements Serializable {
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
        mPublicRegistration + "|" + mGuideTypes.toString() + "}";
-   }
-
-   private String capitalize(String word) {
-      return Character.toUpperCase(word.charAt(0)) + word.substring(1);
    }
 }

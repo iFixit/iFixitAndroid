@@ -109,7 +109,7 @@ public class WebViewFragment extends SherlockFragment
    public void onViewGuide(int guideid) {
       Intent intent = new Intent(getActivity(), GuideViewActivity.class);
 
-      intent.putExtra(TopicGuideListFragment.GUIDEID, guideid);
+      intent.putExtra(GuideViewActivity.GUIDEID, guideid);
       getActivity().startActivity(intent);
    }
 

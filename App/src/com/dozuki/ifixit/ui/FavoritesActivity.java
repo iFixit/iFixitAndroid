@@ -19,8 +19,7 @@ public class FavoritesActivity extends BaseActivity {
    private int OFFSET = 0;
    private static final String GUIDES_KEY = "GUIDES_KEY";
 
-   private FavoritesActivity mContext;
-   private ArrayList<GuideInfo> mGuides;
+   private ArrayList<GuideInfo> mGuides = new ArrayList<GuideInfo>();
    private GridView mGridView;
 
    @Override
@@ -29,12 +28,10 @@ public class FavoritesActivity extends BaseActivity {
 
       setTitle(getString(R.string.favorites));
 
-      mContext = this;
-
       setContentView(R.layout.favorites);
 
       if (savedInstanceState != null) {
-         mGuides = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDES_KEY);
+         mGuides = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDES_KEY);
          initGridView();
       } else {
          showLoading(R.id.favorites_loading);
@@ -49,14 +46,14 @@ public class FavoritesActivity extends BaseActivity {
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
             GuideInfo guide = mGuides.get(position);
-            Intent intent = new Intent(mContext, GuideViewActivity.class);
+            Intent intent = new Intent(FavoritesActivity.this, GuideViewActivity.class);
 
-            intent.putExtra(GuideViewActivity.SAVED_GUIDEID, guide.mGuideid);
+            intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
             startActivity(intent);
          }
       });
 
-      mGridView.setAdapter(new GuideListAdapter(this, mGuides));
+      mGridView.setAdapter(new GuideListAdapter(this, mGuides, false));
       mGridView.setEmptyView(findViewById(R.id.favorites_empty_view));
    }
 
@@ -73,12 +70,14 @@ public class FavoritesActivity extends BaseActivity {
 
          initGridView();
       } else {
-         APIService.getErrorDialog(this, event.getError(), null).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      super.onSaveInstanceState(state);
+
       state.putSerializable(GUIDES_KEY, mGuides);
    }
 

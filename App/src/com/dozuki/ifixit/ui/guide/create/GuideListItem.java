@@ -14,6 +14,7 @@ import android.widget.*;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIService;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.picasso.Picasso;
@@ -21,7 +22,6 @@ import com.squareup.picasso.Picasso;
 public class GuideListItem extends LinearLayout {
    private static final int ANIMATION_DURATION = 300;
 
-   private static final boolean STATE_OPEN = true;
    private static final boolean STATE_CLOSED = false;
    private Context mContext;
 
@@ -35,8 +35,6 @@ public class GuideListItem extends LinearLayout {
    private LinearLayout mEditBar;
    private Activity mActivity;
    private final RelativeLayout mUpperSection;
-
-   private boolean mEditBarVisible = false;
    private GuideInfo mGuideInfo;
 
    private OnClickListener mEditClickListener = new OnClickListener() {
@@ -103,7 +101,17 @@ public class GuideListItem extends LinearLayout {
       mPublishText = (TextView) findViewById(R.id.guide_create_item_publish_status);
       mPublishButton = (TextView) findViewById(R.id.guide_create_item_publish);
 
-      mToggleEdit.setChecked(STATE_CLOSED);
+      findViewById(R.id.guide_create_item_view).setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            Intent intent = new Intent(mActivity, GuideViewActivity.class);
+            intent.putExtra(GuideViewActivity.GUIDEID, mGuideInfo.mGuideid);
+            intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
+            mActivity.startActivity(intent);
+         }
+      });
+
+      mToggleEdit.setOnCheckedChangeListener(null);
       mToggleEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -113,8 +121,7 @@ public class GuideListItem extends LinearLayout {
          }
       });
 
-
-      this.setOnClickListener(mUpperSectionListener);
+      setOnClickListener(mUpperSectionListener);
 
       mUpperSection.setOnClickListener(mUpperSectionListener);
       if (MainApplication.get().getSite().mName.equals("ifixit")) {
@@ -127,11 +134,11 @@ public class GuideListItem extends LinearLayout {
    }
 
    public void setRowData(GuideInfo guideInfo) {
-
       mGuideInfo = guideInfo;
       setTag(mGuideInfo.mGuideid);
 
       mTitleView.setText(Html.fromHtml(mGuideInfo.mTitle));
+      mToggleEdit.setChecked(mGuideInfo.mEditMode);
 
       if (mThumbnail != null) {
          if (mGuideInfo.hasImage()) {
@@ -149,6 +156,7 @@ public class GuideListItem extends LinearLayout {
       }
 
       setPublished(mGuideInfo.mPublic);
+      toggleListItem(mGuideInfo.mEditMode, false, mToggleEdit, mEditBar);
    }
 
    public void setPublished(boolean published) {

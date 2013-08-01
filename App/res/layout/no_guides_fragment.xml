@@ -1,19 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="?attr/doz__background"
-    android:orientation="vertical" >
+    android:background="?attr/doz__background">
 
-    <ImageView
+    <TextView
+        style="@style/BodyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_vertical"
-        android:clipToPadding="true"
-        android:contentDescription="@string/no_guides"
-        android:paddingLeft="20dp"
-        android:paddingRight="20dp"
-        android:paddingTop="40dp"
-        android:src="@drawable/no_guides" />
+        android:layout_centerHorizontal="true"
+        android:textAlignment="center"
+        android:text="@string/no_guides"
+        android:paddingTop="20dp" />
 
-</LinearLayout>
+</RelativeLayout>

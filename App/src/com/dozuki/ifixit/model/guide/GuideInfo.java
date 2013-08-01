@@ -34,10 +34,10 @@ public class GuideInfo implements Serializable {
    @SerializedName("image")
    public Image mImage;
 
-   @SerializedName("locale") public String mLocale;
+   @SerializedName("locale")
+   public String mLocale;
 
    public transient boolean mEditMode = false;
-
 
    public GuideInfo(int guideid) {
       mGuideid = guideid;
@@ -45,12 +45,9 @@ public class GuideInfo implements Serializable {
 
    public boolean hasSubject() {
       List<String> hasSubject = Arrays.asList("repair", "installation", "disassembly");
-      List<String> noSubject = Arrays.asList("technique", "maintenance", "teardown");
+      //List<String> noSubject = Arrays.asList("technique", "maintenance", "teardown");
 
-      if (mSubject == null) {
-         return false;
-      }
-      return !mSubject.equals("") && hasSubject.contains(mType.toLowerCase());
+       return mSubject != null && !mSubject.equals("") && hasSubject.contains(mType.toLowerCase());
    }
 
    public boolean hasImage() {
@@ -63,10 +60,6 @@ public class GuideInfo implements Serializable {
          path = path.replace("https", "http");
 
       return path;
-   }
-
-   public boolean hasFlag(String flagid) {
-      return false;
    }
 
    public String toString() {

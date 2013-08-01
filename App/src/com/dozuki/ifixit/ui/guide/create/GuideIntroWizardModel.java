@@ -12,14 +12,12 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.*;
 
 public class GuideIntroWizardModel extends AbstractWizardModel {
-   Context mContext;
    public static String HAS_SUBJECT_KEY = "hasSubject";
    public static String NO_SUBJECT_KEY = "noSubject";
 
 
    public GuideIntroWizardModel(Context context) {
       super(context);
-      mContext = context;
    }
 
    @Override
@@ -44,7 +42,8 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
        .setDescription(app.getString(R.string.guide_intro_wizard_guide_subject_description,
         topicName.toLowerCase()))
        .setHint(app.getString(R.string.guide_intro_wizard_guide_subject_hint))
-       .setTitle(app.getString(R.string.guide_intro_wizard_guide_subject_title));
+       .setTitle(app.getString(R.string.guide_intro_wizard_guide_subject_title))
+       .setRequired(true);
 
       Page titlePage = new GuideTitlePage(this)
        .setDescription(app.getString(R.string.guide_intro_wizard_guide_title_description,
