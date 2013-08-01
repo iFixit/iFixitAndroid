@@ -68,7 +68,6 @@ public class TopicInfoFragment extends SherlockFragment {
 
       Picasso.with(getSherlockActivity())
        .load(url)
-       .error(R.drawable.no_image)
        .into((ImageView) v.findViewById(R.id.topic_info_image));
 
       return v;
