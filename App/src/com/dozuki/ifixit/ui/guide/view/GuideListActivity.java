@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui.guide.view;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 public abstract class GuideListActivity extends BaseActivity {
 
    private static final int LIMIT = 20;
+   private static final String GRID_STATE = "GRID_STATE";
    private int OFFSET = 0;
 
    private static final String GUIDES_KEY = "GUIDES_KEY";
@@ -40,19 +42,22 @@ public abstract class GuideListActivity extends BaseActivity {
 
       setContentView(R.layout.guide_list);
 
+      Parcelable gridState = null;
+
       if (savedInstanceState != null) {
          mGuides = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDES_KEY);
+         gridState = savedInstanceState.getParcelable(GRID_STATE);
       }
 
       if (mGuides != null) {
-         initGridView();
+         initGridView(gridState);
       } else {
          APIService.call(this, getApiCall(LIMIT, OFFSET));
          showLoading(R.id.loading_container);
       }
    }
 
-   private void initGridView() {
+   private void initGridView(Parcelable state) {
       mGridView = (GridView)findViewById(R.id.guide_grid);
       mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
          @Override
@@ -78,6 +83,9 @@ public abstract class GuideListActivity extends BaseActivity {
       mGridView.setOnScrollListener(mScrollListener);
       mAdapter = new GuideListAdapter(this, mGuides, false);
       mGridView.setAdapter(mAdapter);
+      if (state != null) {
+         mGridView.onRestoreInstanceState(state);
+      }
    }
 
    protected void setGuides(APIEvent.Guides event) {
@@ -101,7 +109,7 @@ public abstract class GuideListActivity extends BaseActivity {
          }
 
          if (mGridView == null)
-            initGridView();
+            initGridView(null);
       } else {
          APIService.getErrorDialog(this, event).show();
       }
@@ -109,6 +117,9 @@ public abstract class GuideListActivity extends BaseActivity {
 
    @Override
    public void onSaveInstanceState(Bundle state) {
+      super.onSaveInstanceState(state);
+
+      state.putParcelable(GRID_STATE, mGridView.onSaveInstanceState());
       state.putSerializable(GUIDES_KEY, mGuides);
    }
 }
