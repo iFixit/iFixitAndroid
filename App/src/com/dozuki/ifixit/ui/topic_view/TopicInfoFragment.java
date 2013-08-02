@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.topic_view;
 
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
@@ -59,7 +61,6 @@ public class TopicInfoFragment extends SherlockFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View v = inflater.inflate(R.layout.topic_info, container, false);
 
-      // Wrap the title in <h1> tags so it has the same style as the headers in the topic content html
       Spanned title = Html.fromHtml(mTopic.getTitle());
       ((TextView) v.findViewById(R.id.topic_info_title)).setText(title);
       ((TextView) v.findViewById(R.id.topic_info_summary)).setText(mTopic.getDescription());
@@ -69,9 +70,25 @@ public class TopicInfoFragment extends SherlockFragment {
 
       String url = mTopic.getImage().getPath(IMAGE_SIZE);
 
+      ImageView topicImage = (ImageView) v.findViewById(R.id.topic_info_image);
+      topicImage.setTag(mTopic.getImage().getPath());
+      topicImage.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            String url = (String) v.getTag();
+
+            if (url == null || (url.equals("") || url.startsWith("."))) return;
+
+            Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
+            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
+            startActivity(intent);
+         }
+      });
+
       PicassoUtils.with(getSherlockActivity())
        .load(url)
-       .into((ImageView) v.findViewById(R.id.topic_info_image));
+       .error(R.drawable.no_image)
+       .into(topicImage);
 
       return v;
    }
