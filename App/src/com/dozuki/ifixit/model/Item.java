@@ -11,14 +11,15 @@ public class Item implements Serializable {
       TOOL
    }
 
-   private ItemType mType;
+   protected ItemType mType;
    protected String mNote;
    protected String mTitle;
-   private int mQuantity;
+   protected String mQuantity;
    protected String mUrl;
    protected String mThumb;
 
-   public Item(ItemType type, String title, int quantity, String url, String thumb, String notes) {
+   public Item(ItemType type, String title, String quantity, String url,
+    String thumb, String notes) {
       mType = type;
       mNote = notes;
       mTitle = title;
@@ -35,7 +36,7 @@ public class Item implements Serializable {
       mTitle = title;
    }
 
-   public int getQuantity() {
+   public String getQuantity() {
       return mQuantity;
    }
 
