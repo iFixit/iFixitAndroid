@@ -131,9 +131,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void setThumbs(ArrayList<Image> images) {
-      calculateDimensions();
-
       boolean hideOnSingleThumb = (images.size() <= 1 && !mShowSingle);
+
+      calculateDimensions(hideOnSingleThumb);
 
       mThumbnailContainer.setVisibility(hideOnSingleThumb ? GONE : VISIBLE);
 
@@ -297,7 +297,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    public void fitToSpace() {
-      calculateDimensions();
+      calculateDimensions((mThumbs.size() <= 1 && !mShowSingle));
 
       setMainImageDimensions(mMainHeight, mMainWidth);
 
@@ -348,23 +348,29 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
        .into((Target)image);
    }
 
-   private void calculateDimensions() {
+   private void calculateDimensions(boolean fullScreen) {
       if (mMainWidth == 0 || mMainHeight == 0)
-         getMainImageDimensions();
+         getMainImageDimensions(fullScreen);
 
       if (mThumbnailWidth == 0 || mThumbnailHeight == 0)
          getThumbnailDimensions();
    }
 
-   private void getMainImageDimensions() {
+   private void getMainImageDimensions(boolean fullScreen) {
       if (MainApplication.get().inPortraitMode()) {
-         float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f)
-          + getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
+         float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f);
 
-         // Main image is 4/5ths of the available screen width
-         mMainWidth = (((mDisplayMetrics.widthPixels - pagePadding) / 5f) * 4f);
+         // If we are hiding the thumbnails when there's 0 or 1 images on the step,
+         // the main image should expand to fill the available screen space.
+         if (fullScreen) {
+            mMainWidth = (mDisplayMetrics.widthPixels - pagePadding);
+         } else {
+            // Main image is 4/5ths of the available screen width
+            mMainWidth = (((mDisplayMetrics.widthPixels - pagePadding
+             - getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right)) / 5f) * 4f);
+         }
+
          mMainHeight = mMainWidth * (3f / 4f);
-
       } else {
          mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.landscape_navigation_height);
          mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
