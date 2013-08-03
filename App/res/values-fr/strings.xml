@@ -19,7 +19,6 @@
 
     <!-- General -->
     <string name="save">Sauvegarder</string>
-    <string name="error">Erreur</string>
     <string name="yes">Oui</string>
     <string name="no">Non</string>
     <string name="cancel">Annuler</string>
@@ -32,14 +31,6 @@
         serveurs.</string>
     <string name="no_connection">Pas de connexion</string>
     <string name="no_connection_title">Erreur de Connexion</string>
-    <string name="invalid_revision_error_title">Erreur de Révision</string>
-    <string name="invalid_revision_error">On dirait que vous êtes en train d\'éditer une version de ce guide qui est
-        mis à jour.
-Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recharger ce guide.
-    </string>
-    <string name="fatal_error_title">Erreur Inconnue</string>
-    <string name="fatal_error">On dirait que une erreur s\'est produite. S\'il vous plaît recharger votre
-        guide.</string>
     <string name="media_error_title">Quelque chose s\'est mal passé. Réessayez plus tard.</string>
     <string name="error_confirm">OK</string>
 
@@ -149,8 +140,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="next_page_image_desc"> Page Suivante</string>
 
     <string name="video_play_button_description">Bouton de Lecture de la Vidéo</string>
-    <string name="video_activity_progress_title">Attendez s\'il vous plaît ...</string>
-    <string name="video_activity_progress_body"> Chargement Video ...</string>
 
     <!-- Guide View Menu -->
     <string name="guide_edit_text"> Modifier </string>
@@ -210,7 +199,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="guide_intro_wizard_guide_subject_title">Guide Sujet</string>
     <string name="guide_intro_wizard_guide_title_title">Guide Titre</string>
     <string name="guide_intro_wizard_guide_summary_title">Résumé Guide</string>
-    <string name="guide_intro_wizard_guide_introduction_title">Introduction</string>
     <string name="guide_intro_wizard_guide_topic_title">%s Nom</string>
     <string name="guide_intro_wizard_guide_introduction_description">Ce guide est apropos de quoi ?
         Décrivez le composant, ou chose / idée que vous décrivez à propos de %1$s.</string>
@@ -275,7 +263,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="restart_video_message">Rejouer cette video ?</string>
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Nom</string>
     <string name="guide_intro_wizard_guide_subject_hint">Rejouer - Écran, batterie, etc</string>
-    <string name="loading_image">@string/loading</string>
     <string name="black_bullet_description">Point Centré Noir</string>
     <string name="red_bullet_description">Point Centré Rouge</string>
     <string name="orange_bullet_description">Point Centré Orange</string>
@@ -287,23 +274,15 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="important_bullet_description">Point Centré de Note Important</string>
     <string name="bullet_reorder_description">Point Centré de Rappel</string>
     <string name="default_step_number">Étape #</string>
-    <string name="loading">Chargement...</string>
+    <string name="loading">Chargement…</string>
     <string name="topic_info_image">L\'image principale de sujet</string>
     <string name="delete_step">Efacer Étape</string>
-    <string name="deleting">Suppression...</string>
-    <string name="saving">Sauver...</string>
+    <string name="deleting">Suppression…</string>
+    <string name="saving">Sauver…</string>
     <string name="gallery_image_content_description">Gallerie d\'images</string>
-    <string name="featured_guides">Guides Présentés</string>
     <string name="optional">Optionnel</string>
     <string name="favorites">Favoris</string>
     <string name="favorites_empty_text">Vous n\'avez pas encore de guides préférés.</string>
-    <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
-    <string name="link_to_item">Link to %1$s</string>
-    <string name="no_items">No Items</string>
-    <string name="view">View</string>
-    <string name="save_changes_to_step">Save changes to this step?</string>
-    <string name="new_line">New line</string>
-    <string name="discard_changes">Discard Changes</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>
@@ -322,4 +301,27 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
         <item>Effacer</item>
     </string-array>
 
+
+    <!-- Strings needing translations. -->
+
+    <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
+    <string name="link_to_item">Link to %1$s</string>
+    <string name="no_items">No Items</string>
+    <string name="view">View</string>
+    <string name="save_changes_to_step">Save changes to this step?</string>
+    <string name="new_line">New line</string>
+    <string name="discard_changes">Discard Changes</string>
+    <string name="error">Erreur</string>
+    <string name="invalid_revision_error_title">Erreur de Révision</string>
+    <string name="invalid_revision_error">On dirait que vous êtes en train d\'éditer une version de ce guide qui est
+        mis à jour.
+Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recharger ce guide.
+    </string>
+    <string name="fatal_error_title">Erreur Inconnue</string>
+    <string name="fatal_error">On dirait que une erreur s\'est produite. S\'il vous plaît recharger votre
+        guide.</string>
+    <string name="featured_guides">Guides Présentés</string>
+    <string name="video_activity_progress_title">Attendez s\'il vous plaît ...</string>
+    <string name="video_activity_progress_body"> Chargement Video ...</string>
+    <string name="guide_intro_wizard_guide_introduction_title">Introduction</string>
 </resources>
