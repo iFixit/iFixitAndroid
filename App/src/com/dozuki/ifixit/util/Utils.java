@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.util;
 
 import android.graphics.drawable.BitmapDrawable;
+import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
@@ -49,6 +50,18 @@ public class Utils {
       view.setImageDrawable(null);
       view.getResources().flushLayoutCache();
       view.destroyDrawingCache();
+   }
+
+   /**
+    * Strips out newlines from Editables
+    */
+   public static Editable stripNewlines(Editable s) {
+      for (int i = s.length(); i > 0; i--) {
+         if (s.subSequence(i-1, i).toString().equals("\n")) {
+            s.replace(i-1, i, "");
+         }
+      }
+      return s;
    }
 
    /**

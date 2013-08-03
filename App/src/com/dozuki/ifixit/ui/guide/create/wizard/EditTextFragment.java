@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.util.Utils;
 
 public class EditTextFragment extends SherlockFragment {
    private static final String ARG_KEY = "key";
@@ -118,11 +119,7 @@ public class EditTextFragment extends SherlockFragment {
          @Override
          public void afterTextChanged(Editable editable) {
             if (mPage.shouldStripNewlines()) {
-               for (int i = editable.length(); i > 0; i--) {
-                  if (editable.subSequence(i-1, i).toString().equals("\n")) {
-                     editable.replace(i-1, i, "");
-                  }
-               }
+               editable = Utils.stripNewlines(editable);
             }
 
             mPage.getData().putString(EditTextPage.TEXT_DATA_KEY,

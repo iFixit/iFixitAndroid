@@ -21,6 +21,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
 import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
+import com.dozuki.ifixit.util.Utils;
 import com.google.analytics.tracking.android.EasyTracker;
 
 import java.util.ArrayList;
@@ -305,6 +306,9 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
          @Override
          public void afterTextChanged(Editable s) {
             if (s.length() > 0) {
+               // Strip out newlines
+               s = Utils.stripNewlines(s);
+
                String lineText = s.toString();
 
                if (lineText.equals(line.getTextRaw())) {
