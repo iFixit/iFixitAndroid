@@ -105,7 +105,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private boolean mAddStepAfterSave = false;
 
    // Flag to prevent saving a guide while we're waiting for an image to upload and return
-   private boolean mLockSave;
+   private boolean mLockSave = false;
 
    private int mExitCode;
 
@@ -140,6 +140,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
          mLockSave = savedInstanceState.getBoolean(LOCK_SAVE);
+
          mIsLoading = savedInstanceState.getBoolean(LOADING);
          mExitCode = savedInstanceState.getInt(EXIT_CODE);
          if (mShowingHelp) {
@@ -161,6 +162,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       setContentView(R.layout.guide_create_step_edit);
 
       mSaveStep = (Button) findViewById(R.id.step_edit_save);
+
+      if (mLockSave) {
+         lockSave();
+      }
+
       toggleSave(mIsStepDirty);
 
       if (mGuide != null) {
