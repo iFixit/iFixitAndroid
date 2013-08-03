@@ -269,7 +269,6 @@
     <string name="restart_video_message">Reproducir este vídeo otra vez?</string>
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Nombre</string>
     <string name="guide_intro_wizard_guide_subject_hint">Por ejemplo - Pantalla, Batería, Bujías, etc</string>
-    <string name="loading_image">@string/loading</string>
     <string name="black_bullet_description">Bala negra</string>
     <string name="red_bullet_description">Bala roja</string>
     <string name="orange_bullet_description">Bala naranja</string>
@@ -281,14 +280,13 @@
     <string name="important_bullet_description">Bala de nota importante</string>
     <string name="bullet_reorder_description">Bala recordatoria</string>
     <string name="default_step_number">Paso #</string>
-    <string name="loading">Cargando...</string>
+    <string name="loading">Cargando…</string>
     <string name="topic_info_image">Imágen de tema principal</string>
     <string name="delete_step">Eliminar paso</string>
-    <string name="deleting">Eliminando...</string>
-    <string name="saving">Guardando...</string>
+    <string name="deleting">Eliminando…</string>
+    <string name="saving">Guardando…</string>
     <string name="gallery_image_content_description">Galería de Imágenes</string>
     <string name="optional">Opcional</string>
-    <string name="teardowns">Teardowns</string>
     <string name="favorites">Favoritos</string>
     <string name="favorites_empty_text">Aun no has favorecido ninguna guía..</string>
 
@@ -326,6 +324,11 @@
     <string name="fatal_error_title">Error Desconocido</string>
     <string name="fatal_error">Ha ocurrido un error. Por favor recarge su guía.</string>
     <string name="featured_guides">Guías Destacadas</string>
-    <string name="video_activity_progress_title">Por Favor Espere...</string>
-    <string name="video_activity_progress_body">Cargando Vídeo....</string>
+    <string name="video_activity_progress_title">Por Favor Espere…</string>
+    <string name="video_activity_progress_body">Cargando Vídeo….</string>
+    <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
+    <string name="not_found_error">The requested data does not exist.</string>
+    <string name="loading_image">Uploading Images…</string>
+    <string name="teardowns">Teardowns</string>
+    <string name="introduction">Introduction</string>
 </resources>

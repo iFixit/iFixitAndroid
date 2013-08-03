@@ -286,7 +286,7 @@
     <string name="restart_video_message">Dieses Video noch einmal abspielen?</string>
     <string name="guide_intro_wizard_guide_topic_hint">%1$s Name</string>
     <string name="guide_intro_wizard_guide_subject_hint">Zum Beispiel: Bildschirm, Batterie, Zündkerzen, etc.</string>
-    <string name="loading_image">Wird geladen...</string>
+    <string name="loading_image">Wird geladen…</string>
     <string name="black_bullet_description">Schwarzer Aufzählungspunkt</string>
     <string name="red_bullet_description">Roter Aufzählungspunkt</string>
     <string name="orange_bullet_description">Oranger Aufzählungspunkt</string>
@@ -298,14 +298,13 @@
     <string name="important_bullet_description">Aufzählungspunkt \"Wichtiger Hinweis\"</string>
     <string name="bullet_reorder_description">Aufzählungspunkt \"Erinnerung\"</string>
     <string name="default_step_number">Schritt Nr.</string>
-    <string name="loading">Wird geladen...</string>
+    <string name="loading">Wird geladen…</string>
     <string name="topic_info_image">Bild Hauptthema</string>
     <string name="delete_step">Schritt löschen</string>
-    <string name="deleting">Wird gelöscht...</string>
-    <string name="saving">Wird gespeichert...</string>
+    <string name="deleting">Wird gelöscht…</string>
+    <string name="saving">Wird gespeichert…</string>
     <string name="gallery_image_content_description">Galleriebild</string>
     <string name="optional">Optional</string>
-    <string name="teardowns">Teardowns</string>
     <string name="featured_guides">Beachtenswerte Anleitungen</string>
     <string name="favorites">Favorites</string>
 
@@ -345,7 +344,10 @@
     </string>
     <string name="fatal_error_title">Unbekannter Fehler</string>
     <string name="fatal_error">Es ist ein Fehler aufgetreten. Bitte lade die Anleitung neu.</string>
-    <string name="slide_menu_featured_guides">Beachtenswerte Anleitungen</string>
-    <string name="video_activity_progress_title">Bitte warten...</string>
-    <string name="video_activity_progress_body">Video wird geladen...</string>
+    <string name="video_activity_progress_title">Bitte warten…</string>
+    <string name="video_activity_progress_body">Video wird geladen…</string>
+    <string name="not_found_error">The requested data does not exist.</string>
+    <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
+    <string name="teardowns">Teardowns</string>
+    <string name="introduction">Introduction</string>
 </resources>

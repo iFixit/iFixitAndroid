@@ -203,7 +203,7 @@
     <string name="guide_intro_wizard_guide_introduction_description">Ce guide est apropos de quoi ?
         Décrivez le composant, ou chose / idée que vous décrivez à propos de %1$s.</string>
     <string name="guide_intro_wizard_guide_summary_description">Dans une phrase ou deux, décrivez ce guide.</string>
-    <string name="guide_intro_wizard_guide_title_description">Titre généré par le type, %1$s... Only edit
+    <string name="guide_intro_wizard_guide_title_description">Titre généré par le type, %1$s… Only edit
         Seulement modifier si vous n\'êtes pas heureux avec ce qui est là.
     </string>
     <string name="guide_intro_wizard_guide_subject_description">Quel est ce guide ?
@@ -247,7 +247,6 @@
     <string name="indent_limit_above">Impossible de tirer plus</string>
     <string name="confirm_reorder_bullets">Confirmez le tri</string>
     <string name="reorder_bullets_title">Réorganiser les marqueurs</string>
-    <string name="create_bullets">Ajouter un marqueur</string>
     <string name="cancel_reorder_bullets">Annuler le tri</string>
 
 
@@ -321,7 +320,16 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="fatal_error">On dirait que une erreur s\'est produite. S\'il vous plaît recharger votre
         guide.</string>
     <string name="featured_guides">Guides Présentés</string>
-    <string name="video_activity_progress_title">Attendez s\'il vous plaît ...</string>
-    <string name="video_activity_progress_body"> Chargement Video ...</string>
+    <string name="video_activity_progress_title">Attendez s\'il vous plaît …</string>
+    <string name="video_activity_progress_body"> Chargement Video …</string>
     <string name="guide_intro_wizard_guide_introduction_title">Introduction</string>
+    <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
+    <string name="not_found_error">The requested data does not exist.</string>
+    <string name="step_edit_new_thumb_actions_title">Attach Image</string>
+    <string name="step_edit_existing_image_actions_title">Image Actions</string>
+    <string name="image_saved_to_media_manager_toast">Image saved to your media manager.</string>
+    <string name="add_new_bullet">Add new bullet</string>
+    <string name="loading_image">Uploading Images…</string>
+    <string name="teardowns">Teardowns</string>
+    <string name="introduction">Introduction</string>
 </resources>
