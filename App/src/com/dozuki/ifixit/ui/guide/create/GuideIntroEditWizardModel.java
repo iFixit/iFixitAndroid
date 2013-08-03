@@ -20,14 +20,7 @@ public class GuideIntroEditWizardModel extends GuideIntroWizardModel {
    protected PageList onNewRootPageList() {
       MainApplication app = MainApplication.get();
 
-      String[] typesArr = new String[app.getSite().getGuideTypes().size()];
-
       String topicName = app.getTopicName();
-
-      Page titlePage = new GuideTitlePage(this)
-       .setDescription(app.getString(R.string.guide_intro_wizard_guide_title_description,
-        topicName.toLowerCase()))
-       .setTitle(app.getString(R.string.guide_intro_wizard_guide_title_title));
 
       Page summaryPage = new EditTextPage(this)
        .setDescription(app.getString(R.string.guide_intro_wizard_guide_summary_description))
