@@ -103,13 +103,12 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+
       savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
       savedInstanceState.putSerializable(STEP_FOR_DELETE, mStepForDelete);
       savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
-      savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY,
-       mGuide);
-
-      super.onSaveInstanceState(savedInstanceState);
+      savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
    }
 
    @Override

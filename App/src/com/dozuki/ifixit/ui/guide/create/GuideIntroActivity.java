@@ -33,18 +33,11 @@ import java.util.List;
 public class GuideIntroActivity extends BaseActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks,
  ModelCallbacks {
    public static final int GUIDE_STEP_EDIT_REQUEST = 1;
-
-   private boolean mEditIntroState = false;
    public static final String STATE_KEY = "STATE_KEY";
 
    private ViewPager mPager;
    private FormWizardPagerAdapter mPagerAdapter;
-
-   private boolean mEditingAfterReview;
-
    private AbstractWizardModel mWizardModel;
-
-   private boolean mConsumePageSelectedEvent;
 
    private Button mNextButton;
    private Button mPrevButton;
@@ -54,6 +47,10 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
 
    private Bundle mWizardModelBundle;
    private Guide mGuide;
+
+   private boolean mEditingAfterReview;
+   private boolean mEditIntroState = false;
+   private boolean mConsumePageSelectedEvent;
 
    private View.OnClickListener mNextButtonClickListener = new View.OnClickListener() {
       @Override
@@ -129,8 +126,8 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       Bundle extras = getIntent().getExtras();
       if (extras != null) {
          mGuide = (Guide) extras.getSerializable(StepsActivity.GUIDE_KEY);
-         mWizardModelBundle = buildIntroBundle();
          mEditIntroState = extras.getBoolean(GuideIntroActivity.STATE_KEY);
+         mWizardModelBundle = buildIntroBundle();
       } else if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
          mWizardModelBundle = savedInstanceState.getBundle("model");
@@ -187,9 +184,10 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
       return bundle;
    }
 
-
    protected void initWizard() {
-      mWizardModel = new GuideIntroWizardModel(this);
+      mWizardModel = mEditIntroState ?
+       new GuideIntroEditWizardModel(this) :
+       new GuideIntroWizardModel(this);
 
       if (mWizardModelBundle != null) {
          mWizardModel.load(mWizardModelBundle);

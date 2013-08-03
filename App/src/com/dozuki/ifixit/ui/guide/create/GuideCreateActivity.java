@@ -4,14 +4,12 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
@@ -25,7 +23,6 @@ import com.dozuki.ifixit.util.JSONHelper;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -106,7 +103,11 @@ public class GuideCreateActivity extends BaseActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case MENU_CREATE_GUIDE:
-            createGuide();
+            if (mUserGuideList != null) {
+               Intent intent = new Intent(this, GuideIntroActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
+            }
             break;
       }
 
@@ -193,19 +194,6 @@ public class GuideCreateActivity extends BaseActivity {
          }
          APIService.getErrorDialog(this, event).show();
       }
-   }
-
-   public void createGuide() {
-      if (mUserGuideList == null) {
-         return;
-      }
-      launchGuideCreateIntro();
-   }
-
-   private void launchGuideCreateIntro() {
-      Intent intent = new Intent(this, GuideIntroActivity.class);
-      intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-      startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
    }
 
    private AlertDialog createHelpDialog() {

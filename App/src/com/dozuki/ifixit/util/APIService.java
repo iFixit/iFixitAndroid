@@ -309,15 +309,22 @@ public class APIService extends Service {
           .guide_intro_wizard_guide_topic_title, app.getTopicName())).getString(TopicNamePage.TOPIC_DATA_KEY));
          requestBody.put("title", bundle.getBundle(app.getString(R.string
           .guide_intro_wizard_guide_title_title)).getString(GuideTitlePage.TITLE_DATA_KEY));
-         requestBody.put("introduction", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_introduction_title)).getString(EditTextPage.TEXT_DATA_KEY));
-         String subjectKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R
-          .string.guide_intro_wizard_guide_subject_title);
+
+         String subjectKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":"
+          + app.getString(R.string.guide_intro_wizard_guide_subject_title);
          if (bundle.containsKey(subjectKey)) {
             requestBody.put("subject", bundle.getBundle(subjectKey).getString(EditTextPage.TEXT_DATA_KEY));
          }
-         requestBody.put("summary", bundle.getBundle(app.getString(R.string
-          .guide_intro_wizard_guide_summary_title)).getString(EditTextPage.TEXT_DATA_KEY));
+
+         String introductionKey = app.getString(R.string.guide_intro_wizard_guide_introduction_title);
+         if (bundle.containsKey(introductionKey)) {
+            requestBody.put("introduction", bundle.getBundle(introductionKey).getString(EditTextPage.TEXT_DATA_KEY));
+         }
+
+         String summaryKey = app.getString(R.string.guide_intro_wizard_guide_summary_title);
+         if (bundle.containsKey(summaryKey)) {
+            requestBody.put("summary", bundle.getBundle(summaryKey).getString(EditTextPage.TEXT_DATA_KEY));
+         }
 
       } catch (JSONException e) {
          return null;
