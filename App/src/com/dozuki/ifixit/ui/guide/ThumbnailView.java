@@ -277,6 +277,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       if (url.startsWith("http")) {
          url = url + mImageSizes.getMain();
+
          buildImage(mPicasso.load(url), mMainImage);
       } else {
          buildImage(mPicasso.load(new File(url))

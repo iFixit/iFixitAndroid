@@ -27,6 +27,7 @@ public class EditTextPage extends Page {
 
    protected String mDescription = "";
    private String mHint = "";
+   private boolean mStripNewlines = true;
 
    public EditTextPage(ModelCallbacks callbacks) {
       super(callbacks);
@@ -45,6 +46,15 @@ public class EditTextPage extends Page {
    @Override
    public boolean isCompleted() {
       return !TextUtils.isEmpty(mData.getString(TEXT_DATA_KEY));
+   }
+
+   public EditTextPage stripNewlines(boolean shouldStrip) {
+      mStripNewlines = shouldStrip;
+      return this;
+   }
+
+   public boolean shouldStripNewlines() {
+      return mStripNewlines;
    }
 
    public EditTextPage setDescription(String description) {

@@ -31,6 +31,7 @@ public class GuideIntroEditWizardModel extends GuideIntroWizardModel {
        .setDescription(app.getString(R.string.guide_intro_wizard_guide_introduction_description,
         topicName.toLowerCase()))
        .setHint(app.getString(R.string.optional))
+       .stripNewlines(false)
        .setTitle(app.getString(R.string.guide_intro_wizard_guide_introduction_title));
 
       PageList pages = super.onNewRootPageList();

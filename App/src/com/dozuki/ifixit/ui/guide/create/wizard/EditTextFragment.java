@@ -117,6 +117,14 @@ public class EditTextFragment extends SherlockFragment {
 
          @Override
          public void afterTextChanged(Editable editable) {
+            if (mPage.shouldStripNewlines()) {
+               for (int i = editable.length(); i > 0; i--) {
+                  if (editable.subSequence(i-1, i).toString().equals("\n")) {
+                     editable.replace(i-1, i, "");
+                  }
+               }
+            }
+
             mPage.getData().putString(EditTextPage.TEXT_DATA_KEY,
              (editable != null) ? editable.toString() : null);
             mPage.notifyDataChanged();
