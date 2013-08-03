@@ -324,8 +324,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
             } else if (mLines.indexOf(line) == mLines.size() - 1) {
                mNewBulletButton.setVisibility(View.GONE);
             }
-
-            setGuideDirty();
          }
 
          @Override
