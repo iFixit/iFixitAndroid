@@ -135,7 +135,7 @@ public class APIService extends Service {
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
-      final APICall apiCall = (APICall)extras.getSerializable(API_CALL);
+      final APICall apiCall = (APICall) extras.getSerializable(API_CALL);
 
       // Commented out because the DB code isn't ready yet.
       // APIDatabase db = new APIDatabase(this);

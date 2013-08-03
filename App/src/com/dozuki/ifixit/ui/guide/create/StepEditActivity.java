@@ -93,7 +93,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
    // Used to navigate to the correct step when coming from GuideViewActivity.
    private int mInboundStepId;
-   private int mGuideid;
 
    private boolean mConfirmDelete = false;
    private boolean mIsStepDirty = false;
@@ -214,12 +213,12 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
          if (mGuide == null) {
             mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
-            mGuideid = extras.getInt(GUIDE_ID_KEY);
+            int guideid = extras.getInt(GUIDE_ID_KEY);
             mInboundStepId = extras.getInt(GUIDE_STEP_ID);
 
             showLoading(mLoadingContainer);
             APIService.call(StepEditActivity.this,
-             APIService.getGuideForEditAPICall(mGuideid));
+             APIService.getGuideForEditAPICall(guideid));
          }
       }
    }
@@ -401,9 +400,10 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
             toggleSave(false);
             mIsStepDirty = false;
+
             // Set the inbound stepid so the Step pager will navigate to the current step after updating
             mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
-            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(mGuideid));
+            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(mGuide.getGuideid()));
 
             break;
       }
