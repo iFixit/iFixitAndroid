@@ -25,7 +25,6 @@ import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
 import com.google.analytics.tracking.android.EasyTracker;
-import com.squareup.otto.Subscribe;
 import com.squareup.otto.Bus;
 
 import java.io.File;
@@ -204,6 +203,13 @@ public class StepEditImageFragment extends SherlockFragment {
       super.onSaveInstanceState(savedInstanceState);
 
       savedInstanceState.putSerializable(IMAGES_KEY, mImages);
+   }
+
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      mThumbs.destroy();
    }
 
    /////////////////////////////////////////////////////

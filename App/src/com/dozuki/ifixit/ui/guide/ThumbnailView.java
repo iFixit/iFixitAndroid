@@ -30,7 +30,6 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    private ArrayList<FallbackImageView> mThumbs;
    private FallbackImageView mMainImage;
    private ImageView mAddThumbButton;
-   private Context mContext;
    private ImageSizes mImageSizes;
    private boolean mShowSingle = false;
    private boolean mCanEdit = false;
@@ -72,14 +71,16 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
 
       mMainImage = null;
       mThumbs = null;
+      mLongClickListener = null;
+      mAddThumbListener = null;
+      mPicasso = null;
    }
 
    private void init(Context context) {
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.thumbnail_viewer, this, true);
 
-      mContext = context;
-      mPicasso = PicassoUtils.with(mContext);
+      mPicasso = PicassoUtils.with(getContext());
       mImageSizes = MainApplication.get().getImageSizes();
 
       if (MainApplication.inDebug()) {
@@ -100,10 +101,10 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
             String url = (String) v.getTag();
 
             if (url == null || (url.equals("") || url.startsWith("."))) return;
-
-            Intent intent = new Intent(mContext, FullImageViewActivity.class);
+            Context context = getContext();
+            Intent intent = new Intent(context, FullImageViewActivity.class);
             intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-            mContext.startActivity(intent);
+            context.startActivity(intent);
          }
       });
 
@@ -187,7 +188,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
    }
 
    private int addThumb(Image image) {
-      LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       FallbackImageView thumb = (FallbackImageView) inflater.inflate(R.layout.thumbnail, null);
 
       thumb.setOnClickListener(this);

@@ -234,7 +234,7 @@ public class GuideIntroActivity extends BaseActivity implements PageFragmentCall
    }
 
    @Override
-   protected void onDestroy() {
+   public void onDestroy() {
       super.onDestroy();
       // Null check is required to prevent null pointer exceptions when a user is not logged in and cancels login.
       if (mWizardModel != null) {

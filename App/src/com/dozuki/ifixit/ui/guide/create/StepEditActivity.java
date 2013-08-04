@@ -289,6 +289,14 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    }
 
    @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      mCurStepFragment = null;
+
+   }
+
+   @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);

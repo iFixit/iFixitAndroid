@@ -38,52 +38,6 @@ public class GuideListItem extends LinearLayout {
    private final RelativeLayout mUpperSection;
    private GuideInfo mGuideInfo;
 
-   private OnClickListener mEditClickListener = new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-         EasyTracker.getTracker().sendEvent("ui_action", "button_press", "edit_guide", null);
-
-         Intent intent = new Intent(mActivity, StepsActivity.class);
-         intent.putExtra(StepsActivity.GUIDE_ID_KEY, mGuideInfo.mGuideid);
-         intent.putExtra(StepsActivity.GUIDE_PUBLIC_KEY, mGuideInfo.mPublic);
-         mActivity.startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
-      }
-   };
-
-   private OnClickListener mPublishClickListener = new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-         EasyTracker.getTracker().sendEvent("ui_action", "button_press", "publish_guide", null);
-
-         if (!mGuideInfo.mPublic) {
-            APIService.call(mActivity,
-             APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
-         } else {
-            APIService.call(mActivity,
-             APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
-         }
-      }
-   };
-
-   private OnClickListener mDeleteClickListener = new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-         EasyTracker.getTracker().sendEvent("ui_action", "button_press", "delete_guide", null);
-
-         ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
-      }
-   };
-
-   private OnClickListener mUpperSectionListener = new OnClickListener() {
-      @Override
-      public void onClick(View v) {
-         EasyTracker.getTracker().sendEvent("ui_action", "button_press", "toggle_guide_item", null);
-
-         mToggleEdit.toggle();
-      }
-   };
-
-
    public GuideListItem(Context context, Activity activity) {
       super(context);
       mActivity = activity;
@@ -122,16 +76,55 @@ public class GuideListItem extends LinearLayout {
          }
       });
 
-      setOnClickListener(mUpperSectionListener);
+      OnClickListener upperSectionListener = new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "toggle_guide_item", null);
 
-      mUpperSection.setOnClickListener(mUpperSectionListener);
+            mToggleEdit.toggle();
+         }
+      };
+
+      setOnClickListener(upperSectionListener);
+
+      mUpperSection.setOnClickListener(upperSectionListener);
       if (MainApplication.get().getSite().mName.equals("ifixit")) {
          mDeleteButton.setVisibility(View.GONE);
       } else {
-         mDeleteButton.setOnClickListener(mDeleteClickListener);
+         mDeleteButton.setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               EasyTracker.getTracker().sendEvent("ui_action", "button_press", "delete_guide", null);
+
+               ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
+            }
+         });
       }
-      mEditButton.setOnClickListener(mEditClickListener);
-      mPublishButton.setOnClickListener(mPublishClickListener);
+      mEditButton.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "edit_guide", null);
+
+            Intent intent = new Intent(mActivity, StepsActivity.class);
+            intent.putExtra(StepsActivity.GUIDE_ID_KEY, mGuideInfo.mGuideid);
+            intent.putExtra(StepsActivity.GUIDE_PUBLIC_KEY, mGuideInfo.mPublic);
+            mActivity.startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
+         }
+      });
+      mPublishButton.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "publish_guide", null);
+
+            if (!mGuideInfo.mPublic) {
+               APIService.call(mActivity,
+                APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+            } else {
+               APIService.call(mActivity,
+                APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+            }
+         }
+      });
    }
 
    public void setRowData(GuideInfo guideInfo) {

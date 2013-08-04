@@ -8,7 +8,6 @@ import com.dozuki.ifixit.R;
 
 public class TopicListHeaderView extends LinearLayout {
    private TextView mTopicName;
-   private String mHeader;
 
    public TopicListHeaderView(Context context) {
       super(context);
@@ -21,7 +20,6 @@ public class TopicListHeaderView extends LinearLayout {
    }
 
    public void setHeader(String header) {
-      mHeader = header;
-      mTopicName.setText(mHeader);
+      mTopicName.setText(header);
    }
 }
