@@ -51,6 +51,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
    private static final int MENU_DISCARD_CHANGES = 14;
+   private static final String TAG = "StepEditActivity";
 
    private enum ConfirmSave {
       NEW_STEP,
@@ -242,69 +243,51 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       MainApplication.getBus().register(this);
 
       super.onActivityResult(requestCode, resultCode, data);
+      int pos = mPagePosition;
+      Log.d(TAG, "onActivityResult: page position" + pos);
 
-      if (mCurStepFragment != null) {
-         Image newThumb;
+      Image newThumb;
 
-         switch (requestCode) {
-            case GALLERY_REQUEST_CODE:
-               if (data != null) {
-                  newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-                  mGuide.getStep(mPagePosition).addImage(newThumb);
-                  mCurStepFragment.setImages(mGuide.getStep(mPagePosition).getImages());
-                  MainApplication.getBus().post(new StepChangedEvent());
-               } else {
-                  Log.e("StepEditActivity", "Error data is null!");
+      switch (requestCode) {
+         case GALLERY_REQUEST_CODE:
+            if (data != null) {
+               Log.d("StepEditActivity", "GALLERY_REQUEST_CODE");
+
+               newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
+               mGuide.getStep(mPagePosition).addImage(newThumb);
+               refreshView(mPagePosition);
+
+               MainApplication.getBus().post(new StepChangedEvent());
+            } else {
+               Log.e("StepEditActivity", "Error data is null!");
+               return;
+            }
+
+            break;
+         case CAMERA_REQUEST_CODE:
+            if (resultCode == Activity.RESULT_OK) {
+               Log.d("StepEditActivity", "CAMERA_REQUEST_CODE");
+
+               SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
+               String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
+
+               if (tempFileName == null) {
+                  Log.e("StepEditActivity", "Error cameraTempFile is null!");
                   return;
                }
 
-               break;
-            case CAMERA_REQUEST_CODE:
-               if (resultCode == Activity.RESULT_OK) {
+               // Prevent a save from being called until the image uploads and returns with the imageid
+               lockSave();
 
-                  SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
-                  String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
+               newThumb = new Image();
+               newThumb.setLocalImage(tempFileName);
 
-                  if (tempFileName == null) {
-                     Log.e("StepEditActivity", "Error cameraTempFile is null!");
-                     return;
-                  }
+               mGuide.getStep(mPagePosition).addImage(newThumb);
+               refreshView(mPagePosition);
 
-                  // Prevent a save from being called until the image uploads and returns with the imageid
-                  lockSave();
-
-                  newThumb = new Image();
-                  newThumb.setLocalImage(tempFileName);
-
-                  mGuide.getStep(mPagePosition).addImage(newThumb);
-                  mCurStepFragment.setImages(mGuide.getStep(mPagePosition).getImages());
-
-                  APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
-               }
-               break;
-         }
-
-      } else {
-         if (resultCode == RESULT_OK) {
-
-            // we dont have a reference the the fragment managing the media, so we make the changes to the step manually
-            Image image = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-            ArrayList<Image> list = mGuide.getStep(mPagePosition).getImages();
-
-            if (list.size() > 0) {
-               list.set(0, image);
-            } else {
-               list.add(image);
+               APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
             }
-
-            mGuide.getStep(mPagePosition).setImages(list);
-            toggleSave(true);
-            // recreate pager with updated step:
-            initPager();
-            mPager.invalidate();
-            mTitleIndicator.invalidate();
-            mPager.setCurrentItem(mPagePosition, false);
-         }
+            break;
       }
    }
 
@@ -322,7 +305,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       savedInstanceState.putInt(EXIT_CODE, mExitCode);
    }
 
-   public void navigateBack() {
+   private void navigateBack() {
       Intent returnIntent = new Intent();
       returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
       setResult(RESULT_OK, returnIntent);
@@ -468,8 +451,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                }
             }
 
-            mCurStepFragment.setImages(images);
             mGuide.getStep(mPagePosition).setImages(images);
+            refreshView(mPagePosition);
          }
 
          if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
@@ -487,6 +470,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    @Subscribe
    public void onStepImageDelete(StepImageDeleteEvent event) {
       mGuide.getStep(mPagePosition).getImages().remove(event.image);
+
+      refreshView(mPagePosition);
    }
 
    @Subscribe
@@ -591,7 +576,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       }
    }
 
-   public void addNewStep(int newPosition) {
+   private void addNewStep(int newPosition) {
       if (!mGuide.hasNewStep()) {
          GuideStep step = new GuideStep(StepPortalFragment.STEP_ID++);
          step.setOrderby(newPosition);
@@ -600,13 +585,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          step.setStepNum(newPosition);
 
          mGuide.addStep(step, newPosition);
-
-         // The view pager does not recreate the item in the current position unless we force it
-         initPager();
-         mPager.invalidate();
-         mTitleIndicator.invalidate();
-
-         mPager.setCurrentItem(newPosition, false);
+         refreshView(newPosition);
       } else {
          // Show "Must add content to step" toast
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
@@ -623,7 +602,16 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    // ADAPTERS and PRIVATE CLASSES
    /////////////////////////////////////////////////////
 
-   public class StepAdapter extends FragmentStatePagerAdapter {
+   private void refreshView(int position) {
+      // The view pager does not recreate the item in the current position unless we force it to.
+      initPager();
+      mPager.invalidate();
+      mTitleIndicator.notifyDataSetChanged();
+      mStepAdapter.notifyDataSetChanged();
+      mPager.setCurrentItem(position, false);
+   }
+
+   private class StepAdapter extends FragmentStatePagerAdapter {
 
       public StepAdapter(FragmentManager fm) {
          super(fm);
@@ -983,12 +971,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       // Update the guide on successful save or conflict.
       mGuide.getSteps().set(mSavePosition, step);
 
-      // The view pager does not recreate the item in the current position unless we force it
-      initPager();
-      mPager.invalidate();
-      mTitleIndicator.invalidate();
-
-      mPager.setCurrentItem(mSavePosition, false);
+      refreshView(mSavePosition);
    }
 
    protected void deleteStep() {
@@ -1014,11 +997,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       int newPosition = mPagePosition - 1;
 
       // The view pager does not recreate the item in the current position unless we force it to.
-      initPager();
-      mPager.invalidate();
-      mTitleIndicator.notifyDataSetChanged();
-      mStepAdapter.notifyDataSetChanged();
-      mPager.setCurrentItem(newPosition, false);
+      refreshView(newPosition);
    }
 
    /**
