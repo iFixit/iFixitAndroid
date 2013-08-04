@@ -310,12 +310,12 @@
     <!-- Strings needing translations. -->
 
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
-    <string name="link_to_item">Link to %1$s</string>
+    <string name="link_to_item">Enlace a %1$s</string>
     <string name="no_items">No Items</string>
-    <string name="view">View</string>
-    <string name="save_changes_to_step">Save changes to this step?</string>
-    <string name="new_line">New line</string>
-    <string name="discard_changes">Discard Changes</string>
+    <string name="view">Ver</string>
+    <string name="save_changes_to_step">¿Guardar cambios a este paso?</string>
+    <string name="new_line">Nueva línea</string>
+    <string name="discard_changes">Descartar Cambios</string>
     <string name="error">Error</string>
     <string name="invalid_revision_error_title">Error de revisión</string>
     <string name="invalid_revision_error">Parece que es posible que esté editando una versión antigua de esta guía.
@@ -328,7 +328,7 @@
     <string name="video_activity_progress_body">Cargando Vídeo….</string>
     <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
     <string name="not_found_error">The requested data does not exist.</string>
-    <string name="loading_image">Uploading Images…</string>
+    <string name="loading_image">Subiendo Imágenes…</string>
     <string name="teardowns">Teardowns</string>
-    <string name="introduction">Introduction</string>
+    <string name="introduction">Introducción</string>
 </resources>
