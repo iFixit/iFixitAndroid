@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import android.view.View;
@@ -27,8 +26,9 @@ import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.ViewServer;
+import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -255,6 +255,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
 
       buildSliderMenu();
+
+      if (MainApplication.inDebug()) {
+         ViewServer.get(this).addWindow(this);
+      }
    }
 
    private void buildSliderMenu() {
@@ -373,6 +377,17 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
+
+      if (MainApplication.inDebug())
+         ViewServer.get(this).setFocusedWindow(this);
+   }
+
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      if (MainApplication.inDebug())
+         ViewServer.get(this).removeWindow(this);
    }
 
    @Override
