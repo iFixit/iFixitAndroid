@@ -42,6 +42,12 @@ public class APIError implements Serializable {
          false,
          false
       ),
+      VALIDATION(
+         R.string.validation_error_title,
+         R.string.validation_error_body,
+         false,
+         false
+      ),
       UNAUTHORIZED(
          // These values shouldn't ever be used because this is merely a signal
          // to open the login dialog.
@@ -91,6 +97,7 @@ public class APIError implements Serializable {
          case 403: error = Type.FORBIDDEN; break;
          case 404: error = Type.NOT_FOUND; break;
          case 409: error = Type.CONFLICT;  break;
+         case 422: error = Type.VALIDATION; break;
          default:  error = Type.OTHER;
       }
 

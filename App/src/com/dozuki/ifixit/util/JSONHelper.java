@@ -509,6 +509,24 @@ public class JSONHelper {
       return error;
    }
 
+   public static String parseValidationError(String json) {
+      String message = "";
+
+      try {
+         JSONObject jError = new JSONObject(json);
+         JSONArray jErrors = jError.getJSONArray("errors");
+
+         message = jError.getString("message") + ".";
+         for (int i = 0; i < jErrors.length(); i++) {
+            message += "  " + ((JSONObject)jErrors.get(i)).getString("message");
+         }
+      } catch (JSONException e) {
+         Log.e("JSONHelper", "Unable to parse error message");
+      }
+
+      return message;
+   }
+
    public static ArrayList<GuideInfo> parseUserFavorites(String json) {
       ArrayList<GuideInfo> result = new ArrayList<GuideInfo>();
 

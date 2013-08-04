@@ -185,10 +185,18 @@ public class APIService extends Service {
 
       String error = JSONHelper.parseError(response);
       if (error != null) {
+         String title;
          APIError.Type type = error.equals(INVALID_LOGIN_STRING) ?
           APIError.Type.INVALID_USER : APIError.getByStatusCode(code, this).mType;
 
-         return result.setError(new APIError(getString(R.string.error), error, type));
+         if (type == APIError.Type.VALIDATION) {
+            error = JSONHelper.parseValidationError(response);
+            title = getString(R.string.validation_error_title);
+         } else {
+            title = getString(R.string.error);
+         }
+
+         return result.setError(new APIError(title, error, type));
       }
 
       APIEvent<?> event;

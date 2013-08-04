@@ -331,4 +331,6 @@
     <string name="loading_image">Subiendo Imágenes…</string>
     <string name="teardowns">Teardowns</string>
     <string name="introduction">Introducción</string>
+    <string name="validation_error_title">Validation Error</string>
+    <string name="validation_error_body">Validation failed</string>
 </resources>
