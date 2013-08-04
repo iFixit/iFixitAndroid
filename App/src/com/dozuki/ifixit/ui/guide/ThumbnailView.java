@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,6 +26,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 public class ThumbnailView extends LinearLayout implements View.OnClickListener {
+   private static final String TAG = "ThumbnailView";
    private ArrayList<FallbackImageView> mThumbs;
    private FallbackImageView mMainImage;
    private ImageView mAddThumbButton;
@@ -144,7 +146,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          mThumbs.clear();
 
          for (Image image : images) {
-            addThumb(image, image.isLocal());
+            addThumb(image);
          }
       } else {
          if (mAddThumbButton != null) {
@@ -184,7 +186,7 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
       }
    }
 
-   public int addThumb(Image image, boolean fromDisk) {
+   private int addThumb(Image image) {
       LayoutInflater inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       FallbackImageView thumb = (FallbackImageView) inflater.inflate(R.layout.thumbnail, null);
 
@@ -194,8 +196,9 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
          thumb.setOnLongClickListener(mLongClickListener);
       }
 
-      if (fromDisk) {
-         File file = new File(image.getPath());
+      if (image.hasLocalPath()) {
+         Log.d(TAG, "Using local image " + image.getLocalPath());
+         File file = new File(image.getLocalPath());
          buildImage(mPicasso.load(file)
           .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
           .centerCrop(),
@@ -205,9 +208,11 @@ public class ThumbnailView extends LinearLayout implements View.OnClickListener 
           .centerCrop(),
           mMainImage);
       } else {
+         Log.d(TAG, "Using remote image " + image.getPath());
+
          String url = image.getPath(mImageSizes.getThumb());
          buildImage(mPicasso.load(url), thumb);
-         thumb.setImageUrl(image.getPath());
+         thumb.setImage(image);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);

@@ -243,15 +243,13 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       MainApplication.getBus().register(this);
 
       super.onActivityResult(requestCode, resultCode, data);
-      int pos = mPagePosition;
-      Log.d(TAG, "onActivityResult: page position" + pos);
 
+      int pos = mPagePosition;
       Image newThumb;
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
             if (data != null) {
-               Log.d("StepEditActivity", "GALLERY_REQUEST_CODE");
 
                newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mGuide.getStep(mPagePosition).addImage(newThumb);
@@ -266,7 +264,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             break;
          case CAMERA_REQUEST_CODE:
             if (resultCode == Activity.RESULT_OK) {
-               Log.d("StepEditActivity", "CAMERA_REQUEST_CODE");
 
                SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
                String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
@@ -446,6 +443,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
             for (Image image : images) {
                if (image.isLocal()) {
+                  newThumb.setLocalPath(image.getPath());
                   images.set(images.indexOf(image), newThumb);
                   break;
                }

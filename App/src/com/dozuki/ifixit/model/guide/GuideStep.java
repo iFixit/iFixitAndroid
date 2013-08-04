@@ -44,14 +44,6 @@ public class GuideStep implements Serializable {
    private Embed mEmbed;
    protected boolean mEditMode; // save state for edit drop down
 
-   public void setEditMode(boolean editMode) {
-      mEditMode = editMode;
-   }
-
-   public boolean getEditMode() {
-      return mEditMode;
-   }
-
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
       mOrderby = stepNum;
@@ -59,6 +51,14 @@ public class GuideStep implements Serializable {
       mImages = new ArrayList<Image>();
       mLines = new ArrayList<StepLine>();
       mRevisionid = null;
+   }
+
+   public void setEditMode(boolean editMode) {
+      mEditMode = editMode;
+   }
+
+   public boolean getEditMode() {
+      return mEditMode;
    }
 
    public String type() {

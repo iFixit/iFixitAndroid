@@ -4,7 +4,6 @@ import com.dozuki.ifixit.MainApplication;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 
 public class Image implements Serializable {
    private static final long serialVersionUID = 772113480839309007L;
@@ -19,6 +18,7 @@ public class Image implements Serializable {
 
    @SerializedName("id") private int mId;
    @SerializedName("original") private String mPath;
+   private String mLocalPath;
 
    public Image() {
       this(LOCAL_IMAGE_ID);
@@ -31,11 +31,13 @@ public class Image implements Serializable {
    public Image(int id, String path) {
       mId = id;
       mPath = cleanPath(path);
+      mLocalPath = "";
    }
 
    public void setLocalImage(String path) {
       mId = LOCAL_IMAGE_ID;
       mPath = cleanPath(path);
+      mLocalPath = mPath;
    }
 
    public void setId(int id) {
@@ -44,6 +46,18 @@ public class Image implements Serializable {
 
    public int getId() {
       return mId;
+   }
+
+   public boolean hasLocalPath() {
+      return !mLocalPath.isEmpty();
+   }
+
+   public String getLocalPath() {
+      return mLocalPath;
+   }
+
+   public void setLocalPath(String path) {
+      mLocalPath = path;
    }
 
    public void setPath(String path) {
@@ -70,6 +84,7 @@ public class Image implements Serializable {
    public String toString() {
       return "{\n" +
        "path: " + mPath + ",\n" +
+       "localPath: " + mLocalPath + ",\n" +
        "id: " + mId + "\n" +
        "}";
    }
@@ -86,7 +101,7 @@ public class Image implements Serializable {
    private String cleanPath(String path) {
 
       if (MainApplication.inDebug() && path.length() != 0)
-         path = path.replaceFirst("https","http");
+         path = path.replaceFirst("https", "http");
 
       return path;
    }

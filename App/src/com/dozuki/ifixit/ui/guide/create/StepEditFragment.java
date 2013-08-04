@@ -125,10 +125,6 @@ public class StepEditFragment extends SherlockFragment {
       return mEditBulletFrag.getTitle();
    }
 
-   public void setImages(ArrayList<Image> images) {
-      mEditImageFrag.setImages(images);
-   }
-
    private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditBulletFrag.setStepTitle(mStepObject.getTitle());
@@ -136,9 +132,5 @@ public class StepEditFragment extends SherlockFragment {
       if (mStepType.equals(IMAGE_TYPE)) {
          mEditImageFrag.setImages(mStepObject.getImages());
       }
-   }
-
-   public void setMediaResult(int requestCode, int resultCode, Intent data) {
-      mEditImageFrag.onActivityResult(requestCode, resultCode, data);
    }
 }
