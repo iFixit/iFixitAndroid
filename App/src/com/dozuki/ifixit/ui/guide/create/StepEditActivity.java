@@ -162,10 +162,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       mSaveStep = (Button) findViewById(R.id.step_edit_save);
 
-      if (mLockSave) {
-         lockSave();
-      }
-
       toggleSave(mIsStepDirty);
 
       if (mGuide != null) {
@@ -198,6 +194,11 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
+      }
+
+      // Must be after mPager and mTitleIndicator are initialized, otherwise they aren't locked
+      if (mLockSave) {
+         lockSave();
       }
    }
 
