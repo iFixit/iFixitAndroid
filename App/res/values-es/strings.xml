@@ -309,28 +309,28 @@
 
     <!-- Strings needing translations. -->
 
-    <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
+    <string name="empty_image_error">La imagen esta vacía, pruebe con otra imagen o suba una nueva imagen.</string>
     <string name="link_to_item">Enlace a %1$s</string>
-    <string name="no_items">No Items</string>
+    <string name="no_items">No hay Artículos</string>
     <string name="view">Ver</string>
-    <string name="save_changes_to_step">¿Guardar cambios a este paso?</string>
-    <string name="new_line">Nueva línea</string>
+    <string name="save_changes_to_step">Guardar los cambios a este paso?</string>
+    <string name="new_line">Línea Nueva</string>
     <string name="discard_changes">Descartar Cambios</string>
     <string name="error">Error</string>
     <string name="invalid_revision_error_title">Error de revisión</string>
-    <string name="invalid_revision_error">Parece que es posible que esté editando una versión antigua de esta guía.
-        Para prevenir una perdida de información, por favor recarge esta guía.
+    <string name="invalid_revision_error">Parece que es posible que estés editando una versión antigua de esta guía.
+        Para prevenir una perdida de información, por favor recarga esta guía.
     </string>
     <string name="fatal_error_title">Error Desconocido</string>
-    <string name="fatal_error">Ha ocurrido un error. Por favor recarge su guía.</string>
+    <string name="fatal_error">Ha ocurrido un error. Por favor recarga tu guía.</string>
     <string name="featured_guides">Guías Destacadas</string>
     <string name="video_activity_progress_title">Por Favor Espere…</string>
     <string name="video_activity_progress_body">Cargando Vídeo….</string>
-    <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
-    <string name="not_found_error">The requested data does not exist.</string>
+    <string name="forbidden_error">Tienes privilegios insuficientes para cumplir esta acción.</string>
+    <string name="not_found_error">Los datos solicitados no existen.</string>
     <string name="loading_image">Subiendo Imágenes…</string>
     <string name="teardowns">Teardowns</string>
     <string name="introduction">Introducción</string>
-    <string name="validation_error_title">Validation Error</string>
-    <string name="validation_error_body">Validation failed</string>
+    <string name="validation_error_title">Error de Validación</string>
+    <string name="validation_error_body">La validación fallo</string>
 </resources>
