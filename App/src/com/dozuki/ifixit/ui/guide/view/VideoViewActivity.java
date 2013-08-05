@@ -19,7 +19,6 @@ import com.dozuki.ifixit.R;
 public class VideoViewActivity extends Activity {
 
    public static final String VIDEO_URL = "VIDEO_URL";
-   private String mVideoUrl;
    private VideoView mVideoView;
    private ProgressDialog mProgressDialog;
    private Context mContext;
@@ -38,14 +37,14 @@ public class VideoViewActivity extends Activity {
       mVideoView = (VideoView) findViewById(R.id.video_view);
 
       Bundle extras = getIntent().getExtras();
-      mVideoUrl = (String) extras.get(VIDEO_URL);
+      String videoUrl = (String) extras.get(VIDEO_URL);
 
       MediaController mc = new MediaController(this);
       mVideoView.setMediaController(mc);
 
-      mVideoView.setVideoURI(Uri.parse(mVideoUrl));
+      mVideoView.setVideoURI(Uri.parse(videoUrl));
 
-      mProgressDialog = ProgressDialog.show(mContext, 
+      mProgressDialog = ProgressDialog.show(mContext,
          getString(R.string.video_activity_progress_title),
          getString(R.string.video_activity_progress_body), true);
 
