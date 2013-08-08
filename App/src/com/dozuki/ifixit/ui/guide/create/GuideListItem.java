@@ -10,7 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.ToggleButton;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
@@ -116,6 +122,14 @@ public class GuideListItem extends LinearLayout {
          public void onClick(View v) {
             EasyTracker.getTracker().sendEvent("ui_action", "button_press", "publish_guide", null);
 
+            // Ignore button press if we are already (un)publishing the guide.
+            if (mGuideInfo.mIsPublishing) {
+               return;
+            }
+
+            mGuideInfo.mIsPublishing = true;
+            mPublishButton.setText(mGuideInfo.mPublic ? R.string.unpublishing : R.string.publishing);
+
             if (!mGuideInfo.mPublic) {
                APIService.call(mActivity,
                 APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
@@ -158,10 +172,10 @@ public class GuideListItem extends LinearLayout {
    public void setPublished(boolean published) {
       if (published) {
          buildPublishView(R.drawable.ic_list_item_unpublish, Color.rgb(0, 191, 0),
-          R.string.published, R.string.unpublish);
+          R.string.published, mGuideInfo.mIsPublishing ? R.string.unpublishing : R.string.unpublish);
       } else {
          buildPublishView(R.drawable.ic_list_item_publish, Color.RED,
-          R.string.unpublished, R.string.publish);
+          R.string.unpublished, mGuideInfo.mIsPublishing ? R.string.publishing : R.string.publish);
       }
    }
 

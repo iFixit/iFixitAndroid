@@ -333,4 +333,6 @@
     <string name="introduction">Introducción</string>
     <string name="validation_error_title">Error de Validación</string>
     <string name="validation_error_body">La validación fallo</string>
+    <string name="unpublishing">Unpublishing…</string>
+    <string name="publishing">Publishing…</string>
 </resources>

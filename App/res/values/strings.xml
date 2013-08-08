@@ -317,6 +317,8 @@
     <string name="discard_changes">Discard Changes</string>
     <string name="validation_error_title">Validation Error</string>
     <string name="validation_error_body">Validation failed</string>
+    <string name="unpublishing">Unpublishing…</string>
+    <string name="publishing">Publishing…</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>

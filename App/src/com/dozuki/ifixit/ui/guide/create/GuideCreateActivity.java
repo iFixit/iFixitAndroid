@@ -162,6 +162,7 @@ public class GuideCreateActivity extends BaseActivity {
             if (userGuide.mGuideid == guide.getGuideid()) {
                userGuide.mRevisionid = guide.getRevisionid();
                userGuide.mPublic = guide.isPublic();
+               userGuide.mIsPublishing = false;
                break;
             }
          }

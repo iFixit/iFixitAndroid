@@ -352,4 +352,6 @@
     <string name="introduction">Introduction</string>
     <string name="validation_error_title">Validation Error</string>
     <string name="validation_error_body">Validation failed</string>
+    <string name="unpublishing">Unpublishing…</string>
+    <string name="publishing">Publishing…</string>
 </resources>

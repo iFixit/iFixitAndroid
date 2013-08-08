@@ -38,6 +38,7 @@ public class GuideInfo implements Serializable {
    public String mLocale;
 
    public transient boolean mEditMode = false;
+   public transient boolean mIsPublishing = false;
 
    public GuideInfo(int guideid) {
       mGuideid = guideid;
