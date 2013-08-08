@@ -89,7 +89,7 @@ public class OpenIDActivity extends Activity {
             for (int i = 0; i < pairs.length; i++) {
                String[] parts = pairs[i].split("=", 2);
                // If token is found, return it to the calling activity.
-               if (parts.length == 2 && parts[0].equalsIgnoreCase("session")) {
+               if (parts.length == 2 && parts[0].trim().equalsIgnoreCase("session")) {
                   Intent result = new Intent();
                   result.putExtra(SESSION, parts[1]);
                   setResult(RESULT_OK, result);
@@ -98,7 +98,8 @@ public class OpenIDActivity extends Activity {
                }
             }
 
-            Log.w("iFixit", "Couldn't find session in Cookie from OpenID login");
+            Log.w("iFixit", "Couldn't find session in Cookie from OpenID login: " +
+             cookie);
             Intent result = new Intent();
             setResult(RESULT_CANCELED, result);
             finish();
