@@ -56,7 +56,7 @@ public class Site implements Serializable {
     * Returns the resourceid for the current site's object name.
     */
    public int getObjectName() {
-      if (mName.equals("ifixit")) {
+      if (isIfixit()) {
          return R.string.devices;
       } else {
          return R.string.topics;
@@ -74,13 +74,17 @@ public class Site implements Serializable {
    }
 
    public String siteName() {
-      return Utils.capitalize(mName);
+      if (isIfixit()) {
+         return "iFixit";
+      } else {
+         return Utils.capitalize(mName);
+      }
    }
 
    public String getAPIDomain() {
       String domain;
       if (MainApplication.inDebug()) {
-         if (mName.equals("ifixit")) {
+         if (isIfixit()) {
             domain = DEV_SERVER;
          } else {
             domain = mName + "." + DEV_SERVER;
@@ -94,7 +98,7 @@ public class Site implements Serializable {
 
    public int theme() {
       // Put custom site themes here.
-      if (mName.equals("ifixit")) {
+      if (isIfixit()) {
          return R.style.Theme_iFixit;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
@@ -171,5 +175,9 @@ public class Site implements Serializable {
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
        mPublicRegistration + "|" + mGuideTypes.toString() + "}";
+   }
+
+   private boolean isIfixit() {
+      return mName.equals("ifixit");
    }
 }

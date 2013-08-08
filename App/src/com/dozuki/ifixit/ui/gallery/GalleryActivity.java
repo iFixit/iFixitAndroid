@@ -174,6 +174,7 @@ public class GalleryActivity extends BaseActivity {
 
    private AlertDialog createHelpDialog() {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.media_help_messege,
        MainApplication.get().getSite().siteName()))
          .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
