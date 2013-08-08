@@ -49,7 +49,7 @@ public class Site implements Serializable {
    }
 
    public String getOpenIdLoginUrl() {
-      return "https://" + mDomain + "/Guide/login/openid?host=";
+      return "https://" + getAPIDomain() + "/Guide/login/openid?host=";
    }
 
    /**
