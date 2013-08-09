@@ -74,7 +74,6 @@
     <string name="register">Register</string>
 
     <string name="logout_messege">Are you sure you want to logout?</string>
-    <string name="login_error">Uh oh! Invalid login info, try again please.</string>
     <string name="try_again">Try again</string>
     <string name="register_agreement">I agree to
         <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>

@@ -20,9 +20,6 @@
         <item name="android:listViewStyle">@style/Base.ListView</item>
         <item name="android:progressBarStyle">@style/Base.ProgressBar</item>
 
-        <item name="buttonBarStyle">@style/Base.ButtonBar</item>
-        <item name="buttonBarButtonStyle">@style/Base.Button.Borderless</item>
-
         <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
         <item name="mdMenuBackground">@color/menu_background</item>
     </style>
