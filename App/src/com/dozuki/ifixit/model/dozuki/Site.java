@@ -73,6 +73,9 @@ public class Site implements Serializable {
       return types;
    }
 
+   /**
+    * TODO: mTitle is probably what should be used instead of capitalizing the site name.
+    */
    public String siteName() {
       if (isIfixit()) {
          return "iFixit";
