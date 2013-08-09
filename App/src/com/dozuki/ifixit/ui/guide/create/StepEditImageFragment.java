@@ -185,8 +185,8 @@ public class StepEditImageFragment extends SherlockFragment {
                          bus.post(new StepImageDeleteEvent(thumbImage));
                          bus.post(new StepChangedEvent());
 
-                         mThumbs.removeThumb((FallbackImageView) v);
-                         mImages.remove(v);
+                         mThumbs.removeThumb(v);
+                         mImages.remove(thumbImage);
                          break;
                    }
                 }
