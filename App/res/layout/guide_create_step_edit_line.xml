@@ -28,9 +28,23 @@
         android:layout_marginLeft="8dp"
         android:layout_marginTop="8dp"
         android:layout_toRightOf="@+id/guide_step_item_bullet_thumbnail"
+        android:layout_toLeftOf="@+id/step_line_mic_button"
         android:hint="@string/step_text_default"
         android:imeOptions="actionDone"
         android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
         android:maxLength="350"/>
+
+    <ImageButton
+        android:id="@+id/step_line_mic_button"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="8dp"
+        android:layout_marginRight="4dp"
+        android:layout_marginLeft="4dp"
+        android:background="?android:attr/selectableItemBackground"
+        android:src="@drawable/ic_action_mic"
+        android:contentDescription="Voice dictate line content"/>
 
 </RelativeLayout>

@@ -242,10 +242,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       MainApplication.getBus().register(this);
 
-      super.onActivityResult(requestCode, resultCode, data);
-
-      int pos = mPagePosition;
       Image newThumb;
+      Log.d("StepEditActivity", "onActivityResult");
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
@@ -285,6 +283,8 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
             }
             break;
+         default:
+            super.onActivityResult(requestCode, resultCode, data);
       }
    }
 

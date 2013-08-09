@@ -2,13 +2,13 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
@@ -104,6 +104,16 @@ public class StepEditFragment extends SherlockFragment {
       setCopiesForEdit();
 
       return v;
+   }
+
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+      super.onActivityResult(requestCode, resultCode, intent);
+      mEditBulletFrag = (StepEditLinesFragment) getChildFragmentManager()
+       .findFragmentById(R.id.guide_create_edit_bullet_fragment_container);
+      if(mEditBulletFrag != null){
+         mEditBulletFrag.onActivityResult(requestCode, resultCode, intent);
+      }
    }
 
    @Override

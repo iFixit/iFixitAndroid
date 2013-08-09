@@ -1,12 +1,21 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentManager;
 import android.text.Editable;
+import android.text.Spannable;
+import android.text.SpannableString;
 import android.text.TextWatcher;
+import android.text.method.ScrollingMovementMethod;
+import android.text.style.SuggestionSpan;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -36,6 +45,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
    private static final int INDENT_LIMIT = 2;
    private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
+   private static final int MIC_REQUEST_CODE = 4;
    private LinearLayout mBulletContainer;
    private Button mNewBulletButton;
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
@@ -96,7 +106,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
          mTitle = savedInstanceState.getString(TITLE_KEY);
 
          FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
-         mLines = (ArrayList<StepLine>)savedInstanceState.getSerializable(STEP_LIST_KEY);
+         mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
          mOrderby = savedInstanceState.getInt(STEP_ORDERBY);
          mChooseBulletDialog =
           (ChooseBulletDialog) fm.getFragment(savedInstanceState, BULLET_FRAG_ID);
@@ -302,6 +312,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       final EditText text = (EditText) v.findViewById(R.id.step_line_text_view);
       text.setText(line.getTextRaw());
       text.setId(index);
+      text.setMovementMethod(ScrollingMovementMethod.getInstance());
       text.addTextChangedListener(new TextWatcher() {
          @Override
          public void afterTextChanged(Editable s) {
@@ -342,7 +353,82 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
          }
       });
 
+      ImageButton mic = (ImageButton) v.findViewById(R.id.step_line_mic_button);
+      mic.setTag(index);
+      text.setTag(index);
+      mic.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            Log.d("StepEditLinesFragment", (Integer) v.getTag() + "");
+
+            SharedPreferences sp = getActivity().getPreferences(Activity.MODE_PRIVATE);
+            sp.edit().putInt("lineid", (Integer) v.getTag()).commit();
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
+             RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
+            startActivityForResult(intent, MIC_REQUEST_CODE);
+         }
+      });
+
       return v;
+   }
+
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+      Log.d("StepEditLinesFragment", "onActivityResult");
+      if (requestCode == MIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+         // Populate the wordsList with the String values the recognition engine thought it heard
+         ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+         if (MainApplication.inDebug()) {
+            String debug = "";
+
+            for (String match : matches) {
+               debug += "   " + match + "\n";
+            }
+            Log.d("StepEditLinesFragment", "Potential Results:  \n\n" + debug);
+         }
+
+         if (matches.size() > 0) {
+            SharedPreferences sp = getActivity().getPreferences(Activity.MODE_PRIVATE);
+            int lineid = sp.getInt("lineid", 0);
+            EditText lineText = (EditText) mBulletContainer.findViewWithTag(lineid);
+
+            if (lineText == null) {
+               Log.d("StepEditLinesFragment", "lineText is null, couldn't find line view");
+            } else {
+               Log.d("StepEditLinesFragment", "found linetext");
+
+               String newText = matches.get(0);
+               Editable oldText = lineText.getText();
+
+               Log.d("StepEditLinesFragment", "Old Text: " + oldText);
+               Log.d("StepEditLinesFragment", "New Text: " + newText);
+
+               int start = oldText.length();
+               int end = oldText.length() + newText.length();
+               String[] suggestions = new String[matches.size()];
+               suggestions = matches.toArray(suggestions);
+
+               SuggestionSpan suggestionsSpan = new SuggestionSpan(getActivity(), suggestions,
+                SuggestionSpan.FLAG_EASY_CORRECT);
+
+               Spannable span = new SpannableString(oldText + newText);
+               span.setSpan(suggestionsSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+               lineText.setText(span);
+               Log.d("StepEditLInesFragment", "After: " + lineText.getText());
+            }
+         } else {
+            Log.d("StepEditLinesFragment", "No matches; try again");
+            // Relaunch mic and try again
+         }
+      }
+
+      super.onActivityResult(requestCode, resultCode, data);
    }
 
    protected void restrictDialogOptions(ChooseBulletDialog dialog, StepLine line) {
