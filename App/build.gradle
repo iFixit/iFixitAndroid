@@ -36,18 +36,32 @@ dependencies {
 
 android {
    compileSdkVersion 18
-   buildToolsVersion "17.0.0"
+   buildToolsVersion "18.0.1"
 
    defaultConfig {
       minSdkVersion 8
       targetSdkVersion 18
    }
 
+   buildTypes {
+      debug {
+         buildConfig 'public static final String DEV_SERVER = ' + dev_server + ';'
+      }
+
+      release {
+         buildConfig 'public static final String DEV_SERVER = "";'
+      }
+   }
+
    sourceSets {
       main {
          manifest.srcFile 'AndroidManifest.xml'
          java.srcDirs = ['src']
+         resources.srcDirs = ['src']
+         aidl.srcDirs = ['src']
+         renderscript.srcDirs = ['src']
          res.srcDirs = ['res']
+         assets.srcDirs = ['assets']
       }
    }
 }

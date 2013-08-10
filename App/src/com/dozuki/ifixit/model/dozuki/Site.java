@@ -2,6 +2,7 @@ package com.dozuki.ifixit.model.dozuki;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.util.EditDistance;
 import com.dozuki.ifixit.util.Utils;
@@ -11,8 +12,6 @@ import java.util.ArrayList;
 
 public class Site implements Serializable {
    private static final long serialVersionUID = -2798641261277805693L;
-
-   private static final String DEV_SERVER = "";
 
    public int mSiteid;
    public String mName;
@@ -88,9 +87,9 @@ public class Site implements Serializable {
       String domain;
       if (MainApplication.inDebug()) {
          if (isIfixit()) {
-            domain = DEV_SERVER;
+            domain = BuildConfig.DEV_SERVER;
          } else {
-            domain = mName + "." + DEV_SERVER;
+            domain = mName + "." + BuildConfig.DEV_SERVER;
          }
       } else {
          domain = mDomain;
