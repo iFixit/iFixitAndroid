@@ -16,10 +16,10 @@ import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -34,11 +34,10 @@ import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Tracker;
-import com.dozuki.ifixit.util.JSONHelper;
 import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -830,6 +829,9 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       mSavePosition = savePosition;
       mIsStepDirty = false;
+
+      InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
       showLoading(mLoadingContainer, getString(R.string.saving));
       toggleSave(mIsStepDirty);
