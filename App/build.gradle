@@ -41,7 +41,10 @@ android {
    defaultConfig {
       minSdkVersion 8
       targetSdkVersion 18
+
+      buildConfig 'public static final String APP_ID = ' + app_id + ';'
    }
+
 
    buildTypes {
       debug {

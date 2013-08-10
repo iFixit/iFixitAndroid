@@ -15,6 +15,7 @@ import android.os.IBinder;
 import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -599,7 +600,7 @@ public class APIService extends Service {
                   request.header("Authorization", "api " + authToken);
                }
 
-               request.header("X-App-Id", "1234");
+               request.header("X-App-Id", BuildConfig.APP_ID);
 
                // Trust all certs and hosts in development
                if (MainApplication.inDebug()) {
