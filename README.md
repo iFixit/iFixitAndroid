@@ -8,6 +8,12 @@ Official iFixit Android App
 
     git clone https://github.com/iFixit/iFixitAndroid.git
 
+### Gradle Config
+
+Add values for `dev_server` and `app_id` to /gradle.properties like so:
+
+    dev_server="www.devserver.com"
+    app_id="0123456789ABCDEF0123456789ABCDEF"
 
 ### Intellij
 
