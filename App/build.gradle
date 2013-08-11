@@ -45,6 +45,14 @@ android {
       buildConfig 'public static final String APP_ID = ' + app_id + ';'
    }
 
+   signingConfigs {
+      release {
+         storeFile file("../keystores/ifixit.keystore")
+         keyAlias ifixitKeyAlias
+         storePassword ifixitStorePassword
+         keyPassword ifixitKeyPassword
+      }
+   }
 
    buildTypes {
       debug {
@@ -53,6 +61,7 @@ android {
 
       release {
          buildConfig 'public static final String DEV_SERVER = "";'
+         signingConfig signingConfigs.release
       }
    }
 

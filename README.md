@@ -15,6 +15,18 @@ Add values for `dev_server` and `app_id` to /gradle.properties like so:
     dev_server="www.devserver.com"
     app_id="0123456789ABCDEF0123456789ABCDEF"
 
+### Signing
+
+Add values for `ifixitKeyAlias`, `ifixitStorePassword`, and `ifixitKeyPassword` to /gradle.properties like so:
+
+    ifixitKeyAlias=keyAliasName
+    ifixitStorePassword=password
+    ifixitKeyPassword=password
+
+Symlink keystores/ifixit.keystore to your keystore like so:
+
+    ln -s ~/path/to/keystore keystores/ifixit.keystore
+
 ### Intellij
 
 File -> Import Project...
