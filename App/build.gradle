@@ -41,6 +41,7 @@ android {
    defaultConfig {
       minSdkVersion 8
       targetSdkVersion 18
+      packageName "com.dozuki.ifixit"
 
       buildConfig 'public static final String APP_ID = ' + app_id + ';'
    }
@@ -65,6 +66,16 @@ android {
       }
    }
 
+   productFlavors {
+      ifixit {
+      }
+
+      dozuki {
+         // TODO: Change to "com.dozuki.dozuki"
+         packageName "com.dozuki.ifixit"
+      }
+   }
+
    sourceSets {
       main {
          manifest.srcFile 'AndroidManifest.xml'
@@ -74,6 +85,12 @@ android {
          renderscript.srcDirs = ['src']
          res.srcDirs = ['res']
          assets.srcDirs = ['assets']
+      }
+
+      dozuki {
+         manifest.srcFile 'dozuki/AndroidManifest.xml'
+         java.srcDirs = ["dozuki/src"]
+         res.srcDirs = ["dozuki/res"]
       }
    }
 }
