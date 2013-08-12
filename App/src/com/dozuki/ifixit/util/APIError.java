@@ -1,12 +1,14 @@
 package com.dozuki.ifixit.util;
 
-import android.content.Context;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 
 import java.io.Serializable;
 
 public class APIError implements Serializable {
    private static final long serialVersionUID = 1L;
+   private static final int NO_INDEX = -1;
+
    public static enum Type {
       OTHER(
          R.string.fatal_error_title,
@@ -75,22 +77,28 @@ public class APIError implements Serializable {
    public String mTitle;
    public String mMessage;
    public Type mType;
+   public int mIndex;
 
-   public APIError(Type type, Context context) {
-      this(type.mTitle, type.mMessage, type, context);
+   public APIError(Type type) {
+      this(type.mTitle, type.mMessage, type);
    }
 
-   public APIError(int title, int message, Type type, Context context) {
-      this(context.getString(title), context.getString(message), type);
+   public APIError(int title, int message, Type type) {
+      this(MainApplication.get().getString(title), MainApplication.get().getString(message), type);
    }
 
    public APIError(String title, String message, Type type) {
+      this(title, message, type, NO_INDEX);
+   }
+
+   public APIError(String title, String message, Type type, int index) {
       mTitle = title;
       mMessage = message;
       mType = type;
+      mIndex = index;
    }
 
-   public static APIError getByStatusCode(int code, Context context) {
+   public static APIError getByStatusCode(int code) {
       Type error;
 
       switch (code) {
@@ -101,6 +109,6 @@ public class APIError implements Serializable {
          default:  error = Type.OTHER;
       }
 
-      return new APIError(error, context);
+      return new APIError(error);
    }
 }

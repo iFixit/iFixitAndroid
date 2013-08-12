@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
+import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.*;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
@@ -23,6 +25,7 @@ import java.util.*;
 
 public class JSONHelper {
    private static final String TAG = "JSONHelper";
+   private static final String INVALID_LOGIN_STRING = "Invalid login";
 
    public static ArrayList<Site> parseSites(String json) throws JSONException {
       ArrayList<Site> sites = new ArrayList<Site>();
@@ -487,21 +490,34 @@ public class JSONHelper {
    }
 
    /**
-    * Returns the error message contained in the given JSON, or null if one
+    * Returns the APIError contained in the given JSON, or null if one
     * does not exist.
     * <p/>
     * e.g. Returns "Guide not found" for:
     * "{"error":true,"msg":"Guide not found"}"
     */
-   public static String parseError(String json) {
-      String error = null;
+   public static APIError parseError(String json, int code) {
+      APIError error = null;
+      String message, title;
+      APIError.Type type;
+      MainApplication app = MainApplication.get();
 
       try {
          JSONObject jError = new JSONObject(json);
 
-         if (jError.has("message")) {
-            error = jError.getString("message");
+         message = jError.getString("message");
+
+         type = message.equals(INVALID_LOGIN_STRING) ?
+          APIError.Type.INVALID_USER :
+          APIError.getByStatusCode(code).mType;
+
+         if (type == APIError.Type.VALIDATION) {
+            error = JSONHelper.parseValidationError(json);
+         } else {
+            title = app.getString(R.string.error); // Default error string
+            error = new APIError(title, message, type);
          }
+
       } catch (JSONException e) {
          Log.e("JSONHelper", "Unable to parse error message");
       }
@@ -509,8 +525,10 @@ public class JSONHelper {
       return error;
    }
 
-   public static String parseValidationError(String json) {
-      String message = "";
+   public static APIError parseValidationError(String json) {
+      String message;
+      int index = -1;
+      APIError error = null;
 
       try {
          JSONObject jError = new JSONObject(json);
@@ -519,12 +537,18 @@ public class JSONHelper {
          message = jError.getString("message") + ".";
          for (int i = 0; i < jErrors.length(); i++) {
             message += "  " + ((JSONObject)jErrors.get(i)).getString("message");
+            index = ((JSONObject)jErrors.get(i)).optInt("index", -1);
          }
+         error = new APIError(
+          MainApplication.get().getString(R.string.validation_error_title),
+          message,
+          APIError.Type.VALIDATION,
+          index);
       } catch (JSONException e) {
          Log.e("JSONHelper", "Unable to parse error message");
       }
 
-      return message;
+      return error;
    }
 
    public static ArrayList<GuideInfo> parseUserFavorites(String json) {
