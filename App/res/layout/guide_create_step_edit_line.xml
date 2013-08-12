@@ -31,8 +31,7 @@
         android:layout_toLeftOf="@+id/step_line_mic_button"
         android:hint="@string/step_text_default"
         android:imeOptions="actionDone"
-        android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"
-        android:maxLength="350"/>
+        android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"/>
 
     <ImageButton
         android:id="@+id/step_line_mic_button"
