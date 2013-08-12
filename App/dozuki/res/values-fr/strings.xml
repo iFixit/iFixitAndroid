@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dozuki Site List -->
+    <string name="dozuki_search_hint">Rechercher les Sites</string>
+    <string name="site_list_button">Explorer les Sites</string>
+    <string name="site_list_title">Sélectionner un Site</string>
+    <string name="site_list_image_description">Dozuki: Où la documentation technique prend vie</string>
+    <string name="site_list_background">Dozuki scie sur l\'établi</string>
+    <string name="site_list_search_title">Rechercher les Sites</string>
+    <string name="lock_description">Site Privé</string>
+    <string name="empty_site_list">Pas de des sites trouvés.</string>
+</resources>

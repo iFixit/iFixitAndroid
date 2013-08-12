@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Main Application -->
     <string name="devices">Dispositifs</string>
     <string name="topics">Sujets</string>

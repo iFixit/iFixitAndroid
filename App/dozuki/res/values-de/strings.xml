@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dozuki Site List -->
+    <string name="dozuki_search_hint">Websites suchen</string>
+    <string name="site_list_button">Websites erkunden</string>
+    <string name="site_list_title">Website wählen</string>
+    <string name="site_list_image_description">Dozuki: Wir machen technische Dokumentation lebendig</string>
+    <string name="site_list_background">Dozuki Handsäge auf Werkbank</string>
+    <string name="site_list_search_title">Websites suchen</string>
+    <string name="lock_description">Nichtöffentliche Website</string>
+    <string name="empty_site_list">Keine Websites gefunden.</string>
+</resources>

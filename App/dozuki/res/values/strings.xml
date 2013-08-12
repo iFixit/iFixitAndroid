@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dozuki</string>
+
+    <!-- Dozuki Site List -->
+    <string name="dozuki_search_hint">Search sites</string>
+    <string name="site_list_button">Explore Sites</string>
+    <string name="site_list_title">Select a site</string>
+    <string name="site_list_image_description">Dozuki: We make technical documentation come to life</string>
+    <string name="site_list_background">Dozuki handsaw on workbench</string>
+    <string name="site_list_search_title">Search Sites</string>
+    <string name="lock_description">Private Site</string>
+    <string name="empty_site_list">No sites found.</string>
+</resources>

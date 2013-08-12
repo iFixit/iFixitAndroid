@@ -1,10 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <!-- App Names -->
-    <string name="app_name_dozuki">Dozuki</string>
-    <string name="app_name_ifixit">iFixit</string>
-
     <!-- Main Application -->
     <string name="devices">Geräte</string>
     <string name="topics">Themen</string>
