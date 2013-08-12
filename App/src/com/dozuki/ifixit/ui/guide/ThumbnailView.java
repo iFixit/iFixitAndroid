@@ -247,8 +247,13 @@ public class ThumbnailView extends LinearLayout {
    }
 
    public void removeThumb(Object view) {
-      mThumbs.remove((ViewHolder) view);
-      mThumbnailContainer.removeView(((ViewHolder) view).container);
+      for (ViewHolder thumbHolder : mThumbs) {
+         if (thumbHolder.container == view) {
+            mThumbs.remove(thumbHolder);
+            mThumbnailContainer.removeView(thumbHolder.container);
+         }
+      }
+
       if ((mThumbs.size() < 3 && mThumbs.size() > 0) && mAddThumbButton != null) {
          mAddThumbButton.setVisibility(VISIBLE);
       }

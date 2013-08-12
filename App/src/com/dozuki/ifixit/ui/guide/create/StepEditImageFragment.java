@@ -20,7 +20,6 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
-import com.dozuki.ifixit.ui.guide.FallbackImageView;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
@@ -181,12 +180,13 @@ public class StepEditImageFragment extends SherlockFragment {
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
                          EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "delete_from_step", null);
+                         mThumbs.removeThumb(v);
+                         mImages.remove(thumbImage);
+
                          Bus bus = MainApplication.getBus();
                          bus.post(new StepImageDeleteEvent(thumbImage));
                          bus.post(new StepChangedEvent());
 
-                         mThumbs.removeThumb(v);
-                         mImages.remove(thumbImage);
                          break;
                    }
                 }
