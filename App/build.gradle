@@ -71,8 +71,9 @@ android {
       }
 
       dozuki {
-         // TODO: Change to "com.dozuki.dozuki"
-         packageName "com.dozuki.ifixit"
+         // This is a bug in gradle. xmlns declarations aren't updated when
+         // the package name changes: http://stackoverflow.com/a/16850109/1135611
+         /* packageName "com.dozuki.dozuki" */
       }
    }
 
