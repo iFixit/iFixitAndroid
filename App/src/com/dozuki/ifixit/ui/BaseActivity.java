@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,6 +50,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    protected static final String LOADING = "LOADING_FRAGMENT";
 
    private static final int MENU_OVERFLOW = 1;
+   private static final String PEEK_MENU = "PEEK_MENU_KEY";
+   private static final String INTERFACE_STATE = "IFIXIT_INTERFACE_STATE";
 
 
    /**
@@ -246,7 +249,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
 
-      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.BEHIND, Position.LEFT, MenuDrawer.MENU_DRAG_WINDOW);
+      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY, Position.LEFT, MenuDrawer.MENU_DRAG_CONTENT);
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -254,11 +257,23 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
       mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
 
+      SharedPreferences prefs = getSharedPreferences(INTERFACE_STATE, MODE_PRIVATE);
+
+      if (!prefs.contains(PEEK_MENU)) {
+         prefs.edit().putBoolean(PEEK_MENU, false).commit();
+         mMenuDrawer.peekDrawer(1000, 0);
+      }
+
       buildSliderMenu();
 
       if (MainApplication.inDebug()) {
          ViewServer.get(this).addWindow(this);
       }
+   }
+
+   @Override
+   public void setContentView(int layoutResId) {
+      mMenuDrawer.setContentView(layoutResId);
    }
 
    private void buildSliderMenu() {
