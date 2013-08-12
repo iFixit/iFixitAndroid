@@ -336,4 +336,5 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="validation_error_body">Validation failed</string>
     <string name="unpublishing">Unpublishing…</string>
     <string name="publishing">Publishing…</string>
+    <string name="voice_dictate_line_content_description">Voice dictate line content</string>
 </resources>

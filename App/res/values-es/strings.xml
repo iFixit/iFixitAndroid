@@ -335,4 +335,5 @@
     <string name="validation_error_body">La validación fallo</string>
     <string name="unpublishing">Unpublishing…</string>
     <string name="publishing">Publishing…</string>
+    <string name="voice_dictate_line_content_description">Voice dictate line content</string>
 </resources>
