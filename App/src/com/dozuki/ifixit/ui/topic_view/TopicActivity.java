@@ -20,22 +20,14 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
-public class TopicActivity extends BaseActivity
- implements TopicSelectedListener, OnBackStackChangedListener {
+public class TopicActivity extends BaseActivity implements TopicSelectedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
 
-   /**
-    * Used for Dozuki app. Enables the up navigation button to finish the
-    * activity and go back to the sites list.
-    */
-   private static final boolean UP_NAVIGATION_FINISH_ACTIVITY = false;
-
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
    private TopicNode mRootTopic;
-   private int mBackStackSize = 0;
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
@@ -72,12 +64,6 @@ public class TopicActivity extends BaseActivity
          hideTopicListWithDelay();
       }
 
-      getSupportFragmentManager().addOnBackStackChangedListener(this);
-
-      // Reset backstack size
-      mBackStackSize = -1;
-      onBackStackChanged();
-
       if (mTopicViewOverlay != null) {
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -111,17 +97,6 @@ public class TopicActivity extends BaseActivity
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
-   }
-
-   @Override
-   public void onBackStackChanged() {
-      int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
-
-      if (mBackStackSize > backStackSize) {
-         setTopicListVisible();
-      }
-
-      mBackStackSize = backStackSize;
    }
 
    @Override
