@@ -31,6 +31,7 @@ import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeLi
 import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.util.Utils;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -60,6 +61,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    // title
    private String mTitle = NO_TITLE;
    private EditText mStepTitle;
+   private int mStepId;
 
 
    /////////////////////////////////////////////////////
@@ -221,6 +223,20 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       }
    }
 
+   @Subscribe
+   public void onLineValidationFailed(StepLineValidationEvent event) {
+      if (event.stepid == mStepId) {
+
+         // Set the cursor to focus on the line that failed.
+         EditText et = (EditText) mBulletContainer.findViewById(event.index);
+
+         et.setError(getString(R.string.line_length_exceeded_error));
+
+         int textLength = et.getText().length();
+         et.setSelection(textLength, textLength);
+      }
+   }
+
    /////////////////////////////////////////////////////
    // DIALOGS
    /////////////////////////////////////////////////////
@@ -270,6 +286,10 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
 
    public void setStepOrderby(int orderby) {
       mOrderby = orderby;
+   }
+
+   public void setStepId(int stepid) {
+      mStepId = stepid;
    }
 
    private void initilizeBulletContainer() {

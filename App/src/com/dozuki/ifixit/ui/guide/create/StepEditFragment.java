@@ -138,6 +138,7 @@ public class StepEditFragment extends SherlockFragment {
    private void setCopiesForEdit() {
       mEditBulletFrag.setSteps(mStepObject.getLines());
       mEditBulletFrag.setStepTitle(mStepObject.getTitle());
+      mEditBulletFrag.setStepId(mStepObject.getStepid());
       mEditBulletFrag.setStepOrderby(mStepObject.getOrderby());
       if (mStepType.equals(IMAGE_TYPE)) {
          mEditImageFrag.setImages(mStepObject.getImages());

@@ -433,8 +433,31 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       if (event.hasError()) {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
+         final APIError error = event.getError();
 
-         APIService.getErrorDialog(this, event).show();
+         if (error.mType == APIError.Type.VALIDATION) {
+
+            int positiveButton = R.string.error_confirm;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(error.mTitle)
+             .setMessage(error.mMessage)
+             .setPositiveButton(positiveButton,
+              new DialogInterface.OnClickListener() {
+                 public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+
+                    if (error.mIndex != -1) {
+                       MainApplication.getBus().post(new StepLineValidationEvent(
+                        mGuide.getStep(mSavePosition).getStepid(), error.mIndex));
+                    }
+                 }
+              });
+
+            builder.create().show();
+         } else {
+            APIService.getErrorDialog(this, event).show();
+         }
       }
    }
 
@@ -550,14 +573,14 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       switch (v.getId()) {
          case R.id.step_edit_delete_step:
             gaTracker.sendEvent("ui_action", "button_press", "step_edit_delete_step",
-             (long)mGuide.getStep(mPagePosition).getStepid());
+             (long) mGuide.getStep(mPagePosition).getStepid());
             if (!mGuide.getSteps().isEmpty()) {
                createDeleteDialog(StepEditActivity.this).show();
             }
             break;
          case R.id.step_edit_save:
             gaTracker.sendEvent("ui_action", "button_press", "step_edit_save_step",
-             (long)mGuide.getStep(mPagePosition).getStepid());
+             (long) mGuide.getStep(mPagePosition).getStepid());
             save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
@@ -568,7 +591,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
             // If the step has changes, prompt the user to save or continue editing.
             if (mIsStepDirty) {
                createSaveChangesDialog(ConfirmSave.NEW_STEP).show();
-            // If the step doesn't have any bullet content, prompt them to add some.
+               // If the step doesn't have any bullet content, prompt them to add some.
             } else if (!stepHasLineContent(mGuide.getStep(mPagePosition))) {
                Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
                 Toast.LENGTH_SHORT).show();
@@ -830,7 +853,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       mSavePosition = savePosition;
       mIsStepDirty = false;
 
-      InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
       imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
       showLoading(mLoadingContainer, getString(R.string.saving));
@@ -894,7 +917,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
          return;
       }
 
-      EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long)mGuide.getGuideid());
+      EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid());
 
       Intent intent = new Intent(this, GuideViewActivity.class);
       if (mParentGuideId != NO_PARENT_GUIDE) {
