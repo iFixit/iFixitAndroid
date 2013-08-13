@@ -47,15 +47,12 @@ public class FallbackImageView extends ImageView implements Target {
              "image.");
             throw new RuntimeException();
          } else {
-            Log.d(TAG, "Falling back to remote image from url" + mImageUrl);
             builder = picasso.load(mImageUrl);
          }
       } else {
          if (mImage.hasLocalPath()) {
-            Log.d(TAG, "Falling back to local image " + mImage.getLocalPath());
             builder = picasso.load(new File(mImage.getLocalPath()));
          } else {
-            Log.d(TAG, "Falling back to remote image " + mImage.getPath());
             builder = picasso.load(mImage.getPath());
          }
       }

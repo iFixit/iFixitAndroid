@@ -5,7 +5,6 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.style.BulletSpan;
 import android.text.style.StrikethroughSpan;
-import android.util.Log;
 import org.xml.sax.XMLReader;
 
 
@@ -26,10 +25,6 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
          handleListItem(opening, output);
       } else if (tag.equalsIgnoreCase("img")) {
          output.append(NEWLINE);
-      }
-
-      if (tag.equals("video")) {
-         Log.d("TopicInfoFragment", output.toString());
       }
    }
 

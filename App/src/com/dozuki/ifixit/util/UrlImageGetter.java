@@ -6,7 +6,6 @@ import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.text.Html;
-import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
@@ -62,9 +61,6 @@ public class UrlImageGetter implements Html.ImageGetter {
       protected void onPostExecute(Drawable result) {
          int width = result.getIntrinsicWidth();
          int height = (int) ((width * (3f/4f)) - 0.5f);
-
-         Log.d("UrlImageGetter", "drawable height: " + height);
-         Log.d("UrlImageGetter", "drawable width: " + width);
 
          result.setBounds(0, 0, width, height);
 

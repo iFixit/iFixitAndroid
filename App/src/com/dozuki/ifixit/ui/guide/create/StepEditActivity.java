@@ -242,7 +242,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       MainApplication.getBus().register(this);
 
       Image newThumb;
-      Log.d("StepEditActivity", "onActivityResult");
 
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:

@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -197,7 +196,6 @@ public class ThumbnailView extends LinearLayout {
       thumb.container.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            Log.d("ThumbnailView", "onClick");
             for (ViewHolder view : mThumbs) {
                if (v.getId() == view.container.getId() && v.getTag() instanceof Image) {
                   Image image = (Image) v.getTag();
@@ -212,7 +210,6 @@ public class ThumbnailView extends LinearLayout {
       }
 
       if (image.hasLocalPath()) {
-         Log.d(TAG, "Using local image " + image.getLocalPath());
          File file = new File(image.getLocalPath());
          buildImage(mPicasso.load(file)
           .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
@@ -223,8 +220,6 @@ public class ThumbnailView extends LinearLayout {
           .centerCrop(),
           mMainImage);
       } else {
-         Log.d(TAG, "Using remote image " + image.getPath());
-
          String url = image.getPath(mImageSizes.getThumb());
          buildImage(mPicasso.load(url), thumb.image);
          thumb.image.setImage(image);

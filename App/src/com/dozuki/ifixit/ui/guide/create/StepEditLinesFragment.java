@@ -381,7 +381,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
             Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
              RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-            Log.d("StepEditLinesFragment", (Integer) v.getTag() + "");
 
             SharedPreferences sp = getActivity().getPreferences(Activity.MODE_PRIVATE);
             sp.edit().putInt("lineid", (Integer) v.getTag()).commit();
@@ -398,7 +397,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-      Log.d("StepEditLinesFragment", "onActivityResult");
       if (requestCode == MIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
          // Populate the wordsList with the String values the recognition engine thought it heard
          ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
