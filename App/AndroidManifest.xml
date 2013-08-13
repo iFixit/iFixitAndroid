@@ -36,16 +36,6 @@
                 <action android:name="android.intent.action.MAIN"/>
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
-
-            <!--DOZUKI
-            <intent-filter>
-               <action android:name="android.intent.action.SEARCH" />
-            </intent-filter>
-            <meta-data android:name="android.app.searchable"
-               android:resource="@xml/dozuki_searchable"/>
-            <meta-data android:name="android.app.default_searchable"
-               android:value=".SiteListActivity" />
-            DOZUKI-->
         </activity>
         <activity android:name=".ui.guide.view.TeardownsActivity"/>
         <activity android:name=".ui.guide.view.FeaturedGuidesActivity"/>
