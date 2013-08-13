@@ -4,7 +4,7 @@
            tools:ignore="TypographyDashes">
 
     <!-- iFixit Tracking ID -->
-    <string name="ga_trackingId">UA-30506-1</string>
+    <string name="ga_trackingId">UA-30506-9</string>
 
     <!--Enable automatic activity tracking-->
     <bool name="ga_autoActivityTracking">true</bool>
