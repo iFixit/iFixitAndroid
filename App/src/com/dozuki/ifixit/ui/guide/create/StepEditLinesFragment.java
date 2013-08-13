@@ -13,7 +13,6 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
-import android.text.method.ScrollingMovementMethod;
 import android.text.style.SuggestionSpan;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -312,7 +311,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       final EditText text = (EditText) v.findViewById(R.id.step_line_text_view);
       text.setText(line.getTextRaw());
       text.setId(index);
-      text.setMovementMethod(ScrollingMovementMethod.getInstance());
       text.addTextChangedListener(new TextWatcher() {
          @Override
          public void afterTextChanged(Editable s) {
@@ -325,6 +323,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
                if (lineText.equals(line.getTextRaw())) {
                   return;
                }
+
                mLines.get(mLines.indexOf(line)).setTextRaw(lineText);
 
                if (mLines.size() != BULLET_LIMIT && mLines.indexOf(line) == mLines.size() - 1) {
