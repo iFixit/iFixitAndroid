@@ -218,7 +218,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
          if (!isIndentionStateValid()) {
             fixIndentionState();
          }
-         // ((GuideStepChangedListener) getActivity()).enableSave();
+
          setGuideDirty();
       }
    }
