@@ -1,21 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/gray" >
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/topic_list_background">
 
-    <FrameLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:layout_marginRight="@dimen/topic_list_right_divider"
-        android:background="@color/translucent_white"
+    <com.marczych.androidsectionheaders.SectionListView
+        android:id="@+id/topicList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/transparent"
         android:paddingRight="16dp"
-        android:paddingLeft="16dp">
-
-        <com.marczych.androidsectionheaders.SectionListView
-            android:id="@+id/topicList"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
-    </FrameLayout>
+        android:paddingLeft="16dp"/>
 
 </RelativeLayout>
