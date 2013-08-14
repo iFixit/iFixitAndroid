@@ -72,9 +72,7 @@ android {
       }
 
       dozuki {
-         // This is a bug in gradle. xmlns declarations aren't updated when
-         // the package name changes: http://stackoverflow.com/a/16850109/1135611
-         /* packageName "com.dozuki.dozuki" */
+         packageName "com.dozuki.dozuki"
 
          buildConfig 'public static final String SITE_NAME = "dozuki";'
       }

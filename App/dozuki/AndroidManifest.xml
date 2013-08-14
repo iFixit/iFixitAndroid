@@ -3,8 +3,15 @@
     <application
         android:theme="@style/Theme.Dozuki">
 
+        <!-- This must be specified as com.dozuki.ifixit because changing the
+             package name in Gradle has some issues. If it is left as
+             ".ui.dozuki.SiteListActivity" it is converted to
+             "com.dozuki.dozuki.ui.dozuki.SiteListactivity" which _should_ be
+             fine. However, the package for code is not changed so
+             SiteListActivity actually lives in "com.dozuki.ifixit.ui.dozuki".
+             -->
         <activity
-            android:name=".ui.dozuki.SiteListActivity"
+            android:name="com.dozuki.ifixit.ui.dozuki.SiteListActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>

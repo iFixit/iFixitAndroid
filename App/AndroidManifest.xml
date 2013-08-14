@@ -27,9 +27,6 @@
         <service android:name=".util.APIService"/>
 
         <activity
-            android:name=".ui.dozuki.SiteListActivity"
-            android:launchMode="singleTop"/>
-        <activity
             android:name=".ui.topic_view.TopicActivity"
             android:launchMode="singleTop">
             <intent-filter>
