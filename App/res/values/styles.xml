@@ -170,7 +170,6 @@
     </style>
 
     <style name="GuideMediaMain">
-        <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
         <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
     </style>
 

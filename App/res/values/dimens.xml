@@ -29,7 +29,7 @@
     <dimen name="guide_thumbnail_padding">1dp</dimen>
 
     <!-- Step Edit View -->
-    <dimen name="step_pager_bar_height">40dp</dimen>
+    <dimen name="step_pager_bar_height">30dp</dimen>
     <dimen name="step_edit_title_text_bottom_spacing">16dp</dimen>
     <dimen name="step_edit_line_spacing">4dp</dimen>
 

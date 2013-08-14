@@ -7,6 +7,20 @@
         <item name="android:baselineAligned">false</item>
     </style>
 
+    <style name="GuideStepMediaWrap">
+        <item name="android:background">@drawable/step_media_background</item>
+        <item name="android:padding">@dimen/page_padding</item>
+    </style>
+
+    <style name="GuideStepLinesWrap">
+        <item name="android:paddingTop">@dimen/page_padding</item>
+        <item name="android:paddingRight">@dimen/page_padding</item>
+        <item name="android:paddingBottom">@dimen/page_padding</item>
+        <item name="android:paddingLeft">8dp</item>
+
+        <item name="android:background">?attr/doz__background</item>
+    </style>
+
     <style name="GuideMediaMain">
         <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
