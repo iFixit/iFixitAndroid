@@ -10,20 +10,18 @@ Official iFixit Android App
 
 ### Gradle Config
 
-Add values for `dev_server` and `app_id` to /gradle.properties like so:
+Add a value for `devServer` to `/gradle.properties` like so:
 
-    dev_server="www.devserver.com"
-    app_id="0123456789ABCDEF0123456789ABCDEF"
+    devServer="www.devserver.com"
 
-### Signing
+For each site, add values for `{siteName}KeyAlias`, `{siteName}StorePassword`, `{siteName}KeyPassword`, and `{siteName}AppId` to `/gradle.properties`. For example:
 
-Add values for `ifixitKeyAlias`, `ifixitStorePassword`, and `ifixitKeyPassword` to /gradle.properties like so:
-
+    ifixitAppId="0123456789ABCDEF0123456789ABCDEF"
     ifixitKeyAlias=keyAliasName
     ifixitStorePassword=password
     ifixitKeyPassword=password
 
-Symlink keystores/ifixit.keystore to your keystore like so:
+Symlink `keystores/{siteName}.keystore` to your keystore like so:
 
     ln -s ~/path/to/keystore keystores/ifixit.keystore
 

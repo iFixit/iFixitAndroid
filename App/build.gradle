@@ -42,8 +42,6 @@ android {
       minSdkVersion 8
       targetSdkVersion 18
       packageName "com.dozuki.ifixit"
-
-      buildConfig 'public static final String APP_ID = ' + app_id + ';'
    }
 
    signingConfigs {
@@ -57,7 +55,7 @@ android {
 
    buildTypes {
       debug {
-         buildConfig 'public static final String DEV_SERVER = ' + dev_server + ';'
+         buildConfig 'public static final String DEV_SERVER = ' + devServer + ';'
       }
 
       release {
@@ -68,13 +66,15 @@ android {
 
    productFlavors {
       ifixit {
-         buildConfig 'public static final String SITE_NAME = "ifixit";'
+         buildConfig 'public static final String SITE_NAME = "ifixit";', \
+                     'public static final String APP_ID = ' + ifixitAppId + ';'
       }
 
       dozuki {
          packageName "com.dozuki.dozuki"
 
-         buildConfig 'public static final String SITE_NAME = "dozuki";'
+         buildConfig 'public static final String SITE_NAME = "dozuki";', \
+                     'public static final String APP_ID = ' + dozukiAppId + ';'
       }
    }
 
