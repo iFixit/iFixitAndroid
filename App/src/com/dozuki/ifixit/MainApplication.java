@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.util.Log;
+
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
@@ -189,7 +189,7 @@ public class MainApplication extends Application {
 
    // Returns true if the app is in debug mode (not in production)
    public static boolean inDebug() {
-      return (0 != (get().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+      return BuildConfig.DEBUG;
    }
 
    public static Bus getBus() {
