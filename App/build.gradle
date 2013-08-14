@@ -89,6 +89,10 @@ android {
          assets.srcDirs = ['assets']
       }
 
+      ifixit {
+         manifest.srcFile 'ifixit/AndroidManifest.xml'
+      }
+
       dozuki {
          manifest.srcFile 'dozuki/AndroidManifest.xml'
          java.srcDirs = ["dozuki/src"]

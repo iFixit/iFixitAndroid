@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application
         android:theme="@style/Theme.Dozuki">
+        <activity
+            android:name="com.dozuki.ifixit.ui.topic_view.TopicActivity"
+            android:launchMode="singleTop" />
 
         <!-- This must be specified as com.dozuki.ifixit because changing the
              package name in Gradle has some issues. If it is left as

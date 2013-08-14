@@ -2,7 +2,6 @@
 
 # Features left to move into gradle:
 #    Updating intent-filter domain for GuideView
-#    Update analytics key
 
 if [ $# -eq 0 ]
 then

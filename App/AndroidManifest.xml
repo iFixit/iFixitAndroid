@@ -26,14 +26,6 @@
         android:theme="@style/Theme.iFixit">
         <service android:name=".util.APIService"/>
 
-        <activity
-            android:name=".ui.topic_view.TopicActivity"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
         <activity android:name=".ui.guide.view.TeardownsActivity"/>
         <activity android:name=".ui.guide.view.FeaturedGuidesActivity"/>
         <activity android:name=".ui.FavoritesActivity"/>
