@@ -34,45 +34,14 @@
         <activity
             android:name=".ui.guide.create.GuideIntroActivity"
             android:launchMode="singleTop"/>
-        <activity
-            android:name=".ui.guide.create.GuideCreateActivity"/>
-        <activity
-            android:name=".ui.guide.create.StepsActivity"/>
+        <activity android:name=".ui.guide.create.GuideCreateActivity"/>
+        <activity android:name=".ui.guide.create.StepsActivity"/>
         <activity
             android:name=".ui.guide.create.StepEditActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.login.OpenIDActivity"/>
         <activity android:name=".ui.topic_view.TopicViewActivity"/>
-        <activity
-            android:name=".ui.guide.view.GuideViewActivity"
-            android:exported="true"
-            android:launchMode="singleTop">
-            <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-
-                <category android:name="android.intent.category.DEFAULT"/>
-                <category android:name="android.intent.category.BROWSABLE"/>
-
-                <data
-                    android:scheme="http"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Guide/"/>
-                <data
-                    android:scheme="http"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Teardown/"/>
-                <!-- Duplicates for https. -->
-                <data
-                    android:scheme="https"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Guide/"/>
-                <data
-                    android:scheme="https"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Teardown/"/>
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.guide.view.FullImageViewActivity"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>

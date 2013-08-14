@@ -1,8 +1,5 @@
 #!/bin/bash
 
-# Features left to move into gradle:
-#    Updating intent-filter domain for GuideView
-
 if [ $# -eq 0 ]
 then
    echo "Usage: $0 <site name> [--package-change]"

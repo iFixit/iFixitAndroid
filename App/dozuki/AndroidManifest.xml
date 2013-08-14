@@ -29,5 +29,35 @@
             <meta-data android:name="android.app.default_searchable"
                android:value=".SiteListActivity" />
         </activity>
+
+        <activity
+            android:name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Guide/"/>
+                <data
+                    android:scheme="http"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Teardown/"/>
+                <!-- Duplicates for https. -->
+                <data
+                    android:scheme="https"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Guide/"/>
+                <data
+                    android:scheme="https"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Teardown/"/>
+            </intent-filter>
+        </activity>
     </application>
 </manifest>
