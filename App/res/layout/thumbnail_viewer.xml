@@ -15,7 +15,7 @@
             android:id="@+id/main_image_view"
             android:layout_width="@dimen/guide_image_width"
             android:layout_height="@dimen/guide_image_height"
-            android:background="@color/step_edit_add_photo_background"
+            android:background="@drawable/image_background"
             android:scaleType="centerInside"
             android:contentDescription="@string/guide_create_step_edit_main_image_description"/>
     </FrameLayout>
@@ -34,12 +34,12 @@
             android:layout_width="@dimen/guide_thumbnail_width"
             android:layout_height="@dimen/guide_thumbnail_height"
             android:layout_gravity="right"
-            android:background="@drawable/add_thumbnail_item_background"
+            android:background="@drawable/image_background"
+            android:src="@drawable/add_photos"
             android:focusable="true"
             android:clickable="true"
             android:cropToPadding="true"
             android:padding="@dimen/add_thumbnail_icon_inner_padding"
-            android:src="@drawable/add_photos"
             android:visibility="gone"
             android:contentDescription="@string/thumbnail_desc"/>
 

@@ -39,6 +39,7 @@ public class ThumbnailView extends LinearLayout {
    private float mThumbnailHeight = 0;
    private float mMainWidth = 0;
    private float mMainHeight = 0;
+   private int mThumbnailSpacing;
 
    static class ViewHolder {
       FallbackImageView image;
@@ -85,6 +86,9 @@ public class ThumbnailView extends LinearLayout {
    private void init(Context context) {
       LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.thumbnail_viewer, this, true);
+
+
+      mThumbnailSpacing = getResources().getDimensionPixelSize(R.dimen.guide_thumbnail_spacing);
 
       mPicasso = PicassoUtils.with(getContext());
       mImageSizes = MainApplication.get().getImageSizes();
@@ -335,10 +339,10 @@ public class ThumbnailView extends LinearLayout {
 
          if (!MainApplication.get().inPortraitMode()) {
             lp.gravity = Gravity.NO_GRAVITY;
-            lp.setMargins(0, 0, 16, 0);
+            lp.setMargins(0, 0, mThumbnailSpacing, 0);
          } else {
             lp.gravity = Gravity.RIGHT;
-            lp.setMargins(0, 0, 0, 16);
+            lp.setMargins(0, 0, 0, mThumbnailSpacing);
          }
 
          mAddThumbButton.setLayoutParams(lp);
@@ -368,10 +372,10 @@ public class ThumbnailView extends LinearLayout {
        LayoutParams.WRAP_CONTENT);
       if (!MainApplication.get().inPortraitMode()) {
          llp.gravity = Gravity.NO_GRAVITY;
-         llp.setMargins(0, 0, 16, 0);
+         llp.setMargins(0, 0, mThumbnailSpacing, 0);
       } else {
          llp.gravity = Gravity.RIGHT;
-         llp.setMargins(0, 0, 0, 16);
+         llp.setMargins(0, 0, 0, mThumbnailSpacing);
       }
 
       thumb.image.setLayoutParams(flp);
@@ -427,6 +431,7 @@ public class ThumbnailView extends LinearLayout {
          mThumbnailWidth = (mDisplayMetrics.widthPixels - mMainWidth - pagePadding);
          mThumbnailHeight = mThumbnailWidth * (3f / 4f);
       } else {
+         float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f);
          // Screen height minus everything else that occupies vertical space
          mThumbnailHeight = (mDisplayMetrics.heightPixels - mMainHeight - mNavigationHeight);
          mThumbnailWidth = (mThumbnailHeight * (4f / 3f));

@@ -136,14 +136,18 @@
 
     <style name="GuideStepWrap">
         <item name="android:orientation">vertical</item>
-        <item name="android:padding">@dimen/page_padding</item>
         <item name="android:background">?attr/doz__background</item>
-        <item name="android:paddingBottom">0dp</item>
         <item name="android:baselineAligned">false</item>
     </style>
 
     <style name="GuideStepMediaWrap">
-        <item name="android:layout_marginBottom">@dimen/guide_step_section_seperator</item>
+        <item name="android:background">@drawable/step_media_background</item>
+        <item name="android:padding">@dimen/page_padding</item>
+    </style>
+
+    <style name="GuideStepLinesWrap">
+        <item name="android:padding">@dimen/page_padding</item>
+        <item name="android:background">?attr/doz__background</item>
     </style>
 
     <style name="GuideStepLines">
@@ -151,7 +155,6 @@
     </style>
 
     <style name="Thumbnail">
-        <item name="android:padding">@dimen/guide_thumbnail_padding</item>
         <item name="android:layout_gravity">right</item>
     </style>
 
@@ -167,7 +170,6 @@
     </style>
 
     <style name="GuideMediaMain">
-        <item name="android:padding">@dimen/guide_image_padding</item>
         <item name="android:layout_marginBottom">@dimen/guide_image_spacing_bottom</item>
         <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
     </style>

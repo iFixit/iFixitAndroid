@@ -6,7 +6,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -118,17 +117,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
-      /**
-       * lock screen for small sizes to portrait.
-       * Courtesy:
-       * http://stackoverflow.com/questions/10491531/android-restrict-activity-orientation-based-on-screen-size
-       */
-      if (MainApplication.get().isScreenLarge()) {
-         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
-      } else {
-         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-      }
+      setContentView(R.layout.guide_create_step_edit);
 
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
@@ -157,8 +146,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
       } else {
          extractExtras(getIntent().getExtras());
       }
-
-      setContentView(R.layout.guide_create_step_edit);
 
       mSaveStep = (Button) findViewById(R.id.step_edit_save);
 

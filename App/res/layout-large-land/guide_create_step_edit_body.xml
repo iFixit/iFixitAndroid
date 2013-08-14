@@ -4,21 +4,20 @@
               android:id="@+id/guide_create_edit_edit_container"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
-              style="@style/GuideStepWrap"
-              android:weightSum="10">
+              style="@style/GuideStepWrap">
 
     <FrameLayout
         android:id="@+id/guide_create_edit_media_fragment_container"
         style="@style/GuideStepMediaWrap"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="4"/>
+        android:layout_weight="1"/>
 
     <FrameLayout
         android:id="@+id/guide_create_edit_bullet_fragment_container"
         style="@style/GuideStepLinesWrap"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="6"/>
+        android:layout_weight="1"/>
 
 </LinearLayout>

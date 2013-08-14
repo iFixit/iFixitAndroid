@@ -45,5 +45,6 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="image_border">#FFF3F3F3</color>
     <color name="step_edit_add_photo_background">@color/image_border</color>
     <color name="lined_text_view_stroke">#FFDDDDDD</color>
+    <color name="gainsboro">#FFDCDCDC</color>
 
 </resources>

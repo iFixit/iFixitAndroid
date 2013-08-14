@@ -3,8 +3,7 @@
                 android:id="@+id/step_edit_line_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="12dp"
-                android:layout_marginTop="12dp"
+                android:layout_marginBottom="18dp"
                 android:background="?attr/doz__background">
 
     <ImageView
@@ -24,9 +23,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginBottom="8dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginBottom="@dimen/step_edit_line_spacing"
+        android:layout_marginLeft="@dimen/step_edit_line_spacing"
+        android:layout_marginTop="@dimen/step_edit_line_spacing"
         android:layout_toRightOf="@+id/guide_step_item_bullet_thumbnail"
         android:layout_toLeftOf="@+id/step_line_mic_button"
         android:hint="@string/step_text_default"
@@ -40,8 +39,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:layout_marginRight="4dp"
-        android:layout_marginLeft="4dp"
         android:background="?android:attr/selectableItemBackground"
         android:src="@drawable/ic_action_mic"
         android:contentDescription="@string/voice_dictate_line_content_description"/>

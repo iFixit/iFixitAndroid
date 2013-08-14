@@ -9,7 +9,7 @@
 
     <com.dozuki.ifixit.ui.guide.FallbackImageView
         android:id="@+id/thumbnail_image"
-        android:background="?attr/doz__imageBorder"
+        android:background="@drawable/image_background"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:contentDescription="@string/thumbnail_desc"/>

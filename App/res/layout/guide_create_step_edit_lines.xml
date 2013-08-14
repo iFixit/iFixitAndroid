@@ -16,12 +16,11 @@
             android:id="@+id/step_edit_title_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textSize="24sp"
             android:imeOptions="actionDone"
             android:inputType="textShortMessage|textAutoCorrect|textCapSentences"
             android:selectAllOnFocus="true"
             android:hint="@string/step_title_hint"
-            android:layout_marginBottom="16dp"
+            android:layout_marginBottom="@dimen/step_edit_title_text_bottom_spacing"
             android:singleLine="true"/>
 
         <LinearLayout

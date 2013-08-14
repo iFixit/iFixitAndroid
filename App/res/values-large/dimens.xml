@@ -28,5 +28,6 @@
     <dimen name="add_thumbnail_icon_inner_padding">16dp</dimen>
 
     <dimen name="guide_create_step_edit_video__marginRight">0dp</dimen>
+    <dimen name="step_edit_line_spacing">8dp</dimen>
 
 </resources>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="page_padding">4dp</dimen>
+
+    <dimen name="guide_thumbnail_spacing">4dp</dimen>
+    <dimen name="guide_image_spacing_bottom">4dp</dimen>
+    <dimen name="guide_image_spacing_right">4dp</dimen>
+    <dimen name="step_edit_title_text_bottom_spacing">8dp</dimen>
+</resources>
