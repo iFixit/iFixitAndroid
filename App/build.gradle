@@ -45,11 +45,17 @@ android {
    }
 
    signingConfigs {
-      release {
+      ifixit {
          storeFile file("../keystores/ifixit.keystore")
          keyAlias ifixitKeyAlias
          storePassword ifixitStorePassword
          keyPassword ifixitKeyPassword
+      }
+      dozuki {
+         storeFile file("../keystores/dozuki.keystore")
+         keyAlias dozukiKeyAlias
+         storePassword dozukiStorePassword
+         keyPassword dozukiKeyPassword
       }
    }
 
@@ -60,17 +66,19 @@ android {
 
       release {
          buildConfig 'public static final String DEV_SERVER = "";'
-         signingConfig signingConfigs.release
       }
    }
 
    productFlavors {
       ifixit {
+         signingConfig signingConfigs.ifixit
+
          buildConfig 'public static final String SITE_NAME = "ifixit";', \
                      'public static final String APP_ID = ' + ifixitAppId + ';'
       }
 
       dozuki {
+         signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
 
          buildConfig 'public static final String SITE_NAME = "dozuki";', \
