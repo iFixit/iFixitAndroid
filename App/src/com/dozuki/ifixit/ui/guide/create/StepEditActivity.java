@@ -29,7 +29,7 @@ import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
@@ -45,7 +45,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class StepEditActivity extends BaseActivity implements OnClickListener {
+public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickListener {
    public static final int MENU_VIEW_GUIDE = 12;
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;

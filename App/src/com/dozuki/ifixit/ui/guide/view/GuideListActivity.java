@@ -9,7 +9,7 @@ import android.widget.GridView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.EndlessScrollListener;
 import com.dozuki.ifixit.ui.GuideListAdapter;
 import com.dozuki.ifixit.util.APICall;
@@ -18,7 +18,7 @@ import com.dozuki.ifixit.util.APIService;
 
 import java.util.ArrayList;
 
-public abstract class GuideListActivity extends BaseActivity {
+public abstract class GuideListActivity extends BaseMenuDrawerActivity {
 
    private static final int LIMIT = 20;
    private static final String GRID_STATE = "GRID_STATE";

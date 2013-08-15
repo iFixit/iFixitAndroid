@@ -5,9 +5,9 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 
-public class TopicViewActivity extends BaseActivity {
+public class TopicViewActivity extends BaseMenuDrawerActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;

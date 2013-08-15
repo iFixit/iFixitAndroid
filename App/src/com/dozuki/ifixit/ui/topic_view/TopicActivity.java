@@ -14,13 +14,13 @@ import android.widget.FrameLayout;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
-public class TopicActivity extends BaseActivity implements TopicSelectedListener {
+public class TopicActivity extends BaseMenuDrawerActivity implements TopicSelectedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;

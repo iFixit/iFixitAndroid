@@ -14,7 +14,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.LoginEvent;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -22,7 +22,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class GalleryActivity extends BaseActivity {
+public class GalleryActivity extends BaseMenuDrawerActivity {
 
    public static final String MEDIA_FRAGMENT_PHOTOS = "MEDIA_FRAGMENT_PHOTOS";
    public static final String ACTIVITY_RETURN_MODE = "ACTIVITY_RETURN_ID";

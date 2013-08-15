@@ -10,7 +10,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
@@ -23,7 +23,8 @@ import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.List;
 
-public class GuideViewActivity extends BaseActivity implements ViewPager.OnPageChangeListener {
+public class GuideViewActivity extends BaseMenuDrawerActivity implements
+ ViewPager.OnPageChangeListener {
 
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";

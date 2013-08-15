@@ -80,6 +80,13 @@ public class SiteListActivity extends BaseActivity
    }
 
    @Override
+   public void onResume() {
+      MainApplication.get().setSite(Site.getSite("dozuki"));
+
+      super.onResume();
+   }
+
+   @Override
    protected void onNewIntent(Intent intent) {
       setIntent(intent);
       handleIntent(intent);
@@ -151,12 +158,5 @@ public class SiteListActivity extends BaseActivity
    @Override
    public boolean neverFinishActivityOnLogout() {
       return true;
-   }
-
-   @Override
-   public void onResume() {
-      MainApplication.get().setSite(Site.getSite("dozuki"));
-
-      super.onResume();
    }
 }

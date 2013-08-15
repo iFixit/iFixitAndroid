@@ -15,7 +15,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -27,7 +27,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class GuideCreateActivity extends BaseActivity {
+public class GuideCreateActivity extends BaseMenuDrawerActivity {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    static int GUIDE_STEP_EDIT_REQUEST = 1;
    private static final int MENU_CREATE_GUIDE = 3;

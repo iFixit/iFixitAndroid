@@ -17,7 +17,7 @@ import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.guide.wizard.*;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
 import com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip;
@@ -30,8 +30,8 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GuideIntroActivity extends BaseActivity implements PageFragmentCallbacks, ReviewFragment.Callbacks,
- ModelCallbacks {
+public class GuideIntroActivity extends BaseMenuDrawerActivity implements
+ PageFragmentCallbacks, ReviewFragment.Callbacks, ModelCallbacks {
    public static final int GUIDE_STEP_EDIT_REQUEST = 1;
    public static final String STATE_KEY = "STATE_KEY";
 

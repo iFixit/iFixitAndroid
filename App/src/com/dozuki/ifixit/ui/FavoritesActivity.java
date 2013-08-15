@@ -14,7 +14,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class FavoritesActivity extends BaseActivity {
+public class FavoritesActivity extends BaseMenuDrawerActivity {
    private static final int LIMIT = 200;
    private int OFFSET = 0;
    private static final String GUIDES_KEY = "GUIDES_KEY";
