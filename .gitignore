@@ -24,6 +24,12 @@ target
 release.properties
 pom.xml.*
 
+#Gradle
+/gradle.properties
+.gradle
+*/build
+keystores
+
 #Ant
 build.xml
 ant.properties

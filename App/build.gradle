@@ -1,0 +1,110 @@
+buildscript {
+   repositories {
+      mavenCentral()
+   }
+   dependencies {
+      classpath 'com.android.tools.build:gradle:0.5.+'
+   }
+}
+apply plugin: 'android'
+
+repositories {
+   mavenCentral()
+   mavenLocal() // Needed to pick up analytics from maven-android-sdk-deployer
+   maven {
+      url 'https://raw.github.com/marczych/ark/master/releases/'
+   }
+}
+
+dependencies {
+   compile "com.android.support:support-v4:18.0.0"
+   compile "com.actionbarsherlock:actionbarsherlock:4.4.0@aar"
+   compile "com.squareup.okhttp:okhttp:1.1.0"
+   compile "com.marczych.androidsectionheaders:androidsectionheaders:1.0.0"
+   compile "com.squareup:otto:1.3.2"
+   compile "com.github.kevinsawicki:http-request:5.4"
+   compile "org.jsoup:jsoup:1.7.2"
+   compile "com.google.code.gson:gson:2.2.4"
+   compile "com.squareup.picasso:picasso:1.1.1"
+   compile "net.simonvt.menudrawer:menudrawer:3.0.4@aar"
+   compile "com.viewpagerindicator:viewpagerindicator:2.4.1"
+   compile "com.google.android.analytics:analytics:3"
+   compile "com.github.chrisbanes.pulltorefresh:pulltorefresh:2.1.2"
+   compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
+   compile "com.mobeta.android.dslv:dslv:0.6.1"
+}
+
+android {
+   compileSdkVersion 18
+   buildToolsVersion "18.0.1"
+
+   defaultConfig {
+      minSdkVersion 8
+      targetSdkVersion 18
+      packageName "com.dozuki.ifixit"
+   }
+
+   signingConfigs {
+      ifixit {
+         storeFile file("../keystores/ifixit.keystore")
+         keyAlias ifixitKeyAlias
+         storePassword ifixitStorePassword
+         keyPassword ifixitKeyPassword
+      }
+      dozuki {
+         storeFile file("../keystores/dozuki.keystore")
+         keyAlias dozukiKeyAlias
+         storePassword dozukiStorePassword
+         keyPassword dozukiKeyPassword
+      }
+   }
+
+   buildTypes {
+      debug {
+         buildConfig 'public static final String DEV_SERVER = ' + devServer + ';'
+      }
+
+      release {
+         buildConfig 'public static final String DEV_SERVER = "";'
+      }
+   }
+
+   productFlavors {
+      ifixit {
+         signingConfig signingConfigs.ifixit
+
+         buildConfig 'public static final String SITE_NAME = "ifixit";', \
+                     'public static final String APP_ID = ' + ifixitAppId + ';'
+      }
+
+      dozuki {
+         signingConfig signingConfigs.dozuki
+         packageName "com.dozuki.dozuki"
+
+         buildConfig 'public static final String SITE_NAME = "dozuki";', \
+                     'public static final String APP_ID = ' + dozukiAppId + ';'
+      }
+   }
+
+   sourceSets {
+      main {
+         manifest.srcFile 'AndroidManifest.xml'
+         java.srcDirs = ['src']
+         resources.srcDirs = ['src']
+         aidl.srcDirs = ['src']
+         renderscript.srcDirs = ['src']
+         res.srcDirs = ['res']
+         assets.srcDirs = ['assets']
+      }
+
+      ifixit {
+         manifest.srcFile 'ifixit/AndroidManifest.xml'
+      }
+
+      dozuki {
+         manifest.srcFile 'dozuki/AndroidManifest.xml'
+         java.srcDirs = ["dozuki/src"]
+         res.srcDirs = ["dozuki/res"]
+      }
+   }
+}

@@ -23,7 +23,6 @@
     <string name="com.dozuki.ifixit.ui.guide.view.FullImageViewActivity">Full Screen Image View</string>
     <string name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity">Guide View</string>
     <string name="com.dozuki.ifixit.ui.guide.view.VideoViewActivity">Video View</string>
-    <string name="com.dozuki.ifixit.ui.guide.view.FullImageViewActivity">Full Screen Image View</string>
     <string name="com.dozuki.ifixit.ui.guide.edit.StepsActivity">Edit Steps List</string>
     <string name="com.dozuki.ifixit.ui.guide.edit.GuideCreateActivity">User Guides</string>
     <string name="com.dozuki.ifixit.ui.guide.edit.GuideIntroActivity">Create New Guide</string>

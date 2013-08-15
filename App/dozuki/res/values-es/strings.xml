@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Dozuki Site List -->
+    <string name="dozuki_search_hint">Buscar sitios</string>
+    <string name="site_list_button">Explorar sitios</string>
+    <string name="site_list_title">Seleccione un sitio</string>
+    <string name="site_list_image_description">Dozuki: Le damos vida a la documentación técnica</string>
+    <string name="site_list_background">Serrucho de costilla Dozuki en la mesa de trabajo</string>
+    <string name="site_list_search_title">Buscar Sitios</string>
+    <string name="lock_description">Sitio Privado</string>
+    <string name="empty_site_list">No se encontraron sitios.</string>
+</resources>

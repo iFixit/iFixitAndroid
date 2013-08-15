@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+   <!-- TODO: This theme isn't updated in the merged Manifest... -->
+    <application
+        android:theme="@style/Theme.Dozuki">
+        <activity
+            android:name="com.dozuki.ifixit.ui.topic_view.TopicActivity"
+            android:launchMode="singleTop" />
+
+        <!-- This must be specified as com.dozuki.ifixit because changing the
+             package name in Gradle has some issues. If it is left as
+             ".ui.dozuki.SiteListActivity" it is converted to
+             "com.dozuki.dozuki.ui.dozuki.SiteListactivity" which _should_ be
+             fine. However, the package for code is not changed so
+             SiteListActivity actually lives in "com.dozuki.ifixit.ui.dozuki".
+             -->
+        <activity
+            android:name="com.dozuki.ifixit.ui.dozuki.SiteListActivity"
+            android:theme="@style/Theme.Dozuki"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+
+            <intent-filter>
+               <action android:name="android.intent.action.SEARCH" />
+            </intent-filter>
+            <meta-data android:name="android.app.searchable"
+               android:resource="@xml/dozuki_searchable"/>
+            <meta-data android:name="android.app.default_searchable"
+               android:value=".SiteListActivity" />
+        </activity>
+
+        <activity
+            android:name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <data
+                    android:scheme="http"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Guide/"/>
+                <data
+                    android:scheme="http"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Teardown/"/>
+                <!-- Duplicates for https. -->
+                <data
+                    android:scheme="https"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Guide/"/>
+                <data
+                    android:scheme="https"
+                    android:host="*.dozuki.com"
+                    android:pathPrefix="/Teardown/"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

@@ -6,12 +6,12 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.content.pm.ApplicationInfo;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.util.Log;
+
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
@@ -26,8 +26,6 @@ import java.net.URL;
 
 public class MainApplication extends Application {
    private static final int LARGE_SIZE_CUTOFF = 800;
-   // The current version of the app (this is replaced by dozukify.sh).
-   private static final String CURRENT_SITE = "SITE_ifixit";
 
    private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
@@ -137,7 +135,7 @@ public class MainApplication extends Application {
     * title displayed.
     */
    public String getSiteDisplayTitle() {
-      if (CURRENT_SITE.equals("SITE_dozuki")) {
+      if (BuildConfig.SITE_NAME.equals("SITE_dozuki")) {
          return getSite().mTitle;
       } else {
          return "";
@@ -191,7 +189,7 @@ public class MainApplication extends Application {
 
    // Returns true if the app is in debug mode (not in production)
    public static boolean inDebug() {
-      return (0 != (get().getApplicationInfo().flags & ApplicationInfo.FLAG_DEBUGGABLE));
+      return BuildConfig.DEBUG;
    }
 
    public static Bus getBus() {
@@ -261,9 +259,7 @@ public class MainApplication extends Application {
     * (iFixit/Crucial etc.).
     */
    private Site getDefaultSite() {
-      String siteName = CURRENT_SITE.replace("SITE_", "");
-
-      return Site.getSite(siteName);
+      return Site.getSite(BuildConfig.SITE_NAME);
    }
 
    /**
