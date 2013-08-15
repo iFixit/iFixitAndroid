@@ -655,7 +655,6 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
    private void refreshView(int position) {
       // The view pager does not recreate the item in the current position unless we force it to.
       initPager();
-      mPager.invalidate();
       mTitleIndicator.notifyDataSetChanged();
       mStepAdapter.notifyDataSetChanged();
       mPager.setCurrentItem(position, false);
