@@ -394,7 +394,7 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
 
       menu.add(1, MENU_DISCARD_CHANGES, 0, R.string.discard_changes)
        .setIcon(R.drawable.ic_action_undo)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
 
       return super.onCreateOptionsMenu(menu);
    }
