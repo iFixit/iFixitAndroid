@@ -91,7 +91,7 @@ public class StepEditFragment extends SherlockFragment {
 
             ft.add(R.id.guide_create_edit_media_fragment_container, mEditVideoFrag, STEP_VIDEO_FRAGMENT_TAG);
          } else if (mStepType.equals(EMBED_TYPE)) {
-            mEditEmbedFrag =  new StepEditEmbedFragment();
+            mEditEmbedFrag = new StepEditEmbedFragment();
             ft.add(R.id.guide_create_edit_media_fragment_container, mEditEmbedFrag, STEP_EMBED_FRAGMENT_TAG);
          } else if (mStepType.equals(IMAGE_TYPE)) {
             mEditImageFrag = new StepEditImageFragment();
@@ -104,16 +104,6 @@ public class StepEditFragment extends SherlockFragment {
       setCopiesForEdit();
 
       return v;
-   }
-
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-      super.onActivityResult(requestCode, resultCode, intent);
-      mEditBulletFrag = (StepEditLinesFragment) getChildFragmentManager()
-       .findFragmentById(R.id.guide_create_edit_bullet_fragment_container);
-      if(mEditBulletFrag != null){
-         mEditBulletFrag.onActivityResult(requestCode, resultCode, intent);
-      }
    }
 
    @Override

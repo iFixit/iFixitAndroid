@@ -7,6 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.speech.RecognizerIntent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
@@ -266,6 +268,40 @@ public class StepEditActivity extends BaseActivity implements OnClickListener {
                refreshView(mPagePosition);
 
                APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
+            }
+            break;
+         case StepEditLinesFragment.MIC_REQUEST_CODE:
+            if (resultCode == Activity.RESULT_OK) {
+               // Populate the wordsList with the String values the recognition engine thought it heard
+               final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+               if (MainApplication.inDebug()) {
+                  String debug = "";
+
+                  for (String match : matches) {
+                     debug += "   " + match + "\n";
+                  }
+                  Log.d("StepEditActivity", "Potential Results:  \n\n" + debug);
+               }
+
+               if (matches.size() > 0) {
+                  Handler handler = new Handler();
+                  
+                  // We have to delay posting the event because this activities onActivityResult method is called just
+                  // before the fragments onResume.  Delaying 1/10 of a second gives the fragment enough time to
+                  // register its' event bus listener so it can receive the event.
+                  handler.postDelayed(new Runnable() {
+                     @Override
+                     public void run() {
+                        MainApplication.getBus().post(new StepMicCompleteEvent(matches,
+                         mGuide.getStep(mPagePosition).getStepid()));
+                     }
+
+                  }, 100);
+               } else {
+                  Log.d("StepEditActivity", "No matches; try again");
+                  // TODO: Relaunch mic and try again
+               }
             }
             break;
          default:

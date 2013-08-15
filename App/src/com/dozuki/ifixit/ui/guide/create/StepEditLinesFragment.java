@@ -45,7 +45,8 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
    private static final int INDENT_LIMIT = 2;
    private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
-   private static final int MIC_REQUEST_CODE = 4;
+   protected static final int MIC_REQUEST_CODE = 2342;
+   private static final String MIC_TEXT_LINE_ID = "MIC_TEXT_LINE_ID_KEY";
    private LinearLayout mBulletContainer;
    private Button mNewBulletButton;
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
@@ -237,6 +238,42 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       }
    }
 
+   @Subscribe
+   public void onStepMicComplete(StepMicCompleteEvent event) {
+      if (event.stepid == mStepId) {
+
+         SharedPreferences sp = getActivity().getPreferences(Activity.MODE_PRIVATE);
+         int lineid = sp.getInt(MIC_TEXT_LINE_ID, 0);
+         EditText lineText = (EditText) mBulletContainer.findViewWithTag(lineid + "text");
+
+         if (lineText == null) {
+            Log.e("StepEditLinesFragment", "lineText is null, couldn't find line view");
+            // TODO: intelligently handle a failure.
+         } else {
+            String[] suggestions = new String[event.results.size()];
+            suggestions = event.results.toArray(suggestions);
+
+            SuggestionSpan suggestionsSpan = new SuggestionSpan(getActivity(), suggestions,
+             SuggestionSpan.FLAG_EASY_CORRECT);
+
+            String newText = suggestions[0];
+            Editable oldText = lineText.getText();
+
+            int start = oldText.length();
+
+            // If there wasn't any old text (new line), then don't add an extra space between the old and new text.
+            String combinedText = oldText + ((start == 0) ? "" : " ") + newText;
+
+            int end = combinedText.length();
+
+            Spannable span = new SpannableString(combinedText);
+            span.setSpan(suggestionsSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            lineText.setText(span);
+            lineText.setSelection(end);
+         }
+      }
+   }
+
    /////////////////////////////////////////////////////
    // DIALOGS
    /////////////////////////////////////////////////////
@@ -374,7 +411,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
 
       ImageButton mic = (ImageButton) v.findViewById(R.id.step_line_mic_button);
       mic.setTag(index);
-      text.setTag(index);
+      text.setTag(index + "text");
       mic.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
@@ -383,69 +420,15 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
              RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
 
             SharedPreferences sp = getActivity().getPreferences(Activity.MODE_PRIVATE);
-            sp.edit().putInt("lineid", (Integer) v.getTag()).commit();
+            sp.edit().putInt(MIC_TEXT_LINE_ID, (Integer) v.getTag()).commit();
             intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL,
              RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
             intent.putExtra(RecognizerIntent.EXTRA_PARTIAL_RESULTS, true);
-            startActivityForResult(intent, MIC_REQUEST_CODE);
+            getActivity().startActivityForResult(intent, MIC_REQUEST_CODE);
          }
       });
 
       return v;
-   }
-
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-
-      if (requestCode == MIC_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-         // Populate the wordsList with the String values the recognition engine thought it heard
-         ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-         if (MainApplication.inDebug()) {
-            String debug = "";
-
-            for (String match : matches) {
-               debug += "   " + match + "\n";
-            }
-            Log.d("StepEditLinesFragment", "Potential Results:  \n\n" + debug);
-         }
-
-         if (matches.size() > 0) {
-            SharedPreferences sp = getActivity().getPreferences(Activity.MODE_PRIVATE);
-            int lineid = sp.getInt("lineid", 0);
-            EditText lineText = (EditText) mBulletContainer.findViewWithTag(lineid);
-
-            if (lineText == null) {
-               Log.d("StepEditLinesFragment", "lineText is null, couldn't find line view");
-            } else {
-               Log.d("StepEditLinesFragment", "found linetext");
-
-               String newText = matches.get(0);
-               Editable oldText = lineText.getText();
-
-               Log.d("StepEditLinesFragment", "Old Text: " + oldText);
-               Log.d("StepEditLinesFragment", "New Text: " + newText);
-
-               int start = oldText.length();
-               int end = oldText.length() + newText.length();
-               String[] suggestions = new String[matches.size()];
-               suggestions = matches.toArray(suggestions);
-
-               SuggestionSpan suggestionsSpan = new SuggestionSpan(getActivity(), suggestions,
-                SuggestionSpan.FLAG_EASY_CORRECT);
-
-               Spannable span = new SpannableString(oldText + newText);
-               span.setSpan(suggestionsSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
-               lineText.setText(span);
-               Log.d("StepEditLInesFragment", "After: " + lineText.getText());
-            }
-         } else {
-            Log.d("StepEditLinesFragment", "No matches; try again");
-            // Relaunch mic and try again
-         }
-      }
-
-      super.onActivityResult(requestCode, resultCode, data);
    }
 
    protected void restrictDialogOptions(ChooseBulletDialog dialog, StepLine line) {
