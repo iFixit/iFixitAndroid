@@ -57,6 +57,12 @@ android {
          storePassword dozukiStorePassword
          keyPassword dozukiKeyPassword
       }
+      zealoptics {
+         storeFile file("../keystores/zealoptics.keystore")
+         keyAlias zealopticsKeyAlias
+         storePassword zealopticsStorePassword
+         keyPassword zealopticsKeyPassword
+      }
    }
 
    buildTypes {
@@ -84,6 +90,14 @@ android {
          buildConfig 'public static final String SITE_NAME = "dozuki";', \
                      'public static final String APP_ID = ' + dozukiAppId + ';'
       }
+
+      zealoptics {
+         signingConfig signingConfigs.zealoptics
+         packageName "com.dozuki.zealoptics"
+
+         buildConfig 'public static final String SITE_NAME = "zealoptics";', \
+                     'public static final String APP_ID = ' + zealopticsAppId + ';'
+      }
    }
 
    sourceSets {
@@ -106,6 +120,11 @@ android {
          manifest.srcFile 'dozuki/AndroidManifest.xml'
          java.srcDirs = ["dozuki/src"]
          res.srcDirs = ["dozuki/res"]
+      }
+
+      zealoptics {
+         manifest.srcFile 'zealoptics/AndroidManifest.xml'
+         res.srcDirs = ["zealoptics/res"]
       }
    }
 }

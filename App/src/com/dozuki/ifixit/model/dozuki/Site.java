@@ -166,6 +166,18 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = false;
+      } else if (siteName.equals("zealoptics")) {
+         site = new Site(1343);
+         site.mName = "zealoptics";
+         site.mDomain = "zealoptics.dozuki.com";
+         site.mTitle = "ZEAL Optics";
+         site.mTheme = "black";
+         site.mPublic = true;
+         site.mAnswers = true;
+         site.mDescription = "";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = true;
       }
 
       return site;

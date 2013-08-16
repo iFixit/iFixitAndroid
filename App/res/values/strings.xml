@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">iFixit</string>
-
     <!-- Main Application -->
     <string name="devices">Devices</string>
     <string name="topics">Topics</string>
