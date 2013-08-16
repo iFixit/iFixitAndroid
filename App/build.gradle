@@ -99,6 +99,7 @@ android {
 
       ifixit {
          manifest.srcFile 'ifixit/AndroidManifest.xml'
+         res.srcDirs = ["ifixit/res"]
       }
 
       dozuki {
