@@ -46,19 +46,19 @@ android {
 
    signingConfigs {
       ifixit {
-         storeFile file("../keystores/ifixit.keystore")
+         storeFile file("sites/ifixit/keystore")
          keyAlias ifixitKeyAlias
          storePassword ifixitStorePassword
          keyPassword ifixitKeyPassword
       }
       dozuki {
-         storeFile file("../keystores/dozuki.keystore")
+         storeFile file("sites/dozuki/keystore")
          keyAlias dozukiKeyAlias
          storePassword dozukiStorePassword
          keyPassword dozukiKeyPassword
       }
       zealoptics {
-         storeFile file("../keystores/zealoptics.keystore")
+         storeFile file("sites/zealoptics/keystore")
          keyAlias zealopticsKeyAlias
          storePassword zealopticsStorePassword
          keyPassword zealopticsKeyPassword
@@ -112,19 +112,19 @@ android {
       }
 
       ifixit {
-         manifest.srcFile 'ifixit/AndroidManifest.xml'
-         res.srcDirs = ["ifixit/res"]
+         manifest.srcFile 'sites/ifixit/AndroidManifest.xml'
+         res.srcDirs = ["sites/ifixit/res"]
       }
 
       dozuki {
-         manifest.srcFile 'dozuki/AndroidManifest.xml'
-         java.srcDirs = ["dozuki/src"]
-         res.srcDirs = ["dozuki/res"]
+         manifest.srcFile 'sites/dozuki/AndroidManifest.xml'
+         java.srcDirs = ["sites/dozuki/src"]
+         res.srcDirs = ["sites/dozuki/res"]
       }
 
       zealoptics {
-         manifest.srcFile 'zealoptics/AndroidManifest.xml'
-         res.srcDirs = ["zealoptics/res"]
+         manifest.srcFile 'sites/zealoptics/AndroidManifest.xml'
+         res.srcDirs = ["sites/zealoptics/res"]
       }
    }
 }

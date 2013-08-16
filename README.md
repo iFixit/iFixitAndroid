@@ -21,9 +21,9 @@ For each site, add values for `{siteName}KeyAlias`, `{siteName}StorePassword`, `
     ifixitStorePassword=password
     ifixitKeyPassword=password
 
-Symlink `keystores/{siteName}.keystore` to your keystore like so:
+Symlink `App/sites/{siteName}/keystore` to your keystore like so:
 
-    ln -s ~/path/to/keystore keystores/ifixit.keystore
+    ln -s ~/path/to/keystore App/sites/ifixit/keystore
 
 ### Intellij
 
