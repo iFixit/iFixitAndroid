@@ -310,10 +310,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
       if (!event.hasError()) {
          Guide guide = event.getResult();
 
-         GuideStep step = new GuideStep(StepPortalFragment.STEP_ID++);
-         step.setStepNum(1);
-         step.setOrderby(1);
-         step.setTitle(StepPortalFragment.DEFAULT_TITLE);
+         GuideStep step = new GuideStep();
          step.addLine(new StepLine());
 
          ArrayList<GuideStep> initialStepList = new ArrayList<GuideStep>();

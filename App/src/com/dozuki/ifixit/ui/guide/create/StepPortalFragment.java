@@ -28,7 +28,6 @@ import com.squareup.otto.Subscribe;
 
 public class StepPortalFragment extends SherlockFragment implements StepReorderFragment.StepRearrangeListener {
    public static int STEP_ID = 0;
-   public static final String DEFAULT_TITLE = "";
 
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String STEP_FOR_DELETE = "STEP_FOR_DELETE";

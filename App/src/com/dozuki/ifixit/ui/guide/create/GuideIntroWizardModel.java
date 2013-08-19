@@ -26,9 +26,6 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
 
       String topicName = app.getTopicName();
 
-      String[] hasSubject = {"Repair", "Installation", "Disassembly"};
-      String[] noSubject = {"Technique", "Maintenance", "Teardown"};
-
       Page topicPage = new TopicNamePage(this)
        .setDescription(app.getString(R.string.guide_intro_wizard_guide_topic_description,
         topicName.toLowerCase(), topicName.toLowerCase()))
@@ -49,8 +46,8 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
        .setTitle(app.getString(R.string.guide_intro_wizard_guide_title_title));
 
       Page typePage = new BranchPage(this, app.getString(R.string.guide_intro_wizard_guide_type_title))
-       .addBranch(hasSubject, HAS_SUBJECT_KEY, subjectPage)
-       .addBranch(noSubject, NO_SUBJECT_KEY)
+       .addBranch(app.getSite().hasSubject, HAS_SUBJECT_KEY, subjectPage)
+       .addBranch(app.getSite().noSubject, NO_SUBJECT_KEY)
        .setChoices(app.getSite().getGuideTypes().toArray(typesArr))
        .setRequired(true);
 

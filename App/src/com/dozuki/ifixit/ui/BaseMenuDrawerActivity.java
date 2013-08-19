@@ -13,19 +13,17 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
-import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
+import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.EasyTracker;
-
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -45,9 +43,6 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
     * Slide Out Menu Drawer
     */
    private MenuDrawer mMenuDrawer;
-
-   private MenuAdapter mAdapter;
-   private ListView mList;
 
    private int mActivePosition = -1;
 
@@ -150,13 +145,13 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
       // of the arrow indicator.
-      mList = new ListView(this);
-      mAdapter = new MenuAdapter(items);
-      mList.setAdapter(mAdapter);
-      mList.setOnItemClickListener(mItemClickListener);
-      mList.setCacheColorHint(Color.TRANSPARENT);
+      ListView menuList = new ListView(this);
+      MenuAdapter adapter = new MenuAdapter(items);
+      menuList.setAdapter(adapter);
+      menuList.setOnItemClickListener(mItemClickListener);
+      menuList.setCacheColorHint(Color.TRANSPARENT);
 
-      mMenuDrawer.setMenuView(mList);
+      mMenuDrawer.setMenuView(menuList);
       mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
       mMenuDrawer.setDrawerIndicatorEnabled(true);
 
@@ -255,8 +250,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
             break;
 
          case NEW_GUIDE:
-            intent = new Intent(context, GuideIntroActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            intent = new Intent(this, StepEditActivity.class);
             startActivity(intent);
             break;
 

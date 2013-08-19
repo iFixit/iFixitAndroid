@@ -337,4 +337,9 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="publishing">Publishing…</string>
     <string name="voice_dictate_line_content_description">Voice dictate line content</string>
     <string name="line_length_exceeded_error">Maximum 350 characters per line.</string>
+    <string name="new_guide_details_title">New Guide Details</string>
+    <string name="device_invalid_characters_error_message">Device name contains invalid characters.</string>
+    <string name="guide_subject_required_error">Guide Subject Required</string>
+    <string name="topic_name_required_error">%1$s Name Required</string>
+
 </resources>

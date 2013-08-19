@@ -103,11 +103,9 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case MENU_CREATE_GUIDE:
-            if (mUserGuideList != null) {
-               Intent intent = new Intent(this, GuideIntroActivity.class);
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-               startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
-            }
+            Intent intent = new Intent(this, StepEditActivity.class);
+            startActivity(intent);
+            finish();
             break;
       }
 
@@ -125,10 +123,11 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+
       savedInstanceState.putSerializable(GUIDE_OBJECT_KEY, mUserGuideList);
       savedInstanceState.putSerializable(GUIDE_FOR_DELETE, mGuideForDelete);
       savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
-      super.onSaveInstanceState(savedInstanceState);
    }
 
    @Override

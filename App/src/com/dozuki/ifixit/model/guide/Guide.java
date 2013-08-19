@@ -8,6 +8,7 @@ import java.util.ArrayList;
 
 public class Guide implements Serializable {
    private static final long serialVersionUID = -1965203088124961695L;
+   private static final int NEW_GUIDE_ID = -1;
 
    protected int mGuideid;
    /**
@@ -32,11 +33,23 @@ public class Guide implements Serializable {
    protected boolean mCanEdit = true;
    protected int mPatrolThreshold = 0;
 
+   public Guide() {
+      this(NEW_GUIDE_ID);
+   }
+
    public Guide(int guideid) {
       mGuideid = guideid;
       mSteps = new ArrayList<GuideStep>();
       mTools = new ArrayList<Item>();
       mParts = new ArrayList<Item>();
+   }
+
+   public void setGuideid(int guideid) {
+      mGuideid = guideid;
+   }
+
+   public boolean isNewGuide() {
+      return mGuideid == NEW_GUIDE_ID;
    }
 
    public void setPatrolThreshold(int threshold) {

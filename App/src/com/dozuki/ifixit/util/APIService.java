@@ -294,6 +294,24 @@ public class APIService extends Service {
       return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
 
+   public static APICall getCreateGuideAPICall(Guide guide) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("type", guide.getType());
+         requestBody.put("category", guide.getTopic());
+         requestBody.put("title", guide.getTitle());
+
+         if (guide.getSubject() != null) {
+            requestBody.put("subject", guide.getSubject());
+         }
+      } catch (JSONException e) {
+         // TODO Error
+      }
+
+      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
+   }
+
    public static APICall getDeleteGuideAPICall(GuideInfo guide) {
       return new APICall(APIEndpoint.DELETE_GUIDE, guide.mGuideid + "?revisionid=" + guide.mRevisionid, "");
    }

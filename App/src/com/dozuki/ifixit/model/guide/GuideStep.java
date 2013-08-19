@@ -9,6 +9,8 @@ import java.util.ArrayList;
 
 public class GuideStep implements Serializable {
    private static final long serialVersionUID = 2884598684003517264L;
+   private static final int DEFAULT_STEP_NUMBER = 1;
+   private static final String DEFAULT_TITLE = "";
 
    /**
     * Guide that this step originates from. Can either be the guide currently
@@ -44,10 +46,14 @@ public class GuideStep implements Serializable {
    private Embed mEmbed;
    protected boolean mEditMode; // save state for edit drop down
 
+   public GuideStep() {
+      this(DEFAULT_STEP_NUMBER);
+   }
+
    public GuideStep(int stepNum) {
       mStepNum = stepNum;
       mOrderby = stepNum;
-      mTitle = "";
+      mTitle = DEFAULT_TITLE;
       mImages = new ArrayList<Image>();
       mLines = new ArrayList<StepLine>();
       mRevisionid = null;

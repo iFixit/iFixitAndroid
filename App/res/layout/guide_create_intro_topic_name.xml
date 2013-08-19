@@ -19,7 +19,6 @@
                 android:id="@+id/page_description"
                 style="@style/WizardPageDescription"/>
 
-
             <AutoCompleteTextView
                 android:id="@+id/topic_name"
                 android:layout_width="match_parent"

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+ <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent">
+
+     <LinearLayout
+         android:orientation="vertical"
+         android:paddingRight="16dp"
+         android:paddingLeft="16dp"
+         android:paddingTop="24dp"
+         android:paddingBottom="24dp"
+
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+
+         <TextView
+             style="@style/Base.FormLabel"
+             android:text="Guide Type"/>
+
+         <Spinner
+             android:id="@+id/guide_types_spinner"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             style="@style/Base.FormField"/>
+
+         <TextView
+             style="@style/Base.FormLabel"
+             android:text="@string/guide_intro_wizard_guide_topic_title"
+             android:id="@+id/topic_name_label"/>
+
+         <AutoCompleteTextView
+             android:id="@+id/topic_name_field"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             android:saveEnabled="false"
+             android:inputType="textCapWords"
+             android:textColor="@color/black"
+             style="@style/Base.FormField"/>
+
+         <TextView
+             style="@style/Base.FormLabel"
+             android:id="@+id/subject_label"
+             android:text="Guide Subject"/>
+
+         <EditText
+             android:id="@+id/subject_field"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
+             style="@style/Base.FormField"
+             android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"/>
+
+         <View
+             android:id="@+id/divider"
+             android:background="?dividerHorizontal"
+             android:layout_height="1dp"
+             android:layout_marginBottom="16dp"
+             android:layout_width="match_parent"/>
+
+         <Button
+             style="?buttonBarButtonStyle"
+             android:id="@+id/save"
+             android:layout_width="200dp"
+             android:layout_height="wrap_content"
+             android:layout_gravity="left"
+             android:text="@string/save"/>
+
+     </LinearLayout>
+ </ScrollView>

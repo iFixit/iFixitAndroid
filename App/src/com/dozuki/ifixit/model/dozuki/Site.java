@@ -27,6 +27,10 @@ public class Site implements Serializable {
    public String mCustomDomain;
    public String mStoreUrl;
 
+   public String[] hasSubject = {"Repair", "Installation", "Replacement", "Disassembly"};
+   public String[] noSubject = {"Technique", "Maintenance", "Teardown"};
+
+
    public ArrayList<GuideType> mGuideTypes;
 
    public Site(int siteid) {
@@ -70,6 +74,19 @@ public class Site implements Serializable {
       }
 
       return types;
+   }
+
+   public boolean hasSubject(String type) {
+      boolean result = false;
+
+      for (String t : hasSubject) {
+         if (t.equals(type)) {
+            result = true;
+            break;
+         }
+      }
+
+      return result;
    }
 
    /**
@@ -191,7 +208,7 @@ public class Site implements Serializable {
        mPublicRegistration + "|" + mGuideTypes.toString() + "}";
    }
 
-   private boolean isIfixit() {
+   public boolean isIfixit() {
       return mName.equals("ifixit");
    }
 }

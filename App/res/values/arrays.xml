@@ -10,4 +10,20 @@
         <!-- Grid Images -->
         <item>.standard</item>
     </array>
+    <array name="ifixit_guide_types">
+        <item>Replacement</item>
+        <item>Repair</item>
+        <item>Disassembly</item>
+        <item>Technique</item>
+        <item>Maintenance</item>
+        <item>Teardown</item>
+    </array>
+    <array name="dozuki_guide_types">
+        <item>Installation</item>
+        <item>Repair</item>
+        <item>Disassembly</item>
+        <item>Technique</item>
+        <item>Maintenance</item>
+        <item>Teardown</item>
+    </array>
 </resources>
