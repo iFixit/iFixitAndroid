@@ -35,19 +35,21 @@
              android:saveEnabled="false"
              android:inputType="textCapWords"
              android:textColor="@color/black"
+             android:imeOptions="actionNext"
              style="@style/Base.FormField"/>
 
          <TextView
              style="@style/Base.FormLabel"
              android:id="@+id/subject_label"
-             android:text="Guide Subject"/>
+             android:text="@string/guide_subject_label"/>
 
          <EditText
              android:id="@+id/subject_field"
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              style="@style/Base.FormField"
-             android:inputType="text|textMultiLine|textAutoComplete|textAutoCorrect|textCapSentences"/>
+             android:imeOptions="actionDone"
+             android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences"/>
 
          <View
              android:id="@+id/divider"

@@ -309,6 +309,7 @@
     <string name="device_invalid_characters_error_message">Device name contains invalid characters.</string>
     <string name="guide_subject_required_error">Guide Subject Required</string>
     <string name="topic_name_required_error">%1$s Name Required</string>
+    <string name="guide_subject_label">Guide Subject</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>
