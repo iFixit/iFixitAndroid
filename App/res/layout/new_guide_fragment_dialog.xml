@@ -33,7 +33,8 @@
              android:layout_width="match_parent"
              android:layout_height="wrap_content"
              android:saveEnabled="false"
-             android:inputType="textCapWords"
+             android:inputType="text|textCapWords"
+             android:singleLine="true"
              android:textColor="@color/black"
              android:imeOptions="actionNext"
              style="@style/Base.FormField"/>

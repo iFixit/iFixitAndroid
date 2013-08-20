@@ -1,18 +1,19 @@
 package com.dozuki.ifixit.ui.guide.create;
 
 import android.os.Bundle;
- import android.text.Editable;
- import android.text.TextWatcher;
- import android.view.LayoutInflater;
- import android.view.View;
- import android.view.ViewGroup;
- import android.widget.*;
- import com.actionbarsherlock.app.SherlockDialogFragment;
- import com.dozuki.ifixit.MainApplication;
- import com.dozuki.ifixit.R;
- import com.dozuki.ifixit.model.guide.Guide;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.view.inputmethod.EditorInfo;
+import android.widget.*;
+import com.actionbarsherlock.app.SherlockDialogFragment;
+import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.guide.Guide;
 
- import java.util.regex.Pattern;
+import java.util.regex.Pattern;
 
 public class NewGuideDialogFragment extends SherlockDialogFragment {
     private static final String INVALID_DEVICE_NAME_PATTERN = "[^#<>\\[\\]\\|\\{\\},\\+\\?&\\/\\\\\\%:;]+";
@@ -93,8 +94,10 @@ public class NewGuideDialogFragment extends SherlockDialogFragment {
 
              if (!MainApplication.get().getSite().hasSubject(guideTypes[position])) {
                 visibility = View.GONE;
+                mTopic.setImeOptions(EditorInfo.IME_ACTION_DONE);
              } else {
                 visibility = View.VISIBLE;
+                mTopic.setImeOptions(EditorInfo.IME_ACTION_NEXT);
              }
 
              mSubject.setVisibility(visibility);
