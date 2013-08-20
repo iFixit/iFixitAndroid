@@ -282,6 +282,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                  // Populate the wordsList with the String values the recognition engine thought it heard
                  final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
 
+                 if (matches == null) {
+                    return;
+                 }
+
                  if (MainApplication.inDebug()) {
                     String debug = "";
 
