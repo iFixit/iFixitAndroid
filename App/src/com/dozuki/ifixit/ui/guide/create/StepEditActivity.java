@@ -410,6 +410,23 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
         return super.onCreateOptionsMenu(menu);
      }
 
+    @Override public boolean onPrepareOptionsMenu(Menu menu) {
+       MenuItem viewGuide = menu.findItem(MENU_VIEW_GUIDE);
+       if (mGuide != null) {
+          if (mGuide.getRevisionid() == null) {
+             viewGuide.setIcon(R.drawable.ic_action_book_dark);
+             viewGuide.setEnabled(false);
+          } else {
+             viewGuide.setIcon(R.drawable.ic_action_book);
+             viewGuide.setEnabled(true);
+          }
+       } else {
+          viewGuide.setIcon(R.drawable.ic_action_book_dark);
+          viewGuide.setEnabled(false);
+       }
+       return super.onPrepareOptionsMenu(menu);
+    }
+
      @Override
      public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
@@ -513,6 +530,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
         mGuide.setAuthor(guide.getAuthor());
         mGuide.setPublic(false);
         mGuide.setTitle(guide.getTitle());
+         supportInvalidateOptionsMenu();
         save(mPagePosition);
      }
 
