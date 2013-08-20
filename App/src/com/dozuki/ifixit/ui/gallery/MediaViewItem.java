@@ -67,7 +67,7 @@ public class MediaViewItem extends RelativeLayout {
    }
 
    public void clearImage() {
-      Utils.stripImageView(mImageView);
+      Utils.safeStripImageView(mImageView);
       mImageView.setImageResource(R.color.image_border);
    }
 }

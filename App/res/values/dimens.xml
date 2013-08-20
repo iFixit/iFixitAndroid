@@ -49,10 +49,10 @@
 
     <!-- Media Manager -->
     <dimen name="gallery_login_text_padding">8dp</dimen>
-    <dimen name="gallery_grid_column_width">133dp</dimen>
+    <dimen name="gallery_grid_column_width">100dp</dimen>
     <dimen name="gallery_grid_item_height">100dp</dimen>
     <dimen name="gallery_top_bar_height">48dp</dimen>
-    <dimen name="gallery_grid_spacing">1dp</dimen>
+    <dimen name="gallery_grid_spacing">4dp</dimen>
 
     <dimen name="login_agreement_text_top_padding">3dp</dimen>
     <dimen name="guide_create_step_edit_bottom_bar_height">48dp</dimen>
