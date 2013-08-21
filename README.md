@@ -6,59 +6,41 @@ Official iFixit Android App
 
 ## Installation
 
+Start by cloning the repo:
+
     git clone https://github.com/iFixit/iFixitAndroid.git
 
-### Gradle Config
+Copy `gradle.properties.base` to `gradle.properties`. This contains all of the
+values necessary to build the app in debug mode. To build the app in release
+mode, update the necessary keystore information and symlink
+`App/sites/{siteName}/keystore` to your keystore like so:
 
-Add a value for `devServer` to `/gradle.properties` like so:
+    ln -s /path/to/keystore App/sites/ifixit/keystore
 
-    devServer="www.devserver.com"
-
-For each site, add values for `{siteName}KeyAlias`, `{siteName}StorePassword`, `{siteName}KeyPassword`, and `{siteName}AppId` to `/gradle.properties`. For example:
-
-    ifixitAppId="0123456789ABCDEF0123456789ABCDEF"
-    ifixitKeyAlias=keyAliasName
-    ifixitStorePassword=password
-    ifixitKeyPassword=password
-
-Symlink `App/sites/{siteName}/keystore` to your keystore like so:
-
-    ln -s ~/path/to/keystore App/sites/ifixit/keystore
-
-### Intellij
-
-File -> Import Project...
-
-Select the iFixitAndroid folder that you cloned previously
-
-Create project from existing sources
-
-...
-
-And that's it!
-
-
-### Eclipse
-
-TODO
+Open the project in your IDE of choice or build it on the command line by
+invoking gradle commands such as `gradle installIfixitDebug`.
 
 ## API Documentation
 
-[iFixit API documentation](https://www.ifixit.com/api/1.1/docs)
+[iFixit API documentation](https://www.ifixit.com/api/2.0/docs)
 
 ## Contributing
 
-This app is a native android version of the iFixit website.  We offer native
-browsing of our guides as well as integrated web views of our site with Answers
-and our Cart.  We've got some fun experimental features we're playing around
-with like Voice Command for navigating through guides.
+This app is a native Android version of the iFixit website including:
+
+*   Device hierarchy browsing
+*   Answers and guide lists for devices
+*   Guide view
+*   Media manager integration: viewing and uploading of images
+*   Guide lists for favorites, featured, and teardowns
+*   Guide creation and editing
 
 We have a small development team, and don't have the resources to do all of these
-ourselves. We'd love help! If any of those problems looks interesting to you, fork our
-code and hack away!
+ourselves. We'd love help! If any of those problems looks interesting to you,
+fork our code and hack away!
 
-Got an awesome feature idea that we don't have an API to support yet? Post the request on
-meta.ifixit.com and we'll add it to our to-do list.
+Got an awesome feature idea that we don't have an API to support yet? Post the
+request on meta.ifixit.com and we'll add it to our to-do list.
 
 ## Licensing
 
