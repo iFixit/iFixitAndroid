@@ -44,719 +44,720 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickListener {
-     public static final int MENU_VIEW_GUIDE = 12;
-     private static final int STEP_VIEW = 1;
-     private static final int FOR_RESULT = 2;
-     private static final int HOME_UP = 3;
-     private static final int MENU_DISCARD_CHANGES = 14;
-     private static final String TAG = "StepEditActivity";
+   public static final int MENU_VIEW_GUIDE = 12;
+   private static final int STEP_VIEW = 1;
+   private static final int FOR_RESULT = 2;
+   private static final int HOME_UP = 3;
+   private static final int MENU_DISCARD_CHANGES = 14;
+   private static final String TAG = "StepEditActivity";
 
-     private enum ConfirmSave {
-        NEW_STEP,
-        NEXT_STEP
-     }
+   private enum ConfirmSave {
+      NEW_STEP,
+      NEXT_STEP
+   }
 
-     public static final int GALLERY_REQUEST_CODE = 1;
-     public static final int CAMERA_REQUEST_CODE = 1888;
+   public static final int GALLERY_REQUEST_CODE = 1;
+   public static final int CAMERA_REQUEST_CODE = 1888;
 
-     public static final String TEMP_FILE_NAME_KEY = "TEMP_FILE_NAME_KEY";
-     public static final String EXIT_CODE = "EXIT_CODE_KEY";
-     public static final String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
+   public static final String TEMP_FILE_NAME_KEY = "TEMP_FILE_NAME_KEY";
+   public static final String EXIT_CODE = "EXIT_CODE_KEY";
+   public static final String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
-     public static String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
-     public static String DELETE_GUIDE_DIALOG_KEY = "DeleteGuideDialog";
-     public static final String GUIDE_ID_KEY = "GUIDE_ID_KEY";
-     public static final String GUIDE_STEP_ID = "GUIDE_STEP_ID";
-     public static final String PARENT_GUIDE_ID_KEY = "PARENT_GUIDE_ID_KEY";
-     public static final int NO_PARENT_GUIDE = -1;
+   public static String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
+   public static String DELETE_GUIDE_DIALOG_KEY = "DeleteGuideDialog";
+   public static final String GUIDE_ID_KEY = "GUIDE_ID_KEY";
+   public static final String GUIDE_STEP_ID = "GUIDE_STEP_ID";
+   public static final String PARENT_GUIDE_ID_KEY = "PARENT_GUIDE_ID_KEY";
+   public static final int NO_PARENT_GUIDE = -1;
 
-     private static final String SHOWING_HELP = "SHOWING_HELP";
+   private static final String SHOWING_HELP = "SHOWING_HELP";
 
-     private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
-     private static final String SHOWING_SAVE = "SHOWING_SAVE";
-     private static final String LOCK_SAVE = "LOCK_SAVE";
+   private static final String IS_GUIDE_DIRTY_KEY = "IS_GUIDE_DIRTY_KEY";
+   private static final String SHOWING_SAVE = "SHOWING_SAVE";
+   private static final String LOCK_SAVE = "LOCK_SAVE";
 
-     private Guide mGuide;
-     private StepEditFragment mCurStepFragment;
-     private ImageButton mAddStepButton;
-     private Button mSaveStep;
-     private ImageButton mDeleteStepButton;
-     private StepAdapter mStepAdapter;
-     private LockableViewPager mPager;
-     private LockableTitlePageIndicator mTitleIndicator;
-     private int mPagePosition = 0;
-     private int mSavePosition;
+   private Guide mGuide;
+   private StepEditFragment mCurStepFragment;
+   private ImageButton mAddStepButton;
+   private Button mSaveStep;
+   private ImageButton mDeleteStepButton;
+   private StepAdapter mStepAdapter;
+   private LockableViewPager mPager;
+   private LockableTitlePageIndicator mTitleIndicator;
+   private int mPagePosition = 0;
+   private int mSavePosition;
 
-     // Necessary for editing prerequisite guides from the view interface in order to navigate back to the parent guide.
-     private int mParentGuideId = NO_PARENT_GUIDE;
+   // Necessary for editing prerequisite guides from the view interface in order to navigate back to the parent guide.
+   private int mParentGuideId = NO_PARENT_GUIDE;
 
-     // Used to navigate to the correct step when coming from GuideViewActivity.
-     private int mInboundStepId;
+   // Used to navigate to the correct step when coming from GuideViewActivity.
+   private int mInboundStepId;
 
-     private boolean mConfirmDelete = false;
-     private boolean mIsStepDirty = false;
-     private boolean mShowingHelp = false;
-     private boolean mShowingSave = false;
-     private boolean mIsLoading;
+   private boolean mConfirmDelete = false;
+   private boolean mIsStepDirty = false;
+   private boolean mShowingHelp = false;
+   private boolean mShowingSave = false;
+   private boolean mIsLoading;
 
-     // Should a new step be created after a step POST response (creating a new step)
-     private boolean mAddStepAfterSave = false;
+   // Should a new step be created after a step POST response (creating a new step)
+   private boolean mAddStepAfterSave = false;
 
-     // Flag to prevent saving a guide while we're waiting for an image to upload and return
-     private boolean mLockSave = false;
+   // Flag to prevent saving a guide while we're waiting for an image to upload and return
+   private boolean mLockSave = false;
 
-     private int mExitCode;
+   private int mExitCode;
 
-     private static int mLoadingContainer = R.id.step_edit_loading_screen;
+   private static int mLoadingContainer = R.id.step_edit_loading_screen;
 
 
-     /////////////////////////////////////////////////////
-     // LIFECYCLE
-     /////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////
+   // LIFECYCLE
+   /////////////////////////////////////////////////////
 
-     @Override
-     public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.guide_create_step_edit);
+   @Override
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.guide_create_step_edit);
 
-        if (savedInstanceState != null) {
-           mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
+      if (savedInstanceState != null) {
+         mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
 
-           mPagePosition = savedInstanceState.getInt(GUIDE_STEP_NUM_KEY);
-           mConfirmDelete = savedInstanceState.getBoolean(DELETE_GUIDE_DIALOG_KEY);
-           mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
-           mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
-           mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
-           mLockSave = savedInstanceState.getBoolean(LOCK_SAVE);
+         mPagePosition = savedInstanceState.getInt(GUIDE_STEP_NUM_KEY);
+         mConfirmDelete = savedInstanceState.getBoolean(DELETE_GUIDE_DIALOG_KEY);
+         mIsStepDirty = savedInstanceState.getBoolean(IS_GUIDE_DIRTY_KEY);
+         mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
+         mShowingSave = savedInstanceState.getBoolean(SHOWING_SAVE);
+         mLockSave = savedInstanceState.getBoolean(LOCK_SAVE);
 
-           mIsLoading = savedInstanceState.getBoolean(LOADING);
-           mExitCode = savedInstanceState.getInt(EXIT_CODE);
-           if (mShowingHelp) {
-              createHelpDialog().show();
+         mIsLoading = savedInstanceState.getBoolean(LOADING);
+         mExitCode = savedInstanceState.getInt(EXIT_CODE);
+         if (mShowingHelp) {
+            createHelpDialog().show();
+         }
+
+         if (mShowingSave) {
+            createExitWarningDialog(mExitCode).show();
+         }
+
+         if (mConfirmDelete) {
+            createDeleteDialog(this).show();
+         }
+
+      } else if (getIntent().getExtras() != null) {
+         extractExtras(getIntent().getExtras());
+      } else {
+         // Creating a new guide
+         mGuide = new Guide();
+
+         GuideStep step = new GuideStep();
+         step.addLine(new StepLine());
+
+         mGuide.addStep(step);
+         mPagePosition = 0;
+      }
+
+      mSaveStep = (Button) findViewById(R.id.step_edit_save);
+
+      toggleSave(mIsStepDirty);
+
+      if (mGuide != null) {
+         initPage(mPagePosition);
+      }
+   }
+
+   private void initPage(int startPage) {
+      String guideTitle = mGuide.getTitle();
+
+      getSupportActionBar().setTitle(guideTitle);
+
+      EasyTracker.getTracker().sendView(guideTitle + " Edit View");
+
+      mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
+      mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
+
+      mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
+      initPager();
+      mPager.setCurrentItem(startPage);
+
+      mTitleIndicator = (LockableTitlePageIndicator) findViewById(R.id.step_edit_top_bar);
+      mTitleIndicator.setViewPager(mPager);
+
+      mSaveStep.setOnClickListener(this);
+      mAddStepButton.setOnClickListener(this);
+      mDeleteStepButton.setOnClickListener(this);
+
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+      if (mIsLoading) {
+         mPager.setVisibility(View.GONE);
+      }
+
+      // Must be after mPager and mTitleIndicator are initialized, otherwise they aren't locked
+      if (mLockSave) {
+         lockSave();
+      }
+   }
+
+   private void initPager() {
+      mStepAdapter = new StepAdapter(getSupportFragmentManager());
+      mPager.setAdapter(mStepAdapter);
+   }
+
+   private void extractExtras(Bundle extras) {
+      if (extras != null) {
+         mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
+         mPagePosition = extras.getInt(GUIDE_STEP_NUM_KEY, 0);
+
+         if (mGuide == null) {
+            mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
+            int guideid = extras.getInt(GUIDE_ID_KEY);
+            mInboundStepId = extras.getInt(GUIDE_STEP_ID);
+
+            showLoading(mLoadingContainer);
+            APIService.call(StepEditActivity.this,
+             APIService.getGuideForEditAPICall(guideid));
+         }
+      }
+   }
+
+   @Override
+   public void onNewIntent(Intent intent) {
+      super.onNewIntent(intent);
+
+      mGuide = null;
+      mPagePosition = 0;
+
+      extractExtras(intent.getExtras());
+      if (mGuide != null) {
+         initPage(mPagePosition);
+      }
+   }
+
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      MainApplication.getBus().register(this);
+
+      Image newThumb;
+
+      switch (requestCode) {
+         case GALLERY_REQUEST_CODE:
+            if (data != null) {
+
+               newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
+               mGuide.getStep(mPagePosition).addImage(newThumb);
+               refreshView(mPagePosition);
+
+               MainApplication.getBus().post(new StepChangedEvent());
+            } else {
+               Log.e("StepEditActivity", "Error data is null!");
+               return;
+            }
+
+            break;
+         case CAMERA_REQUEST_CODE:
+            if (resultCode == Activity.RESULT_OK) {
+
+               SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
+               String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
+
+               if (tempFileName == null) {
+                  Log.e("StepEditActivity", "Error cameraTempFile is null!");
+                  return;
+               }
+
+               // Prevent a save from being called until the image uploads and returns with the imageid
+               lockSave();
+
+               newThumb = new Image();
+               newThumb.setLocalImage(tempFileName);
+
+               mGuide.getStep(mPagePosition).addImage(newThumb);
+               refreshView(mPagePosition);
+
+               APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
+            }
+            break;
+         case StepEditLinesFragment.MIC_REQUEST_CODE:
+            if (resultCode == Activity.RESULT_OK) {
+               // Populate the wordsList with the String values the recognition engine thought it heard
+               final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+
+               if (matches == null) {
+                  return;
+               }
+
+               if (MainApplication.inDebug()) {
+                  String debug = "";
+
+                  for (String match : matches) {
+                     debug += "   " + match + "\n";
+                  }
+                  Log.d("StepEditActivity", "Potential Results:  \n\n" + debug);
+               }
+
+               if (matches.size() > 0) {
+                  Handler handler = new Handler();
+
+                  // We have to delay posting the event because this activities onActivityResult method is called just
+                  // before the fragments onResume.  Delaying 1/10 of a second gives the fragment enough time to
+                  // register its' event bus listener so it can receive the event.
+                  handler.postDelayed(new Runnable() {
+                     @Override
+                     public void run() {
+                        MainApplication.getBus().post(new StepMicCompleteEvent(matches,
+                         mGuide.getStep(mPagePosition).getStepid()));
+                     }
+
+                  }, 100);
+               } else {
+                  Log.d("StepEditActivity", "No matches; try again");
+                  // TODO: Relaunch mic and try again
+               }
+            }
+            break;
+         default:
+            super.onActivityResult(requestCode, resultCode, data);
+      }
+   }
+
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      mCurStepFragment = null;
+
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle savedInstanceState) {
+      super.onSaveInstanceState(savedInstanceState);
+      savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
+      savedInstanceState.putBoolean(DELETE_GUIDE_DIALOG_KEY, mConfirmDelete);
+      savedInstanceState.putInt(StepEditActivity.GUIDE_STEP_NUM_KEY, mPagePosition);
+      savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
+      savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
+      savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
+      savedInstanceState.putBoolean(LOADING, mIsLoading);
+      savedInstanceState.putBoolean(LOCK_SAVE, mLockSave);
+      savedInstanceState.putInt(EXIT_CODE, mExitCode);
+   }
+
+   private void navigateBack() {
+      Intent returnIntent = new Intent();
+      returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+      setResult(RESULT_OK, returnIntent);
+      finish();
+   }
+
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
+   }
+
+   @Override
+   public boolean alertOnNavigation() {
+      return mIsStepDirty;
+   }
+
+   @Override
+   public AlertDialog navigationAlertDialog(final String tag, final Context context) {
+      mShowingSave = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+       .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
+       .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
+       .setNegativeButton(getString(R.string.save),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = true;
+              save(mPagePosition);
+              dialog.dismiss();
+
+              navigateMenuDrawer(tag, context);
            }
+        })
+       .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = false;
+              dialog.dismiss();
 
-           if (mShowingSave) {
-              createExitWarningDialog(mExitCode).show();
-           }
-
-           if (mConfirmDelete) {
-              createDeleteDialog(this).show();
-           }
-
-        } else if (getIntent().getExtras() != null) {
-           extractExtras(getIntent().getExtras());
-        } else {
-           // Creating a new guide
-           mGuide = new Guide();
-
-           GuideStep step = new GuideStep();
-           step.addLine(new StepLine());
-
-           mGuide.addStep(step);
-           mPagePosition = 0;
-        }
-
-        mSaveStep = (Button) findViewById(R.id.step_edit_save);
-
-        toggleSave(mIsStepDirty);
-
-        if (mGuide != null) {
-           initPage(mPagePosition);
-        }
-     }
-
-     private void initPage(int startPage) {
-        String guideTitle = mGuide.getTitle();
-
-        getSupportActionBar().setTitle(guideTitle);
-
-        EasyTracker.getTracker().sendView(guideTitle + " Edit View");
-
-        mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
-        mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
-
-        mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
-        initPager();
-        mPager.setCurrentItem(startPage);
-
-        mTitleIndicator = (LockableTitlePageIndicator) findViewById(R.id.step_edit_top_bar);
-        mTitleIndicator.setViewPager(mPager);
-
-        mSaveStep.setOnClickListener(this);
-        mAddStepButton.setOnClickListener(this);
-        mDeleteStepButton.setOnClickListener(this);
-
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
-        if (mIsLoading) {
-           mPager.setVisibility(View.GONE);
-        }
-
-        // Must be after mPager and mTitleIndicator are initialized, otherwise they aren't locked
-        if (mLockSave) {
-           lockSave();
-        }
-     }
-
-     private void initPager() {
-        mStepAdapter = new StepAdapter(getSupportFragmentManager());
-        mPager.setAdapter(mStepAdapter);
-     }
-
-     private void extractExtras(Bundle extras) {
-        if (extras != null) {
-           mGuide = (Guide) extras.getSerializable(GuideCreateActivity.GUIDE_KEY);
-           mPagePosition = extras.getInt(GUIDE_STEP_NUM_KEY, 0);
-
-           if (mGuide == null) {
-              mParentGuideId = extras.getInt(PARENT_GUIDE_ID_KEY, NO_PARENT_GUIDE);
-              int guideid = extras.getInt(GUIDE_ID_KEY);
-              mInboundStepId = extras.getInt(GUIDE_STEP_ID);
-
-              showLoading(mLoadingContainer);
-              APIService.call(StepEditActivity.this,
-               APIService.getGuideForEditAPICall(guideid));
-           }
-        }
-     }
-
-     @Override
-     public void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-
-        mGuide = null;
-        mPagePosition = 0;
-
-        extractExtras(intent.getExtras());
-        if (mGuide != null) {
-           initPage(mPagePosition);
-        }
-     }
-
-     @Override
-     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        MainApplication.getBus().register(this);
-
-        Image newThumb;
-
-        switch (requestCode) {
-           case GALLERY_REQUEST_CODE:
-              if (data != null) {
-
-                 newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-                 mGuide.getStep(mPagePosition).addImage(newThumb);
-                 refreshView(mPagePosition);
-
-                 MainApplication.getBus().post(new StepChangedEvent());
-              } else {
-                 Log.e("StepEditActivity", "Error data is null!");
-                 return;
-              }
-
-              break;
-           case CAMERA_REQUEST_CODE:
-              if (resultCode == Activity.RESULT_OK) {
-
-                 SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
-                 String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
-
-                 if (tempFileName == null) {
-                    Log.e("StepEditActivity", "Error cameraTempFile is null!");
-                    return;
-                 }
-
-                 // Prevent a save from being called until the image uploads and returns with the imageid
-                 lockSave();
-
-                 newThumb = new Image();
-                 newThumb.setLocalImage(tempFileName);
-
-                 mGuide.getStep(mPagePosition).addImage(newThumb);
-                 refreshView(mPagePosition);
-
-                 APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
-              }
-              break;
-           case StepEditLinesFragment.MIC_REQUEST_CODE:
-              if (resultCode == Activity.RESULT_OK) {
-                 // Populate the wordsList with the String values the recognition engine thought it heard
-                 final ArrayList<String> matches = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-
-                 if (matches == null) {
-                    return;
-                 }
-
-                 if (MainApplication.inDebug()) {
-                    String debug = "";
-
-                    for (String match : matches) {
-                       debug += "   " + match + "\n";
-                    }
-                    Log.d("StepEditActivity", "Potential Results:  \n\n" + debug);
-                 }
-
-                 if (matches.size() > 0) {
-                    Handler handler = new Handler();
-
-                    // We have to delay posting the event because this activities onActivityResult method is called just
-                    // before the fragments onResume.  Delaying 1/10 of a second gives the fragment enough time to
-                    // register its' event bus listener so it can receive the event.
-                    handler.postDelayed(new Runnable() {
-                       @Override
-                       public void run() {
-                          MainApplication.getBus().post(new StepMicCompleteEvent(matches,
-                           mGuide.getStep(mPagePosition).getStepid()));
-                       }
-
-                    }, 100);
-                 } else {
-                    Log.d("StepEditActivity", "No matches; try again");
-                    // TODO: Relaunch mic and try again
-                 }
-              }
-              break;
-           default:
-              super.onActivityResult(requestCode, resultCode, data);
-        }
-     }
-
-     @Override
-     public void onDestroy() {
-        super.onDestroy();
-
-        mCurStepFragment = null;
-
-     }
-
-     @Override
-     public void onSaveInstanceState(Bundle savedInstanceState) {
-        super.onSaveInstanceState(savedInstanceState);
-        savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
-        savedInstanceState.putBoolean(DELETE_GUIDE_DIALOG_KEY, mConfirmDelete);
-        savedInstanceState.putInt(StepEditActivity.GUIDE_STEP_NUM_KEY, mPagePosition);
-        savedInstanceState.putBoolean(IS_GUIDE_DIRTY_KEY, mIsStepDirty);
-        savedInstanceState.putBoolean(SHOWING_HELP, mShowingHelp);
-        savedInstanceState.putBoolean(SHOWING_SAVE, mShowingSave);
-        savedInstanceState.putBoolean(LOADING, mIsLoading);
-        savedInstanceState.putBoolean(LOCK_SAVE, mLockSave);
-        savedInstanceState.putInt(EXIT_CODE, mExitCode);
-     }
-
-     private void navigateBack() {
-        Intent returnIntent = new Intent();
-        returnIntent.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-        setResult(RESULT_OK, returnIntent);
-        finish();
-     }
-
-     @Override
-     public boolean finishActivityIfLoggedOut() {
-        return true;
-     }
-
-     @Override
-     public boolean alertOnNavigation() {
-        return mIsStepDirty;
-     }
-
-     @Override
-     public AlertDialog navigationAlertDialog(final String tag, final Context context) {
-        mShowingSave = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder
-         .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
-         .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
-         .setNegativeButton(getString(R.string.save),
-          new DialogInterface.OnClickListener() {
-             public void onClick(DialogInterface dialog, int id) {
-                mIsStepDirty = true;
-                save(mPagePosition);
-                dialog.dismiss();
-
-                navigateMenuDrawer(tag, context);
-             }
-          })
-         .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
-          new DialogInterface.OnClickListener() {
-             public void onClick(DialogInterface dialog, int id) {
-                mIsStepDirty = false;
-                dialog.dismiss();
-
-                navigateMenuDrawer(tag, context);
-             }
-          });
-
-        AlertDialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-           @Override
-           public void onDismiss(DialogInterface dialog) {
-              mShowingSave = false;
+              navigateMenuDrawer(tag, context);
            }
         });
 
-        return dialog;
-     }
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingSave = false;
+         }
+      });
 
-     @Override
-     public boolean onCreateOptionsMenu(Menu menu) {
-        menu.add(2, MENU_VIEW_GUIDE, 0, R.string.view_guide)
-         .setIcon(R.drawable.ic_action_book)
-         .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      return dialog;
+   }
 
-        menu.add(1, MENU_DISCARD_CHANGES, 0, R.string.discard_changes)
-         .setIcon(R.drawable.ic_action_undo)
-         .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      menu.add(2, MENU_VIEW_GUIDE, 0, R.string.view_guide)
+       .setIcon(R.drawable.ic_action_book)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 
-        return super.onCreateOptionsMenu(menu);
-     }
+      menu.add(1, MENU_DISCARD_CHANGES, 0, R.string.discard_changes)
+       .setIcon(R.drawable.ic_action_undo)
+       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
 
-    @Override public boolean onPrepareOptionsMenu(Menu menu) {
-       MenuItem viewGuide = menu.findItem(MENU_VIEW_GUIDE);
-       if (mGuide != null) {
-          if (mGuide.getRevisionid() == null) {
-             viewGuide.setIcon(R.drawable.ic_action_book_dark);
-             viewGuide.setEnabled(false);
-          } else {
-             viewGuide.setIcon(R.drawable.ic_action_book);
-             viewGuide.setEnabled(true);
-          }
-       } else {
-          viewGuide.setIcon(R.drawable.ic_action_book_dark);
-          viewGuide.setEnabled(false);
-       }
-       return super.onPrepareOptionsMenu(menu);
-    }
+      return super.onCreateOptionsMenu(menu);
+   }
 
-     @Override
-     public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-           case MENU_VIEW_GUIDE:
-              finishEdit(STEP_VIEW);
-              break;
-           case MENU_DISCARD_CHANGES:
-              if (!mIsStepDirty) break; // Bail early if there aren't any changes
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      MenuItem viewGuide = menu.findItem(MENU_VIEW_GUIDE);
+      if (mGuide != null) {
+         if (mGuide.getRevisionid() == null) {
+            viewGuide.setIcon(R.drawable.ic_action_book_dark);
+            viewGuide.setEnabled(false);
+         } else {
+            viewGuide.setIcon(R.drawable.ic_action_book);
+            viewGuide.setEnabled(true);
+         }
+      } else {
+         viewGuide.setIcon(R.drawable.ic_action_book_dark);
+         viewGuide.setEnabled(false);
+      }
+      return super.onPrepareOptionsMenu(menu);
+   }
 
-              toggleSave(false);
-              mIsStepDirty = false;
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case MENU_VIEW_GUIDE:
+            finishEdit(STEP_VIEW);
+            break;
+         case MENU_DISCARD_CHANGES:
+            if (!mIsStepDirty) break; // Bail early if there aren't any changes
 
-              // Set the inbound stepid so the Step pager will navigate to the current step after updating
-              mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
-              APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(mGuide.getGuideid()));
+            toggleSave(false);
+            mIsStepDirty = false;
 
-              break;
-        }
+            // Set the inbound stepid so the Step pager will navigate to the current step after updating
+            mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
+            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(mGuide.getGuideid()));
 
-        return super.onOptionsItemSelected(item);
-     }
+            break;
+      }
 
-     /////////////////////////////////////////////////////
-     // NOTIFICATION LISTENERS
-     /////////////////////////////////////////////////////
+      return super.onOptionsItemSelected(item);
+   }
 
-     @Subscribe
-     public void onGuideGet(APIEvent.GuideForEdit event) {
-        hideLoading();
+   /////////////////////////////////////////////////////
+   // NOTIFICATION LISTENERS
+   /////////////////////////////////////////////////////
 
-        if (!event.hasError()) {
-           int startPagePosition = 0;
-           mGuide = event.getResult();
-           for (int i = 0; i < mGuide.getSteps().size(); i++) {
-              if (mGuide.getStep(i).getStepid() == mInboundStepId) {
-                 startPagePosition = i;
-                 break;
-              }
-           }
-           initPage(startPagePosition);
-        } else {
-           APIService.getErrorDialog(this, event).show();
-        }
-     }
+   @Subscribe
+   public void onGuideGet(APIEvent.GuideForEdit event) {
+      hideLoading();
 
-     @Subscribe
-     public void onStepSave(APIEvent.StepSave event) {
-        hideLoading();
+      if (!event.hasError()) {
+         int startPagePosition = 0;
+         mGuide = event.getResult();
+         for (int i = 0; i < mGuide.getSteps().size(); i++) {
+            if (mGuide.getStep(i).getStepid() == mInboundStepId) {
+               startPagePosition = i;
+               break;
+            }
+         }
+         initPage(startPagePosition);
+      } else {
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
 
-        if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
-           updateCurrentStep(event.getResult());
-        }
+   @Subscribe
+   public void onStepSave(APIEvent.StepSave event) {
+      hideLoading();
 
-        if (event.hasError()) {
-           mIsStepDirty = true;
-           toggleSave(mIsStepDirty);
-           final APIError error = event.getError();
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+         updateCurrentStep(event.getResult());
+      }
 
-           if (error.mType == APIError.Type.VALIDATION) {
+      if (event.hasError()) {
+         mIsStepDirty = true;
+         toggleSave(mIsStepDirty);
+         final APIError error = event.getError();
 
-              int positiveButton = R.string.error_confirm;
+         if (error.mType == APIError.Type.VALIDATION) {
 
-              AlertDialog.Builder builder = new AlertDialog.Builder(this);
-              builder.setTitle(error.mTitle)
-               .setMessage(error.mMessage)
-               .setPositiveButton(positiveButton,
-                new DialogInterface.OnClickListener() {
-                   public void onClick(DialogInterface dialog, int id) {
-                      dialog.dismiss();
+            int positiveButton = R.string.error_confirm;
 
-                      if (error.mIndex != -1) {
-                         MainApplication.getBus().post(new StepLineValidationEvent(
-                          mGuide.getStep(mSavePosition).getStepid(), error.mIndex));
-                      }
-                   }
-                });
+            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+            builder.setTitle(error.mTitle)
+             .setMessage(error.mMessage)
+             .setPositiveButton(positiveButton,
+              new DialogInterface.OnClickListener() {
+                 public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
 
-              builder.create().show();
-           } else {
-              APIService.getErrorDialog(this, event).show();
-           }
-        }
-     }
-
-     @Subscribe
-     public void onGuideDetailsChanged(GuideDetailsChangedEvent event) {
-        showLoading(mLoadingContainer);
-
-        mGuide = event.guide;
-        APIService.call(StepEditActivity.this, APIService.getCreateGuideAPICall(mGuide));
-     }
-
-     @Subscribe
-     public void onGuideCreated(APIEvent.CreateGuide event) {
-        mPagePosition = 0;
-
-        Guide guide = event.getResult();
-
-        mGuide.setGuideid(guide.getGuideid());
-        mGuide.setRevisionid(guide.getRevisionid());
-        mGuide.setAuthor(guide.getAuthor());
-        mGuide.setPublic(false);
-        mGuide.setTitle(guide.getTitle());
-         supportInvalidateOptionsMenu();
-        save(mPagePosition);
-     }
-
-     @Subscribe
-     public void onUploadStepImage(APIEvent.UploadStepImage event) {
-        if (!event.hasError()) {
-           Image newThumb = event.getResult();
-
-           // Find the temporarily stored image object to update the filename to
-           // the image path and imageid.
-           if (newThumb != null) {
-              ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(mPagePosition).getImages());
-
-              for (Image image : images) {
-                 if (image.isLocal()) {
-                    newThumb.setLocalPath(image.getPath());
-                    images.set(images.indexOf(image), newThumb);
-                    break;
+                    if (error.mIndex != -1) {
+                       MainApplication.getBus().post(new StepLineValidationEvent(
+                        mGuide.getStep(mSavePosition).getStepid(), error.mIndex));
+                    }
                  }
-              }
+              });
 
-              mGuide.getStep(mPagePosition).setImages(images);
-              refreshView(mPagePosition);
-           }
+            builder.create().show();
+         } else {
+            APIService.getErrorDialog(this, event).show();
+         }
+      }
+   }
 
-           if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
-              unlockSave();
+   @Subscribe
+   public void onGuideDetailsChanged(GuideDetailsChangedEvent event) {
+      showLoading(mLoadingContainer);
 
-              // Set guide dirty after the image is uploaded so the user can't
-              // save the guide before we have the imageid.
-              MainApplication.getBus().post(new StepChangedEvent());
-           }
-        } else {
-           APIService.getErrorDialog(this, event).show();
-        }
-     }
+      mGuide = event.guide;
+      APIService.call(StepEditActivity.this, APIService.getCreateGuideAPICall(mGuide));
+   }
 
-     @Subscribe
-     public void onStepImageDelete(StepImageDeleteEvent event) {
-        mGuide.getStep(mPagePosition).getImages().remove(event.image);
+   @Subscribe
+   public void onGuideCreated(APIEvent.CreateGuide event) {
+      mPagePosition = 0;
 
-        refreshView(mPagePosition);
-     }
+      Guide guide = event.getResult();
 
-     @Subscribe
-     public void onStepAdd(APIEvent.StepAdd event) {
-        hideLoading();
+      mGuide.setGuideid(guide.getGuideid());
+      mGuide.setRevisionid(guide.getRevisionid());
+      mGuide.setAuthor(guide.getAuthor());
+      mGuide.setPublic(false);
+      mGuide.setTitle(guide.getTitle());
+      supportInvalidateOptionsMenu();
+      save(mPagePosition);
+   }
 
-        if (!event.hasError()) {
-           mGuide = event.getResult();
+   @Subscribe
+   public void onUploadStepImage(APIEvent.UploadStepImage event) {
+      if (!event.hasError()) {
+         Image newThumb = event.getResult();
 
-           mStepAdapter.notifyDataSetChanged();
-           mPager.setCurrentItem(mSavePosition);
+         // Find the temporarily stored image object to update the filename to
+         // the image path and imageid.
+         if (newThumb != null) {
+            ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(mPagePosition).getImages());
 
-           if (mAddStepAfterSave) {
-              addNewStep(mSavePosition + 1);
-              mAddStepAfterSave = false;
-           }
-        } else {
-           mAddStepAfterSave = false;
-           mIsStepDirty = true;
-           toggleSave(mIsStepDirty);
+            for (Image image : images) {
+               if (image.isLocal()) {
+                  newThumb.setLocalPath(image.getPath());
+                  images.set(images.indexOf(image), newThumb);
+                  break;
+               }
+            }
 
-           APIService.getErrorDialog(this, event).show();
-        }
-     }
+            mGuide.getStep(mPagePosition).setImages(images);
+            refreshView(mPagePosition);
+         }
 
-     @Subscribe
-     public void onGuideStepDeleted(APIEvent.StepRemove event) {
-        hideLoading();
+         if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
+            unlockSave();
 
-        if (!event.hasError()) {
-           mGuide.setRevisionid(event.getResult().getRevisionid());
-           deleteStep();
-        } else {
-           // Try to update the step on a conflict.
-           if (event.getError().mType == APIError.Type.CONFLICT) {
-              try {
-                 updateCurrentStep(JSONHelper.parseStep(
-                  new JSONObject(event.getResponse()), 0));
-              } catch (JSONException e) {
-                 Log.w("StepEditActivity", "Error parsing step delete conflict", e);
-              }
-           }
+            // Set guide dirty after the image is uploaded so the user can't
+            // save the guide before we have the imageid.
+            MainApplication.getBus().post(new StepChangedEvent());
+         }
+      } else {
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
 
-           APIService.getErrorDialog(this, event).show();
-        }
-     }
+   @Subscribe
+   public void onStepImageDelete(StepImageDeleteEvent event) {
+      mGuide.getStep(mPagePosition).getImages().remove(event.image);
 
-     @Subscribe
-     public void onImageCopy(APIEvent.CopyImage event) {
-        if (!event.hasError()) {
-           Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
-            Toast.LENGTH_LONG).show();
-        } else {
-           APIService.getErrorDialog(this, event).show();
-        }
-     }
+      refreshView(mPagePosition);
+   }
 
-     @Subscribe
-     public void onGuideChanged(StepChangedEvent event) {
-        mIsStepDirty = true;
-        toggleSave(mIsStepDirty);
-     }
+   @Subscribe
+   public void onStepAdd(APIEvent.StepAdd event) {
+      hideLoading();
 
-     /////////////////////////////////////////////////////
-     // UI EVENT LISTENERS
-     /////////////////////////////////////////////////////
+      if (!event.hasError()) {
+         mGuide = event.getResult();
 
-     @Override
-     public void onClick(View v) {
-        Tracker gaTracker = EasyTracker.getTracker();
-        switch (v.getId()) {
-           case R.id.step_edit_delete_step:
-              gaTracker.sendEvent("ui_action", "button_press", "step_edit_delete_step",
-               (long) mGuide.getStep(mPagePosition).getStepid());
-              if (!mGuide.getSteps().isEmpty()) {
-                 createDeleteDialog(StepEditActivity.this).show();
-              }
-              break;
-           case R.id.step_edit_save:
-              gaTracker.sendEvent("ui_action", "button_press", "step_edit_save_step",
-               (long) mGuide.getStep(mPagePosition).getStepid());
+         mStepAdapter.notifyDataSetChanged();
+         mPager.setCurrentItem(mSavePosition);
 
-              if (mGuide.isNewGuide()) {
-                 // DialogFragment.show() will take care of adding the fragment
-                 // in a transaction.  We also want to remove any currently showing
-                 // dialog, so make our own transaction and take care of that here.
-                 FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                 Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-                 if (prev != null) {
-                    ft.remove(prev);
-                 }
-                 ft.addToBackStack(null);
+         if (mAddStepAfterSave) {
+            addNewStep(mSavePosition + 1);
+            mAddStepAfterSave = false;
+         }
+      } else {
+         mAddStepAfterSave = false;
+         mIsStepDirty = true;
+         toggleSave(mIsStepDirty);
 
-                 // Create and show the dialog.
-                 DialogFragment newFragment = NewGuideDialogFragment.newInstance(mGuide);
-                 newFragment.show(ft, "dialog");
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
 
-              } else {
-                 save(mPagePosition);
-              }
-              break;
-           case R.id.step_edit_add_step:
-              gaTracker.sendEvent("ui_action", "button_press", "step_edit_add_step", null);
+   @Subscribe
+   public void onGuideStepDeleted(APIEvent.StepRemove event) {
+      hideLoading();
 
-              int newPosition = mPagePosition + 1;
+      if (!event.hasError()) {
+         mGuide.setRevisionid(event.getResult().getRevisionid());
+         deleteStep();
+      } else {
+         // Try to update the step on a conflict.
+         if (event.getError().mType == APIError.Type.CONFLICT) {
+            try {
+               updateCurrentStep(JSONHelper.parseStep(
+                new JSONObject(event.getResponse()), 0));
+            } catch (JSONException e) {
+               Log.w("StepEditActivity", "Error parsing step delete conflict", e);
+            }
+         }
 
-              // If the step has changes, prompt the user to save or continue editing.
-              if (mIsStepDirty) {
-                 createSaveChangesDialog(ConfirmSave.NEW_STEP).show();
-                 // If the step doesn't have any bullet content, prompt them to add some.
-              } else if (!stepHasLineContent(mGuide.getStep(mPagePosition))) {
-                 Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
-                  Toast.LENGTH_SHORT).show();
-                 return;
-              } else {
-                 addNewStep(newPosition);
-              }
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
 
-              break;
-        }
-     }
+   @Subscribe
+   public void onImageCopy(APIEvent.CopyImage event) {
+      if (!event.hasError()) {
+         Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
+          Toast.LENGTH_LONG).show();
+      } else {
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
 
-     private void addNewStep(int newPosition) {
-        if (!mGuide.hasNewStep()) {
-           GuideStep step = new GuideStep(newPosition);
-           step.addLine(new StepLine());
-           mGuide.addStep(step, newPosition);
+   @Subscribe
+   public void onGuideChanged(StepChangedEvent event) {
+      mIsStepDirty = true;
+      toggleSave(mIsStepDirty);
+   }
 
-           refreshView(newPosition);
-        } else {
-           // Show "Must add content to step" toast
-           Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
-            Toast.LENGTH_SHORT).show();
-        }
-     }
+   /////////////////////////////////////////////////////
+   // UI EVENT LISTENERS
+   /////////////////////////////////////////////////////
 
-     @Override
-     public void onBackPressed() {
-        if (mGuide.getRevisionid() == null) {
-           super.onBackPressed();
-        } else {
-           finishEdit(HOME_UP);
-        }
-     }
+   @Override
+   public void onClick(View v) {
+      Tracker gaTracker = EasyTracker.getTracker();
+      switch (v.getId()) {
+         case R.id.step_edit_delete_step:
+            gaTracker.sendEvent("ui_action", "button_press", "step_edit_delete_step",
+             (long) mGuide.getStep(mPagePosition).getStepid());
+            if (!mGuide.getSteps().isEmpty()) {
+               createDeleteDialog(StepEditActivity.this).show();
+            }
+            break;
+         case R.id.step_edit_save:
+            gaTracker.sendEvent("ui_action", "button_press", "step_edit_save_step",
+             (long) mGuide.getStep(mPagePosition).getStepid());
 
-     /////////////////////////////////////////////////////
-     // ADAPTERS and PRIVATE CLASSES
-     /////////////////////////////////////////////////////
+            if (mGuide.isNewGuide()) {
+               // DialogFragment.show() will take care of adding the fragment
+               // in a transaction.  We also want to remove any currently showing
+               // dialog, so make our own transaction and take care of that here.
+               FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+               Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+               if (prev != null) {
+                  ft.remove(prev);
+               }
+               ft.addToBackStack(null);
 
-     private void refreshView(int position) {
-        // The view pager does not recreate the item in the current position unless we force it to.
-        initPager();
-        mTitleIndicator.notifyDataSetChanged();
-        mStepAdapter.notifyDataSetChanged();
-        mPager.setCurrentItem(position, false);
-     }
+               // Create and show the dialog.
+               DialogFragment newFragment = NewGuideDialogFragment.newInstance(mGuide);
+               newFragment.show(ft, "dialog");
 
-     private class StepAdapter extends FragmentStatePagerAdapter {
+            } else {
+               save(mPagePosition);
+            }
+            break;
+         case R.id.step_edit_add_step:
+            gaTracker.sendEvent("ui_action", "button_press", "step_edit_add_step", null);
 
-        public StepAdapter(FragmentManager fm) {
-           super(fm);
-        }
+            int newPosition = mPagePosition + 1;
 
-        @Override
-        public int getCount() {
-           return mGuide.getSteps().size();
-        }
+            // If the step has changes, prompt the user to save or continue editing.
+            if (mIsStepDirty) {
+               createSaveChangesDialog(ConfirmSave.NEW_STEP).show();
+               // If the step doesn't have any bullet content, prompt them to add some.
+            } else if (!stepHasLineContent(mGuide.getStep(mPagePosition))) {
+               Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
+                Toast.LENGTH_SHORT).show();
+               return;
+            } else {
+               addNewStep(newPosition);
+            }
 
-        @Override
-        public CharSequence getPageTitle(int position) {
-           return getString(R.string.step_number, position + 1);
-        }
+            break;
+      }
+   }
 
-        @Override
-        public Fragment getItem(int position) {
-           return StepEditFragment.newInstance(mGuide.getStep(position));
-        }
+   private void addNewStep(int newPosition) {
+      if (!mGuide.hasNewStep()) {
+         GuideStep step = new GuideStep(newPosition);
+         step.addLine(new StepLine());
+         mGuide.addStep(step, newPosition);
 
-        /**
-         * When you call notifyDataSetChanged(), if it's set to POSITION_NONE, the view pager will remove all views and
-         * reload them all.
-         */
-        @Override
-        public int getItemPosition(Object object) {
+         refreshView(newPosition);
+      } else {
+         // Show "Must add content to step" toast
+         Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
+          Toast.LENGTH_SHORT).show();
+      }
+   }
+
+   @Override
+   public void onBackPressed() {
+      if (mGuide.getRevisionid() == null) {
+         super.onBackPressed();
+      } else {
+         finishEdit(HOME_UP);
+      }
+   }
+
+   /////////////////////////////////////////////////////
+   // ADAPTERS and PRIVATE CLASSES
+   /////////////////////////////////////////////////////
+
+   private void refreshView(int position) {
+      // The view pager does not recreate the item in the current position unless we force it to.
+      initPager();
+      mTitleIndicator.notifyDataSetChanged();
+      mStepAdapter.notifyDataSetChanged();
+      mPager.setCurrentItem(position, false);
+   }
+
+   private class StepAdapter extends FragmentStatePagerAdapter {
+
+      public StepAdapter(FragmentManager fm) {
+         super(fm);
+      }
+
+      @Override
+      public int getCount() {
+         return mGuide.getSteps().size();
+      }
+
+      @Override
+      public CharSequence getPageTitle(int position) {
+         return getString(R.string.step_number, position + 1);
+      }
+
+      @Override
+      public Fragment getItem(int position) {
+         return StepEditFragment.newInstance(mGuide.getStep(position));
+      }
+
+      /**
+       * When you call notifyDataSetChanged(), if it's set to POSITION_NONE, the view pager will remove all views and
+       * reload them all.
+       */
+      @Override
+      public int getItemPosition(Object object) {
            /*StepEditFragment page = (StepEditFragment)object;
            GuideStep step = page.getStepObject();
            int position = mGuide.getSteps().indexOf(step);
@@ -764,405 +765,405 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
            if (position >= 0) {
               return position;
            } else {*/
-           return PagerAdapter.POSITION_NONE;
-           // }
-        }
+         return PagerAdapter.POSITION_NONE;
+         // }
+      }
 
-        @Override
-        public void setPrimaryItem(ViewGroup container, int position, Object object) {
-           super.setPrimaryItem(container, position, object);
+      @Override
+      public void setPrimaryItem(ViewGroup container, int position, Object object) {
+         super.setPrimaryItem(container, position, object);
 
-           mPagePosition = position;
-           mCurStepFragment = (StepEditFragment) object;
-        }
-     }
+         mPagePosition = position;
+         mCurStepFragment = (StepEditFragment) object;
+      }
+   }
 
-     /////////////////////////////////////////////////////
-     // DIALOGS
-     /////////////////////////////////////////////////////
+   /////////////////////////////////////////////////////
+   // DIALOGS
+   /////////////////////////////////////////////////////
 
-     protected AlertDialog createDeleteDialog(final Context context) {
-        mConfirmDelete = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(context);
-        builder
-         .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
-         .setMessage(context.getString(R.string.step_edit_confirm_delete_message, mPagePosition + 1))
-         .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int id) {
-               mConfirmDelete = false;
-               mIsStepDirty = false;
+   protected AlertDialog createDeleteDialog(final Context context) {
+      mConfirmDelete = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(context);
+      builder
+       .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
+       .setMessage(context.getString(R.string.step_edit_confirm_delete_message, mPagePosition + 1))
+       .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int id) {
+             mConfirmDelete = false;
+             mIsStepDirty = false;
 
-               //step is at end of list
-               if (mPagePosition >= mGuide.getSteps().size()
-                // or it's a new step
-                || mGuide.getStep(mPagePosition).getRevisionid() == null) {
-                  deleteStep();
-               } else {
-                  showLoading(mLoadingContainer, getString(R.string.deleting));
-                  APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
-                   mGuide.getGuideid(), mGuide.getSteps().get(mPagePosition)));
-               }
-               dialog.cancel();
-            }
-         }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-           @Override
-           public void onClick(DialogInterface dialog, int which) {
-              mConfirmDelete = false;
-              dialog.cancel();
-           }
-        });
-
-        AlertDialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-           @Override
-           public void onDismiss(DialogInterface dialog) {
-              mConfirmDelete = false;
-           }
-        });
-
-        return dialog;
-     }
-
-     protected AlertDialog createHelpDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle(getString(R.string.media_help_title))
-         .setMessage(getString(R.string.guide_create_edit_steps_help))
-         .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-
-            public void onClick(DialogInterface dialog, int id) {
-               dialog.cancel();
-            }
-         });
-
-        return builder.create();
-     }
-
-     protected AlertDialog createSaveChangesDialog(final ConfirmSave dialogType) {
-        mShowingSave = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder
-         .setTitle(getString(R.string.save_changes_to_step))
-         .setPositiveButton(getString(R.string.yes),
-          new DialogInterface.OnClickListener() {
-             public void onClick(DialogInterface dialog, int id) {
-                save(mPagePosition);
-                dialog.dismiss();
-                switch (dialogType) {
-                   case NEW_STEP:
-                      addNewStep(mPagePosition + 1);
-                      mAddStepAfterSave = true;
-                      break;
-                   case NEXT_STEP:
-                      break;
-                }
+             //step is at end of list
+             if (mPagePosition >= mGuide.getSteps().size()
+              // or it's a new step
+              || mGuide.getStep(mPagePosition).getRevisionid() == null) {
+                deleteStep();
+             } else {
+                showLoading(mLoadingContainer, getString(R.string.deleting));
+                APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
+                 mGuide.getGuideid(), mGuide.getSteps().get(mPagePosition)));
              }
-          })
-         .setNegativeButton(getString(R.string.cancel),
-          new DialogInterface.OnClickListener() {
-             public void onClick(DialogInterface dialog, int id) {
-                mIsStepDirty = true;
-                dialog.dismiss();
-             }
-          });
+             dialog.cancel();
+          }
+       }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+         @Override
+         public void onClick(DialogInterface dialog, int which) {
+            mConfirmDelete = false;
+            dialog.cancel();
+         }
+      });
 
-        AlertDialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-           @Override
-           public void onDismiss(DialogInterface dialog) {
-              mShowingSave = false;
-           }
-        });
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mConfirmDelete = false;
+         }
+      });
 
-        return dialog;
+      return dialog;
+   }
 
-     }
+   protected AlertDialog createHelpDialog() {
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setTitle(getString(R.string.media_help_title))
+       .setMessage(getString(R.string.guide_create_edit_steps_help))
+       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
 
-     protected AlertDialog createExitWarningDialog(final int exitCode) {
-        mShowingSave = true;
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder
-         .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
-         .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
-         .setNegativeButton(getString(R.string.save),
-          new DialogInterface.OnClickListener() {
-             public void onClick(DialogInterface dialog, int id) {
-                mIsStepDirty = true;
-                save(mPagePosition);
-                dialog.dismiss();
+          public void onClick(DialogInterface dialog, int id) {
+             dialog.cancel();
+          }
+       });
 
-                if (mExitCode == STEP_VIEW) {
-                   navigateToStepView();
-                } else {
-                   navigateBack();
-                }
-             }
-          })
-         .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
-          new DialogInterface.OnClickListener() {
-             public void onClick(DialogInterface dialog, int id) {
-                mIsStepDirty = false;
-                dialog.dismiss();
-                finishEdit(exitCode);
-             }
-          });
+      return builder.create();
+   }
 
-        AlertDialog dialog = builder.create();
-        dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-           @Override
-           public void onDismiss(DialogInterface dialog) {
-              mShowingSave = false;
-           }
-        });
-
-        return dialog;
-     }
-
-     /////////////////////////////////////////////////////
-     // HELPERS
-     /////////////////////////////////////////////////////
-
-     protected void save(int savePosition) {
-        GuideStep obj = mGuide.getStep(savePosition);
-
-        obj.setLines(mCurStepFragment.getLines());
-        obj.setTitle(mCurStepFragment.getTitle());
-
-        mGuide.getSteps().set(savePosition, obj);
-
-        if (!stepHasLineContent(obj)) {
-           Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
-            Toast.LENGTH_SHORT).show();
-
-           return;
-        }
-
-        if (!mIsStepDirty || mLockSave) {
-           return;
-        }
-
-        mSavePosition = savePosition;
-        mIsStepDirty = false;
-
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-
-        showLoading(mLoadingContainer, getString(R.string.saving));
-        toggleSave(mIsStepDirty);
-
-        if (obj.getRevisionid() != null) {
-           APIService.call(this, APIService.getEditStepAPICall(obj, mGuide.getGuideid()));
-        } else {
-           APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
-            mPagePosition + 1, mGuide.getRevisionid()));
-        }
-     }
-
-     private boolean stepHasLineContent(GuideStep obj) {
-        if (obj.getLines().size() == 0) {
-           return false;
-        }
-
-        for (StepLine l : obj.getLines()) {
-           if (l.getTextRaw().length() == 0) {
-              return false;
-           }
-        }
-
-
-        return true;
-     }
-
-     @Override
-     public void showLoading(int container) {
-        if (mPager != null) {
-           mPager.setVisibility(View.GONE);
-        }
-        mIsLoading = true;
-
-        super.showLoading(container);
-     }
-
-     @Override
-     public void showLoading(int container, String message) {
-        if (mPager != null) {
-           mPager.setVisibility(View.GONE);
-        }
-        mIsLoading = true;
-
-        super.showLoading(container, message);
-     }
-
-     @Override
-     public void hideLoading() {
-        if (mPager != null) {
-           mPager.setVisibility(View.VISIBLE);
-        }
-        getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
-        mIsLoading = false;
-     }
-
-     protected void navigateToStepView() {
-        // Bail early if somehow the user is able to click view guide before the guide is retrieved.
-        if (mGuide == null) {
-           return;
-        }
-
-        EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid());
-
-        Intent intent = new Intent(this, GuideViewActivity.class);
-        if (mParentGuideId != NO_PARENT_GUIDE) {
-           intent.putExtra(GuideViewActivity.GUIDEID, mParentGuideId);
-        } else {
-           intent.putExtra(GuideViewActivity.GUIDEID, mGuide.getGuideid());
-        }
-        intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
-        intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());
-        intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
-        intent.putExtra(GuideViewActivity.FROM_EDIT, true);
-        startActivity(intent);
-     }
-
-     protected void finishEdit(int exitCode) {
-        mExitCode = exitCode;
-        if (mIsStepDirty || mLockSave) {
-           createExitWarningDialog(exitCode).show();
-        } else {
-
-           // Clean out unsaved, new steps.
-           for (Iterator<GuideStep> it = mGuide.getSteps().iterator(); it.hasNext(); ) {
-              if (it.next().getRevisionid() == null) {
-                 it.remove();
+   protected AlertDialog createSaveChangesDialog(final ConfirmSave dialogType) {
+      mShowingSave = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+       .setTitle(getString(R.string.save_changes_to_step))
+       .setPositiveButton(getString(R.string.yes),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              save(mPagePosition);
+              dialog.dismiss();
+              switch (dialogType) {
+                 case NEW_STEP:
+                    addNewStep(mPagePosition + 1);
+                    mAddStepAfterSave = true;
+                    break;
+                 case NEXT_STEP:
+                    break;
               }
            }
-
-           int guideSize = mGuide.getSteps().size();
-
-           // Make sure the step numbers are correct after removing steps.
-           for (int i = 1; i <= guideSize; i++) {
-              mGuide.getStep(i - 1).setStepNum(i);
+        })
+       .setNegativeButton(getString(R.string.cancel),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = true;
+              dialog.dismiss();
            }
+        });
 
-           // Necessary because if there were any new steps that were deleted, we need to let the adapters know about
-           // it.  Otherwise we get IllegalStateExceptions.
-           mStepAdapter.notifyDataSetChanged();
-           mTitleIndicator.notifyDataSetChanged();
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingSave = false;
+         }
+      });
 
-           // If the current position is equal to or greater than the number of steps in the guide,
-           // there was a new step at the end of the guide and that position no longer exists.  Set the page position
-           // to the new last step.
-           if (mPagePosition >= guideSize) {
-              mPagePosition = guideSize - 1;
-           }
+      return dialog;
 
-           Intent data;
-           switch (exitCode) {
-              case HOME_UP:
-                 data = new Intent(this, StepsActivity.class);
-                 data.putExtra(StepsActivity.GUIDE_ID_KEY, mGuide.getGuideid());
-                 data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
-                 data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
-                  | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+   }
 
-                 startActivity(data);
-                 finish();
-                 break;
-              case FOR_RESULT:
-                 data = new Intent();
-                 data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+   protected AlertDialog createExitWarningDialog(final int exitCode) {
+      mShowingSave = true;
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder
+       .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
+       .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
+       .setNegativeButton(getString(R.string.save),
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = true;
+              save(mPagePosition);
+              dialog.dismiss();
 
-                 if (getParent() == null) {
-                    setResult(Activity.RESULT_OK, data);
-                 } else {
-                    getParent().setResult(Activity.RESULT_OK, data);
-                 }
-
-                 finish();
-                 break;
-              case STEP_VIEW:
-                 mIsStepDirty = false;
-                 toggleSave(false);
+              if (mExitCode == STEP_VIEW) {
                  navigateToStepView();
-                 break;
-
+              } else {
+                 navigateBack();
+              }
            }
-        }
-     }
+        })
+       .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
+        new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int id) {
+              mIsStepDirty = false;
+              dialog.dismiss();
+              finishEdit(exitCode);
+           }
+        });
 
-     private void updateCurrentStep(GuideStep step) {
-        // Update the guide on successful save or conflict.
-        mGuide.getSteps().set(mSavePosition, step);
+      AlertDialog dialog = builder.create();
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingSave = false;
+         }
+      });
 
-        refreshView(mSavePosition);
-     }
+      return dialog;
+   }
 
-     protected void deleteStep() {
-        mGuide.getSteps().remove(mPagePosition);
+   /////////////////////////////////////////////////////
+   // HELPERS
+   /////////////////////////////////////////////////////
 
-        // If it's the last step in the guide, finish the activity.
-        if (mGuide.getSteps().size() == 0) {
-           mStepAdapter.notifyDataSetChanged();
+   protected void save(int savePosition) {
+      GuideStep obj = mGuide.getStep(savePosition);
 
-           navigateBack();
-           return;
-        }
+      obj.setLines(mCurStepFragment.getLines());
+      obj.setTitle(mCurStepFragment.getTitle());
 
-        // Disable the save button.
-        toggleSave(false);
+      mGuide.getSteps().set(savePosition, obj);
 
-        int guideSize = mGuide.getSteps().size();
+      if (!stepHasLineContent(obj)) {
+         Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
+          Toast.LENGTH_SHORT).show();
 
-        for (int i = 0; i < guideSize; i++) {
-           mGuide.getStep(i).setStepNum(i);
-        }
+         return;
+      }
 
-        int newPosition = mPagePosition - 1;
+      if (!mIsStepDirty || mLockSave) {
+         return;
+      }
 
-        // The view pager does not recreate the item in the current position unless we force it to.
-        refreshView(newPosition);
-     }
+      mSavePosition = savePosition;
+      mIsStepDirty = false;
 
-     /**
-      * Toggle the save button state
-      *
-      * @param toggle true to enable, false to disable
-      */
-     public void toggleSave(boolean toggle) {
-        if (!mLockSave) {
-           int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
-           int buttonTextColor = toggle ? R.color.white : R.color.fireswing_grey;
+      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
-           mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
-           mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
-           mSaveStep.setText(R.string.save);
-           mSaveStep.setEnabled(toggle);
-           // Lock the pager if save is enabled
-           enableViewPager(!toggle);
-        }
-     }
+      showLoading(mLoadingContainer, getString(R.string.saving));
+      toggleSave(mIsStepDirty);
 
-     protected void enableViewPager(boolean unlocked) {
-        if (mPager != null) {
-           mPager.setPagingEnabled(unlocked);
-        }
+      if (obj.getRevisionid() != null) {
+         APIService.call(this, APIService.getEditStepAPICall(obj, mGuide.getGuideid()));
+      } else {
+         APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
+          mPagePosition + 1, mGuide.getRevisionid()));
+      }
+   }
 
-        if (mTitleIndicator != null) {
-           mTitleIndicator.setPagingEnabled(unlocked);
-        }
-     }
+   private boolean stepHasLineContent(GuideStep obj) {
+      if (obj.getLines().size() == 0) {
+         return false;
+      }
 
-     public void lockSave() {
-        mLockSave = true;
+      for (StepLine l : obj.getLines()) {
+         if (l.getTextRaw().length() == 0) {
+            return false;
+         }
+      }
 
-        mSaveStep.setText(getString(R.string.loading_image));
-        mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_dark_grey));
-        mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_grey));
 
-        enableViewPager(false);
-     }
+      return true;
+   }
 
-     public void unlockSave() {
-        mLockSave = false;
-        enableViewPager(true);
-     }
-  }
+   @Override
+   public void showLoading(int container) {
+      if (mPager != null) {
+         mPager.setVisibility(View.GONE);
+      }
+      mIsLoading = true;
+
+      super.showLoading(container);
+   }
+
+   @Override
+   public void showLoading(int container, String message) {
+      if (mPager != null) {
+         mPager.setVisibility(View.GONE);
+      }
+      mIsLoading = true;
+
+      super.showLoading(container, message);
+   }
+
+   @Override
+   public void hideLoading() {
+      if (mPager != null) {
+         mPager.setVisibility(View.VISIBLE);
+      }
+      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      mIsLoading = false;
+   }
+
+   protected void navigateToStepView() {
+      // Bail early if somehow the user is able to click view guide before the guide is retrieved.
+      if (mGuide == null) {
+         return;
+      }
+
+      EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid());
+
+      Intent intent = new Intent(this, GuideViewActivity.class);
+      if (mParentGuideId != NO_PARENT_GUIDE) {
+         intent.putExtra(GuideViewActivity.GUIDEID, mParentGuideId);
+      } else {
+         intent.putExtra(GuideViewActivity.GUIDEID, mGuide.getGuideid());
+      }
+      intent.putExtra(GuideViewActivity.CURRENT_PAGE, mPagePosition + 1);
+      intent.putExtra(GuideViewActivity.INBOUND_STEP_ID, mGuide.getStep(mPagePosition).getStepid());
+      intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
+      intent.putExtra(GuideViewActivity.FROM_EDIT, true);
+      startActivity(intent);
+   }
+
+   protected void finishEdit(int exitCode) {
+      mExitCode = exitCode;
+      if (mIsStepDirty || mLockSave) {
+         createExitWarningDialog(exitCode).show();
+      } else {
+
+         // Clean out unsaved, new steps.
+         for (Iterator<GuideStep> it = mGuide.getSteps().iterator(); it.hasNext(); ) {
+            if (it.next().getRevisionid() == null) {
+               it.remove();
+            }
+         }
+
+         int guideSize = mGuide.getSteps().size();
+
+         // Make sure the step numbers are correct after removing steps.
+         for (int i = 1; i <= guideSize; i++) {
+            mGuide.getStep(i - 1).setStepNum(i);
+         }
+
+         // Necessary because if there were any new steps that were deleted, we need to let the adapters know about
+         // it.  Otherwise we get IllegalStateExceptions.
+         mStepAdapter.notifyDataSetChanged();
+         mTitleIndicator.notifyDataSetChanged();
+
+         // If the current position is equal to or greater than the number of steps in the guide,
+         // there was a new step at the end of the guide and that position no longer exists.  Set the page position
+         // to the new last step.
+         if (mPagePosition >= guideSize) {
+            mPagePosition = guideSize - 1;
+         }
+
+         Intent data;
+         switch (exitCode) {
+            case HOME_UP:
+               data = new Intent(this, StepsActivity.class);
+               data.putExtra(StepsActivity.GUIDE_ID_KEY, mGuide.getGuideid());
+               data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+               data.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK
+                | Intent.FLAG_ACTIVITY_NO_ANIMATION);
+
+               startActivity(data);
+               finish();
+               break;
+            case FOR_RESULT:
+               data = new Intent();
+               data.putExtra(GuideCreateActivity.GUIDE_KEY, mGuide);
+
+               if (getParent() == null) {
+                  setResult(Activity.RESULT_OK, data);
+               } else {
+                  getParent().setResult(Activity.RESULT_OK, data);
+               }
+
+               finish();
+               break;
+            case STEP_VIEW:
+               mIsStepDirty = false;
+               toggleSave(false);
+               navigateToStepView();
+               break;
+
+         }
+      }
+   }
+
+   private void updateCurrentStep(GuideStep step) {
+      // Update the guide on successful save or conflict.
+      mGuide.getSteps().set(mSavePosition, step);
+
+      refreshView(mSavePosition);
+   }
+
+   protected void deleteStep() {
+      mGuide.getSteps().remove(mPagePosition);
+
+      // If it's the last step in the guide, finish the activity.
+      if (mGuide.getSteps().size() == 0) {
+         mStepAdapter.notifyDataSetChanged();
+
+         navigateBack();
+         return;
+      }
+
+      // Disable the save button.
+      toggleSave(false);
+
+      int guideSize = mGuide.getSteps().size();
+
+      for (int i = 0; i < guideSize; i++) {
+         mGuide.getStep(i).setStepNum(i);
+      }
+
+      int newPosition = mPagePosition - 1;
+
+      // The view pager does not recreate the item in the current position unless we force it to.
+      refreshView(newPosition);
+   }
+
+   /**
+    * Toggle the save button state
+    *
+    * @param toggle true to enable, false to disable
+    */
+   public void toggleSave(boolean toggle) {
+      if (!mLockSave) {
+         int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
+         int buttonTextColor = toggle ? R.color.white : R.color.fireswing_grey;
+
+         mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
+         mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
+         mSaveStep.setText(R.string.save);
+         mSaveStep.setEnabled(toggle);
+         // Lock the pager if save is enabled
+         enableViewPager(!toggle);
+      }
+   }
+
+   protected void enableViewPager(boolean unlocked) {
+      if (mPager != null) {
+         mPager.setPagingEnabled(unlocked);
+      }
+
+      if (mTitleIndicator != null) {
+         mTitleIndicator.setPagingEnabled(unlocked);
+      }
+   }
+
+   public void lockSave() {
+      mLockSave = true;
+
+      mSaveStep.setText(getString(R.string.loading_image));
+      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_dark_grey));
+      mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_grey));
+
+      enableViewPager(false);
+   }
+
+   public void unlockSave() {
+      mLockSave = false;
+      enableViewPager(true);
+   }
+}
