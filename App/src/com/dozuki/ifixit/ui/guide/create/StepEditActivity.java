@@ -563,7 +563,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Subscribe
    public void onGuideDetailsChanged(GuideDetailsChangedEvent event) {
-      showLoading(mLoadingContainer);
+      showLoading(mLoadingContainer, "Creating New Guide...");
+      toggleSave(false);
 
       mGuide = event.guide;
       APIService.call(StepEditActivity.this, APIService.getCreateGuideAPICall(mGuide));
@@ -580,6 +581,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mGuide.setAuthor(guide.getAuthor());
       mGuide.setPublic(false);
       mGuide.setTitle(guide.getTitle());
+      getSupportActionBar().setTitle(guide.getTitle());
       supportInvalidateOptionsMenu();
       save(mPagePosition);
    }
