@@ -25,8 +25,6 @@
 
         <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
         <item name="mdMenuBackground">@color/menu_background</item>
-
-        <item name="switchStyle">@style/Widget.Holo.CompoundButton.Switch</item>
     </style>
 
     <style name="Theme.iFixit" parent="Theme.Base">
