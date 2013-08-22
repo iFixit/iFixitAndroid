@@ -779,6 +779,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    /////////////////////////////////////////////////////
 
    private void refreshView(int position) {
+      // Fetch data from children fragments to make sure we don't lose any unsaved fields.
+      fetchChildData(position);
+
       // The view pager does not recreate the item in the current position unless we force it to.
       initPager();
       mTitleIndicator.notifyDataSetChanged();
@@ -979,12 +982,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    /////////////////////////////////////////////////////
 
    protected void save(int savePosition) {
-      GuideStep obj = mGuide.getStep(savePosition);
 
-      obj.setLines(mCurStepFragment.getLines());
-      obj.setTitle(mCurStepFragment.getTitle());
-
-      mGuide.getSteps().set(savePosition, obj);
+      // Fetch changes the children fragments
+      GuideStep obj = fetchChildData(savePosition);
 
       if (!stepHasLineContent(obj)) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
@@ -1011,6 +1011,16 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
           mPagePosition + 1, mGuide.getRevisionid()));
       }
+   }
+   private GuideStep fetchChildData(int position) {
+      GuideStep obj = mGuide.getStep(position);
+
+      obj.setLines(mCurStepFragment.getLines());
+      obj.setTitle(mCurStepFragment.getTitle());
+
+      mGuide.getSteps().set(position, obj);
+
+      return obj;
    }
 
    private boolean stepHasLineContent(GuideStep obj) {
