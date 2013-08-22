@@ -706,6 +706,11 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
              (long) mGuide.getStep(mPagePosition).getStepid());
 
             if (mGuide.isNewGuide()) {
+               if (!stepHasLineContent(mCurStepFragment.getLines())) {
+                  Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
+                   Toast.LENGTH_SHORT).show();
+                  return;
+               }
                // DialogFragment.show() will take care of adding the fragment
                // in a transaction.  We also want to remove any currently showing
                // dialog, so make our own transaction and take care of that here.
@@ -719,7 +724,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                // Create and show the dialog.
                DialogFragment newFragment = NewGuideDialogFragment.newInstance(mGuide);
                newFragment.show(ft, "dialog");
-
             } else {
                save(mPagePosition);
             }
@@ -983,7 +987,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       if (!stepHasLineContent(obj)) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
           Toast.LENGTH_SHORT).show();
-
          return;
       }
 
@@ -1009,11 +1012,15 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    private boolean stepHasLineContent(GuideStep obj) {
-      if (obj.getLines().size() == 0) {
+      return stepHasLineContent(obj.getLines());
+   }
+
+   private boolean stepHasLineContent(ArrayList<StepLine> lines) {
+      if (lines.size() == 0) {
          return false;
       }
 
-      for (StepLine l : obj.getLines()) {
+      for (StepLine l : lines) {
          if (l.getTextRaw().length() == 0) {
             return false;
          }
