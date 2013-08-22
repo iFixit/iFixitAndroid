@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
@@ -16,15 +17,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.ImageButton;
-import android.widget.Toast;
+import android.widget.*;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
@@ -50,6 +50,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private static final int HOME_UP = 3;
    private static final int MENU_DISCARD_CHANGES = 14;
    private static final String TAG = "StepEditActivity";
+   private static final int MENU_PUBLISH_SWITCH = 15;
 
    private enum ConfirmSave {
       NEW_STEP,
@@ -196,6 +197,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       if (mLockSave) {
          lockSave();
       }
+
+      // Finally, reload the action bar to update action states (view guide and public/private toggle)
+      supportInvalidateOptionsMenu();
    }
 
    private void initPager() {
@@ -325,7 +329,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       super.onDestroy();
 
       mCurStepFragment = null;
-
    }
 
    @Override
@@ -399,31 +402,54 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      menu.add(2, MENU_VIEW_GUIDE, 0, R.string.view_guide)
-       .setIcon(R.drawable.ic_action_book)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      getSupportMenuInflater().inflate(R.menu.step_edit_menu, menu);
+      MenuItem item = menu.findItem(R.id.publish_guide);
+      CompoundButton toggle = (CompoundButton)item.getActionView().findViewById(R.id.publish_toggle);
+      toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+         @Override
+         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+            if (mGuide != null && isChecked != mGuide.isPublic()) {
+               Log.d("StepEditActivity", "Toggle: " + (isChecked ? "true" : "false"));
 
-      menu.add(1, MENU_DISCARD_CHANGES, 0, R.string.discard_changes)
-       .setIcon(R.drawable.ic_action_undo)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_NEVER);
+               // Disable the switch / checkbox until the publish response comes back.
+               //buttonView.setEnabled(false);
+               showLoading(mLoadingContainer, (isChecked ? "Publishing..." : "Unpublishing..."));
 
+               if (isChecked) {
+                  APIService.call(StepEditActivity.this,
+                   APIService.getPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
+               } else {
+                  APIService.call(StepEditActivity.this,
+                   APIService.getUnPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
+               }
+            }
+         }
+      });
       return super.onCreateOptionsMenu(menu);
    }
 
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem viewGuide = menu.findItem(MENU_VIEW_GUIDE);
+      MenuItem viewGuide = menu.findItem(R.id.view_guide);
+      MenuItem visibilityToggle = menu.findItem(R.id.publish_guide);
+      CompoundButton toggle = ((CompoundButton) visibilityToggle.getActionView().findViewById(R.id.publish_toggle));
       if (mGuide != null) {
          if (mGuide.getRevisionid() == null) {
             viewGuide.setIcon(R.drawable.ic_action_book_dark);
             viewGuide.setEnabled(false);
+            toggle.setEnabled(false);
          } else {
             viewGuide.setIcon(R.drawable.ic_action_book);
             viewGuide.setEnabled(true);
+            toggle.setEnabled(true);
+
+            if (toggle.isChecked() != mGuide.isPublic())
+               toggle.setChecked(mGuide.isPublic());
          }
       } else {
          viewGuide.setIcon(R.drawable.ic_action_book_dark);
          viewGuide.setEnabled(false);
+         toggle.setEnabled(false);
       }
       return super.onPrepareOptionsMenu(menu);
    }
@@ -431,10 +457,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
-         case MENU_VIEW_GUIDE:
+         case R.id.view_guide:
             finishEdit(STEP_VIEW);
             break;
-         case MENU_DISCARD_CHANGES:
+         case R.id.discard_changes:
             if (!mIsStepDirty) break; // Bail early if there aren't any changes
 
             toggleSave(false);
@@ -453,6 +479,22 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
    /////////////////////////////////////////////////////
+
+   @Subscribe
+   public void onPublishStatus(APIEvent.PublishStatus event) {
+      hideLoading();
+
+      // Update guide even if there is a conflict.
+      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+         mGuide = event.getResult();
+         // Reload the options menu to reenable the button
+         supportInvalidateOptionsMenu();
+      }
+
+      if (event.hasError()) {
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
 
    @Subscribe
    public void onGuideGet(APIEvent.GuideForEdit event) {

@@ -12,6 +12,8 @@
 
     <dimen name="loading_fragment_text_margin_bottom">8dp</dimen>
 
+    <dimen name="action_bar_switch_padding">16dip</dimen>
+
     <!-- Menu Drawer -->
     <dimen name="menu_size">250dp</dimen>
     <dimen name="menu_bezel_size">10dp</dimen>
