@@ -251,6 +251,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
          case NEW_GUIDE:
             intent = new Intent(this, StepEditActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
             startActivity(intent);
             break;
 
@@ -292,6 +293,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       }
       mMenuDrawer.closeMenu();
    }
+
    private static class Item {
       String mTitle;
       int mIconRes;

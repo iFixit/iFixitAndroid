@@ -148,13 +148,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          extractExtras(getIntent().getExtras());
       } else {
          // Creating a new guide
-         mGuide = new Guide();
-
-         GuideStep step = new GuideStep();
-         step.addLine(new StepLine());
-
-         mGuide.addStep(step);
-         mPagePosition = 0;
+         initializeNewGuide();
       }
 
       mSaveStep = (Button) findViewById(R.id.step_edit_save);
@@ -164,6 +158,17 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       if (mGuide != null) {
          initPage(mPagePosition);
       }
+   }
+
+   private void initializeNewGuide() {
+      // Creating a new guide
+      mGuide = new Guide();
+
+      GuideStep step = new GuideStep();
+      step.addLine(new StepLine());
+
+      mGuide.addStep(step);
+      mPagePosition = 0;
    }
 
    private void initPage(int startPage) {
@@ -228,10 +233,17 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
 
-      mGuide = null;
-      mPagePosition = 0;
+      Bundle extras = intent.getExtras();
+      if (extras != null) {
+         Log.d(TAG, "onNewIntent has extras");
+         mGuide = null;
+         mPagePosition = 0;
 
-      extractExtras(intent.getExtras());
+         extractExtras(intent.getExtras());
+      } else {
+         initializeNewGuide();
+      }
+
       if (mGuide != null) {
          initPage(mPagePosition);
       }
@@ -246,7 +258,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       switch (requestCode) {
          case GALLERY_REQUEST_CODE:
             if (data != null) {
-
                newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mGuide.getStep(mPagePosition).addImage(newThumb);
                refreshView(mPagePosition);
@@ -408,7 +419,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            if (mGuide != null && isChecked != mGuide.isPublic()) {
+            if (mGuide != null && !mGuide.isNewGuide() && isChecked != mGuide.isPublic()) {
                Log.d("StepEditActivity", "Toggle: " + (isChecked ? "true" : "false"));
 
                // Disable the switch / checkbox until the publish response comes back.
