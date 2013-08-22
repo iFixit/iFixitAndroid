@@ -24,6 +24,7 @@ import com.squareup.picasso.Target;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class ThumbnailView extends LinearLayout {
    private static final String TAG = "ThumbnailView";
@@ -247,9 +248,13 @@ public class ThumbnailView extends LinearLayout {
    }
 
    public void removeThumb(Object view) {
-      for (ViewHolder thumbHolder : mThumbs) {
+      Iterator<ViewHolder> it = mThumbs.iterator();
+
+      while (it.hasNext()) {
+         ViewHolder thumbHolder = it.next();
+
          if (thumbHolder.container == view) {
-            mThumbs.remove(thumbHolder);
+            it.remove();
             mThumbnailContainer.removeView(thumbHolder.container);
          }
       }
