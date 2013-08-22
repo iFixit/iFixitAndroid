@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="page_padding">4dp</dimen>
+    <dimen name="action_bar_switch_padding">6dip</dimen>
 
     <dimen name="guide_thumbnail_spacing">4dp</dimen>
     <dimen name="guide_image_spacing_bottom">4dp</dimen>

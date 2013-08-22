@@ -12,7 +12,7 @@
 
     <dimen name="loading_fragment_text_margin_bottom">8dp</dimen>
 
-    <dimen name="action_bar_switch_padding">16dip</dimen>
+    <dimen name="action_bar_switch_padding">8dip</dimen>
 
     <!-- Menu Drawer -->
     <dimen name="menu_size">250dp</dimen>
