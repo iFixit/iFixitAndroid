@@ -216,7 +216,9 @@ public abstract class MediaFragment extends SherlockFragment
 
    @Override
    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-      setDeleteMode();
+      if (!mSelectForReturn)
+         setDeleteMode();
+
       return false;
    }
 
@@ -437,9 +439,10 @@ public abstract class MediaFragment extends SherlockFragment
 
          itemView.clearImage();
 
-         // image was pulled from the server
+         // image was added from the local gallery or captured on the phone
          if (image.isLocal()) {
             Uri temp = Uri.parse(image.getPath());
+            image.setLocalImage(temp.toString());
 
             if (image.fromMediaStore()) {
                // Media Store image
@@ -464,8 +467,7 @@ public abstract class MediaFragment extends SherlockFragment
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         MenuInflater inflater = getSherlockActivity().getSupportMenuInflater();
-         inflater.inflate(R.menu.contextual_delete, menu);
+         getSherlockActivity().getSupportMenuInflater().inflate(R.menu.contextual_delete, menu);
          return true;
       }
 

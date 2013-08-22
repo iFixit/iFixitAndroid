@@ -23,6 +23,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    public static final int MENU_STEP_ADD = 2;
    public static final int MENU_EDIT_INTRO = 3;
    public static final int MENU_REARRANGE_STEPS = 4;
+   public static final int MENU_VIEW_GUIDE = 12;
    public static String GUIDE_KEY = "GUIDE_KEY";
    public static String GUIDE_ID_KEY = "GUIDE_ID_KEY";
    public static String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
@@ -140,7 +141,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
        .setIcon(R.drawable.ic_dialog_arrange_bullets_light)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
       menu
-       .add(4, StepEditActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
+       .add(4, StepsActivity.MENU_VIEW_GUIDE, 0, R.string.view_guide)
        .setIcon(R.drawable.ic_action_book)
        .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
 

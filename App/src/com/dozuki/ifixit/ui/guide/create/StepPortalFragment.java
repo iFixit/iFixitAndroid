@@ -151,7 +151,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
 
             launchStepEdit(mGuide.getSteps().size());
             break;
-         case StepEditActivity.MENU_VIEW_GUIDE:
+         case StepsActivity.MENU_VIEW_GUIDE:
             Intent intent = new Intent(getActivity(), GuideViewActivity.class);
             intent.putExtra(GuideViewActivity.GUIDEID, mGuide.getGuideid());
             intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);

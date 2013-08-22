@@ -213,6 +213,8 @@ public class ThumbnailView extends LinearLayout {
          thumb.container.setOnLongClickListener(mLongClickListener);
       }
 
+      thumb.image.setImage(image);
+
       if (image.hasLocalPath()) {
          File file = new File(image.getLocalPath());
          buildImage(mPicasso.load(file)
@@ -226,7 +228,6 @@ public class ThumbnailView extends LinearLayout {
       } else {
          String url = image.getPath(mImageSizes.getThumb());
          buildImage(mPicasso.load(url), thumb.image);
-         thumb.image.setImage(image);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);

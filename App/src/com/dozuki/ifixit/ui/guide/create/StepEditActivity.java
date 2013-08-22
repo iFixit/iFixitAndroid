@@ -44,13 +44,10 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickListener {
-   public static final int MENU_VIEW_GUIDE = 12;
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
-   private static final int MENU_DISCARD_CHANGES = 14;
    private static final String TAG = "StepEditActivity";
-   private static final int MENU_PUBLISH_SWITCH = 15;
 
    private enum ConfirmSave {
       NEW_STEP,
@@ -109,7 +106,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private int mExitCode;
 
    private static int mLoadingContainer = R.id.step_edit_loading_screen;
-
 
    /////////////////////////////////////////////////////
    // LIFECYCLE

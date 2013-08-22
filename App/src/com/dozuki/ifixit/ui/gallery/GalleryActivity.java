@@ -10,6 +10,7 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -31,9 +32,9 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
    public static final String MEDIA_RETURN_KEY = "MEDIA_RETURN_KEY";
    public static final String ATTACHED_MEDIA_IDS = "ATTACHED_MEDIA_IDS";
 
-   public static boolean showingLogout;
-   public static boolean showingHelp;
-   public static boolean showingDelete;
+   public static boolean showingLogout = false;
+   public static boolean showingHelp = false;
+   public static boolean showingDelete = false;
 
    private HashMap<String, MediaFragment> mMediaCategoryFragments;
    private MediaFragment mCurrentMediaFragment;
@@ -41,6 +42,10 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       setTheme(((MainApplication) getApplication()).getSiteTheme());
+
+      super.onCreate(savedInstanceState);
+
+      setContentView(R.layout.gallery_root);
 
       mMediaCategoryFragments = new HashMap<String, MediaFragment>();
       mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS, new PhotoMediaFragment());
@@ -59,8 +64,9 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       boolean getMediaItemForReturn = false;
 
-      if (getIntent().getExtras() != null) {
-         Bundle bundle = getIntent().getExtras();
+      Bundle bundle = getIntent().getExtras();
+
+      if (bundle != null) {
          int returnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
          ArrayList<Integer> alreadyAttachedImages = bundle.getIntegerArrayList(ATTACHED_MEDIA_IDS);
          mCurrentMediaFragment.setAlreadyAttachedImages(alreadyAttachedImages);
@@ -71,10 +77,6 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       }
 
       mCurrentMediaFragment.setForReturn(getMediaItemForReturn);
-
-      super.onCreate(savedInstanceState);
-
-      setContentView(R.layout.gallery_root);
       StepAdapter stepAdapter = new StepAdapter(this.getSupportFragmentManager());
       ViewPager pager = (ViewPager) findViewById(R.id.gallery_view_body_pager);
       pager.setAdapter(stepAdapter);
@@ -190,14 +192,14 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         // MenuInflater inflater = getSupportMenuInflater();
-         // inflater.inflate(R.menu.gallery_menu, menu);
+         getSupportMenuInflater().inflate(R.menu.gallery_menu, menu);
          return true;
       }
 
       @Override
       public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
-         return false;
+         menu.findItem(R.id.top_camera_button).setVisible(false);
+         return true;
       }
 
       @Override
@@ -207,7 +209,18 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       @Override
       public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+         boolean isLoggedIn = ((MainApplication) getApplication()).isUserLoggedIn();
 
+         if (!isLoggedIn) return false;
+
+         switch (item.getItemId()) {
+            case R.id.top_camera_button:
+               mCurrentMediaFragment.launchCamera();
+               break;
+            case R.id.top_gallery_button:
+               mCurrentMediaFragment.launchImageChooser();
+               break;
+         }
          return true;
       }
    }
