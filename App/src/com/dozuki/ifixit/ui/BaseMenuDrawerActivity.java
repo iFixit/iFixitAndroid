@@ -119,8 +119,11 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
-      items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
-      if (onIfixit) items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, "teardowns"));
+
+      if (onIfixit) {
+         items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
+         items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, "teardowns"));
+      }
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
       items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, "user_favorites"));

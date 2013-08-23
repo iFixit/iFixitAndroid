@@ -148,6 +148,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          initializeNewGuide();
       }
 
+      if (MainApplication.get().getSite().mGuideTypes == null) {
+         APIService.call(this, APIService.getSiteInfoAPICall());
+      }
+
       mSaveStep = (Button) findViewById(R.id.step_edit_save);
 
       toggleSave(mIsStepDirty);
@@ -257,7 +261,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             if (data != null) {
                newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mGuide.getStep(mPagePosition).addImage(newThumb);
-               refreshView(mPagePosition);
+               refreshView(mPagePosition, true);
 
                MainApplication.getBus().post(new StepChangedEvent());
             } else {
@@ -284,7 +288,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                newThumb.setLocalImage(tempFileName);
 
                mGuide.getStep(mPagePosition).addImage(newThumb);
-               refreshView(mPagePosition);
+               refreshView(mPagePosition, true);
 
                APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
             }
@@ -489,6 +493,13 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    /////////////////////////////////////////////////////
 
    @Subscribe
+   public void onSiteInfo(APIEvent.SiteInfo event) {
+      if (!event.hasError()) {
+         MainApplication.get().setSite(event.getResult());
+      }
+   }
+
+   @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
       hideLoading();
 
@@ -573,18 +584,25 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Subscribe
    public void onGuideCreated(APIEvent.CreateGuide event) {
-      mPagePosition = 0;
+      if (!event.hasError()) {
+         mPagePosition = 0;
 
-      Guide guide = event.getResult();
+         Guide guide = event.getResult();
 
-      mGuide.setGuideid(guide.getGuideid());
-      mGuide.setRevisionid(guide.getRevisionid());
-      mGuide.setAuthor(guide.getAuthor());
-      mGuide.setPublic(false);
-      mGuide.setTitle(guide.getTitle());
-      getSupportActionBar().setTitle(guide.getTitle());
-      supportInvalidateOptionsMenu();
-      save(mPagePosition);
+         mGuide.setGuideid(guide.getGuideid());
+         mGuide.setRevisionid(guide.getRevisionid());
+         mGuide.setAuthor(guide.getAuthor());
+         mGuide.setPublic(false);
+         mGuide.setTitle(guide.getTitle());
+         getSupportActionBar().setTitle(guide.getTitle());
+         supportInvalidateOptionsMenu();
+         save(mPagePosition);
+      } else {
+         mIsStepDirty = true;
+         toggleSave(mIsStepDirty);
+
+         APIService.getErrorDialog(this, event).show();
+      }
    }
 
    @Subscribe
@@ -606,7 +624,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             }
 
             mGuide.getStep(mPagePosition).setImages(images);
-            refreshView(mPagePosition);
+            refreshView(mPagePosition, true);
          }
 
          if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
@@ -625,7 +643,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onStepImageDelete(StepImageDeleteEvent event) {
       mGuide.getStep(mPagePosition).getImages().remove(event.image);
 
-      refreshView(mPagePosition);
+      refreshView(mPagePosition, true);
    }
 
    @Subscribe
@@ -758,7 +776,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          step.addLine(new StepLine());
          mGuide.addStep(step, newPosition);
 
-         refreshView(newPosition);
+         refreshView(newPosition, false);
       } else {
          // Show "Must add content to step" toast
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
@@ -779,9 +797,11 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    // ADAPTERS and PRIVATE CLASSES
    /////////////////////////////////////////////////////
 
-   private void refreshView(int position) {
-      // Fetch data from children fragments to make sure we don't lose any unsaved fields.
-      fetchChildData(position);
+   private void refreshView(int position, boolean reloadData) {
+      if (reloadData) {
+         // Fetch data from children fragments to make sure we don't lose any unsaved fields.
+         fetchChildData(position);
+      }
 
       // The view pager does not recreate the item in the current position unless we force it to.
       initPager();
@@ -1163,7 +1183,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       // Update the guide on successful save or conflict.
       mGuide.getSteps().set(mSavePosition, step);
 
-      refreshView(mSavePosition);
+      refreshView(mSavePosition, true);
    }
 
    protected void deleteStep() {
@@ -1189,7 +1209,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       int newPosition = mPagePosition - 1;
 
       // The view pager does not recreate the item in the current position unless we force it to.
-      refreshView(newPosition);
+      refreshView(newPosition, false);
    }
 
    /**

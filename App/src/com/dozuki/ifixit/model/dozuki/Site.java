@@ -76,6 +76,12 @@ public class Site implements Serializable {
       return types;
    }
 
+   public String[] getGuideTypesArray() {
+      String[] typesArr = new String[mGuideTypes.size()];
+
+      return getGuideTypes().toArray(typesArr);
+   }
+
    public boolean hasSubject(String type) {
       boolean result = false;
 
@@ -210,5 +216,9 @@ public class Site implements Serializable {
 
    public boolean isIfixit() {
       return mName.equals("ifixit");
+   }
+
+   public boolean isDozuki() {
+      return mName.equals("dozuki");
    }
 }

@@ -71,7 +71,6 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
 
       mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
        getActivity().getComponentName()));
-      mSearchView.setIconifiedByDefault(false);
       mSearchView.setOnQueryTextListener((SiteListActivity)getActivity());
 
       View searchPlate = mSearchView.findViewById(R.id.abs__search_plate);
