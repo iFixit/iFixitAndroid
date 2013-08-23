@@ -4,12 +4,12 @@
      <item
         android:id="@+id/top_camera_button"
         android:icon="@drawable/ic_action_camera"
-        android:showAsAction="always|withText"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/camera_tool_tip"/>
     <item
         android:id="@+id/top_gallery_button"
         android:icon="@drawable/ic_action_picture_add"
-        android:showAsAction="always|withText"
+        android:showAsAction="ifRoom|withText"
         android:title="@string/gallery_tool_tip"/>
 
 </menu>

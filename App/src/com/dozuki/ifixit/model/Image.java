@@ -49,7 +49,7 @@ public class Image implements Serializable {
    }
 
    public boolean hasLocalPath() {
-      return !mLocalPath.isEmpty();
+      return mLocalPath != null && mLocalPath.length() > 0;
    }
 
    public String getLocalPath() {

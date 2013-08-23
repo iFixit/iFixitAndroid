@@ -65,6 +65,6 @@ public class GuideInfo implements Serializable {
 
    public String toString() {
       return mGuideid + ", " + mSubject + ", " + mImage + ", " + mTitle +
-       ", " + mType + ", " + mFlags.toString();
+       ", " + mType + ", " + Arrays.toString(mFlags);
    }
 }

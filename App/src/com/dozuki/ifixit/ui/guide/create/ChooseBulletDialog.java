@@ -104,7 +104,7 @@ public class ChooseBulletDialog extends DialogFragment implements OnClickListene
 
       LayoutParams params = getDialog().getWindow().getAttributes();
       params.width = LayoutParams.WRAP_CONTENT;
-      getDialog().getWindow().setAttributes((android.view.WindowManager.LayoutParams) params);
+      getDialog().getWindow().setAttributes(params);
       getDialog().getWindow().setBackgroundDrawable(new ColorDrawable(0));
 
       return view;

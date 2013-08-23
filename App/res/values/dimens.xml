@@ -19,16 +19,13 @@
     <dimen name="menu_bezel_size">10dp</dimen>
 
     <!-- Guide View -->
-    <dimen name="guide_step_section_seperator">8dp</dimen>
     <dimen name="guide_image_width">256dp</dimen>
     <dimen name="guide_image_height">192dp</dimen>
-    <dimen name="guide_image_padding">1dp</dimen>
     <dimen name="guide_image_spacing_right">8dp</dimen>
     <dimen name="guide_image_spacing_bottom">8dp</dimen>
     <dimen name="guide_thumbnail_width">120dp</dimen>
     <dimen name="guide_thumbnail_height">90dp</dimen>
     <dimen name="guide_thumbnail_spacing">6dp</dimen>
-    <dimen name="guide_thumbnail_padding">1dp</dimen>
 
     <!-- Step Edit View -->
     <dimen name="step_pager_bar_height">30dp</dimen>
@@ -40,9 +37,7 @@
     <dimen name="topic_list_vertical_spacing">4dp</dimen>
     <dimen name="topic_list_horizontal_spacing">2dp</dimen>
     <dimen name="topic_list_top_margin">4dp</dimen>
-    <dimen name="topic_list_right_divider">0dp</dimen>
 
-    <dimen name="circle_page_indicator_padding">6dp</dimen>
     <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>
     <dimen name="step_icon_left_spacing">10dp</dimen>
@@ -50,7 +45,6 @@
     <dimen name="progress_bar_width">80dp</dimen>
 
     <!-- Media Manager -->
-    <dimen name="gallery_login_text_padding">8dp</dimen>
     <dimen name="gallery_grid_column_width">100dp</dimen>
     <dimen name="gallery_grid_item_height">100dp</dimen>
     <dimen name="gallery_top_bar_height">48dp</dimen>
@@ -60,15 +54,8 @@
     <dimen name="guide_create_step_edit_bottom_bar_height">48dp</dimen>
     <dimen name="guide_create_edit_button_dim">36dp</dimen>
     <dimen name="guide_create_list_item_text_right_offset">42dp</dimen>
-    <dimen name="guide_create_icon_button_dim">20dp</dimen>
-    <dimen name="guide_create_page_padding">16dp</dimen>
-    <dimen name="guide_create_intro_spacing">32dp</dimen>
-    <dimen name="guide_create_intro_title">5dp</dimen>
     <dimen name="guide_create_edit_add_bullet_button_padding">16dp</dimen>
     <dimen name="guide_create_edit_add_bullet_button_margin_top">8dp</dimen>
-    <dimen name="guide_create_edit_media_horizontal_margin">16dp</dimen>
-    <dimen name="guide_create_edit_media_vertical_margin">8dp</dimen>
-    <dimen name="guide_create_edit_media_thumbnail_margin">4dp</dimen>
     <dimen name="add_thumbnail_icon_inner_padding">8dp</dimen>
     <dimen name="guide_create_step_edit_video__marginRight">0dp</dimen>
 

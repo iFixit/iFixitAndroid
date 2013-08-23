@@ -15,7 +15,7 @@
 
          <TextView
              style="@style/Base.FormLabel"
-             android:text="Guide Type"/>
+             android:text="@string/guide_type"/>
 
          <Spinner
              android:id="@+id/guide_types_spinner"

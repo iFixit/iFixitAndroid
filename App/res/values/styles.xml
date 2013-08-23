@@ -17,7 +17,7 @@
 
     <style name="Base.ButtonBar">
         <item name="android:background">@null</item>
-        <item name="android:divider">?dividerVertical</item>
+        <item name="android:divider">?android:dividerVertical</item>
         <item name="android:paddingBottom">0dip</item>
         <item name="android:paddingLeft">0dip</item>
         <item name="android:paddingRight">0dip</item>
@@ -38,7 +38,7 @@
     </style>
 
     <style name="Base.Button.Borderless">
-        <item name="android:background">?selectableItemBackground</item>
+        <item name="android:background">?android:selectableItemBackground</item>
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingRight">4dip</item>
     </style>
@@ -249,7 +249,7 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">?listPreferredItemPaddingLeft</item>
+        <item name="android:paddingLeft">?android:listPreferredItemPaddingLeft</item>
         <item name="android:textSize">36sp</item>
         <item name="android:textColor">#ff0099cc</item>
         <item name="android:fontFamily">sans-serif-thin</item>
@@ -260,7 +260,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:paddingLeft">?listPreferredItemPaddingLeft</item>
+        <item name="android:paddingLeft">?android:listPreferredItemPaddingLeft</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?android:textColorSecondaryInverse</item>
     </style>

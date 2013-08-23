@@ -9,16 +9,11 @@
     <dimen name="title_text_size">32sp</dimen>
     <dimen name="body_text_size">18sp</dimen>
     <dimen name="body_text_top_spacing">16dp</dimen>
-    <dimen name="guide_image_padding">1dp</dimen>
     <dimen name="guide_thumbnail_spacing">8dp</dimen>
-    <dimen name="guide_thumbnail_padding">1dp</dimen>
-    <dimen name="guide_step_section_seperator">16dp</dimen>
     <dimen name="topic_list_vertical_spacing">4dp</dimen>
     <dimen name="topic_list_horizontal_spacing">4dp</dimen>
     <dimen name="topic_list_top_margin">8dp</dimen>
-    <dimen name="topic_list_right_divider">1dp</dimen>
     <dimen name="page_padding">8dp</dimen>
-    <dimen name="circle_page_indicator_padding">6dp</dimen>
     <dimen name="step_bullet_padding">6dp</dimen>
     <dimen name="step_icon_top_spacing">6dp</dimen>
     <dimen name="step_icon_left_spacing">20dp</dimen>

@@ -119,7 +119,10 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity {
    public void onSaveInstanceState(Bundle state) {
       super.onSaveInstanceState(state);
 
-      state.putParcelable(GRID_STATE, mGridView.onSaveInstanceState());
-      state.putSerializable(GUIDES_KEY, mGuides);
+      if (mGridView != null)
+         state.putParcelable(GRID_STATE, mGridView.onSaveInstanceState());
+
+      if (mGuides != null)
+         state.putSerializable(GUIDES_KEY, mGuides);
    }
 }

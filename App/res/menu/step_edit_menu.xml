@@ -3,7 +3,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
         android:id="@+id/publish_guide"
-        android:title="Visibility"
+        android:title="@string/visibility"
         android:actionLayout="@layout/menu_publish_switch"
         android:showAsAction="always"/>
     <item

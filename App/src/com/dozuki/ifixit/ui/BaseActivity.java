@@ -2,7 +2,6 @@ package com.dozuki.ifixit.ui;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -86,7 +85,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        */
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
-
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 

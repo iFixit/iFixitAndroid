@@ -292,7 +292,6 @@ public abstract class MediaFragment extends SherlockFragment
 
    private File createImageFile() throws IOException {
       // Create an image file name
-      String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
       String imageFileName = CaptureHelper.getFileName();
       File image = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
 

@@ -105,9 +105,7 @@ public class StepVideoFragment extends SherlockFragment {
    /////////////////////////////////////////////////////
 
    private ViewGroup.LayoutParams fitToSpace(View view, float width, float height) {
-      float newWidth = 0f;
-      float newHeight = 0f;
-      float padding = 0f;
+      float newWidth, newHeight, padding = 0f;
 
       if (MainApplication.get().inPortraitMode()) {
          padding = viewPadding(R.dimen.page_padding);
@@ -134,7 +132,7 @@ public class StepVideoFragment extends SherlockFragment {
    }
 
    private float navigationHeight() {
-      int actionBarHeight = 0, indicatorHeight = 50;
+      int actionBarHeight, indicatorHeight = 50;
 
       actionBarHeight = mResources.getDimensionPixelSize(
        com.actionbarsherlock.R.dimen.abs__action_bar_default_height);

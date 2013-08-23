@@ -402,9 +402,9 @@ public class JSONHelper {
 
       GalleryVideoList userVideoList = new GalleryVideoList();
 
-      for (int i = 0; i < jImages.length(); i++) {
+      //for (int i = 0; i < jImages.length(); i++) {
          //userVideoList.addItem((parseUserVideoInfo(jImages.getJSONObject(i))));
-      }
+      //}
       return userVideoList;
    }
 
@@ -426,9 +426,9 @@ public class JSONHelper {
 
       GalleryEmbedList userEmbedList = new GalleryEmbedList();
 
-      for (int i = 0; i < jEmbed.length(); i++) {
+      //for (int i = 0; i < jEmbed.length(); i++) {
          //userEmbedList.addItem((parseUserVideoInfo(jEmbeds.getJSONObject(i))));
-      }
+      //}
       return userEmbedList;
    }
 /*

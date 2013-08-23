@@ -131,7 +131,7 @@ public class SpeechCommander {
 
    private Command getMatch(String phrase) {
       for (String command : mCommands.keySet()) {
-         if (phrase.indexOf(command) != -1) {
+         if (phrase.contains(command)) {
             return mCommands.get(command);
          }
       }

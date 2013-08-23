@@ -1,8 +1,8 @@
 package com.dozuki.ifixit.model.dozuki;
 
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.util.EditDistance;
 import com.dozuki.ifixit.util.Utils;

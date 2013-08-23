@@ -145,14 +145,10 @@ public class SiteListActivity extends BaseActivity
 
    @Override
    public boolean onKeyUp(int keyCode, KeyEvent event) {
-      if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-         /**
-          * We want to ignore the hardware search button if the dialog doesn't handle it.
-          */
-         return true;
-      } else {
-         return super.onKeyUp(keyCode, event);
-      }
+      /**
+       * We want to ignore the hardware search button if the dialog doesn't handle it.
+       */
+      return keyCode == KeyEvent.KEYCODE_SEARCH || super.onKeyUp(keyCode, event);
    }
 
    @Override

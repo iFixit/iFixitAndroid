@@ -9,7 +9,6 @@ Taken from @Lars from Stack Overflow - thanks!
 
     <color name="menu_background">#FF555555</color>
     <color name="white">#FFFFFF</color>
-    <color name="translucent_white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>
     <color name="dark">#222222</color>
     <color name="black">#FF333333</color>
@@ -25,7 +24,6 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_grey">#F7777777</color>
     <color name="fireswing_grey">#FFEEEEEE</color>
     <color name="fireswing_blue">#FF2DB6EA</color>
-    <color name="fireswing_disabled">#FF656565</color>
     <color name="fireswing_dark_grey">#FF666666</color>
 
     <color name="topic_guide_title_background">#DD222222</color>
@@ -38,13 +36,9 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="step_pager_selected_last_tab_color">#550099CC</color>
     <color name="step_pager_next_tab_color">#10000000</color>
 
-    <color name="review_green">#FF669900</color>
-
     <color name="text_light">#66000000</color>
 
     <color name="image_border">#FFF3F3F3</color>
-    <color name="step_edit_add_photo_background">@color/image_border</color>
-    <color name="lined_text_view_stroke">#FFDDDDDD</color>
     <color name="gainsboro">#FFDCDCDC</color>
 
 </resources>

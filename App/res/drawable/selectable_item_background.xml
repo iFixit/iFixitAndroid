@@ -12,6 +12,6 @@
     <item android:state_focused="false" android:state_pressed="true"
           android:drawable="@drawable/list_selector_background_transition_holo_light"/>
     <item android:state_focused="true" android:drawable="@drawable/list_pressed_holo_light"/>
-    <item android:drawable="@color/image_border"/>
+    <item android:drawable="@drawable/image_background"/>
 
 </selector>

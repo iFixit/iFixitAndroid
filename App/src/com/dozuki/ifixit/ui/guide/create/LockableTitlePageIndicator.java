@@ -22,10 +22,7 @@ public class LockableTitlePageIndicator extends TitlePageIndicator {
 
    @Override
    public boolean onTouchEvent(android.view.MotionEvent ev) {
-      if (this.isPagingEnabled) {
-         return super.onTouchEvent(ev);
-      }
-      return false;
+      return this.isPagingEnabled && super.onTouchEvent(ev);
    }
 
    public void setPagingEnabled(boolean enabled) {
