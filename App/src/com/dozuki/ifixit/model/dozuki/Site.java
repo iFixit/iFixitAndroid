@@ -28,7 +28,7 @@ public class Site implements Serializable {
    public String mStoreUrl;
 
    public String[] hasSubject = {"Repair", "Installation", "Replacement", "Disassembly"};
-   public String[] noSubject = {"Technique", "Maintenance", "Teardown"};
+   public String[] noSubject = {"Technique", "How-to", "Maintenance", "Teardown"};
 
 
    public ArrayList<GuideType> mGuideTypes;
