@@ -165,13 +165,18 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
                break;
             }
          }
-
-         mGuideListAdapter.notifyDataSetChanged();
       }
 
       if (event.hasError()) {
          APIService.getErrorDialog(this, event).show();
+
+         // Reset the guide state
+         for (GuideInfo guide : mUserGuideList) {
+            guide.mIsPublishing = false;
+         }
       }
+
+      mGuideListAdapter.notifyDataSetChanged();
    }
 
    @Subscribe

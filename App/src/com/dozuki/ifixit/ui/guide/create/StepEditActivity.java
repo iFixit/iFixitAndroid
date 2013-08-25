@@ -506,13 +506,15 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       // Update guide even if there is a conflict.
       if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
          mGuide = event.getResult();
-         // Reload the options menu to reenable the button
-         supportInvalidateOptionsMenu();
       }
 
       if (event.hasError()) {
          APIService.getErrorDialog(this, event).show();
       }
+
+      // Reload the options menu to reenable the button, regardless of success or failure because we need to update
+      // the state if the request failed so the toggle is reset to it's correct position.
+      supportInvalidateOptionsMenu();
    }
 
    @Subscribe

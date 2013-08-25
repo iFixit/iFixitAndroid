@@ -30,7 +30,7 @@ public class APIError implements Serializable {
          R.string.error,
          R.string.forbidden_error,
          false,
-         true
+         false
       ),
       NOT_FOUND( // 404
          R.string.error,
