@@ -788,7 +788,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public void onBackPressed() {
-      if (mGuide.getRevisionid() == null) {
+      if (mGuide != null && mGuide.getRevisionid() == null) {
          super.onBackPressed();
       } else {
          finishEdit(HOME_UP);
