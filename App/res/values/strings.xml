@@ -60,8 +60,8 @@
 
     <string name="logout_messege">Are you sure you want to logout?</string>
     <string name="try_again">Try again</string>
-    <string name="register_agreement">I agree to
-        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
+    <string name="register_agreement">I agree to <a
+        href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
         under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.
     </string>
     <string name="terms_unchecked_error">You must agree to the terms.</string>
