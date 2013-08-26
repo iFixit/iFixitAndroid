@@ -581,8 +581,10 @@ public class APIService extends Service {
 
    @Subscribe
    public void onDeadEvent(DeadEvent event) {
-      if (!mDeadEvents.contains(event)) {
-         mDeadEvents.add(event);
+      synchronized (mDeadEvents) {
+         if (!mDeadEvents.contains(event)) {
+            mDeadEvents.add(event);
+         }
       }
    }
 
@@ -590,15 +592,17 @@ public class APIService extends Service {
       if (mDeadEvents.isEmpty())  {
          return;
       }
-      Iterator<DeadEvent> it = mDeadEvents.iterator();
+      synchronized (mDeadEvents) {
+         Iterator<DeadEvent> it = mDeadEvents.iterator();
 
-      // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
-      // onDeadEvent, and added back to the list.
-      while (it.hasNext()) {
-         DeadEvent dead = it.next();
-         it.remove();
+         // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
+         // onDeadEvent, and added back to the list.
+         while (it.hasNext()) {
+            DeadEvent dead = it.next();
+            it.remove();
 
-         MainApplication.getBus().post(dead.event);
+            MainApplication.getBus().post(dead.event);
+         }
       }
    }
 
