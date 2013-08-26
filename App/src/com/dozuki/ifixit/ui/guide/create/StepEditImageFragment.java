@@ -126,8 +126,11 @@ public class StepEditImageFragment extends SherlockFragment {
 
                             File file = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
                             String tempFileName = file.getAbsolutePath();
-                            SharedPreferences prefs = getActivity().getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
-                            prefs.edit().putString(StepEditActivity.TEMP_FILE_NAME_KEY, tempFileName).commit();
+
+                            if (isAdded()) {
+                               SharedPreferences prefs = getActivity().getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
+                               prefs.edit().putString(StepEditActivity.TEMP_FILE_NAME_KEY, tempFileName).commit();
+                            }
 
                             cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             mContext.startActivityForResult(cameraIntent, StepEditActivity.CAMERA_REQUEST_CODE);

@@ -198,6 +198,6 @@ public class GuideStep implements Serializable {
 
    public String toString() {
       return "{GuideStep: " + mGuideid + ", " + mStepid + ", " + mRevisionid + ", " +
-       mOrderby + ", " + mStepNum + ", " + mTitle + ", " + mLines + ", " + mImages + "}";
+       mOrderby + ", " + mStepNum + ", " + mTitle + ", " + mLines.toString() + ", " + mImages.toString() + "}";
    }
 }

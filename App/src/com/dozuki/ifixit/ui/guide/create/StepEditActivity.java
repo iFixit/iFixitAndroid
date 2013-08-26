@@ -2,12 +2,10 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.SharedPreferences;
+import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.IBinder;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.*;
 import android.support.v4.view.PagerAdapter;
@@ -49,6 +47,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
    private static final String TAG = "StepEditActivity";
+   private boolean mBounded;
 
    private enum ConfirmSave {
       NEW_STEP,
@@ -107,6 +106,26 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private int mExitCode;
 
    private static int mLoadingContainer = R.id.step_edit_loading_screen;
+
+   private APIService mAPIService;
+
+   ServiceConnection mConnection = new ServiceConnection() {
+
+      public void onServiceDisconnected(ComponentName name) {
+         if (MainApplication.inDebug()) Toast.makeText(StepEditActivity.this, "Service is disconnected", 1000).show();
+         mBounded = false;
+         mAPIService = null;
+      }
+
+      public void onServiceConnected(ComponentName name, IBinder service) {
+         if (MainApplication.inDebug()) Toast.makeText(StepEditActivity.this, "Service is connected", 1000).show();
+         mBounded = true;
+         APIService.LocalBinder mLocalBinder = (APIService.LocalBinder)service;
+         mAPIService = mLocalBinder.getAPIServiceInstance();
+
+         mAPIService.retryDeadEvents();
+      }
+   };
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -263,7 +282,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                mGuide.getStep(mPagePosition).addImage(newThumb);
                refreshView(mPagePosition, true);
 
-               MainApplication.getBus().post(new StepChangedEvent());
+               onGuideChanged(null);
             } else {
                Log.e("StepEditActivity", "Error data is null!");
                return;
@@ -342,6 +361,22 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
       mCurStepFragment = null;
    }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+      Intent mIntent = new Intent(this, APIService.class);
+      bindService(mIntent, mConnection, BIND_AUTO_CREATE);
+   };
+
+   @Override
+   public void onStop() {
+      super.onStop();
+      if(mBounded) {
+         unbindService(mConnection);
+         mBounded = false;
+      }
+   };
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -609,32 +644,38 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Subscribe
    public void onUploadStepImage(APIEvent.UploadStepImage event) {
+      int position = mPagePosition;
+
       if (!event.hasError()) {
          Image newThumb = event.getResult();
 
          // Find the temporarily stored image object to update the filename to
          // the image path and imageid.
          if (newThumb != null) {
-            ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(mPagePosition).getImages());
+            ArrayList<Image> images = new ArrayList<Image>(mGuide.getStep(position).getImages());
 
+            int i = 0;
             for (Image image : images) {
                if (image.isLocal()) {
                   newThumb.setLocalPath(image.getPath());
-                  images.set(images.indexOf(image), newThumb);
+                  images.set(i, newThumb);
                   break;
                }
+               i++;
             }
 
-            mGuide.getStep(mPagePosition).setImages(images);
-            refreshView(mPagePosition, true);
+            mGuide.getStep(position).setImages(images);
+            refreshView(position, true);
          }
 
-         if (!mGuide.getStep(mPagePosition).hasLocalImages()) {
+         if (!mGuide.getStep(position).hasLocalImages()) {
             unlockSave();
 
             // Set guide dirty after the image is uploaded so the user can't
             // save the guide before we have the imageid.
-            MainApplication.getBus().post(new StepChangedEvent());
+            onGuideChanged(null);
+         } else {
+            mAPIService.retryDeadEvents();
          }
       } else {
          APIService.getErrorDialog(this, event).show();
@@ -685,7 +726,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                updateCurrentStep(JSONHelper.parseStep(
                 new JSONObject(event.getResponse()), 0));
             } catch (JSONException e) {
-               Log.w("StepEditActivity", "Error parsing step delete conflict", e);
+               Log.e("StepEditActivity", "Error parsing step delete conflict", e);
             }
          }
 
@@ -966,7 +1007,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       builder
        .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
        .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
-       .setNegativeButton(getString(R.string.save),
+       .setPositiveButton(getString(R.string.save),
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
               mIsStepDirty = true;
@@ -980,7 +1021,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               }
            }
         })
-       .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
+       .setNegativeButton(R.string.guide_create_confirm_leave_without_save_cancel,
         new DialogInterface.OnClickListener() {
            public void onClick(DialogInterface dialog, int id) {
               mIsStepDirty = false;
@@ -1035,6 +1076,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
           mPagePosition + 1, mGuide.getRevisionid()));
       }
    }
+
    private GuideStep fetchChildData(int position) {
       GuideStep obj = mGuide.getStep(position);
 

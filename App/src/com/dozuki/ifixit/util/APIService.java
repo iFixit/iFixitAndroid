@@ -10,12 +10,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
+import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -27,11 +28,13 @@ import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
+import com.squareup.otto.DeadEvent;
+import com.squareup.otto.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -60,9 +63,19 @@ public class APIService extends Service {
     */
    private static APICall sPendingApiCall;
 
+   private ArrayList<DeadEvent> mDeadEvents;
+
+   public class LocalBinder extends Binder {
+      public APIService getAPIServiceInstance() {
+         return APIService.this;
+      }
+   }
+
+   IBinder mBinder = new LocalBinder();
+
    @Override
    public IBinder onBind(Intent intent) {
-      return null; // Do nothing.
+      return mBinder;
    }
 
    /**
@@ -549,8 +562,49 @@ public class APIService extends Service {
       return dialog;
    }
 
+   @Override
+   public void onCreate() {
+      super.onCreate();
+      mDeadEvents = new ArrayList<DeadEvent>();
+
+      MainApplication.getBus().register(this);
+   }
+
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      mDeadEvents = null;
+
+      MainApplication.getBus().unregister(this);
+   }
+
+   @Subscribe
+   public void onDeadEvent(DeadEvent event) {
+      if (!mDeadEvents.contains(event)) {
+         mDeadEvents.add(event);
+      }
+   }
+
+   public void retryDeadEvents() {
+      if (mDeadEvents.isEmpty())  {
+         return;
+      }
+      Iterator<DeadEvent> it = mDeadEvents.iterator();
+
+      // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
+      // onDeadEvent, and added back to the list.
+      while (it.hasNext()) {
+         DeadEvent dead = it.next();
+         it.remove();
+
+         MainApplication.getBus().post(dead.event);
+      }
+   }
+
    private void performRequest(final APICall apiCall, final Responder responder) {
       final APIEndpoint endpoint = apiCall.mEndpoint;
+
       if (!checkConnectivity(responder, endpoint, apiCall)) {
          return;
       }
