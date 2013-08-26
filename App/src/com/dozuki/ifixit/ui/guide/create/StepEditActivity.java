@@ -688,8 +688,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       if (!event.hasError()) {
          mGuide = event.getResult();
 
-         mStepAdapter.notifyDataSetChanged();
-         mPager.setCurrentItem(mSavePosition);
+         refreshView(mSavePosition);
 
          if (mAddStepAfterSave) {
             addNewStep(mSavePosition + 1);
