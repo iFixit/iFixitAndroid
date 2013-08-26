@@ -89,7 +89,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
                return;
             }
             mTitle = s.toString();
-            setGuideDirty();
+            MainApplication.getBus().post(new StepTitleChangedEvent(mStepId, mTitle));
          }
 
          @Override
@@ -381,13 +381,15 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
                   return;
                }
 
-               mLines.get(mLines.indexOf(line)).setTextRaw(lineText);
+               int position = mLines.indexOf(line);
+
+               mLines.get(position).setTextRaw(lineText);
 
                if (mLines.size() != BULLET_LIMIT && mLines.indexOf(line) == mLines.size() - 1) {
                   mNewBulletButton.setVisibility(View.VISIBLE);
                }
 
-               setGuideDirty();
+               MainApplication.getBus().post(new StepLinesChangedEvent(mStepId, mLines));
             } else if (mLines.indexOf(line) == mLines.size() - 1) {
                mNewBulletButton.setVisibility(View.GONE);
             }
@@ -586,7 +588,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
    }
 
    private void setGuideDirty() {
-      MainApplication.getBus().post(new StepChangedEvent());
+      MainApplication.getBus().post(new StepLinesChangedEvent(mStepId, mLines));
    }
 
    public void removeBullets() {

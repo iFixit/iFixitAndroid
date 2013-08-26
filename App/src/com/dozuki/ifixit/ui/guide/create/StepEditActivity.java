@@ -75,7 +75,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private static final String LOCK_SAVE = "LOCK_SAVE";
 
    private Guide mGuide;
-   private StepEditFragment mCurStepFragment;
    private ImageButton mAddStepButton;
    private Button mSaveStep;
    private ImageButton mDeleteStepButton;
@@ -280,7 +279,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             if (data != null) {
                newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
                mGuide.getStep(mPagePosition).addImage(newThumb);
-               refreshView(mPagePosition, true);
+               refreshView(mPagePosition);
 
                onGuideChanged(null);
             } else {
@@ -307,7 +306,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                newThumb.setLocalImage(tempFileName);
 
                mGuide.getStep(mPagePosition).addImage(newThumb);
-               refreshView(mPagePosition, true);
+               refreshView(mPagePosition);
 
                APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
             }
@@ -353,13 +352,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          default:
             super.onActivityResult(requestCode, resultCode, data);
       }
-   }
-
-   @Override
-   public void onDestroy() {
-      super.onDestroy();
-
-      mCurStepFragment = null;
    }
 
    @Override
@@ -665,7 +657,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             }
 
             mGuide.getStep(position).setImages(images);
-            refreshView(position, true);
+            refreshView(position);
          }
 
          if (!mGuide.getStep(position).hasLocalImages()) {
@@ -686,7 +678,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onStepImageDelete(StepImageDeleteEvent event) {
       mGuide.getStep(mPagePosition).getImages().remove(event.image);
 
-      refreshView(mPagePosition, true);
+      refreshView(mPagePosition);
    }
 
    @Subscribe
@@ -735,6 +727,18 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Subscribe
+   public void onStepLinesChanged(StepLinesChangedEvent event) {
+      mGuide.getStepById(event.stepid).setLines(event.lines);
+      onGuideChanged(null);
+   }
+
+   @Subscribe
+   public void onStepTitleChanged(StepTitleChangedEvent event) {
+      mGuide.getStepById(event.stepid).setTitle(event.title);
+      onGuideChanged(null);
+   }
+
+   @Subscribe
    public void onImageCopy(APIEvent.CopyImage event) {
       if (!event.hasError()) {
          Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
@@ -770,7 +774,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
              (long) mGuide.getStep(mPagePosition).getStepid());
 
             if (mGuide.isNewGuide()) {
-               if (!stepHasLineContent(mCurStepFragment.getLines())) {
+               if (!stepHasLineContent(mGuide.getStep(mPagePosition).getLines())) {
                   Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
                    Toast.LENGTH_SHORT).show();
                   return;
@@ -819,7 +823,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          step.addLine(new StepLine());
          mGuide.addStep(step, newPosition);
 
-         refreshView(newPosition, false);
+         refreshView(newPosition);
       } else {
          // Show "Must add content to step" toast
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
@@ -840,12 +844,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    // ADAPTERS and PRIVATE CLASSES
    /////////////////////////////////////////////////////
 
-   private void refreshView(int position, boolean reloadData) {
-      if (reloadData) {
-         // Fetch data from children fragments to make sure we don't lose any unsaved fields.
-         fetchChildData(position);
-      }
-
+   private void refreshView(int position) {
       // The view pager does not recreate the item in the current position unless we force it to.
       initPager();
       mTitleIndicator.notifyDataSetChanged();
@@ -896,7 +895,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          super.setPrimaryItem(container, position, object);
 
          mPagePosition = position;
-         mCurStepFragment = (StepEditFragment) object;
       }
    }
 
@@ -1047,8 +1045,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    protected void save(int savePosition) {
 
-      // Fetch changes the children fragments
-      GuideStep obj = fetchChildData(savePosition);
+      GuideStep obj = mGuide.getStep(savePosition);
 
       if (!stepHasLineContent(obj)) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
@@ -1075,17 +1072,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
           mPagePosition + 1, mGuide.getRevisionid()));
       }
-   }
-
-   private GuideStep fetchChildData(int position) {
-      GuideStep obj = mGuide.getStep(position);
-
-      obj.setLines(mCurStepFragment.getLines());
-      obj.setTitle(mCurStepFragment.getTitle());
-
-      mGuide.getSteps().set(position, obj);
-
-      return obj;
    }
 
    private boolean stepHasLineContent(GuideStep obj) {
@@ -1227,7 +1213,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       // Update the guide on successful save or conflict.
       mGuide.getSteps().set(mSavePosition, step);
 
-      refreshView(mSavePosition, true);
+      refreshView(mSavePosition);
    }
 
    protected void deleteStep() {
@@ -1253,7 +1239,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       int newPosition = mPagePosition - 1;
 
       // The view pager does not recreate the item in the current position unless we force it to.
-      refreshView(newPosition, false);
+      refreshView(newPosition);
    }
 
    /**

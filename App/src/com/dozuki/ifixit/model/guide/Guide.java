@@ -132,6 +132,16 @@ public class Guide implements Serializable {
       return mSteps.get(position);
    }
 
+   public GuideStep getStepById(int stepid) {
+      for (GuideStep step : mSteps) {
+         if (step.getStepid() == stepid) {
+            return step;
+         }
+      }
+
+      return null;
+   }
+
    public boolean hasNewStep() {
       for (GuideStep step : mSteps) {
          if (step.isNewStep()) {
