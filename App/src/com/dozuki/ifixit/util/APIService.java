@@ -35,9 +35,9 @@ import org.json.JSONObject;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -66,7 +66,7 @@ public class APIService extends Service {
     */
    private static APICall sPendingApiCall;
 
-   private CopyOnWriteArrayList<DeadEvent> mDeadEvents;
+   private List<DeadEvent> mDeadEvents;
 
    public class LocalBinder extends Binder {
       public APIService getAPIServiceInstance() {
@@ -568,7 +568,7 @@ public class APIService extends Service {
    @Override
    public void onCreate() {
       super.onCreate();
-      mDeadEvents = new CopyOnWriteArrayList<DeadEvent>();
+      mDeadEvents = Collections.synchronizedList(new ArrayList<DeadEvent>());
 
       MainApplication.getBus().register(this);
    }
@@ -584,31 +584,29 @@ public class APIService extends Service {
 
    @Subscribe
    public void onDeadEvent(DeadEvent event) {
-      if (!mDeadEvents.contains(event)) {
-         mDeadEvents.add(event);
+      synchronized (mDeadEvents) {
+         if (!mDeadEvents.contains(event)) {
+            mDeadEvents.add(event);
+         }
       }
    }
 
    public void retryDeadEvents() {
-      if (mDeadEvents.isEmpty()) {
-         return;
+      synchronized (mDeadEvents) {
+         if (mDeadEvents.isEmpty()) {
+            return;
+         }
+
+         Iterator<DeadEvent> it = mDeadEvents.iterator();
+
+         // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
+         // onDeadEvent, and added back to the list.
+         while (it.hasNext()) {
+            DeadEvent dead = it.next();
+            it.remove();
+            MainApplication.getBus().post(dead.event);
+         }
       }
-
-      Iterator<DeadEvent> it = mDeadEvents.iterator();
-      List<DeadEvent> toDelete = new ArrayList<DeadEvent>();
-
-      // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
-      // onDeadEvent, and added back to the list.
-      while (it.hasNext()) {
-         DeadEvent dead = it.next();
-         toDelete.add(dead);
-
-         MainApplication.getBus().post(dead.event);
-      }
-
-      // We have to remove them all after we are done using the iterator because CopyOnWriteArrayList's iterator does
-      // not work with remove.
-      mDeadEvents.removeAll(toDelete);
    }
 
    private void performRequest(final APICall apiCall, final Responder responder) {
