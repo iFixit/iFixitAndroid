@@ -450,6 +450,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             if (mGuide != null && !mGuide.isNewGuide() && isChecked != mGuide.isPublic()) {
                Log.d("StepEditActivity", "Toggle: " + (isChecked ? "true" : "false"));
 
+               // Disable the toggle so we don't have multiple presses.
+               buttonView.setEnabled(false);
+
                // Disable the switch / checkbox until the publish response comes back.
                //buttonView.setEnabled(false);
                showLoading(mLoadingContainer, (isChecked ? "Publishing..." : "Unpublishing..."));
@@ -529,6 +532,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    @Subscribe
    public void onPublishStatus(APIEvent.PublishStatus event) {
       hideLoading();
+
+      // Re-enable the toggle view
+      findViewById(R.id.publish_toggle).setEnabled(true);
 
       // Update guide even if there is a conflict.
       if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
