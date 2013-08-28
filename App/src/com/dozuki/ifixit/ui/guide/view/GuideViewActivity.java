@@ -56,7 +56,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       setContentView(R.layout.guide_main);
 
-      showLoading(R.id.loading_container);
       mPager = (ViewPager) findViewById(R.id.guide_pager);
       mIndicator = (TitlePageIndicator) findViewById(R.id.guide_step_title_indicator);
 
@@ -122,7 +121,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
 
-      showLoading(R.id.loading_container);
       // Reset everything to default values since we're getting a new intent - forces the view to refresh.
       mGuide = null;
       mCurrentPage = -1;
@@ -289,6 +287,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    public void getGuide(int guideid) {
+      showLoading(R.id.loading_container);
       APIService.call(this, APIService.getGuideAPICall(guideid));
    }
 
