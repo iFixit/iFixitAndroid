@@ -377,9 +377,9 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
 
       @Override
       public int getItemPosition(Object object) {
-         // TODO: be smarter about this
+         // TODO: Be smarter about this.
          if (object == mPrimaryItem) {
-            // Re-use the current fragment (its position never changes)
+            // Re-use the current fragment (its position never changes).
             return POSITION_UNCHANGED;
          }
 

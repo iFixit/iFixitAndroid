@@ -225,7 +225,7 @@ public class StepPagerStrip extends View {
         invalidate();
         scrollCurrentPageIntoView();
 
-        // TODO: Set content description appropriately
+        // TODO: Set content description appropriately.
     }
 
     private void scrollCurrentPageIntoView() {
@@ -251,7 +251,7 @@ public class StepPagerStrip extends View {
         mPageCount = count;
         invalidate();
 
-        // TODO: Set content description appropriately
+        // TODO: Set content description appropriately.
     }
 
     public static interface OnPageSelectedListener {

@@ -332,9 +332,12 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                if (matches.size() > 0) {
                   Handler handler = new Handler();
 
-                  // We have to delay posting the event because this activities onActivityResult method is called just
-                  // before the fragments onResume.  Delaying 1/10 of a second gives the fragment enough time to
-                  // register its' event bus listener so it can receive the event.
+                  /**
+                   * We have to delay posting the event because this activities
+                   * onActivityResult method is called just before the fragments onResume.
+                   * Delaying 1/10 of a second gives the fragment enough time to
+                   * register its' event bus listener so it can receive the event.
+                   */
                   handler.postDelayed(new Runnable() {
                      @Override
                      public void run() {
@@ -345,7 +348,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                   }, 100);
                } else {
                   Log.d("StepEditActivity", "No matches; try again");
-                  // TODO: Relaunch mic and try again
+                  // TODO: Relaunch mic and try again.
                }
             }
             break;

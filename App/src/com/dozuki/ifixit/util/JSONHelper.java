@@ -391,7 +391,7 @@ public class JSONHelper {
       String path = img.getString("original");
       String ratio = jImage.getString("ratio");
       String markup = jImage.isNull("markup") ? "" : jImage.getString("markup");
-      // TODO: add exif
+      // TODO: Add exif.
       String exif = "";
 
       return new UserImage(id, path, width, height, ratio, markup, exif);

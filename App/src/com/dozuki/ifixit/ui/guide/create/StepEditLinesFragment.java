@@ -248,7 +248,7 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
 
          if (lineText == null) {
             Log.e("StepEditLinesFragment", "lineText is null, couldn't find line view");
-            // TODO: intelligently handle a failure.
+            // TODO: Intelligently handle a failure.
          } else {
             String[] suggestions = new String[event.results.size()];
             suggestions = event.results.toArray(suggestions);

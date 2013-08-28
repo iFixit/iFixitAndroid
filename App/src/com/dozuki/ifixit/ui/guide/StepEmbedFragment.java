@@ -121,8 +121,7 @@ public class StepEmbedFragment extends SherlockFragment {
          mMainWebView.loadUrl(embedUrl);
          mMainWebView.setTag(embedUrl);
       } else {
-         // TODO: find the best place and way to handle the returned
-         // oembed
+         // TODO: find the best place and way to handle the returned oembed.
          mEmbedRet = new EmbedRetriever();
          mEmbedRet.execute(mEmbed);
       }

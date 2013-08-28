@@ -63,7 +63,7 @@ public class TopicListAdapter extends Section {
 
       return topicRow;
    }
-
+}
 ...
 ```
 
