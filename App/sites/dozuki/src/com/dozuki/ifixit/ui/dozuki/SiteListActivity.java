@@ -55,21 +55,19 @@ public class SiteListActivity extends BaseActivity
       mSiteListButton.setTypeface(btnType);
 
       mSiteListButton.setOnClickListener(new OnClickListener() {
-          public void onClick(View view) {
-              FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+         public void onClick(View view) {
+            FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 
-              mSiteListDialog = SiteListDialogFragment.newInstance();
-              mSiteListDialog.setSites(mSiteList, false);
-              mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE,
-               android.R.style.Theme_Holo_Light_DialogWhenLarge);
-              mSiteListDialog.show(ft, SITE_LIST_DIALOG);
-          }
+            mSiteListDialog = SiteListDialogFragment.newInstance();
+            mSiteListDialog.setSites(mSiteList, false);
+            mSiteListDialog.setStyle(DialogFragment.STYLE_NO_TITLE,
+             android.R.style.Theme_Holo_Light_DialogWhenLarge);
+            mSiteListDialog.show(ft, SITE_LIST_DIALOG);
+         }
       });
 
       mSiteListDialog = (SiteListDialogFragment)getSupportFragmentManager().
        findFragmentByTag(SITE_LIST_DIALOG);
-
-      handleIntent(getIntent());
    }
 
    @Override

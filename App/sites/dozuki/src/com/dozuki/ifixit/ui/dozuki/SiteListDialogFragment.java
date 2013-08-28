@@ -57,7 +57,6 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
    }
 
    private void initDialog() {
-      initializeAdapter();
       if (mSiteList == null) {
          mSiteListView.setVisibility(View.GONE);
          mSiteListView.getEmptyView().setVisibility(View.GONE);
@@ -67,11 +66,19 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
          return;
       }
 
+      initializeAdapter();
+
+      mSiteListView.setVisibility(View.VISIBLE);
+      mSiteListView.getEmptyView().setVisibility(View.VISIBLE);
+      mSearchView.setVisibility(View.VISIBLE);
+      mLoadingIndicator.setVisibility(View.GONE);
+
       SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 
       mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
        getActivity().getComponentName()));
       mSearchView.setOnQueryTextListener((SiteListActivity)getActivity());
+      mSearchView.setIconifiedByDefault(false);
 
       View searchPlate = mSearchView.findViewById(R.id.abs__search_plate);
       searchPlate.setBackgroundResource(R.drawable.textfield_search_view_holo_light);
@@ -86,8 +93,6 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
    @Override
    public void onResume() {
       super.onResume();
-
-      MainApplication.getBus().register(this);
 
       getDialog().setOnKeyListener(new OnKeyListener() {
           public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -104,13 +109,6 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
               }
           }
       });
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      MainApplication.getBus().unregister(this);
    }
 
    @Override
