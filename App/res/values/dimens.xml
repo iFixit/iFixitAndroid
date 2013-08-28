@@ -21,8 +21,7 @@
     <!-- Guide View -->
     <dimen name="guide_image_width">256dp</dimen>
     <dimen name="guide_image_height">192dp</dimen>
-    <dimen name="guide_image_spacing_right">8dp</dimen>
-    <dimen name="guide_image_spacing_bottom">8dp</dimen>
+    <dimen name="guide_image_spacing">8dp</dimen>
     <dimen name="guide_thumbnail_width">120dp</dimen>
     <dimen name="guide_thumbnail_height">90dp</dimen>
     <dimen name="guide_thumbnail_spacing">6dp</dimen>

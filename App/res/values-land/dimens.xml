@@ -4,7 +4,6 @@
     <dimen name="action_bar_switch_padding">6dip</dimen>
 
     <dimen name="guide_thumbnail_spacing">4dp</dimen>
-    <dimen name="guide_image_spacing_bottom">4dp</dimen>
-    <dimen name="guide_image_spacing_right">4dp</dimen>
+    <dimen name="guide_image_spacing">4dp</dimen>
     <dimen name="step_edit_title_text_bottom_spacing">8dp</dimen>
 </resources>

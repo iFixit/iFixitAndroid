@@ -181,11 +181,12 @@
     </style>
 
     <style name="ThumbnailList">
+        <item name="android:paddingLeft">@dimen/guide_image_spacing</item>
         <item name="android:orientation">vertical</item>
     </style>
 
     <style name="GuideMediaMain">
-        <item name="android:layout_marginRight">@dimen/guide_image_spacing_right</item>
+        <item name="android:layout_marginRight">0dp</item>
     </style>
 
     <style name="GuideCreateItemIcon">

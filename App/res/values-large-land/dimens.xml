@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <dimen name="guide_image_spacing">8dp</dimen>
     <dimen name="guide_thumbnail_spacing">8dp</dimen>
     <dimen name="topic_list_image_height">240dp</dimen>
-    <dimen name="guide_image_spacing_bottom">8dp</dimen>
     <dimen name="gallery_grid_column_width">200dp</dimen>
     <dimen name="gallery_grid_item_height">200dp</dimen>
 

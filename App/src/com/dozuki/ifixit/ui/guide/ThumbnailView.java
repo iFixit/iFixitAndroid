@@ -415,13 +415,13 @@ public class ThumbnailView extends LinearLayout {
          } else {
             // Main image is 4/5ths of the available screen width
             mMainWidth = (((mDisplayMetrics.widthPixels - pagePadding
-             - getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right)) / 5f) * 4f);
+             - getResources().getDimensionPixelSize(R.dimen.guide_image_spacing)) / 5f) * 4f);
          }
 
          mMainHeight = mMainWidth * (3f / 4f);
       } else {
          mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.landscape_navigation_height);
-         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_bottom);
+         mNavigationHeight += getResources().getDimensionPixelSize(R.dimen.guide_image_spacing);
 
          // Main image is 4/5ths of the available screen height
          mMainHeight = (((mDisplayMetrics.heightPixels - mNavigationHeight) / 5f) * 4f);
@@ -432,7 +432,7 @@ public class ThumbnailView extends LinearLayout {
    private void getThumbnailDimensions() {
       if (MainApplication.get().inPortraitMode()) {
          float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f)
-          + getResources().getDimensionPixelSize(R.dimen.guide_image_spacing_right);
+          + getResources().getDimensionPixelSize(R.dimen.guide_image_spacing);
          // Screen height minus everything else that occupies horizontal space
          mThumbnailWidth = (mDisplayMetrics.widthPixels - mMainWidth - pagePadding);
          mThumbnailHeight = mThumbnailWidth * (3f / 4f);
