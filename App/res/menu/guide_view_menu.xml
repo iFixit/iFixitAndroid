@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/edit_guide"
+        android:title="@string/edit_guide"
+        android:icon="@drawable/ic_action_edit"
+        android:showAsAction="ifRoom|withText"/>
+    <item
+        android:id="@+id/reload_guide"
+        android:title="@string/reload_guide"
+        android:icon="@drawable/ic_action_refresh_dark"
+        android:showAsAction="never"/>
+</menu>

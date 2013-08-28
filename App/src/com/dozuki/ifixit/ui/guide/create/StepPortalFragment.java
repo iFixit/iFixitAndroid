@@ -132,10 +132,10 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
          case android.R.id.home:
             getActivity().finish();
             break;
-         case StepsActivity.MENU_EDIT_INTRO:
+         case R.id.edit_guide_details:
             launchGuideIntroEdit();
             break;
-         case StepsActivity.MENU_REARRANGE_STEPS:
+         case R.id.reorder_steps:
             if (mGuide.getSteps().size() < 2) {
                Toast.makeText(getActivity(), R.string.step_reorder_insufficient_steps, Toast.LENGTH_SHORT).show();
                break;
@@ -143,7 +143,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
             closeSelectedStep();
             launchStepReorderFragment();
             break;
-         case StepsActivity.MENU_STEP_ADD:
+         case R.id.add_step:
             GuideStep newStep = new GuideStep(mGuide.getSteps().size() + 1);
 
             newStep.addLine(new StepLine());
@@ -151,7 +151,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
 
             launchStepEdit(mGuide.getSteps().size());
             break;
-         case StepsActivity.MENU_VIEW_GUIDE:
+         case R.id.view_guide:
             Intent intent = new Intent(getActivity(), GuideViewActivity.class);
             intent.putExtra(GuideViewActivity.GUIDEID, mGuide.getGuideid());
             intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
@@ -321,6 +321,7 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
    protected AlertDialog createDeleteDialog(GuideStep item) {
       mStepForDelete = item;
       mShowingDelete = true;
+
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.step_edit_confirm_delete_message, mStepForDelete.getStepNum()))

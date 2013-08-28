@@ -171,7 +171,7 @@
     <string name="step_edit_confirm_delete_title">Schritt löschen</string>
     <string name="step_edit_confirm_delete_message">Möchtest Du Schritt %1$d wirklich löschen?</string>
     <string name="edit">Bearbeiten</string>
-    <string name="edit_step_intro">Intro bearbeiten</string>
+    <string name="edit_guide_details">Intro bearbeiten</string>
     <string name="add_step">Schritt hinzufügen</string>
     <string name="reorder_steps">Neu anordnen</string>
     <string name="no_steps_text">Die Anleitung hat keine Schritte.</string>
@@ -358,5 +358,6 @@
     <string name="guide_subject_label">Guide Subject</string>
     <string name="visibility">Visibility</string>
     <string name="guide_type">Guide Type</string>
+    <string name="reload_guide">Reload Guide</string>
 
 </resources>

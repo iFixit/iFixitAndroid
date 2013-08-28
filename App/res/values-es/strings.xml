@@ -168,7 +168,7 @@
     <string name="step_edit_confirm_delete_title">Eliminar Paso</string>
     <string name="step_edit_confirm_delete_message">Está usted seguro/a que quiere eliminar Paso %1$d?</string>
     <string name="edit">Editar</string>
-    <string name="edit_step_intro">Editar la Introducción</string>
+    <string name="edit_guide_details">Editar la Introducción</string>
     <string name="add_step">Agregar Paso</string>
     <string name="reorder_steps">Reordenar</string>
     <string name="no_steps_text">La guía no contiene pasos.</string>
@@ -339,5 +339,6 @@
     <string name="guide_subject_label">Guide Subject</string>
     <string name="visibility">Visibility</string>
     <string name="guide_type">Guide Type</string>
+    <string name="reload_guide">Reload Guide</string>
 
 </resources>

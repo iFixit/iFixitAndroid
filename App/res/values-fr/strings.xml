@@ -167,7 +167,7 @@
     <string name="step_edit_confirm_delete_title">Supprimer L\'étape</string>
     <string name="step_edit_confirm_delete_message"> Etes-vous sûr que vous voulez supprimer </string>
     <string name="edit">Modifier</string>
-    <string name="edit_step_intro">Intro</string>
+    <string name="edit_guide_details">Intro</string>
     <string name="add_step">Ajouter Étape</string>
     <string name="reorder_steps">Réorganiser</string>
     <string name="no_steps_text">ajouter des étapes avec la barre ci-dessus !</string>
@@ -344,5 +344,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="guide_subject_label">Guide Subject</string>
     <string name="visibility">Visibility</string>
     <string name="guide_type">Guide Type</string>
+    <string name="reload_guide">Reload Guide</string>
 
 </resources>

@@ -37,9 +37,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
 
-   public static final int MENU_EDIT_GUIDE = 2;
-   private static final int MENU_REFRESH_GUIDE = 3;
-
    private int mGuideid;
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
@@ -178,21 +175,14 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      menu.add(1, MENU_EDIT_GUIDE, 0, R.string.edit_guide)
-       .setIcon(R.drawable.ic_action_edit)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
-      menu.add(2, MENU_REFRESH_GUIDE, 0, "Reload Guide")
-       .setIcon(R.drawable.ic_action_refresh_dark)
-       .setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-
+      getSupportMenuInflater().inflate(R.menu.guide_view_menu, menu);
       return super.onCreateOptionsMenu(menu);
    }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
-         case MENU_EDIT_GUIDE:
+         case R.id.edit_guide:
             if (mGuide != null) {
                EasyTracker.getTracker().sendEvent("menu_action", "button_press", "edit_guide",
                 (long)mGuide.getGuideid());
@@ -228,7 +218,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                }
             }
             break;
-         case MENU_REFRESH_GUIDE:
+         case R.id.reload_guide:
             // Set guide to null to force a refresh of the guide object.
             mGuide = null;
             getGuide(mGuideid);

@@ -168,9 +168,9 @@
     <string name="step_edit_confirm_delete_title">Delete Step</string>
     <string name="step_edit_confirm_delete_message">Are you sure you want to delete Step %1$d?</string>
     <string name="edit">Edit</string>
-    <string name="edit_step_intro">Edit Intro</string>
+    <string name="edit_guide_details">Edit Guide Details</string>
     <string name="add_step">Add Step</string>
-    <string name="reorder_steps">Reorder</string>
+    <string name="reorder_steps">Reorder Steps</string>
     <string name="no_steps_text">No guide steps.</string>
 
     <!-- Guide Step Rearrange Dialog -->
@@ -312,6 +312,7 @@
     <string name="guide_subject_label">Guide Subject</string>
     <string name="visibility">Visibility</string>
     <string name="guide_type">Guide Type</string>
+    <string name="reload_guide">Reload Guide</string>
 
     <string-array name="guide_type_array">
         <item>Installation</item>
