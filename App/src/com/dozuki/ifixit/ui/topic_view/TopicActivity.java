@@ -20,7 +20,8 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
-public class TopicActivity extends BaseMenuDrawerActivity implements TopicSelectedListener {
+public class TopicActivity extends BaseMenuDrawerActivity
+ implements TopicSelectedListener, OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
@@ -28,6 +29,7 @@ public class TopicActivity extends BaseMenuDrawerActivity implements TopicSelect
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
    private TopicNode mRootTopic;
+   private int mBackStackSize = 0;
    private boolean mDualPane;
    private boolean mHideTopicList;
    private boolean mTopicListVisible;
@@ -64,6 +66,12 @@ public class TopicActivity extends BaseMenuDrawerActivity implements TopicSelect
          hideTopicListWithDelay();
       }
 
+      getSupportFragmentManager().addOnBackStackChangedListener(this);
+
+      // Reset backstack size
+      mBackStackSize = -1;
+      onBackStackChanged();
+
       if (mTopicViewOverlay != null) {
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
@@ -97,6 +105,17 @@ public class TopicActivity extends BaseMenuDrawerActivity implements TopicSelect
 
       outState.putSerializable(ROOT_TOPIC, mRootTopic);
       outState.putBoolean(TOPIC_LIST_VISIBLE, mTopicListVisible);
+   }
+
+   @Override
+   public void onBackStackChanged() {
+      int backStackSize = getSupportFragmentManager().getBackStackEntryCount();
+
+      if (mBackStackSize > backStackSize) {
+         setTopicListVisible();
+      }
+
+      mBackStackSize = backStackSize;
    }
 
    @Override
