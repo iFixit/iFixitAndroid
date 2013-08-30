@@ -102,17 +102,25 @@ public class TopicListFragment extends SherlockFragment
          mTopicAdapter.addSection(adapter);
       }
 
-      if (nonLeaves.size() > 0) {
-         adapter = new TopicListAdapter(mContext, mContext.getString(
-          R.string.categories), nonLeaves);
-         adapter.setTopicSelectedListener(this);
-         mTopicAdapter.addSection(adapter);
-      }
+      if (MainApplication.get().getSite().isIfixit()) {
+         if (nonLeaves.size() > 0) {
+            adapter = new TopicListAdapter(mContext, mContext.getString(
+             R.string.categories), nonLeaves);
+            adapter.setTopicSelectedListener(this);
+            mTopicAdapter.addSection(adapter);
+         }
 
-      if (leaves.size() > 0) {
-         MainApplication app = (MainApplication)getActivity().getApplication();
+         if (leaves.size() > 0) {
+            MainApplication app = (MainApplication)getActivity().getApplication();
 
-         adapter = new TopicListAdapter(mContext, mContext.getString(app.getSite().getObjectName()), leaves);
+            adapter = new TopicListAdapter(mContext, app.getSite().getObjectName(), leaves);
+            adapter.setTopicSelectedListener(this);
+            mTopicAdapter.addSection(adapter);
+         }
+      } else {
+         Collections.sort(mTopic.getChildren(), comparator);
+         adapter = new TopicListAdapter(mContext, MainApplication.get().getSite().getObjectNamePlural(),
+          mTopic.getChildren());
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
       }
