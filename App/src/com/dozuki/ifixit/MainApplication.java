@@ -10,8 +10,8 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.StrictMode;
 import android.util.Log;
-
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
@@ -88,6 +88,21 @@ public class MainApplication extends Application {
       if (!mConnectionFactorySet) {
          HttpRequest.setConnectionFactory(new OkConnectionFactory());
          mConnectionFactorySet = true;
+      }
+
+      if (false && inDebug()) {
+         StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
+          .detectDiskReads()
+          .detectDiskWrites()
+          .detectNetwork()   // or .detectAll() for all detectable problems
+          .penaltyLog()
+          .build());
+         StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder()
+          .detectLeakedSqlLiteObjects()
+          .detectLeakedClosableObjects()
+          .penaltyLog()
+          .penaltyDeath()
+          .build());
       }
 
       super.onCreate();
