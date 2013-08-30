@@ -9,15 +9,14 @@ import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.ui.BaseFragment;
 
 import java.util.ArrayList;
 
-public class StepLinesFragment extends SherlockFragment {
+public class StepLinesFragment extends BaseFragment {
 
    public static final String GUIDE_STEP = "GUIDE_STEP_KEY";
 
@@ -58,18 +57,6 @@ public class StepLinesFragment extends SherlockFragment {
       mLineList.setAdapter(mTextAdapter);
 
       return view;
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-      MainApplication.getBus().unregister(this);
    }
 
    public class StepTextArrayAdapter extends ArrayAdapter<StepLine> {

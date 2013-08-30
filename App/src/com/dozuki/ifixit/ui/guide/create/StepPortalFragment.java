@@ -12,21 +12,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
-public class StepPortalFragment extends SherlockFragment implements StepReorderFragment.StepRearrangeListener {
+public class StepPortalFragment extends BaseFragment implements StepReorderFragment.StepRearrangeListener {
    public static int STEP_ID = 0;
 
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
@@ -86,18 +86,6 @@ public class StepPortalFragment extends SherlockFragment implements StepReorderF
       }
 
       return view;
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-      MainApplication.getBus().unregister(this);
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
    }
 
    @Override

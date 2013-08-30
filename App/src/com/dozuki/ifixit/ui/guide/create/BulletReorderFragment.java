@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.R.color;
 import android.content.DialogInterface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -17,13 +16,14 @@ import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
 import java.util.ArrayList;
 
-public class BulletReorderFragment extends DialogFragment {
+public class BulletReorderFragment extends BaseDialogFragment {
 
    public interface BulletRearrangeListener {
 

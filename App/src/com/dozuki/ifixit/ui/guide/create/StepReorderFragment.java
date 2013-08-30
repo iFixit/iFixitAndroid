@@ -8,7 +8,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
@@ -18,6 +18,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.mobeta.android.dslv.DragSortController;
@@ -26,7 +27,7 @@ import com.mobeta.android.dslv.DragSortListView;
 import java.util.ArrayList;
 import java.util.List;
 
-public class StepReorderFragment extends SherlockFragment {
+public class StepReorderFragment extends BaseFragment {
 
    public interface StepRearrangeListener {
 

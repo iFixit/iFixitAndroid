@@ -15,10 +15,11 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIService;
@@ -30,7 +31,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public class StepEditImageFragment extends SherlockFragment {
+public class StepEditImageFragment extends BaseFragment {
 
    private static final int COPY_TO_MEDIA_MANAGER = 0;
    private static final int DETACH_TO_MEDIA_MANAGER = 1;
@@ -85,20 +86,6 @@ public class StepEditImageFragment extends SherlockFragment {
       }
 
       return v;
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      MainApplication.getBus().unregister(this);
    }
 
    @Override

@@ -73,6 +73,5 @@ public class PhotoMediaFragment extends MediaFragment {
    @Subscribe
    public void onLogin(LoginEvent.Login event) {
       setupUser(event.getUser());
-      retrieveUserMedia();
    }
 }

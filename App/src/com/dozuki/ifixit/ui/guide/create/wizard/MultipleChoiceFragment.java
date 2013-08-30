@@ -26,17 +26,18 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockListFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.MultipleFixedChoicePage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.ui.BaseListFragment;
 
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class MultipleChoiceFragment extends SherlockListFragment {
+public class MultipleChoiceFragment extends BaseListFragment {
    private static final String ARG_KEY = "key";
 
    private PageFragmentCallbacks mCallbacks;

@@ -27,12 +27,13 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.Utils;
 
-public class EditTextFragment extends SherlockFragment {
+public class EditTextFragment extends BaseFragment {
    private static final String ARG_KEY = "key";
 
    private PageFragmentCallbacks mCallbacks;

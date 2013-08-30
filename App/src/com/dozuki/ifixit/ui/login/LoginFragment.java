@@ -6,18 +6,23 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
@@ -25,7 +30,7 @@ import com.dozuki.ifixit.util.APIService;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
 
-public class LoginFragment extends DialogFragment implements OnClickListener {
+public class LoginFragment extends BaseDialogFragment implements OnClickListener {
    private static final int OPEN_ID_RESULT_CODE = 4;
 
    private Button mLogin;
@@ -147,19 +152,10 @@ public class LoginFragment extends DialogFragment implements OnClickListener {
    public void onResume() {
       super.onResume();
 
-      MainApplication.getBus().register(this);
-
       if (mFailedSsoLogin) {
          // Dismiss the dialog because SSO login failed.
          getDialog().cancel();
       }
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      MainApplication.getBus().unregister(this);
    }
 
    private void login() {

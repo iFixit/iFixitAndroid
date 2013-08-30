@@ -28,10 +28,10 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.MainApplication;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -39,7 +39,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class TopicNameFragment extends SherlockFragment {
+public class TopicNameFragment extends BaseFragment {
    private static final String ARG_KEY = "key";
    public static final String TOPIC_LIST_KEY = "TOPIC_LIST_KEY";
 
@@ -137,19 +137,6 @@ public class TopicNameFragment extends SherlockFragment {
    public void onDetach() {
       super.onDetach();
       mCallbacks = null;
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      MainApplication.getBus().unregister(this);
    }
 
    @Override

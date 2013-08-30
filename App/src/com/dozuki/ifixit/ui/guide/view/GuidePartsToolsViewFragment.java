@@ -4,13 +4,14 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.actionbarsherlock.app.SherlockListFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Item;
+import com.dozuki.ifixit.ui.BaseListFragment;
 
 import java.util.ArrayList;
 
-public class GuidePartsToolsViewFragment extends SherlockListFragment {
+public class GuidePartsToolsViewFragment extends BaseListFragment {
    private ArrayList<Item> mItems;
 
    public GuidePartsToolsViewFragment(ArrayList<Item> items) {

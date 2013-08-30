@@ -5,10 +5,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.R;
 
-public class LoadingFragment extends SherlockFragment {
+import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.ui.BaseFragment;
+
+public class LoadingFragment extends BaseFragment {
    private String mLoadingText;
 
    public LoadingFragment() { }

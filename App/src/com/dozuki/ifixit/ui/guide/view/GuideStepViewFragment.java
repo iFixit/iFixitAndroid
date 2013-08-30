@@ -5,14 +5,14 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.StepEmbedFragment;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
-import com.google.analytics.tracking.android.EasyTracker;
 
-public class GuideStepViewFragment extends SherlockFragment {
+public class GuideStepViewFragment extends BaseFragment {
 
    private static final String GUIDE_STEP_KEY = "GUIDE_STEP_KEY";
    private static final int MEDIA_CONTAINER = R.id.guide_step_media;

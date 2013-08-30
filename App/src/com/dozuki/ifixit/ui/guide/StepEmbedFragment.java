@@ -14,11 +14,11 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.guide.OEmbed;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.EmbedViewActivity;
 import com.dozuki.ifixit.util.JSONHelper;
 
@@ -27,7 +27,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-public class StepEmbedFragment extends SherlockFragment {
+public class StepEmbedFragment extends BaseFragment {
 
    public static final String GUIDE_EMBED_KEY = "GUIDE_EMBED_KEY";
    private Activity mContext;

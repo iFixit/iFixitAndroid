@@ -8,15 +8,16 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.GuideListAdapter;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class TopicGuideListFragment extends SherlockFragment {
+public class TopicGuideListFragment extends BaseFragment {
 
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
 

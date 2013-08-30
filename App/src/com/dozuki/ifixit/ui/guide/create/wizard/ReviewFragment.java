@@ -25,17 +25,18 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockListFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
 import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.ReviewItem;
+import com.dozuki.ifixit.ui.BaseListFragment;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class ReviewFragment extends SherlockListFragment implements ModelCallbacks {
+public class ReviewFragment extends BaseListFragment implements ModelCallbacks {
    private Callbacks mCallbacks;
    private AbstractWizardModel mWizardModel;
    private List<ReviewItem> mCurrentReviewItems;

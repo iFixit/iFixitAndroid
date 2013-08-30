@@ -8,12 +8,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.Utils;
 
-public class GuideIntroViewFragment extends SherlockFragment {
+public class GuideIntroViewFragment extends BaseFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
 
    private TextView mTitle;

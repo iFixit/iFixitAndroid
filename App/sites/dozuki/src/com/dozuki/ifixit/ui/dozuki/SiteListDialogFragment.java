@@ -26,7 +26,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class SiteListDialogFragment extends SherlockDialogFragment {
+public class SiteListDialogFragment extends BaseDialogFragment {
    private static final String SITE_LIST = "SITE_LIST";
 
    private ListView mSiteListView;

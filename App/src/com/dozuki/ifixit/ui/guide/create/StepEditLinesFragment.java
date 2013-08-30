@@ -21,12 +21,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.*;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout.LayoutParams;
-import com.actionbarsherlock.app.SherlockFragment;
+import android.widget.Toast;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
 import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.util.Utils;
@@ -35,7 +41,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class StepEditLinesFragment extends SherlockFragment implements BulletDialogListener, BulletRearrangeListener {
+public class StepEditLinesFragment extends BaseFragment implements BulletDialogListener, BulletRearrangeListener {
    private static final int BULLET_LIMIT = 8;
    private static final int BULLET_INDENT = 25;
    private static final String STEP_LIST_KEY = "STEP_LIST_KEY";
@@ -143,18 +149,6 @@ public class StepEditLinesFragment extends SherlockFragment implements BulletDia
       initilizeBulletContainer();
 
       return v;
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-      MainApplication.getBus().unregister(this);
    }
 
    @Override

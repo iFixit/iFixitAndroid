@@ -3,17 +3,18 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.DialogInterface;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class ChooseBulletDialog extends DialogFragment implements OnClickListener {
+public class ChooseBulletDialog extends BaseDialogFragment implements OnClickListener {
 
    private static final String INDEX_KEY = "INDEX_KEY";
    private static final String DELETE_VIS_KEY = "DELETE_VIS_KEY";

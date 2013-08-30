@@ -10,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
@@ -28,7 +28,7 @@ import com.viewpagerindicator.TitlePageIndicator;
 
 import java.net.URLEncoder;
 
-public class TopicViewFragment extends SherlockFragment {
+public class TopicViewFragment extends BaseFragment {
    private static final int GUIDES_TAB = 0;
    private static final int MORE_INFO_TAB = 1;
    private static final int ANSWERS_TAB = 2;
@@ -94,20 +94,6 @@ public class TopicViewFragment extends SherlockFragment {
          }
       }
       return view;
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      MainApplication.getBus().unregister(this);
    }
 
    @Override

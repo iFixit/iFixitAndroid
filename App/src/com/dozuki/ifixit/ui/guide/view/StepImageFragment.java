@@ -6,15 +6,16 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 
 import java.util.ArrayList;
 
-public class StepImageFragment extends SherlockFragment {
+public class StepImageFragment extends BaseFragment {
    private static final String IMAGES_KEY = "IMAGES_KEY";
 
    // Step Images

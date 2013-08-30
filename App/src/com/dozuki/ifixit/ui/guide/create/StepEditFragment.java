@@ -1,22 +1,21 @@
 package com.dozuki.ifixit.ui.guide.create;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
 
 import java.util.ArrayList;
 
 
-public class StepEditFragment extends SherlockFragment {
+public class StepEditFragment extends BaseFragment {
 
    private static final String GUIDE_STEP_KEY = "GUIDE_STEP_NUM_KEY";
    private static final String STEP_EMBED_FRAGMENT_TAG = "STEP_EMBED_FRAGMENT_TAG";

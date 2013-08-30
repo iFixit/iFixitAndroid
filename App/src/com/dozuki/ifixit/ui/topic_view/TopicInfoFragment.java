@@ -14,9 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.actionbarsherlock.app.SherlockFragment;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.UrlImageGetter;
@@ -24,7 +25,7 @@ import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 import com.google.analytics.tracking.android.EasyTracker;
 
-public class TopicInfoFragment extends SherlockFragment {
+public class TopicInfoFragment extends BaseFragment {
 
    private static final float HEADER_SIZE = 1.3f;
    private static final String IMAGE_SIZE = ".medium";

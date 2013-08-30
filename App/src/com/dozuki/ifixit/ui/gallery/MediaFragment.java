@@ -23,7 +23,6 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -32,6 +31,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
 import com.dozuki.ifixit.model.gallery.GalleryMediaList;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
@@ -41,7 +41,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 
-public abstract class MediaFragment extends SherlockFragment
+public abstract class MediaFragment extends BaseFragment
  implements OnItemClickListener, OnItemLongClickListener {
 
    protected static final int IMAGE_PAGE_SIZE = 1000;
@@ -202,18 +202,6 @@ public abstract class MediaFragment extends SherlockFragment
       if (mCameraTempFileName != null) {
          savedInstanceState.putString(CAMERA_PATH, mCameraTempFileName);
       }
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-      MainApplication.getBus().unregister(this);
    }
 
    @Override

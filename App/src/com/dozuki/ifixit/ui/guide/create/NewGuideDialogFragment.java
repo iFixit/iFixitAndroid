@@ -7,19 +7,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
-import android.widget.*;
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
+import android.widget.Spinner;
+import android.widget.TextView;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
+import com.dozuki.ifixit.ui.BaseDialogFragment;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
-public class NewGuideDialogFragment extends SherlockDialogFragment {
+public class NewGuideDialogFragment extends BaseDialogFragment {
    private static final String INVALID_DEVICE_NAME_PATTERN = "[^#<>\\[\\]\\|\\{\\},\\+\\?&\\/\\\\\\%:;]+";
 
    private static final String GUIDE_KEY = "GUIDE_KEY";
@@ -168,19 +174,6 @@ public class NewGuideDialogFragment extends SherlockDialogFragment {
 
       outState.putSerializable(GUIDE_KEY, mGuide);
       outState.putStringArrayList(TOPIC_LIST_KEY, mTopics);
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-      MainApplication.getBus().register(this);
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      MainApplication.getBus().unregister(this);
    }
 
    @Subscribe
