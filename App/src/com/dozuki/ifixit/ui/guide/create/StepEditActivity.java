@@ -1111,7 +1111,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          }
       }
 
-
       return true;
    }
 
@@ -1245,7 +1244,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       if (mGuide.getSteps().size() == 0) {
          mStepAdapter.notifyDataSetChanged();
 
-         navigateBack();
+         finishEdit(HOME_UP);
          return;
       }
 
