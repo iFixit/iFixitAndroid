@@ -195,6 +195,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    private void initPage(int startPage) {
+
       String guideTitle = mGuide.getTitle();
 
       getSupportActionBar().setTitle(guideTitle);
@@ -447,6 +448,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
+      super.onCreateOptionsMenu(menu);
+
       getSupportMenuInflater().inflate(R.menu.step_edit_menu, menu);
       MenuItem item = menu.findItem(R.id.publish_guide);
       CompoundButton toggle = (CompoundButton)item.getActionView().findViewById(R.id.publish_toggle);
@@ -461,7 +464,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
                // Disable the switch / checkbox until the publish response comes back.
                //buttonView.setEnabled(false);
-               showLoading(mLoadingContainer, (isChecked ? "Publishing..." : "Unpublishing..."));
+               showLoading(mLoadingContainer, getString(isChecked ? R.string.publishing : R.string.unpublishing));
 
                if (isChecked) {
                   APIService.call(StepEditActivity.this,
@@ -473,7 +476,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             }
          }
       });
-      return super.onCreateOptionsMenu(menu);
+
+      return true;
    }
 
    @Override
@@ -539,11 +543,14 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onPublishStatus(APIEvent.PublishStatus event) {
       hideLoading();
 
-      enablePublishToggle(true);
+      // Re-enable the toggle view
+      findViewById(R.id.publish_toggle).setEnabled(true);
 
       // Update guide even if there is a conflict.
       if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
-         mGuide = event.getResult();
+         Guide result = event.getResult();
+         mGuide.setRevisionid(result.getRevisionid());
+         mGuide.setPublic(result.isPublic());
       }
 
       if (event.hasError()) {
@@ -696,8 +703,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onStepAdd(APIEvent.StepAdd event) {
       hideLoading();
 
-      enablePublishToggle(true);
-
       if (!event.hasError()) {
          mGuide = event.getResult();
 
@@ -836,8 +841,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          mGuide.addStep(step, newPosition);
 
          refreshView(newPosition);
-
-         enablePublishToggle(false);
       } else {
          // Show "Must add content to step" toast
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
@@ -855,8 +858,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    public void enablePublishToggle(boolean enabled) {
-      // Re-enable the toggle view
-      findViewById(R.id.publish_toggle).setEnabled(enabled);
    }
 
    /////////////////////////////////////////////////////
@@ -937,9 +938,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
              if (mPagePosition >= mGuide.getSteps().size()
               // or it's a new step
               || mGuide.getStep(mPagePosition).getRevisionid() == null) {
-                // When adding a new step, we disable the toggle to prevent some wonky pager issues,
-                // so we need to re-enable it here.
-                enablePublishToggle(true);
                 deleteStep();
              } else {
                 showLoading(mLoadingContainer, getString(R.string.deleting));
