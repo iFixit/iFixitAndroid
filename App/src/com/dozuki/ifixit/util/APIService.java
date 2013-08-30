@@ -597,7 +597,10 @@ public class APIService extends Service {
             return;
          }
 
-         Iterator<DeadEvent> it = mDeadEvents.iterator();
+         List<DeadEvent> iterable = Collections.synchronizedList(mDeadEvents);
+         mDeadEvents = Collections.synchronizedList(new ArrayList<DeadEvent>());
+
+         Iterator<DeadEvent> it = iterable.iterator();
 
          // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
          // onDeadEvent, and added back to the list.
@@ -623,7 +626,7 @@ public class APIService extends Service {
          Log.i("APIService", "Request body: " + apiCall.mRequestBody);
       }
 
-      new AsyncTask<String, Void, APIEvent<?>>() {
+      AsyncTask<String, Void, APIEvent<?>> as = new AsyncTask<String, Void, APIEvent<?>>() {
          @Override
          protected APIEvent<?> doInBackground(String... dummy) {
             APIEvent<?> event = endpoint.getEvent();
@@ -734,7 +737,13 @@ public class APIService extends Service {
          protected void onPostExecute(APIEvent<?> result) {
             responder.setResult(result);
          }
-      }.execute();
+      };
+
+      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR1) {
+         as.execute();
+      } else {
+         as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+      }
    }
 
    private boolean checkConnectivity(Responder responder, APIEndpoint endpoint,
