@@ -9,10 +9,7 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.AsyncTask;
-import android.os.Binder;
-import android.os.Bundle;
-import android.os.IBinder;
+import android.os.*;
 import android.util.Log;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
@@ -34,10 +31,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.

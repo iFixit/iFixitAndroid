@@ -120,7 +120,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       if (!onIfixit) items.add(new Item("Back to Site List", R.drawable.ic_action_list, "site_list"));
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
-      items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
+      items.add(new Item(getString(R.string.slide_menu_browse_devices, MainApplication.get().getSite()
+       .getObjectNamePlural()),
+       R.drawable.ic_action_list_2,
+       "browse_topics"));
 
       if (onIfixit) {
          items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));

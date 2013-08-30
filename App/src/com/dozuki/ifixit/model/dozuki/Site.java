@@ -1,8 +1,10 @@
 package com.dozuki.ifixit.model.dozuki;
 
+import android.content.res.Resources;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.util.EditDistance;
 import com.dozuki.ifixit.util.Utils;
@@ -26,10 +28,13 @@ public class Site implements Serializable {
    public boolean mPublicRegistration;
    public String mCustomDomain;
    public String mStoreUrl;
+   public Image mLogo;
+
+   public String mObjectNameSingular;
+   public String mObjectNamePlural;
 
    public String[] hasSubject = {"Repair", "Installation", "Replacement", "Disassembly"};
    public String[] noSubject = {"Technique", "How-to", "Maintenance", "Teardown"};
-
 
    public ArrayList<GuideType> mGuideTypes;
 
@@ -58,12 +63,12 @@ public class Site implements Serializable {
    /**
     * Returns the resourceid for the current site's object name.
     */
-   public int getObjectName() {
-      if (isIfixit()) {
-         return R.string.devices;
-      } else {
-         return R.string.topics;
-      }
+   public String getObjectName() {
+      return mObjectNameSingular;
+   }
+
+   public String getObjectNamePlural() {
+      return mObjectNamePlural;
    }
 
    public ArrayList<String> getGuideTypes() {
@@ -138,6 +143,7 @@ public class Site implements Serializable {
    // Used only for custom apps, where we don't have a call to get the site info.
    public static Site getSite(String siteName) {
       Site site = null;
+      Resources res = MainApplication.get().getResources();
 
       if (siteName.equals("ifixit")) {
          site = new Site(2);
@@ -153,6 +159,8 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
+         site.mObjectNamePlural = res.getString(R.string.devices);
+         site.mObjectNameSingular = res.getString(R.string.device);
       } else if (siteName.equals("dozuki")) {
          site = new Site(5);
          site.mName = "dozuki";
@@ -165,6 +173,8 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("crucial")) {
          site = new Site(549);
          site.mName = "crucial";
@@ -178,6 +188,8 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("zealoptics")) {
          site = new Site(1343);
          site.mName = "zealoptics";
@@ -190,6 +202,8 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       }
 
       return site;

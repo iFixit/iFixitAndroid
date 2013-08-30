@@ -47,8 +47,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
    private static final String TAG = "StepEditActivity";
-   private boolean mBounded;
-
    private enum ConfirmSave {
       NEW_STEP,
       NEXT_STEP
@@ -108,6 +106,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    private APIService mAPIService;
 
+   private boolean mBounded;
+   private SharedPreferences mSharedPreferences;
+
+
    ServiceConnection mConnection = new ServiceConnection() {
 
       public void onServiceDisconnected(ComponentName name) {
@@ -134,6 +136,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_create_step_edit);
+
+      mSharedPreferences = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
 
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
@@ -291,8 +295,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          case CAMERA_REQUEST_CODE:
             if (resultCode == Activity.RESULT_OK) {
 
-               SharedPreferences prefs = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
-               String tempFileName = prefs.getString(TEMP_FILE_NAME_KEY, null);
+               String tempFileName = mSharedPreferences.getString(TEMP_FILE_NAME_KEY, null);
 
                if (tempFileName == null) {
                   Log.e("StepEditActivity", "Error cameraTempFile is null!");
@@ -536,8 +539,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onPublishStatus(APIEvent.PublishStatus event) {
       hideLoading();
 
-      // Re-enable the toggle view
-      findViewById(R.id.publish_toggle).setEnabled(true);
+      enablePublishToggle(true);
 
       // Update guide even if there is a conflict.
       if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {

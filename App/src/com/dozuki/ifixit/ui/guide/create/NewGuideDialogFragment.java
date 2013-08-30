@@ -12,18 +12,25 @@ import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
+import com.squareup.otto.Subscribe;
 
+import java.util.ArrayList;
 import java.util.regex.Pattern;
 
 public class NewGuideDialogFragment extends SherlockDialogFragment {
    private static final String INVALID_DEVICE_NAME_PATTERN = "[^#<>\\[\\]\\|\\{\\},\\+\\?&\\/\\\\\\%:;]+";
 
    private static final String GUIDE_KEY = "GUIDE_KEY";
+   private static final String TOPIC_LIST_KEY = "TOPIC_LIST_KEY";
    private Guide mGuide;
    private Spinner mType;
    private EditText mSubject;
    private AutoCompleteTextView mTopic;
    private TextView mSubjectLabel;
+   private ArrayList<String> mTopics;
+   private ArrayAdapter<String> mAdapter;
 
    public static NewGuideDialogFragment newInstance(Guide guide) {
       NewGuideDialogFragment frag = new NewGuideDialogFragment();
@@ -41,6 +48,7 @@ public class NewGuideDialogFragment extends SherlockDialogFragment {
 
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(GUIDE_KEY);
+         mTopics = (ArrayList<String>) savedInstanceState.getSerializable(TOPIC_LIST_KEY);
       } else {
          mGuide = (Guide) getArguments().getSerializable(GUIDE_KEY);
       }
@@ -69,6 +77,12 @@ public class NewGuideDialogFragment extends SherlockDialogFragment {
             }
          }
       });
+
+      if (mTopics != null) {
+         setTopicArrayAdapter();
+      } else {
+         APIService.call(getActivity(), APIService.getAllTopicsAPICall());
+      }
 
       mSubject = (EditText) v.findViewById(R.id.subject_field);
       mSubject.setHint(getString(R.string.guide_intro_wizard_guide_subject_hint));
@@ -153,6 +167,7 @@ public class NewGuideDialogFragment extends SherlockDialogFragment {
       super.onSaveInstanceState(outState);
 
       outState.putSerializable(GUIDE_KEY, mGuide);
+      outState.putStringArrayList(TOPIC_LIST_KEY, mTopics);
    }
 
    @Override
@@ -166,5 +181,23 @@ public class NewGuideDialogFragment extends SherlockDialogFragment {
       super.onPause();
 
       MainApplication.getBus().unregister(this);
+   }
+
+   @Subscribe
+   public void onTopicList(APIEvent.TopicList event) {
+      if (!event.hasError()) {
+         mTopics = new ArrayList<String>(event.getResult());
+
+         setTopicArrayAdapter();
+      } else {
+         APIService.getErrorDialog(getActivity(), event).show();
+      }
+   }
+
+   private void setTopicArrayAdapter() {
+      mAdapter = new ArrayAdapter<String>(getActivity(), R.layout.topic_name_autocomplete_dropdown_item,
+       mTopics);
+
+      mTopic.setAdapter(mAdapter);
    }
 }

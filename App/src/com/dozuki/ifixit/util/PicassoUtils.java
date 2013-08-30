@@ -23,6 +23,8 @@ public class PicassoUtils {
          try {
             client.setResponseCache(createResponseCache(context));
          } catch (IOException ignored) {
+            // Ignored
+            // throw new RuntimeException();
          }
          singleton = new Picasso.Builder(context).loader(new OkHttpLoader(client)).build();
       }

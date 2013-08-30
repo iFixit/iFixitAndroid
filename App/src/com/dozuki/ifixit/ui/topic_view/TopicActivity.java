@@ -6,7 +6,6 @@ import android.os.Handler;
 import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentManager.OnBackStackChangedListener;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,7 +20,7 @@ import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
 public class TopicActivity extends BaseMenuDrawerActivity
- implements TopicSelectedListener, OnBackStackChangedListener {
+ implements TopicSelectedListener, FragmentManager.OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;

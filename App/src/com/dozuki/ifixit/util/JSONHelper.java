@@ -71,6 +71,15 @@ public class JSONHelper {
       JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
       site.mGuideTypes = new ArrayList<GuideType>();
 
+      Log.d("JSONHelper", siteInfoObject.getString("object-name-plural"));
+      site.mObjectNamePlural = siteInfoObject.getString("object-name-plural");
+      site.mObjectNameSingular = siteInfoObject.getString("object-name-singular");
+
+      if (!siteInfoObject.isNull("logo")) {
+         JSONObject logoImage = siteInfoObject.getJSONObject("logo").getJSONObject("image");
+         site.mLogo = new Image(logoImage.getInt("id"), logoImage.getString("original"));
+      }
+
       Iterator<?> keys = types.keys();
       while (keys.hasNext()) {
          String key = (String) keys.next();

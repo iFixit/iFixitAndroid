@@ -610,7 +610,7 @@ public enum APIEndpoint {
             return new APIEvent.SiteInfo();
          }
       },
-      true,  // Must be authenticated to force GuideIntroActivity to require login.
+      false,
       "GET",
       false
    ),

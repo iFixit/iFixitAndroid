@@ -115,7 +115,7 @@ public class MainApplication extends Application {
    }
 
    public String getTopicName() {
-      String topicName = getString(R.string.topic);
+      String topicName = getString(R.string.category);
 
       if (mSite.mName.equals("ifixit")) {
          topicName = getString(R.string.device);

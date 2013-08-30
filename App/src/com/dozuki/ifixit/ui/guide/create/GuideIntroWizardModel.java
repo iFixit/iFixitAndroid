@@ -8,7 +8,10 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.Context;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.wizard.*;
+
+import java.util.ArrayList;
 
 public class GuideIntroWizardModel extends AbstractWizardModel {
    public static String HAS_SUBJECT_KEY = "hasSubject";
@@ -45,12 +48,38 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
         topicName.toLowerCase()))
        .setTitle(app.getString(R.string.guide_intro_wizard_guide_title_title));
 
-      Page typePage = new BranchPage(this, app.getString(R.string.guide_intro_wizard_guide_type_title))
-       .addBranch(app.getSite().hasSubject, HAS_SUBJECT_KEY, subjectPage)
-       .addBranch(app.getSite().noSubject, NO_SUBJECT_KEY)
-       .setChoices(app.getSite().getGuideTypes().toArray(typesArr))
+      typesArr = app.getSite().getGuideTypes().toArray(typesArr);
+
+      String[] hasSubject = filterTypesForBranch(typesArr, true);
+      String[] noSubject = filterTypesForBranch(typesArr, false);
+
+      Page typePage = new BranchPage(this, app.getString(R.string.guide_intro_wizard_guide_type_title));
+
+      if (hasSubject.length != 0) {
+         ((BranchPage)typePage).addBranch(hasSubject, HAS_SUBJECT_KEY, subjectPage);
+      }
+
+      if (noSubject.length != 0) {
+         ((BranchPage)typePage).addBranch(noSubject, NO_SUBJECT_KEY);
+      }
+
+      ((BranchPage)typePage)
+       .setChoices(typesArr)
        .setRequired(true);
 
       return new PageList(topicPage, typePage, titlePage);
+   }
+
+   private String[] filterTypesForBranch(String[] types, boolean hasSubjectBranch) {
+      Site site = MainApplication.get().getSite();
+      ArrayList<String> result = new ArrayList<String>();
+
+      for (int i = 0; i < types.length; i++) {
+         if (hasSubjectBranch == site.hasSubject(types[i])) {
+            result.add(types[i]);
+         }
+      }
+
+      return result.toArray(new String[result.size()]);
    }
 }

@@ -38,7 +38,7 @@
     <string name="slide_menu_my_guides">My Guides</string>
     <string name="slide_menu_search">Search</string>
     <string name="slide_menu_browse_content">Browse Content</string>
-    <string name="slide_menu_browse_devices">Browse Devices</string>
+    <string name="slide_menu_browse_devices">Browse %1$s</string>
     <string name="slide_menu_favorite_guides">Favorite Guides</string>
     <string name="slide_menu_create_new_guide">Create New Guide</string>
     <string name="slide_menu_media_gallery">Media Manager</string>
@@ -115,6 +115,7 @@
     <!-- Topic List -->
     <string name="generalInformation">General Information</string>
     <string name="categories">Categories</string>
+    <string name="category">Category</string>
 
     <!-- Topic View -->
     <string name="guides">Guides</string>
@@ -133,7 +134,7 @@
     <string name="topic_guide_thumbnail">Guide section thumbnail</string>
     <string name="main_guide_img_description">Guide main image</string>
     <string name="thumbnail_desc">Thumbnail image</string>
-    <string name="topic_img_desc">Topic image</string>
+    <string name="topic_img_desc">Category image</string>
     <string name="next_page_image_desc">Next page</string>
 
     <string name="video_play_button_description">Video Play Button</string>
@@ -149,7 +150,7 @@
     <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="topic_name_hint">Topic Name</string>
+    <string name="topic_name_hint">Category Name</string>
 
     <!-- Full Screen Image -->
     <string name="close_full_screen_desc">Close full screen button</string>
@@ -257,7 +258,7 @@
 
 
     <!-- Miscellaneous -->
-    <string name="topic_background_description">Topic background</string>
+    <string name="topic_background_description">Category background</string>
     <string name="example_guide_item_title">Installing Samsung SGH-E317 SIM Card</string>
     <string name="fist_background_desc">Fist background image</string>
     <string name="my_guides">My Guides</string>
@@ -281,7 +282,7 @@
     <string name="bullet_reorder_description">Reminder bullet</string>
     <string name="default_step_number">Step #</string>
     <string name="loading">Loading…</string>
-    <string name="topic_info_image">Main topic image</string>
+    <string name="topic_info_image">Main category image</string>
     <string name="delete_step">Delete step</string>
     <string name="deleting">Deleting…</string>
     <string name="saving">Saving…</string>

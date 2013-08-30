@@ -14,13 +14,15 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-
 import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
+import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
@@ -37,8 +39,7 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
    }
 
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
+   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       if (savedInstanceState != null) {
          mSiteList = (ArrayList<Site>)savedInstanceState.getSerializable(SITE_LIST);
       }
@@ -51,9 +52,14 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
 
       mSearchView = (SearchView)view.findViewById(R.id.dozuki_search_view);
 
-      initDialog();
-
       return view;
+   }
+
+   @Override
+   public void onActivityCreated (Bundle savedInstanceState) {
+      super.onActivityCreated(savedInstanceState);
+
+      initDialog();
    }
 
    private void initDialog() {
@@ -112,6 +118,24 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
    }
 
    @Override
+   public void onPause() {
+      super.onPause();
+
+      MainApplication.getBus().register(this);
+   }
+
+   @Subscribe
+   public void onSiteInfo(APIEvent.SiteInfo event) {
+      if (!event.hasError()) {
+         MainApplication.get().setSite(event.getResult());
+         Intent intent = new Intent(getActivity(), TopicActivity.class);
+         startActivity(intent);
+      } else {
+         Log.e("BaseMenuDrawerActivity", "Error loading site info");
+      }
+   }
+
+   @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
@@ -138,10 +162,8 @@ public class SiteListDialogFragment extends SherlockDialogFragment {
          @Override
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
-            Intent intent = new Intent(getActivity(), TopicActivity.class);
-
             MainApplication.get().setSite(siteListAdapter.getSiteList().get(position));
-            startActivity(intent);
+            APIService.call(getActivity(), APIService.getSiteInfoAPICall());
          }
       });
    }
