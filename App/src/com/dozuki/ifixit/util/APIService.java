@@ -10,7 +10,13 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.*;
+import android.os.AsyncTask;
+import android.os.Binder;
+import android.os.Build;
+import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
+
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -27,6 +33,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
