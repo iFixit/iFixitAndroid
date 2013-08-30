@@ -64,7 +64,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       if (!prefs.contains(PEEK_MENU)) {
          prefs.edit().putBoolean(PEEK_MENU, false).commit();
-         mMenuDrawer.peekDrawer(1000, 0);
+         mMenuDrawer.openMenu();
       }
 
       buildSliderMenu();
@@ -116,6 +116,8 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       List<Object> items = new ArrayList<Object>();
 
       //items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
+
+      if (!onIfixit) items.add(new Item("Back to Site List", R.drawable.ic_action_list, "site_list"));
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_browse_devices), R.drawable.ic_action_list_2, "browse_topics"));
@@ -183,7 +185,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
    }
 
    public enum Navigation {
-      SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY,
+      SITE_LIST, SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY,
       LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS;
 
       public static Navigation navigate(String str) {
@@ -205,6 +207,8 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
           if (alertOnNavigation()) {
              navigationAlertDialog(tag, context).show();
           } else {
+             mMenuDrawer.closeMenu();
+
              EasyTracker.getTracker().sendEvent("menu_action", "drawer_item_click",
               ((String) view.getTag()).toLowerCase(), null);
 
@@ -217,10 +221,21 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
     };
 
    public void navigateMenuDrawer(String tag, Context context) {
+
       Intent intent;
       String url;
 
       switch (Navigation.navigate(tag)) {
+         case SITE_LIST:
+            try {
+               intent = new Intent(context, Class.forName("SiteListActivity"));
+               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+               startActivity(intent);
+               finish();
+            } catch (ClassNotFoundException e) {
+               // Fall through, should never happen.  Class SiteListActivity will only exist for dozuki.
+            }
+            break;
          case SEARCH:
          case BROWSE_TOPICS:
             intent = new Intent(context, TopicActivity.class);
@@ -294,7 +309,6 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
          case HELP:
          case ABOUT:
       }
-      mMenuDrawer.closeMenu();
    }
 
    private static class Item {
