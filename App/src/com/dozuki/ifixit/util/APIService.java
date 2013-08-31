@@ -9,7 +9,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.*;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -38,7 +37,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -47,9 +48,6 @@ import java.util.*;
  * Add functionality to download multiple guides including images.
  */
 public class APIService extends Service {
-   private boolean mUrlStreamFactorySet = false;
-   private boolean mConnectionFactorySet = false;
-
    private interface Responder {
       public void setResult(APIEvent<?> result);
    }
@@ -67,6 +65,9 @@ public class APIService extends Service {
     */
    private static APICall sPendingApiCall;
 
+   /**
+    * List of events that have been sent but not received by any subscribers.
+    */
    private List<DeadEvent> mDeadEvents;
 
    public class LocalBinder extends Binder {
@@ -569,7 +570,8 @@ public class APIService extends Service {
    @Override
    public void onCreate() {
       super.onCreate();
-      mDeadEvents = Collections.synchronizedList(new ArrayList<DeadEvent>());
+
+      mDeadEvents = new LinkedList<DeadEvent>();
 
       MainApplication.getBus().register(this);
    }
@@ -578,37 +580,39 @@ public class APIService extends Service {
    public void onDestroy() {
       super.onDestroy();
 
-      mDeadEvents = null;
-
       MainApplication.getBus().unregister(this);
+
+      mDeadEvents = null;
    }
 
    @Subscribe
-   public void onDeadEvent(DeadEvent event) {
+   public void onDeadEvent(DeadEvent deadEvent) {
+      if (BuildConfig.DEBUG) {
+         Log.i("APIService", "onDeadEvent: " + deadEvent.object.class.getName());
+      }
+
       synchronized (mDeadEvents) {
-         if (!mDeadEvents.contains(event)) {
-            mDeadEvents.add(event);
-         }
+         mDeadEvents.add(deadEvent);
       }
    }
 
    public void retryDeadEvents() {
+      if (BuildConfig.DEBUG) {
+         Log.i("APIService", "Retrying " + mDeadEvents.size() + " dead events");
+      }
+
       synchronized (mDeadEvents) {
          if (mDeadEvents.isEmpty()) {
             return;
          }
 
-         List<DeadEvent> iterable = Collections.synchronizedList(mDeadEvents);
-         mDeadEvents = Collections.synchronizedList(new ArrayList<DeadEvent>());
+         List<DeadEvent> deadEvents = mDeadEvents;
+         mDeadEvents = new LinkedList<DeadEvent>();
 
-         Iterator<DeadEvent> it = iterable.iterator();
-
-         // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
-         // onDeadEvent, and added back to the list.
-         while (it.hasNext()) {
-            DeadEvent dead = it.next();
-            it.remove();
-            MainApplication.getBus().post(dead.event);
+         // Iterate over all the dead events, firing off each one.  If it fails,
+         // it is recaught by the @Subscribe onDeadEvent, and added back to the list.
+         for (DeadEvent deadEvent : deadEvents) {
+            MainApplication.getBus().post(deadEvent.event);
          }
       }
    }
