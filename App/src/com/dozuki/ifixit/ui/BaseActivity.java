@@ -1,7 +1,8 @@
 package com.dozuki.ifixit.ui;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
+import android.support.v4.app.Fragment;
+
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -225,11 +226,16 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    public void showLoading(int container, String message) {
       getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(message), LOADING).addToBackStack(LOADING)
+       .add(container, new LoadingFragment(message), LOADING)
        .commit();
    }
 
    public void hideLoading() {
-      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      Fragment loadingFragment = getSupportFragmentManager().findFragmentByTag(LOADING);
+      if (loadingFragment != null) {
+         getSupportFragmentManager().beginTransaction()
+          .remove(loadingFragment)
+          .commit();
+      }
    }
 }

@@ -210,18 +210,25 @@ public class TopicActivity extends BaseMenuDrawerActivity
 
    @Override
    public void showLoading(int container) {
+      super.showLoading(container);
+
       mTopicView =
        (TopicViewFragment) getSupportFragmentManager().findFragmentById(R.id.topic_view_fragment);
-      getSupportFragmentManager().beginTransaction()
-       .add(R.id.topic_list_fragment, new LoadingFragment(), LOADING).addToBackStack(LOADING)
-       .commit();
       if (mTopicView != null) {
-         getSupportFragmentManager().beginTransaction().hide(mTopicView).addToBackStack(null).commit();
+         getSupportFragmentManager().beginTransaction().hide(mTopicView).commit();
       }
    }
 
    @Override
    public void hideLoading() {
-      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
+      super.hideLoading();
+
+      Fragment topicViewFragment = (TopicViewFragment) getSupportFragmentManager().
+       findFragmentById(R.id.topic_view_fragment);
+      if (topicViewFragment != null) {
+         getSupportFragmentManager().beginTransaction()
+          .show(topicViewFragment)
+          .commit();
+      }
    }
 }
