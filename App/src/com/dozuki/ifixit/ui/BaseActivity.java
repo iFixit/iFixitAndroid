@@ -1,12 +1,16 @@
 package com.dozuki.ifixit.ui;
 
+import android.content.ComponentName;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
@@ -16,6 +20,7 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.google.analytics.tracking.android.EasyTracker;
@@ -30,6 +35,8 @@ import com.squareup.otto.Subscribe;
  */
 public abstract class BaseActivity extends SherlockFragmentActivity {
    protected static final String LOADING = "LOADING_FRAGMENT";
+
+   private APIService mAPIService;
 
    /**
     * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
@@ -73,6 +80,19 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       }
    };
 
+   private ServiceConnection mConnection = new ServiceConnection() {
+      public void onServiceDisconnected(ComponentName name) {
+         mAPIService = null;
+      }
+
+      public void onServiceConnected(ComponentName name, IBinder service) {
+         APIService.LocalBinder mLocalBinder = (APIService.LocalBinder)service;
+         mAPIService = mLocalBinder.getAPIServiceInstance();
+
+         mAPIService.retryDeadEvents();
+      }
+   };
+
    @Override
    public void onCreate(Bundle savedState) {
       MainApplication app = MainApplication.get();
@@ -84,7 +104,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        * Set the current site's theme. Must be before onCreate because of
        * inflating views.
        */
-
       setTheme(app.getSiteTheme());
 
       if (site.isIfixit()) {
@@ -131,6 +150,9 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       if (MainApplication.inDebug()) {
          ViewServer.get(this).addWindow(this);
       }
+
+      Intent mIntent = new Intent(this, APIService.class);
+      bindService(mIntent, mConnection, BIND_AUTO_CREATE);
    }
 
    public void setTitle(String title) {
@@ -172,7 +194,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       EasyTracker.getInstance().activityStop(this);
    }
 
-
    @Override
    public void onRestart() {
       super.onRestart();
@@ -186,6 +207,17 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
 
+      /**
+       * This covers missed events caused by dialogs or other views causing the
+       * Activity's onPause method to be called which unregisters the Activity
+       * as well as returning to an already running Activity via the back button.
+       * If the service isn't connected yet then dead events will be retried in
+       * onServiceConnected.
+       */
+      if (mAPIService != null) {
+         mAPIService.retryDeadEvents();
+      }
+
       if (MainApplication.inDebug()) {
          ViewServer.get(this).setFocusedWindow(this);
       }
@@ -194,6 +226,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    @Override
    public void onDestroy() {
       super.onDestroy();
+
+      if (mAPIService != null) {
+         unbindService(mConnection);
+      }
 
       if (MainApplication.inDebug()) {
          ViewServer.get(this).removeWindow(this);

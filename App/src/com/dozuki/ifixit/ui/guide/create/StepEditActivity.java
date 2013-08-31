@@ -5,7 +5,6 @@ import android.app.AlertDialog;
 import android.content.*;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.IBinder;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.*;
 import android.support.v4.view.PagerAdapter;
@@ -47,6 +46,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
    private static final String TAG = "StepEditActivity";
+
    private enum ConfirmSave {
       NEW_STEP,
       NEXT_STEP
@@ -92,7 +92,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private boolean mIsStepDirty = false;
    private boolean mShowingHelp = false;
    private boolean mShowingSave = false;
-   private boolean mIsLoading;
+   private boolean mIsLoading = false;
 
    // Should a new step be created after a step POST response (creating a new step)
    private boolean mAddStepAfterSave = false;
@@ -104,29 +104,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    private static int mLoadingContainer = R.id.step_edit_loading_screen;
 
-   private APIService mAPIService;
-
-   private boolean mBounded;
    private SharedPreferences mSharedPreferences;
-
-
-   ServiceConnection mConnection = new ServiceConnection() {
-
-      public void onServiceDisconnected(ComponentName name) {
-         if (MainApplication.inDebug()) Toast.makeText(StepEditActivity.this, "Service is disconnected", 1000).show();
-         mBounded = false;
-         mAPIService = null;
-      }
-
-      public void onServiceConnected(ComponentName name, IBinder service) {
-         if (MainApplication.inDebug()) Toast.makeText(StepEditActivity.this, "Service is connected", 1000).show();
-         mBounded = true;
-         APIService.LocalBinder mLocalBinder = (APIService.LocalBinder)service;
-         mAPIService = mLocalBinder.getAPIServiceInstance();
-
-         mAPIService.retryDeadEvents();
-      }
-   };
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -360,19 +338,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Override
-   public void onStart() {
-      super.onStart();
-      Intent mIntent = new Intent(this, APIService.class);
-      bindService(mIntent, mConnection, BIND_AUTO_CREATE);
-   };
-
-   @Override
    public void onStop() {
       super.onStop();
-      if(mBounded) {
-         unbindService(mConnection);
-         mBounded = false;
-      }
    };
 
    @Override
@@ -682,8 +649,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             // Set guide dirty after the image is uploaded so the user can't
             // save the guide before we have the imageid.
             onGuideChanged(null);
-         } else {
-            mAPIService.retryDeadEvents();
          }
       } else {
          APIService.getErrorDialog(this, event).show();
