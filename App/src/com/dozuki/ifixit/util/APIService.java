@@ -68,7 +68,7 @@ public class APIService extends Service {
    /**
     * List of events that have been sent but not received by any subscribers.
     */
-   private List<DeadEvent> mDeadEvents;
+   private List<APIEvent<?>> mDeadApiEvents;
 
    public class LocalBinder extends Binder {
       public APIService getAPIServiceInstance() {
@@ -571,7 +571,7 @@ public class APIService extends Service {
    public void onCreate() {
       super.onCreate();
 
-      mDeadEvents = new LinkedList<DeadEvent>();
+      mDeadApiEvents = new LinkedList<APIEvent<?>>();
 
       MainApplication.getBus().register(this);
    }
@@ -582,37 +582,41 @@ public class APIService extends Service {
 
       MainApplication.getBus().unregister(this);
 
-      mDeadEvents = null;
+      mDeadApiEvents = null;
    }
 
    @Subscribe
    public void onDeadEvent(DeadEvent deadEvent) {
+      Object event = deadEvent.event;
+
       if (BuildConfig.DEBUG) {
-         Log.i("APIService", "onDeadEvent: " + deadEvent.object.class.getName());
+         Log.i("APIService", "onDeadEvent: " + event.getClass().getName());
       }
 
-      synchronized (mDeadEvents) {
-         mDeadEvents.add(deadEvent);
+      if (event instanceof APIEvent<?>) {
+         synchronized (mDeadApiEvents) {
+            mDeadApiEvents.add((APIEvent<?>)event);
+         }
       }
    }
 
    public void retryDeadEvents() {
       if (BuildConfig.DEBUG) {
-         Log.i("APIService", "Retrying " + mDeadEvents.size() + " dead events");
+         Log.i("APIService", "Retrying " + mDeadApiEvents.size() + " dead events");
       }
 
-      synchronized (mDeadEvents) {
-         if (mDeadEvents.isEmpty()) {
+      synchronized (mDeadApiEvents) {
+         if (mDeadApiEvents.isEmpty()) {
             return;
          }
 
-         List<DeadEvent> deadEvents = mDeadEvents;
-         mDeadEvents = new LinkedList<DeadEvent>();
+         List<APIEvent<?>> deadApiEvents = mDeadApiEvents;
+         mDeadApiEvents = new LinkedList<APIEvent<?>>();
 
          // Iterate over all the dead events, firing off each one.  If it fails,
          // it is recaught by the @Subscribe onDeadEvent, and added back to the list.
-         for (DeadEvent deadEvent : deadEvents) {
-            MainApplication.getBus().post(deadEvent.event);
+         for (APIEvent<?> apiEvent : deadApiEvents) {
+            MainApplication.getBus().post(apiEvent);
          }
       }
    }
