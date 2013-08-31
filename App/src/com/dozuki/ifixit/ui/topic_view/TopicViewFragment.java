@@ -122,17 +122,14 @@ public class TopicViewFragment extends BaseFragment {
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
-      if (getActivity() == null) {
-         return;
-      }
       ((BaseActivity)getActivity()).hideLoading();
 
-      if (mTopicLeaf != null && topicLeaf != null) {
-         if (mTopicLeaf.equals(topicLeaf)) {
-            selectDefaultTab();
-            return;
-         } else if (!topicLeaf.getName().equals(mTopicNode.getName())) {
+      if (topicLeaf != null) {
+         if (!topicLeaf.getName().equals(mTopicNode.getName())) {
             // Not the most recently selected topic... wait for another.
+            return;
+         } else if (mTopicLeaf != null && mTopicLeaf.equals(topicLeaf)) {
+            selectDefaultTab();
             return;
          }
       }
