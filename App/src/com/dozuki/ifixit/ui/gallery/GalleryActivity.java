@@ -10,7 +10,6 @@ import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -83,8 +82,6 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       TitlePageIndicator titleIndicator = (TitlePageIndicator) findViewById(R.id.gallery_view_top_bar);
       titleIndicator.setViewPager(pager);
       pager.setCurrentItem(1);
-
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
    }
 
    @Override

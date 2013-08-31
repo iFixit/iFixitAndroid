@@ -70,7 +70,7 @@ public class Image implements Serializable {
 
    public String getPath(String size) {
       if (size.length() != 0 && !size.startsWith(".")) {
-         size = size + ".";
+         size = "." + size;
       }
 
       return mPath + size;

@@ -9,5 +9,7 @@
         <item>.huge</item>
         <!-- Grid Images -->
         <item>.standard</item>
+        <!-- Action Bar Logo -->
+        <item>.thumbnail</item>
     </array>
 </resources>

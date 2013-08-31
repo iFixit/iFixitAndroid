@@ -51,7 +51,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      getSupportActionBar().setTitle(getString(R.string.my_guides));
+      setTitle(getString(R.string.my_guides));
 
       setContentView(R.layout.guide_create);
 

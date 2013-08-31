@@ -216,8 +216,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mAddStepButton.setOnClickListener(this);
       mDeleteStepButton.setOnClickListener(this);
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
       if (mIsLoading) {
          mPager.setVisibility(View.GONE);
       }
@@ -641,7 +639,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          mGuide.setAuthor(guide.getAuthor());
          mGuide.setPublic(false);
          mGuide.setTitle(guide.getTitle());
-         getSupportActionBar().setTitle(guide.getTitle());
+         setTitle(guide.getTitle());
          supportInvalidateOptionsMenu();
          save(mPagePosition);
       } else {

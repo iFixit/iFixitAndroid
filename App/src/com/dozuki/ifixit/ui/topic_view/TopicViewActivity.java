@@ -20,7 +20,6 @@ public class TopicViewActivity extends BaseMenuDrawerActivity {
       setContentView(R.layout.topic_view);
 
       showLoading(R.id.topic_view_fragment);
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       if (savedState == null) {
          mTopicView = new TopicViewFragment();
@@ -42,7 +41,7 @@ public class TopicViewActivity extends BaseMenuDrawerActivity {
       mTopicNode = (TopicNode)getIntent().getSerializableExtra(TOPIC_KEY);
 
       if (mTopicNode != null) {
-         getSupportActionBar().setTitle(mTopicNode.getName());
+         setTitle(mTopicNode.getName());
       }
    }
 

@@ -7,6 +7,12 @@
         <item name="doz__background">@color/white</item>
         <item name="doz__imageBorder">@color/image_border</item>
 
+        <!-- Action Bar Logo -->
+        <item name="logo">@android:color/transparent</item>
+        <item name="android:logo">@android:color/transparent</item>
+        <item name="icon">@android:color/transparent</item>
+        <item name="android:icon">@android:color/transparent</item>
+
         <!-- Holo Theme -->
         <item name="dividerHorizontal">?android:listDivider</item>
         <item name="dividerVertical">?android:listDivider</item>
@@ -28,9 +34,6 @@
     </style>
 
     <style name="Theme.iFixit" parent="Theme.Base">
-        <!-- Action Bar Logo -->
-        <item name="logo">@drawable/logo_ifixit</item>
-        <item name="android:logo">@drawable/logo_ifixit</item>
 
         <!-- Action Bar Sherlock overrides -->
         <item name="actionBarTabTextStyle">@style/Widget.iFixit.ActionBar.TabText</item>
@@ -47,10 +50,6 @@
     </style>
 
     <style name="Theme.Dozuki" parent="Theme.Base">
-
-        <!-- Action Bar Logo -->
-        <item name="logo">@drawable/logo_dozuki</item>
-        <item name="android:logo">@drawable/logo_dozuki</item>
 
         <!-- Action Bar Sherlock overrides -->
         <item name="homeAsUpIndicator">@drawable/abs__ic_ab_back_holo_dark</item>

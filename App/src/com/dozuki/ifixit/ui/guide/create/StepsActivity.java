@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
-import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -34,9 +33,6 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
       int guideid = 0;
 
       super.onCreate(savedInstanceState);
-
-      ActionBar actionBar = getSupportActionBar();
-      actionBar.setDisplayHomeAsUpEnabled(true);
 
       if (savedInstanceState != null) {
          // to persist mGuide

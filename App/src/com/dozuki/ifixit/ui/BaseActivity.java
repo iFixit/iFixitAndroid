@@ -1,15 +1,22 @@
 package com.dozuki.ifixit.ui;
 
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
+import android.support.v4.app.FragmentManager;
+import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
+import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIEvent;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.squareup.otto.Subscribe;
@@ -68,13 +75,47 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
+      MainApplication app = MainApplication.get();
+      Site site = app.getSite();
+      ActionBar ab = getSupportActionBar();
+      ab.setDisplayHomeAsUpEnabled(true);
+
       /**
        * Set the current site's theme. Must be before onCreate because of
        * inflating views.
        */
 
-      setTheme(MainApplication.get().getSiteTheme());
-      setTitle("");
+      setTheme(app.getSiteTheme());
+
+      if (site.isIfixit()) {
+         ab.setLogo(R.drawable.logo_ifixit);
+         ab.setDisplayUseLogoEnabled(true);
+      } else {
+         ab.setDisplayUseLogoEnabled(false);
+         ab.setDisplayShowTitleEnabled(false);
+         ab.setDisplayShowCustomEnabled(true);
+         ab.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
+
+         View v = getLayoutInflater().inflate(R.layout.menu_title, null);
+
+         ImageView customLogo = (ImageView) v.findViewById(R.id.custom_logo);
+         TextView siteTitle = (TextView) v.findViewById(R.id.custom_site_title);
+
+         if (site.mLogo != null) {
+            PicassoUtils.with(this)
+             .load(site.mLogo.getPath(app.getImageSizes().getLogo()))
+             .error(R.drawable.logo_dozuki)
+             .into(customLogo);
+            customLogo.setVisibility(View.VISIBLE);
+            siteTitle.setVisibility(View.GONE);
+         } else {
+            siteTitle.setText(site.mTitle);
+            siteTitle.setVisibility(View.VISIBLE);
+            customLogo.setVisibility(View.GONE);
+         }
+
+         ab.setCustomView(v);
+      }
 
       super.onCreate(savedState);
 
@@ -87,10 +128,17 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
 
-      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
       if (MainApplication.inDebug()) {
          ViewServer.get(this).addWindow(this);
+      }
+   }
+
+   public void setTitle(String title) {
+      if (MainApplication.get().getSite().isIfixit()) {
+         getSupportActionBar().setTitle(title);
+      } else {
+         TextView titleView = ((TextView) getSupportActionBar().getCustomView().findViewById(R.id.custom_page_title));
+         titleView.setText(title);
       }
    }
 
@@ -138,16 +186,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(loginEventListener);
 
-      if (MainApplication.inDebug())
+      if (MainApplication.inDebug()) {
          ViewServer.get(this).setFocusedWindow(this);
+      }
    }
 
    @Override
    public void onDestroy() {
       super.onDestroy();
 
-      if (MainApplication.inDebug())
+      if (MainApplication.inDebug()) {
          ViewServer.get(this).removeWindow(this);
+      }
    }
 
    @Override

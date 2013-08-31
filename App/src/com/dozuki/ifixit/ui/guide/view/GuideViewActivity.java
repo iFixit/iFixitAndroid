@@ -270,7 +270,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mGuide = guide;
 
       String guideTitle = mGuide.getTitle();
-      getSupportActionBar().setTitle(guideTitle);
+      setTitle(guideTitle);
       EasyTracker.getTracker().sendView(guideTitle + " View");
 
       mAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide);

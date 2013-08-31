@@ -205,6 +205,7 @@ public class MainApplication extends Application {
       if (mImageSizes == null) {
          TypedArray imageSizes = getResources().obtainTypedArray(R.array.image_sizes);
          mImageSizes = new ImageSizes(
+          imageSizes.getString(4),
           imageSizes.getString(0),
           imageSizes.getString(1),
           imageSizes.getString(2),

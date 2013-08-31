@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -64,20 +65,13 @@ public class SiteListDialogFragment extends BaseDialogFragment {
 
    private void initDialog() {
       if (mSiteList == null) {
-         mSiteListView.setVisibility(View.GONE);
-         mSiteListView.getEmptyView().setVisibility(View.GONE);
-         mSearchView.setVisibility(View.GONE);
-         mLoadingIndicator.setVisibility(View.VISIBLE);
-
+         showLoading();
          return;
       }
 
       initializeAdapter();
 
-      mSiteListView.setVisibility(View.VISIBLE);
-      mSiteListView.getEmptyView().setVisibility(View.VISIBLE);
-      mSearchView.setVisibility(View.VISIBLE);
-      mLoadingIndicator.setVisibility(View.GONE);
+      hideLoading();
 
       SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 
@@ -96,9 +90,24 @@ public class SiteListDialogFragment extends BaseDialogFragment {
       searchMag.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_dark));
    }
 
+   public void showLoading() {
+      mSiteListView.setVisibility(View.GONE);
+      mSiteListView.getEmptyView().setVisibility(View.GONE);
+      mSearchView.setVisibility(View.GONE);
+      mLoadingIndicator.setVisibility(View.VISIBLE);
+   }
+
+   public void hideLoading() {
+      mSiteListView.setVisibility(View.VISIBLE);
+      mSiteListView.getEmptyView().setVisibility(View.VISIBLE);
+      mSearchView.setVisibility(View.VISIBLE);
+      mLoadingIndicator.setVisibility(View.GONE);
+   }
+
    @Override
    public void onResume() {
       super.onResume();
+      MainApplication.getBus().register(this);
 
       getDialog().setOnKeyListener(new OnKeyListener() {
           public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -121,7 +130,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
    public void onPause() {
       super.onPause();
 
-      MainApplication.getBus().register(this);
+      MainApplication.getBus().unregister(this);
    }
 
    @Subscribe
@@ -133,6 +142,8 @@ public class SiteListDialogFragment extends BaseDialogFragment {
       } else {
          Log.e("BaseMenuDrawerActivity", "Error loading site info");
       }
+
+      hideLoading();
    }
 
    @Override
@@ -162,6 +173,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
          @Override
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
+            showLoading();
             MainApplication.get().setSite(siteListAdapter.getSiteList().get(position));
             APIService.call(getActivity(), APIService.getSiteInfoAPICall());
          }

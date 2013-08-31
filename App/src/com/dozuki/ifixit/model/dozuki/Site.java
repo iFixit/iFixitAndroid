@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.model.dozuki;
 
 import android.content.res.Resources;
+import android.graphics.drawable.Drawable;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -223,5 +224,9 @@ public class Site implements Serializable {
 
    public boolean isDozuki() {
       return mName.equals("dozuki");
+   }
+
+   public Drawable getLogo() {
+      return null;
    }
 }
