@@ -90,8 +90,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       public void onServiceConnected(ComponentName name, IBinder service) {
          APIService.LocalBinder mLocalBinder = (APIService.LocalBinder)service;
          mAPIService = mLocalBinder.getAPIServiceInstance();
-
-         mAPIService.retryDeadEvents();
       }
    };
 
@@ -243,7 +241,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        * onServiceConnected.
        */
       if (mAPIService != null) {
-         mAPIService.retryDeadEvents();
+         mAPIService.retryDeadEvents(this);
       }
 
       if (MainApplication.inDebug()) {

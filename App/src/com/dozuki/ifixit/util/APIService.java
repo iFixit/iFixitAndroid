@@ -27,6 +27,7 @@ import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
@@ -97,6 +98,7 @@ public class APIService extends Service {
     */
    public static void call(Activity activity, APICall apiCall) {
       APIEndpoint endpoint = apiCall.mEndpoint;
+      apiCall.mActivityid = ((BaseActivity)activity).getActivityid();
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(endpoint) && !MainApplication.get().isUserLoggedIn()) {
@@ -600,11 +602,7 @@ public class APIService extends Service {
       }
    }
 
-   public void retryDeadEvents() {
-      if (BuildConfig.DEBUG) {
-         Log.i("APIService", "Retrying " + mDeadApiEvents.size() + " dead events");
-      }
-
+   public void retryDeadEvents(BaseActivity activity) {
       synchronized (mDeadApiEvents) {
          if (mDeadApiEvents.isEmpty()) {
             return;
@@ -612,11 +610,31 @@ public class APIService extends Service {
 
          List<APIEvent<?>> deadApiEvents = mDeadApiEvents;
          mDeadApiEvents = new LinkedList<APIEvent<?>>();
+         int activityid = activity.getActivityid();
+
+         if (activityid == -1) {
+            Log.w("APIService", "Invalid activityid!");
+         }
 
          // Iterate over all the dead events, firing off each one.  If it fails,
          // it is recaught by the @Subscribe onDeadEvent, and added back to the list.
          for (APIEvent<?> apiEvent : deadApiEvents) {
-            MainApplication.getBus().post(apiEvent);
+            // Fire the event If the activityids match, otherwise add it back
+            // to the list of dead events so we can try it again later.
+            if (activityid == apiEvent.mApiCall.mActivityid) {
+               if (BuildConfig.DEBUG) {
+                  Log.i("APIService", "Retrying dead event: " +
+                   apiEvent.getClass().getName());
+               }
+
+               MainApplication.getBus().post(apiEvent);
+            } else {
+               mDeadApiEvents.add(apiEvent);
+            }
+         }
+
+         if (BuildConfig.DEBUG && mDeadApiEvents.size() > 0) {
+            Log.i("APIService", "Skipped " + mDeadApiEvents.size() + " dead events");
          }
       }
    }
