@@ -223,7 +223,10 @@ public class APIService extends Service {
             event.mCode = code;
             event.mApiCall = result.mApiCall;
             event.mResponse = result.mResponse;
-         } catch (JSONException e) {
+         } catch (Exception e) {
+            // This is meant to catch JSON and GSON parse exceptions but enumerating
+            // all different types of Exceptions and putting error handling code
+            // in one place is tedious.
             Log.e("APIService", "API parse error", e);
             result.setError(new APIError(APIError.Type.PARSE));
 
