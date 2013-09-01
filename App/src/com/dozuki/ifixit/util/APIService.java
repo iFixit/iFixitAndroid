@@ -186,9 +186,10 @@ public class APIService extends Service {
 
             /**
              * Always post the result despite any errors. This actually sends it off
-             * to Activities etc. that care about API calls.
+             * to BaseActivity which posts the underlying APIEvent<?> if the APICall
+             * was initiated by that Activity instance.
              */
-            MainApplication.getBus().post(result);
+            MainApplication.getBus().post(new APIEvent.ActivityProxy(result));
          }
       });
 
@@ -199,7 +200,6 @@ public class APIService extends Service {
     * Parse the response in the given result with the given requestTarget.
     */
    private APIEvent<?> parseResult(APIEvent<?> result, APIEndpoint endpoint) {
-
       APIEvent<?> event;
 
       int code = result.mCode;
@@ -596,9 +596,15 @@ public class APIService extends Service {
       }
 
       if (event instanceof APIEvent<?>) {
-         synchronized (mDeadApiEvents) {
-            mDeadApiEvents.add((APIEvent<?>)event);
-         }
+         addDeadApiEvent((APIEvent<?>)event);
+      } else if (event instanceof APIEvent.ActivityProxy) {
+         addDeadApiEvent(((APIEvent.ActivityProxy)event).getApiEvent());
+      }
+   }
+
+   private void addDeadApiEvent(APIEvent<?> apiEvent) {
+      synchronized (mDeadApiEvents) {
+         mDeadApiEvents.add(apiEvent);
       }
    }
 
