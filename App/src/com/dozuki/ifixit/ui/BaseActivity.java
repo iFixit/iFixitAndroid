@@ -35,8 +35,10 @@ import com.squareup.otto.Subscribe;
  */
 public abstract class BaseActivity extends SherlockFragmentActivity {
    protected static final String LOADING = "LOADING_FRAGMENT";
+   private static final String ACTIVITY_ID = "ACTIVITY_ID";
 
    private APIService mAPIService;
+   private int mActivityid;
 
    /**
     * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
@@ -95,6 +97,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
+      if (savedState != null) {
+         mActivityid = savedState.getInt(ACTIVITY_ID);
+      } else {
+         mActivityid = generateActivityid();
+      }
+
       MainApplication app = MainApplication.get();
       Site site = app.getSite();
       ActionBar ab = getSupportActionBar();
@@ -155,13 +163,33 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       bindService(mIntent, mConnection, BIND_AUTO_CREATE);
    }
 
+   /**
+    * Returns a unique integer for use as an activity id.
+    */
+   private static int sActivityIdCounter = 0;
+   private int generateActivityid() {
+      return sActivityIdCounter++;
+   }
+
+   public int getActivityid() {
+      return mActivityid;
+   }
+
    public void setTitle(String title) {
       if (MainApplication.get().getSite().isIfixit()) {
          getSupportActionBar().setTitle(title);
       } else {
-         TextView titleView = ((TextView) getSupportActionBar().getCustomView().findViewById(R.id.custom_page_title));
+         TextView titleView = ((TextView)getSupportActionBar().getCustomView().
+          findViewById(R.id.custom_page_title));
          titleView.setText(title);
       }
+   }
+
+   @Override
+   protected void onSaveInstanceState(Bundle outState) {
+      super.onSaveInstanceState(outState);
+
+      outState.putInt(ACTIVITY_ID, mActivityid);
    }
 
    /**
