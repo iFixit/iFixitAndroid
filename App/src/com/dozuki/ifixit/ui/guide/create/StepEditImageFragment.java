@@ -130,11 +130,7 @@ public class StepEditImageFragment extends BaseFragment {
                          EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_gallery", null);
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
-                         ArrayList<Integer> attachedMediaIds = new ArrayList<Integer>();
-                         for (Image image : mImages) {
-                            attachedMediaIds.add(image.getId());
-                         }
-                         intent.putIntegerArrayListExtra(GalleryActivity.ATTACHED_MEDIA_IDS, attachedMediaIds);
+                         intent.putExtra(GalleryActivity.ATTACHED_MEDIA_IDS, mImages);
                          mContext.startActivityForResult(intent, StepEditActivity.GALLERY_REQUEST_CODE);
                          break;
                    }

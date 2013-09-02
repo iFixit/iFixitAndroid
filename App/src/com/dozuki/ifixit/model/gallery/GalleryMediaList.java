@@ -113,15 +113,16 @@ public class GalleryMediaList implements Serializable {
       return count;
    }
 
-   public void removeImagesWithIds(ArrayList<Integer> alreadyAttachedImages) {
-      int numImages = mImages.size();
+   public void removeImagesWithIds(ArrayList<Image> alreadyAttachedImages) {
+      ArrayList<GalleryImage> toRemove = new ArrayList<GalleryImage>();
 
-      for (int i = 0; i < numImages; i++) {
-         if (alreadyAttachedImages.contains(mImages.get(i).getId())) {
-            mImages.remove(i);
-            numImages--;
+      for (GalleryImage image : mImages) {
+         if (alreadyAttachedImages.contains(image)) {
+            toRemove.add(image);
          }
       }
+
+      mImages.removeAll(toRemove);
    }
 
    private boolean isInvalid(UserImage image) {

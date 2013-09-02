@@ -15,19 +15,15 @@ import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.AdapterView;
+import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import android.widget.BaseAdapter;
-import android.widget.GridView;
-import android.widget.TextView;
-import android.widget.Toast;
-
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
 import com.dozuki.ifixit.model.gallery.GalleryMediaList;
 import com.dozuki.ifixit.model.user.User;
@@ -58,7 +54,7 @@ public abstract class MediaFragment extends BaseFragment
    protected MediaAdapter mGalleryAdapter;
    protected GalleryMediaList mMediaList;
    protected boolean mNextPageRequestInProgress;
-   protected ArrayList<Integer> mAlreadyAttachedImages;
+   protected ArrayList<Image> mAlreadyAttachedImages;
    private GridView mGridView;
    private String mUserName;
    private ImageSizes mImageSizes;
@@ -251,8 +247,8 @@ public abstract class MediaFragment extends BaseFragment
       mSelectForReturn = returnItem;
    }
 
-   public void setAlreadyAttachedImages(ArrayList<Integer> imageids) {
-      mAlreadyAttachedImages = new ArrayList<Integer>(imageids);
+   public void setAlreadyAttachedImages(ArrayList<Image> images) {
+      mAlreadyAttachedImages = new ArrayList<Image>(images);
    }
 
    protected void setEmptyListView() {

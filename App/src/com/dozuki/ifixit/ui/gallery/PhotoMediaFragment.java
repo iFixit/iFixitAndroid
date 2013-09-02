@@ -1,9 +1,6 @@
 package com.dozuki.ifixit.ui.gallery;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
+import android.util.Log;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -32,6 +29,7 @@ public class PhotoMediaFragment extends MediaFragment {
       if (!event.hasError()) {
          ArrayList<UserImage> imageList = new ArrayList<UserImage>(event.getResult());
          if (imageList.size() > 0) {
+
             mMediaList.setItems(imageList);
             if (mAlreadyAttachedImages != null) {
                mMediaList.removeImagesWithIds(mAlreadyAttachedImages);

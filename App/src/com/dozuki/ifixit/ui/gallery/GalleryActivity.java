@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.util.Utils;
@@ -67,7 +68,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       if (bundle != null) {
          int returnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
-         ArrayList<Integer> alreadyAttachedImages = bundle.getIntegerArrayList(ATTACHED_MEDIA_IDS);
+         ArrayList<Image> alreadyAttachedImages = (ArrayList<Image>)bundle.getSerializable(ATTACHED_MEDIA_IDS);
          mCurrentMediaFragment.setAlreadyAttachedImages(alreadyAttachedImages);
          if (returnValue != -1) {
             getMediaItemForReturn = true;
