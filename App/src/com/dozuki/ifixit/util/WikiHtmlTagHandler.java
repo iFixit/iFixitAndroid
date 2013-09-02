@@ -11,7 +11,7 @@ import org.xml.sax.XMLReader;
 public class WikiHtmlTagHandler implements Html.TagHandler {
 
    private static final String LIST_INDENT = "    ";
-   private static final String BULLET = "•";
+   private static final String BULLET = "\\u2022";
    private static final String NEWLINE = "\n";
 
    private int level = 0;
@@ -54,7 +54,7 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
                where += NEWLINE.length(); // so the margin and bullet are inserted after the newline
             }
 
-            output.insert(where, Utils.repeat(LIST_INDENT, level) + BULLET + " ");
+            output.insert(where, Utils.repeat(LIST_INDENT, level) + unescapeUnicode(BULLET) + "  ");
          }
       }
    }
@@ -88,6 +88,10 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
          }
          return null;
       }
+   }
+
+   private char unescapeUnicode(String unicode) {
+      return (char) Integer.parseInt( unicode.substring(2), 16 );
    }
 }
 
