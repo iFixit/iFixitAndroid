@@ -1112,12 +1112,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public void showLoading(int container) {
-      if (mPager != null) {
-         mPager.setVisibility(View.GONE);
-      }
-      mIsLoading = true;
-
-      super.showLoading(container);
+      this.showLoading(container, getString(R.string.loading));
    }
 
    @Override
@@ -1135,8 +1130,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       if (mPager != null) {
          mPager.setVisibility(View.VISIBLE);
       }
-      getSupportFragmentManager().popBackStack(LOADING, FragmentManager.POP_BACK_STACK_INCLUSIVE);
       mIsLoading = false;
+
+      super.hideLoading();
    }
 
    protected void navigateToStepView() {
