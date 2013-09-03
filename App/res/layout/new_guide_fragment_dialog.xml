@@ -13,15 +13,6 @@
          android:layout_width="match_parent"
          android:layout_height="wrap_content">
 
-         <TextView
-             style="@style/Base.FormLabel"
-             android:text="@string/guide_type"/>
-
-         <Spinner
-             android:id="@+id/guide_types_spinner"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             style="@style/Base.FormField"/>
 
          <TextView
              style="@style/Base.FormLabel"
@@ -36,7 +27,17 @@
              android:inputType="text|textCapWords"
              android:singleLine="true"
              android:textColor="@color/black"
-             android:imeOptions="actionNext"
+             android:imeOptions="actionDone"
+             style="@style/Base.FormField"/>
+
+         <TextView
+             style="@style/Base.FormLabel"
+             android:text="@string/guide_type"/>
+
+         <Spinner
+             android:id="@+id/guide_types_spinner"
+             android:layout_width="match_parent"
+             android:layout_height="wrap_content"
              style="@style/Base.FormField"/>
 
          <TextView
