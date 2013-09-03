@@ -599,6 +599,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Subscribe
    public void onGuideCreated(APIEvent.CreateGuide event) {
+      hideLoading();
+
       if (!event.hasError()) {
          mPagePosition = 0;
 
