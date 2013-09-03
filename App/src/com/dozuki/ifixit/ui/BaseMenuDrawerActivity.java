@@ -117,7 +117,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       //items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
 
-      if (!onIfixit) items.add(new Item("Back to Site List", R.drawable.ic_action_list, "site_list"));
+      if (!onIfixit) items.add(new Item(getString(R.string.back_to_site_list), R.drawable.ic_action_list, "site_list"));
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_browse_devices, MainApplication.get().getSite()
@@ -231,7 +231,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       switch (Navigation.navigate(tag)) {
          case SITE_LIST:
             try {
-               intent = new Intent(context, Class.forName("SiteListActivity"));
+               intent = new Intent(context, Class.forName("com.dozuki.ifixit.ui.dozuki.SiteListActivity"));
                intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
                startActivity(intent);
                finish();
