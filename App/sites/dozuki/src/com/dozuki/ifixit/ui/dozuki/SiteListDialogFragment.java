@@ -78,14 +78,14 @@ public class SiteListDialogFragment extends BaseDialogFragment {
       mSearchView.setOnQueryTextListener((SiteListActivity)getActivity());
       mSearchView.setIconifiedByDefault(false);
 
-      View searchPlate = mSearchView.findViewById(R.id.abs__search_plate);
-      searchPlate.setBackgroundResource(R.drawable.textfield_search_view_holo_light);
+      mSearchView.findViewById(R.id.abs__search_plate)
+       .setBackgroundResource(R.drawable.textfield_search_view_holo_light);
 
-      ImageView searchExit = (ImageView)mSearchView.findViewById(R.id.abs__search_close_btn);
-      searchExit.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_exit));
+      ((ImageView)mSearchView.findViewById(R.id.abs__search_close_btn))
+       .setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_exit));
 
-      ImageView searchMag = (ImageView)mSearchView.findViewById(R.id.abs__search_mag_icon);
-      searchMag.setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_dark));
+      ((ImageView)mSearchView.findViewById(R.id.abs__search_mag_icon))
+       .setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_dark));
    }
 
    public void showLoading() {
@@ -111,19 +111,19 @@ public class SiteListDialogFragment extends BaseDialogFragment {
       }
 
       getDialog().setOnKeyListener(new OnKeyListener() {
-          public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
-              if (keyCode == KeyEvent.KEYCODE_SEARCH) {
-                  /**
-                   * Phones with a hardware search button open up the SearchDialog by
-                   * default. This overrides that by setting focus on the SearchView.
-                   * Unfortunately it does not open the soft keyboard as of now.
-                   */
-                  mSearchView.requestFocus();
-                  return true;
-              } else {
-                  return false;
-              }
-          }
+         public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
+            if (keyCode == KeyEvent.KEYCODE_SEARCH) {
+               /**
+                * Phones with a hardware search button open up the SearchDialog by
+                * default. This overrides that by setting focus on the SearchView.
+                * Unfortunately it does not open the soft keyboard as of now.
+                */
+               mSearchView.requestFocus();
+               return true;
+            } else {
+               return false;
+            }
+         }
       });
    }
 
