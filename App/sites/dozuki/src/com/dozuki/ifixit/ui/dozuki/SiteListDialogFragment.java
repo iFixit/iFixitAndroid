@@ -15,11 +15,11 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import com.actionbarsherlock.app.SherlockDialogFragment;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -107,7 +107,6 @@ public class SiteListDialogFragment extends BaseDialogFragment {
    @Override
    public void onResume() {
       super.onResume();
-      MainApplication.getBus().register(this);
 
       getDialog().setOnKeyListener(new OnKeyListener() {
           public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
@@ -124,13 +123,6 @@ public class SiteListDialogFragment extends BaseDialogFragment {
               }
           }
       });
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      MainApplication.getBus().unregister(this);
    }
 
    @Subscribe
