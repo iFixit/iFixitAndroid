@@ -246,6 +246,15 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       MainApplication.getBus().register(this);
       MainApplication.getBus().register(mBaseActivityListener);
 
+      if (MainApplication.inDebug()) {
+         ViewServer.get(this).setFocusedWindow(this);
+      }
+   }
+
+   @Override
+   protected void onPostResume() {
+      super.onPostResume();
+
       /**
        * This covers missed events caused by dialogs or other views causing the
        * Activity's onPause method to be called which unregisters the Activity
@@ -255,10 +264,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        */
       if (mAPIService != null) {
          mAPIService.retryDeadEvents(this);
-      }
-
-      if (MainApplication.inDebug()) {
-         ViewServer.get(this).setFocusedWindow(this);
       }
    }
 
