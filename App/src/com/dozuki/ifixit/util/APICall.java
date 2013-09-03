@@ -14,6 +14,7 @@ public class APICall implements Serializable {
    protected String mExtraInfo;
    protected String mFilePath;
    protected String mAuthToken;
+   protected int mActivityid = -1;
 
    public APICall(APIEndpoint endpoint, String query) {
       this(endpoint, query, null);

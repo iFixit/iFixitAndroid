@@ -18,10 +18,30 @@ import java.util.ArrayList;
  * Base class for API events that are posted to the otto bus.
  */
 public abstract class APIEvent<T> {
+   /**
+    * Proxy for APIEvents. APIService posts these to the bus, BaseActivity
+    * listens for them and posts the underlying APIEvent to the bus if the
+    * activityids match.
+    */
+   public static class ActivityProxy {
+      protected APIEvent<?> mApiEvent;
+
+      public ActivityProxy(APIEvent<?> apiEvent) {
+         mApiEvent = apiEvent;
+      }
+
+      public APIEvent<?> getApiEvent() {
+         return mApiEvent;
+      }
+
+      public int getActivityid() {
+         return mApiEvent.mApiCall.mActivityid;
+      }
+   }
+
    public static class Unauthorized extends APIEvent<String> {}
 
    public static class Categories extends APIEvent<TopicNode> {}
-
    public static class Topic extends APIEvent<TopicLeaf> {}
    public static class TopicList extends APIEvent<ArrayList<String>> {}
 

@@ -9,7 +9,6 @@ import android.content.DialogInterface.OnCancelListener;
 import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.os.*;
 import android.os.AsyncTask;
 import android.os.Binder;
 import android.os.Build;
@@ -28,6 +27,7 @@ import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
 import com.dozuki.ifixit.model.guide.wizard.Page;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
@@ -38,7 +38,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.*;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * Service used to perform asynchronous API requests and broadcast results.
@@ -47,9 +49,6 @@ import java.util.*;
  * Add functionality to download multiple guides including images.
  */
 public class APIService extends Service {
-   private boolean mUrlStreamFactorySet = false;
-   private boolean mConnectionFactorySet = false;
-
    private interface Responder {
       public void setResult(APIEvent<?> result);
    }
@@ -67,7 +66,10 @@ public class APIService extends Service {
     */
    private static APICall sPendingApiCall;
 
-   private List<DeadEvent> mDeadEvents;
+   /**
+    * List of events that have been sent but not received by any subscribers.
+    */
+   private List<APIEvent<?>> mDeadApiEvents;
 
    public class LocalBinder extends Binder {
       public APIService getAPIServiceInstance() {
@@ -96,6 +98,7 @@ public class APIService extends Service {
     */
    public static void call(Activity activity, APICall apiCall) {
       APIEndpoint endpoint = apiCall.mEndpoint;
+      apiCall.mActivityid = ((BaseActivity)activity).getActivityid();
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(endpoint) && !MainApplication.get().isUserLoggedIn()) {
@@ -183,9 +186,10 @@ public class APIService extends Service {
 
             /**
              * Always post the result despite any errors. This actually sends it off
-             * to Activities etc. that care about API calls.
+             * to BaseActivity which posts the underlying APIEvent<?> if the APICall
+             * was initiated by that Activity instance.
              */
-            MainApplication.getBus().post(result);
+            MainApplication.getBus().post(new APIEvent.ActivityProxy(result));
          }
       });
 
@@ -196,7 +200,6 @@ public class APIService extends Service {
     * Parse the response in the given result with the given requestTarget.
     */
    private APIEvent<?> parseResult(APIEvent<?> result, APIEndpoint endpoint) {
-
       APIEvent<?> event;
 
       int code = result.mCode;
@@ -220,7 +223,10 @@ public class APIService extends Service {
             event.mCode = code;
             event.mApiCall = result.mApiCall;
             event.mResponse = result.mResponse;
-         } catch (JSONException e) {
+         } catch (Exception e) {
+            // This is meant to catch JSON and GSON parse exceptions but enumerating
+            // all different types of Exceptions and putting error handling code
+            // in one place is tedious.
             Log.e("APIService", "API parse error", e);
             result.setError(new APIError(APIError.Type.PARSE));
 
@@ -569,7 +575,8 @@ public class APIService extends Service {
    @Override
    public void onCreate() {
       super.onCreate();
-      mDeadEvents = Collections.synchronizedList(new ArrayList<DeadEvent>());
+
+      mDeadApiEvents = new LinkedList<APIEvent<?>>();
 
       MainApplication.getBus().register(this);
    }
@@ -578,37 +585,65 @@ public class APIService extends Service {
    public void onDestroy() {
       super.onDestroy();
 
-      mDeadEvents = null;
-
       MainApplication.getBus().unregister(this);
+
+      mDeadApiEvents = null;
    }
 
    @Subscribe
-   public void onDeadEvent(DeadEvent event) {
-      synchronized (mDeadEvents) {
-         if (!mDeadEvents.contains(event)) {
-            mDeadEvents.add(event);
-         }
+   public void onDeadEvent(DeadEvent deadEvent) {
+      Object event = deadEvent.event;
+
+      if (BuildConfig.DEBUG) {
+         Log.i("APIService", "onDeadEvent: " + event.getClass().getName());
+      }
+
+      if (event instanceof APIEvent<?>) {
+         addDeadApiEvent((APIEvent<?>)event);
+      } else if (event instanceof APIEvent.ActivityProxy) {
+         addDeadApiEvent(((APIEvent.ActivityProxy)event).getApiEvent());
       }
    }
 
-   public void retryDeadEvents() {
-      synchronized (mDeadEvents) {
-         if (mDeadEvents.isEmpty()) {
+   private void addDeadApiEvent(APIEvent<?> apiEvent) {
+      synchronized (mDeadApiEvents) {
+         mDeadApiEvents.add(apiEvent);
+      }
+   }
+
+   public void retryDeadEvents(BaseActivity activity) {
+      synchronized (mDeadApiEvents) {
+         if (mDeadApiEvents.isEmpty()) {
             return;
          }
 
-         List<DeadEvent> iterable = Collections.synchronizedList(mDeadEvents);
-         mDeadEvents = Collections.synchronizedList(new ArrayList<DeadEvent>());
+         List<APIEvent<?>> deadApiEvents = mDeadApiEvents;
+         mDeadApiEvents = new LinkedList<APIEvent<?>>();
+         int activityid = activity.getActivityid();
 
-         Iterator<DeadEvent> it = iterable.iterator();
+         if (activityid == -1) {
+            Log.w("APIService", "Invalid activityid!");
+         }
 
-         // Iterate over all the dead events, firing off each one.  If it fails, it is recaught by the @Subscribe
-         // onDeadEvent, and added back to the list.
-         while (it.hasNext()) {
-            DeadEvent dead = it.next();
-            it.remove();
-            MainApplication.getBus().post(dead.event);
+         // Iterate over all the dead events, firing off each one.  If it fails,
+         // it is recaught by the @Subscribe onDeadEvent, and added back to the list.
+         for (APIEvent<?> apiEvent : deadApiEvents) {
+            // Fire the event If the activityids match, otherwise add it back
+            // to the list of dead events so we can try it again later.
+            if (activityid == apiEvent.mApiCall.mActivityid) {
+               if (BuildConfig.DEBUG) {
+                  Log.i("APIService", "Retrying dead event: " +
+                   apiEvent.getClass().getName());
+               }
+
+               MainApplication.getBus().post(apiEvent);
+            } else {
+               mDeadApiEvents.add(apiEvent);
+            }
+         }
+
+         if (BuildConfig.DEBUG && mDeadApiEvents.size() > 0) {
+            Log.i("APIService", "Skipped " + mDeadApiEvents.size() + " dead events");
          }
       }
    }
