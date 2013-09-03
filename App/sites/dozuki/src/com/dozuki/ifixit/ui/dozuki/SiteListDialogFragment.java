@@ -19,6 +19,7 @@ import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEvent;
@@ -71,8 +72,6 @@ public class SiteListDialogFragment extends BaseDialogFragment {
 
       initializeAdapter();
 
-      hideLoading();
-
       SearchManager searchManager = (SearchManager)getActivity().getSystemService(Context.SEARCH_SERVICE);
 
       mSearchView.setSearchableInfo(searchManager.getSearchableInfo(
@@ -108,6 +107,10 @@ public class SiteListDialogFragment extends BaseDialogFragment {
    public void onResume() {
       super.onResume();
 
+      if (mSiteList != null && mSiteListView.getVisibility() == View.GONE) {
+         hideLoading();
+      }
+
       getDialog().setOnKeyListener(new OnKeyListener() {
           public boolean onKey(DialogInterface dialog, int keyCode, KeyEvent event) {
               if (keyCode == KeyEvent.KEYCODE_SEARCH) {
@@ -132,8 +135,14 @@ public class SiteListDialogFragment extends BaseDialogFragment {
          Intent intent = new Intent(getActivity(), TopicActivity.class);
          startActivity(intent);
       } else {
-         Log.e("BaseMenuDrawerActivity", "Error loading site info");
+         hideLoading();
+         Log.e("SiteListDialogFragment", "Error loading site info");
       }
+   }
+
+   @Subscribe
+   public void onCancelLogin(LoginEvent.Cancel event) {
+      hideLoading();
    }
 
    @Override
