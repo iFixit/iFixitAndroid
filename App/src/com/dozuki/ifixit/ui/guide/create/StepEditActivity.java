@@ -82,7 +82,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private int mPagePosition = 0;
    private int mSavePosition;
 
-   // Necessary for editing prerequisite guides from the view interface in order to navigate back to the parent guide.
+   /**
+    * Necessary for editing prerequisite guides from the view interface in order
+    * to navigate back to the parent guide.
+    */
    private int mParentGuideId = NO_PARENT_GUIDE;
 
    // Used to navigate to the correct step when coming from GuideViewActivity.

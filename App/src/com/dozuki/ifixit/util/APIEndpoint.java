@@ -721,11 +721,8 @@ public enum APIEndpoint {
       }
 
       protocol = "https";
-      url = String.format("%s://%s/api/%s/%s", protocol, domain, API_VERSION, mEndpoint.createUrl(query));
-
-      if (MainApplication.inDebug()) {
-         Log.d("APIEndpoint", "API Request URL: " + url);
-      }
+      url = String.format("%s://%s/api/%s/%s", protocol, domain, API_VERSION,
+       mEndpoint.createUrl(query));
 
       return url;
    }

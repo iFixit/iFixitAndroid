@@ -71,7 +71,6 @@ public class JSONHelper {
       JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
       site.mGuideTypes = new ArrayList<GuideType>();
 
-      Log.d("JSONHelper", siteInfoObject.getString("object-name-plural"));
       site.mObjectNamePlural = siteInfoObject.getString("object-name-plural");
       site.mObjectNameSingular = siteInfoObject.getString("object-name-singular");
 

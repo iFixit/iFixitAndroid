@@ -6,7 +6,6 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -136,7 +135,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
          startActivity(intent);
       } else {
          hideLoading();
-         Log.e("SiteListDialogFragment", "Error loading site info");
+         APIService.getErrorDialog(getActivity(), event).show();
       }
    }
 
