@@ -84,14 +84,19 @@ public class OpenIDActivity extends Activity {
                return;
             }
 
+            // Some subdomains of ifixit.com have their session name as 'edusession'
+            // so it doesn't collide with ifixit.com's session. Use 'edusession' if
+            // it exists, otherwise stick to 'session'.
+            String sessionName = cookie.contains("edusession") ? "edusession" : "session";
+
             // Cookie is a string like NAME=VALUE [; NAME=VALUE]
             String[] pairs = cookie.split(";");
             for (int i = 0; i < pairs.length; i++) {
                String[] parts = pairs[i].split("=", 2);
                // If token is found, return it to the calling activity.
-               if (parts.length == 2 && parts[0].trim().equalsIgnoreCase("session")) {
+               if (parts.length == 2 && parts[0].trim().equalsIgnoreCase(sessionName)) {
                   Intent result = new Intent();
-                  result.putExtra(SESSION, parts[1]);
+                  result.putExtra(SESSION, parts[1].trim());
                   setResult(RESULT_OK, result);
                   finish();
                   return;

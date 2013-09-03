@@ -759,10 +759,10 @@ public class APIService extends Service {
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {
                   e.getCause().printStackTrace();
-                  Log.e("iFixit::APIService", "IOException from request", e.getCause());
+                  Log.e("APIService", "IOException from request", e.getCause());
                } else {
                   e.printStackTrace();
-                  Log.e("iFixit::APIService", "API error", e);
+                  Log.e("APIService", "API error", e);
                }
 
                return event.setError(new APIError(APIError.Type.PARSE));
