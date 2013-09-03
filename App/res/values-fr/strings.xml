@@ -345,5 +345,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="visibility">Visibility</string>
     <string name="guide_type">Guide Type</string>
     <string name="reload_guide">Reload Guide</string>
+    <string name="back_to_site_list">Back to Site List</string>
 
 </resources>

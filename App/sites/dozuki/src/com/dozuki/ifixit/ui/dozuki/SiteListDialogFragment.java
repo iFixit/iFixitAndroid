@@ -134,8 +134,6 @@ public class SiteListDialogFragment extends BaseDialogFragment {
       } else {
          Log.e("BaseMenuDrawerActivity", "Error loading site info");
       }
-
-      hideLoading();
    }
 
    @Override
