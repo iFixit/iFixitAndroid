@@ -196,7 +196,7 @@ public class StepReorderFragment extends BaseFragment {
          GuideStep step = getItem(position);
 
          String title = getItem(position).getTitle();
-         if (step.equals("")) {
+         if (title.length() == 0) {
             holder.stepsView.setText(getString(R.string.step_number, (mGuide.getSteps().indexOf(mStepsCopy
              .get(position)) + 1)));
             holder.stepNumber.setVisibility(View.GONE);
@@ -215,7 +215,6 @@ public class StepReorderFragment extends BaseFragment {
 
             // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
             holder.mImageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
          } else {
             setImageThumb(step.getImages(), holder.mImageView);
          }
