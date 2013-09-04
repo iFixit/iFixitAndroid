@@ -15,6 +15,7 @@ import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -79,9 +80,22 @@ public class SiteListActivity extends BaseActivity
 
    @Override
    public void onResume() {
-      MainApplication.get().setSite(Site.getSite("dozuki"));
+      if (!MainApplication.get().isLoggingIn()) {
+         /**
+          * Reset the current site to Dozuki anytime this Activity resumes
+          * unless the user is logging in because the current site needs to be
+          * set for login so the API call goes to the right site.
+          */
+         MainApplication.get().setSite(Site.getSite("dozuki"));
+      }
 
       super.onResume();
+   }
+
+   @Override
+   public void onCancelLogin(LoginEvent.Cancel event) {
+      // Reset to Dozuki when login is cancelled.
+      MainApplication.get().setSite(Site.getSite("dozuki"));
    }
 
    @Override
