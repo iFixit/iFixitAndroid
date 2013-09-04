@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -44,19 +43,6 @@ public class TopicViewFragment extends BaseFragment {
    private TitlePageIndicator mTitleIndicator;
 
    private int mSelectedTab = -1;
-
-   @Subscribe
-   public void onTopic(APIEvent.Topic event) {
-      if (!event.hasError()) {
-         setTopicLeaf(event.getResult());
-      } else {
-         APIService.getErrorDialog(getActivity(), event).show();
-      }
-   }
-
-   public boolean isDisplayingTopic() {
-      return mTopicLeaf != null;
-   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -105,6 +91,19 @@ public class TopicViewFragment extends BaseFragment {
       outState.putSerializable(CURRENT_TOPIC_NODE, mTopicNode);
    }
 
+   @Subscribe
+   public void onTopic(APIEvent.Topic event) {
+      if (!event.hasError()) {
+         setTopicLeaf(event.getResult());
+      } else {
+         APIService.getErrorDialog(getActivity(), event).show();
+      }
+   }
+
+   public boolean isDisplayingTopic() {
+      return mTopicLeaf != null;
+   }
+
    public void setTopicNode(TopicNode topicNode) {
       if (topicNode == null) {
          mTopicNode = null;
@@ -122,7 +121,6 @@ public class TopicViewFragment extends BaseFragment {
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
-      ((BaseActivity)getActivity()).hideLoading();
 
       if (topicLeaf != null) {
          if (!topicLeaf.getName().equals(mTopicNode.getName())) {
@@ -162,15 +160,13 @@ public class TopicViewFragment extends BaseFragment {
       mTitleIndicator.setCurrentItem(defaultTab);
       mPager.invalidate();
       mTitleIndicator.invalidate();
+
+      ((BaseActivity)getActivity()).hideLoading();
    }
 
    private void getTopicLeaf(String topicName) {
       mTopicLeaf = null;
       mSelectedTab = -1;
-
-      if (mTitleIndicator != null) {
-         mTitleIndicator.setVisibility(View.VISIBLE);
-      }
 
       APIService.call(getActivity(), APIService.getTopicAPICall(topicName));
    }

@@ -14,7 +14,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
-import com.dozuki.ifixit.ui.guide.view.LoadingFragment;
+import com.dozuki.ifixit.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -24,6 +24,8 @@ public class TopicActivity extends BaseMenuDrawerActivity
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";
    protected static final long TOPIC_LIST_HIDE_DELAY = 1;
+   private static final String TOPIC_TAG = "TOPIC_TAG";
+   private static final String TOPIC_LOADING = "TOPIC_LOADING_TAG";
 
    private TopicViewFragment mTopicView;
    private FrameLayout mTopicViewOverlay;
@@ -39,17 +41,27 @@ public class TopicActivity extends BaseMenuDrawerActivity
 
       setContentView(R.layout.topics);
 
-      mTopicView = (TopicViewFragment) getSupportFragmentManager()
-       .findFragmentById(R.id.topic_view_fragment);
+      FrameLayout topicViewContainer = (FrameLayout) findViewById(R.id.topic_view_fragment_container);
+      mDualPane = topicViewContainer != null;
       mTopicViewOverlay = (FrameLayout) findViewById(R.id.topic_view_overlay);
       mHideTopicList = mTopicViewOverlay != null;
-      mDualPane = mTopicView != null && mTopicView.isInLayout();
 
       if (savedInstanceState != null) {
          mRootTopic = (TopicNode) savedInstanceState.getSerializable(ROOT_TOPIC);
          mTopicListVisible = savedInstanceState.getBoolean(TOPIC_LIST_VISIBLE);
       } else {
          mTopicListVisible = true;
+      }
+
+      if (mDualPane) {
+         mTopicView = (TopicViewFragment) getSupportFragmentManager().findFragmentByTag(TOPIC_TAG);
+
+         if (mTopicView == null) {
+            mTopicView = new TopicViewFragment();
+            getSupportFragmentManager().beginTransaction()
+             .add(R.id.topic_view_fragment_container, mTopicView, TOPIC_TAG)
+             .commit();
+         }
       }
 
       if (mRootTopic == null) {
@@ -61,7 +73,7 @@ public class TopicActivity extends BaseMenuDrawerActivity
          getSupportFragmentManager().popBackStack();
       }
 
-      if (mTopicListVisible && mHideTopicList && mTopicView.isDisplayingTopic()) {
+      if (mTopicView != null && mTopicListVisible && mHideTopicList && mTopicView.isDisplayingTopic()) {
          hideTopicListWithDelay();
       }
 
@@ -98,6 +110,11 @@ public class TopicActivity extends BaseMenuDrawerActivity
       }
    }
 
+   @Subscribe
+   public void onTopic(APIEvent.Topic event) {
+      hideTopicLoading();
+   }
+
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
@@ -121,6 +138,7 @@ public class TopicActivity extends BaseMenuDrawerActivity
    public void onTopicSelected(TopicNode topic) {
       if (topic.isLeaf()) {
          if (mDualPane) {
+            showTopicLoading(topic.getName());
             mTopicView.setTopicNode(topic);
 
             if (mHideTopicList) {
@@ -136,6 +154,8 @@ public class TopicActivity extends BaseMenuDrawerActivity
          }
       } else {
          if (mDualPane && !topic.isRoot()) {
+            showTopicLoading(topic.getName());
+
             mTopicView.setTopicNode(topic);
          }
          changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
@@ -176,8 +196,7 @@ public class TopicActivity extends BaseMenuDrawerActivity
       changeTopicListView(fragment, addToBack, false);
    }
 
-   private void changeTopicListView(Fragment fragment, boolean addToBack,
-    boolean delay) {
+   private void changeTopicListView(Fragment fragment, boolean addToBack, boolean delay) {
       FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
       int inAnim, outAnim;
 
@@ -208,27 +227,30 @@ public class TopicActivity extends BaseMenuDrawerActivity
    // HELPERS
    /////////////////////////////////////////////////////
 
-   @Override
-   public void showLoading(int container) {
-      super.showLoading(container);
-
-      mTopicView =
-       (TopicViewFragment) getSupportFragmentManager().findFragmentById(R.id.topic_view_fragment);
+   public void showTopicLoading(String topicName) {
+      mTopicView = (TopicViewFragment) getSupportFragmentManager().findFragmentByTag(TOPIC_TAG);
       if (mTopicView != null) {
-         getSupportFragmentManager().beginTransaction().hide(mTopicView).commit();
+         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+         ft.hide(mTopicView);
+         ft.add(R.id.topic_view_fragment_container,
+          new LoadingFragment(getString(R.string.loading_topic, topicName)), TOPIC_LOADING);
+         ft.commit();
       }
    }
 
-   @Override
-   public void hideLoading() {
-      super.hideLoading();
+   public void hideTopicLoading() {
+      // Do not re-set mTopicView with this fragment reference
+      Fragment frag = getSupportFragmentManager().findFragmentByTag(TOPIC_TAG);
+      if (frag != null) {
+         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+         Fragment loading = getSupportFragmentManager().findFragmentByTag(TOPIC_LOADING);
 
-      Fragment topicViewFragment = (TopicViewFragment) getSupportFragmentManager().
-       findFragmentById(R.id.topic_view_fragment);
-      if (topicViewFragment != null) {
-         getSupportFragmentManager().beginTransaction()
-          .show(topicViewFragment)
-          .commit();
+         if (loading != null) {
+            ft.remove(loading);
+         }
+
+         ft.show(frag);
+         ft.commit();
       }
    }
 }

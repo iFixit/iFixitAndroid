@@ -1,13 +1,11 @@
-package com.dozuki.ifixit.ui.guide.view;
+package com.dozuki.ifixit.ui;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.ui.BaseFragment;
 
 public class LoadingFragment extends BaseFragment {
    private String mLoadingText;

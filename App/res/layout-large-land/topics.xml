@@ -35,11 +35,11 @@
             android:paddingTop="20dp"
             android:scaleType="fitXY" />
 
-        <fragment
-            android:id="@+id/topic_view_fragment"
-            android:name="com.dozuki.ifixit.ui.topic_view.TopicViewFragment"
+        <FrameLayout
+            android:id="@+id/topic_view_fragment_container"
             android:layout_width="match_parent"
             android:layout_height="match_parent"/>
+
     </FrameLayout>
 
 </LinearLayout>

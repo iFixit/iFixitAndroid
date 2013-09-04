@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.topic_view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.view.View;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
@@ -19,7 +20,7 @@ public class TopicViewActivity extends BaseMenuDrawerActivity {
 
       setContentView(R.layout.topic_view);
 
-      showLoading(R.id.topic_view_fragment);
+      showLoading(R.id.loading_container);
 
       if (savedState == null) {
          mTopicView = new TopicViewFragment();
@@ -54,5 +55,17 @@ public class TopicViewActivity extends BaseMenuDrawerActivity {
             topicViewFragment.setTopicNode(mTopicNode);
          }
       }
+   }
+
+   @Override
+   public void showLoading(int container) {
+      findViewById(container).setVisibility(View.VISIBLE);
+      super.showLoading(container);
+   }
+
+   @Override
+   public void hideLoading() {
+      super.hideLoading();
+      findViewById(R.id.loading_container).setVisibility(View.GONE);
    }
 }

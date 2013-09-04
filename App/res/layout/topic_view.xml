@@ -4,4 +4,13 @@
              android:name="com.dozuki.ifixit.topic_view.ui.TopicViewFragment"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:background="?attr/doz__background"/>
+             android:background="?attr/doz__background">
+
+    <FrameLayout
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/doz__background"
+        android:id="@+id/loading_container"/>
+
+</FrameLayout>
