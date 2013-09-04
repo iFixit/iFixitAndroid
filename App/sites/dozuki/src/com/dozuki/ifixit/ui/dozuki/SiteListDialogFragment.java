@@ -57,7 +57,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
    }
 
    @Override
-   public void onActivityCreated (Bundle savedInstanceState) {
+   public void onActivityCreated(Bundle savedInstanceState) {
       super.onActivityCreated(savedInstanceState);
 
       initDialog();
@@ -156,6 +156,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
 
       if (initDialog) {
          initDialog();
+         hideLoading();
       }
    }
 
