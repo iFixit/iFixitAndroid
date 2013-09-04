@@ -39,6 +39,8 @@ android {
    buildToolsVersion "18.0.1"
 
    defaultConfig {
+      versionCode 33
+      versionName "2.0.0"
       minSdkVersion 8
       targetSdkVersion 18
       packageName "com.dozuki.ifixit"
@@ -86,6 +88,8 @@ android {
       dozuki {
          signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
+         versionCode 33
+         versionName "2.0.0"
 
          buildConfig 'public static final String SITE_NAME = "dozuki";', \
                      'public static final String APP_ID = ' + dozukiAppId + ';'
@@ -94,6 +98,8 @@ android {
       zealoptics {
          signingConfig signingConfigs.zealoptics
          packageName "com.dozuki.zealoptics"
+         versionCode 33
+         versionName "2.0.0"
 
          buildConfig 'public static final String SITE_NAME = "zealoptics";', \
                      'public static final String APP_ID = ' + zealopticsAppId + ';'
@@ -128,3 +134,4 @@ android {
       }
    }
 }
+
