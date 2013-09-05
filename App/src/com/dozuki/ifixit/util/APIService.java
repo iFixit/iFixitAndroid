@@ -679,6 +679,8 @@ public class APIService extends Service {
             HttpRequest request;
 
             try {
+               long startTime = System.currentTimeMillis();
+
                if (endpoint.mMethod.equals("GET")) {
                   request = HttpRequest.get(url);
                } else {
@@ -741,8 +743,11 @@ public class APIService extends Service {
                int code = request.code();
 
                if (MainApplication.inDebug()) {
+                  long endTime = System.currentTimeMillis();
+
                   Log.d("APIService", "Response code: " + code);
                   Log.d("APIService", "Response body: " + responseBody);
+                  Log.d("APIService", "Request time: " + (endTime - startTime) + "ms");
                }
 
                /**
