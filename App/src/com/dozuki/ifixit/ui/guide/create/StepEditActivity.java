@@ -828,9 +828,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       }
    }
 
-   public void enablePublishToggle(boolean enabled) {
-   }
-
    /////////////////////////////////////////////////////
    // ADAPTERS and PRIVATE CLASSES
    /////////////////////////////////////////////////////
@@ -841,6 +838,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mTitleIndicator.notifyDataSetChanged();
       mStepAdapter.notifyDataSetChanged();
       mPager.setCurrentItem(position, false);
+      mPagePosition = position;
    }
 
    private class StepAdapter extends FragmentStatePagerAdapter {
