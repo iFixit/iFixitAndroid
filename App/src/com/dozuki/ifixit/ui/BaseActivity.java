@@ -74,7 +74,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       @SuppressWarnings("unused")
       @Subscribe
       public void onUnauthorized(APIEvent.Unauthorized event) {
-         LoginFragment.newInstance().show(getSupportFragmentManager(), "LoginFragment");
+         openLoginDialogIfLoggedOut();
       }
 
       @SuppressWarnings("unused")
@@ -285,6 +285,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       MainApplication.getBus().unregister(this);
       MainApplication.getBus().unregister(mBaseActivityListener);
+   }
+
+   public void openLoginDialogIfLoggedOut() {
+      if (!MainApplication.get().isUserLoggedIn()) {
+         LoginFragment.newInstance().show(getSupportFragmentManager(), "LoginFragment");
+      }
    }
 
    /**

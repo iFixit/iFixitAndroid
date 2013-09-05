@@ -165,7 +165,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    private void initializeNewGuide() {
-      // Creating a new guide
+      // Require the user to be logged in to create a new guide. Existing guides
+      // are covered by the get guide API call.
+      openLoginDialogIfLoggedOut();
+
       mGuide = new Guide();
 
       GuideStep step = new GuideStep();
