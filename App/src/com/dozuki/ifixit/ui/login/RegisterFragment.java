@@ -62,6 +62,8 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
          mPassword.setVisibility(View.VISIBLE);
          mConfirmPassword.setVisibility(View.VISIBLE);
          mName.setVisibility(View.VISIBLE);
+         mTermsAgreeText.setVisibility(View.VISIBLE);
+         mTermsAgreeCheckBox.setVisibility(View.VISIBLE);
 
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
@@ -161,6 +163,8 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
                mPassword.setVisibility(View.GONE);
                mConfirmPassword.setVisibility(View.GONE);
                mName.setVisibility(View.GONE);
+               mTermsAgreeText.setVisibility(View.GONE);
+               mTermsAgreeCheckBox.setVisibility(View.GONE);
 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
