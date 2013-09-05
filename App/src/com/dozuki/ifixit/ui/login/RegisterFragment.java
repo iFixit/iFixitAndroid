@@ -40,7 +40,6 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    private TextView mTermsAgreeText;
    private CheckBox mTermsAgreeCheckBox;
    private ProgressBar mLoadingSpinner;
-   private APICall mCurAPICall;
 
    @Subscribe
    public void onRegister(APIEvent.Register event) {
@@ -90,14 +89,14 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
       mLoginId = (EditText)view.findViewById(R.id.edit_login_id);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
       mConfirmPassword = (EditText)view.findViewById(R.id.edit_confirm_password);
-      
-      // Password fields default to a courier typeface (very annoying) and 
-      // setting the font-family in xml does nothing, so we have to set it 
+
+      // Password fields default to a courier typeface (very annoying) and
+      // setting the font-family in xml does nothing, so we have to set it
       // explicitly here
       mPassword.setTypeface(Typeface.DEFAULT);
       mConfirmPassword.setTypeface(Typeface.DEFAULT);
       mName = (EditText)view.findViewById(R.id.edit_login_username);
-    
+
       mRegister = (Button)view.findViewById(R.id.register_button);
       mCancelRegister = (Button)view.findViewById(R.id.cancel_register_button);
 
@@ -108,14 +107,14 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
       mTermsAgreeText = (TextView)view.findViewById(R.id.login_agreement_terms_textview);
       mTermsAgreeText.setText(R.string.register_agreement);
       mTermsAgreeText.setMovementMethod(LinkMovementMethod.getInstance());
-      
+
       mLoadingSpinner = (ProgressBar)view.findViewById(R.id.login_loading_bar);
       mLoadingSpinner.setVisibility(View.GONE);
 
       mRegister.setOnClickListener(this);
       mCancelRegister.setOnClickListener(this);
       getDialog().setTitle(R.string.register_dialog_title);
-      
+
       return view;
    }
 
@@ -143,11 +142,6 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    }
 
    @Override
-   public void onAttach(Activity activity) {
-      super.onAttach(activity);
-   }
-
-   @Override
    public void onClick(View v) {
       switch (v.getId()) {
          case R.id.register_button:
@@ -155,7 +149,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
             String name = mName.getText().toString();
             String password = mPassword.getText().toString();
             String confirmPassword = mConfirmPassword.getText().toString();
-        
+
             if (password.equals(confirmPassword) && login.length() > 0 &&
              name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
                enable(false);
@@ -168,8 +162,8 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
-               mCurAPICall = APIService.getRegisterAPICall(login, password, name);
-               APIService.call(getActivity(), mCurAPICall);
+               APIService.call(getActivity(),
+                APIService.getRegisterAPICall(login, password, name));
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);
@@ -191,7 +185,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
                   showKeyboard();
                }
                mErrorText.setVisibility(View.VISIBLE);
-            }     
+            }
             break;
 
           case R.id.cancel_register_button:
@@ -202,7 +196,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
               .remove(this)
               .add(new LoginFragment(), null)
               .commit();
-               
+
               break;
        }
    }
