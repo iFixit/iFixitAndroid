@@ -84,6 +84,11 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
          }
       });
 
+      String topic = mGuide.getTopic();
+      if (topic != null && topic.length() != 0) {
+         mTopic.setText(topic);
+      }
+
       if (mTopics != null) {
          setTopicArrayAdapter();
       } else {
@@ -92,6 +97,12 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
 
       mSubject = (EditText) v.findViewById(R.id.subject_field);
       mSubject.setHint(getString(R.string.guide_intro_wizard_guide_subject_hint));
+      String subject = mGuide.getSubject();
+
+      if (subject != null && subject.length() != 0) {
+         mSubject.setText(subject);
+      }
+
       mSubjectLabel = (TextView) v.findViewById(R.id.subject_label);
       mType = (Spinner) v.findViewById(R.id.guide_types_spinner);
 
@@ -129,6 +140,11 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
          }
       });
 
+      String type = mGuide.getType();
+      if (type != null && !type.isEmpty()) {
+         mType.setSelection(adapter.getPosition(type));
+      }
+
       ((TextView) v.findViewById(R.id.topic_name_label)).setText(
        getString(R.string.guide_intro_wizard_guide_topic_title, topicName));
 
@@ -164,6 +180,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
             }
          }
       });
+
       return v;
    }
 
@@ -171,6 +188,17 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
    @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
+
+      Editable topic = mTopic.getText();
+      if (topic != null)
+         mGuide.setTopic(topic.toString());
+
+      if (mSubject != null) {
+         Editable subject = mSubject.getText();
+         if (subject != null) {
+            mGuide.setSubject(subject.toString());
+         }
+      }
 
       outState.putSerializable(GUIDE_KEY, mGuide);
       outState.putStringArrayList(TOPIC_LIST_KEY, mTopics);
