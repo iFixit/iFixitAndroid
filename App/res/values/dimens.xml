@@ -4,7 +4,7 @@
     <!-- Helper dimens -->
     <dimen name="site_list_button_width">340dp</dimen>
 
-    <dimen name="title_text_size">32sp</dimen>
+    <dimen name="title_text_size">24sp</dimen>
     <dimen name="body_text_size">16sp</dimen>
     <dimen name="body_text_top_spacing">8dp</dimen>
     <dimen name="progress_bar_width_height">120dp</dimen>
