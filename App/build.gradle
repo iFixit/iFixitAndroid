@@ -90,6 +90,8 @@ android {
          packageName "com.dozuki.dozuki"
          versionCode 33
          versionName "2.0.0"
+         minSdkVersion 9
+         targetSdkVersion 18
 
          buildConfig 'public static final String SITE_NAME = "dozuki";', \
                      'public static final String APP_ID = ' + dozukiAppId + ';'
