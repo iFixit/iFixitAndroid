@@ -39,7 +39,7 @@ android {
    buildToolsVersion "18.0.1"
 
    defaultConfig {
-      versionCode 33
+      versionCode 34
       versionName "2.0.0"
       minSdkVersion 8
       targetSdkVersion 18
@@ -88,7 +88,7 @@ android {
       dozuki {
          signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
-         versionCode 33
+         versionCode 34
          versionName "2.0.0"
          minSdkVersion 9
          targetSdkVersion 18
@@ -100,7 +100,7 @@ android {
       zealoptics {
          signingConfig signingConfigs.zealoptics
          packageName "com.dozuki.zealoptics"
-         versionCode 33
+         versionCode 34
          versionName "2.0.0"
 
          buildConfig 'public static final String SITE_NAME = "zealoptics";', \
