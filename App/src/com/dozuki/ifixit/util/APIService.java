@@ -720,7 +720,7 @@ public class APIService extends Service {
                request.header("X-App-Id", BuildConfig.APP_ID);
 
                // Trust all certs and hosts in development
-               if (MainApplication.inDebug()) {
+               if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || MainApplication.inDebug()) {
                   request.trustAllCerts();
                   request.trustAllHosts();
                }

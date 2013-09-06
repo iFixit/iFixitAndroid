@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentManager;
@@ -44,15 +45,18 @@ import java.util.ArrayList;
 public class StepEditLinesFragment extends BaseFragment implements BulletDialogListener, BulletRearrangeListener {
    private static final int BULLET_LIMIT = 8;
    private static final int BULLET_INDENT = 25;
+   private static final int INDENT_LIMIT = 2;
+
    private static final String STEP_LIST_KEY = "STEP_LIST_KEY";
    private static final String STEP_ORDERBY = "STEP_ORDERBY";
    private static final String SHOWING_BULLET_FRAG = "SHOWING_BULLET_FRAG";
    private static final String BULLET_FRAG_ID = "BULLET_FRAG_ID";
    private static final String SHOWING_REORDER_FRAG = "SHOWING_REORDER_FRAG";
-   private static final int INDENT_LIMIT = 2;
    private static final String REORDER_FRAG_ID = "REORDER_FRAG_ID";
-   protected static final int MIC_REQUEST_CODE = 2342;
    private static final String MIC_TEXT_LINE_ID = "MIC_TEXT_LINE_ID_KEY";
+
+   protected static final int MIC_REQUEST_CODE = 2342;
+
    private LinearLayout mBulletContainer;
    private Button mNewBulletButton;
    private ArrayList<StepLine> mLines = new ArrayList<StepLine>();
@@ -65,7 +69,6 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
    private static String NO_TITLE = "";
    private static final String TITLE_KEY = "TITLE_KEY";
 
-   // title
    private String mTitle = NO_TITLE;
    private EditText mStepTitle;
    private int mStepId;
@@ -240,15 +243,9 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
          int lineid = sp.getInt(MIC_TEXT_LINE_ID, 0);
          EditText lineText = (EditText) mBulletContainer.findViewWithTag(lineid + "text");
 
-         if (lineText == null) {
-            Log.e("StepEditLinesFragment", "lineText is null, couldn't find line view");
-            // TODO: Intelligently handle a failure.
-         } else {
+         if (lineText != null) {
             String[] suggestions = new String[event.results.size()];
             suggestions = event.results.toArray(suggestions);
-
-            SuggestionSpan suggestionsSpan = new SuggestionSpan(getActivity(), suggestions,
-             SuggestionSpan.FLAG_EASY_CORRECT);
 
             String newText = suggestions[0];
             Editable oldText = lineText.getText();
@@ -261,7 +258,14 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
             int end = combinedText.length();
 
             Spannable span = new SpannableString(combinedText);
-            span.setSpan(suggestionsSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+               SuggestionSpan suggestionsSpan = new SuggestionSpan(getActivity(), suggestions,
+                SuggestionSpan.FLAG_EASY_CORRECT);
+
+               span.setSpan(suggestionsSpan, start, end, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE);
+            }
+
             lineText.setText(span);
             lineText.setSelection(end);
          }
