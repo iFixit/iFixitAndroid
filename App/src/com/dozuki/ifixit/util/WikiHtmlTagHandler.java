@@ -17,7 +17,7 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
    private int level = 0;
 
    public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-      if (tag.equalsIgnoreCase("strike") || tag.equals("s")) {
+      if (tag.equalsIgnoreCase("strike") || tag.equalsIgnoreCase("s") || tag.equalsIgnoreCase("del")) {
          handleStrike(opening, output);
       } else if (tag.equalsIgnoreCase("ul") || tag.equalsIgnoreCase("ol")) {
          handleList(opening, tag, output);

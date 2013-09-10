@@ -11,6 +11,7 @@ import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 
 public class GuideStepLineView extends LinearLayout {
    private static final int LINE_INDENT = 50;
@@ -31,7 +32,8 @@ public class GuideStepLineView extends LinearLayout {
       setPadding(LINE_INDENT * line.getLevel(), MARGIN, 0, MARGIN);
 
       TextView stepText = (TextView) findViewById(R.id.step_text);
-      stepText.setText(Utils.correctLinkPaths(Html.fromHtml(line.getTextRendered())));
+      stepText.setText(Utils.correctLinkPaths(
+       Html.fromHtml(line.getTextRendered(), null, new WikiHtmlTagHandler())));
       stepText.setMovementMethod(LinkMovementMethod.getInstance());
 
       ImageView bullet = (ImageView)findViewById(R.id.bullet);
