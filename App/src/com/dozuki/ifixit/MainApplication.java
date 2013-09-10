@@ -334,8 +334,9 @@ public class MainApplication extends Application {
    }
 
    public boolean isScreenLarge() {
-      final int screenSize = getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK;
-      return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE
-       || screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
+      final int screenSize = getResources().getConfiguration().screenLayout &
+       Configuration.SCREENLAYOUT_SIZE_MASK;
+      return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE ||
+       screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
    }
 }

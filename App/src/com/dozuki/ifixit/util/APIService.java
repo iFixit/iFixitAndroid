@@ -119,8 +119,10 @@ public class APIService extends Service {
       MainApplication.get().shallowLogout();
 
       // The APIError doesn't matter as long as one exists.
-      return new APIEvent.Unauthorized().setCode(INVALID_LOGIN_CODE).
-       setError(new APIError("", "", APIError.Type.UNAUTHORIZED));
+      return new APIEvent.Unauthorized().
+         setCode(INVALID_LOGIN_CODE).
+         setError(new APIError("", "", APIError.Type.UNAUTHORIZED)).
+         setApiCall(apiCall);
    }
 
    /**
@@ -289,13 +291,10 @@ public class APIService extends Service {
    }
 
    public static APICall getLogoutAPICall(User user) {
-      // Can't log out an already logged out user.
-      if (user == null) {
-         return null;
-      }
-
       APICall apiCall = new APICall(APIEndpoint.LOGOUT, NO_QUERY);
 
+      // Override the authToken because the user won't be logged in by the time
+      // the request is performed.
       apiCall.mAuthToken = user.getAuthToken();
 
       return apiCall;
