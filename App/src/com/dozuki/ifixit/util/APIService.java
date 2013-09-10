@@ -667,7 +667,6 @@ public class APIService extends Service {
          protected APIEvent<?> doInBackground(String... dummy) {
             APIEvent<?> event = endpoint.getEvent();
             event.setApiCall(apiCall);
-            HttpRequest.setConnectionFactory(new OkConnectionFactory());
 
             /**
              * Unfortunately we must split the creation of the HttpRequest
