@@ -17,6 +17,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
+import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.login.LoginFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -29,16 +30,20 @@ import com.squareup.otto.Subscribe;
 /**
  * Base Activity that performs various functions that all Activities in this app
  * should do. Such as:
- * <p/>
+ *
  * Registering for the event bus. Setting the current site's theme. Finishing
  * the Activity if the user logs out but the Activity requires authentication.
  */
 public abstract class BaseActivity extends SherlockFragmentActivity {
    protected static final String LOADING = "LOADING_FRAGMENT";
    private static final String ACTIVITY_ID = "ACTIVITY_ID";
+   private static final String USERID = "USERID";
+
+   private static final int LOGGED_OUT_USERID = -1;
 
    private APIService mAPIService;
    private int mActivityid;
+   private int mUserid;
 
    /**
     * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
@@ -109,8 +114,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void onCreate(Bundle savedState) {
       if (savedState != null) {
          mActivityid = savedState.getInt(ACTIVITY_ID);
+         mUserid = savedState.getInt(USERID);
       } else {
          mActivityid = generateActivityid();
+         setUserid();
       }
 
       MainApplication app = MainApplication.get();
@@ -200,6 +207,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       super.onSaveInstanceState(outState);
 
       outState.putInt(ACTIVITY_ID, mActivityid);
+      outState.putInt(USERID, mUserid);
    }
 
    /**
@@ -297,14 +305,24 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
     * Left for derived classes to implement.
     */
    public void onLogin(LoginEvent.Login event) {
+      setUserid();
    }
 
    public void onLogout(LoginEvent.Logout event) {
+      setUserid();
       finishActivityIfPermissionDenied();
    }
 
    public void onCancelLogin(LoginEvent.Cancel event) {
       finishActivityIfPermissionDenied();
+   }
+
+   /**
+    * Sets the userid to the currently logged in user's userid.
+    */
+   private void setUserid() {
+      User user = MainApplication.get().getUser();
+      mUserid = user == null ? LOGGED_OUT_USERID : user.getUserid();
    }
 
    /**
@@ -330,11 +348,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    /**
-    * "Settings" methods for derived classes are found below. Decides when to
-    * finish the Activity, what icons to display etc.
-    */
-
-   /**
     * Returns true if the Activity should be finished if the user logs out or
     * cancels authentication.
     */
@@ -345,7 +358,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    /**
     * Returns true if the Activity should never be finished despite meeting
     * other conditions.
-    * <p/>
+    *
     * This exists because of a race condition of sorts involving logging out of
     * private Dozuki sites. SiteListActivity can't reset the current site to
     * one that is public so it is erroneously finished unless flagged

@@ -29,8 +29,8 @@ public class User implements Serializable {
       return mUserid;
    }
 
-   public void setUserid(int mUserid) {
-      this.mUserid = mUserid;
+   public void setUserid(int userid) {
+      mUserid = userid;
    }
 
    public String getUsername() {
