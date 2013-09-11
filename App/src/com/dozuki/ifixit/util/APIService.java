@@ -723,6 +723,8 @@ public class APIService extends Service {
                   request.trustAllHosts();
                }
 
+               request.followRedirects(false);
+
                /**
                 * Continue with constructing the request body.
                 */
