@@ -330,19 +330,17 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
     */
    private void finishActivityIfPermissionDenied() {
       MainApplication app = MainApplication.get();
+      User user = app.getUser();
+      int currentUserid = user == null ? LOGGED_OUT_USERID : user.getUserid();
 
-      /**
-       * Never finish if user is logged in or is logging in.
-       */
-      if (app.isUserLoggedIn() || app.isLoggingIn()) {
+      // Never finish the activity if the user is logging in.
+      if (neverFinishActivityOnLogout() || app.isLoggingIn()) {
          return;
       }
 
-      /**
-       * Finish if the site is private or activity requires authentication.
-       */
-      if (!neverFinishActivityOnLogout()
-       && (finishActivityIfLoggedOut() || !app.getSite().mPublic)) {
+      // Finish if the site is private or activity requires authentication.
+      if ((currentUserid == LOGGED_OUT_USERID || currentUserid != mUserid) &&
+       (finishActivityIfLoggedOut() || !app.getSite().mPublic)) {
          finish();
       }
    }
