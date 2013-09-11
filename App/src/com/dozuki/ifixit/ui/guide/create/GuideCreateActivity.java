@@ -87,8 +87,16 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    public void onRestart() {
       super.onRestart();
 
-      // Perform the API call again because data may have changed in child Activities.
-      APIService.call(this, APIService.getUserGuidesAPICall());
+      // Don't retry the event if the Activity is finishing. This fixes a crazy
+      // bug that caused authenticated Activities to not finish even though they
+      // should have been. This was caused by the user being logged out, the API
+      // call triggering the Unauthorized APIEvent which opened the LoginDialog
+      // so MainApplication thought that the user was logging in and decided
+      // not to finish the Activity below this one on the stack.
+      if (!isFinishing()) {
+         // Perform the API call again because data may have changed in child Activities.
+         APIService.call(this, APIService.getUserGuidesAPICall());
+      }
    }
 
    @Override
