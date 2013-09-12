@@ -9,16 +9,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.*;
 import android.widget.ProgressBar;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
 
-public class WebViewFragment extends SherlockFragment
- implements OnViewGuideListener {
+public class WebViewFragment extends BaseFragment implements OnViewGuideListener {
    private WebView mWebView;
    private String mUrl;
    private Site mSite;

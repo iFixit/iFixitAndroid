@@ -8,11 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import com.actionbarsherlock.app.SherlockFragment;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
+import com.dozuki.ifixit.ui.BaseFragment;
 import com.google.analytics.tracking.android.EasyTracker;
 import com.marczych.androidsectionheaders.SectionHeadersAdapter;
 import com.marczych.androidsectionheaders.SectionListView;
@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class TopicListFragment extends SherlockFragment
+public class TopicListFragment extends BaseFragment
  implements TopicSelectedListener, OnItemClickListener {
    private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
 
