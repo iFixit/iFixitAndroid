@@ -28,8 +28,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    ),
 
    GUIDE(
@@ -47,8 +46,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    ),
 
    GUIDES(
@@ -66,8 +64,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    ),
 
    TOPIC(
@@ -90,8 +87,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    ),
 
    ALL_TOPICS(
@@ -109,8 +105,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    ),
 
    LOGIN(
@@ -148,6 +143,7 @@ public enum APIEndpoint {
       },
       true,
       "DELETE",
+      false,
       false
    ),
 
@@ -185,8 +181,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "GET",
-      false
+      "GET"
    ),
    USER_VIDEOS(
       new Endpoint() {
@@ -203,8 +198,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "GET",
-      false
+      "GET"
    ),
 
    USER_FAVORITES(
@@ -222,8 +216,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "GET",
-      false
+      "GET"
    ),
 
    USER_EMBEDS(
@@ -241,8 +234,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "GET",
-      false
+      "GET"
    ),
 
    UPLOAD_IMAGE(
@@ -283,8 +275,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "POST",
-      false
+      "POST"
    ),
 
    UPLOAD_STEP_IMAGE(
@@ -325,8 +316,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "POST",
-      false
+      "POST"
    ),
 
    COPY_IMAGE(
@@ -345,8 +335,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "POST",
-      false
+      "POST"
    ),
 
    DELETE_IMAGE(
@@ -365,8 +354,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "DELETE",
-      false
+      "DELETE"
    ),
 
    USER_GUIDES(
@@ -384,8 +372,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "GET",
-      false
+      "GET"
    ),
 
    GUIDE_FOR_EDIT(
@@ -403,8 +390,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "GET",
-      false
+      "GET"
    ),
 
    CREATE_GUIDE(
@@ -422,8 +408,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "POST",
-      false
+      "POST"
    ),
 
    EDIT_GUIDE(
@@ -441,8 +426,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "PATCH",
-      false
+      "PATCH"
    ),
    DELETE_GUIDE(
       new Endpoint() {
@@ -459,8 +443,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "DELETE",
-      false
+      "DELETE"
    ),
 
    PUBLISH_GUIDE(
@@ -478,8 +461,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "PUT",
-      false
+      "PUT"
    ),
 
    UNPUBLISH_GUIDE(
@@ -497,8 +479,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "DELETE",
-      false
+      "DELETE"
    ),
 
    REORDER_GUIDE_STEPS(
@@ -516,8 +497,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "PUT",
-      false
+      "PUT"
    ),
 
    ADD_GUIDE_STEP(
@@ -535,8 +515,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "POST",
-      false
+      "POST"
    ),
 
    UPDATE_GUIDE_STEP(
@@ -554,8 +533,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "PATCH",
-      false
+      "PATCH"
    ),
 
    DELETE_GUIDE_STEP(
@@ -573,8 +551,7 @@ public enum APIEndpoint {
          }
       },
       true,
-      "DELETE",
-      false
+      "DELETE"
    ),
 
    SITES(
@@ -592,8 +569,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    ),
 
    SITE_INFO(
@@ -611,8 +587,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    ),
 
    USER_INFO(
@@ -630,8 +605,7 @@ public enum APIEndpoint {
          }
       },
       false,
-      "GET",
-      false
+      "GET"
    );
 
    /**
@@ -685,12 +659,26 @@ public enum APIEndpoint {
     */
    public final boolean mForcePublic;
 
+   /**
+    * True to post results of API calls to the Bus.
+    */
+   public final boolean mPostResults;
+
+   private APIEndpoint(Endpoint endpoint, boolean authenticated, String method) {
+      this(endpoint, authenticated, method, false);
+   }
+
    private APIEndpoint(Endpoint endpoint, boolean authenticated,
     String method, boolean forcePublic) {
+      this(endpoint, authenticated, method, forcePublic, true);
+   }
+   private APIEndpoint(Endpoint endpoint, boolean authenticated,
+    String method, boolean forcePublic, boolean postResults) {
       mEndpoint = endpoint;
       mAuthenticated = authenticated;
       mMethod = method;
       mForcePublic = forcePublic;
+      mPostResults = postResults;
    }
 
    /**

@@ -186,12 +186,14 @@ public class APIService extends Service {
                saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
             }
 
-            /**
-             * Always post the result despite any errors. This actually sends it off
-             * to BaseActivity which posts the underlying APIEvent<?> if the APICall
-             * was initiated by that Activity instance.
-             */
-            MainApplication.getBus().post(new APIEvent.ActivityProxy(result));
+            if (apiCall.mEndpoint.mPostResults) {
+               /**
+                * Always post the result despite any errors. This actually sends it off
+                * to BaseActivity which posts the underlying APIEvent<?> if the APICall
+                * was initiated by that Activity instance.
+                */
+               MainApplication.getBus().post(new APIEvent.ActivityProxy(result));
+            }
          }
       });
 
