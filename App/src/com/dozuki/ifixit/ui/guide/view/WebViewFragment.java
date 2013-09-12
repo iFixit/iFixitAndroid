@@ -21,6 +21,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
    private WebView mWebView;
    private String mUrl;
    private Site mSite;
+   private GuideWebView mWebViewClient;
    protected ProgressBar mProgressBar;
 
    @Override
@@ -29,19 +30,17 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       if (mWebView != null) {
          mWebView.destroy();
       }
-      
+
       if (mSite == null) {
          mSite = ((MainApplication)getActivity().getApplication()).getSite();
       }
-      
-      View view = inflater.inflate(R.layout.web_view_fragment, container,
-       false);
+
+      View view = inflater.inflate(R.layout.web_view_fragment, container, false);
       mProgressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
       mWebView = (WebView)view.findViewById(R.id.web_view);
             
       CookieSyncManager.createInstance(mWebView.getContext());
-      CookieManager cookieManager = CookieManager.getInstance();
-      cookieManager.setAcceptCookie(true);
+      CookieManager.getInstance().setAcceptCookie(true);
       
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
@@ -52,12 +51,13 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       settings.setAppCacheEnabled(true);
       settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
-      mWebView.setWebViewClient(new GuideWebView(this));
+      mWebViewClient = new GuideWebView(this);
+      mWebView.setWebViewClient(mWebViewClient);
 
       if (savedInstanceState != null) {
          mWebView.restoreState(savedInstanceState);
       } else if (mUrl != null) {
-         mWebView.loadUrl(mUrl);
+         loadUrl(mUrl);
       }
 
       return view;
@@ -101,6 +101,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       mUrl = url;
 
       if (mWebView != null) {
+         mWebViewClient.setSessionCookie(url);
          mWebView.loadUrl(mUrl);
       }
    }
@@ -117,17 +118,13 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       private static final int GUIDEID_POSITION = 5;
       private static final String GUIDE_URL = "Guide";
       private static final String TEARDOWN_URL = "Teardown";
-      
+
       private OnViewGuideListener mGuideListener;
 
       public GuideWebView(OnViewGuideListener guideListener) {
          mGuideListener = guideListener;
-         
-         if (!mSite.mPublic) {
-            setSessionCookie("http://" + mSite.mDomain);
-         }
       }
-      
+
       protected void setSessionCookie(String url) {
          User user = MainApplication.get().getUser();
 
@@ -143,8 +140,8 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       public boolean shouldOverrideUrlLoading(WebView view, String url) {
          String[] pieces = url.split("/");
          int guideid;
-         
-         if (url.equals("http://"+ mSite.mDomain + "/Guide/login")) {
+
+         if (url.equals("http://" + mSite.mDomain + "/Guide/login")) {
             url = mUrl;
          } else {
             try {
@@ -155,16 +152,15 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
                   guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
                   mGuideListener.onViewGuide(guideid);
                   return true;
-               } 
+               }
             } catch (ArrayIndexOutOfBoundsException e) {
                Log.e("GuideWebView ArrayIndexOutOfBoundsException", e.toString());
             } catch (NumberFormatException e) {
                Log.e("GuideWebView NumberFormatException", e.toString());
             }
          }
-         
-         setSessionCookie(url);
-         view.loadUrl(url);
+
+         loadUrl(url);
 
          return true;
       }

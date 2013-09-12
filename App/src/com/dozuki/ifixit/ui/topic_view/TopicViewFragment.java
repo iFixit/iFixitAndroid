@@ -235,23 +235,11 @@ public class TopicViewFragment extends BaseFragment {
 
                EasyTracker.getTracker().sendView(mTopicLeaf.getName() + " Answers");
 
-               if (mSite.mAnswers) {
-                  webView.loadUrl(mTopicLeaf.getSolutionsUrl());
+               webView.loadUrl(mTopicLeaf.getSolutionsUrl());
 
-                  selectedFragment = webView;
-                  mSelectedTab = ANSWERS_TAB;
-               } else {
+               selectedFragment = webView;
+               mSelectedTab = ANSWERS_TAB;
 
-                  try {
-                     webView.loadUrl("http://" + mSite.mDomain + "/c/"
-                      + URLEncoder.encode(mTopicLeaf.getName(), "UTF-8"));
-                  } catch (Exception e) {
-                     Log.w("iFixit", "Encoding error: " + e.getMessage());
-                  }
-
-                  selectedFragment = webView;
-                  mSelectedTab = MORE_INFO_TAB;
-               }
                return selectedFragment;
             default:
                return null;
