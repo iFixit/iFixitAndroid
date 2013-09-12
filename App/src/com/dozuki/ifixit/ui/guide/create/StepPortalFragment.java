@@ -14,6 +14,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -26,7 +27,8 @@ import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
 
-public class StepPortalFragment extends BaseFragment implements StepReorderFragment.StepRearrangeListener {
+public class StepPortalFragment extends BaseFragment implements
+ StepReorderFragment.StepRearrangeListener {
    public static int STEP_ID = 0;
 
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
@@ -115,6 +117,11 @@ public class StepPortalFragment extends BaseFragment implements StepReorderFragm
    }
 
    @Override
+   public void onPrepareOptionsMenu(Menu menu) {
+      menu.findItem(R.id.reorder_steps).setVisible(mGuide.getSteps().size() >= 2);
+   }
+
+   @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case android.R.id.home:
@@ -124,10 +131,6 @@ public class StepPortalFragment extends BaseFragment implements StepReorderFragm
             launchGuideIntroEdit();
             break;
          case R.id.reorder_steps:
-            if (mGuide.getSteps().size() < 2) {
-               Toast.makeText(getActivity(), R.string.step_reorder_insufficient_steps, Toast.LENGTH_SHORT).show();
-               break;
-            }
             closeSelectedStep();
             launchStepReorderFragment();
             break;

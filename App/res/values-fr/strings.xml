@@ -174,7 +174,6 @@
 
     <!-- Guide Step Rearrange Dialog -->
     <string name="step_rearrange_title">Réorganiser</string>
-    <string name="step_reorder_insufficient_steps">Pas assez d\'étape pour réorganiser.</string>
 
     <!-- Guide Introduction Edit -->
     <string name="default_title">Titre par Défaut</string>
