@@ -175,7 +175,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
    private AlertDialog createHelpDialog() {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
-      builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.media_help_messege,
+      builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.media_help_message,
        MainApplication.get().getSite().mTitle))
          .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {

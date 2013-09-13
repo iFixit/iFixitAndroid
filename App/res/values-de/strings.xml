@@ -6,16 +6,6 @@
     <string name="device">Gerät</string>
     <string name="topic">Thema</string>
 
-    <!-- Dozuki Site List -->
-    <string name="dozuki_search_hint">Websites suchen</string>
-    <string name="site_list_button">Websites erkunden</string>
-    <string name="site_list_title">Website wählen</string>
-    <string name="site_list_image_description">Dozuki: Wir machen technische Dokumentation lebendig</string>
-    <string name="site_list_background">Dozuki Handsäge auf Werkbank</string>
-    <string name="site_list_search_title">Websites suchen</string>
-    <string name="lock_description">Nichtöffentliche Website</string>
-    <string name="empty_site_list">Keine Websites gefunden.</string>
-
     <!-- General -->
     <string name="save">Speichern</string>
     <string name="yes">Ja</string>
@@ -41,7 +31,6 @@
     <string name="slide_menu_my_guides">Meine Anleitungen</string>
     <string name="slide_menu_search">Suche</string>
     <string name="slide_menu_browse_content">Inhalte durchsuchen</string>
-    <string name="slide_menu_browse_devices">Geräte durchsuchen</string>
     <string name="slide_menu_favorite_guides">Anleitungsfavoriten</string>
     <string name="slide_menu_create_new_guide">Neue Anleitung erstellen</string>
     <string name="slide_menu_media_gallery">Medienverwaltung</string>
@@ -61,7 +50,6 @@
     <string name="logout">Abmelden</string>
     <string name="register">Registrieren</string>
 
-    <string name="logout_messege">Möchtest Du Dich wirklich abmelden?</string>
     <string name="login_error">Hoppla! Ungültige Login-Informationen, bitte versuche es noch einmal.</string>
     <string name="try_again">Nochmal versuchen</string>
     <string name="register_agreement">Ich stimme zu, dass meine Beiträge unter unserer
@@ -88,7 +76,7 @@
 
     <!-- Gallery -->
     <string name="media_help_title">Was ist das hier?</string>
-    <string name="media_help_messege">Dieser Medienmanager ist direkt mit Deinem %1$s Benutzerkonto verbunden. Alle
+    <string name="media_help_message">Dieser Medienmanager ist direkt mit Deinem %1$s Benutzerkonto verbunden. Alle
         Bilder, die Du hier hochlädst, stehen Dir für die Erstellung Deiner Anleitungen zur Verfügung.
     </string>
     <string name="media_gallery_title">Medienmanager</string>
@@ -137,7 +125,6 @@
     <string name="topic_guide_thumbnail">Vorschaubild des Anleitungsabschnitts</string>
     <string name="main_guide_img_description">Hauptbild der Anleitung</string>
     <string name="thumbnail_desc">Vorschaubild</string>
-    <string name="topic_img_desc">Bild des Themenbereichs</string>
     <string name="next_page_image_desc">Nächste Seite</string>
 
     <string name="video_play_button_description">Schaltfläche für Video</string>
@@ -151,7 +138,6 @@
     <string name="finish">Abschließen</string>
     <string name="next">Weiter</string>
     <string name="previous">Zurück</string>
-    <string name="topic_name_hint">Titel Thema</string>
 
     <!-- Full Screen Image -->
     <string name="close_full_screen_desc">Schaltfläche Vollbildmodus schließen</string>
@@ -171,9 +157,7 @@
     <string name="step_edit_confirm_delete_title">Schritt löschen</string>
     <string name="step_edit_confirm_delete_message">Möchtest Du Schritt %1$d wirklich löschen?</string>
     <string name="edit">Bearbeiten</string>
-    <string name="edit_guide_details">Intro bearbeiten</string>
     <string name="add_step">Schritt hinzufügen</string>
-    <string name="reorder_steps">Neu anordnen</string>
     <string name="no_steps_text">Die Anleitung hat keine Schritte.</string>
 
     <!-- Guide Step Rearrange Dialog -->
@@ -240,7 +224,6 @@
     <string name="guide_create_confirm_leave_without_save_body">Deine Änderungen werden beim Verlassen des Bereichs
         verloren gehen.
     </string>
-    <string name="guide_create_confirm_leave_without_save_cancel">Verlassen</string>
     <string name="guide_create_step_edit_main_image_description">Hauptschritt Bild bearbeiten</string>
     <string name="default_step_title">Schritt unbenannt</string>
     <string name="step_title_hint">Titel des Schritts (optional)</string>
@@ -268,7 +251,6 @@
 
 
     <!-- Miscellaneous -->
-    <string name="topic_background_description">Thema Hintergrund</string>
     <string name="example_guide_item_title">Samsung SGH-E317 SIM Card installieren</string>
     <string name="fist_background_desc">Faust Hintergrundbild</string>
     <string name="my_guides">Meine Anleitungen</string>
@@ -359,5 +341,12 @@
     <string name="reload_guide">Reload Guide</string>
     <string name="back_to_site_list">Back to Site List</string>
     <string name="loading_topic">Loading %1$s...</string>
-
+    <string name="slide_menu_browse_devices">Browse %1$s</string>
+    <string name="category">Category</string>
+    <string name="topic_img_desc">Category image</string>
+    <string name="topic_name_hint">Category Name</string>
+    <string name="edit_guide_details">Edit Guide Details</string>
+    <string name="reorder_steps">Reorder Steps</string>
+    <string name="guide_create_confirm_leave_without_save_cancel">Cancel</string>
+    <string name="topic_background_description">Category background</string>
 </resources>

@@ -6,16 +6,6 @@
     <string name="device">Dispositivo</string>
     <string name="topic">Tema</string>
 
-    <!-- Dozuki Site List -->
-    <string name="dozuki_search_hint">Buscar sitios</string>
-    <string name="site_list_button">Explorar sitios</string>
-    <string name="site_list_title">Seleccione un sitio</string>
-    <string name="site_list_image_description">Dozuki: Le damos vida a la documentación técnica</string>
-    <string name="site_list_background">Serrucho de costilla Dozuki en la mesa de trabajo</string>
-    <string name="site_list_search_title">Buscar Sitios</string>
-    <string name="lock_description">Sitio Privado</string>
-    <string name="empty_site_list">No se encontraron sitios.</string>
-
     <!-- General -->
     <string name="save">Guardar</string>
     <string name="yes">Si</string>
@@ -40,7 +30,6 @@
     <string name="slide_menu_my_guides">Mis Guías</string>
     <string name="slide_menu_search">Buscar</string>
     <string name="slide_menu_browse_content">Navegar Contenido</string>
-    <string name="slide_menu_browse_devices">Navegar Dispositivos</string>
     <string name="slide_menu_favorite_guides">Guías Favoritas</string>
     <string name="slide_menu_create_new_guide">Crear Nueva Guía</string>
     <string name="slide_menu_media_gallery">Administrador de Medios</string>
@@ -60,7 +49,6 @@
     <string name="logout">Cerrar Sesión</string>
     <string name="register">Registrarse</string>
 
-    <string name="logout_messege">Está seguro que desea cerrar la sesión?</string>
     <string name="login_error">Uh oh! Información de ingresó es invalida, por favor intente otra vez.</string>
     <string name="try_again">Intente otra vez</string>
     <string name="register_agreement">Estoy de acuerdo
@@ -87,7 +75,7 @@
 
         <!-- Gallery -->
     <string name="media_help_title">Que es esto?</string>
-    <string name="media_help_messege">
+    <string name="media_help_message">
         El administrador de medios esta conectado directamente a tu cuenta de %1$s. Cualquier foto
         que subas aquí estará disponible a ti para el proceso de creación de guías.
     </string>
@@ -135,7 +123,6 @@
     <string name="topic_guide_thumbnail">La imágen a tamaño reducido de la sección de una guía</string>
     <string name="main_guide_img_description">Imágen principal de una guía</string>
     <string name="thumbnail_desc">Imágen a tamaño reducido</string>
-    <string name="topic_img_desc">Imágen del tema.</string>
     <string name="next_page_image_desc">Próxima Página</string>
 
     <string name="video_play_button_description">Botón de Reproducción</string>
@@ -149,7 +136,6 @@
     <string name="finish">Terminar</string>
     <string name="next">Próximo</string>
     <string name="previous">Previo</string>
-    <string name="topic_name_hint">Nombre de Tema</string>
 
     <!-- Full Screen Image -->
     <string name="close_full_screen_desc">Botón para cerrar pantalla completa</string>
@@ -168,9 +154,7 @@
     <string name="step_edit_confirm_delete_title">Eliminar Paso</string>
     <string name="step_edit_confirm_delete_message">Está usted seguro/a que quiere eliminar Paso %1$d?</string>
     <string name="edit">Editar</string>
-    <string name="edit_guide_details">Editar la Introducción</string>
     <string name="add_step">Agregar Paso</string>
-    <string name="reorder_steps">Reordenar</string>
     <string name="no_steps_text">La guía no contiene pasos.</string>
 
     <!-- Guide Step Rearrange Dialog -->
@@ -226,7 +210,6 @@
     <string name="guide_create_edit_must_add_line_content">No puedes guardar el paso hasta que el contenido de linea es añadido.</string>
     <string name="guide_create_confirm_leave_without_save_title">Salir Sin Guardar?</string>
     <string name="guide_create_confirm_leave_without_save_body">Al salirse se cancelara cualquier modificación que hayas hecho.</string>
-    <string name="guide_create_confirm_leave_without_save_cancel">Salir</string>
     <string name="guide_create_step_edit_main_image_description">Paso principal editar imágen</string>
     <string name="default_step_title">Paso intitulado</string>
     <string name="step_title_hint">Título de Paso (opcional)</string>
@@ -252,7 +235,6 @@
     <string name="cancel_reorder_bullets">Cancelar</string>
 
     <!-- Miscellaneous -->
-    <string name="topic_background_description">Fondo de tema</string>
     <string name="example_guide_item_title">Installando Samsung SGH-E317 SIM Card</string>
     <string name="fist_background_desc">Imágen de fondo del puño</string>
     <string name="my_guides">Mis Guías</string>
@@ -301,8 +283,6 @@
         <item>Eliminar</item>
     </string-array>
 
-    <!-- Strings needing translations. -->
-
     <string name="empty_image_error">La imagen esta vacía, pruebe con otra imagen o suba una nueva imagen.</string>
     <string name="link_to_item">Enlace a %1$s</string>
     <string name="no_items">No hay Artículos</string>
@@ -327,10 +307,13 @@
     <string name="introduction">Introducción</string>
     <string name="validation_error_title">Error de Validación</string>
     <string name="validation_error_body">La validación fallo</string>
+
+
+    <!-- Strings needing translations. -->
     <string name="unpublishing">Unpublishing…</string>
     <string name="publishing">Publishing…</string>
     <string name="voice_dictate_line_content_description">Voice dictate line content</string>
-    <string name="line_length_exceeded_error">Maximum 350 characters per line.</string>
+    <string name="line_length_exceeded_error">Maximum 349 characters per line.</string>
     <string name="new_guide_details_title">New Guide Details</string>
     <string name="device_invalid_characters_error_message">Device name contains invalid characters.</string>
     <string name="guide_subject_required_error">Guide Subject Required</string>
@@ -341,5 +324,12 @@
     <string name="reload_guide">Reload Guide</string>
     <string name="back_to_site_list">Back to Site List</string>
     <string name="loading_topic">Loading %1$s...</string>
-
+    <string name="slide_menu_browse_devices">Browse %1$s</string>
+    <string name="category">Category</string>
+    <string name="topic_img_desc">Category image</string>
+    <string name="topic_name_hint">Category Name</string>
+    <string name="edit_guide_details">Edit Guide Details</string>
+    <string name="reorder_steps">Reorder Steps</string>
+    <string name="guide_create_confirm_leave_without_save_cancel">Cancel</string>
+    <string name="topic_background_description">Category background</string>
 </resources>

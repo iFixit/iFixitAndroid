@@ -6,16 +6,6 @@
     <string name="device">Dispositif</string>
     <string name="topic">Sujet</string>
 
-    <!-- Dozuki Site List -->
-    <string name="dozuki_search_hint">Rechercher les Sites</string>
-    <string name="site_list_button">Explorer les Sites</string>
-    <string name="site_list_title">Sélectionner un Site</string>
-    <string name="site_list_image_description">Dozuki: Où la documentation technique prend vie</string>
-    <string name="site_list_background">Dozuki scie sur l\'établi</string>
-    <string name="site_list_search_title">Rechercher les Sites</string>
-    <string name="lock_description">Site Privé</string>
-    <string name="empty_site_list">Pas de des sites trouvés.</string>
-
     <!-- General -->
     <string name="save">Sauvegarder</string>
     <string name="yes">Oui</string>
@@ -40,7 +30,6 @@
     <string name="slide_menu_my_guides">Mes Guides</string>
     <string name="slide_menu_search">Chercher</string>
     <string name="slide_menu_browse_content">Navigation du contenu</string>
-    <string name="slide_menu_browse_devices">Recherchez Dispositifs</string>
     <string name="slide_menu_favorite_guides">Guides Favoris</string>
     <string name="slide_menu_create_new_guide">Créer un nouveau Guide</string>
     <string name="slide_menu_media_gallery"> Galerie des Médias</string>
@@ -60,7 +49,6 @@
     <string name="logout">Déconnexion</string>
     <string name="register">S\'inscrire</string>
 
-    <string name="logout_messege">Etes-vous sûr de vouloir vous déconnecter ?</string>
     <string name="login_error"> Uh oh ! Détails de connexion invalide, essayez à nouveau s\'il vous plaît..</string>
     <string name="try_again"> Essayez à nouveau </string>
     <string name="register_agreement"> J\'accepte
@@ -87,7 +75,7 @@
 
     <!-- Gallery -->
     <string name="media_help_title">Qu\'est-ce que ceci ?</string>
-    <string name="media_help_messege">Cette galerie est directement liée à votre compte iFixit. Toutes les photos que
+    <string name="media_help_message">Cette galerie est directement liée à votre compte iFixit. Toutes les photos que
         vous chargez ici sera à votre disposition pendant votre création de guide. Restez à l\'écoute et vous serez
         capable de créer des guides n\'importe quand !
     </string>
@@ -135,7 +123,6 @@
     <string name="topic_guide_thumbnail">Guide section miniature</string>
     <string name="main_guide_img_description"> Image principale de guide </string>
     <string name="thumbnail_desc">Image Miniature</string>
-    <string name="topic_img_desc">Sujet Image</string>
     <string name="next_page_image_desc"> Page Suivante</string>
 
     <string name="video_play_button_description">Bouton de Lecture de la Vidéo</string>
@@ -149,7 +136,6 @@
     <string name="finish"> Terminer </string>
     <string name="next"> Suivant </string>
     <string name="previous"> Précédente </string>
-    <string name="topic_name_hint">Nom du sujet</string>
 
     <!-- Full Screen Image -->
     <string name="close_full_screen_desc"> Bouton pour Fermer Plein Écran </string>
@@ -167,9 +153,7 @@
     <string name="step_edit_confirm_delete_title">Supprimer L\'étape</string>
     <string name="step_edit_confirm_delete_message"> Etes-vous sûr que vous voulez supprimer </string>
     <string name="edit">Modifier</string>
-    <string name="edit_guide_details">Intro</string>
     <string name="add_step">Ajouter Étape</string>
-    <string name="reorder_steps">Réorganiser</string>
     <string name="no_steps_text">ajouter des étapes avec la barre ci-dessus !</string>
 
     <!-- Guide Step Rearrange Dialog -->
@@ -227,7 +211,6 @@
         de la ligne est ajouté.</string>
     <string name="guide_create_confirm_leave_without_save_title">Quitter sans Sauvegarder ?</string>
     <string name="guide_create_confirm_leave_without_save_body">Quitter annulera les modifications que vous avez faites.</string>
-    <string name="guide_create_confirm_leave_without_save_cancel">Quitter</string>
     <string name="guide_create_step_edit_main_image_description">Image principale de l\'étape</string>
     <string name="default_step_title">Étape sans titre</string>
     <string name="step_title_hint">Insérez sagesse ici.</string>
@@ -249,7 +232,6 @@
 
 
     <!-- Miscellaneous -->
-    <string name="topic_background_description">Sujet fond</string>
     <string name="example_guide_item_title"> Installation de carte SIM Samsung SGH-E317</string>
     <string name="fist_background_desc">Image fond de poing</string>
     <string name="my_guides">Mes Guides</string>
@@ -346,5 +328,12 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="reload_guide">Reload Guide</string>
     <string name="back_to_site_list">Back to Site List</string>
     <string name="loading_topic">Loading %1$s...</string>
-
+    <string name="slide_menu_browse_devices">Browse %1$s</string>
+    <string name="category">Category</string>
+    <string name="topic_img_desc">Category image</string>
+    <string name="topic_name_hint">Category Name</string>
+    <string name="edit_guide_details">Edit Guide Details</string>
+    <string name="reorder_steps">Reorder Steps</string>
+    <string name="guide_create_confirm_leave_without_save_cancel">Cancel</string>
+    <string name="topic_background_description">Category background</string>
 </resources>

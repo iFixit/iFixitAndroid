@@ -58,7 +58,6 @@
     <string name="logout">Logout</string>
     <string name="register">Register</string>
 
-    <string name="logout_messege">Are you sure you want to logout?</string>
     <string name="try_again">Try again</string>
     <string name="register_agreement">I agree to <a
         href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
@@ -84,7 +83,7 @@
 
     <!-- Gallery -->
     <string name="media_help_title">What\'s this?</string>
-    <string name="media_help_messege">
+    <string name="media_help_message">
         This media manager is linked directly to your %1$s account. Any pictures you
         load into here will be available to you in your guide creation endeavors.
     </string>
