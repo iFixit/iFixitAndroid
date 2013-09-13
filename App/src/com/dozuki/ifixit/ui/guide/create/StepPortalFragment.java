@@ -118,7 +118,9 @@ public class StepPortalFragment extends BaseFragment implements
 
    @Override
    public void onPrepareOptionsMenu(Menu menu) {
-      menu.findItem(R.id.reorder_steps).setVisible(mGuide.getSteps().size() >= 2);
+      if (mGuide != null) {
+         menu.findItem(R.id.reorder_steps).setVisible(mGuide.getSteps().size() >= 2);
+      }
    }
 
    @Override
