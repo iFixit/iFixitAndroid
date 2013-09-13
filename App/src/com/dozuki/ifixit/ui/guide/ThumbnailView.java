@@ -170,7 +170,7 @@ public class ThumbnailView extends LinearLayout {
 
       mPicasso.load(R.drawable.no_image)
        .fit()
-       .into((Target) mMainImage);
+       .into((ImageView)mMainImage);
    }
 
    public void setAddImageMain() {
