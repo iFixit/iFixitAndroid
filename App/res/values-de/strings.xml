@@ -340,7 +340,7 @@
     <string name="guide_type">Guide Type</string>
     <string name="reload_guide">Reload Guide</string>
     <string name="back_to_site_list">Back to Site List</string>
-    <string name="loading_topic">Loading %1$s...</string>
+    <string name="loading_topic">Loading %1$s…</string>
     <string name="slide_menu_browse_devices">Browse %1$s</string>
     <string name="category">Category</string>
     <string name="topic_img_desc">Category image</string>
