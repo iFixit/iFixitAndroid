@@ -11,8 +11,7 @@
     <string name="cancel">Abbrechen</string>
     <string name="confirm_delete_title">Löschen bestätigen</string>
     <string name="confirm_delete_body">Das Löschen einer Anleitung lässt sich NICHT widerrufen. Sind Sie sicher, dass
-        Sie \"%1$s\" löschen möchten?
-    </string>
+        Sie \"%1$s\" löschen möchten?</string>
 
     <!-- Error Messages -->
     <string name="parse_error_title">Also das ist jetzt wirklich blamabel</string>
@@ -47,8 +46,7 @@
     <string name="try_again">Nochmal versuchen</string>
     <string name="register_agreement">Ich stimme zu, dass meine Beiträge unter unserer
         <a href="http://www.ifixit.com/Info/Licensing">freien Lizenz</a>
-        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">veröffentlicht werden</a>.
-    </string>
+        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">veröffentlicht werden</a>.</string>
     <string name="terms_unchecked_error">Du musst den Bedingungen zustimmen.</string>
     <string name="login_dialog_title">Anmelden</string>
     <string name="register_dialog_title">Registrieren</string>
@@ -70,26 +68,20 @@
     <!-- Gallery -->
     <string name="media_help_title">Was ist das hier?</string>
     <string name="media_help_message">Dieser Medienmanager ist direkt mit Deinem %1$s Benutzerkonto verbunden. Alle
-        Bilder, die Du hier hochlädst, stehen Dir für die Erstellung Deiner Anleitungen zur Verfügung.
-    </string>
+        Bilder, die Du hier hochlädst, stehen Dir für die Erstellung Deiner Anleitungen zur Verfügung.</string>
     <string name="media_help_confirm">Gut zu wissen!</string>
     <string name="gallery_tool_tip">Bild hinzufügen</string>
     <string name="camera_tool_tip">Kamera</string>
     <string name="no_images_text">Es befinden sich keine Bilder in Deinem Medienmanager. Fügen Bilder hinzu, indem Du
-        auf die Symbole oben klickst!
-    </string>
+        auf die Symbole oben klickst!</string>
     <string name="image_chooser_title">Bild wählen</string>
     <string name="image">Bild</string>
     <string name="images">Bilder</string>
     <string name="non_image_error">Bilder müssen eine Größe von mindestens 800x600 Pixel haben and lokal auf Deinem
-        Gerät gespeichert sein. Gültige Formate sind .png, .jpg, .jpeg, und .gif.
-    </string>
+        Gerät gespeichert sein. Gültige Formate sind .png, .jpg, .jpeg, und .gif.</string>
     <string name="too_many_image_error">Du kannst höchstens vier Dateien gleichzeitig hochladen. Warte bitte, bis der
-        Upload der aktuellen Dateien abgeschlossen ist, bevor Du weitere Dateien hochlädst.
-    </string>
-    <string name="delete_loading_image_error">Eines oder mehrere Bilder laden noch und werden daher nicht vom Server
-        gelöscht.
-    </string>
+        Upload der aktuellen Dateien abgeschlossen ist, bevor Du weitere Dateien hochlädst.</string>
+    <string name="delete_loading_image_error">Eines oder mehrere Bilder laden noch und werden daher nicht vom Server gelöscht.</string>
 
     <!-- HELP NEEDED FOR TRANSLATION: Please provide example content for these two variables -->
     <string name="media_delete_body">Möchtest Du %1$d %2$s wirklich löschen?</string>
@@ -133,8 +125,7 @@
     <string name="action_delete">Löschen</string>
     <string name="add_guide">Anleitung hinzufügen</string>
     <string name="no_guides_text">Du hast bisher noch keine Anleitungen erstellt. Tippe auf ein Symbol in der Action Bar
-        oder im Menü, um eine Anleitung zu erstellen.
-    </string>
+        oder im Menü, um eine Anleitung zu erstellen.</string>
 
     <!-- Guide Steps Edit List -->
     <string name="step_edit_confirm_delete_title">Schritt löschen</string>
@@ -155,22 +146,15 @@
     <string name="guide_intro_wizard_guide_introduction_title">Einleitung</string>
     <string name="guide_intro_wizard_guide_topic_title">%s Name</string>
     <string name="guide_intro_wizard_guide_introduction_description">Worum genau geht es bei dieser Anleitung?
-        Beschreibe die Komponente, den Sachverhalt oder das Konzept im Zusammenhang mit diesem %1$s.
-    </string>
-    <string name="guide_intro_wizard_guide_summary_description">Beschreibe in ein oder zwei Sätzen, worum es bei dieser
-        Anleitung geht.
-    </string>
+        Beschreibe die Komponente, den Sachverhalt oder das Konzept im Zusammenhang mit diesem %1$s.</string>
+    <string name="guide_intro_wizard_guide_summary_description">Beschreibe in ein oder zwei Sätzen, worum es bei dieser Anleitung geht.</string>
     <!-- Improve English - We've suggested a title for you. You are welcome to change it. -->
-    <string name="guide_intro_wizard_guide_title_description">Wir haben Dir einen Titel vorgeschlagen. Du kannst ihn
-        aber gern ändern.
-    </string>
+    <string name="guide_intro_wizard_guide_title_description">Wir haben Dir einen Titel vorgeschlagen. Du kannst ihn aber gern ändern.</string>
     <string name="guide_intro_wizard_guide_subject_description">Worum genau geht es bei dieser Anleitung? Beschreibe die
-        Komponente, den Sachverhalt oder das Konzept im Zusammenhang mit diesem %1$s.
-    </string>
+        Komponente, den Sachverhalt oder das Konzept im Zusammenhang mit diesem %1$s.</string>
     <string name="guide_intro_wizard_guide_topic_description">Welches %1$s bearbeitest Du? Ist es zum Beispiel ein
         \"iPhone 4\" oder ein \"Dyson Staubsauger\"? Falls das %2$s schon existiert, gehe sicher, dass Du es aus der
-        vorausgefüllten Liste auswählst.
-    </string>
+        vorausgefüllten Liste auswählst.</string>
 
     <!-- Guide Step Edit -->
     <string name="step_number">Schritt %1$d</string>
@@ -178,17 +162,11 @@
     <string name="step_delete_dialog_body">Möchtest Du diese Zeile wirklich löschen?</string>
     <string name="guide_create_help">Hilfetext</string>
     <string name="guide_create_edit_steps_help">Hilfetext</string>
-    <string name="guide_create_edit_step_media_cannot_add_step">Füge in diesem Schritt erst Inhalte hinzu, bevor Du
-        einen weiteren Schritt ergänzt.
-    </string>
+    <string name="guide_create_edit_step_media_cannot_add_step">Füge in diesem Schritt erst Inhalte hinzu, bevor Du einen weiteren Schritt ergänzt.</string>
     <!-- Improve English -->
-    <string name="guide_create_edit_must_add_line_content">Dieser Schritt kann erst gespeichert werden, nachdem eine
-        Inhaltszeile hinzugefügt wurde.
-    </string>
+    <string name="guide_create_edit_must_add_line_content">Dieser Schritt kann erst gespeichert werden, nachdem eine Inhaltszeile hinzugefügt wurde.</string>
     <string name="guide_create_confirm_leave_without_save_title">Verlassen ohne zu speichern?</string>
-    <string name="guide_create_confirm_leave_without_save_body">Deine Änderungen werden beim Verlassen des Bereichs
-        verloren gehen.
-    </string>
+    <string name="guide_create_confirm_leave_without_save_body">Deine Änderungen werden beim Verlassen des Bereichs verloren gehen.</string>
     <string name="guide_create_step_edit_main_image_description">Hauptschritt Bild bearbeiten</string>
     <string name="default_step_title">Schritt unbenannt</string>
     <string name="step_title_hint">Titel des Schritts (optional)</string>
@@ -272,8 +250,7 @@
     <string name="error">Fehler</string>
     <string name="invalid_revision_error_title">Versionierungsfehler</string>
     <string name="invalid_revision_error">Du scheinst eine veraltete Version dieser Anleitung zu bearbeiten. Bitte lade
-        die Anleitung neu, um keine Informationen zu verlieren.
-    </string>
+        die Anleitung neu, um keine Informationen zu verlieren.</string>
     <string name="fatal_error_title">Unbekannter Fehler</string>
     <string name="fatal_error">Es ist ein Fehler aufgetreten. Bitte lade die Anleitung neu.</string>
     <string name="video_activity_progress_title">Bitte warten…</string>

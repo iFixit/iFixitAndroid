@@ -28,7 +28,7 @@
     <string name="slide_menu_browse_content">Navigation du contenu</string>
     <string name="slide_menu_favorite_guides">Guides Favoris</string>
     <string name="slide_menu_create_new_guide">Créer un nouveau Guide</string>
-    <string name="slide_menu_media_gallery"> Galerie des Médias</string>
+    <string name="slide_menu_media_gallery">Galerie des Médias</string>
     <string name="slide_menu_logout">Déconnexion</string>
     <string name="slide_menu_ifixit_everywhere">iFixit Partout</string>
     <string name="slide_menu_youtube">Youtube Channel</string>
@@ -42,14 +42,13 @@
     <string name="login">Connecter</string>
     <string name="register">S\'inscrire</string>
 
-    <string name="login_error"> Uh oh ! Détails de connexion invalide, essayez à nouveau s\'il vous plaît..</string>
-    <string name="try_again"> Essayez à nouveau </string>
-    <string name="register_agreement"> J\'accepte
+    <string name="login_error">Uh oh ! Détails de connexion invalide, essayez à nouveau s\'il vous plaît..</string>
+    <string name="try_again">Essayez à nouveau</string>
+    <string name="register_agreement">J\'accepte
         <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">libérer mes contributions</a>
-        sous <a href="http://www.ifixit.com/Info/Licensing">notre licence publique</a>.
-    </string>
+        sous <a href="http://www.ifixit.com/Info/Licensing">notre licence publique</a>.</string>
     <string name="terms_unchecked_error">Vous devez accepter les termes.</string>
-    <string name="login_dialog_title"> Cnnecter</string>
+    <string name="login_dialog_title">Cnnecter</string>
     <string name="register_dialog_title">Register</string>
     <string name="login_password_hint">Mot de passe</string>
     <string name="login_email_hint">Email</string>
@@ -70,31 +69,26 @@
     <string name="media_help_title">Qu\'est-ce que ceci ?</string>
     <string name="media_help_message">Cette galerie est directement liée à votre compte iFixit. Toutes les photos que
         vous chargez ici sera à votre disposition pendant votre création de guide. Restez à l\'écoute et vous serez
-        capable de créer des guides n\'importe quand !
-    </string>
-    <string name="media_help_confirm"> Bon à savoir !</string>
-    <string name="gallery_tool_tip"> Ajouter une image </string>
-    <string name="camera_tool_tip"> Caméra </string>
-    <string name="no_images_text"> Ajouter des images avec les icônes ci-dessus !</string>
+        capable de créer des guides n\'importe quand!</string>
+    <string name="media_help_confirm">Bon à savoir !</string>
+    <string name="gallery_tool_tip">Ajouter une image</string>
+    <string name="camera_tool_tip">Caméra</string>
+    <string name="no_images_text">Ajouter des images avec les icônes ci-dessus !</string>
     <string name="image_chooser_title">Sélectionnez l\'image</string>
     <string name="image">image</string>
     <string name="images">images</string>
     <string name="non_image_error">Les images doivent être au moins 800x600 pixels et locales sur votre appareil. Les formats valides sont
-        .png, .jpg, .jpeg, and .gif.
-    </string>
+        .png, .jpg, .jpeg, and .gif.</string>
     <string name="too_many_image_error">Vous pouvez seulement télécharger 4 fichiers à la fois. S\'il vous plaît
-        attendez que vos ajouts actuels se terminent pour télécharger un autre fichier.
-    </string>
-    <string name="delete_loading_image_error"> Une ou plusieurs images sont toujours en chargement et ne sera pas supprimé de le serveur</string>
+        attendez que vos ajouts actuels se terminent pour télécharger un autre fichier.</string>
+    <string name="delete_loading_image_error">Une ou plusieurs images sont toujours en chargement et ne sera pas supprimé de le serveur</string>
 
-    <string name="media_delete_body">
-        Etes-vous sûr que vous voulez supprimer %1$d %2$s ?
-    </string>
+    <string name="media_delete_body">Etes-vous sûr que vous voulez supprimer %1$d %2$s?</string>
 
 
     <!-- Topic List -->
-    <string name="generalInformation"> Informations Générales </string>
-    <string name="categories"> Catégories </string>
+    <string name="generalInformation">Informations Générales</string>
+    <string name="categories">Catégories</string>
 
     <!-- Topic View -->
     <string name="guides">Guides</string>
@@ -116,12 +110,12 @@
 
     <!-- Guide View Menu -->
     <string name="review">Examinez</string>
-    <string name="finish"> Terminer </string>
-    <string name="next"> Suivant </string>
-    <string name="previous"> Précédente </string>
+    <string name="finish">Terminer</string>
+    <string name="next">Suivant</string>
+    <string name="previous">Précédente</string>
 
     <!-- Full Screen Image -->
-    <string name="close_full_screen_desc"> Bouton pour Fermer Plein Écran </string>
+    <string name="close_full_screen_desc">Bouton pour Fermer Plein Écran</string>
 
     <!-- Guide Edit List -->
     <string name="publish">Publier</string>
@@ -129,12 +123,12 @@
     <string name="unpublish">Dépublier</string>
     <string name="unpublished">Non Publié</string>
     <string name="action_delete">Supprimer</string>
-    <string name="add_guide"> Ajouter Guide </string>
-    <string name="no_guides_text"> Ajouter guides avec la barre ci-dessus !</string>
+    <string name="add_guide">Ajouter Guide</string>
+    <string name="no_guides_text">Ajouter guides avec la barre ci-dessus !</string>
 
     <!-- Guide Steps Edit List -->
     <string name="step_edit_confirm_delete_title">Supprimer L\'étape</string>
-    <string name="step_edit_confirm_delete_message"> Etes-vous sûr que vous voulez supprimer </string>
+    <string name="step_edit_confirm_delete_message">Etes-vous sûr que vous voulez supprimer</string>
     <string name="edit">Modifier</string>
     <string name="add_step">Ajouter Étape</string>
     <string name="no_steps_text">ajouter des étapes avec la barre ci-dessus !</string>
@@ -153,20 +147,17 @@
         Décrivez le composant, ou chose / idée que vous décrivez à propos de %1$s.</string>
     <string name="guide_intro_wizard_guide_summary_description">Dans une phrase ou deux, décrivez ce guide.</string>
     <string name="guide_intro_wizard_guide_title_description">Titre généré par le type, %1$s… Only edit
-        Seulement modifier si vous n\'êtes pas heureux avec ce qui est là.
-    </string>
+        Seulement modifier si vous n\'êtes pas heureux avec ce qui est là.</string>
     <string name="guide_intro_wizard_guide_subject_description">Quel est ce guide ?
-        Décrivez l\'élément, une chose ou idée dont vous parlez à propos de %1$s.
-    </string>
+        Décrivez l\'élément, une chose ou idée dont vous parlez à propos de %1$s.</string>
     <string name="guide_intro_wizard_guide_topic_description">Sur quelle %1$s travaillez-vous?
         Par exemple, est-ce un \"iPhone 4\" ou une \"Machine à laver Kenmore\" ?
-        Si le %2$s existe déjà, assurez-vous de le sélectionner dans la liste prérempli.
-    </string>
+        Si le %2$s existe déjà, assurez-vous de le sélectionner dans la liste prérempli.</string>
 
     <!-- Guide Step Edit -->
     <string name="step_number">Étape %1$d</string>
 
-    <string name="step_delete_dialog_title">Supprimer la Ligne </string>
+    <string name="step_delete_dialog_title">Supprimer la Ligne</string>
     <string name="step_delete_dialog_body">Etes-vous sûr de vouloir supprimer cette ligne ?</string>
     <string name="guide_create_help">aide texte</string>
     <string name="guide_create_edit_steps_help">aide texte</string>
@@ -252,14 +243,13 @@
     <string name="invalid_revision_error_title">Erreur de Révision</string>
     <string name="invalid_revision_error">On dirait que vous êtes en train d\'éditer une version de ce guide qui est
         mis à jour.
-Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recharger ce guide.
-    </string>
+Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recharger ce guide.</string>
     <string name="fatal_error_title">Erreur Inconnue</string>
     <string name="fatal_error">On dirait que une erreur s\'est produite. S\'il vous plaît recharger votre
         guide.</string>
     <string name="featured_guides">Guides Présentés</string>
     <string name="video_activity_progress_title">Attendez s\'il vous plaît …</string>
-    <string name="video_activity_progress_body"> Chargement Video …</string>
+    <string name="video_activity_progress_body">Chargement Video …</string>
     <string name="guide_intro_wizard_guide_introduction_title">Introduction</string>
     <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
     <string name="not_found_error">The requested data does not exist.</string>

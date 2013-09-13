@@ -46,8 +46,7 @@
     <string name="try_again">Intente otra vez</string>
     <string name="register_agreement">Estoy de acuerdo
         <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">de liberar mis contribuciones</a>
-        bajo <a href="http://www.ifixit.com/Info/Licensing">nuestra licencia libre.</a>.
-    </string>
+        bajo <a href="http://www.ifixit.com/Info/Licensing">nuestra licencia libre.</a>.</string>
     <string name="terms_unchecked_error">Debe aceptar los términos.</string>
     <string name="login_dialog_title">Ingresar</string>
     <string name="register_dialog_title">Registrarse</string>
@@ -70,8 +69,7 @@
     <string name="media_help_title">Que es esto?</string>
     <string name="media_help_message">
         El administrador de medios esta conectado directamente a tu cuenta de %1$s. Cualquier foto
-        que subas aquí estará disponible a ti para el proceso de creación de guías.
-    </string>
+        que subas aquí estará disponible a ti para el proceso de creación de guías.</string>
     <string name="media_help_confirm">Es bueno saber!</string>
     <string name="gallery_tool_tip">Agregar Imágen</string>
     <string name="camera_tool_tip">Cámara</string>
@@ -80,17 +78,12 @@
     <string name="image">imágen</string>
     <string name="images">imágenes</string>
     <string name="non_image_error"> Las imágenes deben de ser por lo menos 800x600 píxeles y deben de estar localizadas en su dispositivo. Los formatos válidos son
-        .png, .jpg, .jpeg, y .gif.
-    </string>
+        .png, .jpg, .jpeg, y .gif.</string>
     <string name="too_many_image_error">Solo puede subir 4 archivos a la vez. Por favor espere que sus archivos
-        terminen de subir para subir otro archivo.
-    </string>
-    <string name="delete_loading_image_error">Una o mas imágenes aun están cargando y no serán borradas del servidor.
-    </string>
+        terminen de subir para subir otro archivo.</string>
+    <string name="delete_loading_image_error">Una o mas imágenes aun están cargando y no serán borradas del servidor.</string>
 
-    <string name="media_delete_body">
-        Está usted seguro/a que quiere eliminar %1$d %2$s?
-    </string>
+    <string name="media_delete_body">Está usted seguro/a que quiere eliminar %1$d %2$s?</string>
 
     <!-- Topic List -->
     <string name="generalInformation">Información General</string>
@@ -155,14 +148,11 @@
         Describe el componente, cosa, o idea que estas describiendo sobre %1$s.</string>
     <string name="guide_intro_wizard_guide_summary_description">Resume ésta guía en una o dos oraciónes.</string>
     <string name="guide_intro_wizard_guide_title_description">Título generado por el tipo, %1$s, y enfoque. Solo edita
-        si no estas feliz con lo que esta  escrito allí..
-    </string>
+        si no estas feliz con lo que esta  escrito allí..</string>
     <string name="guide_intro_wizard_guide_subject_description">Específicamente, cual es la utilidad de la guía? Describe el
-        componente, cosa, o idea que estas describiendo sobre %1$s.
-    </string>
+        componente, cosa, o idea que estas describiendo sobre %1$s.</string>
     <string name="guide_intro_wizard_guide_topic_description">En qué %1$s estas trabajando? Por ejemplo, es un
-        \"iPhone 4\" or una \"Kenmore Washing Machine\"? Si el %2$s ya existe, asegúrese de seleccionar desde la lista pre poblada.
-    </string>
+        \"iPhone 4\" or una \"Kenmore Washing Machine\"? Si el %2$s ya existe, asegúrese de seleccionar desde la lista pre poblada.</string>
 
     <!-- Guide Step Edit -->
     <string name="step_number">Paso %1$d</string>
@@ -170,8 +160,7 @@
     <string name="step_delete_dialog_body">Está seguro que desea eliminar esta línea?</string>
     <string name="guide_create_help">texto de ayuda</string>
     <string name="guide_create_edit_steps_help">texto de ayuda</string>
-    <string name="guide_create_edit_step_media_cannot_add_step">Agrega contenido al paso actual antes de crear un nuevo paso.
-    </string>
+    <string name="guide_create_edit_step_media_cannot_add_step">Agrega contenido al paso actual antes de crear un nuevo paso.</string>
     <string name="guide_create_edit_must_add_line_content">No puedes guardar el paso hasta que el contenido de linea es añadido.</string>
     <string name="guide_create_confirm_leave_without_save_title">Salir Sin Guardar?</string>
     <string name="guide_create_confirm_leave_without_save_body">Al salirse se cancelara cualquier modificación que hayas hecho.</string>
@@ -250,8 +239,7 @@
     <string name="error">Error</string>
     <string name="invalid_revision_error_title">Error de revisión</string>
     <string name="invalid_revision_error">Parece que es posible que estés editando una versión antigua de esta guía.
-        Para prevenir una perdida de información, por favor recarga esta guía.
-    </string>
+        Para prevenir una perdida de información, por favor recarga esta guía.</string>
     <string name="fatal_error_title">Error Desconocido</string>
     <string name="fatal_error">Ha ocurrido un error. Por favor recarga tu guía.</string>
     <string name="featured_guides">Guías Destacadas</string>
