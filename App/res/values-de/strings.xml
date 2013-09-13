@@ -238,7 +238,6 @@
 
 
     <!-- Strings needing translations. -->
-
     <string name="favorites_empty_text">You haven\'t favorited any guides yet.</string>
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
     <string name="link_to_item">Link to %1$s</string>
@@ -247,14 +246,13 @@
     <string name="save_changes_to_step">Save changes to this step?</string>
     <string name="new_line">New line</string>
     <string name="discard_changes">Discard Changes</string>
-    <string name="error">Fehler</string>
-    <string name="invalid_revision_error_title">Versionierungsfehler</string>
-    <string name="invalid_revision_error">Du scheinst eine veraltete Version dieser Anleitung zu bearbeiten. Bitte lade
-        die Anleitung neu, um keine Informationen zu verlieren.</string>
-    <string name="fatal_error_title">Unbekannter Fehler</string>
-    <string name="fatal_error">Es ist ein Fehler aufgetreten. Bitte lade die Anleitung neu.</string>
-    <string name="video_activity_progress_title">Bitte warten…</string>
-    <string name="video_activity_progress_body">Video wird geladen…</string>
+    <string name="error">An Error Has Occurred</string>
+    <string name="invalid_revision_error_title">Edit conflict</string>
+    <string name="invalid_revision_error">Your changes could not be saved because the content you are editing has changed since you last opened it. Please remake your changes and try again.</string>
+    <string name="fatal_error_title">Unknown Error</string>
+    <string name="fatal_error">It looks like an error occurred.</string>
+    <string name="video_activity_progress_title">Please Wait…</string>
+    <string name="video_activity_progress_body">Loading Video…</string>
     <string name="not_found_error">The requested data does not exist.</string>
     <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
     <string name="teardowns">Teardowns</string>
