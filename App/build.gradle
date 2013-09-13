@@ -25,7 +25,7 @@ dependencies {
    compile "com.github.kevinsawicki:http-request:5.4.1"
    compile "org.jsoup:jsoup:1.7.2"
    compile "com.google.code.gson:gson:2.2.4"
-   compile "com.squareup.picasso:picasso:1.1.1"
+   compile "com.squareup.picasso:picasso:2.0.2"
    compile "net.simonvt.menudrawer:menudrawer:3.0.4@aar"
    compile "com.viewpagerindicator:viewpagerindicator:2.4.1"
    compile "com.google.android.analytics:analytics:3"

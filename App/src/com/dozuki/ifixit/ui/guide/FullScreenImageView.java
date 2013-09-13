@@ -6,6 +6,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 
@@ -23,12 +24,12 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
    }
 
    @Override
-   public void onSuccess(Bitmap bitmap) {
+   public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
       setImageBitmap(bitmap);
    }
 
    @Override
-   public void onError() {
+   public void onBitmapFailed() {
       if (mImageUrl.isEmpty()) {
          Log.e("FallbackImageView", "You must set the base Image url using setImageUrl.");
       }

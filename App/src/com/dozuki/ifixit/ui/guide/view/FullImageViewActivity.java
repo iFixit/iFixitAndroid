@@ -8,6 +8,7 @@ import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.ui.guide.ScaleImageTransformation;
 import com.dozuki.ifixit.ui.guide.FullScreenImageView;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
@@ -45,12 +46,10 @@ public class FullImageViewActivity extends SherlockActivity {
           .into((Target) image);
       } else if (url.startsWith("content://")) {
          picasso.load(url)
-          .scale(0.5f)
           .error(R.drawable.no_image)
           .into((Target) image);
       } else {
          picasso.load(new File(url))
-          .scale(0.5f)
           .error(R.drawable.no_image)
           .into((Target) image);
       }

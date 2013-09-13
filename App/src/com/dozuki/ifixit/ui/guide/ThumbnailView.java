@@ -19,7 +19,7 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestBuilder;
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
@@ -388,7 +388,7 @@ public class ThumbnailView extends LinearLayout {
       thumb.container.setLayoutParams(llp);
    }
 
-   private void buildImage(RequestBuilder builder, FallbackImageView image) {
+   private void buildImage(RequestCreator builder, FallbackImageView image) {
       builder
        .error(R.drawable.no_image)
        .into((Target) image);

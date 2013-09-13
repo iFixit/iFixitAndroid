@@ -9,7 +9,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestBuilder;
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
@@ -32,14 +32,14 @@ public class FallbackImageView extends ImageView implements Target {
    }
 
    @Override
-   public void onSuccess(Bitmap bitmap) {
+   public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
       setImageBitmap(bitmap);
    }
 
    @Override
-   public void onError() {
+   public void onBitmapFailed() {
       Picasso picasso = PicassoUtils.with(getContext());
-      RequestBuilder builder;
+      RequestCreator builder;
 
       if (mImage == null) {
          if (mImageUrl.isEmpty()) {

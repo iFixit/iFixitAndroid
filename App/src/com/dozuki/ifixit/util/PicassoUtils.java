@@ -3,7 +3,7 @@ package com.dozuki.ifixit.util;
 import android.content.Context;
 import com.squareup.okhttp.HttpResponseCache;
 import com.squareup.okhttp.OkHttpClient;
-import com.squareup.picasso.OkHttpLoader;
+import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
 import javax.net.ssl.SSLContext;
@@ -26,7 +26,7 @@ public class PicassoUtils {
             // Ignored
             // throw new RuntimeException();
          }
-         singleton = new Picasso.Builder(context).loader(new OkHttpLoader(client)).build();
+         singleton = new Picasso.Builder(context).downloader(new OkHttpDownloader(client)).build();
       }
       return singleton;
    }
@@ -63,12 +63,12 @@ public class PicassoUtils {
       }
    }
 
-   private static int calculateDiskCacheSize(File dir) {
+   private static long calculateDiskCacheSize(File dir) {
       try {
          final Class<?> clazz = Class.forName("com.squareup.picasso.Utils");
          final Method method = clazz.getDeclaredMethod("calculateDiskCacheSize", File.class);
          method.setAccessible(true);
-         return (Integer) method.invoke(null, dir);
+         return (Long) method.invoke(null, dir);
       } catch (ClassNotFoundException e) {
          throw new RuntimeException(e); // shouldn't happen
       } catch (NoSuchMethodException e) {
@@ -82,7 +82,7 @@ public class PicassoUtils {
 
    private static HttpResponseCache createResponseCache(Context context) throws IOException {
       File cacheDir = createDefaultCacheDir(context);
-      int maxSize = calculateDiskCacheSize(cacheDir);
+      long maxSize = calculateDiskCacheSize(cacheDir);
       return new HttpResponseCache(cacheDir, maxSize);
    }
 }

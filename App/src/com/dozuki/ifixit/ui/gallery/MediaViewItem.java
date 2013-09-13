@@ -12,7 +12,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestBuilder;
+import com.squareup.picasso.RequestCreator;
 
 import java.io.File;
 
@@ -54,7 +54,7 @@ public class MediaViewItem extends RelativeLayout {
       buildImage(mPicasso.load(image));
    }
 
-   private void buildImage(RequestBuilder builder) {
+   private void buildImage(RequestCreator builder) {
       builder
        .resize(mTargetWidth, mTargetHeight)
        .centerCrop()
