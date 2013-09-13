@@ -2,9 +2,7 @@
 <resources>
     <!-- Main Application -->
     <string name="devices">Geräte</string>
-    <string name="topics">Themen</string>
     <string name="device">Gerät</string>
-    <string name="topic">Thema</string>
 
     <!-- General -->
     <string name="save">Speichern</string>
@@ -21,7 +19,6 @@
     <string name="parse_error_message">Beim Versuch, Inhalte vom Server zu laden, ist ein Fehler aufgetreten.</string>
     <string name="no_connection">Keine Verbindung</string>
     <string name="no_connection_title">Verbindungsfehler</string>
-    <string name="media_error_title">Etwas ist schiefgegangen. Versuche es später erneut.</string>
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
@@ -29,7 +26,6 @@
     <string name="account_username_title">Benutzerkonto (%1$s)</string>
 
     <string name="slide_menu_my_guides">Meine Anleitungen</string>
-    <string name="slide_menu_search">Suche</string>
     <string name="slide_menu_browse_content">Inhalte durchsuchen</string>
     <string name="slide_menu_favorite_guides">Anleitungsfavoriten</string>
     <string name="slide_menu_create_new_guide">Neue Anleitung erstellen</string>
@@ -40,14 +36,11 @@
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
     <string name="slide_menu_more_info">Mehr Info</string>
-    <string name="slide_menu_help">Hilfe</string>
-    <string name="slide_menu_about">Über</string>
 
     <!-- Log-In / Log-Out -->
     <string name="username">Benutzername</string>
     <string name="password">Passwort</string>
     <string name="login">Anmelden</string>
-    <string name="logout">Abmelden</string>
     <string name="register">Registrieren</string>
 
     <string name="login_error">Hoppla! Ungültige Login-Informationen, bitte versuche es noch einmal.</string>
@@ -79,15 +72,12 @@
     <string name="media_help_message">Dieser Medienmanager ist direkt mit Deinem %1$s Benutzerkonto verbunden. Alle
         Bilder, die Du hier hochlädst, stehen Dir für die Erstellung Deiner Anleitungen zur Verfügung.
     </string>
-    <string name="media_gallery_title">Medienmanager</string>
     <string name="media_help_confirm">Gut zu wissen!</string>
     <string name="gallery_tool_tip">Bild hinzufügen</string>
     <string name="camera_tool_tip">Kamera</string>
     <string name="no_images_text">Es befinden sich keine Bilder in Deinem Medienmanager. Fügen Bilder hinzu, indem Du
         auf die Symbole oben klickst!
     </string>
-    <string name="no_embeds_text">HTML-Elemente kannst Du auf iFixit.com einbetten!</string>
-    <string name="no_videos_text">Füge Videos hinzu, indem Du auf die Symbole oben klickst!</string>
     <string name="image_chooser_title">Bild wählen</string>
     <string name="image">Bild</string>
     <string name="images">Bilder</string>
@@ -120,20 +110,13 @@
     <string name="requiredParts">Benötigte Ersatzteile</string>
 
     <!-- Guide View Steps -->
-    <string name="step">Schritt</string>
     <string name="no_guides">Keine Anleitungen</string>
     <string name="topic_guide_thumbnail">Vorschaubild des Anleitungsabschnitts</string>
-    <string name="main_guide_img_description">Hauptbild der Anleitung</string>
     <string name="thumbnail_desc">Vorschaubild</string>
-    <string name="next_page_image_desc">Nächste Seite</string>
 
     <string name="video_play_button_description">Schaltfläche für Video</string>
 
     <!-- Guide View Menu -->
-    <string name="guide_edit_text">Bearbeiten</string>
-    <string name="guide_share_text">Teilen</string>
-    <string name="guide_comment_text">Kommentare</string>
-    <string name="guide_favorite_text">Favorit</string>
     <string name="review">Überarbeiten</string>
     <string name="finish">Abschließen</string>
     <string name="next">Weiter</string>
@@ -165,22 +148,6 @@
 
     <!-- Guide Introduction Edit -->
     <string name="default_title">Standardtitel</string>
-    <string name="create_guide_error">Der Gerätetyp muss angegeben werden!</string>
-    <string name="create_guide_header">Anleitung erstellen</string>
-    <string name="create_guide_header_edit">Einleitung bearbeiten</string>
-    <string name="create_guide_title">Titel</string>
-    <string name="create_guide_device">Gerät</string>
-
-    <string name="create_guide_device_subject">Thema</string>
-    <string name="create_guide_summary">Zusammenfassung</string>
-    <string name="create_guide_intro">Einleitung</string>
-    <string name="device_hint">Woran arbeitest Du?</string>
-    <string name="device_focus_hint">Auf welchen Teil des Geräts konzentrierst Du Dich?</string>
-    <string name="title_hint">Füge der Anleitung einen Titel hinzu.</string>
-    <string name="summary_hint">Fasse den Inhalt der Anleitung in ein bis zwei Sätzen zusammen.</string>
-    <string name="introduction_hint">Schildere kurz, was das Lernziel dieser Anleitung ist.</string>
-    <string name="guide_type_prompt">Zu welcher Kategorie gehört diese Anleitung?</string>
-
     <string name="guide_intro_wizard_guide_type_title">Kategorie der Anleitung</string>
     <string name="guide_intro_wizard_guide_subject_title">Thema der Anleitung</string>
     <string name="guide_intro_wizard_guide_title_title">Titel der Anleitung</string>
@@ -210,9 +177,7 @@
     <string name="step_delete_dialog_title">Zeile löschen</string>
     <string name="step_delete_dialog_body">Möchtest Du diese Zeile wirklich löschen?</string>
     <string name="guide_create_help">Hilfetext</string>
-    <string name="guide_create_steps_help">Hilfetext</string>
     <string name="guide_create_edit_steps_help">Hilfetext</string>
-    <string name="guide_create_step_media_add_dialog_title">Bild hinzufügen</string>
     <string name="guide_create_edit_step_media_cannot_add_step">Füge in diesem Schritt erst Inhalte hinzu, bevor Du
         einen weiteren Schritt ergänzt.
     </string>
@@ -246,12 +211,10 @@
     <string name="indent_limit_above">Weiter Einrücken nicht möglich.</string>
     <string name="confirm_reorder_bullets">Bestätigen</string>
     <string name="reorder_bullets_title">Aufzählungspunkte umsortieren</string>
-    <string name="add_new_bullet">Neuen Aufzählungspunkt hinzufügen</string>
     <string name="cancel_reorder_bullets">Abbrechen</string>
 
 
     <!-- Miscellaneous -->
-    <string name="example_guide_item_title">Samsung SGH-E317 SIM Card installieren</string>
     <string name="fist_background_desc">Faust Hintergrundbild</string>
     <string name="my_guides">Meine Anleitungen</string>
     <string name="edit_guide">Anleitung bearbeiten</string>
@@ -282,12 +245,6 @@
     <string name="optional">Optional</string>
     <string name="featured_guides">Beachtenswerte Anleitungen</string>
     <string name="favorites">Favorites</string>
-
-    <string-array name="guide_type_array">
-        <item>Installation</item>
-        <item>Reparatur</item>
-        <item>Demontage</item>
-    </string-array>
 
     <string-array name="new_image_actions">
         <item>Kamera</item>
@@ -344,7 +301,6 @@
     <string name="slide_menu_browse_devices">Browse %1$s</string>
     <string name="category">Category</string>
     <string name="topic_img_desc">Category image</string>
-    <string name="topic_name_hint">Category Name</string>
     <string name="edit_guide_details">Edit Guide Details</string>
     <string name="reorder_steps">Reorder Steps</string>
     <string name="guide_create_confirm_leave_without_save_cancel">Cancel</string>

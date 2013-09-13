@@ -2,9 +2,7 @@
 <resources>
     <!-- Main Application -->
     <string name="devices">Dispositifs</string>
-    <string name="topics">Sujets</string>
     <string name="device">Dispositif</string>
-    <string name="topic">Sujet</string>
 
     <!-- General -->
     <string name="save">Sauvegarder</string>
@@ -20,7 +18,6 @@
         serveurs.</string>
     <string name="no_connection">Pas de connexion</string>
     <string name="no_connection_title">Erreur de Connexion</string>
-    <string name="media_error_title">Quelque chose s\'est mal passé. Réessayez plus tard.</string>
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
@@ -28,7 +25,6 @@
     <string name="account_username_title">Compte de (%1$s)</string>
 
     <string name="slide_menu_my_guides">Mes Guides</string>
-    <string name="slide_menu_search">Chercher</string>
     <string name="slide_menu_browse_content">Navigation du contenu</string>
     <string name="slide_menu_favorite_guides">Guides Favoris</string>
     <string name="slide_menu_create_new_guide">Créer un nouveau Guide</string>
@@ -39,14 +35,11 @@
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
     <string name="slide_menu_more_info">Plus D\'informations</string>
-    <string name="slide_menu_help">Aide</string>
-    <string name="slide_menu_about">Propos</string>
 
     <!-- Log-In / Log-Out -->
     <string name="username">Nom d\'utilisateur</string>
     <string name="password">Mot de passe</string>
     <string name="login">Connecter</string>
-    <string name="logout">Déconnexion</string>
     <string name="register">S\'inscrire</string>
 
     <string name="login_error"> Uh oh ! Détails de connexion invalide, essayez à nouveau s\'il vous plaît..</string>
@@ -79,13 +72,10 @@
         vous chargez ici sera à votre disposition pendant votre création de guide. Restez à l\'écoute et vous serez
         capable de créer des guides n\'importe quand !
     </string>
-    <string name="media_gallery_title">Galerie Média</string>
     <string name="media_help_confirm"> Bon à savoir !</string>
     <string name="gallery_tool_tip"> Ajouter une image </string>
     <string name="camera_tool_tip"> Caméra </string>
     <string name="no_images_text"> Ajouter des images avec les icônes ci-dessus !</string>
-    <string name="no_embeds_text"> Ajouter du code HTML à iFixit.com !</string>
-    <string name="no_videos_text"> Ajouter des vidéos avec les icônes ci-dessus !</string>
     <string name="image_chooser_title">Sélectionnez l\'image</string>
     <string name="image">image</string>
     <string name="images">images</string>
@@ -118,20 +108,13 @@
     <string name="requiredParts">Pièces Nécessaires</string>
 
     <!-- Guide View Steps -->
-    <string name="step">Étape</string>
     <string name="no_guides">Aucun Guide</string>
     <string name="topic_guide_thumbnail">Guide section miniature</string>
-    <string name="main_guide_img_description"> Image principale de guide </string>
     <string name="thumbnail_desc">Image Miniature</string>
-    <string name="next_page_image_desc"> Page Suivante</string>
 
     <string name="video_play_button_description">Bouton de Lecture de la Vidéo</string>
 
     <!-- Guide View Menu -->
-    <string name="guide_edit_text"> Modifier </string>
-    <string name="guide_share_text">Partager</string>
-    <string name="guide_comment_text"> Commentaires </string>
-    <string name="guide_favorite_text">Favori</string>
     <string name="review">Examinez</string>
     <string name="finish"> Terminer </string>
     <string name="next"> Suivant </string>
@@ -161,22 +144,6 @@
 
     <!-- Guide Introduction Edit -->
     <string name="default_title">Titre par Défaut</string>
-    <string name="create_guide_error">Vous devez entrer le type de dispositif !</string>
-    <string name="create_guide_header">Créer un guide</string>
-    <string name="create_guide_header_edit">Éditer l\'introduction</string>
-    <string name="create_guide_title">Titre</string>
-    <string name="create_guide_device">Equipement</string>
-    <string name="create_guide_device_subject">Sujet</string>
-    <string name="create_guide_summary">Résumé</string>
-    <string name="create_guide_intro">Introduction</string>
-    <string name="device_hint">Sur quoi travaillez-vous ?</string>
-    <string name="device_focus_hint">Sur quelle partie du dispositif vous concentrez-vous ?</string>
-    <string name="title_hint">Ajouter titre de guide.</string>
-    <string name="summary_hint">Résumer ce guide en une phrase ou deux.</string>
-    <string name="introduction_hint">Décrivez brièvement ce que votre guide enseigne aux gens.</string>
-    <string name="guide_type_prompt">Quelle sorte de guide est-ce ?</string>
-
-
     <string name="guide_intro_wizard_guide_type_title">Type de Guide</string>
     <string name="guide_intro_wizard_guide_subject_title">Guide Sujet</string>
     <string name="guide_intro_wizard_guide_title_title">Guide Titre</string>
@@ -202,9 +169,7 @@
     <string name="step_delete_dialog_title">Supprimer la Ligne </string>
     <string name="step_delete_dialog_body">Etes-vous sûr de vouloir supprimer cette ligne ?</string>
     <string name="guide_create_help">aide texte</string>
-    <string name="guide_create_steps_help">texte d\'aide</string>
     <string name="guide_create_edit_steps_help">aide texte</string>
-    <string name="guide_create_step_media_add_dialog_title"> Ajouter une Image </string>
     <string name="guide_create_edit_step_media_cannot_add_step">Ajouter du contenu à l\'étape actuelle avant de créer
         une nouvelle étape.</string>
     <string name="guide_create_edit_must_add_line_content">Impossible d\'enregistrer étape jusqu\'à ce que le contenu
@@ -232,7 +197,6 @@
 
 
     <!-- Miscellaneous -->
-    <string name="example_guide_item_title"> Installation de carte SIM Samsung SGH-E317</string>
     <string name="fist_background_desc">Image fond de poing</string>
     <string name="my_guides">Mes Guides</string>
     <string name="edit_guide">Modifier Guide</string>
@@ -262,12 +226,6 @@
     <string name="optional">Optionnel</string>
     <string name="favorites">Favoris</string>
     <string name="favorites_empty_text">Vous n\'avez pas encore de guides préférés.</string>
-
-    <string-array name="guide_type_array">
-        <item>Installation</item>
-        <item>Réparation</item>
-        <item>Démontage</item>
-    </string-array>
 
     <string-array name="new_image_actions">
         <item>Caméra</item>
@@ -308,7 +266,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="step_edit_new_thumb_actions_title">Attach Image</string>
     <string name="step_edit_existing_image_actions_title">Image Actions</string>
     <string name="image_saved_to_media_manager_toast">Image saved to your media manager.</string>
-    <string name="add_new_bullet">Add new bullet</string>
     <string name="loading_image">Uploading Images…</string>
     <string name="teardowns">Teardowns</string>
     <string name="introduction">Introduction</string>
@@ -331,7 +288,6 @@ Pour vous assurer que vous ne perdez pas d\'information, s\'il vous plaît recha
     <string name="slide_menu_browse_devices">Browse %1$s</string>
     <string name="category">Category</string>
     <string name="topic_img_desc">Category image</string>
-    <string name="topic_name_hint">Category Name</string>
     <string name="edit_guide_details">Edit Guide Details</string>
     <string name="reorder_steps">Reorder Steps</string>
     <string name="guide_create_confirm_leave_without_save_cancel">Cancel</string>

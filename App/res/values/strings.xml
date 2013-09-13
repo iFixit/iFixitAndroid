@@ -2,9 +2,7 @@
 <resources>
     <!-- Main Application -->
     <string name="devices">Devices</string>
-    <string name="topics">Topics</string>
     <string name="device">Device</string>
-    <string name="topic">Topic</string>
 
     <!-- General -->
     <string name="save">Save</string>
@@ -28,7 +26,6 @@
     <string name="forbidden_error">You have insufficient privileges to perform this action.</string>
     <string name="login_error">Invalid login. Check your email address and password to verify they are correct.</string>
     <string name="not_found_error">The requested data does not exist.</string>
-    <string name="media_error_title">Something went wrong. Try again later.</string>
     <string name="error_confirm">OK</string>
 
     <!-- Navigation -->
@@ -36,7 +33,6 @@
     <string name="account_username_title">Account (%1$s)</string>
 
     <string name="slide_menu_my_guides">My Guides</string>
-    <string name="slide_menu_search">Search</string>
     <string name="slide_menu_browse_content">Browse Content</string>
     <string name="slide_menu_browse_devices">Browse %1$s</string>
     <string name="slide_menu_favorite_guides">Favorite Guides</string>
@@ -48,14 +44,11 @@
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
     <string name="slide_menu_more_info">More Information</string>
-    <string name="slide_menu_help">Help</string>
-    <string name="slide_menu_about">About</string>
 
     <!-- Log-In / Log-Out -->
     <string name="username">User Name</string>
     <string name="password">Password</string>
     <string name="login">Login</string>
-    <string name="logout">Logout</string>
     <string name="register">Register</string>
 
     <string name="try_again">Try again</string>
@@ -87,13 +80,10 @@
         This media manager is linked directly to your %1$s account. Any pictures you
         load into here will be available to you in your guide creation endeavors.
     </string>
-    <string name="media_gallery_title">Media Manager</string>
     <string name="media_help_confirm">Good to know!</string>
     <string name="gallery_tool_tip">Add Image</string>
     <string name="camera_tool_tip">Camera</string>
     <string name="no_images_text">No images in your Media Manager. Add images with the icons above!</string>
-    <string name="no_embeds_text">Add HTML embeds online at iFixit.com!</string>
-    <string name="no_videos_text">Add videos with the icons above!</string>
     <string name="image_chooser_title">Select Picture</string>
     <string name="image">image</string>
     <string name="images">images</string>
@@ -128,28 +118,20 @@
     <string name="requiredParts">Required Parts</string>
 
     <!-- Guide View Steps -->
-    <string name="step">Step</string>
     <string name="no_guides">No guides</string>
     <string name="topic_guide_thumbnail">Guide section thumbnail</string>
-    <string name="main_guide_img_description">Guide main image</string>
     <string name="thumbnail_desc">Thumbnail image</string>
     <string name="topic_img_desc">Category image</string>
-    <string name="next_page_image_desc">Next page</string>
 
     <string name="video_play_button_description">Video Play Button</string>
     <string name="video_activity_progress_title">Please Wait…</string>
     <string name="video_activity_progress_body">Loading Video…</string>
 
     <!-- Guide View Menu -->
-    <string name="guide_edit_text">Edit</string>
-    <string name="guide_share_text">Share</string>
-    <string name="guide_comment_text">Comments</string>
-    <string name="guide_favorite_text">Favorite</string>
     <string name="review">Review</string>
     <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
-    <string name="topic_name_hint">Category Name</string>
 
     <!-- Full Screen Image -->
     <string name="close_full_screen_desc">Close full screen button</string>
@@ -178,22 +160,6 @@
 
     <!-- Guide Introduction Edit -->
     <string name="default_title">Default Title</string>
-    <string name="create_guide_error">Must enter the type of device!</string>
-    <string name="create_guide_header">Create A Guide</string>
-    <string name="create_guide_header_edit">Edit Introduction</string>
-    <string name="create_guide_title">Title</string>
-    <string name="create_guide_device">Device</string>
-
-    <string name="create_guide_device_subject">Subject</string>
-    <string name="create_guide_summary">Summary</string>
-    <string name="create_guide_intro">@string/introduction</string>
-    <string name="device_hint">What are you working on?</string>
-    <string name="device_focus_hint">What part of the device are you focusing on?</string>
-    <string name="title_hint">Add guide title.</string>
-    <string name="summary_hint">Summarize this guide in a sentence or two.</string>
-    <string name="introduction_hint">Briefly outline what your guide will teach someone.</string>
-    <string name="guide_type_prompt">What type of guide is this?</string>
-
     <string name="guide_intro_wizard_guide_type_title">Guide Type</string>
     <string name="guide_intro_wizard_guide_subject_title">Guide Subject</string>
     <string name="guide_intro_wizard_guide_title_title">Guide Title</string>
@@ -219,9 +185,7 @@
     <string name="step_delete_dialog_title">Delete Line</string>
     <string name="step_delete_dialog_body">Are you sure you want to delete this line?</string>
     <string name="guide_create_help">help text</string>
-    <string name="guide_create_steps_help">help text</string>
     <string name="guide_create_edit_steps_help">help text</string>
-    <string name="guide_create_step_media_add_dialog_title">Add Image</string>
     <string name="guide_create_edit_step_media_cannot_add_step">Add content to current step before creating a new
         step.
     </string>
@@ -251,13 +215,11 @@
     <string name="indent_limit_above">Cannot indent any further.</string>
     <string name="confirm_reorder_bullets">Confirm</string>
     <string name="reorder_bullets_title">Reorder Bullets</string>
-    <string name="add_new_bullet">Add new bullet</string>
     <string name="cancel_reorder_bullets">Cancel</string>
 
 
     <!-- Miscellaneous -->
     <string name="topic_background_description">Category background</string>
-    <string name="example_guide_item_title">Installing Samsung SGH-E317 SIM Card</string>
     <string name="fist_background_desc">Fist background image</string>
     <string name="my_guides">My Guides</string>
     <string name="edit_guide">Edit Guide</string>
@@ -314,12 +276,6 @@
     <string name="reload_guide">Reload Guide</string>
     <string name="back_to_site_list">Back to Site List</string>
     <string name="loading_topic">Loading %1$s…</string>
-
-    <string-array name="guide_type_array">
-        <item>Installation</item>
-        <item>Repair</item>
-        <item>Disassembly</item>
-    </string-array>
 
     <string-array name="new_image_actions">
         <item>Camera</item>
