@@ -255,25 +255,25 @@
 
 
     <!-- Strings needing translations. -->
-    <string name="unpublishing">Unpublishing…</string>
-    <string name="publishing">Publishing…</string>
-    <string name="voice_dictate_line_content_description">Voice dictate line content</string>
-    <string name="line_length_exceeded_error">Maximum 349 characters per line.</string>
-    <string name="new_guide_details_title">New Guide Details</string>
-    <string name="device_invalid_characters_error_message">Device name contains invalid characters.</string>
-    <string name="guide_subject_required_error">Guide Subject Required</string>
-    <string name="topic_name_required_error">%1$s Name Required</string>
-    <string name="guide_subject_label">Guide Subject</string>
-    <string name="visibility">Visibility</string>
-    <string name="guide_type">Guide Type</string>
-    <string name="reload_guide">Reload Guide</string>
-    <string name="back_to_site_list">Back to Site List</string>
-    <string name="loading_topic">Loading %1$s…</string>
-    <string name="slide_menu_browse_devices">Browse %1$s</string>
-    <string name="category">Category</string>
-    <string name="topic_img_desc">Category image</string>
-    <string name="edit_guide_details">Edit Guide Details</string>
-    <string name="reorder_steps">Reorder Steps</string>
-    <string name="guide_create_confirm_leave_without_save_cancel">Cancel</string>
-    <string name="topic_background_description">Category background</string>
+    <string name="unpublishing">Inéditando…</string>
+    <string name="publishing">Publicando…</string>
+    <string name="voice_dictate_line_content_description">Dictado de voz del contenido de linea</string>
+    <string name="line_length_exceeded_error">Maximo de 349 carácteres por linea.</string>
+    <string name="new_guide_details_title">Detalles de la Guía Nueva</string>
+    <string name="device_invalid_characters_error_message">El nombre del dispositivo contiene carácteres invalidos.</string>
+    <string name="guide_subject_required_error">Tema de Guía Requerido</string>
+    <string name="topic_name_required_error">%1$s Nombre Requerido</string>
+    <string name="guide_subject_label">Tema de Guía</string>
+    <string name="visibility">Visibilidad</string>
+    <string name="guide_type">Tipo de Guía</string>
+    <string name="reload_guide">Recargar Guía</string>
+    <string name="back_to_site_list">Regresar al Listado del Sitio</string>
+    <string name="loading_topic">Cargando %1$s…</string>
+    <string name="slide_menu_browse_devices">Navegar %1$s</string>
+    <string name="category">Categoria</string>
+    <string name="topic_img_desc">Imagen de Categoria</string>
+    <string name="edit_guide_details">Editar Detalles de Guía</string>
+    <string name="reorder_steps">Reordenar Pasos</string>
+    <string name="guide_create_confirm_leave_without_save_cancel">Cancelar</string>
+    <string name="topic_background_description">Fondo de categoria</string>
 </resources>
