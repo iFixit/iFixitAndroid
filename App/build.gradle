@@ -12,7 +12,7 @@ repositories {
    mavenCentral()
    mavenLocal() // Needed to pick up analytics from maven-android-sdk-deployer
    maven {
-      url 'https://raw.github.com/marczych/ark/master/releases/'
+      url 'https://raw.github.com/iFixit/ark/master/releases/'
    }
 }
 
