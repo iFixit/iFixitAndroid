@@ -229,8 +229,6 @@
         <item>Effacer</item>
     </string-array>
 
-
-    <!-- Strings needing translations. -->
     <string name="empty_image_error">L'image est vide, essayez une autre ou télécharger une autre image.</string>
     <string name="link_to_item">Lien à %1$s</string>
     <string name="no_items">Aucun Élément</string>
@@ -278,4 +276,7 @@
     <string name="reorder_steps">Changer l'ordre des étapes</string>
     <string name="guide_create_confirm_leave_without_save_cancel">Annuler</string>
     <string name="topic_background_description">Contexte de la Catégorie</string>
+
+
+    <!-- Strings needing translations. -->
 </resources>
