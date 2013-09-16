@@ -1,8 +1,14 @@
-Official iFixit Android App
+Official iFixit Android App v2.0.0
 ===========================
 
-## Version 2.0.0
+This app is a native Android version of the iFixit website including:
 
+* Device hierarchy browsing
+* Answers and guide lists for devices
+* Guide view
+* Media manager integration: viewing and uploading of images
+* Guide lists for favorites, featured, and teardowns
+* Guide creation and editing
 
 ## Installation
 
@@ -17,30 +23,33 @@ mode, update the necessary keystore information and symlink
 
     ln -s /path/to/keystore App/sites/ifixit/keystore
 
-Open the project in your IDE of choice or build it on the command line by
+Open `build.gradle` in your IDE of choice or build it on the command line by
 invoking gradle commands such as `gradle installIfixitDebug`.
 
-## API Documentation
+## Acknowledgements
 
-[iFixit API documentation](https://www.ifixit.com/api/2.0/docs)
+All of the app's content comes from [iFixit's public API](https://www.ifixit.com/api/2.0/docs).
+
+The app is built on many open source libraries such as:
+
+* [ActionBarSherlock](https://github.com/JakeWharton/ActionBarSherlock)
+* [ViewPagerIndicator](https://github.com/JakeWharton/Android-ViewPagerIndicator)
+* [okhttp](https://github.com/square/okhttp)
+* [otto](https://github.com/square/otto)
+* [picasso](https://github.com/square/picasso)
+* [http-request](https://github.com/kevinsawicki/http-request)
+
+The complete list of dependencies can be found in the
+[build.gradle](https://github.com/iFixit/iFixitAndroid/blob/master/App/build.gradle) file.
 
 ## Contributing
 
-This app is a native Android version of the iFixit website including:
-
-*   Device hierarchy browsing
-*   Answers and guide lists for devices
-*   Guide view
-*   Media manager integration: viewing and uploading of images
-*   Guide lists for favorites, featured, and teardowns
-*   Guide creation and editing
-
-We have a small development team, and don't have the resources to do all of these
-ourselves. We'd love help! If any of those problems looks interesting to you,
-fork our code and hack away!
+We have a small development team, and don't have the resources to implement
+all of the features we would like to ourselves. We'd love help! If there is
+any feature you would contribute, fork our code and hack away!
 
 Got an awesome feature idea that we don't have an API to support yet? Post the
-request on meta.ifixit.com and we'll add it to our to-do list.
+request on [iFixit Meta](http://meta.ifixit.com) and we'll add it to our to-do list.
 
 ## Licensing
 
@@ -61,5 +70,5 @@ you distribute the application.
 That is, the trademarks are protected, but the code itself is under an open license. You
 can use the trademarks individually, but not for any sort of distribution.
 
-Copyright (c) 2012 iFixit
+Copyright (c) 2013 iFixit
 
