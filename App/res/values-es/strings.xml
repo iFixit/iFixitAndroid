@@ -253,8 +253,6 @@
     <string name="validation_error_title">Error de Validación</string>
     <string name="validation_error_body">La validación fallo</string>
 
-
-    <!-- Strings needing translations. -->
     <string name="unpublishing">Inéditando…</string>
     <string name="publishing">Publicando…</string>
     <string name="voice_dictate_line_content_description">Dictado de voz del contenido de linea</string>
@@ -276,4 +274,7 @@
     <string name="reorder_steps">Reordenar Pasos</string>
     <string name="guide_create_confirm_leave_without_save_cancel">Cancelar</string>
     <string name="topic_background_description">Fondo de categoria</string>
+
+
+    <!-- Strings needing translations. -->
 </resources>
