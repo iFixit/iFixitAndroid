@@ -229,27 +229,30 @@
         <item>Effacer</item>
     </string-array>
 
-    <string name="empty_image_error">L'image est vide, essayez une autre ou télécharger une autre image.</string>
+    <!-- Strings needing translations. -->
+    <string name="empty_image_error">L\'image est vide, essayez une autre ou télécharger une autre image.</string>
     <string name="link_to_item">Lien à %1$s</string>
     <string name="no_items">Aucun Élément</string>
     <string name="view">Afficher</string>
     <string name="save_changes_to_step">Sauvegarder vos modifications de cette étape ?</string>
     <string name="new_line">Nouvelle ligne</string>
     <string name="discard_changes">Effacer vos Modifications</string>
-    <string name="error">Une erreur s'est produite</string>
+    <string name="error">Une erreur s\'est produite</string>
     <string name="invalid_revision_error_title">Modifier un conflit</string>
-    <string name="invalid_revision_error">Vos changements n'ont pas pu être sauvés car le contenu que vous éditiez a changé depuis que vous l'avez ouverte. S'il vous plaît, refaisiez vos modifications et essayez à nouveau.</string>
+    <string name="invalid_revision_error">Vos changements n\'ont pas pu être sauvés car le contenu que vous éditiez a
+        changé depuis que vous l\'avez ouverte. S\'il vous plaît, refaisiez vos modifications et essayez à
+        nouveau.</string>
     <string name="fatal_error_title">Erreur Inconnue</string>
-    <string name="fatal_error">On dirait q'une erreur s'est produite.</string>
+    <string name="fatal_error">On dirait q\'une erreur s\'est produite.</string>
     <string name="featured_guides">Guides Populaires</string>
-    <string name="video_activity_progress_title">Attendez s'il vous plaît ...</string>
-    <string name="video_activity_progress_body">Chargement de la vidéo ...</string>
+    <string name="video_activity_progress_title">Attendez s\'il vous plaît…</string>
+    <string name="video_activity_progress_body">Chargement de la vidéo…</string>
     <string name="guide_intro_wizard_guide_introduction_title">Introduction</string>
-    <string name="forbidden_error">Vous n'avez pas les privilèges nécessaire pour effectuer cette action.</string>
-    <string name="not_found_error">Les données demandé n'existe pas.</string>
+    <string name="forbidden_error">Vous n\'avez pas les privilèges nécessaire pour effectuer cette action.</string>
+    <string name="not_found_error">Les données demandé n\'existe pas.</string>
     <string name="step_edit_new_thumb_actions_title">Attaché une Image</string>
     <string name="step_edit_existing_image_actions_title">Option Image</string>
-    <string name="image_saved_to_media_manager_toast">L'image enregistrée sur votre gestionnaire de médias.</string>
+    <string name="image_saved_to_media_manager_toast">L\'image enregistrée sur votre gestionnaire de médias.</string>
     <string name="loading_image">En train de téléchargé les images…</string>
     <string name="teardowns">Démontages</string>
     <string name="introduction">Introduction</string>
@@ -260,7 +263,8 @@
     <string name="voice_dictate_line_content_description">Dicter le contenu en ligne par voix</string>
     <string name="line_length_exceeded_error">350 caractères par ligne maximum.</string>
     <string name="new_guide_details_title">Nouveau détail de Guide</string>
-    <string name="device_invalid_characters_error_message">Nom de l'appareil contient des caractères non valides.</string>
+    <string name="device_invalid_characters_error_message">Nom de l\'appareil contient des caractères non
+        valides.</string>
     <string name="guide_subject_required_error">Sujet de Guide Requis</string>
     <string name="topic_name_required_error">%1$s Nom Requis</string>
     <string name="guide_subject_label">Sujet du Guide</string>
@@ -271,9 +275,9 @@
     <string name="loading_topic">En train de charger %1$s…</string>
     <string name="slide_menu_browse_devices">Naviguer %1$s</string>
     <string name="category">Categoriey</string>
-    <string name="topic_img_desc">l'Image de Categorie</string>
+    <string name="topic_img_desc">l\'Image de Categorie</string>
     <string name="edit_guide_details">Changer les detailles du guide</string>
-    <string name="reorder_steps">Changer l'ordre des étapes</string>
+    <string name="reorder_steps">Changer l\'ordre des étapes</string>
     <string name="guide_create_confirm_leave_without_save_cancel">Annuler</string>
     <string name="topic_background_description">Contexte de la Catégorie</string>
 
