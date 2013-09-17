@@ -28,7 +28,7 @@ invoking gradle commands such as `gradle installIfixitDebug`.
 
 ## Acknowledgements
 
-All of the app's content comes from [iFixit's public API](https://www.ifixit.com/api/2.0/docs).
+All of the app's content comes from [iFixit's public API][apidocs].
 
 The app is built on many open source libraries such as:
 
@@ -39,8 +39,7 @@ The app is built on many open source libraries such as:
 * [picasso](https://github.com/square/picasso)
 * [http-request](https://github.com/kevinsawicki/http-request)
 
-The complete list of dependencies can be found in the
-[build.gradle](https://github.com/iFixit/iFixitAndroid/blob/master/App/build.gradle) file.
+The complete list of dependencies can be found in the [build.gradle][build.gradle] file.
 
 ## Contributing
 
@@ -49,7 +48,11 @@ all of the features we would like to ourselves. We'd love help! If there is
 any feature you would contribute, fork our code and hack away!
 
 Got an awesome feature idea that we don't have an API to support yet? Post the
-request on [iFixit Meta](http://meta.ifixit.com) and we'll add it to our to-do list.
+request on [iFixit Meta][meta] and we'll add it to our to-do list.
+
+Before your code can be accepted into the project you must also sign the
+[Individual Contributor License Agreement (CLA)][cla].
+
 
 ## Licensing
 
@@ -72,3 +75,8 @@ can use the trademarks individually, but not for any sort of distribution.
 
 Copyright (c) 2013 iFixit
 
+
+ [cla]: https://docs.google.com/forms/d/1wrPw91REdDKbZQ4vrGeUo8s_TkddZTTxiur0rbUxahk/viewform
+ [meta]: http://meta.ifixit.com
+ [build.gradle]: https://github.com/iFixit/iFixitAndroid/blob/master/App/build.gradle
+ [apidocs]: https://www.ifixit.com/api/2.0/docs
