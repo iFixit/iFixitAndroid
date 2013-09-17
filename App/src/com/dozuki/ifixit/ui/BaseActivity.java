@@ -10,7 +10,6 @@ import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
@@ -24,6 +23,7 @@ import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
 
@@ -163,8 +163,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       super.onCreate(savedState);
 
-      EasyTracker.getInstance().setContext(this);
-
       /**
        * There is another register call in onResume but we also need it here for the onUnauthorized
        * call that is usually triggered in onCreate of derived Activities.
@@ -227,17 +225,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       super.onStart();
 
       overridePendingTransition(0, 0);
-
-      // Start analytics tracking
-      EasyTracker.getInstance().activityStart(this);
-   }
-
-   @Override
-   public void onStop() {
-      super.onStop();
-
-      // Stop analytics tracking
-      EasyTracker.getInstance().activityStop(this);
    }
 
    @Override

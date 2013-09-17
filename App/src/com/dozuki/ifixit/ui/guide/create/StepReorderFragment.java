@@ -21,6 +21,9 @@ import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
@@ -31,7 +34,7 @@ public class StepReorderFragment extends BaseFragment {
 
    public interface StepRearrangeListener {
 
-      public void onReorderComplete(boolean reOdered);
+      public void onReorderComplete(boolean reodered);
 
    }
 
@@ -85,8 +88,6 @@ public class StepReorderFragment extends BaseFragment {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      EasyTracker.getInstance().setContext(getActivity());
-
       getSherlockActivity().startActionMode(new ContextualStepReorder());
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.get(StepsActivity.GUIDE_KEY);
@@ -123,7 +124,10 @@ public class StepReorderFragment extends BaseFragment {
    public void onStart() {
       super.onStart();
 
-      EasyTracker.getTracker().sendView(mGuide.getTitle() + " Step Reorder");
+      Tracker tracker = MainApplication.getGaTracker();
+      tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid() + "/step_reorder");
+
+      tracker.send(MapBuilder.createAppView().build());
    }
 
    public final class ContextualStepReorder implements ActionMode.Callback {

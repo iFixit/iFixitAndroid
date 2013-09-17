@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -19,6 +18,8 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -69,6 +70,8 @@ public class SiteListActivity extends BaseActivity
 
       mSiteListDialog = (SiteListDialogFragment)getSupportFragmentManager().
        findFragmentByTag(SITE_LIST_DIALOG);
+
+      MainApplication.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, "/sitelist").build());
    }
 
    @Override

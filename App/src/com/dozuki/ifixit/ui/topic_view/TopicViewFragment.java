@@ -4,8 +4,8 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,13 +21,16 @@ import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
-import java.net.URLEncoder;
+import java.util.HashMap;
+import java.util.Map;
 
-public class TopicViewFragment extends BaseFragment {
+public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
    private static final int GUIDES_TAB = 0;
    private static final int MORE_INFO_TAB = 1;
    private static final int ANSWERS_TAB = 2;
@@ -48,8 +51,6 @@ public class TopicViewFragment extends BaseFragment {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      EasyTracker.getInstance().setContext(getActivity());
-
       if (mSite == null) {
          mSite = ((MainApplication) getActivity().getApplication()).getSite();
       }
@@ -63,6 +64,7 @@ public class TopicViewFragment extends BaseFragment {
 
       mPager = (ViewPager) view.findViewById(R.id.topic_view_view_pager);
       mTitleIndicator = (TitlePageIndicator) view.findViewById(R.id.topic_view_indicator);
+      mTitleIndicator.setOnPageChangeListener(this);
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE, 0); // Default to Guide page
@@ -147,8 +149,25 @@ public class TopicViewFragment extends BaseFragment {
       selectDefaultTab();
    }
 
-   private void selectDefaultTab() {
+   @Override
+   public void onPageScrolled(int i, float v, int i2) {
 
+   }
+
+   @Override
+   public void onPageSelected(int position) {
+      String label = mPageAdapter.getFragmentScreenLabel(position);
+      Tracker tracker = MainApplication.getGaTracker();
+      tracker.set(Fields.SCREEN_NAME, label);
+      tracker.send(MapBuilder.createAppView().build());
+   }
+
+   @Override
+   public void onPageScrollStateChanged(int i) {
+
+   }
+
+   private void selectDefaultTab() {
       if (mTopicLeaf == null) {
          return;
       }
@@ -161,7 +180,7 @@ public class TopicViewFragment extends BaseFragment {
       mPager.invalidate();
       mTitleIndicator.invalidate();
 
-      ((BaseActivity)getActivity()).hideLoading();
+      ((BaseActivity) getActivity()).hideLoading();
    }
 
    private void getTopicLeaf(String topicName) {
@@ -180,9 +199,12 @@ public class TopicViewFragment extends BaseFragment {
    }
 
    public class PageAdapter extends FragmentStatePagerAdapter {
+      private Map<Integer, String> mPageLabelMap;
 
       public PageAdapter(FragmentManager fm) {
          super(fm);
+
+         mPageLabelMap = new HashMap<Integer, String>();
       }
 
       @Override
@@ -215,8 +237,9 @@ public class TopicViewFragment extends BaseFragment {
 
       @Override
       public Fragment getItem(int position) {
-
+         String label = "/category/" + mTopicLeaf.getName();
          Fragment selectedFragment;
+
          switch (position) {
             case GUIDES_TAB:
                if (mTopicLeaf.getGuides().size() == 0) {
@@ -225,31 +248,49 @@ public class TopicViewFragment extends BaseFragment {
                   selectedFragment = new TopicGuideListFragment(mTopicLeaf);
                }
                mSelectedTab = GUIDES_TAB;
-               return selectedFragment;
+               label += "/guides";
+               break;
             case MORE_INFO_TAB:
                selectedFragment = new TopicInfoFragment(mTopicLeaf);
+               label += "/info";
+
                mSelectedTab = MORE_INFO_TAB;
-               return selectedFragment;
+               break;
             case ANSWERS_TAB:
                WebViewFragment webView = new WebViewFragment();
 
-               EasyTracker.getTracker().sendView(mTopicLeaf.getName() + " Answers");
+               label += "/answers";
 
                webView.loadUrl(mTopicLeaf.getSolutionsUrl());
 
                selectedFragment = webView;
                mSelectedTab = ANSWERS_TAB;
 
-               return selectedFragment;
+               break;
             default:
                return null;
          }
+
+         mPageLabelMap.put(position, label);
+
+         return selectedFragment;
       }
 
       @Override
       public void setPrimaryItem(ViewGroup container, int position, Object object) {
          super.setPrimaryItem(container, position, object);
          mSelectedTab = position;
+      }
+
+      public String getFragmentScreenLabel(int key) {
+         return mPageLabelMap.get(key);
+      }
+
+      @Override
+      public void destroyItem(View container, int position, Object object) {
+         super.destroyItem(container, position, object);
+
+         mPageLabelMap.remove(position);
       }
    }
 }

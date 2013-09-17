@@ -7,27 +7,12 @@
     <string name="ga_trackingId">UA-30506-9</string>
 
     <!--Enable automatic activity tracking-->
-    <bool name="ga_autoActivityTracking">true</bool>
+    <bool name="ga_autoActivityTracking">false</bool>
 
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>
 
-    <!-- Disable when released -->
-    <bool name="ga_debug">false</bool>
-
-    <!-- The screen names that will appear in your reporting -->
-    <string name="com.dozuki.ifixit.ui.topic_view.TopicActivity">Topic List</string>
-    <string name="com.dozuki.ifixit.ui.topic_view.TopicViewActivity">Topic View</string>
-    <string name="com.dozuki.ifixit.ui.topic_view.TeardownsActivity">Teardowns Activity</string>
-    <string name="com.dozuki.ifixit.ui.guide.view.EmbedViewActivity">Embed View</string>
-    <string name="com.dozuki.ifixit.ui.guide.view.FullImageViewActivity">Full Screen Image View</string>
-    <string name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity">Guide View</string>
-    <string name="com.dozuki.ifixit.ui.guide.view.VideoViewActivity">Video View</string>
-    <string name="com.dozuki.ifixit.ui.guide.edit.StepsActivity">Edit Steps List</string>
-    <string name="com.dozuki.ifixit.ui.guide.edit.GuideCreateActivity">User Guides</string>
-    <string name="com.dozuki.ifixit.ui.guide.edit.GuideIntroActivity">Create New Guide</string>
-    <string name="com.dozuki.ifixit.ui.guide.edit.StepEditActivity">Edit Guide Steps</string>
-    <string name="com.dozuki.ifixit.ui.dozuki.SiteListActivity">Dozuki Site List</string>
-    <string name="com.dozuki.ifixit.ui.gallery.GalleryActivity">Media Manager</string>
+    <!-- Set to false for production release -->
+    <bool name="ga_debug">true</bool>
 
 </resources>

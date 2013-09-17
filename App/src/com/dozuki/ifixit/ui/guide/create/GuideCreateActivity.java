@@ -12,6 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
@@ -20,6 +21,8 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.JSONHelper;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
@@ -81,6 +84,15 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
             APIService.call(mActivity, APIService.getUserGuidesAPICall());
          }
       });
+
+      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides");
+   }
+
+   @Override
+   public void onStart() {
+      super.onStart();
+
+      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    @Override

@@ -1,5 +1,6 @@
 package com.dozuki.ifixit;
 
+import com.dozuki.ifixit.R;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -11,6 +12,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
 import android.os.StrictMode;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -20,12 +22,37 @@ import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.OkConnectionFactory;
 import com.dozuki.ifixit.util.Utils;
 import com.github.kevinsawicki.http.HttpRequest;
+import com.google.analytics.tracking.android.GAServiceManager;
+import com.google.analytics.tracking.android.GoogleAnalytics;
+import com.google.analytics.tracking.android.Logger;
+import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Bus;
 
 import java.net.URL;
 
 public class MainApplication extends Application {
    private static final int LARGE_SIZE_CUTOFF = 800;
+
+   /*
+    * Google Analytics configuration values.
+    */
+   // Placeholder property ID.
+   private static final String GA_PROPERTY_ID = "UA-30506-9";
+
+   // Dispatch period in seconds.
+   private static final int GA_DISPATCH_PERIOD = 30;
+
+   // Prevent hits from being sent to reports, i.e. during testing.
+   private static final boolean GA_IS_DRY_RUN = false;
+
+   // GA Logger verbosity.
+   private static final Logger.LogLevel GA_LOG_VERBOSITY = Logger.LogLevel.VERBOSE;
+
+   // Key used to store a user's tracking preferences in SharedPreferences.
+   private static final String TRACKING_PREF_KEY = "trackingPreference";
+
+   private static GoogleAnalytics mGa;
+   private static Tracker mTracker;
 
    private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
@@ -106,9 +133,55 @@ public class MainApplication extends Application {
       }
 
       super.onCreate();
+      initializeGa();
 
       sMainApplication = this;
       setSite(getDefaultSite());
+   }
+
+   /*
+    * Method to handle basic Google Analytics initialization. This call will not
+    * block as all Google Analytics work occurs off the main thread.
+    */
+   private void initializeGa() {
+      mGa = GoogleAnalytics.getInstance(this);
+      mTracker = mGa.getTracker(GA_PROPERTY_ID);
+
+      // Set dispatch period.
+      GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
+
+      // Set dryRun flag.
+      mGa.setDryRun(GA_IS_DRY_RUN);
+
+      // Set Logger verbosity.
+      mGa.getLogger().setLogLevel(GA_LOG_VERBOSITY);
+
+      // Set the opt out flag when user updates a tracking preference.
+      SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(this);
+      userPrefs.registerOnSharedPreferenceChangeListener(new SharedPreferences.OnSharedPreferenceChangeListener() {
+         @Override
+         public void onSharedPreferenceChanged(SharedPreferences sharedPreferences,
+          String key) {
+            if (key.equals(TRACKING_PREF_KEY)) {
+               GoogleAnalytics.getInstance(getApplicationContext())
+                .setAppOptOut(sharedPreferences.getBoolean(key, false));
+            }
+         }
+      });
+   }
+
+   /*
+    * Returns the Google Analytics tracker.
+    */
+   public static Tracker getGaTracker() {
+      return mTracker;
+   }
+
+   /*
+    * Returns the Google Analytics instance.
+    */
+   public static GoogleAnalytics getGaInstance() {
+      return mGa;
    }
 
    /**

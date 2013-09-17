@@ -27,6 +27,9 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 
 public class RegisterFragment extends BaseDialogFragment implements OnClickListener {
@@ -75,13 +78,6 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    public RegisterFragment() {}
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-
-      EasyTracker.getInstance().setContext(getActivity());
-   }
-
-   @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.register_fragment, container, false);
@@ -121,7 +117,11 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    @Override
    public void onStart() {
       super.onStart();
-      EasyTracker.getTracker().sendView("User Registration");
+
+      Tracker tracker = MainApplication.getGaTracker();
+      tracker.set(Fields.SCREEN_NAME, "/register");
+
+      tracker.send(MapBuilder.createAppView().build());
    }
 
    private void showKeyboard() {

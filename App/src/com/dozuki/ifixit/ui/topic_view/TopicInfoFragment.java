@@ -15,6 +15,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -24,6 +25,9 @@ import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 
 public class TopicInfoFragment extends BaseFragment {
 
@@ -46,8 +50,6 @@ public class TopicInfoFragment extends BaseFragment {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
-      EasyTracker.getInstance().setContext(getActivity());
 
       Bundle b = getArguments();
 
@@ -92,12 +94,6 @@ public class TopicInfoFragment extends BaseFragment {
        .into(topicImage);
 
       return v;
-   }
-
-   @Override
-   public void onStart() {
-      super.onStart();
-      EasyTracker.getTracker().sendView(mTopic.getName() + " Info");
    }
 
    @Override

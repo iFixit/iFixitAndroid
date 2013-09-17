@@ -13,7 +13,9 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.dozuki.ifixit.ui.BaseFragment;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.marczych.androidsectionheaders.SectionHeadersAdapter;
 import com.marczych.androidsectionheaders.SectionListView;
 
@@ -44,8 +46,6 @@ public class TopicListFragment extends BaseFragment
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      EasyTracker.getInstance().setContext(getActivity());
-
       if (savedInstanceState != null) {
          mTopic = (TopicNode)savedInstanceState.getSerializable(CURRENT_TOPIC);
       }
@@ -67,7 +67,11 @@ public class TopicListFragment extends BaseFragment
    @Override
    public void onStart() {
       super.onStart();
-      EasyTracker.getTracker().sendView("Topic/" + mTopic.getName());
+
+      Tracker tracker = MainApplication.getGaTracker();
+      tracker.set(Fields.SCREEN_NAME, "/category/" + mTopic.getName());
+
+      tracker.send(MapBuilder.createAppView().build());
    }
 
    private void setupTopicAdapter() {

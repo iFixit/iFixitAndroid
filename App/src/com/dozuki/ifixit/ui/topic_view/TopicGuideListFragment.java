@@ -9,13 +9,18 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.GuideListAdapter;
+import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 
 public class TopicGuideListFragment extends BaseFragment {
 
@@ -35,8 +40,6 @@ public class TopicGuideListFragment extends BaseFragment {
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
-
-      EasyTracker.getInstance().setContext(getActivity());
 
       if (savedState != null && mTopicLeaf == null) {
          mTopicLeaf = (TopicLeaf)savedState.getSerializable(SAVED_TOPIC);
@@ -70,13 +73,9 @@ public class TopicGuideListFragment extends BaseFragment {
    }
 
    @Override
-   public void onStart() {
-      super.onStart();
-      EasyTracker.getTracker().sendView(mTopicLeaf.getName() + " Guides");
-   }
-
-   @Override
    public void onSaveInstanceState(Bundle state) {
+      super.onSaveInstanceState(state);
+
       state.putSerializable(SAVED_TOPIC, mTopicLeaf);
    }
 }

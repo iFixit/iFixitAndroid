@@ -28,6 +28,9 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 
 public class LoginFragment extends BaseDialogFragment implements OnClickListener {
@@ -89,8 +92,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      EasyTracker.getInstance().setContext(getActivity());
-
       MainApplication.get().setIsLoggingIn(true);
 
       Site site = MainApplication.get().getSite();
@@ -145,7 +146,11 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    @Override
    public void onStart() {
       super.onStart();
-      EasyTracker.getTracker().sendView("User Login");
+
+      Tracker tracker = MainApplication.getGaTracker();
+      tracker.set(Fields.SCREEN_NAME, "/login");
+
+      tracker.send(MapBuilder.createAppView().build());
    }
 
    @Override

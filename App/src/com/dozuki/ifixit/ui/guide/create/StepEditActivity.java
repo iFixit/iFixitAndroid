@@ -2,12 +2,20 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.*;
+import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
-import android.support.v4.app.*;
+import android.support.v4.app.DialogFragment;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,16 +40,19 @@ import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.JSONHelper;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 
-public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickListener {
+public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickListener, ViewPager.OnPageChangeListener {
    private static final int STEP_VIEW = 1;
    private static final int FOR_RESULT = 2;
    private static final int HOME_UP = 3;
@@ -179,12 +190,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    private void initPage(int startPage) {
-
       String guideTitle = mGuide.getTitle();
 
       getSupportActionBar().setTitle(guideTitle);
-
-      EasyTracker.getTracker().sendView(guideTitle + " Edit View");
 
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
@@ -195,6 +203,22 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
       mTitleIndicator = (LockableTitlePageIndicator) findViewById(R.id.step_edit_top_bar);
       mTitleIndicator.setViewPager(mPager);
+      mTitleIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+         @Override
+         public void onPageScrolled(int i, float v, int i2) {}
+
+         @Override
+         public void onPageSelected(int currentPage) {
+            Log.d("StepEditActivity", "Current page: " + currentPage);
+            String label = mStepAdapter.getFragmentScreenLabel(currentPage);
+            Tracker tracker = MainApplication.getGaTracker();
+            tracker.set(Fields.SCREEN_NAME, label);
+            tracker.send(MapBuilder.createAppView().build());
+         }
+
+         @Override
+         public void onPageScrollStateChanged(int i) {}
+      });
 
       mSaveStep.setOnClickListener(this);
       mAddStepButton.setOnClickListener(this);
@@ -748,18 +772,20 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public void onClick(View v) {
-      Tracker gaTracker = EasyTracker.getTracker();
+      Tracker gaTracker = MainApplication.getGaTracker();
       switch (v.getId()) {
          case R.id.step_edit_delete_step:
-            gaTracker.sendEvent("ui_action", "button_press", "step_edit_delete_step",
-             (long) mGuide.getStep(mPagePosition).getStepid());
+            gaTracker.send(MapBuilder
+             .createEvent("ui_action", "button_press", "step_edit_delete_step",
+              (long) mGuide.getStep(mPagePosition).getStepid()).build());
             if (!mGuide.getSteps().isEmpty()) {
                createDeleteDialog(StepEditActivity.this).show();
             }
             break;
          case R.id.step_edit_save:
-            gaTracker.sendEvent("ui_action", "button_press", "step_edit_save_step",
-             (long) mGuide.getStep(mPagePosition).getStepid());
+            gaTracker.send(MapBuilder
+             .createEvent("ui_action", "button_press", "step_edit_save_step",
+              (long) mGuide.getStep(mPagePosition).getStepid()).build());
 
             if (mGuide.isNewGuide()) {
                if (!stepHasLineContent(mGuide.getStep(mPagePosition).getLines())) {
@@ -785,7 +811,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             }
             break;
          case R.id.step_edit_add_step:
-            gaTracker.sendEvent("ui_action", "button_press", "step_edit_add_step", null);
+            gaTracker.send(MapBuilder
+             .createEvent("ui_action", "button_press", "step_edit_add_step", null).build());
 
             int newPosition = mPagePosition + 1;
 
@@ -842,9 +869,13 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    private class StepAdapter extends FragmentStatePagerAdapter {
+      private Map<Integer, String> mPageLabelMap;
 
       public StepAdapter(FragmentManager fm) {
          super(fm);
+
+         mPageLabelMap = new HashMap<Integer, String>();
+         Log.d("StepEditActivity", "creating map");
       }
 
       @Override
@@ -859,6 +890,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
       @Override
       public Fragment getItem(int position) {
+         String label = "/guide/edit/" + mGuide.getGuideid() + "/" + (position + 1); // Step title # should be 1 indexed
+         mPageLabelMap.put(position, label);
+         Log.d("StepEditActivity", "putting label " + label);
+
          return StepEditFragment.newInstance(mGuide.getStep(position));
       }
 
@@ -879,12 +914,32 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          // }
       }
 
+      public String getFragmentScreenLabel(int key) {
+         return mPageLabelMap.get(key);
+      }
+
+      @Override
+      public void destroyItem(View container, int position, Object object) {
+         super.destroyItem(container, position, object);
+         Log.d("StepEditActivity", "destroying label " + mPageLabelMap.get(position));
+
+         mPageLabelMap.remove(position);
+      }
+
       @Override
       public void setPrimaryItem(ViewGroup container, int position, Object object) {
          super.setPrimaryItem(container, position, object);
+         Log.d("StepEditActivity", "primary item #" + position);
 
          mPagePosition = position;
       }
+   }
+
+   public void onPageScrollStateChanged(int arg0) { }
+
+   public void onPageScrolled(int arg0, float arg1, int arg2) { }
+
+   public void onPageSelected(int currentPage) {
    }
 
    /////////////////////////////////////////////////////
@@ -1106,13 +1161,22 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       super.hideLoading();
    }
 
+   public int getGuideId() {
+      if (mGuide != null) {
+         return mGuide.getGuideid();
+      } else {
+         return 0;
+      }
+   }
+
    protected void navigateToStepView() {
       // Bail early if somehow the user is able to click view guide before the guide is retrieved.
       if (mGuide == null) {
          return;
       }
 
-      EasyTracker.getTracker().sendEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid());
+      MainApplication.getGaTracker().send(MapBuilder
+       .createEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid()).build());
 
       Intent intent = new Intent(this, GuideViewActivity.class);
       if (mParentGuideId != NO_PARENT_GUIDE) {

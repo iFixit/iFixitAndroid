@@ -7,14 +7,20 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.CompoundButton;
 import android.widget.CompoundButton.OnCheckedChangeListener;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.ToggleButton;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.VideoThumbnail;
+import com.dozuki.ifixit.model.guide.GuideStep;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -62,7 +68,8 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mStepFrame.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "toggle_step_item", null);
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "toggle_step_item",
+             null).build());
 
             mToggleEdit.toggle();
          }
@@ -70,7 +77,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mDeleteButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "delete_step", null);
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "delete_step", null).build());
 
             mPortalRef.createDeleteDialog(mStepObject).show();
          }
@@ -78,7 +85,7 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mEditButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "edit_step", null);
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "edit_step", null).build());
 
             mPortalRef.launchStepEdit(mStepPosition);
          }

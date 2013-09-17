@@ -23,7 +23,7 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.PicassoUtils;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
 public class GuideListItem extends LinearLayout {
@@ -85,7 +85,8 @@ public class GuideListItem extends LinearLayout {
       OnClickListener upperSectionListener = new OnClickListener() {
          @Override
          public void onClick(View v) {
-            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "toggle_guide_item", null);
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+             "toggle_guide_item", null).build());
 
             mToggleEdit.toggle();
          }
@@ -100,7 +101,7 @@ public class GuideListItem extends LinearLayout {
          mDeleteButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-               EasyTracker.getTracker().sendEvent("ui_action", "button_press", "delete_guide", null);
+               MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "delete_guide", null).build());
 
                ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
             }
@@ -109,7 +110,7 @@ public class GuideListItem extends LinearLayout {
       mEditButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "edit_guide", null);
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "edit_guide", null).build());
 
             Intent intent = new Intent(mActivity, StepsActivity.class);
             intent.putExtra(StepsActivity.GUIDE_ID_KEY, mGuideInfo.mGuideid);
@@ -120,7 +121,8 @@ public class GuideListItem extends LinearLayout {
       mPublishButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "publish_guide", null);
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "publish_guide",
+             null).build());
 
             // Ignore button press if we are already (un)publishing the guide.
             if (mGuideInfo.mIsPublishing) {

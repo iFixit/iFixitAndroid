@@ -13,11 +13,13 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
-
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
 
@@ -86,13 +88,6 @@ public class BulletReorderFragment extends BaseDialogFragment {
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(LINES_KEY, mLines);
-   }
-
-   @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-
-      EasyTracker.getInstance().setContext(getActivity());
    }
 
    @Override
@@ -172,18 +167,6 @@ public class BulletReorderFragment extends BaseDialogFragment {
 
          return v;
       }
-   }
-
-   @Override
-   public void onDetach() {
-      super.onDetach();
-   }
-
-   @Override
-   public void onStart() {
-      super.onStart();
-
-      EasyTracker.getTracker().sendView("Step Edit Line Reorder");
    }
 
    public int getBulletResource(String color) {

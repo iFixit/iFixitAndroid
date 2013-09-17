@@ -5,11 +5,14 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -37,6 +40,9 @@ public class FavoritesActivity extends BaseMenuDrawerActivity {
          showLoading(R.id.favorites_loading);
          APIService.call(this, APIService.getUserFavorites(LIMIT, OFFSET));
       }
+
+      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/favorites");
+      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    private void initGridView() {

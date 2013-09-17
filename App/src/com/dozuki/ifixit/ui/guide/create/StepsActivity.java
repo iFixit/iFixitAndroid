@@ -4,13 +4,16 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import com.actionbarsherlock.view.Menu;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
-import com.dozuki.ifixit.ui.guide.create.StepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.ui.LoadingFragment;
+import com.dozuki.ifixit.ui.guide.create.StepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 public class StepsActivity extends BaseMenuDrawerActivity implements StepRearrangeListener {
@@ -105,9 +108,9 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    }
 
    @Override
-   public void onReorderComplete(boolean val) {
+   public void onReorderComplete(boolean reodered) {
       ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
-       .onReorderComplete(val);
+       .onReorderComplete(reodered);
    }
 
    @Override
@@ -130,6 +133,9 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    public void onRetrievedGuide(APIEvent.GuideForEdit event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
+         MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid());
+         MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
+
          hideLoading();
       } else {
          APIService.getErrorDialog(StepsActivity.this, event).show();

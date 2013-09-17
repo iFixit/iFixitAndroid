@@ -10,6 +10,7 @@ import com.dozuki.ifixit.MainApplication;
  * Note: This is basically a duplicate of other Base*Fragment classes.
  */
 public class BaseDialogFragment extends SherlockDialogFragment {
+
    @Override
    public void onResume() {
       MainApplication.getBus().register(this);
@@ -21,4 +22,5 @@ public class BaseDialogFragment extends SherlockDialogFragment {
       MainApplication.getBus().unregister(this);
       super.onPause();
    }
+
 }

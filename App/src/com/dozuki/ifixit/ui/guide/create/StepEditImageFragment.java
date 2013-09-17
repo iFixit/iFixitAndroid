@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
@@ -24,7 +23,7 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.CaptureHelper;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Bus;
 
 import java.io.File;
@@ -105,7 +104,9 @@ public class StepEditImageFragment extends BaseFragment {
                    Intent intent;
                    switch (which) {
                       case CAPTURE_IMAGE:
-                         EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_camera", null);
+                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
+                       "add_from_camera",
+                       null).build());
                          try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -127,7 +128,7 @@ public class StepEditImageFragment extends BaseFragment {
 
                          break;
                       case MEDIA_MANAGER:
-                         EasyTracker.getTracker().sendEvent("ui_action", "add_image", "add_from_gallery", null);
+                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image", "add_from_gallery", null).build());
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                          intent.putExtra(GalleryActivity.ATTACHED_MEDIA_IDS, mImages);
@@ -153,19 +154,22 @@ public class StepEditImageFragment extends BaseFragment {
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
-                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "copy_to_media_manager",
-                          null);
+                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
+                          "copy_to_media_manager",
+                          null).build());
                          APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
-                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "detach_to_media_manager",
-                          null);
+                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
+                          "detach_to_media_manager",
+                          null).build());
 
                          APIService.call(getActivity(),
                           APIService.getCopyImageAPICall(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
-                         EasyTracker.getTracker().sendEvent("ui_action", "edit_image", "delete_from_step", null);
+                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
+                          "delete_from_step", null).build());
                          mThumbs.removeThumb(v);
                          mImages.remove(thumbImage);
 

@@ -9,10 +9,12 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
-
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 
 public class ChooseBulletDialog extends BaseDialogFragment implements OnClickListener {
 
@@ -49,9 +51,6 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
       super.onCreate(savedInstanceState);
 
       setStyle(STYLE_NO_TITLE, 0);
-
-      EasyTracker.getInstance().setContext(getActivity());
-
    }
 
    @Override
@@ -126,80 +125,83 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
    public void onClick(View v) {
       BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
 
+      Tracker tracker = MainApplication.getGaTracker();
+
       switch (v.getId()) {
          case R.id.bullet_dialog_color_black:
             frag.onFinishBulletDialog(mStepIndex, "black");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_black", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_black",
+             null).build());
 
             break;
          case R.id.bullet_dialog_color_red:
             frag.onFinishBulletDialog(mStepIndex, "red");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_red", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_red", null).build());
 
             break;
          case R.id.bullet_dialog_color_orange:
             frag.onFinishBulletDialog(mStepIndex, "orange");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_orange", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_orange", null).build());
 
             break;
          case R.id.bullet_dialog_color_yellow:
             frag.onFinishBulletDialog(mStepIndex, "yellow");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_yellow", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_yellow", null).build());
 
             break;
          case R.id.bullet_dialog_color_blue:
             frag.onFinishBulletDialog(mStepIndex, "blue");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_blue", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_blue", null).build());
 
             break;
          case R.id.bullet_dialog_color_purple:
             frag.onFinishBulletDialog(mStepIndex, "violet");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_purple", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_purple", null).build());
 
             break;
          case R.id.bullet_dialog_color_green:
             frag.onFinishBulletDialog(mStepIndex, "green");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_color_green", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_green", null).build());
 
             break;
          case R.id.bullet_dialog_caution:
             frag.onFinishBulletDialog(mStepIndex, "icon_caution");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_caution", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_caution", null).build());
 
             break;
          case R.id.bullet_dialog_note:
             frag.onFinishBulletDialog(mStepIndex, "icon_note");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_note", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_note", null).build());
 
             break;
          case R.id.bullet_dialog_reminder:
             frag.onFinishBulletDialog(mStepIndex, "icon_reminder");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_reminder", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_reminder", null).build());
 
             break;
          case R.id.bullet_dialog_indent:
             frag.onFinishBulletDialog(mStepIndex, "action_indent");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_indent", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_indent", null).build());
 
             break;
          case R.id.bullet_dialog_unindent:
             frag.onFinishBulletDialog(mStepIndex, "action_unindent");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_unindent", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_unindent", null).build());
 
             break;
          case R.id.bullet_dialog_rearrange:
             frag.onFinishBulletDialog(mStepIndex, "action_reorder");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_rearrange", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_rearrange", null).build());
 
             break;
          case R.id.bullet_dialog_delete:
             frag.onFinishBulletDialog(mStepIndex, "action_delete");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_delete", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_delete", null).build());
 
             break;
          case R.id.bullet_dialog_cancel:
             frag.onFinishBulletDialog(mStepIndex, "action_cancel");
-            EasyTracker.getTracker().sendEvent("ui_action", "button_click", "bullet_dialog_cancel", null);
+            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_cancel", null).build());
 
             break;
       }
@@ -217,7 +219,11 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
    public void onStart() {
       super.onStart();
 
-      EasyTracker.getTracker().sendView("Step Edit Bullet Chooser");
+      Tracker tracker = MainApplication.getGaTracker();
+      tracker.set(Fields.SCREEN_NAME, "/guide/edit/" + ((StepEditActivity)
+       getActivity()).getGuideId() + "/" + mStepIndex + "/bullet_dialog");
+
+      tracker.send(MapBuilder.createAppView().build());
    }
 
    public void disableUnIndent() {

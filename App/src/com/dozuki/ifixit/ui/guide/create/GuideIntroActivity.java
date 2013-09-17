@@ -16,7 +16,12 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
-import com.dozuki.ifixit.model.guide.wizard.*;
+import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
+import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
+import com.dozuki.ifixit.model.guide.wizard.ModelCallbacks;
+import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
@@ -24,7 +29,8 @@ import com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -138,6 +144,9 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
       } else {
          initWizard();
       }
+
+      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid() + "/details");
+      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    private Bundle buildIntroBundle() {
@@ -213,14 +222,6 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
 
       onPageTreeChanged();
       updateBottomBar();
-
-      // If we're editing an existing guide, jump to the review page for an overview of the guide details
-      if (mEditIntroState) {
-         EasyTracker.getTracker().sendView("Edit Guide Intro");
-         mPager.setCurrentItem(mCurrentPageSequence.size());
-      } else {
-         EasyTracker.getTracker().sendView("Create New Guide");
-      }
    }
 
 

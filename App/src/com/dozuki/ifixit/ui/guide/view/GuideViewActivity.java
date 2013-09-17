@@ -8,6 +8,7 @@ import android.util.Log;
 import android.view.View;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
@@ -17,7 +18,9 @@ import com.dozuki.ifixit.ui.guide.create.StepsActivity;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -182,8 +185,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       switch (item.getItemId()) {
          case R.id.edit_guide:
             if (mGuide != null) {
-               EasyTracker.getTracker().sendEvent("menu_action", "button_press", "edit_guide",
-                (long)mGuide.getGuideid());
+               MainApplication.getGaTracker().send(MapBuilder.createEvent("menu_action", "button_press",
+                "edit_guide", (long)mGuide.getGuideid()).build());
+
                Intent intent;
                // If the user is on the introduction, take them to edit the introduction fields.
                if (mCurrentPage == 0) {
@@ -269,9 +273,13 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       mGuide = guide;
 
+      Tracker tracker = MainApplication.getGaTracker();
+
+      tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid());
+      tracker.send(MapBuilder.createAppView().build());
+
       String guideTitle = mGuide.getTitle();
       setTitle(guideTitle);
-      EasyTracker.getTracker().sendView(guideTitle + " View");
 
       mAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide);
 
@@ -340,6 +348,11 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    public void onPageSelected(int currentPage) {
       mCurrentPage = currentPage;
+
+      String label = mAdapter.getFragmentScreenLabel(currentPage);
+      Tracker tracker = MainApplication.getGaTracker();
+      tracker.set(Fields.SCREEN_NAME, label);
+      tracker.send(MapBuilder.createAppView().build());
    }
 
    @Override

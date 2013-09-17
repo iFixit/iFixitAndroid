@@ -17,6 +17,8 @@ import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.util.Utils;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -83,6 +85,9 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       TitlePageIndicator titleIndicator = (TitlePageIndicator) findViewById(R.id.gallery_view_top_bar);
       titleIndicator.setViewPager(pager);
       pager.setCurrentItem(1);
+
+      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/media/images");
+      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    @Override

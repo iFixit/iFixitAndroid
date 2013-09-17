@@ -15,7 +15,6 @@ import android.text.Spannable;
 import android.text.SpannableString;
 import android.text.TextWatcher;
 import android.text.style.SuggestionSpan;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +28,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
@@ -37,7 +35,8 @@ import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
 import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.util.Utils;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.Fields;
+import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -137,7 +136,8 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
       mNewBulletButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            EasyTracker.getTracker().sendEvent("ui_action", "button_press", "new_bullet_button", null);
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+             "new_bullet_button", null).build());
             mLines.add(new StepLine());
             View view = getView(mLines.get(mLines.size() - 1), mLines.size() - 1);
             mBulletContainer.addView(view, mLines.size() - 1);
@@ -577,6 +577,9 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
    }
 
    private void launchBulletReorder() {
+      String screenLabel = "/guide/edit/" + ((StepEditActivity)getActivity()).getGuideId() + "/" + mStepId +
+       "/line_reorder";
+      MainApplication.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, screenLabel).build());
       FragmentManager fm = getActivity().getSupportFragmentManager();
       mReorderFragment = new BulletReorderFragment();
       mReorderFragment.setLines(mLines);

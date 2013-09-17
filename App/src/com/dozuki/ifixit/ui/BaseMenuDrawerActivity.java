@@ -25,6 +25,7 @@ import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.EasyTracker;
+import com.google.analytics.tracking.android.MapBuilder;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -214,8 +215,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
           } else {
              mMenuDrawer.closeMenu();
 
-             EasyTracker.getTracker().sendEvent("menu_action", "drawer_item_click",
-              ((String) view.getTag()).toLowerCase(), null);
+             MainApplication.getGaTracker().send(MapBuilder
+              .createEvent("menu_action", "drawer_item_click", ((String) view.getTag()).toLowerCase(), null)
+              .build());
 
              mActivePosition = position;
              mMenuDrawer.setActiveView(view, position);

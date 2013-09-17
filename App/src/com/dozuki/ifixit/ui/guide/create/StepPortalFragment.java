@@ -229,8 +229,8 @@ public class StepPortalFragment extends BaseFragment implements
    /////////////////////////////////////////////////////
 
    @Override
-   public void onReorderComplete(boolean reOrdered) {
-      if (reOrdered) {
+   public void onReorderComplete(boolean reodered) {
+      if (reodered) {
          mStepAdapter.notifyDataSetChanged();
          ((StepsActivity) getActivity()).showLoading();
          APIService.call(getActivity(), APIService.getStepReorderAPICall(mGuide));

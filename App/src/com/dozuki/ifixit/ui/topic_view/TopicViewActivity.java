@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
+import com.google.analytics.tracking.android.Fields;
 
 public class TopicViewActivity extends BaseMenuDrawerActivity {
    public static final String TOPIC_KEY = "TOPIC";
@@ -43,6 +45,8 @@ public class TopicViewActivity extends BaseMenuDrawerActivity {
 
       if (mTopicNode != null) {
          setTitle(mTopicNode.getName());
+
+         MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/category/" + mTopicNode.getName());
       }
    }
 

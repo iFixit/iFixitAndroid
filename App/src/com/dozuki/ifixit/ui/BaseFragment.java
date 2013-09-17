@@ -10,6 +10,7 @@ import com.dozuki.ifixit.MainApplication;
  * Note: This is basically a duplicate of other Base*Fragment classes.
  */
 public class BaseFragment extends SherlockFragment {
+
    @Override
    public void onResume() {
       MainApplication.getBus().register(this);
