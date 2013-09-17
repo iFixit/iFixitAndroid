@@ -1,39 +1,48 @@
-The worlds largest repair manual that anyone can edit! 
+Das weltgrößte Reparaturhandbuch, das jeder bearbeiten kann! 
 
-★ NEW IN v2.0! ★
-Document and share your repairs with the world! Now you can create your own DIY
-guide straight from your smartphone or tablet — Simply snap a photo, write (or
-dictate!) the instructions, and then publish. It’s that easy!
+★ NEU IN v2.0! ★
+Dokumentiere deine Reparaturen und teile sie mit der Welt! Du kannst deine
+eigenen
+Do-it-yourself-Anleitungen jetzt direkt auf dem Smartphone oder Tablet
+erstellen —
+Mach einfach Fotos, schreibe (oder diktiere!) die Anweisungen und
+veröffentliche
+das Ergebnis. Fertig!
 
-We have thousands of step-by-step guides with gorgeous images that makes it
-easy to repair your stuff.  We have new guides for dozens of Androids,
-including the five most popular Android devices: the Samsung Galaxy SIII, the
-Galaxy S4, the Galaxy Note, the Galaxy Note II, and the new Motorola Moto X.
+Bei uns findest du Tausende Schritt-für-Schritt-Anleitungen mit tollen
+Abbildungen, die
+es dir leicht machen, deine Sachen zu reparieren. Wir haben neue Guides für
+Dutzende von
+Android-Geräten, inklusive der fünf beliebtesten Androiden: das Samsung Galaxy
+SIII, das
+Galaxy S4, das Galaxy Note, das Galaxy Note II und das neue Motorola Moto X.
 
-Also, stay informed about the newest gadgets with our critically renowned
-device teardowns.  
+Durch unsere renommierten Teardowns von Geräten bleibst du außerdem stets
+informiert
+über die neuesten Gadgets.  
 
-★ Learn How to Repair ★ 
-✓ Fix a cracked iPhone screen
-✓ Upgrade the hard drive in your laptop
-✓ Change the oil in your car
-✓ Repair your XBox’s Red Ring of Death
-✓ Change a flat tire in your bike
-✓ Mend your Patagonia clothing
-✓ Much, much, more
+★ Reparieren lernen ★ 
+✓ Tausche ein gesplittertes iPhone-Display aus
+✓ Upgrade die Festplatte deines Laptops
+✓ Mach selber einen Ölwechsel bei deinem Auto
+✓ Repariere den ‚Red Ring of Death’-Fehler deiner Xbox
+✓ Behebe einen Plattfuß an deinem Fahrrad
+✓ Flicke Kleidungsstücke der Marke Patagonia
+✓ Und vieles, vieles mehr
 
-★  Thousands of How-To Guides ★ 
+★  Tausende praktischer Handbücher ★ 
 ✓ Apple MacBooks, Air, PowerBook + iBook
 ✓ iPod + iPad + iPhone
 ✓ Xbox + PlayStation + Wii
 ✓ PC Desktop + Laptop
-✓ Digital cameras
-✓ Cars, bikes, and motorcycles
-✓ Espresso machines
-✓ Cell phones: Samsung, Blackberry, Nokia, Sony, & more
-✓ More tutorials added all the time—or make your own!
+✓ Digitalkameras
+✓ Autos, Fahrräder und Motorräder
+✓ Kaffeemaschinen
+✓ Mobiltelefone: Samsung, Blackberry, Nokia, Sony & andere
+✓ Es werden ständig neue Guides ergänzt—und können von dir auch selbst erstellt
+werden!
 
-★ Praise from the Press ★ 
+★ Pressestimmen ★ 
 "Empowers you to fix things yourself. From troubleshooting to parts and tools,
 to repair guides, they have your back." — TreeHugger
 "Demonstrates the old-fashioned virtue of repair and extending the lifespan of
@@ -43,7 +52,7 @@ Thanks a lot." — Engadget
 "Illustrated repair guides that take you step by step through the process." —
 Dallas Morning News
 
-★ Testimonials ★ 
+★ Referenzen ★ 
 "You guys rule and have saved me many many times. Thank you!" – Ralph in North
 Carolina
 "I love your repair guides. You've saved me hundreds of dollars over the last
@@ -53,63 +62,23 @@ few years." – David in Maryland
 "The installation went smoothly thanks to your excellent guides. We got my
 son's MacBook Pro running and saved $$$$$." – Christopher in New Mexico
 
-★  Support iFixit ★ 
-We fund these manuals by selling parts and tools. If you use our manual to fix
-something, support our work by buying from us. 
-iFixit’s Pro Tech Toolkit contains everything you need to repair electronics:
+★  Unterstütze iFixit ★
+Wir finanzieren unsere Handbücher durch den Verkauf von Ersatzteilen und
+Werkzeug. Wenn
+du ein Handbuch verwendest, um etwas zu reparieren, freuen wir uns über die
+Unterstützung
+unserer Arbeit durch einen Kauf bei iFixit.
+
+Das iFixit Pro Tech Toolkit enthält alles, was man zur Reparatur von Elektronik
+benötigt:
 http://www.ifixit.com/Tools/Pro-Tech-Toolkit/IF145-072
 
-We also offer thousands of Android, MacBook, iMac, iPhone, and game console
-parts: http://www.ifixit.com/Parts-Store
+Wir bieten auch Tausende von Ersatzteilen für Android, MacBook, iMac, iPhone
+und
+Spielkonsolen an: http://www.ifixit.com/Parts-Store
 
-★ iFixit: Repair Manual supports Android version 2.2 and up ★
-
-This app is open source!  Fork us, open a issue, or just say hello at
+★ iFixit: Repair Manual unterstützt Android Version 2.2 und höher ★
+Diese App ist quelloffen! Du kannst sie verbessern, einen Software-Fork
+erzeugen oder einfach ‚Hallo‘ sagen unter:
 https://github.com/iFixit/iFixitAndroid
-
-START OLD TEXT
-++++++++++++
-
-Android App Store
-
-++++++++++++
-
-iFixit — Das kostenlose Reparaturhandbuch! Tausende Anleitungen mit
-großformatigen, attraktiven Abbildungen machen es dir leicht, all deine Sachen
-zu reparieren. 
-
-● Enthaltene Geräte ●
-
-Die Reparaturhandbücher behandeln folgende Themen:
-
-✓ MacBook Reparatur
-✓ MacBook Pro Reparatur
-✓ PowerBook & iBook Reparatur
-✓ iPad Reparatur
-✓ iPhone Reparatur
-✓ iPod Reparatur
-✓ Xbox Reparatur
-✓ PlayStation Reparatur
-✓ PC- & Laptop Reparatur
-✓ Dutzende Handbücher zur Reparatur von Digitalkameras
-✓ Hunderte Handbücher zur Reparatur von Handys
-✓ Harley Davidson Reparatur
-✓ Honda Accord Reparatur
-✓ Wöchentlich werden neue Handbücher ergänzt
-● Pressestimmen ●
-● Referenzen ●
-● Unterstütze iFixit ●
-
-Hilf mit, damit unsere Handbücher kostenlos bleiben: Wir leben vom Verkauf von
-Ersatzteilen und Werkzeugen. Wenn du ein Handbuch verwendest, um etwas zu
-reparieren, freuen wir uns über die Unterstützung unserer Arbeit durch den Kauf
-von Ersatzteilen.
-
-Wir verkaufen tausende Ersatzteile für MacBooks, iPods, iPhones, iPads und
-Spielkonsolen sowie Spezialwerkzeug zur Reparatur von Elektronikgeräten.
-
-Diese App ist quelloffen! Du kannst sie verbessern oder einen Software-Fork
-erzeugen unter: https://github.com/iFixit
-
-Repariere deine Apple, Nintendo, Microsoft oder Sony Hardware einfach selbst!
 
