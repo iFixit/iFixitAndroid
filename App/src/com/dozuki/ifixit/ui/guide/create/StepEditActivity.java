@@ -209,7 +209,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
          @Override
          public void onPageSelected(int currentPage) {
-            Log.d("StepEditActivity", "Current page: " + currentPage);
             String label = mStepAdapter.getFragmentScreenLabel(currentPage);
             Tracker tracker = MainApplication.getGaTracker();
             tracker.set(Fields.SCREEN_NAME, label);
@@ -265,7 +264,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
       Bundle extras = intent.getExtras();
       if (extras != null) {
-         Log.d(TAG, "onNewIntent has extras");
          mGuide = null;
          mPagePosition = 0;
 
@@ -336,7 +334,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                   for (String match : matches) {
                      debug += "   " + match + "\n";
                   }
-                  Log.d("StepEditActivity", "Potential Results:  \n\n" + debug);
                }
 
                if (matches.size() > 0) {
@@ -357,7 +354,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
                   }, 100);
                } else {
-                  Log.d("StepEditActivity", "No matches; try again");
+                  Log.d("StepEditActivity", "No mic matches; try again");
                   // TODO: Relaunch mic and try again.
                }
             }
@@ -366,11 +363,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             super.onActivityResult(requestCode, resultCode, data);
       }
    }
-
-   @Override
-   public void onStop() {
-      super.onStop();
-   };
 
    @Override
    public void onSaveInstanceState(Bundle savedInstanceState) {
@@ -452,8 +444,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
             if (mGuide != null && !mGuide.isNewGuide() && isChecked != mGuide.isPublic()) {
-               Log.d("StepEditActivity", "Toggle: " + (isChecked ? "true" : "false"));
-
                // Disable the toggle so we don't have multiple presses.
                buttonView.setEnabled(false);
 
@@ -875,7 +865,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          super(fm);
 
          mPageLabelMap = new HashMap<Integer, String>();
-         Log.d("StepEditActivity", "creating map");
       }
 
       @Override
@@ -892,7 +881,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       public Fragment getItem(int position) {
          String label = "/guide/edit/" + mGuide.getGuideid() + "/" + (position + 1); // Step title # should be 1 indexed
          mPageLabelMap.put(position, label);
-         Log.d("StepEditActivity", "putting label " + label);
 
          return StepEditFragment.newInstance(mGuide.getStep(position));
       }
@@ -921,7 +909,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       @Override
       public void destroyItem(View container, int position, Object object) {
          super.destroyItem(container, position, object);
-         Log.d("StepEditActivity", "destroying label " + mPageLabelMap.get(position));
 
          mPageLabelMap.remove(position);
       }
@@ -929,7 +916,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       @Override
       public void setPrimaryItem(ViewGroup container, int position, Object object) {
          super.setPrimaryItem(container, position, object);
-         Log.d("StepEditActivity", "primary item #" + position);
 
          mPagePosition = position;
       }
@@ -939,8 +925,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    public void onPageScrolled(int arg0, float arg1, int arg2) { }
 
-   public void onPageSelected(int currentPage) {
-   }
+   public void onPageSelected(int currentPage) { }
 
    /////////////////////////////////////////////////////
    // DIALOGS

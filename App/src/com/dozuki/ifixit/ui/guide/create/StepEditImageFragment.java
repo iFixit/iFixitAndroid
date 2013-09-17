@@ -10,6 +10,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
@@ -105,8 +106,7 @@ public class StepEditImageFragment extends BaseFragment {
                    switch (which) {
                       case CAPTURE_IMAGE:
                          MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
-                       "add_from_camera",
-                       null).build());
+                          "add_from_camera", null).build());
                          try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -116,19 +116,21 @@ public class StepEditImageFragment extends BaseFragment {
                             String tempFileName = file.getAbsolutePath();
 
                             if (isAdded()) {
-                               SharedPreferences prefs = getActivity().getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
+                               SharedPreferences prefs = getActivity().getSharedPreferences(
+                                "com.dozuki.ifixit", Context.MODE_PRIVATE);
                                prefs.edit().putString(StepEditActivity.TEMP_FILE_NAME_KEY, tempFileName).commit();
                             }
 
                             cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, Uri.fromFile(file));
                             mContext.startActivityForResult(cameraIntent, StepEditActivity.CAMERA_REQUEST_CODE);
                          } catch (IOException e) {
-                            e.printStackTrace();
+                            Log.e("StepEditImageFragment", "Capture image", e);
                          }
 
                          break;
                       case MEDIA_MANAGER:
-                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image", "add_from_gallery", null).build());
+                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
+                          "add_from_gallery", null).build());
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                          intent.putExtra(GalleryActivity.ATTACHED_MEDIA_IDS, mImages);
