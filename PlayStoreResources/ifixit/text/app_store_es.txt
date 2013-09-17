@@ -1,69 +1,56 @@
-The worlds largest repair manual that anyone can edit! 
+El manual de reparación mas grande del mundo que todos pueden editar!
 
-★ NEW IN v2.0! ★
-Document and share your repairs with the world! Now you can create your own DIY
-guide straight from your smartphone or tablet — Simply snap a photo, write (or
-dictate!) the instructions, and then publish. It’s that easy!
+★ NUEVO EN v2.0! ★
 
-We have thousands of step-by-step guides with gorgeous images that makes it
-easy to repair your stuff.  We have new guides for dozens of Androids,
-including the five most popular Android devices: the Samsung Galaxy SIII, the
-Galaxy S4, the Galaxy Note, the Galaxy Note II, and the new Motorola Moto X.
+Comparte y documenta tus reparaciones con el mundo! Ahora puedes crear tus propias guías directamente desde tu smartphone o tableta. Simplemente toma una foto, escribe (o dicta!) las instrucciones, y después publica. Es así de fácil. 
 
-Also, stay informed about the newest gadgets with our critically renowned
-device teardowns.  
+Tenemos miles de guías de paso a paso con imágenes maravillosas que facilitaran la reparación de tus cosas. Tenemos nuevas guías para docenas de Androids, incluyendo los cinco dispositivos Android mas populares: el Samsung Galaxy SIII, el Samsung Galaxy S4, el Galaxy Note, el Galaxy Note II, y el nuevo Motorola Moto X.
 
-★ Learn How to Repair ★ 
-✓ Fix a cracked iPhone screen
-✓ Upgrade the hard drive in your laptop
-✓ Change the oil in your car
-✓ Repair your XBox’s Red Ring of Death
-✓ Change a flat tire in your bike
-✓ Mend your Patagonia clothing
-✓ Much, much, more
+Mantente informado sobre los nuevos aparatos con nuestros famosos teardowns de dispositivos.
 
-★  Thousands of How-To Guides ★ 
+★ Aprende Como Reparar ★
+✓ Arregla una pantalla de iPhone quebrada
+✓ Remplaza el disco duro en tu laptop
+✓ Cambia el aceite en tu carro
+✓ Repara el Red Ring of Death de tu Xbox
+✓ Cambia una llanta pinchada en tu bicicleta
+✓ Remenda tu ropa de Patagonia
+✓ Mucho, mucho, mas
+
+★ Miles de Guias ★
 ✓ Apple MacBooks, Air, PowerBook + iBook
 ✓ iPod + iPad + iPhone
 ✓ Xbox + PlayStation + Wii
 ✓ PC Desktop + Laptop
-✓ Digital cameras
-✓ Cars, bikes, and motorcycles
-✓ Espresso machines
-✓ Cell phones: Samsung, Blackberry, Nokia, Sony, & more
-✓ More tutorials added all the time—or make your own!
+✓ Cámara digitales
+✓ Carros, bicicletas, y motocicletas
+✓ Maquinas de Espresso
+✓ Telefonos celulares: Samsung, Blackberry, Nokia, Sony y mas
 
-★ Praise from the Press ★ 
-"Empowers you to fix things yourself. From troubleshooting to parts and tools,
-to repair guides, they have your back." — TreeHugger
-"Demonstrates the old-fashioned virtue of repair and extending the lifespan of
-devices." — Reuters
-"The robots of the future will see this and murder us all. Thanks iFixit.
-Thanks a lot." — Engadget
-"Illustrated repair guides that take you step by step through the process." —
-Dallas Morning News
+★ Recomendaciones de la Prensa ★
+"Te fortalece a arreglar cosas. Desde soluciones de problemas a partes y
+herramientas, a guías de reparación, ellos te respaldan."
+— TreeHugger
+"Demuestran la virtud antigua de reparación y la extensión de vida de
+dispositivos."
+— Reuters
 
-★ Testimonials ★ 
-"You guys rule and have saved me many many times. Thank you!" – Ralph in North
-Carolina
-"I love your repair guides. You've saved me hundreds of dollars over the last
-few years." – David in Maryland
-"Great, clean and easy to navigate."– Serge in New Brunswick
-"Quick and straightforward." – Owen in New York
-"The installation went smoothly thanks to your excellent guides. We got my
-son's MacBook Pro running and saved $$$$$." – Christopher in New Mexico
+★ Testimoniales ★
+"Amo las guías de reparación de iFixit. Me han ahorrado cientos de dólares en
+los últimos años"
+– David en Maryland
+"Estupendo, limpio y fácil de navegar.'
+– Serge en New Brunswick
 
-★  Support iFixit ★ 
-We fund these manuals by selling parts and tools. If you use our manual to fix
-something, support our work by buying from us. 
-iFixit’s Pro Tech Toolkit contains everything you need to repair electronics:
+★ Supportar iFixit ★
+
+Nosotros financiamos estos manuales vendiendo partes y herramientas. Si ocupas nuestro manual para arreglar algo, por favor apoya nuestro trabajo comprando de nosotros.
+El Pro Tech Toolkit de iFixit contiene todo lo que necesitas para reparar electrónicos:
 http://www.ifixit.com/Tools/Pro-Tech-Toolkit/IF145-072
 
-We also offer thousands of Android, MacBook, iMac, iPhone, and game console
-parts: http://www.ifixit.com/Parts-Store
+También ofrecemos miles de partes de Android, MacBook, iMac, iPhone, y video consolas: http://www.ifixit.com/Parts-Store
 
-★ iFixit: Repair Manual supports Android version 2.2 and up ★
+★ iFixit: El Manual de Reparacion es compatible con versiones de Android 2.2 y superiores ★
 
-This app is open source!  Fork us, open a issue, or just say hello at
+Esta aplicación es de código abierto! Haz una copia, abre un problema, o simplemente dinos hola en
 https://github.com/iFixit/iFixitAndroid
-
