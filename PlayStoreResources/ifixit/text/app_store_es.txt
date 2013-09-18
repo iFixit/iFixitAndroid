@@ -2,11 +2,17 @@ El manual de reparación mas grande del mundo que todos pueden editar!
 
 ★ NUEVO EN v2.0! ★
 
-Comparte y documenta tus reparaciones con el mundo! Ahora puedes crear tus propias guías directamente desde tu smartphone o tableta. Simplemente toma una foto, escribe (o dicta!) las instrucciones, y después publica. Es así de fácil. 
+Comparte y documenta tus reparaciones con el mundo! Ahora puedes crear tus 
+propias guías directamente desde tu smartphone o tableta. Simplemente toma una 
+foto, escribe (o dicta!) las instrucciones, y después publica. Es así de fácil. 
 
-Tenemos miles de guías de paso a paso con imágenes maravillosas que facilitaran la reparación de tus cosas. Tenemos nuevas guías para docenas de Androids, incluyendo los cinco dispositivos Android mas populares: el Samsung Galaxy SIII, el Samsung Galaxy S4, el Galaxy Note, el Galaxy Note II, y el nuevo Motorola Moto X.
+Tenemos miles de guías de paso a paso con imágenes maravillosas que facilitaran 
+la reparación de tus cosas. Tenemos nuevas guías para docenas de Androids, 
+incluyendo los cinco dispositivos Android mas populares: el Samsung Galaxy SIII, 
+el Samsung Galaxy S4, el Galaxy Note, el Galaxy Note II, y el nuevo Motorola Moto X.
 
-Mantente informado sobre los nuevos aparatos con nuestros famosos teardowns de dispositivos.
+Mantente informado sobre los nuevos aparatos con nuestros famosos teardowns 
+de dispositivos.
 
 ★ Aprende Como Reparar ★
 ✓ Arregla una pantalla de iPhone quebrada
@@ -44,13 +50,16 @@ los últimos años"
 
 ★ Supportar iFixit ★
 
-Nosotros financiamos estos manuales vendiendo partes y herramientas. Si ocupas nuestro manual para arreglar algo, por favor apoya nuestro trabajo comprando de nosotros.
-El Pro Tech Toolkit de iFixit contiene todo lo que necesitas para reparar electrónicos:
-http://www.ifixit.com/Tools/Pro-Tech-Toolkit/IF145-072
+Nosotros financiamos estos manuales vendiendo partes y herramientas. Si ocupas 
+nuestro manual para arreglar algo, por favor apoya nuestro trabajo comprando 
+de nosotros.
+El Pro Tech Toolkit de iFixit contiene todo lo que necesitas para reparar 
+electrónicos: http://www.ifixit.com/Tools/Pro-Tech-Toolkit/IF145-072
 
-También ofrecemos miles de partes de Android, MacBook, iMac, iPhone, y video consolas: http://www.ifixit.com/Parts-Store
+También ofrecemos miles de partes de Android, MacBook, iMac, iPhone, y video 
+consolas: http://www.ifixit.com/Parts-Store
 
 ★ iFixit: El Manual de Reparacion es compatible con versiones de Android 2.2 y superiores ★
 
-Esta aplicación es de código abierto! Haz una copia, abre un problema, o simplemente dinos hola en
-https://github.com/iFixit/iFixitAndroid
+Esta aplicación es de código abierto! Haz una copia, abre un problema, o 
+simplemente dinos hola en https://github.com/iFixit/iFixitAndroid
