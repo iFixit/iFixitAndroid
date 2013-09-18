@@ -18,6 +18,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -366,9 +367,9 @@ public class StepPortalFragment extends BaseFragment implements
          if (view != null) {
             view.setChecked(false);
          }
-         for (int i = 0; i < mGuide.getSteps().size(); i++) {
-            if (mGuide.getSteps().get(i).getStepid() == mCurOpenGuideObjectID) {
-               mGuide.getSteps().get(i).setEditMode(false);
+         for (GuideStep step : mGuide.getSteps()) {
+            if (step.getStepid() == mCurOpenGuideObjectID) {
+               step.setEditMode(false);
             }
          }
       }

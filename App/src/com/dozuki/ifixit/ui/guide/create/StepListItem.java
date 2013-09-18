@@ -19,13 +19,12 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class StepListItem extends RelativeLayout implements AnimationListener {
+public class StepListItem extends RelativeLayout {
    private static final int ANIMATION_DURATION = 300;
    private TextView mStepsView;
    private TextView mStepNumber;
@@ -124,7 +123,6 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
             mToggleEdit.startAnimation(rotateAnimation);
             // Creating the expand animation for the item
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            expandAni.setAnimationListener(this);
             // Start the animation on the toolbar
             mEditBar.startAnimation(expandAni);
          } else {
@@ -136,7 +134,6 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
             Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counterclockwise);
             mToggleEdit.startAnimation(rotateAnimation);
             ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            expandAni.setAnimationListener(this);
             mEditBar.startAnimation(expandAni);
          } else {
             mEditBar.setVisibility(View.GONE);
@@ -189,18 +186,4 @@ public class StepListItem extends RelativeLayout implements AnimationListener {
       mToggleEdit.setChecked(check);
    }
 
-   @Override
-   public void onAnimationEnd(Animation animation) {
-      mPortalRef.invalidateViews();
-   }
-
-   @Override
-   public void onAnimationRepeat(Animation animation) {
-
-   }
-
-   @Override
-   public void onAnimationStart(Animation animation) {
-
-   }
 }
