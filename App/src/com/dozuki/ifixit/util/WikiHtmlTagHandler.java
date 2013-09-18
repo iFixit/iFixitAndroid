@@ -49,7 +49,7 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
          output.removeSpan(obj);
 
          if (where != len) {
-            if (output.charAt(where - 1) != '\n') {
+            if (where > 0 && output.charAt(where - 1) != '\n') {
                output.insert(where, NEWLINE);
                where += NEWLINE.length(); // so the margin and bullet are inserted after the newline
             }
