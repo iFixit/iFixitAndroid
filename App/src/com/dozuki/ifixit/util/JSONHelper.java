@@ -49,13 +49,13 @@ public class JSONHelper {
 
       site.mName = jSite.getString("name");
       site.mDomain = jSite.getString("domain");
-      site.mCustomDomain = jSite.has("custom_domain") ? jSite.getString("custom_domain") : "";
+      site.mCustomDomain = jSite.optString("custom_domain", "");
       site.mTitle = jSite.getString("title");
       site.mTheme = jSite.getString("theme");
       site.mPublic = !jSite.getBoolean("private");
       site.mDescription = jSite.getString("description");
       site.mAnswers = jSite.getBoolean("answers");
-      site.mStoreUrl = jSite.has("store") ? jSite.getString("store") : "";
+      site.mStoreUrl = jSite.optString("store", "");
 
       setAuthentication(site, jSite.getJSONObject("authentication"));
 

@@ -116,6 +116,13 @@ public class Site implements Serializable {
       return domain;
    }
 
+   /**
+    * Returns true if the provided host is for this Site.
+    */
+   public boolean hostMatches(String host) {
+      return mDomain.equals(host) || mCustomDomain.equals(host);
+   }
+
    public int theme() {
       // Put custom site themes here.
       if (isIfixit()) {

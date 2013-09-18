@@ -11,6 +11,7 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
@@ -83,23 +84,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
          mGuideid = -1;
 
-         // Handle when the activity is started from an external app.  (like a link)
+         // Handle when the activity is started from viewing a guide link.
          if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            List<String> segments = intent.getData().getPathSegments();
-
-            try {
-               mGuideid = Integer.parseInt(segments.get(2));
-            } catch (Exception e) {
-               hideLoading();
-               Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments", e);
-
-               MainApplication.getGaTracker().send(MapBuilder.createException(
-                new StandardExceptionParser(this, null).getDescription(
-                Thread.currentThread().getName(), e), false).build());
-
-               displayGuideNotFoundDialog();
-               return;
-            }
+            handleActionViewIntent(intent);
+            return;
          } else {
             extractExtras(intent.getExtras());
          }
@@ -127,6 +115,38 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          mInboundStepId = extras.getInt(INBOUND_STEP_ID);
          mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
       }
+   }
+
+   private void handleActionViewIntent(Intent intent) {
+      Site site = MainApplication.get().getSite();
+      String host = intent.getData().getHost();
+      List<String> segments = intent.getData().getPathSegments();
+
+      try {
+         mGuideid = Integer.parseInt(segments.get(2));
+      } catch (Exception e) {
+         hideLoading();
+         Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments", e);
+
+         MainApplication.getGaTracker().send(MapBuilder.createException(
+          new StandardExceptionParser(this, null).getDescription(
+          Thread.currentThread().getName(), e), false).build());
+
+         displayGuideNotFoundDialog();
+         return;
+      }
+
+
+      if (site.hostMatches(host)) {
+         // Load the guide for the current site.
+         getGuide(mGuideid);
+         return;
+      }
+
+      // The guide is for a different site so we must first perform a site info
+      // API call to the domain to get information about the site and then
+      // fetch the guide for viewing.
+      // TODO!
    }
 
    @Override
