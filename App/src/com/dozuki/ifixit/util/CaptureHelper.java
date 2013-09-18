@@ -2,9 +2,9 @@ package com.dozuki.ifixit.util;
 
 import android.os.Environment;
 import android.util.Log;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.google.analytics.tracking.android.MapBuilder;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
@@ -24,7 +24,8 @@ public class CaptureHelper {
             return null;
          }
       } else {
-         Log.w("iFixit", "External storage is not mounted READ/WRITE.");
+         MainApplication.getGaTracker().send(MapBuilder.createException(
+          "External storage is not mounted READ/WRITE", false).build());
       }
 
       return storageDir;
