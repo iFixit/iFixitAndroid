@@ -6,6 +6,7 @@ import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -15,11 +16,13 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
+import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.SpeechCommander;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -88,7 +91,13 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                mGuideid = Integer.parseInt(segments.get(2));
             } catch (Exception e) {
                hideLoading();
-               Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments");
+               Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments", e);
+
+               MainApplication.getGaTracker().send(MapBuilder.createException(
+                new StandardExceptionParser(this, null).getDescription(
+                Thread.currentThread().getName(), e), false).build());
+
+               displayGuideNotFoundDialog();
                return;
             }
          } else {
@@ -203,8 +212,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                   }
 
                   int stepGuideid = mGuide.getStep(stepNum).getGuideid();
-                  // If the step is part of a prerequisite guide, store the parents guideid so that we can get back from
-                  // editing this prerequisite.
+                  // If the step is part of a prerequisite guide, store the parents
+                  // guideid so that we can get back from editing this prerequisite.
                   if (stepGuideid != mGuide.getGuideid()) {
                      intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
                   }
@@ -339,8 +348,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    public void onPageScrollStateChanged(int arg0) { }
 
-   public void onPageScrolled(int arg0, float arg1, int arg2) {
-   }
+   public void onPageScrolled(int arg0, float arg1, int arg2) { }
 
    public void onPageSelected(int currentPage) {
       mCurrentPage = currentPage;
@@ -349,6 +357,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       Tracker tracker = MainApplication.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, label);
       tracker.send(MapBuilder.createAppView().build());
+   }
+
+   private void displayGuideNotFoundDialog() {
+      APIService.getErrorDialog(this, new APIEvent.ViewGuide().
+       setCode(404).
+       setError(APIError.getByStatusCode(404))).show();
    }
 
    @Override
