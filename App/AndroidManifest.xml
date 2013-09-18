@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.dozuki.ifixit"
-          android:versionCode="35"
+          android:versionCode="36"
           android:versionName="2.0.0">
 
     <uses-sdk
