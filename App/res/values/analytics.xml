@@ -11,8 +11,4 @@
 
     <!--Enable automatic exception tracking-->
     <bool name="ga_reportUncaughtExceptions">true</bool>
-
-    <!-- Set to false for production release -->
-    <bool name="ga_debug">true</bool>
-
 </resources>

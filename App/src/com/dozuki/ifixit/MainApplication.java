@@ -31,22 +31,14 @@ import com.squareup.otto.Bus;
 import java.net.URL;
 
 public class MainApplication extends Application {
-   private static final int LARGE_SIZE_CUTOFF = 800;
-
    /*
     * Google Analytics configuration values.
     */
-   // Placeholder property ID.
+   // Property ID.
    private static final String GA_PROPERTY_ID = "UA-30506-9";
 
    // Dispatch period in seconds.
    private static final int GA_DISPATCH_PERIOD = 30;
-
-   // Prevent hits from being sent to reports, i.e. during testing.
-   private static final boolean GA_IS_DRY_RUN = false;
-
-   // GA Logger verbosity.
-   private static final Logger.LogLevel GA_LOG_VERBOSITY = Logger.LogLevel.VERBOSE;
 
    // Key used to store a user's tracking preferences in SharedPreferences.
    private static final String TRACKING_PREF_KEY = "trackingPreference";
@@ -147,14 +139,12 @@ public class MainApplication extends Application {
       mGa = GoogleAnalytics.getInstance(this);
       mTracker = mGa.getTracker(GA_PROPERTY_ID);
 
-      // Set dispatch period.
       GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
 
-      // Set dryRun flag.
-      mGa.setDryRun(GA_IS_DRY_RUN);
-
-      // Set Logger verbosity.
-      mGa.getLogger().setLogLevel(GA_LOG_VERBOSITY);
+      // Set dryRun to disable event dispatching.
+      mGa.setDryRun(BuildConfig.DEBUG);
+      mGa.getLogger().setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.INFO :
+       Logger.LogLevel.WARNING);
 
       // Set the opt out flag when user updates a tracking preference.
       SharedPreferences userPrefs = PreferenceManager.getDefaultSharedPreferences(this);
