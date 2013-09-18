@@ -22,8 +22,6 @@
         <item name="android:paddingLeft">0dip</item>
         <item name="android:paddingRight">0dip</item>
         <item name="android:paddingTop">0dip</item>
-        <item name="android:dividerPadding">12dip</item>
-        <item name="android:showDividers">middle</item>
     </style>
 
     <style name="Base.Button">
@@ -38,12 +36,12 @@
     </style>
 
     <style name="Base.Button.Borderless">
-        <item name="android:background">?android:selectableItemBackground</item>
+        <item name="android:background">@drawable/selectable_item_background_transparent</item>
         <item name="android:paddingLeft">4dip</item>
         <item name="android:paddingRight">4dip</item>
     </style>
 
-    <style name="Base.FormLabel">
+    <style name="Base.FormLabel" parent="android:Widget.Holo.Light.TextView">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">4dp</item>
@@ -52,7 +50,7 @@
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="Base.FormField">
+    <style name="Base.FormField" parent="android:Widget.Holo.Light.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">24dp</item>
