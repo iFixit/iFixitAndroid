@@ -3,7 +3,6 @@ package com.dozuki.ifixit.ui.gallery;
 import android.util.Log;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.UserImage;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -66,10 +65,5 @@ public class PhotoMediaFragment extends MediaFragment {
       } else {
          APIService.getErrorDialog(getActivity(), event).show();
       }
-   }
-
-   @Subscribe
-   public void onLogin(LoginEvent.Login event) {
-      setupUser(event.getUser());
    }
 }

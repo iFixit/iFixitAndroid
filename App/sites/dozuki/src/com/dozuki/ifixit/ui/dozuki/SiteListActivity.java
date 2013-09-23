@@ -33,7 +33,6 @@ public class SiteListActivity extends BaseActivity
    private SiteListDialogFragment mSiteListDialog;
    private ArrayList<Site> mSiteList;
 
-   @SuppressWarnings("unchecked")
    @Override
    public void onCreate(Bundle savedInstanceState) {
       getSupportActionBar().hide();

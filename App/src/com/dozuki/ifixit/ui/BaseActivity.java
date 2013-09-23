@@ -288,9 +288,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       }
    }
 
-   /**
-    * Left for derived classes to implement.
-    */
    public void onLogin(LoginEvent.Login event) {
       setUserid();
    }

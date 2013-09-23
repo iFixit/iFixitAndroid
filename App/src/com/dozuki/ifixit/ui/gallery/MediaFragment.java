@@ -56,7 +56,6 @@ public abstract class MediaFragment extends BaseFragment
    protected boolean mNextPageRequestInProgress;
    protected ArrayList<Image> mAlreadyAttachedImages;
    private GridView mGridView;
-   private String mUserName;
    private ImageSizes mImageSizes;
    private ActionMode mMode;
    private String mCameraTempFileName;
@@ -112,10 +111,6 @@ public abstract class MediaFragment extends BaseFragment
       mGridView.setAdapter(mGalleryAdapter);
       mGridView.setOnItemClickListener(this);
       mGridView.setOnItemLongClickListener(this);
-
-      if (MainApplication.get().isUserLoggedIn()) {
-         setupUser(MainApplication.get().getUser());
-      }
 
       if (savedInstanceState != null) {
          boolean deleteMode = savedInstanceState.getBoolean("DELETE_MODE");
@@ -315,10 +310,6 @@ public abstract class MediaFragment extends BaseFragment
       APIService.call(getSherlockActivity(), APIService.getDeleteImageAPICall(deleteList));
 
       mMode.finish();
-   }
-
-   protected void setupUser(User user) {
-      mUserName = user.getUsername();
    }
 
    private void setDeleteMode() {

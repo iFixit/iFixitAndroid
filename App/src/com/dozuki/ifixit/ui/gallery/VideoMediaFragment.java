@@ -5,7 +5,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
-import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -26,11 +25,6 @@ public class VideoMediaFragment extends MediaFragment {
       } else {
          APIService.getErrorDialog(getActivity(), event).show();
       }
-   }
-
-   @Subscribe
-   public void onLogin(LoginEvent.Login event) {
-      setupUser(event.getUser());
    }
 
    @Override
