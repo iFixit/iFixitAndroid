@@ -163,12 +163,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public void onSaveInstanceState(Bundle state) {
-      /**
-       * TODO Figure out why we don't super.onSaveInstanceState(). I think
-       * this causes step fragments to not maintain state across orientation
-       * changes (selected thumbnail). However, I remember this failing with a
-       * call to super.onSavInstanceState(). Investigate.
-       */
+      super.onSaveInstanceState(state);
+
       state.putSerializable(GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
