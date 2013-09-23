@@ -141,7 +141,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
       });
 
       String type = mGuide.getType();
-      if (type != null && !type.isEmpty()) {
+      if (type != null && type.length() > 0) {
          mType.setSelection(adapter.getPosition(type));
       }
 

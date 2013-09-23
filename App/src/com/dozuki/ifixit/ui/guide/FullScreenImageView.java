@@ -30,7 +30,7 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
 
    @Override
    public void onBitmapFailed() {
-      if (mImageUrl.isEmpty()) {
+      if (mImageUrl.length() == 0) {
          Log.e("FallbackImageView", "You must set the base Image url using setImageUrl.");
       }
 

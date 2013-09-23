@@ -42,7 +42,7 @@ public class FallbackImageView extends ImageView implements Target {
       RequestCreator builder;
 
       if (mImage == null) {
-         if (mImageUrl.isEmpty()) {
+         if (mImageUrl.length() == 0) {
             Log.e("FallbackImageView", "You must either set a fallback image object or simply a path to a fallback " +
              "image.");
             throw new RuntimeException();
