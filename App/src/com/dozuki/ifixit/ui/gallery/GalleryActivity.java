@@ -115,8 +115,10 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       }
    }
 
-   @Subscribe
+   @Override
    public void onLogin(LoginEvent.Login event) {
+      super.onLogin(event);
+
       if (MainApplication.get().isFirstTimeGalleryUser()) {
          createHelpDialog().show();
          MainApplication.get().setFirstTimeGalleryUser(false);
