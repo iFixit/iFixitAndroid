@@ -60,10 +60,10 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
          fragment = new GuideIntroViewFragment(mGuide);
       } else if (position == mToolsPosition) {
          label += "/tools";
-         fragment = new GuidePartsToolsViewFragment(mGuide.getTools());
+         fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getTools());
       } else if (position == mPartsPosition) {
          label += "/parts";
-         fragment = new GuidePartsToolsViewFragment(mGuide.getParts());
+         fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getParts());
       } else {
          int stepNumber = (position - mStepOffset);
          label += "/" + (stepNumber + 1); // Step title # should be 1 indexed.
