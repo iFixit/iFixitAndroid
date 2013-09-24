@@ -40,12 +40,14 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String GUIDEID = "GUIDEID";
+   public static final String DOMAIN = "DOMAIN";
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
 
    private int mGuideid;
    private Guide mGuide;
+   private String mDomain;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage = -1;
    private ViewPager mPager;
@@ -68,6 +70,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(GUIDEID);
+         mDomain = savedInstanceState.getString(DOMAIN);
          mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
 
          if (mGuide != null) {
@@ -76,8 +79,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             setGuide(mGuide, mCurrentPage);
             mIndicator.setCurrentItem(mCurrentPage);
             mPager.setCurrentItem(mCurrentPage);
-         } else {
-            getGuide(mGuideid);
          }
       } else {
          Intent intent = getIntent();
@@ -93,10 +94,11 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          }
       }
 
-      if (mGuide == null) {
-         getGuide(mGuideid);
-      } else {
+      if (mGuide != null) {
          setGuide(mGuide, mCurrentPage);
+      } else if (mDomain == null) {
+         // If mDomain is set, then we will fetch the guide in this.onSites().
+         getGuide(mGuideid);
       }
 
       //initSpeechRecognizer();
@@ -104,8 +106,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private void extractExtras(Bundle extras) {
       if (extras != null) {
-         if (extras.containsKey(GuideViewActivity.GUIDEID)) {
-            mGuideid = extras.getInt(GuideViewActivity.GUIDEID);
+         if (extras.containsKey(GUIDEID)) {
+            mGuideid = extras.getInt(GUIDEID);
          }
 
          if (extras.containsKey(GuideViewActivity.SAVED_GUIDE)) {
@@ -118,8 +120,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    private void handleActionViewIntent(Intent intent) {
-      Site site = MainApplication.get().getSite();
-      String host = intent.getData().getHost();
       List<String> segments = intent.getData().getPathSegments();
 
       try {
@@ -136,17 +136,19 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          return;
       }
 
-
-      if (site.hostMatches(host)) {
+      Site currentSite = MainApplication.get().getSite();
+      mDomain = intent.getData().getHost();
+      if (currentSite.hostMatches(mDomain)) {
          // Load the guide for the current site.
          getGuide(mGuideid);
          return;
       }
 
-      // The guide is for a different site so we must first perform a site info
-      // API call to the domain to get information about the site and then
-      // fetch the guide for viewing.
-      // TODO!
+      // Set site to dozuki before API call.
+      MainApplication.get().setSite(Site.getSite("dozuki"));
+
+      showLoading(R.id.loading_container);
+      APIService.call(this, APIService.getSitesAPICall());
    }
 
    @Override
@@ -194,7 +196,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public void onSaveInstanceState(Bundle state) {
       super.onSaveInstanceState(state);
 
-      state.putSerializable(GUIDEID, mGuideid);
+      state.putInt(GUIDEID, mGuideid);
+      state.putString(DOMAIN, mDomain);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
    }
@@ -260,6 +263,41 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    /////////////////////////////////////////////////////
 
    @Subscribe
+   public void onSites(APIEvent.Sites event) {
+      if (!event.hasError()) {
+         Site selectedSite = null;
+         for (Site site : event.getResult()) {
+            if (site.hostMatches(mDomain)) {
+               selectedSite = site;
+               break;
+            }
+         }
+
+         if (selectedSite != null) {
+            // Set the site and then fetch the guide.
+            MainApplication.get().setSite(selectedSite);
+
+            // Recreating the Activity forces it to be recreated with the appropriate
+            // theme and fetch the guide from the correct site. mDomain needs to be
+            // reset otherwise the guide won't be fetched (end of onCreate()).
+            mDomain = null;
+            recreate();
+         } else {
+            Exception e = new Exception();
+            Log.e("GuideViewActivity", "Didn't find site!", e);
+
+            MainApplication.getGaTracker().send(MapBuilder.createException(
+             new StandardExceptionParser(this, null).getDescription(
+             Thread.currentThread().getName(), e), false).build());
+
+            displayGuideNotFoundDialog();
+         }
+      } else {
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
+
+   @Subscribe
    public void onGuide(APIEvent.ViewGuide event) {
       if (!event.hasError()) {
          if (mGuide == null) {
@@ -280,7 +318,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             setGuide(guide, mCurrentPage);
          }
       } else {
-         APIService.getErrorDialog(GuideViewActivity.this, event).show();
+         APIService.getErrorDialog(this, event).show();
       }
    }
 

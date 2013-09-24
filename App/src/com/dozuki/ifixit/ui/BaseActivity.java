@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.login.LoginFragment;
@@ -94,6 +95,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
             MainApplication.getBus().post(new DeadEvent(MainApplication.getBus(),
              activityProxy.getApiEvent()));
          }
+      }
+
+      @SuppressWarnings("unused")
+      @Subscribe
+      public void onSiteChanged(SiteChangedEvent event) {
+         // Reset the userid so we don't erroneously finish the Activity.
+         setUserid();
       }
    };
 

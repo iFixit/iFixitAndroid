@@ -27,7 +27,7 @@ public class Site implements Serializable {
    public boolean mStandardAuth;
    public String mSsoUrl;
    public boolean mPublicRegistration;
-   public String mCustomDomain;
+   public String mCustomDomain = "";
    public String mStoreUrl;
    public Image mLogo;
 
