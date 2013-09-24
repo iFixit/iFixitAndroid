@@ -293,8 +293,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void onLogout(LoginEvent.Logout event) {
-      setUserid();
       finishActivityIfPermissionDenied();
+      setUserid();
    }
 
    public void onCancelLogin(LoginEvent.Cancel event) {
