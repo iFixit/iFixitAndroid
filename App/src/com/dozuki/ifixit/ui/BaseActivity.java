@@ -316,6 +316,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void onLogout(LoginEvent.Logout event) {
+      /**
+       * Check permissions before setting mUserid. Otherwise the Activity
+       * will never be finished because mUserid matches the currently logged
+       * in user.
+       */
       finishActivityIfPermissionDenied();
       setUserid();
    }
