@@ -3,11 +3,25 @@ package com.dozuki.ifixit.util;
 import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.*;
+import com.dozuki.ifixit.model.Badges;
+import com.dozuki.ifixit.model.Embed;
+import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.model.Item;
+import com.dozuki.ifixit.model.Video;
+import com.dozuki.ifixit.model.VideoEncoding;
+import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
-import com.dozuki.ifixit.model.guide.*;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.model.guide.GuideType;
+import com.dozuki.ifixit.model.guide.OEmbed;
+import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.model.search.GuideSearchResult;
+import com.dozuki.ifixit.model.search.Search;
+import com.dozuki.ifixit.model.search.TopicSearchResult;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.user.User;
@@ -21,11 +35,79 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
 import java.lang.reflect.Type;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 public class JSONHelper {
    private static final String TAG = "JSONHelper";
    private static final String INVALID_LOGIN_STRING = "Invalid login";
+
+   public static Search parseSearchResults(String json) throws JSONException {
+
+      Search search = new Search();
+      JSONObject response = new JSONObject(json);
+
+      search.mLimit = response.getInt("limit");
+      search.mOffset = response.getInt("offset");
+      search.mTotalResults = response.getInt("totalResults");
+      search.mHasMoreResults = response.getBoolean("moreResults");
+      search.mQuery = response.getString("search");
+
+      Log.d("JSONHelper", json);
+
+      if (response.has("results")) {
+         JSONArray resultsArr = response.getJSONArray("results");
+         int count = resultsArr.length();
+
+         for (int i = 0; i < count; i++) {
+            JSONObject result = resultsArr.getJSONObject(i);
+            String resultType = result.getString("dataType");
+            if (resultType.equals("guide")) {
+               GuideSearchResult gsr = new GuideSearchResult();
+               gsr.mGuideid = result.getInt("guideid");
+               gsr.mTitle = result.getString("title");
+               gsr.mRevisionid = result.getInt("revisionid");
+               gsr.mModifiedDate = new Date(result.getLong("modified_date"));
+               gsr.mPrereqModifiedDate = new Date(result.getLong("prereq_modified_date"));
+               gsr.mUrl = result.getString("url");
+               gsr.mGuideType = result.getString("type");
+               gsr.mTopic = result.getString("category");
+               gsr.mSubject = result.getString("subject");
+               gsr.mPublic = result.getBoolean("public");
+               gsr.mUserid = result.getInt("userid");
+               gsr.mAuthorUsername = result.getString("username");
+               gsr.mImage = parseImage(result, "image");
+               gsr.mLocale = result.getString("locale");
+
+               JSONArray flags = result.getJSONArray("flags");
+               Log.d("JSONHelper", flags.toString());
+               int numFlags = flags.length();
+               for (int j = 0; j < numFlags; j++) {
+                  gsr.mFlags.add(flags.getString(j));
+               }
+
+               search.mResults.add(gsr);
+            } else if (resultType.equals("wiki")) {
+               TopicSearchResult tsr = new TopicSearchResult();
+               tsr.mDisplayTitle = result.getString("display_title");
+               tsr.mTitle = result.getString("title");
+               tsr.mText = result.getString("text");
+               tsr.mNamespace = result.getString("namespace");
+               tsr.mSummary = result.getString("summary");
+               tsr.mUrl = result.getString("url");
+               tsr.mImage = parseImage(result, "image");
+
+               search.mResults.add(tsr);
+            }
+         }
+      }
+
+      return search;
+   }
 
    public static ArrayList<Site> parseSites(String json) throws JSONException {
       ArrayList<Site> sites = new ArrayList<Site>();

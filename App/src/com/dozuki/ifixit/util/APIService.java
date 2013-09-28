@@ -15,7 +15,6 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
-
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -33,12 +32,11 @@ import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.util.Collections;
+import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -255,6 +253,10 @@ public class APIService extends Service {
       // APIDatabase db = new APIDatabase(this);
       // db.insertResult(result.getResponse(), requestTarget, requestQuery);
       // db.close();
+   }
+
+   public static APICall getSearchAPICall(APIEndpoint endpoint, String query) {
+      return new APICall(endpoint, query);
    }
 
    public static APICall getTeardowns(int limit, int offset) {
@@ -639,6 +641,10 @@ public class APIService extends Service {
 
                MainApplication.getBus().post(apiEvent);
             } else {
+               if (BuildConfig.DEBUG) {
+                  Log.i("APIService", "Adding dead event: " + apiEvent.getClass().toString());
+               }
+
                mDeadApiEvents.add(apiEvent);
             }
          }

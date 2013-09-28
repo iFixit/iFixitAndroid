@@ -262,6 +262,16 @@
     <string name="reload_guide">Reload Guide</string>
     <string name="back_to_site_list">Back to Site List</string>
     <string name="loading_topic">Loading %1$s…</string>
+    <string name="search">Search</string>
+    <string name="guides_search_label">Guides</string>
+    <string name="guides_search_hint">Search Guides</string>
+    <string name="searchable_categories_label">Categories</string>
+    <string name="searchable_categories_hint">Search Categories</string>
+    <string name="search_hint">Search iFixit</string>
+    <string name="search_site_hint">Search %1$s</string>
+    <string name="guide_search_thumbnail_content_description">Thumbnail</string>
+    <string name="by_author">By %1$s</string>
+    <string name="result_count">%1$d Results</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>

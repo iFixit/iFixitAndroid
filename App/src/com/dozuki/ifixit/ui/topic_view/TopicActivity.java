@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.topic_view;
 
+import android.app.SearchManager;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -9,17 +10,18 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 public class TopicActivity extends BaseMenuDrawerActivity
@@ -97,6 +99,47 @@ public class TopicActivity extends BaseMenuDrawerActivity
                }
             }
          });
+      }
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      getSupportMenuInflater().inflate(R.menu.topic_menu, menu);
+
+      MenuItem searchItem = menu.findItem(R.id.action_search);
+      searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
+         @Override
+         public boolean onMenuItemActionExpand(MenuItem item) {
+            ((EditText) item.getActionView().findViewById(R.id.abs__search_src_text)).setHint(getString(R.string
+             .search_site_hint, MainApplication.get().getSite().mTitle));
+            return true;
+         }
+
+         @Override
+         public boolean onMenuItemActionCollapse(MenuItem item) {
+            return true;
+         }
+      });
+
+      SearchView searchView = (SearchView) searchItem.getActionView();
+
+      if (searchView != null) {
+         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
+      }
+
+      return true;
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case R.id.action_search:
+            //onSearchRequested();
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
       }
    }
 

@@ -41,6 +41,8 @@ public abstract class APIEvent<T> {
 
    public static class Unauthorized extends APIEvent<String> {}
 
+   public static class Search extends APIEvent<com.dozuki.ifixit.model.search.Search> {}
+
    public static class Categories extends APIEvent<TopicNode> {}
    public static class Topic extends APIEvent<TopicLeaf> {}
    public static class TopicList extends APIEvent<ArrayList<String>> {}
