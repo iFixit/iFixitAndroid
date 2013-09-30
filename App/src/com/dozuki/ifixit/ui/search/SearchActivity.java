@@ -112,21 +112,37 @@ public class SearchActivity extends BaseActivity {
 
          if (frag == null) {
             frag = SearchFragment.newInstance(search);
+            ft.replace(R.id.search_results_container, frag, mCurrentTag).commit();
          } else {
             ((SearchFragment)frag).setSearchResults(search);
          }
-
-         ft.replace(R.id.search_results_container, frag, mCurrentTag).commit();
       } else {
          Log.e("SearchFragment", "Error retrieving search results");
       }
+   }
+
+   public String buildQuery(String query) {
+      switch (mSpinnerPosition) {
+         case GUIDES_POSITION:
+            mCurrentTag = GUIDE_SEARCH_FRAGMENT;
+            query += "?filter=guide";
+
+            break;
+         case TOPIC_POSITION:
+            mCurrentTag = TOPIC_SEARCH_FRAGMENT;
+            query += "?filter=device";
+
+            break;
+      }
+
+      return query;
    }
 
    private void handleSearch(String query) {
       showLoading(R.id.search_results_container);
       APIService.call(this, APIService.getSearchAPICall(APIEndpoint.SEARCH, query));
    }
-
+   
    private void handleIntent(Intent intent, boolean sendQuery) {
       if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
          search(intent.getStringExtra(SearchManager.QUERY), sendQuery);
@@ -144,22 +160,5 @@ public class SearchActivity extends BaseActivity {
       if (sendQuery) {
          handleSearch(buildQuery(mQuery));
       }
-   }
-
-   private String buildQuery(String query) {
-      switch (mSpinnerPosition) {
-         case GUIDES_POSITION:
-            mCurrentTag = GUIDE_SEARCH_FRAGMENT;
-            query += "?filter=guide";
-
-            break;
-         case TOPIC_POSITION:
-            mCurrentTag = TOPIC_SEARCH_FRAGMENT;
-            query += "?filter=device";
-
-            break;
-      }
-
-      return query;
    }
 }

@@ -7,13 +7,25 @@ import android.view.ViewGroup;
 import android.widget.ListView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.Search;
+import com.dozuki.ifixit.model.search.Searchable;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.ui.EndlessScrollListener;
+import com.dozuki.ifixit.util.APIEndpoint;
+import com.dozuki.ifixit.util.APIService;
+
+import java.util.ArrayList;
 
 public class SearchFragment extends BaseFragment {
+
+   private static final int LIMIT = 20;
+   private int mOffset = 0;
+
    private static final String SEACH_RESULTS_KEY = "SEARCH_RESULTS_KEY";
    private Search mSearch;
+   private ArrayList<Searchable> mSearchResults;
    private SearchAdapter mAdapter;
    private ListView mList;
+   private EndlessScrollListener mScrollListener;
 
    public static SearchFragment newInstance(Search search) {
       Bundle args = new Bundle();
@@ -23,6 +35,10 @@ public class SearchFragment extends BaseFragment {
       frag.setArguments(args);
 
       return frag;
+   }
+
+   public SearchFragment() {
+      mSearchResults = new ArrayList<Searchable>();
    }
 
    @Override
@@ -37,12 +53,32 @@ public class SearchFragment extends BaseFragment {
          mSearch = (Search)savedInstanceState.getSerializable(SEACH_RESULTS_KEY);
       }
 
+      if (mSearch != null) {
+         mSearchResults = mSearch.mResults;
+      }
+
       mList = (ListView)view.findViewById(R.id.search_list_view);
-      mAdapter = new SearchAdapter(mSearch.mResults, getActivity());
+
+      mScrollListener = new EndlessScrollListener(mList, new EndlessScrollListener.RefreshList() {
+         @Override
+         public void onRefresh(int pageNumber) {
+            mOffset += LIMIT;
+
+            String query = ((SearchActivity)getActivity()).buildQuery(mSearch.mQuery);
+            query += "&limit=" + LIMIT + "&offset=" + mOffset;
+
+            APIService.call(getActivity(), APIService.getSearchAPICall(APIEndpoint.SEARCH, query));
+         }
+      });
+
+      mList.setOnScrollListener(mScrollListener);
+
+      mAdapter = new SearchAdapter(mSearchResults, getActivity());
       mList.setAdapter(mAdapter);
 
       return view;
    }
+
 
    @Override
    public void onSaveInstanceState(Bundle state) {
@@ -52,9 +88,24 @@ public class SearchFragment extends BaseFragment {
    }
 
    public void setSearchResults(Search search) {
+      // If the new search query is different than the existing one, clear out the old search results.
+      if (!search.mQuery.equals(mSearch.mQuery)) {
+         mSearchResults.clear();
+      }
+
       mSearch = search;
-      mAdapter.setSearchResults(mSearch.mResults);
+
+      mSearchResults.addAll(search.mResults);
+
+      if (!mSearch.mHasMoreResults) {
+         mScrollListener.noMorePages();
+      } else {
+         mScrollListener.notifyMorePages();
+      }
+
+      mAdapter.setSearchResults(mSearchResults);
       mAdapter.notifyDataSetChanged();
       mList.invalidate();
+
    }
 }
