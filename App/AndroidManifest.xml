@@ -30,18 +30,20 @@
             android:value=".ui.search.SearchActivity"/>
 
         <service android:name=".util.APIService"/>
+
         <activity
             android:name=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
             android:label="@string/search"
-            android:launchMode="singleTop" >
+            android:launchMode="singleTop">
             <intent-filter>
-                <action android:name="android.intent.action.SEARCH" />
+                <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>
 
-            <meta-data android:name="android.app.searchable"
-                       android:resource="@xml/searchable"/>
+            <meta-data
+                android:name="android.app.searchable"
+                android:resource="@xml/searchable"/>
         </activity>
 
         <activity android:name=".ui.guide.view.TeardownsActivity"/>
@@ -72,5 +74,9 @@
             android:name=".ui.guide.view.EmbedViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
+
+        <provider
+            android:name=".ui.search.SearchSuggestionProvider"
+            android:authorities="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"/>
     </application>
 </manifest>

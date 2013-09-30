@@ -4,6 +4,7 @@ import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -142,7 +143,7 @@ public class SearchActivity extends BaseActivity {
       showLoading(R.id.search_results_container);
       APIService.call(this, APIService.getSearchAPICall(APIEndpoint.SEARCH, query));
    }
-   
+
    private void handleIntent(Intent intent, boolean sendQuery) {
       if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
          search(intent.getStringExtra(SearchManager.QUERY), sendQuery);
@@ -151,6 +152,11 @@ public class SearchActivity extends BaseActivity {
 
    private void search(final String query, boolean sendQuery) {
       getSupportActionBar().setTitle(query);
+
+      SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
+       SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
+      suggestions.saveRecentQuery(query, null);
+
       try {
          mQuery = URLEncoder.encode(query, "UTF-8");
       } catch (UnsupportedEncodingException e) {
