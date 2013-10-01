@@ -15,6 +15,7 @@ import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.login.LoginFragment;
@@ -38,12 +39,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    protected static final String LOADING = "LOADING_FRAGMENT";
    private static final String ACTIVITY_ID = "ACTIVITY_ID";
    private static final String USERID = "USERID";
+   private static final String SITE = "SITE";
 
    private static final int LOGGED_OUT_USERID = -1;
 
    private APIService mAPIService;
    private int mActivityid;
    private int mUserid;
+   private Site mSite;
 
    /**
     * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
@@ -95,6 +98,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
              activityProxy.getApiEvent()));
          }
       }
+
+      @SuppressWarnings("unused")
+      @Subscribe
+      public void onSiteChanged(SiteChangedEvent event) {
+         mSite = event.mSite;
+         // Reset the userid so we don't erroneously finish the Activity.
+         setUserid();
+      }
    };
 
    private ServiceConnection mConnection = new ServiceConnection() {
@@ -115,9 +126,20 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       if (savedState != null) {
          mActivityid = savedState.getInt(ACTIVITY_ID);
          mUserid = savedState.getInt(USERID);
+         mSite = (Site)savedState.getSerializable(SITE);
+
+         Site currentSite = MainApplication.get().getSite();
+
+         // If the site associated with this Activity is different than the current site,
+         // set it to the one this Activity wants. Don't always do this because of the
+         // overhead of reading the user from SharedPreferences.
+         if (mSite.mSiteid != currentSite.mSiteid) {
+            MainApplication.get().setSite(mSite);
+         }
       } else {
          mActivityid = generateActivityid();
          setUserid();
+         mSite = MainApplication.get().getSite();
       }
 
       MainApplication app = MainApplication.get();
@@ -206,6 +228,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       outState.putInt(ACTIVITY_ID, mActivityid);
       outState.putInt(USERID, mUserid);
+      outState.putSerializable(SITE, mSite);
    }
 
    /**
@@ -293,8 +316,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void onLogout(LoginEvent.Logout event) {
-      setUserid();
+      /**
+       * Check permissions before setting mUserid. Otherwise the Activity
+       * will never be finished because mUserid matches the currently logged
+       * in user.
+       */
       finishActivityIfPermissionDenied();
+      setUserid();
    }
 
    public void onCancelLogin(LoginEvent.Cancel event) {

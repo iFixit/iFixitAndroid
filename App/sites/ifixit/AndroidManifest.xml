@@ -20,23 +20,16 @@
                 <category android:name="android.intent.category.DEFAULT"/>
                 <category android:name="android.intent.category.BROWSABLE"/>
 
-                <data
-                    android:scheme="http"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Guide/"/>
-                <data
-                    android:scheme="http"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Teardown/"/>
-                <!-- Duplicates for https. -->
-                <data
-                    android:scheme="https"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Guide/"/>
-                <data
-                    android:scheme="https"
-                    android:host="www.ifixit.com"
-                    android:pathPrefix="/Teardown/"/>
+                <!-- We need to match Guide and Teardown for upper and lower case and also http and https. -->
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/Teardown/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/Teardown/"/>
+
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/teardown/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/teardown/"/>
             </intent-filter>
         </activity>
     </application>

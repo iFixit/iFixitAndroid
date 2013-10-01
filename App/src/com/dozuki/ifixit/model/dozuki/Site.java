@@ -27,7 +27,7 @@ public class Site implements Serializable {
    public boolean mStandardAuth;
    public String mSsoUrl;
    public boolean mPublicRegistration;
-   public String mCustomDomain;
+   public String mCustomDomain = "";
    public String mStoreUrl;
    public Image mLogo;
 
@@ -114,6 +114,13 @@ public class Site implements Serializable {
       }
 
       return domain;
+   }
+
+   /**
+    * Returns true if the provided host is for this Site.
+    */
+   public boolean hostMatches(String host) {
+      return mDomain.equals(host) || mCustomDomain.equals(host);
    }
 
    public int theme() {
