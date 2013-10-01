@@ -168,6 +168,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       mMenuDrawer.invalidate();
    }
 
+   public void setMenuDrawerSlideDrawable(int drawable) {
+      mMenuDrawer.setSlideDrawable(drawable);
+   }
+
    /**
     * Close the menu drawer if back is pressed and the menu is open.
     */
