@@ -15,6 +15,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.APIService;
@@ -190,6 +191,8 @@ public class MainApplication extends Application {
 
       // Update logged in user based on current site.
       mUser = getUserFromPreferenceFile(site);
+
+      getBus().post(new SiteChangedEvent(mSite, mUser));
    }
 
    public String getTopicName() {
