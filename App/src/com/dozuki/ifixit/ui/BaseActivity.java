@@ -345,21 +345,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       User user = app.getUser();
       int currentUserid = user == null ? LOGGED_OUT_USERID : user.getUserid();
 
-      // Never finish the activity if the user is logging in or Activity specifies.
+      // Never finish the activity if the user is logging in.
       if (neverFinishActivityOnLogout() || app.isLoggingIn()) {
          return;
       }
 
-      boolean userCanViewPreviousUsersContent =
-       mUserid == LOGGED_OUT_USERID ||
-       mUserid == currentUserid;
-
-      boolean activityRequiresLogin =
-       finishActivityIfLoggedOut() ||
-       !app.getSite().mPublic;
-
       // Finish if the site is private or activity requires authentication.
-      if (!userCanViewPreviousUsersContent && activityRequiresLogin) {
+      if ((currentUserid == LOGGED_OUT_USERID || currentUserid != mUserid) &&
+       (finishActivityIfLoggedOut() || !app.getSite().mPublic)) {
          finish();
       }
    }
