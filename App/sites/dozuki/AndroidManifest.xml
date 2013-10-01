@@ -61,5 +61,10 @@
                     android:pathPrefix="/Teardown/"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
+            android:authorities="com.dozuki.dozuki.ui.search.SearchSuggestionProvider"/>
+
     </application>
 </manifest>

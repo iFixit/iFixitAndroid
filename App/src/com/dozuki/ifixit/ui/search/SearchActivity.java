@@ -15,11 +15,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.Search;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -94,6 +96,19 @@ public class SearchActivity extends BaseActivity {
       searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
 
       return true;
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         // Respond to the action bar's Up/Home button
+         case android.R.id.home:
+            Intent intent = new Intent(this, TopicActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            startActivity(intent);
+            return true;
+      }
+      return super.onOptionsItemSelected(item);
    }
 
    @SuppressWarnings("unused")

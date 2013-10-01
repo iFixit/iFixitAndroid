@@ -1,12 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.dozuki.ifixit"
-          android:versionCode="37"
-          android:versionName="2.0.1">
-
-    <uses-sdk
-        android:minSdkVersion="8"
-        android:targetSdkVersion="18"/>
+          package="com.dozuki.ifixit">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -74,9 +68,5 @@
             android:name=".ui.guide.view.EmbedViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
-
-        <provider
-            android:name=".ui.search.SearchSuggestionProvider"
-            android:authorities="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"/>
     </application>
 </manifest>

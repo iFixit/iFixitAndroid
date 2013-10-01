@@ -132,17 +132,6 @@ public class TopicActivity extends BaseMenuDrawerActivity
       return true;
    }
 
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case R.id.action_search:
-            //onSearchRequested();
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
-
    @Subscribe
    public void onCategories(APIEvent.Categories event) {
       hideLoading();

@@ -57,8 +57,6 @@ public class JSONHelper {
       search.mHasMoreResults = response.getBoolean("moreResults");
       search.mQuery = response.getString("search");
 
-      Log.d("JSONHelper", json);
-
       if (response.has("results")) {
          JSONArray resultsArr = response.getJSONArray("results");
          int count = resultsArr.length();
@@ -84,7 +82,6 @@ public class JSONHelper {
                gsr.mLocale = result.getString("locale");
 
                JSONArray flags = result.getJSONArray("flags");
-               Log.d("JSONHelper", flags.toString());
                int numFlags = flags.length();
                for (int j = 0; j < numFlags; j++) {
                   gsr.mFlags.add(flags.getString(j));
