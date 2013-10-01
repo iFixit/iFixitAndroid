@@ -21,7 +21,7 @@
 
         <meta-data
             android:name="android.app.default_searchable"
-            android:value=".ui.search.SearchActivity"/>
+            android:value="com.dozuki.ifixit.ui.search.SearchActivity"/>
 
         <service android:name=".util.APIService"/>
 
