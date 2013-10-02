@@ -162,7 +162,9 @@ public class TopicListFragment extends BaseFragment
    private void setTopic(TopicNode topic) {
       mTopic = topic;
 
-      getSherlockActivity().setTitle(mTopic.getName().equals("ROOT") ? "" : mTopic.getName());
+      getSherlockActivity().setTitle(mTopic.getName().equals("ROOT") ?
+       MainApplication.get().getSite().mTitle :
+       mTopic.getName());
 
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);
