@@ -120,13 +120,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             mGuide = (Guide) extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
          }
 
-         Log.d("GuideViewActivity", "here");
-
          mInboundStepId = extras.getInt(INBOUND_STEP_ID, DEFAULT_INBOUND_STEPID);
          mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
-
-         Log.d("GuideViewActivity", "here2");
-
       }
    }
 
@@ -249,7 +244,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (!event.hasError()) {
          if (mGuide == null) {
             Guide guide = event.getResult();
-            Log.d("GuideViewActivity", guide.getTitle());
             if (mInboundStepId != DEFAULT_INBOUND_STEPID) {
                for (int i = 0; i < guide.getSteps().size(); i++) {
                   if (mInboundStepId == guide.getStep(i).getStepid()) {

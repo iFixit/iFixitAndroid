@@ -17,13 +17,16 @@ public class SearchBaseMenuDrawerActivity extends BaseMenuDrawerActivity {
       searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
          @Override
          public boolean onMenuItemActionExpand(MenuItem item) {
-            ((EditText) item.getActionView().findViewById(R.id.abs__search_src_text)).setHint(getString(R.string
-             .search_site_hint, MainApplication.get().getSite().mTitle));
+            String hint = getString(R.string.search_site_hint, MainApplication.get().getSite().mTitle);
+            ((EditText) item.getActionView().findViewById(R.id.abs__search_src_text)).setHint(hint);
+
+            // Returns true to expand the menu item
             return true;
          }
 
          @Override
          public boolean onMenuItemActionCollapse(MenuItem item) {
+            // Returns true to collapse the menu item
             return true;
          }
       });
