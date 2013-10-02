@@ -130,7 +130,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       setTheme(app.getSiteTheme());
 
       if (site.isIfixit()) {
-         ab.setLogo(R.drawable.logo_ifixit);
          ab.setDisplayUseLogoEnabled(true);
       } else {
          ab.setDisplayUseLogoEnabled(false);
