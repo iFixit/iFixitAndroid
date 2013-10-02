@@ -23,6 +23,7 @@ import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
+import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.MapBuilder;
 import net.simonvt.menudrawer.MenuDrawer;
@@ -250,7 +251,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
             }
             break;
          case SEARCH:
-            onSearchRequested();
+            intent = new Intent(context, SearchActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
             break;
          case BROWSE_TOPICS:
             intent = new Intent(context, TopicActivity.class);
