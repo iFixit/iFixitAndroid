@@ -7,7 +7,6 @@ import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -116,7 +115,7 @@ public class SearchActivity extends SearchBaseMenuDrawerActivity {
             ((SearchFragment)frag).setSearchResults(search);
          }
       } else {
-         Log.e("SearchFragment", "Error retrieving search results");
+         APIService.getErrorDialog(this, event).show();
       }
    }
 
