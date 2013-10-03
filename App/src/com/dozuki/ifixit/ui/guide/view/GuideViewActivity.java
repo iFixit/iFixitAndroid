@@ -228,16 +228,20 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             return true;
             break;
          case R.id.comments:
-            Log.d("GuideViewActivity", (mCurrentPage - (mStepOffset + 1)) + "");
             ArrayList<Comment> comments;
             int stepIndex = (mCurrentPage - (mStepOffset + 1));
-            if (stepIndex >= mStepOffset) {
-               comments = mGuide.getStep(stepIndex).getComments();
-            } else {
+            String title;
+
+            // If we're in one of the introduction pages, show guide comments.
+            if (stepIndex < 0) {
                comments = mGuide.getComments();
+               title = getString(R.string.guide_comments);
+            } else {
+               comments = mGuide.getStep(stepIndex).getComments();
+               title = getString(R.string.step_number_comments, stepIndex + 1);
             }
 
-            CommentsFragment frag = CommentsFragment.newInstance(comments);
+            CommentsFragment frag = CommentsFragment.newInstance(comments, title);
             frag.setRetainInstance(true);
             frag.show(getSupportFragmentManager(), COMMENTS_TAG);
             return true;
