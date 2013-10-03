@@ -286,6 +286,9 @@
     <string name="result_count">%1$d Results</string>
     <string name="no_search_results">No search results.</string>
     <string name="creating_new_guide">Creating New Guide…</string>
+    <string name="empty_step_comments">No step comments.</string>
+    <string name="comments">Comments</string>
+    <string name="step_comments">Step Comments</string>
 
     <!-- Strings needing translations. -->
     <string name="slide_menu_barcode_scanner">Scan QR Code</string>

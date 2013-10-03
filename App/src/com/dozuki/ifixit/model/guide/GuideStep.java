@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Video;
@@ -8,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class GuideStep implements Serializable {
-   private static final long serialVersionUID = 2884598684003517264L;
+   private static final long serialVersionUID = 2884598684003517267L;
    private static final int DEFAULT_STEP_NUMBER = 1;
    private static final String DEFAULT_TITLE = "";
    private static final int DEFAULT_STEP_ID = -1;
@@ -40,6 +41,11 @@ public class GuideStep implements Serializable {
     */
    protected int mStepNum;
 
+   /**
+    * Collection of user comments about the step
+    */
+   protected ArrayList<Comment> mComments;
+
    protected String mTitle;
    protected ArrayList<Image> mImages;
    protected ArrayList<StepLine> mLines;
@@ -58,7 +64,16 @@ public class GuideStep implements Serializable {
       mTitle = DEFAULT_TITLE;
       mImages = new ArrayList<Image>();
       mLines = new ArrayList<StepLine>();
+      mComments = new ArrayList<Comment>();
       mRevisionid = null;
+   }
+
+   public ArrayList<Comment> getComments() {
+      return mComments;
+   }
+
+   public void setComments(ArrayList<Comment> comments) {
+      mComments = comments;
    }
 
    public void setEditMode(boolean editMode) {

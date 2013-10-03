@@ -7,6 +7,7 @@ import android.view.View;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideStep;
 
 import java.util.HashMap;
 import java.util.Map;

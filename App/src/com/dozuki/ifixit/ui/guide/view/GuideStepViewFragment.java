@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.ui.guide.CommentsFragment;
 import com.dozuki.ifixit.ui.guide.StepEmbedFragment;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
 
@@ -54,7 +57,7 @@ public class GuideStepViewFragment extends BaseFragment {
             mImageFrag = (StepImageFragment) getChildFragmentManager().findFragmentByTag(STEP_IMAGE_FRAGMENT_TAG);
          }
 
-         mLinesFrag = (StepLinesFragment) getChildFragmentManager().findFragmentById(R.id.guide_step_lines);
+         mLinesFrag = (StepLinesFragment) getChildFragmentManager().findFragmentById(R.id.guide_step_content);
 
       } else {
          String stepType = mStep.type();
@@ -68,7 +71,7 @@ public class GuideStepViewFragment extends BaseFragment {
 
          FragmentTransaction ft = getChildFragmentManager()
           .beginTransaction()
-          .add(R.id.guide_step_lines, mLinesFrag);
+          .add(R.id.guide_step_content, mLinesFrag);
 
          if (stepType.equals(VIDEO_TYPE)) {
             Bundle videoArgs = new Bundle();

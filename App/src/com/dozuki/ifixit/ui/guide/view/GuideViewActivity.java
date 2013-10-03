@@ -14,8 +14,10 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
+import com.dozuki.ifixit.ui.guide.CommentsFragment;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
@@ -30,6 +32,9 @@ import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GuideViewActivity extends BaseMenuDrawerActivity implements
  ViewPager.OnPageChangeListener {
@@ -47,11 +52,13 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
+   private static final String COMMENTS_TAG = "COMMENTS_TAG";
 
    private int mGuideid;
    private Guide mGuide;
    private SpeechCommander mSpeechCommander;
    private int mCurrentPage = -1;
+   private int mStepOffset = 1;
    private ViewPager mPager;
    private TitlePageIndicator mIndicator;
    private int mInboundStepId = DEFAULT_INBOUND_STEPID;
@@ -180,7 +187,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          case R.id.edit_guide:
             if (mGuide != null) {
                MainApplication.getGaTracker().send(MapBuilder.createEvent("menu_action", "button_press",
-                "edit_guide", (long)mGuide.getGuideid()).build());
+                "edit_guide", (long) mGuide.getGuideid()).build());
 
                Intent intent;
                // If the user is on the introduction, take them to edit the introduction fields.
@@ -219,6 +226,21 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             mGuide = null;
             getGuide(mGuideid);
             return true;
+            break;
+         case R.id.comments:
+            Log.d("GuideViewActivity", (mCurrentPage - (mStepOffset + 1)) + "");
+            ArrayList<Comment> comments;
+            int stepIndex = (mCurrentPage - (mStepOffset + 1));
+            if (stepIndex >= mStepOffset) {
+               comments = mGuide.getStep(stepIndex).getComments();
+            } else {
+               comments = mGuide.getComments();
+            }
+
+            CommentsFragment frag = CommentsFragment.newInstance(comments);
+            frag.setRetainInstance(true);
+            frag.show(getSupportFragmentManager(), COMMENTS_TAG);
+            return true;
          default:
             return super.onOptionsItemSelected(item);
       }
@@ -236,12 +258,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             if (mInboundStepId != DEFAULT_INBOUND_STEPID) {
                for (int i = 0; i < guide.getSteps().size(); i++) {
                   if (mInboundStepId == guide.getStep(i).getStepid()) {
-                     int stepOffset = 1;
-                     if (guide.getNumTools() != 0) stepOffset++;
-                     if (guide.getNumParts() != 0) stepOffset++;
+                     mStepOffset = 1;
+                     if (guide.getNumTools() != 0) mStepOffset++;
+                     if (guide.getNumParts() != 0) mStepOffset++;
 
                      // Account for the introduction, parts and tools pages
-                     mCurrentPage = i + stepOffset;
+                     mCurrentPage = i + mStepOffset;
                      break;
                   }
                }
