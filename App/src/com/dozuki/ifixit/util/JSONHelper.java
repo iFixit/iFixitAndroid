@@ -63,16 +63,15 @@ public class JSONHelper {
    }
 
    public static Site parseSiteInfo(String json) throws JSONException {
-      Site site = null;
-
       JSONObject siteInfoObject = new JSONObject(json);
-      site = parseSite(siteInfoObject);
+      Site site = parseSite(siteInfoObject);
 
       JSONObject types = (JSONObject) siteInfoObject.get("guide-types");
       site.mGuideTypes = new ArrayList<GuideType>();
 
       site.mObjectNamePlural = siteInfoObject.getString("object-name-plural");
       site.mObjectNameSingular = siteInfoObject.getString("object-name-singular");
+      site.mBarcodeScanner = siteInfoObject.getBoolean("feature-mobile-scanner");
 
       if (!siteInfoObject.isNull("logo")) {
          JSONObject logoImage = siteInfoObject.getJSONObject("logo").getJSONObject("image");
@@ -104,9 +103,9 @@ public class JSONHelper {
       try {
          JSONArray topicsJson = new JSONArray(json);
 
-         for (int i = 0; i < topicsJson.length(); i++)
+         for (int i = 0; i < topicsJson.length(); i++) {
             topics.add(topicsJson.getString(i));
-
+         }
       } catch (JSONException e) {
          Log.e(TAG, "Error parsing all topics list: ", e);
       }

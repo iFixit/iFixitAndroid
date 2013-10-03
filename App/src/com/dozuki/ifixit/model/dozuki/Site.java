@@ -38,6 +38,7 @@ public class Site implements Serializable {
    public String[] noSubject = {"Technique", "How-to", "Maintenance", "Teardown"};
 
    public ArrayList<GuideType> mGuideTypes;
+   public boolean mBarcodeScanner = false;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -89,16 +90,13 @@ public class Site implements Serializable {
    }
 
    public boolean hasSubject(String type) {
-      boolean result = false;
-
       for (String t : hasSubject) {
          if (t.equals(type)) {
-            result = true;
-            break;
+            return true;
          }
       }
 
-      return result;
+      return false;
    }
 
    public String getAPIDomain() {
@@ -212,6 +210,7 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
+         site.mBarcodeScanner = true;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
       }
