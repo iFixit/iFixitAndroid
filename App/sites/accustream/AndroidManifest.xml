@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name="com.dozuki.ifixit.ui.topic_view.TopicActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity"
+            android:exported="true"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <!-- We need to match:
+                        Guide and Teardown
+                        upper and lower case
+                        http and https
+                        dozuki and custom domain
+                -->
+                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/Teardown/"/>
+                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/Teardown/"/>
+
+                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/teardown/"/>
+                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/teardown/"/>
+
+                <data android:scheme="http"  android:host="accustream.dozuki.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="http"  android:host="accustream.dozuki.com" android:pathPrefix="/Teardown/"/>
+                <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/Teardown/"/>
+
+                <data android:scheme="http"  android:host="accustream.dozuki.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="http"  android:host="accustream.dozuki.com" android:pathPrefix="/teardown/"/>
+                <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/teardown/"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>

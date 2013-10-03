@@ -198,15 +198,17 @@ public class Site implements Serializable {
          site.mPublicRegistration = false;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
-      } else if (siteName.equals("zealoptics")) {
-         site = new Site(1343);
-         site.mName = "zealoptics";
-         site.mDomain = "zealoptics.dozuki.com";
-         site.mTitle = "ZEAL Optics";
-         site.mTheme = "black";
+      } else if (siteName.equals("accustream")) {
+         site = new Site(1145);
+         site.mName = "accustream";
+         site.mDomain = "accustream.dozuki.com";
+         site.mTitle = "Accustream";
+         site.mTheme = "white";
          site.mPublic = true;
-         site.mAnswers = true;
-         site.mDescription = "";
+         site.mAnswers = false;
+         site.mDescription = "AccuStream offers a complete line of manuals and " +
+          "resources that can be very helpful when you are having problems or when " +
+          "it is after business hours here at AccuStream.";
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
