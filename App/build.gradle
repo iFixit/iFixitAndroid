@@ -59,11 +59,11 @@ android {
          storePassword dozukiStorePassword
          keyPassword dozukiKeyPassword
       }
-      zealoptics {
-         storeFile file("sites/zealoptics/keystore")
-         keyAlias zealopticsKeyAlias
-         storePassword zealopticsStorePassword
-         keyPassword zealopticsKeyPassword
+      accustream {
+         storeFile file("sites/accustream/keystore")
+         keyAlias accustreamKeyAlias
+         storePassword accustreamStorePassword
+         keyPassword accustreamKeyPassword
       }
    }
 
@@ -97,14 +97,14 @@ android {
                      'public static final String APP_ID = ' + dozukiAppId + ';'
       }
 
-      zealoptics {
-         signingConfig signingConfigs.zealoptics
-         packageName "com.dozuki.zealoptics"
+      accustream {
+         signingConfig signingConfigs.accustream
+         packageName "com.dozuki.accustream"
          versionCode 34
          versionName "2.0.0"
 
-         buildConfig 'public static final String SITE_NAME = "zealoptics";', \
-                     'public static final String APP_ID = ' + zealopticsAppId + ';'
+         buildConfig 'public static final String SITE_NAME = "accustream";', \
+                     'public static final String APP_ID = ' + accustreamAppId + ';'
       }
    }
 
@@ -130,9 +130,9 @@ android {
          res.srcDirs = ["sites/dozuki/res"]
       }
 
-      zealoptics {
-         manifest.srcFile 'sites/zealoptics/AndroidManifest.xml'
-         res.srcDirs = ["sites/zealoptics/res"]
+      accustream {
+         manifest.srcFile 'sites/accustream/AndroidManifest.xml'
+         res.srcDirs = ["sites/accustream/res"]
       }
    }
 }

@@ -12,7 +12,7 @@ dozukiKeyAlias=keyalias
 dozukiStorePassword=storepassword
 dozukiKeyPassword=keypassword
 
-zealopticsAppId="0123456789ABCDEF0123456789ABCDEF"
-zealopticsKeyAlias=keyalias
-zealopticsStorePassword=storepassword
-zealopticsKeyPassword=keypassword
+accustreamAppId="0123456789ABCDEF0123456789ABCDEF"
+accustreamKeyAlias=keyalias
+accustreamStorePassword=storepassword
+accustreamKeyPassword=keypassword
