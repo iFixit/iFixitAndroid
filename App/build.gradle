@@ -34,6 +34,12 @@ dependencies {
    compile "com.mobeta.android.dslv:dslv:0.6.1"
 }
 
+// List of sites. Used to create signingConfigs and sourceSets.
+// Ideally this would be used to create the productFlavors too but there are
+// enough differences between flavors that it would be challenging to make it
+// better.
+def sites = ["ifixit", "dozuki", "accustream"]
+
 android {
    compileSdkVersion 18
    buildToolsVersion "18.0.1"
@@ -47,23 +53,8 @@ android {
    }
 
    signingConfigs {
-      ifixit {
-         storeFile file("sites/ifixit/keystore")
-         keyAlias ifixitKeyAlias
-         storePassword ifixitStorePassword
-         keyPassword ifixitKeyPassword
-      }
-      dozuki {
-         storeFile file("sites/dozuki/keystore")
-         keyAlias dozukiKeyAlias
-         storePassword dozukiStorePassword
-         keyPassword dozukiKeyPassword
-      }
-      accustream {
-         storeFile file("sites/accustream/keystore")
-         keyAlias accustreamKeyAlias
-         storePassword accustreamStorePassword
-         keyPassword accustreamKeyPassword
+      for (site in sites) {
+         "${site}" createSiteSigningConfig(site)
       }
    }
 
@@ -81,8 +72,7 @@ android {
       ifixit {
          signingConfig signingConfigs.ifixit
 
-         buildConfig 'public static final String SITE_NAME = "ifixit";', \
-                     'public static final String APP_ID = ' + ifixitAppId + ';'
+         buildConfig createSiteBuildConfig("ifixit")
       }
 
       dozuki {
@@ -98,8 +88,7 @@ android {
          minSdkVersion 9
          targetSdkVersion 18
 
-         buildConfig 'public static final String SITE_NAME = "dozuki";', \
-                     'public static final String APP_ID = ' + dozukiAppId + ';'
+         buildConfig createSiteBuildConfig("dozuki")
       }
 
       accustream {
@@ -113,8 +102,7 @@ android {
          versionCode 34
          versionName "2.0.0"
 
-         buildConfig 'public static final String SITE_NAME = "accustream";', \
-                     'public static final String APP_ID = ' + accustreamAppId + ';'
+         buildConfig createSiteBuildConfig("accustream")
       }
    }
 
@@ -129,21 +117,32 @@ android {
          assets.srcDirs = ['assets']
       }
 
-      ifixit {
-         manifest.srcFile 'sites/ifixit/AndroidManifest.xml'
-         res.srcDirs = ["sites/ifixit/res"]
-      }
-
-      dozuki {
-         manifest.srcFile 'sites/dozuki/AndroidManifest.xml'
-         java.srcDirs = ["sites/dozuki/src"]
-         res.srcDirs = ["sites/dozuki/res"]
-      }
-
-      accustream {
-         manifest.srcFile 'sites/accustream/AndroidManifest.xml'
-         res.srcDirs = ["sites/accustream/res"]
+      for (site in sites) {
+         "${site}" createSiteSourceSet(site)
       }
    }
 }
 
+/* Various functions to create DSL for a site. */
+
+def createSiteSigningConfig(siteName) {
+   return {
+      storeFile file("sites/${siteName}/keystore")
+      keyAlias getProperty("${siteName}KeyAlias")
+      storePassword getProperty("${siteName}StorePassword")
+      keyPassword getProperty("${siteName}KeyPassword")
+   }
+}
+
+def createSiteSourceSet(siteName) {
+   return {
+      manifest.srcFile "sites/${siteName}/AndroidManifest.xml"
+      res.srcDirs = ["sites/${siteName}/res"]
+      java.srcDirs = ["sites/${siteName}/src"]
+   }
+}
+
+def createSiteBuildConfig(siteName) {
+   return "public static final String SITE_NAME = \"${siteName}\";\n" +
+          'public static final String APP_ID = ' + getProperty("${siteName}AppId") + ';'
+}
