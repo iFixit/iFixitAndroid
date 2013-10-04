@@ -34,6 +34,12 @@ dependencies {
    compile "com.mobeta.android.dslv:dslv:0.6.1"
 }
 
+// List of sites. Used to create signingConfigs and sourceSets.
+// Ideally this would be used to create the productFlavors too but there are
+// enough differences between flavors that it would be challenging to make it
+// better.
+def sites = ["ifixit", "dozuki", "accustream"]
+
 android {
    compileSdkVersion 18
    buildToolsVersion "18.0.1"
@@ -47,9 +53,9 @@ android {
    }
 
    signingConfigs {
-      ifixit createSiteSigningConfig("ifixit")
-      dozuki createSiteSigningConfig("dozuki")
-      accustream createSiteSigningConfig("accustream")
+      for (site in sites) {
+         "${site}" createSiteSigningConfig(site)
+      }
    }
 
    buildTypes {
@@ -101,9 +107,9 @@ android {
          assets.srcDirs = ['assets']
       }
 
-      ifixit createSiteSourceSet("ifixit")
-      dozuki createSiteSourceSet("dozuki")
-      accustream createSiteSourceSet("accustream")
+      for (site in sites) {
+         "${site}" createSiteSourceSet(site)
+      }
    }
 }
 
