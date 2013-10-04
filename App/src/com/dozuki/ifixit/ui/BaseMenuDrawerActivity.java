@@ -28,8 +28,6 @@ import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.google.zxing.integration.android.IntentIntegrator;
-import com.google.zxing.integration.android.IntentResult;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -119,12 +117,33 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
    @Override
    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+      String barcodeScannerResult = getBarcodeScannerResult(requestCode, resultCode, intent);
 
-      if (result != null && result.getContents() != null) {
-         startActivity(GuideViewActivity.viewUrl(this, result.getContents()));
+      if (barcodeScannerResult != null) {
+         startActivity(GuideViewActivity.viewUrl(this, barcodeScannerResult));
       } else {
          super.onActivityResult(requestCode, resultCode, intent);
+      }
+   }
+
+   private String getBarcodeScannerResult(int requestCode, int resultCode, Intent intent) {
+      try {
+         // Call IntentIntegrator.parseResult(requestCode, resultCode, intent);
+         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
+         Class[] argTypes = new Class[] { Integer.TYPE, Integer.TYPE, Intent.class };
+         Method parseResult = c.getDeclaredMethod("parseActivityResult", argTypes);
+         Object intentResult = parseResult.invoke(null, requestCode, resultCode, intent);
+
+         // Call intentResult.getContents().
+         c = Class.forName("com.google.zxing.integration.android.IntentResult");
+         argTypes = new Class[] { };
+         Method getContents = c.getDeclaredMethod("getContents", argTypes);
+         Object contents = getContents.invoke(intentResult);
+
+         return (String)contents;
+      } catch (Exception e) {
+         Log.e("BaseMenuDrawerActivity", "Failure parsing activity result", e);
+         return null;
       }
    }
 
