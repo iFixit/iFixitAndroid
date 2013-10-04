@@ -34,6 +34,7 @@ import com.google.zxing.integration.android.IntentResult;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -231,10 +232,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
        @Override
        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
           String tag = (String) view.getTag();
-          Context context = parent.getContext();
 
           if (alertOnNavigation()) {
-             navigationAlertDialog(tag, context).show();
+             navigationAlertDialog(tag).show();
           } else {
              mMenuDrawer.closeMenu();
 
@@ -245,61 +245,49 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
              mActivePosition = position;
              mMenuDrawer.setActiveView(view, position);
 
-             navigateMenuDrawer(tag, context);
+             navigateMenuDrawer(tag);
           }
        }
     };
 
-   public void navigateMenuDrawer(String tag, Context context) {
+   protected void navigateMenuDrawer(String tag) {
       Intent intent;
       String url;
 
       switch (Navigation.navigate(tag)) {
          case SITE_LIST:
-            try {
-               // We need to use reflection because SiteListActivity only exists for
-               // the dozuki build but this code is around for all builds.
-               intent = new Intent(context,
-                Class.forName("com.dozuki.ifixit.ui.dozuki.SiteListActivity"));
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION |
-                Intent.FLAG_ACTIVITY_CLEAR_TOP);
-               startActivity(intent);
-               finish();
-            } catch (ClassNotFoundException e) {
-               Log.e("BaseMenuDrawerActivity", "Cannot start SiteListActivity", e);
-            }
+            returnToSiteList();
             break;
          case SCAN_BARCODE:
-            // This launches the BarCode scanner Activity.
-            IntentIntegrator.initiateScan(this);
+            launchBarcodeScanner();
             break;
          case SEARCH:
          case BROWSE_TOPICS:
-            intent = new Intent(context, TopicActivity.class);
+            intent = new Intent(this, TopicActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case FEATURED_GUIDES:
-            intent = new Intent(context, FeaturedGuidesActivity.class);
+            intent = new Intent(this, FeaturedGuidesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case TEARDOWNS:
-            intent = new Intent(context, TeardownsActivity.class);
+            intent = new Intent(this, TeardownsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case USER_FAVORITES:
-            intent = new Intent(context, FavoritesActivity.class);
+            intent = new Intent(this, FavoritesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case USER_GUIDES:
-            intent = new Intent(context, GuideCreateActivity.class);
+            intent = new Intent(this, GuideCreateActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
@@ -311,7 +299,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
             break;
 
          case MEDIA_GALLERY:
-            intent = new Intent(context, GalleryActivity.class);
+            intent = new Intent(this, GalleryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
@@ -345,6 +333,34 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
          case HELP:
          case ABOUT:
+      }
+   }
+
+   private void returnToSiteList() {
+      try {
+         // We need to use reflection because SiteListActivity only exists for
+         // the dozuki build but this code is around for all builds.
+         Intent intent = new Intent(this,
+          Class.forName("com.dozuki.ifixit.ui.dozuki.SiteListActivity"));
+         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION |
+          Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         startActivity(intent);
+         finish();
+      } catch (ClassNotFoundException e) {
+         Log.e("BaseMenuDrawerActivity", "Cannot start SiteListActivity", e);
+      }
+   }
+
+   private void launchBarcodeScanner() {
+      // We want to just call `IntentIntegrator.initiateScan(this);` but it doesn't
+      // compile unless the dependency exists.
+      try {
+         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
+         Class[] argTypes = new Class[] { android.app.Activity.class };
+         Method initiateScan = c.getDeclaredMethod("initiateScan", argTypes);
+         initiateScan.invoke(null, this);
+      } catch (Exception e) {
+         Log.e("BaseMenuDrawerActivity", "Cannot launch barcode scanner", e);
       }
    }
 
@@ -452,7 +468,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       return false;
    }
 
-   public AlertDialog navigationAlertDialog(String tag, Context context) {
+   public AlertDialog navigationAlertDialog(String tag) {
       return null;
    }
 
