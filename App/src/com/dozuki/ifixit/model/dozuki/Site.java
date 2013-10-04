@@ -200,6 +200,7 @@ public class Site implements Serializable {
          site = new Site(1145);
          site.mName = "accustream";
          site.mDomain = "accustream.dozuki.com";
+         site.mCustomDomain = "support.accustream.com";
          site.mTitle = "Accustream";
          site.mTheme = "white";
          site.mPublic = true;

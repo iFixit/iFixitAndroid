@@ -14,18 +14,23 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -111,22 +116,39 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       buildSliderMenu();
    }
 
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+      IntentResult result = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
+
+      if (result != null && result.getContents() != null) {
+         startActivity(GuideViewActivity.viewUrl(this, result.getContents()));
+      } else {
+         super.onActivityResult(requestCode, resultCode, intent);
+      }
+   }
+
    private void buildSliderMenu() {
-      boolean onIfixit = MainApplication.get().getSite().mName.equals("ifixit");
+      Site site = MainApplication.get().getSite();
+      boolean onIfixit = site.isIfixit();
 
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
       //items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
 
-      if (!onIfixit) items.add(new Item(getString(R.string.back_to_site_list),
-       R.drawable.ic_action_list, "site_list"));
+      if (MainApplication.isDozukiApp()) {
+         items.add(new Item(getString(R.string.back_to_site_list),
+          R.drawable.ic_action_list, "site_list"));
+      }
+
+      if (site.mBarcodeScanner) {
+         items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
+          R.drawable.ic_action_barcode_2, "scan_barcode"));
+      }
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_browse_devices, MainApplication.get().getSite()
-       .getObjectNamePlural()),
-       R.drawable.ic_action_list_2,
-       "browse_topics"));
+       .getObjectNamePlural()), R.drawable.ic_action_list_2, "browse_topics"));
 
       if (onIfixit) {
          items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
@@ -192,7 +214,8 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
    public enum Navigation {
       SITE_LIST, SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY,
-      LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS;
+      LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS,
+      SCAN_BARCODE;
 
       public static Navigation navigate(String str) {
          try {
@@ -245,6 +268,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
             } catch (ClassNotFoundException e) {
                Log.e("BaseMenuDrawerActivity", "Cannot start SiteListActivity", e);
             }
+            break;
+         case SCAN_BARCODE:
+            // This launches the BarCode scanner Activity.
+            IntentIntegrator.initiateScan(this);
             break;
          case SEARCH:
          case BROWSE_TOPICS:

@@ -86,6 +86,11 @@ android {
       }
 
       dozuki {
+         dependencies {
+            compile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+            compile 'com.google.zxing:core:2.2'
+         }
+
          signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
          versionCode 34
@@ -98,6 +103,11 @@ android {
       }
 
       accustream {
+         dependencies {
+            compile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+            compile 'com.google.zxing:core:2.2'
+         }
+
          signingConfig signingConfigs.accustream
          packageName "com.dozuki.accustream"
          versionCode 34

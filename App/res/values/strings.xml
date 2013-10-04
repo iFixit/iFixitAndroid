@@ -44,6 +44,7 @@
     <string name="slide_menu_facebook">Facebook</string>
     <string name="slide_menu_twitter">Twitter</string>
     <string name="slide_menu_more_info">More Information</string>
+    <string name="slide_menu_barcode_scanner">Scan QR Code</string>
 
     <!-- Log-In / Log-Out -->
     <string name="username">User Name</string>

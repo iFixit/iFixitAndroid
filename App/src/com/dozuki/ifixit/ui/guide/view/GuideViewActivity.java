@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.ui.guide.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
@@ -44,6 +46,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
+   private static final String GUIDE_URL = "GUIDE_URL";
 
    private int mGuideid;
    private Guide mGuide;
@@ -58,6 +61,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    /////////////////////////////////////////////////////
    // LIFECYCLE
    /////////////////////////////////////////////////////
+
+   public static Intent viewUrl(Context context, String url) {
+      Intent intent = new Intent(context, GuideViewActivity.class);
+      intent.putExtra(GUIDE_URL, url);
+      return intent;
+   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +96,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
          // Handle when the activity is started from viewing a guide link.
          if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            handleActionViewIntent(intent);
+            handleGuideUriView(intent.getData());
             return;
          } else {
             extractExtras(intent.getExtras());
@@ -106,6 +115,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private void extractExtras(Bundle extras) {
       if (extras != null) {
+         if (extras.containsKey(GUIDE_URL)) {
+            handleGuideUriView(Uri.parse(extras.getString(GUIDE_URL)));
+         }
+
          if (extras.containsKey(GUIDEID)) {
             mGuideid = extras.getInt(GUIDEID);
          }
@@ -119,8 +132,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
    }
 
-   private void handleActionViewIntent(Intent intent) {
-      List<String> segments = intent.getData().getPathSegments();
+   private void handleGuideUriView(Uri uri) {
+      List<String> segments = uri.getPathSegments();
 
       try {
          mGuideid = Integer.parseInt(segments.get(2));
@@ -137,7 +150,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
 
       Site currentSite = MainApplication.get().getSite();
-      mDomain = intent.getData().getHost();
+      mDomain = uri.getHost();
       if (currentSite.hostMatches(mDomain)) {
          // Load the guide for the current site.
          getGuide(mGuideid);
