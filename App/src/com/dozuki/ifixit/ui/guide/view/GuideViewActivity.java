@@ -97,7 +97,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          // Handle when the activity is started from viewing a guide link.
          if (Intent.ACTION_VIEW.equals(intent.getAction())) {
             handleGuideUriView(intent.getData());
-            return;
          } else {
             extractExtras(intent.getExtras());
          }
@@ -152,16 +151,18 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       Site currentSite = MainApplication.get().getSite();
       mDomain = uri.getHost();
       if (currentSite.hostMatches(mDomain)) {
-         // Load the guide for the current site.
-         getGuide(mGuideid);
-         return;
+         // Set mDomain to null to let it fall through to the end of onCreate to fetch the guide.
+         mDomain = null;
+      } else if (MainApplication.isDozukiApp()) {
+         // Only switch to the other site in the Dozuki app.
+         // Set site to dozuki before API call.
+         MainApplication.get().setSite(Site.getSite("dozuki"));
+
+         showLoading(R.id.loading_container);
+         APIService.call(this, APIService.getSitesAPICall());
+      } else {
+         displayGuideNotFoundDialog();
       }
-
-      // Set site to dozuki before API call.
-      MainApplication.get().setSite(Site.getSite("dozuki"));
-
-      showLoading(R.id.loading_container);
-      APIService.call(this, APIService.getSitesAPICall());
    }
 
    @Override
