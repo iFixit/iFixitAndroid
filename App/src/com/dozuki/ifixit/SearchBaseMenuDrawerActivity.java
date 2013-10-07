@@ -1,10 +1,13 @@
 package com.dozuki.ifixit;
 
 import android.app.SearchManager;
+import android.database.Cursor;
+import android.support.v4.widget.CursorAdapter;
 import android.widget.EditText;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 
 public class SearchBaseMenuDrawerActivity extends BaseMenuDrawerActivity {
@@ -31,16 +34,32 @@ public class SearchBaseMenuDrawerActivity extends BaseMenuDrawerActivity {
          }
       });
 
-      SearchView searchView = (SearchView) searchItem.getActionView();
+      final SearchView searchView = (SearchView) searchItem.getActionView();
 
       if (searchView != null) {
          SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
          searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
          searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
-         searchView.setSubmitButtonEnabled(true);
+         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+               return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+               CursorAdapter cursorAdapter = searchView.getSuggestionsAdapter();
+               Cursor cursor = cursorAdapter.getCursor();
+               int suggestionIndex = cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY);
+               searchView.setQuery(cursor.getString(suggestionIndex), false);
+               searchView.clearFocus();
+               return false;
+            }
+         });
+
+         searchView.clearFocus();
       }
 
       return true;
    }
-
 }
