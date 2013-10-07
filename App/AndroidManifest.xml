@@ -27,7 +27,7 @@
 
         <activity
             android:name=".ui.search.SearchActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:configChanges="orientation|keyboardHidden"
             android:hardwareAccelerated="true"
             android:label="@string/search"
             android:launchMode="singleTop">
