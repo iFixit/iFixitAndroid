@@ -1,4 +1,4 @@
-package com.dozuki.ifixit;
+package com.dozuki.ifixit.ui;
 
 import android.app.SearchManager;
 import android.database.Cursor;
@@ -7,10 +7,10 @@ import android.widget.EditText;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
+import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 
-public class SearchBaseMenuDrawerActivity extends BaseMenuDrawerActivity {
+public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {

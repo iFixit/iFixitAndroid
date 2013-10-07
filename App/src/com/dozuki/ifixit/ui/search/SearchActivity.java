@@ -13,9 +13,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
+import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.SearchBaseMenuDrawerActivity;
 import com.dozuki.ifixit.model.search.Search;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEndpoint;
@@ -27,7 +27,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 
-public class SearchActivity extends SearchBaseMenuDrawerActivity {
+public class SearchActivity extends BaseSearchMenuDrawerActivity {
    private static final int GUIDES_POSITION = 0;
    private static final int TOPIC_POSITION = 1;
    private static final String TOPIC_SEARCH_FRAGMENT = "TOPIC_SEARCH_FRAGMENT";
