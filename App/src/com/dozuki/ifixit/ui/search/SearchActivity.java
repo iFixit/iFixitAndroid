@@ -16,7 +16,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.search.Search;
+import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIEvent;
@@ -99,7 +99,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       hideLoading();
 
       if (!event.hasError()) {
-         Search search = event.getResult();
+         SearchResults search = event.getResult();
 
          mResultCount.setText(getString(R.string.result_count, search.mTotalResults));
 

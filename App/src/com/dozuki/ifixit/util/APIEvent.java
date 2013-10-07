@@ -7,6 +7,7 @@ import com.dozuki.ifixit.model.gallery.GalleryVideoList;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.user.User;
@@ -41,7 +42,7 @@ public abstract class APIEvent<T> {
 
    public static class Unauthorized extends APIEvent<String> {}
 
-   public static class Search extends APIEvent<com.dozuki.ifixit.model.search.Search> {}
+   public static class Search extends APIEvent<SearchResults> {}
 
    public static class Categories extends APIEvent<TopicNode> {}
    public static class Topic extends APIEvent<TopicLeaf> {}

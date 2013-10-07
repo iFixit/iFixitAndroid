@@ -16,7 +16,7 @@ import com.dozuki.ifixit.util.PicassoUtils;
 
 import java.io.Serializable;
 
-public class TopicSearchResult extends SearchResult implements Searchable, Serializable {
+public class TopicSearchResult implements SearchResult, Serializable {
    private static final long serialVersionUID = -24643222443335L;
 
    public String mTitle;

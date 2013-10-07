@@ -5,23 +5,23 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import com.dozuki.ifixit.model.search.Searchable;
+import com.dozuki.ifixit.model.search.SearchResult;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SearchAdapter extends BaseAdapter {
 
-   private List<Searchable> mResults;
+   private List<SearchResult> mResults;
 
    private LayoutInflater mInflater;
 
-   public SearchAdapter(List<Searchable> results, Context context) {
+   public SearchAdapter(List<SearchResult> results, Context context) {
       mResults = results;
       mInflater = LayoutInflater.from(context);
    }
 
-   public void setSearchResults(ArrayList<Searchable> results) {
+   public void setSearchResults(ArrayList<SearchResult> results) {
       mResults = results;
    }
 
@@ -31,7 +31,7 @@ public class SearchAdapter extends BaseAdapter {
    }
 
    @Override
-   public Searchable getItem(int position) {
+   public SearchResult getItem(int position) {
       return mResults.get(position);
    }
 

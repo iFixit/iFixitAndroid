@@ -5,8 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.search.Search;
-import com.dozuki.ifixit.model.search.Searchable;
+import com.dozuki.ifixit.model.search.SearchResults;
+import com.dozuki.ifixit.model.search.SearchResult;
 import com.dozuki.ifixit.ui.BaseListFragment;
 import com.dozuki.ifixit.ui.EndlessScrollListener;
 import com.dozuki.ifixit.util.APIEndpoint;
@@ -20,12 +20,12 @@ public class SearchFragment extends BaseListFragment {
    private int mOffset = 0;
 
    private static final String SEACH_RESULTS_KEY = "SEARCH_RESULTS_KEY";
-   private Search mSearch;
-   private ArrayList<Searchable> mSearchResults;
+   private SearchResults mSearch;
+   private ArrayList<SearchResult> mSearchResults;
    private SearchAdapter mAdapter;
    private EndlessScrollListener mScrollListener;
 
-   public static SearchFragment newInstance(Search search) {
+   public static SearchFragment newInstance(SearchResults search) {
       Bundle args = new Bundle();
       args.putSerializable(SEACH_RESULTS_KEY, search);
 
@@ -36,7 +36,7 @@ public class SearchFragment extends BaseListFragment {
    }
 
    public SearchFragment() {
-      mSearchResults = new ArrayList<Searchable>();
+      mSearchResults = new ArrayList<SearchResult>();
    }
 
    @Override
@@ -46,9 +46,9 @@ public class SearchFragment extends BaseListFragment {
       Bundle args = getArguments();
 
       if (args != null) {
-         mSearch = (Search)args.getSerializable(SEACH_RESULTS_KEY);
+         mSearch = (SearchResults)args.getSerializable(SEACH_RESULTS_KEY);
       } else if (savedInstanceState != null) {
-         mSearch = (Search)savedInstanceState.getSerializable(SEACH_RESULTS_KEY);
+         mSearch = (SearchResults)savedInstanceState.getSerializable(SEACH_RESULTS_KEY);
       }
 
       if (mSearch != null) {
@@ -88,7 +88,7 @@ public class SearchFragment extends BaseListFragment {
       state.putSerializable(SEACH_RESULTS_KEY, mSearch);
    }
 
-   public void setSearchResults(Search search) {
+   public void setSearchResults(SearchResults search) {
       // If the new search query is different than the existing one, clear out the old search results.
       if (!search.mQuery.equals(mSearch.mQuery)) {
          mSearchResults.clear();

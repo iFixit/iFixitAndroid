@@ -20,7 +20,7 @@ import com.dozuki.ifixit.model.guide.GuideType;
 import com.dozuki.ifixit.model.guide.OEmbed;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.search.GuideSearchResult;
-import com.dozuki.ifixit.model.search.Search;
+import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.model.search.TopicSearchResult;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
@@ -46,9 +46,9 @@ public class JSONHelper {
    private static final String TAG = "JSONHelper";
    private static final String INVALID_LOGIN_STRING = "Invalid login";
 
-   public static Search parseSearchResults(String json) throws JSONException {
+   public static SearchResults parseSearchResults(String json) throws JSONException {
 
-      Search search = new Search();
+      SearchResults search = new SearchResults();
       JSONObject response = new JSONObject(json);
 
       search.mLimit = response.getInt("limit");
