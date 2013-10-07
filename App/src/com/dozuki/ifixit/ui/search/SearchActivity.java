@@ -123,7 +123,7 @@ public class SearchActivity extends SearchBaseMenuDrawerActivity {
       switch (mSpinnerPosition) {
          case GUIDES_POSITION:
             mCurrentTag = GUIDE_SEARCH_FRAGMENT;
-            query += "?filter=guide";
+            query += "?filter=guide,teardowns";
 
             break;
          case TOPIC_POSITION:
