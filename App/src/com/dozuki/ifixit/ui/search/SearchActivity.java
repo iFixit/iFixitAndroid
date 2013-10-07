@@ -85,9 +85,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       switch (item.getItemId()) {
          // Respond to the action bar's Up/Home button
          case android.R.id.home:
-            Intent intent = new Intent(this, TopicActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
+            finish();
             return true;
       }
       return super.onOptionsItemSelected(item);
