@@ -281,8 +281,6 @@
     <string name="guide_create_confirm_leave_without_save_cancel">Annuler</string>
     <string name="topic_background_description">Contexte de la Catégorie</string>
     <string name="search">Search</string>
-    <string name="searchable_categories_label">Categories</string>
-    <string name="searchable_categories_hint">Search Categories</string>
     <string name="search_hint">Search iFixit</string>
     <string name="search_site_hint">Search %1$s</string>
     <string name="guide_search_thumbnail_content_description">Thumbnail</string>
