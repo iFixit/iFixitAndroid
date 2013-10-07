@@ -25,7 +25,6 @@
     <TextView
         android:id="@+id/guide_author"
         style="@style/BodyText"
-        android:text="@string/by_author"
         android:layout_below="@+id/guide_title"
         android:layout_toRightOf="@+id/guide_thumbnail"
         android:layout_width="wrap_content"
