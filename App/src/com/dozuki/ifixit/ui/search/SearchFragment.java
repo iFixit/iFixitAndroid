@@ -19,7 +19,7 @@ public class SearchFragment extends BaseListFragment {
    private static final int LIMIT = 20;
    private int mOffset = 0;
 
-   private static final String SEACH_RESULTS_KEY = "SEARCH_RESULTS_KEY";
+   private static final String SEARCH_RESULTS_KEY = "SEARCH_RESULTS_KEY";
    private SearchResults mSearch;
    private ArrayList<SearchResult> mSearchResults;
    private SearchAdapter mAdapter;
@@ -27,7 +27,7 @@ public class SearchFragment extends BaseListFragment {
 
    public static SearchFragment newInstance(SearchResults search) {
       Bundle args = new Bundle();
-      args.putSerializable(SEACH_RESULTS_KEY, search);
+      args.putSerializable(SEARCH_RESULTS_KEY, search);
 
       SearchFragment frag = new SearchFragment();
       frag.setArguments(args);
@@ -46,9 +46,9 @@ public class SearchFragment extends BaseListFragment {
       Bundle args = getArguments();
 
       if (args != null) {
-         mSearch = (SearchResults)args.getSerializable(SEACH_RESULTS_KEY);
+         mSearch = (SearchResults)args.getSerializable(SEARCH_RESULTS_KEY);
       } else if (savedInstanceState != null) {
-         mSearch = (SearchResults)savedInstanceState.getSerializable(SEACH_RESULTS_KEY);
+         mSearch = (SearchResults)savedInstanceState.getSerializable(SEARCH_RESULTS_KEY);
       }
 
       if (mSearch != null) {
@@ -85,7 +85,7 @@ public class SearchFragment extends BaseListFragment {
    public void onSaveInstanceState(Bundle state) {
       super.onSaveInstanceState(state);
 
-      state.putSerializable(SEACH_RESULTS_KEY, mSearch);
+      state.putSerializable(SEARCH_RESULTS_KEY, mSearch);
    }
 
    public void setSearchResults(SearchResults search) {
