@@ -145,7 +145,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       }
    }
 
-   private void search(final String query, boolean sendQuery) {
+   private void search(String query, boolean sendQuery) {
       getSupportActionBar().setTitle(query);
 
       SearchRecentSuggestions suggestions = new SearchRecentSuggestions(this,
