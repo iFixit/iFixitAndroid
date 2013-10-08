@@ -13,11 +13,10 @@ import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResults;
-import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -110,7 +109,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
             frag = SearchFragment.newInstance(search);
             ft.replace(R.id.search_results_container, frag, mCurrentTag).commit();
          } else {
-            ((SearchFragment)frag).setSearchResults(search);
+            ((SearchFragment) frag).setSearchResults(search);
          }
       } else {
          APIService.getErrorDialog(this, event).show();
@@ -118,23 +117,29 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
    }
 
    public String buildQuery(String query) {
-      switch (mSpinnerPosition) {
-         case GUIDES_POSITION:
-            mCurrentTag = GUIDE_SEARCH_FRAGMENT;
-            query += "?filter=guide,teardowns";
+      if (query.length() > 0) {
+         switch (mSpinnerPosition) {
+            case GUIDES_POSITION:
+               mCurrentTag = GUIDE_SEARCH_FRAGMENT;
+               query += "?filter=guide,teardowns";
 
-            break;
-         case TOPIC_POSITION:
-            mCurrentTag = TOPIC_SEARCH_FRAGMENT;
-            query += "?filter=device";
+               break;
+            case TOPIC_POSITION:
+               mCurrentTag = TOPIC_SEARCH_FRAGMENT;
+               query += "?filter=device";
 
-            break;
+               break;
+         }
       }
-
       return query;
    }
 
    private void handleSearch(String query) {
+      if (query.length() == 0) {
+         hideLoading();
+         return;
+      }
+
       showLoading(R.id.search_results_container);
       APIService.call(this, APIService.getSearchAPICall(APIEndpoint.SEARCH, query));
    }
