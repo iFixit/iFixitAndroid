@@ -379,7 +379,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       }
    }
 
-   private void launchBarcodeScanner() {
+   protected void launchBarcodeScanner() {
       // We want to just call `IntentIntegrator.initiateScan(this);` but it doesn't
       // compile unless the dependency exists.
       try {
