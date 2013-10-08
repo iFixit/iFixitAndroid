@@ -65,28 +65,10 @@ public class JSONHelper {
             JSONObject result = resultsArr.getJSONObject(i);
             String resultType = result.getString("dataType");
             if (resultType.equals("guide")) {
-               GuideSearchResult gsr = new GuideSearchResult();
-               gsr.mGuideid = result.getInt("guideid");
-               gsr.mTitle = result.getString("title");
-               gsr.mRevisionid = result.getInt("revisionid");
-               gsr.mModifiedDate = new Date(result.getLong("modified_date"));
-               gsr.mPrereqModifiedDate = new Date(result.getLong("prereq_modified_date"));
-               gsr.mUrl = result.getString("url");
-               gsr.mGuideType = result.getString("type");
-               gsr.mTopic = result.getString("category");
-               gsr.mSubject = result.getString("subject");
-               gsr.mPublic = result.getBoolean("public");
-               gsr.mUserid = result.getInt("userid");
-               gsr.mAuthorUsername = result.getString("username");
-               gsr.mImage = parseImage(result, "image");
-               gsr.mLocale = result.getString("locale");
+               Type guidesType = new TypeToken<GuideInfo>() {}.getType();
+               GuideInfo gi = new Gson().fromJson(result.toString(), guidesType);
 
-               JSONArray flags = result.getJSONArray("flags");
-               int numFlags = flags.length();
-               for (int j = 0; j < numFlags; j++) {
-                  gsr.mFlags.add(flags.getString(j));
-               }
-
+               GuideSearchResult gsr = new GuideSearchResult(gi);
                search.mResults.add(gsr);
             } else if (resultType.equals("wiki")) {
                TopicSearchResult tsr = new TopicSearchResult();
