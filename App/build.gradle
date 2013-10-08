@@ -133,7 +133,7 @@ def createSiteSourceSet(siteName) {
 }
 
 def createSiteBuildConfig(siteName) {
-   return 'public static final String SEARCH_PROVIDER_AUTHORITY = "com.dozuki.${siteName}.ui.search.SearchSuggestionProvider";',  \
+   return "public static final String SEARCH_PROVIDER_AUTHORITY = \"com.dozuki.${siteName}.ui.search.SearchSuggestionProvider\";" +
           "public static final String SITE_NAME = \"${siteName}\";\n" +
           'public static final String APP_ID = ' + getProperty("${siteName}AppId") + ';'
 }
