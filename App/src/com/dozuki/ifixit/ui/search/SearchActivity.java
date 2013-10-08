@@ -141,7 +141,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       }
 
       showLoading(R.id.search_results_container);
-      APIService.call(this, APIService.getSearchAPICall(APIEndpoint.SEARCH, query));
+      APIService.call(this, APIService.getSearchAPICall(query));
    }
 
    private void handleIntent(Intent intent, boolean sendQuery) {

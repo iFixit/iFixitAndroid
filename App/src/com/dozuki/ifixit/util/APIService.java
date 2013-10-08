@@ -255,8 +255,8 @@ public class APIService extends Service {
       // db.close();
    }
 
-   public static APICall getSearchAPICall(APIEndpoint endpoint, String query) {
-      return new APICall(endpoint, query);
+   public static APICall getSearchAPICall(String query) {
+      return new APICall(APIEndpoint.SEARCH, query);
    }
 
    public static APICall getTeardowns(int limit, int offset) {

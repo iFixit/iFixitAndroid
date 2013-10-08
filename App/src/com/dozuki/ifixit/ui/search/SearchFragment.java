@@ -88,7 +88,7 @@ public class SearchFragment extends BaseListFragment {
             String query = ((SearchActivity) getActivity()).buildQuery(mSearch.mQuery);
             query += "&limit=" + LIMIT + "&offset=" + mOffset;
 
-            APIService.call(getActivity(), APIService.getSearchAPICall(APIEndpoint.SEARCH, query));
+            APIService.call(getActivity(), APIService.getSearchAPICall(query));
          }
       });
 
