@@ -10,19 +10,15 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.model.topic.TopicSelectedListener;
-import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
-public class TopicActivity extends BaseMenuDrawerActivity
+public class TopicActivity extends BaseSearchMenuDrawerActivity
  implements TopicSelectedListener, FragmentManager.OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";

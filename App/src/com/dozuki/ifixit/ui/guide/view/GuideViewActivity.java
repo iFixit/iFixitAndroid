@@ -33,6 +33,8 @@ import java.util.List;
 public class GuideViewActivity extends BaseMenuDrawerActivity implements
  ViewPager.OnPageChangeListener {
 
+   private static final int DEFAULT_INBOUND_STEPID = -1;
+
    private static final String NEXT_COMMAND = "next";
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
@@ -52,7 +54,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private int mCurrentPage = -1;
    private ViewPager mPager;
    private TitlePageIndicator mIndicator;
-   private int mInboundStepId = -1;
+   private int mInboundStepId = DEFAULT_INBOUND_STEPID;
    private GuideViewAdapter mAdapter;
 
    /////////////////////////////////////////////////////
@@ -71,7 +73,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(GUIDEID);
          mDomain = savedInstanceState.getString(DOMAIN);
-         mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+
+         if (savedInstanceState.containsKey(SAVED_GUIDE)) {
+            mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+         }
 
          if (mGuide != null) {
             mCurrentPage = savedInstanceState.getInt(CURRENT_PAGE);
@@ -114,7 +119,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             mGuide = (Guide) extras.getSerializable(GuideViewActivity.SAVED_GUIDE);
          }
 
-         mInboundStepId = extras.getInt(INBOUND_STEP_ID);
+         mInboundStepId = extras.getInt(INBOUND_STEP_ID, DEFAULT_INBOUND_STEPID);
          mCurrentPage = extras.getInt(GuideViewActivity.CURRENT_PAGE, 0);
       }
    }
@@ -302,7 +307,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (!event.hasError()) {
          if (mGuide == null) {
             Guide guide = event.getResult();
-            if (mInboundStepId != -1) {
+            if (mInboundStepId != DEFAULT_INBOUND_STEPID) {
                for (int i = 0; i < guide.getSteps().size(); i++) {
                   if (mInboundStepId == guide.getStep(i).getStepid()) {
                      int stepOffset = 1;

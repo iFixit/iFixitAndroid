@@ -45,8 +45,8 @@ android {
    buildToolsVersion "18.0.1"
 
    defaultConfig {
-      versionCode 37
-      versionName "2.0.1"
+      versionCode 38
+      versionName "2.1.0"
       minSdkVersion 8
       targetSdkVersion 18
       packageName "com.dozuki.ifixit"
@@ -78,8 +78,8 @@ android {
       dozuki {
          signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
-         versionCode 34
-         versionName "2.0.0"
+         versionCode 38
+         versionName "2.1.0"
          minSdkVersion 9
          targetSdkVersion 18
 
@@ -133,6 +133,7 @@ def createSiteSourceSet(siteName) {
 }
 
 def createSiteBuildConfig(siteName) {
-   return "public static final String SITE_NAME = \"${siteName}\";\n" +
+   return 'public static final String SEARCH_PROVIDER_AUTHORITY = "com.dozuki.${siteName}.ui.search.SearchSuggestionProvider";',  \
+          "public static final String SITE_NAME = \"${siteName}\";\n" +
           'public static final String APP_ID = ' + getProperty("${siteName}AppId") + ';'
 }

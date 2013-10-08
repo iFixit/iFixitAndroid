@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.dozuki.Site;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -13,6 +12,24 @@ import java.net.URLEncoder;
  * Defines all APIEndpoints.
  */
 public enum APIEndpoint {
+   SEARCH(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "search/" + query;
+       }
+
+       public APIEvent<?> parse(String json) throws JSONException {
+          return new APIEvent.Search().setResult(JSONHelper.parseSearchResults(json));
+       }
+
+       public APIEvent<?> getEvent() {
+          return new APIEvent.Search();
+       }
+    },
+    false,
+    "GET"
+   ),
+
    CATEGORIES(
       new Endpoint() {
          public String createUrl(String query) {

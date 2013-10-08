@@ -70,8 +70,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
    public static final String GUIDE_PUBLIC_KEY = "GUIDE_PUBLIC_KEY";
 
-   public static String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
-   public static String DELETE_GUIDE_DIALOG_KEY = "DeleteGuideDialog";
+   public static final String GUIDE_STEP_NUM_KEY = "GUIDE_STEP_NUM_KEY";
+   public static final String DELETE_GUIDE_DIALOG_KEY = "DeleteGuideDialog";
    public static final String GUIDE_ID_KEY = "GUIDE_ID_KEY";
    public static final String GUIDE_STEP_ID = "GUIDE_STEP_ID";
    public static final String PARENT_GUIDE_ID_KEY = "PARENT_GUIDE_ID_KEY";

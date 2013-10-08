@@ -4,9 +4,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="?attr/doz__background"
-              android:paddingLeft="8dp"
-              android:paddingRight="8dp">
+              android:background="?attr/doz__background">
 
     <ListView
         android:id="@id/android:list"

@@ -23,8 +23,8 @@ import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
+import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.MapBuilder;
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -117,7 +117,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
-      //items.add(new Item(getString(R.string.slide_menu_search), R.drawable.ic_action_search, "search"));
+      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, "search"));
 
       if (!onIfixit) items.add(new Item(getString(R.string.back_to_site_list),
        R.drawable.ic_action_list, "site_list"));
@@ -167,6 +167,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       mMenuDrawer.setDrawerIndicatorEnabled(true);
 
       mMenuDrawer.invalidate();
+   }
+
+   public void setMenuDrawerSlideDrawable(int drawable) {
+      mMenuDrawer.setSlideDrawable(drawable);
    }
 
    /**
@@ -247,6 +251,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
             }
             break;
          case SEARCH:
+            intent = new Intent(context, SearchActivity.class);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
+            startActivity(intent);
+            break;
          case BROWSE_TOPICS:
             intent = new Intent(context, TopicActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
