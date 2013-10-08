@@ -8,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.marczych.androidsectionheaders.Section;
 
 import java.util.ArrayList;

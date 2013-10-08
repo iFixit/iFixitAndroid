@@ -11,7 +11,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.model.topic.TopicSelectedListener;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -163,7 +162,9 @@ public class TopicListFragment extends BaseFragment
    private void setTopic(TopicNode topic) {
       mTopic = topic;
 
-      getSherlockActivity().setTitle(mTopic.getName().equals("ROOT") ? "" : mTopic.getName());
+      getSherlockActivity().setTitle(mTopic.getName().equals("ROOT") ?
+       MainApplication.get().getSite().mTitle :
+       mTopic.getName());
 
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);

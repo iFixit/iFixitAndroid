@@ -32,5 +32,10 @@
                 <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/teardown/"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
+            android:authorities="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"/>
+
     </application>
 </manifest>

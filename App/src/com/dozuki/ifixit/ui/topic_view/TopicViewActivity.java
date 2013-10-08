@@ -4,13 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
+import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
-import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.google.analytics.tracking.android.Fields;
 
-public class TopicViewActivity extends BaseMenuDrawerActivity {
+public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
    public static final String TOPIC_KEY = "TOPIC";
 
    private TopicViewFragment mTopicView;

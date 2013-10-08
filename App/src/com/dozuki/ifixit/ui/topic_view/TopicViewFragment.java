@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,7 +124,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
    public void setTopicLeaf(TopicLeaf topicLeaf) {
 
       if (topicLeaf != null) {
-         if (!topicLeaf.getName().equals(mTopicNode.getName())) {
+         if (mTopicNode != null && !topicLeaf.getName().equals(mTopicNode.getName())) {
             // Not the most recently selected topic... wait for another.
             return;
          } else if (mTopicLeaf != null && mTopicLeaf.equals(topicLeaf)) {
