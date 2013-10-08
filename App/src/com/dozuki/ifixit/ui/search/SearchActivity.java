@@ -7,7 +7,6 @@ import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -15,7 +14,6 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResults;
@@ -132,6 +130,12 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
 
    public String buildQuery(String query) {
       if (query.length() > 0) {
+         try {
+            query = URLEncoder.encode(query, "UTF-8");
+         } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+         }
+
          switch (mSpinnerPosition) {
             case GUIDES_POSITION:
                mCurrentTag = GUIDE_SEARCH_FRAGMENT;
@@ -177,11 +181,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
        SearchSuggestionProvider.AUTHORITY, SearchSuggestionProvider.MODE);
       suggestions.saveRecentQuery(query, null);
 
-      try {
-         mQuery = URLEncoder.encode(query, "UTF-8");
-      } catch (UnsupportedEncodingException e) {
-         e.printStackTrace();
-      }
+      mQuery = query;
 
       if (sendQuery) {
          handleSearch(buildQuery(mQuery));
