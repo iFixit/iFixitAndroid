@@ -39,7 +39,6 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
       if (searchView != null) {
          SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
          searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-         searchView.setIconifiedByDefault(false); // Do not iconify the widget; expand it by default
          searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
             public boolean onSuggestionSelect(int position) {
@@ -56,8 +55,6 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
                return false;
             }
          });
-
-         searchView.clearFocus();
       }
 
       return true;

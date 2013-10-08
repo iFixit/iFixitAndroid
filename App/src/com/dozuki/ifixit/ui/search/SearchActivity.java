@@ -7,17 +7,19 @@ import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
-import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
 import com.squareup.otto.Subscribe;
@@ -36,6 +38,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
    private int mSpinnerPosition = 0;
    private String mCurrentTag;
    private TextView mResultCount;
+   private boolean mFocusSearch = false;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +82,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       handleIntent(intent, true);
    }
 
+
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
@@ -116,6 +120,16 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       }
    }
 
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      if (mFocusSearch) {
+         MenuItem searchItem = menu.findItem(R.id.action_search);
+         searchItem.expandActionView();
+         mFocusSearch = false;
+      }
+      return true;
+   }
+
    public String buildQuery(String query) {
       if (query.length() > 0) {
          switch (mSpinnerPosition) {
@@ -137,11 +151,17 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
    private void handleSearch(String query) {
       if (query.length() == 0) {
          hideLoading();
+         focusSearch();
          return;
       }
 
       showLoading(R.id.search_results_container);
       APIService.call(this, APIService.getSearchAPICall(query));
+   }
+
+   private void focusSearch() {
+      mFocusSearch = true;
+      supportInvalidateOptionsMenu();
    }
 
    private void handleIntent(Intent intent, boolean sendQuery) {
