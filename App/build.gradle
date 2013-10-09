@@ -45,7 +45,7 @@ android {
    buildToolsVersion "18.0.1"
 
    defaultConfig {
-      versionCode 38
+      versionCode 39
       versionName "2.1.0"
       minSdkVersion 8
       targetSdkVersion 18
@@ -78,10 +78,7 @@ android {
       dozuki {
          signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
-         versionCode 38
-         versionName "2.1.0"
          minSdkVersion 9
-         targetSdkVersion 18
 
          buildConfig createSiteBuildConfig("dozuki", "UA-30506-19")
       }
@@ -89,8 +86,7 @@ android {
       accustream {
          signingConfig signingConfigs.accustream
          packageName "com.dozuki.accustream"
-         versionCode 34
-         versionName "2.0.0"
+         minSdkVersion 9
 
          buildConfig createSiteBuildConfig("accustream", "UA-30506-19")
       }
