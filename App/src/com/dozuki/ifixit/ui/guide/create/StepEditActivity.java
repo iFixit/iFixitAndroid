@@ -396,7 +396,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Override
-   public AlertDialog navigationAlertDialog(final String tag) {
+   public AlertDialog navigationAlertDialog(final Navigation item) {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
@@ -409,7 +409,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               save(mPagePosition);
               dialog.dismiss();
 
-              navigateMenuDrawer(tag);
+              navigateMenuDrawer(item);
            }
         })
        .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
@@ -418,7 +418,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               mIsStepDirty = false;
               dialog.dismiss();
 
-              navigateMenuDrawer(tag);
+              navigateMenuDrawer(item);
            }
         });
 

@@ -164,45 +164,45 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       if (MainApplication.isDozukiApp()) {
          items.add(new Item(getString(R.string.back_to_site_list),
-          R.drawable.ic_action_list, "site_list"));
+          R.drawable.ic_action_list, Navigation.SITE_LIST));
       }
 
-      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, "search"));
+      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, Navigation.SEARCH));
 
       if (site.barcodeScanningEnabled()) {
          items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
-          R.drawable.ic_action_qr_code, "scan_barcode"));
+          R.drawable.ic_action_qr_code, Navigation.SCAN_BARCODE));
       }
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_browse_devices, MainApplication.get().getSite()
-       .getObjectNamePlural()), R.drawable.ic_action_list_2, "browse_topics"));
+       .getObjectNamePlural()), R.drawable.ic_action_list_2, Navigation.BROWSE_TOPICS));
 
       if (onIfixit) {
-         items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
-         items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, "teardowns"));
+         items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, Navigation.FEATURED_GUIDES));
+         items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, Navigation.TEARDOWNS));
       }
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
-      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, "user_favorites"));
-      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
-      items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, "new_guide"));
-      items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
+      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, Navigation.USER_FAVORITES));
+      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, Navigation.USER_GUIDES));
+      items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, Navigation.NEW_GUIDE));
+      items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, Navigation.MEDIA_GALLERY));
 
       if (MainApplication.get().isUserLoggedIn()) {
-         items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, "logout"));
+         items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, Navigation.LOGOUT));
       }
 
       if (onIfixit) {
          items.add(new Category(getString(R.string.slide_menu_ifixit_everywhere)));
-         items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, "youtube"));
-         items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, "facebook"));
-         items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, "twitter"));
+         items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, Navigation.YOUTUBE));
+         items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, Navigation.FACEBOOK));
+         items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, Navigation.TWITTER));
       }
 
       /*items.add(new Category(getString(R.string.slide_menu_more_info)));
-      items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, "help"));
-      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, "about")); */
+      items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, Navigation.HELP));
+      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, Navigation.ABOUT)); */
 
       // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
       // of the arrow indicator.
@@ -244,48 +244,39 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       outState.putInt(STATE_ACTIVE_POSITION, mActivePosition);
    }
 
-   public enum Navigation {
+   protected enum Navigation {
       SITE_LIST, SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY,
-      LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS,
-      SCAN_BARCODE;
-
-      public static Navigation navigate(String str) {
-         try {
-            return valueOf(str.toUpperCase());
-         } catch (Exception ex) {
-            return NOVALUE;
-         }
-      }
+      LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, TEARDOWNS, SCAN_BARCODE;
    }
 
    private AdapterView.OnItemClickListener mItemClickListener =
     new AdapterView.OnItemClickListener() {
        @Override
        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-          String tag = (String) view.getTag();
+          Navigation item = (Navigation)view.getTag();
 
           if (alertOnNavigation()) {
-             navigationAlertDialog(tag).show();
+             navigationAlertDialog(item).show();
           } else {
              mMenuDrawer.closeMenu();
 
              MainApplication.getGaTracker().send(MapBuilder
-              .createEvent("menu_action", "drawer_item_click", ((String) view.getTag()).toLowerCase(), null)
+              .createEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null)
               .build());
 
              mActivePosition = position;
              mMenuDrawer.setActiveView(view, position);
 
-             navigateMenuDrawer(tag);
+             navigateMenuDrawer(item);
           }
        }
     };
 
-   protected void navigateMenuDrawer(String tag) {
+   protected void navigateMenuDrawer(Navigation item) {
       Intent intent;
       String url;
 
-      switch (Navigation.navigate(tag)) {
+      switch (item) {
          case SITE_LIST:
             returnToSiteList();
             break;
@@ -402,21 +393,21 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
    }
 
    private static class Item {
-      String mTitle;
-      int mIconRes;
-      String mTag;
+      protected String mTitle;
+      protected int mIconRes;
+      protected Navigation mItem;
 
-      Item(String title, int iconRes, String tag) {
+      public Item(String title, int iconRes, Navigation item) {
          mTitle = title;
          mIconRes = iconRes;
-         mTag = tag;
+         mItem = item;
       }
    }
 
    private static class Category {
-      String mTitle;
+      protected String mTitle;
 
-      Category(String title) {
+      public Category(String title) {
          mTitle = title;
       }
    }
@@ -425,7 +416,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       private List<Object> mItems;
       private static final int VIEW_TYPE_COUNT = 2;
 
-      MenuAdapter(List<Object> items) {
+      public MenuAdapter(List<Object> items) {
          mItems = items;
       }
 
@@ -484,7 +475,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
             TextView tv = (TextView) v;
             tv.setText(((Item) item).mTitle);
             tv.setCompoundDrawablesWithIntrinsicBounds(((Item) item).mIconRes, 0, 0, 0);
-            tv.setTag(((Item) item).mTag);
+            tv.setTag(((Item) item).mItem);
          }
 
          v.setTag(R.id.mdActiveViewPosition, position);
@@ -505,7 +496,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       return false;
    }
 
-   public AlertDialog navigationAlertDialog(String tag) {
+   public AlertDialog navigationAlertDialog(Navigation item) {
       return null;
    }
 
