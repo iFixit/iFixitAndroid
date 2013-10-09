@@ -16,9 +16,9 @@ public class GuideInfo implements Serializable {
    @SerializedName("revisionid")
    public int mRevisionid;
    @SerializedName("modified_date")
-   public int mModifiedDate;
+   public double mModifiedDate;
    @SerializedName("prereq_modified_date")
-   public int mPrereqModifiedDate;
+   public double mPrereqModifiedDate;
    @SerializedName("type")
    public String mType;
    @SerializedName("category")
