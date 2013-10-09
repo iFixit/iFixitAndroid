@@ -11,6 +11,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.CheatSheet;
 
 public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
 
@@ -68,6 +69,8 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
             onOptionsItemSelected(barcodeItem);
          }
       });
+
+      CheatSheet.setup(barcodeItem.getActionView(), R.string.slide_menu_barcode_scanner);
 
       return super.onCreateOptionsMenu(menu);
    }
