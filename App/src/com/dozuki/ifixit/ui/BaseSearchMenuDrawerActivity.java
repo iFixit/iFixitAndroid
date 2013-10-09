@@ -9,6 +9,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.google.analytics.tracking.android.MapBuilder;
 
 public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
 
@@ -22,6 +23,9 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
          public boolean onMenuItemActionExpand(MenuItem item) {
             String hint = getString(R.string.search_site_hint, MainApplication.get().getSite().mTitle);
             ((EditText) item.getActionView().findViewById(R.id.abs__search_src_text)).setHint(hint);
+
+            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "search", "action_bar_search",
+             null).build());
 
             // Returns true to expand the menu item
             return true;
