@@ -32,7 +32,7 @@ public class StepEditFragment extends BaseFragment {
    private StepEditLinesFragment mEditBulletFrag;
    private StepEditImageFragment mEditImageFrag;
    private StepVideoFragment mEditVideoFrag;
-   private StepEditEmbedFragment mEditEmbedFrag;
+   private StepEmbedFragment mEditEmbedFrag;
 
 
    static StepEditFragment newInstance(GuideStep step) {
@@ -63,7 +63,7 @@ public class StepEditFragment extends BaseFragment {
             mEditVideoFrag = (StepVideoFragment) getChildFragmentManager().findFragmentByTag(
              STEP_VIDEO_FRAGMENT_TAG);
          } else if (mStepType.equals(EMBED_TYPE)) {
-            mEditEmbedFrag = (StepEditEmbedFragment) getChildFragmentManager().findFragmentByTag(
+            mEditEmbedFrag = (StepEmbedFragment) getChildFragmentManager().findFragmentByTag(
              STEP_EMBED_FRAGMENT_TAG);
          } else if (mStepType.equals(IMAGE_TYPE)) {
             mEditImageFrag = (StepEditImageFragment) getChildFragmentManager().findFragmentByTag(
