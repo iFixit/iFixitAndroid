@@ -162,12 +162,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
-      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, "search"));
-
       if (MainApplication.isDozukiApp()) {
          items.add(new Item(getString(R.string.back_to_site_list),
           R.drawable.ic_action_list, "site_list"));
       }
+
+      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, "search"));
 
       if (site.mBarcodeScanner) {
          items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
