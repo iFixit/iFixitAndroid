@@ -61,9 +61,12 @@ public class GuideInfo implements Serializable {
    }
 
    public String getImagePath(String size) {
-      String path = mImage.getPath(size);
-      if (MainApplication.inDebug() && path.startsWith("https")) {
-         path = path.replace("https", "http");
+      String path = "";
+      if (mImage != null) {
+         path = mImage.getPath(size);
+         if (MainApplication.inDebug() && path.startsWith("https")) {
+            path = path.replace("https", "http");
+         }
       }
 
       return path;
