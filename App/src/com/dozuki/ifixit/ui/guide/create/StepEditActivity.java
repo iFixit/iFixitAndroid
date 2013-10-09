@@ -391,12 +391,12 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Override
-   public boolean alertOnNavigation() {
-      return mIsStepDirty;
-   }
+   public AlertDialog getNavigationAlertDialog(final Navigation item) {
+      if (!mIsStepDirty) {
+         // Don't warn the user if the step is clean.
+         return null;
+      }
 
-   @Override
-   public AlertDialog navigationAlertDialog(final Navigation item) {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder

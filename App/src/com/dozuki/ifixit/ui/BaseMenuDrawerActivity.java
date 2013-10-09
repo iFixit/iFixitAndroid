@@ -254,9 +254,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
        @Override
        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
           Navigation item = (Navigation)view.getTag();
+          AlertDialog navigationDialog = getNavigationAlertDialog(item);
 
-          if (alertOnNavigation()) {
-             navigationAlertDialog(item).show();
+          if (navigationDialog != null) {
+             navigationDialog.show();
           } else {
              mMenuDrawer.closeMenu();
 
@@ -489,14 +490,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
    }
 
    /**
-    * Whether the activity show warn the user before navigating away using the MenuDrawer.
-    * @return
+    * Returns an AlertDialog to warn the user before navigating away from the Activity.
+    * null is returned if the user shouldn't be warned.
     */
-   public boolean alertOnNavigation() {
-      return false;
-   }
-
-   public AlertDialog navigationAlertDialog(Navigation item) {
+   public AlertDialog getNavigationAlertDialog(Navigation item) {
       return null;
    }
 
