@@ -14,6 +14,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -128,6 +129,11 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
    }
 
    private String getBarcodeScannerResult(int requestCode, int resultCode, Intent intent) {
+      // The classes below might not exist if barcode scanning isn't enabled.
+      if (!MainApplication.get().getSite().mBarcodeScanner) {
+         return null;
+      }
+
       try {
          // Call IntentIntegrator.parseResult(requestCode, resultCode, intent);
          Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
@@ -143,6 +149,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
          return (String)contents;
       } catch (Exception e) {
+         Toast.makeText(this, "Failed to parse result.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Failure parsing activity result", e);
          return null;
       }
@@ -375,6 +382,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
          startActivity(intent);
          finish();
       } catch (ClassNotFoundException e) {
+         Toast.makeText(this, "Failed to return to site list.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Cannot start SiteListActivity", e);
       }
    }
@@ -388,6 +396,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
          Method initiateScan = c.getDeclaredMethod("initiateScan", argTypes);
          initiateScan.invoke(null, this);
       } catch (Exception e) {
+         Toast.makeText(this, "Failed to launch QR code scanner.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Cannot launch barcode scanner", e);
       }
    }
