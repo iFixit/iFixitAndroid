@@ -79,10 +79,7 @@ public class GuideStepViewFragment extends BaseFragment {
 
             ft.add(MEDIA_CONTAINER, mVideoFrag, STEP_VIDEO_FRAGMENT_TAG);
          } else if (stepType.equals(EMBED_TYPE)) {
-            Bundle embedArgs = new Bundle();
-
-            embedArgs.putSerializable(StepEmbedFragment.GUIDE_EMBED_KEY, mStep.getEmbed());
-            mEmbedFrag = new StepEmbedFragment();
+            mEmbedFrag = StepEmbedFragment.newInstance(mStep.getEmbed());
             ft.add(MEDIA_CONTAINER, mEmbedFrag, STEP_EMBED_FRAGMENT_TAG);
          } else if (stepType.equals(IMAGE_TYPE)) {
             mImageFrag = new StepImageFragment(mStep.getImages());

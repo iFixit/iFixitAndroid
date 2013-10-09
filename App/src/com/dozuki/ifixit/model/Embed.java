@@ -1,59 +1,55 @@
 package com.dozuki.ifixit.model;
 
-import com.dozuki.ifixit.model.guide.OEmbed;
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.Serializable;
 
 public class Embed implements Serializable {
 
    private static final long serialVersionUID = 1L;
-   protected int mWidth;
-   protected int mHeight;
-   protected OEmbed mOEmbed;
-   protected String mType;
-   protected String mURL;
-   protected String mContentURL;
+   public String mSourceUrl;
+   public int mEmbedid;
+   public String mUrl;
+   public String mTitle;
+   public String mType;
+   public String mProviderUrl;
+   public String mHtml;
+   public String mProviderName;
+   public String mAuthorUrl;
+   public String mAuthorName;
+   public String mCacheAge;
+   public String mVersion;
+   public int mWidth;
+   public int mHeight;
 
-   public Embed(int width, int height, String type, String url) {
-      mWidth = width;
-      mHeight = height;
-      mType = type;
-      mURL = url;
-   }
+   public Embed(JSONObject embed) {
+      try {
+         mUrl = embed.getString("url");
+         mWidth = embed.getInt("width");
+         mHeight = embed.getInt("height");
+         mAuthorName = embed.isNull("author_name") ? "" : embed.getString("author_name");
+         mAuthorUrl = embed.isNull("author_url") ? "" : embed.getString("author_url");
+         mCacheAge = embed.isNull("cache_age") ? "" : embed.getString("cache_age");
+         mProviderName = embed.isNull("provider_name") ? "" : embed.getString("provider_name");
+         mVersion = embed.getString("version");
+         mHtml = embed.getString("html");
+         mSourceUrl = getSourceUrl(mHtml);
+         mProviderUrl = embed.getString("provider_url");
+         mType = embed.getString("type");
+         mEmbedid = embed.getInt("embedid");
+         mTitle = embed.getString("title");
 
-   public String getURL() {
-      return mURL;
-   }
-   
-   public int getWidth() {
-      return mWidth;
-   }
-   
-   public int getHeight() {
-      return mHeight;
-   }
-
-   public void addOembed(OEmbed oe) {
-      mOEmbed = oe;
-   }
-
-   public boolean hasOembed() {
-      return mOEmbed != null;
-   }
-
-   public OEmbed getOembed() {
-      return mOEmbed;
-   }
-
-   public String getType() {
-      return mType;
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
    }
 
-   public void setContentURL(String url) {
-      mContentURL = url;
-   }
+   private String getSourceUrl(String html) {
+      Document doc = Jsoup.parse(html);
 
-   public String getContentURL() {
-      return mContentURL;
+      return doc.getElementsByAttribute("src").get(0).attr("src");
    }
 }

@@ -34,7 +34,9 @@ import org.json.JSONObject;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 
+import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -271,7 +273,7 @@ public class JSONHelper {
             step.addVideo(parseVideo(jVideo));
          } else if (type.equals("embed")) {
             JSONObject jEmbed = jMedia.getJSONObject("data");
-            step.addEmbed(parseEmbed(jEmbed));
+            step.addEmbed(new Embed(jEmbed));
          }
 
       } catch (JSONException e) {
@@ -285,19 +287,6 @@ public class JSONHelper {
       }
 
       return step;
-   }
-
-   public static Map<String, String> getQueryMap(String url) {
-      String query = url.substring(url.indexOf('?') + 1);
-      String[] params = query.split("&");
-      Map<String, String> map = new HashMap<String, String>();
-      for (String param : params) {
-         String name = param.split("=")[0];
-         String value = param.split("=")[1];
-         map.put(name, value);
-      }
-
-      return map;
    }
 
    private static Video parseVideo(JSONObject jVideo) throws JSONException {
@@ -339,25 +328,6 @@ public class JSONHelper {
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
       return new VideoEncoding(jVideoEncoding.getInt("width"), jVideoEncoding.getInt("height"),
         jVideoEncoding.getString("url"), jVideoEncoding.getString("format"));
-   }
-
-   private static Embed parseEmbed(JSONObject jEmbed) throws JSONException {
-      Embed em = new Embed(jEmbed.getInt("width"), jEmbed.getInt("height"),
-       jEmbed.getString("type"), jEmbed.getString("url"));
-      em.setContentURL(getQueryMap(jEmbed.getString("url")).get("url"));
-      return em;
-   }
-
-   public static OEmbed parseOEmbed(String embed) throws JSONException {
-
-      JSONObject jOEmbed = new JSONObject(embed);
-      String thumbnail = null;
-      if (jOEmbed.has("thumbnail_url")) {
-         thumbnail = jOEmbed.getString("thumbnail_url");
-      }
-      Document doc = Jsoup.parse(jOEmbed.getString("html"));
-      return new OEmbed(jOEmbed.getString("html"),
-       doc.getElementsByAttribute("src").get(0).attr("src"), thumbnail);
    }
 
    private static StepLine parseLine(JSONObject jLine) throws JSONException {
