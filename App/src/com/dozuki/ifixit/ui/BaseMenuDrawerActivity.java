@@ -171,7 +171,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       if (site.mBarcodeScanner) {
          items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
-          R.drawable.ic_action_barcode_2, "scan_barcode"));
+          R.drawable.ic_action_qr_code, "scan_barcode"));
       }
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));

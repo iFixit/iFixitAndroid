@@ -11,7 +11,7 @@
 
     <item
         android:id="@+id/action_scan_barcode"
-        android:icon="@drawable/ic_action_barcode_2"
+        android:icon="@drawable/ic_action_qr_code"
         android:showAsAction="always"
         android:actionLayout="@layout/action_button_barcode"
         android:title="@string/slide_menu_barcode_scanner"/>
