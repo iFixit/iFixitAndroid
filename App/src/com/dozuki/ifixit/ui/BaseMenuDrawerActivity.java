@@ -164,45 +164,45 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       if (MainApplication.isDozukiApp()) {
          items.add(new Item(getString(R.string.back_to_site_list),
-          R.drawable.ic_action_list, Navigation.SITE_LIST));
+          R.drawable.ic_action_list, NavigationItem.SITE_LIST));
       }
 
-      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, Navigation.SEARCH));
+      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, NavigationItem.SEARCH));
 
       if (site.barcodeScanningEnabled()) {
          items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
-          R.drawable.ic_action_qr_code, Navigation.SCAN_BARCODE));
+          R.drawable.ic_action_qr_code, NavigationItem.SCAN_BARCODE));
       }
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_browse_devices, MainApplication.get().getSite()
-       .getObjectNamePlural()), R.drawable.ic_action_list_2, Navigation.BROWSE_TOPICS));
+       .getObjectNamePlural()), R.drawable.ic_action_list_2, NavigationItem.BROWSE_TOPICS));
 
       if (onIfixit) {
-         items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, Navigation.FEATURED_GUIDES));
-         items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, Navigation.TEARDOWNS));
+         items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, NavigationItem.FEATURED_GUIDES));
+         items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, NavigationItem.TEARDOWNS));
       }
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
-      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, Navigation.USER_FAVORITES));
-      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, Navigation.USER_GUIDES));
-      items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, Navigation.NEW_GUIDE));
-      items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, Navigation.MEDIA_GALLERY));
+      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, NavigationItem.USER_FAVORITES));
+      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, NavigationItem.USER_GUIDES));
+      items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, NavigationItem.NEW_GUIDE));
+      items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, NavigationItem.MEDIA_GALLERY));
 
       if (MainApplication.get().isUserLoggedIn()) {
-         items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, Navigation.LOGOUT));
+         items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, NavigationItem.LOGOUT));
       }
 
       if (onIfixit) {
          items.add(new Category(getString(R.string.slide_menu_ifixit_everywhere)));
-         items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, Navigation.YOUTUBE));
-         items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, Navigation.FACEBOOK));
-         items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, Navigation.TWITTER));
+         items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, NavigationItem.YOUTUBE));
+         items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, NavigationItem.FACEBOOK));
+         items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, NavigationItem.TWITTER));
       }
 
       /*items.add(new Category(getString(R.string.slide_menu_more_info)));
-      items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, Navigation.HELP));
-      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, Navigation.ABOUT)); */
+      items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, NavigationItem.HELP));
+      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, NavigationItem.ABOUT)); */
 
       // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
       // of the arrow indicator.
@@ -244,16 +244,81 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       outState.putInt(STATE_ACTIVE_POSITION, mActivePosition);
    }
 
-   protected enum Navigation {
-      SITE_LIST, SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY,
-      LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, TEARDOWNS, SCAN_BARCODE;
+   protected enum NavigationItem {
+      SITE_LIST(new Action() {
+         public void performAction(BaseMenuDrawerActivity activity) {
+            activity.returnToSiteList();
+         }
+      }),
+      SEARCH(SearchActivity.class),
+      SCAN_BARCODE(new Action() {
+         public void performAction(BaseMenuDrawerActivity activity) {
+            activity.launchBarcodeScanner();
+         }
+      }),
+      FEATURED_GUIDES(FeaturedGuidesActivity.class),
+      BROWSE_TOPICS(TopicActivity.class),
+      USER_GUIDES(GuideCreateActivity.class),
+      NEW_GUIDE(
+         StepEditActivity.class,
+         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP
+      ),
+      MEDIA_GALLERY(GalleryActivity.class),
+      LOGOUT(new Action() {
+         public void performAction(BaseMenuDrawerActivity activity) {
+            MainApplication.get().logout(activity);
+         }
+      }),
+      USER_FAVORITES(FavoritesActivity.class),
+      YOUTUBE("https://www.youtube.com/user/iFixitYourself"),
+      FACEBOOK("https://www.facebook.com/iFixit"),
+      TWITTER("https://twitter.com/iFixit"),
+      TEARDOWNS(TeardownsActivity.class);
+
+      private static final int DEFAULT_FLAGS = Intent.FLAG_ACTIVITY_NO_ANIMATION;
+
+      /**
+       * Allows items to run arbitrary code when it is selected.
+       */
+      private interface Action {
+         public void performAction(BaseMenuDrawerActivity activity);
+      }
+
+      public final Class<? extends BaseActivity> mActivityClass;
+      public final int mIntentFlags;
+      public final String mUrl;
+      public final Action mAction;
+
+      private NavigationItem(Class activityClass) {
+         this(activityClass, DEFAULT_FLAGS);
+      }
+
+      private NavigationItem(Class<? extends BaseActivity> activityClass, int intentFlags) {
+         this(activityClass, intentFlags, null, null);
+      }
+
+      private NavigationItem(String url) {
+         this(null, DEFAULT_FLAGS, url, null);
+      }
+
+      private NavigationItem(Action action) {
+         this(null, DEFAULT_FLAGS, null, action);
+      }
+
+      private NavigationItem(Class<? extends BaseActivity>  activityClass, int intentFlags,
+       String url, Action action) {
+         mActivityClass = activityClass;
+         mIntentFlags = intentFlags;
+         mUrl = url;
+         mAction = action;
+      }
    }
 
    private AdapterView.OnItemClickListener mItemClickListener =
     new AdapterView.OnItemClickListener() {
        @Override
        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-          Navigation item = (Navigation)view.getTag();
+          NavigationItem item = (NavigationItem)view.getTag();
           AlertDialog navigationDialog = getNavigationAlertDialog(item);
 
           if (navigationDialog != null) {
@@ -273,93 +338,20 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
        }
     };
 
-   protected void navigateMenuDrawer(Navigation item) {
-      Intent intent;
-      String url;
-
-      switch (item) {
-         case SITE_LIST:
-            returnToSiteList();
-            break;
-         case SCAN_BARCODE:
-            launchBarcodeScanner();
-            break;
-         case SEARCH:
-            intent = new Intent(this, SearchActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            break;
-         case BROWSE_TOPICS:
-            intent = new Intent(this, TopicActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            break;
-
-         case FEATURED_GUIDES:
-            intent = new Intent(this, FeaturedGuidesActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            break;
-
-         case TEARDOWNS:
-            intent = new Intent(this, TeardownsActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            break;
-
-         case USER_FAVORITES:
-            intent = new Intent(this, FavoritesActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            break;
-
-         case USER_GUIDES:
-            intent = new Intent(this, GuideCreateActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            break;
-
-         case NEW_GUIDE:
-            intent = new Intent(this, StepEditActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-            break;
-
-         case MEDIA_GALLERY:
-            intent = new Intent(this, GalleryActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
-            startActivity(intent);
-            break;
-         case LOGOUT:
-            MainApplication.get().logout(BaseMenuDrawerActivity.this);
-            break;
-
-         case YOUTUBE:
-            intent = new Intent(Intent.ACTION_VIEW);
-            url = "https://www.youtube.com/user/iFixitYourself";
-
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
-            break;
-
-         case FACEBOOK:
-            intent = new Intent(Intent.ACTION_VIEW);
-            url = "https://www.facebook.com/iFixit";
-
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
-            break;
-
-         case TWITTER:
-            intent = new Intent(Intent.ACTION_VIEW);
-            url = "https://twitter.com/iFixit";
-
-            intent.setData(Uri.parse(url));
-            startActivity(intent);
-            break;
-
-         case HELP:
-         case ABOUT:
+   protected void navigateMenuDrawer(NavigationItem item) {
+      if (item.mActivityClass != null) {
+         Intent intent = new Intent(this, item.mActivityClass);
+         intent.setFlags(item.mIntentFlags);
+         startActivity(intent);
+      } else if (item.mUrl != null) {
+         Intent intent = new Intent(Intent.ACTION_VIEW);
+         intent.setData(Uri.parse(item.mUrl));
+         startActivity(intent);
+      } else if (item.mAction != null) {
+         item.mAction.performAction(this);
+      } else {
+         Log.e("BaseMenuDrawerActivity",
+          "Could not take action on NavigationItem: " + item.toString());
       }
    }
 
@@ -396,9 +388,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
    private static class Item {
       protected String mTitle;
       protected int mIconRes;
-      protected Navigation mItem;
+      protected NavigationItem mItem;
 
-      public Item(String title, int iconRes, Navigation item) {
+      public Item(String title, int iconRes, NavigationItem item) {
          mTitle = title;
          mIconRes = iconRes;
          mItem = item;
@@ -493,7 +485,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
     * Returns an AlertDialog to warn the user before navigating away from the Activity.
     * null is returned if the user shouldn't be warned.
     */
-   public AlertDialog getNavigationAlertDialog(Navigation item) {
+   public AlertDialog getNavigationAlertDialog(NavigationItem item) {
       return null;
    }
 

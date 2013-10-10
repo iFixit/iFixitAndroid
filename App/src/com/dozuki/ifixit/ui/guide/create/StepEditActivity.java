@@ -391,7 +391,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Override
-   public AlertDialog getNavigationAlertDialog(final Navigation item) {
+   public AlertDialog getNavigationAlertDialog(final NavigationItem item) {
       if (!mIsStepDirty) {
          // Don't warn the user if the step is clean.
          return null;
