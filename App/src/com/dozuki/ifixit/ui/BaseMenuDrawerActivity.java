@@ -41,7 +41,8 @@ import java.util.List;
 /**
  * Base activity that displays the menu drawer.
  */
-public abstract class BaseMenuDrawerActivity extends BaseActivity {
+public abstract class BaseMenuDrawerActivity extends BaseActivity
+ implements AdapterView.OnItemClickListener {
    private static final String STATE_ACTIVE_POSITION =
     "com.dozuki.ifixit.ui.BaseMenuDrawerActivity.activePosition";
    private static final String PEEK_MENU = "PEEK_MENU_KEY";
@@ -156,60 +157,21 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
    }
 
    private void buildSliderMenu() {
-      Site site = MainApplication.get().getSite();
-      boolean onIfixit = site.isIfixit();
-
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
-      List<Object> items = new ArrayList<Object>();
+      List<NavigationItem> items = new ArrayList<NavigationItem>();
 
-      if (MainApplication.isDozukiApp()) {
-         items.add(new Item(getString(R.string.back_to_site_list),
-          R.drawable.ic_action_list, NavigationItem.SITE_LIST));
+      for (NavigationItem item : NavigationItem.values()) {
+         if (item.shouldDisplay()) {
+            items.add(item);
+         }
       }
-
-      items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, NavigationItem.SEARCH));
-
-      if (site.barcodeScanningEnabled()) {
-         items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
-          R.drawable.ic_action_qr_code, NavigationItem.SCAN_BARCODE));
-      }
-
-      items.add(new Category(getString(R.string.slide_menu_browse_content)));
-      items.add(new Item(getString(R.string.slide_menu_browse_devices, MainApplication.get().getSite()
-       .getObjectNamePlural()), R.drawable.ic_action_list_2, NavigationItem.BROWSE_TOPICS));
-
-      if (onIfixit) {
-         items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, NavigationItem.FEATURED_GUIDES));
-         items.add(new Item(getString(R.string.teardowns), R.drawable.ic_menu_stack, NavigationItem.TEARDOWNS));
-      }
-
-      items.add(new Category(buildAccountMenuCategoryTitle()));
-      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, NavigationItem.USER_FAVORITES));
-      items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, NavigationItem.USER_GUIDES));
-      items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, NavigationItem.NEW_GUIDE));
-      items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, NavigationItem.MEDIA_GALLERY));
-
-      if (MainApplication.get().isUserLoggedIn()) {
-         items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, NavigationItem.LOGOUT));
-      }
-
-      if (onIfixit) {
-         items.add(new Category(getString(R.string.slide_menu_ifixit_everywhere)));
-         items.add(new Item(getString(R.string.slide_menu_youtube), R.drawable.ic_action_youtube, NavigationItem.YOUTUBE));
-         items.add(new Item(getString(R.string.slide_menu_facebook), R.drawable.ic_action_facebook, NavigationItem.FACEBOOK));
-         items.add(new Item(getString(R.string.slide_menu_twitter), R.drawable.ic_action_twitter, NavigationItem.TWITTER));
-      }
-
-      /*items.add(new Category(getString(R.string.slide_menu_more_info)));
-      items.add(new Item(getString(R.string.slide_menu_help), R.drawable.ic_action_help, NavigationItem.HELP));
-      items.add(new Item(getString(R.string.slide_menu_about), R.drawable.ic_action_info, NavigationItem.ABOUT)); */
 
       // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
       // of the arrow indicator.
       ListView menuList = new ListView(this);
       MenuAdapter adapter = new MenuAdapter(items);
       menuList.setAdapter(adapter);
-      menuList.setOnItemClickListener(mItemClickListener);
+      menuList.setOnItemClickListener(this);
       menuList.setCacheColorHint(Color.TRANSPARENT);
 
       mMenuDrawer.setMenuView(menuList);
@@ -244,115 +206,285 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       outState.putInt(STATE_ACTIVE_POSITION, mActivePosition);
    }
 
+   /**
+    * Represents an item or separator in the navigation drawer. Items are displayed
+    * in the order that they are defined.
+    */
    protected enum NavigationItem {
-      SITE_LIST(new Action() {
-         public void performAction(BaseMenuDrawerActivity activity) {
+      SITE_LIST(
+         R.string.back_to_site_list,
+         R.drawable.ic_action_list
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.isDozukiApp();
+         }
+
+         @Override
+         public void performNavigation(BaseMenuDrawerActivity activity) {
             activity.returnToSiteList();
          }
-      }),
-      SEARCH(SearchActivity.class),
-      SCAN_BARCODE(new Action() {
-         public void performAction(BaseMenuDrawerActivity activity) {
+      },
+
+      SEARCH(
+         R.string.search,
+         R.drawable.ic_action_search,
+         SearchActivity.class
+      ),
+
+      SCAN_BARCODE(
+         R.string.slide_menu_barcode_scanner,
+         R.drawable.ic_action_qr_code
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().barcodeScanningEnabled();
+         }
+
+         @Override
+         public void performNavigation(BaseMenuDrawerActivity activity) {
             activity.launchBarcodeScanner();
          }
-      }),
-      FEATURED_GUIDES(FeaturedGuidesActivity.class),
-      BROWSE_TOPICS(TopicActivity.class),
-      USER_GUIDES(GuideCreateActivity.class),
+      },
+
+      BROWSE_CONTENT_SEPARATOR(R.string.slide_menu_browse_content),
+
+      BROWSE_TOPICS(
+         R.string.slide_menu_browse_devices,
+         R.drawable.ic_action_list_2,
+         TopicActivity.class
+      ) {
+         @Override
+         public String getTitle(Context context) {
+            return context.getString(mTitle,
+             MainApplication.get().getSite().getObjectNamePlural());
+         }
+      },
+
+      FEATURED_GUIDES(
+         R.string.featured_guides,
+         R.drawable.ic_action_star_10,
+         FeaturedGuidesActivity.class
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().isIfixit();
+         }
+      },
+
+      TEARDOWNS(
+         R.string.teardowns,
+         R.drawable.ic_menu_stack,
+         TeardownsActivity.class
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().isIfixit();
+         }
+      },
+
+      ACCOUNT_MENU_SEPARATOR() {
+         @Override
+         public String getTitle(Context context) {
+            MainApplication app = MainApplication.get();
+            boolean loggedIn = app.isUserLoggedIn();
+
+            if (loggedIn) {
+               String username = app.getUser().getUsername();
+               return context.getString(R.string.account_username_title, username);
+            } else {
+               return context.getString(R.string.account_menu_title);
+            }
+         }
+      },
+
+      USER_FAVORITES(
+         R.string.slide_menu_favorite_guides,
+         R.drawable.ic_menu_favorite_light,
+         FavoritesActivity.class
+      ),
+
+      USER_GUIDES(
+         R.string.slide_menu_my_guides,
+         R.drawable.ic_menu_spinner_guides,
+         GuideCreateActivity.class
+      ),
+
       NEW_GUIDE(
+         R.string.slide_menu_create_new_guide,
+         R.drawable.ic_menu_add_guide,
          StepEditActivity.class,
          Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP
       ),
-      MEDIA_GALLERY(GalleryActivity.class),
-      LOGOUT(new Action() {
-         public void performAction(BaseMenuDrawerActivity activity) {
+
+      MEDIA_GALLERY(
+         R.string.slide_menu_media_gallery,
+         R.drawable.ic_menu_spinner_gallery,
+         GalleryActivity.class
+      ),
+
+      LOGOUT(
+         R.string.slide_menu_logout,
+         R.drawable.ic_action_exit
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().isUserLoggedIn();
+         }
+
+         @Override
+         public void performNavigation(BaseMenuDrawerActivity activity) {
             MainApplication.get().logout(activity);
          }
-      }),
-      USER_FAVORITES(FavoritesActivity.class),
-      YOUTUBE("https://www.youtube.com/user/iFixitYourself"),
-      FACEBOOK("https://www.facebook.com/iFixit"),
-      TWITTER("https://twitter.com/iFixit"),
-      TEARDOWNS(TeardownsActivity.class);
+      },
 
+      IFIXIT_EVERYWHERE_SEPARATOR(
+         R.string.slide_menu_ifixit_everywhere
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().isIfixit();
+         }
+      },
+
+      YOUTUBE(
+         R.string.slide_menu_youtube,
+         R.drawable.ic_action_youtube,
+         "https://www.youtube.com/user/iFixitYourself"
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().isIfixit();
+         }
+      },
+
+      FACEBOOK(
+         R.string.slide_menu_facebook,
+         R.drawable.ic_action_facebook,
+         "https://www.facebook.com/iFixit"
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().isIfixit();
+         }
+      },
+
+      TWITTER(
+         R.string.slide_menu_twitter,
+         R.drawable.ic_action_twitter,
+         "https://twitter.com/iFixit"
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().isIfixit();
+         }
+      };
+
+      private static final int NO_RES = -1;
       private static final int DEFAULT_FLAGS = Intent.FLAG_ACTIVITY_NO_ANIMATION;
 
       /**
-       * Allows items to run arbitrary code when it is selected.
+       * Used for display.
        */
-      private interface Action {
-         public void performAction(BaseMenuDrawerActivity activity);
-      }
+      public final boolean mSeparator;
+      public final int mTitle;
+      public final int mIcon;
 
+      /**
+       * Used for default navigation actions.
+       */
       public final Class<? extends BaseActivity> mActivityClass;
       public final int mIntentFlags;
       public final String mUrl;
-      public final Action mAction;
 
-      private NavigationItem(Class activityClass) {
-         this(activityClass, DEFAULT_FLAGS);
+      private NavigationItem() {
+         this(true, NO_RES, NO_RES, null, DEFAULT_FLAGS, null);
       }
 
-      private NavigationItem(Class<? extends BaseActivity> activityClass, int intentFlags) {
-         this(activityClass, intentFlags, null, null);
+      private NavigationItem(int title) {
+         this(true, title, NO_RES, null, DEFAULT_FLAGS, null);
       }
 
-      private NavigationItem(String url) {
-         this(null, DEFAULT_FLAGS, url, null);
+      private NavigationItem(int title, int icon) {
+         this(false, title, icon, null, DEFAULT_FLAGS, null);
       }
 
-      private NavigationItem(Action action) {
-         this(null, DEFAULT_FLAGS, null, action);
+      private NavigationItem(int title, int icon, Class activityClass) {
+         this(title, icon, activityClass, DEFAULT_FLAGS);
       }
 
-      private NavigationItem(Class<? extends BaseActivity>  activityClass, int intentFlags,
-       String url, Action action) {
+      private NavigationItem(int title, int icon,
+       Class<? extends BaseActivity> activityClass, int intentFlags) {
+         this(false, title, icon, activityClass, intentFlags, null);
+      }
+
+      private NavigationItem(int title, int icon, String url) {
+         this(false, title, icon, null, DEFAULT_FLAGS, url);
+      }
+
+      private NavigationItem(boolean separator, int title, int icon,
+       Class<? extends BaseActivity>  activityClass, int intentFlags, String url) {
+         mSeparator = separator;
+         mTitle = title;
+         mIcon = icon;
          mActivityClass = activityClass;
          mIntentFlags = intentFlags;
          mUrl = url;
-         mAction = action;
+      }
+
+      /**
+       * Display all by default.
+       */
+      public boolean shouldDisplay() {
+         return true;
+      }
+
+      public String getTitle(Context context) {
+         return context.getString(mTitle);
+      }
+
+      /**
+       * Enums can override this to run arbitrary code when the item is selected.
+       */
+      public void performNavigation(BaseMenuDrawerActivity activity) {
+         if (mActivityClass != null) {
+            Intent intent = new Intent(activity, mActivityClass);
+            intent.setFlags(mIntentFlags);
+            activity.startActivity(intent);
+         } else if (mUrl != null) {
+            Intent intent = new Intent(Intent.ACTION_VIEW);
+            intent.setData(Uri.parse(mUrl));
+            activity.startActivity(intent);
+         } else {
+            Log.e("BaseMenuDrawerActivity",
+             "Could not take action on NavigationItem: " + toString());
+         }
       }
    }
 
-   private AdapterView.OnItemClickListener mItemClickListener =
-    new AdapterView.OnItemClickListener() {
-       @Override
-       public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-          NavigationItem item = (NavigationItem)view.getTag();
-          AlertDialog navigationDialog = getNavigationAlertDialog(item);
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+       NavigationItem item = (NavigationItem)view.getTag();
+       AlertDialog navigationDialog = getNavigationAlertDialog(item);
 
-          if (navigationDialog != null) {
-             navigationDialog.show();
-          } else {
-             mMenuDrawer.closeMenu();
+       if (navigationDialog != null) {
+          navigationDialog.show();
+       } else {
+          mMenuDrawer.closeMenu();
 
-             MainApplication.getGaTracker().send(MapBuilder
-              .createEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null)
-              .build());
+          MainApplication.getGaTracker().send(MapBuilder
+           .createEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null)
+           .build());
 
-             mActivePosition = position;
-             mMenuDrawer.setActiveView(view, position);
+          mActivePosition = position;
+          mMenuDrawer.setActiveView(view, position);
 
-             navigateMenuDrawer(item);
-          }
+          navigateMenuDrawer(item);
        }
-    };
+    }
 
    protected void navigateMenuDrawer(NavigationItem item) {
-      if (item.mActivityClass != null) {
-         Intent intent = new Intent(this, item.mActivityClass);
-         intent.setFlags(item.mIntentFlags);
-         startActivity(intent);
-      } else if (item.mUrl != null) {
-         Intent intent = new Intent(Intent.ACTION_VIEW);
-         intent.setData(Uri.parse(item.mUrl));
-         startActivity(intent);
-      } else if (item.mAction != null) {
-         item.mAction.performAction(this);
-      } else {
-         Log.e("BaseMenuDrawerActivity",
-          "Could not take action on NavigationItem: " + item.toString());
-      }
+      item.performNavigation(this);
    }
 
    private void returnToSiteList() {
@@ -385,31 +517,11 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       }
    }
 
-   private static class Item {
-      protected String mTitle;
-      protected int mIconRes;
-      protected NavigationItem mItem;
-
-      public Item(String title, int iconRes, NavigationItem item) {
-         mTitle = title;
-         mIconRes = iconRes;
-         mItem = item;
-      }
-   }
-
-   private static class Category {
-      protected String mTitle;
-
-      public Category(String title) {
-         mTitle = title;
-      }
-   }
-
    private class MenuAdapter extends BaseAdapter {
-      private List<Object> mItems;
+      private List<NavigationItem> mItems;
       private static final int VIEW_TYPE_COUNT = 2;
 
-      public MenuAdapter(List<Object> items) {
+      public MenuAdapter(List<NavigationItem> items) {
          mItems = items;
       }
 
@@ -430,7 +542,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       @Override
       public int getItemViewType(int position) {
-         return getItem(position) instanceof Item ? 0 : 1;
+         return mItems.get(position).mSeparator ? 0 : 1;
       }
 
       @Override
@@ -440,7 +552,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       @Override
       public boolean isEnabled(int position) {
-         return getItem(position) instanceof Item;
+         return !mItems.get(position).mSeparator;
       }
 
       @Override
@@ -450,34 +562,33 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       @Override
       public View getView(int position, View convertView, ViewGroup parent) {
-         View v = convertView;
-         Object item = getItem(position);
+         View view = convertView;
+         NavigationItem item = mItems.get(position);
 
-         if (item instanceof Category) {
-            if (v == null) {
-               v = getLayoutInflater().inflate(R.layout.menu_row_category, parent, false);
+         if (item.mSeparator) {
+            if (view == null) {
+               view = getLayoutInflater().inflate(R.layout.menu_row_category, parent, false);
             }
 
-            ((TextView) v).setText(((Category) item).mTitle);
-
+            ((TextView)view).setText(item.getTitle(BaseMenuDrawerActivity.this));
          } else {
-            if (v == null) {
-               v = getLayoutInflater().inflate(R.layout.menu_row_item, parent, false);
+            if (view == null) {
+               view = getLayoutInflater().inflate(R.layout.menu_row_item, parent, false);
             }
 
-            TextView tv = (TextView) v;
-            tv.setText(((Item) item).mTitle);
-            tv.setCompoundDrawablesWithIntrinsicBounds(((Item) item).mIconRes, 0, 0, 0);
-            tv.setTag(((Item) item).mItem);
+            TextView textView = (TextView)view;
+            textView.setText(item.getTitle(BaseMenuDrawerActivity.this));
+            textView.setCompoundDrawablesWithIntrinsicBounds(item.mIcon, 0, 0, 0);
+            textView.setTag(item);
          }
 
-         v.setTag(R.id.mdActiveViewPosition, position);
+         view.setTag(R.id.mdActiveViewPosition, position);
 
          if (position == mActivePosition) {
-            mMenuDrawer.setActiveView(v, position);
+            mMenuDrawer.setActiveView(view, position);
          }
 
-         return v;
+         return view;
       }
    }
 
