@@ -266,4 +266,8 @@ public class Guide implements Serializable {
        mAuthor + "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroductionRendered + "\n" +
        mSummary + "\n\n" + mSteps + "\n" + mSummary + "}";
    }
+
+   public int getCommentCount() {
+      return mComments.size();
+   }
 }

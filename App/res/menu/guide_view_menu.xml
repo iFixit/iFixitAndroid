@@ -5,12 +5,12 @@
         android:id="@+id/edit_guide"
         android:title="@string/edit_guide"
         android:icon="@drawable/ic_action_edit"
-        android:showAsAction="ifRoom|withText"/>
+        android:showAsAction="always"/>
     <item
         android:id="@+id/comments"
         android:title="@string/comments"
-        android:icon="@drawable/ic_action_monolog"
-        android:showAsAction="ifRoom|withText"/>
+        android:actionLayout="@layout/comment_bubble"
+        android:showAsAction="always"/>
     <item
         android:id="@+id/reload_guide"
         android:title="@string/reload_guide"

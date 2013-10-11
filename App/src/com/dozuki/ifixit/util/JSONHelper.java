@@ -4,6 +4,7 @@ import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;

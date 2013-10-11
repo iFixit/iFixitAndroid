@@ -8,7 +8,7 @@ import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
-
+import android.widget.TextView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -125,6 +125,38 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
    }
 
+   private void handleActionViewIntent(Intent intent) {
+      List<String> segments = intent.getData().getPathSegments();
+
+      try {
+         mGuideid = Integer.parseInt(segments.get(2));
+      } catch (Exception e) {
+         hideLoading();
+         Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments", e);
+
+         MainApplication.getGaTracker().send(MapBuilder.createException(
+          new StandardExceptionParser(this, null).getDescription(
+           Thread.currentThread().getName(), e), false).build());
+
+         displayGuideNotFoundDialog();
+         return;
+      }
+
+      Site currentSite = MainApplication.get().getSite();
+      mDomain = intent.getData().getHost();
+      if (currentSite.hostMatches(mDomain)) {
+         // Load the guide for the current site.
+         getGuide(mGuideid);
+         return;
+      }
+
+      // Set site to dozuki before API call.
+      MainApplication.get().setSite(Site.getSite("dozuki"));
+
+      showLoading(R.id.loading_container);
+      APIService.call(this, APIService.getSitesAPICall());
+   }
+
    @Override
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
@@ -178,7 +210,58 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       getSupportMenuInflater().inflate(R.menu.guide_view_menu, menu);
+
+      MenuItem item = menu.findItem(R.id.comments);
+      item.getActionView().setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            if (mGuide != null) {
+               ArrayList<Comment> comments;
+               int stepIndex = getStepIndex();
+               String title;
+
+               // If we're in one of the introduction pages, show guide comments.
+               if (stepIndex < 0) {
+                  comments = mGuide.getComments();
+                  title = getString(R.string.guide_comments);
+               } else {
+                  comments = mGuide.getStep(stepIndex).getComments();
+                  title = getString(R.string.step_number_comments, stepIndex + 1);
+               }
+
+               CommentsFragment frag = CommentsFragment.newInstance(comments, title);
+               frag.setRetainInstance(true);
+               frag.show(getSupportFragmentManager(), COMMENTS_TAG);
+            }
+         }
+      });
+
       return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      MenuItem item = menu.findItem(R.id.comments);
+      TextView countView = ((TextView) item.getActionView().findViewById(R.id.comment_count));
+
+      if (mGuide != null) {
+         int stepIndex = getStepIndex();
+
+         int commentCount = 0;
+         if (stepIndex < 0) {
+            commentCount = mGuide.getCommentCount();
+         } else {
+            commentCount = mGuide.getStep(stepIndex).getCommentCount();
+         }
+
+         Log.d("GuideStep", "onPrepareOptionsMenu " + commentCount);
+
+         if (countView != null) {
+            countView.setText(commentCount + "");
+         }
+      }
+
+      return super.onPrepareOptionsMenu(menu);
    }
 
    @Override
@@ -250,24 +333,63 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
    }
 
+   private int getStepIndex() {
+      return (mCurrentPage - (mStepOffset + 1));
+   }
+
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
    /////////////////////////////////////////////////////
 
    @Subscribe
-   public void onGuide(ApiEvent.ViewGuide event) {
+   public void onSites(APIEvent.Sites event) {
+      if (!event.hasError()) {
+         Site selectedSite = null;
+         for (Site site : event.getResult()) {
+            if (site.hostMatches(mDomain)) {
+               selectedSite = site;
+               break;
+            }
+         }
+
+         if (selectedSite != null) {
+            // Set the site and then fetch the guide.
+            MainApplication.get().setSite(selectedSite);
+
+            // Recreating the Activity forces it to be recreated with the appropriate
+            // theme and fetch the guide from the correct site. mDomain needs to be
+            // reset otherwise the guide won't be fetched (end of onCreate()).
+            mDomain = null;
+            recreate();
+         } else {
+            Exception e = new Exception();
+            Log.e("GuideViewActivity", "Didn't find site!", e);
+
+            MainApplication.getGaTracker().send(MapBuilder.createException(
+             new StandardExceptionParser(this, null).getDescription(
+              Thread.currentThread().getName(), e), false).build());
+
+            displayGuideNotFoundDialog();
+         }
+      } else {
+         APIService.getErrorDialog(this, event).show();
+      }
+   }
+
+   @Subscribe
+   public void onGuide(APIEvent.ViewGuide event) {
       if (!event.hasError()) {
          if (mGuide == null) {
             Guide guide = event.getResult();
             if (mInboundStepId != DEFAULT_INBOUND_STEPID) {
                for (int i = 0; i < guide.getSteps().size(); i++) {
                   if (mInboundStepId == guide.getStep(i).getStepid()) {
-                     mStepOffset = 1;
-                     if (guide.getNumTools() != 0) mStepOffset++;
-                     if (guide.getNumParts() != 0) mStepOffset++;
+                     int stepOffset = 1;
+                     if (guide.getNumTools() != 0) stepOffset++;
+                     if (guide.getNumParts() != 0) stepOffset++;
 
                      // Account for the introduction, parts and tools pages
-                     mCurrentPage = i + mStepOffset;
+                     mCurrentPage = i + stepOffset;
                      break;
                   }
                }
@@ -312,6 +434,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       // listen for page changes so we can track the current index
       mIndicator.setOnPageChangeListener(this);
       mIndicator.setCurrentItem(currentPage);
+
+      // Update the comment count
+      supportInvalidateOptionsMenu();
    }
 
    public void getGuide(int guideid) {
@@ -367,6 +492,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    public void onPageSelected(int currentPage) {
       mCurrentPage = currentPage;
+
+      // Update comment count in the menu
+      supportInvalidateOptionsMenu();
 
       String label = mAdapter.getFragmentScreenLabel(currentPage);
       Tracker tracker = MainApplication.getGaTracker();

@@ -298,4 +298,6 @@
     <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
     <string name="create_new_guide">Create New Guide</string>
     <string name="new_guide">New Guide</string>
+    <string name="on_date">on %1$s</string>
+    <string name="by_on_comment_details">By %1$s on %2$s</string>
 </resources>

@@ -1,17 +1,17 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-
+import android.widget.TextView;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.BaseFragment;
-import com.dozuki.ifixit.ui.guide.CommentsFragment;
 import com.dozuki.ifixit.ui.guide.StepEmbedFragment;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
 

@@ -68,6 +68,10 @@ public class GuideStep implements Serializable {
       mRevisionid = null;
    }
 
+   public int getCommentCount() {
+      return mComments.size();
+   }
+
    public ArrayList<Comment> getComments() {
       return mComments;
    }
