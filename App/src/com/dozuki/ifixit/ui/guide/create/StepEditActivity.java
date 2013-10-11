@@ -607,7 +607,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Subscribe
    public void onGuideDetailsChanged(GuideDetailsChangedEvent event) {
-      showLoading(mLoadingContainer, "Creating New Guide...");
+      showLoading(mLoadingContainer, getString(R.string.creating_new_guide));
       toggleSave(false);
 
       mGuide = event.guide;
