@@ -282,6 +282,7 @@
     <string name="step_number_comments">Step %1$d Comments</string>
     <string name="on_date">on %1$s</string>
     <string name="by_on_comment_details">By %1$s on %2$s</string>
+    <string name="add_comment">Add comment...</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>

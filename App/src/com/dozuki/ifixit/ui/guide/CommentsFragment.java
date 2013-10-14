@@ -1,9 +1,12 @@
 package com.dozuki.ifixit.ui.guide;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
@@ -46,6 +49,17 @@ public class CommentsFragment extends BaseDialogFragment {
       } else {
          title = getString(R.string.comments);
       }
+
+      final EditText editText = (EditText)view.findViewById(R.id.add_comment_field);
+
+      ImageButton addComment = (ImageButton)view.findViewById(R.id.add_comment_button);
+      addComment.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            String commentText = String.valueOf(editText.getText());
+            Log.d("CommentsFragment", "send comment: " + commentText);
+         }
+      });
 
       ListView list = (ListView)view.findViewById(android.R.id.list);
       list.setEmptyView(view.findViewById(android.R.id.empty));

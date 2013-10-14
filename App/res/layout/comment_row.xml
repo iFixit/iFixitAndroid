@@ -10,12 +10,16 @@
     <TextView
         android:id="@+id/comment_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="wrap_content"
+        android:textSize="16sp"
+        android:textColor="@android:color/primary_text_light"/>
 
     <TextView
         android:id="@+id/comment_details"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/comment_text"/>
+        android:layout_below="@+id/comment_text"
+        android:textSize="14sp"
+        android:textColor="@android:color/secondary_text_light"/>
 
 </RelativeLayout>

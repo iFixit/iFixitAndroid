@@ -1,19 +1,56 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?doz__background">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="?doz__background"
+              android:orientation="vertical"
+              android:weightSum="10">
 
-    <ListView
-        android:id="@+id/android:list"
-        android:layout_height="match_parent"
+    <FrameLayout
         android:layout_width="match_parent"
-        style="@style/Base.ListView"/>
+        android:layout_height="0dp"
+        android:layout_weight="8">
 
-    <TextView
-        android:id="@+id/android:empty"
-        android:layout_height="wrap_content"
-        android:layout_width="wrap_content"
-        android:text="@string/empty_step_comments"/>
-</RelativeLayout>
+        <ListView
+            android:id="@+id/android:list"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            style="@style/Base.ListView"/>
+
+        <TextView
+            android:id="@+id/android:empty"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/empty_step_comments"
+            style="@android:style/TextAppearance.Widget.TextView"
+            android:layout_gravity="center"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:background="?doz__background"
+        android:layout_weight="2"
+        android:orientation="horizontal"
+        android:weightSum="10">
+
+        <EditText
+            android:id="@+id/add_comment_field"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="8"
+            android:hint="@string/add_comment"/>
+
+        <ImageButton
+            android:id="@+id/add_comment_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:layout_marginRight="8dp"
+            android:src="@drawable/ic_action_send"
+            android:background="@drawable/selectable_item_background_transparent"/>
+    </LinearLayout>
+
+</LinearLayout>
