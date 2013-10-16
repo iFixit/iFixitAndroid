@@ -10,6 +10,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.ui.guide.StepEmbedFragment;
 import com.dozuki.ifixit.ui.guide.StepVideoFragment;
 
 import java.util.ArrayList;
@@ -31,7 +32,7 @@ public class StepEditFragment extends BaseFragment {
    private StepEditLinesFragment mEditBulletFrag;
    private StepEditImageFragment mEditImageFrag;
    private StepVideoFragment mEditVideoFrag;
-   private StepEditEmbedFragment mEditEmbedFrag;
+   private StepEmbedFragment mEditEmbedFrag;
 
 
    static StepEditFragment newInstance(GuideStep step) {
@@ -62,7 +63,7 @@ public class StepEditFragment extends BaseFragment {
             mEditVideoFrag = (StepVideoFragment) getChildFragmentManager().findFragmentByTag(
              STEP_VIDEO_FRAGMENT_TAG);
          } else if (mStepType.equals(EMBED_TYPE)) {
-            mEditEmbedFrag = (StepEditEmbedFragment) getChildFragmentManager().findFragmentByTag(
+            mEditEmbedFrag = (StepEmbedFragment) getChildFragmentManager().findFragmentByTag(
              STEP_EMBED_FRAGMENT_TAG);
          } else if (mStepType.equals(IMAGE_TYPE)) {
             mEditImageFrag = (StepEditImageFragment) getChildFragmentManager().findFragmentByTag(
@@ -90,8 +91,8 @@ public class StepEditFragment extends BaseFragment {
 
             ft.add(R.id.guide_create_edit_media_fragment_container, mEditVideoFrag, STEP_VIDEO_FRAGMENT_TAG);
          } else if (mStepType.equals(EMBED_TYPE)) {
-            mEditEmbedFrag = new StepEditEmbedFragment();
-            ft.add(R.id.guide_create_edit_media_fragment_container, mEditEmbedFrag, STEP_EMBED_FRAGMENT_TAG);
+            ft.add(R.id.guide_create_edit_media_fragment_container,
+             StepEmbedFragment.newInstance(mStepObject.getEmbed()), STEP_EMBED_FRAGMENT_TAG);
          } else if (mStepType.equals(IMAGE_TYPE)) {
             mEditImageFrag = new StepEditImageFragment();
             ft.add(R.id.guide_create_edit_media_fragment_container, mEditImageFrag, STEP_IMAGE_FRAGMENT_TAG);

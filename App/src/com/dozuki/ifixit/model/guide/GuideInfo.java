@@ -16,9 +16,9 @@ public class GuideInfo implements Serializable {
    @SerializedName("revisionid")
    public int mRevisionid;
    @SerializedName("modified_date")
-   public int mModifiedDate;
+   public double mModifiedDate;
    @SerializedName("prereq_modified_date")
-   public int mPrereqModifiedDate;
+   public double mPrereqModifiedDate;
    @SerializedName("type")
    public String mType;
    @SerializedName("category")
@@ -61,9 +61,12 @@ public class GuideInfo implements Serializable {
    }
 
    public String getImagePath(String size) {
-      String path = mImage.getPath(size);
-      if (MainApplication.inDebug() && path.startsWith("https")) {
-         path = path.replace("https", "http");
+      String path = "";
+      if (mImage != null) {
+         path = mImage.getPath(size);
+         if (MainApplication.inDebug() && path.startsWith("https")) {
+            path = path.replace("https", "http");
+         }
       }
 
       return path;
