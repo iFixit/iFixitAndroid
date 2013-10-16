@@ -22,6 +22,7 @@ public class Comment implements Serializable {
    private static final long serialVersionUID = -1333520388124961696L;
 
    private static final int NO_PARENT_ID = -1;
+   public JSONObject mComment;
    public int mCommentid;
    public String mLocale;
    public int mParentid;
@@ -41,6 +42,7 @@ public class Comment implements Serializable {
 
    public Comment(JSONObject object) throws JSONException {
       Log.d("Comment", object.toString());
+      mComment = object;
       mCommentid = object.getInt("commentid");
       mLocale = object.getString("locale");
       mParentid = object.isNull("parentid") ? NO_PARENT_ID : object.getInt("parentid");
@@ -76,6 +78,7 @@ public class Comment implements Serializable {
 
       ((TextView) v.findViewById(R.id.comment_text)).setText(Html.fromHtml(mTextRendered));
       ((TextView) v.findViewById(R.id.comment_details)).setText(commmentDetails);
+
       RelativeLayout wrap = (RelativeLayout) v.findViewById(R.id.comment_row_wrap);
 
       Log.d("Comment", "ParentId " + mParentid);
@@ -83,15 +86,26 @@ public class Comment implements Serializable {
          //LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
          wrap.setPadding(16, wrap.getPaddingTop(), 0, wrap.getPaddingBottom());
 
-         Log.d("Comment", wrap.getPaddingLeft() + "");
          //lp.setMargins(16, 0, 0, 0);
          //((RelativeLayout)v.findViewById(R.id.comment_row_wrap)).setLayoutParams(lp);
       }
 
       for (Comment reply : mReplies) {
-         wrap.addView(reply.buildView(v, inflater, wrap));
+         Log.d("Comment", reply.toString());
+         //wrap.addView(reply.buildView(v, inflater, wrap));
       }
 
       return v;
+   }
+
+   @Override
+   public String toString() {
+      try {
+         return mComment.toString(4);
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
+
+      return "";
    }
 }

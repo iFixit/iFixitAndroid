@@ -217,7 +217,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          public void onClick(View v) {
             if (mGuide != null) {
                ArrayList<Comment> comments;
-               int stepIndex = getStepIndex();
+               int stepIndex = getStepIndex(), stepid = -1, guideid = mGuide.getGuideid();
                String title;
 
                // If we're in one of the introduction pages, show guide comments.
@@ -226,10 +226,11 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                   title = getString(R.string.guide_comments);
                } else {
                   comments = mGuide.getStep(stepIndex).getComments();
+                  stepid = mGuide.getStep(stepIndex).getStepid();
                   title = getString(R.string.step_number_comments, stepIndex + 1);
                }
 
-               CommentsFragment frag = CommentsFragment.newInstance(comments, title);
+               CommentsFragment frag = CommentsFragment.newInstance(comments, title, guideid, stepid);
                frag.setRetainInstance(true);
                frag.show(getSupportFragmentManager(), COMMENTS_TAG);
             }
@@ -384,12 +385,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             if (mInboundStepId != DEFAULT_INBOUND_STEPID) {
                for (int i = 0; i < guide.getSteps().size(); i++) {
                   if (mInboundStepId == guide.getStep(i).getStepid()) {
-                     int stepOffset = 1;
-                     if (guide.getNumTools() != 0) stepOffset++;
-                     if (guide.getNumParts() != 0) stepOffset++;
+                     mStepOffset = 1;
+                     if (guide.getNumTools() != 0) mStepOffset++;
+                     if (guide.getNumParts() != 0) mStepOffset++;
 
                      // Account for the introduction, parts and tools pages
-                     mCurrentPage = i + stepOffset;
+                     mCurrentPage = i + mStepOffset;
                      break;
                   }
                }

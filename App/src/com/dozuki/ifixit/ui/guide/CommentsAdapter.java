@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class CommentsAdapter extends BaseAdapter {
 
-   private final ArrayList<Comment> mComments;
+   private ArrayList<Comment> mComments;
    private final LayoutInflater mInflater;
 
    public CommentsAdapter(Context context, ArrayList<Comment> comments) {
@@ -37,5 +37,9 @@ public class CommentsAdapter extends BaseAdapter {
    @Override
    public View getView(int position, View convertView, ViewGroup parent) {
       return ((Comment)getItem(position)).buildView(convertView, mInflater, parent);
+   }
+
+   public void setComments(ArrayList<Comment> comments) {
+      mComments = comments;
    }
 }
