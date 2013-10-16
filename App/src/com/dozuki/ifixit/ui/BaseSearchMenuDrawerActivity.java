@@ -61,6 +61,6 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
          });
       }
 
-      return true;
+      return super.onCreateOptionsMenu(menu);
    }
 }

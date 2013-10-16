@@ -126,10 +126,10 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
             Intent intent = new Intent(this, StepEditActivity.class);
             startActivity(intent);
             finish();
-            break;
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
       }
-
-      return super.onOptionsItemSelected(item);
    }
 
    @Override
