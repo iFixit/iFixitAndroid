@@ -122,6 +122,8 @@ public class StepPortalFragment extends BaseFragment implements
       if (mGuide != null) {
          menu.findItem(R.id.reorder_steps).setVisible(mGuide.getSteps().size() >= 2);
       }
+
+      super.onPrepareOptionsMenu(menu);
    }
 
    @Override
