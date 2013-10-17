@@ -35,8 +35,6 @@ public class MainApplication extends Application {
    /*
     * Google Analytics configuration values.
     */
-   // Property ID.
-   private static final String GA_PROPERTY_ID = "UA-30506-9";
 
    // Dispatch period in seconds.
    private static final int GA_DISPATCH_PERIOD = 30;
@@ -138,7 +136,7 @@ public class MainApplication extends Application {
     */
    private void initializeGa() {
       mGa = GoogleAnalytics.getInstance(this);
-      mTracker = mGa.getTracker(GA_PROPERTY_ID);
+      mTracker = mGa.getTracker(BuildConfig.GA_PROPERTY_ID);
 
       GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
 

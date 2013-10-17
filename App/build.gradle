@@ -45,7 +45,7 @@ android {
    buildToolsVersion "18.0.1"
 
    defaultConfig {
-      versionCode 38
+      versionCode 39
       versionName "2.1.0"
       minSdkVersion 8
       targetSdkVersion 18
@@ -72,7 +72,7 @@ android {
       ifixit {
          signingConfig signingConfigs.ifixit
 
-         buildConfig createSiteBuildConfig("ifixit")
+         buildConfig createSiteBuildConfig("ifixit", "UA-30506-9")
       }
 
       dozuki {
@@ -83,12 +83,9 @@ android {
 
          signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
-         versionCode 38
-         versionName "2.1.0"
          minSdkVersion 9
-         targetSdkVersion 18
 
-         buildConfig createSiteBuildConfig("dozuki")
+         buildConfig createSiteBuildConfig("dozuki", "UA-30506-19")
       }
 
       accustream {
@@ -99,10 +96,9 @@ android {
 
          signingConfig signingConfigs.accustream
          packageName "com.dozuki.accustream"
-         versionCode 34
-         versionName "2.0.0"
+         minSdkVersion 9
 
-         buildConfig createSiteBuildConfig("accustream")
+         buildConfig createSiteBuildConfig("accustream", "UA-30506-19")
       }
    }
 
@@ -142,8 +138,9 @@ def createSiteSourceSet(siteName) {
    }
 }
 
-def createSiteBuildConfig(siteName) {
-   return "public static final String SEARCH_PROVIDER_AUTHORITY = \"com.dozuki.${siteName}.ui.search.SearchSuggestionProvider\";" +
+def createSiteBuildConfig(siteName, gaPropertyId) {
+   return "public static final String GA_PROPERTY_ID = \"${gaPropertyId}\";" +
+          "public static final String SEARCH_PROVIDER_AUTHORITY = \"com.dozuki.${siteName}.ui.search.SearchSuggestionProvider\";" +
           "public static final String SITE_NAME = \"${siteName}\";\n" +
           'public static final String APP_ID = ' + getProperty("${siteName}AppId") + ';'
 }

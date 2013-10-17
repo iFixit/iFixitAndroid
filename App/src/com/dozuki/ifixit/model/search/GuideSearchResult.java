@@ -51,10 +51,16 @@ public class GuideSearchResult implements SearchResult, Serializable {
 
       ImageView thumbnail = (ImageView)v.findViewById(R.id.guide_thumbnail);
 
-      PicassoUtils.with(context)
-       .load(mGuideInfo.getImagePath(MainApplication.get().getImageSizes().getThumb()))
-       .into(thumbnail);
+      if (mGuideInfo.hasImage()) {
+         String imagePath = mGuideInfo.getImagePath(MainApplication.get().getImageSizes().getThumb());
 
+         PicassoUtils.with(context)
+          .load(imagePath)
+          .error(R.drawable.no_image)
+          .into(thumbnail);
+      } else {
+         PicassoUtils.with(context).load(R.drawable.no_image).into(thumbnail);
+      }
       return v;
    }
 

@@ -266,15 +266,15 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                   startActivity(intent);
                }
             }
-            break;
+            return true;
          case R.id.reload_guide:
             // Set guide to null to force a refresh of the guide object.
             mGuide = null;
             getGuide(mGuideid);
+            return true;
          default:
             return super.onOptionsItemSelected(item);
       }
-      return true;
    }
 
    /////////////////////////////////////////////////////

@@ -131,14 +131,14 @@ public class StepPortalFragment extends BaseFragment implements
       switch (item.getItemId()) {
          case android.R.id.home:
             getActivity().finish();
-            break;
+            return true;
          case R.id.edit_guide_details:
             launchGuideIntroEdit();
-            break;
+            return true;
          case R.id.reorder_steps:
             closeSelectedStep();
             launchStepReorderFragment();
-            break;
+            return true;
          case R.id.add_step:
             GuideStep newStep = new GuideStep(mGuide.getSteps().size() + 1);
 
@@ -146,19 +146,17 @@ public class StepPortalFragment extends BaseFragment implements
             mGuide.addStep(newStep);
 
             launchStepEdit(mGuide.getSteps().size());
-            break;
+            return true;
          case R.id.view_guide:
             Intent intent = new Intent(getActivity(), GuideViewActivity.class);
             intent.putExtra(GuideViewActivity.GUIDEID, mGuide.getGuideid());
             intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
             startActivity(intent);
-            break;
+            return true;
          default:
             return super.onOptionsItemSelected(item);
-
       }
-      return true;
-}
+   }
 
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
