@@ -14,21 +14,27 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.MapBuilder;
+
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
+import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -111,22 +117,66 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       buildSliderMenu();
    }
 
+   @Override
+   protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+      String barcodeScannerResult = getBarcodeScannerResult(requestCode, resultCode, intent);
+
+      if (barcodeScannerResult != null) {
+         startActivity(GuideViewActivity.viewUrl(this, barcodeScannerResult));
+      } else {
+         super.onActivityResult(requestCode, resultCode, intent);
+      }
+   }
+
+   private String getBarcodeScannerResult(int requestCode, int resultCode, Intent intent) {
+      // The classes below might not exist if barcode scanning isn't enabled.
+      if (!MainApplication.get().getSite().barcodeScanningEnabled()) {
+         return null;
+      }
+
+      try {
+         // Call IntentIntegrator.parseResult(requestCode, resultCode, intent);
+         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
+         Class[] argTypes = new Class[] { Integer.TYPE, Integer.TYPE, Intent.class };
+         Method parseResult = c.getDeclaredMethod("parseActivityResult", argTypes);
+         Object intentResult = parseResult.invoke(null, requestCode, resultCode, intent);
+
+         // Call intentResult.getContents().
+         c = Class.forName("com.google.zxing.integration.android.IntentResult");
+         argTypes = new Class[] { };
+         Method getContents = c.getDeclaredMethod("getContents", argTypes);
+         Object contents = getContents.invoke(intentResult);
+
+         return (String)contents;
+      } catch (Exception e) {
+         Toast.makeText(this, "Failed to parse result.", Toast.LENGTH_SHORT).show();
+         Log.e("BaseMenuDrawerActivity", "Failure parsing activity result", e);
+         return null;
+      }
+   }
+
    private void buildSliderMenu() {
-      boolean onIfixit = MainApplication.get().getSite().mName.equals("ifixit");
+      Site site = MainApplication.get().getSite();
+      boolean onIfixit = site.isIfixit();
 
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
       List<Object> items = new ArrayList<Object>();
 
+      if (MainApplication.isDozukiApp()) {
+         items.add(new Item(getString(R.string.back_to_site_list),
+          R.drawable.ic_action_list, "site_list"));
+      }
+
       items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, "search"));
 
-      if (!onIfixit) items.add(new Item(getString(R.string.back_to_site_list),
-       R.drawable.ic_action_list, "site_list"));
+      if (site.barcodeScanningEnabled()) {
+         items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
+          R.drawable.ic_action_qr_code, "scan_barcode"));
+      }
 
       items.add(new Category(getString(R.string.slide_menu_browse_content)));
       items.add(new Item(getString(R.string.slide_menu_browse_devices, MainApplication.get().getSite()
-       .getObjectNamePlural()),
-       R.drawable.ic_action_list_2,
-       "browse_topics"));
+       .getObjectNamePlural()), R.drawable.ic_action_list_2, "browse_topics"));
 
       if (onIfixit) {
          items.add(new Item(getString(R.string.featured_guides), R.drawable.ic_action_star_10, "featured_guides"));
@@ -196,7 +246,8 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
    public enum Navigation {
       SITE_LIST, SEARCH, FEATURED_GUIDES, BROWSE_TOPICS, USER_GUIDES, NEW_GUIDE, MEDIA_GALLERY,
-      LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS;
+      LOGOUT, USER_FAVORITES, YOUTUBE, FACEBOOK, TWITTER, HELP, ABOUT, NOVALUE, TEARDOWNS,
+      SCAN_BARCODE;
 
       public static Navigation navigate(String str) {
          try {
@@ -212,10 +263,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
        @Override
        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
           String tag = (String) view.getTag();
-          Context context = parent.getContext();
 
           if (alertOnNavigation()) {
-             navigationAlertDialog(tag, context).show();
+             navigationAlertDialog(tag).show();
           } else {
              mMenuDrawer.closeMenu();
 
@@ -226,61 +276,53 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
              mActivePosition = position;
              mMenuDrawer.setActiveView(view, position);
 
-             navigateMenuDrawer(tag, context);
+             navigateMenuDrawer(tag);
           }
        }
     };
 
-   public void navigateMenuDrawer(String tag, Context context) {
+   protected void navigateMenuDrawer(String tag) {
       Intent intent;
       String url;
 
       switch (Navigation.navigate(tag)) {
          case SITE_LIST:
-            try {
-               // We need to use reflection because SiteListActivity only exists for
-               // the dozuki build but this code is around for all builds.
-               intent = new Intent(context,
-                Class.forName("com.dozuki.ifixit.ui.dozuki.SiteListActivity"));
-               intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION |
-                Intent.FLAG_ACTIVITY_CLEAR_TOP);
-               startActivity(intent);
-               finish();
-            } catch (ClassNotFoundException e) {
-               Log.e("BaseMenuDrawerActivity", "Cannot start SiteListActivity", e);
-            }
+            returnToSiteList();
+            break;
+         case SCAN_BARCODE:
+            launchBarcodeScanner();
             break;
          case SEARCH:
-            intent = new Intent(context, SearchActivity.class);
+            intent = new Intent(this, SearchActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
          case BROWSE_TOPICS:
-            intent = new Intent(context, TopicActivity.class);
+            intent = new Intent(this, TopicActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case FEATURED_GUIDES:
-            intent = new Intent(context, FeaturedGuidesActivity.class);
+            intent = new Intent(this, FeaturedGuidesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case TEARDOWNS:
-            intent = new Intent(context, TeardownsActivity.class);
+            intent = new Intent(this, TeardownsActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case USER_FAVORITES:
-            intent = new Intent(context, FavoritesActivity.class);
+            intent = new Intent(this, FavoritesActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
 
          case USER_GUIDES:
-            intent = new Intent(context, GuideCreateActivity.class);
+            intent = new Intent(this, GuideCreateActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
@@ -292,7 +334,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
             break;
 
          case MEDIA_GALLERY:
-            intent = new Intent(context, GalleryActivity.class);
+            intent = new Intent(this, GalleryActivity.class);
             intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION);
             startActivity(intent);
             break;
@@ -326,6 +368,36 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
          case HELP:
          case ABOUT:
+      }
+   }
+
+   private void returnToSiteList() {
+      try {
+         // We need to use reflection because SiteListActivity only exists for
+         // the dozuki build but this code is around for all builds.
+         Intent intent = new Intent(this,
+          Class.forName("com.dozuki.ifixit.ui.dozuki.SiteListActivity"));
+         intent.setFlags(Intent.FLAG_ACTIVITY_NO_ANIMATION |
+          Intent.FLAG_ACTIVITY_CLEAR_TOP);
+         startActivity(intent);
+         finish();
+      } catch (ClassNotFoundException e) {
+         Toast.makeText(this, "Failed to return to site list.", Toast.LENGTH_SHORT).show();
+         Log.e("BaseMenuDrawerActivity", "Cannot start SiteListActivity", e);
+      }
+   }
+
+   protected void launchBarcodeScanner() {
+      // We want to just call `IntentIntegrator.initiateScan(this);` but it doesn't
+      // compile unless the dependency exists.
+      try {
+         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
+         Class[] argTypes = new Class[] { android.app.Activity.class };
+         Method initiateScan = c.getDeclaredMethod("initiateScan", argTypes);
+         initiateScan.invoke(null, this);
+      } catch (Exception e) {
+         Toast.makeText(this, "Failed to launch QR code scanner.", Toast.LENGTH_SHORT).show();
+         Log.e("BaseMenuDrawerActivity", "Cannot launch barcode scanner", e);
       }
    }
 
@@ -433,7 +505,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       return false;
    }
 
-   public AlertDialog navigationAlertDialog(String tag, Context context) {
+   public AlertDialog navigationAlertDialog(String tag) {
       return null;
    }
 

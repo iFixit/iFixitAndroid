@@ -4,11 +4,14 @@ import android.app.SearchManager;
 import android.database.Cursor;
 import android.support.v4.widget.CursorAdapter;
 import android.widget.EditText;
+import android.view.View;
+import android.view.View.OnClickListener;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.CheatSheet;
 import com.google.analytics.tracking.android.MapBuilder;
 
 public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
@@ -61,6 +64,38 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
          });
       }
 
+      // Trigger onOptionsItemSelected for the custom menu item because it doesn't
+      // happen automatically.
+      final MenuItem barcodeItem = menu.findItem(R.id.action_scan_barcode);
+      barcodeItem.getActionView().setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            onOptionsItemSelected(barcodeItem);
+         }
+      });
+
+      CheatSheet.setup(barcodeItem.getActionView(), R.string.slide_menu_barcode_scanner);
+
       return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case R.id.action_scan_barcode:
+            launchBarcodeScanner();
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
+   }
+
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      // Only display barcode scanner menu item if it's enabled.
+      menu.findItem(R.id.action_scan_barcode).setVisible(
+       MainApplication.get().getSite().barcodeScanningEnabled());
+
+      return super.onPrepareOptionsMenu(menu);
    }
 }

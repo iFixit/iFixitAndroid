@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Site implements Serializable {
-   private static final long serialVersionUID = -2798641261277805693L;
+   private static final long serialVersionUID = -2998341267277845644L;
 
    public int mSiteid;
    public String mName;
@@ -38,6 +38,7 @@ public class Site implements Serializable {
    public String[] noSubject = {"Technique", "How-to", "Maintenance", "Teardown"};
 
    public ArrayList<GuideType> mGuideTypes;
+   private boolean mBarcodeScanner = false;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -88,17 +89,25 @@ public class Site implements Serializable {
       return getGuideTypes().toArray(typesArr);
    }
 
-   public boolean hasSubject(String type) {
-      boolean result = false;
+   public void setBarcodeScanner(boolean enabled) {
+      mBarcodeScanner = enabled;
+   }
 
+   public boolean barcodeScanningEnabled() {
+      // Return false for now because this shouldn't be enabled for any site.
+      // Uncomment this when we're ready to release the feature.
+      //return mBarcodeScanner;
+      return false;
+   }
+
+   public boolean hasSubject(String type) {
       for (String t : hasSubject) {
          if (t.equals(type)) {
-            result = true;
-            break;
+            return true;
          }
       }
 
-      return result;
+      return false;
    }
 
    public String getAPIDomain() {
@@ -202,6 +211,7 @@ public class Site implements Serializable {
          site = new Site(1145);
          site.mName = "accustream";
          site.mDomain = "accustream.dozuki.com";
+         site.mCustomDomain = "support.accustream.com";
          site.mTitle = "Accustream";
          site.mTheme = "white";
          site.mPublic = true;
@@ -212,6 +222,7 @@ public class Site implements Serializable {
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
+         site.mBarcodeScanner = true;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
       }
@@ -224,7 +235,7 @@ public class Site implements Serializable {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
-       mPublicRegistration + "|" + mGuideTypes.toString() + "}";
+       mPublicRegistration + "}";
    }
 
    public boolean isIfixit() {

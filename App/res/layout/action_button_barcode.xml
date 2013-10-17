@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- TODO: This could be genericized by removing android:text so the caller
+     can set it dynamically. -->
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="wrap_content"
+   android:layout_height="match_parent"
+   android:gravity="center"
+   style="@style/Widget.Sherlock.ActionButton"
+   android:text="@string/slide_menu_barcode_scanner_short"
+   android:drawableLeft="@drawable/ic_action_qr_code"
+   android:background="@drawable/abs__item_background_holo_dark"
+   android:clickable="true"
+
+   android:textSize="12sp"
+   android:textStyle="bold"
+   android:textColor="?attr/actionMenuTextColor"
+   android:textAllCaps="@bool/abs__config_actionMenuItemAllCaps" />
+<!-- Note: The text attributes were copied from:
+     "@style/TextAppearance.Sherlock.Widget.ActionBar.Menu" -->
