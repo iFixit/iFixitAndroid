@@ -94,7 +94,7 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
    public boolean onPrepareOptionsMenu(Menu menu) {
       // Only display barcode scanner menu item if it's enabled.
       menu.findItem(R.id.action_scan_barcode).setVisible(
-       MainApplication.get().getSite().mBarcodeScanner);
+       MainApplication.get().getSite().barcodeScanningEnabled());
 
       return super.onPrepareOptionsMenu(menu);
    }

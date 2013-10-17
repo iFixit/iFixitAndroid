@@ -14,7 +14,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Site implements Serializable {
-   private static final long serialVersionUID = -2798641261277805693L;
+   private static final long serialVersionUID = -2998341267277845644L;
 
    public int mSiteid;
    public String mName;
@@ -38,7 +38,7 @@ public class Site implements Serializable {
    public String[] noSubject = {"Technique", "How-to", "Maintenance", "Teardown"};
 
    public ArrayList<GuideType> mGuideTypes;
-   public boolean mBarcodeScanner = false;
+   private boolean mBarcodeScanner = false;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -87,6 +87,17 @@ public class Site implements Serializable {
       String[] typesArr = new String[mGuideTypes.size()];
 
       return getGuideTypes().toArray(typesArr);
+   }
+
+   public void setBarcodeScanner(boolean enabled) {
+      mBarcodeScanner = enabled;
+   }
+
+   public boolean barcodeScanningEnabled() {
+      // Return false for now because this shouldn't be enabled for any site.
+      // Uncomment this when we're ready to release the feature.
+      //return mBarcodeScanner;
+      return false;
    }
 
    public boolean hasSubject(String type) {
@@ -224,7 +235,7 @@ public class Site implements Serializable {
       return "{" + mSiteid + " | " + mName + " | " + mDomain + " | " + mTitle +
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
-       mPublicRegistration + "|" + mGuideTypes.toString() + "}";
+       mPublicRegistration + "}";
    }
 
    public boolean isIfixit() {

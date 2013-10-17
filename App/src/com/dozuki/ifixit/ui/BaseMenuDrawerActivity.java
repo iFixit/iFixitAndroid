@@ -130,7 +130,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
    private String getBarcodeScannerResult(int requestCode, int resultCode, Intent intent) {
       // The classes below might not exist if barcode scanning isn't enabled.
-      if (!MainApplication.get().getSite().mBarcodeScanner) {
+      if (!MainApplication.get().getSite().barcodeScanningEnabled()) {
          return null;
       }
 
@@ -169,7 +169,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       items.add(new Item(getString(R.string.search), R.drawable.ic_action_search, "search"));
 
-      if (site.mBarcodeScanner) {
+      if (site.barcodeScanningEnabled()) {
          items.add(new Item(getString(R.string.slide_menu_barcode_scanner),
           R.drawable.ic_action_qr_code, "scan_barcode"));
       }
