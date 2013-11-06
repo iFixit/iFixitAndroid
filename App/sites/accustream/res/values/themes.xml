@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Accustream" parent="android:Theme.Light">
+        <item name="doz__topicGuideList">@style/Widget.Dozuki.ListViewStyle</item>
+        <item name="doz__listViewStyle">@style/Widget.iFixit.ListViewStyle</item>
+        <item name="doz__topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
+
+        <item name="doz__topicHeaderColor">@color/red</item>
+        <item name="doz__sectionHeader">@drawable/section_header__grey</item>
+
+        <item name="android:editTextStyle">@style/EditText.Accustream</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.Accustream</item>
+
+        <item name="android:checkboxStyle">@style/CheckBox.Accustream</item>
+
+        <item name="android:radioButtonStyle">@style/RadioButton.Accustream</item>
+
+        <item name="android:buttonStyle">@style/Button.Accustream</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButton.Accustream</item>
+
+        <item name="android:spinnerStyle">@style/Spinner.Accustream</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/Spinner.Accustream.DropDown</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem.Accustream</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Accustream</item>
+
+        <item name="android:seekBarStyle">@style/SeekBar.Accustream</item>
+
+        <item name="android:ratingBarStyle">@style/RatingBar.Accustream</item>
+
+        <item name="android:ratingBarStyleIndicator">@style/RatingBarBig.Accustream</item>
+
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmall.Accustream</item>
+
+        <item name="android:buttonStyleToggle">@style/Toggle.Accustream</item>
+
+        <item name="android:listViewStyle">@style/ListView.Accustream</item>
+
+        <item name="android:listViewWhiteStyle">@style/ListView.Accustream.White</item>
+
+        <item name="android:spinnerItemStyle">@style/SpinnerItem.Accustream</item>
+
+    </style>
+
+</resources>

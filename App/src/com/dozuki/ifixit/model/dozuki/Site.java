@@ -127,12 +127,14 @@ public class Site implements Serializable {
       // Put custom site themes here.
       if (isIfixit()) {
          return R.style.Theme_iFixit;
+      } else if (isAccustream()) {
+         return R.style.Theme_Accustream;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
             // Site has a custom theme but we don't have one implemented yet.
             return R.style.Theme_Dozuki;
-         } else if (mTheme.equals("green")) {
+         } /*else if (mTheme.equals("green")) {
             return R.style.Theme_Dozuki_Green;
          } else if (mTheme.equals("blue")) {
             return R.style.Theme_Dozuki_Blue;
@@ -142,7 +144,7 @@ public class Site implements Serializable {
             return R.style.Theme_Dozuki_Orange;
          } else if (mTheme.equals("black")) {
             return R.style.Theme_Dozuki_Grey;
-         }
+         }*/
       }
 
       return R.style.Theme_Dozuki;
@@ -225,6 +227,10 @@ public class Site implements Serializable {
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
        mPublicRegistration + "|" + mGuideTypes.toString() + "}";
+   }
+
+   public boolean isAccustream() {
+      return mName.equals("accustream");
    }
 
    public boolean isIfixit() {

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.iFixit" parent="Theme.Base">
+        <!-- iFixit Custom Attributes / Styles -->
+        <item name="doz__sectionHeader">@drawable/section_header__blue</item>
+        <item name="doz__primaryHighlightColor">@color/ifixit_blue</item>
+        <item name="doz__listItemSelector">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="doz__spinnerBackground">@drawable/ifixit__spinner_background_holo_light</item>
+
+        <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
+
+        <item name="android:editTextStyle">@style/EditText.iFixit</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.iFixit</item>
+
+        <item name="android:checkboxStyle">@style/CheckBox.iFixit</item>
+
+        <item name="android:radioButtonStyle">@style/RadioButton.iFixit</item>
+
+        <item name="android:buttonStyle">@style/Button.iFixit</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButton.iFixit</item>
+
+        <item name="android:spinnerStyle">@style/Spinner.iFixit</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/Spinner.iFixit.DropDown</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem.iFixit</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.iFixit</item>
+
+        <item name="android:seekBarStyle">@style/SeekBar.iFixit</item>
+
+        <item name="android:ratingBarStyle">@style/RatingBar.iFixit</item>
+
+        <item name="android:ratingBarStyleIndicator">@style/RatingBarBig.iFixit</item>
+
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmall.iFixit</item>
+
+        <item name="android:buttonStyleToggle">@style/Toggle.iFixit</item>
+
+        <item name="android:listViewStyle">@style/ListView.iFixit</item>
+
+        <item name="android:listViewWhiteStyle">@style/ListView.iFixit.White</item>
+
+        <item name="android:spinnerItemStyle">@style/SpinnerItem.iFixit</item>
+
+    </style>
+
+</resources>

@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AutoCompleteTextView.iFixit" parent="android:Widget.Holo.Light.AutoCompleteTextView">
+        <item name="android:dropDownSelector">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="android:background">@drawable/ifixit__edit_text_holo_light</item>
+    </style>
+
+    <style name="Button.iFixit" parent="android:Widget.Holo.Light.Button">
+        <item name="android:background">@drawable/ifixit__btn_default_holo_light</item>
+    </style>
+
+    <style name="ImageButton.iFixit" parent="android:Widget.Holo.Light.ImageButton">
+        <item name="android:background">@drawable/ifixit__btn_default_holo_light</item>
+    </style>
+
+    <style name="Spinner.iFixit" parent="android:Widget.Holo.Light.Spinner">
+        <item name="android:background">@drawable/ifixit__spinner_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/ifixit__list_selector_holo_light</item>
+    </style>
+
+    <style name="TabWidget.iFixit" parent="@android:style/Widget.TabWidget">
+        <item name="android:tabStripLeft">@null</item>
+        <item name="android:tabStripRight">@null</item>
+        <item name="android:tabStripEnabled">false</item>
+        <item name="android:divider">?android:attr/dividerVertical</item>
+        <item name="android:showDividers">middle</item>
+        <item name="android:dividerPadding">8dip</item>
+        <item name="android:measureWithLargestChild">true</item>
+        <item name="tabLayout">@layout/ifixit__tab_indicator_holo</item>
+    </style>
+
+
+    <style name="Tab"></style>
+
+    <style name="TabText"></style>
+
+    <style name="Tab.iFixit" parent="@android:style/Widget.ActionBar.TabView">
+        <item name="android:paddingLeft">16dip</item>
+        <item name="android:paddingRight">16dip</item>
+        <item name="android:background">@drawable/ifixit__tab_indicator_holo</item>
+        <item name="android:layout_width">0dip</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:minWidth">80dip</item>
+    </style>
+
+    <style name="TabText.iFixit">
+        <item name="android:textColor">#000000</item>
+        <item name="android:textSize">12sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:ellipsize">marquee</item>
+        <item name="android:maxLines">2</item>
+        <item name="android:maxWidth">180dip</item>
+    </style>
+
+    <style name="ProgressBar.iFixit" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/ifixit__progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/ifixit__progress_indeterminate_horizontal_holo_light</item>
+    </style>
+
+    <style name="SeekBar.iFixit" parent="android:Widget.Holo.Light.SeekBar">
+        <item name="android:progressDrawable">@drawable/ifixit__scrubber_progress_horizontal_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/ifixit__scrubber_progress_horizontal_holo_light</item>
+        <item name="android:thumb">@drawable/ifixit__scrubber_control_selector_holo_light</item>
+    </style>
+
+    <style name="RatingBar.iFixit" parent="android:Widget.Holo.Light.RatingBar">
+        <item name="android:progressDrawable">@drawable/ifixit__ratingbar_full_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/ifixit__ratingbar_full_holo_light</item>
+    </style>
+
+    <style name="RatingBarBig.iFixit" parent="android:Widget.Holo.Light.RatingBar.Indicator">
+        <item name="android:progressDrawable">@drawable/ifixit__ratingbar_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/ifixit__ratingbar_holo_light</item>
+    </style>
+
+    <style name="RatingBarSmall.iFixit" parent="android:Widget.Holo.Light.RatingBar.Small">
+        <item name="android:progressDrawable">@drawable/ifixit__ratingbar_small_holo_light</item>
+        <item name="android:indeterminateDrawable">@drawable/ifixit__ratingbar_small_holo_light</item>
+    </style>
+
+    <style name="Toggle.iFixit" parent="android:Widget.Holo.Light.Button.Toggle">
+        <item name="android:background">@drawable/ifixit__btn_toggle_holo_light</item>
+    </style>
+
+    <style name="ListView.iFixit" parent="android:Widget.Holo.Light.ListView">
+        <item name="android:listSelector">@drawable/ifixit__list_selector_holo_light</item>
+    </style>
+
+</resources>

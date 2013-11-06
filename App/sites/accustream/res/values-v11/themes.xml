@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Accustream" parent="android:Theme.Holo.Light.DarkActionBar">
+
+        <item name="android:editTextBackground">@drawable/accustream__edit_text_holo_light</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.Accustream</item>
+
+        <item name="android:listChoiceIndicatorMultiple">@drawable/accustream__btn_check_holo_light</item>
+
+        <item name="android:listChoiceIndicatorSingle">@drawable/accustream__btn_radio_holo_light</item>
+
+        <item name="android:buttonStyle">@style/Button.Accustream</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButton.Accustream</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/Spinner.Accustream</item>
+
+        <item name="android:tabWidgetStyle">@style/TabWidget.Accustream</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Accustream</item>
+
+        <item name="android:seekBarStyle">@style/SeekBar.Accustream</item>
+
+        <item name="android:ratingBarStyle">@style/RatingBar.Accustream</item>
+
+        <item name="android:ratingBarStyleIndicator">@style/RatingBarBig.Accustream</item>
+
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmall.Accustream</item>
+
+        <item name="android:buttonStyleToggle">@style/Toggle.Accustream</item>
+
+        <item name="android:listChoiceBackgroundIndicator">@drawable/accustream__list_selector_holo_light</item>
+
+        <item name="android:activatedBackgroundIndicator">@drawable/accustream__activated_background_holo_light</item>
+
+        <item name="android:fastScrollThumbDrawable">@drawable/accustream__fastscroll_thumb_holo</item>
+
+    </style>
+
+</resources>

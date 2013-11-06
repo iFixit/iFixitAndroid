@@ -5,7 +5,7 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:background="@drawable/list_selector_holo_light">
+                android:background="?doz__listItemSelector">
 
     <ImageView
         android:id="@+id/search_result_thumbnail"
