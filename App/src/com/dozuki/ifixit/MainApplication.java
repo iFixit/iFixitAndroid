@@ -321,6 +321,13 @@ public class MainApplication extends Application {
    }
 
    /**
+    * Returns true iff this is the dozuki app (com.dozuki.dozuki).
+    */
+   public static boolean isDozukiApp() {
+      return BuildConfig.SITE_NAME.equals("dozuki");
+   }
+
+   /**
     * Should only be used to get the current site for a "custom" app
     * (iFixit/Crucial etc.).
     */

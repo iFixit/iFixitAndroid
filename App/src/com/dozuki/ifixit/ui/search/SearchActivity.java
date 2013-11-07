@@ -88,8 +88,9 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
          case android.R.id.home:
             finish();
             return true;
+         default:
+            return super.onOptionsItemSelected(item);
       }
-      return super.onOptionsItemSelected(item);
    }
 
    @SuppressWarnings("unused")
@@ -125,7 +126,8 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
          searchItem.expandActionView();
          mFocusSearch = false;
       }
-      return true;
+
+      return super.onPrepareOptionsMenu(menu);
    }
 
    public String buildQuery(String query) {

@@ -76,6 +76,11 @@ android {
       }
 
       dozuki {
+         dependencies {
+            dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+            dozukiCompile 'com.google.zxing:core:2.2'
+         }
+
          signingConfig signingConfigs.dozuki
          packageName "com.dozuki.dozuki"
          minSdkVersion 9
@@ -84,6 +89,11 @@ android {
       }
 
       accustream {
+         dependencies {
+            accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+            accustreamCompile 'com.google.zxing:core:2.2'
+         }
+
          signingConfig signingConfigs.accustream
          packageName "com.dozuki.accustream"
          minSdkVersion 9

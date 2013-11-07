@@ -396,7 +396,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Override
-   public AlertDialog navigationAlertDialog(final String tag, final Context context) {
+   public AlertDialog navigationAlertDialog(final String tag) {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
@@ -409,7 +409,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               save(mPagePosition);
               dialog.dismiss();
 
-              navigateMenuDrawer(tag, context);
+              navigateMenuDrawer(tag);
            }
         })
        .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
@@ -418,7 +418,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               mIsStepDirty = false;
               dialog.dismiss();
 
-              navigateMenuDrawer(tag, context);
+              navigateMenuDrawer(tag);
            }
         });
 
@@ -435,8 +435,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      super.onCreateOptionsMenu(menu);
-
       getSupportMenuInflater().inflate(R.menu.step_edit_menu, menu);
       MenuItem item = menu.findItem(R.id.publish_guide);
       CompoundButton toggle = (CompoundButton)item.getActionView().findViewById(R.id.publish_toggle);
@@ -462,7 +460,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          }
       });
 
-      return true;
+      return super.onCreateOptionsMenu(menu);
    }
 
    @Override
@@ -496,21 +494,22 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       switch (item.getItemId()) {
          case R.id.view_guide:
             finishEdit(STEP_VIEW);
-            break;
+            return true;
          case R.id.discard_changes:
-            if (!mIsStepDirty) break; // Bail early if there aren't any changes
+            if (mIsStepDirty) {
+               toggleSave(false);
+               mIsStepDirty = false;
 
-            toggleSave(false);
-            mIsStepDirty = false;
+               // Set the inbound stepid so the Step pager will navigate to the current step after updating
+               mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
+               APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(
+                mGuide.getGuideid()));
+            }
 
-            // Set the inbound stepid so the Step pager will navigate to the current step after updating
-            mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
-            APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(mGuide.getGuideid()));
-
-            break;
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
       }
-
-      return super.onOptionsItemSelected(item);
    }
 
    /////////////////////////////////////////////////////

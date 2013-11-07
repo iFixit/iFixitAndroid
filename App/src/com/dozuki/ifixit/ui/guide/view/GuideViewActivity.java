@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.ui.guide.view;
 
+import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
@@ -46,6 +48,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
+   private static final String GUIDE_URL = "GUIDE_URL";
 
    private int mGuideid;
    private Guide mGuide;
@@ -60,6 +63,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    /////////////////////////////////////////////////////
    // LIFECYCLE
    /////////////////////////////////////////////////////
+
+   public static Intent viewUrl(Context context, String url) {
+      Intent intent = new Intent(context, GuideViewActivity.class);
+      intent.putExtra(GUIDE_URL, url);
+      return intent;
+   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -92,8 +101,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
          // Handle when the activity is started from viewing a guide link.
          if (Intent.ACTION_VIEW.equals(intent.getAction())) {
-            handleActionViewIntent(intent);
-            return;
+            handleGuideUriView(intent.getData());
          } else {
             extractExtras(intent.getExtras());
          }
@@ -111,6 +119,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private void extractExtras(Bundle extras) {
       if (extras != null) {
+         if (extras.containsKey(GUIDE_URL)) {
+            handleGuideUriView(Uri.parse(extras.getString(GUIDE_URL)));
+         }
+
          if (extras.containsKey(GUIDEID)) {
             mGuideid = extras.getInt(GUIDEID);
          }
@@ -124,8 +136,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
    }
 
-   private void handleActionViewIntent(Intent intent) {
-      List<String> segments = intent.getData().getPathSegments();
+   private void handleGuideUriView(Uri uri) {
+      List<String> segments = uri.getPathSegments();
 
       try {
          mGuideid = Integer.parseInt(segments.get(2));
@@ -142,18 +154,20 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
 
       Site currentSite = MainApplication.get().getSite();
-      mDomain = intent.getData().getHost();
+      mDomain = uri.getHost();
       if (currentSite.hostMatches(mDomain)) {
-         // Load the guide for the current site.
-         getGuide(mGuideid);
-         return;
+         // Set mDomain to null to let it fall through to the end of onCreate to fetch the guide.
+         mDomain = null;
+      } else if (MainApplication.isDozukiApp()) {
+         // Only switch to the other site in the Dozuki app.
+         // Set site to dozuki before API call.
+         MainApplication.get().setSite(Site.getSite("dozuki"));
+
+         showLoading(R.id.loading_container);
+         APIService.call(this, APIService.getSitesAPICall());
+      } else {
+         displayGuideNotFoundDialog();
       }
-
-      // Set site to dozuki before API call.
-      MainApplication.get().setSite(Site.getSite("dozuki"));
-
-      showLoading(R.id.loading_container);
-      APIService.call(this, APIService.getSitesAPICall());
    }
 
    @Override
@@ -252,15 +266,15 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                   startActivity(intent);
                }
             }
-            break;
+            return true;
          case R.id.reload_guide:
             // Set guide to null to force a refresh of the guide object.
             mGuide = null;
             getGuide(mGuideid);
+            return true;
          default:
             return super.onOptionsItemSelected(item);
       }
-      return true;
    }
 
    /////////////////////////////////////////////////////
