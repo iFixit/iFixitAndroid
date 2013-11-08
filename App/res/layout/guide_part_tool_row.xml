@@ -4,7 +4,7 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?doz__listItemSelector">
+                android:background="?attr/doz__itemSelector">
 
     <TextView
         android:id="@+id/item_quantity"

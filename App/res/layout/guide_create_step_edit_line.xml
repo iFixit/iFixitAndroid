@@ -39,7 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:background="?doz__listItemSelector"
+        android:background="?attr/doz__itemSelector"
         android:src="@drawable/ic_action_mic"
         android:contentDescription="@string/voice_dictate_line_content_description"/>
 

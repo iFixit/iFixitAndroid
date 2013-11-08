@@ -14,7 +14,7 @@
     <attr name="doz__listViewStyle" format="reference"/>
     <attr name="doz__topicGuideList" format="reference"/>
     <attr name="doz__topicDefaultBackground" format="reference|color"/>
-    <attr name="doz__listItemSelector" format="reference|color"/>
+    <attr name="doz__itemSelector" format="reference|color"/>
     <attr name="doz__spinnerBackground" format="reference|color"/>
 
     <attr name="buttonBarButtonStyle" format="reference"/>
