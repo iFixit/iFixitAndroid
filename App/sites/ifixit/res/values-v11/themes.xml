@@ -2,7 +2,7 @@
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.iFixit" parent="android:Theme.Holo.Light.DarkActionBar">
+    <style name="Theme.iFixit" parent="Theme.Base">
 
         <item name="doz__sectionHeader">@drawable/section_header__blue</item>
         <item name="doz__primaryHighlightColor">@color/ifixit_blue</item>

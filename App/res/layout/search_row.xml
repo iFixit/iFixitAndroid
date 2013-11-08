@@ -5,14 +5,11 @@
                 android:layout_height="wrap_content"
                 android:paddingTop="6dp"
                 android:paddingBottom="6dp"
-                android:background="?doz__listItemSelector">
+                android:background="@drawable/bg_card">
 
     <ImageView
         android:id="@+id/search_result_thumbnail"
-        android:layout_width="@dimen/guide_thumbnail_width"
-        android:layout_height="@dimen/guide_thumbnail_height"
-        android:layout_marginRight="4dp"
-        android:layout_alignParentLeft="true"
+        style="@style/ListItemThumbnail"
         android:contentDescription="@string/guide_search_thumbnail_content_description"/>
 
     <TextView

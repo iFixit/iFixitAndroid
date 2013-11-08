@@ -1,111 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/guide_create_grid_box"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/guide_create_item_view"
               android:layout_width="match_parent"
               android:layout_height="wrap_content"
               android:layout_margin="4dp"
-              android:background="@color/gray"
-              android:orientation="vertical"
-              android:padding="1dp">
+              android:background="@drawable/bg_card">
 
-    <RelativeLayout
-        android:id="@+id/guide_create_upper_section"
+    <ImageView
+        android:id="@+id/guide_create_item_thumbnail"
+        android:layout_width="@dimen/list_item_thumbnail_width"
+        android:layout_height="@dimen/list_item_thumbnail_height"
+        android:layout_marginRight="8dp"
+        android:background="@color/image_border"
+        android:contentDescription="@string/topic_guide_thumbnail"/>
+
+    <TextView
+        android:id="@+id/guide_create_item_title"
+        style="@android:style/TextAppearance.Medium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@drawable/border">
+        android:layout_marginTop="2dp"
+        android:layout_marginRight="@dimen/guide_create_list_item_text_right_offset"
+        android:layout_alignLeft="@+id/guide_create_item_publish_status"
+        android:ellipsize="end"
+        android:maxLines="2"
+        android:scrollHorizontally="true"
+        android:text="@string/default_title"/>
 
-        <ImageView
-            android:id="@+id/guide_create_item_thumbnail"
-            android:layout_width="@dimen/expandable_list_item_thumbnail_width"
-            android:layout_height="@dimen/expandable_list_item_thumbnail_height"
-            android:layout_marginRight="8dp"
-            android:background="@color/image_border"
-            android:contentDescription="@string/topic_guide_thumbnail"/>
-
-        <ToggleButton
-            android:id="@+id/guide_create_toggle_edit"
-            android:layout_width="@dimen/guide_create_edit_button_dim"
-            android:layout_height="@dimen/guide_create_edit_button_dim"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="4dp"
-            android:background="@drawable/ic_guide_expand"
-            android:textOff=""
-            android:textOn=""/>
-
-        <TextView
-            android:id="@+id/guide_create_item_title"
-            style="@android:style/TextAppearance.Medium"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_marginRight="@dimen/guide_create_list_item_text_right_offset"
-            android:layout_alignLeft="@+id/guide_create_item_publish_status"
-            android:ellipsize="end"
-            android:maxLines="2"
-            android:scrollHorizontally="true"
-            android:text="@string/default_title"/>
-
-        <TextView
-            android:id="@+id/guide_create_item_publish_status"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            android:layout_below="@+id/guide_create_item_title"
-            android:layout_toRightOf="@+id/guide_create_item_thumbnail"
-            android:text="@string/unpublished"
-            android:textColor="@color/dozuki_red"
-            android:textSize="12sp"
-            android:textStyle="italic"/>
-
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/guide_create_item_edit_section"
+    <TextView
+        android:id="@+id/guide_create_item_publish_status"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/gallery_top_bar_height"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="-50dp"
-        android:background="@color/fireswing_grey"
-        android:gravity="right"
-        android:orientation="horizontal"
-        android:paddingTop="8dp"
-        android:visibility="gone">
+        android:layout_height="wrap_content"
+        android:layout_marginTop="2dp"
+        android:layout_below="@+id/guide_create_item_title"
+        android:layout_toRightOf="@+id/guide_create_item_thumbnail"
+        android:text="@string/unpublished"
+        android:textColor="@color/dozuki_red"
+        android:textSize="12sp"
+        android:textStyle="italic"/>
 
-        <TextView
-            android:id="@+id/guide_create_item_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/GuideCreateItemIcon"
-            android:drawableLeft="@drawable/ic_action_book_dark"
-            android:text="@string/view"/>
+    <ImageButton
+        android:id="@+id/guide_item_menu_button"
+        style="@style/ItemMenuButton"/>
 
-        <TextView
-            android:id="@+id/guide_create_item_publish"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/GuideCreateItemIcon"
 
-            android:drawableLeft="@drawable/ic_list_item_publish"
-            android:text="@string/publish"/>
-
-        <TextView
-            android:id="@+id/guide_create_item_delete"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/GuideCreateItemIcon"
-
-            android:drawableLeft="@drawable/ic_guide_delete"
-            android:text="@string/action_delete"/>
-
-        <TextView
-            android:id="@+id/guide_create_item_edit"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            style="@style/GuideCreateItemIcon"
-
-            android:drawableLeft="@drawable/ic_guide_edit"
-            android:text="@string/edit"/>
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>

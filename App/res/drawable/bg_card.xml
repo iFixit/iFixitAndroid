@@ -1,31 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <item>
-        <shape
-            android:shape="rectangle"
-            android:dither="true">
 
-            <corners android:radius="2dp"/>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
 
-            <solid android:color="#ccc"/>
+<item android:state_window_focused="false" android:drawable="@android:color/transparent" />
 
-        </shape>
-    </item>
+<!-- Even though these two point to the same resource, have two states so the drawable will invalidate itself when coming out of pressed state. -->
+<item android:state_focused="true"  android:state_enabled="false" android:state_pressed="true" android:drawable="@drawable/ifixit__list_selector_disabled_holo_light" />
+<item android:state_focused="true"  android:state_enabled="false"                              android:drawable="@drawable/ifixit__list_selector_disabled_holo_light" />
+<item android:state_focused="true"                                android:state_pressed="true" android:drawable="@drawable/ifixit__list_selector_background_transition_holo_light" />
+<item android:state_focused="false"                               android:state_pressed="true" android:drawable="@drawable/ifixit__list_selector_background_transition_holo_light" />
+<item android:state_focused="true"                                                             android:drawable="@drawable/ifixit__list_focused_holo" />
+<item android:drawable="@drawable/bg_card_background" />
 
-    <item android:bottom="2dp">
-        <shape
-            android:shape="rectangle"
-            android:dither="true">
-
-            <corners android:radius="2dp"/>
-
-            <solid android:color="@android:color/white"/>
-
-            <padding
-                android:bottom="8dp"
-                android:left="8dp"
-                android:right="8dp"
-                android:top="8dp"/>
-        </shape>
-    </item>
-</layer-list>
+</selector>

@@ -63,6 +63,22 @@
         <item name="android:layout_centerVertical">true</item>
     </style>
 
+    <style name="ListItemThumbnail">
+        <item name="android:layout_width">@dimen/list_item_thumbnail_width</item>
+        <item name="android:layout_height">@dimen/list_item_thumbnail_height</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:background">@color/image_border</item>
+    </style>
+
+    <style name="ItemMenuButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/abs__ic_menu_moreoverflow_holo_light</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:background">?doz__listItemSelector</item>
+    </style>
+
     <style name="BulletIcon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

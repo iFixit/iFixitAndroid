@@ -3,7 +3,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Accustream" parent="android:Theme.Light">
+    <style name="Theme.Accustream" parent="Theme.Base">
         <item name="doz__topicGuideList">@style/Widget.Dozuki.ListViewStyle</item>
         <item name="doz__listViewStyle">@style/Widget.iFixit.ListViewStyle</item>
         <item name="doz__topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>

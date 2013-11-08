@@ -11,14 +11,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
-
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -35,14 +32,12 @@ public class StepPortalFragment extends BaseFragment implements
    private static final String SHOWING_DELETE = "SHOWING_DELETE";
    private static final String STEP_FOR_DELETE = "STEP_FOR_DELETE";
    private static final int NO_ID = -1;
-   private static final String CURRENT_OPEN_ITEM = "CURRENT_OPEN_ITEM";
 
    private ListView mStepList;
    private StepAdapter mStepAdapter;
    private Guide mGuide;
    private GuideStep mStepForDelete;
    private StepPortalFragment mSelf;
-   private int mCurOpenGuideObjectID;
    private boolean mShowingDelete;
    private ActionBar mActionBar;
 
@@ -59,10 +54,8 @@ public class StepPortalFragment extends BaseFragment implements
       setHasOptionsMenu(true);
       mSelf = this;
       mStepAdapter = new StepAdapter();
-      mCurOpenGuideObjectID = NO_ID;
 
       if (savedInstanceState != null) {
-         mCurOpenGuideObjectID = savedInstanceState.getInt(CURRENT_OPEN_ITEM);
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE);
          mStepForDelete = (GuideStep) savedInstanceState.getSerializable(STEP_FOR_DELETE);
          mGuide = (Guide) savedInstanceState.getSerializable(StepsActivity.GUIDE_KEY);
@@ -95,7 +88,6 @@ public class StepPortalFragment extends BaseFragment implements
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
 
-      savedInstanceState.putInt(CURRENT_OPEN_ITEM, mCurOpenGuideObjectID);
       savedInstanceState.putSerializable(STEP_FOR_DELETE, mStepForDelete);
       savedInstanceState.putBoolean(SHOWING_DELETE, mShowingDelete);
       savedInstanceState.putSerializable(StepsActivity.GUIDE_KEY, mGuide);
@@ -136,7 +128,6 @@ public class StepPortalFragment extends BaseFragment implements
             launchGuideIntroEdit();
             return true;
          case R.id.reorder_steps:
-            closeSelectedStep();
             launchStepReorderFragment();
             return true;
          case R.id.add_step:
@@ -350,29 +341,5 @@ public class StepPortalFragment extends BaseFragment implements
 
    protected void invalidateViews() {
       mStepList.invalidateViews();
-   }
-
-   protected void onItemSelected(int id, boolean sel) {
-      if (!sel) {
-         mCurOpenGuideObjectID = NO_ID;
-         return;
-      }
-      closeSelectedStep();
-      mCurOpenGuideObjectID = id;
-   }
-
-   private void closeSelectedStep() {
-      if (mCurOpenGuideObjectID != NO_ID) {
-         StepListItem view = ((StepListItem) mStepList.findViewWithTag(mCurOpenGuideObjectID));
-         if (view != null) {
-            view.setChecked(false);
-         }
-         for (GuideStep step : mGuide.getSteps()) {
-            if (step.getStepid() == mCurOpenGuideObjectID) {
-               step.setEditMode(false);
-            }
-         }
-      }
-      mCurOpenGuideObjectID = NO_ID;
    }
 }

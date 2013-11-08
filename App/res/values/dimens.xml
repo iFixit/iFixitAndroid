@@ -62,8 +62,8 @@
     <dimen name="step_pager_tab_width">32dp</dimen>
     <dimen name="step_pager_tab_height">3dp</dimen>
     <dimen name="step_pager_tab_spacing">4dp</dimen>
-    <dimen name="expandable_list_item_thumbnail_width">80dp</dimen>
-    <dimen name="expandable_list_item_thumbnail_height">60dp</dimen>
+    <dimen name="list_item_thumbnail_width">80dp</dimen>
+    <dimen name="list_item_thumbnail_height">60dp</dimen>
     <dimen name="landscape_navigation_height">40dp</dimen>
 
 </resources>
