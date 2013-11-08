@@ -7,7 +7,7 @@
         <item name="doz__background">@color/white</item>
         <item name="doz__imageBorder">@color/image_border</item>
         <item name="doz__topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
-        <item name="doz__listItemSelector">@drawable/list_selector_holo_light</item>
+        <item name="doz__itemSelector">@drawable/list_selector_holo_light</item>
 
         <!-- Action Bar Logo -->
         <item name="logo">@android:color/transparent</item>

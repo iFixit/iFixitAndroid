@@ -6,7 +6,7 @@
         <!-- iFixit Custom Attributes / Styles -->
         <item name="doz__sectionHeader">@drawable/section_header__blue</item>
         <item name="doz__primaryHighlightColor">@color/ifixit_blue</item>
-        <item name="doz__listItemSelector">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="doz__itemSelector">@drawable/ifixit__list_selector_holo_light</item>
         <item name="doz__spinnerBackground">@drawable/ifixit__spinner_background_holo_light</item>
 
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>

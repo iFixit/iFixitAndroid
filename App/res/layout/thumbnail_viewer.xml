@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:foreground="@drawable/abs__item_background_holo_light">
+        android:foreground="?attr/doz__itemSelector">
 
         <com.dozuki.ifixit.ui.guide.FallbackImageView
             android:id="@+id/main_image_view"
@@ -34,7 +34,7 @@
             android:layout_width="@dimen/guide_thumbnail_width"
             android:layout_height="@dimen/guide_thumbnail_height"
             android:layout_gravity="right"
-            android:background="@drawable/selectable_item_background"
+            android:background="?attr/doz__itemSelector"
             android:src="@drawable/add_photos"
             android:focusable="true"
             android:clickable="true"
