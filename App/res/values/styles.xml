@@ -181,7 +181,7 @@
 
     <style name="GuideStepLinesWrap">
         <item name="android:padding">@dimen/page_padding</item>
-        <item name="android:background">?attr/doz__background</item>
+        <item name="android:background">@drawable/top_border_bg</item>
     </style>
 
     <style name="GuideStepLines">
