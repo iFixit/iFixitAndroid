@@ -137,7 +137,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
    public void onTopicSelected(TopicNode topic) {
       if (topic.isLeaf()) {
          if (mDualPane) {
-            showTopicLoading(topic.getName());
+            showTopicLoading(topic.getDisplayName());
             mTopicView.setTopicNode(topic);
 
             if (mHideTopicList) {
@@ -153,7 +153,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
          }
       } else {
          if (mDualPane && !topic.isRoot()) {
-            showTopicLoading(topic.getName());
+            showTopicLoading(topic.getDisplayName());
 
             mTopicView.setTopicNode(topic);
          }

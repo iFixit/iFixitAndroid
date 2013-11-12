@@ -340,8 +340,11 @@ public class JSONHelper {
     * Topic hierarchy parsing
     */
    public static TopicNode parseTopics(String json) throws JSONException {
-      JSONObject jTopics = new JSONObject(json);
-      ArrayList<TopicNode> topics = parseTopicChildren(jTopics);
+      JSONObject jResponse = new JSONObject(json);
+      JSONObject jHierarchy = jResponse.getJSONObject("hierarchy");
+      JSONObject jDisplayNames = jResponse.getJSONObject("display_titles");
+
+      ArrayList<TopicNode> topics = parseTopicChildren(jHierarchy, jDisplayNames);
       TopicNode root = new TopicNode();
 
       root.setChildren(topics);
@@ -352,13 +355,8 @@ public class JSONHelper {
    /**
     * Reads through the given JSONObject and adds any topics to the given topic.
     */
-   private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic)
-    throws JSONException {
-      // Don't allocate any lists if it's empty.
-      if (jTopic.length() == 0) {
-         return null;
-      }
-
+   private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic,
+    JSONObject jDisplayNames) throws JSONException {
       @SuppressWarnings("unchecked")
       Iterator<String> iterator = jTopic.keys();
       String topicName;
@@ -369,7 +367,15 @@ public class JSONHelper {
          topicName = iterator.next();
 
          currentTopic = new TopicNode(topicName);
-         currentTopic.setChildren(parseTopicChildren(jTopic.getJSONObject(topicName)));
+
+         if (!jTopic.isNull(topicName)) {
+            currentTopic.setChildren(parseTopicChildren(jTopic.getJSONObject(topicName),
+             jDisplayNames));
+         }
+
+         if (jDisplayNames.has(topicName)) {
+            currentTopic.setDisplayName(jDisplayNames.getString(topicName));
+         }
 
          topics.add(currentTopic);
       }

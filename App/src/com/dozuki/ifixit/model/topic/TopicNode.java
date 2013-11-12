@@ -8,6 +8,7 @@ public class TopicNode implements Serializable {
    protected static final String ROOT_NAME = "ROOT";
 
    private String mName;
+   private String mDisplayName;
    private ArrayList<TopicNode> mChildren;
 
    public TopicNode() {
@@ -16,10 +17,19 @@ public class TopicNode implements Serializable {
 
    public TopicNode(String name) {
       mName = name;
+      mDisplayName = name;
    }
 
    public String getName() {
       return mName;
+   }
+
+   public String getDisplayName() {
+      return mDisplayName;
+   }
+
+   public void setDisplayName(String displayName) {
+      mDisplayName = displayName;
    }
 
    public ArrayList<TopicNode> getChildren() {
