@@ -32,7 +32,8 @@
         android:layout_height="wrap_content"
         style="@style/BodyText"
         android:layout_toRightOf="@+id/x"
-        android:layout_centerVertical="true"/>
+        android:layout_centerVertical="true"
+        android:layout_marginRight="42dp"/>
 
     <ImageView
         android:id="@+id/item_link"
