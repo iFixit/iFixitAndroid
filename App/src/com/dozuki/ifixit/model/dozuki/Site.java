@@ -214,13 +214,11 @@ public class Site implements Serializable {
          site.mName = "accustream";
          site.mDomain = "accustream.dozuki.com";
          site.mCustomDomain = "support.accustream.com";
-         site.mTitle = "Accustream";
+         site.mTitle = "Hypertherm Waterjet Mobile Assistant";
          site.mTheme = "white";
          site.mPublic = true;
          site.mAnswers = false;
-         site.mDescription = "AccuStream offers a complete line of manuals and " +
-          "resources that can be very helpful when you are having problems or when " +
-          "it is after business hours here at AccuStream.";
+         site.mDescription = "Hypertherm Waterjet Mobile Assistant provides step-by-step guides for setting up, maintaining, repairing and troubleshooting your waterjet system including the high pressure pump, cutting head, on/off valve, abrasive delivery system and high pressure tubing.  Guides exist for equipment supplied by all major waterjet OEMs: Hypertherm HyPrecision™, KMT, Flow, OMAX and Jet Edge.";
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
@@ -238,6 +236,10 @@ public class Site implements Serializable {
        " | " + mTheme + " | " + mPublic + " | " + mDescription + " | " +
        mAnswers + " | " + mStandardAuth + " | " + mSsoUrl + " | " +
        mPublicRegistration + "}";
+   }
+
+   public boolean actionBarUsesIcon() {
+      return isAccustream() || isIfixit();
    }
 
    public boolean isAccustream() {

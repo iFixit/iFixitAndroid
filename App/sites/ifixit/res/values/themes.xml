@@ -9,6 +9,11 @@
         <item name="doz__itemSelector">@drawable/ifixit__list_selector_holo_light</item>
         <item name="doz__spinnerBackground">@drawable/ifixit__spinner_background_holo_light</item>
 
+        <item name="actionBarItemBackground">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="searchAutoCompleteTextView">@style/AutoCompleteTextView.iFixit</item>
+
+        <item name="actionBarStyle">@style/Widget.iFixit.ActionBar</item>
+
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
 
         <item name="android:editTextStyle">@style/EditText.iFixit</item>

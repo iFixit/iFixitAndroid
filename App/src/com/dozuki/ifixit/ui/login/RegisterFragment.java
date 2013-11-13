@@ -157,7 +157,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
             String confirmPassword = mConfirmPassword.getText().toString();
 
             if (password.equals(confirmPassword) && login.length() > 0 &&
-             name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
+             name.length() > 0 && (!MainApplication.get().getSite().isIfixit() || mTermsAgreeCheckBox.isChecked())) {
                enable(false);
                mLoginId.setVisibility(View.GONE);
                mPassword.setVisibility(View.GONE);

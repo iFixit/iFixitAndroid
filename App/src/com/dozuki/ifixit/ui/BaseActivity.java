@@ -164,8 +164,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          ImageView customLogo = (ImageView) v.findViewById(R.id.custom_logo);
          TextView siteTitle = (TextView) v.findViewById(R.id.custom_site_title);
-
-         if (site.mLogo != null) {
+         if (site.isAccustream()) {
+            PicassoUtils.with(this)
+             .load(R.drawable.icon)
+             .into(customLogo);
+            customLogo.setVisibility(View.VISIBLE);
+            siteTitle.setVisibility(View.GONE);
+         } else if (site.mLogo != null) {
             PicassoUtils.with(this)
              .load(site.mLogo.getPath(app.getImageSizes().getLogo()))
              .error(R.drawable.logo_dozuki)

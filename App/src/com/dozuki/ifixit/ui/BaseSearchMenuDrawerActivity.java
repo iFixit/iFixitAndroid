@@ -2,7 +2,9 @@ package com.dozuki.ifixit.ui;
 
 import android.app.SearchManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.support.v4.widget.CursorAdapter;
+import android.util.TypedValue;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
@@ -44,6 +46,9 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
       final SearchView searchView = (SearchView) searchItem.getActionView();
 
       if (searchView != null) {
+
+         applyThemeToSearchView(searchView);
+
          SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
          searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
          searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
@@ -97,5 +102,21 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
        MainApplication.get().getSite().barcodeScanningEnabled());
 
       return super.onPrepareOptionsMenu(menu);
+   }
+
+   /**
+    * SearchView's AutoCompleteTextView and other elements are not styleable via XML,
+    * so we have to find the view by its ID and apply the style programmatically.
+    *
+    * Changes the color of the underline of the search edit text field.
+    * @param searchView
+    */
+   private void applyThemeToSearchView(SearchView searchView) {
+      View searchPlate = searchView.findViewById(R.id.abs__search_src_text);
+      searchView.findViewById(R.id.abs__search_plate).setBackgroundColor(Color.TRANSPARENT);
+      TypedValue typedValue = new TypedValue();
+      getTheme().resolveAttribute(R.attr.doz__editTextBackground, typedValue, true);
+
+      searchPlate.setBackgroundResource(typedValue.resourceId);
    }
 }

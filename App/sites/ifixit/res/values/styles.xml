@@ -46,6 +46,9 @@
         <item name="android:checkMark">@drawable/ifixit__btn_radio_holo_light</item>
     </style>
 
+    <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
+    </style>
+
     <style name="Tab"></style>
 
     <style name="TabText"></style>
