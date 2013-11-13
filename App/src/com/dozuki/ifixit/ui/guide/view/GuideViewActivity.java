@@ -109,7 +109,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       if (mGuide != null) {
          setGuide(mGuide, mCurrentPage);
-      } else if (mDomain == null) {
+      } else if (mDomain == null && mGuideid != -1) {
          // If mDomain is set, then we will fetch the guide in this.onSites().
          getGuide(mGuideid);
       }
