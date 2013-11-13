@@ -96,8 +96,7 @@ public class Site implements Serializable {
    public boolean barcodeScanningEnabled() {
       // Return false for now because this shouldn't be enabled for any site.
       // Uncomment this when we're ready to release the feature.
-      //return mBarcodeScanner;
-      return false;
+      return mBarcodeScanner;
    }
 
    public boolean hasSubject(String type) {
