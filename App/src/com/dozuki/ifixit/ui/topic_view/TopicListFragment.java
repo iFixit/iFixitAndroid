@@ -11,6 +11,7 @@ import android.widget.AdapterView.OnItemClickListener;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;

@@ -1,114 +1,132 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
     <LinearLayout
-        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:paddingBottom="20dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="20dp" >
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
         <TextView
-            android:id="@+id/login_error_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="5dp"
-            android:text="@string/login_error"
-            android:textColor="@color/red" />
+            style="@style/DialogTitle"
+            android:text="@string/register_dialog_title"/>
 
-        <ProgressBar
-            android:id="@+id/login_loading_bar"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginBottom="5dp"
-            android:visibility="gone" />
-
-        <EditText
-            android:id="@+id/edit_login_id"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="sans"
-            android:hint="@string/email_hint"
-            android:inputType="textEmailAddress|textNoSuggestions" >
-
-            <requestFocus />
-        </EditText>
-
-        <EditText
-            android:id="@+id/edit_login_username"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="sans"
-            android:hint="@string/username"
-            android:inputType="textNoSuggestions" />
-
-        <EditText
-            android:id="@+id/edit_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="sans"
-            android:hint="@string/password"
-            android:inputType="textPassword" />
-
-        <EditText
-            android:id="@+id/edit_confirm_password"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:fontFamily="sans"
-            android:hint="@string/password_confirm_hint"
-            android:inputType="textPassword" />
+        <View style="@style/DialogTitleDivider"/>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="20dp"
-            android:orientation="horizontal" >
-
-            <CheckBox
-                android:id="@+id/login_agreement_terms_checkbox"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" />
+            android:orientation="vertical"
+            android:paddingBottom="20dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="20dp">
 
             <TextView
-                android:id="@+id/login_agreement_terms_textview"
+                android:id="@+id/login_error_text"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="fill"
+                android:layout_marginBottom="5dp"
+                android:text="@string/login_error"
+                android:textColor="@color/red"/>
+
+            <ProgressBar
+                android:id="@+id/login_loading_bar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginBottom="5dp"
+                android:visibility="gone"/>
+
+            <EditText
+                android:id="@+id/edit_login_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
                 android:fontFamily="sans"
-                android:paddingTop="@dimen/login_agreement_text_top_padding" />
-        </LinearLayout>
+                android:hint="@string/email_hint"
+                android:inputType="textEmailAddress|textNoSuggestions"
+                android:background="?doz__editTextBackground">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:weightSum="2" >
+                <requestFocus/>
+            </EditText>
 
-            <Button
-                android:id="@+id/cancel_register_button"
-                android:layout_width="0px"
+            <EditText
+                android:id="@+id/edit_login_username"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/cancel_register_description"
-                android:text="@string/cancel_register_button" />
+                android:layout_marginBottom="10dp"
+                android:fontFamily="sans"
+                android:hint="@string/username"
+                android:inputType="textNoSuggestions"
+                android:background="?doz__editTextBackground"/>
 
-            <Button
-                android:id="@+id/register_button"
-                android:layout_width="0px"
+            <EditText
+                android:id="@+id/edit_password"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:contentDescription="@string/register_description"
-                android:text="@string/register" />
+                android:layout_marginBottom="10dp"
+                android:fontFamily="sans"
+                android:hint="@string/password"
+                android:inputType="textPassword"
+                android:background="?doz__editTextBackground"/>
+
+            <EditText
+                android:id="@+id/edit_confirm_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:fontFamily="sans"
+                android:hint="@string/password_confirm_hint"
+                android:inputType="textPassword"
+                android:background="?doz__editTextBackground"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:orientation="horizontal">
+
+                <CheckBox
+                    android:id="@+id/login_agreement_terms_checkbox"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:button="?doz__checkboxBackground"/>
+
+                <TextView
+                    android:id="@+id/login_agreement_terms_textview"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="fill"
+                    android:fontFamily="sans"
+                    android:paddingTop="@dimen/login_agreement_text_top_padding"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:weightSum="2">
+
+                <Button
+                    android:id="@+id/cancel_register_button"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/cancel_register_description"
+                    android:text="@string/cancel_register_button"
+                    android:background="?doz__buttonBackground"/>
+
+                <Button
+                    android:id="@+id/register_button"
+                    android:layout_width="0px"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:contentDescription="@string/register_description"
+                    android:text="@string/register"
+                    android:background="?doz__buttonBackground"/>
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
-
 </ScrollView>

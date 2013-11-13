@@ -1,103 +1,122 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:fillViewport="true" >
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
 
-    <RelativeLayout
-        android:layout_width="match_parent"
+    <LinearLayout
         android:layout_height="wrap_content"
-        android:paddingBottom="20dp"
-        android:paddingLeft="16dp"
-        android:paddingRight="16dp"
-        android:paddingTop="20dp" >
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/login_text"
+        <TextView
+            android:id="@+id/site_list_title"
+            style="@style/DialogTitle"
+            android:text="@string/login_dialog_title"/>
+
+        <View
+            android:id="@+id/titleDivider"
+            style="@style/DialogTitleDivider"/>
+
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="16dp" >
-
-            <TextView
-                android:id="@+id/login_error_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/login_error"
-                android:textColor="@color/red" />
-
-            <ProgressBar
-                android:id="@+id/login_loading_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:visibility="gone" />
-
-            <EditText
-                android:id="@+id/edit_email"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="sans"
-                android:hint="@string/login_email_hint"
-                android:inputType="textEmailAddress|textNoSuggestions" >
-
-                <requestFocus />
-            </EditText>
-
-            <EditText
-                android:id="@+id/edit_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="sans"
-                android:hint="@string/login_password_hint"
-                android:inputType="textPassword" />
+            android:paddingBottom="20dp"
+            android:paddingLeft="16dp"
+            android:paddingRight="16dp"
+            android:paddingTop="20dp">
 
             <LinearLayout
+                android:id="@+id/login_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:weightSum="2" >
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
 
-                <Button
-                    android:id="@+id/register_button"
-                    android:layout_width="0px"
+                <TextView
+                    android:id="@+id/login_error_text"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/register_description"
-                    android:text="@string/register" />
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/login_error"
+                    android:textColor="@color/red"/>
 
-                <Button
-                    android:id="@+id/signin_button"
-                    android:layout_width="0px"
+                <ProgressBar
+                    android:id="@+id/login_loading_bar"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/signin_description"
-                    android:text="@string/login" />
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="gone"/>
+
+                <EditText
+                    android:id="@+id/edit_email"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="sans"
+                    android:hint="@string/login_email_hint"
+                    android:inputType="textEmailAddress|textNoSuggestions"
+                    android:background="?doz__editTextBackground">
+
+                    <requestFocus/>
+                </EditText>
+
+                <EditText
+                    android:id="@+id/edit_password"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    android:fontFamily="sans"
+                    android:hint="@string/login_password_hint"
+                    android:inputType="textPassword"
+                    android:background="?doz__editTextBackground"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:weightSum="2">
+
+                    <Button
+                        android:id="@+id/register_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/register_description"
+                        android:text="@string/register"
+                        android:background="?doz__buttonBackground"/>
+
+                    <Button
+                        android:id="@+id/signin_button"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/signin_description"
+                        android:text="@string/login"
+                        android:background="?doz__buttonBackground"/>
+                </LinearLayout>
             </LinearLayout>
-        </LinearLayout>
 
-        <ImageButton
-            android:id="@+id/use_google_login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/login_text"
-            android:layout_centerHorizontal="true"
-            android:layout_marginBottom="4dp"
-            android:background="@drawable/ic_btn_sign_in_google"
-            android:contentDescription="@string/google_signin_description" />
+            <ImageButton
+                android:id="@+id/use_google_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/login_text"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="4dp"
+                android:background="@drawable/ic_btn_sign_in_google"
+                android:contentDescription="@string/google_signin_description"/>
 
-        <ImageButton
-            android:id="@+id/use_yahoo_login_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/use_google_login_button"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/ic_btn_sign_in_yahoo"
-            android:contentDescription="@string/yahoo_signin_description"
-            android:visibility="gone" />
-    </RelativeLayout>
-
+            <ImageButton
+                android:id="@+id/use_yahoo_login_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/use_google_login_button"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/ic_btn_sign_in_yahoo"
+                android:contentDescription="@string/yahoo_signin_description"
+                android:visibility="gone"/>
+        </RelativeLayout>
+    </LinearLayout>
 </ScrollView>

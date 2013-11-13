@@ -45,6 +45,8 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
       bundle.putSerializable(GUIDE_KEY, guide);
       frag.setArguments(bundle);
 
+      frag.setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
+
       return frag;
    }
 
