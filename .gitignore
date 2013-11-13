@@ -41,3 +41,4 @@ proguard-project.txt
 .DS_Store
 tmp
 .*.swp
+scripts/assets/*
