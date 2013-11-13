@@ -48,6 +48,8 @@
 
         <item name="android:dropDownSpinnerStyle">@style/Spinner.Accustream</item>
 
+        <item name="android:progressBarStyle">@style/ProgressBar.Accustream</item>
+
         <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Accustream</item>
 
         <item name="android:seekBarStyle">@style/SeekBar.Accustream</item>
