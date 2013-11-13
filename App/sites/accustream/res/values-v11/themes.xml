@@ -3,8 +3,37 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Accustream" parent="Theme.Base">
+    <style name="Theme.Accustream.Dark" parent="Theme.Sherlock">
+        <!-- Action Bar Sherlock overrides -->
+        <item name="android:dropDownListViewStyle">@style/DropDownListView</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.Accustream</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.Accustream</item>
+    </style>
 
+    <style name="Theme.Accustream" parent="Theme.Base">
+        <!-- Theme Attributes -->
+        <item name="doz__topicGuideList">@style/ListView.Accustream</item>
+        <item name="doz__listViewStyle">@style/ListView.Accustream</item>
+        <item name="doz__itemSelector">@drawable/accustream__list_selector_holo_light</item>
+
+        <item name="doz__primaryHighlightColor">@color/accustream_primary</item>
+        <item name="doz__sectionHeader">@drawable/section_header__accustream</item>
+        <item name="doz__spinnerBackground">@drawable/accustream__spinner_background_holo_light</item>
+        <item name="doz__editTextBackground">@drawable/accustream__edit_text_holo_light</item>
+        <item name="doz__buttonBackground">@drawable/accustream__btn_default_holo_light</item>
+        <item name="doz__checkboxBackground">@drawable/accustream__btn_check_holo_light</item>
+
+        <!-- Action Bar theme -->
+        <item name="android:selectableItemBackground">@drawable/accustream__item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/accustream__item_background_holo_light</item>
+        <item name="android:actionBarItemBackground">@drawable/accustream__list_selector_holo_light</item>
+        <item name="actionBarItemBackground">@drawable/accustream__list_selector_holo_light</item>
+
+        <item name="android:actionBarWidgetTheme">@style/Theme.Accustream.Dark</item>
+        <item name="actionBarWidgetTheme">@style/Theme.Accustream.Dark</item>
+
+        <!-- Holo Theme Overrides -->
         <item name="android:editTextBackground">@drawable/accustream__edit_text_holo_light</item>
 
         <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.Accustream</item>
@@ -19,17 +48,9 @@
 
         <item name="android:dropDownSpinnerStyle">@style/Spinner.Accustream</item>
 
-        <item name="android:tabWidgetStyle">@style/TabWidget.Accustream</item>
-
         <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Accustream</item>
 
         <item name="android:seekBarStyle">@style/SeekBar.Accustream</item>
-
-        <item name="android:ratingBarStyle">@style/RatingBar.Accustream</item>
-
-        <item name="android:ratingBarStyleIndicator">@style/RatingBarBig.Accustream</item>
-
-        <item name="android:ratingBarStyleSmall">@style/RatingBarSmall.Accustream</item>
 
         <item name="android:buttonStyleToggle">@style/Toggle.Accustream</item>
 
