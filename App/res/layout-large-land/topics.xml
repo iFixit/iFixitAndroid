@@ -17,7 +17,8 @@
         android:id="@+id/topic_list_fragment"
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:layout_weight="25" />
+        android:layout_weight="25"
+        android:background="@drawable/right_border_bg"/>
 
     <FrameLayout
         android:layout_width="0dp"
