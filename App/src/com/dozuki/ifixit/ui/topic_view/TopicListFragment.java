@@ -75,6 +75,8 @@ public class TopicListFragment extends BaseFragment
    }
 
    private void setupTopicAdapter() {
+      // TODO: A lot of of this is specific to iFixit so it should probably
+      // be moved to the iFixit block.
       mTopicAdapter = new SectionHeadersAdapter();
       ArrayList<TopicNode> generalInfo = new ArrayList<TopicNode>();
       ArrayList<TopicNode> nonLeaves = new ArrayList<TopicNode>();
@@ -89,6 +91,9 @@ public class TopicListFragment extends BaseFragment
          }
       }
 
+      // The sorting is necessary because JSON objects are inherently unorderd.
+      // The API returns them in the correct order but no JSON implementation
+      // will respect the order of the elements.
       Comparator<TopicNode> comparator = new Comparator<TopicNode>() {
          public int compare(TopicNode first, TopicNode second) {
             return first.getName().compareToIgnoreCase(second.getName());
@@ -99,7 +104,10 @@ public class TopicListFragment extends BaseFragment
       Collections.sort(leaves, comparator);
 
       if (!mTopic.isRoot() && !((TopicActivity)getActivity()).isDualPane()) {
-         generalInfo.add(new TopicNode(mTopic.getName()));
+         TopicNode generalTopicNode = new TopicNode(mTopic.getName());
+         generalTopicNode.setDisplayName(mTopic.getDisplayName());
+
+         generalInfo.add(generalTopicNode);
          adapter = new TopicListAdapter(mContext, mContext.getString(
           R.string.generalInformation), generalInfo);
          adapter.setTopicSelectedListener(this);
@@ -165,7 +173,7 @@ public class TopicListFragment extends BaseFragment
 
       ((BaseActivity)getActivity()).setTitle(mTopic.getName().equals("ROOT") ?
        MainApplication.get().getSite().mTitle :
-       mTopic.getName());
+       mTopic.getDisplayName());
 
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);

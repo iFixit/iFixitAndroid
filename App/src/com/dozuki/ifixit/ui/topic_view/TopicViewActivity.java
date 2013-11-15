@@ -44,7 +44,7 @@ public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
       mTopicNode = (TopicNode)getIntent().getSerializableExtra(TOPIC_KEY);
 
       if (mTopicNode != null) {
-         setTitle(mTopicNode.getName());
+         setTitle(mTopicNode.getDisplayName());
 
          MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/category/" + mTopicNode.getName());
       }
