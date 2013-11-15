@@ -57,5 +57,10 @@
                 <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/teardown/"/>
             </intent-filter>
         </activity>
+
+        <provider
+            android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
+            android:authorities="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"/>
+
     </application>
 </manifest>
