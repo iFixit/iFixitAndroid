@@ -60,7 +60,7 @@
 
         <provider
             android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
-            android:authorities="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"/>
+            android:authorities="com.dozuki.accustream.ui.search.SearchSuggestionProvider"/>
 
     </application>
 </manifest>
