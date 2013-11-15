@@ -59,7 +59,7 @@ public class TopicListAdapter extends Section {
 
       topicName = (TextView)row.findViewById(R.id.topic_title);
 
-      topicName.setText(mTopicList.get(position).getName());
+      topicName.setText(mTopicList.get(position).getDisplayName());
 
       return row;
    }
