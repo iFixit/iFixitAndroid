@@ -39,6 +39,10 @@ public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
          Bundle extras = getIntent().getExtras();
 
          if (extras != null) {
+            if (extras.containsKey(GuideViewActivity.TOPIC_NAME_KEY)) {
+               setTitle(extras.getString(GuideViewActivity.TOPIC_NAME_KEY));
+            }
+
             mTopicView.setArguments(extras);
          }
 
