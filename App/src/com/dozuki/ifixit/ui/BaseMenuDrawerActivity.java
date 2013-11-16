@@ -126,7 +126,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       String barcodeScannerResult = getBarcodeScannerResult(requestCode, resultCode, intent);
 
       if (barcodeScannerResult != null) {
-         startActivity(GuideViewActivity.viewUrl(this, barcodeScannerResult));
+         startActivity(IntentFilterActivity.viewUrl(this, barcodeScannerResult));
       } else {
          super.onActivityResult(requestCode, resultCode, intent);
       }

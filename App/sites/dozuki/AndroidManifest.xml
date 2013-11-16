@@ -33,9 +33,8 @@
         </activity>
 
         <activity
-            android:name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity"
-            android:exported="true"
-            android:launchMode="singleTop">
+            android:name="com.dozuki.ifixit.ui.IntentFilterActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
