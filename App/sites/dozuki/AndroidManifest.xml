@@ -51,6 +51,9 @@
                 <data android:scheme="https" android:host="*.dozuki.com" android:pathPrefix="/guide/"/>
                 <data android:scheme="http"  android:host="*.dozuki.com" android:pathPrefix="/teardown/"/>
                 <data android:scheme="https" android:host="*.dozuki.com" android:pathPrefix="/teardown/"/>
+
+                <data android:scheme="http"  android:host="*.dozuki.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="*.dozuki.com" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
 

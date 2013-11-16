@@ -9,6 +9,7 @@ import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.ui.topic_view.TopicViewActivity;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -95,6 +96,9 @@ public class IntentFilterActivity extends BaseActivity {
 
             int guideid = Integer.parseInt(segments.get(2));
             intent = GuideViewActivity.viewGuideid(this, guideid);
+         } else if (prefix.equalsIgnoreCase("c") || prefix.equalsIgnoreCase("device")) {
+            String topicName = segments.get(1);
+            intent = TopicViewActivity.viewTopic(this, topicName);
          }
       } catch (Exception e) {
          Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments", e);

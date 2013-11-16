@@ -29,6 +29,9 @@
                 <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/guide/"/>
                 <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/teardown/"/>
                 <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/teardown/"/>
+
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
 
