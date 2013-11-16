@@ -210,7 +210,7 @@ public class Site implements Serializable {
          site = new Site(1145);
          site.mName = "accustream";
          site.mDomain = "accustream.dozuki.com";
-         site.mCustomDomain = "support.accustream.com";
+         site.mCustomDomain = "assist.hypertherm.com";
          site.mTitle = "Hypertherm Waterjet Mobile Assistant";
          site.mTheme = "white";
          site.mPublic = true;

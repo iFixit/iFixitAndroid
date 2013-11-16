@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.search;
 
 import android.app.SearchManager;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.provider.SearchRecentSuggestions;
@@ -12,6 +13,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -31,12 +33,20 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
    private static final int TOPIC_POSITION = 1;
    private static final String TOPIC_SEARCH_FRAGMENT = "TOPIC_SEARCH_FRAGMENT";
    private static final String GUIDE_SEARCH_FRAGMENT = "GUIDE_SEARCH_FRAGMENT";
+   private static final String SEARCH_QUERY = "SEARCH_QUERY";
+
    private String mQuery = "";
    private Spinner mSpinner;
    private int mSpinnerPosition = 0;
    private String mCurrentTag;
    private TextView mResultCount;
    private boolean mFocusSearch = false;
+
+   public static Intent viewSearch(Context context, String query) {
+      Intent intent = new Intent(context, SearchActivity.class);
+      intent.putExtra(SEARCH_QUERY, query);
+      return intent;
+   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -171,7 +181,10 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
    }
 
    private void handleIntent(Intent intent, boolean sendQuery) {
-      if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
+      Bundle extras = intent.getExtras();
+      if (extras.getString(SEARCH_QUERY) != null) {
+         search(extras.getString(SEARCH_QUERY), sendQuery);
+      } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
          search(intent.getStringExtra(SearchManager.QUERY), sendQuery);
       }
    }

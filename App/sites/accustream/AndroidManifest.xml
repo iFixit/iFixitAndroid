@@ -11,9 +11,8 @@
         </activity>
 
         <activity
-            android:name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity"
-            android:exported="true"
-            android:launchMode="singleTop">
+            android:name="com.dozuki.ifixit.ui.IntentFilterActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -36,15 +35,9 @@
                 <data android:scheme="http"  android:host="assist.hypertherm.com" android:pathPrefix="/teardown/"/>
                 <data android:scheme="https" android:host="assist.hypertherm.com" android:pathPrefix="/teardown/"/>
 
-                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/Guide/"/>
-                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/Guide/"/>
-                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/Teardown/"/>
-                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/Teardown/"/>
+                <data android:scheme="http"  android:host="assist.hypertherm.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="assist.hypertherm.com" android:pathPrefix="/c/"/>
 
-                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/guide/"/>
-                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/guide/"/>
-                <data android:scheme="http"  android:host="support.accustream.com" android:pathPrefix="/teardown/"/>
-                <data android:scheme="https" android:host="support.accustream.com" android:pathPrefix="/teardown/"/>
 
                 <data android:scheme="http"  android:host="accustream.dozuki.com" android:pathPrefix="/Guide/"/>
                 <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/Guide/"/>
@@ -55,6 +48,9 @@
                 <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/guide/"/>
                 <data android:scheme="http"  android:host="accustream.dozuki.com" android:pathPrefix="/teardown/"/>
                 <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/teardown/"/>
+
+                <data android:scheme="http"  android:host="accustream.dozuki.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
 
