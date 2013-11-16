@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui.search;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +9,6 @@ import com.dozuki.ifixit.model.search.SearchResult;
 import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.BaseListFragment;
 import com.dozuki.ifixit.ui.EndlessScrollListener;
-import com.dozuki.ifixit.util.APIEndpoint;
 import com.dozuki.ifixit.util.APIService;
 
 import java.util.ArrayList;
@@ -103,21 +101,21 @@ public class SearchFragment extends BaseListFragment {
          mSearch = search;
 
          initializeScrollListener();
+
+         mSearchResults.addAll(search.mResults);
+
+         mAdapter.setSearchResults(mSearchResults);
+         mAdapter.notifyDataSetChanged();
+
+         if (!mSearch.mHasMoreResults) {
+            mScrollListener.noMorePages();
+         } else {
+            mScrollListener.notifyMorePages();
+         }
+
+         getListView().invalidate();
       } else {
          mSearch = search;
       }
-
-      mSearchResults.addAll(search.mResults);
-
-      mAdapter.setSearchResults(mSearchResults);
-      mAdapter.notifyDataSetChanged();
-
-      if (!mSearch.mHasMoreResults) {
-         mScrollListener.noMorePages();
-      } else {
-         mScrollListener.notifyMorePages();
-      }
-
-      getListView().invalidate();
    }
 }
