@@ -140,7 +140,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       List<String> segments = uri.getPathSegments();
 
       try {
-         mGuideid = Integer.parseInt(segments.get(2));
+         mGuideid = Integer.parseInt(segments.get(2).trim());
       } catch (Exception e) {
          hideLoading();
          Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments", e);
