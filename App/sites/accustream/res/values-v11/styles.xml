@@ -3,14 +3,14 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
     <style name="DropDownListView" parent="android:Widget.Holo.Light.ListView.DropDown">
-        <item name="android:listSelector">@drawable/accustream__list_selector_holo_light</item>
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
     </style>
 
     <style name="DropDownNav.Accustream" parent="android:Widget.Holo.Light.ListView.DropDown">
         <item name="android:background">@drawable/accustream__spinner_background_holo_light</item>
         <item name="android:popupBackground">@drawable/accustream__spinner_background_holo_light</item>
-        <item name="android:dropDownSelector">@drawable/accustream__list_selector_holo_light</item>
-        <item name="android:listSelector">@drawable/accustream__list_selector_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
     </style>
 
     <style name="DialogTheme.Accustream" parent="android:Theme.Holo.Light.Dialog">

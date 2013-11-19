@@ -6,8 +6,6 @@
     <style name="Theme.Dozuki" parent="Theme.Base">
 
         <!-- Custom Attributes / Styles for Dozuki -->
-        <item name="doz__listViewStyle">@style/Widget.Dozuki.ListViewStyle</item>
-        <item name="doz__topicGuideList">@style/Widget.Dozuki.ListViewStyle</item>
         <item name="doz__topicDefaultBackground">@style/Widget.Dozuki.TopicBackground</item>
         <item name="doz__sectionHeader">@drawable/section_header</item>
 
@@ -40,10 +38,6 @@
         <item name="android:ratingBarStyleSmall">@style/RatingBarSmall.iFixit</item>
 
         <item name="android:buttonStyleToggle">@style/Toggle.iFixit</item>
-
-        <item name="android:listViewStyle">@style/ListView.iFixit</item>
-
-        <item name="android:listViewWhiteStyle">@style/ListView.iFixit.White</item>
 
         <item name="android:spinnerItemStyle">@style/SpinnerItem.iFixit</item>
 

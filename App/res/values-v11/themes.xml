@@ -6,6 +6,9 @@
         <item name="doz__textColorSecondary">@color/gray</item>
         <item name="doz__background">@color/gainsboro</item>
         <item name="doz__imageBorder">@color/image_border</item>
+        <item name="doz__itemSelector">@drawable/list_selector_holo_light</item>
+        <item name="doz__topicGuideList">@style/ListView</item>
+        <item name="doz__listViewStyle">@style/ListView</item>
 
         <!-- Holo Theme -->
         <item name="dividerHorizontal">?android:dividerHorizontal</item>
@@ -18,6 +21,9 @@
         <item name="android:windowBackground">?doz__background</item>
 
         <item name="android:progressBarStyle">@style/Base.ProgressBar</item>
+
+        <item name="android:listChoiceBackgroundIndicator">@drawable/list_selector_holo_light</item>
+        <item name="android:activatedBackgroundIndicator">@drawable/activated_background_holo_light</item>
 
         <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
         <item name="mdMenuBackground">@color/menu_background</item>

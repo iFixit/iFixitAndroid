@@ -3,13 +3,24 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="DropDownListView.iFixit" parent="Widget.Sherlock.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+    </style>
+
+    <style name="DropDownNav.iFixit" parent="Widget.Sherlock.Light.ListView.DropDown">
+        <item name="android:background">@drawable/ifixit__spinner_background_holo_light</item>
+        <item name="android:popupBackground">@drawable/item_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+    </style>
+
     <style name="EditText.iFixit" parent="android:Widget.EditText">
         <item name="android:background">@drawable/ifixit__edit_text_holo_light</item>
         <item name="android:textColor">#000000</item>
     </style>
 
     <style name="AutoCompleteTextView.iFixit" parent="android:Widget.AutoCompleteTextView">
-        <item name="android:dropDownSelector">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
         <item name="android:background">@drawable/ifixit__edit_text_holo_light</item>
         <item name="android:textColor">#000000</item>
     </style>
@@ -35,7 +46,7 @@
 
     <style name="Spinner.iFixit" parent="android:Widget.Spinner">
         <item name="android:background">?doz__spinnerBackground</item>
-        <item name="android:dropDownSelector">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
     </style>
 
     <style name="Spinner.iFixit.DropDown">
@@ -44,9 +55,6 @@
 
     <style name="SpinnerDropDownItem.iFixit" parent="android:Widget.DropDownItem.Spinner">
         <item name="android:checkMark">@drawable/ifixit__btn_radio_holo_light</item>
-    </style>
-
-    <style name="Widget.iFixit.ActionBar" parent="Widget.Sherlock.Light.ActionBar.Solid">
     </style>
 
     <style name="Tab"></style>
@@ -117,15 +125,6 @@
         <item name="android:background">@drawable/ifixit__btn_toggle_holo_light</item>
         <item name="android:minHeight">48dip</item>
         <item name="android:textColor">#000000</item>
-    </style>
-
-    <style name="ListView.iFixit" parent="android:Widget.ListView">
-        <item name="android:listSelector">@drawable/ifixit__list_selector_holo_light</item>
-        <item name="android:cacheColorHint">#00000000</item>
-    </style>
-
-    <style name="ListView.iFixit.White" parent="android:Widget.ListView.White">
-        <item name="android:listSelector">@drawable/ifixit__list_selector_holo_light</item>
     </style>
 
     <style name="SpinnerItem.iFixit" parent="android:TextAppearance.Widget.TextView.SpinnerItem">

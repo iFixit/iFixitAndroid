@@ -7,17 +7,13 @@
          so we need to inherit from the the base Theme.Sherlock to override the overflow dropdown selector state. -->
     <style name="Theme.Accustream.Dark" parent="Theme.Sherlock">
         <!-- Action Bar Sherlock overrides -->
-        <item name="android:dropDownListViewStyle">@style/DropDownListView</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView</item>
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.Accustream</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.Accustream</item>
         <item name="actionDropDownStyle">@style/DropDownNav.Accustream</item>
     </style>
 
     <style name="Theme.Accustream" parent="Theme.Base">
         <!-- Theme Attributes -->
-        <item name="doz__topicGuideList">@style/ListView.Accustream</item>
-        <item name="doz__listViewStyle">@style/ListView.Accustream</item>
-        <item name="doz__itemSelector">@drawable/accustream__list_selector_holo_light</item>
-
         <item name="doz__primaryHighlightColor">@color/accustream_primary</item>
         <item name="doz__sectionHeader">@drawable/section_header__accustream</item>
         <item name="doz__spinnerBackground">@drawable/accustream__spinner_background_holo_light</item>
@@ -38,7 +34,7 @@
         <item name="android:checkboxStyle">@style/CheckBox.Accustream</item>
 
         <item name="android:radioButtonStyle">@style/RadioButton.Accustream</item>
-        x
+
         <item name="android:buttonStyle">@style/Button.Accustream</item>
 
         <item name="android:imageButtonStyle">@style/ImageButton.Accustream</item>
@@ -56,10 +52,6 @@
         <item name="android:seekBarStyle">@style/SeekBar.Accustream</item>
 
         <item name="android:buttonStyleToggle">@style/Toggle.Accustream</item>
-
-        <item name="android:listViewStyle">@style/ListView.Accustream</item>
-
-        <item name="android:listViewWhiteStyle">@style/ListView.Accustream.White</item>
 
         <item name="android:spinnerItemStyle">@style/SpinnerItem.Accustream</item>
 

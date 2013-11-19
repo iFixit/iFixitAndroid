@@ -4,7 +4,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="AutoCompleteTextView.iFixit" parent="android:Widget.Holo.Light.AutoCompleteTextView">
-        <item name="android:dropDownSelector">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
         <item name="android:background">@drawable/ifixit__edit_text_holo_light</item>
     </style>
 
@@ -18,7 +18,7 @@
 
     <style name="Spinner.iFixit" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/ifixit__spinner_background_holo_light</item>
-        <item name="android:dropDownSelector">@drawable/ifixit__list_selector_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
     </style>
 
     <style name="TabWidget.iFixit" parent="@android:style/Widget.TabWidget">
@@ -84,10 +84,6 @@
 
     <style name="Toggle.iFixit" parent="android:Widget.Holo.Light.Button.Toggle">
         <item name="android:background">@drawable/ifixit__btn_toggle_holo_light</item>
-    </style>
-
-    <style name="ListView.iFixit" parent="android:Widget.Holo.Light.ListView">
-        <item name="android:listSelector">@drawable/ifixit__list_selector_holo_light</item>
     </style>
 
 </resources>
