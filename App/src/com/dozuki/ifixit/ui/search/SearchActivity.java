@@ -182,7 +182,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
 
    private void handleIntent(Intent intent, boolean sendQuery) {
       Bundle extras = intent.getExtras();
-      if (extras.getString(SEARCH_QUERY) != null) {
+      if (extras != null && extras.getString(SEARCH_QUERY) != null) {
          search(extras.getString(SEARCH_QUERY), sendQuery);
       } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
          search(intent.getStringExtra(SearchManager.QUERY), sendQuery);
