@@ -151,6 +151,9 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        */
       setTheme(app.getSiteTheme());
 
+      ((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
+       .item_background_holo_light);
+
       if (site.isIfixit()) {
          ab.setLogo(R.drawable.icon);
          ab.setDisplayUseLogoEnabled(true);
