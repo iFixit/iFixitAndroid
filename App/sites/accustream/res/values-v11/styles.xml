@@ -18,7 +18,7 @@
     </style>
 
     <style name="AutoCompleteTextView.Accustream" parent="android:Widget.Holo.Light.AutoCompleteTextView">
-        <item name="android:dropDownSelector">@drawable/accustream__list_selector_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
         <item name="android:background">@drawable/accustream__edit_text_holo_light</item>
     </style>
 
@@ -32,7 +32,7 @@
 
     <style name="Spinner.Accustream" parent="android:Widget.Holo.Light.Spinner">
         <item name="android:background">@drawable/accustream__spinner_background_holo_light</item>
-        <item name="android:dropDownSelector">@drawable/accustream__list_selector_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
     </style>
 
     <style name="ProgressBar.Accustream" parent="android:Widget.Holo.Light.ProgressBar.Horizontal">

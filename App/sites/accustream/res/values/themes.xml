@@ -15,15 +15,15 @@
     <style name="Theme.Accustream" parent="Theme.Base">
         <!-- Theme Attributes -->
         <item name="doz__primaryHighlightColor">@color/accustream_primary</item>
-        <item name="doz__sectionHeader">@drawable/section_header__accustream</item>
+        <item name="doz__sectionHeader">@drawable/accustream__section_header</item>
         <item name="doz__spinnerBackground">@drawable/accustream__spinner_background_holo_light</item>
         <item name="doz__editTextBackground">@drawable/accustream__edit_text_holo_light</item>
         <item name="doz__buttonBackground">@drawable/accustream__btn_default_holo_light</item>
         <item name="doz__checkboxBackground">@drawable/accustream__btn_check_holo_light</item>
 
         <!-- Action Bar theme -->
-        <item name="selectableItemBackground">@drawable/accustream__item_background_holo_light</item>
-        <item name="actionBarItemBackground">@drawable/accustream__item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
         <item name="actionBarWidgetTheme">@style/Theme.Accustream.Dark</item>
 
         <!-- Holo Theme Overrides -->
