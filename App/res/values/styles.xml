@@ -74,6 +74,9 @@
         <item name="android:layout_width">@dimen/list_item_thumbnail_width</item>
         <item name="android:layout_height">@dimen/list_item_thumbnail_height</item>
         <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
         <item name="android:background">@color/image_border</item>
     </style>
 
@@ -83,6 +86,7 @@
         <item name="android:src">@drawable/abs__ic_menu_moreoverflow_holo_light</item>
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_alignParentTop">true</item>
+        <item name="android:padding">8dp</item>
         <item name="android:background">?attr/doz__itemSelector</item>
     </style>
 
@@ -178,17 +182,15 @@
         <item name="android:paddingLeft">4dp</item>
         <item name="android:textAllCaps">true</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:background">@null</item>
+        <item name="android:background">?doz__background</item>
     </style>
 
     <style name="GuideGridItem">
         <item name="android:background">@drawable/bg_card</item>
-        <item name="android:layout_margin">4dp</item>
     </style>
 
     <style name="GuideGridItemThumbnail">
-        <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:background">?attr/doz__imageBorder</item>
+        <item name="android:layout_marginRight">8dp</item>
     </style>
 
     <style name="GuideGridItemTitle" parent="android:TextAppearance.Medium.Inverse">

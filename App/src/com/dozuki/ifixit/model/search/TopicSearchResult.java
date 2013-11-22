@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.ui.RoundedTransformation;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicViewActivity;
 import com.dozuki.ifixit.util.PicassoUtils;
@@ -48,6 +49,8 @@ public class TopicSearchResult implements SearchResult, Serializable {
 
       PicassoUtils.with(container.getContext())
        .load(mImage.getPath(MainApplication.get().getImageSizes().getThumb()))
+       .transform(new RoundedTransformation(4, 0))
+       .error(R.drawable.no_image)
        .into(thumbnail);
 
       return v;

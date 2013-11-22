@@ -10,14 +10,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.ui.RoundedTransformation;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.PicassoUtils;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class GuideSearchResult implements SearchResult, Serializable {
    private static final long serialVersionUID = -2464223423335L;
@@ -56,11 +54,13 @@ public class GuideSearchResult implements SearchResult, Serializable {
 
          PicassoUtils.with(context)
           .load(imagePath)
+          .transform(new RoundedTransformation(4, 0))
           .error(R.drawable.no_image)
           .into(thumbnail);
       } else {
          PicassoUtils.with(context).load(R.drawable.no_image).into(thumbnail);
       }
+
       return v;
    }
 

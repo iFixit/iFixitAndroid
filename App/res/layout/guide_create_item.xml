@@ -8,10 +8,7 @@
 
     <ImageView
         android:id="@+id/guide_create_item_thumbnail"
-        android:layout_width="@dimen/list_item_thumbnail_width"
-        android:layout_height="@dimen/list_item_thumbnail_height"
-        android:layout_marginRight="8dp"
-        android:background="@color/image_border"
+        style="@style/ListItemThumbnail"
         android:contentDescription="@string/topic_guide_thumbnail"/>
 
     <TextView

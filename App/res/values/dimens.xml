@@ -34,7 +34,7 @@
     <!-- Topic List -->
     <dimen name="topic_list_column_width">270dp</dimen>
     <dimen name="topic_list_vertical_spacing">4dp</dimen>
-    <dimen name="topic_list_horizontal_spacing">2dp</dimen>
+    <dimen name="topic_list_horizontal_spacing">4dp</dimen>
     <dimen name="topic_list_top_margin">4dp</dimen>
 
     <dimen name="step_bullet_padding">6dp</dimen>

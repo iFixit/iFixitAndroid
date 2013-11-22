@@ -8,20 +8,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class StepListItem extends RelativeLayout {
-   private static final int ANIMATION_DURATION = 300;
+public class StepListItem extends TouchableRelativeLayout {
    private TextView mStepsView;
    private TextView mStepNumber;
    private ImageView mImageView;

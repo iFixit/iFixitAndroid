@@ -12,18 +12,20 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.ui.RoundedTransformation;
+import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
-public class GuideListItem extends RelativeLayout {
+public class GuideListItem extends TouchableRelativeLayout {
    private Context mContext;
 
    private TextView mTitleView;
@@ -120,16 +122,22 @@ public class GuideListItem extends RelativeLayout {
       if (mThumbnail != null) {
          Picasso picasso = PicassoUtils.with(mContext);
 
+         Transformation transform = new RoundedTransformation(4, 0);
+
          if (mGuideInfo.hasImage()) {
             picasso
              .load(mGuideInfo.getImagePath(".standard"))
              .noFade()
+             .fit()
+             .transform(transform)
              .error(R.drawable.no_image)
              .into(mThumbnail);
          } else {
             picasso
              .load(R.drawable.no_image)
              .noFade()
+             .fit()
+             .transform(transform)
              .into(mThumbnail);
          }
       }

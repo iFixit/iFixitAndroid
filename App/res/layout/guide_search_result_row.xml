@@ -3,8 +3,6 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:paddingTop="6dp"
-                android:paddingBottom="6dp"
                 android:background="@drawable/bg_card">
 
     <ImageView
@@ -15,13 +13,14 @@
     <TextView
         android:id="@+id/guide_title"
         android:textSize="18sp"
+        style="@style/TextAppearance.Sherlock.Light.SearchResult.Title"
         android:layout_toRightOf="@+id/guide_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
     <TextView
         android:id="@+id/guide_author"
-        style="@style/BodyText"
+        style="@style/TextAppearance.Sherlock.Light.SearchResult.Subtitle"
         android:layout_below="@+id/guide_title"
         android:layout_toRightOf="@+id/guide_thumbnail"
         android:layout_width="wrap_content"
