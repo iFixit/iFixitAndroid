@@ -41,14 +41,14 @@ dependencies {
 def sites = ["ifixit", "dozuki", "accustream"]
 
 android {
-   compileSdkVersion 18
+   compileSdkVersion 19
    buildToolsVersion "18.0.1"
 
    defaultConfig {
       versionCode 43
       versionName "2.2.0"
       minSdkVersion 8
-      targetSdkVersion 18
+      targetSdkVersion 19
       packageName "com.dozuki.ifixit"
    }
 
