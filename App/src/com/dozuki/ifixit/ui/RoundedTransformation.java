@@ -6,16 +6,21 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import com.squareup.picasso.Transformation;
 
-public class RoundedTransformation implements com.squareup.picasso.Transformation {
-   private final int radius;
-   private final int margin;  // dp
+public class RoundedTransformation implements Transformation {
+   private final int mRadius;
+   private final int mMargin;
 
-   // radius is corner radii in dp
-   // margin is the board in dp
+   /**
+    * Applies a rounded corder transformation to an image loaded by Picasso
+    *
+    * @param radius in DP
+    * @param margin in DP
+    */
    public RoundedTransformation(final int radius, final int margin) {
-      this.radius = radius;
-      this.margin = margin;
+      mRadius = radius;
+      mMargin = margin;
    }
 
    @Override
@@ -26,7 +31,8 @@ public class RoundedTransformation implements com.squareup.picasso.Transformatio
 
       Bitmap output = Bitmap.createBitmap(source.getWidth(), source.getHeight(), source.getConfig());
       Canvas canvas = new Canvas(output);
-      canvas.drawRoundRect(new RectF(margin, margin, source.getWidth() - margin, source.getHeight() - margin), radius, radius, paint);
+      canvas.drawRoundRect(new RectF(mMargin, mMargin, source.getWidth() - mMargin, source.getHeight() - mMargin),
+       mRadius, mRadius, paint);
 
       if (source != output) {
          source.recycle();
