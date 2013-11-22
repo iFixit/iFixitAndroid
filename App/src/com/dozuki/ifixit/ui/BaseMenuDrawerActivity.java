@@ -73,7 +73,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
       buildSliderMenu();
 
-      if (!MainApplication.get().getSite().isIfixit()) {
+      if (!MainApplication.get().getSite().actionBarUsesIcon()) {
          findViewById(R.id.menu_title_wrapper).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
