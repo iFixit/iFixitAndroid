@@ -15,6 +15,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -32,11 +33,11 @@ import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -206,6 +207,7 @@ public class APIService extends Service {
 
       int code = result.mCode;
       String response = result.getResponse();
+      byte[] rawOutput = result.mRawOutput;
 
       APIError error = null;
 
@@ -219,7 +221,7 @@ public class APIService extends Service {
          try {
             // We don't know the type of APIEvent it is so we must let the endpoint's
             // parseResult return the correct one...
-            event = endpoint.parseResult(response);
+            event = endpoint.parseResult(response, rawOutput);
 
             // ... and then we can copy over the other values we need.
             event.mCode = code;
@@ -538,6 +540,10 @@ public class APIService extends Service {
       return apiCall;
    }
 
+   public static APICall getImageAPICall(int imageid) {
+      return new APICall(APIEndpoint.IMAGE, imageid + "");
+   }
+
    public static AlertDialog getErrorDialog(final Activity activity,
     final APIEvent<?> event) {
       APIError error = event.getError();
@@ -747,7 +753,8 @@ public class APIService extends Service {
                 * The order is important here. If the code() is called first an IOException
                 * is thrown in some cases (invalid login for one, maybe more).
                 */
-               String responseBody = request.body();
+               String responseBody = "";
+               byte[] rawOutput = request.bytes();
                int code = request.code();
 
                if (MainApplication.inDebug()) {
@@ -767,7 +774,7 @@ public class APIService extends Service {
                if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
                   return getUnauthorizedEvent(apiCall);
                } else {
-                  return event.setCode(code).setResponse(responseBody);
+                  return event.setCode(code).setResponse(responseBody, rawOutput);
                }
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {

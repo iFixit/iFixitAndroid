@@ -1,10 +1,14 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
+
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.squareup.wire.Wire;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 
@@ -12,13 +16,37 @@ import java.net.URLEncoder;
  * Defines all APIEndpoints.
  */
 public enum APIEndpoint {
+   IMAGE(
+    new Endpoint() {
+       public String createUrl(String imageid) {
+          return "media/images/" + imageid;
+       }
+
+       public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
+          try {
+             Wire wire = new Wire();
+             return new APIEvent.Image().setResult(wire.parseFrom(rawOutput, com.dozuki.ifixit.api_2_0.Image.class));
+          } catch (IOException e) {
+             Log.e("iFixit", "wire parseFrom", e);
+             return null;
+          }
+       }
+
+       public APIEvent<?> getEvent() {
+          return new APIEvent.Image();
+       }
+    },
+    false,
+    "GET"
+   ),
+
    SEARCH(
     new Endpoint() {
        public String createUrl(String query) {
           return "search/" + query;
        }
 
-       public APIEvent<?> parse(String json) throws JSONException {
+       public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
           return new APIEvent.Search().setResult(JSONHelper.parseSearchResults(json));
        }
 
@@ -36,7 +64,7 @@ public enum APIEndpoint {
             return "categories?withDisplayTitles";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.Categories().setResult(JSONHelper.parseTopics(json));
          }
 
@@ -54,7 +82,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.ViewGuide().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -72,7 +100,7 @@ public enum APIEndpoint {
             return "guides" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.Guides().setResult(JSONHelper.parseGuides(json));
          }
 
@@ -95,7 +123,7 @@ public enum APIEndpoint {
             }
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.Topic().setResult(JSONHelper.parseTopicLeaf(json));
          }
 
@@ -113,7 +141,7 @@ public enum APIEndpoint {
             return "categories/all?limit=100000";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.TopicList().setResult(JSONHelper.parseAllTopics(json));
          }
 
@@ -131,7 +159,7 @@ public enum APIEndpoint {
             return "user/token";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.Login().setResult(JSONHelper.parseLoginInfo(json));
          }
 
@@ -150,7 +178,7 @@ public enum APIEndpoint {
             return "user/token";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.Logout();
          }
 
@@ -170,7 +198,7 @@ public enum APIEndpoint {
             return "users";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.Register().setResult(JSONHelper.parseLoginInfo(json));
          }
 
@@ -189,7 +217,7 @@ public enum APIEndpoint {
             return "user/media/images" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UserImages().setResult(JSONHelper.parseUserImages(json));
          }
 
@@ -206,7 +234,7 @@ public enum APIEndpoint {
             return "user/media/videos" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UserVideos().setResult(JSONHelper.parseUserVideos(json));
          }
 
@@ -224,7 +252,7 @@ public enum APIEndpoint {
             return "user/favorites/guides";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UserFavorites().setResult(JSONHelper.parseUserFavorites(json));
          }
 
@@ -242,7 +270,7 @@ public enum APIEndpoint {
             return "user/media/embeds" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UserEmbeds().setResult(JSONHelper.parseUserEmbeds(json));
          }
 
@@ -283,7 +311,7 @@ public enum APIEndpoint {
             return filePath.substring(index + 1);
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UploadImage().setResult(JSONHelper.parseUploadedImage(json));
          }
 
@@ -324,7 +352,7 @@ public enum APIEndpoint {
             return filePath.substring(index + 1);
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UploadStepImage().setResult(JSONHelper.parseUploadedImage(json));
          }
 
@@ -342,7 +370,7 @@ public enum APIEndpoint {
             return "user/media/images/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             // TODO: Actually look at the response?
             return new APIEvent.DeleteImage().setResult("");
          }
@@ -361,7 +389,7 @@ public enum APIEndpoint {
             return "user/media/images" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             // TODO: Actually look at the response?
             return new APIEvent.DeleteImage().setResult("");
          }
@@ -380,7 +408,7 @@ public enum APIEndpoint {
             return "user/guides?limit=10000";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UserGuides().setResult(JSONHelper.parseUserGuides(json));
          }
 
@@ -398,7 +426,7 @@ public enum APIEndpoint {
             return "guides/" + query + "?unpatrolled&excludePrerequisiteSteps";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.GuideForEdit().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -416,7 +444,7 @@ public enum APIEndpoint {
             return "guides";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.CreateGuide().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -434,7 +462,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.EditGuide().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -451,7 +479,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
            return new APIEvent.DeleteGuide().setResult(json);
          }
 
@@ -469,7 +497,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -487,7 +515,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -505,7 +533,7 @@ public enum APIEndpoint {
             return "guides/" +  query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.StepReorder().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -523,7 +551,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.StepAdd().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -541,7 +569,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.StepSave().setResult(JSONHelper.parseStep(new JSONObject(json), 0));
          }
 
@@ -559,7 +587,7 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.StepRemove().setResult(JSONHelper.parseGuide(json));
          }
 
@@ -577,7 +605,7 @@ public enum APIEndpoint {
             return "sites?limit=1000";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.Sites().setResult(JSONHelper.parseSites(json));
          }
 
@@ -595,7 +623,7 @@ public enum APIEndpoint {
             return "sites/info";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.SiteInfo().setResult(JSONHelper.parseSiteInfo(json));
          }
 
@@ -613,7 +641,7 @@ public enum APIEndpoint {
             return "user";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException {
             return new APIEvent.UserInfo().setResult(JSONHelper.parseLoginInfo(json));
          }
 
@@ -644,7 +672,7 @@ public enum APIEndpoint {
       /**
        * Returns an APIEvent given the JSON response of the request.
        */
-      public APIEvent<?> parse(String json) throws JSONException;
+      public APIEvent<?> parse(String json, byte[] rawOutput) throws JSONException;
 
       /**
        * Returns an empty APIEvent that is used for events for this endpoint.
@@ -732,8 +760,8 @@ public enum APIEndpoint {
       return url;
    }
 
-   public APIEvent<?> parseResult(String json) throws JSONException {
-      return mEndpoint.parse(json).setResponse(json);
+   public APIEvent<?> parseResult(String json, byte[] rawOutput) throws JSONException {
+      return mEndpoint.parse(json, rawOutput).setResponse(json, rawOutput);
    }
 
    /**

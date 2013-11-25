@@ -7,12 +7,14 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
-import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.ui.LoadingFragment;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
@@ -65,7 +67,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
 
       if (mRootTopic == null) {
          showLoading(R.id.topic_list_fragment);
-         APIService.call(this, APIService.getCategoriesAPICall());
+         APIService.call(this, APIService.getImageAPICall(5));
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
@@ -107,6 +109,11 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
       } else {
          APIService.getErrorDialog(this, event).show();
       }
+   }
+
+   @Subscribe
+   public void onImage(APIEvent.Image event) {
+      Log.w("Image!", event.getResult().image.original);
    }
 
    @Subscribe

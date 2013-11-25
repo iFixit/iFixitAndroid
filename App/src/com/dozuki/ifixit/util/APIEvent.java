@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.util;
 
-import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
@@ -52,15 +51,16 @@ public abstract class APIEvent<T> {
    public static class Logout extends APIEvent<String> {}
    public static class Register extends APIEvent<User> {}
 
+   public static class Image extends APIEvent<com.dozuki.ifixit.api_2_0.Image> {}
    public static class UserImages extends APIEvent<ArrayList<UserImage>> {}
    public static class UserVideos extends APIEvent<GalleryVideoList> {}
    public static class UserEmbeds extends APIEvent<GalleryEmbedList> {}
    public static class UserInfo extends APIEvent<User> {}
    public static class UserFavorites extends APIEvent<ArrayList<GuideInfo>> {}
 
-   public static class CopyImage extends APIEvent<Image> {}
-   public static class UploadImage extends APIEvent<Image> {}
-   public static class UploadStepImage extends APIEvent<Image> {}
+   public static class CopyImage extends APIEvent<com.dozuki.ifixit.model.Image> {}
+   public static class UploadImage extends APIEvent<com.dozuki.ifixit.model.Image> {}
+   public static class UploadStepImage extends APIEvent<com.dozuki.ifixit.model.Image> {}
    public static class DeleteImage extends APIEvent<String> {}
 
    public static class Guides extends APIEvent<ArrayList<GuideInfo>> {}
@@ -80,6 +80,7 @@ public abstract class APIEvent<T> {
    public static class SiteInfo extends APIEvent<Site> {}
 
    public String mResponse;
+   public byte[] mRawOutput;
    public T mResult;
    public APICall mApiCall;
    public APIError mError;
@@ -102,8 +103,9 @@ public abstract class APIEvent<T> {
       return mError != null;
    }
 
-   public APIEvent<T> setResponse(String response) {
+   public APIEvent<T> setResponse(String response, byte[] rawOutput) {
       mResponse = response;
+      mRawOutput = rawOutput;
       return this;
    }
 
