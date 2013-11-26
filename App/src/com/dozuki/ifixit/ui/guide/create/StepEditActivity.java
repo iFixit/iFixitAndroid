@@ -391,12 +391,12 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Override
-   public boolean alertOnNavigation() {
-      return mIsStepDirty;
-   }
+   public AlertDialog getNavigationAlertDialog(final NavigationItem item) {
+      if (!mIsStepDirty) {
+         // Don't warn the user if the step is clean.
+         return null;
+      }
 
-   @Override
-   public AlertDialog navigationAlertDialog(final String tag) {
       mShowingSave = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
@@ -409,7 +409,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               save(mPagePosition);
               dialog.dismiss();
 
-              navigateMenuDrawer(tag);
+              navigateMenuDrawer(item);
            }
         })
        .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
@@ -418,7 +418,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               mIsStepDirty = false;
               dialog.dismiss();
 
-              navigateMenuDrawer(tag);
+              navigateMenuDrawer(item);
            }
         });
 
