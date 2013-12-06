@@ -205,18 +205,17 @@
         <item name="android:baselineAligned">false</item>
     </style>
 
-    <style name="GuideStepMediaWrap">
-        <item name="android:background">@drawable/step_media_background</item>
+    <style name="GuideStepMediaContainer">
         <item name="android:padding">@dimen/page_padding</item>
     </style>
 
-    <style name="GuideStepLinesWrap">
+    <style name="GuideStepLinesContainer">
         <item name="android:padding">@dimen/page_padding</item>
         <item name="android:background">@drawable/top_border_bg</item>
     </style>
 
     <style name="GuideStepLines">
-        <item name="android:background">?attr/doz__background</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="Thumbnail">

@@ -21,7 +21,7 @@
 
             <solid android:color="@android:color/white"/>
 
-            <padding android:bottom="6dp"/>
+            <padding android:bottom="2dp"/>
         </shape>
     </item>
 </layer-list>
