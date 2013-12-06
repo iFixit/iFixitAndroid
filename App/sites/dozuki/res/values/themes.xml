@@ -2,45 +2,68 @@
 
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
-    <style name="Theme.Dozuki" parent="Theme.Base">
-
-        <!-- Custom Attributes / Styles for Dozuki -->
-        <item name="doz__topicDefaultBackground">@style/Widget.Dozuki.TopicBackground</item>
-        <item name="doz__sectionHeader">@drawable/section_header</item>
-
-        <item name="android:editTextStyle">@style/EditText.iFixit</item>
-
-        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.iFixit</item>
-
-        <item name="android:checkboxStyle">@style/CheckBox.iFixit</item>
-
-        <item name="android:radioButtonStyle">@style/RadioButton.iFixit</item>
-
-        <item name="android:buttonStyle">@style/Button.iFixit</item>
-
-        <item name="android:imageButtonStyle">@style/ImageButton.iFixit</item>
-
-        <item name="android:spinnerStyle">@style/Spinner.iFixit</item>
-
-        <item name="android:dropDownSpinnerStyle">@style/Spinner.iFixit.DropDown</item>
-
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem.iFixit</item>
-
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.iFixit</item>
-
-        <item name="android:seekBarStyle">@style/SeekBar.iFixit</item>
-
-        <item name="android:ratingBarStyle">@style/RatingBar.iFixit</item>
-
-        <item name="android:ratingBarStyleIndicator">@style/RatingBarBig.iFixit</item>
-
-        <item name="android:ratingBarStyleSmall">@style/RatingBarSmall.iFixit</item>
-
-        <item name="android:buttonStyleToggle">@style/Toggle.iFixit</item>
-
-        <item name="android:spinnerItemStyle">@style/SpinnerItem.iFixit</item>
-
+    <!-- actionWidgetTheme is used with a ContextThemeWrapper when using the DarkActionBar theme,
+         so we need to inherit from the the base Theme.Sherlock to override the overflow dropdown selector state. -->
+    <style name="Theme.Dozuki.Dark" parent="Theme.Sherlock">
+        <!-- Action Bar Sherlock overrides -->
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.iFixit</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.iFixit</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.iFixit</item>
     </style>
 
+    <!-- Default to the iFixit theme -->
+    <style name="Theme.Dozuki" parent="Theme.iFixit"></style>
+
+    <style name="Theme.Dozuki.Green" parent="Theme.Dozuki">
+        <item name="doz__primaryHighlightColor">@color/dozuki_green</item>
+        <item name="doz__sectionHeader">@drawable/green__section_header</item>
+    </style>
+
+    <style name="Theme.Dozuki.White" parent="Theme.Dozuki">
+        <item name="doz__primaryHighlightColor">@color/dozuki_white</item>
+        <item name="doz__sectionHeader">@drawable/white__section_header</item>
+    </style>
+
+    <style name="Theme.Dozuki.Black" parent="Theme.Dozuki">
+        <item name="doz__primaryHighlightColor">@color/dozuki_grey</item>
+        <item name="doz__sectionHeader">@drawable/grey__section_header</item>
+    </style>
+
+    <style name="Theme.Dozuki.Orange" parent="Theme.Dozuki">
+        <!-- Theme Attributes -->
+        <item name="doz__primaryHighlightColor">@color/dozuki_orange</item>
+        <item name="doz__sectionHeader">@drawable/orange__section_header</item>
+        <item name="doz__spinnerBackground">@drawable/orange__spinner_background_holo_light</item>
+        <item name="doz__editTextBackground">@drawable/orange__edit_text_holo_light</item>
+        <item name="doz__buttonBackground">@drawable/orange__btn_default_holo_light</item>
+        <item name="doz__checkboxBackground">@drawable/orange__btn_check_holo_light</item>
+
+        <!-- Action Bar theme -->
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarWidgetTheme">@style/Theme.Dozuki.Dark</item>
+
+        <item name="android:editTextStyle">@style/EditText.Dozuki.Orange</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.Dozuki.Orange</item>
+
+        <item name="android:checkboxStyle">@style/CheckBox.Dozuki.Orange</item>
+
+        <item name="android:radioButtonStyle">@style/RadioButton.Dozuki.Orange</item>
+
+        <item name="android:buttonStyle">@style/Button.Dozuki.Orange</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButton.Dozuki.Orange</item>
+
+        <item name="android:spinnerStyle">@style/Spinner.Dozuki.Orange</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/Spinner.Dozuki.Orange.DropDown</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem.Dozuki.Orange</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Dozuki.Orange</item>
+
+        <item name="android:buttonStyleToggle">@style/Toggle.Dozuki.Orange</item>
+
+    </style>
 </resources>

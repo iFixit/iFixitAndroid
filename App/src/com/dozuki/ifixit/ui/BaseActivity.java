@@ -156,7 +156,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        .item_background_holo_light);
 
       if (site.actionBarUsesIcon()) {
-         ab.setLogo(R.drawable.icon);
+         ab.setLogo(site.getIcon());
          ab.setDisplayUseLogoEnabled(true);
 
          // Get the default action bar title resourceid

@@ -48,19 +48,11 @@
 
         <item name="android:dropDownSpinnerStyle">@style/Spinner.iFixit</item>
 
-        <item name="android:tabWidgetStyle">@style/TabWidget.iFixit</item>
-
         <item name="android:progressBarStyle">@style/ProgressBar.iFixit</item>
 
         <item name="android:progressBarStyleHorizontal">@style/ProgressBar.iFixit</item>
 
         <item name="android:seekBarStyle">@style/SeekBar.iFixit</item>
-
-        <item name="android:ratingBarStyle">@style/RatingBar.iFixit</item>
-
-        <item name="android:ratingBarStyleIndicator">@style/RatingBarBig.iFixit</item>
-
-        <item name="android:ratingBarStyleSmall">@style/RatingBarSmall.iFixit</item>
 
         <item name="android:buttonStyleToggle">@style/Toggle.iFixit</item>
 
