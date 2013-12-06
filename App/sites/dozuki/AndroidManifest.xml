@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
-   <!-- TODO: This theme isn't updated in the merged Manifest... -->
-    <application
-        android:theme="@style/Theme.Dozuki">
+    <application>
         <activity
             android:name="com.dozuki.ifixit.ui.topic_view.TopicActivity"
             android:launchMode="singleTop"/>
@@ -33,9 +31,8 @@
         </activity>
 
         <activity
-            android:name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity"
-            android:exported="true"
-            android:launchMode="singleTop">
+            android:name="com.dozuki.ifixit.ui.IntentFilterActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -52,6 +49,9 @@
                 <data android:scheme="https" android:host="*.dozuki.com" android:pathPrefix="/guide/"/>
                 <data android:scheme="http"  android:host="*.dozuki.com" android:pathPrefix="/teardown/"/>
                 <data android:scheme="https" android:host="*.dozuki.com" android:pathPrefix="/teardown/"/>
+
+                <data android:scheme="http"  android:host="*.dozuki.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="*.dozuki.com" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
 

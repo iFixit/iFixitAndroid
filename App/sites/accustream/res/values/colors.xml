@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="accustream_primary">#ffb42d2d</color>
+    <color name="emphasis">@color/accustream_primary</color>
+
+    <color name="step_pager_previous_tab_color">#88b42d2d</color>
+    <color name="step_pager_selected_tab_color">@color/accustream_primary</color>
+    <color name="step_pager_selected_last_tab_color">#55b42d2d</color>
+    <color name="step_pager_next_tab_color">#10000000</color>
+</resources>

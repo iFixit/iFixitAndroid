@@ -7,6 +7,7 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.app.Fragment;
+import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -151,9 +152,31 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        */
       setTheme(app.getSiteTheme());
 
-      if (site.isIfixit()) {
-         ab.setLogo(R.drawable.icon);
+      ((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
+       .item_background_holo_light);
+
+      if (site.actionBarUsesIcon()) {
+         ab.setLogo(site.getIcon());
          ab.setDisplayUseLogoEnabled(true);
+
+         // Get the default action bar title resourceid
+         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
+
+         // If it doesn't exist, use actionbarsherlocks
+         if (titleId == 0) {
+            titleId = com.actionbarsherlock.R.id.abs__action_bar_title;
+         }
+
+         TextView title = (TextView) findViewById(titleId);
+
+         // If we were able to get the title element, set it to multi-line and a bit smaller text size so that long
+         // site titles (i.e. Hypertherm Waterjet Mobile Assistant) and long guide titles fit nicely.
+         if (title != null) {
+            title.setSingleLine(false);
+            title.setMaxLines(2);
+            title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
+         }
+
       } else {
          ab.setDisplayUseLogoEnabled(false);
          ab.setDisplayShowTitleEnabled(false);
@@ -164,7 +187,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          ImageView customLogo = (ImageView) v.findViewById(R.id.custom_logo);
          TextView siteTitle = (TextView) v.findViewById(R.id.custom_site_title);
-
          if (site.mLogo != null) {
             PicassoUtils.with(this)
              .load(site.mLogo.getPath(app.getImageSizes().getLogo()))
@@ -211,7 +233,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void setTitle(String title) {
-      if (MainApplication.get().getSite().isIfixit()) {
+      if (MainApplication.get().getSite().actionBarUsesIcon()) {
          getSupportActionBar().setTitle(title);
       } else {
          TextView titleView = ((TextView)getSupportActionBar().getCustomView().

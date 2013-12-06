@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.login;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
@@ -17,16 +16,13 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
@@ -72,6 +68,12 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
       }
    }
 
+   public static RegisterFragment newInstance() {
+      RegisterFragment frag = new RegisterFragment();
+      frag.setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
+      return frag;
+   }
+
    /**
     * Required for restoring fragments
     */
@@ -101,15 +103,19 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
 
       mTermsAgreeCheckBox = (CheckBox)view.findViewById(R.id.login_agreement_terms_checkbox);
       mTermsAgreeText = (TextView)view.findViewById(R.id.login_agreement_terms_textview);
-      mTermsAgreeText.setText(R.string.register_agreement);
-      mTermsAgreeText.setMovementMethod(LinkMovementMethod.getInstance());
+      if (MainApplication.get().getSite().isIfixit()) {
+         mTermsAgreeText.setText(R.string.register_agreement);
+         mTermsAgreeText.setMovementMethod(LinkMovementMethod.getInstance());
+      } else {
+         mTermsAgreeCheckBox.setVisibility(View.GONE);
+         mTermsAgreeText.setVisibility(View.GONE);
+      }
 
       mLoadingSpinner = (ProgressBar)view.findViewById(R.id.login_loading_bar);
       mLoadingSpinner.setVisibility(View.GONE);
 
       mRegister.setOnClickListener(this);
       mCancelRegister.setOnClickListener(this);
-      getDialog().setTitle(R.string.register_dialog_title);
 
       return view;
    }
@@ -151,7 +157,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
             String confirmPassword = mConfirmPassword.getText().toString();
 
             if (password.equals(confirmPassword) && login.length() > 0 &&
-             name.length() > 0 && mTermsAgreeCheckBox.isChecked()) {
+             name.length() > 0 && (!MainApplication.get().getSite().isIfixit() || mTermsAgreeCheckBox.isChecked())) {
                enable(false);
                mLoginId.setVisibility(View.GONE);
                mPassword.setVisibility(View.GONE);
@@ -194,7 +200,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
               // Go back to login.
              fragmentManager.beginTransaction()
               .remove(this)
-              .add(new LoginFragment(), null)
+              .add(LoginFragment.newInstance(), null)
               .commit();
 
               break;

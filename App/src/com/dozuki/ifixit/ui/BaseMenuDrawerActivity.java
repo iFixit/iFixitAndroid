@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui;
 
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -15,7 +14,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
@@ -24,13 +22,11 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
-import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.MapBuilder;
-
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -76,6 +72,15 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       }
 
       buildSliderMenu();
+
+      if (!MainApplication.get().getSite().actionBarUsesIcon()) {
+         findViewById(R.id.menu_title_wrapper).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               mMenuDrawer.toggleMenu();
+            }
+         });
+      }
    }
 
    @Override
@@ -122,7 +127,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       String barcodeScannerResult = getBarcodeScannerResult(requestCode, resultCode, intent);
 
       if (barcodeScannerResult != null) {
-         startActivity(GuideViewActivity.viewUrl(this, barcodeScannerResult));
+         startActivity(IntentFilterActivity.viewUrl(this, barcodeScannerResult));
       } else {
          super.onActivityResult(requestCode, resultCode, intent);
       }
@@ -137,17 +142,17 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       try {
          // Call IntentIntegrator.parseResult(requestCode, resultCode, intent);
          Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
-         Class[] argTypes = new Class[] { Integer.TYPE, Integer.TYPE, Intent.class };
+         Class[] argTypes = new Class[]{Integer.TYPE, Integer.TYPE, Intent.class};
          Method parseResult = c.getDeclaredMethod("parseActivityResult", argTypes);
          Object intentResult = parseResult.invoke(null, requestCode, resultCode, intent);
 
          // Call intentResult.getContents().
          c = Class.forName("com.google.zxing.integration.android.IntentResult");
-         argTypes = new Class[] { };
+         argTypes = new Class[]{};
          Method getContents = c.getDeclaredMethod("getContents", argTypes);
          Object contents = getContents.invoke(intentResult);
 
-         return (String)contents;
+         return (String) contents;
       } catch (Exception e) {
          Toast.makeText(this, "Failed to parse result.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Failure parsing activity result", e);
@@ -184,10 +189,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       }
 
       items.add(new Category(buildAccountMenuCategoryTitle()));
-      items.add(new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, "user_favorites"));
+      items.add(
+       new Item(getString(R.string.slide_menu_favorite_guides), R.drawable.ic_menu_favorite_light, "user_favorites"));
       items.add(new Item(getString(R.string.slide_menu_my_guides), R.drawable.ic_menu_spinner_guides, "user_guides"));
       items.add(new Item(getString(R.string.slide_menu_create_new_guide), R.drawable.ic_menu_add_guide, "new_guide"));
-      items.add(new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
+      items.add(
+       new Item(getString(R.string.slide_menu_media_gallery), R.drawable.ic_menu_spinner_gallery, "media_gallery"));
 
       if (MainApplication.get().isUserLoggedIn()) {
          items.add(new Item(getString(R.string.slide_menu_logout), R.drawable.ic_action_exit, "logout"));
@@ -392,7 +399,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
       // compile unless the dependency exists.
       try {
          Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
-         Class[] argTypes = new Class[] { android.app.Activity.class };
+         Class[] argTypes = new Class[]{android.app.Activity.class};
          Method initiateScan = c.getDeclaredMethod("initiateScan", argTypes);
          initiateScan.invoke(null, this);
       } catch (Exception e) {
@@ -499,6 +506,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity {
 
    /**
     * Whether the activity show warn the user before navigating away using the MenuDrawer.
+    *
     * @return
     */
    public boolean alertOnNavigation() {

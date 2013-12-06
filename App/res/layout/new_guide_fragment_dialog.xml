@@ -1,72 +1,88 @@
 <?xml version="1.0" encoding="utf-8"?>
- <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-     <LinearLayout
-         android:orientation="vertical"
-         android:paddingRight="16dp"
-         android:paddingLeft="16dp"
-         android:paddingTop="24dp"
-         android:paddingBottom="24dp"
+    <LinearLayout
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
 
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content">
+        <TextView
+            style="@style/DialogTitle"
+            android:text="@string/new_guide_details_title"/>
 
+        <View style="@style/DialogTitleDivider"/>
 
-         <TextView
-             style="@style/Base.FormLabel"
-             android:text="@string/guide_intro_wizard_guide_topic_title"
-             android:id="@+id/topic_name_label"/>
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingRight="16dp"
+            android:paddingLeft="16dp"
+            android:paddingTop="24dp"
+            android:paddingBottom="24dp"
 
-         <AutoCompleteTextView
-             android:id="@+id/topic_name_field"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             android:saveEnabled="false"
-             android:inputType="text|textCapWords"
-             android:singleLine="true"
-             android:textColor="@color/black"
-             android:imeOptions="actionDone"
-             style="@style/Base.FormField"/>
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
 
-         <TextView
-             style="@style/Base.FormLabel"
-             android:text="@string/guide_type"/>
+            <TextView
+                style="@style/Base.FormLabel"
+                android:text="@string/guide_intro_wizard_guide_topic_title"
+                android:id="@+id/topic_name_label"/>
 
-         <Spinner
-             android:id="@+id/guide_types_spinner"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             style="@style/Base.FormField"/>
+            <AutoCompleteTextView
+                android:id="@+id/topic_name_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:saveEnabled="false"
+                android:inputType="text|textCapWords"
+                android:singleLine="true"
+                android:textColor="@color/black"
+                android:imeOptions="actionDone"
+                style="@style/Base.FormField"
+                android:background="?doz__editTextBackground"
+                android:dropDownSelector="?doz__itemSelector"/>
 
-         <TextView
-             style="@style/Base.FormLabel"
-             android:id="@+id/subject_label"
-             android:text="@string/guide_subject_label"/>
+            <TextView
+                style="@style/Base.FormLabel"
+                android:text="@string/guide_type"/>
 
-         <EditText
-             android:id="@+id/subject_field"
-             android:layout_width="match_parent"
-             android:layout_height="wrap_content"
-             style="@style/Base.FormField"
-             android:imeOptions="actionDone"
-             android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences"/>
+            <Spinner
+                android:id="@+id/guide_types_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Base.FormField"
+                android:dropDownSelector="?doz__itemSelector"/>
 
-         <View
-             android:id="@+id/divider"
-             android:background="?dividerHorizontal"
-             android:layout_height="1dp"
-             android:layout_marginBottom="16dp"
-             android:layout_width="match_parent"/>
+            <TextView
+                style="@style/Base.FormLabel"
+                android:id="@+id/subject_label"
+                android:text="@string/guide_subject_label"/>
 
-         <Button
-             style="?buttonBarButtonStyle"
-             android:id="@+id/save"
-             android:layout_width="200dp"
-             android:layout_height="wrap_content"
-             android:layout_gravity="left"
-             android:text="@string/save"/>
+            <EditText
+                android:id="@+id/subject_field"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                style="@style/Base.FormField"
+                android:background="?doz__editTextBackground"
+                android:imeOptions="actionDone"
+                android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences"/>
 
-     </LinearLayout>
- </ScrollView>
+            <View
+                android:id="@+id/divider"
+                android:background="?dividerHorizontal"
+                android:layout_height="1dp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"/>
+
+            <Button
+                style="?buttonBarButtonStyle"
+                android:background="?doz__buttonBackground"
+                android:id="@+id/save"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/save"/>
+
+        </LinearLayout>
+    </LinearLayout>
+</ScrollView>

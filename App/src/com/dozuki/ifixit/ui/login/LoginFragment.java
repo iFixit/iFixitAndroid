@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -27,7 +27,6 @@ import com.dozuki.ifixit.util.APICall;
 import com.dozuki.ifixit.util.APIError;
 import com.dozuki.ifixit.util.APIEvent;
 import com.dozuki.ifixit.util.APIService;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
@@ -85,7 +84,11 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    public LoginFragment() {}
 
    public static LoginFragment newInstance() {
-      return new LoginFragment();
+      LoginFragment frag = new LoginFragment();
+      frag.setStyle(DialogFragment.STYLE_NO_TITLE,
+       android.R.style.Theme_Holo_Light_Dialog);
+
+      return frag;
    }
 
    @Override
@@ -137,8 +140,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
       mLoadingSpinner = (ProgressBar)view.findViewById(R.id.login_loading_bar);
       mLoadingSpinner.setVisibility(View.GONE);
-      
-      getDialog().setTitle(R.string.login_dialog_title);
       
       return view;
    }
@@ -229,7 +230,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
            
              fragmentManager.beginTransaction()
               .remove(this)
-              .add(new RegisterFragment(), null)
+              .add(RegisterFragment.newInstance(), null)
               .commit();
               
              break;

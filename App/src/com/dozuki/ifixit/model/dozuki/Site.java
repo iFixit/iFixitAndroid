@@ -39,6 +39,7 @@ public class Site implements Serializable {
 
    public ArrayList<GuideType> mGuideTypes;
    private boolean mBarcodeScanner = false;
+   private int mIcon;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -94,10 +95,7 @@ public class Site implements Serializable {
    }
 
    public boolean barcodeScanningEnabled() {
-      // Return false for now because this shouldn't be enabled for any site.
-      // Uncomment this when we're ready to release the feature.
-      //return mBarcodeScanner;
-      return false;
+      return mBarcodeScanner;
    }
 
    public boolean hasSubject(String type) {
@@ -136,6 +134,8 @@ public class Site implements Serializable {
       // Put custom site themes here.
       if (isIfixit()) {
          return R.style.Theme_iFixit;
+      } else if (isAccustream()) {
+         return R.style.Theme_Accustream;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -144,13 +144,13 @@ public class Site implements Serializable {
          } else if (mTheme.equals("green")) {
             return R.style.Theme_Dozuki_Green;
          } else if (mTheme.equals("blue")) {
-            return R.style.Theme_Dozuki_Blue;
+            return R.style.Theme_iFixit;
          } else if (mTheme.equals("white")) {
             return R.style.Theme_Dozuki_White;
          } else if (mTheme.equals("orange")) {
             return R.style.Theme_Dozuki_Orange;
          } else if (mTheme.equals("black")) {
-            return R.style.Theme_Dozuki_Grey;
+            return R.style.Theme_Dozuki_Black;
          }
       }
 
@@ -161,6 +161,7 @@ public class Site implements Serializable {
    public static Site getSite(String siteName) {
       Site site = null;
       Resources res = MainApplication.get().getResources();
+      String packageName = MainApplication.get().getPackageName();
 
       if (siteName.equals("ifixit")) {
          site = new Site(2);
@@ -168,6 +169,7 @@ public class Site implements Serializable {
          site.mDomain = "www.ifixit.com";
          site.mTitle = "iFixit";
          site.mTheme = "custom";
+         site.mIcon = MainApplication.get().getResources().getIdentifier("ifixit_icon", "drawable", packageName);;
          site.mPublic = true;
          site.mAnswers = true;
          site.mDescription = "iFixit is the free repair manual you can edit." +
@@ -184,6 +186,7 @@ public class Site implements Serializable {
          site.mDomain = "www.dozuki.com";
          site.mTitle = "Dozuki";
          site.mTheme = "custom";
+         site.mIcon = res.getIdentifier("dozuki_icon", "drawable", packageName);
          site.mPublic = true;
          site.mAnswers = true;
          site.mDescription = "Using the Dozuki platform: How-to guides and other useful information.";
@@ -199,6 +202,7 @@ public class Site implements Serializable {
          site.mTitle = "Crucial";
          site.mTheme = "white";
          site.mPublic = true;
+         site.mIcon = res.getIdentifier("dozuki_icon", "drawable", packageName);
          site.mAnswers = true;
          site.mDescription = "Free installation guides for Crucial RAM and" +
           " SSD products.";
@@ -211,14 +215,13 @@ public class Site implements Serializable {
          site = new Site(1145);
          site.mName = "accustream";
          site.mDomain = "accustream.dozuki.com";
-         site.mCustomDomain = "support.accustream.com";
-         site.mTitle = "Accustream";
+         site.mCustomDomain = "assist.hypertherm.com";
+         site.mTitle = "Hypertherm Waterjet Mobile Assistant";
          site.mTheme = "white";
+         site.mIcon = MainApplication.get().getResources().getIdentifier("accustream_icon", "drawable", packageName);;
          site.mPublic = true;
          site.mAnswers = false;
-         site.mDescription = "AccuStream offers a complete line of manuals and " +
-          "resources that can be very helpful when you are having problems or when " +
-          "it is after business hours here at AccuStream.";
+         site.mDescription = "Hypertherm Waterjet Mobile Assistant provides step-by-step guides for setting up, maintaining, repairing and troubleshooting your waterjet system including the high pressure pump, cutting head, on/off valve, abrasive delivery system and high pressure tubing.  Guides exist for equipment supplied by all major waterjet OEMs: Hypertherm HyPrecision™, KMT, Flow, OMAX and Jet Edge.";
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = true;
@@ -238,6 +241,14 @@ public class Site implements Serializable {
        mPublicRegistration + "}";
    }
 
+   public boolean actionBarUsesIcon() {
+      return isAccustream() || isIfixit();
+   }
+
+   public boolean isAccustream() {
+      return mName.equals("accustream");
+   }
+
    public boolean isIfixit() {
       return mName.equals("ifixit");
    }
@@ -248,5 +259,9 @@ public class Site implements Serializable {
 
    public Drawable getLogo() {
       return null;
+   }
+
+   public int getIcon() {
+      return mIcon;
    }
 }

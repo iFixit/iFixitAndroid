@@ -9,8 +9,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="4dp"
-        android:dividerHeight="@dimen/topic_list_vertical_spacing"
-        android:divider="@color/white"/>
+        android:dividerHeight="4dp"
+        android:divider="@color/transparent"/>
 
     <TextView
         android:id="@+id/no_guides_text"

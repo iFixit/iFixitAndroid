@@ -40,6 +40,9 @@
                 android:resource="@xml/searchable"/>
         </activity>
 
+        <activity
+            android:name=".ui.guide.view.GuideViewActivity"
+            android:launchMode="singleTop"/>
         <activity android:name=".ui.guide.view.TeardownsActivity"/>
         <activity android:name=".ui.guide.view.FeaturedGuidesActivity"/>
         <activity android:name=".ui.FavoritesActivity"/>

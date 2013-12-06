@@ -1,29 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
              android:layout_width="match_parent"
              android:layout_height="match_parent"
-             android:foreground="@drawable/selectable_item_background_transparent"
-             android:background="@drawable/border">
+             android:orientation="vertical"
+             android:background="@drawable/bg_card">
 
     <ImageView
         android:id="@+id/guide_grid_item_thumbnail"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="fill"
-        android:background="@color/gray"
-        android:contentDescription="@string/topic_img_desc"
-        android:minHeight="@dimen/topic_list_image_height"
-        android:scaleType="centerCrop"/>
+        style="@style/GuideGridItemThumbnail"
+        android:contentDescription="@string/topic_img_desc"/>
+
+    <View
+        android:layout_height="match_parent"
+        android:layout_width="1dp"
+        android:background="#ff7c7c7c"/>
 
     <TextView
         android:id="@+id/guide_grid_item_title"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        style="@style/GuideGridItemTitle"
-        android:layout_gravity="bottom"
-        android:background="@color/topic_guide_title_background"
-        android:textColor="@color/white"
-        android:paddingTop="8dp"
-        android:paddingBottom="8dp"
-        android:maxLines="3"/>
-</FrameLayout>
+        style="@style/GuideGridItemTitle"/>
+
+</LinearLayout>

@@ -41,7 +41,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    private static final String GUIDE_FOR_DELETE = "GUIDE_FOR_DELETE";
    private static String GUIDE_OBJECT_KEY = "GUIDE_OBJECT_KEY";
    public static String GUIDE_KEY = "GUIDE_KEY";
-   private int mCurOpenGuideObjectID;
 
    private ArrayList<GuideInfo> mUserGuideList = new ArrayList<GuideInfo>();
    private boolean mShowingHelp;
@@ -303,24 +302,5 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
 
          return itemView;
       }
-   }
-
-   public void onItemSelected(int id, boolean sel) {
-      if (!sel) {
-         mCurOpenGuideObjectID = NO_ID;
-         return;
-      }
-      if (mCurOpenGuideObjectID != NO_ID) {
-         GuideListItem view = ((GuideListItem) mGuideListView.findViewWithTag(mCurOpenGuideObjectID));
-         if (view != null) {
-            view.setChecked(false);
-         }
-         for (GuideInfo guide : mUserGuideList) {
-            if (guide.mGuideid == mCurOpenGuideObjectID) {
-               guide.mEditMode = false;
-            }
-         }
-      }
-      mCurOpenGuideObjectID = id;
    }
 }

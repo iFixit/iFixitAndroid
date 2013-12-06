@@ -9,14 +9,14 @@
 
     <FrameLayout
         android:id="@+id/guide_create_edit_media_fragment_container"
-        style="@style/GuideStepMediaWrap"
+        style="@style/GuideStepMediaContainer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="4"/>
 
     <FrameLayout
         android:id="@+id/guide_create_edit_bullet_fragment_container"
-        style="@style/GuideStepLinesWrap"
+        style="@style/GuideStepLinesContainer"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         android:layout_weight="6"/>

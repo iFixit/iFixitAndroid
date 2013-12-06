@@ -37,7 +37,7 @@
 
         <Button
             style="?buttonBarButtonStyle"
-            android:background="@drawable/wizard_selectable_item_background"
+            android:background="?doz__itemSelector"
             android:id="@+id/prev_button"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -46,7 +46,7 @@
 
         <Button
             style="?buttonBarButtonStyle"
-            android:background="@drawable/wizard_selectable_item_background"
+            android:background="?doz__itemSelector"
             android:id="@+id/next_button"
             android:layout_width="0dp"
             android:layout_weight="1"

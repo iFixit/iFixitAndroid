@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
     <!-- Base Style Attributes -->
-    <attr name="doz__textColorPrimary" format="color" />
-    <attr name="doz__textColorSecondary" format="color" />
-    <attr name="doz__textColorPrimaryEmphasis" format="color" />
-    <attr name="doz__textColorSecondaryEmphasis" format="color" />
+    <attr name="doz__textColorPrimary" format="color"/>
+    <attr name="doz__textColorSecondary" format="color"/>
+    <attr name="doz__textColorPrimaryEmphasis" format="color"/>
+    <attr name="doz__textColorSecondaryEmphasis" format="color"/>
+    <attr name="doz__primaryHighlightColor" format="color"/>
 
-    <attr name="doz__background" format="reference|color" />
-    <attr name="doz__imageBorder" format="reference|color" />
+    <attr name="doz__background" format="reference|color"/>
+    <attr name="doz__imageBorder" format="reference|color"/>
 
-    <attr name="doz__topicHeaderColor" format="reference|color" />
-    <attr name="doz__sectionHeader" format="reference" />
-    <attr name="doz__listViewStyle" format="reference" />
-    <attr name="doz__topicGuideList" format="reference" />
-    <attr name="doz__topicDefaultBackground" format="reference|color" />
-
+    <attr name="doz__sectionHeader" format="reference"/>
+    <attr name="doz__listViewStyle" format="reference"/>
+    <attr name="doz__topicGuideList" format="reference"/>
+    <attr name="doz__topicDefaultBackground" format="reference|color"/>
+    <attr name="doz__itemSelector" format="reference|color"/>
+    <attr name="doz__spinnerBackground" format="reference|color"/>
+    <attr name="doz__buttonBackground" format="reference|color"/>
+    <attr name="doz__editTextBackground" format="reference|color"/>
+    <attr name="doz__checkboxBackground" format="reference|color"/>
 
     <attr name="buttonBarButtonStyle" format="reference"/>
     <attr name="buttonBarStyle" format="reference"/>
@@ -24,9 +27,9 @@
     <attr name="dividerHorizontal" format="reference"/>
 
     <declare-styleable name="ThumbnailView">
-        <attr name="show_single" format="boolean" />
-        <attr name="can_edit" format="boolean" />
-        <attr name="add_thumbnail_icon" format="integer" />
-        <attr name="main_image" format="integer" />
+        <attr name="show_single" format="boolean"/>
+        <attr name="can_edit" format="boolean"/>
+        <attr name="add_thumbnail_icon" format="integer"/>
+        <attr name="main_image" format="integer"/>
     </declare-styleable>
 </resources>

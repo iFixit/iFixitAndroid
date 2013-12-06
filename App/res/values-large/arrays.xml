@@ -2,13 +2,13 @@
 <resources>
     <array name="image_sizes">
         <!-- Guide Image Thumbnail -->
-        <item>.medium</item>
+        <item>.large</item>
         <!-- Guide Main Image -->
-        <item>.medium</item>
+        <item>.large</item>
         <!-- Guide Image Fullsize -->
         <item>.huge</item>
         <!-- Grid Images -->
-        <item>.standard</item>
+        <item>.medium</item>
         <!-- Action Bar Logo -->
         <item>.thumbnail</item>
     </array>

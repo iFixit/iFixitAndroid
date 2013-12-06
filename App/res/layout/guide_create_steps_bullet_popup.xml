@@ -28,35 +28,27 @@
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_black"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/black_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_black"/>
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_red"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/red_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_red"/>
 
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_orange"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/orange_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_orange"/>
 
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_yellow"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/yellow_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_yellow"/>
 
@@ -69,25 +61,19 @@
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_green"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/green_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_green"/>
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_blue"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/blue_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_blue"/>
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_purple"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/purple_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_pink"/>
                 </TableRow>
@@ -99,25 +85,19 @@
 
                     <ImageView
                         android:id="@+id/bullet_dialog_caution"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/caution_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_caution"/>
 
                     <ImageView
                         android:id="@+id/bullet_dialog_note"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/important_bullet_description"
                         android:src="@drawable/ic_dialog_bullet_note_light"/>
 
                     <ImageView
                         android:id="@+id/bullet_dialog_reminder"
-                        style="@style/Base.BulletIcon"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
+                        style="@style/BulletIcon"
                         android:contentDescription="@string/bullet_reorder_description"
                         android:src="@drawable/ic_dialog_bullet_reminder_light"/>
 
@@ -126,36 +106,31 @@
 
             <TextView
                 android:id="@+id/bullet_dialog_indent"
-                style="@style/Base.BulletItem"
-                android:layout_width="match_parent"
+                style="@style/BulletItem"
                 android:drawableLeft="@drawable/ic_dialog_indent"
                 android:text="@string/indent_bullet"/>
 
             <TextView
                 android:id="@+id/bullet_dialog_unindent"
-                style="@style/Base.BulletItem"
-                android:layout_width="match_parent"
+                style="@style/BulletItem"
                 android:drawableLeft="@drawable/ic_dialog_unindent"
                 android:text="@string/unindent_bullet"/>
 
             <TextView
                 android:id="@+id/bullet_dialog_rearrange"
-                style="@style/Base.BulletItem"
-                android:layout_width="match_parent"
+                style="@style/BulletItem"
                 android:drawableLeft="@drawable/ic_dialog_arrange_bullets_light"
                 android:text="@string/rearrange_bullet"/>
 
             <TextView
                 android:id="@+id/bullet_dialog_delete"
-                style="@style/Base.BulletItem"
-                android:layout_width="match_parent"
+                style="@style/BulletItem"
                 android:drawableLeft="@drawable/ic_menu_bot_step_delete"
                 android:text="@string/delete_bullet"/>
 
             <TextView
                 android:id="@+id/bullet_dialog_cancel"
-                style="@style/Base.BulletItem"
-                android:layout_width="match_parent"
+                style="@style/BulletItem"
                 android:drawablePadding="0dp"
                 android:gravity="center"
                 android:text="@string/cancel"/>
