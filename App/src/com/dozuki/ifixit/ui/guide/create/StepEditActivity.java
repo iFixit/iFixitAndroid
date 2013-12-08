@@ -36,6 +36,7 @@ import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
@@ -163,7 +164,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       }
 
       if (MainApplication.get().getSite().mGuideTypes == null) {
-         Api.call(this, Api.getSiteInfoAPICall());
+         Api.call(this, ApiCall.siteInfo());
       }
 
       mSaveStep = (Button) findViewById(R.id.step_edit_save);
@@ -253,7 +254,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
             showLoading(mLoadingContainer);
             Api.call(StepEditActivity.this,
-             Api.getGuideForEditAPICall(guideid));
+             ApiCall.unpatrolledGuide(guideid));
          }
       }
    }
@@ -316,7 +317,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                mGuide.getStep(mPagePosition).addImage(newThumb);
                refreshView(mPagePosition);
 
-               Api.call(this, Api.getUploadImageToStepAPICall(tempFileName));
+               Api.call(this, ApiCall.uploadImageToStep(tempFileName));
             }
             break;
          case StepEditLinesFragment.MIC_REQUEST_CODE:
@@ -451,10 +452,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
                if (isChecked) {
                   Api.call(StepEditActivity.this,
-                   Api.getPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
+                   ApiCall.publishGuide(mGuide.getGuideid(), mGuide.getRevisionid()));
                } else {
                   Api.call(StepEditActivity.this,
-                   Api.getUnPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
+                   ApiCall.unpublishGuide(mGuide.getGuideid(), mGuide.getRevisionid()));
                }
             }
          }
@@ -502,7 +503,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
                // Set the inbound stepid so the Step pager will navigate to the current step after updating
                mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
-               Api.call(StepEditActivity.this, Api.getGuideForEditAPICall(
+               Api.call(StepEditActivity.this, ApiCall.unpatrolledGuide(
                 mGuide.getGuideid()));
             }
 
@@ -610,7 +611,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       toggleSave(false);
 
       mGuide = event.guide;
-      Api.call(StepEditActivity.this, Api.getCreateGuideAPICall(mGuide));
+      Api.call(StepEditActivity.this, ApiCall.createGuide(mGuide));
    }
 
    @Subscribe
@@ -949,7 +950,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                 deleteStep();
              } else {
                 showLoading(mLoadingContainer, getString(R.string.deleting));
-                Api.call(StepEditActivity.this, Api.getRemoveStepAPICall(
+                Api.call(StepEditActivity.this, ApiCall.deleteStep(
                  mGuide.getGuideid(), mGuide.getSteps().get(mPagePosition)));
              }
              dialog.cancel();
@@ -1095,9 +1096,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       toggleSave(mIsStepDirty);
 
       if (obj.getRevisionid() != null) {
-         Api.call(this, Api.getEditStepAPICall(obj, mGuide.getGuideid()));
+         Api.call(this, ApiCall.editStep(obj, mGuide.getGuideid()));
       } else {
-         Api.call(this, Api.getAddStepAPICall(obj, mGuide.getGuideid(),
+         Api.call(this, ApiCall.createStep(obj, mGuide.getGuideid(),
           mPagePosition + 1, mGuide.getRevisionid()));
       }
    }

@@ -19,6 +19,7 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
@@ -164,7 +165,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          MainApplication.get().setSite(Site.getSite("dozuki"));
 
          showLoading(R.id.loading_container);
-         Api.call(this, Api.getSitesAPICall());
+         Api.call(this, ApiCall.sites());
       } else {
          displayGuideNotFoundDialog();
       }
@@ -378,7 +379,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    public void getGuide(int guideid) {
       showLoading(R.id.loading_container);
-      Api.call(this, Api.getGuideAPICall(guideid));
+      Api.call(this, ApiCall.guide(guideid));
    }
 
    private void nextStep() {

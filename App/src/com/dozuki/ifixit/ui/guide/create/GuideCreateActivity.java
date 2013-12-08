@@ -17,6 +17,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
@@ -70,7 +71,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
          }
       } else {
          showLoading(R.id.loading_container);
-         Api.call(this, Api.getUserGuidesAPICall());
+         Api.call(this, ApiCall.userGuides());
       }
 
       mGuideListAdapter = new GuideCreateListAdapter();
@@ -81,7 +82,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       mGuideListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
          @Override
          public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-            Api.call(mActivity, Api.getUserGuidesAPICall());
+            Api.call(mActivity, ApiCall.userGuides());
          }
       });
 
@@ -107,7 +108,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       // not to finish the Activity below this one on the stack.
       if (!isFinishing()) {
          // Perform the API call again because data may have changed in child Activities.
-         Api.call(this, Api.getUserGuidesAPICall());
+         Api.call(this, ApiCall.userGuides());
       }
    }
 
@@ -251,7 +252,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
        .setMessage(getString(R.string.confirm_delete_body, item.mTitle))
        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
-             Api.call(GuideCreateActivity.this, Api.getDeleteGuideAPICall(mGuideForDelete));
+             Api.call(GuideCreateActivity.this, ApiCall.deleteGuide(mGuideForDelete));
              dialog.cancel();
           }
        }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {

@@ -23,6 +23,7 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
@@ -134,10 +135,10 @@ public class GuideListItem extends LinearLayout {
 
             if (!mGuideInfo.mPublic) {
                Api.call(mActivity,
-                Api.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+                ApiCall.publishGuide(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
             } else {
                Api.call(mActivity,
-                Api.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+                ApiCall.unpublishGuide(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
             }
          }
       });

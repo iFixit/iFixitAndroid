@@ -14,6 +14,7 @@ import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.LoadingFragment;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
@@ -65,7 +66,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
 
       if (mRootTopic == null) {
          showLoading(R.id.topic_list_fragment);
-         Api.call(this, Api.getCategoriesAPICall());
+         Api.call(this, ApiCall.categories());
       }
 
       if (!mTopicListVisible && !mHideTopicList) {

@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.gallery;
 
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
@@ -27,6 +28,6 @@ public class VideoMediaFragment extends MediaFragment {
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
       Api.call(getActivity(),
-       Api.getUserVideosAPICall("?limit=" + IMAGE_PAGE_SIZE));
+       ApiCall.userVideos("?limit=" + IMAGE_PAGE_SIZE));
    }
 }

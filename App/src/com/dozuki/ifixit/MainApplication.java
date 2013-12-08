@@ -21,6 +21,7 @@ import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.OkConnectionFactory;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
@@ -384,7 +385,7 @@ public class MainApplication extends Application {
       // Check if the user is null because we're paranoid.
       if (mUser != null && activity != null) {
          // Perform the API call to delete the user's authToken.
-         Api.call(activity, Api.getLogoutAPICall(mUser));
+         Api.call(activity, ApiCall.logout(mUser));
       }
 
       shallowLogout();

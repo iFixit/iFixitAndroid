@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
@@ -92,7 +93,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
       if (mTopics != null) {
          setTopicArrayAdapter();
       } else {
-         Api.call(getActivity(), Api.getAllTopicsAPICall());
+         Api.call(getActivity(), ApiCall.allTopics());
       }
 
       mSubject = (EditText) v.findViewById(R.id.subject_field);

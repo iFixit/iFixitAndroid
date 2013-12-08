@@ -21,6 +21,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
@@ -160,7 +161,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
                Api.call(getActivity(),
-                Api.getRegisterAPICall(login, password, name));
+                ApiCall.register(login, password, name));
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);

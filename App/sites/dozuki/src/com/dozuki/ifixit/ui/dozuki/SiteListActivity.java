@@ -16,6 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
@@ -44,7 +45,7 @@ public class SiteListActivity extends BaseActivity
       }
 
       if (mSiteList == null) {
-         Api.call(this, Api.getSitesAPICall());
+         Api.call(this, ApiCall.sites());
       }
 
       setTheme(R.style.Theme_Sherlock_Light);

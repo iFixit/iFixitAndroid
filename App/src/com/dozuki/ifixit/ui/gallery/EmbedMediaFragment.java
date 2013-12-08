@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.gallery;
 
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
@@ -27,6 +28,6 @@ public class EmbedMediaFragment extends MediaFragment {
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
       Api.call(getActivity(),
-       Api.getUserEmbedsAPICall("?limit=" + IMAGE_PAGE_SIZE));
+       ApiCall.userEmbeds("?limit=" + IMAGE_PAGE_SIZE));
    }
 }

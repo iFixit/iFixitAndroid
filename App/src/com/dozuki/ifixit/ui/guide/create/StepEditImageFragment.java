@@ -24,6 +24,7 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.CaptureHelper;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Bus;
 
@@ -160,7 +161,7 @@ public class StepEditImageFragment extends BaseFragment {
                           "copy_to_media_manager",
                           null).build());
                          Api.call(getActivity(),
-                          Api.getCopyImageAPICall(thumbImage.getId() + ""));
+                          ApiCall.copyImage(thumbImage.getId() + ""));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
                          MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
@@ -168,7 +169,7 @@ public class StepEditImageFragment extends BaseFragment {
                           null).build());
 
                          Api.call(getActivity(),
-                          Api.getCopyImageAPICall(thumbImage.getId() + ""));
+                          ApiCall.copyImage(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
                          MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
                           "delete_from_step", null).build());

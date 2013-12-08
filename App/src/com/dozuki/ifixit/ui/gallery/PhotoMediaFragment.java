@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.gallery;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.UserImage;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
@@ -16,7 +17,7 @@ public class PhotoMediaFragment extends MediaFragment {
       ((GalleryActivity)getActivity()).showLoading(R.id.gallery_loading_container);
 
       Api.call(getActivity(),
-       Api.getUserImagesAPICall("?limit=" + IMAGE_PAGE_SIZE));
+       ApiCall.userImages("?limit=" + IMAGE_PAGE_SIZE));
    }
 
    @Subscribe

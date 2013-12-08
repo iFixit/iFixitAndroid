@@ -21,6 +21,7 @@ import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
@@ -68,7 +69,7 @@ public class StepPortalFragment extends BaseFragment implements
 
       if (mGuide == null) {
          ((StepsActivity) getActivity()).showLoading();
-         Api.call(getActivity(), Api.getGuideForEditAPICall(guideid));
+         Api.call(getActivity(), ApiCall.unpatrolledGuide(guideid));
       } else {
          mActionBar.setTitle(mGuide.getTitle());
       }
@@ -232,7 +233,7 @@ public class StepPortalFragment extends BaseFragment implements
       if (reodered) {
          mStepAdapter.notifyDataSetChanged();
          ((StepsActivity) getActivity()).showLoading();
-         Api.call(getActivity(), Api.getStepReorderAPICall(mGuide));
+         Api.call(getActivity(), ApiCall.reorderSteps(mGuide));
       }
    }
 
@@ -323,7 +324,7 @@ public class StepPortalFragment extends BaseFragment implements
 
              ((StepsActivity) getActivity()).showLoading();
              Api.call(getActivity(),
-              Api.getRemoveStepAPICall(mGuide.getGuideid(), mStepForDelete));
+              ApiCall.deleteStep(mGuide.getGuideid(), mStepForDelete));
              dialog.cancel();
 
           }

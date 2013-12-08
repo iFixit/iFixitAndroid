@@ -31,6 +31,7 @@ import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.CaptureHelper;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.api.ApiCall;
 
 import java.io.File;
 import java.io.IOException;
@@ -168,7 +169,7 @@ public abstract class MediaFragment extends BaseFragment
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            Api.call(getSherlockActivity(), Api.getUploadImageAPICall(path, key));
+            Api.call(getSherlockActivity(), ApiCall.uploadImage(path, key));
          } else if (requestCode == CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
                Log.e("iFixit", "Error cameraTempFile is null!");
@@ -176,7 +177,7 @@ public abstract class MediaFragment extends BaseFragment
             }
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
-            Api.call(getSherlockActivity(), Api.getUploadImageAPICall(
+            Api.call(getSherlockActivity(), ApiCall.uploadImage(
              mCameraTempFileName, key));
          }
       }
@@ -306,7 +307,7 @@ public abstract class MediaFragment extends BaseFragment
          }
       }
 
-      Api.call(getSherlockActivity(), Api.getDeleteImageAPICall(deleteList));
+      Api.call(getSherlockActivity(), ApiCall.deleteImage(deleteList));
 
       mMode.finish();
    }

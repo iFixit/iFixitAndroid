@@ -21,6 +21,7 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
@@ -174,7 +175,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
           long id) {
             showLoading();
             MainApplication.get().setSite(siteListAdapter.getSiteList().get(position));
-            Api.call(getActivity(), Api.getSiteInfoAPICall());
+            Api.call(getActivity(), ApiCall.siteInfo());
          }
       });
    }

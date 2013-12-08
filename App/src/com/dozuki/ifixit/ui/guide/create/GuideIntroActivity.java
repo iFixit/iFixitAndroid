@@ -26,6 +26,7 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
 import com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
@@ -66,10 +67,10 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
 
             Bundle bundle = mWizardModel.save();
             if (mEditIntroState) {
-               Api.call(GuideIntroActivity.this, Api.getEditGuideAPICall(bundle,
+               Api.call(GuideIntroActivity.this, ApiCall.editGuide(bundle,
                 mGuide.getGuideid(), mGuide.getRevisionid()));
             } else {
-               Api.call(GuideIntroActivity.this, Api.getCreateGuideAPICall(bundle));
+               Api.call(GuideIntroActivity.this, ApiCall.createGuideFromBundle(bundle));
             }
 
          } else {
@@ -140,7 +141,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
       }
 
       if (MainApplication.get().getSite().mGuideTypes == null) {
-         Api.call(this, Api.getSiteInfoAPICall());
+         Api.call(this, ApiCall.siteInfo());
       } else {
          initWizard();
       }

@@ -173,7 +173,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
-         mCurAPICall = Api.getLoginAPICall(login, password);
+         mCurAPICall = ApiCall.login(login, password);
          Api.call(getActivity(), mCurAPICall);
       } else {
          if (login.length() < 1) {
@@ -252,7 +252,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          mLoadingSpinner.setVisibility(View.VISIBLE);
          String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
-         mCurAPICall = Api.getUserInfoAPICall(session);
+         mCurAPICall = ApiCall.userInfo(session);
          Api.call(getActivity(), mCurAPICall);
       } else if (!MainApplication.get().getSite().mStandardAuth) {
          /**

@@ -10,6 +10,7 @@ import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.BaseListFragment;
 import com.dozuki.ifixit.ui.EndlessScrollListener;
 import com.dozuki.ifixit.util.api.Api;
+import com.dozuki.ifixit.util.api.ApiCall;
 
 import java.util.ArrayList;
 
@@ -86,7 +87,7 @@ public class SearchFragment extends BaseListFragment {
             String query = ((SearchActivity) getActivity()).buildQuery(mSearch.mQuery);
             query += "&limit=" + LIMIT + "&offset=" + mOffset;
 
-            Api.call(getActivity(), Api.getSearchAPICall(query));
+            Api.call(getActivity(), ApiCall.search(query));
          }
       });
 

@@ -9,6 +9,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
@@ -38,7 +39,7 @@ public class FavoritesActivity extends BaseMenuDrawerActivity {
          initGridView();
       } else {
          showLoading(R.id.favorites_loading);
-         Api.call(this, Api.getUserFavorites(LIMIT, OFFSET));
+         Api.call(this, ApiCall.userFavorites(LIMIT, OFFSET));
       }
 
       MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/favorites");

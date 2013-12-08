@@ -18,6 +18,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
@@ -162,7 +163,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       }
 
       showLoading(R.id.search_results_container);
-      Api.call(this, Api.getSearchAPICall(query));
+      Api.call(this, ApiCall.search(query));
    }
 
    private void focusSearch() {

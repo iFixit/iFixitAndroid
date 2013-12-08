@@ -18,6 +18,7 @@ import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
@@ -186,7 +187,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      Api.call(getActivity(), Api.getTopicAPICall(topicName));
+      Api.call(getActivity(), ApiCall.topic(topicName));
    }
 
    public TopicLeaf getTopicLeaf() {
