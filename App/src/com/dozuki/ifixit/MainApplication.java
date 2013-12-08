@@ -3,7 +3,6 @@ package com.dozuki.ifixit;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -13,14 +12,15 @@ import android.content.res.TypedArray;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
-import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.OkConnectionFactory;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.analytics.tracking.android.GAServiceManager;
@@ -125,6 +125,7 @@ public class MainApplication extends Application {
 
       super.onCreate();
       initializeGa();
+      Api.init();
 
       sMainApplication = this;
       setSite(getDefaultSite());
@@ -355,9 +356,9 @@ public class MainApplication extends Application {
       /**
        * Execute pending API call if one exists.
        */
-      Intent pendingApiCall = Api.getAndRemovePendingApiCall(this);
+      ApiCall pendingApiCall = Api.getAndRemovePendingApiCall(this);
       if (pendingApiCall != null) {
-         startService(pendingApiCall);
+         Api.call(null, pendingApiCall);
       }
    }
 

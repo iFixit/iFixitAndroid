@@ -2,56 +2,38 @@ package com.dozuki.ifixit.util.api;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.AsyncTask;
-import android.os.Binder;
 import android.os.Build;
-import android.os.Bundle;
-import android.os.IBinder;
 import android.util.Log;
+
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
-import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
-import com.dozuki.ifixit.model.guide.wizard.Page;
-import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
-import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.io.File;
 import java.util.LinkedList;
 import java.util.List;
 
 /**
- * Service used to perform asynchronous API requests and broadcast results.
- * <p/>
- * Future plans: Store the results in a database for later viewing.
- * Add functionality to download multiple guides including images.
+ * Class that performs asynchronous API calls and posts the results to the
+ * event bus.
  */
-public class Api extends Service {
+public class Api {
    private interface Responder {
       public void setResult(ApiEvent<?> result);
    }
-
-   private static final String API_CALL = "API_CALL";
 
    private static final int INVALID_LOGIN_CODE = 401;
 
@@ -65,20 +47,7 @@ public class Api extends Service {
    /**
     * List of events that have been sent but not received by any subscribers.
     */
-   private List<ApiEvent<?>> mDeadApiEvents;
-
-   public class LocalBinder extends Binder {
-      public Api getAPIServiceInstance() {
-         return Api.this;
-      }
-   }
-
-   IBinder mBinder = new LocalBinder();
-
-   @Override
-   public IBinder onBind(Intent intent) {
-      return mBinder;
-   }
+   private static List<ApiEvent<?>> sDeadApiEvents;
 
    /**
     * Returns true if the the user needs to be authenticated for the given site and endpoint.
@@ -92,15 +61,40 @@ public class Api extends Service {
     * Performs the API call defined by the given Intent. This takes care of opening a
     * login dialog and saving the Intent if the user isn't authenticated but should be.
     */
-   public static void call(Activity activity, ApiCall apiCall) {
+   public static void call(Activity activity, final ApiCall apiCall) {
       ApiEndpoint endpoint = apiCall.mEndpoint;
-      apiCall.mActivityid = ((BaseActivity)activity).getActivityid();
+      if (activity != null) {
+         apiCall.mActivityid = ((BaseActivity)activity).getActivityid();
+      } else if (apiCall.mActivityid == -1) {
+         Log.w("Api", "Missing activityid!", new Exception());
+      }
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(endpoint) && !MainApplication.get().isUserLoggedIn()) {
          MainApplication.getBus().post(getUnauthorizedEvent(apiCall));
       } else {
-         activity.startService(makeApiIntent(activity, apiCall));
+         performRequest(apiCall, new Responder() {
+            public void setResult(ApiEvent<?> result) {
+               // Don't parse if we've erred already.
+               if (!result.hasError()) {
+                  result = parseResult(result, apiCall.mEndpoint);
+               }
+
+               // Don't save if there a parse error.
+               if (!result.hasError()) {
+                  saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
+               }
+
+               if (apiCall.mEndpoint.mPostResults) {
+                  /**
+                   * Always post the result despite any errors. This actually sends it off
+                   * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
+                   * was initiated by that Activity instance.
+                   */
+                  MainApplication.getBus().post(new ApiEvent.ActivityProxy(result));
+               }
+            }
+         });
       }
    }
 
@@ -124,82 +118,21 @@ public class Api extends Service {
    /**
     * Returns the pending API call and sets it to null. Returns null if no pending API call.
     */
-   public static Intent getAndRemovePendingApiCall(Context context) {
+   public static ApiCall getAndRemovePendingApiCall(Context context) {
       ApiCall pendingApiCall = sPendingApiCall;
       sPendingApiCall = null;
 
       if (pendingApiCall != null) {
-         return makeApiIntent(context, pendingApiCall);
+         return pendingApiCall;
       } else {
          return null;
       }
    }
 
    /**
-    * Constructs an Intent that can be used to start the Api and perform
-    * the given APIcall.
-    */
-   private static Intent makeApiIntent(Context context, ApiCall apiCall) {
-      Intent intent = new Intent(context, Api.class);
-      Bundle extras = new Bundle();
-
-      extras.putSerializable(API_CALL, apiCall);
-      intent.putExtras(extras);
-
-      return intent;
-   }
-
-   @Override
-   public int onStartCommand(Intent intent, int flags, int startId) {
-      Bundle extras = intent.getExtras();
-      final ApiCall apiCall = (ApiCall) extras.getSerializable(API_CALL);
-
-      // Commented out because the DB code isn't ready yet.
-      // ApiDatabase db = new ApiDatabase(this);
-      // String fetchedResult = db.fetchResult(requestTarget, requestQuery);
-      // db.close();
-
-      // if (fetchedResult != null) {
-      //    Result result = parseResult(fetchedResult, requestTarget,
-      //     broadcastAction);
-
-      //    if (!result.hasError()) {
-      //       broadcastResult(result, broadcastAction);
-
-      //       return START_NOT_STICKY;
-      //    }
-      // }
-
-      performRequest(apiCall, new Responder() {
-         public void setResult(ApiEvent<?> result) {
-            // Don't parse if we've erred already.
-            if (!result.hasError()) {
-               result = parseResult(result, apiCall.mEndpoint);
-            }
-
-            // Don't save if there a parse error.
-            if (!result.hasError()) {
-               saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
-            }
-
-            if (apiCall.mEndpoint.mPostResults) {
-               /**
-                * Always post the result despite any errors. This actually sends it off
-                * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
-                * was initiated by that Activity instance.
-                */
-               MainApplication.getBus().post(new ApiEvent.ActivityProxy(result));
-            }
-         }
-      });
-
-      return START_NOT_STICKY;
-   }
-
-   /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private ApiEvent<?> parseResult(ApiEvent<?> result, ApiEndpoint endpoint) {
+   private static ApiEvent<?> parseResult(ApiEvent<?> result, ApiEndpoint endpoint) {
       ApiEvent<?> event;
 
       int code = result.mCode;
@@ -245,7 +178,7 @@ public class Api extends Service {
       return code >= 200 && code < 300;
    }
 
-   private void saveResult(ApiEvent<?> result, int requestTarget,
+   private static void saveResult(ApiEvent<?> result, int requestTarget,
     String requestQuery) {
       // Commented out because the DB code isn't ready yet.
       // ApiDatabase db = new ApiDatabase(this);
@@ -268,7 +201,7 @@ public class Api extends Service {
            public void onClick(DialogInterface dialog, int id) {
               // Try performing the request again.
               if (event.mError.mType.mTryAgain) {
-                 activity.startService(makeApiIntent(activity, event.mApiCall));
+                 call(activity, event.mApiCall);
               }
 
               dialog.dismiss();
@@ -290,53 +223,42 @@ public class Api extends Service {
       return dialog;
    }
 
-   @Override
-   public void onCreate() {
-      super.onCreate();
+   public static void init() {
+      sDeadApiEvents = new LinkedList<ApiEvent<?>>();
 
-      mDeadApiEvents = new LinkedList<ApiEvent<?>>();
+      MainApplication.getBus().register(new Object() {
+         @Subscribe
+         public void onDeadEvent(DeadEvent deadEvent) {
+            Object event = deadEvent.event;
 
-      MainApplication.getBus().register(this);
+            if (BuildConfig.DEBUG) {
+               Log.i("Api", "onDeadEvent: " + event.getClass().getName());
+            }
+
+            if (event instanceof ApiEvent<?>) {
+               addDeadApiEvent((ApiEvent<?>)event);
+            } else if (event instanceof ApiEvent.ActivityProxy) {
+               addDeadApiEvent(((ApiEvent.ActivityProxy)event).getApiEvent());
+            }
+         }
+
+      });
    }
 
-   @Override
-   public void onDestroy() {
-      super.onDestroy();
-
-      MainApplication.getBus().unregister(this);
-
-      mDeadApiEvents = null;
-   }
-
-   @Subscribe
-   public void onDeadEvent(DeadEvent deadEvent) {
-      Object event = deadEvent.event;
-
-      if (BuildConfig.DEBUG) {
-         Log.i("Api", "onDeadEvent: " + event.getClass().getName());
-      }
-
-      if (event instanceof ApiEvent<?>) {
-         addDeadApiEvent((ApiEvent<?>)event);
-      } else if (event instanceof ApiEvent.ActivityProxy) {
-         addDeadApiEvent(((ApiEvent.ActivityProxy)event).getApiEvent());
+   private static void addDeadApiEvent(ApiEvent<?> apiEvent) {
+      synchronized (sDeadApiEvents) {
+         sDeadApiEvents.add(apiEvent);
       }
    }
 
-   private void addDeadApiEvent(ApiEvent<?> apiEvent) {
-      synchronized (mDeadApiEvents) {
-         mDeadApiEvents.add(apiEvent);
-      }
-   }
-
-   public void retryDeadEvents(BaseActivity activity) {
-      synchronized (mDeadApiEvents) {
-         if (mDeadApiEvents.isEmpty()) {
+   public static void retryDeadEvents(BaseActivity activity) {
+      synchronized (sDeadApiEvents) {
+         if (sDeadApiEvents.isEmpty()) {
             return;
          }
 
-         List<ApiEvent<?>> deadApiEvents = mDeadApiEvents;
-         mDeadApiEvents = new LinkedList<ApiEvent<?>>();
+         List<ApiEvent<?>> deadApiEvents = sDeadApiEvents;
+         sDeadApiEvents = new LinkedList<ApiEvent<?>>();
          int activityid = activity.getActivityid();
 
          if (activityid == -1) {
@@ -360,17 +282,17 @@ public class Api extends Service {
                   Log.i("Api", "Adding dead event: " + apiEvent.getClass().toString());
                }
 
-               mDeadApiEvents.add(apiEvent);
+               sDeadApiEvents.add(apiEvent);
             }
          }
 
-         if (BuildConfig.DEBUG && mDeadApiEvents.size() > 0) {
-            Log.i("Api", "Skipped " + mDeadApiEvents.size() + " dead events");
+         if (BuildConfig.DEBUG && sDeadApiEvents.size() > 0) {
+            Log.i("Api", "Skipped " + sDeadApiEvents.size() + " dead events");
          }
       }
    }
 
-   private void performRequest(final ApiCall apiCall, final Responder responder) {
+   private static void performRequest(final ApiCall apiCall, final Responder responder) {
       final ApiEndpoint endpoint = apiCall.mEndpoint;
 
       if (!checkConnectivity(responder, endpoint, apiCall)) {
@@ -429,14 +351,14 @@ public class Api extends Service {
                   authToken = user.getAuthToken();
                }
 
-               request.userAgent(MainApplication.get().getUserAgent());
-
                /**
                 * Send along the auth token if we found one.
                 */
                if (authToken != null) {
                   request.header("Authorization", "api " + authToken);
                }
+
+               request.userAgent(MainApplication.get().getUserAgent());
 
                request.header("X-App-Id", BuildConfig.APP_ID);
 
@@ -510,10 +432,10 @@ public class Api extends Service {
       }
    }
 
-   private boolean checkConnectivity(Responder responder, ApiEndpoint endpoint,
+   private static boolean checkConnectivity(Responder responder, ApiEndpoint endpoint,
     ApiCall apiCall) {
       ConnectivityManager cm = (ConnectivityManager)
-       getSystemService(Context.CONNECTIVITY_SERVICE);
+       MainApplication.get().getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       if (netInfo == null || !netInfo.isConnected()) {

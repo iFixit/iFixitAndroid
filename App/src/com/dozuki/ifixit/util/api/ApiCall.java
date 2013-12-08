@@ -45,12 +45,12 @@ public class ApiCall implements Serializable {
    }
 
    public ApiCall(ApiEndpoint endpoint, String query, String requestBody,
-                  String extraInfo) {
+    String extraInfo) {
       this(endpoint, query, requestBody, extraInfo, null);
    }
 
    public ApiCall(ApiEndpoint endpoint, String query, String requestBody,
-                  String extraInfo, String filePath) {
+    String extraInfo, String filePath) {
       mEndpoint = endpoint;
       mQuery = query;
       mRequestBody = requestBody;
@@ -161,7 +161,7 @@ public class ApiCall implements Serializable {
             requestBody.put("subject", guide.getSubject());
          }
       } catch (JSONException e) {
-         // TODO Error
+         return null;
       }
 
       return new ApiCall(ApiEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
