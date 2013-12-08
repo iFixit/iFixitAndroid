@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.util;
+package com.dozuki.ifixit.util.api;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -6,7 +6,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-public class APIDatabase extends SQLiteOpenHelper {
+public class ApiDatabase extends SQLiteOpenHelper {
    private static final int DATABASE_VERSION = 1;
    private static final String DATABASE_NAME = "api";
    private static final String TABLE_API_RESULTS = "api_results";
@@ -27,7 +27,7 @@ public class APIDatabase extends SQLiteOpenHelper {
       KEY_DATE + " INTEGER" +
     ")";
 
-   public APIDatabase(Context context) throws Exception {
+   public ApiDatabase(Context context) throws Exception {
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
       throw new Exception("Database not implemented yet");
    }

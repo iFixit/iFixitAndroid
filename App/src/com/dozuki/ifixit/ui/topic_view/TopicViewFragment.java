@@ -18,8 +18,8 @@ import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
 import com.dozuki.ifixit.ui.guide.view.WebViewFragment;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
@@ -93,11 +93,11 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
    }
 
    @Subscribe
-   public void onTopic(APIEvent.Topic event) {
+   public void onTopic(ApiEvent.Topic event) {
       if (!event.hasError()) {
          setTopicLeaf(event.getResult());
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -186,7 +186,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       mTopicLeaf = null;
       mSelectedTab = -1;
 
-      APIService.call(getActivity(), APIService.getTopicAPICall(topicName));
+      Api.call(getActivity(), Api.getTopicAPICall(topicName));
    }
 
    public TopicLeaf getTopicLeaf() {

@@ -1,6 +1,5 @@
 package com.dozuki.ifixit;
 
-import com.dozuki.ifixit.R;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
@@ -18,7 +17,7 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.OkConnectionFactory;
 import com.dozuki.ifixit.util.Utils;
@@ -355,7 +354,7 @@ public class MainApplication extends Application {
       /**
        * Execute pending API call if one exists.
        */
-      Intent pendingApiCall = APIService.getAndRemovePendingApiCall(this);
+      Intent pendingApiCall = Api.getAndRemovePendingApiCall(this);
       if (pendingApiCall != null) {
          startService(pendingApiCall);
       }
@@ -385,7 +384,7 @@ public class MainApplication extends Application {
       // Check if the user is null because we're paranoid.
       if (mUser != null && activity != null) {
          // Perform the API call to delete the user's authToken.
-         APIService.call(activity, APIService.getLogoutAPICall(mUser));
+         Api.call(activity, Api.getLogoutAPICall(mUser));
       }
 
       shallowLogout();
@@ -398,7 +397,7 @@ public class MainApplication extends Application {
     */
    public void cancelLogin() {
       // Clear the pending api call if one exists.
-      APIService.getAndRemovePendingApiCall(this);
+      Api.getAndRemovePendingApiCall(this);
       setIsLoggingIn(false);
 
       getBus().post(new LoginEvent.Cancel());

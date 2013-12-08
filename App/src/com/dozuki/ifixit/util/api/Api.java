@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.util;
+package com.dozuki.ifixit.util.api;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -28,6 +28,7 @@ import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
+import com.dozuki.ifixit.util.JSONHelper;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import com.squareup.otto.DeadEvent;
@@ -36,7 +37,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
-import java.net.URLEncoder;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -46,9 +46,9 @@ import java.util.List;
  * Future plans: Store the results in a database for later viewing.
  * Add functionality to download multiple guides including images.
  */
-public class APIService extends Service {
+public class Api extends Service {
    private interface Responder {
-      public void setResult(APIEvent<?> result);
+      public void setResult(ApiEvent<?> result);
    }
 
    private static final String API_CALL = "API_CALL";
@@ -62,16 +62,16 @@ public class APIService extends Service {
     * but the user is not logged in. This is then performed once the user has
     * authenticated.
     */
-   private static APICall sPendingApiCall;
+   private static ApiCall sPendingApiCall;
 
    /**
     * List of events that have been sent but not received by any subscribers.
     */
-   private List<APIEvent<?>> mDeadApiEvents;
+   private List<ApiEvent<?>> mDeadApiEvents;
 
    public class LocalBinder extends Binder {
-      public APIService getAPIServiceInstance() {
-         return APIService.this;
+      public Api getAPIServiceInstance() {
+         return Api.this;
       }
    }
 
@@ -85,7 +85,7 @@ public class APIService extends Service {
    /**
     * Returns true if the the user needs to be authenticated for the given site and endpoint.
     */
-   private static boolean requireAuthentication(APIEndpoint endpoint) {
+   private static boolean requireAuthentication(ApiEndpoint endpoint) {
       return (endpoint.mAuthenticated || !MainApplication.get().getSite().mPublic) &&
        !endpoint.mForcePublic;
    }
@@ -94,8 +94,8 @@ public class APIService extends Service {
     * Performs the API call defined by the given Intent. This takes care of opening a
     * login dialog and saving the Intent if the user isn't authenticated but should be.
     */
-   public static void call(Activity activity, APICall apiCall) {
-      APIEndpoint endpoint = apiCall.mEndpoint;
+   public static void call(Activity activity, ApiCall apiCall) {
+      ApiEndpoint endpoint = apiCall.mEndpoint;
       apiCall.mActivityid = ((BaseActivity)activity).getActivityid();
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
@@ -107,19 +107,19 @@ public class APIService extends Service {
    }
 
    /**
-    * Returns an APIEvent that triggers a login dialog and sets up the APICall to be performed
+    * Returns an ApiEvent that triggers a login dialog and sets up the ApiCall to be performed
     * once the user successfully logs in.
     */
-   private static APIEvent<?> getUnauthorizedEvent(APICall apiCall) {
+   private static ApiEvent<?> getUnauthorizedEvent(ApiCall apiCall) {
       sPendingApiCall = apiCall;
 
       // We aren't logged in anymore so lets make sure we don't think we are.
       MainApplication.get().shallowLogout();
 
-      // The APIError doesn't matter as long as one exists.
-      return new APIEvent.Unauthorized().
+      // The ApiError doesn't matter as long as one exists.
+      return new ApiEvent.Unauthorized().
          setCode(INVALID_LOGIN_CODE).
-         setError(new APIError("", "", APIError.Type.UNAUTHORIZED)).
+         setError(new ApiError("", "", ApiError.Type.UNAUTHORIZED)).
          setApiCall(apiCall);
    }
 
@@ -127,7 +127,7 @@ public class APIService extends Service {
     * Returns the pending API call and sets it to null. Returns null if no pending API call.
     */
    public static Intent getAndRemovePendingApiCall(Context context) {
-      APICall pendingApiCall = sPendingApiCall;
+      ApiCall pendingApiCall = sPendingApiCall;
       sPendingApiCall = null;
 
       if (pendingApiCall != null) {
@@ -138,11 +138,11 @@ public class APIService extends Service {
    }
 
    /**
-    * Constructs an Intent that can be used to start the APIService and perform
+    * Constructs an Intent that can be used to start the Api and perform
     * the given APIcall.
     */
-   private static Intent makeApiIntent(Context context, APICall apiCall) {
-      Intent intent = new Intent(context, APIService.class);
+   private static Intent makeApiIntent(Context context, ApiCall apiCall) {
+      Intent intent = new Intent(context, Api.class);
       Bundle extras = new Bundle();
 
       extras.putSerializable(API_CALL, apiCall);
@@ -154,10 +154,10 @@ public class APIService extends Service {
    @Override
    public int onStartCommand(Intent intent, int flags, int startId) {
       Bundle extras = intent.getExtras();
-      final APICall apiCall = (APICall) extras.getSerializable(API_CALL);
+      final ApiCall apiCall = (ApiCall) extras.getSerializable(API_CALL);
 
       // Commented out because the DB code isn't ready yet.
-      // APIDatabase db = new APIDatabase(this);
+      // ApiDatabase db = new ApiDatabase(this);
       // String fetchedResult = db.fetchResult(requestTarget, requestQuery);
       // db.close();
 
@@ -173,7 +173,7 @@ public class APIService extends Service {
       // }
 
       performRequest(apiCall, new Responder() {
-         public void setResult(APIEvent<?> result) {
+         public void setResult(ApiEvent<?> result) {
             // Don't parse if we've erred already.
             if (!result.hasError()) {
                result = parseResult(result, apiCall.mEndpoint);
@@ -187,10 +187,10 @@ public class APIService extends Service {
             if (apiCall.mEndpoint.mPostResults) {
                /**
                 * Always post the result despite any errors. This actually sends it off
-                * to BaseActivity which posts the underlying APIEvent<?> if the APICall
+                * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
                 * was initiated by that Activity instance.
                 */
-               MainApplication.getBus().post(new APIEvent.ActivityProxy(result));
+               MainApplication.getBus().post(new ApiEvent.ActivityProxy(result));
             }
          }
       });
@@ -201,13 +201,13 @@ public class APIService extends Service {
    /**
     * Parse the response in the given result with the given requestTarget.
     */
-   private APIEvent<?> parseResult(APIEvent<?> result, APIEndpoint endpoint) {
-      APIEvent<?> event;
+   private ApiEvent<?> parseResult(ApiEvent<?> result, ApiEndpoint endpoint) {
+      ApiEvent<?> event;
 
       int code = result.mCode;
       String response = result.getResponse();
 
-      APIError error = null;
+      ApiError error = null;
 
       if (!isSuccess(code)) {
          error = JSONHelper.parseError(response, code);
@@ -217,7 +217,7 @@ public class APIService extends Service {
          event = result.setError(error);
       } else {
          try {
-            // We don't know the type of APIEvent it is so we must let the endpoint's
+            // We don't know the type of ApiEvent it is so we must let the endpoint's
             // parseResult return the correct one...
             event = endpoint.parseResult(response);
 
@@ -229,14 +229,14 @@ public class APIService extends Service {
             // This is meant to catch JSON and GSON parse exceptions but enumerating
             // all different types of Exceptions and putting error handling code
             // in one place is tedious.
-            Log.e("APIService", "API parse error", e);
-            result.setError(new APIError(APIError.Type.PARSE));
+            Log.e("Api", "API parse error", e);
+            result.setError(new ApiError(ApiError.Type.PARSE));
 
             event = result;
          }
 
          if (!isSuccess(code)) {
-            event.setError(APIError.getByStatusCode(code));
+            event.setError(ApiError.getByStatusCode(code));
          }
       }
 
@@ -247,41 +247,41 @@ public class APIService extends Service {
       return code >= 200 && code < 300;
    }
 
-   private void saveResult(APIEvent<?> result, int requestTarget,
+   private void saveResult(ApiEvent<?> result, int requestTarget,
     String requestQuery) {
       // Commented out because the DB code isn't ready yet.
-      // APIDatabase db = new APIDatabase(this);
+      // ApiDatabase db = new ApiDatabase(this);
       // db.insertResult(result.getResponse(), requestTarget, requestQuery);
       // db.close();
    }
 
-   public static APICall getSearchAPICall(String query) {
-      return new APICall(APIEndpoint.SEARCH, query);
+   public static ApiCall getSearchAPICall(String query) {
+      return new ApiCall(ApiEndpoint.SEARCH, query);
    }
 
-   public static APICall getTeardowns(int limit, int offset) {
-      return new APICall(APIEndpoint.GUIDES,
+   public static ApiCall getTeardowns(int limit, int offset) {
+      return new ApiCall(ApiEndpoint.GUIDES,
        "?filter=teardown&order=DESC&limit=" + limit + "&offset=" + offset);
    }
 
-   public static APICall getFeaturedGuides(int limit, int offset) {
-      return new APICall(APIEndpoint.GUIDES,
+   public static ApiCall getFeaturedGuides(int limit, int offset) {
+      return new ApiCall(ApiEndpoint.GUIDES,
        "/featured?limit=" + limit + "&offset=" + offset);
    }
 
-   public static APICall getCategoriesAPICall() {
-      return new APICall(APIEndpoint.CATEGORIES, NO_QUERY);
+   public static ApiCall getCategoriesAPICall() {
+      return new ApiCall(ApiEndpoint.CATEGORIES, NO_QUERY);
    }
 
-   public static APICall getGuideAPICall(int guideid) {
-      return new APICall(APIEndpoint.GUIDE, "" + guideid);
+   public static ApiCall getGuideAPICall(int guideid) {
+      return new ApiCall(ApiEndpoint.GUIDE, "" + guideid);
    }
 
-   public static APICall getTopicAPICall(String topicName) {
-      return new APICall(APIEndpoint.TOPIC, topicName);
+   public static ApiCall getTopicAPICall(String topicName) {
+      return new ApiCall(ApiEndpoint.TOPIC, topicName);
    }
 
-   public static APICall getLoginAPICall(String email, String password) {
+   public static ApiCall getLoginAPICall(String email, String password) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -291,11 +291,11 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.LOGIN, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
 
-   public static APICall getLogoutAPICall(User user) {
-      APICall apiCall = new APICall(APIEndpoint.LOGOUT, NO_QUERY);
+   public static ApiCall getLogoutAPICall(User user) {
+      ApiCall apiCall = new ApiCall(ApiEndpoint.LOGOUT, NO_QUERY);
 
       // Override the authToken because the user won't be logged in by the time
       // the request is performed.
@@ -304,11 +304,11 @@ public class APIService extends Service {
       return apiCall;
    }
 
-   public static APICall getUserFavorites(int limit, int offset) {
-      return new APICall(APIEndpoint.USER_FAVORITES, "?limit=" + limit + "&offset=" + offset);
+   public static ApiCall getUserFavorites(int limit, int offset) {
+      return new ApiCall(ApiEndpoint.USER_FAVORITES, "?limit=" + limit + "&offset=" + offset);
    }
 
-   public static APICall getCreateGuideAPICall(Bundle introWizardModel) {
+   public static ApiCall getCreateGuideAPICall(Bundle introWizardModel) {
       JSONObject requestBody = guideBundleToRequestBody(introWizardModel);
 
       try {
@@ -317,10 +317,10 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
 
-   public static APICall getCreateGuideAPICall(Guide guide) {
+   public static ApiCall getCreateGuideAPICall(Guide guide) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -335,17 +335,17 @@ public class APIService extends Service {
          // TODO Error
       }
 
-      return new APICall(APIEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
    }
 
-   public static APICall getDeleteGuideAPICall(GuideInfo guide) {
-      return new APICall(APIEndpoint.DELETE_GUIDE, guide.mGuideid + "?revisionid=" + guide.mRevisionid, "");
+   public static ApiCall getDeleteGuideAPICall(GuideInfo guide) {
+      return new ApiCall(ApiEndpoint.DELETE_GUIDE, guide.mGuideid + "?revisionid=" + guide.mRevisionid, "");
    }
 
-   public static APICall getEditGuideAPICall(Bundle bundle, int guideid, int revisionid) {
+   public static ApiCall getEditGuideAPICall(Bundle bundle, int guideid, int revisionid) {
       JSONObject requestBody = guideBundleToRequestBody(bundle);
 
-      return new APICall(APIEndpoint.EDIT_GUIDE, "" + guideid + "?revisionid="
+      return new ApiCall(ApiEndpoint.EDIT_GUIDE, "" + guideid + "?revisionid="
        + revisionid, requestBody.toString());
    }
 
@@ -383,17 +383,17 @@ public class APIService extends Service {
       return requestBody;
    }
 
-   public static APICall getPublishGuideAPICall(int guideid, int revisionid) {
-      return new APICall(APIEndpoint.PUBLISH_GUIDE,
+   public static ApiCall getPublishGuideAPICall(int guideid, int revisionid) {
+      return new ApiCall(ApiEndpoint.PUBLISH_GUIDE,
        guideid + "/public" + "?revisionid=" + revisionid, "");
    }
 
-   public static APICall getUnPublishGuideAPICall(int guideid, int revisionid) {
-      return new APICall(APIEndpoint.UNPUBLISH_GUIDE,
+   public static ApiCall getUnPublishGuideAPICall(int guideid, int revisionid) {
+      return new ApiCall(ApiEndpoint.UNPUBLISH_GUIDE,
        guideid + "/public" + "?revisionid=" + revisionid, "");
    }
 
-   public static APICall getEditStepAPICall(GuideStep step, int guideid) {
+   public static ApiCall getEditStepAPICall(GuideStep step, int guideid) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -404,11 +404,11 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.UPDATE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
+      return new ApiCall(ApiEndpoint.UPDATE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
        + step.getRevisionid(), requestBody.toString());
    }
 
-   public static APICall getAddStepAPICall(GuideStep step, int guideid, int stepPosition, int revisionid) {
+   public static ApiCall getAddStepAPICall(GuideStep step, int guideid, int stepPosition, int revisionid) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -420,11 +420,11 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.ADD_GUIDE_STEP, "" + guideid + "/steps" + "?revisionid=" + revisionid,
+      return new ApiCall(ApiEndpoint.ADD_GUIDE_STEP, "" + guideid + "/steps" + "?revisionid=" + revisionid,
        requestBody.toString());
    }
 
-   public static APICall getRemoveStepAPICall(int guideid, GuideStep step) {
+   public static ApiCall getRemoveStepAPICall(int guideid, GuideStep step) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -433,11 +433,11 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.DELETE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
+      return new ApiCall(ApiEndpoint.DELETE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
        + step.getRevisionid(), requestBody.toString());
    }
 
-   public static APICall getStepReorderAPICall(Guide guide) {
+   public static ApiCall getStepReorderAPICall(Guide guide) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -446,22 +446,22 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.REORDER_GUIDE_STEPS, "" + guide.getGuideid() + "/steporder" + "?revisionid="
+      return new ApiCall(ApiEndpoint.REORDER_GUIDE_STEPS, "" + guide.getGuideid() + "/steporder" + "?revisionid="
        + guide.getRevisionid(), requestBody.toString());
    }
 
    /**
     * TODO: Paginate.
     */
-   public static APICall getUserGuidesAPICall() {
-      return new APICall(APIEndpoint.USER_GUIDES, NO_QUERY);
+   public static ApiCall getUserGuidesAPICall() {
+      return new ApiCall(ApiEndpoint.USER_GUIDES, NO_QUERY);
    }
 
-   public static APICall getGuideForEditAPICall(int guideid) {
-      return new APICall(APIEndpoint.GUIDE_FOR_EDIT, "" + guideid);
+   public static ApiCall getGuideForEditAPICall(int guideid) {
+      return new ApiCall(ApiEndpoint.GUIDE_FOR_EDIT, "" + guideid);
    }
 
-   public static APICall getRegisterAPICall(String email, String password, String username) {
+   public static ApiCall getRegisterAPICall(String email, String password, String username) {
       JSONObject requestBody = new JSONObject();
 
       try {
@@ -472,36 +472,36 @@ public class APIService extends Service {
          return null;
       }
 
-      return new APICall(APIEndpoint.REGISTER, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.REGISTER, NO_QUERY, requestBody.toString());
    }
 
-   public static APICall getCopyImageAPICall(String query) {
-      return new APICall(APIEndpoint.COPY_IMAGE, query);
+   public static ApiCall getCopyImageAPICall(String query) {
+      return new ApiCall(ApiEndpoint.COPY_IMAGE, query);
    }
 
-   public static APICall getUserImagesAPICall(String query) {
-      return new APICall(APIEndpoint.USER_IMAGES, query);
+   public static ApiCall getUserImagesAPICall(String query) {
+      return new ApiCall(ApiEndpoint.USER_IMAGES, query);
    }
 
-   public static APICall getUserVideosAPICall(String query) {
-      return new APICall(APIEndpoint.USER_VIDEOS, query);
+   public static ApiCall getUserVideosAPICall(String query) {
+      return new ApiCall(ApiEndpoint.USER_VIDEOS, query);
    }
 
-   public static APICall getUserEmbedsAPICall(String query) {
-      return new APICall(APIEndpoint.USER_EMBEDS, query);
+   public static ApiCall getUserEmbedsAPICall(String query) {
+      return new ApiCall(ApiEndpoint.USER_EMBEDS, query);
    }
 
-   public static APICall getUploadImageAPICall(String filePath, String extraInformation) {
-      return new APICall(APIEndpoint.UPLOAD_IMAGE, filePath, null, extraInformation,
+   public static ApiCall getUploadImageAPICall(String filePath, String extraInformation) {
+      return new ApiCall(ApiEndpoint.UPLOAD_IMAGE, filePath, null, extraInformation,
        filePath);
    }
 
-   public static APICall getUploadImageToStepAPICall(String filePath) {
-      return new APICall(APIEndpoint.UPLOAD_STEP_IMAGE, filePath, null, null,
+   public static ApiCall getUploadImageToStepAPICall(String filePath) {
+      return new ApiCall(ApiEndpoint.UPLOAD_STEP_IMAGE, filePath, null, null,
        filePath);
    }
 
-   public static APICall getDeleteImageAPICall(List<Integer> deleteList) {
+   public static ApiCall getDeleteImageAPICall(List<Integer> deleteList) {
       StringBuilder stringBuilder = new StringBuilder();
       String separator = "";
 
@@ -515,23 +515,23 @@ public class APIService extends Service {
          separator = ",";
       }
 
-      return new APICall(APIEndpoint.DELETE_IMAGE, stringBuilder.toString());
+      return new ApiCall(ApiEndpoint.DELETE_IMAGE, stringBuilder.toString());
    }
 
-   public static APICall getAllTopicsAPICall() {
-      return new APICall(APIEndpoint.ALL_TOPICS, NO_QUERY);
+   public static ApiCall getAllTopicsAPICall() {
+      return new ApiCall(ApiEndpoint.ALL_TOPICS, NO_QUERY);
    }
 
-   public static APICall getSitesAPICall() {
-      return new APICall(APIEndpoint.SITES, NO_QUERY);
+   public static ApiCall getSitesAPICall() {
+      return new ApiCall(ApiEndpoint.SITES, NO_QUERY);
    }
 
-   public static APICall getSiteInfoAPICall() {
-      return new APICall(APIEndpoint.SITE_INFO, NO_QUERY);
+   public static ApiCall getSiteInfoAPICall() {
+      return new ApiCall(ApiEndpoint.SITE_INFO, NO_QUERY);
    }
 
-   public static APICall getUserInfoAPICall(String authToken) {
-      APICall apiCall = new APICall(APIEndpoint.USER_INFO, NO_QUERY);
+   public static ApiCall getUserInfoAPICall(String authToken) {
+      ApiCall apiCall = new ApiCall(ApiEndpoint.USER_INFO, NO_QUERY);
 
       apiCall.mAuthToken = authToken;
 
@@ -539,8 +539,8 @@ public class APIService extends Service {
    }
 
    public static AlertDialog getErrorDialog(final Activity activity,
-    final APIEvent<?> event) {
-      APIError error = event.getError();
+    final ApiEvent<?> event) {
+      ApiError error = event.getError();
 
       int positiveButton = error.mType.mTryAgain ?
        R.string.try_again : R.string.error_confirm;
@@ -579,7 +579,7 @@ public class APIService extends Service {
    public void onCreate() {
       super.onCreate();
 
-      mDeadApiEvents = new LinkedList<APIEvent<?>>();
+      mDeadApiEvents = new LinkedList<ApiEvent<?>>();
 
       MainApplication.getBus().register(this);
    }
@@ -598,17 +598,17 @@ public class APIService extends Service {
       Object event = deadEvent.event;
 
       if (BuildConfig.DEBUG) {
-         Log.i("APIService", "onDeadEvent: " + event.getClass().getName());
+         Log.i("Api", "onDeadEvent: " + event.getClass().getName());
       }
 
-      if (event instanceof APIEvent<?>) {
-         addDeadApiEvent((APIEvent<?>)event);
-      } else if (event instanceof APIEvent.ActivityProxy) {
-         addDeadApiEvent(((APIEvent.ActivityProxy)event).getApiEvent());
+      if (event instanceof ApiEvent<?>) {
+         addDeadApiEvent((ApiEvent<?>)event);
+      } else if (event instanceof ApiEvent.ActivityProxy) {
+         addDeadApiEvent(((ApiEvent.ActivityProxy)event).getApiEvent());
       }
    }
 
-   private void addDeadApiEvent(APIEvent<?> apiEvent) {
+   private void addDeadApiEvent(ApiEvent<?> apiEvent) {
       synchronized (mDeadApiEvents) {
          mDeadApiEvents.add(apiEvent);
       }
@@ -620,29 +620,29 @@ public class APIService extends Service {
             return;
          }
 
-         List<APIEvent<?>> deadApiEvents = mDeadApiEvents;
-         mDeadApiEvents = new LinkedList<APIEvent<?>>();
+         List<ApiEvent<?>> deadApiEvents = mDeadApiEvents;
+         mDeadApiEvents = new LinkedList<ApiEvent<?>>();
          int activityid = activity.getActivityid();
 
          if (activityid == -1) {
-            Log.w("APIService", "Invalid activityid!");
+            Log.w("Api", "Invalid activityid!");
          }
 
          // Iterate over all the dead events, firing off each one.  If it fails,
          // it is recaught by the @Subscribe onDeadEvent, and added back to the list.
-         for (APIEvent<?> apiEvent : deadApiEvents) {
+         for (ApiEvent<?> apiEvent : deadApiEvents) {
             // Fire the event If the activityids match, otherwise add it back
             // to the list of dead events so we can try it again later.
             if (activityid == apiEvent.mApiCall.mActivityid) {
                if (BuildConfig.DEBUG) {
-                  Log.i("APIService", "Retrying dead event: " +
+                  Log.i("Api", "Retrying dead event: " +
                    apiEvent.getClass().getName());
                }
 
                MainApplication.getBus().post(apiEvent);
             } else {
                if (BuildConfig.DEBUG) {
-                  Log.i("APIService", "Adding dead event: " + apiEvent.getClass().toString());
+                  Log.i("Api", "Adding dead event: " + apiEvent.getClass().toString());
                }
 
                mDeadApiEvents.add(apiEvent);
@@ -650,13 +650,13 @@ public class APIService extends Service {
          }
 
          if (BuildConfig.DEBUG && mDeadApiEvents.size() > 0) {
-            Log.i("APIService", "Skipped " + mDeadApiEvents.size() + " dead events");
+            Log.i("Api", "Skipped " + mDeadApiEvents.size() + " dead events");
          }
       }
    }
 
-   private void performRequest(final APICall apiCall, final Responder responder) {
-      final APIEndpoint endpoint = apiCall.mEndpoint;
+   private void performRequest(final ApiCall apiCall, final Responder responder) {
+      final ApiEndpoint endpoint = apiCall.mEndpoint;
 
       if (!checkConnectivity(responder, endpoint, apiCall)) {
          return;
@@ -665,14 +665,14 @@ public class APIService extends Service {
       final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
 
       if (MainApplication.inDebug()) {
-         Log.i("APIService", "Performing API call: " + endpoint.mMethod + " " + url);
-         Log.i("APIService", "Request body: " + apiCall.mRequestBody);
+         Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
+         Log.i("Api", "Request body: " + apiCall.mRequestBody);
       }
 
-      AsyncTask<String, Void, APIEvent<?>> as = new AsyncTask<String, Void, APIEvent<?>>() {
+      AsyncTask<String, Void, ApiEvent<?>> as = new AsyncTask<String, Void, ApiEvent<?>>() {
          @Override
-         protected APIEvent<?> doInBackground(String... dummy) {
-            APIEvent<?> event = endpoint.getEvent();
+         protected ApiEvent<?> doInBackground(String... dummy) {
+            ApiEvent<?> event = endpoint.getEvent();
             event.setApiCall(apiCall);
 
             /**
@@ -753,9 +753,9 @@ public class APIService extends Service {
                if (MainApplication.inDebug()) {
                   long endTime = System.currentTimeMillis();
 
-                  Log.d("APIService", "Response code: " + code);
-                  Log.d("APIService", "Response body: " + responseBody);
-                  Log.d("APIService", "Request time: " + (endTime - startTime) + "ms");
+                  Log.d("Api", "Response code: " + code);
+                  Log.d("Api", "Response body: " + responseBody);
+                  Log.d("Api", "Request time: " + (endTime - startTime) + "ms");
                }
 
                /**
@@ -772,18 +772,18 @@ public class APIService extends Service {
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {
                   e.getCause().printStackTrace();
-                  Log.e("APIService", "IOException from request", e.getCause());
+                  Log.e("Api", "IOException from request", e.getCause());
                } else {
                   e.printStackTrace();
-                  Log.e("APIService", "API error", e);
+                  Log.e("Api", "API error", e);
                }
 
-               return event.setError(new APIError(APIError.Type.PARSE));
+               return event.setError(new ApiError(ApiError.Type.PARSE));
             }
          }
 
          @Override
-         protected void onPostExecute(APIEvent<?> result) {
+         protected void onPostExecute(ApiEvent<?> result) {
             responder.setResult(result);
          }
       };
@@ -795,8 +795,8 @@ public class APIService extends Service {
       }
    }
 
-   private boolean checkConnectivity(Responder responder, APIEndpoint endpoint,
-    APICall apiCall) {
+   private boolean checkConnectivity(Responder responder, ApiEndpoint endpoint,
+    ApiCall apiCall) {
       ConnectivityManager cm = (ConnectivityManager)
        getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
@@ -804,7 +804,7 @@ public class APIService extends Service {
       if (netInfo == null || !netInfo.isConnected()) {
          responder.setResult(endpoint.getEvent()
           .setApiCall(apiCall)
-          .setError(new APIError(APIError.Type.CONNECTION)));
+          .setError(new ApiError(ApiError.Type.CONNECTION)));
          return false;
       }
 

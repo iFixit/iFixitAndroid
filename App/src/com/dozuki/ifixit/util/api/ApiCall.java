@@ -1,14 +1,14 @@
-package com.dozuki.ifixit.util;
+package com.dozuki.ifixit.util.api;
 
 import java.io.Serializable;
 
 /**
- * Defines an APICall that can be performed using APIService.call().
+ * Defines an ApiCall that can be performed using Api.call().
  */
-public class APICall implements Serializable {
+public class ApiCall implements Serializable {
    private static final long serialVersionUID = 8782535908621394800L;
 
-   protected APIEndpoint mEndpoint;
+   protected ApiEndpoint mEndpoint;
    protected String mQuery;
    protected String mRequestBody;
    protected String mExtraInfo;
@@ -16,21 +16,21 @@ public class APICall implements Serializable {
    protected String mAuthToken;
    protected int mActivityid = -1;
 
-   public APICall(APIEndpoint endpoint, String query) {
+   public ApiCall(ApiEndpoint endpoint, String query) {
       this(endpoint, query, null);
    }
 
-   public APICall(APIEndpoint endpoint, String query, String requestBody) {
+   public ApiCall(ApiEndpoint endpoint, String query, String requestBody) {
       this(endpoint, query, requestBody, null);
    }
 
-   public APICall(APIEndpoint endpoint, String query, String requestBody,
-    String extraInfo) {
+   public ApiCall(ApiEndpoint endpoint, String query, String requestBody,
+                  String extraInfo) {
       this(endpoint, query, requestBody, extraInfo, null);
    }
 
-   public APICall(APIEndpoint endpoint, String query, String requestBody,
-    String extraInfo, String filePath) {
+   public ApiCall(ApiEndpoint endpoint, String query, String requestBody,
+                  String extraInfo, String filePath) {
       mEndpoint = endpoint;
       mQuery = query;
       mRequestBody = requestBody;

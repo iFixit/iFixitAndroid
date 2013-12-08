@@ -19,8 +19,8 @@ import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.login.LoginFragment;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.squareup.otto.DeadEvent;
@@ -41,7 +41,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    private static final int LOGGED_OUT_USERID = -1;
 
-   private APIService mAPIService;
+   private Api mAPIService;
    private int mActivityid;
    private int mUserid;
    private Site mSite;
@@ -79,18 +79,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       @SuppressWarnings("unused")
       @Subscribe
-      public void onUnauthorized(APIEvent.Unauthorized event) {
+      public void onUnauthorized(ApiEvent.Unauthorized event) {
          openLoginDialogIfLoggedOut();
       }
 
       @SuppressWarnings("unused")
       @Subscribe
-      public void onApiCall(APIEvent.ActivityProxy activityProxy) {
+      public void onApiCall(ApiEvent.ActivityProxy activityProxy) {
          if (activityProxy.getActivityid() == mActivityid) {
             // Send the real event off to the real handler.
             MainApplication.getBus().post(activityProxy.getApiEvent());
          } else {
-            // Send the event back to APIService so it can retry it for the
+            // Send the event back to Api so it can retry it for the
             // intended Activity.
             MainApplication.getBus().post(new DeadEvent(MainApplication.getBus(),
              activityProxy.getApiEvent()));
@@ -112,7 +112,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       }
 
       public void onServiceConnected(ComponentName name, IBinder service) {
-         APIService.LocalBinder mLocalBinder = (APIService.LocalBinder)service;
+         Api.LocalBinder mLocalBinder = (Api.LocalBinder)service;
          mAPIService = mLocalBinder.getAPIServiceInstance();
 
          mAPIService.retryDeadEvents(BaseActivity.this);
@@ -194,7 +194,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          ViewServer.get(this).addWindow(this);
       }
 
-      Intent mIntent = new Intent(this, APIService.class);
+      Intent mIntent = new Intent(this, Api.class);
       bindService(mIntent, mConnection, BIND_AUTO_CREATE);
    }
 

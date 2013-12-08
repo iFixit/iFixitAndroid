@@ -23,7 +23,7 @@
             android:name="android.app.default_searchable"
             android:value="com.dozuki.ifixit.ui.search.SearchActivity"/>
 
-        <service android:name=".util.APIService"/>
+        <service android:name=".util.api.Api"/>
 
         <activity
             android:name=".ui.search.SearchActivity"

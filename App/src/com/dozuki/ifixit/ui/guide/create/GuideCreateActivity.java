@@ -17,9 +17,9 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -70,7 +70,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
          }
       } else {
          showLoading(R.id.loading_container);
-         APIService.call(this, APIService.getUserGuidesAPICall());
+         Api.call(this, Api.getUserGuidesAPICall());
       }
 
       mGuideListAdapter = new GuideCreateListAdapter();
@@ -81,7 +81,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       mGuideListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
          @Override
          public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-            APIService.call(mActivity, APIService.getUserGuidesAPICall());
+            Api.call(mActivity, Api.getUserGuidesAPICall());
          }
       });
 
@@ -102,12 +102,12 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       // Don't retry the event if the Activity is finishing. This fixes a crazy
       // bug that caused authenticated Activities to not finish even though they
       // should have been. This was caused by the user being logged out, the API
-      // call triggering the Unauthorized APIEvent which opened the LoginDialog
+      // call triggering the Unauthorized ApiEvent which opened the LoginDialog
       // so MainApplication thought that the user was logging in and decided
       // not to finish the Activity below this one on the stack.
       if (!isFinishing()) {
          // Perform the API call again because data may have changed in child Activities.
-         APIService.call(this, APIService.getUserGuidesAPICall());
+         Api.call(this, Api.getUserGuidesAPICall());
       }
    }
 
@@ -156,7 +156,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    }
 
    @Subscribe
-   public void onUserGuides(APIEvent.UserGuides event) {
+   public void onUserGuides(ApiEvent.UserGuides event) {
       if (!event.hasError()) {
          mUserGuideList.clear();
          mUserGuideList.addAll(event.getResult());
@@ -168,14 +168,14 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
 
          hideLoading();
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onPublishStatus(APIEvent.PublishStatus event) {
+   public void onPublishStatus(ApiEvent.PublishStatus event) {
       // Update guide even if there is a conflict.
-      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+      if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
          Guide guide = event.getResult();
          for (GuideInfo userGuide : mUserGuideList) {
             if (userGuide.mGuideid == guide.getGuideid()) {
@@ -188,7 +188,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       }
 
       if (event.hasError()) {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
 
          // Reset the guide state
          for (GuideInfo guide : mUserGuideList) {
@@ -200,14 +200,14 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    }
 
    @Subscribe
-   public void onDeleteGuide(APIEvent.DeleteGuide event) {
+   public void onDeleteGuide(ApiEvent.DeleteGuide event) {
       if (!event.hasError()) {
          mUserGuideList.remove(mGuideForDelete);
 
          mGuideListAdapter.notifyDataSetChanged();
       } else {
          // Try to update the guide's revisionid on a conflict.
-         if (event.getError().mType == APIError.Type.CONFLICT) {
+         if (event.getError().mType == ApiError.Type.CONFLICT) {
             try {
                Guide updatedGuide = JSONHelper.parseGuide(event.getResponse());
                GuideInfo guideToUpdate = mUserGuideList.get(mUserGuideList.indexOf(mGuideForDelete));
@@ -217,7 +217,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
                Log.w("GuideCreateActivity", "Error parsing guide delete conflict", e);
             }
          }
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
@@ -251,7 +251,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
        .setMessage(getString(R.string.confirm_delete_body, item.mTitle))
        .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
           public void onClick(DialogInterface dialog, int id) {
-             APIService.call(GuideCreateActivity.this, APIService.getDeleteGuideAPICall(mGuideForDelete));
+             Api.call(GuideCreateActivity.this, Api.getDeleteGuideAPICall(mGuideForDelete));
              dialog.cancel();
           }
        }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
