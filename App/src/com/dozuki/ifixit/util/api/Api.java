@@ -261,10 +261,6 @@ public class Api {
          sDeadApiEvents = new LinkedList<ApiEvent<?>>();
          int activityid = activity.getActivityid();
 
-         if (activityid == -1) {
-            Log.w("Api", "Invalid activityid!");
-         }
-
          // Iterate over all the dead events, firing off each one.  If it fails,
          // it is recaught by the @Subscribe onDeadEvent, and added back to the list.
          for (ApiEvent<?> apiEvent : deadApiEvents) {
