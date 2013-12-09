@@ -2,7 +2,6 @@ package com.dozuki.ifixit.ui;
 
 import android.content.Context;
 import android.text.Html;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -47,7 +46,6 @@ public class GuideItemView extends TouchableRelativeLayout {
          mPicasso.cancelRequest(mThumbnail);
 
          String url = guide.getImagePath(imageSizes.getGrid());
-         Log.d("GuideItemView", "Loading image " + url);
          mPicasso
           .load(url)
           .transform(transform)
