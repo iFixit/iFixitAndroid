@@ -39,6 +39,7 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="text_light">#66000000</color>
 
     <color name="image_border">#FFF3F3F3</color>
+    <color name="border">#FFCCCCCC</color>
     <color name="gainsboro">#FFDCDCDC</color>
 
 </resources>
