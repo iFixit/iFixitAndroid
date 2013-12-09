@@ -10,7 +10,7 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="menu_background">#FF555555</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>
-    <color name="dark">#222222</color>
+    <color name="dark">#FF222222</color>
     <color name="black">#FF333333</color>
     <color name="red">#FFFF0000</color>
     <color name="emphasis">#FF31B6E7</color>

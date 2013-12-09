@@ -3,8 +3,7 @@
                 android:id="@+id/step_edit_line_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="18dp"
-                android:background="?attr/doz__background">
+                android:layout_marginBottom="18dp">
 
     <ImageView
         android:id="@+id/guide_step_item_bullet_thumbnail"

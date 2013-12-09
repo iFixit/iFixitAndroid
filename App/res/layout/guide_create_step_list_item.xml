@@ -16,7 +16,6 @@
         style="@android:style/TextAppearance.Medium"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@+id/step_item_toggle_edit"
         android:layout_toRightOf="@+id/guide_step_item_thumbnail"
         android:ellipsize="end"
         android:maxLines="1"
@@ -30,7 +29,7 @@
         android:layout_below="@+id/step_line_text_view"
         android:layout_toRightOf="@+id/guide_step_item_thumbnail"
         android:text=""
-        android:textColor="@color/fireswing_dark_grey"
+        android:textColor="@color/black"
         android:textSize="12sp"
         android:textStyle="italic"/>
 
