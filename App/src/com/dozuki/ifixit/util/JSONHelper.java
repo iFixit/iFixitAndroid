@@ -17,7 +17,6 @@ import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.GuideType;
-import com.dozuki.ifixit.model.guide.OEmbed;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.search.GuideSearchResult;
 import com.dozuki.ifixit.model.search.SearchResults;
@@ -26,23 +25,17 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.model.user.UserImage;
+import com.dozuki.ifixit.util.api.ApiError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.jsoup.Jsoup;
-import org.jsoup.nodes.Document;
 
-import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Type;
-import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
 
 public class JSONHelper {
    private static final String TAG = "JSONHelper";
@@ -534,16 +527,16 @@ public class JSONHelper {
    }
 
    /**
-    * Returns the APIError contained in the given JSON, or null if one
+    * Returns the ApiError contained in the given JSON, or null if one
     * does not exist.
     * <p/>
     * e.g. Returns "Guide not found" for:
     * "{"error":true,"msg":"Guide not found"}"
     */
-   public static APIError parseError(String json, int code) {
-      APIError error = null;
+   public static ApiError parseError(String json, int code) {
+      ApiError error = null;
       String message, title;
-      APIError.Type type;
+      ApiError.Type type;
       MainApplication app = MainApplication.get();
 
       try {
@@ -552,14 +545,14 @@ public class JSONHelper {
          message = jError.getString("message");
 
          type = message.equals(INVALID_LOGIN_STRING) ?
-          APIError.Type.INVALID_USER :
-          APIError.getByStatusCode(code).mType;
+          ApiError.Type.INVALID_USER :
+          ApiError.getByStatusCode(code).mType;
 
-         if (type == APIError.Type.VALIDATION) {
+         if (type == ApiError.Type.VALIDATION) {
             error = JSONHelper.parseValidationError(json);
          } else {
             title = app.getString(R.string.error); // Default error string
-            error = new APIError(title, message, type);
+            error = new ApiError(title, message, type);
          }
 
       } catch (JSONException e) {
@@ -569,10 +562,10 @@ public class JSONHelper {
       return error;
    }
 
-   public static APIError parseValidationError(String json) {
+   public static ApiError parseValidationError(String json) {
       String message;
       int index = -1;
-      APIError error = null;
+      ApiError error = null;
 
       try {
          JSONObject jError = new JSONObject(json);
@@ -583,10 +576,10 @@ public class JSONHelper {
             message += "  " + ((JSONObject)jErrors.get(i)).getString("message");
             index = ((JSONObject)jErrors.get(i)).optInt("index", -1);
          }
-         error = new APIError(
+         error = new ApiError(
           MainApplication.get().getString(R.string.validation_error_title),
           message,
-          APIError.Type.VALIDATION,
+          ApiError.Type.VALIDATION,
           index);
       } catch (JSONException e) {
          Log.e("JSONHelper", "Unable to parse error message");

@@ -26,9 +26,10 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.wizard.PageFragmentCallbacks;
 import com.dozuki.ifixit.ui.guide.create.wizard.ReviewFragment;
 import com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
@@ -66,10 +67,10 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
 
             Bundle bundle = mWizardModel.save();
             if (mEditIntroState) {
-               APIService.call(GuideIntroActivity.this, APIService.getEditGuideAPICall(bundle,
+               Api.call(GuideIntroActivity.this, ApiCall.editGuide(bundle,
                 mGuide.getGuideid(), mGuide.getRevisionid()));
             } else {
-               APIService.call(GuideIntroActivity.this, APIService.getCreateGuideAPICall(bundle));
+               Api.call(GuideIntroActivity.this, ApiCall.createGuideFromBundle(bundle));
             }
 
          } else {
@@ -140,7 +141,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
       }
 
       if (MainApplication.get().getSite().mGuideTypes == null) {
-         APIService.call(this, APIService.getSiteInfoAPICall());
+         Api.call(this, ApiCall.siteInfo());
       } else {
          initWizard();
       }
@@ -296,18 +297,18 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
    /////////////////////////////////////////////////////
 
    @Subscribe
-   public void onSiteInfo(APIEvent.SiteInfo event) {
+   public void onSiteInfo(ApiEvent.SiteInfo event) {
       if (!event.hasError()) {
          MainApplication.get().setSite(event.getResult());
 
          initWizard();
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onGuideCreated(APIEvent.CreateGuide event) {
+   public void onGuideCreated(ApiEvent.CreateGuide event) {
       if (!event.hasError()) {
          Guide guide = event.getResult();
 
@@ -327,12 +328,12 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
          finish();
       } else {
          hideChildren(false);
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onGuideEdited(APIEvent.EditGuide event) {
+   public void onGuideEdited(ApiEvent.EditGuide event) {
       if (!event.hasError()) {
          Guide guide = event.getResult();
          hideLoading();
@@ -342,7 +343,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
          startActivityForResult(intent, GUIDE_STEP_EDIT_REQUEST);
          finish();
       } else {
-         if (event.getError().mType == APIError.Type.CONFLICT) {
+         if (event.getError().mType == ApiError.Type.CONFLICT) {
             mGuide = event.getResult();
             mWizardModelBundle = buildIntroBundle();
             mWizardModel.load(mWizardModelBundle);
@@ -351,7 +352,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
             hideLoading();
          }
 
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 

@@ -1,15 +1,12 @@
 package com.dozuki.ifixit.ui;
 
-import android.content.ComponentName;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.support.v4.app.Fragment;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.MainApplication;
@@ -19,10 +16,10 @@ import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.login.LoginFragment;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
+import com.dozuki.ifixit.util.api.Api;
+import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
 
@@ -41,7 +38,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    private static final int LOGGED_OUT_USERID = -1;
 
-   private APIService mAPIService;
    private int mActivityid;
    private int mUserid;
    private Site mSite;
@@ -79,18 +75,18 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       @SuppressWarnings("unused")
       @Subscribe
-      public void onUnauthorized(APIEvent.Unauthorized event) {
+      public void onUnauthorized(ApiEvent.Unauthorized event) {
          openLoginDialogIfLoggedOut();
       }
 
       @SuppressWarnings("unused")
       @Subscribe
-      public void onApiCall(APIEvent.ActivityProxy activityProxy) {
+      public void onApiCall(ApiEvent.ActivityProxy activityProxy) {
          if (activityProxy.getActivityid() == mActivityid) {
             // Send the real event off to the real handler.
             MainApplication.getBus().post(activityProxy.getApiEvent());
          } else {
-            // Send the event back to APIService so it can retry it for the
+            // Send the event back to Api so it can retry it for the
             // intended Activity.
             MainApplication.getBus().post(new DeadEvent(MainApplication.getBus(),
              activityProxy.getApiEvent()));
@@ -103,19 +99,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          mSite = event.mSite;
          // Reset the userid so we don't erroneously finish the Activity.
          setUserid();
-      }
-   };
-
-   private ServiceConnection mConnection = new ServiceConnection() {
-      public void onServiceDisconnected(ComponentName name) {
-         mAPIService = null;
-      }
-
-      public void onServiceConnected(ComponentName name, IBinder service) {
-         APIService.LocalBinder mLocalBinder = (APIService.LocalBinder)service;
-         mAPIService = mLocalBinder.getAPIServiceInstance();
-
-         mAPIService.retryDeadEvents(BaseActivity.this);
       }
    };
 
@@ -194,8 +177,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          ViewServer.get(this).addWindow(this);
       }
 
-      Intent mIntent = new Intent(this, APIService.class);
-      bindService(mIntent, mConnection, BIND_AUTO_CREATE);
+      Api.retryDeadEvents(this);
    }
 
    /**
@@ -274,21 +256,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        * This covers missed events caused by dialogs or other views causing the
        * Activity's onPause method to be called which unregisters the Activity
        * as well as returning to an already running Activity via the back button.
-       * If the service isn't connected yet then dead events will be retried in
-       * onServiceConnected.
        */
-      if (mAPIService != null) {
-         mAPIService.retryDeadEvents(this);
-      }
+      Api.retryDeadEvents(this);
    }
 
    @Override
    public void onDestroy() {
       super.onDestroy();
-
-      if (mAPIService != null) {
-         unbindService(mConnection);
-      }
 
       if (MainApplication.inDebug()) {
          ViewServer.get(this).removeWindow(this);

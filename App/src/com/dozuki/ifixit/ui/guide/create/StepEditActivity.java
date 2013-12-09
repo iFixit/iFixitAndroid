@@ -36,9 +36,10 @@ import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -163,7 +164,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       }
 
       if (MainApplication.get().getSite().mGuideTypes == null) {
-         APIService.call(this, APIService.getSiteInfoAPICall());
+         Api.call(this, ApiCall.siteInfo());
       }
 
       mSaveStep = (Button) findViewById(R.id.step_edit_save);
@@ -252,8 +253,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             mInboundStepId = extras.getInt(GUIDE_STEP_ID);
 
             showLoading(mLoadingContainer);
-            APIService.call(StepEditActivity.this,
-             APIService.getGuideForEditAPICall(guideid));
+            Api.call(StepEditActivity.this,
+             ApiCall.unpatrolledGuide(guideid));
          }
       }
    }
@@ -316,7 +317,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                mGuide.getStep(mPagePosition).addImage(newThumb);
                refreshView(mPagePosition);
 
-               APIService.call(this, APIService.getUploadImageToStepAPICall(tempFileName));
+               Api.call(this, ApiCall.uploadImageToStep(tempFileName));
             }
             break;
          case StepEditLinesFragment.MIC_REQUEST_CODE:
@@ -450,11 +451,11 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                showLoading(mLoadingContainer, getString(isChecked ? R.string.publishing : R.string.unpublishing));
 
                if (isChecked) {
-                  APIService.call(StepEditActivity.this,
-                   APIService.getPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
+                  Api.call(StepEditActivity.this,
+                   ApiCall.publishGuide(mGuide.getGuideid(), mGuide.getRevisionid()));
                } else {
-                  APIService.call(StepEditActivity.this,
-                   APIService.getUnPublishGuideAPICall(mGuide.getGuideid(), mGuide.getRevisionid()));
+                  Api.call(StepEditActivity.this,
+                   ApiCall.unpublishGuide(mGuide.getGuideid(), mGuide.getRevisionid()));
                }
             }
          }
@@ -502,7 +503,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
                // Set the inbound stepid so the Step pager will navigate to the current step after updating
                mInboundStepId = mGuide.getStep(mPagePosition).getStepid();
-               APIService.call(StepEditActivity.this, APIService.getGuideForEditAPICall(
+               Api.call(StepEditActivity.this, ApiCall.unpatrolledGuide(
                 mGuide.getGuideid()));
             }
 
@@ -517,28 +518,28 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    /////////////////////////////////////////////////////
 
    @Subscribe
-   public void onSiteInfo(APIEvent.SiteInfo event) {
+   public void onSiteInfo(ApiEvent.SiteInfo event) {
       if (!event.hasError()) {
          MainApplication.get().setSite(event.getResult());
       }
    }
 
    @Subscribe
-   public void onPublishStatus(APIEvent.PublishStatus event) {
+   public void onPublishStatus(ApiEvent.PublishStatus event) {
       hideLoading();
 
       // Re-enable the toggle view
       findViewById(R.id.publish_toggle).setEnabled(true);
 
       // Update guide even if there is a conflict.
-      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+      if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
          Guide result = event.getResult();
          mGuide.setRevisionid(result.getRevisionid());
          mGuide.setPublic(result.isPublic());
       }
 
       if (event.hasError()) {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
 
       // Reload the options menu to reenable the button, regardless of success or failure because we need to update
@@ -547,7 +548,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Subscribe
-   public void onGuideGet(APIEvent.GuideForEdit event) {
+   public void onGuideGet(ApiEvent.GuideForEdit event) {
       hideLoading();
 
       if (!event.hasError()) {
@@ -561,24 +562,24 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          }
          initPage(startPagePosition);
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onStepSave(APIEvent.StepSave event) {
+   public void onStepSave(ApiEvent.StepSave event) {
       hideLoading();
 
-      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+      if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
          updateCurrentStep(event.getResult());
       }
 
       if (event.hasError()) {
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
-         final APIError error = event.getError();
+         final ApiError error = event.getError();
 
-         if (error.mType == APIError.Type.VALIDATION) {
+         if (error.mType == ApiError.Type.VALIDATION) {
 
             int positiveButton = R.string.error_confirm;
 
@@ -599,7 +600,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
             builder.create().show();
          } else {
-            APIService.getErrorDialog(this, event).show();
+            Api.getErrorDialog(this, event).show();
          }
       }
    }
@@ -610,11 +611,11 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       toggleSave(false);
 
       mGuide = event.guide;
-      APIService.call(StepEditActivity.this, APIService.getCreateGuideAPICall(mGuide));
+      Api.call(StepEditActivity.this, ApiCall.createGuide(mGuide));
    }
 
    @Subscribe
-   public void onGuideCreated(APIEvent.CreateGuide event) {
+   public void onGuideCreated(ApiEvent.CreateGuide event) {
       hideLoading();
 
       if (!event.hasError()) {
@@ -634,12 +635,12 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onUploadStepImage(APIEvent.UploadStepImage event) {
+   public void onUploadStepImage(ApiEvent.UploadStepImage event) {
       int position = mPagePosition;
 
       if (!event.hasError()) {
@@ -672,7 +673,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             onGuideChanged(null);
          }
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
@@ -684,7 +685,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Subscribe
-   public void onStepAdd(APIEvent.StepAdd event) {
+   public void onStepAdd(ApiEvent.StepAdd event) {
       hideLoading();
 
       if (!event.hasError()) {
@@ -701,12 +702,12 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          mIsStepDirty = true;
          toggleSave(mIsStepDirty);
 
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onGuideStepDeleted(APIEvent.StepRemove event) {
+   public void onGuideStepDeleted(ApiEvent.StepRemove event) {
       hideLoading();
 
       if (!event.hasError()) {
@@ -714,7 +715,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          deleteStep();
       } else {
          // Try to update the step on a conflict.
-         if (event.getError().mType == APIError.Type.CONFLICT) {
+         if (event.getError().mType == ApiError.Type.CONFLICT) {
             try {
                updateCurrentStep(JSONHelper.parseStep(
                 new JSONObject(event.getResponse()), 0));
@@ -723,7 +724,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             }
          }
 
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
@@ -740,12 +741,12 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Subscribe
-   public void onImageCopy(APIEvent.CopyImage event) {
+   public void onImageCopy(ApiEvent.CopyImage event) {
       if (!event.hasError()) {
          Toast.makeText(this, getString(R.string.image_saved_to_media_manager_toast),
           Toast.LENGTH_LONG).show();
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
@@ -949,7 +950,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                 deleteStep();
              } else {
                 showLoading(mLoadingContainer, getString(R.string.deleting));
-                APIService.call(StepEditActivity.this, APIService.getRemoveStepAPICall(
+                Api.call(StepEditActivity.this, ApiCall.deleteStep(
                  mGuide.getGuideid(), mGuide.getSteps().get(mPagePosition)));
              }
              dialog.cancel();
@@ -1095,9 +1096,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       toggleSave(mIsStepDirty);
 
       if (obj.getRevisionid() != null) {
-         APIService.call(this, APIService.getEditStepAPICall(obj, mGuide.getGuideid()));
+         Api.call(this, ApiCall.editStep(obj, mGuide.getGuideid()));
       } else {
-         APIService.call(this, APIService.getAddStepAPICall(obj, mGuide.getGuideid(),
+         Api.call(this, ApiCall.createStep(obj, mGuide.getGuideid(),
           mPagePosition + 1, mGuide.getRevisionid()));
       }
    }

@@ -11,21 +11,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 public class StepPortalFragment extends BaseFragment implements
@@ -70,7 +69,7 @@ public class StepPortalFragment extends BaseFragment implements
 
       if (mGuide == null) {
          ((StepsActivity) getActivity()).showLoading();
-         APIService.call(getActivity(), APIService.getGuideForEditAPICall(guideid));
+         Api.call(getActivity(), ApiCall.unpatrolledGuide(guideid));
       } else {
          mActionBar.setTitle(mGuide.getTitle());
       }
@@ -163,7 +162,7 @@ public class StepPortalFragment extends BaseFragment implements
    /////////////////////////////////////////////////////
 
    @Subscribe
-   public void onGuideForEdit(APIEvent.GuideForEdit event) {
+   public void onGuideForEdit(ApiEvent.GuideForEdit event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
 
@@ -174,12 +173,12 @@ public class StepPortalFragment extends BaseFragment implements
 
          ((StepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
    @Subscribe
-   public void onGuideIntroSaved(APIEvent.EditGuide event) {
+   public void onGuideIntroSaved(ApiEvent.EditGuide event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
 
@@ -188,12 +187,12 @@ public class StepPortalFragment extends BaseFragment implements
             mActionBar.setTitle(mGuide.getTitle());
          }
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
    @Subscribe
-   public void onGuideStepDeleted(APIEvent.StepRemove event) {
+   public void onGuideStepDeleted(ApiEvent.StepRemove event) {
       if (!event.hasError()) {
          mGuide.deleteStep(mStepForDelete);
          for (int i = 0; i < mGuide.getSteps().size(); i++) {
@@ -205,15 +204,15 @@ public class StepPortalFragment extends BaseFragment implements
          invalidateViews();
          ((StepsActivity) getActivity()).hideLoading();
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
    @Subscribe
-   public void onStepReorder(APIEvent.StepReorder event) {
+   public void onStepReorder(ApiEvent.StepReorder event) {
       ((StepsActivity)getActivity()).hideLoading();
 
-      if (!event.hasError() || event.getError().mType == APIError.Type.CONFLICT) {
+      if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
          mGuide = event.getResult();
 
          mStepAdapter.notifyDataSetChanged();
@@ -221,7 +220,7 @@ public class StepPortalFragment extends BaseFragment implements
       }
 
       if (event.hasError()) {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
@@ -234,7 +233,7 @@ public class StepPortalFragment extends BaseFragment implements
       if (reodered) {
          mStepAdapter.notifyDataSetChanged();
          ((StepsActivity) getActivity()).showLoading();
-         APIService.call(getActivity(), APIService.getStepReorderAPICall(mGuide));
+         Api.call(getActivity(), ApiCall.reorderSteps(mGuide));
       }
    }
 
@@ -324,8 +323,8 @@ public class StepPortalFragment extends BaseFragment implements
              mShowingDelete = false;
 
              ((StepsActivity) getActivity()).showLoading();
-             APIService.call(getActivity(),
-              APIService.getRemoveStepAPICall(mGuide.getGuideid(), mStepForDelete));
+             Api.call(getActivity(),
+              ApiCall.deleteStep(mGuide.getGuideid(), mStepForDelete));
              dialog.cancel();
 
           }

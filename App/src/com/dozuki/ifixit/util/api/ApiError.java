@@ -1,11 +1,11 @@
-package com.dozuki.ifixit.util;
+package com.dozuki.ifixit.util.api;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 
 import java.io.Serializable;
 
-public class APIError implements Serializable {
+public class ApiError implements Serializable {
    private static final long serialVersionUID = 1L;
    private static final int NO_INDEX = -1;
 
@@ -79,26 +79,26 @@ public class APIError implements Serializable {
    public Type mType;
    public int mIndex;
 
-   public APIError(Type type) {
+   public ApiError(Type type) {
       this(type.mTitle, type.mMessage, type);
    }
 
-   public APIError(int title, int message, Type type) {
+   public ApiError(int title, int message, Type type) {
       this(MainApplication.get().getString(title), MainApplication.get().getString(message), type);
    }
 
-   public APIError(String title, String message, Type type) {
+   public ApiError(String title, String message, Type type) {
       this(title, message, type, NO_INDEX);
    }
 
-   public APIError(String title, String message, Type type, int index) {
+   public ApiError(String title, String message, Type type, int index) {
       mTitle = title;
       mMessage = message;
       mType = type;
       mIndex = index;
    }
 
-   public static APIError getByStatusCode(int code) {
+   public static ApiError getByStatusCode(int code) {
       Type error;
 
       switch (code) {
@@ -109,6 +109,6 @@ public class APIError implements Serializable {
          default:  error = Type.OTHER;
       }
 
-      return new APIError(error);
+      return new ApiError(error);
    }
 }

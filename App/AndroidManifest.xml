@@ -23,8 +23,6 @@
             android:name="android.app.default_searchable"
             android:value="com.dozuki.ifixit.ui.search.SearchActivity"/>
 
-        <service android:name=".util.APIService"/>
-
         <activity
             android:name=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"

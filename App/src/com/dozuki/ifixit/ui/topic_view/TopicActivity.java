@@ -14,8 +14,9 @@ import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.LoadingFragment;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 public class TopicActivity extends BaseSearchMenuDrawerActivity
@@ -65,7 +66,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
 
       if (mRootTopic == null) {
          showLoading(R.id.topic_list_fragment);
-         APIService.call(this, APIService.getCategoriesAPICall());
+         Api.call(this, ApiCall.categories());
       }
 
       if (!mTopicListVisible && !mHideTopicList) {
@@ -97,7 +98,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
    }
 
    @Subscribe
-   public void onCategories(APIEvent.Categories event) {
+   public void onCategories(ApiEvent.Categories event) {
       hideLoading();
       if (!event.hasError()) {
          if (mRootTopic == null) {
@@ -105,12 +106,12 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
             onTopicSelected(mRootTopic);
          }
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onTopic(APIEvent.Topic event) {
+   public void onTopic(ApiEvent.Topic event) {
       hideTopicLoading();
    }
 

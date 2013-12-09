@@ -12,9 +12,9 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.EndlessScrollListener;
 import com.dozuki.ifixit.ui.GuideListAdapter;
-import com.dozuki.ifixit.util.APICall;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 
 import java.util.ArrayList;
 
@@ -32,7 +32,7 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity {
    private GuideListAdapter mAdapter;
 
    protected abstract int getGuideListTitle();
-   protected abstract APICall getApiCall(int limit, int offset);
+   protected abstract ApiCall getApiCall(int limit, int offset);
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -52,7 +52,7 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity {
       if (mGuides != null) {
          initGridView(gridState);
       } else {
-         APIService.call(this, getApiCall(LIMIT, OFFSET));
+         Api.call(this, getApiCall(LIMIT, OFFSET));
          showLoading(R.id.loading_container);
       }
    }
@@ -76,7 +76,7 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity {
          public void onRefresh(int pageNumber) {
             OFFSET += LIMIT;
 
-            APIService.call(GuideListActivity.this, getApiCall(LIMIT, OFFSET));
+            Api.call(GuideListActivity.this, getApiCall(LIMIT, OFFSET));
          }
       });
 
@@ -88,7 +88,7 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity {
       }
    }
 
-   protected void setGuides(APIEvent.Guides event) {
+   protected void setGuides(ApiEvent.Guides event) {
       hideLoading();
 
       if (!event.hasError()) {
@@ -111,7 +111,7 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity {
          if (mGridView == null)
             initGridView(null);
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 

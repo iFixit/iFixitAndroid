@@ -1,10 +1,8 @@
 package com.dozuki.ifixit;
 
-import com.dozuki.ifixit.R;
 import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -14,14 +12,16 @@ import android.content.res.TypedArray;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
+
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
-import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.OkConnectionFactory;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.api.Api;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
@@ -125,6 +125,7 @@ public class MainApplication extends Application {
 
       super.onCreate();
       initializeGa();
+      Api.init();
 
       sMainApplication = this;
       setSite(getDefaultSite());
@@ -355,9 +356,9 @@ public class MainApplication extends Application {
       /**
        * Execute pending API call if one exists.
        */
-      Intent pendingApiCall = APIService.getAndRemovePendingApiCall(this);
+      ApiCall pendingApiCall = Api.getAndRemovePendingApiCall(this);
       if (pendingApiCall != null) {
-         startService(pendingApiCall);
+         Api.call(null, pendingApiCall);
       }
    }
 
@@ -385,7 +386,7 @@ public class MainApplication extends Application {
       // Check if the user is null because we're paranoid.
       if (mUser != null && activity != null) {
          // Perform the API call to delete the user's authToken.
-         APIService.call(activity, APIService.getLogoutAPICall(mUser));
+         Api.call(activity, ApiCall.logout(mUser));
       }
 
       shallowLogout();
@@ -398,7 +399,7 @@ public class MainApplication extends Application {
     */
    public void cancelLogin() {
       // Clear the pending api call if one exists.
-      APIService.getAndRemovePendingApiCall(this);
+      Api.getAndRemovePendingApiCall(this);
       setIsLoggingIn(false);
 
       getBus().post(new LoginEvent.Cancel());

@@ -23,11 +23,10 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.dozuki.ifixit.util.APICall;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
-import com.google.analytics.tracking.android.EasyTracker;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
@@ -44,21 +43,21 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    private EditText mPassword;
    private TextView mErrorText;
    private ProgressBar mLoadingSpinner;
-   private APICall mCurAPICall;
+   private ApiCall mCurAPICall;
    private boolean mHasRegisterBtn = true;
    private boolean mFailedSsoLogin = false;
 
    @Subscribe
-   public void onLogin(APIEvent.Login event) {
+   public void onLogin(ApiEvent.Login event) {
       handleLogin(event);
    }
 
    @Subscribe
-   public void onUserInfo(APIEvent.UserInfo event) {
+   public void onUserInfo(ApiEvent.UserInfo event) {
       handleLogin(event);
    }
 
-   private void handleLogin(APIEvent<User> event) {
+   private void handleLogin(ApiEvent<User> event) {
       if (!event.hasError()) {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
@@ -66,7 +65,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          dismiss();
       } else {
          enable(true);
-         APIError error = event.getError();
+         ApiError error = event.getError();
 
          mLoadingSpinner.setVisibility(View.GONE);
 
@@ -174,8 +173,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
-         mCurAPICall = APIService.getLoginAPICall(login, password);
-         APIService.call(getActivity(), mCurAPICall);
+         mCurAPICall = ApiCall.login(login, password);
+         Api.call(getActivity(), mCurAPICall);
       } else {
          if (login.length() < 1) {
             mLoginId.requestFocus();
@@ -253,8 +252,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          mLoadingSpinner.setVisibility(View.VISIBLE);
          String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
-         mCurAPICall = APIService.getUserInfoAPICall(session);
-         APIService.call(getActivity(), mCurAPICall);
+         mCurAPICall = ApiCall.userInfo(session);
+         Api.call(getActivity(), mCurAPICall);
       } else if (!MainApplication.get().getSite().mStandardAuth) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need

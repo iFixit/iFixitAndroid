@@ -19,9 +19,10 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.SpeechCommander;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -164,7 +165,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          MainApplication.get().setSite(Site.getSite("dozuki"));
 
          showLoading(R.id.loading_container);
-         APIService.call(this, APIService.getSitesAPICall());
+         Api.call(this, ApiCall.sites());
       } else {
          displayGuideNotFoundDialog();
       }
@@ -282,7 +283,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    /////////////////////////////////////////////////////
 
    @Subscribe
-   public void onSites(APIEvent.Sites event) {
+   public void onSites(ApiEvent.Sites event) {
       if (!event.hasError()) {
          Site selectedSite = null;
          for (Site site : event.getResult()) {
@@ -312,12 +313,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             displayGuideNotFoundDialog();
          }
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onGuide(APIEvent.ViewGuide event) {
+   public void onGuide(ApiEvent.ViewGuide event) {
       if (!event.hasError()) {
          if (mGuide == null) {
             Guide guide = event.getResult();
@@ -337,7 +338,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             setGuide(guide, mCurrentPage);
          }
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
@@ -378,7 +379,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    public void getGuide(int guideid) {
       showLoading(R.id.loading_container);
-      APIService.call(this, APIService.getGuideAPICall(guideid));
+      Api.call(this, ApiCall.guide(guideid));
    }
 
    private void nextStep() {
@@ -437,9 +438,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    private void displayGuideNotFoundDialog() {
-      APIService.getErrorDialog(this, new APIEvent.ViewGuide().
+      Api.getErrorDialog(this, new ApiEvent.ViewGuide().
        setCode(404).
-       setError(APIError.getByStatusCode(404))).show();
+       setError(ApiError.getByStatusCode(404))).show();
    }
 
    @Override
