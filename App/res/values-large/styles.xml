@@ -20,7 +20,7 @@
         <item name="android:scaleType">centerCrop</item>
     </style>
 
-    <style name="TopicHeaderRow">
+    <style name="TopicHeaderRow.Background">
         <item name="android:background">@color/white</item>
     </style>
 </resources>
