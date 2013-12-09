@@ -1281,8 +1281,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
     */
    public void toggleSave(boolean toggle) {
       if (!mLockSave) {
-         int buttonBackgroundColor = toggle ? R.color.fireswing_blue : R.color.fireswing_dark_grey;
-         int buttonTextColor = toggle ? R.color.white : R.color.fireswing_grey;
+         int buttonBackgroundColor = toggle ? R.color.emphasis : R.color.disabled_grey_bg;
+         int buttonTextColor = toggle ? R.color.white : R.color.disabled_grey_text;
 
          mSaveStep.setBackgroundColor(getResources().getColor(buttonBackgroundColor));
          mSaveStep.setTextColor(getResources().getColor(buttonTextColor));
@@ -1307,8 +1307,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mLockSave = true;
 
       mSaveStep.setText(getString(R.string.loading_image));
-      mSaveStep.setBackgroundColor(getResources().getColor(R.color.fireswing_dark_grey));
-      mSaveStep.setTextColor(getResources().getColor(R.color.fireswing_grey));
+      mSaveStep.setBackgroundColor(getResources().getColor(R.color.disabled_grey_bg));
+      mSaveStep.setTextColor(getResources().getColor(R.color.disabled_grey_text));
 
       enableViewPager(false);
    }

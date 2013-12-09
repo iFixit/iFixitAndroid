@@ -48,7 +48,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:textColor="@color/dark"
-            android:background="@color/fireswing_blue"/>
+            android:background="@color/emphasis"/>
 
         <ImageButton
             android:id="@+id/step_edit_add_step"

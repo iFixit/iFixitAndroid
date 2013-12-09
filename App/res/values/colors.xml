@@ -8,23 +8,15 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="transparent">#00000000</color>
 
     <color name="menu_background">#FF555555</color>
-    <color name="white">#FFFFFF</color>
+    <color name="white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>
     <color name="dark">#222222</color>
     <color name="black">#FF333333</color>
-    <color name="red">#FFff0000</color>
+    <color name="red">#FFFF0000</color>
     <color name="emphasis">#FF31B6E7</color>
-    <color name="topic_guide_item_background">#FFEEEEEE</color>
-    <color name="ifixit_blue">#FF336DA8</color>
     <color name="invisible">#00000000</color>
-    <color name="dozuki_red">#FFDD4124</color>
-    <color name="dozuki_green">#FFAFC400</color>
-    <color name="dozuki_orange">#FFF25D07</color>
-    <color name="dozuki_white">#FFCCCCCC</color>
-    <color name="dozuki_grey">#F7777777</color>
-    <color name="fireswing_grey">#FFEEEEEE</color>
-    <color name="fireswing_blue">#FF2DB6EA</color>
-    <color name="fireswing_dark_grey">#FF666666</color>
+    <color name="disabled_grey_text">#FFEEEEEE</color>
+    <color name="disabled_grey_bg">#FF666666</color>
 
     <color name="topic_guide_title_background">#DD222222</color>
 
@@ -41,5 +33,13 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="image_border">#FFF3F3F3</color>
     <color name="border">#FFCCCCCC</color>
     <color name="gainsboro">#FFDCDCDC</color>
+
+    <!-- Theme Colors -->
+    <color name="ifixit_blue">#FF336DA8</color>
+    <color name="dozuki_red">#FFDD4124</color>
+    <color name="dozuki_green">#FFAFC400</color>
+    <color name="dozuki_orange">#FFF25D07</color>
+    <color name="dozuki_white">#FFCCCCCC</color>
+    <color name="dozuki_grey">#F7777777</color>
 
 </resources>
