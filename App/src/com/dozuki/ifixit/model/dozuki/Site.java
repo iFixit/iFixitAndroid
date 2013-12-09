@@ -39,7 +39,6 @@ public class Site implements Serializable {
 
    public ArrayList<GuideType> mGuideTypes;
    private boolean mBarcodeScanner = false;
-   private int mIcon;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -169,7 +168,6 @@ public class Site implements Serializable {
          site.mDomain = "www.ifixit.com";
          site.mTitle = "iFixit";
          site.mTheme = "custom";
-         site.mIcon = MainApplication.get().getResources().getIdentifier("icon", "drawable", packageName);;
          site.mPublic = true;
          site.mAnswers = true;
          site.mDescription = "iFixit is the free repair manual you can edit." +
@@ -186,7 +184,6 @@ public class Site implements Serializable {
          site.mDomain = "www.dozuki.com";
          site.mTitle = "Dozuki";
          site.mTheme = "custom";
-         site.mIcon = res.getIdentifier("icon", "drawable", packageName);
          site.mPublic = true;
          site.mAnswers = true;
          site.mDescription = "Using the Dozuki platform: How-to guides and other useful information.";
@@ -202,7 +199,6 @@ public class Site implements Serializable {
          site.mTitle = "Crucial";
          site.mTheme = "white";
          site.mPublic = true;
-         site.mIcon = res.getIdentifier("icon", "drawable", packageName);
          site.mAnswers = true;
          site.mDescription = "Free installation guides for Crucial RAM and" +
           " SSD products.";
@@ -218,7 +214,6 @@ public class Site implements Serializable {
          site.mCustomDomain = "assist.hypertherm.com";
          site.mTitle = "Hypertherm Waterjet Mobile Assistant";
          site.mTheme = "white";
-         site.mIcon = MainApplication.get().getResources().getIdentifier("icon", "drawable", packageName);;
          site.mPublic = true;
          site.mAnswers = false;
          site.mDescription = "Hypertherm Waterjet Mobile Assistant provides step-by-step guides for setting up, maintaining, repairing and troubleshooting your waterjet system including the high pressure pump, cutting head, on/off valve, abrasive delivery system and high pressure tubing.  Guides exist for equipment supplied by all major waterjet OEMs: Hypertherm HyPrecision™, KMT, Flow, OMAX and Jet Edge.";
@@ -259,9 +254,5 @@ public class Site implements Serializable {
 
    public Drawable getLogo() {
       return null;
-   }
-
-   public int getIcon() {
-      return mIcon;
    }
 }
