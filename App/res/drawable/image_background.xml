@@ -3,7 +3,7 @@
        android:shape="rectangle">
     <solid android:color="@color/image_border"/>
     <stroke
-        android:width="1dip"
-        android:color="@color/gainsboro"/>
-    <padding android:bottom="1dp"/>
+        android:width="1dp"
+        android:color="@color/border"/>
+    <padding android:bottom="1dp" android:right="1dp" android:top="1dp" android:left="1dp"/>
 </shape>
