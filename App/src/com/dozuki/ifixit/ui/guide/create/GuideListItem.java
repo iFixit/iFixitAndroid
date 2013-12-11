@@ -108,6 +108,12 @@ public class GuideListItem extends TouchableRelativeLayout {
 
             MenuInflater menuInflater = itemMenu.getMenuInflater();
             menuInflater.inflate(R.menu.guide_item_popup, itemMenu.getMenu());
+
+            // Disable deleting guides on iFixit for now.
+            if (MainApplication.get().getSite().isIfixit()) {
+               itemMenu.getMenu().findItem(R.id.guide_create_item_delete).setVisible(false);
+            }
+
             itemMenu.show();
          }
       });
