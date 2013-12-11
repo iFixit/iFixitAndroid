@@ -204,12 +204,13 @@
 
     <style name="GuideStepWrap">
         <item name="android:orientation">vertical</item>
-        <item name="android:background">?attr/doz__background</item>
+        <item name="android:background">@color/white</item>
         <item name="android:baselineAligned">false</item>
     </style>
 
     <style name="GuideStepMediaContainer">
         <item name="android:padding">@dimen/page_padding</item>
+        <item name="android:background">?doz__background</item>
     </style>
 
     <style name="GuideStepLinesContainer">
