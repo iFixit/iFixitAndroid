@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
+    <!-- Base -->
     <dimen name="page_padding">4dp</dimen>
+
+    <!-- Action Bar -->
     <dimen name="action_bar_switch_padding">6dip</dimen>
 
+    <!-- Guide View -->
     <dimen name="guide_thumbnail_spacing">4dp</dimen>
     <dimen name="guide_image_spacing">4dp</dimen>
+
+    <!-- Step Edit View -->
     <dimen name="step_edit_title_text_bottom_spacing">8dp</dimen>
+
 </resources>

@@ -1,13 +1,17 @@
 package com.dozuki.ifixit.ui.topic_view;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
-import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.google.analytics.tracking.android.Fields;
 
 public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
@@ -15,6 +19,12 @@ public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
 
    private TopicViewFragment mTopicView;
    private TopicNode mTopicNode;
+
+   public static Intent viewTopic(Context context, String topicName) {
+      Intent intent = new Intent(context, TopicViewActivity.class);
+      intent.putExtra(GuideViewActivity.TOPIC_NAME_KEY, topicName);
+      return intent;
+   }
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -29,6 +39,10 @@ public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
          Bundle extras = getIntent().getExtras();
 
          if (extras != null) {
+            if (extras.containsKey(GuideViewActivity.TOPIC_NAME_KEY)) {
+               setTitle(extras.getString(GuideViewActivity.TOPIC_NAME_KEY));
+            }
+
             mTopicView.setArguments(extras);
          }
 

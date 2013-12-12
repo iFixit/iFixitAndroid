@@ -6,9 +6,7 @@
 
     <com.viewpagerindicator.TitlePageIndicator
         android:id="@+id/topic_view_indicator"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/black"
+        style="@style/TitlePageIndicator"
         android:visibility="gone"/>
 
     <android.support.v4.view.ViewPager

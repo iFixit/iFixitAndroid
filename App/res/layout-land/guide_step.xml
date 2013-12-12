@@ -6,13 +6,13 @@
 
     <FrameLayout
         android:id="@+id/guide_step_media"
-        style="@style/GuideStepMediaWrap"
+        style="@style/GuideStepMediaContainer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"/>
 
     <FrameLayout
         android:id="@+id/guide_step_lines"
-        style="@style/GuideStepLinesWrap"
+        style="@style/GuideStepLinesContainer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent" />
 

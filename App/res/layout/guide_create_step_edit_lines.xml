@@ -31,7 +31,6 @@
 
             <Button
                 android:id="@+id/add_new_bullet_button"
-                style="@style/Base.Button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

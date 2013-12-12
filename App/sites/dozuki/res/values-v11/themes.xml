@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Dozuki.Orange" parent="Theme.Dozuki">
+        <!-- Theme Attributes -->
+        <item name="doz__primaryHighlightColor">@color/dozuki_orange</item>
+        <item name="doz__sectionHeader">@drawable/orange__section_header</item>
+        <item name="doz__spinnerBackground">@drawable/orange__spinner_background_holo_light</item>
+        <item name="doz__editTextBackground">@drawable/orange__edit_text_holo_light</item>
+        <item name="doz__buttonBackground">@drawable/orange__btn_default_holo_light</item>
+        <item name="doz__checkboxBackground">@drawable/orange__btn_check_holo_light</item>
+
+        <!-- Action Bar theme -->
+        <item name="android:selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="android:actionBarItemBackground">@drawable/list_selector_holo_light</item>
+        <item name="actionBarItemBackground">@drawable/list_selector_holo_light</item>
+
+        <item name="android:actionBarWidgetTheme">@style/Theme.Dozuki.Dark</item>
+        <item name="actionBarWidgetTheme">@style/Theme.Dozuki.Dark</item>
+
+        <item name="android:editTextBackground">@drawable/orange__edit_text_holo_light</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.Dozuki.Orange</item>
+
+        <item name="android:listChoiceIndicatorMultiple">@drawable/orange__btn_check_holo_light</item>
+
+        <item name="android:listChoiceIndicatorSingle">@drawable/orange__btn_radio_holo_light</item>
+
+        <item name="android:buttonStyle">@style/Button.Dozuki.Orange</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButton.Dozuki.Orange</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/Spinner.Dozuki.Orange</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Dozuki.Orange</item>
+
+        <item name="android:buttonStyleToggle">@style/Toggle.Dozuki.Orange</item>
+
+    </style>
+
+</resources>

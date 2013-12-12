@@ -1,11 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <!-- Guide View -->
     <dimen name="guide_image_spacing">8dp</dimen>
     <dimen name="guide_thumbnail_spacing">8dp</dimen>
+
+    <!-- Topic List -->
     <dimen name="topic_list_image_height">240dp</dimen>
+
+    <!-- Media Manager -->
     <dimen name="gallery_grid_column_width">200dp</dimen>
     <dimen name="gallery_grid_item_height">200dp</dimen>
 
-    <dimen name="guide_create_step_edit_video__marginRight">12dp</dimen>
+    <!-- Step Edit -->
+    <dimen name="guide_create_step_edit_video_right_margin">12dp</dimen>
+
 </resources>

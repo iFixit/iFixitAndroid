@@ -1,47 +1,45 @@
 package com.dozuki.ifixit.ui.guide.create;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
-import android.widget.CompoundButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.ToggleButton;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.ui.RoundedTransformation;
+import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.APIService;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
-public class GuideListItem extends LinearLayout {
-   private static final int ANIMATION_DURATION = 300;
-
-   private static final boolean STATE_CLOSED = false;
+public class GuideListItem extends TouchableRelativeLayout {
+   private static final int DELETE_OPTION = 3;
+   private static final int EDIT_OPTION = 2;
+   private static final int PUBLISH_OPTION = 1;
+   private static final int VIEW_OPTION = 0;
    private Context mContext;
 
    private TextView mTitleView;
    private ImageView mThumbnail;
-   private TextView mDeleteButton;
-   private TextView mEditButton;
    private TextView mPublishText;
-   private TextView mPublishButton;
-   private ToggleButton mToggleEdit;
-   private LinearLayout mEditBar;
    private Activity mActivity;
-   private final RelativeLayout mUpperSection;
    private GuideInfo mGuideInfo;
 
    public GuideListItem(Context context, Activity activity) {
@@ -54,93 +52,123 @@ public class GuideListItem extends LinearLayout {
 
       mTitleView = (TextView) findViewById(R.id.guide_create_item_title);
       mThumbnail = (ImageView) findViewById(R.id.guide_create_item_thumbnail);
-      mToggleEdit = (ToggleButton) findViewById(R.id.guide_create_toggle_edit);
-      mUpperSection = (RelativeLayout) findViewById(R.id.guide_create_upper_section);
-      mDeleteButton = (TextView) findViewById(R.id.guide_create_item_delete);
-      mEditBar = (LinearLayout) findViewById(R.id.guide_create_item_edit_section);
-      mEditButton = (TextView) findViewById(R.id.guide_create_item_edit);
       mPublishText = (TextView) findViewById(R.id.guide_create_item_publish_status);
-      mPublishButton = (TextView) findViewById(R.id.guide_create_item_publish);
 
-      findViewById(R.id.guide_create_item_view).setOnClickListener(new OnClickListener() {
+      setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            Intent intent = new Intent(mActivity, GuideViewActivity.class);
-            intent.putExtra(GuideViewActivity.GUIDEID, mGuideInfo.mGuideid);
-            intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
-            mActivity.startActivity(intent);
+            editGuide();
          }
       });
 
-      mToggleEdit.setOnCheckedChangeListener(null);
-      mToggleEdit.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-         @Override
-         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mGuideInfo.mEditMode = isChecked;
-            ((GuideCreateActivity) mActivity).onItemSelected(mGuideInfo.mGuideid, isChecked);
-            toggleListItem(isChecked, true, mToggleEdit, mEditBar);
-         }
-      });
+      final View menuButton = findViewById(R.id.guide_item_menu_button);
 
-      OnClickListener upperSectionListener = new OnClickListener() {
+      menuButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
-             "toggle_guide_item", null).build());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+               PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
 
-            mToggleEdit.toggle();
-         }
-      };
+               itemMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                  @Override
+                  public boolean onMenuItemClick(MenuItem item) {
+                     switch (item.getItemId()) {
+                        case R.id.guide_create_item_view:
+                           viewGuide();
+                           break;
+                        case R.id.guide_create_item_edit:
+                           editGuide();
+                           break;
+                        case R.id.guide_create_item_publish:
+                           publishGuide();
+                           break;
+                        case R.id.guide_create_item_delete:
+                           deleteGuide();
+                           break;
+                     }
 
-      setOnClickListener(upperSectionListener);
+                     return true;
+                  }
+               });
 
-      mUpperSection.setOnClickListener(upperSectionListener);
-      if (MainApplication.get().getSite().mName.equals("ifixit")) {
-         mDeleteButton.setVisibility(View.GONE);
-      } else {
-         mDeleteButton.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "delete_guide", null).build());
+               MenuInflater menuInflater = itemMenu.getMenuInflater();
+               menuInflater.inflate(R.menu.guide_item_popup, itemMenu.getMenu());
+               Menu menu = itemMenu.getMenu();
 
-               ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
-            }
-         });
-      }
-      mEditButton.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "edit_guide", null).build());
+               if (mGuideInfo.mPublic) {
+                  menu.findItem(R.id.guide_create_item_publish).setTitle(R.string.unpublish);
+               }
 
-            Intent intent = new Intent(mActivity, StepsActivity.class);
-            intent.putExtra(StepsActivity.GUIDE_ID_KEY, mGuideInfo.mGuideid);
-            intent.putExtra(StepsActivity.GUIDE_PUBLIC_KEY, mGuideInfo.mPublic);
-            mActivity.startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
-         }
-      });
-      mPublishButton.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "publish_guide",
-             null).build());
+               // Disable deleting guides on iFixit for now.
+               if (MainApplication.get().getSite().isIfixit()) {
+                  menu.findItem(R.id.guide_create_item_delete).setVisible(false);
+               }
 
-            // Ignore button press if we are already (un)publishing the guide.
-            if (mGuideInfo.mIsPublishing) {
-               return;
-            }
-
-            mGuideInfo.mIsPublishing = true;
-            mPublishButton.setText(mGuideInfo.mPublic ? R.string.unpublishing : R.string.publishing);
-
-            if (!mGuideInfo.mPublic) {
-               APIService.call(mActivity,
-                APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+               itemMenu.show();
             } else {
-               APIService.call(mActivity,
-                APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+               // PopupMenu was added in API 11, so let's use an AlertDialog instead.
+               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+               builder.setItems(MainApplication.get().getSite().isIfixit() ? R.array.step_list_item_options
+                : R.array.guide_list_item_options_with_delete, new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                     switch (which) {
+                        case VIEW_OPTION:
+                           viewGuide();
+                           break;
+                        case PUBLISH_OPTION:
+                           publishGuide();
+                           break;
+                        case EDIT_OPTION:
+                           editGuide();
+                           break;
+                        case DELETE_OPTION:
+                           deleteGuide();
+                           break;
+                     }
+                  }
+               });
+               builder.create();
+               builder.show();
             }
          }
       });
+   }
+
+   private void viewGuide() {
+      Intent intent = new Intent(mActivity, GuideViewActivity.class);
+      intent.putExtra(GuideViewActivity.GUIDEID, mGuideInfo.mGuideid);
+      intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
+      mActivity.startActivity(intent);
+   }
+
+   private void publishGuide() {
+      MainApplication.getGaTracker()
+       .send(MapBuilder.createEvent("ui_action", "button_press", "publish_guide",
+        null).build());
+
+      // Ignore button press if we are already (un)publishing the guide.
+      if (mGuideInfo.mIsPublishing) {
+         return;
+      }
+
+      mGuideInfo.mIsPublishing = true;
+      mPublishText.setText(mGuideInfo.mPublic ? R.string.unpublishing : R.string.publishing);
+      mPublishText.setTextColor(getResources().getColor(R.color.text_light));
+
+      if (!mGuideInfo.mPublic) {
+         APIService.call(mActivity,
+          APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+      } else {
+         APIService.call(mActivity,
+          APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+      }
+   }
+
+   private void deleteGuide() {
+      MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+       "delete_guide", null).build());
+
+      ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
    }
 
    public void setRowData(GuideInfo guideInfo) {
@@ -148,27 +176,31 @@ public class GuideListItem extends LinearLayout {
       setTag(mGuideInfo.mGuideid);
 
       mTitleView.setText(Html.fromHtml(mGuideInfo.mTitle));
-      mToggleEdit.setChecked(mGuideInfo.mEditMode);
 
       if (mThumbnail != null) {
          Picasso picasso = PicassoUtils.with(mContext);
+
+         Transformation transform = new RoundedTransformation(4, 0);
 
          if (mGuideInfo.hasImage()) {
             picasso
              .load(mGuideInfo.getImagePath(".standard"))
              .noFade()
+             .fit()
+             .transform(transform)
              .error(R.drawable.no_image)
              .into(mThumbnail);
          } else {
             picasso
              .load(R.drawable.no_image)
              .noFade()
+             .fit()
+             .transform(transform)
              .into(mThumbnail);
          }
       }
 
       setPublished(mGuideInfo.mPublic);
-      toggleListItem(mGuideInfo.mEditMode, false, mToggleEdit, mEditBar);
    }
 
    public void setPublished(boolean published) {
@@ -181,46 +213,21 @@ public class GuideListItem extends LinearLayout {
       }
    }
 
+   private void editGuide() {
+      MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+       "edit_guide", null).build());
+
+      Intent intent = new Intent(mActivity, StepsActivity.class);
+      intent.putExtra(StepsActivity.GUIDE_ID_KEY, mGuideInfo.mGuideid);
+      intent.putExtra(StepsActivity.GUIDE_PUBLIC_KEY, mGuideInfo.mPublic);
+      mActivity.startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
+   }
+
    private void buildPublishView(int drawable, int color, int textString, int buttonString) {
       Drawable img = getContext().getResources().getDrawable(drawable);
       img.setBounds(0, 0, img.getMinimumWidth(), img.getMinimumHeight());
 
       mPublishText.setText(textString);
       mPublishText.setTextColor(color);
-
-      mPublishButton.setCompoundDrawables(img, null, null, null);
-      mPublishButton.setText(buttonString);
    }
-
-   public void toggleListItem(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
-    final LinearLayout mEditBar) {
-      if (isChecked) {
-         if (animate) {
-            Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_clockwise);
-            mToggleEdit.startAnimation(rotateAnimation);
-            // Creating the expand animation for the item
-            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            // Start the animation on the toolbar
-            mEditBar.startAnimation(expandAni);
-         } else {
-            mEditBar.setVisibility(View.VISIBLE);
-            ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
-         }
-      } else {
-         if (animate) {
-            Animation rotateAnimation = AnimationUtils.loadAnimation(getContext(), R.anim.rotate_counterclockwise);
-            mToggleEdit.startAnimation(rotateAnimation);
-            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            mEditBar.startAnimation(expandAni);
-         } else {
-            mEditBar.setVisibility(View.GONE);
-            ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
-         }
-      }
-   }
-
-   public void setChecked(boolean check) {
-      mToggleEdit.setChecked(check);
-   }
-
 }

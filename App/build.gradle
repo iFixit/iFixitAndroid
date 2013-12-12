@@ -3,7 +3,7 @@ buildscript {
       mavenCentral()
    }
    dependencies {
-      classpath 'com.android.tools.build:gradle:0.5.+'
+      classpath 'com.android.tools.build:gradle:0.6.1'
    }
 }
 apply plugin: 'android'
@@ -41,14 +41,14 @@ dependencies {
 def sites = ["ifixit", "dozuki", "accustream"]
 
 android {
-   compileSdkVersion 18
+   compileSdkVersion 19
    buildToolsVersion "18.0.1"
 
    defaultConfig {
-      versionCode 39
-      versionName "2.1.0"
+      versionCode 43
+      versionName "2.2.0"
       minSdkVersion 8
-      targetSdkVersion 18
+      targetSdkVersion 19
       packageName "com.dozuki.ifixit"
    }
 
@@ -131,10 +131,18 @@ def createSiteSigningConfig(siteName) {
 }
 
 def createSiteSourceSet(siteName) {
-   return {
-      manifest.srcFile "sites/${siteName}/AndroidManifest.xml"
-      res.srcDirs = ["sites/${siteName}/res"]
-      java.srcDirs = ["sites/${siteName}/src"]
+   if (siteName == 'dozuki') {
+      return {
+         manifest.srcFile "sites/dozuki/AndroidManifest.xml"
+         res.srcDirs = ["sites/dozuki/res", "sites/accustream/res", "sites/ifixit/res"]
+         java.srcDirs = ["sites/dozuki/src", "sites/accustream/src", "sites/ifixit/src"]
+      }
+   } else {
+      return {
+         manifest.srcFile "sites/${siteName}/AndroidManifest.xml"
+         res.srcDirs = ["sites/${siteName}/res", "sites/${siteName}/site-res"]
+         java.srcDirs = ["sites/${siteName}/src"]
+      }
    }
 }
 

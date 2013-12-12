@@ -63,11 +63,6 @@ public class ThumbnailView extends LinearLayout {
       init(context, attrs);
    }
 
-   public ThumbnailView(Context context, AttributeSet attrs, int defStyle) {
-      super(context, attrs, defStyle);
-      init(context, attrs);
-   }
-
    public void destroy() {
       mPicasso.cancelRequest((Target) mMainImage);
 

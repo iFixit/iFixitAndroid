@@ -9,7 +9,7 @@
    style="@style/Widget.Sherlock.ActionButton"
    android:text="@string/slide_menu_barcode_scanner_short"
    android:drawableLeft="@drawable/ic_action_qr_code"
-   android:background="@drawable/abs__item_background_holo_dark"
+   android:background="?doz__itemSelector"
    android:clickable="true"
 
    android:textSize="12sp"

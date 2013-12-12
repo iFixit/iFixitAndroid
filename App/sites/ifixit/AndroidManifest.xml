@@ -11,9 +11,8 @@
         </activity>
 
         <activity
-            android:name="com.dozuki.ifixit.ui.guide.view.GuideViewActivity"
-            android:exported="true"
-            android:launchMode="singleTop">
+            android:name="com.dozuki.ifixit.ui.IntentFilterActivity"
+            android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
 
@@ -30,6 +29,9 @@
                 <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/guide/"/>
                 <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/teardown/"/>
                 <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/teardown/"/>
+
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
 

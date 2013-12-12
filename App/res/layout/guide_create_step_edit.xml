@@ -8,10 +8,8 @@
 
     <com.dozuki.ifixit.ui.guide.create.LockableTitlePageIndicator
         android:id="@+id/step_edit_top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        style="@style/Base.TitleIndicator"/>
+        style="@style/TitlePageIndicator"/>
 
     <com.dozuki.ifixit.ui.guide.create.LockableViewPager
         android:id="@+id/guide_edit_body_pager"
@@ -50,7 +48,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:textColor="@color/dark"
-            android:background="@color/fireswing_blue"/>
+            android:background="@color/emphasis"/>
 
         <ImageButton
             android:id="@+id/step_edit_add_step"

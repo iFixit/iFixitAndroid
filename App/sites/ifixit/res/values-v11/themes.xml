@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <!-- actionWidgetTheme is used with a ContextThemeWrapper when using the DarkActionBar theme,
+         so we need to inherit from the the base Theme.Sherlock to override the overflow dropdown selector state. -->
+    <style name="Theme.iFixit.Dark" parent="Theme.Sherlock">
+        <!-- Action Bar Sherlock overrides -->
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.iFixit</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.iFixit</item>
+        <item name="android:actionDropDownStyle">@style/DropDownNav.iFixit</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.iFixit</item>
+    </style>
+
+    <style name="Theme.iFixit" parent="Theme.Base">
+        <!-- Theme Attributes -->
+        <item name="doz__primaryHighlightColor">@color/ifixit_blue</item>
+        <item name="doz__sectionHeader">@drawable/ifixit__section_header</item>
+        <item name="doz__spinnerBackground">@drawable/ifixit__spinner_background_holo_light</item>
+        <item name="doz__editTextBackground">@drawable/ifixit__edit_text_holo_light</item>
+        <item name="doz__buttonBackground">@drawable/ifixit__btn_default_holo_light</item>
+        <item name="doz__checkboxBackground">@drawable/ifixit__btn_check_holo_light</item>
+
+        <!-- Action Bar theme -->
+        <item name="android:selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+
+        <item name="android:actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+
+        <item name="android:actionBarWidgetTheme">@style/Theme.iFixit.Dark</item>
+        <item name="actionBarWidgetTheme">@style/Theme.iFixit.Dark</item>
+
+        <item name="actionBarStyle">@style/ActionBar</item>
+        <item name="android:actionBarStyle">@style/ActionBar</item>
+
+        <item name="android:editTextBackground">@drawable/ifixit__edit_text_holo_light</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.iFixit</item>
+
+        <item name="android:listChoiceIndicatorMultiple">@drawable/ifixit__btn_check_holo_light</item>
+
+        <item name="android:listChoiceIndicatorSingle">@drawable/ifixit__btn_radio_holo_light</item>
+
+        <item name="android:buttonStyle">@style/Button.iFixit</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButton.iFixit</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/Spinner.iFixit</item>
+
+        <item name="android:progressBarStyle">@style/ProgressBar.iFixit</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.iFixit</item>
+
+        <item name="android:seekBarStyle">@style/SeekBar.iFixit</item>
+
+        <item name="android:buttonStyleToggle">@style/Toggle.iFixit</item>
+
+        <item name="android:fastScrollThumbDrawable">@drawable/ifixit__fastscroll_thumb_holo</item>
+
+    </style>
+
+</resources>

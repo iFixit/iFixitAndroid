@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="GuideGridItemTitle" parent="android:TextAppearance.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">bottom</item>
+        <item name="android:textColor">?doz__textColorPrimary</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">8dp</item>
+        <item name="android:paddingTop">8dp</item>
+        <item name="android:paddingBottom">8dp</item>
+        <item name="android:maxLines">3</item>
+    </style>
+
+    <style name="GuideGridItemThumbnail">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">fill</item>
+        <item name="android:minHeight">@dimen/topic_list_image_height</item>
+        <item name="android:scaleType">centerCrop</item>
+    </style>
+
+    <style name="TopicHeaderRow.Background">
+        <item name="android:background">@color/white</item>
+    </style>
+</resources>

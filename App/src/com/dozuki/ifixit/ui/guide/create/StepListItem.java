@@ -1,39 +1,34 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
-import android.view.animation.AnimationUtils;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
+import android.widget.PopupMenu;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
+import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class StepListItem extends RelativeLayout {
-   private static final int ANIMATION_DURATION = 300;
+public class StepListItem extends TouchableRelativeLayout {
+   private static final int EDIT_OPTION = 0;
+   private static final int DELETE_OPTION = 1;
    private TextView mStepsView;
    private TextView mStepNumber;
-   private ToggleButton mToggleEdit;
-   private TextView mDeleteButton;
-   private TextView mEditButton;
-   private LinearLayout mEditBar;
    private ImageView mImageView;
-   private RelativeLayout mStepFrame;
    private Context mContext;
    private StepPortalFragment mPortalRef;
    private GuideStep mStepObject;
@@ -48,55 +43,76 @@ public class StepListItem extends RelativeLayout {
       inflater.inflate(R.layout.guide_create_step_list_item, this, true);
       mStepsView = (TextView) findViewById(R.id.step_line_text_view);
       mStepNumber = (TextView) findViewById(R.id.guide_create_step_item_number);
-      mToggleEdit = (ToggleButton) findViewById(R.id.step_item_toggle_edit);
       mImageView = (ImageView) findViewById(R.id.guide_step_item_thumbnail);
-      mDeleteButton = (TextView) findViewById(R.id.step_create_item_delete);
-      mEditButton = (TextView) findViewById(R.id.step_create_item_edit);
-      mEditBar = (LinearLayout) findViewById(R.id.step_create_item_edit_section);
-      mStepFrame = (RelativeLayout) findViewById(R.id.guide_step_edit_frame);
 
-      mToggleEdit.setOnCheckedChangeListener(null);
-      mToggleEdit.setOnCheckedChangeListener(new OnCheckedChangeListener() {
-         @Override
-         public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-            mStepObject.setEditMode(isChecked);
-            portalRef.onItemSelected(mStepObject.getStepid(), isChecked);
-            setEditMode(isChecked, true, mToggleEdit, mEditBar);
-         }
-      });
-      mStepFrame.setOnClickListener(new OnClickListener() {
+      setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "toggle_step_item",
-             null).build());
-
-            mToggleEdit.toggle();
+            editStep();
          }
       });
-      mDeleteButton.setOnClickListener(new OnClickListener() {
+
+      final View menuButton = findViewById(R.id.step_item_menu_button);
+
+      menuButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "delete_step", null).build());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-            mPortalRef.createDeleteDialog(mStepObject).show();
+               PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
+
+               itemMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                  @Override
+                  public boolean onMenuItemClick(MenuItem item) {
+                     switch (item.getItemId()) {
+                        case R.id.step_create_item_edit:
+                           editStep();
+                           break;
+                        case R.id.step_create_item_delete:
+                           deleteStep();
+                           break;
+                     }
+
+                     return true;
+                  }
+               });
+
+               MenuInflater menuInflater = itemMenu.getMenuInflater();
+               menuInflater.inflate(R.menu.step_item_popup, itemMenu.getMenu());
+               itemMenu.show();
+            } else {
+               // PopupMenu was added in API 11, so let's use an AlertDialog instead.
+               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+               builder.setItems(R.array.step_list_item_options, new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                     switch (which) {
+                        case EDIT_OPTION:
+                           editStep();
+                           break;
+                        case DELETE_OPTION:
+                           deleteStep();
+                           break;
+                     }
+                  }
+               });
+               builder.create();
+               builder.show();
+            }
          }
       });
-      mEditButton.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "edit_step", null).build());
+   }
 
-            mPortalRef.launchStepEdit(mStepPosition);
-         }
-      });
+   private void deleteStep() {
+      MainApplication.getGaTracker()
+       .send(MapBuilder.createEvent("ui_action", "button_press", "delete_step", null).build());
+
+      mPortalRef.createDeleteDialog(mStepObject).show();
    }
 
    public void setRowData(GuideStep step, int position) {
       mStepObject = step;
       mStepPosition = position;
 
-      boolean isEdit = step.getEditMode();
-      mToggleEdit.setChecked(isEdit);
       String stepText = MainApplication.get().getString(R.string.step_number, mStepPosition + 1);
       if (mStepObject.getTitle().equals("")) {
          mStepsView.setText(stepText);
@@ -112,34 +128,13 @@ public class StepListItem extends RelativeLayout {
       } else {
          setStepThumbnail(mStepObject.getImages(), mImageView);
       }
-      setEditMode(isEdit, false, mToggleEdit, mEditBar);
    }
 
-   public void setEditMode(boolean isChecked, boolean animate, final ToggleButton mToggleEdit,
-    final LinearLayout mEditBar) {
-      if (isChecked) {
-         if (animate) {
-            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_clockwise);
-            mToggleEdit.startAnimation(rotateAnimation);
-            // Creating the expand animation for the item
-            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            // Start the animation on the toolbar
-            mEditBar.startAnimation(expandAni);
-         } else {
-            mEditBar.setVisibility(View.VISIBLE);
-            ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = 0;
-         }
-      } else {
-         if (animate) {
-            Animation rotateAnimation = AnimationUtils.loadAnimation(mContext, R.anim.rotate_counterclockwise);
-            mToggleEdit.startAnimation(rotateAnimation);
-            ExpandAnimation expandAni = new ExpandAnimation(mEditBar, ANIMATION_DURATION);
-            mEditBar.startAnimation(expandAni);
-         } else {
-            mEditBar.setVisibility(View.GONE);
-            ((LinearLayout.LayoutParams) mEditBar.getLayoutParams()).bottomMargin = -50;
-         }
-      }
+   private void editStep() {
+      MainApplication.getGaTracker()
+       .send(MapBuilder.createEvent("ui_action", "button_press", "edit_step", null).build());
+
+      mPortalRef.launchStepEdit(mStepPosition);
    }
 
    private void setStepThumbnail(ArrayList<Image> imageList, ImageView imageView) {
@@ -152,7 +147,7 @@ public class StepListItem extends RelativeLayout {
       } else {
          for (Image imageInfo : imageList) {
             if (imageInfo.getId() > 0) {
-               String url = imageInfo.getPath(".thumbnail");
+               String url = imageInfo.getPath(".standard");
                setStepThumbnail(url, imageView);
                return;
             }
@@ -161,7 +156,7 @@ public class StepListItem extends RelativeLayout {
    }
 
    private void setStepThumbnail(VideoThumbnail thumb, ImageView imageView) {
-      String url = thumb.getPath(".thumbnail");
+      String url = thumb.getPath(".standard");
 
       // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
       imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
@@ -181,9 +176,4 @@ public class StepListItem extends RelativeLayout {
 
       imageView.invalidate();
    }
-
-   public void setChecked(boolean check) {
-      mToggleEdit.setChecked(check);
-   }
-
 }

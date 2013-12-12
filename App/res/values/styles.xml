@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="ActionBar" parent="Widget.Sherlock.Light.ActionBar">
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+    </style>
+
     <!-- Holo Theme Overrides -->
     <style name="Base"/>
 
@@ -9,12 +14,6 @@
         <item name="android:indeterminateDrawable">@drawable/progress_indeterminate_horizontal_holo_light</item>
         <item name="android:minHeight">16dip</item>
         <item name="android:maxHeight">16dip</item>
-    </style>
-
-    <style name="Base.ListView" parent="android:Widget.ListView">
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-        <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:layout_marginRight">8dp</item>
     </style>
 
     <style name="Base.ButtonBar">
@@ -65,19 +64,42 @@
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingBottom">8dp</item>
         <item name="android:paddingTop">8dp</item>
-        <item name="android:background">@drawable/icon_selector</item>
+        <item name="android:background">?attr/doz__itemSelector</item>
         <item name="android:layout_centerVertical">true</item>
     </style>
 
-    <style name="Base.BulletIcon">
-        <item name="android:layout_gravity">center</item>
-        <item name="android:padding">16dp</item>
-        <item name="android:background">@drawable/icon_selector</item>
+    <style name="ListItemThumbnail">
+        <item name="android:layout_width">@dimen/list_item_thumbnail_width</item>
+        <item name="android:layout_height">@dimen/list_item_thumbnail_height</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginTop">4dp</item>
+        <item name="android:layout_marginBottom">4dp</item>
+        <item name="android:layout_marginLeft">4dp</item>
+        <item name="android:background">@color/image_border</item>
     </style>
 
-    <style name="Base.BulletItem">
+    <style name="ItemMenuButton">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:src">@drawable/abs__ic_menu_moreoverflow_holo_light</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_alignParentTop">true</item>
+        <item name="android:padding">8dp</item>
+        <item name="android:background">?attr/doz__itemSelector</item>
+    </style>
+
+    <style name="BulletIcon">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:background">?attr/doz__itemSelector</item>
+    </style>
+
+    <style name="BulletItem">
+        <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
-        <item name="android:background">@drawable/bullet_item</item>
+        <item name="android:background">?attr/doz__itemSelector</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:drawablePadding">10dp</item>
         <item name="android:paddingLeft">16dp</item>
@@ -86,8 +108,12 @@
         <item name="android:textColor">@color/white</item>
     </style>
 
-    <style name="Base.TitleIndicator">
+    <style name="TitlePageIndicator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
         <item name="android:background">@color/black</item>
+
+        <item name="footerColor">?doz__primaryHighlightColor</item>
     </style>
 
     <style name="TitleText" parent="android:TextAppearance.Medium">
@@ -117,30 +143,56 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <style name="DialogTitle">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">22sp</item>
+        <item name="android:padding">16dp</item>
+    </style>
+
+    <style name="DialogTitleDivider">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">2dip</item>
+        <item name="android:background">?doz__primaryHighlightColor</item>
+    </style>
+
     <style name="SectionListView">
         <item name="android:paddingRight">16dp</item>
         <item name="android:paddingLeft">16dp</item>
     </style>
 
+    <style name="ListView" parent="android:Widget.ListView">
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:cacheColorHint">#00000000</item>
+    </style>
+
+    <style name="ListView.White" parent="android:Widget.ListView.White">
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+    </style>
+
     <style name="TopicHeaderRow">
-        <item name="android:drawableBottom">?attr/doz__sectionHeader</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">?doz__primaryHighlightColor</item>
+        <item name="android:drawableBottom">?doz__sectionHeader</item>
         <item name="android:drawablePadding">4dp</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingLeft">4dp</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:textColor">?attr/doz__topicHeaderColor</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:background">?attr/doz__background</item>
     </style>
 
+    <style name="TopicHeaderRow.Background">
+        <item name="android:background">?doz__background</item>
+    </style>
+
+    <style name="TopicHeaderRow.Background.Compat"></style>
+
     <style name="GuideGridItem">
-        <item name="android:background">@color/topic_guide_item_background</item>
-        <item name="android:layout_margin">4dp</item>
+        <item name="android:background">@drawable/bg_card</item>
     </style>
 
     <style name="GuideGridItemThumbnail">
-        <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:background">?attr/doz__imageBorder</item>
+        <item name="android:layout_marginRight">8dp</item>
     </style>
 
     <style name="GuideGridItemTitle" parent="android:TextAppearance.Medium.Inverse">
@@ -151,29 +203,26 @@
 
     <style name="GuideStepWrap">
         <item name="android:orientation">vertical</item>
-        <item name="android:background">?attr/doz__background</item>
+        <item name="android:background">@color/white</item>
         <item name="android:baselineAligned">false</item>
     </style>
 
-    <style name="GuideStepMediaWrap">
-        <item name="android:background">@drawable/step_media_background</item>
+    <style name="GuideStepMediaContainer">
         <item name="android:padding">@dimen/page_padding</item>
+        <item name="android:background">?doz__background</item>
     </style>
 
-    <style name="GuideStepLinesWrap">
+    <style name="GuideStepLinesContainer">
         <item name="android:padding">@dimen/page_padding</item>
-        <item name="android:background">?attr/doz__background</item>
+        <item name="android:background">@drawable/top_border_bg</item>
     </style>
 
     <style name="GuideStepLines">
-        <item name="android:background">?attr/doz__background</item>
+        <item name="android:background">@android:color/transparent</item>
     </style>
 
     <style name="Thumbnail">
         <item name="android:layout_gravity">right</item>
-    </style>
-
-    <style name="ThumbnailAddButton">
     </style>
 
     <style name="ThumbnailContainer">
@@ -210,7 +259,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?android:attr/textColorSecondaryInverse</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">true</item>
 
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">16dp</item>
@@ -219,6 +267,8 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
+
+    <style name="MenuDrawer.Widget.Category.Compat"></style>
 
     <style name="MenuDrawer.Widget.Title">
         <item name="android:textAppearance">?android:attr/textAppearance</item>
@@ -229,7 +279,7 @@
         <item name="android:paddingRight">32dp</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
-        <item name="android:background">@drawable/menu_list_selector_holo_dark</item>
+        <item name="android:background">?attr/doz__itemSelector</item>
 
         <item name="android:drawablePadding">16dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -250,32 +300,21 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">?android:listPreferredItemPaddingLeft</item>
+        <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">36sp</item>
-        <item name="android:textColor">#ff0099cc</item>
-        <item name="android:fontFamily">sans-serif-thin</item>
+        <item name="android:textColor">?doz__primaryHighlightColor</item>
     </style>
+
+    <style name="WizardPageTitle.Compat"/>
 
     <style name="WizardPageDescription">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:paddingLeft">?android:listPreferredItemPaddingLeft</item>
+        <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?android:textColorSecondaryInverse</item>
-    </style>
-
-    <style name="WizardFormLabel">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
     </style>
 
     <style name="WizardFinishTextAppearance">
@@ -286,24 +325,9 @@
     <!-- iFixit -->
     <style name="Widget.iFixit"></style>
 
-    <style name="Widget.iFixit.ListViewStyle" parent="Base.ListView">
-        <item name="android:cacheColorHint">#00000000</item>
-    </style>
-
     <style name="Widget.iFixit.TopicBackground" parent="Widget.iFixit">
         <item name="android:src">@drawable/fist_default</item>
         <item name="android:contentDescription">@string/fist_background_desc</item>
-    </style>
-
-    <style name="Widget.iFixit.ActionBar.TabText" parent="Widget.Sherlock.Light.ActionBar.TabText.Inverse">
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
-
-    <style name="Widget.iFixit.ActionBar.TabView" parent="Widget.Sherlock.Light.ActionBar.TabView.Inverse">
-        <item name="android:background">@drawable/tab_indicator_ifixit</item>
-        <item name="background">@drawable/tab_indicator_ifixit</item>
     </style>
 
     <!-- Dozuki -->
@@ -313,47 +337,6 @@
         <item name="android:src">@drawable/fist_default</item>
         <item name="android:contentDescription">@string/fist_background_desc</item>
         <item name="android:visibility">gone</item>
-    </style>
-
-    <style name="Widget.Dozuki.ActionBar.TabText" parent="Widget.iFixit.ActionBar.TabText"></style>
-
-    <style name="Widget.Dozuki.ActionBar.TabView" parent="Widget.iFixit.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_green</item>
-        <item name="background">@drawable/tab_indicator_green</item>
-    </style>
-
-    <style name="Widget.Dozuki.ActionBar.TabView.Green" parent="Widget.iFixit.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_green</item>
-        <item name="background">@drawable/tab_indicator_green</item>
-    </style>
-
-    <style name="Widget.Dozuki.ActionBar.TabView.Orange" parent="Widget.iFixit.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_orange</item>
-        <item name="background">@drawable/tab_indicator_orange</item>
-    </style>
-
-    <style name="Widget.Dozuki.ActionBar.TabView.Grey" parent="Widget.iFixit.ActionBar.TabView">
-        <item name="android:background">@drawable/tab_indicator_grey</item>
-        <item name="background">@drawable/tab_indicator_grey</item>
-    </style>
-
-    <style name="Widget.Dozuki.ListViewStyle" parent="Base.ListView">
-        <item name="android:cacheColorHint">#00000000</item>
-        <item name="android:divider">#FFEFEFEF</item>
-        <item name="android:dividerHeight">1dp</item>
-        <item name="android:fadingEdge">none</item>
-    </style>
-
-    <style name="Widget.Dozuki.ListViewStyle.Green" parent="Widget.Dozuki.ListViewStyle">
-        <item name="android:listSelector">@drawable/list_selector_green</item>
-    </style>
-
-    <style name="Widget.Dozuki.ListViewStyle.Orange" parent="Widget.Dozuki.ListViewStyle">
-        <item name="android:listSelector">@drawable/list_selector_orange</item>
-    </style>
-
-    <style name="Widget.Dozuki.ListViewStyle.Grey" parent="Widget.Dozuki.ListViewStyle">
-        <item name="android:listSelector">@drawable/list_selector_grey</item>
     </style>
 
 </resources>
