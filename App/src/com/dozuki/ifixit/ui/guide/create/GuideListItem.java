@@ -1,12 +1,16 @@
 package com.dozuki.ifixit.ui.guide.create;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -26,6 +30,10 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 public class GuideListItem extends TouchableRelativeLayout {
+   private static final int DELETE_OPTION = 3;
+   private static final int EDIT_OPTION = 2;
+   private static final int PUBLISH_OPTION = 1;
+   private static final int VIEW_OPTION = 0;
    private Context mContext;
 
    private TextView mTitleView;
@@ -58,65 +66,109 @@ public class GuideListItem extends TouchableRelativeLayout {
       menuButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+               PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
 
-            itemMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-               @Override
-               public boolean onMenuItemClick(MenuItem item) {
-                  switch (item.getItemId()) {
-                     case R.id.guide_create_item_view:
-                        Intent intent = new Intent(mActivity, GuideViewActivity.class);
-                        intent.putExtra(GuideViewActivity.GUIDEID, mGuideInfo.mGuideid);
-                        intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
-                        mActivity.startActivity(intent);
-                        break;
-                     case R.id.guide_create_item_edit:
-                        editGuide();
-                        break;
-                     case R.id.guide_create_item_publish:
-                        MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "publish_guide",
-                         null).build());
-
-                        // Ignore button press if we are already (un)publishing the guide.
-                        if (mGuideInfo.mIsPublishing) {
+               itemMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                  @Override
+                  public boolean onMenuItemClick(MenuItem item) {
+                     switch (item.getItemId()) {
+                        case R.id.guide_create_item_view:
+                           viewGuide();
                            break;
-                        }
+                        case R.id.guide_create_item_edit:
+                           editGuide();
+                           break;
+                        case R.id.guide_create_item_publish:
+                           publishGuide();
+                           break;
+                        case R.id.guide_create_item_delete:
+                           deleteGuide();
+                           break;
+                     }
 
-                        mGuideInfo.mIsPublishing = true;
-                        item.setTitle(mGuideInfo.mPublic ? R.string.unpublishing : R.string.publishing);
-
-                        if (!mGuideInfo.mPublic) {
-                           APIService.call(mActivity,
-                            APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
-                        } else {
-                           APIService.call(mActivity,
-                            APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
-                        }
-
-                        break;
-                     case R.id.guide_create_item_delete:
-                        MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
-                         "delete_guide", null).build());
-
-                        ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
-                        break;
+                     return true;
                   }
+               });
 
-                  return true;
+               MenuInflater menuInflater = itemMenu.getMenuInflater();
+               menuInflater.inflate(R.menu.guide_item_popup, itemMenu.getMenu());
+               Menu menu = itemMenu.getMenu();
+
+               if (mGuideInfo.mPublic) {
+                  menu.findItem(R.id.guide_create_item_publish).setTitle(R.string.unpublish);
                }
-            });
 
-            MenuInflater menuInflater = itemMenu.getMenuInflater();
-            menuInflater.inflate(R.menu.guide_item_popup, itemMenu.getMenu());
+               // Disable deleting guides on iFixit for now.
+               if (MainApplication.get().getSite().isIfixit()) {
+                  menu.findItem(R.id.guide_create_item_delete).setVisible(false);
+               }
 
-            // Disable deleting guides on iFixit for now.
-            if (MainApplication.get().getSite().isIfixit()) {
-               itemMenu.getMenu().findItem(R.id.guide_create_item_delete).setVisible(false);
+               itemMenu.show();
+            } else {
+               // PopupMenu was added in API 11, so let's use an AlertDialog instead.
+               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+               builder.setItems(MainApplication.get().getSite().isIfixit() ? R.array.step_list_item_options
+                : R.array.guide_list_item_options_with_delete, new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                     switch (which) {
+                        case VIEW_OPTION:
+                           viewGuide();
+                           break;
+                        case PUBLISH_OPTION:
+                           publishGuide();
+                           break;
+                        case EDIT_OPTION:
+                           editGuide();
+                           break;
+                        case DELETE_OPTION:
+                           deleteGuide();
+                           break;
+                     }
+                  }
+               });
+               builder.create();
+               builder.show();
             }
-
-            itemMenu.show();
          }
       });
+   }
+
+   private void viewGuide() {
+      Intent intent = new Intent(mActivity, GuideViewActivity.class);
+      intent.putExtra(GuideViewActivity.GUIDEID, mGuideInfo.mGuideid);
+      intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
+      mActivity.startActivity(intent);
+   }
+
+   private void publishGuide() {
+      MainApplication.getGaTracker()
+       .send(MapBuilder.createEvent("ui_action", "button_press", "publish_guide",
+        null).build());
+
+      // Ignore button press if we are already (un)publishing the guide.
+      if (mGuideInfo.mIsPublishing) {
+         return;
+      }
+
+      mGuideInfo.mIsPublishing = true;
+      mPublishText.setText(mGuideInfo.mPublic ? R.string.unpublishing : R.string.publishing);
+      mPublishText.setTextColor(getResources().getColor(R.color.text_light));
+
+      if (!mGuideInfo.mPublic) {
+         APIService.call(mActivity,
+          APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+      } else {
+         APIService.call(mActivity,
+          APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+      }
+   }
+
+   private void deleteGuide() {
+      MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+       "delete_guide", null).build());
+
+      ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
    }
 
    public void setRowData(GuideInfo guideInfo) {

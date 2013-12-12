@@ -284,4 +284,22 @@
         <item>Delete</item>
     </string-array>
 
+    <string-array name="step_list_item_options">
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="guide_list_item_options_with_delete">
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="guide_list_item_options">
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+    </string-array>
+
 </resources>

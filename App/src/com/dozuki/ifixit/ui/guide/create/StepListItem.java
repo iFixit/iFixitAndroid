@@ -1,6 +1,9 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.os.Build;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -21,6 +24,8 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 public class StepListItem extends TouchableRelativeLayout {
+   private static final int EDIT_OPTION = 0;
+   private static final int DELETE_OPTION = 1;
    private TextView mStepsView;
    private TextView mStepNumber;
    private ImageView mImageView;
@@ -52,31 +57,56 @@ public class StepListItem extends TouchableRelativeLayout {
       menuButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
 
-            itemMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-               @Override
-               public boolean onMenuItemClick(MenuItem item) {
-                  switch (item.getItemId()) {
-                     case R.id.step_create_item_edit:
-                        editStep();
-                        break;
-                     case R.id.step_create_item_delete:
-                        MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "delete_step", null).build());
+               PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
 
-                        mPortalRef.createDeleteDialog(mStepObject).show();
-                        break;
+               itemMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                  @Override
+                  public boolean onMenuItemClick(MenuItem item) {
+                     switch (item.getItemId()) {
+                        case R.id.step_create_item_edit:
+                           editStep();
+                           break;
+                        case R.id.step_create_item_delete:
+                           deleteStep();
+                           break;
+                     }
+
+                     return true;
                   }
+               });
 
-                  return true;
-               }
-            });
-
-            MenuInflater menuInflater = itemMenu.getMenuInflater();
-            menuInflater.inflate(R.menu.step_item_popup, itemMenu.getMenu());
-            itemMenu.show();
+               MenuInflater menuInflater = itemMenu.getMenuInflater();
+               menuInflater.inflate(R.menu.step_item_popup, itemMenu.getMenu());
+               itemMenu.show();
+            } else {
+               // PopupMenu was added in API 11, so let's use an AlertDialog instead.
+               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+               builder.setItems(R.array.step_list_item_options, new DialogInterface.OnClickListener() {
+                  public void onClick(DialogInterface dialog, int which) {
+                     switch (which) {
+                        case EDIT_OPTION:
+                           editStep();
+                           break;
+                        case DELETE_OPTION:
+                           deleteStep();
+                           break;
+                     }
+                  }
+               });
+               builder.create();
+               builder.show();
+            }
          }
       });
+   }
+
+   private void deleteStep() {
+      MainApplication.getGaTracker()
+       .send(MapBuilder.createEvent("ui_action", "button_press", "delete_step", null).build());
+
+      mPortalRef.createDeleteDialog(mStepObject).show();
    }
 
    public void setRowData(GuideStep step, int position) {
@@ -101,7 +131,8 @@ public class StepListItem extends TouchableRelativeLayout {
    }
 
    private void editStep() {
-      MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press", "edit_step", null).build());
+      MainApplication.getGaTracker()
+       .send(MapBuilder.createEvent("ui_action", "button_press", "edit_step", null).build());
 
       mPortalRef.launchStepEdit(mStepPosition);
    }
