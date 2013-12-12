@@ -147,7 +147,7 @@ public class StepListItem extends TouchableRelativeLayout {
       } else {
          for (Image imageInfo : imageList) {
             if (imageInfo.getId() > 0) {
-               String url = imageInfo.getPath(".thumbnail");
+               String url = imageInfo.getPath(".standard");
                setStepThumbnail(url, imageView);
                return;
             }
@@ -156,7 +156,7 @@ public class StepListItem extends TouchableRelativeLayout {
    }
 
    private void setStepThumbnail(VideoThumbnail thumb, ImageView imageView) {
-      String url = thumb.getPath(".thumbnail");
+      String url = thumb.getPath(".standard");
 
       // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
       imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
