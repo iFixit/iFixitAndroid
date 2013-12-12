@@ -604,19 +604,4 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
    public AlertDialog getNavigationAlertDialog(NavigationItem item) {
       return null;
    }
-
-   private String buildAccountMenuCategoryTitle() {
-      MainApplication app = MainApplication.get();
-      boolean loggedIn = app.isUserLoggedIn();
-      String title;
-
-      if (loggedIn) {
-         String username = app.getUser().getUsername();
-         title = getString(R.string.account_username_title, username);
-      } else {
-         title = getString(R.string.account_menu_title);
-      }
-
-      return title;
-   }
 }
