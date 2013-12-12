@@ -1,7 +1,9 @@
-package com.dozuki.ifixit.util;
+package com.dozuki.ifixit.util.api;
 
 import android.util.Log;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.util.JSONHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -11,19 +13,19 @@ import java.net.URLEncoder;
 /**
  * Defines all APIEndpoints.
  */
-public enum APIEndpoint {
+public enum ApiEndpoint {
    SEARCH(
     new Endpoint() {
        public String createUrl(String query) {
           return "search/" + query;
        }
 
-       public APIEvent<?> parse(String json) throws JSONException {
-          return new APIEvent.Search().setResult(JSONHelper.parseSearchResults(json));
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.Search().setResult(JSONHelper.parseSearchResults(json));
        }
 
-       public APIEvent<?> getEvent() {
-          return new APIEvent.Search();
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.Search();
        }
     },
     false,
@@ -36,12 +38,12 @@ public enum APIEndpoint {
             return "categories?withDisplayTitles";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Categories().setResult(JSONHelper.parseTopics(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Categories().setResult(JSONHelper.parseTopics(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.Categories();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Categories();
          }
       },
       false,
@@ -54,12 +56,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.ViewGuide().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.ViewGuide().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.ViewGuide();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.ViewGuide();
          }
       },
       false,
@@ -72,12 +74,12 @@ public enum APIEndpoint {
             return "guides" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Guides().setResult(JSONHelper.parseGuides(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Guides().setResult(JSONHelper.parseGuides(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.Guides();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Guides();
          }
       },
       false,
@@ -95,12 +97,12 @@ public enum APIEndpoint {
             }
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Topic().setResult(JSONHelper.parseTopicLeaf(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Topic().setResult(JSONHelper.parseTopicLeaf(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.Topic();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Topic();
          }
       },
       false,
@@ -113,12 +115,12 @@ public enum APIEndpoint {
             return "categories/all?limit=100000";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.TopicList().setResult(JSONHelper.parseAllTopics(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.TopicList().setResult(JSONHelper.parseAllTopics(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.TopicList();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.TopicList();
          }
       },
       false,
@@ -131,12 +133,12 @@ public enum APIEndpoint {
             return "user/token";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Login().setResult(JSONHelper.parseLoginInfo(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Login().setResult(JSONHelper.parseLoginInfo(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.Login();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Login();
          }
       },
       false,
@@ -150,12 +152,12 @@ public enum APIEndpoint {
             return "user/token";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Logout();
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Logout();
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.Logout();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Logout();
          }
       },
       true,
@@ -170,12 +172,12 @@ public enum APIEndpoint {
             return "users";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Register().setResult(JSONHelper.parseLoginInfo(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Register().setResult(JSONHelper.parseLoginInfo(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.Register();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Register();
          }
       },
       false,
@@ -189,12 +191,12 @@ public enum APIEndpoint {
             return "user/media/images" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UserImages().setResult(JSONHelper.parseUserImages(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UserImages().setResult(JSONHelper.parseUserImages(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UserImages();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UserImages();
          }
       },
       true,
@@ -206,12 +208,12 @@ public enum APIEndpoint {
             return "user/media/videos" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UserVideos().setResult(JSONHelper.parseUserVideos(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UserVideos().setResult(JSONHelper.parseUserVideos(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UserVideos();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UserVideos();
          }
       },
       true,
@@ -224,12 +226,12 @@ public enum APIEndpoint {
             return "user/favorites/guides";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UserFavorites().setResult(JSONHelper.parseUserFavorites(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UserFavorites().setResult(JSONHelper.parseUserFavorites(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UserFavorites();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UserFavorites();
          }
       },
       true,
@@ -242,12 +244,12 @@ public enum APIEndpoint {
             return "user/media/embeds" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UserEmbeds().setResult(JSONHelper.parseUserEmbeds(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UserEmbeds().setResult(JSONHelper.parseUserEmbeds(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UserVideos();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UserVideos();
          }
       },
       true,
@@ -283,12 +285,12 @@ public enum APIEndpoint {
             return filePath.substring(index + 1);
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UploadImage().setResult(JSONHelper.parseUploadedImage(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UploadImage().setResult(JSONHelper.parseUploadedImage(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UploadImage();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UploadImage();
          }
       },
       true,
@@ -324,12 +326,12 @@ public enum APIEndpoint {
             return filePath.substring(index + 1);
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UploadStepImage().setResult(JSONHelper.parseUploadedImage(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UploadStepImage().setResult(JSONHelper.parseUploadedImage(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UploadStepImage();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UploadStepImage();
          }
       },
       true,
@@ -342,13 +344,13 @@ public enum APIEndpoint {
             return "user/media/images/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public ApiEvent<?> parse(String json) throws JSONException {
             // TODO: Actually look at the response?
-            return new APIEvent.DeleteImage().setResult("");
+            return new ApiEvent.DeleteImage().setResult("");
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.DeleteImage();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.DeleteImage();
          }
       },
       true,
@@ -361,13 +363,13 @@ public enum APIEndpoint {
             return "user/media/images" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
+         public ApiEvent<?> parse(String json) throws JSONException {
             // TODO: Actually look at the response?
-            return new APIEvent.DeleteImage().setResult("");
+            return new ApiEvent.DeleteImage().setResult("");
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.DeleteImage();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.DeleteImage();
          }
       },
       true,
@@ -380,12 +382,12 @@ public enum APIEndpoint {
             return "user/guides?limit=10000";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UserGuides().setResult(JSONHelper.parseUserGuides(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UserGuides().setResult(JSONHelper.parseUserGuides(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UserGuides();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UserGuides();
          }
       },
       true,
@@ -398,12 +400,12 @@ public enum APIEndpoint {
             return "guides/" + query + "?unpatrolled&excludePrerequisiteSteps";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.GuideForEdit().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.GuideForEdit().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.GuideForEdit();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.GuideForEdit();
          }
       },
       true,
@@ -416,12 +418,12 @@ public enum APIEndpoint {
             return "guides";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.CreateGuide().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.CreateGuide().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.CreateGuide();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.CreateGuide();
          }
       },
       true,
@@ -434,12 +436,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.EditGuide().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.EditGuide().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.EditGuide();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.EditGuide();
          }
       },
       true,
@@ -451,12 +453,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-           return new APIEvent.DeleteGuide().setResult(json);
+         public ApiEvent<?> parse(String json) throws JSONException {
+           return new ApiEvent.DeleteGuide().setResult(json);
          }
 
-         public APIEvent<?> getEvent() {
-           return new APIEvent.DeleteGuide();
+         public ApiEvent<?> getEvent() {
+           return new ApiEvent.DeleteGuide();
          }
       },
       true,
@@ -469,12 +471,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.PublishStatus();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.PublishStatus();
          }
       },
       true,
@@ -487,12 +489,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.PublishStatus().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.PublishStatus();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.PublishStatus();
          }
       },
       true,
@@ -505,12 +507,12 @@ public enum APIEndpoint {
             return "guides/" +  query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.StepReorder().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.StepReorder().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.StepReorder();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.StepReorder();
          }
       },
       true,
@@ -523,12 +525,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.StepAdd().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.StepAdd().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.StepAdd();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.StepAdd();
          }
       },
       true,
@@ -541,12 +543,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.StepSave().setResult(JSONHelper.parseStep(new JSONObject(json), 0));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.StepSave().setResult(JSONHelper.parseStep(new JSONObject(json), 0));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.StepSave();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.StepSave();
          }
       },
       true,
@@ -559,12 +561,12 @@ public enum APIEndpoint {
             return "guides/" + query;
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.StepRemove().setResult(JSONHelper.parseGuide(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.StepRemove().setResult(JSONHelper.parseGuide(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.StepRemove();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.StepRemove();
          }
       },
       true,
@@ -577,12 +579,12 @@ public enum APIEndpoint {
             return "sites?limit=1000";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.Sites().setResult(JSONHelper.parseSites(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Sites().setResult(JSONHelper.parseSites(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.Sites();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Sites();
          }
       },
       false,
@@ -595,12 +597,12 @@ public enum APIEndpoint {
             return "sites/info";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.SiteInfo().setResult(JSONHelper.parseSiteInfo(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.SiteInfo().setResult(JSONHelper.parseSiteInfo(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.SiteInfo();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.SiteInfo();
          }
       },
       false,
@@ -613,12 +615,12 @@ public enum APIEndpoint {
             return "user";
          }
 
-         public APIEvent<?> parse(String json) throws JSONException {
-            return new APIEvent.UserInfo().setResult(JSONHelper.parseLoginInfo(json));
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.UserInfo().setResult(JSONHelper.parseLoginInfo(json));
          }
 
-         public APIEvent<?> getEvent() {
-            return new APIEvent.UserInfo();
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.UserInfo();
          }
       },
       false,
@@ -642,16 +644,16 @@ public enum APIEndpoint {
       public String createUrl(String query);
 
       /**
-       * Returns an APIEvent given the JSON response of the request.
+       * Returns an ApiEvent given the JSON response of the request.
        */
-      public APIEvent<?> parse(String json) throws JSONException;
+      public ApiEvent<?> parse(String json) throws JSONException;
 
       /**
-       * Returns an empty APIEvent that is used for events for this endpoint.
+       * Returns an empty ApiEvent that is used for events for this endpoint.
        *
        * This is typically used to put errors into so they still get to the right place.
        */
-      public APIEvent<?> getEvent();
+      public ApiEvent<?> getEvent();
    }
 
    /**
@@ -681,16 +683,16 @@ public enum APIEndpoint {
     */
    public final boolean mPostResults;
 
-   private APIEndpoint(Endpoint endpoint, boolean authenticated, String method) {
+   private ApiEndpoint(Endpoint endpoint, boolean authenticated, String method) {
       this(endpoint, authenticated, method, false);
    }
 
-   private APIEndpoint(Endpoint endpoint, boolean authenticated,
-    String method, boolean forcePublic) {
+   private ApiEndpoint(Endpoint endpoint, boolean authenticated,
+                       String method, boolean forcePublic) {
       this(endpoint, authenticated, method, forcePublic, true);
    }
-   private APIEndpoint(Endpoint endpoint, boolean authenticated,
-    String method, boolean forcePublic, boolean postResults) {
+   private ApiEndpoint(Endpoint endpoint, boolean authenticated,
+                       String method, boolean forcePublic, boolean postResults) {
       mEndpoint = endpoint;
       mAuthenticated = authenticated;
       mMethod = method;
@@ -732,14 +734,14 @@ public enum APIEndpoint {
       return url;
    }
 
-   public APIEvent<?> parseResult(String json) throws JSONException {
+   public ApiEvent<?> parseResult(String json) throws JSONException {
       return mEndpoint.parse(json).setResponse(json);
    }
 
    /**
     * Returns a "plain" event that is the correct type for this endpoint.
     */
-   public APIEvent<?> getEvent() {
+   public ApiEvent<?> getEvent() {
       return mEndpoint.getEvent();
    }
 

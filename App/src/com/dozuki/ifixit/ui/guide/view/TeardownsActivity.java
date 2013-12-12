@@ -3,9 +3,8 @@ package com.dozuki.ifixit.ui.guide.view;
 import android.os.Bundle;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.util.APICall;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
@@ -26,12 +25,12 @@ public class TeardownsActivity extends GuideListActivity {
    }
 
    @Override
-   protected APICall getApiCall(int limit, int offset) {
-      return APIService.getTeardowns(limit, offset);
+   protected ApiCall getApiCall(int limit, int offset) {
+      return ApiCall.teardowns(limit, offset);
    }
 
    @Subscribe
-   public void onGuides(APIEvent.Guides event) {
+   public void onGuides(ApiEvent.Guides event) {
       setGuides(event);
    }
 }

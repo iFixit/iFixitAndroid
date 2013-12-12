@@ -1,17 +1,14 @@
 package com.dozuki.ifixit.ui.gallery;
 
-import android.os.Bundle;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 public class VideoMediaFragment extends MediaFragment {
    @Subscribe
-   public void onUserVideos(APIEvent.UserVideos event) {
+   public void onUserVideos(ApiEvent.UserVideos event) {
       if (!event.hasError()) {
          GalleryVideoList videoList = event.getResult();
          if (videoList.getItems().size() > 0) {
@@ -23,14 +20,14 @@ public class VideoMediaFragment extends MediaFragment {
          }
          mNextPageRequestInProgress = false;
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
-      APIService.call(getActivity(),
-       APIService.getUserVideosAPICall("?limit=" + IMAGE_PAGE_SIZE));
+      Api.call(getActivity(),
+       ApiCall.userVideos("?limit=" + IMAGE_PAGE_SIZE));
    }
 }

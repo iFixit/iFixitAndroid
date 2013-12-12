@@ -1,11 +1,11 @@
 package com.dozuki.ifixit.ui.gallery;
 
-import android.util.Log;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.UserImage;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -16,12 +16,12 @@ public class PhotoMediaFragment extends MediaFragment {
       mNextPageRequestInProgress = true;
       ((GalleryActivity)getActivity()).showLoading(R.id.gallery_loading_container);
 
-      APIService.call(getActivity(),
-       APIService.getUserImagesAPICall("?limit=" + IMAGE_PAGE_SIZE));
+      Api.call(getActivity(),
+       ApiCall.userImages("?limit=" + IMAGE_PAGE_SIZE));
    }
 
    @Subscribe
-   public void onUserImages(APIEvent.UserImages event) {
+   public void onUserImages(ApiEvent.UserImages event) {
       ((GalleryActivity)getActivity()).hideLoading();
       setEmptyListView();
 
@@ -39,12 +39,12 @@ public class PhotoMediaFragment extends MediaFragment {
 
          mNextPageRequestInProgress = false;
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
    @Subscribe
-   public void onUploadImage(APIEvent.UploadImage event) {
+   public void onUploadImage(ApiEvent.UploadImage event) {
       if (!event.hasError()) {
          Image image = event.getResult();
          String key = event.getExtraInfo();
@@ -54,16 +54,16 @@ public class PhotoMediaFragment extends MediaFragment {
          mGalleryAdapter.notifyDataSetChanged();
          mGalleryAdapter.invalidatedView();
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
    @Subscribe
-   public void onDeleteImage(APIEvent.DeleteImage event) {
+   public void onDeleteImage(ApiEvent.DeleteImage event) {
       if (!event.hasError()) {
          mGalleryAdapter.notifyDataSetChanged();
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 }

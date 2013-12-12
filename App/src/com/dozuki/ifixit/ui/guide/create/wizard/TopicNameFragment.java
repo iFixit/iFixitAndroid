@@ -32,8 +32,9 @@ import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.ui.BaseFragment;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -93,7 +94,7 @@ public class TopicNameFragment extends BaseFragment {
       if (mTopics != null) {
          setTopicArrayAdapter();
       } else {
-         APIService.call(getActivity(), APIService.getAllTopicsAPICall());
+         Api.call(getActivity(), ApiCall.allTopics());
       }
 
       mTopicNameView.setHint(mPage.getHint());
@@ -169,13 +170,13 @@ public class TopicNameFragment extends BaseFragment {
    }
 
    @Subscribe
-   public void onTopicList(APIEvent.TopicList event) {
+   public void onTopicList(ApiEvent.TopicList event) {
       if (!event.hasError()) {
          mTopics = new ArrayList<String>(event.getResult());
 
          setTopicArrayAdapter();
       } else {
-         APIService.getErrorDialog(getActivity(), event).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 }

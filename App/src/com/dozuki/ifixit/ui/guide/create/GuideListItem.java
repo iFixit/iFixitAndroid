@@ -23,8 +23,9 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.RoundedTransformation;
 import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
@@ -156,11 +157,11 @@ public class GuideListItem extends TouchableRelativeLayout {
       mPublishText.setTextColor(getResources().getColor(R.color.text_light));
 
       if (!mGuideInfo.mPublic) {
-         APIService.call(mActivity,
-          APIService.getPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+         Api.call(mActivity,
+          ApiCall.publishGuide(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
       } else {
-         APIService.call(mActivity,
-          APIService.getUnPublishGuideAPICall(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
+         Api.call(mActivity,
+          ApiCall.unpublishGuide(mGuideInfo.mGuideid, mGuideInfo.mRevisionid));
       }
    }
 

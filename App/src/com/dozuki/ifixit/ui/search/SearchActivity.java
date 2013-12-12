@@ -20,8 +20,9 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 import java.io.UnsupportedEncodingException;
@@ -105,7 +106,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
 
    @SuppressWarnings("unused")
    @Subscribe
-   public void onSearchResults(APIEvent.Search event) {
+   public void onSearchResults(ApiEvent.Search event) {
       hideLoading();
 
       if (!event.hasError()) {
@@ -125,7 +126,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
             ((SearchFragment) frag).setSearchResults(search);
          }
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
@@ -172,7 +173,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       }
 
       showLoading(R.id.search_results_container);
-      APIService.call(this, APIService.getSearchAPICall(query));
+      Api.call(this, ApiCall.search(query));
    }
 
    private void focusSearch() {

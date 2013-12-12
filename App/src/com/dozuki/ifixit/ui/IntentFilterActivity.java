@@ -11,9 +11,10 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicViewActivity;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.squareup.otto.Subscribe;
@@ -79,7 +80,7 @@ public class IntentFilterActivity extends BaseActivity {
          // Set site to dozuki before API call.
          MainApplication.get().setSite(Site.getSite("dozuki"));
 
-         APIService.call(this, APIService.getSitesAPICall());
+         Api.call(this, ApiCall.sites());
       } else {
          displayNotFoundDialog();
          return;
@@ -123,7 +124,7 @@ public class IntentFilterActivity extends BaseActivity {
    }
 
    @Subscribe
-   public void onSites(APIEvent.Sites event) {
+   public void onSites(ApiEvent.Sites event) {
       if (!event.hasError()) {
          Site selectedSite = null;
          for (Site site : event.getResult()) {
@@ -149,14 +150,14 @@ public class IntentFilterActivity extends BaseActivity {
             displayNotFoundDialog();
          }
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    public void displayNotFoundDialog() {
-      // The APIEvent type doesn't matter.
-      APIService.getErrorDialog(this, new APIEvent.ViewGuide().
+      // The ApiEvent type doesn't matter.
+      Api.getErrorDialog(this, new ApiEvent.ViewGuide().
        setCode(404).
-       setError(APIError.getByStatusCode(404))).show();
+       setError(ApiError.getByStatusCode(404))).show();
    }
 }

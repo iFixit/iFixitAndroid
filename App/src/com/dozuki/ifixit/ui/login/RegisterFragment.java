@@ -20,9 +20,10 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.dozuki.ifixit.util.APIError;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiError;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
@@ -41,7 +42,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    private ProgressBar mLoadingSpinner;
 
    @Subscribe
-   public void onRegister(APIEvent.Register event) {
+   public void onRegister(ApiEvent.Register event) {
       if (!event.hasError()) {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user);
@@ -49,10 +50,10 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
          dismiss();
       } else {
          enable(true);
-         APIError error = event.getError();
-         if (error.mType == APIError.Type.CONNECTION ||
-          error.mType == APIError.Type.PARSE) {
-            APIService.getErrorDialog(getActivity(), event).show();
+         ApiError error = event.getError();
+         if (error.mType == ApiError.Type.CONNECTION ||
+          error.mType == ApiError.Type.PARSE) {
+            Api.getErrorDialog(getActivity(), event).show();
          }
          mLoadingSpinner.setVisibility(View.GONE);
 
@@ -168,8 +169,8 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
-               APIService.call(getActivity(),
-                APIService.getRegisterAPICall(login, password, name));
+               Api.call(getActivity(),
+                ApiCall.register(login, password, name));
             } else {
                if (login.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);

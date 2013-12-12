@@ -10,8 +10,8 @@ import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.LoadingFragment;
 import com.dozuki.ifixit.ui.guide.create.StepReorderFragment.StepRearrangeListener;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.util.api.Api;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
@@ -130,7 +130,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    /////////////////////////////////////////////////////
 
    @Subscribe
-   public void onRetrievedGuide(APIEvent.GuideForEdit event) {
+   public void onRetrievedGuide(ApiEvent.GuideForEdit event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
          MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid());
@@ -138,17 +138,17 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
 
          hideLoading();
       } else {
-         APIService.getErrorDialog(StepsActivity.this, event).show();
+         Api.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 
    @Subscribe
-   public void onIntroSavedGuide(APIEvent.EditGuide event) {
+   public void onIntroSavedGuide(ApiEvent.EditGuide event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
          hideLoading();
       } else {
-         APIService.getErrorDialog(StepsActivity.this, event).show();
+         Api.getErrorDialog(StepsActivity.this, event).show();
       }
    }
 
