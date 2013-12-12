@@ -65,6 +65,9 @@ android {
 
       release {
          buildConfig 'public static final String DEV_SERVER = "";'
+
+         runProguard true
+         proguardFile 'proguard.cfg'
       }
    }
 
