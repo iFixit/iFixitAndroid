@@ -287,4 +287,5 @@
     <!-- Strings needing translations. -->
     <string name="slide_menu_barcode_scanner">Scan QR Code</string>
     <string name="slide_menu_barcode_scanner_short">Scan</string>
+    <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
 </resources>

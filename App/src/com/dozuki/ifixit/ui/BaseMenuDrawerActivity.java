@@ -266,6 +266,17 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          }
       },
 
+      STORE(
+       R.string.parts_and_tools,
+       R.drawable.ic_action_basket,
+       "http://www.ifixit.com/Store"
+      ) {
+         @Override
+         public boolean shouldDisplay() {
+            return MainApplication.get().getSite().isIfixit();
+         }
+      },
+
       FEATURED_GUIDES(
          R.string.featured_guides,
          R.drawable.ic_action_star_10,
