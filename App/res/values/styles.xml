@@ -2,9 +2,7 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="ActionBar" parent="Widget.Sherlock.Light.ActionBar">
-        <item name="android:actionBarItemBackground">@drawable/item_background_holo_light</item>
         <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="android:selectableItemBackground">@drawable/item_background_holo_light</item>
         <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
     </style>
 
@@ -180,13 +178,14 @@
         <item name="android:drawablePadding">4dp</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingLeft">4dp</item>
-        <item name="android:textAllCaps">true</item>
         <item name="android:textSize">14sp</item>
     </style>
 
     <style name="TopicHeaderRow.Background">
         <item name="android:background">?doz__background</item>
     </style>
+
+    <style name="TopicHeaderRow.Background.Compat"></style>
 
     <style name="GuideGridItem">
         <item name="android:background">@drawable/bg_card</item>
@@ -260,7 +259,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">?android:attr/textColorSecondaryInverse</item>
         <item name="android:textSize">14sp</item>
-        <item name="android:textAllCaps">true</item>
 
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">16dp</item>
@@ -269,6 +267,8 @@
         <item name="android:singleLine">true</item>
         <item name="android:ellipsize">end</item>
     </style>
+
+    <style name="MenuDrawer.Widget.Category.Compat"></style>
 
     <style name="MenuDrawer.Widget.Title">
         <item name="android:textAppearance">?android:attr/textAppearance</item>
@@ -300,32 +300,21 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">8dp</item>
-        <item name="android:paddingLeft">?android:listPreferredItemPaddingLeft</item>
+        <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">36sp</item>
         <item name="android:textColor">?doz__primaryHighlightColor</item>
-        <item name="android:fontFamily">sans-serif-thin</item>
     </style>
+
+    <style name="WizardPageTitle.Compat"/>
 
     <style name="WizardPageDescription">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">16dp</item>
         <item name="android:layout_marginBottom">16dp</item>
-        <item name="android:paddingLeft">?android:listPreferredItemPaddingLeft</item>
+        <item name="android:paddingLeft">16dp</item>
         <item name="android:textSize">18sp</item>
         <item name="android:textColor">?android:textColorSecondaryInverse</item>
-    </style>
-
-    <style name="WizardFormLabel">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">0dp</item>
-        <item name="android:textAppearance">?android:textAppearanceSmall</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textAllCaps">true</item>
-        <item name="android:paddingLeft">12dp</item>
-        <item name="android:paddingRight">12dp</item>
     </style>
 
     <style name="WizardFinishTextAppearance">
@@ -339,12 +328,6 @@
     <style name="Widget.iFixit.TopicBackground" parent="Widget.iFixit">
         <item name="android:src">@drawable/fist_default</item>
         <item name="android:contentDescription">@string/fist_background_desc</item>
-    </style>
-
-    <style name="Widget.iFixit.ActionBar.TabText" parent="Widget.Sherlock.Light.ActionBar.TabText.Inverse">
-        <item name="android:textAllCaps">false</item>
-        <item name="android:textSize">18sp</item>
-        <item name="android:textColor">@color/white</item>
     </style>
 
     <!-- Dozuki -->

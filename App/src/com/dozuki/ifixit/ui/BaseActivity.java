@@ -153,8 +153,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        */
       setTheme(app.getSiteTheme());
 
-      ((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
-       .item_background_holo_light);
+      // This doesn't work on on versions below ICS.  Don't really care if the home button pressed state is the wrong
+      // color on those devices so just ignore it.
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+         ((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
+          .item_background_holo_light);
+      }
 
       if (site.actionBarUsesIcon()) {
          ab.setLogo(getResources().getIdentifier("icon", "drawable", getPackageName()));
