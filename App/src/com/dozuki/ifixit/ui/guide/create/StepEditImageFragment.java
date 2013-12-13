@@ -16,14 +16,16 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
+import android.widget.Toast;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.ThumbnailView;
-import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.CaptureHelper;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Bus;
@@ -126,6 +128,7 @@ public class StepEditImageFragment extends BaseFragment {
                             mContext.startActivityForResult(cameraIntent, StepEditActivity.CAMERA_REQUEST_CODE);
                          } catch (IOException e) {
                             Log.e("StepEditImageFragment", "Capture image", e);
+                            Toast.makeText(mContext, "Please insert an SD card.", Toast.LENGTH_SHORT).show();
                          }
 
                          break;

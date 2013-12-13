@@ -267,7 +267,8 @@ public abstract class MediaFragment extends BaseFragment
           Uri.fromFile(file));
          startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
       } catch (IOException e) {
-         e.printStackTrace();
+         Log.e("MediaFragment", "Launch camera", e);
+         Toast.makeText(getActivity(), "Please insert an SD card.", Toast.LENGTH_SHORT).show();
       }
    }
 
