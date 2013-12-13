@@ -99,24 +99,23 @@ public class SearchFragment extends BaseListFragment {
       if (!search.mQuery.equals(mSearch.mQuery)) {
          mSearchResults.clear();
 
-         mSearch = search;
-
          initializeScrollListener();
-
-         mSearchResults.addAll(search.mResults);
-
-         mAdapter.setSearchResults(mSearchResults);
-         mAdapter.notifyDataSetChanged();
-
-         if (!mSearch.mHasMoreResults) {
-            mScrollListener.noMorePages();
-         } else {
-            mScrollListener.notifyMorePages();
-         }
-
-         getListView().invalidate();
-      } else {
-         mSearch = search;
       }
+
+      mSearch = search;
+
+      mSearchResults.addAll(search.mResults);
+
+      mAdapter.setSearchResults(mSearchResults);
+      mAdapter.notifyDataSetChanged();
+
+      if (!mSearch.mHasMoreResults) {
+         mScrollListener.noMorePages();
+      } else {
+         mScrollListener.notifyMorePages();
+      }
+
+      getListView().invalidate();
+
    }
 }
