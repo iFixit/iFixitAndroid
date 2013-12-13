@@ -50,6 +50,7 @@ public abstract class MediaFragment extends BaseFragment
    private static final String SHOWING_DELETE_KEY = "SHOWING_DELETE_KEY";
    private static final int MAX_UPLOAD_COUNT = 4;
    private static final String RETURNING_VAL = "RETURNING_VAL";
+   private static final String DELETE_MODE = "DELETE_MODE";
 
    protected MediaAdapter mGalleryAdapter;
    protected GalleryMediaList mMediaList;
@@ -59,8 +60,7 @@ public abstract class MediaFragment extends BaseFragment
    private ImageSizes mImageSizes;
    private ActionMode mMode;
    private String mCameraTempFileName;
-   private boolean SHOWING_HELP = false;
-   private boolean SHOWING_DELETE = false;
+   private boolean mShowingDelete = false;
    private boolean mSelectForReturn;
    private TextView mNoMediaView;
 
@@ -84,13 +84,13 @@ public abstract class MediaFragment extends BaseFragment
       View view = inflater.inflate(R.layout.gallery_view, container, false);
 
       if (savedInstanceState != null) {
-         SHOWING_DELETE = savedInstanceState.getBoolean(SHOWING_DELETE_KEY);
+         mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE_KEY);
 
          mMediaList = (GalleryMediaList) savedInstanceState.getSerializable(GALLERY_MEDIA_LIST);
 
          mSelectForReturn = savedInstanceState.getBoolean(RETURNING_VAL);
 
-         if (SHOWING_DELETE) {
+         if (mShowingDelete) {
             createDeleteConfirmDialog().show();
          }
 
@@ -113,8 +113,7 @@ public abstract class MediaFragment extends BaseFragment
       mGridView.setOnItemLongClickListener(this);
 
       if (savedInstanceState != null) {
-         boolean deleteMode = savedInstanceState.getBoolean("DELETE_MODE");
-         if (deleteMode) {
+         if (savedInstanceState.getBoolean(DELETE_MODE)) {
             setDeleteMode();
          }
       }
@@ -187,8 +186,9 @@ public abstract class MediaFragment extends BaseFragment
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
       savedInstanceState.putSerializable(GALLERY_MEDIA_LIST, mMediaList);
-      savedInstanceState.putBoolean(SHOWING_DELETE_KEY, SHOWING_DELETE);
+      savedInstanceState.putBoolean(SHOWING_DELETE_KEY, mShowingDelete);
       savedInstanceState.putBoolean(RETURNING_VAL, mSelectForReturn);
+      savedInstanceState.putBoolean(DELETE_MODE, mMode != null);
 
       if (mCameraTempFileName != null) {
          savedInstanceState.putString(CAMERA_PATH, mCameraTempFileName);
@@ -332,7 +332,7 @@ public abstract class MediaFragment extends BaseFragment
    }
 
    private AlertDialog createDeleteConfirmDialog() {
-      SHOWING_DELETE = true;
+      mShowingDelete = true;
 
       int selectedCount = mMediaList.countSelected();
 
@@ -345,7 +345,7 @@ public abstract class MediaFragment extends BaseFragment
         new DialogInterface.OnClickListener() {
            @Override
            public void onClick(DialogInterface dialog, int id) {
-              SHOWING_DELETE = false;
+              mShowingDelete = false;
               deleteSelectedPhotos();
               dialog.cancel();
            }
@@ -353,7 +353,7 @@ public abstract class MediaFragment extends BaseFragment
        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
           @Override
           public void onClick(DialogInterface dialog, int which) {
-             SHOWING_DELETE = false;
+             mShowingDelete = false;
              dialog.cancel();
           }
        });
@@ -362,7 +362,7 @@ public abstract class MediaFragment extends BaseFragment
       dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
-            SHOWING_DELETE = false;
+            mShowingDelete = false;
          }
       });
 

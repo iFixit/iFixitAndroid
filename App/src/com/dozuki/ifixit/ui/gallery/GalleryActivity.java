@@ -2,7 +2,6 @@ package com.dozuki.ifixit.ui.gallery;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -86,12 +85,6 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/media/images");
       MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
-   }
-
-   @Override
-   public void onConfigurationChanged(Configuration newConfig) {
-      super.onConfigurationChanged(newConfig);
-      setContentView(R.layout.gallery_root);
    }
 
    @Override
