@@ -45,7 +45,9 @@
         <activity android:name=".ui.guide.view.FeaturedGuidesActivity"/>
         <activity android:name=".ui.FavoritesActivity"/>
 
-        <activity android:name=".ui.gallery.GalleryActivity"/>
+        <activity android:name=".ui.gallery.GalleryActivity"
+            android:configChanges="orientation"/>
+
         <activity
             android:name=".ui.guide.create.GuideIntroActivity"
             android:launchMode="singleTop"/>

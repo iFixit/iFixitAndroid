@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui.gallery;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -19,7 +20,6 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.util.Utils;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.ArrayList;
@@ -86,6 +86,12 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/media/images");
       MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
+   }
+
+   @Override
+   public void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
+      setContentView(R.layout.gallery_root);
    }
 
    @Override
