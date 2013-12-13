@@ -109,7 +109,7 @@ public class GuideListItem extends TouchableRelativeLayout {
             } else {
                // PopupMenu was added in API 11, so let's use an AlertDialog instead.
                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-               builder.setItems(MainApplication.get().getSite().isIfixit() ? R.array.step_list_item_options
+               builder.setItems(MainApplication.get().getSite().isIfixit() ? R.array.guide_list_item_options
                 : R.array.guide_list_item_options_with_delete, new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
                      switch (which) {
