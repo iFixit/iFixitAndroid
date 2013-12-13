@@ -50,7 +50,7 @@ public class GuideInfo implements Serializable {
    }
 
    public boolean hasSubject() {
-      List<String> hasSubject = Arrays.asList("repair", "installation", "disassembly");
+      List<String> hasSubject = Arrays.asList("repair", "replacement", "installation", "disassembly");
       //List<String> noSubject = Arrays.asList("technique", "maintenance", "teardown");
 
       return mSubject != null && !mSubject.equals("") && hasSubject.contains(mType.toLowerCase());
