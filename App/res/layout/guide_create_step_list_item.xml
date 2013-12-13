@@ -3,7 +3,6 @@
                 android:id="@+id/step_create_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="4dp"
                 android:background="@drawable/bg_card">
 
     <ImageView
