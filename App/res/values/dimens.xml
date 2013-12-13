@@ -68,6 +68,7 @@
     <!-- Media List Items -->
     <dimen name="list_item_thumbnail_width">80dp</dimen>
     <dimen name="list_item_thumbnail_height">60dp</dimen>
+    <dimen name="list_item_horizontal_margin">4dp</dimen>
     <dimen name="guide_create_list_item_text_right_offset">42dp</dimen>
 
 </resources>

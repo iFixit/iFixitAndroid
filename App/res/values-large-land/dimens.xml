@@ -15,4 +15,7 @@
     <!-- Step Edit -->
     <dimen name="guide_create_step_edit_video_right_margin">12dp</dimen>
 
+    <!-- Media List Items -->
+    <dimen name="list_item_horizontal_margin">120dp</dimen>
+
 </resources>
