@@ -174,7 +174,8 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
       Bundle subjectBundle = new Bundle();
       subjectBundle.putString(EditTextPage.TEXT_DATA_KEY, mGuide.getSubject());
 
-      if (type.equals("installation") || type.equals("disassembly") || type.equals("repair")) {
+      if (type.equals("replacement") || type.equals("introduction") || type.equals("disassembly")
+       || type.equals("repair")) {
          subjectBundleKey = GuideIntroWizardModel.HAS_SUBJECT_KEY + ":" + app.getString(R.string
           .guide_intro_wizard_guide_subject_title);
       } else {
