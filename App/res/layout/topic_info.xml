@@ -13,6 +13,7 @@
             android:id="@+id/topic_info_image"
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:background="@drawable/image_background_selectable"
             android:scaleType="centerCrop"
             android:contentDescription="@string/topic_info_image"/>
 

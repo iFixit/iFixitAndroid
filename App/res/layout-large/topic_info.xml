@@ -15,6 +15,7 @@
             android:scaleType="fitCenter"
             android:layout_alignParentRight="true"
             android:layout_margin="16dp"
+            android:background="@drawable/image_background_selectable"
             android:contentDescription="@string/topic_info_image"/>
 
         <TextView
