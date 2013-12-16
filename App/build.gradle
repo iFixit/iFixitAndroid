@@ -1,18 +1,22 @@
 buildscript {
    repositories {
       mavenCentral()
+      mavenLocal()
    }
    dependencies {
       classpath 'com.android.tools.build:gradle:0.6.3'
+      classpath 'com.squareup.gradle:gradle-android-test-plugin:0.9.1-SNAPSHOT'
    }
 }
 apply plugin: 'android'
+apply plugin: 'android-test'
 
 repositories {
    mavenCentral()
    mavenLocal() // Needed to pick up analytics from maven-android-sdk-deployer
    maven {
       url 'https://raw.github.com/iFixit/ark/master/releases/'
+      url 'https://oss.sonatype.org/content/repositories/snapshots/'
    }
 }
 
@@ -32,6 +36,14 @@ dependencies {
    compile "com.github.chrisbanes.pulltorefresh:pulltorefresh:2.1.2"
    compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
    compile "com.mobeta.android.dslv:dslv:0.6.1"
+
+   testCompile 'junit:junit:4.11'
+   testCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+   testCompile 'com.squareup:fest-android:1.0.7'
+
+   instrumentTestCompile 'junit:junit:4.11'
+   instrumentTestCompile 'org.robolectric:robolectric:2.3-SNAPSHOT'
+   instrumentTestCompile 'com.squareup:fest-android:1.0.7'
 }
 
 // List of sites. Used to create signingConfigs and sourceSets.
@@ -108,13 +120,10 @@ android {
    sourceSets {
       main {
          manifest.srcFile 'AndroidManifest.xml'
-         java.srcDirs = ['src/main/java']
-         resources.srcDirs = ['src/main/java']
-         aidl.srcDirs = ['src/main/java']
-         renderscript.srcDirs = ['src/main/java']
          res.srcDirs = ['res']
-         assets.srcDirs = ['assets']
       }
+
+      instrumentTest.setRoot('src/test')
 
       for (site in sites) {
          "${site}" createSiteSourceSet(site)
