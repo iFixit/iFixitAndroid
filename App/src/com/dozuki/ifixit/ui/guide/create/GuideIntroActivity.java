@@ -224,6 +224,11 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
 
       onPageTreeChanged();
       updateBottomBar();
+
+      // If we're editing an existing guides details, start at the Review page.
+      if (mEditIntroState) {
+         mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
+      }
    }
 
 
