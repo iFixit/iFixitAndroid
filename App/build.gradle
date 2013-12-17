@@ -74,6 +74,8 @@ android {
    productFlavors {
       ifixit {
          signingConfig signingConfigs.ifixit
+         packageName "com.dozuki.ifixit"
+         minSdkVersion 8
 
          buildConfig createSiteBuildConfig("ifixit", "UA-30506-9")
       }
