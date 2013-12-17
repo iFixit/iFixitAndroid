@@ -21,15 +21,11 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -163,15 +159,21 @@ public class GuideIntroViewFragment extends BaseFragment {
 
          mIntro.setText(Utils.correctLinkPaths(Html.fromHtml(introductionText, null, new WikiHtmlTagHandler())));
 
-         if (!mGuide.getDifficulty().equals("false")) {
-            mDifficulty.setText(getActivity().getString(R.string.difficulty) +
-             ": " + Utils.correctLinkPaths(Html.fromHtml(mGuide.getDifficulty())));
+         // Authors and Difficulty are not relevant on teardowns.
+         if (mGuide.getType().equalsIgnoreCase("teardown")) {
+            mDifficulty.setVisibility(View.GONE);
+            mAuthor.setVisibility(View.GONE);
+         } else {
+            if (!mGuide.getDifficulty().equals("false")) {
+               mDifficulty.setText(getActivity().getString(R.string.difficulty) +
+                ": " + Utils.correctLinkPaths(Html.fromHtml(mGuide.getDifficulty())));
+            }
+
+            mAuthor.setText(getActivity().getString(R.string.author) + ": " +
+             Utils.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
+
          }
-
-         mAuthor.setText(getActivity().getString(R.string.author) + ": " +
-          Utils.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
       }
-
       return view;
    }
 }
