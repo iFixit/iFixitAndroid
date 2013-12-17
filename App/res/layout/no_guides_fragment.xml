@@ -5,6 +5,7 @@
     android:background="?attr/doz__background">
 
     <TextView
+        android:id="@+id/no_guides_text"
         style="@style/BodyText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -12,5 +13,15 @@
         android:textAlignment="center"
         android:text="@string/no_guides"
         android:paddingTop="20dp" />
+
+    <Button
+        android:id="@+id/new_guide_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/create_new_guide"
+        android:layout_marginTop="20dp"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/no_guides_text"/>
+
 
 </RelativeLayout>

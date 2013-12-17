@@ -273,6 +273,7 @@
     <string name="no_search_results">No search results.</string>
     <string name="creating_new_guide">Creating New Guide…</string>
     <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
+    <string name="create_new_guide">Create New Guide</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>
