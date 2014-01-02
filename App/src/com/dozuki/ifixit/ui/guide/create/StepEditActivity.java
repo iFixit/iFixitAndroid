@@ -177,6 +177,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    private void initializeNewGuide() {
+      // Set the page title to "New Guide"
+      getSupportActionBar().setTitle(getString(R.string.new_guide));
+
       // Require the user to be logged in to create a new guide. Existing guides
       // are covered by the get guide API call.
       openLoginDialogIfLoggedOut();
@@ -193,7 +196,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private void initPage(int startPage) {
       String guideTitle = mGuide.getTitle();
 
-      getSupportActionBar().setTitle(guideTitle);
+      // Only set the page title if the guide actually has a title.
+      if (guideTitle != null) {
+         getSupportActionBar().setTitle(guideTitle);
+      }
 
       mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
       mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
