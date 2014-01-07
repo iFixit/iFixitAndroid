@@ -344,4 +344,22 @@ public class ApiCall implements Serializable {
    public static ApiCall siteInfo() {
       return new ApiCall(ApiEndpoint.SITE_INFO, NO_QUERY);
    }
+
+   public static ApiCall postNewGuideComment(String comment, int guideid, int stepid) {
+      JSONObject requestBody = new JSONObject();
+      String query = guideid + "/";
+      if (stepid != -1) {
+         query += "steps/" + stepid + "/";
+      }
+
+      query +=  "comments";
+
+      try {
+         requestBody.put("text", comment);
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
+
+      return new ApiCall(ApiEndpoint.ADD_GUIDE_COMMENT, query, requestBody.toString());
+   }
 }

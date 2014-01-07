@@ -529,6 +529,21 @@ public class JSONHelper {
       return user;
    }
 
+   public static User parseUserLight(JSONObject jUser) throws JSONException {
+      User user = new User();
+      user.setUserid(jUser.getInt("userid"));
+      user.setUsername(jUser.getString("username"));
+
+      if (!jUser.isNull("image"))
+         user.setAvatar(parseImage(jUser.getJSONObject("image"), null));
+
+      if (!jUser.isNull("join_date"))
+         user.setJoinDate(jUser.getInt("join_date"));
+
+      user.setReputation(jUser.getInt("reputation"));
+      return user;
+   }
+
    public static Badges parseBadges(JSONObject json) throws JSONException {
 
       int gold = json.getInt("gold");

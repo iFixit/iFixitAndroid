@@ -92,12 +92,12 @@ public enum ApiEndpoint {
           return "guides/" + query;
        }
 
-       public APIEvent<?> parse(String json) throws JSONException {
-          return new APIEvent.AddComment().setResult(JSONHelper.parseGuide(json));
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.AddComment().setResult(JSONHelper.parseGuide(json));
        }
 
-       public APIEvent<?> getEvent() {
-          return new APIEvent.AddComment();
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.AddComment();
        }
     },
     true,

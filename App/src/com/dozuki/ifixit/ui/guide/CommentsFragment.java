@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.guide;
 
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,8 +12,9 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.dozuki.ifixit.util.APIEvent;
-import com.dozuki.ifixit.util.APIService;
+import com.dozuki.ifixit.util.api.Api;
+import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -74,7 +76,7 @@ public class CommentsFragment extends BaseDialogFragment {
             String commentText = String.valueOf(editText.getText());
 
             if (commentText.length() > 0) {
-               APIService.call(getActivity(), APIService.postNewGuideComment(commentText, mGuideid, mStepid));
+               Api.call(getActivity(), ApiCall.postNewGuideComment(commentText, mGuideid, mStepid));
             }
          }
       });
@@ -86,6 +88,7 @@ public class CommentsFragment extends BaseDialogFragment {
       list.setAdapter(mAdapter);
 
       getDialog().setTitle(title);
+      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light_DialogWhenLarge);
       return view;
    }
 
@@ -99,8 +102,7 @@ public class CommentsFragment extends BaseDialogFragment {
    }
 
    @Subscribe
-   public void onCommentAdd(APIEvent.AddComment event) {
-
+   public void onCommentAdd(ApiEvent.AddComment event) {
       if (!event.hasError()) {
          Guide guide = event.getResult();
          mComments.clear();

@@ -2,7 +2,6 @@ package com.dozuki.ifixit.ui.guide.view;
 
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
@@ -13,19 +12,19 @@ import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.Comment;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.CommentsFragment;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
+import com.dozuki.ifixit.util.SpeechCommander;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
-import com.dozuki.ifixit.util.SpeechCommander;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.StandardExceptionParser;
@@ -63,6 +62,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private TitlePageIndicator mIndicator;
    private int mInboundStepId = DEFAULT_INBOUND_STEPID;
    private GuideViewAdapter mAdapter;
+   private String mDomain;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -85,6 +85,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(GUIDEID);
+         mDomain = savedInstanceState.getString(DOMAIN);
 
          if (savedInstanceState.containsKey(SAVED_GUIDE)) {
             mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
@@ -154,7 +155,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       MainApplication.get().setSite(Site.getSite("dozuki"));
 
       showLoading(R.id.loading_container);
-      APIService.call(this, APIService.getSitesAPICall());
+      Api.call(this, ApiCall.sites());
    }
 
    @Override
@@ -310,7 +311,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             mGuide = null;
             getGuide(mGuideid);
             return true;
-            break;
          case R.id.comments:
             ArrayList<Comment> comments;
             int stepIndex = (mCurrentPage - (mStepOffset + 1));
@@ -325,7 +325,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                title = getString(R.string.step_number_comments, stepIndex + 1);
             }
 
-            CommentsFragment frag = CommentsFragment.newInstance(comments, title);
+            CommentsFragment frag = CommentsFragment.newInstance(comments, title, mGuide.getGuideid(),
+             mGuide.getStep(stepIndex).getStepid());
             frag.setRetainInstance(true);
             frag.show(getSupportFragmentManager(), COMMENTS_TAG);
             return true;
@@ -343,7 +344,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    /////////////////////////////////////////////////////
 
    @Subscribe
-   public void onSites(APIEvent.Sites event) {
+   public void onSites(ApiEvent.Sites event) {
       if (!event.hasError()) {
          Site selectedSite = null;
          for (Site site : event.getResult()) {
@@ -373,12 +374,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             displayGuideNotFoundDialog();
          }
       } else {
-         APIService.getErrorDialog(this, event).show();
+         Api.getErrorDialog(this, event).show();
       }
    }
 
    @Subscribe
-   public void onGuide(APIEvent.ViewGuide event) {
+   public void onGuide(ApiEvent.ViewGuide event) {
       if (!event.hasError()) {
          if (mGuide == null) {
             Guide guide = event.getResult();
@@ -501,6 +502,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       Tracker tracker = MainApplication.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, label);
       tracker.send(MapBuilder.createAppView().build());
+   }
+
+   private void displayGuideNotFoundDialog() {
+      Api.getErrorDialog(this, new ApiEvent.ViewGuide().
+       setCode(404).
+       setError(ApiError.getByStatusCode(404))).show();
    }
 
    @Override

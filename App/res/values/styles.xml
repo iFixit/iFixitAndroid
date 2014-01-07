@@ -164,6 +164,8 @@
     <style name="ListView" parent="android:Widget.ListView">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
         <item name="android:cacheColorHint">#00000000</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:paddingLeft">16dp</item>
     </style>
 
     <style name="ListView.White" parent="android:Widget.ListView.White">
