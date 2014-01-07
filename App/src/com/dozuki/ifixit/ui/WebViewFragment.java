@@ -177,10 +177,13 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       public void onPageFinished(WebView view, String url) {
          mProgressBar.setVisibility(View.GONE);
 
-         // Amazon app store doesn't like our footer links to other app stores, so we are forced to hide them
-         view.loadUrl("javascript:(function() { " +
-          "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
-          "})()");
+         if (MainApplication.get().getSite().isIfixit()) {
+            // Amazon app store doesn't like our footer links to other app stores in the iFixit app,
+            // so we are forced to hide them
+            view.loadUrl("javascript:(function() { " +
+             "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
+             "})()");
+         }
       }
    }
 }
