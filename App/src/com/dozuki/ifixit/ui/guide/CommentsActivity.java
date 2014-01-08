@@ -1,17 +1,16 @@
 package com.dozuki.ifixit.ui.guide;
 
-import android.app.DialogFragment;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.ui.BaseDialogFragment;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
@@ -19,7 +18,7 @@ import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
 
-public class CommentsFragment extends BaseDialogFragment {
+public class CommentsActivity extends BaseActivity {
 
    private static final String COMMENTS_KEY = "COMMENTS_KEY";
    private static final String TITLE_KEY = "TITLE_FIELD";
@@ -30,27 +29,32 @@ public class CommentsFragment extends BaseDialogFragment {
    private int mGuideid;
    private int mStepid;
    private CommentsAdapter mAdapter;
+   private CommentsActivity mActivity;
 
-   public static CommentsFragment newInstance(ArrayList<Comment> comments, String title, int guideid, int stepid) {
+   public static Intent viewComments(Context context, ArrayList<Comment> comments, String title, int guideid,
+    int stepid) {
+
       Bundle args = new Bundle();
       args.putSerializable(COMMENTS_KEY, comments);
       args.putString(TITLE_KEY, title);
       args.putInt(GUIDEID_KEY, guideid);
       args.putInt(STEPID_KEY, stepid);
-      CommentsFragment frag = new CommentsFragment();
-      frag.setArguments(args);
-      return frag;
+      Intent intent = new Intent(context, CommentsActivity.class);
+
+      return intent;
    }
 
-   public CommentsFragment() {
+   public CommentsActivity() {
       mComments = new ArrayList<Comment>();
    }
 
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
-      View view = inflater.inflate(R.layout.guide_step_comments, container, false);
-      Bundle args = getArguments();
+   public void onCreate(Bundle savedInstanceState) {
+      super.onCreate(savedInstanceState);
+      setContentView(R.layout.guide_step_comments);
+
+      mActivity = this;
+      Bundle args = getIntent().getExtras();
       String title;
 
       if (savedInstanceState != null) {
@@ -67,29 +71,27 @@ public class CommentsFragment extends BaseDialogFragment {
          title = getString(R.string.comments);
       }
 
-      final EditText editText = (EditText) view.findViewById(R.id.add_comment_field);
+      final EditText editText = (EditText) findViewById(R.id.add_comment_field);
 
-      ImageButton addComment = (ImageButton) view.findViewById(R.id.add_comment_button);
+      ImageButton addComment = (ImageButton) findViewById(R.id.add_comment_button);
       addComment.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
             String commentText = String.valueOf(editText.getText());
 
             if (commentText.length() > 0) {
-               Api.call(getActivity(), ApiCall.postNewGuideComment(commentText, mGuideid, mStepid));
+               Api.call(mActivity, ApiCall.postNewGuideComment(commentText, mGuideid, mStepid));
             }
          }
       });
 
-      ListView list = (ListView) view.findViewById(android.R.id.list);
-      list.setEmptyView(view.findViewById(android.R.id.empty));
+      ListView list = (ListView) findViewById(android.R.id.list);
+      list.setEmptyView(findViewById(android.R.id.empty));
 
-      mAdapter = new CommentsAdapter(getActivity(), mComments);
+      mAdapter = new CommentsAdapter(this, mComments);
       list.setAdapter(mAdapter);
 
-      getDialog().setTitle(title);
-      setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Holo_Light_DialogWhenLarge);
-      return view;
+      setTitle(title);
    }
 
    @Override

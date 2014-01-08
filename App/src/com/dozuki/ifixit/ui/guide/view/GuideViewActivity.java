@@ -16,7 +16,7 @@ import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
-import com.dozuki.ifixit.ui.guide.CommentsFragment;
+import com.dozuki.ifixit.ui.guide.CommentsActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
@@ -231,9 +231,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                   title = getString(R.string.step_number_comments, stepIndex + 1);
                }
 
-               CommentsFragment frag = CommentsFragment.newInstance(comments, title, guideid, stepid);
-               frag.setRetainInstance(true);
-               frag.show(getSupportFragmentManager(), COMMENTS_TAG);
+               startActivity(CommentsActivity.viewComments(getApplicationContext(), comments, title, guideid, stepid));
             }
          }
       });
@@ -325,10 +323,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                title = getString(R.string.step_number_comments, stepIndex + 1);
             }
 
-            CommentsFragment frag = CommentsFragment.newInstance(comments, title, mGuide.getGuideid(),
-             mGuide.getStep(stepIndex).getStepid());
-            frag.setRetainInstance(true);
-            frag.show(getSupportFragmentManager(), COMMENTS_TAG);
+            startActivity(CommentsActivity.viewComments(this, comments, title, mGuide.getGuideid(),
+             mGuide.getStep(stepIndex).getStepid()));
+
             return true;
          default:
             return super.onOptionsItemSelected(item);
