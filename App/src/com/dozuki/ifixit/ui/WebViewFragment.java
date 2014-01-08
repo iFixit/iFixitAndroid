@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.guide.view;
+package com.dozuki.ifixit.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -7,15 +7,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.*;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
 import com.dozuki.ifixit.model.user.User;
-import com.dozuki.ifixit.ui.BaseFragment;
-import com.dozuki.ifixit.ui.topic_view.TopicGuideListFragment;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 
 public class WebViewFragment extends BaseFragment implements OnViewGuideListener {
    private WebView mWebView;
@@ -32,16 +35,16 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       }
 
       if (mSite == null) {
-         mSite = ((MainApplication)getActivity().getApplication()).getSite();
+         mSite = ((MainApplication) getActivity().getApplication()).getSite();
       }
 
       View view = inflater.inflate(R.layout.web_view_fragment, container, false);
-      mProgressBar = (ProgressBar)view.findViewById(R.id.progress_bar);
-      mWebView = (WebView)view.findViewById(R.id.web_view);
-            
+      mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+      mWebView = (WebView) view.findViewById(R.id.web_view);
+
       CookieSyncManager.createInstance(mWebView.getContext());
       CookieManager.getInstance().setAcceptCookie(true);
-      
+
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
       settings.setBuiltInZoomControls(true);
@@ -173,6 +176,14 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       @Override
       public void onPageFinished(WebView view, String url) {
          mProgressBar.setVisibility(View.GONE);
+
+         if (MainApplication.get().getSite().isIfixit()) {
+            // Amazon app store doesn't like our footer links to other app stores in the iFixit app,
+            // so we are forced to hide them
+            view.loadUrl("javascript:(function() { " +
+             "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
+             "})()");
+         }
       }
    }
 }

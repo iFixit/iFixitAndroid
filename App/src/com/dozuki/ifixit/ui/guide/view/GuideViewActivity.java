@@ -23,11 +23,9 @@ import com.dozuki.ifixit.ui.guide.create.StepsActivity;
 import com.dozuki.ifixit.util.SpeechCommander;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
-import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -511,14 +509,22 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    @Override
-   public void showLoading(int container) {
-      findViewById(container).setVisibility(View.VISIBLE);
-      super.showLoading(container);
+   public void showLoading(int id) {
+      View container = findViewById(id);
+      if (container != null) {
+         container.setVisibility(View.VISIBLE);
+      }
+
+      super.showLoading(id);
    }
 
    @Override
    public void hideLoading() {
       super.hideLoading();
-      findViewById(R.id.loading_container).setVisibility(View.GONE);
+
+      View container = findViewById(R.id.loading_container);
+      if (container != null) {
+         container.setVisibility(View.GONE);
+      }
    }
 }
