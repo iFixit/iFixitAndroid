@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -34,12 +35,12 @@ public class CommentsActivity extends BaseActivity {
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title, int guideid,
     int stepid) {
 
-      Bundle args = new Bundle();
-      args.putSerializable(COMMENTS_KEY, comments);
-      args.putString(TITLE_KEY, title);
-      args.putInt(GUIDEID_KEY, guideid);
-      args.putInt(STEPID_KEY, stepid);
       Intent intent = new Intent(context, CommentsActivity.class);
+
+      intent.putExtra(TITLE_KEY, title);
+      intent.putExtra(GUIDEID_KEY, guideid);
+      intent.putExtra(STEPID_KEY, stepid);
+      intent.putExtra(COMMENTS_KEY, comments);
 
       return intent;
    }
@@ -51,7 +52,8 @@ public class CommentsActivity extends BaseActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.guide_step_comments);
+      setContentView(R.layout.comments);
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       mActivity = this;
       Bundle args = getIntent().getExtras();
@@ -101,6 +103,19 @@ public class CommentsActivity extends BaseActivity {
       state.putSerializable(COMMENTS_KEY, mComments);
       state.putInt(GUIDEID_KEY, mGuideid);
       state.putInt(STEPID_KEY, mStepid);
+   }
+
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         // Respond to the action bar's Up/Home button
+         case android.R.id.home:
+            finish();
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
    }
 
    @Subscribe

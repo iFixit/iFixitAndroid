@@ -11,6 +11,7 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.transformations.RoundedTransformation;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 

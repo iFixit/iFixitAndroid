@@ -7,13 +7,14 @@ import android.view.View;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
-import com.dozuki.ifixit.model.guide.GuideStep;
 
 import java.util.HashMap;
 import java.util.Map;
 
 public class GuideViewAdapter extends FragmentStatePagerAdapter {
    private static final int GUIDE_INTRO_POSITION = 0;
+   private static final int CONTAINER = R.id.guide_pager;
+   private FragmentManager mFragmentManager;
    private Map<Integer, String> mPageLabelMap;
 
    private int mStepOffset = 1;
@@ -27,6 +28,7 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
 
    public GuideViewAdapter(FragmentManager fm, Guide guide) {
       super(fm);
+      mFragmentManager = fm;
       mGuide = guide;
 
       mPageLabelMap = new HashMap<Integer, String>();
@@ -98,6 +100,11 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
       } else {
          return MainApplication.get().getString(R.string.step_number, (position - mStepOffset) + 1);
       }
+   }
+
+   public void swapCurrentPage(Fragment frag) {
+      mFragmentManager.beginTransaction().replace(CONTAINER, frag).commit();
+      notifyDataSetChanged();
    }
 
    public int getStepOffset() {

@@ -91,7 +91,6 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       handleIntent(intent, true);
    }
 
-
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {

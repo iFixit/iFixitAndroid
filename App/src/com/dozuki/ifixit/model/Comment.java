@@ -1,14 +1,19 @@
 package com.dozuki.ifixit.model;
 
+import android.content.Context;
 import android.text.Html;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.util.JSONHelper;
+import com.dozuki.ifixit.util.PicassoUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -19,15 +24,14 @@ import java.util.ArrayList;
 import java.util.Date;
 
 public class Comment implements Serializable {
-   private static final long serialVersionUID = -1333520388124961696L;
+   private static final long serialVersionUID = -1333520488223961692L;
 
    private static final int NO_PARENT_ID = -1;
-   public JSONObject mComment;
+   public String mCommentSource;
    public int mCommentid;
    public String mLocale;
    public int mParentid;
-   public int mUserid;
-   public String mUsername;
+   public User mUser;
    public String mTitle;
    public String mTextRaw;
    public String mTextRendered;
@@ -41,13 +45,11 @@ public class Comment implements Serializable {
    public Comment() { }
 
    public Comment(JSONObject object) throws JSONException {
-      Log.d("Comment", object.toString());
-      mComment = object;
+      mCommentSource = object.toString(4);
       mCommentid = object.getInt("commentid");
       mLocale = object.getString("locale");
       mParentid = object.isNull("parentid") ? NO_PARENT_ID : object.getInt("parentid");
-      mUserid = object.getInt("userid");
-      mUsername = object.getString("username");
+      mUser = JSONHelper.parseUserLight(object.getJSONObject("author"));
       mTitle = object.getString("title");
       mTextRaw = object.getString("text_raw");
       mTextRendered = object.getString("text_rendered");
@@ -67,25 +69,34 @@ public class Comment implements Serializable {
       }
    }
 
-   public View buildView(View v, LayoutInflater inflater, ViewGroup container) {
+   public View buildView(Context context, View v, LayoutInflater inflater, ViewGroup container) {
       if (v == null) {
          v = inflater.inflate(R.layout.comment_row, container, false);
       }
 
       SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy");
-      String commmentDetails = MainApplication.get().getString(R.string.by_on_comment_details, mUsername,
+      String commmentDetails = MainApplication.get().getString(R.string.by_on_comment_details, mUser.getUsername(),
        df.format(mDate));
 
       ((TextView) v.findViewById(R.id.comment_text)).setText(Html.fromHtml(mTextRendered));
       ((TextView) v.findViewById(R.id.comment_details)).setText(commmentDetails);
+
+      ImageView avatar = (ImageView) v.findViewById(R.id.comment_author);
+
+      Log.d("Comment", "Avatar: " + mUser.getAvatar().getPath());
+      PicassoUtils
+       .with(context)
+       .load(mUser.getAvatar().getPath())
+       .error(R.drawable.no_image)
+       .resize(100, 100)
+       .into(avatar);
 
       RelativeLayout wrap = (RelativeLayout) v.findViewById(R.id.comment_row_wrap);
 
       Log.d("Comment", "ParentId " + mParentid);
       if (mParentid != NO_PARENT_ID) {
          //LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-         wrap.setPadding(16, wrap.getPaddingTop(), 0, wrap.getPaddingBottom());
-
+         //wrap.setPadding(16, wrap.getPaddingTop(), 0, wrap.getPaddingBottom());
          //lp.setMargins(16, 0, 0, 0);
          //((RelativeLayout)v.findViewById(R.id.comment_row_wrap)).setLayoutParams(lp);
       }
@@ -100,12 +111,6 @@ public class Comment implements Serializable {
 
    @Override
    public String toString() {
-      try {
-         return mComment.toString(4);
-      } catch (JSONException e) {
-         e.printStackTrace();
-      }
-
-      return "";
+      return mCommentSource;
    }
 }

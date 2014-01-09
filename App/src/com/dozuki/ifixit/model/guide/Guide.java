@@ -8,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Guide implements Serializable {
-   private static final long serialVersionUID = -1965203088124961696L;
+   private static final long serialVersionUID = -1965203088124961396L;
    private static final int NEW_GUIDE_ID = -1;
 
    protected int mGuideid;
