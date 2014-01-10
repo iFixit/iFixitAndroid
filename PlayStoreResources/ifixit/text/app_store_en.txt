@@ -1,7 +1,9 @@
-The world's largest repair manual that anyone can edit! 
+The world's largest repair manual that anyone can edit!  Fix it yourself with
+our easy to use DIY guides for pretty much everything.
 
-★ NEW IN v2.0! ★
-Document and share your repairs with the world! Now you can create your own DIY
+★  NEW IN v2.0! ★
+Document and share your repairs with the world! Now you can create your own
+DIY
 guide straight from your smartphone or tablet — Simply snap a photo, write (or
 dictate!) the instructions, and then publish. It’s that easy!
 
@@ -11,9 +13,9 @@ including the five most popular Android devices: the Samsung Galaxy SIII, the
 Galaxy S4, the Galaxy Note, the Galaxy Note II, and the new Motorola Moto X.
 
 Also, stay informed about the newest gadgets with our critically renowned
-device teardowns.  
+device teardowns.
 
-★ Learn How to Repair ★ 
+★  Learn How to Repair ★
 ✓ Fix a cracked iPhone screen
 ✓ Upgrade the hard drive in your laptop
 ✓ Change the oil in your car
@@ -22,18 +24,24 @@ device teardowns.
 ✓ Mend your Patagonia clothing
 ✓ Much, much, more
 
-★  Thousands of How-To Guides ★ 
-✓ Apple MacBooks, Air, PowerBook + iBook
-✓ iPod + iPad + iPhone
-✓ Xbox + PlayStation + Wii
-✓ PC Desktop + Laptop
-✓ Digital cameras
-✓ Cars, bikes, and motorcycles
-✓ Espresso machines
-✓ Cell phones: Samsung, Blackberry, Nokia, Sony, & more
-✓ More tutorials added all the time—or make your own!
+★  Thousands of How-To Repair Guides for Top Brands ★
+✓ Apple Computers: MacBooks, MacBook Pro, Macbook Air, Mac Mini, Mac Pro,
+PowerBook + iBook
+✓ Apple Mobile: iPod, iPad, iPad 2, iPad 3, iPad 4, iPad Air, iPhone, iPhone
+3, iPhone 3G, iPhone 4, iPhone 4s, iPhone 5, iPhone 5s
+✓ Android tablets: Nexus 4, Nexus 5, Nexus 7, Nexus 7 2, Nexus 10, Galaxy Tab
+✓ Cell phones: Apple, Motorola, Samsung, LG, Blackberry, Nokia, Sony, & more
+✓ Gaming consoles:  Xbox, Xbox 360, Xbox One, PlayStation, Playstation 2,
+Playstation 3, Playstation 4, Wii, Wii U
+✓ PC Laptops: Acer, Dell, HP, Lenovo, Sony, Toshiba
+✓ PC Desktops: Dell, eMachines, Gateway, HP, Sony, Asus
+✓ Cameras: Canon, Nikon, Casio, Kodak, Fujifilm, Olympus, Sony, Yashica
+✓ Cars and Trucks: Ford, Honda, Lexus, Mercedes, Jeep, GMC, Subaru, Toyota
+✓ Vehicles: Bikes, Tractor,  and Motorcycles
+✓ Household Appliances: Espresso machines, Vacuums, Fans 
+✓ Plus many, many more repair guides are added by our incredible community!
 
-★ Praise from the Press ★ 
+★  Praise from the Press ★
 "Empowers you to fix things yourself. From troubleshooting to parts and tools,
 to repair guides, they have your back." — TreeHugger
 "Demonstrates the old-fashioned virtue of repair and extending the lifespan of
@@ -43,7 +51,7 @@ Thanks a lot." — Engadget
 "Illustrated repair guides that take you step by step through the process." —
 Dallas Morning News
 
-★ Testimonials ★ 
+★  Testimonials ★
 "You guys rule and have saved me many many times. Thank you!" – Ralph in North
 Carolina
 "I love your repair guides. You've saved me hundreds of dollars over the last
@@ -53,17 +61,16 @@ few years." – David in Maryland
 "The installation went smoothly thanks to your excellent guides. We got my
 son's MacBook Pro running and saved $$$$$." – Christopher in New Mexico
 
-★  Support iFixit ★ 
+★  Support iFixit ★
 We fund these manuals by selling parts and tools. If you use our manual to fix
-something, support our work by buying from us. 
+something, support our work by buying from us.
 iFixit’s Pro Tech Toolkit contains everything you need to repair electronics:
 http://www.ifixit.com/Tools/Pro-Tech-Toolkit/IF145-072
 
 We also offer thousands of Android, MacBook, iMac, iPhone, and game console
 parts: http://www.ifixit.com/Parts-Store
 
-★ iFixit: Repair Manual supports Android version 2.2 and up ★
+★  iFixit: Repair Manual supports Android version 2.2 and up ★
 
 This app is open source!  Fork us, open a issue, or just say hello at
 https://github.com/iFixit/iFixitAndroid
-
