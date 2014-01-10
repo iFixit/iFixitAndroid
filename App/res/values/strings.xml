@@ -283,6 +283,7 @@
     <string name="on_date">on %1$s</string>
     <string name="by_on_comment_details">%1$s on %2$s</string>
     <string name="add_comment">Add comment...</string>
+    <string name="reply">Reply</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>
@@ -313,4 +314,13 @@
         <item>@string/edit</item>
     </string-array>
 
+    <string-array name="comment_owner_options">
+        <item>@string/reply</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+    </string-array>
+
+    <string-array name="comment_options">
+        <item>@string/reply</item>
+    </string-array>
 </resources>

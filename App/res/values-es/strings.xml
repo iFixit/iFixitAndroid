@@ -297,4 +297,5 @@
     <string name="on_date">on %1$s</string>
     <string name="by_on_comment_details">By %1$s on %2$s</string>
     <string name="add_comment">Add comment...</string>
+    <string name="reply">Reply</string>
 </resources>
