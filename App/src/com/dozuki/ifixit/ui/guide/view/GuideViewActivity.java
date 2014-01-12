@@ -214,6 +214,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             mGuide = null;
             getGuide(mGuideid);
             return true;
+         case R.id.favorite_guide:
+            Api.call(this, ApiCall.favoriteGuide(mGuideid, !mGuide.isFavorited()));
+            return true;
          default:
             return super.onOptionsItemSelected(item);
       }
@@ -243,6 +246,16 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             }
             setGuide(guide, mCurrentPage);
          }
+      } else {
+         Api.getErrorDialog(this, event).show();
+      }
+   }
+
+   @Subscribe
+   public void onFavorite(ApiEvent.FavoriteGuide event) {
+      if (!event.hasError()) {
+         boolean favorited = event.getResult();
+         mGuide.setFavorited(favorited);
       } else {
          Api.getErrorDialog(this, event).show();
       }

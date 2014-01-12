@@ -202,6 +202,7 @@ public enum ApiEndpoint {
       true,
       "GET"
    ),
+
    USER_VIDEOS(
       new Endpoint() {
          public String createUrl(String query) {
@@ -364,7 +365,6 @@ public enum ApiEndpoint {
          }
 
          public ApiEvent<?> parse(String json) throws JSONException {
-            // TODO: Actually look at the response?
             return new ApiEvent.DeleteImage().setResult("");
          }
 
@@ -412,6 +412,42 @@ public enum ApiEndpoint {
       "GET"
    ),
 
+   FAVORITE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/favorites/guides/" + query;
+         }
+
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.FavoriteGuide().setResult(true);
+         }
+
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.FavoriteGuide();
+         }
+      },
+      true,
+      "PUT"
+   ),
+
+   UNFAVORITE_GUIDE(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "user/favorites/guides/" + query;
+         }
+
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.FavoriteGuide().setResult(false);
+         }
+
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.FavoriteGuide();
+         }
+      },
+      true,
+      "DELETE"
+   ),
+
    CREATE_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
@@ -447,6 +483,7 @@ public enum ApiEndpoint {
       true,
       "PATCH"
    ),
+
    DELETE_GUIDE(
       new Endpoint() {
          public String createUrl(String query) {

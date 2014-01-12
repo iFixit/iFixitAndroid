@@ -2,6 +2,11 @@
 
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
+        android:id="@+id/favorite_guide"
+        android:title="@string/favorite_guide"
+        android:icon="@drawable/ic_menu_favorite_light"
+        android:showAsAction="ifRoom|withText"/>
+    <item
         android:id="@+id/edit_guide"
         android:title="@string/edit_guide"
         android:icon="@drawable/ic_action_edit"

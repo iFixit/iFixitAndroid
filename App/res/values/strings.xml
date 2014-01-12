@@ -239,6 +239,8 @@
     <string name="teardowns">Teardowns</string>
     <string name="featured_guides">Featured Guides</string>
     <string name="favorites">Favorites</string>
+    <string name="favorite_guide">Favorite Guide</string>
+    <string name="unfavorite_guide">Unfavorite Guide</string>
     <string name="favorites_empty_text">You haven\'t favorited any guides yet.</string>
     <string name="introduction">Introduction</string>
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
