@@ -32,7 +32,7 @@ public class Guide implements Serializable {
    protected ArrayList<Item> mParts;
    protected boolean mCanEdit = true;
    protected int mPatrolThreshold = 0;
-   protected boolean favorited = false;
+   protected boolean mFavorited = false;
 
    public Guide() {
       this(NEW_GUIDE_ID);
@@ -237,11 +237,11 @@ public class Guide implements Serializable {
    }
 
    public boolean isFavorited() {
-      return favorited;
+      return mFavorited;
    }
 
-   public void setFavorited(boolean fav) {
-      favorited = fav;
+   public void setFavorited(boolean favorited) {
+      mFavorited = favorited;
    }
 
    @Override
