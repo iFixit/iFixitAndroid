@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.guide;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -31,6 +32,7 @@ public class CommentsActivity extends BaseActivity {
    private int mStepid;
    private CommentsAdapter mAdapter;
    private CommentsActivity mActivity;
+   private ListView mCommentsList;
 
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title, int guideid,
     int stepid) {
@@ -87,11 +89,11 @@ public class CommentsActivity extends BaseActivity {
          }
       });
 
-      ListView list = (ListView) findViewById(android.R.id.list);
-      list.setEmptyView(findViewById(android.R.id.empty));
+      mCommentsList = (ListView) findViewById(R.id.comment_list);
+      mCommentsList.setEmptyView(findViewById(android.R.id.empty));
 
       mAdapter = new CommentsAdapter(this, mComments);
-      list.setAdapter(mAdapter);
+      mCommentsList.setAdapter(mAdapter);
 
       setTitle(title);
    }
@@ -131,8 +133,18 @@ public class CommentsActivity extends BaseActivity {
 
          mAdapter.setComments(mComments);
          mAdapter.notifyDataSetChanged();
+         scrollCommentsToBottom();
       } else {
 
       }
+   }
+
+   private void scrollCommentsToBottom() {
+      new Handler().post(new Runnable() {
+         @Override
+         public void run() {
+            mCommentsList.setSelection(mAdapter.getCount() - 1);
+         }
+      });
    }
 }

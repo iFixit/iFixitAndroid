@@ -362,4 +362,12 @@ public class ApiCall implements Serializable {
 
       return new ApiCall(ApiEndpoint.ADD_GUIDE_COMMENT, query, requestBody.toString());
    }
+
+   public static ApiCall deleteGuideComment(int guideid, int commentid) {
+      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + guideid + "/comments/" + commentid);
+   }
+
+   public static ApiCall deleteStepComment(int guideid, int stepid, int commentid) {
+      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + guideid + "/steps/" + stepid + "/comments/" + commentid);
+   }
 }

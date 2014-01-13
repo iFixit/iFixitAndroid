@@ -104,6 +104,42 @@ public enum ApiEndpoint {
     "POST"
    ),
 
+   EDIT_GUIDE_COMMENT(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "guides/" + query;
+       }
+
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.EditComment().setResult(JSONHelper.parseGuide(json));
+       }
+
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.EditComment();
+       }
+    },
+    true,
+    "PATCH"
+   ),
+
+   DELETE_COMMENT(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "guides/" + query;
+       }
+
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.DeleteComment().setResult("");
+       }
+
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.DeleteComment();
+       }
+    },
+    true,
+    "DELETE"
+   ),
+
 
    TOPIC(
       new Endpoint() {

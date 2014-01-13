@@ -1,25 +1,12 @@
 package com.dozuki.ifixit.model;
 
-import android.content.Context;
-import android.text.Html;
-import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.RelativeLayout;
-import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
-import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.JSONHelper;
-import com.dozuki.ifixit.util.PicassoUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -31,6 +18,7 @@ public class Comment implements Serializable {
    public int mCommentid;
    public String mLocale;
    public int mParentid;
+   public String mContext; // What this comment is about
    public User mUser;
    public String mTitle;
    public String mTextRaw;
@@ -51,6 +39,7 @@ public class Comment implements Serializable {
       mParentid = object.isNull("parentid") ? NO_PARENT_ID : object.getInt("parentid");
       mUser = JSONHelper.parseUserLight(object.getJSONObject("author"));
       mTitle = object.getString("title");
+      mContext = object.getString("context");
       mTextRaw = object.getString("text_raw");
       mTextRendered = object.getString("text_rendered");
       mRating = object.getInt("rating");
@@ -67,46 +56,6 @@ public class Comment implements Serializable {
             mReplies.add(new Comment(replies.getJSONObject(i)));
          }
       }
-   }
-
-   public View buildView(Context context, View v, LayoutInflater inflater, ViewGroup container) {
-      if (v == null) {
-         v = inflater.inflate(R.layout.comment_row, container, false);
-      }
-
-      SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy");
-      String commmentDetails = MainApplication.get().getString(R.string.by_on_comment_details, mUser.getUsername(),
-       df.format(mDate));
-
-      ((TextView) v.findViewById(R.id.comment_text)).setText(Html.fromHtml(mTextRendered));
-      ((TextView) v.findViewById(R.id.comment_details)).setText(commmentDetails);
-
-      ImageView avatar = (ImageView) v.findViewById(R.id.comment_author);
-
-      Log.d("Comment", "Avatar: " + mUser.getAvatar().getPath());
-      PicassoUtils
-       .with(context)
-       .load(mUser.getAvatar().getPath())
-       .error(R.drawable.no_image)
-       .resize(100, 100)
-       .into(avatar);
-
-      RelativeLayout wrap = (RelativeLayout) v.findViewById(R.id.comment_row_wrap);
-
-      Log.d("Comment", "ParentId " + mParentid);
-      if (mParentid != NO_PARENT_ID) {
-         //LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-         //wrap.setPadding(16, wrap.getPaddingTop(), 0, wrap.getPaddingBottom());
-         //lp.setMargins(16, 0, 0, 0);
-         //((RelativeLayout)v.findViewById(R.id.comment_row_wrap)).setLayoutParams(lp);
-      }
-
-      for (Comment reply : mReplies) {
-         Log.d("Comment", reply.toString());
-         //wrap.addView(reply.buildView(v, inflater, wrap));
-      }
-
-      return v;
    }
 
    @Override
