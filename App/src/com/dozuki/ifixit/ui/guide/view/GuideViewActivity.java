@@ -289,7 +289,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mFavoriting = false;
       if (!event.hasError()) {
          boolean favorited = event.getResult();
-         mGuide.setFavorited(favorited);
+
+         if (mGuide != null) {
+            mGuide.setFavorited(favorited);
+         }
 
          toast(favorited ? R.string.favorited : R.string.unfavorited,
           Toast.LENGTH_SHORT);
