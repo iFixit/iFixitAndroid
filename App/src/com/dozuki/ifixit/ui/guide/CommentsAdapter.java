@@ -25,7 +25,7 @@ public class CommentsAdapter extends BaseAdapter {
    }
 
    @Override
-   public Object getItem(int position) {
+   public Comment getItem(int position) {
       return mComments.get(position);
    }
 
@@ -44,7 +44,7 @@ public class CommentsAdapter extends BaseAdapter {
          v = (CommentView) convertView;
       }
 
-      Comment comment = (Comment) getItem(position);
+      Comment comment = getItem(position);
 
       v.buildView(comment);
 

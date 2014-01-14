@@ -19,6 +19,7 @@ import android.widget.ViewSwitcher;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.transformations.CircleTransformation;
@@ -30,19 +31,35 @@ public class CommentView extends RelativeLayout {
     private static final int REPLY_OPTION = 0;
     private static final int EDIT_OPTION = 1;
     private static final int DELETE_OPTION = 2;
-    private Context mContext;
+   private RelativeLayout mContainer;
+   private Context mContext;
 
-    public CommentView(Context context) {
+   public CommentView(Context context) {
        super(context);
 
        LayoutInflater.from(context).inflate(R.layout.comment_row, this, true);
 
        mContext = context;
+       mContainer = (RelativeLayout)findViewById(R.id.comment_row_wrap);
     }
 
     public void buildView(final Comment comment) {
-       if (comment.mParentid != NO_PARENT_ID) {
-          setBackgroundResource(android.R.color.transparent);
+       final boolean reply = comment.mParentid != NO_PARENT_ID;
+
+       User currentUser = MainApplication.get().getUser();
+
+       final boolean commentOwner = currentUser != null &&
+        comment.mUser.getUserid() == currentUser.getUserid();
+
+       if (reply) {
+          mContainer.setBackgroundResource(R.color.subtle_gray);
+
+          // Can't reply to replies, so remove the form
+          mContainer.removeView(findViewById(R.id.add_reply_container));
+       }
+
+       if (comment.isReplying()) {
+          toggleReplyForm(true);
        }
 
        SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy");
@@ -56,25 +73,29 @@ public class CommentView extends RelativeLayout {
 
        ImageView avatar = (ImageView) findViewById(R.id.comment_author);
 
-       PicassoUtils
-        .with(mContext)
-        .load(comment.mUser.getAvatar().getPath("thumbnail"))
-        .error(R.drawable.no_image)
-        .fit()
-        .centerInside()
-        .transform(new CircleTransformation())
-        .into(avatar);
+       Image avatarImage = comment.mUser.getAvatar();
+
+       if (avatarImage != null) {
+          PicassoUtils
+           .with(mContext)
+           .load(avatarImage.getPath("thumbnail"))
+           .error(R.drawable.no_image)
+           .fit()
+           .centerInside()
+           .transform(new CircleTransformation())
+           .into(avatar);
+       }
 
        final View menuButton = findViewById(R.id.comment_menu);
+
+       // if there are options, show the menu button
+       if (reply && !commentOwner) {
+          menuButton.setVisibility(View.GONE);
+       }
 
        menuButton.setOnClickListener(new View.OnClickListener() {
           @Override
           public void onClick(View v) {
-             User currentUser = MainApplication.get().getUser();
-
-             boolean commentOwner = currentUser != null &&
-              comment.mUser.getUserid() == currentUser.getUserid();
-
              if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
                 PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
 
@@ -101,16 +122,10 @@ public class CommentView extends RelativeLayout {
                 MenuInflater menuInflater = itemMenu.getMenuInflater();
                 menuInflater.inflate(R.menu.comment_item_popup, menu);
 
-                boolean reply = comment.mParentid != NO_PARENT_ID;
                 // If the comment is areply, hide reply option
                 menu.findItem(R.id.comment_item_reply).setVisible(!reply);
                 menu.findItem(R.id.comment_item_delete).setVisible(commentOwner);
                 menu.findItem(R.id.comment_item_edit).setVisible(commentOwner);
-
-                // if there are no options, hide the mnu
-                if (reply && !commentOwner) {
-                   menuButton.setVisibility(View.GONE);
-                }
 
                 itemMenu.show();
              } else {
@@ -143,14 +158,27 @@ public class CommentView extends RelativeLayout {
        ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.edit_comment_switcher);
        switcher.showNext();
        ((EditText) findViewById(R.id.edit_comment_text)).setText(comment.mTextRaw);
-       //Api.call(mContext, ApiCll.eitomment(comment.mCommentid));
+
+       // MainApplication.getBus().post(new CommentEditEvent(comment));
     }
 
     private void deleteComment(Comment comment) {
-
+       MainApplication.getBus().post(new CommentDeleteEvent(comment));
     }
 
-    private void replyToComment(Comment comment) {
+    private void replyToComment(final Comment parent) {
+       toggleReplyForm(true);
 
+       findViewById(R.id.add_comment_button).setOnClickListener(new OnClickListener() {
+          @Override
+          public void onClick(View v) {
+             String text = ((TextView) findViewById(R.id.add_comment_field)).getText().toString();
+             MainApplication.getBus().post(new CommentReplyEvent(text, parent));
+          }
+       });
     }
+
+   private void toggleReplyForm(boolean show) {
+      findViewById(R.id.add_reply_container).setVisibility(show ? View.VISIBLE : View.GONE);
+   }
  }

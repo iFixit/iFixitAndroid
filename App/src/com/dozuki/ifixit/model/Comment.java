@@ -14,6 +14,7 @@ public class Comment implements Serializable {
    private static final long serialVersionUID = -1333520488223961692L;
 
    private static final int NO_PARENT_ID = -1;
+   private boolean mIsReplying = false
    public String mCommentSource;
    public int mCommentid;
    public String mLocale;
@@ -48,6 +49,7 @@ public class Comment implements Serializable {
       mRepliedDate = new Date(object.getLong("replied_date") * 1000);
       mStatus = object.getString("status");
       mReplies = new ArrayList<Comment>();
+      mIsReplying = false;
       JSONArray replies = object.optJSONArray("replies");
 
       if (replies != null) {
@@ -56,6 +58,10 @@ public class Comment implements Serializable {
             mReplies.add(new Comment(replies.getJSONObject(i)));
          }
       }
+   }
+
+   public boolean isReplying() {
+      return mIsReplying;
    }
 
    @Override

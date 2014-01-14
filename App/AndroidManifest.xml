@@ -46,7 +46,7 @@
         <activity android:name=".ui.FavoritesActivity"/>
 
         <activity android:name=".ui.guide.CommentsActivity"
-                  android:configChanges="orientation|keyboardHidden|screenSize"/>
+                  android:configChanges="orientation|screenSize|keyboard"/>
 
         <activity android:name=".ui.gallery.GalleryActivity"/>
         <activity

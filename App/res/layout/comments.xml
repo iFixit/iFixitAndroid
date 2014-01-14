@@ -1,15 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:orientation="vertical"
-              android:weightSum="10">
+              android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="9">
+        android:layout_height="match_parent"
+        android:layout_above="@+id/add_comment_wrap">
 
         <ListView
             android:id="@+id/comment_list"
@@ -30,31 +28,11 @@
             android:layout_gravity="center_vertical|center_horizontal"/>
     </FrameLayout>
 
-    <LinearLayout
+    <include
+        layout="@layout/comment_input"
+        android:id="@+id/add_comment_wrap"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:minHeight="60dp"
-        android:orientation="horizontal"
-        android:background="@drawable/top_border_bg"
-        android:layout_weight="1"
-        android:weightSum="10">
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"/>
 
-        <EditText
-            android:id="@+id/add_comment_field"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_marginLeft="8dp"
-            android:layout_weight="8"
-            android:hint="@string/add_comment"/>
-
-        <ImageButton
-            android:id="@+id/add_comment_button"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:layout_weight="2"
-            android:layout_marginRight="8dp"
-            android:src="@drawable/ic_action_send"
-            android:background="@drawable/selectable_item_background_transparent"/>
-    </LinearLayout>
-
-</LinearLayout>
+</RelativeLayout>
