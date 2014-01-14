@@ -182,7 +182,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       boolean favorited = mGuide != null ? mGuide.isFavorited() : false;
       favoriteGuide.setIcon(favorited ? R.drawable.ic_action_favorite_filled :
        R.drawable.ic_action_favorite_empty);
-      favoriteGuide.setEnabled(!mFavoriting);
+      favoriteGuide.setEnabled(!mFavoriting && mGuide != null);
       favoriteGuide.setTitle(favorited ? R.string.unfavorite_guide : R.string.favorite_guide);
 
       return super.onPrepareOptionsMenu(menu);
