@@ -13,6 +13,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
@@ -238,8 +239,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             mFavoriting = true;
             supportInvalidateOptionsMenu();
 
-            toast(mGuide.isFavorited() ? R.string.unfavoriting :
-             R.string.favoriting, Toast.LENGTH_LONG);
+            if (MainApplication.get().isUserLoggedIn()) {
+               // Only Toast if the user is logged in. Otherwise it happens
+               // in the login success event handler.
+               toast(mGuide.isFavorited() ? R.string.unfavoriting :
+                R.string.favoriting, Toast.LENGTH_LONG);
+            }
             return true;
          default:
             return super.onOptionsItemSelected(item);
@@ -288,6 +293,20 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          Api.getErrorDialog(this, event).show();
       }
 
+      supportInvalidateOptionsMenu();
+   }
+
+   public void onLogin(LoginEvent.Login event) {
+      if (mFavoriting) {
+         toast(mGuide.isFavorited() ? R.string.unfavoriting :
+          R.string.favoriting, Toast.LENGTH_LONG);
+      }
+   }
+
+   public void onCancelLogin(LoginEvent.Cancel event) {
+      // Always reset this because there is no way that the user can be
+      // favoriting a guide right now.
+      mFavoriting = false;
       supportInvalidateOptionsMenu();
    }
 
