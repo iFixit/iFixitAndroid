@@ -232,17 +232,21 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          case R.id.reload_guide:
             // Set guide to null to force a refresh of the guide object.
             mGuide = null;
+            supportInvalidateOptionsMenu();
             getGuide(mGuideid);
             return true;
          case R.id.favorite_guide:
-            Api.call(this, ApiCall.favoriteGuide(mGuideid, !mGuide.isFavorited()));
+            // Current favorite state.
+            boolean favorited = mGuide == null ? false : mGuide.isFavorited();
             mFavoriting = true;
+
+            Api.call(this, ApiCall.favoriteGuide(mGuideid, !favorited));
             supportInvalidateOptionsMenu();
 
             if (MainApplication.get().isUserLoggedIn()) {
                // Only Toast if the user is logged in. Otherwise it happens
                // in the login success event handler.
-               toast(mGuide.isFavorited() ? R.string.unfavoriting :
+               toast(favorited ? R.string.unfavoriting :
                 R.string.favoriting, Toast.LENGTH_LONG);
             }
             return true;
