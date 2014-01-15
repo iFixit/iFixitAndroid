@@ -90,7 +90,6 @@ public class ApiDatabase extends SQLiteOpenHelper {
       String result = cursor.getString(0);
 
       cursor.close();
-      db.close();
 
       return result;
    }
@@ -105,6 +104,5 @@ public class ApiDatabase extends SQLiteOpenHelper {
       values.put(KEY_DATE, (int)(System.currentTimeMillis() / 1000));
 
       db.insert(TABLE_API_RESULTS, null, values);
-      db.close();
    }
 }
