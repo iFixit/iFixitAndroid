@@ -14,7 +14,7 @@ public class Comment implements Serializable {
    private static final long serialVersionUID = -1333520488223961692L;
 
    private static final int NO_PARENT_ID = -1;
-   private boolean mIsReplying = false
+   private boolean mIsReplying = false;
    public String mCommentSource;
    public int mCommentid;
    public String mLocale;
