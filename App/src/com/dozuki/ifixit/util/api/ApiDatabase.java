@@ -14,7 +14,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
    public static ApiDatabase get(Context context) {
       if (sDatabase == null) {
-         sDatabase = new ApiDatabase(context);
+         sDatabase = new ApiDatabase(context.getApplicationContext());
       }
 
       return sDatabase;
