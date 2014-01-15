@@ -75,16 +75,6 @@ public class Api {
       } else {
          performRequest(apiCall, new Responder() {
             public void setResult(ApiEvent<?> result) {
-               // Don't parse if we've erred already.
-               if (!result.hasError()) {
-                  result = parseResult(result, apiCall.mEndpoint);
-               }
-
-               // Don't save if there a parse error.
-               if (!result.hasError()) {
-                  saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
-               }
-
                if (apiCall.mEndpoint.mPostResults) {
                   /**
                    * Always post the result despite any errors. This actually sends it off
@@ -176,14 +166,6 @@ public class Api {
 
    private static boolean isSuccess(int code) {
       return code >= 200 && code < 300;
-   }
-
-   private static void saveResult(ApiEvent<?> result, int requestTarget,
-    String requestQuery) {
-      // Commented out because the DB code isn't ready yet.
-      // ApiDatabase db = new ApiDatabase(this);
-      // db.insertResult(result.getResponse(), requestTarget, requestQuery);
-      // db.close();
    }
 
    public static AlertDialog getErrorDialog(final Activity activity,
@@ -303,7 +285,15 @@ public class Api {
             }
 
             try {
-               return getResponse(url, event, apiCall);
+               ApiEvent<?> response = getResponse(url, event, apiCall);
+
+               response = parseResult(response, endpoint);
+
+               if (!response.hasError()) {
+                  // Save response.
+               }
+
+               return response;
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {
                   e.getCause().printStackTrace();
