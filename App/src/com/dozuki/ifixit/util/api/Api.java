@@ -152,6 +152,7 @@ public class Api {
             event.mCode = code;
             event.mApiCall = result.mApiCall;
             event.mResponse = result.mResponse;
+            event.mStoredResponse = result.mStoredResponse;
          } catch (Exception e) {
             // This is meant to catch JSON and GSON parse exceptions but enumerating
             // all different types of Exceptions and putting error handling code
@@ -293,9 +294,12 @@ public class Api {
             try {
                ApiEvent<?> response = getResponse(url, event, apiCall);
 
-               response = parseResult(response, endpoint);
+               if (!response.hasError()) {
+                  response = parseResult(response, endpoint);
+               }
 
-               if (!response.hasError() && !response.mStoredResponse) {
+               if (!response.hasError() && endpoint.mMethod.equals("GET") &&
+                !response.mStoredResponse) {
                   storeResponse(url, apiCall, response.getResponse());
                }
 
@@ -424,12 +428,16 @@ public class Api {
    }
 
    private static String getStoredResponse(String url, ApiCall apiCall) {
-      // TODO
-      return null;
+      return ApiDatabase.get(MainApplication.get()).getResponse(url, apiCall.mUserid);
    }
 
    private static void storeResponse(String url, ApiCall apiCall, String response) {
-      // TODO
+      if (MainApplication.inDebug()) {
+         Log.i("Api", "Storing response");
+      }
+
+      ApiDatabase.get(MainApplication.get()).insertResponse(apiCall.mUserid,
+       url, response);
    }
 
    private static boolean hasInternet() {

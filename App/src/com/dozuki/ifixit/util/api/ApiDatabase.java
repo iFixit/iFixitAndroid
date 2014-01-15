@@ -9,27 +9,19 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class ApiDatabase extends SQLiteOpenHelper {
    private static final int DATABASE_VERSION = 1;
    private static final String DATABASE_NAME = "api";
-   private static final String TABLE_API_RESULTS = "api_results";
 
-   // api_results column names
-   private static final String KEY_ID = "_id";
-   private static final String KEY_TARGET = "target";
-   private static final String KEY_QUERY = "query";
-   private static final String KEY_RESULT = "result";
-   private static final String KEY_DATE = "date";
+   private static ApiDatabase sDatabase;
 
-   private static final String CREATE_API_RESULTS_TABLE =
-    "CREATE TABLE " + TABLE_API_RESULTS + "(" +
-      KEY_ID + " INTEGER PRIMARY KEY, " +
-      KEY_TARGET + " INTEGER, " +
-      KEY_QUERY + " TEXT, " +
-      KEY_RESULT + " TEXT, " +
-      KEY_DATE + " INTEGER" +
-    ")";
+   public static ApiDatabase get(Context context) {
+      if (sDatabase == null) {
+         sDatabase = new ApiDatabase(context);
+      }
 
-   public ApiDatabase(Context context) throws Exception {
+      return sDatabase;
+   }
+
+   private ApiDatabase(Context context) {
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
-      throw new Exception("Database not implemented yet");
    }
 
    @Override
@@ -42,20 +34,54 @@ public class ApiDatabase extends SQLiteOpenHelper {
       db.execSQL("DROP TABLE IF EXISTS " + TABLE_API_RESULTS);
 
       // Create tables again.
+      // TODO: This isn't a viable solution when the DB is upgraded.
       onCreate(db);
    }
 
-   public String fetchResult(int target, String query) {
+   /**
+    * Stores API responses for GET requests. Userid and URL are unique enough
+    * to uniquely identify requests because the site is included in the URL,
+    * every request method is `GET`, and all the request headers are the same.
+    */
+   private static final String TABLE_API_RESULTS = "api_results";
+   private static final String KEY_ID = "_id";
+   private static final String KEY_USERID = "userid";
+   private static final String KEY_URL = "url";
+   private static final String KEY_RESPONSE = "response";
+   private static final String KEY_DATE = "date";
+
+   private static final String CREATE_API_RESULTS_TABLE =
+    "CREATE TABLE " + TABLE_API_RESULTS + "(" +
+      KEY_ID + " INTEGER PRIMARY KEY, " +
+      KEY_USERID + " INTEGER, " +
+      KEY_URL + " TEXT, " +
+      KEY_RESPONSE + " TEXT, " +
+      KEY_DATE + " INTEGER" +
+    ")";
+
+   public String getResponse(String url, Integer userid) {
       SQLiteDatabase db = getReadableDatabase();
+
+      String useridQuery;
+      String[] selectionArgs;
+      if (userid == null) {
+         useridQuery = KEY_USERID + " IS NULL";
+         selectionArgs = new String[] {url};
+      } else {
+         useridQuery = KEY_USERID + " = ?";
+         selectionArgs = new String[] {url, userid.toString()};
+      }
 
       Cursor cursor = db.query(
        TABLE_API_RESULTS,
-       new String[] {KEY_RESULT},
-       KEY_TARGET + " = ? AND " +
-       KEY_QUERY + " = ? ",
-       new String[] {String.valueOf(target),
-                     query},
-       null, null, null, null);
+       new String[] {KEY_RESPONSE},
+       KEY_URL + " = ? AND " +
+       useridQuery,
+       selectionArgs,
+       null,
+       null,
+       /* ORDER BY = */ "date DESC",
+       /* LIMIT = */ "1");
 
       if (cursor == null || !cursor.moveToFirst()) {
          return null;
@@ -69,13 +95,13 @@ public class ApiDatabase extends SQLiteOpenHelper {
       return result;
    }
 
-   public void insertResult(String result, int target, String query) {
+   public void insertResponse(Integer userid, String url, String response) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues values = new ContentValues();
 
-      values.put(KEY_TARGET, target);
-      values.put(KEY_QUERY, query);
-      values.put(KEY_RESULT, result);
+      values.put(KEY_USERID, userid);
+      values.put(KEY_URL, url);
+      values.put(KEY_RESPONSE, response);
       values.put(KEY_DATE, (int)(System.currentTimeMillis() / 1000));
 
       db.insert(TABLE_API_RESULTS, null, values);
