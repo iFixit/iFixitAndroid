@@ -289,119 +289,21 @@ public class Api {
    }
 
    private static void performRequest(final ApiCall apiCall, final Responder responder) {
-      final ApiEndpoint endpoint = apiCall.mEndpoint;
-
-      if (!checkConnectivity(responder, endpoint, apiCall)) {
-         return;
-      }
-
-      final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
-
-      if (MainApplication.inDebug()) {
-         Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
-         Log.i("Api", "Request body: " + apiCall.mRequestBody);
-      }
-
       AsyncTask<String, Void, ApiEvent<?>> as = new AsyncTask<String, Void, ApiEvent<?>>() {
          @Override
          protected ApiEvent<?> doInBackground(String... dummy) {
+            ApiEndpoint endpoint = apiCall.mEndpoint;
+            final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
             ApiEvent<?> event = endpoint.getEvent();
             event.setApiCall(apiCall);
 
-            /**
-             * Unfortunately we must split the creation of the HttpRequest
-             * object and the appropriate actions to take for a GET vs. a POST
-             * request. The request headers and trustAllCerts calls must be
-             * made before any data is sent. However, we must have an HttpRequest
-             * object already.
-             */
-            HttpRequest request;
+            if (MainApplication.inDebug()) {
+               Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
+               Log.i("Api", "Request body: " + apiCall.mRequestBody);
+            }
 
             try {
-               long startTime = System.currentTimeMillis();
-
-               if (endpoint.mMethod.equals("GET")) {
-                  request = HttpRequest.get(url);
-               } else {
-                  /**
-                   * For all methods other than get we actually perform a POST but send
-                   * a header indicating the actual request we are performing. This is
-                   * because http-request's underlying HTTPRequest library doesn't
-                   * support PATCH requests.
-                   */
-                  request = HttpRequest.post(url);
-                  request.header("X-HTTP-Method-Override", endpoint.mMethod);
-               }
-
-               String authToken = null;
-
-               /**
-                * Get an appropriate auth token.
-                */
-               if (apiCall.mAuthToken != null) {
-                  // This auth token overrides all other requirements/auth tokens.
-                  authToken = apiCall.mAuthToken;
-               } else if (MainApplication.get().isUserLoggedIn()) {
-                  // Always include it if the user is logged in.
-                  User user = MainApplication.get().getUser();
-                  authToken = user.getAuthToken();
-               }
-
-               /**
-                * Send along the auth token if we found one.
-                */
-               if (authToken != null) {
-                  request.header("Authorization", "api " + authToken);
-               }
-
-               request.userAgent(MainApplication.get().getUserAgent());
-
-               request.header("X-App-Id", BuildConfig.APP_ID);
-
-               // Trust all certs and hosts in development
-               if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || MainApplication.inDebug()) {
-                  request.trustAllCerts();
-                  request.trustAllHosts();
-               }
-
-               request.followRedirects(false);
-
-               /**
-                * Continue with constructing the request body.
-                */
-               if (apiCall.mFilePath != null) {
-                  // POST the file if present.
-                  request.send(new File(apiCall.mFilePath));
-               } else if (apiCall.mRequestBody != null) {
-                  request.send(apiCall.mRequestBody);
-               }
-
-               /**
-                * The order is important here. If the code() is called first an IOException
-                * is thrown in some cases (invalid login for one, maybe more).
-                */
-               String responseBody = request.body();
-               int code = request.code();
-
-               if (MainApplication.inDebug()) {
-                  long endTime = System.currentTimeMillis();
-
-                  Log.d("Api", "Response code: " + code);
-                  Log.d("Api", "Response body: " + responseBody);
-                  Log.d("Api", "Request time: " + (endTime - startTime) + "ms");
-               }
-
-               /**
-                * If the server responds with a 401, the user is logged out even though we
-                * think that they are logged in. Return an Unauthorized event to prompt the
-                * user to log in. Don't do this if we are logging in because the login dialog
-                * will automatically handle these errors.
-                */
-               if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
-                  return getUnauthorizedEvent(apiCall);
-               } else {
-                  return event.setCode(code).setResponse(responseBody);
-               }
+               return getResponse(url, event, apiCall);
             } catch (HttpRequestException e) {
                if (e.getCause() != null) {
                   e.getCause().printStackTrace();
@@ -428,19 +330,111 @@ public class Api {
       }
    }
 
-   private static boolean checkConnectivity(Responder responder, ApiEndpoint endpoint,
-    ApiCall apiCall) {
+   private static ApiEvent<?> getResponse(String url, ApiEvent<?> event, ApiCall apiCall) {
+      long startTime = System.currentTimeMillis();
+
+      if (!hasInternet()) {
+         return event.setError(new ApiError(ApiError.Type.CONNECTION));
+      }
+
+      /**
+       * Unfortunately we must split the creation of the HttpRequest
+       * object and the appropriate actions to take for a GET vs. a POST
+       * request. The request headers and trustAllCerts calls must be
+       * made before any data is sent. However, we must have an HttpRequest
+       * object already.
+       */
+      HttpRequest request;
+
+      if (apiCall.mEndpoint.mMethod.equals("GET")) {
+         request = HttpRequest.get(url);
+      } else {
+         /**
+          * For all methods other than get we actually perform a POST but send
+          * a header indicating the actual request we are performing. This is
+          * because http-request's underlying HTTPRequest library doesn't
+          * support PATCH requests.
+          */
+         request = HttpRequest.post(url);
+         request.header("X-HTTP-Method-Override", apiCall.mEndpoint.mMethod);
+      }
+
+      String authToken = null;
+
+      /**
+       * Get an appropriate auth token.
+       */
+      if (apiCall.mAuthToken != null) {
+         // This auth token overrides all other requirements/auth tokens.
+         authToken = apiCall.mAuthToken;
+      } else if (MainApplication.get().isUserLoggedIn()) {
+         // Always include it if the user is logged in.
+         User user = MainApplication.get().getUser();
+         authToken = user.getAuthToken();
+      }
+
+      /**
+       * Send along the auth token if we found one.
+       */
+      if (authToken != null) {
+         request.header("Authorization", "api " + authToken);
+      }
+
+      request.userAgent(MainApplication.get().getUserAgent());
+
+      request.header("X-App-Id", BuildConfig.APP_ID);
+
+      // Trust all certs and hosts in development
+      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || MainApplication.inDebug()) {
+         request.trustAllCerts();
+         request.trustAllHosts();
+      }
+
+      request.followRedirects(false);
+
+      /**
+       * Continue with constructing the request body.
+       */
+      if (apiCall.mFilePath != null) {
+         // POST the file if present.
+         request.send(new File(apiCall.mFilePath));
+      } else if (apiCall.mRequestBody != null) {
+         request.send(apiCall.mRequestBody);
+      }
+
+      /**
+       * The order is important here. If the code() is called first an IOException
+       * is thrown in some cases (invalid login for one, maybe more).
+       */
+      String responseBody = request.body();
+      int code = request.code();
+
+      if (MainApplication.inDebug()) {
+         long endTime = System.currentTimeMillis();
+
+         Log.d("Api", "Response code: " + code);
+         Log.d("Api", "Response body: " + responseBody);
+         Log.d("Api", "Request time: " + (endTime - startTime) + "ms");
+      }
+
+      /**
+       * If the server responds with a 401, the user is logged out even though we
+       * think that they are logged in. Return an Unauthorized event to prompt the
+       * user to log in. Don't do this if we are logging in because the login dialog
+       * will automatically handle these errors.
+       */
+      if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
+         return getUnauthorizedEvent(apiCall);
+      } else {
+         return event.setCode(code).setResponse(responseBody);
+      }
+   }
+
+   private static boolean hasInternet() {
       ConnectivityManager cm = (ConnectivityManager)
        MainApplication.get().getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-      if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(endpoint.getEvent()
-          .setApiCall(apiCall)
-          .setError(new ApiError(ApiError.Type.CONNECTION)));
-         return false;
-      }
-
-      return true;
+      return netInfo != null && netInfo.isConnected();
    }
 }
