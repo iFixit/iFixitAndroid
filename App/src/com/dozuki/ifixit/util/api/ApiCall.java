@@ -34,6 +34,7 @@ public class ApiCall implements Serializable {
    protected String mExtraInfo;
    protected String mFilePath;
    protected String mAuthToken;
+   protected Integer mUserid;
    protected int mActivityid = -1;
 
    public ApiCall(ApiEndpoint endpoint, String query) {

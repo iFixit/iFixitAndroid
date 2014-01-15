@@ -69,6 +69,12 @@ public class Api {
          Log.w("Api", "Missing activityid!", new Exception());
       }
 
+      if (apiCall.mAuthToken == null && MainApplication.get().isUserLoggedIn()) {
+         User user = MainApplication.get().getUser();
+         apiCall.mAuthToken = user.getAuthToken();
+         apiCall.mUserid = user.getUserid();
+      }
+
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(endpoint) && !MainApplication.get().isUserLoggedIn()) {
          MainApplication.getBus().post(getUnauthorizedEvent(apiCall));
@@ -289,8 +295,8 @@ public class Api {
 
                response = parseResult(response, endpoint);
 
-               if (!response.hasError()) {
-                  // Save response.
+               if (!response.hasError() && !response.mStoredResponse) {
+                  storeResponse(url, apiCall, response.getResponse());
                }
 
                return response;
@@ -324,6 +330,17 @@ public class Api {
       long startTime = System.currentTimeMillis();
 
       if (!hasInternet()) {
+         if (apiCall.mEndpoint.mMethod.equals("GET")) {
+            String response = getStoredResponse(url, apiCall);
+            if (response != null) {
+               if (MainApplication.inDebug()) {
+                  Log.i("Api", "Using stored API response");
+               }
+               // All GETs will be 200's if they're valid.
+               return event.setCode(200).setResponse(response).setStoredResponse(true);
+            }
+         }
+
          return event.setError(new ApiError(ApiError.Type.CONNECTION));
       }
 
@@ -349,25 +366,11 @@ public class Api {
          request.header("X-HTTP-Method-Override", apiCall.mEndpoint.mMethod);
       }
 
-      String authToken = null;
-
       /**
-       * Get an appropriate auth token.
+       * Send along the auth token if we have one.
        */
       if (apiCall.mAuthToken != null) {
-         // This auth token overrides all other requirements/auth tokens.
-         authToken = apiCall.mAuthToken;
-      } else if (MainApplication.get().isUserLoggedIn()) {
-         // Always include it if the user is logged in.
-         User user = MainApplication.get().getUser();
-         authToken = user.getAuthToken();
-      }
-
-      /**
-       * Send along the auth token if we found one.
-       */
-      if (authToken != null) {
-         request.header("Authorization", "api " + authToken);
+         request.header("Authorization", "api " + apiCall.mAuthToken);
       }
 
       request.userAgent(MainApplication.get().getUserAgent());
@@ -418,6 +421,15 @@ public class Api {
       } else {
          return event.setCode(code).setResponse(responseBody);
       }
+   }
+
+   private static String getStoredResponse(String url, ApiCall apiCall) {
+      // TODO
+      return null;
+   }
+
+   private static void storeResponse(String url, ApiCall apiCall, String response) {
+      // TODO
    }
 
    private static boolean hasInternet() {
