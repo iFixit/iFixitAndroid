@@ -16,6 +16,7 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.util.FileCache;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
@@ -428,16 +429,37 @@ public class Api {
    }
 
    private static String getStoredResponse(String url, ApiCall apiCall) {
-      return ApiDatabase.get(MainApplication.get()).getResponse(url, apiCall.mUserid);
+      long startTime = System.currentTimeMillis();
+
+      String response = FileCache.get(getCacheKey(url, apiCall.mUserid));
+
+      if (MainApplication.inDebug()) {
+         long endTime = System.currentTimeMillis();
+         Log.i("Api", "Retrieved response in " + (endTime - startTime) + "ms");
+      }
+
+      return response;
    }
 
    private static void storeResponse(String url, ApiCall apiCall, String response) {
+      long startTime = System.currentTimeMillis();
+
+      FileCache.set(getCacheKey(url, apiCall.mUserid), response);
+
       if (MainApplication.inDebug()) {
-         Log.i("Api", "Storing response");
+         long endTime = System.currentTimeMillis();
+         Log.i("Api", "Stored response in " + (endTime - startTime) + "ms");
+      }
+   }
+
+   private static String getCacheKey(String url, Integer userid) {
+      String key = "api_responses_" + url;
+
+      if (userid != null) {
+         key += userid;
       }
 
-      ApiDatabase.get(MainApplication.get()).insertResponse(apiCall.mUserid,
-       url, response);
+      return key;
    }
 
    private static boolean hasInternet() {

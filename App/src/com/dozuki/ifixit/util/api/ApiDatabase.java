@@ -6,6 +6,12 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+import java.lang.UnsupportedOperationException;
+
+/**
+ * WARNING: Not currently used. There are plans of using it for storing offline
+ * guides.
+ */
 public class ApiDatabase extends SQLiteOpenHelper {
    private static final int DATABASE_VERSION = 1;
    private static final String DATABASE_NAME = "api";
@@ -13,11 +19,14 @@ public class ApiDatabase extends SQLiteOpenHelper {
    private static ApiDatabase sDatabase;
 
    public static ApiDatabase get(Context context) {
+      throw new UnsupportedOperationException("ApiDatabase is not ready!");
+      /*
       if (sDatabase == null) {
          sDatabase = new ApiDatabase(context.getApplicationContext());
       }
 
       return sDatabase;
+      */
    }
 
    private ApiDatabase(Context context) {
