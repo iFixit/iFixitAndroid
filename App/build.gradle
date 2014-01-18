@@ -3,7 +3,7 @@ buildscript {
       mavenCentral()
    }
    dependencies {
-      classpath 'com.android.tools.build:gradle:0.6.3'
+      classpath 'com.android.tools.build:gradle:0.7.0'
    }
 }
 apply plugin: 'android'
@@ -60,11 +60,11 @@ android {
 
    buildTypes {
       debug {
-         buildConfig 'public static final String DEV_SERVER = ' + devServer + ';'
+         buildConfigField "String", "DEV_SERVER", devServer
       }
 
       release {
-         buildConfig 'public static final String DEV_SERVER = "";'
+         buildConfigField "String", "DEV_SERVER", ""
 
          runProguard true
          proguardFile 'proguard.cfg'
@@ -77,7 +77,10 @@ android {
          packageName "com.dozuki.ifixit"
          minSdkVersion 8
 
-         buildConfig createSiteBuildConfig("ifixit", "UA-30506-9")
+         buildConfigField "String", "GA_PROPERTY_ID", '"UA-30506-9"'
+         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.dozuki.ifixit.ui.search.SearchSuggestionProvider"'
+         buildConfigField "String", "SITE_NAME", '"ifixit"'
+         buildConfigField "String", "APP_ID", ifixitAppId
       }
 
       dozuki {
@@ -90,7 +93,10 @@ android {
          packageName "com.dozuki.dozuki"
          minSdkVersion 9
 
-         buildConfig createSiteBuildConfig("dozuki", "UA-30506-19")
+         buildConfigField "String", "GA_PROPERTY_ID", '"UA-30506-19"'
+         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.dozuki.dozuki.ui.search.SearchSuggestionProvider"'
+         buildConfigField "String", "SITE_NAME", '"dozuki"'
+         buildConfigField "String", "APP_ID", dozukiAppId
       }
 
       accustream {
@@ -103,7 +109,10 @@ android {
          packageName "com.dozuki.accustream"
          minSdkVersion 9
 
-         buildConfig createSiteBuildConfig("accustream", "UA-30506-19")
+         buildConfigField "String", "GA_PROPERTY_ID", '"UA-30506-19"'
+         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.accustream.accustream.ui.search.SearchSuggestionProvider"'
+         buildConfigField "String", "SITE_NAME", '"accustream"'
+         buildConfigField "String", "APP_ID", accustreamAppId
       }
    }
 
@@ -149,11 +158,4 @@ def createSiteSourceSet(siteName) {
          java.srcDirs = ["sites/${siteName}/src"]
       }
    }
-}
-
-def createSiteBuildConfig(siteName, gaPropertyId) {
-   return "public static final String GA_PROPERTY_ID = \"${gaPropertyId}\";" +
-          "public static final String SEARCH_PROVIDER_AUTHORITY = \"com.dozuki.${siteName}.ui.search.SearchSuggestionProvider\";" +
-          "public static final String SITE_NAME = \"${siteName}\";\n" +
-          'public static final String APP_ID = ' + getProperty("${siteName}AppId") + ';'
 }
