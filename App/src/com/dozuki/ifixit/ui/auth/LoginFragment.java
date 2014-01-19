@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.login;
+package com.dozuki.ifixit.ui.auth;
 
 import android.app.Activity;
 import android.content.Context;

@@ -17,7 +17,7 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
-import com.dozuki.ifixit.ui.login.LoginFragment;
+import com.dozuki.ifixit.ui.auth.LoginFragment;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.dozuki.ifixit.util.api.Api;
