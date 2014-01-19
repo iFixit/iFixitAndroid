@@ -336,12 +336,11 @@ public class MainApplication extends Application {
    /**
     * Logs the given user in by writing it to SharedPreferences and setting mUser.
     */
-   public void login(User user) {
+   public void login(User user, String email, String password) {
       mUser = user;
 
-      // TODO: Get actual password.
-      mAccount = new Authenticator(this).onAccountAuthenticated(mSite,
-       user.getUsername(), user.getUserid(), "password", user.getAuthToken());
+      mAccount = new Authenticator(this).onAccountAuthenticated(mSite, email,
+       user.getUsername(), user.getUserid(), password, user.getAuthToken());
 
       getBus().post(new LoginEvent.Login(mUser));
 

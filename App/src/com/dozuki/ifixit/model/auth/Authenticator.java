@@ -19,6 +19,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
    private static final String USER_DATA_USER_NAME = "USER_DATA_USER_NAME";
    private static final String USER_DATA_USERID = "USER_DATA_USERID";
    private static final String USER_DATA_AUTH_TOKEN = "USER_DATA_AUTH_TOKEN";
+   private static final String USER_DATA_EMAIL = "USER_DATA_EMAIL";
 
    private final Context mContext;
 
@@ -85,15 +86,19 @@ public class Authenticator extends AbstractAccountAuthenticator {
       return result;
    }
 
-   public Account onAccountAuthenticated(Site site, String userName,
+   public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
       AccountManager accountManager = AccountManager.get(mContext);
       Account account = new Account(userName, ACCOUNT_TYPE);
 
       Bundle userData = new Bundle();
       userData.putString(USER_DATA_SITE_NAME, site.mName);
+      userData.putString(USER_DATA_EMAIL, email);
       userData.putString(USER_DATA_USER_NAME, userName);
       userData.putString(USER_DATA_USERID, "" + userid);
+
+      // TODO: This is already stored in the AccountManager. This isn't strictly
+      // necessary but it makes it easier... Decide to remove or not remove it.
       userData.putString(USER_DATA_AUTH_TOKEN, authToken);
 
       accountManager.addAccountExplicitly(account, password, userData);

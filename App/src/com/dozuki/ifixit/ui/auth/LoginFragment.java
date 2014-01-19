@@ -39,7 +39,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    private Button mRegister;
    private ImageButton mGoogleLogin;
    //private ImageButton mYahooLogin;
-   private EditText mLoginId;
+   private EditText mEmail;
    private EditText mPassword;
    private TextView mErrorText;
    private ProgressBar mLoadingSpinner;
@@ -60,7 +60,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    private void handleLogin(ApiEvent<User> event) {
       if (!event.hasError()) {
          User user = event.getResult();
-         ((MainApplication)getActivity().getApplication()).login(user);
+         ((MainApplication)getActivity().getApplication()).login(user, getEmail(),
+          getPassword());
 
          dismiss();
       } else {
@@ -70,7 +71,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          mLoadingSpinner.setVisibility(View.GONE);
 
          // Show input fields
-         mLoginId.setVisibility(View.VISIBLE);
+         mEmail.setVisibility(View.VISIBLE);
          mPassword.setVisibility(View.VISIBLE);
 
          mErrorText.setVisibility(View.VISIBLE);
@@ -114,7 +115,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       
       View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-      mLoginId = (EditText)view.findViewById(R.id.edit_email);
+      mEmail = (EditText)view.findViewById(R.id.edit_email);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
       mPassword.setTypeface(Typeface.DEFAULT);
 
@@ -165,21 +166,21 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    }
 
    private void login() {
-      String login = mLoginId.getText().toString();
-      String password = mPassword.getText().toString();
+      String email = getEmail();
+      String password = getPassword();
 
-      if (login.length() > 0 && password.length() > 0 ) {
+      if (email.length() > 0 && password.length() > 0 ) {
          // Hide input fields
-         mLoginId.setVisibility(View.GONE);
+         mEmail.setVisibility(View.GONE);
          mPassword.setVisibility(View.GONE);
          
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
-         mCurAPICall = ApiCall.login(login, password);
+         mCurAPICall = ApiCall.login(email, password);
          Api.call(getActivity(), mCurAPICall);
       } else {
-         if (login.length() < 1) {
-            mLoginId.requestFocus();
+         if (email.length() < 1) {
+            mEmail.requestFocus();
             showKeyboard();
          } else {
             mPassword.requestFocus();
@@ -188,6 +189,14 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          mErrorText.setText(R.string.empty_field_error);
          mErrorText.setVisibility(View.VISIBLE);
       }
+   }
+
+   private String getEmail() {
+      return mEmail.getText().toString();
+   }
+
+   private String getPassword() {
+      return mPassword.getText().toString();
    }
 
    private void showKeyboard() {
@@ -199,7 +208,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    }
 
    private void enable(boolean enabled) {
-      mLoginId.setEnabled(enabled);
+      mEmail.setEnabled(enabled);
       mPassword.setEnabled(enabled);
       mLogin.setEnabled(enabled);
       if (mHasRegisterBtn) {
@@ -239,7 +248,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
              InputMethodManager in = (InputMethodManager)getActivity()
               .getSystemService(Context.INPUT_METHOD_SERVICE);
 
-             in.hideSoftInputFromWindow(mLoginId.getApplicationWindowToken(),
+             in.hideSoftInputFromWindow(mEmail.getApplicationWindowToken(),
               InputMethodManager.HIDE_NOT_ALWAYS);
              login();
              break;
