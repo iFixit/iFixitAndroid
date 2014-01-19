@@ -13,6 +13,7 @@ import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -348,6 +349,9 @@ public class MainApplication extends Application {
       editor.putInt(mSite.mName + USERID_KEY, user.getUserid());
       editor.commit();
       mUser = user;
+
+      // TODO: Get actual password.
+      new Authenticator(this).onAccountAuthenticated(user.getUsername(), "password", user.getAuthToken());
 
       getBus().post(new LoginEvent.Login(mUser));
 
