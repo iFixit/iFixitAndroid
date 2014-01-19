@@ -1,8 +1,8 @@
 package com.dozuki.ifixit;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.Application;
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -72,6 +72,11 @@ public class MainApplication extends Application {
     * Currently logged in user or null if user is not logged in.
     */
    private User mUser;
+
+   /**
+    * Current logged in Account. Must be kept in sync with mUser.
+    */
+   private Account mAccount;
 
    /**
     * Current site. Shouldn't ever be null. Set to "dozuki" for dozuki splash screen.
@@ -190,7 +195,7 @@ public class MainApplication extends Application {
       mSite = site;
 
       // Update logged in user based on current site.
-      mUser = getUserFromPreferenceFile(site);
+      setupLoggedInUser(site);
 
       getBus().post(new SiteChangedEvent(mSite, mUser));
    }
@@ -285,22 +290,13 @@ public class MainApplication extends Application {
       return mUser;
    }
 
-   private User getUserFromPreferenceFile(Site site) {
-      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
-       MODE_PRIVATE);
-      String authToken = preferenceFile.getString(site.mName + AUTH_TOKEN_KEY, null);
-      String username = preferenceFile.getString(site.mName + USERNAME_KEY, null);
-      int userid = preferenceFile.getInt(site.mName + USERID_KEY, 0);
-      User user = null;
+   private void setupLoggedInUser(Site site) {
+      Authenticator authenticator = new Authenticator(this);
+      mAccount = authenticator.getAccountForSite(site);
 
-      if (username != null && authToken != null) {
-         user = new User();
-         user.setAuthToken(authToken);
-         user.setUsername(username);
-         user.setUserid(userid);
+      if (mAccount != null) {
+         mUser = authenticator.createUser(mAccount);
       }
-
-      return user;
    }
 
    public boolean isFirstTimeGalleryUser() {
@@ -341,17 +337,11 @@ public class MainApplication extends Application {
     * Logs the given user in by writing it to SharedPreferences and setting mUser.
     */
    public void login(User user) {
-      final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-       Context.MODE_PRIVATE);
-      Editor editor = prefs.edit();
-      editor.putString(mSite.mName + AUTH_TOKEN_KEY, user.getAuthToken());
-      editor.putString(mSite.mName + USERNAME_KEY, user.getUsername());
-      editor.putInt(mSite.mName + USERID_KEY, user.getUserid());
-      editor.commit();
       mUser = user;
 
       // TODO: Get actual password.
-      new Authenticator(this).onAccountAuthenticated(user.getUsername(), "password", user.getAuthToken());
+      mAccount = new Authenticator(this).onAccountAuthenticated(mSite,
+       user.getUsername(), user.getUserid(), "password", user.getAuthToken());
 
       getBus().post(new LoginEvent.Login(mUser));
 
@@ -371,20 +361,17 @@ public class MainApplication extends Application {
     * logout, bleow, should almost always be the one to use.
     */
    public void shallowLogout() {
-      final SharedPreferences prefs = getSharedPreferences(PREFERENCE_FILE,
-       Context.MODE_PRIVATE);
-      Editor editor = prefs.edit();
-      editor.remove(mSite.mName + AUTH_TOKEN_KEY);
-      editor.remove(mSite.mName + USERNAME_KEY);
-      editor.remove(mSite.mName + USERID_KEY);
-      editor.commit();
+      if (mAccount != null) {
+         new Authenticator(this).removeAccount(mAccount);
+      }
 
       mUser = null;
+      mAccount = null;
    }
 
    /**
     * Logs the currently logged in user out by deleting it from SharedPreferences, making
-    * the logout API call to delete the auth token, and * resetting mUser.
+    * the logout API call to delete the auth token, and resetting mUser.
     */
    public void logout(Activity activity) {
       // Check if the user is null because we're paranoid.

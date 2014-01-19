@@ -9,9 +9,16 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.user.User;
+
 public class Authenticator extends AbstractAccountAuthenticator {
    public static final String AUTH_TOKEN_TYPE_FULL_ACCESS = "Full access";
    public static final String ACCOUNT_TYPE = "com.dozuki.dozuki";
+   private static final String USER_DATA_SITE_NAME = "USER_DATA_SITE_NAME";
+   private static final String USER_DATA_USER_NAME = "USER_DATA_USER_NAME";
+   private static final String USER_DATA_USERID = "USER_DATA_USERID";
+   private static final String USER_DATA_AUTH_TOKEN = "USER_DATA_AUTH_TOKEN";
 
    private final Context mContext;
 
@@ -23,7 +30,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
    @Override
    public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-    String authTokenType, String[] requiredFeatures, Bundle options) throws NetworkErrorException {
+    String authTokenType, String[] requiredFeatures, Bundle options)
+    throws NetworkErrorException {
       Log.w("Authenticator", "addAccount not implemented");
       // Creates an Intent to start the authentication activity.
       return null;
@@ -77,13 +85,49 @@ public class Authenticator extends AbstractAccountAuthenticator {
       return result;
    }
 
-   public void onAccountAuthenticated(String userName, String password, String authToken) {
+   public Account onAccountAuthenticated(Site site, String userName,
+    int userid, String password, String authToken) {
       AccountManager accountManager = AccountManager.get(mContext);
       Account account = new Account(userName, ACCOUNT_TYPE);
 
-      // TODO: Add useful data in the Bundle.
-      accountManager.addAccountExplicitly(account, password, null);
+      Bundle userData = new Bundle();
+      userData.putString(USER_DATA_SITE_NAME, site.mName);
+      userData.putString(USER_DATA_USER_NAME, userName);
+      userData.putString(USER_DATA_USERID, "" + userid);
+      userData.putString(USER_DATA_AUTH_TOKEN, authToken);
+
+      accountManager.addAccountExplicitly(account, password, userData);
       accountManager.setAuthToken(account, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
+
+      return account;
+   }
+
+   public Account getAccountForSite(Site site) {
+      AccountManager accountManager = AccountManager.get(mContext);
+      String siteName = site.mName;
+
+      for (Account account : accountManager.getAccountsByType(ACCOUNT_TYPE)) {
+         if (accountManager.getUserData(account, USER_DATA_SITE_NAME).equals(siteName)) {
+            return account;
+         }
+      }
+
+      return null;
+   }
+
+   public User createUser(Account account) {
+      AccountManager accountManager = AccountManager.get(mContext);
+      User user = new User();
+
+      user.setAuthToken(accountManager.getUserData(account, USER_DATA_AUTH_TOKEN));
+      user.setUsername(accountManager.getUserData(account, USER_DATA_USER_NAME));
+      user.setUserid(Integer.parseInt(accountManager.getUserData(account, USER_DATA_USERID)));
+
+      return user;
+   }
+
+   public void removeAccount(Account account) {
+      AccountManager.get(mContext).removeAccount(account, null, null);
    }
 
    @Override
