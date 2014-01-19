@@ -18,14 +18,12 @@ import com.dozuki.ifixit.util.JSONHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Defines an ApiCall that can be performed using Api.call().
  */
-public class ApiCall implements Serializable {
-   private static final long serialVersionUID = 8782535908621394800L;
+public class ApiCall {
    private static final String NO_QUERY = "";
 
    protected ApiEndpoint mEndpoint;

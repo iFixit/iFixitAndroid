@@ -422,10 +422,27 @@ public class Api {
        * will automatically handle these errors.
        */
       if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
-         return getUnauthorizedEvent(apiCall);
+         String newAuthToken = attemptReauthentication();
+
+         if (newAuthToken != null) {
+            // Try again with the new auth token.
+            apiCall.mAuthToken = newAuthToken;
+            return getResponse(url, event, apiCall);
+         } else {
+            return getUnauthorizedEvent(apiCall);
+         }
       } else {
          return event.setCode(code).setResponse(responseBody);
       }
+   }
+
+   /**
+    * Attempts to reauthenticate the user with the stored credentials. Returns
+    * a fresh authToken if successful, null otherwise.
+    */
+   private static String attemptReauthentication() {
+      // TODO: Implement.
+      return null;
    }
 
    private static String getStoredResponse(String url, ApiCall apiCall) {
