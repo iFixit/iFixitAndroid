@@ -360,7 +360,10 @@ public class MainApplication extends Application {
 
    /**
     * Light version of logout that doesn't fire any events or perform any API calls.
-    * logout, bleow, should almost always be the one to use.
+    * logout, below, should almost always be the one to use.
+    *
+    * Warning: This removes the account from AccountManager which could have very bad
+    * consequences for account preferences including sync.
     */
    public void shallowLogout() {
       if (mAccount != null) {

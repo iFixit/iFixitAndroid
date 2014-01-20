@@ -73,7 +73,7 @@ public class Api {
       if (apiCall.mAuthToken == null && MainApplication.get().isUserLoggedIn()) {
          User user = MainApplication.get().getUser();
          apiCall.mAuthToken = user.getAuthToken();
-         apiCall.mUserid = user.getUserid();
+         apiCall.mUser = user;
       }
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
@@ -448,7 +448,7 @@ public class Api {
    private static String getStoredResponse(String url, ApiCall apiCall) {
       long startTime = System.currentTimeMillis();
 
-      String response = FileCache.get(getCacheKey(url, apiCall.mUserid));
+      String response = FileCache.get(getCacheKey(url, apiCall.mUser.getUserid()));
 
       if (MainApplication.inDebug()) {
          long endTime = System.currentTimeMillis();
@@ -461,7 +461,7 @@ public class Api {
    private static void storeResponse(String url, ApiCall apiCall, String response) {
       long startTime = System.currentTimeMillis();
 
-      FileCache.set(getCacheKey(url, apiCall.mUserid), response);
+      FileCache.set(getCacheKey(url, apiCall.mUser.getUserid()), response);
 
       if (MainApplication.inDebug()) {
          long endTime = System.currentTimeMillis();

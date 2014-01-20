@@ -32,7 +32,7 @@ public class ApiCall {
    protected String mExtraInfo;
    protected String mFilePath;
    protected String mAuthToken;
-   protected Integer mUserid;
+   protected User mUser;
    protected int mActivityid = -1;
 
    public ApiCall(ApiEndpoint endpoint, String query) {
