@@ -9,12 +9,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
 
 public class Authenticator extends AbstractAccountAuthenticator {
    public static final String AUTH_TOKEN_TYPE_FULL_ACCESS = "Full access";
-   public static final String ACCOUNT_TYPE = "com.dozuki.dozuki";
    private static final String USER_DATA_SITE_NAME = "USER_DATA_SITE_NAME";
    private static final String USER_DATA_USER_NAME = "USER_DATA_USER_NAME";
    private static final String USER_DATA_USERID = "USER_DATA_USERID";
@@ -28,6 +28,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
       mContext = context;
       mAccountManager = AccountManager.get(mContext);
+   }
+
+   public static String getAccountType() {
+      return "com.dozuki." + BuildConfig.SITE_NAME;
    }
 
    @Override
@@ -100,7 +104,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
          }
       }
 
-      Account newAccount = new Account(userName, ACCOUNT_TYPE);
+      Account newAccount = new Account(userName, getAccountType());
 
       mAccountManager.addAccountExplicitly(newAccount, password, userData);
       mAccountManager.setAuthToken(newAccount, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
@@ -139,7 +143,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
    public Account getAccountForSite(Site site) {
       String siteName = site.mName;
 
-      for (Account account : mAccountManager.getAccountsByType(ACCOUNT_TYPE)) {
+      for (Account account : mAccountManager.getAccountsByType(getAccountType())) {
          if (mAccountManager.getUserData(account, USER_DATA_SITE_NAME).equals(siteName)) {
             return account;
          }
