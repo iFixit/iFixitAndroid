@@ -34,61 +34,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
       return "com.dozuki." + BuildConfig.SITE_NAME;
    }
 
-   @Override
-   public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
-    String authTokenType, String[] requiredFeatures, Bundle options)
-    throws NetworkErrorException {
-      Log.w("Authenticator", "addAccount not implemented");
-      // Creates an Intent to start the authentication activity.
-      return null;
-   }
-
-   @Override
-   public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
-    String authTokenType, Bundle options) throws NetworkErrorException {
-      Log.w("Authenticator", "getAuthToken");
-
-      if (!authTokenType.equals(AUTH_TOKEN_TYPE_FULL_ACCESS)) {
-         Log.w("Authenticator", "Invalid auth token type");
-         return null;
-      }
-
-      String authToken = mAccountManager.peekAuthToken(account, authTokenType);
-
-      if (authToken == null) {
-         String password = mAccountManager.getPassword(account);
-         if (password != null) {
-            // Retry authentication.
-         }
-      }
-
-      if (authToken != null) {
-         Bundle result = new Bundle();
-         result.putString(AccountManager.KEY_ACCOUNT_NAME, account.name);
-         result.putString(AccountManager.KEY_ACCOUNT_TYPE, account.type);
-         result.putString(AccountManager.KEY_AUTHTOKEN, authToken);
-         return result;
-      }
-
-      // Create bundle for launching authentication activity.
-
-      return null;
-   }
-
-   @Override
-   public String getAuthTokenLabel(String authTokenType) {
-      // TODO: Create string resource for it.
-      return authTokenType;
-   }
-
-   @Override
-   public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
-    String[] features) throws NetworkErrorException {
-      Bundle result = new Bundle();
-      result.putBoolean(AccountManager.KEY_BOOLEAN_RESULT, false);
-      return result;
-   }
-
    public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
       Bundle userData = getUserDataBundle(site, email, userName, userid);
@@ -170,6 +115,39 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
    public void removeAccount(Account account) {
       mAccountManager.removeAccount(account, null, null);
+   }
+
+   /**
+    * Unimplemented methods. Turns out we don't really need to implement any of
+    * these methods unless we plan on sharing accounts outside of our app.
+    */
+
+   @Override
+   public Bundle addAccount(AccountAuthenticatorResponse response, String accountType,
+    String authTokenType, String[] requiredFeatures, Bundle options)
+    throws NetworkErrorException {
+      Log.w("Authenticator", "addAccount not implemented");
+      // Creates an Intent to start the authentication activity.
+      return null;
+   }
+
+   @Override
+   public Bundle getAuthToken(AccountAuthenticatorResponse response, Account account,
+    String authTokenType, Bundle options) throws NetworkErrorException {
+      Log.w("Authenticator", "getAuthToken not implemented");
+      return null;
+   }
+
+   @Override
+   public String getAuthTokenLabel(String authTokenType) {
+      return authTokenType;
+   }
+
+   @Override
+   public Bundle hasFeatures(AccountAuthenticatorResponse response, Account account,
+    String[] features) throws NetworkErrorException {
+      Log.w("Authenticator", "hasFeatures not implemented");
+      return null;
    }
 
    @Override
