@@ -87,7 +87,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
    public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
-      Bundle userData = getUserDataBundle(site, email, userName, userid, authToken);
+      Bundle userData = getUserDataBundle(site, email, userName, userid);
 
       Account existingAccount = getAccountForSite(site);
       if (existingAccount != null) {
@@ -117,8 +117,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
       return account;
    }
 
-   private Bundle getUserDataBundle(Site site, String email, String userName, int userid,
-    String authToken) {
+   private Bundle getUserDataBundle(Site site, String email, String userName, int userid) {
       Bundle userData = new Bundle();
       userData.putString(USER_DATA_SITE_NAME, site.mName);
       userData.putString(USER_DATA_EMAIL, email);
