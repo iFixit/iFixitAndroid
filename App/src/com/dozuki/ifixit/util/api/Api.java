@@ -70,6 +70,8 @@ public class Api {
          Log.w("Api", "Missing activityid!", new Exception());
       }
 
+      apiCall.mSite = MainApplication.get().getSite();
+
       if (apiCall.mAuthToken == null && MainApplication.get().isUserLoggedIn()) {
          User user = MainApplication.get().getUser();
          apiCall.mAuthToken = user.getAuthToken();
@@ -283,7 +285,7 @@ public class Api {
          @Override
          protected ApiEvent<?> doInBackground(String... dummy) {
             ApiEndpoint endpoint = apiCall.mEndpoint;
-            final String url = endpoint.getUrl(MainApplication.get().getSite(), apiCall.mQuery);
+            final String url = endpoint.getUrl(apiCall.mSite, apiCall.mQuery);
             ApiEvent<?> event = endpoint.getEvent();
             event.setApiCall(apiCall);
 

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -32,6 +33,7 @@ public class ApiCall {
    protected String mExtraInfo;
    protected String mFilePath;
    protected String mAuthToken;
+   protected Site mSite;
    protected User mUser;
    protected int mActivityid = -1;
 
