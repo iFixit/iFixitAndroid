@@ -59,6 +59,11 @@ public class ApiCall {
       mFilePath = filePath;
    }
 
+   public void updateUser(User user) {
+      mUser = user;
+      mAuthToken = mUser.getAuthToken();
+   }
+
    /**
     * ApiCall Factory methods.
     */

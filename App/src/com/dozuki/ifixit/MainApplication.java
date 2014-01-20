@@ -356,6 +356,7 @@ public class MainApplication extends Application {
        */
       ApiCall pendingApiCall = Api.getAndRemovePendingApiCall(this);
       if (pendingApiCall != null) {
+         pendingApiCall.updateUser(mUser);
          Api.call(null, pendingApiCall);
       }
    }
