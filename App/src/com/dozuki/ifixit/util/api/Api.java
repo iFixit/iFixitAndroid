@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.util.Log;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.FileCache;
@@ -71,11 +73,12 @@ public class Api {
       }
 
       apiCall.mSite = MainApplication.get().getSite();
+      User user = MainApplication.get().getUser();
+      apiCall.mUser = user;
 
-      if (apiCall.mAuthToken == null && MainApplication.get().isUserLoggedIn()) {
-         User user = MainApplication.get().getUser();
+      // TODO: We might not have to do this... investigate.
+      if (apiCall.mAuthToken == null && user != null) {
          apiCall.mAuthToken = user.getAuthToken();
-         apiCall.mUser = user;
       }
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
@@ -284,40 +287,7 @@ public class Api {
       AsyncTask<String, Void, ApiEvent<?>> as = new AsyncTask<String, Void, ApiEvent<?>>() {
          @Override
          protected ApiEvent<?> doInBackground(String... dummy) {
-            ApiEndpoint endpoint = apiCall.mEndpoint;
-            final String url = endpoint.getUrl(apiCall.mSite, apiCall.mQuery);
-            ApiEvent<?> event = endpoint.getEvent();
-            event.setApiCall(apiCall);
-
-            if (MainApplication.inDebug()) {
-               Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
-               Log.i("Api", "Request body: " + apiCall.mRequestBody);
-            }
-
-            try {
-               ApiEvent<?> response = getResponse(url, event, apiCall);
-
-               if (!response.hasError()) {
-                  response = parseResult(response, endpoint);
-               }
-
-               if (!response.hasError() && endpoint.mMethod.equals("GET") &&
-                !response.mStoredResponse) {
-                  storeResponse(url, apiCall, response.getResponse());
-               }
-
-               return response;
-            } catch (HttpRequestException e) {
-               if (e.getCause() != null) {
-                  e.getCause().printStackTrace();
-                  Log.e("Api", "IOException from request", e.getCause());
-               } else {
-                  e.printStackTrace();
-                  Log.e("Api", "API error", e);
-               }
-
-               return event.setError(new ApiError(ApiError.Type.PARSE));
-            }
+            return performAndParseApiCall(apiCall);
          }
 
          @Override
@@ -330,6 +300,37 @@ public class Api {
          as.execute();
       } else {
          as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+      }
+   }
+
+   private static ApiEvent<?> performAndParseApiCall(ApiCall apiCall) {
+      ApiEndpoint endpoint = apiCall.mEndpoint;
+      final String url = endpoint.getUrl(apiCall.mSite, apiCall.mQuery);
+      ApiEvent<?> event = endpoint.getEvent();
+      event.setApiCall(apiCall);
+
+      if (MainApplication.inDebug()) {
+         Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
+         Log.i("Api", "Request body: " + apiCall.mRequestBody);
+      }
+
+      try {
+         ApiEvent<?> response = getResponse(url, event, apiCall);
+
+         if (!response.hasError()) {
+            response = parseResult(response, endpoint);
+         }
+
+         if (!response.hasError() && endpoint.mMethod.equals("GET") &&
+          !response.mStoredResponse) {
+            storeResponse(url, apiCall, response.getResponse());
+         }
+
+         return response;
+      } catch (HttpRequestException e) {
+         Log.e("Api", "API error", e);
+
+         return event.setError(new ApiError(ApiError.Type.PARSE));
       }
    }
 
@@ -424,7 +425,7 @@ public class Api {
        * will automatically handle these errors.
        */
       if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
-         String newAuthToken = attemptReauthentication();
+         String newAuthToken = attemptReauthentication(apiCall);
 
          if (newAuthToken != null) {
             // Try again with the new auth token.
@@ -442,15 +443,39 @@ public class Api {
     * Attempts to reauthenticate the user with the stored credentials. Returns
     * a fresh authToken if successful, null otherwise.
     */
-   private static String attemptReauthentication() {
-      // TODO: Implement.
-      return null;
+   private static String attemptReauthentication(ApiCall attemptedApiCall) {
+      Authenticator authenticator = new Authenticator(MainApplication.get());
+      Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);
+      String email = attemptedApiCall.mUser.mEmail;
+      String password = authenticator.getPassword(account);
+
+      ApiCall loginApiCall = ApiCall.login(email, password);
+      loginApiCall.mSite = attemptedApiCall.mSite;
+      ApiEvent<?> result = performAndParseApiCall(loginApiCall);
+
+      if (result.hasError()) {
+         Log.w("Api", "Reauthentication failed");
+         return null;
+      }
+
+      Object resultObject = result.getResult();
+      if (resultObject instanceof User) {
+         User user = (User)resultObject;
+
+         // Don't notify because this is on a different thread and Otto fails.
+         MainApplication.get().login(user, email, password, false);
+
+         return user.getAuthToken();
+      } else {
+         Log.w("Api", "Reauthentication result isn't a User");
+         return null;
+      }
    }
 
    private static String getStoredResponse(String url, ApiCall apiCall) {
       long startTime = System.currentTimeMillis();
 
-      String response = FileCache.get(getCacheKey(url, apiCall.mUser.getUserid()));
+      String response = FileCache.get(getCacheKey(url, apiCall.mUser));
 
       if (MainApplication.inDebug()) {
          long endTime = System.currentTimeMillis();
@@ -463,7 +488,7 @@ public class Api {
    private static void storeResponse(String url, ApiCall apiCall, String response) {
       long startTime = System.currentTimeMillis();
 
-      FileCache.set(getCacheKey(url, apiCall.mUser.getUserid()), response);
+      FileCache.set(getCacheKey(url, apiCall.mUser), response);
 
       if (MainApplication.inDebug()) {
          long endTime = System.currentTimeMillis();
@@ -471,11 +496,11 @@ public class Api {
       }
    }
 
-   private static String getCacheKey(String url, Integer userid) {
+   private static String getCacheKey(String url, User user) {
       String key = "api_responses_" + url;
 
-      if (userid != null) {
-         key += userid;
+      if (user != null) {
+         key += user.getUserid();
       }
 
       return key;

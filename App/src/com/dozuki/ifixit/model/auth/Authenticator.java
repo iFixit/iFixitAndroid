@@ -88,8 +88,38 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
    public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
-      Account account = new Account(userName, ACCOUNT_TYPE);
+      Bundle userData = getUserDataBundle(site, email, userName, userid, authToken);
 
+      Account existingAccount = getAccountForSite(site);
+      if (existingAccount != null) {
+         // TODO: Verify that it's the same account.
+         return updateAccount(existingAccount, password, authToken, userData);
+      }
+
+      Account newAccount = new Account(userName, ACCOUNT_TYPE);
+
+      mAccountManager.addAccountExplicitly(newAccount, password, userData);
+      mAccountManager.setAuthToken(newAccount, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
+
+      return newAccount;
+   }
+
+   private Account updateAccount(Account account, String password, String authToken,
+    Bundle userData) {
+      // Unfortunately you can't set a bundle on an existing account so we
+      // must iterate over the keys and set the data one by one.
+      for (String key : userData.keySet()) {
+         mAccountManager.setUserData(account, key, userData.getString(key));
+      }
+
+      mAccountManager.setPassword(account, password);
+      mAccountManager.setAuthToken(account, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
+
+      return account;
+   }
+
+   private Bundle getUserDataBundle(Site site, String email, String userName, int userid,
+    String authToken) {
       Bundle userData = new Bundle();
       userData.putString(USER_DATA_SITE_NAME, site.mName);
       userData.putString(USER_DATA_EMAIL, email);
@@ -100,10 +130,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
       // necessary but it makes it easier... Decide to remove or not remove it.
       userData.putString(USER_DATA_AUTH_TOKEN, authToken);
 
-      mAccountManager.addAccountExplicitly(account, password, userData);
-      mAccountManager.setAuthToken(account, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
-
-      return account;
+      return userData;
    }
 
    public Account getAccountForSite(Site site) {
@@ -116,6 +143,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
       }
 
       return null;
+   }
+
+   public String getPassword(Account account) {
+      return mAccountManager.getPassword(account);
    }
 
    public User createUser(Account account) {

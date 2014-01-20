@@ -61,7 +61,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       if (!event.hasError()) {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user, getEmail(),
-          getPassword());
+          getPassword(), true);
 
          dismiss();
       } else {

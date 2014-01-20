@@ -336,7 +336,7 @@ public class MainApplication extends Application {
    /**
     * Logs the given user in by writing it to SharedPreferences and setting mUser.
     */
-   public void login(User user, String email, String password) {
+   public void login(User user, String email, String password, boolean notify) {
       mUser = user;
 
       // Set the email because it isn't included in the API response.
@@ -345,7 +345,9 @@ public class MainApplication extends Application {
       mAccount = new Authenticator(this).onAccountAuthenticated(mSite, email,
        user.getUsername(), user.getUserid(), password, user.getAuthToken());
 
-      getBus().post(new LoginEvent.Login(mUser));
+      if (notify) {
+         getBus().post(new LoginEvent.Login(mUser));
+      }
 
       setIsLoggingIn(false);
 

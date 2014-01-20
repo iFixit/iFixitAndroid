@@ -46,7 +46,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
       if (!event.hasError()) {
          User user = event.getResult();
          ((MainApplication)getActivity().getApplication()).login(user, getEmail(),
-          getPassword());
+          getPassword(), true);
 
          dismiss();
       } else {
