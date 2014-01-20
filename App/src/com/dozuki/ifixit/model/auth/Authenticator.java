@@ -91,8 +91,13 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
       Account existingAccount = getAccountForSite(site);
       if (existingAccount != null) {
-         // TODO: Verify that it's the same account.
-         return updateAccount(existingAccount, password, authToken, userData);
+         if (email.equals(mAccountManager.getUserData(existingAccount, USER_DATA_EMAIL))) {
+            return updateAccount(existingAccount, password, authToken, userData);
+         } else {
+            // Remove the existing account because we will make a new one below. We only
+            // allow at most 1 account per site.
+            removeAccount(existingAccount);
+         }
       }
 
       Account newAccount = new Account(userName, ACCOUNT_TYPE);
