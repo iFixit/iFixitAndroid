@@ -367,8 +367,8 @@ public class MainApplication extends Application {
     * Warning: This removes the account from AccountManager which could have very bad
     * consequences for account preferences including sync.
     */
-   public void shallowLogout() {
-      if (mAccount != null) {
+   public void shallowLogout(boolean removeAccount) {
+      if (removeAccount && mAccount != null) {
          new Authenticator(this).removeAccount(mAccount);
       }
 
@@ -387,7 +387,7 @@ public class MainApplication extends Application {
          Api.call(activity, ApiCall.logout(mUser));
       }
 
-      shallowLogout();
+      shallowLogout(true);
 
       getBus().post(new LoginEvent.Logout());
    }

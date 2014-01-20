@@ -18,7 +18,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
    private static final String USER_DATA_SITE_NAME = "USER_DATA_SITE_NAME";
    private static final String USER_DATA_USER_NAME = "USER_DATA_USER_NAME";
    private static final String USER_DATA_USERID = "USER_DATA_USERID";
-   private static final String USER_DATA_AUTH_TOKEN = "USER_DATA_AUTH_TOKEN";
    private static final String USER_DATA_EMAIL = "USER_DATA_EMAIL";
 
    private final Context mContext;
@@ -126,11 +125,11 @@ public class Authenticator extends AbstractAccountAuthenticator {
       userData.putString(USER_DATA_USER_NAME, userName);
       userData.putString(USER_DATA_USERID, "" + userid);
 
-      // TODO: This is already stored in the AccountManager. This isn't strictly
-      // necessary but it makes it easier... Decide to remove or not remove it.
-      userData.putString(USER_DATA_AUTH_TOKEN, authToken);
-
       return userData;
+   }
+
+   public void invalidateAuthToken(String authToken) {
+      mAccountManager.invalidateAuthToken(AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
    }
 
    public Account getAccountForSite(Site site) {
@@ -152,7 +151,8 @@ public class Authenticator extends AbstractAccountAuthenticator {
    public User createUser(Account account) {
       User user = new User();
 
-      user.setAuthToken(mAccountManager.getUserData(account, USER_DATA_AUTH_TOKEN));
+      user.setAuthToken(mAccountManager.peekAuthToken(account,
+       AUTH_TOKEN_TYPE_FULL_ACCESS));
       user.setUsername(mAccountManager.getUserData(account, USER_DATA_USER_NAME));
       user.setUserid(Integer.parseInt(mAccountManager.getUserData(account, USER_DATA_USERID)));
       user.mEmail = mAccountManager.getUserData(account, USER_DATA_EMAIL);

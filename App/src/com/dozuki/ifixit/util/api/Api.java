@@ -108,7 +108,9 @@ public class Api {
       sPendingApiCall = apiCall;
 
       // We aren't logged in anymore so lets make sure we don't think we are.
-      MainApplication.get().shallowLogout();
+      // Note: This does _not_ remove the account from the AccountManager. The
+      // user still has a chance to reauthenticate and salvage the account.
+      MainApplication.get().shallowLogout(false);
 
       // The ApiError doesn't matter as long as one exists.
       return new ApiEvent.Unauthorized().
@@ -425,7 +427,18 @@ public class Api {
        * will automatically handle these errors.
        */
       if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
-         String newAuthToken = attemptReauthentication(apiCall);
+         String newAuthToken = null;
+
+         // If mAuthToken is null that means that this is resulting from reauthenticating
+         // in which case the user's password has expired. Fall through to presenting
+         // a login dialog so the user can reenter credentials. Upon success, the account
+         // will be updated. If the user doesn't sign in then it will eventually be
+         // removed.
+         // TODO: Eventually remove the account if there is one with an invalid auth token.
+         // Or maybe it's fine to leave it as long as we don't use it. Hmm...
+         if (apiCall.mAuthToken != null) {
+            newAuthToken = attemptReauthentication(apiCall);
+         }
 
          if (newAuthToken != null) {
             // Try again with the new auth token.
@@ -446,6 +459,7 @@ public class Api {
    private static String attemptReauthentication(ApiCall attemptedApiCall) {
       Authenticator authenticator = new Authenticator(MainApplication.get());
       Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);
+      authenticator.invalidateAuthToken(attemptedApiCall.mAuthToken);
       String email = attemptedApiCall.mUser.mEmail;
       String password = authenticator.getPassword(account);
 
