@@ -22,11 +22,13 @@ public class Authenticator extends AbstractAccountAuthenticator {
    private static final String USER_DATA_EMAIL = "USER_DATA_EMAIL";
 
    private final Context mContext;
+   private final AccountManager mAccountManager;
 
    public Authenticator(Context context) {
       super(context);
 
       mContext = context;
+      mAccountManager = AccountManager.get(mContext);
    }
 
    @Override
@@ -48,12 +50,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
          return null;
       }
 
-      AccountManager accountManager = AccountManager.get(mContext);
-
-      String authToken = accountManager.peekAuthToken(account, authTokenType);
+      String authToken = mAccountManager.peekAuthToken(account, authTokenType);
 
       if (authToken == null) {
-         String password = accountManager.getPassword(account);
+         String password = mAccountManager.getPassword(account);
          if (password != null) {
             // Retry authentication.
          }
@@ -88,7 +88,6 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
    public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
-      AccountManager accountManager = AccountManager.get(mContext);
       Account account = new Account(userName, ACCOUNT_TYPE);
 
       Bundle userData = new Bundle();
@@ -101,18 +100,17 @@ public class Authenticator extends AbstractAccountAuthenticator {
       // necessary but it makes it easier... Decide to remove or not remove it.
       userData.putString(USER_DATA_AUTH_TOKEN, authToken);
 
-      accountManager.addAccountExplicitly(account, password, userData);
-      accountManager.setAuthToken(account, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
+      mAccountManager.addAccountExplicitly(account, password, userData);
+      mAccountManager.setAuthToken(account, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
 
       return account;
    }
 
    public Account getAccountForSite(Site site) {
-      AccountManager accountManager = AccountManager.get(mContext);
       String siteName = site.mName;
 
-      for (Account account : accountManager.getAccountsByType(ACCOUNT_TYPE)) {
-         if (accountManager.getUserData(account, USER_DATA_SITE_NAME).equals(siteName)) {
+      for (Account account : mAccountManager.getAccountsByType(ACCOUNT_TYPE)) {
+         if (mAccountManager.getUserData(account, USER_DATA_SITE_NAME).equals(siteName)) {
             return account;
          }
       }
@@ -121,19 +119,18 @@ public class Authenticator extends AbstractAccountAuthenticator {
    }
 
    public User createUser(Account account) {
-      AccountManager accountManager = AccountManager.get(mContext);
       User user = new User();
 
-      user.setAuthToken(accountManager.getUserData(account, USER_DATA_AUTH_TOKEN));
-      user.setUsername(accountManager.getUserData(account, USER_DATA_USER_NAME));
-      user.setUserid(Integer.parseInt(accountManager.getUserData(account, USER_DATA_USERID)));
-      user.mEmail = accountManager.getUserData(account, USER_DATA_EMAIL);
+      user.setAuthToken(mAccountManager.getUserData(account, USER_DATA_AUTH_TOKEN));
+      user.setUsername(mAccountManager.getUserData(account, USER_DATA_USER_NAME));
+      user.setUserid(Integer.parseInt(mAccountManager.getUserData(account, USER_DATA_USERID)));
+      user.mEmail = mAccountManager.getUserData(account, USER_DATA_EMAIL);
 
       return user;
    }
 
    public void removeAccount(Account account) {
-      AccountManager.get(mContext).removeAccount(account, null, null);
+      mAccountManager.removeAccount(account, null, null);
    }
 
    @Override
