@@ -339,6 +339,9 @@ public class MainApplication extends Application {
    public void login(User user, String email, String password) {
       mUser = user;
 
+      // Set the email because it isn't included in the API response.
+      mUser.mEmail = email;
+
       mAccount = new Authenticator(this).onAccountAuthenticated(mSite, email,
        user.getUsername(), user.getUserid(), password, user.getAuthToken());
 
