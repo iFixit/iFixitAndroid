@@ -104,8 +104,15 @@ public class Authenticator extends AbstractAccountAuthenticator {
    public User createUser(Account account) {
       User user = new User();
 
-      user.setAuthToken(mAccountManager.peekAuthToken(account,
-       AUTH_TOKEN_TYPE_FULL_ACCESS));
+      /**
+       * The auth token will be invalidated if the user's auth token expired and
+       * the stored credentials could not successfully reauthenticate. In this case
+       * we pretend that the user is still signed in with a valid account. The
+       * next request that requires authentication will trigger the login dialog.
+       */
+      String authToken = mAccountManager.peekAuthToken(account, AUTH_TOKEN_TYPE_FULL_ACCESS);
+      user.setAuthToken(authToken == null ? "invalid" : authToken);
+
       user.setUsername(mAccountManager.getUserData(account, USER_DATA_USER_NAME));
       user.setUserid(Integer.parseInt(mAccountManager.getUserData(account, USER_DATA_USERID)));
       user.mEmail = mAccountManager.getUserData(account, USER_DATA_EMAIL);

@@ -434,8 +434,6 @@ public class Api {
          // a login dialog so the user can reenter credentials. Upon success, the account
          // will be updated. If the user doesn't sign in then it will eventually be
          // removed.
-         // TODO: Eventually remove the account if there is one with an invalid auth token.
-         // Or maybe it's fine to leave it as long as we don't use it. Hmm...
          if (apiCall.mAuthToken != null) {
             newAuthToken = attemptReauthentication(apiCall);
          }
