@@ -293,6 +293,7 @@ public class MainApplication extends Application {
    private void setupLoggedInUser(Site site) {
       Authenticator authenticator = new Authenticator(this);
       mAccount = authenticator.getAccountForSite(site);
+      mUser = null;
 
       if (mAccount != null) {
          mUser = authenticator.createUser(mAccount);
