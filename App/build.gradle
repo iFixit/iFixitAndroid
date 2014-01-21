@@ -64,7 +64,7 @@ android {
       }
 
       release {
-         buildConfigField "String", "DEV_SERVER", ""
+         buildConfigField "String", "DEV_SERVER", '""'
 
          runProguard true
          proguardFile 'proguard.cfg'
