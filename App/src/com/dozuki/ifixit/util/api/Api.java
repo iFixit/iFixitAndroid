@@ -76,8 +76,10 @@ public class Api {
       User user = MainApplication.get().getUser();
       apiCall.mUser = user;
 
-      // TODO: We might not have to do this... investigate.
       if (apiCall.mAuthToken == null && user != null) {
+         // Set the auth token to the current user's auth token if one isn't
+         // explicitly set. Originally added for logout and user info because a
+         // user isn't associated with the auth token when the API call is performed.
          apiCall.mAuthToken = user.getAuthToken();
       }
 
