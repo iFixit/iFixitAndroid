@@ -5,10 +5,16 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.net.Uri;
 
+import com.dozuki.ifixit.BuildConfig;
+
 /**
  * Currently just a stub so we can use the sync adapter framework.
  */
 public class ApiContentProvider extends ContentProvider {
+   public static String getAuthority() {
+      return "com.dozuki." + BuildConfig.SITE_NAME + ".provider";
+   }
+
    @Override
    public boolean onCreate() {
       // Always return to to indicate that it loaded correctly.

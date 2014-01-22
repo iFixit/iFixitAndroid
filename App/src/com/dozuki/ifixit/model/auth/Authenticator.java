@@ -12,6 +12,7 @@ import android.util.Log;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.util.api.ApiContentProvider;
 
 /**
  * This is the authenticator for accounts associated with this particular app.
@@ -73,6 +74,10 @@ public class Authenticator extends AbstractAccountAuthenticator {
 
       mAccountManager.addAccountExplicitly(newAccount, password, userData);
       mAccountManager.setAuthToken(newAccount, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
+
+      // By default, automatically sync user's data.
+      mContext.getContentResolver().setSyncAutomatically(newAccount,
+       ApiContentProvider.getAuthority(), true);
 
       return newAccount;
    }
