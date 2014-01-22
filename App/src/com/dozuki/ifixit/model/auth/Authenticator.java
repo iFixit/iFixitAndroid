@@ -13,6 +13,20 @@ import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
 
+/**
+ * This is the authenticator for accounts associated with this particular app.
+ * Accounts are not shared between white-labelled apps e.g. iFixit vs. Dozuki.
+ * Many of the "important" methods aren't implemented because they are only used
+ * when sharing accounts between apps and retrieving auth tokens in a consistent
+ * manner. Since we already had all of this functionality, the main benefit of
+ * using the AccountManager system is for background syncing. The SyncService
+ * API requires an Account so it makes sense to store all of the relevant user
+ * data (email, auth token, userid, etc.) in this system rather than in
+ * SharedPreferences.
+ *
+ * This class also has lots of helper methods for interacting with
+ * AccountManager so our application doesn't need to use it directly.
+ */
 public class Authenticator extends AbstractAccountAuthenticator {
    public static final String AUTH_TOKEN_TYPE_FULL_ACCESS = "Full access";
    private static final String USER_DATA_SITE_NAME = "USER_DATA_SITE_NAME";
@@ -34,6 +48,12 @@ public class Authenticator extends AbstractAccountAuthenticator {
       return "com.dozuki." + BuildConfig.SITE_NAME;
    }
 
+   /**
+    * Call whenever an account has been authenticated so it can be added to the
+    * AccountManager with all of the expected fields. Removes any accounts that
+    * are associated with the same site and updates the account if we suspect
+    * it's the same user.
+    */
    public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
       Bundle userData = getUserDataBundle(site, email, userName, userid);
@@ -101,6 +121,9 @@ public class Authenticator extends AbstractAccountAuthenticator {
       return mAccountManager.getPassword(account);
    }
 
+   /**
+    * Factory method for creating a User from an Account.
+    */
    public User createUser(Account account) {
       User user = new User();
 
