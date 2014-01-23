@@ -144,6 +144,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
       user.setUsername(mAccountManager.getUserData(account, USER_DATA_USER_NAME));
       user.setUserid(Integer.parseInt(mAccountManager.getUserData(account, USER_DATA_USERID)));
       user.mEmail = mAccountManager.getUserData(account, USER_DATA_EMAIL);
+      user.mSiteName = mAccountManager.getUserData(account, USER_DATA_SITE_NAME);
 
       return user;
    }

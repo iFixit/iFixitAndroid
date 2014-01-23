@@ -307,7 +307,7 @@ public class Api {
       }
    }
 
-   private static ApiEvent<?> performAndParseApiCall(ApiCall apiCall) {
+   protected static ApiEvent<?> performAndParseApiCall(ApiCall apiCall) {
       ApiEndpoint endpoint = apiCall.mEndpoint;
       final String url = endpoint.getUrl(apiCall.mSite, apiCall.mQuery);
       ApiEvent<?> event = endpoint.getEvent();
