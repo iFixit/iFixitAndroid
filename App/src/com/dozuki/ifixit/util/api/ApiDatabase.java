@@ -17,6 +17,7 @@ import org.json.JSONException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * WARNING: Not currently used. There are plans of using it for storing offline
@@ -142,6 +143,37 @@ public class ApiDatabase extends SQLiteOpenHelper {
       cursor.close();
 
       return modifiedDates;
+   }
+
+   public void deleteGuides(Site site, User user, Set<Integer> guideids) {
+      if (guideids.isEmpty()) {
+         return;
+      }
+
+      StringBuilder where = new StringBuilder(
+       KEY_SITE_NAME + " = ? AND " +
+       KEY_USERID + " = ? AND " +
+       KEY_GUIDEID + " IN (");
+      final int NUM_NON_GUIDE_PARAMS = 2;
+      int i = NUM_NON_GUIDE_PARAMS;
+      String[] params = new String[guideids.size() + NUM_NON_GUIDE_PARAMS];
+
+      params[0] = site.mName;
+      params[1] = user.getUserid() + "";
+
+      for (Integer guideid : guideids) {
+         params[i] = guideid.toString();
+         where.append("?,");
+         i++;
+      }
+      where.deleteCharAt(where.length() - 1); // Delete trailing comma.
+      where.append(")");
+
+      getWritableDatabase().delete(
+       TABLE_OFFLINE_GUIDES,
+       where.toString(),
+       params
+      );
    }
 
    public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent) {

@@ -75,22 +75,14 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          ApiCall apiCall = ApiCall.userFavorites(10000, 0);
          ApiEvent.UserFavorites favorites = performApiCall(apiCall, ApiEvent.UserFavorites.class);
 
-         deleteUnfavoritedGuides(favorites.getResult());
          ArrayList<GuideInfo> staleGuides = getStaleGuides(favorites.getResult());
          ArrayList<Guide> updatedGuides = updateGuides(staleGuides);
          downloadMissingImages(updatedGuides);
       }
 
       /**
-       * Deletes any guides that are currently stored offline due to being favorited
-       * but are no longer favorited now.
-       */
-      private void deleteUnfavoritedGuides(ArrayList<GuideInfo> favorites) {
-         // TODO: The thing.
-      }
-
-      /**
        * Returns all guides that need syncing due to being brand new or having changes.
+       * This also deletes all of the user's offline guides that are no longer favorited.
        */
       private ArrayList<GuideInfo> getStaleGuides(ArrayList<GuideInfo> favorites) {
          // TODO: Get guide info from manually added offline guides (those not coming
@@ -101,11 +93,15 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          for (GuideInfo guide : favorites) {
             Double modifiedDate = modifiedDates.get(guide.mGuideid);
+            modifiedDates.remove(guide.mGuideid);
 
             if (hasNewerModifiedDate(modifiedDate, guide.getAbsoluteModifiedDate())) {
                staleGuides.add(guide);
             }
          }
+
+         // Delete any guides that are currently in the DB but are no longer favorited.
+         mDb.deleteGuides(mSite, mUser, modifiedDates.keySet());
 
          return staleGuides;
       }
