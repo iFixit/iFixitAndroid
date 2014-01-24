@@ -59,6 +59,7 @@
             android:id="@+id/edit_comment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:visibility="gone"
             android:orientation="vertical"
             android:weightSum="10">
 
@@ -71,7 +72,7 @@
             <Button
                 android:id="@+id/add_comment_button"
                 android:layout_width="wrap_content"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:text="@string/save"
                 style="@style/Base.Button"/>
 
@@ -87,15 +88,6 @@
         android:layout_marginBottom="12dp"
         android:layout_marginLeft="24dp"
         android:orientation="vertical"
-        android:visibility="gone"/>
-
-    <include
-        layout="@layout/comment_input"
-        android:id="@+id/add_reply_container"
-        android:layout_below="@+id/comment_replies"
-        android:layout_alignParentBottom="true"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:visibility="gone"/>
 
 </RelativeLayout>

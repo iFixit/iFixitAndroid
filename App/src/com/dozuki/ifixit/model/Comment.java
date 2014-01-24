@@ -14,7 +14,8 @@ public class Comment implements Serializable {
    private static final long serialVersionUID = -1333520488223961692L;
 
    private static final int NO_PARENT_ID = -1;
-   private boolean mIsReplying = false;
+   public int mContextid;
+   public boolean mIsReplying = false;
    public String mCommentSource;
    public int mCommentid;
    public String mLocale;
@@ -33,6 +34,10 @@ public class Comment implements Serializable {
 
    public Comment() { }
 
+   public Comment(String json) throws JSONException {
+      this(new JSONObject(json));
+   }
+
    public Comment(JSONObject object) throws JSONException {
       mCommentSource = object.toString(4);
       mCommentid = object.getInt("commentid");
@@ -41,6 +46,7 @@ public class Comment implements Serializable {
       mUser = JSONHelper.parseUserLight(object.getJSONObject("author"));
       mTitle = object.getString("title");
       mContext = object.getString("context");
+      mContextid = object.getInt("contextid");
       mTextRaw = object.getString("text_raw");
       mTextRendered = object.getString("text_rendered");
       mRating = object.getInt("rating");
@@ -58,6 +64,10 @@ public class Comment implements Serializable {
             mReplies.add(new Comment(replies.getJSONObject(i)));
          }
       }
+   }
+
+   public boolean isReply() {
+      return mParentid != NO_PARENT_ID;
    }
 
    public boolean isReplying() {

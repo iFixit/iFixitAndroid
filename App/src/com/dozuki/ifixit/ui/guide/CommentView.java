@@ -33,6 +33,7 @@ public class CommentView extends RelativeLayout {
     private static final int DELETE_OPTION = 2;
    private RelativeLayout mContainer;
    private Context mContext;
+   private int mPosition;
 
    public CommentView(Context context) {
        super(context);
@@ -53,13 +54,6 @@ public class CommentView extends RelativeLayout {
 
        if (reply) {
           mContainer.setBackgroundResource(R.color.subtle_gray);
-
-          // Can't reply to replies, so remove the form
-          mContainer.removeView(findViewById(R.id.add_reply_container));
-       }
-
-       if (comment.isReplying()) {
-          toggleReplyForm(true);
        }
 
        SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy");
@@ -157,6 +151,7 @@ public class CommentView extends RelativeLayout {
     private void editComment(Comment comment) {
        ViewSwitcher switcher = (ViewSwitcher) findViewById(R.id.edit_comment_switcher);
        switcher.showNext();
+       findViewById(R.id.edit_comment_container).setVisibility(View.VISIBLE);
        ((EditText) findViewById(R.id.edit_comment_text)).setText(comment.mTextRaw);
 
        // MainApplication.getBus().post(new CommentEditEvent(comment));
@@ -166,19 +161,11 @@ public class CommentView extends RelativeLayout {
        MainApplication.getBus().post(new CommentDeleteEvent(comment));
     }
 
-    private void replyToComment(final Comment parent) {
-       toggleReplyForm(true);
-
-       findViewById(R.id.add_comment_button).setOnClickListener(new OnClickListener() {
-          @Override
-          public void onClick(View v) {
-             String text = ((TextView) findViewById(R.id.add_comment_field)).getText().toString();
-             MainApplication.getBus().post(new CommentReplyEvent(text, parent));
-          }
-       });
+    private void replyToComment(Comment parent) {
+       MainApplication.getBus().post(new CommentReplyingEvent(parent));
     }
 
-   private void toggleReplyForm(boolean show) {
-      findViewById(R.id.add_reply_container).setVisibility(show ? View.VISIBLE : View.GONE);
+   public void setPosition(int position) {
+      mPosition = position;
    }
  }

@@ -2,5 +2,6 @@
 <resources>
 
     <item name="guide_step_view_video_url" type="id"/>
+    <item name="comment_parent_id" type="id"/>
 
 </resources>

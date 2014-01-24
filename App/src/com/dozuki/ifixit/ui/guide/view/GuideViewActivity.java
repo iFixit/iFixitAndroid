@@ -51,7 +51,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
-   private static final String COMMENTS_TAG = "COMMENTS_TAG";
+   public static final String COMMENTS_TAG = "COMMENTS_TAG";
+   private static final int COMMENT_REQUEST = 0;
 
    private int mGuideid;
    private Guide mGuide;
@@ -231,13 +232,27 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                   title = getString(R.string.step_number_comments, stepIndex + 1);
                }
 
-               startActivity(CommentsActivity.viewComments(getApplicationContext(), comments, title, guideid, stepid));
+               startActivityForResult(CommentsActivity.viewComments(getApplicationContext(), comments, title, guideid,
+                stepid), COMMENT_REQUEST);
             }
          }
       });
 
       return super.onCreateOptionsMenu(menu);
    }
+
+   @Override
+   protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+      if (requestCode == COMMENT_REQUEST && resultCode == RESULT_OK) {
+         Bundle extras = data.getExtras();
+         if (extras != null) {
+            ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
+            mGuide.setComments(comments);
+            updateCommentCounts();
+         }
+      }
+   }
+
 
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
@@ -435,7 +450,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mIndicator.setCurrentItem(currentPage);
 
       // Update the comment count
-      supportInvalidateOptionsMenu();
+      updateCommentCounts();
    }
 
    public void getGuide(int guideid) {
@@ -525,5 +540,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (container != null) {
          container.setVisibility(View.GONE);
       }
+   }
+
+   // Update the comment count in the action bar
+   private void updateCommentCounts() {
+      supportInvalidateOptionsMenu();
    }
 }

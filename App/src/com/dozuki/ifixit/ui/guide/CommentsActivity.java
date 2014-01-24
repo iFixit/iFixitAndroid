@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.guide;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -8,17 +9,19 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
-import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class CommentsActivity extends BaseActivity {
 
@@ -33,6 +36,8 @@ public class CommentsActivity extends BaseActivity {
    private CommentsAdapter mAdapter;
    private CommentsActivity mActivity;
    private ListView mCommentsList;
+   private EditText mAddCommentField;
+   private Comment mCommentToDelete = null;
 
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title, int guideid,
     int stepid) {
@@ -75,16 +80,25 @@ public class CommentsActivity extends BaseActivity {
          title = getString(R.string.comments);
       }
 
-      final EditText editText = (EditText) findViewById(R.id.add_comment_field);
+      mAddCommentField = (EditText) findViewById(R.id.add_comment_field);
 
       ImageButton addComment = (ImageButton) findViewById(R.id.add_comment_button);
       addComment.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-            String commentText = String.valueOf(editText.getText());
+            mAddCommentField.setEnabled(false);
+            String commentText = String.valueOf(mAddCommentField.getText());
+            String commentContext = mStepid == -1 ? "guide" : "step";
+            int commentContextid = mStepid == -1 ? mGuideid : mStepid;
+            Object parentid = mAddCommentField.getTag(R.id.comment_parent_id);
 
             if (commentText.length() > 0) {
-               Api.call(mActivity, ApiCall.postNewGuideComment(commentText, mGuideid, mStepid));
+               if (parentid != null) {
+                  Api.call(mActivity, ApiCall.newComment(commentText, commentContext, commentContextid,
+                   (Integer)parentid));
+               } else {
+                  Api.call(mActivity, ApiCall.newComment(commentText, commentContext, commentContextid));
+               }
             }
          }
       });
@@ -113,6 +127,13 @@ public class CommentsActivity extends BaseActivity {
       switch (item.getItemId()) {
          // Respond to the action bar's Up/Home button
          case android.R.id.home:
+            Intent data = new Intent();
+            data.putExtra(GuideViewActivity.COMMENTS_TAG, mComments);
+            if (getParent() == null) {
+               setResult(Activity.RESULT_OK, data);
+            } else {
+               getParent().setResult(Activity.RESULT_OK, data);
+            }
             finish();
             return true;
          default:
@@ -121,29 +142,83 @@ public class CommentsActivity extends BaseActivity {
    }
 
    @Subscribe
-   public void onCommentAdd(ApiEvent.AddComment event) {
+   public void onCommentDelete(CommentDeleteEvent event) {
+      mCommentToDelete = event.comment;
+      Api.call(mActivity, ApiCall.deleteComment(event.comment.mCommentid));
+   }
+
+   @Subscribe
+   public void onCommentDeleted(ApiEvent.DeleteComment event) {
       if (!event.hasError()) {
-         Guide guide = event.getResult();
-         mComments.clear();
-         if (mStepid == -1) {
-            mComments.addAll(guide.getComments());
-         } else {
-            mComments.addAll(guide.getStepById(mStepid).getComments());
+         for (Iterator<Comment> it = mComments.iterator(); it.hasNext();) {
+            Comment comment = it.next();
+            if (comment.mCommentid == mCommentToDelete.mCommentid) {
+               it.remove();
+               break;
+            } else {
+               for (Iterator<Comment> rit = comment.mReplies.iterator(); rit.hasNext();) {
+                  Comment reply = rit.next();
+                  if (reply.mCommentid == mCommentToDelete.mCommentid) {
+                     rit.remove();
+                     break;
+                  }
+               }
+            }
          }
 
          mAdapter.setComments(mComments);
          mAdapter.notifyDataSetChanged();
-         scrollCommentsToBottom();
       } else {
-
+         Toast.makeText(getBaseContext(), R.string.error_deleting_comment, Toast.LENGTH_SHORT).show();
       }
+
+      mCommentToDelete = null;
    }
 
-   private void scrollCommentsToBottom() {
+   @Subscribe
+   public void onCommentReplying(CommentReplyingEvent event) {
+      mAddCommentField.setHint(R.string.add_reply);
+      mAddCommentField.requestFocus();
+      mAddCommentField.setTag(R.id.comment_parent_id, event.parent.mCommentid);
+   }
+
+   @Subscribe
+   public void onCommentAdd(ApiEvent.AddComment event) {
+      if (!event.hasError()) {
+         int position = 0;
+         Comment comment = event.getResult();
+         if (comment.isReply()) {
+            for (Comment c : mComments) {
+               if (c.mCommentid == comment.mParentid) {
+                  c.mReplies.add(c.mReplies.size(), comment);
+                  break;
+               }
+
+               position++;
+            }
+         } else {
+            mComments.add(mComments.size(), comment);
+            position = mComments.size();
+         }
+
+         mAdapter.setComments(mComments);
+         mAdapter.notifyDataSetChanged();
+         scrollCommentsToPosition(position);
+         mAddCommentField.setText("");
+         mAddCommentField.setHint(R.string.add_comment);
+         mAddCommentField.setTag(R.id.comment_parent_id, null);
+      } else {
+         Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
+      }
+
+      mAddCommentField.setEnabled(true);
+   }
+
+   private void scrollCommentsToPosition(final int position) {
       new Handler().post(new Runnable() {
          @Override
          public void run() {
-            mCommentsList.setSelection(mAdapter.getCount() - 1);
+            mCommentsList.setSelection(position);
          }
       });
    }

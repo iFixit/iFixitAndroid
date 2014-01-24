@@ -284,6 +284,8 @@
     <string name="by_on_comment_details">%1$s on %2$s</string>
     <string name="add_comment">Add comment...</string>
     <string name="reply">Reply</string>
+    <string name="add_reply">Add reply...</string>
+    <string name="error_deleting_comment">Error deleting comment, try again.</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>

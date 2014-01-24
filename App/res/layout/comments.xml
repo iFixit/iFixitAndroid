@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
     <FrameLayout
         android:layout_width="match_parent"
@@ -28,11 +28,30 @@
             android:layout_gravity="center_vertical|center_horizontal"/>
     </FrameLayout>
 
-    <include
-        layout="@layout/comment_input"
-        android:id="@+id/add_comment_wrap"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"/>
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/top_border_bg"
+        android:weightSum="10">
+
+        <EditText
+            android:id="@+id/add_comment_field"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:inputType="text|textCapSentences|textMultiLine|textAutoComplete"
+            android:layout_weight="8"
+            android:hint="@string/add_comment"/>
+
+        <ImageButton
+            android:id="@+id/add_comment_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:src="@drawable/ic_action_send"
+            android:background="@drawable/selectable_item_background_transparent"/>
+    </LinearLayout>
 
 </RelativeLayout>

@@ -47,6 +47,7 @@ public class CommentsAdapter extends BaseAdapter {
       Comment comment = getItem(position);
 
       v.buildView(comment);
+      v.setPosition(position);
 
       LinearLayout replyContainer = (LinearLayout) v.findViewById(R.id.comment_replies);
 

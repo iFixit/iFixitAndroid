@@ -345,29 +345,29 @@ public class ApiCall implements Serializable {
       return new ApiCall(ApiEndpoint.SITE_INFO, NO_QUERY);
    }
 
-   public static ApiCall postNewGuideComment(String comment, int guideid, int stepid) {
-      JSONObject requestBody = new JSONObject();
-      String query = guideid + "/";
-      if (stepid != -1) {
-         query += "steps/" + stepid + "/";
-      }
+   public static ApiCall newComment(String comment, String context, int contextid) {
+      return newComment(comment, context, contextid, -1);
+   }
 
-      query +=  "comments";
+   public static ApiCall newComment(String comment, String context, int contextid, int parentid) {
+      JSONObject requestBody = new JSONObject();
+      String query = "/" + context + "/" + contextid;
 
       try {
          requestBody.put("text", comment);
+
+         if (parentid != -1) {
+            requestBody.put("parentid", parentid);
+         }
+
       } catch (JSONException e) {
          e.printStackTrace();
       }
 
-      return new ApiCall(ApiEndpoint.ADD_GUIDE_COMMENT, query, requestBody.toString());
+      return new ApiCall(ApiEndpoint.ADD_COMMENT, query, requestBody.toString());
    }
 
-   public static ApiCall deleteGuideComment(int guideid, int commentid) {
-      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + guideid + "/comments/" + commentid);
-   }
-
-   public static ApiCall deleteStepComment(int guideid, int stepid, int commentid) {
-      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + guideid + "/steps/" + stepid + "/comments/" + commentid);
+   public static ApiCall deleteComment(int commentid) {
+      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + commentid);
    }
 }

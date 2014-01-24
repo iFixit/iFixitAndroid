@@ -268,6 +268,12 @@ public class Guide implements Serializable {
    }
 
    public int getCommentCount() {
-      return mComments.size();
+      int count = mComments.size();
+
+      for (Comment comment : mComments) {
+         count += comment.mReplies.size();
+      }
+
+      return count;
    }
 }

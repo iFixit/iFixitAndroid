@@ -1,9 +1,9 @@
 package com.dozuki.ifixit.util.api;
 
 import android.util.Log;
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.util.JSONHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -86,14 +86,14 @@ public enum ApiEndpoint {
       "GET"
    ),
 
-   ADD_GUIDE_COMMENT(
+   ADD_COMMENT(
     new Endpoint() {
        public String createUrl(String query) {
-          return "guides/" + query;
+          return "comments" + query;
        }
 
        public ApiEvent<?> parse(String json) throws JSONException {
-          return new ApiEvent.AddComment().setResult(JSONHelper.parseGuide(json));
+          return new ApiEvent.AddComment().setResult(new Comment(json));
        }
 
        public ApiEvent<?> getEvent() {
@@ -104,14 +104,14 @@ public enum ApiEndpoint {
     "POST"
    ),
 
-   EDIT_GUIDE_COMMENT(
+   EDIT_COMMENT(
     new Endpoint() {
        public String createUrl(String query) {
-          return "guides/" + query;
+          return "comments" + query;
        }
 
        public ApiEvent<?> parse(String json) throws JSONException {
-          return new ApiEvent.EditComment().setResult(JSONHelper.parseGuide(json));
+          return new ApiEvent.EditComment().setResult(new Comment(json));
        }
 
        public ApiEvent<?> getEvent() {
@@ -125,7 +125,7 @@ public enum ApiEndpoint {
    DELETE_COMMENT(
     new Endpoint() {
        public String createUrl(String query) {
-          return "guides/" + query;
+          return "comments" + query;
        }
 
        public ApiEvent<?> parse(String json) throws JSONException {
@@ -139,7 +139,6 @@ public enum ApiEndpoint {
     true,
     "DELETE"
    ),
-
 
    TOPIC(
       new Endpoint() {
