@@ -203,6 +203,8 @@ public class JSONHelper {
       guide.setType(jGuide.getString("type"));
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
       guide.setFavorited(jGuide.getBoolean("favorited"));
+      guide.setModifiedDate(jGuide.getDouble("modified_date"));
+      guide.setPrereqModifiedDate(jGuide.getDouble("prereq_modified_date"));
 
       if (jGuide.has("can_edit")) {
          guide.setCanEdit(jGuide.getBoolean("can_edit"));

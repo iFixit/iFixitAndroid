@@ -16,6 +16,7 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.user.User;
 
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
@@ -56,10 +57,12 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static class OfflineGuideSyncer {
       private final Site mSite;
       private final User mUser;
+      private final ApiDatabase mDb;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
          mUser = user;
+         mDb = ApiDatabase.get(MainApplication.get());
       }
 
       /**
@@ -92,10 +95,30 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private ArrayList<GuideInfo> getStaleGuides(ArrayList<GuideInfo> favorites) {
          // TODO: Get guide info from manually added offline guides (those not coming
          // from favorites) and merge it with the favorite guides.
-         // TODO: Compare this list with the stored guides to return only new and
-         // modified guides.
 
-         return favorites;
+         Map<Integer, Double> modifiedDates = mDb.getGuideModifiedDates(mSite, mUser);
+         ArrayList<GuideInfo> staleGuides = new ArrayList<GuideInfo>();
+
+         for (GuideInfo guide : favorites) {
+            Double modifiedDate = modifiedDates.get(guide.mGuideid);
+
+            if (hasNewerModifiedDate(modifiedDate, guide.getAbsoluteModifiedDate())) {
+               staleGuides.add(guide);
+            }
+         }
+
+         return staleGuides;
+      }
+
+      private static boolean hasNewerModifiedDate(Double existing, double updated) {
+         // Double precision for such large values is pretty finicky... Realistically
+         // a difference of a second in modified time isn't going to cause any problems.
+         final double MAX_DATE_DISCREPANCY = 1.0;
+         if (existing == null) {
+            return true;
+         }
+
+         return (updated - existing) > MAX_DATE_DISCREPANCY;
       }
 
       /**
@@ -109,7 +132,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             ApiEvent.ViewGuide fullGuide = performApiCall(ApiCall.guide(staleGuide.mGuideid),
              ApiEvent.ViewGuide.class);
 
-            // TODO: Store the guide.
+            mDb.saveGuide(mSite, mUser, fullGuide);
 
             guides.add(fullGuide.getResult());
          }
@@ -129,6 +152,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Wrapper for Api.performAndParseApiCall() that throws an ApiSyncException on errors
        * and ensures type safety.
+       *
+       * TODO: Add retries.
+       * TODO: 404's shouldn't cause the sync to fail -- it should remove the data if
+       * it doesn't exist on the backend anymore.
        */
       private <T> T performApiCall(ApiCall apiCall, Class<T> type) {
          apiCall.updateUser(mUser);
@@ -136,6 +163,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          ApiEvent<?> result = Api.performAndParseApiCall(apiCall);
 
+         // TODO: Fail if it's a stored response i.e. we don't have internet.
          if (!result.hasError() && type.isInstance(result)) {
             return (T)result;
          } else {

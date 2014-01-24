@@ -5,8 +5,18 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
-import java.lang.UnsupportedOperationException;
+import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.util.JSONHelper;
+
+import org.json.JSONException;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * WARNING: Not currently used. There are plans of using it for storing offline
@@ -19,14 +29,11 @@ public class ApiDatabase extends SQLiteOpenHelper {
    private static ApiDatabase sDatabase;
 
    public static ApiDatabase get(Context context) {
-      throw new UnsupportedOperationException("ApiDatabase is not ready!");
-      /*
       if (sDatabase == null) {
          sDatabase = new ApiDatabase(context.getApplicationContext());
       }
 
       return sDatabase;
-      */
    }
 
    private ApiDatabase(Context context) {
@@ -40,7 +47,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
    @Override
    public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-      db.execSQL("DROP TABLE IF EXISTS " + TABLE_API_RESULTS);
+      db.execSQL("DROP TABLE IF EXISTS " + TABLE_OFFLINE_GUIDES);
 
       // Create tables again.
       // TODO: This isn't a viable solution when the DB is upgraded.
@@ -48,70 +55,107 @@ public class ApiDatabase extends SQLiteOpenHelper {
    }
 
    /**
-    * Stores API responses for GET requests. Userid and URL are unique enough
-    * to uniquely identify requests because the site is included in the URL,
-    * every request method is `GET`, and all the request headers are the same.
+    * Stores the JSON for guides stored offline.
     */
-   private static final String TABLE_API_RESULTS = "api_results";
+   private static final String TABLE_OFFLINE_GUIDES = "offline_guides";
    private static final String KEY_ID = "_id";
+   private static final String KEY_SITE_NAME = "site_name";
    private static final String KEY_USERID = "userid";
-   private static final String KEY_URL = "url";
-   private static final String KEY_RESPONSE = "response";
-   private static final String KEY_DATE = "date";
+   private static final String KEY_GUIDEID = "guideid";
+   private static final String KEY_MODIFIED_DATE = "modified_date";
+   private static final String KEY_JSON = "json";
 
    private static final String CREATE_API_RESULTS_TABLE =
-    "CREATE TABLE " + TABLE_API_RESULTS + "(" +
-      KEY_ID + " INTEGER PRIMARY KEY, " +
-      KEY_USERID + " INTEGER, " +
-      KEY_URL + " TEXT, " +
-      KEY_RESPONSE + " TEXT, " +
-      KEY_DATE + " INTEGER" +
+    "CREATE TABLE " + TABLE_OFFLINE_GUIDES + "(" +
+       KEY_ID + " INTEGER PRIMARY KEY, " +
+       KEY_SITE_NAME + " TEXT, " +
+       KEY_USERID + " INTEGER, " +
+       KEY_GUIDEID + " INTEGER, " +
+       KEY_MODIFIED_DATE + " REAL, " +
+       KEY_JSON + " TEXT, " +
+       "UNIQUE (" +
+          KEY_SITE_NAME + ", " +
+          KEY_USERID + ", " +
+          KEY_GUIDEID +
+       ") ON CONFLICT REPLACE " +
     ")";
 
-   public String getResponse(String url, Integer userid) {
+   public ArrayList<Guide> getOfflineGuides(Site site, User user) {
+      final int JSON_INDEX = 0;
       SQLiteDatabase db = getReadableDatabase();
 
-      String useridQuery;
-      String[] selectionArgs;
-      if (userid == null) {
-         useridQuery = KEY_USERID + " IS NULL";
-         selectionArgs = new String[] {url};
-      } else {
-         useridQuery = KEY_USERID + " = ?";
-         selectionArgs = new String[] {url, userid.toString()};
-      }
-
       Cursor cursor = db.query(
-       TABLE_API_RESULTS,
-       new String[] {KEY_RESPONSE},
-       KEY_URL + " = ? AND " +
-       useridQuery,
-       selectionArgs,
+       TABLE_OFFLINE_GUIDES,
+       new String[] {KEY_JSON},
+       KEY_SITE_NAME + " = ? AND " +
+       KEY_USERID + " = ?",
+       new String[] {site.mName, user.getUserid() + ""},
        null,
        null,
-       /* ORDER BY = */ "date DESC",
-       /* LIMIT = */ "1");
+       null,
+       null);
 
-      if (cursor == null || !cursor.moveToFirst()) {
-         return null;
+      ArrayList<Guide> guides = new ArrayList<Guide>();
+
+      while (cursor.moveToNext()) {
+         String guideJson = cursor.getString(JSON_INDEX);
+         try {
+            guides.add(JSONHelper.parseGuide(guideJson));
+         } catch (JSONException e) {
+            Log.e("ApiDatabase", "Cannot parse stored guide!", e);
+         }
       }
-
-      String result = cursor.getString(0);
 
       cursor.close();
 
-      return result;
+      return guides;
    }
 
-   public void insertResponse(Integer userid, String url, String response) {
+   /**
+    * Returns a map of guideid to modified date for all of the user's offline guides.
+    */
+   public Map<Integer, Double> getGuideModifiedDates(Site site, User user) {
+      final int GUIDEID_INDEX = 0;
+      final int MODIFIED_DATE_INDEX = 1;
+      SQLiteDatabase db = getReadableDatabase();
+
+      Cursor cursor = db.query(
+       TABLE_OFFLINE_GUIDES,
+       new String[] {KEY_GUIDEID, KEY_MODIFIED_DATE},
+       KEY_SITE_NAME + " = ? AND " +
+        KEY_USERID + " = ?",
+       new String[] {site.mName, user.getUserid() + ""},
+       null,
+       null,
+       null,
+       null);
+
+      Map<Integer, Double> modifiedDates = new HashMap<Integer, Double>();
+
+      while (cursor.moveToNext()) {
+         modifiedDates.put(
+            cursor.getInt(GUIDEID_INDEX),
+            cursor.getDouble(MODIFIED_DATE_INDEX)
+         );
+      }
+
+      cursor.close();
+
+      return modifiedDates;
+   }
+
+   public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues values = new ContentValues();
+      Guide guide = guideEvent.getResult();
 
-      values.put(KEY_USERID, userid);
-      values.put(KEY_URL, url);
-      values.put(KEY_RESPONSE, response);
-      values.put(KEY_DATE, (int)(System.currentTimeMillis() / 1000));
+      values.put(KEY_SITE_NAME, site.mName);
+      values.put(KEY_USERID, user.getUserid());
+      values.put(KEY_GUIDEID, guide.getGuideid());
+      values.put(KEY_MODIFIED_DATE, guide.getAbsoluteModifiedDate());
+      values.put(KEY_JSON, guideEvent.getResponse());
 
-      db.insert(TABLE_API_RESULTS, null, values);
+      db.insertWithOnConflict(TABLE_OFFLINE_GUIDES, null, values,
+       SQLiteDatabase.CONFLICT_REPLACE);
    }
 }

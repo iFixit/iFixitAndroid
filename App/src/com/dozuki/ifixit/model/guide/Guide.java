@@ -33,6 +33,8 @@ public class Guide implements Serializable {
    protected boolean mCanEdit = true;
    protected int mPatrolThreshold = 0;
    protected boolean mFavorited = false;
+   protected double mModifiedDate;
+   protected double mPrereqModifiedDate;
 
    public Guide() {
       this(NEW_GUIDE_ID);
@@ -242,6 +244,21 @@ public class Guide implements Serializable {
 
    public void setFavorited(boolean favorited) {
       mFavorited = favorited;
+   }
+
+   public void setModifiedDate(double modifiedDate) {
+      mModifiedDate = modifiedDate;
+   }
+
+   public void setPrereqModifiedDate(double prereqModifiedDate) {
+      mPrereqModifiedDate = prereqModifiedDate;
+   }
+
+   /**
+    * Returns the guide's modified date including prereq modifications.
+    */
+   public double getAbsoluteModifiedDate() {
+      return Math.max(mModifiedDate, mPrereqModifiedDate);
    }
 
    @Override

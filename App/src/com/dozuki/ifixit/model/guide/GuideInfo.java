@@ -72,6 +72,13 @@ public class GuideInfo implements Serializable {
       return path;
    }
 
+   /**
+    * Returns the guide's modified date including prereq changes.
+    */
+   public double getAbsoluteModifiedDate() {
+      return Math.max(mModifiedDate, mPrereqModifiedDate);
+   }
+
    public String toString() {
       return mGuideid + ", " + mSubject + ", " + mImage + ", " + mTitle +
        ", " + mType + ", " + Arrays.toString(mFlags);
