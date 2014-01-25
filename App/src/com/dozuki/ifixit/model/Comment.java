@@ -15,7 +15,6 @@ public class Comment implements Serializable {
 
    private static final int NO_PARENT_ID = -1;
    public int mContextid;
-   public boolean mIsReplying = false;
    public String mCommentSource;
    public int mCommentid;
    public String mLocale;
@@ -55,7 +54,6 @@ public class Comment implements Serializable {
       mRepliedDate = new Date(object.getLong("replied_date") * 1000);
       mStatus = object.getString("status");
       mReplies = new ArrayList<Comment>();
-      mIsReplying = false;
       JSONArray replies = object.optJSONArray("replies");
 
       if (replies != null) {
@@ -68,10 +66,6 @@ public class Comment implements Serializable {
 
    public boolean isReply() {
       return mParentid != NO_PARENT_ID;
-   }
-
-   public boolean isReplying() {
-      return mIsReplying;
    }
 
    @Override

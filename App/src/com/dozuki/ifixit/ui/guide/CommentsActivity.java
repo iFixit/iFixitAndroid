@@ -5,11 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.widget.ViewSwitcher;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
@@ -34,7 +37,6 @@ public class CommentsActivity extends BaseActivity {
    private int mGuideid;
    private int mStepid;
    private CommentsAdapter mAdapter;
-   private CommentsActivity mActivity;
    private ListView mCommentsList;
    private EditText mAddCommentField;
    private Comment mCommentToDelete = null;
@@ -62,7 +64,6 @@ public class CommentsActivity extends BaseActivity {
       setContentView(R.layout.comments);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-      mActivity = this;
       Bundle args = getIntent().getExtras();
       String title;
 
@@ -94,10 +95,10 @@ public class CommentsActivity extends BaseActivity {
 
             if (commentText.length() > 0) {
                if (parentid != null) {
-                  Api.call(mActivity, ApiCall.newComment(commentText, commentContext, commentContextid,
-                   (Integer)parentid));
+                  Api.call(CommentsActivity.this, ApiCall.newComment(commentText, commentContext, commentContextid,
+                   (Integer) parentid));
                } else {
-                  Api.call(mActivity, ApiCall.newComment(commentText, commentContext, commentContextid));
+                  Api.call(CommentsActivity.this, ApiCall.newComment(commentText, commentContext, commentContextid));
                }
             }
          }
@@ -144,19 +145,19 @@ public class CommentsActivity extends BaseActivity {
    @Subscribe
    public void onCommentDelete(CommentDeleteEvent event) {
       mCommentToDelete = event.comment;
-      Api.call(mActivity, ApiCall.deleteComment(event.comment.mCommentid));
+      Api.call(this, ApiCall.deleteComment(event.comment.mCommentid));
    }
 
    @Subscribe
    public void onCommentDeleted(ApiEvent.DeleteComment event) {
       if (!event.hasError()) {
-         for (Iterator<Comment> it = mComments.iterator(); it.hasNext();) {
+         for (Iterator<Comment> it = mComments.iterator(); it.hasNext(); ) {
             Comment comment = it.next();
             if (comment.mCommentid == mCommentToDelete.mCommentid) {
                it.remove();
                break;
             } else {
-               for (Iterator<Comment> rit = comment.mReplies.iterator(); rit.hasNext();) {
+               for (Iterator<Comment> rit = comment.mReplies.iterator(); rit.hasNext(); ) {
                   Comment reply = rit.next();
                   if (reply.mCommentid == mCommentToDelete.mCommentid) {
                      rit.remove();
@@ -176,9 +177,81 @@ public class CommentsActivity extends BaseActivity {
    }
 
    @Subscribe
+   public void onCommentEditing(final CommentEditEvent event) {
+      View viewRoot = findViewById(event.comment.mCommentid);
+      final View editContainer = viewRoot.findViewById(R.id.edit_comment_container);
+      final EditText editCommentField = (EditText) viewRoot.findViewById(R.id.edit_comment_text);
+      final ViewSwitcher switcher = (ViewSwitcher) viewRoot.findViewById(R.id.edit_comment_switcher);
+
+      switcher.showNext();
+
+      editContainer.setVisibility(View.VISIBLE);
+      editCommentField.setText(event.comment.mTextRaw);
+
+      viewRoot.findViewById(R.id.save_edit_comment_button).setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            String updatedText = editCommentField.getText().toString();
+            Log.d("api", updatedText);
+            // Fire off the edit request only if the comment was changed
+            if (!updatedText.equals(event.comment.mTextRaw)) {
+               Log.d("api", "text changed");
+               Api.call(CommentsActivity.this, ApiCall.editComment(updatedText, event.comment.mCommentid));
+            }
+         }
+      });
+
+      viewRoot.findViewById(R.id.exit_comment_edit_button).setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            switcher.showPrevious();
+            editContainer.setVisibility(View.GONE);
+            editCommentField.setText("");
+         }
+      });
+   }
+
+   @Subscribe
+   public void onCommentEdited(ApiEvent.EditComment event) {
+      if (!event.hasError()) {
+         Comment comment = event.getResult();
+
+         for (Comment c : mComments) {
+            if (comment.isReply() && c.mCommentid == comment.mParentid) {
+               for (int i = 0; i < c.mReplies.size(); i++) {
+                  if (c.mReplies.get(i).mCommentid == comment.mCommentid) {
+                     c.mReplies.get(i).mTextRaw = comment.mTextRaw;
+                     c.mReplies.get(i).mTextRendered = comment.mTextRendered;
+                     break;
+                  }
+               }
+               break;
+            } else if (comment.mCommentid == c.mCommentid) {
+               c.mTextRaw = comment.mTextRaw;
+               c.mTextRendered = comment.mTextRendered;
+            }
+         }
+
+         mAdapter.setComments(mComments);
+         mAdapter.notifyDataSetChanged();
+/*
+         View viewRoot = findViewById(comment.mCommentid);
+         final ViewSwitcher switcher = (ViewSwitcher) viewRoot.findViewById(R.id.edit_comment_switcher);
+
+         switcher.showNext();*/
+      } else {
+         Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
+      }
+   }
+
+   @Subscribe
    public void onCommentReplying(CommentReplyingEvent event) {
       mAddCommentField.setHint(R.string.add_reply);
       mAddCommentField.requestFocus();
+
+      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.showSoftInput(mAddCommentField, InputMethodManager.SHOW_IMPLICIT);
+
       mAddCommentField.setTag(R.id.comment_parent_id, event.parent.mCommentid);
    }
 

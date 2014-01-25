@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
 import android.os.Bundle;
-
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -14,7 +13,6 @@ import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.dozuki.ifixit.util.JSONHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -365,6 +363,18 @@ public class ApiCall implements Serializable {
       }
 
       return new ApiCall(ApiEndpoint.ADD_COMMENT, query, requestBody.toString());
+   }
+
+   public static ApiCall editComment(String text, int commentid) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("text", text);
+      } catch (JSONException e) {
+         e.printStackTrace();
+      }
+
+      return new ApiCall(ApiEndpoint.EDIT_COMMENT, "/" + commentid, requestBody.toString());
    }
 
    public static ApiCall deleteComment(int commentid) {

@@ -46,21 +46,22 @@
         android:id="@+id/edit_comment_switcher"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/comment_details_wrap">
+        android:layout_below="@+id/comment_details_wrap"
+        android:measureAllChildren="false">
 
         <TextView
             android:id="@+id/comment_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textSize="16sp"
+            android:includeFontPadding="false"
             android:textColor="@android:color/primary_text_light"/>
 
-        <LinearLayout
+        <RelativeLayout
             android:id="@+id/edit_comment_container"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:visibility="gone"
-            android:orientation="vertical"
             android:weightSum="10">
 
             <EditText
@@ -70,13 +71,24 @@
                 android:inputType="text|textCapSentences|textMultiLine|textAutoComplete"/>
 
             <Button
-                android:id="@+id/add_comment_button"
+                android:id="@+id/save_edit_comment_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/save"
+                android:layout_below="@+id/edit_comment_text"
+                android:layout_alignParentLeft="true"
                 style="@style/Base.Button"/>
 
-        </LinearLayout>
+            <Button
+                android:id="@+id/exit_comment_edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:layout_below="@+id/edit_comment_text"
+                android:layout_alignParentRight="true"
+                style="@style/Base.Button.Borderless"/>
+
+        </RelativeLayout>
 
     </ViewSwitcher>
 

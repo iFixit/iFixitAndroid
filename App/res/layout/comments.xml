@@ -29,6 +29,7 @@
     </FrameLayout>
 
     <LinearLayout
+        android:id="@+id/add_comment_wrap"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:minHeight="60dp"
