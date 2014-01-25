@@ -9,14 +9,22 @@ import android.os.Bundle;
 import android.util.Log;
 
 import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.util.ImageSizes;
+import com.github.kevinsawicki.http.HttpRequest;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
@@ -54,15 +62,30 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
    }
 
+   private static String sBaseAppDirectory;
+   private static String getBaseAppDirectory() {
+      if (sBaseAppDirectory == null) {
+         sBaseAppDirectory = MainApplication.get().getFilesDir().getAbsolutePath();
+      }
+
+      return sBaseAppDirectory;
+   }
+
+   public static String getOfflinePath(String imageUrl) {
+      return getBaseAppDirectory() + "/offline_guides/images/" + imageUrl.hashCode();
+   }
+
    private static class OfflineGuideSyncer {
       private final Site mSite;
       private final User mUser;
       private final ApiDatabase mDb;
+      private final ImageSizes mImageSizes;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
          mUser = user;
          mDb = ApiDatabase.get(MainApplication.get());
+         mImageSizes = MainApplication.get().getImageSizes();
       }
 
       /**
@@ -77,6 +100,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          ArrayList<GuideInfo> staleGuides = getStaleGuides(favorites.getResult());
          ArrayList<Guide> updatedGuides = updateGuides(staleGuides);
+
+         // TODO: We need to verify that all the images of all the guides are downloaded
+         // in case the sync fails partway through and doesn't finish downloading all the
          downloadMissingImages(updatedGuides);
       }
 
@@ -140,9 +166,61 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * Downloads all new images contained in the guides.
        */
       private void downloadMissingImages(ArrayList<Guide> guides) {
-         // TODO: The thing. Specifically: Gather a set of all images required to view the
-         // guide on this device (for thumbnail, main, and full screen) and limit it to
-         // ones that don't already exist.
+         Set<String> allImages = getAllRequiredImages(guides);
+
+         createImageDirectories();
+
+         for (String imageUrl : allImages) {
+            File file = new File(getOfflinePath(imageUrl));
+            if (!file.exists()) {
+               try {
+                  file.createNewFile();
+                  Log.d(TAG, "Downloading: " + imageUrl);
+                  HttpRequest request = HttpRequest.get(imageUrl);
+                  request.receive(file);
+               } catch (IOException e) {
+                  Log.e(TAG, "Failed to download image", e);
+               } catch (HttpRequest.HttpRequestException e) {
+                  Log.e(TAG, "Failed to download image", e);
+               }
+            } else {
+               Log.e(TAG, "Skipping: " + imageUrl);
+            }
+         }
+      }
+
+      /**
+       * Creates the necessary directories for storing images. This is purely so
+       * File.mkdirs() isn't called for every single image downloaded. This makes it so
+       * it is called at most once per sync.
+       */
+      private static void createImageDirectories() {
+         // The ending file name doesn't matter as long as the parents are the same
+         // as a valid image path.
+         File testFile = new File(getOfflinePath("test"));
+         testFile.mkdirs();
+      }
+
+      /**
+       * Returns a complete set of required images for the list of guides.
+       *
+       * TODO: Verify that these are the only sizes used for these images.
+       */
+      private Set<String> getAllRequiredImages(ArrayList<Guide> guides) {
+         Set<String> images = new HashSet<String>();
+
+         for (Guide guide : guides) {
+            images.add(guide.getIntroImage().getPath(mImageSizes.getGrid()));
+
+            for (GuideStep step : guide.getSteps()) {
+               for (Image image : step.getImages()) {
+                  images.add(image.getPath(mImageSizes.getMain()));
+                  images.add(image.getPath(mImageSizes.getThumb()));
+               }
+            }
+         }
+
+         return images;
       }
 
       /**

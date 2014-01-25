@@ -214,6 +214,10 @@ public class Guide implements Serializable {
       mIntroImage = image;
    }
 
+   public Image getIntroImage() {
+      return mIntroImage;
+   }
+
    public void setSummary(String summary) {
       mSummary = summary;
    }
