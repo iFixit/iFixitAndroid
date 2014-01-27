@@ -29,14 +29,14 @@ public class FileCache {
          Scanner scanner = new Scanner(in).useDelimiter("\\A");
          return scanner.hasNext() ? scanner.next() : null;
       } catch (IOException e) {
-         Log.w("FileCache", "Get", e);
+         Log.e("FileCache", "Get", e);
          return null;
       } finally {
          if (in != null) {
             try {
                in.close();
             } catch (IOException e) {
-               Log.w("FileCache", "Closing input", e);
+               Log.e("FileCache", "Closing input", e);
             }
          }
       }
@@ -49,13 +49,13 @@ public class FileCache {
          byte[] bytes = value.getBytes();
          out.write(bytes, 0, bytes.length);
       } catch (IOException e) {
-         Log.w("FileCache", "Set", e);
+         Log.e("FileCache", "Set", e);
       } finally {
          if (out != null) {
             try {
                out.close();
             } catch (IOException e) {
-               Log.w("FileCache", "Closing output", e);
+               Log.e("FileCache", "Closing output", e);
             }
          }
       }
