@@ -53,6 +53,7 @@
             android:id="@+id/comment_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
             android:textSize="16sp"
             android:includeFontPadding="false"
             android:textColor="@android:color/primary_text_light"/>
