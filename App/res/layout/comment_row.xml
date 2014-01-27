@@ -40,6 +40,14 @@
             android:layout_alignParentRight="true"
             style="@style/ItemMenuButton"/>
 
+        <ProgressBar
+            android:id="@+id/comment_progress"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Sherlock.Light.ProgressBar" />
+
     </RelativeLayout>
 
     <ViewSwitcher

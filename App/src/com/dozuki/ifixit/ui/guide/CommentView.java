@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import com.dozuki.ifixit.MainApplication;
@@ -155,6 +156,9 @@ public class CommentView extends RelativeLayout {
    }
 
    private void deleteComment(Comment comment) {
+      findViewById(R.id.comment_menu).setVisibility(View.GONE);
+      ProgressBar progress = (ProgressBar)findViewById(R.id.comment_progress);
+      progress.setVisibility(View.VISIBLE);
       MainApplication.getBus().post(new CommentDeleteEvent(comment));
    }
 
