@@ -3,7 +3,7 @@ buildscript {
       mavenCentral()
    }
    dependencies {
-      classpath 'com.android.tools.build:gradle:0.7.0'
+      classpath 'com.android.tools.build:gradle:0.8.0'
    }
 }
 apply plugin: 'android'
@@ -42,7 +42,7 @@ def sites = ["ifixit", "dozuki", "accustream"]
 
 android {
    compileSdkVersion 19
-   buildToolsVersion "18.0.1"
+   buildToolsVersion "19.0.1"
 
    defaultConfig {
       versionCode 45
