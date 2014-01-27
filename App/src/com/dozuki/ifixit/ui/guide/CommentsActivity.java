@@ -192,10 +192,8 @@ public class CommentsActivity extends BaseActivity {
          @Override
          public void onClick(View v) {
             String updatedText = editCommentField.getText().toString();
-            Log.d("api", updatedText);
             // Fire off the edit request only if the comment was changed
             if (!updatedText.equals(event.comment.mTextRaw)) {
-               Log.d("api", "text changed");
                Api.call(CommentsActivity.this, ApiCall.editComment(updatedText, event.comment.mCommentid));
             }
          }
