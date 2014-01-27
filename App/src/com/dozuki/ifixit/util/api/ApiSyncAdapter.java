@@ -23,12 +23,20 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
-   private static class ApiSyncException extends RuntimeException {}
+   private static class ApiSyncException extends RuntimeException {
+      public ApiSyncException() {
+         super();
+      }
+      public ApiSyncException(Exception e) {
+         super(e);
+      }
+   }
 
    public ApiSyncAdapter(Context context, boolean autoInitialize) {
       super(context, autoInitialize);
@@ -76,10 +84,48 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    }
 
    private static class OfflineGuideSyncer {
+
+      private class GuideImageSet {
+         public Guide mGuide;
+         public Set<String> mMissingImages;
+         public int mTotalImages;
+         public int mImagesRemaining;
+
+         public GuideImageSet(Guide guide) {
+            mGuide = guide;
+            mMissingImages = new HashSet<String>();
+            mTotalImages = 0;
+
+            addImageIfMissing(guide.getIntroImage().getPath(mImageSizes.getGrid()));
+
+            for (GuideStep step : guide.getSteps()) {
+               for (Image image : step.getImages()) {
+                  addImageIfMissing(image.getPath(mImageSizes.getMain()));
+
+                  // The counting is off because thumb is the same as getMain so we think
+                  // we need to download double the number of images we actually need to.
+                  //addImageIfMissing(image.getPath(mImageSizes.getThumb()));
+               }
+            }
+
+            mImagesRemaining = mMissingImages.size();
+         }
+
+         private void addImageIfMissing(String imageUrl) {
+            // Always add to the total.
+            mTotalImages++;
+
+            File file = new File(getOfflinePath(imageUrl));
+            if (!file.exists()) {
+               mMissingImages.add(imageUrl);
+            }
+         }
+      }
+
       private final Site mSite;
       private final User mUser;
       private final ApiDatabase mDb;
-      private final ImageSizes mImageSizes;
+      protected final ImageSizes mImageSizes;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
@@ -166,27 +212,50 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * Downloads all new images contained in the guides.
        */
       private void downloadMissingImages(ArrayList<Guide> guides) {
-         Set<String> allImages = getAllRequiredImages(guides);
+         List<GuideImageSet> missingGuideImages = getMissingGuideImages(guides);
+         int totalMissingImages = getTotalMissingImages(missingGuideImages);
+         int imagesDownloaded = 0;
 
          createImageDirectories();
 
-         for (String imageUrl : allImages) {
-            File file = new File(getOfflinePath(imageUrl));
-            if (!file.exists()) {
-               try {
-                  file.createNewFile();
-                  Log.d(TAG, "Downloading: " + imageUrl);
-                  HttpRequest request = HttpRequest.get(imageUrl);
-                  request.receive(file);
-               } catch (IOException e) {
-                  Log.e(TAG, "Failed to download image", e);
-               } catch (HttpRequest.HttpRequestException e) {
-                  Log.e(TAG, "Failed to download image", e);
+         for (GuideImageSet guideImages : missingGuideImages) {
+            for (String imageUrl : guideImages.mMissingImages) {
+               File file = new File(getOfflinePath(imageUrl));
+
+               if (!file.exists()) {
+                  try {
+                     Log.d(TAG, "Downloading: " + imageUrl);
+
+                     file.createNewFile();
+                     HttpRequest request = HttpRequest.get(imageUrl);
+                     request.receive(file);
+
+                     imagesDownloaded++;
+                     guideImages.mImagesRemaining--;
+                  } catch (IOException e) {
+                     Log.e(TAG, "Failed to download image", e);
+                     throw new ApiSyncException(e);
+                  } catch (HttpRequest.HttpRequestException e) {
+                     Log.e(TAG, "Failed to download image", e);
+                     throw new ApiSyncException(e);
+                  }
+               } else {
+                  Log.d(TAG, "Skipping: " + imageUrl);
+                  // Happens if guides share images.
+                  imagesDownloaded++;
+                  guideImages.mImagesRemaining--;
                }
-            } else {
-               Log.e(TAG, "Skipping: " + imageUrl);
+
+               Log.w(TAG, guideImages.mTotalImages - guideImages.mImagesRemaining + "/" +
+                guideImages.mTotalImages + " | Total downloaded: " + imagesDownloaded);
+
+               // TODO: Report incremental progress.
             }
+
+            // TODO: Mark guide as complete.
          }
+
+         Log.w(TAG, "Images: " + imagesDownloaded + "/" + totalMissingImages);
       }
 
       /**
@@ -202,25 +271,29 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
 
       /**
-       * Returns a complete set of required images for the list of guides.
+       * Returns a list of guides with all of the images that need to be downloaded.
        *
        * TODO: Verify that these are the only sizes used for these images.
        */
-      private Set<String> getAllRequiredImages(ArrayList<Guide> guides) {
-         Set<String> images = new HashSet<String>();
+      private List<GuideImageSet> getMissingGuideImages(ArrayList<Guide> guides) {
+         List<GuideImageSet> guideImages = new ArrayList<GuideImageSet>();
 
          for (Guide guide : guides) {
-            images.add(guide.getIntroImage().getPath(mImageSizes.getGrid()));
-
-            for (GuideStep step : guide.getSteps()) {
-               for (Image image : step.getImages()) {
-                  images.add(image.getPath(mImageSizes.getMain()));
-                  images.add(image.getPath(mImageSizes.getThumb()));
-               }
-            }
+            GuideImageSet images = new GuideImageSet(guide);
+            guideImages.add(images);
          }
 
-         return images;
+         return guideImages;
+      }
+
+      private static int getTotalMissingImages(List<GuideImageSet> guideImages) {
+         int total = 0;
+
+         for (GuideImageSet guide : guideImages) {
+            total += guide.mMissingImages.size();
+         }
+
+         return total;
       }
 
       /**
