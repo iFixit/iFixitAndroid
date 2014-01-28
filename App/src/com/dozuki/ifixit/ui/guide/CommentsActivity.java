@@ -123,18 +123,27 @@ public class CommentsActivity extends BaseActivity {
       switch (item.getItemId()) {
          // Respond to the action bar's Up/Home button
          case android.R.id.home:
-            Intent data = new Intent();
-            data.putExtra(GuideViewActivity.COMMENTS_TAG, mComments);
-            if (getParent() == null) {
-               setResult(Activity.RESULT_OK, data);
-            } else {
-               getParent().setResult(Activity.RESULT_OK, data);
-            }
-            finish();
+            finishCommentsActivity();
             return true;
          default:
             return super.onOptionsItemSelected(item);
       }
+   }
+
+   @Override
+   public void onBackPressed() {
+      finishCommentsActivity();
+   }
+
+   private void finishCommentsActivity() {
+      Intent data = new Intent();
+      data.putExtra(GuideViewActivity.COMMENTS_TAG, mComments);
+      if (getParent() == null) {
+         setResult(Activity.RESULT_OK, data);
+      } else {
+         getParent().setResult(Activity.RESULT_OK, data);
+      }
+      finish();
    }
 
    @Subscribe
