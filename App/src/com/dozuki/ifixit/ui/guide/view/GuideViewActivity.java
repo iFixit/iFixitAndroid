@@ -219,21 +219,24 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          public void onClick(View v) {
             if (mGuide != null) {
                ArrayList<Comment> comments;
-               int stepIndex = getStepIndex(), stepid = -1, guideid = mGuide.getGuideid();
-               String title;
+               int stepIndex = getStepIndex(), contextid;
+               String title, context;
 
                // If we're in one of the introduction pages, show guide comments.
                if (stepIndex < 0) {
                   comments = mGuide.getComments();
                   title = getString(R.string.guide_comments);
+                  context = "guide";
+                  contextid = mGuide.getGuideid();
                } else {
                   comments = mGuide.getStep(stepIndex).getComments();
-                  stepid = mGuide.getStep(stepIndex).getStepid();
+                  contextid = mGuide.getStep(stepIndex).getStepid();
+                  context = "step";
                   title = getString(R.string.step_number_comments, stepIndex + 1);
                }
 
-               startActivityForResult(CommentsActivity.viewComments(getApplicationContext(), comments, title, guideid,
-                stepid), COMMENT_REQUEST);
+               startActivityForResult(CommentsActivity.viewComments(getApplicationContext(), comments, title,
+                context, contextid), COMMENT_REQUEST);
             }
          }
       });
@@ -332,20 +335,24 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             return true;
          case R.id.comments:
             ArrayList<Comment> comments;
-            int stepIndex = (mCurrentPage - (mStepOffset + 1));
-            String title;
+            int stepIndex = (mCurrentPage - (mStepOffset + 1)), contextid;
+            String title, context;
 
             // If we're in one of the introduction pages, show guide comments.
             if (stepIndex < 0) {
                comments = mGuide.getComments();
                title = getString(R.string.guide_comments);
+               context = "guide";
+               contextid = mGuide.getGuideid();
             } else {
                comments = mGuide.getStep(stepIndex).getComments();
                title = getString(R.string.step_number_comments, stepIndex + 1);
+               context = "step";
+               contextid = mGuide.getStep(stepIndex).getStepid();
             }
 
-            startActivity(CommentsActivity.viewComments(this, comments, title, mGuide.getGuideid(),
-             mGuide.getStep(stepIndex).getStepid()));
+            startActivity(CommentsActivity.viewComments(this, comments, title, context,
+             contextid));
 
             return true;
          default:

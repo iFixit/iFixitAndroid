@@ -29,25 +29,25 @@ public class CommentsActivity extends BaseActivity {
 
    private static final String COMMENTS_KEY = "COMMENTS_KEY";
    private static final String TITLE_KEY = "TITLE_FIELD";
-   private static final String GUIDEID_KEY = "GUIDEID_KEY";
-   private static final String STEPID_KEY = "STEPID_KEY";
+   private static final String CONTEXTID = "CONTEXTID_KEY";
+   private static final String CONTEXT = "CONTEXT_KEY";
 
    private ArrayList<Comment> mComments;
-   private int mGuideid;
-   private int mStepid;
    private CommentsAdapter mAdapter;
    private ListView mCommentsList;
    private EditText mAddCommentField;
    private Comment mCommentToDelete = null;
+   private String mCommentContext;
+   private int mCommentContextId;
 
-   public static Intent viewComments(Context context, ArrayList<Comment> comments, String title, int guideid,
-    int stepid) {
+   public static Intent viewComments(Context context, ArrayList<Comment> comments, String title,
+    String commentContext, int contextid) {
 
       Intent intent = new Intent(context, CommentsActivity.class);
 
       intent.putExtra(TITLE_KEY, title);
-      intent.putExtra(GUIDEID_KEY, guideid);
-      intent.putExtra(STEPID_KEY, stepid);
+      intent.putExtra(CONTEXTID, contextid);
+      intent.putExtra(CONTEXT, commentContext);
       intent.putExtra(COMMENTS_KEY, comments);
 
       return intent;
@@ -68,13 +68,13 @@ public class CommentsActivity extends BaseActivity {
 
       if (savedInstanceState != null) {
          mComments = (ArrayList<Comment>) savedInstanceState.getSerializable(COMMENTS_KEY);
-         mGuideid = savedInstanceState.getInt(GUIDEID_KEY);
-         mStepid = savedInstanceState.getInt(STEPID_KEY);
+         mCommentContext = savedInstanceState.getString(CONTEXT);
+         mCommentContextId = savedInstanceState.getInt(CONTEXTID);
          title = savedInstanceState.getString(TITLE_KEY);
       } else if (args != null) {
          mComments = (ArrayList<Comment>) args.getSerializable(COMMENTS_KEY);
-         mGuideid = args.getInt(GUIDEID_KEY);
-         mStepid = args.getInt(STEPID_KEY);
+         mCommentContext = args.getString(CONTEXT);
+         mCommentContextId = args.getInt(CONTEXTID);
          title = args.getString(TITLE_KEY);
       } else {
          title = getString(R.string.comments);
@@ -87,18 +87,16 @@ public class CommentsActivity extends BaseActivity {
          @Override
          public void onClick(View v) {
             String commentText = String.valueOf(mAddCommentField.getText());
-            String commentContext = mStepid == -1 ? "guide" : "step";
-            int commentContextid = mStepid == -1 ? mGuideid : mStepid;
             Object parentid = mAddCommentField.getTag(R.id.comment_parent_id);
 
             if (commentText.length() > 0) {
                mAddCommentField.setEnabled(false);
 
                if (parentid != null) {
-                  Api.call(CommentsActivity.this, ApiCall.newComment(commentText, commentContext, commentContextid,
+                  Api.call(CommentsActivity.this, ApiCall.newComment(commentText, mCommentContext, mCommentContextId,
                    (Integer) parentid));
                } else {
-                  Api.call(CommentsActivity.this, ApiCall.newComment(commentText, commentContext, commentContextid));
+                  Api.call(CommentsActivity.this, ApiCall.newComment(commentText, mCommentContext, mCommentContextId));
                }
             }
          }
@@ -118,8 +116,6 @@ public class CommentsActivity extends BaseActivity {
       super.onSaveInstanceState(state);
 
       state.putSerializable(COMMENTS_KEY, mComments);
-      state.putInt(GUIDEID_KEY, mGuideid);
-      state.putInt(STEPID_KEY, mStepid);
    }
 
    @Override
