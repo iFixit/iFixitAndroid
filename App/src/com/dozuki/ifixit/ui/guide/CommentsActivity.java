@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
@@ -87,13 +86,14 @@ public class CommentsActivity extends BaseActivity {
       addComment.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-            mAddCommentField.setEnabled(false);
             String commentText = String.valueOf(mAddCommentField.getText());
             String commentContext = mStepid == -1 ? "guide" : "step";
             int commentContextid = mStepid == -1 ? mGuideid : mStepid;
             Object parentid = mAddCommentField.getTag(R.id.comment_parent_id);
 
             if (commentText.length() > 0) {
+               mAddCommentField.setEnabled(false);
+
                if (parentid != null) {
                   Api.call(CommentsActivity.this, ApiCall.newComment(commentText, commentContext, commentContextid,
                    (Integer) parentid));
@@ -121,7 +121,6 @@ public class CommentsActivity extends BaseActivity {
       state.putInt(GUIDEID_KEY, mGuideid);
       state.putInt(STEPID_KEY, mStepid);
    }
-
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
