@@ -44,7 +44,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    }
 
    /**
-    * Displays sync progress in a Notification. Null if progress should not be displayed.
+    * Displays sync progress in a Notification.
     */
    private NotificationManager mNotificationManager;
    private NotificationCompat.Builder mNotificationBuilder;
@@ -71,6 +71,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       // Play Music displays the percentage as text rather than content text.
       mNotificationBuilder.setContentText("Syncing offline guides");
       mNotificationBuilder.setSmallIcon(R.drawable.icon);
+      mNotificationBuilder.setOngoing(true);
+
+      // TODO: setContentIntent to open to the offline guides list.
 
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
@@ -86,11 +89,17 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       try {
          updateNotificationProgress(0, 0, true);
          OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user);
-         syncer.syncOfflineGuides();
+         boolean changes = syncer.syncOfflineGuides();
 
-         // TODO: Update text.
-         updateNotificationProgress(0, 0, false);
-         updateNotificationText("Offline Sync Complete");
+         if (changes) {
+            // TODO: Update text.
+            mNotificationBuilder.setContentTitle("Offline Sync Complete");
+            mNotificationBuilder.setOngoing(false);
+            updateNotificationProgress(0, 0, false);
+         } else {
+            // Remove the notification if there aren't any changes.
+            removeNotification();
+         }
       } catch (ApiSyncException e) {
          Log.e(TAG, "Sync failed", e);
          // TODO: Notify the user?
@@ -102,9 +111,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationManager.notify(SYNC_NOTIFICATION_ID, mNotificationBuilder.build());
    }
 
-   protected void updateNotificationText(String text) {
-      mNotificationBuilder.setContentTitle(text);
-      mNotificationManager.notify(SYNC_NOTIFICATION_ID, mNotificationBuilder.build());
+   protected void removeNotification() {
+      mNotificationManager.cancel(SYNC_NOTIFICATION_ID);
    }
 
    private static String sBaseAppDirectory;
@@ -163,12 +171,14 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private final User mUser;
       private final ApiDatabase mDb;
       protected final ImageSizes mImageSizes;
+      private boolean mChanges;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
          mUser = user;
          mDb = ApiDatabase.get(MainApplication.get());
          mImageSizes = MainApplication.get().getImageSizes();
+         mChanges = false;
       }
 
       /**
@@ -177,7 +187,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        *
        * TODO: It would be nice to delete images that are no longer referenced.
        */
-      protected void syncOfflineGuides() {
+      protected boolean syncOfflineGuides() {
          ApiCall apiCall = ApiCall.userFavorites(10000, 0);
          ApiEvent.UserFavorites favorites = performApiCall(apiCall, ApiEvent.UserFavorites.class);
 
@@ -187,6 +197,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          // TODO: We need to verify that all the images of all the guides are downloaded
          // in case the sync fails partway through and doesn't finish downloading all the
          downloadMissingImages(updatedGuides);
+
+         return mChanges;
       }
 
       /**
@@ -207,6 +219,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             if (hasNewerModifiedDate(modifiedDate, guide.getAbsoluteModifiedDate())) {
                staleGuides.add(guide);
             }
+         }
+
+         if (modifiedDates.size() > 0 || staleGuides.size() > 0) {
+            mChanges = true;
          }
 
          // Delete any guides that are currently in the DB but are no longer favorited.
@@ -248,7 +264,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Downloads all new images contained in the guides.
        */
-      private void downloadMissingImages(ArrayList<Guide> guides) {
+      private int downloadMissingImages(ArrayList<Guide> guides) {
          List<GuideImageSet> missingGuideImages = getMissingGuideImages(guides);
          int totalMissingImages = getTotalMissingImages(missingGuideImages);
          int imagesDownloaded = 0;
@@ -292,7 +308,13 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             // TODO: Mark guide as complete.
          }
 
+         if (imagesDownloaded > 0) {
+            mChanges = true;
+         }
+
          Log.w(TAG, "Images: " + imagesDownloaded + "/" + totalMissingImages);
+
+         return imagesDownloaded;
       }
 
       /**
