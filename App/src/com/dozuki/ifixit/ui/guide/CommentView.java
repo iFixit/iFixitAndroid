@@ -32,7 +32,6 @@ public class CommentView extends RelativeLayout {
    private static final int DELETE_OPTION = 2;
    private RelativeLayout mContainer;
    private Context mContext;
-   private int mPosition;
 
    public CommentView(Context context) {
       super(context);
@@ -164,9 +163,5 @@ public class CommentView extends RelativeLayout {
 
    private void replyToComment(Comment parent) {
       MainApplication.getBus().post(new CommentReplyingEvent(parent));
-   }
-
-   public void setPosition(int position) {
-      mPosition = position;
    }
 }
