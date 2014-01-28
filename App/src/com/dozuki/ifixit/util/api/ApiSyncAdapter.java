@@ -1,14 +1,17 @@
 package com.dozuki.ifixit.util.api;
 
 import android.accounts.Account;
+import android.app.NotificationManager;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -29,6 +32,8 @@ import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
+   public static final int SYNC_NOTIFICATION_ID = 0;
+
    private static class ApiSyncException extends RuntimeException {
       public ApiSyncException() {
          super();
@@ -37,6 +42,12 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          super(e);
       }
    }
+
+   /**
+    * Displays sync progress in a Notification. Null if progress should not be displayed.
+    */
+   private NotificationManager mNotificationManager;
+   private NotificationCompat.Builder mNotificationBuilder;
 
    public ApiSyncAdapter(Context context, boolean autoInitialize) {
       super(context, autoInitialize);
@@ -50,6 +61,17 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
     ContentProviderClient provider, SyncResult syncResult) {
+      mNotificationManager = (NotificationManager)MainApplication.get().
+       getSystemService(Context.NOTIFICATION_SERVICE);
+      mNotificationBuilder = new NotificationCompat.Builder(MainApplication.get());
+
+      // TODO: Update text and icon.
+      // Play Music has "Keeping requested music...".
+      mNotificationBuilder.setContentTitle("Offline Sync");
+      // Play Music displays the percentage as text rather than content text.
+      mNotificationBuilder.setContentText("Syncing offline guides");
+      mNotificationBuilder.setSmallIcon(R.drawable.icon);
+
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
       Site site = MainApplication.get().getSite();
@@ -62,12 +84,27 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
 
       try {
+         updateNotificationProgress(0, 0, true);
          OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user);
          syncer.syncOfflineGuides();
+
+         // TODO: Update text.
+         updateNotificationProgress(0, 0, false);
+         updateNotificationText("Offline Sync Complete");
       } catch (ApiSyncException e) {
          Log.e(TAG, "Sync failed", e);
          // TODO: Notify the user?
       }
+   }
+
+   protected void updateNotificationProgress(int max, int progress, boolean indeterminate) {
+      mNotificationBuilder.setProgress(max, progress, indeterminate);
+      mNotificationManager.notify(SYNC_NOTIFICATION_ID, mNotificationBuilder.build());
+   }
+
+   protected void updateNotificationText(String text) {
+      mNotificationBuilder.setContentTitle(text);
+      mNotificationManager.notify(SYNC_NOTIFICATION_ID, mNotificationBuilder.build());
    }
 
    private static String sBaseAppDirectory;
@@ -83,7 +120,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       return getBaseAppDirectory() + "/offline_guides/images/" + imageUrl.hashCode();
    }
 
-   private static class OfflineGuideSyncer {
+   private class OfflineGuideSyncer {
 
       private class GuideImageSet {
          public Guide mGuide;
@@ -178,7 +215,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          return staleGuides;
       }
 
-      private static boolean hasNewerModifiedDate(Double existing, double updated) {
+      private boolean hasNewerModifiedDate(Double existing, double updated) {
          // Double precision for such large values is pretty finicky... Realistically
          // a difference of a second in modified time isn't going to cause any problems.
          final double MAX_DATE_DISCREPANCY = 1.0;
@@ -249,7 +286,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                Log.w(TAG, guideImages.mTotalImages - guideImages.mImagesRemaining + "/" +
                 guideImages.mTotalImages + " | Total downloaded: " + imagesDownloaded);
 
-               // TODO: Report incremental progress.
+               updateNotificationProgress(totalMissingImages, imagesDownloaded, false);
             }
 
             // TODO: Mark guide as complete.
@@ -263,7 +300,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * File.mkdirs() isn't called for every single image downloaded. This makes it so
        * it is called at most once per sync.
        */
-      private static void createImageDirectories() {
+      private void createImageDirectories() {
          // The ending file name doesn't matter as long as the parents are the same
          // as a valid image path.
          File testFile = new File(getOfflinePath("test"));
@@ -286,7 +323,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          return guideImages;
       }
 
-      private static int getTotalMissingImages(List<GuideImageSet> guideImages) {
+      private int getTotalMissingImages(List<GuideImageSet> guideImages) {
          int total = 0;
 
          for (GuideImageSet guide : guideImages) {
