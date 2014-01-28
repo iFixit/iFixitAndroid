@@ -247,7 +247,13 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          Bundle extras = data.getExtras();
          if (extras != null) {
             ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
-            mGuide.setComments(comments);
+
+            if (getStepIndex() < 0) {
+               mGuide.setComments(comments);
+            } else {
+               mGuide.getStep(getStepIndex()).setComments(comments);
+            }
+
             updateCommentCounts();
          }
       }
