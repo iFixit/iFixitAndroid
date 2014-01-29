@@ -32,7 +32,6 @@ import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
-   public static final int SYNC_NOTIFICATION_ID = 0;
 
    private static class ApiSyncException extends RuntimeException {
       public ApiSyncException() {
@@ -108,11 +107,11 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
    protected void updateNotificationProgress(int max, int progress, boolean indeterminate) {
       mNotificationBuilder.setProgress(max, progress, indeterminate);
-      mNotificationManager.notify(SYNC_NOTIFICATION_ID, mNotificationBuilder.build());
+      mNotificationManager.notify(R.id.guide_sync_notificationid, mNotificationBuilder.build());
    }
 
    protected void removeNotification() {
-      mNotificationManager.cancel(SYNC_NOTIFICATION_ID);
+      mNotificationManager.cancel(R.id.guide_sync_notificationid);
    }
 
    private static String sBaseAppDirectory;

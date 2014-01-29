@@ -2,5 +2,6 @@
 <resources>
 
     <item name="guide_step_view_video_url" type="id"/>
+    <item name="guide_sync_notificationid" type="id"/>
 
 </resources>
