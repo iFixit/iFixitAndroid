@@ -3,11 +3,11 @@ package com.dozuki.ifixit.ui.guide.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.speech.SpeechRecognizer;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -18,7 +18,6 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
-import com.dozuki.ifixit.util.SpeechCommander;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
@@ -48,7 +47,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private int mGuideid;
    private Guide mGuide;
-   private SpeechCommander mSpeechCommander;
    private int mCurrentPage = -1;
    private ViewPager mPager;
    private TitlePageIndicator mIndicator;
@@ -130,34 +128,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       extractExtras(intent.getExtras());
       getGuide(mGuideid);
-   }
-
-   @Override
-   public void onDestroy() {
-      super.onDestroy();
-
-      if (mSpeechCommander != null) {
-         mSpeechCommander.destroy();
-      }
-   }
-
-   @Override
-   public void onPause() {
-      super.onPause();
-
-      if (mSpeechCommander != null) {
-         mSpeechCommander.stopListening();
-         mSpeechCommander.cancel();
-      }
-   }
-
-   @Override
-   public void onResume() {
-      super.onResume();
-
-      if (mSpeechCommander != null) {
-         mSpeechCommander.startListening();
-      }
    }
 
    @Override
@@ -359,18 +329,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       Api.call(this, ApiCall.guide(guideid));
    }
 
-   private void nextStep() {
-      mIndicator.setCurrentItem(mCurrentPage + 1);
-   }
-
-   private void previousStep() {
-      mIndicator.setCurrentItem(mCurrentPage - 1);
-   }
-
-   private void guideHome() {
-      mIndicator.setCurrentItem(0);
-   }
-
    /**
     * Displays a toast with the given values and clears any existing Toasts
     * if they exist.
@@ -384,36 +342,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mToast.setDuration(duration);
 
       mToast.show();
-   }
-
-   @SuppressWarnings("unused")
-   private void initSpeechRecognizer() {
-      if (!SpeechRecognizer.isRecognitionAvailable(getBaseContext())) {
-         return;
-      }
-
-      mSpeechCommander = new SpeechCommander(this, PACKAGE_NAME);
-
-      mSpeechCommander.addCommand(NEXT_COMMAND, new SpeechCommander.Command() {
-         public void performCommand() {
-            nextStep();
-         }
-      });
-
-      mSpeechCommander.addCommand(PREVIOUS_COMMAND,
-       new SpeechCommander.Command() {
-          public void performCommand() {
-             previousStep();
-          }
-       });
-
-      mSpeechCommander.addCommand(HOME_COMMAND, new SpeechCommander.Command() {
-         public void performCommand() {
-            guideHome();
-         }
-      });
-
-      mSpeechCommander.startListening();
    }
 
    public void onPageScrollStateChanged(int arg0) { }
