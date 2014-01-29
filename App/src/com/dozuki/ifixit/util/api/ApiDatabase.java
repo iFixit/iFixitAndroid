@@ -86,7 +86,6 @@ public class ApiDatabase extends SQLiteOpenHelper {
     ")";
 
    public ArrayList<Guide> getOfflineGuides(Site site, User user) {
-      final int JSON_INDEX = 0;
       SQLiteDatabase db = getReadableDatabase();
 
       Cursor cursor = db.query(
@@ -100,10 +99,35 @@ public class ApiDatabase extends SQLiteOpenHelper {
        null,
        null);
 
+      return getGuidesFromCursor(cursor, 0);
+   }
+
+   /**
+    * Returns guides that have been downloaded but some of the images are missing.
+    */
+   public ArrayList<Guide> getUncompleteGuides(Site site, User user) {
+      SQLiteDatabase db = getReadableDatabase();
+
+      Cursor cursor = db.query(
+       TABLE_OFFLINE_GUIDES,
+       new String[] {KEY_JSON},
+       KEY_SITE_NAME + " = ? AND " +
+        KEY_USERID + " = ? AND " +
+        KEY_IMAGES_DOWNLOADED + " != " + KEY_IMAGES_TOTAL,
+       new String[] {site.mName, user.getUserid() + ""},
+       null,
+       null,
+       null,
+       null);
+
+      return getGuidesFromCursor(cursor, 0);
+   }
+
+   private ArrayList<Guide> getGuidesFromCursor(Cursor cursor, int jsonIndex) {
       ArrayList<Guide> guides = new ArrayList<Guide>();
 
       while (cursor.moveToNext()) {
-         String guideJson = cursor.getString(JSON_INDEX);
+         String guideJson = cursor.getString(jsonIndex);
          try {
             guides.add(JSONHelper.parseGuide(guideJson));
          } catch (JSONException e) {
@@ -182,6 +206,9 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
    public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent, int imagesTotal,
     int imagesDownloaded) {
+      if (guideEvent == null) {
+         throw new IllegalArgumentException("ApiEvent<Guide> guideEvent");
+      }
       SQLiteDatabase db = getWritableDatabase();
       ContentValues values = new ContentValues();
       Guide guide = guideEvent.getResult();

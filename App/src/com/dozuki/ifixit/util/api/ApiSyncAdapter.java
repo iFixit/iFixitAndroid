@@ -138,8 +138,13 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          public int mImagesRemaining;
 
          public GuideImageSet(ApiEvent.ViewGuide guideEvent) {
+            this(guideEvent.getResult());
+
             mGuideEvent = guideEvent;
-            mGuide = guideEvent.getResult();
+         }
+
+         public GuideImageSet(Guide guide) {
+            mGuide = guide;
             mMissingImages = new HashSet<String>();
             mTotalImages = 0;
 
@@ -196,24 +201,38 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * TODO: It would be nice to delete images that are no longer referenced.
        */
       protected boolean syncOfflineGuides() {
-         ApiCall apiCall = ApiCall.userFavorites(10000, 0);
-         ApiEvent.UserFavorites favorites = performApiCall(apiCall, ApiEvent.UserFavorites.class);
-
-         ArrayList<GuideInfo> staleGuides = getStaleGuides(favorites.getResult());
+         ArrayList<GuideImageSet> uncompletedGuides = getUncompletedGuides();
+         ArrayList<GuideInfo> staleGuides = getStaleGuides();
          ArrayList<GuideImageSet> updatedGuides = updateGuides(staleGuides);
 
-         // TODO: We need to verify that all the images of all the guides are downloaded
-         // in case the sync fails partway through and doesn't finish downloading all the images.
-         downloadMissingImages(updatedGuides);
+         // Merge updated guides with guides with missing images and fetch all of
+         // their images.
+         uncompletedGuides.addAll(updatedGuides);
+         downloadMissingImages(uncompletedGuides);
 
          return mChanges;
+      }
+
+      private ArrayList<GuideImageSet> getUncompletedGuides() {
+         ArrayList<GuideImageSet> guideImages = new ArrayList<GuideImageSet>();
+
+         for (Guide guide : mDb.getUncompleteGuides(mSite, mUser)) {
+            guideImages.add(new GuideImageSet(guide));
+         }
+
+         return guideImages;
       }
 
       /**
        * Returns all guides that need syncing due to being brand new or having changes.
        * This also deletes all of the user's offline guides that are no longer favorited.
        */
-      private ArrayList<GuideInfo> getStaleGuides(ArrayList<GuideInfo> favorites) {
+      private ArrayList<GuideInfo> getStaleGuides() {
+         ApiCall apiCall = ApiCall.userFavorites(10000, 0);
+         ApiEvent.UserFavorites favoritesEvent = performApiCall(apiCall,
+          ApiEvent.UserFavorites.class);
+         ArrayList<GuideInfo> favorites = favoritesEvent.getResult();
+
          // TODO: Get guide info from manually added offline guides (those not coming
          // from favorites) and merge it with the favorite guides.
 
