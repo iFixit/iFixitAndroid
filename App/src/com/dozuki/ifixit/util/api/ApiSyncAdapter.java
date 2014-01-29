@@ -131,19 +131,21 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private class OfflineGuideSyncer {
 
       private class GuideImageSet {
+         public ApiEvent.ViewGuide mGuideEvent;
          public Guide mGuide;
          public Set<String> mMissingImages;
          public int mTotalImages;
          public int mImagesRemaining;
 
-         public GuideImageSet(Guide guide) {
-            mGuide = guide;
+         public GuideImageSet(ApiEvent.ViewGuide guideEvent) {
+            mGuideEvent = guideEvent;
+            mGuide = guideEvent.getResult();
             mMissingImages = new HashSet<String>();
             mTotalImages = 0;
 
-            addImageIfMissing(guide.getIntroImage().getPath(mImageSizes.getGrid()));
+            addImageIfMissing(mGuide.getIntroImage().getPath(mImageSizes.getGrid()));
 
-            for (GuideStep step : guide.getSteps()) {
+            for (GuideStep step : mGuide.getSteps()) {
                for (Image image : step.getImages()) {
                   addImageIfMissing(image.getPath(mImageSizes.getMain()));
 
@@ -167,11 +169,16 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
       }
 
+      // Update at most every 5 seconds so we don't spend all of our time updating
+      // values in the DB.
+      private static final int GUIDE_PROGRESS_INTERVAL_MS = 5000;
+
       private final Site mSite;
       private final User mUser;
       private final ApiDatabase mDb;
       protected final ImageSizes mImageSizes;
       private boolean mChanges;
+      private long mLastProgressUpdate;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
@@ -179,6 +186,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          mDb = ApiDatabase.get(MainApplication.get());
          mImageSizes = MainApplication.get().getImageSizes();
          mChanges = false;
+         mLastProgressUpdate = 0;
       }
 
       /**
@@ -192,10 +200,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          ApiEvent.UserFavorites favorites = performApiCall(apiCall, ApiEvent.UserFavorites.class);
 
          ArrayList<GuideInfo> staleGuides = getStaleGuides(favorites.getResult());
-         ArrayList<Guide> updatedGuides = updateGuides(staleGuides);
+         ArrayList<GuideImageSet> updatedGuides = updateGuides(staleGuides);
 
          // TODO: We need to verify that all the images of all the guides are downloaded
-         // in case the sync fails partway through and doesn't finish downloading all the
+         // in case the sync fails partway through and doesn't finish downloading all the images.
          downloadMissingImages(updatedGuides);
 
          return mChanges;
@@ -246,16 +254,18 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * Updates the provided guides by downloading the full guide and adding/updating
        * the value stored in the DB.
        */
-      private ArrayList<Guide> updateGuides(ArrayList<GuideInfo> staleGuides) {
-         ArrayList<Guide> guides = new ArrayList<Guide>();
+      private ArrayList<GuideImageSet> updateGuides(ArrayList<GuideInfo> staleGuides) {
+         ArrayList<GuideImageSet> guides = new ArrayList<GuideImageSet>();
 
          for (GuideInfo staleGuide : staleGuides) {
             ApiEvent.ViewGuide fullGuide = performApiCall(ApiCall.guide(staleGuide.mGuideid),
              ApiEvent.ViewGuide.class);
+            GuideImageSet guideImages = new GuideImageSet(fullGuide);
 
-            mDb.saveGuide(mSite, mUser, fullGuide);
+            mDb.saveGuide(mSite, mUser, guideImages.mGuideEvent, guideImages.mTotalImages,
+             guideImages.mTotalImages - guideImages.mImagesRemaining);
 
-            guides.add(fullGuide.getResult());
+            guides.add(guideImages);
          }
 
          return guides;
@@ -264,8 +274,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Downloads all new images contained in the guides.
        */
-      private int downloadMissingImages(ArrayList<Guide> guides) {
-         List<GuideImageSet> missingGuideImages = getMissingGuideImages(guides);
+      private int downloadMissingImages(List<GuideImageSet> missingGuideImages) {
          int totalMissingImages = getTotalMissingImages(missingGuideImages);
          int imagesDownloaded = 0;
 
@@ -299,13 +308,12 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                   guideImages.mImagesRemaining--;
                }
 
-               Log.w(TAG, guideImages.mTotalImages - guideImages.mImagesRemaining + "/" +
-                guideImages.mTotalImages + " | Total downloaded: " + imagesDownloaded);
-
                updateNotificationProgress(totalMissingImages, imagesDownloaded, false);
+               updateGuideProgress(guideImages, true);
             }
 
-            // TODO: Mark guide as complete.
+            // Make sure the guide is marked as complete.
+            updateGuideProgress(guideImages, false);
          }
 
          if (imagesDownloaded > 0) {
@@ -315,6 +323,19 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          Log.w(TAG, "Images: " + imagesDownloaded + "/" + totalMissingImages);
 
          return imagesDownloaded;
+      }
+
+      private void updateGuideProgress(GuideImageSet guide, boolean rateLimit) {
+         if (!rateLimit || System.currentTimeMillis() > mLastProgressUpdate +
+          GUIDE_PROGRESS_INTERVAL_MS) {
+
+            Log.w(TAG, "Updating progress: " + (guide.mTotalImages - guide.mImagesRemaining) + "/" + guide.mTotalImages);
+
+            mDb.updateGuideProgress(mSite, mUser, guide.mGuide.getGuideid(), guide.mTotalImages,
+             guide.mTotalImages - guide.mImagesRemaining);
+
+            mLastProgressUpdate = System.currentTimeMillis();
+         }
       }
 
       /**
@@ -327,22 +348,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          // as a valid image path.
          File testFile = new File(getOfflinePath("test"));
          testFile.mkdirs();
-      }
-
-      /**
-       * Returns a list of guides with all of the images that need to be downloaded.
-       *
-       * TODO: Verify that these are the only sizes used for these images.
-       */
-      private List<GuideImageSet> getMissingGuideImages(ArrayList<Guide> guides) {
-         List<GuideImageSet> guideImages = new ArrayList<GuideImageSet>();
-
-         for (Guide guide : guides) {
-            GuideImageSet images = new GuideImageSet(guide);
-            guideImages.add(images);
-         }
-
-         return guideImages;
       }
 
       private int getTotalMissingImages(List<GuideImageSet> guideImages) {

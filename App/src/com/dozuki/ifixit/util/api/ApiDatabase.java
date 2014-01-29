@@ -64,6 +64,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
    private static final String KEY_USERID = "userid";
    private static final String KEY_GUIDEID = "guideid";
    private static final String KEY_MODIFIED_DATE = "modified_date";
+   private static final String KEY_IMAGES_TOTAL = "images_total";
+   private static final String KEY_IMAGES_DOWNLOADED = "images_downloaded";
    private static final String KEY_JSON = "json";
 
    private static final String CREATE_API_RESULTS_TABLE =
@@ -73,6 +75,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
        KEY_USERID + " INTEGER, " +
        KEY_GUIDEID + " INTEGER, " +
        KEY_MODIFIED_DATE + " REAL, " +
+       KEY_IMAGES_TOTAL + " INTEGER, " +
+       KEY_IMAGES_DOWNLOADED + " INTEGER, " +
        KEY_JSON + " TEXT, " +
        "UNIQUE (" +
           KEY_SITE_NAME + ", " +
@@ -124,7 +128,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
        TABLE_OFFLINE_GUIDES,
        new String[] {KEY_GUIDEID, KEY_MODIFIED_DATE},
        KEY_SITE_NAME + " = ? AND " +
-        KEY_USERID + " = ?",
+       KEY_USERID + " = ?",
        new String[] {site.mName, user.getUserid() + ""},
        null,
        null,
@@ -176,7 +180,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
       );
    }
 
-   public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent) {
+   public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent, int imagesTotal,
+    int imagesDownloaded) {
       SQLiteDatabase db = getWritableDatabase();
       ContentValues values = new ContentValues();
       Guide guide = guideEvent.getResult();
@@ -185,9 +190,27 @@ public class ApiDatabase extends SQLiteOpenHelper {
       values.put(KEY_USERID, user.getUserid());
       values.put(KEY_GUIDEID, guide.getGuideid());
       values.put(KEY_MODIFIED_DATE, guide.getAbsoluteModifiedDate());
+      values.put(KEY_IMAGES_TOTAL, imagesTotal);
+      values.put(KEY_IMAGES_DOWNLOADED, imagesDownloaded);
       values.put(KEY_JSON, guideEvent.getResponse());
 
       db.insertWithOnConflict(TABLE_OFFLINE_GUIDES, null, values,
        SQLiteDatabase.CONFLICT_REPLACE);
+   }
+
+   public void updateGuideProgress(Site site, User user, int guideid, int imagesTotal,
+    int imagesDownloaded) {
+      ContentValues values = new ContentValues();
+      values.put(KEY_IMAGES_TOTAL, imagesTotal);
+      values.put(KEY_IMAGES_DOWNLOADED, imagesDownloaded);
+
+      getWritableDatabase().update(
+       TABLE_OFFLINE_GUIDES,
+       values,
+       KEY_SITE_NAME + " = ? AND " +
+       KEY_USERID + " = ? AND " +
+       KEY_GUIDEID + " = ?",
+       new String[] {site.mName, user.getUserid() + "", guideid + ""}
+      );
    }
 }
