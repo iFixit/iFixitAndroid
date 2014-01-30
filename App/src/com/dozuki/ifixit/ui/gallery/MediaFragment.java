@@ -232,9 +232,7 @@ public abstract class MediaFragment extends BaseFragment
             return;
          }
 
-         Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-         intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-         startActivity(intent);
+         startActivity(FullImageViewActivity.viewImage(getActivity(), url, false));
       }
    }
 

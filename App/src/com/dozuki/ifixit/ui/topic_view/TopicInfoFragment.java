@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.topic_view;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -24,10 +22,6 @@ import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
-import com.google.analytics.tracking.android.EasyTracker;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 
 public class TopicInfoFragment extends BaseFragment {
 
@@ -80,11 +74,11 @@ public class TopicInfoFragment extends BaseFragment {
          public void onClick(View v) {
             String url = (String) v.getTag();
 
-            if (url == null || (url.equals("") || url.startsWith("."))) return;
+            if (url == null || (url.equals("") || url.startsWith("."))) {
+               return;
+            }
 
-            Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-            startActivity(intent);
+            startActivity(FullImageViewActivity.viewImage(getActivity(), url, false));
          }
       });
 

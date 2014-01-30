@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui.guide;
 
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.TypedArray;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
@@ -108,11 +108,12 @@ public class ThumbnailView extends LinearLayout {
          public void onClick(View v) {
             String url = (String) v.getTag();
 
-            if (url == null || (url.equals("") || url.startsWith("."))) return;
+            if (url == null || (url.equals("") || url.startsWith("."))) {
+               return;
+            }
+
             Context context = getContext();
-            Intent intent = new Intent(context, FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-            context.startActivity(intent);
+            context.startActivity(FullImageViewActivity.viewImage(context, url, mIsOfflineGuide));
          }
       });
 
