@@ -53,16 +53,13 @@ public class FullImageViewActivity extends SherlockActivity {
       image.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
       if (url.startsWith("http")) {
-         if (offline) {
-            // TODO: Reconsider this size.
-            url += sizes.getMain();
+         url += sizes.getFull();
 
+         if (offline) {
             picasso.load(new File(ApiSyncAdapter.getOfflinePath(url)))
              .error(R.drawable.no_image)
              .into((Target) image);
          } else {
-            url += sizes.getFull();
-
             picasso.load(url)
              .error(R.drawable.no_image)
              .into((Target) image);

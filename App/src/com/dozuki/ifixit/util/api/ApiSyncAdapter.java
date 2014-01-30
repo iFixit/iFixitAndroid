@@ -156,6 +156,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                   // The counting is off because thumb is the same as getMain so we think
                   // we need to download double the number of images we actually need to.
                   //addImageIfMissing(image.getPath(mImageSizes.getThumb()));
+
+                  addImageIfMissing(image.getPath(mImageSizes.getFull()));
                }
             }
 
@@ -309,6 +311,12 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                      file.createNewFile();
                      HttpRequest request = HttpRequest.get(imageUrl);
                      request.receive(file);
+
+                     if (request.code() == 404) {
+                        Log.e(TAG, "404 FOR IMAGE! " + imageUrl);
+                        // If it's a .huge, download the original size instead because
+                        // FallBackImageView will use that one instead.
+                     }
 
                      imagesDownloaded++;
                      guideImages.mImagesRemaining--;
