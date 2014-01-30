@@ -96,10 +96,32 @@ public class ApiDatabase extends SQLiteOpenHelper {
        new String[] {site.mName, user.getUserid() + ""},
        null,
        null,
-       null,
        null);
 
       return getGuidesFromCursor(cursor, 0);
+   }
+
+   public Guide getOfflineGuide(Site site, User user, int guideid) {
+      SQLiteDatabase db = getReadableDatabase();
+
+      Cursor cursor = db.query(
+       TABLE_OFFLINE_GUIDES,
+       new String[] {KEY_JSON},
+       KEY_SITE_NAME + " = ? AND " +
+       KEY_USERID + " = ? AND " +
+       KEY_GUIDEID + " = ? ",
+       new String[] {site.mName, user.getUserid() + "", guideid + ""},
+       null,
+       null,
+       null);
+
+      ArrayList<Guide> guide = getGuidesFromCursor(cursor, 0);
+
+      if (guide.isEmpty()) {
+         return null;
+      } else {
+         return guide.get(0);
+      }
    }
 
    /**
@@ -115,7 +137,6 @@ public class ApiDatabase extends SQLiteOpenHelper {
         KEY_USERID + " = ? AND " +
         KEY_IMAGES_DOWNLOADED + " != " + KEY_IMAGES_TOTAL,
        new String[] {site.mName, user.getUserid() + ""},
-       null,
        null,
        null,
        null);
@@ -154,7 +175,6 @@ public class ApiDatabase extends SQLiteOpenHelper {
        KEY_SITE_NAME + " = ? AND " +
        KEY_USERID + " = ?",
        new String[] {site.mName, user.getUserid() + ""},
-       null,
        null,
        null,
        null);

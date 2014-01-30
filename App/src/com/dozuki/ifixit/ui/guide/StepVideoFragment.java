@@ -21,17 +21,25 @@ import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
 import com.dozuki.ifixit.util.PicassoUtils;
 
 public class StepVideoFragment extends BaseFragment {
+   private static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
+   private static final String IS_OFFLINE_GUIDE= "IS_OFFLINE_GUIDE";
 
-   public static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
    private Activity mContext;
    private VideoThumbnail mVideoPoster;
    private Video mVideo;
+   private boolean mIsOfflineGuide;
    private Resources mResources;
    private DisplayMetrics mMetrics;
 
-   /////////////////////////////////////////////////////
-   // LIFECYCLE
-   /////////////////////////////////////////////////////
+   public static StepVideoFragment newInstance(Video video, boolean isOfflineGuide) {
+      Bundle args = new Bundle();
+      args.putSerializable(GUIDE_VIDEO_KEY, video);
+      args.putBoolean(IS_OFFLINE_GUIDE, isOfflineGuide);
+      StepVideoFragment frag = new StepVideoFragment();
+      frag.setArguments(args);
+
+      return frag;
+   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -46,19 +54,12 @@ public class StepVideoFragment extends BaseFragment {
    }
 
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+   public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    Bundle savedInstanceState) {
+      mVideo = (Video)getArguments().getSerializable(GUIDE_VIDEO_KEY);
 
       // Inflate the layout for this fragment
       View v = LayoutInflater.from(mContext).inflate(R.layout.guide_step_video, container, false);
-
-      Bundle extras = getArguments();
-      if (extras != null) {
-         mVideo = (Video)extras.getSerializable(GUIDE_VIDEO_KEY);
-      }
-
-      if (savedInstanceState != null) {
-         mVideo = (Video)savedInstanceState.getSerializable(GUIDE_VIDEO_KEY);
-      }
 
       if (mVideo != null) {
          mVideoPoster = mVideo.getThumbnail();
@@ -91,14 +92,6 @@ public class StepVideoFragment extends BaseFragment {
       });
 
       return v;
-   }
-
-   @Override
-   public void onSaveInstanceState(Bundle savedInstanceState) {
-      super.onSaveInstanceState(savedInstanceState);
-
-      savedInstanceState.putSerializable(GUIDE_VIDEO_KEY, mVideo);
-
    }
 
    /////////////////////////////////////////////////////

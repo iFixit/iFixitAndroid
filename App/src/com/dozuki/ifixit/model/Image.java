@@ -70,11 +70,21 @@ public class Image implements Serializable {
    }
 
    public String getPath(String size) {
+      return getPath(size, false);
+   }
+
+   public String getPath(String size, boolean offline) {
       if (size.length() != 0 && !size.startsWith(".")) {
          size = "." + size;
       }
 
-      return mPath + size;
+      String path = mPath + size;
+
+      if (offline) {
+         return ApiSyncAdapter.getOfflinePath(path);
+      } else {
+         return path;
+      }
    }
 
    public String getOfflinePath(String size) {

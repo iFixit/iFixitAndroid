@@ -18,6 +18,7 @@ import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
@@ -41,6 +42,7 @@ public class ThumbnailView extends LinearLayout {
    private float mMainWidth = 0;
    private float mMainHeight = 0;
    private int mThumbnailSpacing;
+   private boolean mIsOfflineGuide;
 
    static class ViewHolder {
       FallbackImageView image;
@@ -131,8 +133,9 @@ public class ThumbnailView extends LinearLayout {
       init(context);
    }
 
-   public void setThumbs(ArrayList<Image> images) {
+   public void setThumbs(ArrayList<Image> images, boolean isOfflineGuide) {
       boolean hideOnSingleThumb = (images.size() <= 1 && !mShowSingle);
+      mIsOfflineGuide = isOfflineGuide;
 
       calculateDimensions(hideOnSingleThumb);
 
@@ -186,7 +189,8 @@ public class ThumbnailView extends LinearLayout {
    }
 
    private int addThumb(Image image) {
-      LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater) getContext().getSystemService(
+       Context.LAYOUT_INFLATER_SERVICE);
       View view = inflater.inflate(R.layout.thumbnail, mThumbnailContainer, false);
 
       ViewHolder thumb = new ViewHolder();
@@ -221,6 +225,9 @@ public class ThumbnailView extends LinearLayout {
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
           .centerCrop(),
           mMainImage);
+      } else if (mIsOfflineGuide) {
+         File file = new File(image.getPath(mImageSizes.getThumb(), mIsOfflineGuide));
+         buildImage(mPicasso.load(file), thumb.image);
       } else {
          String url = image.getPath(mImageSizes.getThumb());
          buildImage(mPicasso.load(url), thumb.image);
@@ -294,15 +301,19 @@ public class ThumbnailView extends LinearLayout {
    }
 
    public void setCurrentThumb(String url) {
-      // Set the images tag as the url before we append .{size} to it, otherwise FullImageView is passed a smaller
-      // version of the image.
+      // Set the images tag as the url before we append .{size} to it, otherwise
+      // FullImageView is passed a smaller version of the image.
       mMainImageContainer.setTag(url);
       mMainImage.setImageUrl(url);
 
       if (url.startsWith("http")) {
          url = url + mImageSizes.getMain();
 
-         buildImage(mPicasso.load(url), mMainImage);
+         if (mIsOfflineGuide) {
+            buildImage(mPicasso.load(new File(ApiSyncAdapter.getOfflinePath(url))), mMainImage);
+         } else {
+            buildImage(mPicasso.load(url), mMainImage);
+         }
       } else {
          buildImage(mPicasso.load(new File(url))
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))

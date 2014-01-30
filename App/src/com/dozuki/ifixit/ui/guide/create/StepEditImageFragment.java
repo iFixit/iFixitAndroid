@@ -81,7 +81,7 @@ public class StepEditImageFragment extends BaseFragment {
 
       // Initialize the step thumbnails and set the main image to the first thumbnail if it exists
       if (mImages != null && mImages.size() > 0) {
-         mThumbs.setThumbs(mImages);
+         mThumbs.setThumbs(mImages, false);
       } else {
          mThumbs.setAddImageMain();
 
@@ -216,7 +216,7 @@ public class StepEditImageFragment extends BaseFragment {
       mImages = new ArrayList<Image>(images);
 
       if (mThumbs != null) {
-         mThumbs.setThumbs(mImages);
+         mThumbs.setThumbs(mImages, false);
       }
    }
 

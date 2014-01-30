@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Embed;
@@ -22,15 +23,19 @@ import com.dozuki.ifixit.ui.guide.view.EmbedViewActivity;
 public class StepEmbedFragment extends BaseFragment {
 
    private static final String GUIDE_EMBED_KEY = "GUIDE_EMBED_KEY";
+   private static final String IS_OFFLINE_GUIDE = "IS_OFFLINE_GUIDE";
+
    private Activity mContext;
    private Resources mResources;
    private DisplayMetrics mMetrics;
    private WebView mMainWebView;
    private Embed mEmbed;
+   private boolean mIsOfflineGuide;
 
-   public static StepEmbedFragment newInstance(Embed embed) {
+   public static StepEmbedFragment newInstance(Embed embed, boolean isOfflineGuide) {
       Bundle args = new Bundle();
       args.putSerializable(GUIDE_EMBED_KEY, embed);
+      args.putBoolean(IS_OFFLINE_GUIDE, isOfflineGuide);
       StepEmbedFragment frag = new StepEmbedFragment();
       frag.setArguments(args);
 
@@ -54,7 +59,9 @@ public class StepEmbedFragment extends BaseFragment {
    }
 
    @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+   public View onCreateView(LayoutInflater inflater, ViewGroup container,
+    Bundle savedInstanceState) {
+      mEmbed = (Embed)getArguments().getSerializable(GUIDE_EMBED_KEY);
 
       // Inflate the layout for this fragment
       View v = ((LayoutInflater)getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE))
@@ -64,11 +71,6 @@ public class StepEmbedFragment extends BaseFragment {
 
       if (savedInstanceState != null) {
          mMainWebView.restoreState(savedInstanceState);
-      }
-
-      Bundle extras = getArguments();
-      if (extras != null) {
-         mEmbed = (Embed) extras.getSerializable(GUIDE_EMBED_KEY);
       }
 
       WebSettings settings = mMainWebView.getSettings();

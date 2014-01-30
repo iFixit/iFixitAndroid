@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui.guide.view;
 
 import android.content.Context;
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -14,12 +15,14 @@ import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
+import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiDatabase;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -53,6 +56,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private int mInboundStepId = DEFAULT_INBOUND_STEPID;
    private GuideViewAdapter mAdapter;
    private boolean mFavoriting = false;
+   private boolean mIsOfflineGuide = false;
    private Toast mToast;
 
    /////////////////////////////////////////////////////
@@ -96,7 +100,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (mGuide != null) {
          setGuide(mGuide, mCurrentPage);
       } else {
-         getGuide(mGuideid);
+         fetchGuideFromApi(mGuideid);
       }
 
       //initSpeechRecognizer();
@@ -127,7 +131,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mInboundStepId = -1;
 
       extractExtras(intent.getExtras());
-      getGuide(mGuideid);
+      fetchGuideFromApi(mGuideid);
    }
 
    @Override
@@ -203,7 +207,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             // Set guide to null to force a refresh of the guide object.
             mGuide = null;
             supportInvalidateOptionsMenu();
-            getGuide(mGuideid);
+            fetchGuideFromApi(mGuideid);
             return true;
          case R.id.favorite_guide:
             // Current favorite state.
@@ -231,27 +235,39 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Subscribe
    public void onGuide(ApiEvent.ViewGuide event) {
+      if (MainApplication.get().isUserLoggedIn() &&
+       (event.mStoredResponse || event.hasError())) {
+         // Attempt to use an offline guide if it isn't a live response.
+         fetchOfflineGuide(mGuideid, event);
+      }
+
       if (!event.hasError()) {
          if (mGuide == null) {
             Guide guide = event.getResult();
-            if (mInboundStepId != DEFAULT_INBOUND_STEPID) {
-               for (int i = 0; i < guide.getSteps().size(); i++) {
-                  if (mInboundStepId == guide.getStep(i).getStepid()) {
-                     int stepOffset = 1;
-                     if (guide.getNumTools() != 0) stepOffset++;
-                     if (guide.getNumParts() != 0) stepOffset++;
-
-                     // Account for the introduction, parts and tools pages
-                     mCurrentPage = i + stepOffset;
-                     break;
-                  }
-               }
-            }
+            mCurrentPage = calculateInitialPage(guide);
             setGuide(guide, mCurrentPage);
          }
       } else {
          Api.getErrorDialog(this, event).show();
       }
+   }
+
+   private int calculateInitialPage(Guide guide) {
+      if (mInboundStepId != DEFAULT_INBOUND_STEPID) {
+         for (int i = 0; i < guide.getSteps().size(); i++) {
+            if (mInboundStepId == guide.getStep(i).getStepid()) {
+               int stepOffset = 1;
+               if (guide.getNumTools() != 0) stepOffset++;
+               if (guide.getNumParts() != 0) stepOffset++;
+
+               // Account for the introduction, parts and tools pages
+               return i + stepOffset;
+            }
+         }
+      }
+
+      // Default to the first page.
+      return 0;
    }
 
    @Subscribe
@@ -309,7 +325,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       String guideTitle = mGuide.getTitle();
       setTitle(guideTitle);
 
-      mAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide);
+      mAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide,
+       mIsOfflineGuide);
 
       mPager.setAdapter(mAdapter);
       mPager.setVisibility(View.VISIBLE);
@@ -324,9 +341,41 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       supportInvalidateOptionsMenu();
    }
 
-   public void getGuide(int guideid) {
+   private void fetchGuideFromApi(int guideid) {
       showLoading(R.id.loading_container);
       Api.call(this, ApiCall.guide(guideid));
+   }
+
+   /**
+    * Returns true if the guide is being fetched, false otherwise.
+    */
+   private void fetchOfflineGuide(final int guideid, final ApiEvent.ViewGuide event) {
+      final MainApplication app = MainApplication.get();
+      final User user = app.getUser();
+
+      // Can't get offline guide if the user isn't logged in.
+      if (user == null) {
+         throw new IllegalStateException("Can't fetch offline guide for logged out user.");
+      }
+
+      new AsyncTask<String, Void, Guide>() {
+         @Override
+         protected Guide doInBackground(String... params) {
+            return ApiDatabase.get(app).getOfflineGuide(app.getSite(), user, guideid);
+         }
+
+         @Override
+         protected void onPostExecute(Guide guide) {
+            if (guide != null) {
+               mIsOfflineGuide = true;
+               mCurrentPage = calculateInitialPage(guide);
+               setGuide(guide, mCurrentPage);
+            } else {
+               mCurrentPage = calculateInitialPage(event.getResult());
+               setGuide(event.getResult(), mCurrentPage);
+            }
+         }
+      }.execute();
    }
 
    /**
