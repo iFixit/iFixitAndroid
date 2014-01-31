@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui.guide;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -19,6 +18,10 @@ import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
+import java.io.File;
 
 public class StepVideoFragment extends BaseFragment {
    private static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
@@ -57,6 +60,7 @@ public class StepVideoFragment extends BaseFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       mVideo = (Video)getArguments().getSerializable(GUIDE_VIDEO_KEY);
+      mIsOfflineGuide = getArguments().getBoolean(IS_OFFLINE_GUIDE);
 
       // Inflate the layout for this fragment
       View v = LayoutInflater.from(mContext).inflate(R.layout.guide_step_video, container, false);
@@ -74,20 +78,25 @@ public class StepVideoFragment extends BaseFragment {
       poster.setLayoutParams(params);
       playButtonContainer.setLayoutParams(params);
 
-      PicassoUtils.with(mContext)
-       .load(mVideoPoster.getPath(MainApplication.get().getImageSizes().getMain()))
-       .error(R.drawable.no_image)
+      Picasso picasso = PicassoUtils.with(mContext);
+      RequestCreator request;
+      String imageUrl = mVideoPoster.getPath(MainApplication.get().getImageSizes().getMain(),
+       mIsOfflineGuide);
+
+      if (mIsOfflineGuide) {
+         request = picasso.load(new File(imageUrl));
+      } else {
+         request = picasso.load(imageUrl);
+      }
+
+      request.error(R.drawable.no_image)
        .into(poster);
 
-      playButton.setTag(R.id.guide_step_view_video_url, mVideo.getEncodings().get(0).getURL());
+      final String videoUrl = mVideo.getEncodings().get(0).getURL();
       playButton.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-            String url = (String) v.getTag(R.id.guide_step_view_video_url);
-
-            Intent i = new Intent(mContext, VideoViewActivity.class);
-            i.putExtra(VideoViewActivity.VIDEO_URL, url);
-            startActivity(i);
+            startActivity(VideoViewActivity.viewVideo(mContext, videoUrl, mIsOfflineGuide));
          }
       });
 

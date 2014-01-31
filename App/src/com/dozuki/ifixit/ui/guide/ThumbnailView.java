@@ -311,7 +311,7 @@ public class ThumbnailView extends LinearLayout {
          url = url + mImageSizes.getMain();
 
          if (mIsOfflineGuide) {
-            buildImage(mPicasso.load(new File(ApiSyncAdapter.getOfflinePath(url))), mMainImage);
+            buildImage(mPicasso.load(new File(ApiSyncAdapter.getOfflineMediaPath(url))), mMainImage);
          } else {
             buildImage(mPicasso.load(url), mMainImage);
          }

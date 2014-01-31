@@ -317,7 +317,7 @@ public class JSONHelper {
       int width = jVideoThumb.getInt("width");
       int height = jVideoThumb.getInt("height");
 
-      return new VideoThumbnail(image.getId(), image.getPath(), ratio, width, height);
+      return new VideoThumbnail(image.getId(), image.getPath(), width, height);
    }
 
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {

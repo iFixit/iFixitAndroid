@@ -81,14 +81,14 @@ public class Image implements Serializable {
       String path = mPath + size;
 
       if (offline) {
-         return ApiSyncAdapter.getOfflinePath(path);
+         return ApiSyncAdapter.getOfflineMediaPath(path);
       } else {
          return path;
       }
    }
 
    public String getOfflinePath(String size) {
-      return ApiSyncAdapter.getOfflinePath(getPath(size));
+      return ApiSyncAdapter.getOfflineMediaPath(getPath(size));
    }
 
    public boolean isLocal() {

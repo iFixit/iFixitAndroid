@@ -13,6 +13,7 @@ import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -123,54 +124,64 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       return sBaseAppDirectory;
    }
 
-   public static String getOfflinePath(String imageUrl) {
-      return getBaseAppDirectory() + "/offline_guides/images/" + imageUrl.hashCode();
+   public static String getOfflineMediaPath(String mediaUrl) {
+      String path = getBaseAppDirectory() + "/offline_guides/media/" + mediaUrl.hashCode();
+
+      return path;
    }
 
    private class OfflineGuideSyncer {
 
-      private class GuideImageSet {
+      private class GuideMedia {
          public ApiEvent.ViewGuide mGuideEvent;
          public Guide mGuide;
-         public Set<String> mMissingImages;
-         public int mTotalImages;
-         public int mImagesRemaining;
+         public Set<String> mMissingMedia;
+         public int mTotalMedia;
+         public int mMediaRemaining;
 
-         public GuideImageSet(ApiEvent.ViewGuide guideEvent) {
+         public GuideMedia(ApiEvent.ViewGuide guideEvent) {
             this(guideEvent.getResult());
 
             mGuideEvent = guideEvent;
          }
 
-         public GuideImageSet(Guide guide) {
+         public GuideMedia(Guide guide) {
             mGuide = guide;
-            mMissingImages = new HashSet<String>();
-            mTotalImages = 0;
+            mMissingMedia = new HashSet<String>();
+            mTotalMedia = 0;
 
-            addImageIfMissing(mGuide.getIntroImage().getPath(mImageSizes.getGrid()));
+            addMediaIfMissing(mGuide.getIntroImage().getPath(mImageSizes.getGrid()));
 
             for (GuideStep step : mGuide.getSteps()) {
                for (Image image : step.getImages()) {
-                  addImageIfMissing(image.getPath(mImageSizes.getMain()));
+                  addMediaIfMissing(image.getPath(mImageSizes.getMain()));
 
                   // The counting is off because thumb is the same as getMain so we think
                   // we need to download double the number of images we actually need to.
-                  //addImageIfMissing(image.getPath(mImageSizes.getThumb()));
+                  //addMediaIfMissing(image.getPath(mImageSizes.getThumb()));
 
-                  addImageIfMissing(image.getPath(mImageSizes.getFull()));
+                  addMediaIfMissing(image.getPath(mImageSizes.getFull()));
+               }
+
+               if (step.hasVideo()) {
+                  Video video = step.getVideo();
+                  addMediaIfMissing(video.getThumbnail().getPath(mImageSizes.getMain()));
+                  // TODO: I don't think that the order of the encodings is reliable so
+                  // we should pick one that we like and use that.
+                  addMediaIfMissing(video.getEncodings().get(0).getURL());
                }
             }
 
-            mImagesRemaining = mMissingImages.size();
+            mMediaRemaining = mMissingMedia.size();
          }
 
-         private void addImageIfMissing(String imageUrl) {
+         private void addMediaIfMissing(String imageUrl) {
             // Always add to the total.
-            mTotalImages++;
+            mTotalMedia++;
 
-            File file = new File(getOfflinePath(imageUrl));
+            File file = new File(getOfflineMediaPath(imageUrl));
             if (!file.exists()) {
-               mMissingImages.add(imageUrl);
+               mMissingMedia.add(imageUrl);
             }
          }
       }
@@ -197,31 +208,31 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
       /**
        * Does the heavy lifting for finding stale guides, updating their contents,
-       * and downloading images.
+       * and downloading media.
        *
-       * TODO: It would be nice to delete images that are no longer referenced.
+       * TODO: It would be nice to delete media that are no longer referenced.
        */
       protected boolean syncOfflineGuides() {
-         ArrayList<GuideImageSet> uncompletedGuides = getUncompletedGuides();
+         ArrayList<GuideMedia> uncompletedGuides = getUncompletedGuides();
          ArrayList<GuideInfo> staleGuides = getStaleGuides();
-         ArrayList<GuideImageSet> updatedGuides = updateGuides(staleGuides);
+         ArrayList<GuideMedia> updatedGuides = updateGuides(staleGuides);
 
-         // Merge updated guides with guides with missing images and fetch all of
-         // their images.
+         // Merge updated guides with guides with missing media and fetch all of
+         // their media.
          uncompletedGuides.addAll(updatedGuides);
-         downloadMissingImages(uncompletedGuides);
+         downloadMissingMedia(uncompletedGuides);
 
          return mChanges;
       }
 
-      private ArrayList<GuideImageSet> getUncompletedGuides() {
-         ArrayList<GuideImageSet> guideImages = new ArrayList<GuideImageSet>();
+      private ArrayList<GuideMedia> getUncompletedGuides() {
+         ArrayList<GuideMedia> guideMedia = new ArrayList<GuideMedia>();
 
          for (Guide guide : mDb.getUncompleteGuides(mSite, mUser)) {
-            guideImages.add(new GuideImageSet(guide));
+            guideMedia.add(new GuideMedia(guide));
          }
 
-         return guideImages;
+         return guideMedia;
       }
 
       /**
@@ -274,18 +285,18 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * Updates the provided guides by downloading the full guide and adding/updating
        * the value stored in the DB.
        */
-      private ArrayList<GuideImageSet> updateGuides(ArrayList<GuideInfo> staleGuides) {
-         ArrayList<GuideImageSet> guides = new ArrayList<GuideImageSet>();
+      private ArrayList<GuideMedia> updateGuides(ArrayList<GuideInfo> staleGuides) {
+         ArrayList<GuideMedia> guides = new ArrayList<GuideMedia>();
 
          for (GuideInfo staleGuide : staleGuides) {
             ApiEvent.ViewGuide fullGuide = performApiCall(ApiCall.guide(staleGuide.mGuideid),
              ApiEvent.ViewGuide.class);
-            GuideImageSet guideImages = new GuideImageSet(fullGuide);
+            GuideMedia guideMedia = new GuideMedia(fullGuide);
 
-            mDb.saveGuide(mSite, mUser, guideImages.mGuideEvent, guideImages.mTotalImages,
-             guideImages.mTotalImages - guideImages.mImagesRemaining);
+            mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, guideMedia.mTotalMedia,
+             guideMedia.mTotalMedia - guideMedia.mMediaRemaining);
 
-            guides.add(guideImages);
+            guides.add(guideMedia);
          }
 
          return guides;
@@ -294,93 +305,93 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Downloads all new images contained in the guides.
        */
-      private int downloadMissingImages(List<GuideImageSet> missingGuideImages) {
-         int totalMissingImages = getTotalMissingImages(missingGuideImages);
-         int imagesDownloaded = 0;
+      private int downloadMissingMedia(List<GuideMedia> missingGuideMedia) {
+         int totalMissingMedia = getTotalMissingMedia(missingGuideMedia);
+         int mediaDownloaded = 0;
 
-         createImageDirectories();
+         createMediaDirectories();
 
-         for (GuideImageSet guideImages : missingGuideImages) {
-            for (String imageUrl : guideImages.mMissingImages) {
-               File file = new File(getOfflinePath(imageUrl));
+         for (GuideMedia guideMedia : missingGuideMedia) {
+            for (String mediaUrl : guideMedia.mMissingMedia) {
+               File file = new File(getOfflineMediaPath(mediaUrl));
 
                if (!file.exists()) {
                   try {
-                     Log.d(TAG, "Downloading: " + imageUrl);
+                     Log.d(TAG, "Downloading: " + mediaUrl);
 
                      file.createNewFile();
-                     HttpRequest request = HttpRequest.get(imageUrl);
+                     HttpRequest request = HttpRequest.get(mediaUrl);
                      request.receive(file);
 
                      if (request.code() == 404) {
-                        Log.e(TAG, "404 FOR IMAGE! " + imageUrl);
+                        Log.e(TAG, "404 FOR MEDIA! " + mediaUrl);
                         // If it's a .huge, download the original size instead because
                         // FallBackImageView will use that one instead.
                      }
 
-                     imagesDownloaded++;
-                     guideImages.mImagesRemaining--;
+                     mediaDownloaded++;
+                     guideMedia.mMediaRemaining--;
                   } catch (IOException e) {
-                     Log.e(TAG, "Failed to download image", e);
+                     Log.e(TAG, "Failed to download medium", e);
                      throw new ApiSyncException(e);
                   } catch (HttpRequest.HttpRequestException e) {
-                     Log.e(TAG, "Failed to download image", e);
+                     Log.e(TAG, "Failed to download medium", e);
                      throw new ApiSyncException(e);
                   }
                } else {
-                  Log.d(TAG, "Skipping: " + imageUrl);
-                  // Happens if guides share images.
-                  imagesDownloaded++;
-                  guideImages.mImagesRemaining--;
+                  Log.d(TAG, "Skipping: " + mediaUrl);
+                  // Happens if guides share media.
+                  mediaDownloaded++;
+                  guideMedia.mMediaRemaining--;
                }
 
-               updateNotificationProgress(totalMissingImages, imagesDownloaded, false);
-               updateGuideProgress(guideImages, true);
+               updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
+               updateGuideProgress(guideMedia, true);
             }
 
             // Make sure the guide is marked as complete.
-            updateGuideProgress(guideImages, false);
+            updateGuideProgress(guideMedia, false);
          }
 
-         if (imagesDownloaded > 0) {
+         if (mediaDownloaded > 0) {
             mChanges = true;
          }
 
-         Log.w(TAG, "Images: " + imagesDownloaded + "/" + totalMissingImages);
+         Log.w(TAG, "Media: " + mediaDownloaded + "/" + totalMissingMedia);
 
-         return imagesDownloaded;
+         return mediaDownloaded;
       }
 
-      private void updateGuideProgress(GuideImageSet guide, boolean rateLimit) {
+      private void updateGuideProgress(GuideMedia guide, boolean rateLimit) {
          if (!rateLimit || System.currentTimeMillis() > mLastProgressUpdate +
           GUIDE_PROGRESS_INTERVAL_MS) {
 
-            Log.w(TAG, "Updating progress: " + (guide.mTotalImages - guide.mImagesRemaining) + "/" + guide.mTotalImages);
+            Log.w(TAG, "Updating progress: " + (guide.mTotalMedia - guide.mMediaRemaining) + "/" + guide.mTotalMedia);
 
-            mDb.updateGuideProgress(mSite, mUser, guide.mGuide.getGuideid(), guide.mTotalImages,
-             guide.mTotalImages - guide.mImagesRemaining);
+            mDb.updateGuideProgress(mSite, mUser, guide.mGuide.getGuideid(), guide.mTotalMedia,
+             guide.mTotalMedia - guide.mMediaRemaining);
 
             mLastProgressUpdate = System.currentTimeMillis();
          }
       }
 
       /**
-       * Creates the necessary directories for storing images. This is purely so
-       * File.mkdirs() isn't called for every single image downloaded. This makes it so
+       * Creates the necessary directories for storing media. This is purely so
+       * File.mkdirs() isn't called for every single medium downloaded. This makes it so
        * it is called at most once per sync.
        */
-      private void createImageDirectories() {
+      private void createMediaDirectories() {
          // The ending file name doesn't matter as long as the parents are the same
-         // as a valid image path.
-         File testFile = new File(getOfflinePath("test"));
+         // as a valid media path.
+         File testFile = new File(getOfflineMediaPath("test"));
          testFile.mkdirs();
       }
 
-      private int getTotalMissingImages(List<GuideImageSet> guideImages) {
+      private int getTotalMissingMedia(List<GuideMedia> guideMedia) {
          int total = 0;
 
-         for (GuideImageSet guide : guideImages) {
-            total += guide.mMissingImages.size();
+         for (GuideMedia guide : guideMedia) {
+            total += guide.mMissingMedia.size();
          }
 
          return total;

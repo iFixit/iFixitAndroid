@@ -56,7 +56,7 @@ public class FullImageViewActivity extends SherlockActivity {
          url += sizes.getFull();
 
          if (offline) {
-            picasso.load(new File(ApiSyncAdapter.getOfflinePath(url)))
+            picasso.load(new File(ApiSyncAdapter.getOfflineMediaPath(url)))
              .error(R.drawable.no_image)
              .into((Target) image);
          } else {
