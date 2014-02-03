@@ -12,13 +12,10 @@ import android.util.Log;
 
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.github.kevinsawicki.http.HttpRequest;
@@ -26,10 +23,8 @@ import com.github.kevinsawicki.http.HttpRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
@@ -131,61 +126,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    }
 
    private class OfflineGuideSyncer {
-
-      private class GuideMedia {
-         public ApiEvent.ViewGuide mGuideEvent;
-         public Guide mGuide;
-         public Set<String> mMissingMedia;
-         public int mTotalMedia;
-         public int mMediaRemaining;
-
-         public GuideMedia(ApiEvent.ViewGuide guideEvent) {
-            this(guideEvent.getResult());
-
-            mGuideEvent = guideEvent;
-         }
-
-         public GuideMedia(Guide guide) {
-            mGuide = guide;
-            mMissingMedia = new HashSet<String>();
-            mTotalMedia = 0;
-
-            addMediaIfMissing(mGuide.getIntroImage().getPath(mImageSizes.getGrid()));
-
-            for (GuideStep step : mGuide.getSteps()) {
-               for (Image image : step.getImages()) {
-                  addMediaIfMissing(image.getPath(mImageSizes.getMain()));
-
-                  // The counting is off because thumb is the same as getMain so we think
-                  // we need to download double the number of images we actually need to.
-                  //addMediaIfMissing(image.getPath(mImageSizes.getThumb()));
-
-                  addMediaIfMissing(image.getPath(mImageSizes.getFull()));
-               }
-
-               if (step.hasVideo()) {
-                  Video video = step.getVideo();
-                  addMediaIfMissing(video.getThumbnail().getPath(mImageSizes.getMain()));
-                  // TODO: I don't think that the order of the encodings is reliable so
-                  // we should pick one that we like and use that.
-                  addMediaIfMissing(video.getEncodings().get(0).getURL());
-               }
-            }
-
-            mMediaRemaining = mMissingMedia.size();
-         }
-
-         private void addMediaIfMissing(String imageUrl) {
-            // Always add to the total.
-            mTotalMedia++;
-
-            File file = new File(getOfflineMediaPath(imageUrl));
-            if (!file.exists()) {
-               mMissingMedia.add(imageUrl);
-            }
-         }
-      }
-
       // Update at most every 5 seconds so we don't spend all of our time updating
       // values in the DB.
       private static final int GUIDE_PROGRESS_INTERVAL_MS = 5000;
@@ -213,9 +153,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * TODO: It would be nice to delete media that are no longer referenced.
        */
       protected boolean syncOfflineGuides() {
-         ArrayList<GuideMedia> uncompletedGuides = getUncompletedGuides();
+         ArrayList<GuideMediaProgress> uncompletedGuides = getUncompletedGuides();
          ArrayList<GuideInfo> staleGuides = getStaleGuides();
-         ArrayList<GuideMedia> updatedGuides = updateGuides(staleGuides);
+         ArrayList<GuideMediaProgress> updatedGuides = updateGuides(staleGuides);
 
          // Merge updated guides with guides with missing media and fetch all of
          // their media.
@@ -225,11 +165,11 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          return mChanges;
       }
 
-      private ArrayList<GuideMedia> getUncompletedGuides() {
-         ArrayList<GuideMedia> guideMedia = new ArrayList<GuideMedia>();
+      private ArrayList<GuideMediaProgress> getUncompletedGuides() {
+         ArrayList<GuideMediaProgress> guideMedia = new ArrayList<GuideMediaProgress>();
 
          for (Guide guide : mDb.getUncompleteGuides(mSite, mUser)) {
-            guideMedia.add(new GuideMedia(guide));
+            guideMedia.add(new GuideMediaProgress(guide, mImageSizes));
          }
 
          return guideMedia;
@@ -285,13 +225,13 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * Updates the provided guides by downloading the full guide and adding/updating
        * the value stored in the DB.
        */
-      private ArrayList<GuideMedia> updateGuides(ArrayList<GuideInfo> staleGuides) {
-         ArrayList<GuideMedia> guides = new ArrayList<GuideMedia>();
+      private ArrayList<GuideMediaProgress> updateGuides(ArrayList<GuideInfo> staleGuides) {
+         ArrayList<GuideMediaProgress> guides = new ArrayList<GuideMediaProgress>();
 
          for (GuideInfo staleGuide : staleGuides) {
             ApiEvent.ViewGuide fullGuide = performApiCall(ApiCall.guide(staleGuide.mGuideid),
              ApiEvent.ViewGuide.class);
-            GuideMedia guideMedia = new GuideMedia(fullGuide);
+            GuideMediaProgress guideMedia = new GuideMediaProgress(fullGuide, mImageSizes);
 
             mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, guideMedia.mTotalMedia,
              guideMedia.mTotalMedia - guideMedia.mMediaRemaining);
@@ -305,13 +245,13 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Downloads all new images contained in the guides.
        */
-      private int downloadMissingMedia(List<GuideMedia> missingGuideMedia) {
+      private int downloadMissingMedia(List<GuideMediaProgress> missingGuideMedia) {
          int totalMissingMedia = getTotalMissingMedia(missingGuideMedia);
          int mediaDownloaded = 0;
 
          createMediaDirectories();
 
-         for (GuideMedia guideMedia : missingGuideMedia) {
+         for (GuideMediaProgress guideMedia : missingGuideMedia) {
             for (String mediaUrl : guideMedia.mMissingMedia) {
                File file = new File(getOfflineMediaPath(mediaUrl));
 
@@ -362,7 +302,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          return mediaDownloaded;
       }
 
-      private void updateGuideProgress(GuideMedia guide, boolean rateLimit) {
+      private void updateGuideProgress(GuideMediaProgress guide, boolean rateLimit) {
          if (!rateLimit || System.currentTimeMillis() > mLastProgressUpdate +
           GUIDE_PROGRESS_INTERVAL_MS) {
 
@@ -387,10 +327,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          testFile.mkdirs();
       }
 
-      private int getTotalMissingMedia(List<GuideMedia> guideMedia) {
+      private int getTotalMissingMedia(List<GuideMediaProgress> guideMedia) {
          int total = 0;
 
-         for (GuideMedia guide : guideMedia) {
+         for (GuideMediaProgress guide : guideMedia) {
             total += guide.mMissingMedia.size();
          }
 
@@ -419,4 +359,5 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
       }
    }
+
 }
