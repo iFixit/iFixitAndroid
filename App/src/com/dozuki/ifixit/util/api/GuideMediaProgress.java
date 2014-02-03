@@ -56,6 +56,12 @@ public class GuideMediaProgress {
       mMediaRemaining = mMissingMedia.size();
    }
 
+   public GuideMediaProgress(Guide guide, int totalMedia, int mediaRemaining) {
+      mGuide = guide;
+      mTotalMedia = totalMedia;
+      mMediaRemaining = mediaRemaining;
+   }
+
    private void addMediaIfMissing(String imageUrl) {
       // Always add to the total.
       mTotalMedia++;
