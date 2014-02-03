@@ -68,6 +68,8 @@ public abstract class ApiEvent<T> {
    public static class DeleteGuide extends ApiEvent<String> {}
    public static class PublishStatus extends ApiEvent<Guide> {}
    public static class UserGuides extends ApiEvent<ArrayList<GuideInfo>> {}
+   public static class CompleteGuide extends ApiEvent<String> {}
+   public static class UncompleteGuide extends ApiEvent<String> {}
    public static class GuideForEdit extends ApiEvent<Guide> {}
    public static class CreateGuide extends ApiEvent<Guide> {}
    public static class StepSave extends ApiEvent<GuideStep> {}

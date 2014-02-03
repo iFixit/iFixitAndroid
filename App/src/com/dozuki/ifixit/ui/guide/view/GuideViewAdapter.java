@@ -13,6 +13,7 @@ import java.util.Map;
 
 public class GuideViewAdapter extends FragmentStatePagerAdapter {
    private static final int GUIDE_INTRO_POSITION = 0;
+   private static final int GUIDE_CONCLUSION_OFFSET = 1;
    private Map<Integer, String> mPageLabelMap;
 
    private int mStepOffset = 1;
@@ -44,7 +45,7 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
    @Override
    public int getCount() {
       if (mGuide != null) {
-         return mGuide.getNumSteps() + mStepOffset;
+         return mGuide.getNumSteps() + mStepOffset + GUIDE_CONCLUSION_OFFSET;
       } else {
          return 0;
       }
@@ -64,6 +65,9 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
       } else if (position == mPartsPosition) {
          label += "/parts";
          fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getParts());
+      } else if (position == conclusionPosition()) {
+         label += "/conclusion";
+         fragment = GuideConclusionFragment.newInstance(mGuide);
       } else {
          int stepNumber = (position - mStepOffset);
          label += "/" + (stepNumber + 1); // Step title # should be 1 indexed.
@@ -94,6 +98,8 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
          return MainApplication.get().getString(R.string.requiredTools);
       } else if (position == mPartsPosition) {
          return MainApplication.get().getString(R.string.requiredParts);
+      } else if (position == conclusionPosition()) {
+         return MainApplication.get().getString(R.string.conclusion);
       } else {
          return MainApplication.get().getString(R.string.step_number, (position - mStepOffset) + 1);
       }
@@ -109,5 +115,9 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
 
    private boolean guideHasParts() {
       return mGuide.getNumParts() != 0;
+   }
+
+   private int conclusionPosition() {
+      return getCount() - GUIDE_CONCLUSION_OFFSET;
    }
 }

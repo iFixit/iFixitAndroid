@@ -178,6 +178,10 @@ public class ApiCall implements Serializable {
        + revisionid, requestBody.toString());
    }
 
+   public static ApiCall completeGuide(int guideid) {
+      return new ApiCall(ApiEndpoint.COMPLETE_GUIDE, guideid + "");
+   }
+
    private static JSONObject guideBundleToRequestBody(Bundle bundle) {
       JSONObject requestBody = new JSONObject();
       MainApplication app = MainApplication.get();

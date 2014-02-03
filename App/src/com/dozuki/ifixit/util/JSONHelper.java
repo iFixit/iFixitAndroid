@@ -202,6 +202,8 @@ public class JSONHelper {
       guide.setPublic(jGuide.getBoolean("public"));
       guide.setType(jGuide.getString("type"));
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
+      guide.setConclusion(jGuide.getString("conclusion_rendered"));
+      guide.setCompleted(jGuide.getBoolean("completed"));
 
       if (jGuide.has("can_edit")) {
          guide.setCanEdit(jGuide.getBoolean("can_edit"));
