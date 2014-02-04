@@ -32,6 +32,7 @@ dependencies {
    compile "com.github.chrisbanes.pulltorefresh:pulltorefresh:2.1.2"
    compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
    compile "com.mobeta.android.dslv:dslv:0.6.1"
+   compile "com.f2prateek.progressbutton:progressbutton:2.0.1@aar"
 }
 
 // List of sites. Used to create signingConfigs and sourceSets.

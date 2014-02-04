@@ -19,19 +19,17 @@
       android:layout_height="wrap_content"
       android:layout_marginTop="2dp"
       android:layout_marginRight="@dimen/guide_create_list_item_text_right_offset"
-      android:layout_alignLeft="@+id/guide_create_item_publish_status"
+      android:layout_toRightOf="@+id/offline_guide_thumbnail"
       android:ellipsize="end"
       android:maxLines="2"
       android:scrollHorizontally="true"
       android:text="@string/default_title"/>
 
-   <!-- Temporary. Will replace with something better. -->
-   <TextView
-      android:id="@+id/offline_guide_progress_text"
-      android:layout_width="match_parent"
+   <com.f2prateek.progressbutton.ProgressButton
+      android:id="@+id/offline_guide_progress_button"
+      android:layout_width="wrap_content"
       android:layout_height="wrap_content"
       android:layout_marginTop="2dp"
-      android:layout_below="@+id/guide_create_item_title"
-      android:layout_toRightOf="@+id/guide_create_item_thumbnail"
-      android:textSize="12sp"/>
+      android:layout_alignParentRight="true"
+      android:layout_centerVertical="true"/>
 </RelativeLayout>

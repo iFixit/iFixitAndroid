@@ -15,6 +15,7 @@ import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
+import com.f2prateek.progressbutton.ProgressButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -23,7 +24,7 @@ import java.io.File;
 public class OfflineGuideListItem extends TouchableRelativeLayout implements
  View.OnClickListener {
    private TextView mTitleView;
-   private TextView mProgressText;
+   private ProgressButton mProgressButton;
    private ImageView mThumbnail;
    private Activity mActivity;
    private GuideMediaProgress mGuideMedia;
@@ -36,7 +37,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       inflater.inflate(R.layout.offline_guide_item, this, true);
 
       mTitleView = (TextView)findViewById(R.id.offline_guide_title);
-      mProgressText = (TextView)findViewById(R.id.offline_guide_progress_text);
+      mProgressButton = (ProgressButton)findViewById(R.id.offline_guide_progress_button);
       mThumbnail = (ImageView)findViewById(R.id.offline_guide_thumbnail);
 
       setOnClickListener(this);
@@ -46,7 +47,8 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       mGuideMedia = guideMedia;
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
-      mProgressText.setText(mGuideMedia.mTotalMedia - mGuideMedia.mMediaRemaining + " / " + mGuideMedia.mTotalMedia);
+      mProgressButton.setMax(mGuideMedia.mTotalMedia);
+      mProgressButton.setProgress(mGuideMedia.mMediaRemaining);
 
       Picasso picasso = PicassoUtils.with(mActivity);
       Transformation transform = new RoundedTransformation(4, 0);
