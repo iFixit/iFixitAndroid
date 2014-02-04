@@ -47,6 +47,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       mGuideMedia = guideMedia;
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
+      mProgressButton.setPinned(true);
       mProgressButton.setMax(mGuideMedia.mTotalMedia);
       mProgressButton.setProgress(mGuideMedia.mMediaProgress);
 
