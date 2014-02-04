@@ -2,9 +2,11 @@ package com.dozuki.ifixit.util.api;
 
 import android.accounts.Account;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -17,6 +19,7 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.github.kevinsawicki.http.HttpRequest;
 
@@ -56,6 +59,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
     ContentProviderClient provider, SyncResult syncResult) {
+      // TODO: Move to a separate function once we finalize notification behavior.
       mNotificationManager = (NotificationManager)MainApplication.get().
        getSystemService(Context.NOTIFICATION_SERVICE);
       mNotificationBuilder = new NotificationCompat.Builder(MainApplication.get());
@@ -67,8 +71,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setContentText("Syncing offline guides");
       mNotificationBuilder.setSmallIcon(R.drawable.icon);
       mNotificationBuilder.setOngoing(true);
-
-      // TODO: setContentIntent to open to the offline guides list.
+      Intent intent = new Intent(MainApplication.get(), OfflineGuidesActivity.class);
+      PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
+       /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      mNotificationBuilder.setContentIntent(pendingIntent);
 
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
