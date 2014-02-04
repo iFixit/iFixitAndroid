@@ -234,7 +234,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             GuideMediaProgress guideMedia = new GuideMediaProgress(fullGuide, mImageSizes);
 
             mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, guideMedia.mTotalMedia,
-             guideMedia.mTotalMedia - guideMedia.mMediaRemaining);
+             guideMedia.mMediaProgress);
 
             guides.add(guideMedia);
          }
@@ -270,7 +270,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                      }
 
                      mediaDownloaded++;
-                     guideMedia.mMediaRemaining--;
+                     guideMedia.mMediaProgress++;
                   } catch (IOException e) {
                      Log.e(TAG, "Failed to download medium", e);
                      throw new ApiSyncException(e);
@@ -282,7 +282,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                   Log.d(TAG, "Skipping: " + mediaUrl);
                   // Happens if guides share media.
                   mediaDownloaded++;
-                  guideMedia.mMediaRemaining--;
+                  guideMedia.mMediaProgress++;
                }
 
                updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
@@ -306,10 +306,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          if (!rateLimit || System.currentTimeMillis() > mLastProgressUpdate +
           GUIDE_PROGRESS_INTERVAL_MS) {
 
-            Log.w(TAG, "Updating progress: " + (guide.mTotalMedia - guide.mMediaRemaining) + "/" + guide.mTotalMedia);
+            Log.w(TAG, "Updating progress: " + guide.mMediaProgress + "/" + guide.mTotalMedia);
 
             mDb.updateGuideProgress(mSite, mUser, guide.mGuide.getGuideid(), guide.mTotalMedia,
-             guide.mTotalMedia - guide.mMediaRemaining);
+             guide.mMediaProgress);
 
             mLastProgressUpdate = System.currentTimeMillis();
          }
@@ -359,5 +359,4 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
       }
    }
-
 }

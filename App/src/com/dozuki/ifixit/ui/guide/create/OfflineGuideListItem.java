@@ -48,7 +48,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
       mProgressButton.setMax(mGuideMedia.mTotalMedia);
-      mProgressButton.setProgress(mGuideMedia.mMediaRemaining);
+      mProgressButton.setProgress(mGuideMedia.mMediaProgress);
 
       Picasso picasso = PicassoUtils.with(mActivity);
       Transformation transform = new RoundedTransformation(4, 0);

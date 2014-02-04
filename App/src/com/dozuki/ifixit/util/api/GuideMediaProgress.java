@@ -18,7 +18,7 @@ public class GuideMediaProgress {
    public Guide mGuide;
    public Set<String> mMissingMedia;
    public int mTotalMedia;
-   public int mMediaRemaining;
+   public int mMediaProgress;
 
    public GuideMediaProgress(ApiEvent.ViewGuide guideEvent, ImageSizes imageSizes) {
       this(guideEvent.getResult(), imageSizes);
@@ -53,13 +53,13 @@ public class GuideMediaProgress {
          }
       }
 
-      mMediaRemaining = mMissingMedia.size();
+      mMediaProgress = mTotalMedia - mMissingMedia.size();
    }
 
-   public GuideMediaProgress(Guide guide, int totalMedia, int mediaRemaining) {
+   public GuideMediaProgress(Guide guide, int totalMedia, int mediaProgress) {
       mGuide = guide;
       mTotalMedia = totalMedia;
-      mMediaRemaining = mediaRemaining;
+      mMediaProgress = mediaProgress;
    }
 
    private void addMediaIfMissing(String imageUrl) {
