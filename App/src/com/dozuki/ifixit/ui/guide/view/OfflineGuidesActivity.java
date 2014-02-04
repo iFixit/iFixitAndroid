@@ -1,6 +1,9 @@
 package com.dozuki.ifixit.ui.guide.view;
 
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
@@ -22,6 +25,9 @@ import com.dozuki.ifixit.util.api.GuideMediaProgress;
 import java.util.Collections;
 import java.util.List;
 
+/**
+ * TODO: Require the user to be logged in.
+ */
 public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
  LoaderManager.LoaderCallbacks<List<GuideMediaProgress>> {
 
@@ -95,6 +101,15 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    protected OfflineGuideListAdapter mAdapter;
    protected List<GuideMediaProgress> mGuides = Collections.emptyList();
    protected ListView mListView;
+   protected BroadcastReceiver mGuideProgressReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         // TODO: This forces a full refetch and parsing of data as well as
+         // a full UI redraw.
+         // TODO: Attach it to the Loader because it's the one that owns the data?
+         getSupportLoaderManager().getLoader(0).onContentChanged();
+      }
+   };
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -107,6 +122,21 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       mListView.setAdapter(mAdapter);
 
       getSupportLoaderManager().initLoader(0, null, this);
+   }
+
+   @Override
+   public void onResume() {
+      super.onResume();
+
+      registerReceiver(mGuideProgressReceiver, new IntentFilter(
+       ApiDatabase.OFFLINE_GUIDE_DATA_CHANGED));
+   }
+
+   @Override
+   public void onPause() {
+      super.onPause();
+
+      unregisterReceiver(mGuideProgressReceiver);
    }
 
    @Override

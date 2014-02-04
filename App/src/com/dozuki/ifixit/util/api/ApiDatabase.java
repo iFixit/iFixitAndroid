@@ -2,6 +2,7 @@ package com.dozuki.ifixit.util.api;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -24,10 +25,14 @@ import java.util.Set;
  * guides.
  */
 public class ApiDatabase extends SQLiteOpenHelper {
+   public static final String OFFLINE_GUIDE_DATA_CHANGED =
+    "com.dozuki.ifixit.util.api.offline_guide_data_changed";
    private static final int DATABASE_VERSION = 1;
    private static final String DATABASE_NAME = "api";
 
    private static ApiDatabase sDatabase;
+
+   private final Context mContext;
 
    public static ApiDatabase get(Context context) {
       if (sDatabase == null) {
@@ -39,6 +44,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
    private ApiDatabase(Context context) {
       super(context, DATABASE_NAME, null, DATABASE_VERSION);
+
+      mContext = context;
    }
 
    @Override
@@ -87,12 +94,10 @@ public class ApiDatabase extends SQLiteOpenHelper {
     ")";
 
    public ArrayList<GuideMediaProgress> getOfflineGuides(Site site, User user) {
-      SQLiteDatabase db = getReadableDatabase();
-
       final int GUIDE_JSON_INDEX = 0;
       final int TOTAL_MEDIA_INDEX = 1;
       final int MEDIA_DOWNLOADED_INDEX = 2;
-      Cursor cursor = db.query(
+      Cursor cursor = getReadableDatabase().query(
        TABLE_OFFLINE_GUIDES,
        new String[] {KEY_JSON, KEY_MEDIA_TOTAL, KEY_MEDIA_DOWNLOADED},
        KEY_SITE_NAME + " = ? AND " +
@@ -241,6 +246,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
        where.toString(),
        params
       );
+      sendDataChangedBroadcast();
    }
 
    public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent, int imagesTotal,
@@ -262,6 +268,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
       db.insertWithOnConflict(TABLE_OFFLINE_GUIDES, null, values,
        SQLiteDatabase.CONFLICT_REPLACE);
+      sendDataChangedBroadcast();
    }
 
    public void updateGuideProgress(Site site, User user, int guideid, int imagesTotal,
@@ -278,5 +285,15 @@ public class ApiDatabase extends SQLiteOpenHelper {
        KEY_GUIDEID + " = ?",
        new String[] {site.mName, user.getUserid() + "", guideid + ""}
       );
+      sendDataChangedBroadcast();
+   }
+
+   /**
+    * Notifies receivers that there was a change to offline guide data.
+    */
+   private void sendDataChangedBroadcast() {
+      Intent broadcast = new Intent();
+      broadcast.setAction(OFFLINE_GUIDE_DATA_CHANGED);
+      mContext.sendBroadcast(broadcast);
    }
 }
