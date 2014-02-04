@@ -65,8 +65,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
    private static final String KEY_GUIDEID = "guideid";
    private static final String KEY_MODIFIED_DATE = "modified_date";
    // TODO: s/IMAGES/MEDIA/
-   private static final String KEY_IMAGES_TOTAL = "images_total";
-   private static final String KEY_IMAGES_DOWNLOADED = "images_downloaded";
+   private static final String KEY_MEDIA_TOTAL = "media_total";
+   private static final String KEY_MEDIA_DOWNLOADED = "media_downloaded";
    private static final String KEY_JSON = "json";
 
    private static final String CREATE_API_RESULTS_TABLE =
@@ -76,8 +76,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
        KEY_USERID + " INTEGER, " +
        KEY_GUIDEID + " INTEGER, " +
        KEY_MODIFIED_DATE + " REAL, " +
-       KEY_IMAGES_TOTAL + " INTEGER, " +
-       KEY_IMAGES_DOWNLOADED + " INTEGER, " +
+       KEY_MEDIA_TOTAL + " INTEGER, " +
+       KEY_MEDIA_DOWNLOADED + " INTEGER, " +
        KEY_JSON + " TEXT, " +
        "UNIQUE (" +
           KEY_SITE_NAME + ", " +
@@ -94,7 +94,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
       final int MEDIA_DOWNLOADED_INDEX = 2;
       Cursor cursor = db.query(
        TABLE_OFFLINE_GUIDES,
-       new String[] {KEY_JSON, KEY_IMAGES_TOTAL, KEY_IMAGES_DOWNLOADED},
+       new String[] {KEY_JSON, KEY_MEDIA_TOTAL, KEY_MEDIA_DOWNLOADED},
        KEY_SITE_NAME + " = ? AND " +
        KEY_USERID + " = ?",
        new String[] {site.mName, user.getUserid() + ""},
@@ -143,7 +143,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
        new String[] {KEY_JSON},
        KEY_SITE_NAME + " = ? AND " +
         KEY_USERID + " = ? AND " +
-        KEY_IMAGES_DOWNLOADED + " != " + KEY_IMAGES_TOTAL,
+        KEY_MEDIA_DOWNLOADED + " != " + KEY_MEDIA_TOTAL,
        new String[] {site.mName, user.getUserid() + ""},
        null,
        null,
@@ -256,8 +256,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
       values.put(KEY_USERID, user.getUserid());
       values.put(KEY_GUIDEID, guide.getGuideid());
       values.put(KEY_MODIFIED_DATE, guide.getAbsoluteModifiedDate());
-      values.put(KEY_IMAGES_TOTAL, imagesTotal);
-      values.put(KEY_IMAGES_DOWNLOADED, imagesDownloaded);
+      values.put(KEY_MEDIA_TOTAL, imagesTotal);
+      values.put(KEY_MEDIA_DOWNLOADED, imagesDownloaded);
       values.put(KEY_JSON, guideEvent.getResponse());
 
       db.insertWithOnConflict(TABLE_OFFLINE_GUIDES, null, values,
@@ -267,8 +267,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
    public void updateGuideProgress(Site site, User user, int guideid, int imagesTotal,
     int imagesDownloaded) {
       ContentValues values = new ContentValues();
-      values.put(KEY_IMAGES_TOTAL, imagesTotal);
-      values.put(KEY_IMAGES_DOWNLOADED, imagesDownloaded);
+      values.put(KEY_MEDIA_TOTAL, imagesTotal);
+      values.put(KEY_MEDIA_DOWNLOADED, imagesDownloaded);
 
       getWritableDatabase().update(
        TABLE_OFFLINE_GUIDES,
