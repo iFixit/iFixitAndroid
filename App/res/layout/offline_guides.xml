@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+   android:layout_width="match_parent"
+   android:layout_height="match_parent"
+   android:background="?attr/doz__background">
+
+   <ListView
+      android:id="@+id/offline_guides_listview"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"
+      android:layout_margin="4dp"
+      android:dividerHeight="4dp"
+      android:divider="@color/transparent"/>
+
+   <TextView
+      android:id="@+id/no_guides_text"
+      style="@style/BodyText"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_marginTop="16dp"
+      android:layout_alignParentTop="true"
+      android:layout_centerHorizontal="true"
+      android:text="@string/no_guides_text"
+      android:visibility="gone"/>
+
+   <FrameLayout
+      android:id="@+id/loading_container"
+      android:layout_width="match_parent"
+      android:layout_height="match_parent"/>
+</RelativeLayout>

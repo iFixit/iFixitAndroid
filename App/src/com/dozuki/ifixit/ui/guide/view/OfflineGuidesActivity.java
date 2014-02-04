@@ -5,20 +5,25 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.ListView;
 
 import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
+import com.dozuki.ifixit.ui.guide.create.OfflineGuideListItem;
 import com.dozuki.ifixit.util.api.ApiDatabase;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
 
+import java.util.Collections;
 import java.util.List;
 
 public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
  LoaderManager.LoaderCallbacks<List<GuideMediaProgress>> {
-   private static final String TAG = "OfflineGuidesActivity";
 
    private static class OfflineGuideLoader extends AsyncTaskLoader<List<GuideMediaProgress>> {
       private Context mContext;
@@ -53,9 +58,53 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
    }
 
+   private class OfflineGuideListAdapter extends BaseAdapter {
+      @Override
+      public int getCount() {
+         return mGuides.size();
+      }
+
+      @Override
+      public Object getItem(int position) {
+         return mGuides.get(position);
+      }
+
+      @Override
+      public long getItemId(int position) {
+         return position;
+      }
+
+      @Override
+      public View getView(int position, View convertView, ViewGroup parent) {
+         OfflineGuideListItem itemView;
+         GuideMediaProgress currItem = (GuideMediaProgress)getItem(position);
+
+         if (convertView != null) {
+            itemView = (OfflineGuideListItem)convertView;
+         } else {
+            itemView = new OfflineGuideListItem(OfflineGuidesActivity.this);
+         }
+
+         itemView.setRowData(currItem);
+
+         return itemView;
+      }
+   }
+
+   private static final String TAG = "OfflineGuidesActivity";
+   protected OfflineGuideListAdapter mAdapter;
+   protected List<GuideMediaProgress> mGuides = Collections.emptyList();
+   protected ListView mListView;
+
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
+
+      setTitle(getString(R.string.offline_guides));
+      setContentView(R.layout.offline_guides);
+      mAdapter = new OfflineGuideListAdapter();
+      mListView = (ListView)findViewById(R.id.offline_guides_listview);
+      mListView.setAdapter(mAdapter);
 
       getSupportLoaderManager().initLoader(0, null, this);
    }
@@ -69,7 +118,9 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    @Override
    public void onLoadFinished(Loader<List<GuideMediaProgress>> loader,
     List<GuideMediaProgress> guides) {
-      Log.w(TAG, "Size: " + guides.size());
+      mGuides = guides;
+
+      mAdapter.notifyDataSetChanged();
    }
 
    @Override
