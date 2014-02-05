@@ -48,6 +48,9 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
       mProgressButton.setPinned(true);
+      // TODO: Verify that 0/0 is fully pinned.
+      // Reset progress so the new max isn't lower than the previous progress.
+      mProgressButton.setProgress(0);
       mProgressButton.setMax(mGuideMedia.mTotalMedia);
       mProgressButton.setProgress(mGuideMedia.mMediaProgress);
 
