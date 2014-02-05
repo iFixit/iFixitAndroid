@@ -5,6 +5,7 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SyncResult;
@@ -59,7 +60,36 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
     ContentProviderClient provider, SyncResult syncResult) {
-      // TODO: Move to a separate function once we finalize notification behavior.
+      boolean manualSync = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL);
+
+      Authenticator authenticator = new Authenticator(getContext());
+      User user = authenticator.createUser(account);
+      Site site = MainApplication.get().getSite();
+
+      if (!site.mName.equals(user.mSiteName)) {
+         // TODO: Retrieve the correct site so we can continue.
+         Log.e("ApiSyncAdapter", "Sites do not match! " + site.mName + " vs. " +
+          user.mSiteName);
+         return;
+      }
+
+      if (manualSync) {
+         initializeNotification();
+      }
+
+      try {
+         OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user, manualSync);
+         syncer.syncOfflineGuides();
+         updateNotificationSuccess();
+      } catch (ApiSyncException e) {
+         Log.e(TAG, "Sync failed", e);
+         // TODO: Notify the user?
+      }
+   }
+
+   protected void initializeNotification() {
+      if (mNotificationBuilder != null) return;
+
       mNotificationManager = (NotificationManager)MainApplication.get().
        getSystemService(Context.NOTIFICATION_SERVICE);
       mNotificationBuilder = new NotificationCompat.Builder(MainApplication.get());
@@ -76,43 +106,29 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
 
-      Authenticator authenticator = new Authenticator(getContext());
-      User user = authenticator.createUser(account);
-      Site site = MainApplication.get().getSite();
-
-      if (!site.mName.equals(user.mSiteName)) {
-         // TODO: Retrieve the correct site so we can continue.
-         Log.e("ApiSyncAdapter", "Sites do not match! " + site.mName + " vs. " +
-          user.mSiteName);
-         return;
-      }
-
-      try {
-         updateNotificationProgress(0, 0, true);
-         OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user);
-         boolean changes = syncer.syncOfflineGuides();
-
-         if (changes) {
-            // TODO: Update text.
-            mNotificationBuilder.setContentTitle("Offline Sync Complete");
-            mNotificationBuilder.setOngoing(false);
-            updateNotificationProgress(0, 0, false);
-         } else {
-            // Remove the notification if there aren't any changes.
-            removeNotification();
-         }
-      } catch (ApiSyncException e) {
-         Log.e(TAG, "Sync failed", e);
-         // TODO: Notify the user?
-      }
+      // Set indeterminate progress and display it.
+      updateNotificationProgress(0, 0, true);
    }
 
    protected void updateNotificationProgress(int max, int progress, boolean indeterminate) {
+      if (mNotificationBuilder == null) return;
+
       mNotificationBuilder.setProgress(max, progress, indeterminate);
       mNotificationManager.notify(R.id.guide_sync_notificationid, mNotificationBuilder.build());
    }
 
+   protected void updateNotificationSuccess() {
+      if (mNotificationBuilder == null) return;
+
+      // TODO: Update text.
+      mNotificationBuilder.setContentTitle("Offline Sync Complete");
+      mNotificationBuilder.setOngoing(false);
+      updateNotificationProgress(0, 0, false);
+   }
+
    protected void removeNotification() {
+      if (mNotificationBuilder == null) return;
+
       mNotificationManager.cancel(R.id.guide_sync_notificationid);
    }
 
@@ -140,15 +156,15 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private final User mUser;
       private final ApiDatabase mDb;
       protected final ImageSizes mImageSizes;
-      private boolean mChanges;
       private long mLastProgressUpdate;
+      private boolean mManualSync;
 
-      public OfflineGuideSyncer(Site site, User user) {
+      public OfflineGuideSyncer(Site site, User user, boolean manualSync) {
          mSite = site;
          mUser = user;
+         mManualSync = manualSync;
          mDb = ApiDatabase.get(MainApplication.get());
          mImageSizes = MainApplication.get().getImageSizes();
-         mChanges = false;
          mLastProgressUpdate = 0;
       }
 
@@ -158,7 +174,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        *
        * TODO: It would be nice to delete media that are no longer referenced.
        */
-      protected boolean syncOfflineGuides() {
+      protected void syncOfflineGuides() {
          ArrayList<GuideMediaProgress> uncompletedGuides = getUncompletedGuides();
          ArrayList<GuideInfo> staleGuides = getStaleGuides();
          ArrayList<GuideMediaProgress> updatedGuides = updateGuides(staleGuides);
@@ -167,8 +183,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          // their media.
          uncompletedGuides.addAll(updatedGuides);
          downloadMissingMedia(uncompletedGuides);
-
-         return mChanges;
       }
 
       private ArrayList<GuideMediaProgress> getUncompletedGuides() {
@@ -201,13 +215,14 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             Double modifiedDate = modifiedDates.get(guide.mGuideid);
             modifiedDates.remove(guide.mGuideid);
 
+            // Initialize the notification if there is a new guide being synced.
+            if (modifiedDate == null) {
+               initializeNotification();
+            }
+
             if (hasNewerModifiedDate(modifiedDate, guide.getAbsoluteModifiedDate())) {
                staleGuides.add(guide);
             }
-         }
-
-         if (modifiedDates.size() > 0 || staleGuides.size() > 0) {
-            mChanges = true;
          }
 
          // Delete any guides that are currently in the DB but are no longer favorited.
@@ -251,7 +266,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Downloads all new images contained in the guides.
        */
-      private int downloadMissingMedia(List<GuideMediaProgress> missingGuideMedia) {
+      private void downloadMissingMedia(List<GuideMediaProgress> missingGuideMedia) {
          int totalMissingMedia = getTotalMissingMedia(missingGuideMedia);
          int mediaDownloaded = 0;
 
@@ -292,20 +307,20 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                }
 
                updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
-               updateGuideProgress(guideMedia, true);
+
+               // Only update at the end when the guide is complete if this is a manual sync
+               // because it isn't likely that the user will see the updates. This avoids
+               // lots of unnecessary DB writes.
+               if (!mManualSync) {
+                  updateGuideProgress(guideMedia, true);
+               }
             }
 
             // Make sure the guide is marked as complete.
             updateGuideProgress(guideMedia, false);
          }
 
-         if (mediaDownloaded > 0) {
-            mChanges = true;
-         }
-
          Log.w(TAG, "Media: " + mediaDownloaded + "/" + totalMissingMedia);
-
-         return mediaDownloaded;
       }
 
       private void updateGuideProgress(GuideMediaProgress guide, boolean rateLimit) {
