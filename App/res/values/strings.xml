@@ -283,6 +283,7 @@
     <string name="create_new_guide">Create New Guide</string>
     <string name="new_guide">New Guide</string>
     <string name="offline_guides">Offline Guides</string>
+    <string name="sync_now">Sync Now</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>

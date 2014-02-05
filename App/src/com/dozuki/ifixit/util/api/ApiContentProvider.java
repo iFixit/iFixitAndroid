@@ -11,8 +11,13 @@ import com.dozuki.ifixit.BuildConfig;
  * Currently just a stub so we can use the sync adapter framework.
  */
 public class ApiContentProvider extends ContentProvider {
+   private static String sAuthority;
    public static String getAuthority() {
-      return "com.dozuki." + BuildConfig.SITE_NAME + ".provider";
+      if (sAuthority == null) {
+         sAuthority = "com.dozuki." + BuildConfig.SITE_NAME + ".provider";
+      }
+
+      return sAuthority;
    }
 
    @Override

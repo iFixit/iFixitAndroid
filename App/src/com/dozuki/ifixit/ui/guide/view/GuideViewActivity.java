@@ -168,8 +168,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       switch (item.getItemId()) {
          case R.id.edit_guide:
             if (mGuide != null) {
-               MainApplication.getGaTracker().send(MapBuilder.createEvent("menu_action", "button_press",
-                "edit_guide", (long)mGuide.getGuideid()).build());
+               MainApplication.getGaTracker().send(MapBuilder.createEvent("menu_action",
+                "button_press", "edit_guide", (long)mGuide.getGuideid()).build());
 
                Intent intent;
                // If the user is on the introduction, take them to edit the introduction fields.

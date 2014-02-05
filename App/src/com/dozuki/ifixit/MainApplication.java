@@ -3,12 +3,14 @@ package com.dozuki.ifixit;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.Application;
+import android.content.ContentResolver;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,6 +25,7 @@ import com.dozuki.ifixit.util.OkConnectionFactory;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiContentProvider;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
@@ -49,9 +52,6 @@ public class MainApplication extends Application {
    private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
     "FIRST_TIME_GALLERY_USER";
-   private static final String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
-   private static final String USERNAME_KEY = "USERNAME_KEY";
-   private static final String USERID_KEY = "USERID_KEY";
 
    /**
     * Singleton reference.
@@ -403,6 +403,17 @@ public class MainApplication extends Application {
       setIsLoggingIn(false);
 
       getBus().post(new LoginEvent.Cancel());
+   }
+
+   public void requestSync() {
+      if (!isUserLoggedIn()) {
+         return;
+      }
+
+      Bundle bundle = new Bundle();
+      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+      ContentResolver.requestSync(mAccount, ApiContentProvider.getAuthority(), bundle);
    }
 
    public boolean isScreenLarge() {

@@ -13,6 +13,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -137,6 +139,23 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       super.onPause();
 
       unregisterReceiver(mGuideProgressReceiver);
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      getSupportMenuInflater().inflate(R.menu.offline_guide_menu, menu);
+      return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId())  {
+         case R.id.offline_guide_sync_now:
+            MainApplication.get().requestSync();
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
+      }
    }
 
    @Override
