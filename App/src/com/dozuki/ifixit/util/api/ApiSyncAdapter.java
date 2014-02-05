@@ -101,6 +101,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setContentText("Syncing offline guides");
       mNotificationBuilder.setSmallIcon(R.drawable.icon);
       mNotificationBuilder.setOngoing(true);
+      mNotificationBuilder.setAutoCancel(true);
       Intent intent = new Intent(MainApplication.get(), OfflineGuidesActivity.class);
       PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
