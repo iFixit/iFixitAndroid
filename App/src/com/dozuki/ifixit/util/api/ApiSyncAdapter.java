@@ -347,10 +347,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
                updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
 
-               // Only update at the end when the guide is complete if this is a manual sync
-               // because it isn't likely that the user will see the updates. This avoids
-               // lots of unnecessary DB writes.
-               if (!mManualSync) {
+               // Only update at the end when the guide is complete if this isn't a manual
+               // sync because it isn't likely that the user will see the updates. This
+               // avoids lots of unnecessary DB writes.
+               if (mManualSync) {
                   updateGuideProgress(guideMedia, true);
                }
             }
