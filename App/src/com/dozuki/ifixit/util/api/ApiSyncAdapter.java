@@ -36,11 +36,21 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
 
    private static class ApiSyncException extends RuntimeException {
-      public ApiSyncException() {
+      public static final int GENERAL_EXCEPTION = 0;
+      public static final int AUTH_EXCEPTION = 1;
+      public static final int CONNECTION_EXCEPTION = 2;
+      public static final int CANCELED_EXCEPTION = 3;
+
+      public final int mExceptionType;
+      public ApiSyncException(int exceptionType) {
          super();
+
+         mExceptionType = exceptionType;
       }
-      public ApiSyncException(Exception e) {
+      public ApiSyncException(int exceptionType, Exception e) {
          super(e);
+
+         mExceptionType = exceptionType;
       }
    }
 
@@ -86,7 +96,24 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          updateNotificationSuccess();
       } catch (ApiSyncException e) {
          Log.e(TAG, "Sync failed", e);
-         // TODO: Notify the user?
+
+         switch (e.mExceptionType) {
+            case ApiSyncException.AUTH_EXCEPTION:
+               syncResult.stats.numAuthExceptions++;
+               setAuthenticationNotification();
+               break;
+            case ApiSyncException.CANCELED_EXCEPTION:
+               // Let the system use the default retry mechanism for canceled syncs.
+               removeNotification();
+               break;
+            case ApiSyncException.GENERAL_EXCEPTION:
+            case ApiSyncException.CONNECTION_EXCEPTION:
+            default:
+               // Triggers a soft error that the system will use to determine how
+               // to reschedule the sync operation.
+               syncResult.stats.numIoExceptions++;
+               break;
+         }
       }
    }
 
@@ -101,7 +128,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
    protected void finishSyncIfCanceled() {
       if (mIsSyncCanceled) {
-         throw new ApiSyncException();
+         throw new ApiSyncException(ApiSyncException.CANCELED_EXCEPTION);
       }
    }
 
@@ -120,7 +147,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setSmallIcon(R.drawable.icon);
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
-      Intent intent = new Intent(MainApplication.get(), OfflineGuidesActivity.class);
+      Intent intent = OfflineGuidesActivity.view(MainApplication.get());
       PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
@@ -141,6 +168,20 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
       // TODO: Update text.
       mNotificationBuilder.setContentTitle("Offline Sync Complete");
+      mNotificationBuilder.setOngoing(false);
+      updateNotificationProgress(0, 0, false);
+   }
+
+   protected void setAuthenticationNotification() {
+      initializeNotification();
+
+      Intent intent = OfflineGuidesActivity.reauthenticate(MainApplication.get());
+      PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
+       /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+      mNotificationBuilder.setContentIntent(pendingIntent);
+
+      mNotificationBuilder.setContentTitle("Offline Sync Failed");
+      mNotificationBuilder.setContentText("Sign-in to resume offline guide sync.");
       mNotificationBuilder.setOngoing(false);
       updateNotificationProgress(0, 0, false);
    }
@@ -325,7 +366,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
                      if (request.code() == 404) {
                         Log.e(TAG, "404 FOR MEDIA! " + mediaUrl);
-                        // If it's a .huge, download the original size instead because
+                        // TODO: If it's a .huge, download the original size instead because
                         // FallBackImageView will use that one instead.
                      }
 
@@ -333,10 +374,11 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                      guideMedia.mMediaProgress++;
                   } catch (IOException e) {
                      Log.e(TAG, "Failed to download medium", e);
-                     throw new ApiSyncException(e);
+                     // TODO: Failing after one failed medium is pretty harsh.
+                     throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
                   } catch (HttpRequest.HttpRequestException e) {
                      Log.e(TAG, "Failed to download medium", e);
-                     throw new ApiSyncException(e);
+                     throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
                   }
                } else {
                   Log.d(TAG, "Skipping: " + mediaUrl);
@@ -411,18 +453,18 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          if (result.mStoredResponse) {
             // Don't continue if we're getting stored responses i.e. we lost internet.
-            throw new ApiSyncException();
+            throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION);
          } else if (!result.hasError() && type.isInstance(result)) {
             // The result is valid -- return it.
             return (T)result;
          } else if (result.mCode == 401) {
             // We are no longer authenticated and must ask the user to reauthenticate.
-            throw new ApiSyncException();
+            throw new ApiSyncException(ApiSyncException.AUTH_EXCEPTION);
          } else if (result.mCode == 404 || result.mCode == 403) {
             // Return null to indicate that the content is no longer available.
             return null;
          } else {
-            throw new ApiSyncException();
+            throw new ApiSyncException(ApiSyncException.GENERAL_EXCEPTION);
          }
       }
    }

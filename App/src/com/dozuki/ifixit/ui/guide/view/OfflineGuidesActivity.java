@@ -98,6 +98,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    private static final String TAG = "OfflineGuidesActivity";
+   private static final String REAUTHENTICATE = "REAUTHENTICATE";
    protected OfflineGuideListAdapter mAdapter;
    protected List<GuideMediaProgress> mGuides = Collections.emptyList();
    protected ListView mListView;
@@ -111,6 +112,16 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
    };
 
+   public static Intent view(Context context) {
+      return new Intent(context, OfflineGuidesActivity.class);
+   }
+
+   public static Intent reauthenticate(Context context) {
+      Intent intent = view(context);
+      intent.putExtra(REAUTHENTICATE, true);
+      return intent;
+   }
+
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
@@ -120,6 +131,12 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       mAdapter = new OfflineGuideListAdapter();
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
       mListView.setAdapter(mAdapter);
+
+      if (getIntent().getBooleanExtra(REAUTHENTICATE, false)) {
+         // The sync service indicates that the user is logged out so lets make sure
+         // that we think that the user is so login can happen as normal.
+         MainApplication.get().shallowLogout(false);
+      }
 
       if (!openLoginDialogIfLoggedOut()) {
          // Initialize the loader if the user is logged in. Otherwise this will
