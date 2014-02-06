@@ -47,6 +47,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
     */
    private NotificationManager mNotificationManager;
    private NotificationCompat.Builder mNotificationBuilder;
+   protected boolean mIsSyncCanceled;
 
    public ApiSyncAdapter(Context context, boolean autoInitialize) {
       super(context, autoInitialize);
@@ -84,6 +85,21 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       } catch (ApiSyncException e) {
          Log.e(TAG, "Sync failed", e);
          // TODO: Notify the user?
+      }
+   }
+
+   @Override
+   public void onSyncCanceled() {
+      super.onSyncCanceled();
+
+      // Set a flag that we will check periodically through the sync process so we can
+      // gracefully cancel.
+      mIsSyncCanceled = true;
+   }
+
+   protected void finishSyncIfCanceled() {
+      if (mIsSyncCanceled) {
+         throw new ApiSyncException();
       }
    }
 
@@ -251,6 +267,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          ArrayList<GuideMediaProgress> guides = new ArrayList<GuideMediaProgress>();
 
          for (GuideInfo staleGuide : staleGuides) {
+            finishSyncIfCanceled();
             ApiEvent.ViewGuide fullGuide = performApiCall(ApiCall.guide(staleGuide.mGuideid),
              ApiEvent.ViewGuide.class);
             GuideMediaProgress guideMedia = new GuideMediaProgress(fullGuide, mImageSizes);
@@ -275,6 +292,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          for (GuideMediaProgress guideMedia : missingGuideMedia) {
             for (String mediaUrl : guideMedia.mMissingMedia) {
+               finishSyncIfCanceled();
                File file = new File(getOfflineMediaPath(mediaUrl));
 
                if (!file.exists()) {
