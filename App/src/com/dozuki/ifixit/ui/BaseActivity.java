@@ -393,9 +393,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void hideLoading() {
       Fragment loadingFragment = getSupportFragmentManager().findFragmentByTag(LOADING);
       if (loadingFragment != null) {
+         // Because this is only hiding the loading fragment, it's fine to
+         // commit with possible state loss.
          getSupportFragmentManager().beginTransaction()
           .remove(loadingFragment)
-          .commit();
+          .commitAllowingStateLoss();
       }
    }
 }

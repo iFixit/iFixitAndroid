@@ -134,6 +134,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    private void initLoader() {
+      showLoading(R.id.loading_container);
       getSupportLoaderManager().initLoader(R.id.offline_guide_loaderid, null, this);
    }
 
@@ -183,6 +184,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    @Override
    public void onLoadFinished(Loader<List<GuideMediaProgress>> loader,
     List<GuideMediaProgress> guides) {
+      hideLoading();
       mGuides = guides;
 
       mAdapter.notifyDataSetChanged();
