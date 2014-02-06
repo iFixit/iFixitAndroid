@@ -96,7 +96,6 @@ public class ApiDatabase extends SQLiteOpenHelper {
       final int GUIDE_JSON_INDEX = 0;
       final int TOTAL_MEDIA_INDEX = 1;
       final int MEDIA_DOWNLOADED_INDEX = 2;
-      // TODO: Order by insertion date DESC; Maybe the primary key would work...
       Cursor cursor = getReadableDatabase().query(
        TABLE_OFFLINE_GUIDES,
        new String[] {KEY_JSON, KEY_MEDIA_TOTAL, KEY_MEDIA_DOWNLOADED},
@@ -105,7 +104,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
        new String[] {site.mName, user.getUserid() + ""},
        null,
        null,
-       null);
+       KEY_ID + " DESC"
+      );
 
       ArrayList<GuideMediaProgress> guideMedia = new ArrayList<GuideMediaProgress>();
 
