@@ -282,6 +282,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
          toast(favorited ? R.string.favorited : R.string.unfavorited,
           Toast.LENGTH_SHORT);
+
+         // Request a sync to make it show up in the offline guides list immediately.
+         MainApplication.get().requestSync();
       } else {
          Api.getErrorDialog(this, event).show();
       }
