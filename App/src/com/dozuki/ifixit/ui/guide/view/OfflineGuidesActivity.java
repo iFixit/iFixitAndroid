@@ -18,6 +18,7 @@ import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.OfflineGuideListItem;
@@ -27,9 +28,6 @@ import com.dozuki.ifixit.util.api.GuideMediaProgress;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * TODO: Require the user to be logged in.
- */
 public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
  LoaderManager.LoaderCallbacks<List<GuideMediaProgress>> {
 
@@ -109,7 +107,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          // TODO: This forces a full refetch and parsing of data as well as
          // a full UI redraw.
          // TODO: Attach it to the Loader because it's the one that owns the data?
-         getSupportLoaderManager().getLoader(0).onContentChanged();
+         getSupportLoaderManager().getLoader(R.id.offline_guide_loaderid).onContentChanged();
       }
    };
 
@@ -123,7 +121,20 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
       mListView.setAdapter(mAdapter);
 
-      getSupportLoaderManager().initLoader(0, null, this);
+      if (!openLoginDialogIfLoggedOut()) {
+         // Initialize the loader if the user is logged in. Otherwise this will
+         // happen when the user logs in.
+         initLoader();
+      }
+   }
+
+   @Override
+   public void onLogin(LoginEvent.Login loginEvent) {
+      initLoader();
+   }
+
+   private void initLoader() {
+      getSupportLoaderManager().initLoader(R.id.offline_guide_loaderid, null, this);
    }
 
    @Override
@@ -156,6 +167,11 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          default:
             return super.onOptionsItemSelected(item);
       }
+   }
+
+   @Override
+   public boolean finishActivityIfLoggedOut() {
+      return true;
    }
 
    @Override

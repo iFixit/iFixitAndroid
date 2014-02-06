@@ -304,9 +304,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       MainApplication.getBus().unregister(mBaseActivityListener);
    }
 
-   public void openLoginDialogIfLoggedOut() {
+   public boolean openLoginDialogIfLoggedOut() {
       if (!MainApplication.get().isUserLoggedIn()) {
          LoginFragment.newInstance().show(getSupportFragmentManager(), "LoginFragment");
+         return true;
+      } else {
+         return false;
       }
    }
 
