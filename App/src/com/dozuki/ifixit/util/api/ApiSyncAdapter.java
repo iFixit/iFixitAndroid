@@ -27,8 +27,10 @@ import com.github.kevinsawicki.http.HttpRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
@@ -265,17 +267,35 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        */
       private ArrayList<GuideMediaProgress> updateGuides(ArrayList<GuideInfo> staleGuides) {
          ArrayList<GuideMediaProgress> guides = new ArrayList<GuideMediaProgress>();
+         Set<Integer> guidesToDelete = null;
 
          for (GuideInfo staleGuide : staleGuides) {
             finishSyncIfCanceled();
             ApiEvent.ViewGuide fullGuide = performApiCall(ApiCall.guide(staleGuide.mGuideid),
              ApiEvent.ViewGuide.class);
+
+            if (fullGuide == null) {
+               Log.w(TAG, "Guide not found! Deleting..." + staleGuide.mGuideid);
+               if (guidesToDelete == null) {
+                  // Lazy initialization.
+                  guidesToDelete = new HashSet<Integer>();
+               }
+
+               // Guide is now inaccessible so we need to remove it from the DB.
+               guidesToDelete.add(staleGuide.mGuideid);
+               continue;
+            }
+
             GuideMediaProgress guideMedia = new GuideMediaProgress(fullGuide, mImageSizes);
 
             mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, guideMedia.mTotalMedia,
              guideMedia.mMediaProgress);
 
             guides.add(guideMedia);
+         }
+
+         if (guidesToDelete != null) {
+            mDb.deleteGuides(mSite, mUser, guidesToDelete);
          }
 
          return guides;
