@@ -131,6 +131,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       mAdapter = new OfflineGuideListAdapter();
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
       mListView.setAdapter(mAdapter);
+      mListView.setEmptyView(findViewById(R.id.no_offline_guides_text));
 
       if (getIntent().getBooleanExtra(REAUTHENTICATE, false)) {
          // The sync service indicates that the user is logged out so lets make sure
