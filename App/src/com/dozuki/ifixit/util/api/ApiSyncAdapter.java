@@ -379,11 +379,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
       /**
        * Wrapper for Api.performAndParseApiCall() that throws an ApiSyncException on errors
-       * and ensures type safety.
+       * and ensures type safety. Returns null if the content is no longer available.
        *
-       * TODO: Add retries.
-       * TODO: 404's shouldn't cause the sync to fail -- it should remove the data if
-       * it doesn't exist on the backend anymore.
+       * TODO: Return different errors to indicate how to handle the error.
        */
       private <T> T performApiCall(ApiCall apiCall, Class<T> type) {
          apiCall.updateUser(mUser);
@@ -391,9 +389,18 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          ApiEvent<?> result = Api.performAndParseApiCall(apiCall);
 
-         // TODO: Fail if it's a stored response i.e. we don't have internet.
-         if (!result.hasError() && type.isInstance(result)) {
+         if (result.mStoredResponse) {
+            // Don't continue if we're getting stored responses i.e. we lost internet.
+            throw new ApiSyncException();
+         } else if (!result.hasError() && type.isInstance(result)) {
+            // The result is valid -- return it.
             return (T)result;
+         } else if (result.mCode == 401) {
+            // We are no longer authenticated and must ask the user to reauthenticate.
+            throw new ApiSyncException();
+         } else if (result.mCode == 404 || result.mCode == 403) {
+            // Return null to indicate that the content is no longer available.
+            return null;
          } else {
             throw new ApiSyncException();
          }
