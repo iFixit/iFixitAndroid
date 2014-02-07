@@ -4,12 +4,15 @@ import android.accounts.Account;
 import android.app.Activity;
 import android.app.Application;
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.content.res.TypedArray;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
@@ -421,5 +424,12 @@ public class MainApplication extends Application {
        Configuration.SCREENLAYOUT_SIZE_MASK;
       return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE ||
        screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
+   }
+
+   public boolean isConnected() {
+      ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+      return netInfo != null && netInfo.isConnected();
    }
 }

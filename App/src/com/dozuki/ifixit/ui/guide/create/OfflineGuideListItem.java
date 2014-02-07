@@ -17,6 +17,7 @@ import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
 import com.f2prateek.progressbutton.ProgressButton;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
 
 import java.io.File;
@@ -43,7 +44,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       setOnClickListener(this);
    }
 
-   public void setRowData(GuideMediaProgress guideMedia) {
+   public void setRowData(GuideMediaProgress guideMedia, boolean displayLiveImages) {
       mGuideMedia = guideMedia;
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
@@ -56,9 +57,16 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       Image image = mGuideMedia.mGuide.getIntroImage();
 
       if (image != null) {
-         picasso
-          // TODO: Put size into ImageSizes and make sure we sync it.
-          .load(new File(image.getPath(".standard", true)))
+         RequestCreator request;
+
+         if (displayLiveImages) {
+            request = picasso.load(image.getPath(".standard"));
+         } else {
+            // TODO: Put size into ImageSizes and make sure we sync it.
+            request = picasso.load(new File(image.getPath(".standard", true)));
+         }
+
+         request
           .noFade()
           .fit()
           .transform(transform)

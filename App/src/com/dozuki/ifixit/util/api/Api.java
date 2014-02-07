@@ -6,8 +6,6 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
@@ -341,7 +339,7 @@ public class Api {
    private static ApiEvent<?> getResponse(String url, ApiEvent<?> event, ApiCall apiCall) {
       long startTime = System.currentTimeMillis();
 
-      if (!hasInternet()) {
+      if (!MainApplication.get().isConnected()) {
          if (apiCall.mEndpoint.mMethod.equals("GET")) {
             String response = getStoredResponse(url, apiCall);
             if (response != null) {
@@ -518,13 +516,5 @@ public class Api {
       }
 
       return key;
-   }
-
-   private static boolean hasInternet() {
-      ConnectivityManager cm = (ConnectivityManager)
-       MainApplication.get().getSystemService(Context.CONNECTIVITY_SERVICE);
-      NetworkInfo netInfo = cm.getActiveNetworkInfo();
-
-      return netInfo != null && netInfo.isConnected();
    }
 }

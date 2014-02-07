@@ -65,6 +65,12 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    private class OfflineGuideListAdapter extends BaseAdapter {
+      protected boolean mDisplayLiveImages;
+
+      public OfflineGuideListAdapter(boolean displayLiveImages) {
+         mDisplayLiveImages = displayLiveImages;
+      }
+
       @Override
       public int getCount() {
          return mGuides.size();
@@ -91,7 +97,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
             itemView = new OfflineGuideListItem(OfflineGuidesActivity.this);
          }
 
-         itemView.setRowData(currItem);
+         itemView.setRowData(currItem, mDisplayLiveImages);
 
          return itemView;
       }
@@ -128,7 +134,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
       setTitle(getString(R.string.offline_guides));
       setContentView(R.layout.offline_guides);
-      mAdapter = new OfflineGuideListAdapter();
+      mAdapter = new OfflineGuideListAdapter(MainApplication.get().isConnected());
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
       mListView.setAdapter(mAdapter);
       mListView.setEmptyView(findViewById(R.id.no_offline_guides_text));

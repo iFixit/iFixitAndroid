@@ -31,7 +31,6 @@ public class GuideMediaProgress {
       mMissingMedia = new HashSet<String>();
       mTotalMedia = 0;
 
-      // TODO: Prioritize this image so the offline guide list can display thumbnails.
       // TODO: Verify that the guide has an image.
       addMediaIfMissing(mGuide.getIntroImage().getPath(imageSizes.getGrid()));
 
