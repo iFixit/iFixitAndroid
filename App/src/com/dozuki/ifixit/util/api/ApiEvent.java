@@ -79,6 +79,7 @@ public abstract class ApiEvent<T> {
    public static class AddComment extends ApiEvent<Comment> {}
    public static class DeleteComment extends ApiEvent<String> {}
    public static class EditComment extends ApiEvent<Comment> {}
+   public static class FavoriteGuide extends ApiEvent<Boolean> {}
 
    public static class Sites extends ApiEvent<ArrayList<Site>> {}
    public static class SiteInfo extends ApiEvent<Site> {}

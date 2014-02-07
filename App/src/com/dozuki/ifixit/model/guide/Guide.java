@@ -33,6 +33,7 @@ public class Guide implements Serializable {
    protected ArrayList<Item> mParts;
    protected boolean mCanEdit = true;
    protected int mPatrolThreshold = 0;
+   protected boolean mFavorited = false;
 
    /**
     * Collection of general user comments on the guide
@@ -247,6 +248,14 @@ public class Guide implements Serializable {
 
    public Integer getRevisionid() {
       return mRevisionid;
+   }
+
+   public boolean isFavorited() {
+      return mFavorited;
+   }
+
+   public void setFavorited(boolean favorited) {
+      mFavorited = favorited;
    }
 
    @Override

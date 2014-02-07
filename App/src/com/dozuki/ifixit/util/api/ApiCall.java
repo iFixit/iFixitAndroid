@@ -176,6 +176,11 @@ public class ApiCall implements Serializable {
        + revisionid, requestBody.toString());
    }
 
+   public static ApiCall favoriteGuide(int guideid, boolean favorite) {
+      ApiEndpoint endpoint = favorite ? ApiEndpoint.FAVORITE_GUIDE : ApiEndpoint.UNFAVORITE_GUIDE;
+      return new ApiCall(endpoint, "" + guideid);
+   }
+
    private static JSONObject guideBundleToRequestBody(Bundle bundle) {
       JSONObject requestBody = new JSONObject();
       MainApplication app = MainApplication.get();

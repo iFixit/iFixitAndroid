@@ -204,6 +204,7 @@ public class JSONHelper {
       guide.setType(jGuide.getString("type"));
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
       guide.setComments(parseComments(jGuide.getJSONArray("comments")));
+      guide.setFavorited(jGuide.getBoolean("favorited"));
 
       if (jGuide.has("can_edit")) {
          guide.setCanEdit(jGuide.getBoolean("can_edit"));

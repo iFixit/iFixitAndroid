@@ -8,6 +8,7 @@ import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.MainApplication;
@@ -15,6 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.CommentsActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
@@ -44,6 +46,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private static final String PREVIOUS_COMMAND = "previous";
    private static final String HOME_COMMAND = "home";
    private static final String PACKAGE_NAME = "com.dozuki.ifixit";
+   private static final String FAVORITING = "FAVORITING";
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String GUIDEID = "GUIDEID";
@@ -64,6 +67,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private int mInboundStepId = DEFAULT_INBOUND_STEPID;
    private GuideViewAdapter mAdapter;
    private String mDomain;
+   private boolean mFavoriting = false;
+   private Toast mToast;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -87,6 +92,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(GUIDEID);
          mDomain = savedInstanceState.getString(DOMAIN);
+         mFavoriting = savedInstanceState.getBoolean(FAVORITING);
 
          if (savedInstanceState.containsKey(SAVED_GUIDE)) {
             mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
@@ -207,6 +213,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       state.putInt(GUIDEID, mGuideid);
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
+      state.putBoolean(FAVORITING, mFavoriting);
    }
 
    @Override
@@ -245,6 +252,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    @Override
+<<<<<<< HEAD
    protected void onActivityResult (int requestCode, int resultCode, Intent data) {
       if (requestCode == COMMENT_REQUEST && resultCode == RESULT_OK) {
          Bundle extras = data.getExtras();
@@ -266,6 +274,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
       MenuItem item = menu.findItem(R.id.comments);
+      MenuItem favoriteGuide = menu.findItem(R.id.favorite_guide);
+
       TextView countView = ((TextView) item.getActionView().findViewById(R.id.comment_count));
 
       if (mGuide != null) {
@@ -284,6 +294,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             countView.setText(commentCount + "");
          }
       }
+
+      boolean favorited = mGuide != null ? mGuide.isFavorited() : false;
+      favoriteGuide.setIcon(favorited ? R.drawable.ic_action_favorite_filled :
+       R.drawable.ic_action_favorite_empty);
+      favoriteGuide.setEnabled(!mFavoriting && mGuide != null);
+      favoriteGuide.setTitle(favorited ? R.string.unfavorite_guide : R.string.favorite_guide);
 
       return super.onPrepareOptionsMenu(menu);
    }
@@ -331,6 +347,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          case R.id.reload_guide:
             // Set guide to null to force a refresh of the guide object.
             mGuide = null;
+            supportInvalidateOptionsMenu();
             getGuide(mGuideid);
             return true;
          case R.id.comments:
@@ -354,6 +371,20 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             startActivity(CommentsActivity.viewComments(this, comments, title, context,
              contextid));
 
+         case R.id.favorite_guide:
+            // Current favorite state.
+            boolean favorited = mGuide == null ? false : mGuide.isFavorited();
+            mFavoriting = true;
+
+            Api.call(this, ApiCall.favoriteGuide(mGuideid, !favorited));
+            supportInvalidateOptionsMenu();
+
+            if (MainApplication.get().isUserLoggedIn()) {
+               // Only Toast if the user is logged in. Otherwise it happens
+               // in the login success event handler.
+               toast(favorited ? R.string.unfavoriting :
+                R.string.favoriting, Toast.LENGTH_LONG);
+            }
             return true;
          default:
             return super.onOptionsItemSelected(item);
@@ -428,6 +459,39 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
    }
 
+   @Subscribe
+   public void onFavorite(ApiEvent.FavoriteGuide event) {
+      mFavoriting = false;
+      if (!event.hasError()) {
+         boolean favorited = event.getResult();
+
+         if (mGuide != null) {
+            mGuide.setFavorited(favorited);
+         }
+
+         toast(favorited ? R.string.favorited : R.string.unfavorited,
+          Toast.LENGTH_SHORT);
+      } else {
+         Api.getErrorDialog(this, event).show();
+      }
+
+      supportInvalidateOptionsMenu();
+   }
+
+   public void onLogin(LoginEvent.Login event) {
+      if (mFavoriting) {
+         toast(mGuide.isFavorited() ? R.string.unfavoriting :
+          R.string.favoriting, Toast.LENGTH_LONG);
+      }
+   }
+
+   public void onCancelLogin(LoginEvent.Cancel event) {
+      // Always reset this because there is no way that the user can be
+      // favoriting a guide right now.
+      mFavoriting = false;
+      supportInvalidateOptionsMenu();
+   }
+
    /////////////////////////////////////////////////////
    // HELPERS
    /////////////////////////////////////////////////////
@@ -481,6 +545,21 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private void guideHome() {
       mIndicator.setCurrentItem(0);
+   }
+
+   /**
+    * Displays a toast with the given values and clears any existing Toasts
+    * if they exist.
+    */
+   private void toast(int string, int duration) {
+      if (mToast == null) {
+         mToast = Toast.makeText(this, string, duration);
+      }
+
+      mToast.setText(string);
+      mToast.setDuration(duration);
+
+      mToast.show();
    }
 
    @SuppressWarnings("unused")
