@@ -111,7 +111,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
       while (cursor.moveToNext()) {
          guideMedia.add(new GuideMediaProgress(
-            getGuideFromCursor(cursor, GUIDE_JSON_INDEX),
+            getGuideFromCursor(cursor, GUIDE_JSON_INDEX, false),
             cursor.getInt(TOTAL_MEDIA_INDEX),
             cursor.getInt(MEDIA_DOWNLOADED_INDEX)
          ));
@@ -134,7 +134,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
        null,
        null);
 
-      return getGuideFromCursor(cursor, 0);
+      return getGuideFromCursor(cursor, 0, true);
    }
 
    /**
@@ -164,7 +164,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
       ArrayList<Guide> guides = new ArrayList<Guide>();
 
       while (cursor.moveToNext()) {
-         guides.add(getGuideFromCursor(cursor, jsonIndex));
+         guides.add(getGuideFromCursor(cursor, jsonIndex, false));
       }
 
       cursor.close();
@@ -175,13 +175,21 @@ public class ApiDatabase extends SQLiteOpenHelper {
    /**
     * Creates a guide from the cursor with JSON found at the provided index.
     */
-   private Guide getGuideFromCursor(Cursor cursor, int jsonIndex) {
-      String guideJson = cursor.getString(jsonIndex);
+   private Guide getGuideFromCursor(Cursor cursor, int jsonIndex, boolean closeCursor) {
       try {
+         // Invalid cursor position.
+         if (cursor.isBeforeFirst() || cursor.isAfterLast()) {
+            return null;
+         }
+         String guideJson = cursor.getString(jsonIndex);
          return JSONHelper.parseGuide(guideJson);
       } catch (JSONException e) {
          Log.e("ApiDatabase", "Cannot parse stored guide!", e);
          return null;
+      } finally {
+         if (closeCursor) {
+            cursor.close();
+         }
       }
    }
 
