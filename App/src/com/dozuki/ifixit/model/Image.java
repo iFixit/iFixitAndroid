@@ -91,6 +91,15 @@ public class Image implements Serializable {
       return ApiSyncAdapter.getOfflineMediaPath(getPath(size));
    }
 
+   /**
+    * Return true if this is an actual image. Really this image shouldn't exist if
+    * it isn't valid but this is currently how the JSON parsing and guide creation code
+    * is currently setup.
+    */
+   public boolean isValid() {
+      return mId != LOCAL_IMAGE_ID;
+   }
+
    public boolean isLocal() {
       return mId == LOCAL_IMAGE_ID;
    }

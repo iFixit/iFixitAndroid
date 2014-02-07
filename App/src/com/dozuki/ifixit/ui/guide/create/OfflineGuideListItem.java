@@ -49,8 +49,15 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
       mProgressButton.setPinned(true);
-      // TODO: Verify that 0/0 is fully pinned.
-      mProgressButton.setProgressAndMax(mGuideMedia.mMediaProgress, mGuideMedia.mTotalMedia);
+
+      if (mGuideMedia.mTotalMedia == 0) {
+         // It's valid for guides to have no images whatsoever so we must pretend that
+         // it has 1 out of 1 images downloaded so ProgressButton doesn't crash on a
+         // max value of 0
+         mProgressButton.setProgressAndMax(1, 1);
+      } else {
+         mProgressButton.setProgressAndMax(mGuideMedia.mMediaProgress, mGuideMedia.mTotalMedia);
+      }
 
       Picasso picasso = PicassoUtils.with(mActivity);
       Transformation transform = new RoundedTransformation(4, 0);

@@ -31,8 +31,10 @@ public class GuideMediaProgress {
       mMissingMedia = new HashSet<String>();
       mTotalMedia = 0;
 
-      // TODO: Verify that the guide has an image.
-      addMediaIfMissing(mGuide.getIntroImage().getPath(imageSizes.getGrid()));
+      Image introImage = mGuide.getIntroImage();
+      if (introImage.isValid()) {
+         addMediaIfMissing(introImage.getPath(imageSizes.getGrid()));
+      }
 
       for (GuideStep step : mGuide.getSteps()) {
          for (Image image : step.getImages()) {
