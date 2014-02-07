@@ -4,10 +4,12 @@ import android.accounts.Account;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
+import android.content.BroadcastReceiver;
 import android.content.ContentProviderClient;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SyncResult;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
@@ -34,12 +36,14 @@ import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
+   public static final String RESTART_SYNC = "ApiSyncAdapter";
 
    private static class ApiSyncException extends RuntimeException {
       public static final int GENERAL_EXCEPTION = 0;
       public static final int AUTH_EXCEPTION = 1;
       public static final int CONNECTION_EXCEPTION = 2;
       public static final int CANCELED_EXCEPTION = 3;
+      public static final int RESTART_EXCEPTION = 4;
 
       public final int mExceptionType;
       public ApiSyncException(int exceptionType) {
@@ -60,6 +64,15 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private NotificationManager mNotificationManager;
    private NotificationCompat.Builder mNotificationBuilder;
    protected boolean mIsSyncCanceled;
+   protected boolean mRestartSync;
+
+   protected BroadcastReceiver mRestartListener = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         // Signal to restart the sync.
+         mRestartSync = true;
+      }
+   };
 
    public ApiSyncAdapter(Context context, boolean autoInitialize) {
       super(context, autoInitialize);
@@ -70,6 +83,15 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       super(context, autoInitialize, allowParallelSyncs);
    }
 
+   /**
+    * Sets a flag to restart the sync if it is running.
+    */
+   public static void restartSync(Context context) {
+      Intent broadcast = new Intent();
+      broadcast.setAction(RESTART_SYNC);
+      context.sendBroadcast(broadcast);
+   }
+
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
     ContentProviderClient provider, SyncResult syncResult) {
@@ -77,7 +99,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
-      Site site = MainApplication.get().getSite();
+      MainApplication app = MainApplication.get();
+      Site site = app.getSite();
 
       if (!site.mName.equals(user.mSiteName)) {
          // TODO: Retrieve the correct site so we can continue.
@@ -91,31 +114,43 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
 
       try {
-         OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user, manualSync);
-         syncer.syncOfflineGuides();
-         updateNotificationSuccess();
-      } catch (ApiSyncException e) {
-         Log.e(TAG, "Sync failed", e);
+         app.registerReceiver(mRestartListener, new IntentFilter(RESTART_SYNC));
+         boolean restart = false;
+         do {
+            try {
+               restart = false;
+               OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user, manualSync);
+               syncer.syncOfflineGuides();
+               updateNotificationSuccess();
+            } catch (ApiSyncException e) {
+               Log.e(TAG, "Sync failed", e);
 
-         switch (e.mExceptionType) {
-            case ApiSyncException.AUTH_EXCEPTION:
-               syncResult.stats.numAuthExceptions++;
-               setAuthenticationNotification();
-               break;
-            case ApiSyncException.CANCELED_EXCEPTION:
-               // Let the system use the default retry mechanism for canceled syncs.
-               removeNotification();
-               break;
-            case ApiSyncException.GENERAL_EXCEPTION:
-            case ApiSyncException.CONNECTION_EXCEPTION:
-            default:
-               // Triggers a soft error that the system will use to determine how
-               // to reschedule the sync operation. Also remove the notification
-               // because it will likely work next time.
-               syncResult.stats.numIoExceptions++;
-               removeNotification();
-               break;
-         }
+               switch (e.mExceptionType) {
+                  case ApiSyncException.AUTH_EXCEPTION:
+                     syncResult.stats.numAuthExceptions++;
+                     setAuthenticationNotification();
+                     break;
+                  case ApiSyncException.CANCELED_EXCEPTION:
+                     // Let the system use the default retry mechanism for canceled syncs.
+                     removeNotification();
+                     break;
+                  case ApiSyncException.RESTART_EXCEPTION:
+                     restart = true;
+                     break;
+                  case ApiSyncException.GENERAL_EXCEPTION:
+                  case ApiSyncException.CONNECTION_EXCEPTION:
+                  default:
+                     // Triggers a soft error that the system will use to determine how
+                     // to reschedule the sync operation. Also remove the notification
+                     // because it will likely work next time.
+                     syncResult.stats.numIoExceptions++;
+                     removeNotification();
+                     break;
+               }
+            }
+         } while (restart);
+      } finally {
+         app.unregisterReceiver(mRestartListener);
       }
    }
 
@@ -130,7 +165,12 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
    protected void finishSyncIfCanceled() {
       if (mIsSyncCanceled) {
+         mIsSyncCanceled = false;
          throw new ApiSyncException(ApiSyncException.CANCELED_EXCEPTION);
+      }
+      if (mRestartSync) {
+         mRestartSync = false;
+         throw new ApiSyncException(ApiSyncException.RESTART_EXCEPTION);
       }
    }
 

@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -29,6 +30,7 @@ import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiContentProvider;
+import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
@@ -417,10 +419,17 @@ public class MainApplication extends Application {
          return;
       }
 
-      Bundle bundle = new Bundle();
-      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
-      bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-      ContentResolver.requestSync(mAccount, ApiContentProvider.getAuthority(), bundle);
+      String authority = ApiContentProvider.getAuthority();
+
+      if (ContentResolver.isSyncActive(mAccount, authority)) {
+         // Sync is already started so lets restart it.
+         ApiSyncAdapter.restartSync(this);
+      } else {
+         Bundle bundle = new Bundle();
+         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+         ContentResolver.requestSync(mAccount, authority, bundle);
+      }
    }
 
    public boolean isScreenLarge() {
