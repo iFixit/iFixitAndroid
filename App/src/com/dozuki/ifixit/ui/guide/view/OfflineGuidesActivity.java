@@ -1,13 +1,17 @@
 package com.dozuki.ifixit.ui.guide.view;
 
+import android.accounts.Account;
 import android.content.BroadcastReceiver;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.SyncStatusObserver;
 import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -22,6 +26,7 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.OfflineGuideListItem;
+import com.dozuki.ifixit.util.api.ApiContentProvider;
 import com.dozuki.ifixit.util.api.ApiDatabase;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
 
@@ -105,6 +110,20 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    private static final String TAG = "OfflineGuidesActivity";
    private static final String REAUTHENTICATE = "REAUTHENTICATE";
+
+   protected SyncStatusObserver mSyncStatusObserver = new SyncStatusObserver() {
+      @Override
+      public void onStatusChanged(int which) {
+         runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+               refreshSyncStatus();
+            }
+         });
+      }
+   };
+   protected Object mSyncObserverHandle;
+
    protected OfflineGuideListAdapter mAdapter;
    protected List<GuideMediaProgress> mGuides = Collections.emptyList();
    protected ListView mListView;
@@ -150,6 +169,8 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          // happen when the user logs in.
          initLoader();
       }
+
+      refreshSyncStatus();
    }
 
    @Override
@@ -168,6 +189,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
       registerReceiver(mGuideProgressReceiver, new IntentFilter(
        ApiDatabase.OFFLINE_GUIDE_DATA_CHANGED));
+
+      mSyncObserverHandle = ContentResolver.addStatusChangeListener(
+       ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE | ContentResolver.SYNC_OBSERVER_TYPE_PENDING,
+       mSyncStatusObserver);
    }
 
    @Override
@@ -175,6 +200,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       super.onPause();
 
       unregisterReceiver(mGuideProgressReceiver);
+
+      if (mSyncObserverHandle != null) {
+         ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+      }
    }
 
    @Override
@@ -192,6 +221,19 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          default:
             return super.onOptionsItemSelected(item);
       }
+   }
+
+   /**
+    * TODO: Update the menu to show that it is running and allow the user to
+    * cancel the sync.
+    */
+   protected void refreshSyncStatus() {
+      final String authority = ApiContentProvider.getAuthority();
+      final Account account = MainApplication.get().getUserAccount();
+      boolean isSyncing = ContentResolver.isSyncActive(account, authority) ||
+       ContentResolver.isSyncPending(account, authority);
+
+      Log.w(TAG, "Is " + (isSyncing ? "" : "NOT ") + "syncing");
    }
 
    @Override
