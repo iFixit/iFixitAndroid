@@ -394,6 +394,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                // Only update at the end when the guide is complete if this isn't a manual
                // sync because it isn't likely that the user will see the updates. This
                // avoids lots of unnecessary DB writes.
+               // TODO: This might be too restrictive because it isn't a manual sync if
+               // the user opens the app, clicks offline guides, and it syncs in the
+               // background. This leaves the user with updates only when entire guides
+               // are completed.
                if (mManualSync) {
                   updateGuideProgress(guideMedia, true);
                }
