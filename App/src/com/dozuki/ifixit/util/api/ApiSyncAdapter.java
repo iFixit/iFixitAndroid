@@ -110,8 +110,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             case ApiSyncException.CONNECTION_EXCEPTION:
             default:
                // Triggers a soft error that the system will use to determine how
-               // to reschedule the sync operation.
+               // to reschedule the sync operation. Also remove the notification
+               // because it will likely work next time.
                syncResult.stats.numIoExceptions++;
+               removeNotification();
                break;
          }
       }
