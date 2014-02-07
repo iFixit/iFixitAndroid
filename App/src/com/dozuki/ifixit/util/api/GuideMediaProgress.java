@@ -38,11 +38,7 @@ public class GuideMediaProgress {
       for (GuideStep step : mGuide.getSteps()) {
          for (Image image : step.getImages()) {
             addMediaIfMissing(image.getPath(imageSizes.getMain()));
-
-            // The counting is off because thumb is the same as getMain so we think
-            // we need to download double the number of images we actually need to.
-            //addMediaIfMissing(image.getPath(mImageSizes.getThumb()));
-
+            addMediaIfMissing(image.getPath(imageSizes.getThumb()));
             addMediaIfMissing(image.getPath(imageSizes.getFull()));
          }
 
@@ -65,7 +61,11 @@ public class GuideMediaProgress {
    }
 
    private void addMediaIfMissing(String imageUrl) {
-      // Always add to the total.
+      if (mMissingMedia.contains(imageUrl)) {
+         // Don't acknowledge duplicates in the total.
+         return;
+      }
+
       mTotalMedia++;
 
       File file = new File(ApiSyncAdapter.getOfflineMediaPath(imageUrl));
