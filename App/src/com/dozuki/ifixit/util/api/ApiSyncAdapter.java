@@ -448,8 +448,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Wrapper for Api.performAndParseApiCall() that throws an ApiSyncException on errors
        * and ensures type safety. Returns null if the content is no longer available.
-       *
-       * TODO: Return different errors to indicate how to handle the error.
        */
       private <T> T performApiCall(ApiCall apiCall, Class<T> type) {
          apiCall.updateUser(mUser);
