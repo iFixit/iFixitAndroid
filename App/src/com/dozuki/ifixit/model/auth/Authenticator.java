@@ -70,7 +70,14 @@ public class Authenticator extends AbstractAccountAuthenticator {
          }
       }
 
-      Account newAccount = new Account(userName, getAccountType());
+      // Accounts cannot share the same name so we must prefix the username with the site
+      // name if this is the dozuki app. This makes each site have a different
+      String accountName = userName;
+      if (BuildConfig.SITE_NAME.equals("dozuki")) {
+         accountName = site.mTitle + ": " + userName;
+      }
+
+      Account newAccount = new Account(accountName, getAccountType());
 
       mAccountManager.addAccountExplicitly(newAccount, password, userData);
       mAccountManager.setAuthToken(newAccount, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);

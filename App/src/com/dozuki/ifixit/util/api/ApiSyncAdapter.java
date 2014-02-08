@@ -103,10 +103,16 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       Site site = app.getSite();
 
       if (!site.mName.equals(user.mSiteName)) {
-         // TODO: Retrieve the correct site so we can continue.
-         Log.e("ApiSyncAdapter", "Sites do not match! " + site.mName + " vs. " +
-          user.mSiteName);
-         return;
+         // This can only happen on Dozuki because there is exactly one site on
+         // every other app so it's guaranteed that the user will match the
+         // default site.
+         Site newSite = fetchSite(user.mSiteName);
+         if (newSite == null) {
+            Log.e(TAG, "Can't find site '" + user.mSiteName + "'!");
+            return;
+         }
+
+         site = newSite;
       }
 
       if (manualSync) {
@@ -154,6 +160,22 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
    }
 
+   /**
+    * Returns the site with the given name or null if it isn't found.
+    */
+   private Site fetchSite(String siteName) {
+      ApiEvent.Sites sites = performApiCall(ApiCall.sites(),
+       MainApplication.get().getSite(), null, ApiEvent.Sites.class);
+
+      for (Site site : sites.getResult()) {
+         if (site.mName.equals(siteName)) {
+            return site;
+         }
+      }
+
+      return null;
+   }
+
    @Override
    public void onSyncCanceled() {
       super.onSyncCanceled();
@@ -189,6 +211,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setSmallIcon(R.drawable.icon);
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
+      // TODO: Set the site so the app will open with the correct site.
       Intent intent = OfflineGuidesActivity.view(MainApplication.get());
       PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
@@ -249,6 +272,33 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       return path;
    }
 
+   /**
+    * Wrapper for Api.performAndParseApiCall() that throws an ApiSyncException on errors
+    * and ensures type safety. Returns null if the content is no longer available.
+    */
+   protected <T> T performApiCall(ApiCall apiCall, Site site, User user, Class<T> type) {
+      apiCall.updateUser(user);
+      apiCall.mSite = site;
+
+      ApiEvent<?> result = Api.performAndParseApiCall(apiCall);
+
+      if (result.mStoredResponse) {
+         // Don't continue if we're getting stored responses i.e. we lost internet.
+         throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION);
+      } else if (!result.hasError() && type.isInstance(result)) {
+         // The result is valid -- return it.
+         return (T)result;
+      } else if (result.mCode == 401) {
+         // We are no longer authenticated and must ask the user to reauthenticate.
+         throw new ApiSyncException(ApiSyncException.AUTH_EXCEPTION);
+      } else if (result.mCode == 404 || result.mCode == 403) {
+         // Return null to indicate that the content is no longer available.
+         return null;
+      } else {
+         throw new ApiSyncException(ApiSyncException.GENERAL_EXCEPTION);
+      }
+   }
+
    private class OfflineGuideSyncer {
       // Update at most every 5 seconds so we don't spend all of our time updating
       // values in the DB.
@@ -303,7 +353,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        */
       private ArrayList<GuideInfo> getStaleGuides() {
          ApiCall apiCall = ApiCall.userFavorites(10000, 0);
-         ApiEvent.UserFavorites favoritesEvent = performApiCall(apiCall,
+         ApiEvent.UserFavorites favoritesEvent = apiCall(apiCall,
           ApiEvent.UserFavorites.class);
          ArrayList<GuideInfo> favorites = favoritesEvent.getResult();
 
@@ -354,7 +404,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          for (GuideInfo staleGuide : staleGuides) {
             finishSyncIfCanceled();
-            ApiEvent.ViewGuide fullGuide = performApiCall(ApiCall.guide(staleGuide.mGuideid),
+            ApiEvent.ViewGuide fullGuide = apiCall(ApiCall.guide(staleGuide.mGuideid),
              ApiEvent.ViewGuide.class);
 
             if (fullGuide == null) {
@@ -485,31 +535,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          return total;
       }
 
-      /**
-       * Wrapper for Api.performAndParseApiCall() that throws an ApiSyncException on errors
-       * and ensures type safety. Returns null if the content is no longer available.
-       */
-      private <T> T performApiCall(ApiCall apiCall, Class<T> type) {
-         apiCall.updateUser(mUser);
-         apiCall.mSite = mSite;
-
-         ApiEvent<?> result = Api.performAndParseApiCall(apiCall);
-
-         if (result.mStoredResponse) {
-            // Don't continue if we're getting stored responses i.e. we lost internet.
-            throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION);
-         } else if (!result.hasError() && type.isInstance(result)) {
-            // The result is valid -- return it.
-            return (T)result;
-         } else if (result.mCode == 401) {
-            // We are no longer authenticated and must ask the user to reauthenticate.
-            throw new ApiSyncException(ApiSyncException.AUTH_EXCEPTION);
-         } else if (result.mCode == 404 || result.mCode == 403) {
-            // Return null to indicate that the content is no longer available.
-            return null;
-         } else {
-            throw new ApiSyncException(ApiSyncException.GENERAL_EXCEPTION);
-         }
+      private<T> T apiCall(ApiCall apiCall, Class<T> type) {
+         return performApiCall(apiCall, mSite, mUser, type);
       }
    }
 }
