@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -37,6 +38,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    private static final String ACTIVITY_ID = "ACTIVITY_ID";
    private static final String USERID = "USERID";
    private static final String SITE = "SITE";
+   // If an Intent has a site argument it will change sites before displaying any content.
+   private static final String SITE_ARGUMENT = "SITE_ARGUMENT";
 
    private static final int LOGGED_OUT_USERID = -1;
 
@@ -106,26 +109,33 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
+      MainApplication app = MainApplication.get();
+      Site currentSite = app.getSite();
+
       if (savedState != null) {
          mActivityid = savedState.getInt(ACTIVITY_ID);
          mUserid = savedState.getInt(USERID);
          mSite = (Site)savedState.getSerializable(SITE);
 
-         Site currentSite = MainApplication.get().getSite();
-
          // If the site associated with this Activity is different than the current site,
          // set it to the one this Activity wants. Don't always do this because of the
          // overhead of reading the user from SharedPreferences.
          if (mSite.mSiteid != currentSite.mSiteid) {
-            MainApplication.get().setSite(mSite);
+            app.setSite(mSite);
          }
       } else {
          mActivityid = generateActivityid();
          setUserid();
-         mSite = MainApplication.get().getSite();
+
+         Site siteArgument = (Site)getIntent().getSerializableExtra(SITE_ARGUMENT);
+         if (siteArgument != null && siteArgument.mSiteid != currentSite.mSiteid) {
+            mSite = siteArgument;
+            app.setSite(mSite);
+         } else {
+            mSite = app.getSite();
+         }
       }
 
-      MainApplication app = MainApplication.get();
       Site site = app.getSite();
       ActionBar ab = getSupportActionBar();
       ab.setDisplayHomeAsUpEnabled(true);
@@ -399,5 +409,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
           .remove(loadingFragment)
           .commitAllowingStateLoss();
       }
+   }
+
+   public static Intent addSite(Intent intent, Site site) {
+      intent.putExtra(SITE_ARGUMENT, site);
+      return intent;
    }
 }

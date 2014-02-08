@@ -22,6 +22,7 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.github.kevinsawicki.http.HttpRequest;
@@ -116,7 +117,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
 
       if (manualSync) {
-         initializeNotification();
+         initializeNotification(site);
       }
 
       try {
@@ -134,7 +135,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                switch (e.mExceptionType) {
                   case ApiSyncException.AUTH_EXCEPTION:
                      syncResult.stats.numAuthExceptions++;
-                     setAuthenticationNotification();
+                     setAuthenticationNotification(site);
                      break;
                   case ApiSyncException.CANCELED_EXCEPTION:
                      // Let the system use the default retry mechanism for canceled syncs.
@@ -196,7 +197,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
    }
 
-   protected void initializeNotification() {
+   protected void initializeNotification(Site site) {
       if (mNotificationBuilder != null) return;
 
       mNotificationManager = (NotificationManager)MainApplication.get().
@@ -212,7 +213,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
       // TODO: Set the site so the app will open with the correct site.
-      Intent intent = OfflineGuidesActivity.view(MainApplication.get());
+      Intent intent = BaseActivity.addSite(
+       OfflineGuidesActivity.view(MainApplication.get()), site);
       PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
@@ -237,10 +239,11 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       updateNotificationProgress(0, 0, false);
    }
 
-   protected void setAuthenticationNotification() {
-      initializeNotification();
+   protected void setAuthenticationNotification(Site site) {
+      initializeNotification(site);
 
-      Intent intent = OfflineGuidesActivity.reauthenticate(MainApplication.get());
+      Intent intent = BaseActivity.addSite(
+       OfflineGuidesActivity.reauthenticate(MainApplication.get()), site);
       PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
@@ -369,7 +372,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
             // Initialize the notification if there is a new guide being synced.
             if (modifiedDate == null) {
-               initializeNotification();
+               initializeNotification(mSite);
             }
 
             if (hasNewerModifiedDate(modifiedDate, guide.getAbsoluteModifiedDate())) {
