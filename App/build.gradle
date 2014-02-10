@@ -4,9 +4,11 @@ buildscript {
    }
    dependencies {
       classpath 'com.android.tools.build:gradle:0.8.0'
+      classpath 'com.stanfy.spoon:spoon-gradle-plugin:0.9.2'
    }
 }
 apply plugin: 'android'
+apply plugin: 'spoon'
 
 repositories {
    mavenCentral()
@@ -50,6 +52,8 @@ android {
       minSdkVersion 8
       targetSdkVersion 19
       packageName "com.dozuki.ifixit"
+
+      testInstrumentationRunner "com.google.android.apps.common.testing.testrunner.GoogleInstrumentationTestRunner"
    }
 
    signingConfigs {
@@ -125,6 +129,10 @@ android {
          renderscript.srcDirs = ['src']
          res.srcDirs = ['res']
          assets.srcDirs = ['assets']
+      }
+
+      instrumentTest {
+         java.srcDirs = ['instrumentTest']
       }
 
       for (site in sites) {
