@@ -291,7 +291,7 @@
     <string name="add_comment">Add comment...</string>
     <string name="reply">Reply</string>
     <string name="add_reply">Add reply...</string>
-    <string name="error_deleting_comment">Error deleting comment, try again.</string>
+    <string name="error_deleting_comment">Error deleting comment. Try again.</string>
     <string name="failed_edit_comment">Comment edit failed. Try again.</string>
 
     <string-array name="new_image_actions">
