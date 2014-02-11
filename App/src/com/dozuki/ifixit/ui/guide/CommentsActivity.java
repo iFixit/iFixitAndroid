@@ -116,6 +116,8 @@ public class CommentsActivity extends BaseActivity {
       super.onSaveInstanceState(state);
 
       state.putSerializable(COMMENTS_KEY, mComments);
+      state.putInt(CONTEXTID, mCommentContextId);
+      state.putString(CONTEXT, mCommentContext);
    }
 
    @Override
