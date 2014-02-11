@@ -240,10 +240,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem item = menu.findItem(R.id.comments);
+      MenuItem comments = menu.findItem(R.id.comments);
       MenuItem favoriteGuide = menu.findItem(R.id.favorite_guide);
 
-      TextView countView = ((TextView) item.getActionView().findViewById(R.id.comment_count));
+      TextView countView = ((TextView)comments.getActionView().findViewById(R.id.comment_count));
 
       if (mGuide != null) {
          int stepIndex = getStepIndex();
@@ -254,8 +254,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          } else {
             commentCount = mGuide.getStep(stepIndex).getCommentCount();
          }
-
-         Log.d("GuideStep", "onPrepareOptionsMenu " + commentCount);
 
          if (countView != null) {
             countView.setText(commentCount + "");
