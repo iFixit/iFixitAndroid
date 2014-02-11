@@ -58,13 +58,13 @@ public class CommentView extends RelativeLayout {
       }
 
       SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy");
-      String commmentDetails =
+      String commentDetails =
        MainApplication.get().getString(R.string.by_on_comment_details, "<b>" + comment.mUser.getUsername() +
         "</b>", df.format(comment.mDate));
 
       TextView commentText = (TextView) findViewById(R.id.comment_text);
       commentText.setText(Html.fromHtml(comment.mTextRendered));
-      ((TextView) findViewById(R.id.comment_details)).setText(Html.fromHtml(commmentDetails));
+      ((TextView) findViewById(R.id.comment_details)).setText(Html.fromHtml(commentDetails));
 
       ImageView avatar = (ImageView) findViewById(R.id.comment_author);
 

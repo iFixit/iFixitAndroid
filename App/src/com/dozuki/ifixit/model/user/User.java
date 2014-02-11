@@ -42,9 +42,6 @@ public class User implements Serializable {
    }
 
    public Image getAvatar() {
-      if (mAvatar == null) {
-
-      }
       return mAvatar;
    }
 

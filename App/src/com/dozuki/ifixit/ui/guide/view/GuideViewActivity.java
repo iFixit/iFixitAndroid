@@ -133,38 +133,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
    }
 
-   private void handleActionViewIntent(Intent intent) {
-      List<String> segments = intent.getData().getPathSegments();
-
-      try {
-         mGuideid = Integer.parseInt(segments.get(2));
-      } catch (Exception e) {
-         hideLoading();
-         Log.e("GuideViewActivity", "Problem parsing guideid out of the path segments", e);
-
-         MainApplication.getGaTracker().send(MapBuilder.createException(
-          new StandardExceptionParser(this, null).getDescription(
-           Thread.currentThread().getName(), e), false).build());
-
-         displayGuideNotFoundDialog();
-         return;
-      }
-
-      Site currentSite = MainApplication.get().getSite();
-      mDomain = intent.getData().getHost();
-      if (currentSite.hostMatches(mDomain)) {
-         // Load the guide for the current site.
-         getGuide(mGuideid);
-         return;
-      }
-
-      // Set site to dozuki before API call.
-      MainApplication.get().setSite(Site.getSite("dozuki"));
-
-      showLoading(R.id.loading_container);
-      Api.call(this, ApiCall.sites());
-   }
-
    @Override
    protected void onNewIntent(Intent intent) {
       super.onNewIntent(intent);
@@ -272,10 +240,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
-      MenuItem item = menu.findItem(R.id.comments);
+      MenuItem comments = menu.findItem(R.id.comments);
       MenuItem favoriteGuide = menu.findItem(R.id.favorite_guide);
 
-      TextView countView = ((TextView) item.getActionView().findViewById(R.id.comment_count));
+      TextView countView = ((TextView)comments.getActionView().findViewById(R.id.comment_count));
 
       if (mGuide != null) {
          int stepIndex = getStepIndex();
@@ -286,8 +254,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          } else {
             commentCount = mGuide.getStep(stepIndex).getCommentCount();
          }
-
-         Log.d("GuideStep", "onPrepareOptionsMenu " + commentCount);
 
          if (countView != null) {
             countView.setText(commentCount + "");
@@ -397,41 +363,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    /////////////////////////////////////////////////////
    // NOTIFICATION LISTENERS
    /////////////////////////////////////////////////////
-
-   @Subscribe
-   public void onSites(ApiEvent.Sites event) {
-      if (!event.hasError()) {
-         Site selectedSite = null;
-         for (Site site : event.getResult()) {
-            if (site.hostMatches(mDomain)) {
-               selectedSite = site;
-               break;
-            }
-         }
-
-         if (selectedSite != null) {
-            // Set the site and then fetch the guide.
-            MainApplication.get().setSite(selectedSite);
-
-            // Recreating the Activity forces it to be recreated with the appropriate
-            // theme and fetch the guide from the correct site. mDomain needs to be
-            // reset otherwise the guide won't be fetched (end of onCreate()).
-            mDomain = null;
-            recreate();
-         } else {
-            Exception e = new Exception();
-            Log.e("GuideViewActivity", "Didn't find site!", e);
-
-            MainApplication.getGaTracker().send(MapBuilder.createException(
-             new StandardExceptionParser(this, null).getDescription(
-              Thread.currentThread().getName(), e), false).build());
-
-            displayGuideNotFoundDialog();
-         }
-      } else {
-         Api.getErrorDialog(this, event).show();
-      }
-   }
 
    @Subscribe
    public void onGuide(ApiEvent.ViewGuide event) {
