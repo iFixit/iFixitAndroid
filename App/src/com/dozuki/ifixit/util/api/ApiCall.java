@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.util.api;
 
 import android.os.Bundle;
+import android.util.Log;
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -364,7 +365,7 @@ public class ApiCall implements Serializable {
          }
 
       } catch (JSONException e) {
-         e.printStackTrace();
+         Log.e("APIError", "New comment error", e);
       }
 
       return new ApiCall(ApiEndpoint.ADD_COMMENT, query, requestBody.toString());
@@ -376,7 +377,7 @@ public class ApiCall implements Serializable {
       try {
          requestBody.put("text", text);
       } catch (JSONException e) {
-         e.printStackTrace();
+         Log.e("APIError", "Edit comment error", e);
       }
 
       return new ApiCall(ApiEndpoint.EDIT_COMMENT, "/" + commentid, requestBody.toString());
