@@ -222,10 +222,10 @@ public class CommentsActivity extends BaseActivity {
 
          for (Comment c : mComments) {
             if (comment.isReply() && c.mCommentid == comment.mParentid) {
-               for (int i = 0; i < c.mReplies.size(); i++) {
-                  if (c.mReplies.get(i).mCommentid == comment.mCommentid) {
-                     c.mReplies.get(i).mTextRaw = comment.mTextRaw;
-                     c.mReplies.get(i).mTextRendered = comment.mTextRendered;
+               for (Comment reply : c.mReplies) {
+                  if (reply.mCommentid == comment.mCommentid) {
+                     reply.mTextRaw = comment.mTextRaw;
+                     reply.mTextRendered = comment.mTextRendered;
                      break;
                   }
                }
