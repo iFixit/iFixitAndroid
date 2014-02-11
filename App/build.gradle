@@ -110,7 +110,7 @@ android {
          minSdkVersion 9
 
          buildConfigField "String", "GA_PROPERTY_ID", '"UA-30506-19"'
-         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.accustream.accustream.ui.search.SearchSuggestionProvider"'
+         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.dozuki.accustream.ui.search.SearchSuggestionProvider"'
          buildConfigField "String", "SITE_NAME", '"accustream"'
          buildConfigField "String", "APP_ID", accustreamAppId
       }
