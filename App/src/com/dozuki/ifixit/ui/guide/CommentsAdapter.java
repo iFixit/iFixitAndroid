@@ -54,12 +54,10 @@ public class CommentsAdapter extends BaseAdapter {
       replyContainer.removeAllViews();
 
       for (Comment reply : comment.mReplies) {
-         if (reply.mParentid == comment.mCommentid) {
-            CommentView replyView = new CommentView(mContext);
-            replyView.buildView(reply);
-            replyView.setPadding(0, 0, 0, 0);
-            replyContainer.addView(replyView);
-         }
+         CommentView replyView = new CommentView(mContext);
+         replyView.buildView(reply);
+         replyView.setPadding(0, 0, 0, 0);
+         replyContainer.addView(replyView);
       }
 
       replyContainer.setVisibility(replyContainer.getChildCount() != 0 ? View.VISIBLE : View.GONE);

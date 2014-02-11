@@ -351,7 +351,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             return true;
          case R.id.comments:
             ArrayList<Comment> comments;
-            int stepIndex = (mCurrentPage - (mStepOffset + 1)), contextid;
+            int stepIndex = getStepIndex(), contextid;
             String title, context;
 
             // If we're in one of the introduction pages, show guide comments.

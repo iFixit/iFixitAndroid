@@ -238,11 +238,6 @@ public class CommentsActivity extends BaseActivity {
 
          mAdapter.setComments(mComments);
          mAdapter.notifyDataSetChanged();
-/*
-         View viewRoot = findViewById(comment.mCommentid);
-         final ViewSwitcher switcher = (ViewSwitcher) viewRoot.findViewById(R.id.edit_comment_switcher);
-
-         switcher.showNext();*/
       } else {
          Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }

@@ -534,9 +534,7 @@ public class JSONHelper {
       User user = new User();
       user.setUserid(jUser.getInt("userid"));
       user.setUsername(jUser.getString("username"));
-
-      if (!jUser.isNull("image"))
-         user.setAvatar(parseImage(jUser.getJSONObject("image"), null));
+      user.setAvatar(parseImage(jUser, "image"));
 
       if (!jUser.isNull("join_date"))
          user.setJoinDate(jUser.getInt("join_date"));
