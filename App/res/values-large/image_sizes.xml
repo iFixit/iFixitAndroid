@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Strings for tablet image sizes. -->
+    <string name="image_sizes_guide_step_thumbnail">.large</string>
+    <string name="image_sizes_guide_step_main">.large</string>
+    <string name="image_sizes_guide_step_fullsize">.huge</string>
+    <string name="image_sizes_grid">.medium</string>
+</resources>

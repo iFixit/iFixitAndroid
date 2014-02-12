@@ -1,17 +1,17 @@
 package com.dozuki.ifixit.util;
 
 public class ImageSizes {
-   private String mThumb;
-   private String mMain;
-   private String mFull;
+   private String mStepThumb;
+   private String mStepMain;
+   private String mStepFull;
    private String mGrid;
    private String mLogo;
 
    public ImageSizes(String logo, String thumb, String main, String full, String grid) {
       mLogo = logo;
-      mThumb = thumb;
-      mMain = main;
-      mFull = full;
+      mStepThumb = thumb;
+      mStepMain = main;
+      mStepFull = full;
       mGrid = grid;
    }
 
@@ -20,15 +20,15 @@ public class ImageSizes {
    }
 
    public String getThumb() {
-      return mThumb;
+      return mStepThumb;
    }
 
    public String getMain() {
-      return mMain;
+      return mStepMain;
    }
 
    public String getFull() {
-      return mFull;
+      return mStepFull;
    }
 
    public String getGrid() {

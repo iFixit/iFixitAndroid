@@ -10,7 +10,6 @@ import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -282,13 +281,13 @@ public class MainApplication extends Application {
 
    public ImageSizes getImageSizes() {
       if (mImageSizes == null) {
-         TypedArray imageSizes = getResources().obtainTypedArray(R.array.image_sizes);
          mImageSizes = new ImageSizes(
-          imageSizes.getString(4),
-          imageSizes.getString(0),
-          imageSizes.getString(1),
-          imageSizes.getString(2),
-          imageSizes.getString(3));
+            getString(R.string.image_sizes_actionbar_logo),
+            getString(R.string.image_sizes_guide_step_thumbnail),
+            getString(R.string.image_sizes_guide_step_main),
+            getString(R.string.image_sizes_guide_step_fullsize),
+            getString(R.string.image_sizes_grid)
+         );
       }
 
       return mImageSizes;
