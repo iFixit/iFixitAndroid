@@ -11,11 +11,13 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
@@ -127,6 +129,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    protected OfflineGuideListAdapter mAdapter;
    protected List<GuideMediaProgress> mGuides = Collections.emptyList();
    protected ListView mListView;
+   protected Button mSyncButton;
+   protected TextView mSyncStatusText;
+   protected ProgressBar mSyncProgressBar;
+   protected boolean mIsSyncing;
    protected BroadcastReceiver mGuideProgressReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
@@ -155,8 +161,22 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       setContentView(R.layout.offline_guides);
       mAdapter = new OfflineGuideListAdapter(MainApplication.get().isConnected());
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
+      mSyncButton = (Button)findViewById(R.id.sync_button);
+      mSyncStatusText = (TextView)findViewById(R.id.sync_status_text);
+      mSyncProgressBar = (ProgressBar)findViewById(R.id.sync_progress_bar);
       mListView.setAdapter(mAdapter);
       mListView.setEmptyView(findViewById(R.id.no_offline_guides_text));
+
+      mSyncButton.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            if (mIsSyncing) {
+               MainApplication.get().cancelSync();
+            } else {
+               MainApplication.get().requestSync();
+            }
+         }
+      });
 
       if (getIntent().getBooleanExtra(REAUTHENTICATE, false)) {
          // The sync service indicates that the user is logged out so lets make sure
@@ -208,7 +228,8 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.offline_guide_menu, menu);
+      // TODO: Remove menu if nothing else is added to it.
+      //getSupportMenuInflater().inflate(R.menu.offline_guide_menu, menu);
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -223,17 +244,23 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
    }
 
-   /**
-    * TODO: Update the menu to show that it is running and allow the user to
-    * cancel the sync.
-    */
    protected void refreshSyncStatus() {
       final String authority = ApiContentProvider.getAuthority();
       final Account account = MainApplication.get().getUserAccount();
       boolean isSyncing = ContentResolver.isSyncActive(account, authority) ||
        ContentResolver.isSyncPending(account, authority);
 
-      Log.w(TAG, "Is " + (isSyncing ? "" : "NOT ") + "syncing");
+      // This gets called a lot so we only update the UI if there is a change.
+      if (isSyncing != mIsSyncing) {
+         mIsSyncing = isSyncing;
+
+         mSyncProgressBar.setMax(100);
+         mSyncProgressBar.setProgress(mIsSyncing ? 50 : 0);
+
+         mSyncStatusText.setText(mIsSyncing ? "Syncing" : "Last synced: today");
+
+         mSyncButton.setText(mIsSyncing ? "Cancel" : "Refresh");
+      }
    }
 
    @Override

@@ -5,7 +5,6 @@ import android.app.Activity;
 import android.app.Application;
 import android.content.ContentResolver;
 import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
@@ -430,6 +429,15 @@ public class MainApplication extends Application {
          bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
          ContentResolver.requestSync(mAccount, authority, bundle);
       }
+   }
+
+   public void cancelSync() {
+      if (!isUserLoggedIn()) {
+         return;
+      }
+
+      String authority = ApiContentProvider.getAuthority();
+      ContentResolver.cancelSync(mAccount, authority);
    }
 
    public boolean isScreenLarge() {

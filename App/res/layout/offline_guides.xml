@@ -4,13 +4,43 @@
    android:layout_height="match_parent"
    android:background="?attr/doz__background">
 
-   <ListView
-      android:id="@+id/offline_guides_listview"
+   <LinearLayout
+      android:orientation="vertical"
       android:layout_width="match_parent"
-      android:layout_height="match_parent"
-      android:layout_margin="4dp"
-      android:dividerHeight="4dp"
-      android:divider="@color/transparent"/>
+      android:layout_height="match_parent">
+      <RelativeLayout
+         android:layout_width="match_parent"
+         android:layout_height="wrap_content">
+         <ProgressBar
+            android:id="@+id/sync_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="false"
+            style="@android:style/Widget.ProgressBar.Horizontal"/>
+
+         <TextView
+            android:id="@+id/sync_status_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sync_progress_bar"
+            style="@style/BodyText" />
+         <Button
+            android:id="@+id/sync_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_below="@id/sync_progress_bar"/>
+      </RelativeLayout>
+
+
+      <ListView
+         android:id="@+id/offline_guides_listview"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_margin="4dp"
+         android:dividerHeight="4dp"
+         android:divider="@color/transparent"/>
+   </LinearLayout>
 
    <TextView
       android:id="@+id/no_offline_guides_text"

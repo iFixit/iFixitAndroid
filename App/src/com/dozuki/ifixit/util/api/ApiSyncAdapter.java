@@ -126,7 +126,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          do {
             try {
                restart = false;
-               OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user, manualSync);
+               OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user);
                syncer.syncOfflineGuides();
                updateNotificationSuccess();
             } catch (ApiSyncException e) {
@@ -312,12 +312,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private final ApiDatabase mDb;
       protected final ImageSizes mImageSizes;
       private long mLastProgressUpdate;
-      private boolean mManualSync;
 
-      public OfflineGuideSyncer(Site site, User user, boolean manualSync) {
+      public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
          mUser = user;
-         mManualSync = manualSync;
          mDb = ApiDatabase.get(MainApplication.get());
          mImageSizes = MainApplication.get().getImageSizes();
          mLastProgressUpdate = 0;
@@ -483,17 +481,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                }
 
                updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
-
-               // Only update at the end when the guide is complete if this isn't a manual
-               // sync because it isn't likely that the user will see the updates. This
-               // avoids lots of unnecessary DB writes.
-               // TODO: This might be too restrictive because it isn't a manual sync if
-               // the user opens the app, clicks offline guides, and it syncs in the
-               // background. This leaves the user with updates only when entire guides
-               // are completed.
-               if (mManualSync) {
-                  updateGuideProgress(guideMedia, true);
-               }
+               updateGuideProgress(guideMedia, true);
             }
 
             // Make sure the guide is marked as complete.
