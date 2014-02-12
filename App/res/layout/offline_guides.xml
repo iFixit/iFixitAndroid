@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="false"
-            style="@android:style/Widget.ProgressBar.Horizontal"/>
+            style="?android:attr/progressBarStyleHorizontal"/>
 
          <TextView
             android:id="@+id/sync_status_text"
