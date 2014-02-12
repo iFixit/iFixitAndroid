@@ -40,18 +40,19 @@
          android:layout_margin="4dp"
          android:dividerHeight="4dp"
          android:divider="@color/transparent"/>
-   </LinearLayout>
 
-   <TextView
-      android:id="@+id/no_offline_guides_text"
-      style="@style/BodyText"
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginTop="16dp"
-      android:layout_alignParentTop="true"
-      android:layout_centerHorizontal="true"
-      android:text="@string/no_offline_guides_text"
-      android:visibility="gone"/>
+      <TextView
+         android:id="@+id/no_offline_guides_text"
+         style="@style/BodyText"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_marginTop="16dp"
+         android:layout_alignParentTop="true"
+         android:layout_centerHorizontal="true"
+         android:text="@string/no_offline_guides_text"
+         android:visibility="gone"/>
+
+   </LinearLayout>
 
    <FrameLayout
       android:id="@+id/loading_container"

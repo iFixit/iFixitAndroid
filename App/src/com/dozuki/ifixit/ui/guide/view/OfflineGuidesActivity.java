@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -119,7 +120,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          runOnUiThread(new Runnable() {
             @Override
             public void run() {
-               refreshSyncStatus();
+               refreshSyncStatus(/* force */ false);
             }
          });
       }
@@ -190,7 +191,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          initLoader();
       }
 
-      refreshSyncStatus();
+      refreshSyncStatus(/* force */ true);
    }
 
    @Override
@@ -244,20 +245,30 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
    }
 
-   protected void refreshSyncStatus() {
+   protected void refreshSyncStatus(boolean forceUpdate) {
       final String authority = ApiContentProvider.getAuthority();
       final Account account = MainApplication.get().getUserAccount();
       boolean isSyncing = ContentResolver.isSyncActive(account, authority) ||
        ContentResolver.isSyncPending(account, authority);
 
       // This gets called a lot so we only update the UI if there is a change.
-      if (isSyncing != mIsSyncing) {
+      if (forceUpdate || isSyncing != mIsSyncing) {
          mIsSyncing = isSyncing;
 
+         // TODO: Clean up strings/values/etc.
          mSyncProgressBar.setMax(100);
          mSyncProgressBar.setProgress(mIsSyncing ? 50 : 0);
 
-         mSyncStatusText.setText(mIsSyncing ? "Syncing" : "Last synced: today");
+         long lastSyncTime = MainApplication.get().getLastSyncTime();
+         CharSequence lastSyncTimeString;
+
+         if (lastSyncTime == MainApplication.NEVER_SYNCED_VALUE) {
+            lastSyncTimeString = "Never";
+         } else {
+            lastSyncTimeString = DateUtils.getRelativeTimeSpanString(lastSyncTime);
+         }
+
+         mSyncStatusText.setText(mIsSyncing ? "Syncing" : "Last synced: " + lastSyncTimeString);
 
          mSyncButton.setText(mIsSyncing ? "Cancel" : "Refresh");
       }

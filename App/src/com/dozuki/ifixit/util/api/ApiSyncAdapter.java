@@ -129,6 +129,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user);
                syncer.syncOfflineGuides();
                updateNotificationSuccess();
+               MainApplication.get().setLastSyncTime(site, user);
             } catch (ApiSyncException e) {
                Log.e(TAG, "Sync failed", e);
 

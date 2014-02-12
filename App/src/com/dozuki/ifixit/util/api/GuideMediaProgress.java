@@ -31,6 +31,8 @@ public class GuideMediaProgress {
       mMissingMedia = new HashSet<String>();
       mTotalMedia = 0;
 
+      // TODO: This intro image isn't always set. We should fall back to the first step's
+      // image if that exists and perhaps the device's image if that fails.
       Image introImage = mGuide.getIntroImage();
       if (introImage.isValid()) {
          addMediaIfMissing(introImage.getPath(imageSizes.getGrid()));

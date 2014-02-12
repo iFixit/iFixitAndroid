@@ -56,6 +56,10 @@ public class MainApplication extends Application {
    private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
     "FIRST_TIME_GALLERY_USER";
+   private static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
+   public static final long NEVER_SYNCED_VALUE = -1;
+   private static final String TAG = "MainApplication";
+
 
    /**
     * Singleton reference.
@@ -438,6 +442,35 @@ public class MainApplication extends Application {
 
       String authority = ApiContentProvider.getAuthority();
       ContentResolver.cancelSync(mAccount, authority);
+   }
+
+   /**
+    * Sets the last sync time for the given user to the current time.
+    */
+   public void setLastSyncTime(Site site, User user) {
+      String lastSyncTimeKey = getLastSyncTimeKey(site, user);
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE | MODE_MULTI_PROCESS);
+      Editor editor = preferenceFile.edit();
+      editor.putLong(lastSyncTimeKey, System.currentTimeMillis());
+
+      editor.commit();
+   }
+
+   public long getLastSyncTime() {
+      if (!isUserLoggedIn()) {
+         return NEVER_SYNCED_VALUE;
+      }
+
+      String lastSyncTimeKey = getLastSyncTimeKey(mSite, mUser);
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE | MODE_MULTI_PROCESS);
+
+      return preferenceFile.getLong(lastSyncTimeKey, NEVER_SYNCED_VALUE);
+   }
+
+   private String getLastSyncTimeKey(Site site, User user) {
+      return LAST_SYNC_TIME + "_" + site.mSiteid + "_" + user.getUserid();
    }
 
    public boolean isScreenLarge() {
