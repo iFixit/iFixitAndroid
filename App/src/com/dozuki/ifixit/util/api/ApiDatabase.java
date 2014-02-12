@@ -20,10 +20,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-/**
- * WARNING: Not currently used. There are plans of using it for storing offline
- * guides.
- */
 public class ApiDatabase extends SQLiteOpenHelper {
    public static final String OFFLINE_GUIDE_DATA_CHANGED =
     "com.dozuki.ifixit.util.api.offline_guide_data_changed";
