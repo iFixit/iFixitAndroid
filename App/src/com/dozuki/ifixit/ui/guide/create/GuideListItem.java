@@ -17,14 +17,16 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.RoundedTransformation;
 import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.util.api.Api;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
@@ -185,7 +187,7 @@ public class GuideListItem extends TouchableRelativeLayout {
 
          if (mGuideInfo.hasImage()) {
             picasso
-             .load(mGuideInfo.getImagePath(".standard"))
+             .load(mGuideInfo.getImagePath(ImageSizes.guideList))
              .noFade()
              .fit()
              .transform(transform)

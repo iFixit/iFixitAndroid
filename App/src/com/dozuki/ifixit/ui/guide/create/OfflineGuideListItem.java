@@ -13,6 +13,7 @@ import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.RoundedTransformation;
 import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
 import com.f2prateek.progressbutton.ProgressButton;
@@ -67,10 +68,9 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
          RequestCreator request;
 
          if (displayLiveImages) {
-            request = picasso.load(image.getPath(".standard"));
+            request = picasso.load(image.getPath(ImageSizes.guideList));
          } else {
-            // TODO: Put size into ImageSizes and make sure we sync it.
-            request = picasso.load(new File(image.getPath(".standard", true)));
+            request = picasso.load(new File(image.getPath(ImageSizes.guideList, true)));
          }
 
          request

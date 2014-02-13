@@ -71,11 +71,6 @@ public class MainApplication extends Application {
    private static Bus sBus;
 
    /**
-    * Singleton for ImageSizes.
-    */
-   private ImageSizes mImageSizes;
-
-   /**
     * Currently logged in user or null if user is not logged in.
     */
    private User mUser;
@@ -139,6 +134,7 @@ public class MainApplication extends Application {
       super.onCreate();
       initializeGa();
       Api.init();
+      ImageSizes.init(this);
 
       sMainApplication = this;
       setSite(getDefaultSite());
@@ -277,20 +273,6 @@ public class MainApplication extends Application {
       }
 
       return sBus;
-   }
-
-   public ImageSizes getImageSizes() {
-      if (mImageSizes == null) {
-         mImageSizes = new ImageSizes(
-            getString(R.string.image_sizes_actionbar_logo),
-            getString(R.string.image_sizes_guide_step_thumbnail),
-            getString(R.string.image_sizes_guide_step_main),
-            getString(R.string.image_sizes_guide_step_fullsize),
-            getString(R.string.image_sizes_grid)
-         );
-      }
-
-      return mImageSizes;
    }
 
    public User getUser() {

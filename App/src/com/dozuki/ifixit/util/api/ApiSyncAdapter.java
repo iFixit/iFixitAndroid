@@ -24,7 +24,6 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
-import com.dozuki.ifixit.util.ImageSizes;
 import com.github.kevinsawicki.http.HttpRequest;
 
 import java.io.File;
@@ -311,14 +310,12 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private final Site mSite;
       private final User mUser;
       private final ApiDatabase mDb;
-      protected final ImageSizes mImageSizes;
       private long mLastProgressUpdate;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
          mUser = user;
          mDb = ApiDatabase.get(MainApplication.get());
-         mImageSizes = MainApplication.get().getImageSizes();
          mLastProgressUpdate = 0;
       }
 
@@ -343,7 +340,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          ArrayList<GuideMediaProgress> guideMedia = new ArrayList<GuideMediaProgress>();
 
          for (Guide guide : mDb.getUncompleteGuides(mSite, mUser)) {
-            guideMedia.add(new GuideMediaProgress(guide, mImageSizes));
+            guideMedia.add(new GuideMediaProgress(guide));
          }
 
          return guideMedia;
@@ -421,7 +418,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                continue;
             }
 
-            GuideMediaProgress guideMedia = new GuideMediaProgress(fullGuide, mImageSizes);
+            GuideMediaProgress guideMedia = new GuideMediaProgress(fullGuide);
 
             mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, guideMedia.mTotalMedia,
              guideMedia.mMediaProgress);

@@ -20,13 +20,13 @@ public class GuideMediaProgress {
    public int mTotalMedia;
    public int mMediaProgress;
 
-   public GuideMediaProgress(ApiEvent.ViewGuide guideEvent, ImageSizes imageSizes) {
-      this(guideEvent.getResult(), imageSizes);
+   public GuideMediaProgress(ApiEvent.ViewGuide guideEvent) {
+      this(guideEvent.getResult());
 
       mGuideEvent = guideEvent;
    }
 
-   public GuideMediaProgress(Guide guide, ImageSizes imageSizes) {
+   public GuideMediaProgress(Guide guide) {
       mGuide = guide;
       mMissingMedia = new HashSet<String>();
       mTotalMedia = 0;
@@ -35,19 +35,19 @@ public class GuideMediaProgress {
       // image if that exists and perhaps the device's image if that fails.
       Image introImage = mGuide.getIntroImage();
       if (introImage.isValid()) {
-         addMediaIfMissing(introImage.getPath(imageSizes.getGrid()));
+         addMediaIfMissing(introImage.getPath(ImageSizes.guideList));
       }
 
       for (GuideStep step : mGuide.getSteps()) {
          for (Image image : step.getImages()) {
-            addMediaIfMissing(image.getPath(imageSizes.getMain()));
-            addMediaIfMissing(image.getPath(imageSizes.getThumb()));
-            addMediaIfMissing(image.getPath(imageSizes.getFull()));
+            addMediaIfMissing(image.getPath(ImageSizes.stepThumb));
+            addMediaIfMissing(image.getPath(ImageSizes.stepMain));
+            addMediaIfMissing(image.getPath(ImageSizes.stepFull));
          }
 
          if (step.hasVideo()) {
             Video video = step.getVideo();
-            addMediaIfMissing(video.getThumbnail().getPath(imageSizes.getMain()));
+            addMediaIfMissing(video.getThumbnail().getPath(ImageSizes.stepMain));
             // TODO: I don't think that the order of the encodings is reliable so
             // we should pick one that we like and use that.
             addMediaIfMissing(video.getEncodings().get(0).getURL());

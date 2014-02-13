@@ -33,8 +33,6 @@ public class GuideItemView extends TouchableRelativeLayout {
    }
 
    public void setGuideItem(GuideInfo guide) {
-      ImageSizes imageSizes = MainApplication.get().getImageSizes();
-
       mTitleView.setText(mShortTitle && guide.hasSubject() ?
        guide.mSubject : Html.fromHtml(guide.mTitle));
 
@@ -45,7 +43,7 @@ public class GuideItemView extends TouchableRelativeLayout {
          Utils.safeStripImageView(mThumbnail);
          mPicasso.cancelRequest(mThumbnail);
 
-         String url = guide.getImagePath(imageSizes.getGrid());
+         String url = guide.getImagePath(ImageSizes.guideList);
          mPicasso
           .load(url)
           .transform(transform)

@@ -15,7 +15,6 @@ public class Image implements Serializable {
     */
    private static final int LOCAL_IMAGE_ID = -1;
    private static final String TAG = "Image";
-   //private final ImageSizes mSizes;
 
    @SerializedName("id") private int mId;
    @SerializedName("original") private String mPath;

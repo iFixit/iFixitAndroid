@@ -1,37 +1,27 @@
 package com.dozuki.ifixit.util;
 
+import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
+
+/**
+ * Defines image sizes for various parts of the app.
+ */
 public class ImageSizes {
-   private String mStepThumb;
-   private String mStepMain;
-   private String mStepFull;
-   private String mGrid;
-   private String mLogo;
+   public static String stepThumb;
+   public static String stepMain;
+   public static String stepFull;
+   public static String stepList;
+   public static String guideList;
+   public static String topicMain;
+   public static String logo;
 
-   public ImageSizes(String logo, String thumb, String main, String full, String grid) {
-      mLogo = logo;
-      mStepThumb = thumb;
-      mStepMain = main;
-      mStepFull = full;
-      mGrid = grid;
-   }
-
-   public String getLogo() {
-      return mLogo;
-   }
-
-   public String getThumb() {
-      return mStepThumb;
-   }
-
-   public String getMain() {
-      return mStepMain;
-   }
-
-   public String getFull() {
-      return mStepFull;
-   }
-
-   public String getGrid() {
-      return mGrid;
+   public static void init(MainApplication app) {
+      stepThumb = app.getString(R.string.is__guide_step_thumbnail);
+      stepMain = app.getString(R.string.is__guide_step_main);
+      stepFull = app.getString(R.string.is__guide_step_fullsize);
+      stepList = app.getString(R.string.is__step_list);
+      guideList = app.getString(R.string.is__guide_list);
+      topicMain = app.getString(R.string.is__topic_main);
+      logo = app.getString(R.string.is__actionbar_logo);
    }
 }

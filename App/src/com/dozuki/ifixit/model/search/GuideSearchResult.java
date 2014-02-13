@@ -8,11 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.RoundedTransformation;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 
 import java.io.Serializable;
@@ -50,7 +52,7 @@ public class GuideSearchResult implements SearchResult, Serializable {
       ImageView thumbnail = (ImageView)v.findViewById(R.id.guide_thumbnail);
 
       if (mGuideInfo.hasImage()) {
-         String imagePath = mGuideInfo.getImagePath(MainApplication.get().getImageSizes().getThumb());
+         String imagePath = mGuideInfo.getImagePath(ImageSizes.stepThumb);
 
          PicassoUtils.with(context)
           .load(imagePath)

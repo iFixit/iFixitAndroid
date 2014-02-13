@@ -43,7 +43,6 @@ public class FullImageViewActivity extends SherlockActivity {
       requestWindowFeature((int) Window.FEATURE_NO_TITLE);
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
-      ImageSizes sizes = MainApplication.get().getImageSizes();
 
       Picasso picasso = PicassoUtils.with(this);
 
@@ -53,7 +52,7 @@ public class FullImageViewActivity extends SherlockActivity {
       image.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
 
       if (url.startsWith("http")) {
-         url += sizes.getFull();
+         url += ImageSizes.stepFull;
 
          if (offline) {
             picasso.load(new File(ApiSyncAdapter.getOfflineMediaPath(url)))

@@ -12,12 +12,14 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.TouchableRelativeLayout;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
@@ -147,7 +149,7 @@ public class StepListItem extends TouchableRelativeLayout {
       } else {
          for (Image imageInfo : imageList) {
             if (imageInfo.getId() > 0) {
-               String url = imageInfo.getPath(".standard");
+               String url = imageInfo.getPath(ImageSizes.stepList);
                setStepThumbnail(url, imageView);
                return;
             }
@@ -156,7 +158,7 @@ public class StepListItem extends TouchableRelativeLayout {
    }
 
    private void setStepThumbnail(VideoThumbnail thumb, ImageView imageView) {
-      String url = thumb.getPath(".standard");
+      String url = thumb.getPath(ImageSizes.stepList);
 
       // Videos are not guaranteed to be 4:3 ratio, so let's fake it.
       imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);

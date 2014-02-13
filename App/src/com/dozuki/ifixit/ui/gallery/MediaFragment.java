@@ -57,7 +57,6 @@ public abstract class MediaFragment extends BaseFragment
    protected boolean mNextPageRequestInProgress;
    protected ArrayList<Image> mAlreadyAttachedImages;
    private GridView mGridView;
-   private ImageSizes mImageSizes;
    private ActionMode mMode;
    private String mCameraTempFileName;
    private boolean mShowingDelete = false;
@@ -72,7 +71,6 @@ public abstract class MediaFragment extends BaseFragment
 
       setHasOptionsMenu(true);
 
-      mImageSizes = MainApplication.get().getImageSizes();
       mMode = null;
 
       mGalleryAdapter = new MediaAdapter();
@@ -428,7 +426,7 @@ public abstract class MediaFragment extends BaseFragment
             }
 
          } else {
-            itemView.setImageItem(image.getPath(mImageSizes.getThumb()));
+            itemView.setImageItem(image.getPath(ImageSizes.stepThumb));
          }
 
          itemView.setTag(image.getPath());

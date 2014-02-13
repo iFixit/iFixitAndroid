@@ -19,6 +19,7 @@ import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.auth.LoginFragment;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.dozuki.ifixit.util.api.Api;
@@ -187,7 +188,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          TextView siteTitle = (TextView) v.findViewById(R.id.custom_site_title);
          if (site.mLogo != null) {
             PicassoUtils.with(this)
-             .load(site.mLogo.getPath(app.getImageSizes().getLogo()))
+             .load(site.mLogo.getPath(ImageSizes.logo))
              .error(R.drawable.logo_dozuki)
              .into(customLogo);
             customLogo.setVisibility(View.VISIBLE);

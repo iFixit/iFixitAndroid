@@ -17,6 +17,7 @@ import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -80,8 +81,7 @@ public class StepVideoFragment extends BaseFragment {
 
       Picasso picasso = PicassoUtils.with(mContext);
       RequestCreator request;
-      String imageUrl = mVideoPoster.getPath(MainApplication.get().getImageSizes().getMain(),
-       mIsOfflineGuide);
+      String imageUrl = mVideoPoster.getPath(ImageSizes.stepMain, mIsOfflineGuide);
 
       if (mIsOfflineGuide) {
          request = picasso.load(new File(imageUrl));
