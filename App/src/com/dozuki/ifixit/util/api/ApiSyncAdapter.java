@@ -445,37 +445,24 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          for (GuideMediaProgress guideMedia : missingGuideMedia) {
             for (String mediaUrl : guideMedia.mMissingMedia) {
                finishSyncIfCanceled();
-               File file = new File(getOfflineMediaPath(mediaUrl));
 
-               if (!file.exists()) {
-                  try {
-                     Log.d(TAG, "Downloading: " + mediaUrl);
-
-                     file.createNewFile();
-                     HttpRequest request = HttpRequest.get(mediaUrl);
-                     request.receive(file);
-
-                     if (request.code() == 404) {
-                        Log.e(TAG, "404 FOR MEDIA! " + mediaUrl);
-                        // TODO: If it's a .huge, download the original size instead because
-                        // FallBackImageView will use that one instead.
-                     }
-
-                     mediaDownloaded++;
-                     guideMedia.mMediaProgress++;
-                  } catch (IOException e) {
-                     Log.e(TAG, "Failed to download medium", e);
-                     // TODO: Failing after one failed medium is pretty harsh.
-                     throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
-                  } catch (HttpRequest.HttpRequestException e) {
-                     Log.e(TAG, "Failed to download medium", e);
-                     throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
-                  }
-               } else {
-                  Log.d(TAG, "Skipping: " + mediaUrl);
-                  // Happens if guides share media.
+               if (downloadMedium(mediaUrl)) {
                   mediaDownloaded++;
                   guideMedia.mMediaProgress++;
+               } else if (mediaUrl.contains(".huge")) {
+                  // Download the original image instead because FullScreenImageView will
+                  // default to that one.
+                  String originalUrl = mediaUrl.replace(".huge", "");
+                  if (downloadMedium(originalUrl)) {
+                     mediaDownloaded++;
+                     guideMedia.mMediaProgress++;
+                  } else {
+                     // Continue on with the next medium. The progress won't be updated
+                     // because the medium wasn't successfully retrieved. Note that other
+                     // failures such as missing internet will throw an exception which
+                     // will cause the sync process to exit immediately.
+                     continue;
+                  }
                }
 
                updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
@@ -487,6 +474,40 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
 
          Log.w(TAG, "Media: " + mediaDownloaded + "/" + totalMissingMedia);
+      }
+
+      /**
+       * Downloads the medium to the persistent location. Returns true if the medium is
+       * persisted, false otherwise.
+       */
+      private boolean downloadMedium(String mediaUrl) {
+         File file = new File(getOfflineMediaPath(mediaUrl));
+
+         if (!file.exists()) {
+            try {
+               Log.d(TAG, "Downloading: " + mediaUrl);
+
+               file.createNewFile();
+               HttpRequest request = HttpRequest.get(mediaUrl);
+               request.receive(file);
+
+               if (request.code() < 200 || request.code() >= 300) {
+                  Log.e(TAG, "MEDIA FAIL! " + mediaUrl);
+                  return false;
+               }
+            } catch (IOException e) {
+               Log.e(TAG, "Failed to download medium", e);
+               throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
+            } catch (HttpRequest.HttpRequestException e) {
+               Log.e(TAG, "Failed to download medium", e);
+               throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
+            }
+         } else {
+            Log.d(TAG, "Skipping: " + mediaUrl);
+            // Happens if guides share media.
+         }
+
+         return true;
       }
 
       private void updateGuideProgress(GuideMediaProgress guide, boolean rateLimit) {
