@@ -16,6 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.util.FileCache;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.github.kevinsawicki.http.HttpRequest;
@@ -208,6 +209,17 @@ public class Api {
               }
            }
         });
+
+      // Add an "Offline Guides" button so the user can always get to the OfflineGuidesActivity.
+      if (error.mType == ApiError.Type.CONNECTION) {
+         builder.setNeutralButton(R.string.offline_guides, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+               activity.startActivity(OfflineGuidesActivity.view(activity));
+               activity.finish();
+            }
+         });
+      }
 
       AlertDialog dialog = builder.create();
       dialog.setOnCancelListener(new OnCancelListener() {
