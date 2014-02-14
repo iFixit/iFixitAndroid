@@ -128,8 +128,9 @@ public class ApiDatabase extends SQLiteOpenHelper {
        new String[] {site.mName, user.getUserid() + "", guideid + ""},
        null,
        null,
-       null);
-
+       null
+      );
+      cursor.moveToFirst();
       return getGuideFromCursor(cursor, 0, true);
    }
 
@@ -180,7 +181,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
          String guideJson = cursor.getString(jsonIndex);
          return JSONHelper.parseGuide(guideJson);
       } catch (JSONException e) {
-         Log.e("ApiDatabase", "Cannot parse stored guide!", e);
+         Log.e(TAG, "Cannot parse stored guide!", e);
          return null;
       } finally {
          if (closeCursor) {

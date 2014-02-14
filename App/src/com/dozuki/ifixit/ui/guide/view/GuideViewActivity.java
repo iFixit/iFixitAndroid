@@ -35,15 +35,11 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private static final int DEFAULT_INBOUND_STEPID = -1;
 
-   private static final String NEXT_COMMAND = "next";
-   private static final String PREVIOUS_COMMAND = "previous";
-   private static final String HOME_COMMAND = "home";
-   private static final String PACKAGE_NAME = "com.dozuki.ifixit";
+   private static final String TAG = "GuideViewActivity";
    private static final String FAVORITING = "FAVORITING";
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String GUIDEID = "GUIDEID";
-   public static final String DOMAIN = "DOMAIN";
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
@@ -152,6 +148,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
+      // TODO: Disable menu items if this is an offline guide.
       MenuItem favoriteGuide = menu.findItem(R.id.favorite_guide);
 
       boolean favorited = mGuide != null ? mGuide.isFavorited() : false;
@@ -239,6 +236,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
        (event.mStoredResponse || event.hasError())) {
          // Attempt to use an offline guide if it isn't a live response.
          fetchOfflineGuide(mGuideid, event);
+         return;
       }
 
       if (!event.hasError()) {
