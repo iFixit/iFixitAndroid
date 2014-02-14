@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class ApiDatabase extends SQLiteOpenHelper {
+   public static final String TAG = "ApiDatabase";
    public static final String OFFLINE_GUIDE_DATA_CHANGED =
     "com.dozuki.ifixit.util.api.offline_guide_data_changed";
    private static final int DATABASE_VERSION = 1;
@@ -63,7 +64,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
     */
    private static final String TABLE_OFFLINE_GUIDES = "offline_guides";
    private static final String KEY_ID = "_id";
-   private static final String KEY_SITE_NAME = "site_name";
+   private static final String KEY_SITEID = "siteid";
    private static final String KEY_USERID = "userid";
    private static final String KEY_GUIDEID = "guideid";
    private static final String KEY_MODIFIED_DATE = "modified_date";
@@ -74,7 +75,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
    private static final String CREATE_API_RESULTS_TABLE =
     "CREATE TABLE " + TABLE_OFFLINE_GUIDES + "(" +
        KEY_ID + " INTEGER PRIMARY KEY, " +
-       KEY_SITE_NAME + " TEXT, " +
+       KEY_SITEID + " INTEGER, " +
        KEY_USERID + " INTEGER, " +
        KEY_GUIDEID + " INTEGER, " +
        KEY_MODIFIED_DATE + " REAL, " +
@@ -82,7 +83,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
        KEY_MEDIA_DOWNLOADED + " INTEGER, " +
        KEY_JSON + " TEXT, " +
        "UNIQUE (" +
-          KEY_SITE_NAME + ", " +
+          KEY_SITEID + ", " +
           KEY_USERID + ", " +
           KEY_GUIDEID +
        ") ON CONFLICT REPLACE " +
@@ -95,9 +96,9 @@ public class ApiDatabase extends SQLiteOpenHelper {
       Cursor cursor = getReadableDatabase().query(
        TABLE_OFFLINE_GUIDES,
        new String[] {KEY_JSON, KEY_MEDIA_TOTAL, KEY_MEDIA_DOWNLOADED},
-       KEY_SITE_NAME + " = ? AND " +
+       KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ?",
-       new String[] {site.mName, user.getUserid() + ""},
+       new String[] {site.mSiteid + "", user.getUserid() + ""},
        null,
        null,
        KEY_ID + " DESC"
@@ -117,15 +118,13 @@ public class ApiDatabase extends SQLiteOpenHelper {
    }
 
    public Guide getOfflineGuide(Site site, User user, int guideid) {
-      SQLiteDatabase db = getReadableDatabase();
-
-      Cursor cursor = db.query(
+      Cursor cursor = getReadableDatabase().query(
        TABLE_OFFLINE_GUIDES,
        new String[] {KEY_JSON},
-       KEY_SITE_NAME + " = ? AND " +
+       KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ? AND " +
        KEY_GUIDEID + " = ? ",
-       new String[] {site.mName, user.getUserid() + "", guideid + ""},
+       new String[] {site.mSiteid + "", user.getUserid() + "", guideid + ""},
        null,
        null,
        null
@@ -143,10 +142,10 @@ public class ApiDatabase extends SQLiteOpenHelper {
       Cursor cursor = db.query(
        TABLE_OFFLINE_GUIDES,
        new String[] {KEY_JSON},
-       KEY_SITE_NAME + " = ? AND " +
-        KEY_USERID + " = ? AND " +
-        KEY_MEDIA_DOWNLOADED + " != " + KEY_MEDIA_TOTAL,
-       new String[] {site.mName, user.getUserid() + ""},
+       KEY_SITEID + " = ? AND " +
+       KEY_USERID + " = ? AND " +
+       KEY_MEDIA_DOWNLOADED + " != " + KEY_MEDIA_TOTAL,
+       new String[] {site.mSiteid + "", user.getUserid() + ""},
        null,
        null,
        null);
@@ -201,9 +200,9 @@ public class ApiDatabase extends SQLiteOpenHelper {
       Cursor cursor = db.query(
        TABLE_OFFLINE_GUIDES,
        new String[] {KEY_GUIDEID, KEY_MODIFIED_DATE},
-       KEY_SITE_NAME + " = ? AND " +
+       KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ?",
-       new String[] {site.mName, user.getUserid() + ""},
+       new String[] {site.mSiteid + "", user.getUserid() + ""},
        null,
        null,
        null);
@@ -228,14 +227,14 @@ public class ApiDatabase extends SQLiteOpenHelper {
       }
 
       StringBuilder where = new StringBuilder(
-       KEY_SITE_NAME + " = ? AND " +
+       KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ? AND " +
        KEY_GUIDEID + " IN (");
       final int NUM_NON_GUIDE_PARAMS = 2;
       int i = NUM_NON_GUIDE_PARAMS;
       String[] params = new String[guideids.size() + NUM_NON_GUIDE_PARAMS];
 
-      params[0] = site.mName;
+      params[0] = site.mSiteid + "";
       params[1] = user.getUserid() + "";
 
       for (Integer guideid : guideids) {
@@ -263,7 +262,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
       ContentValues values = new ContentValues();
       Guide guide = guideEvent.getResult();
 
-      values.put(KEY_SITE_NAME, site.mName);
+      values.put(KEY_SITEID, site.mSiteid);
       values.put(KEY_USERID, user.getUserid());
       values.put(KEY_GUIDEID, guide.getGuideid());
       values.put(KEY_MODIFIED_DATE, guide.getAbsoluteModifiedDate());
@@ -285,10 +284,10 @@ public class ApiDatabase extends SQLiteOpenHelper {
       getWritableDatabase().update(
        TABLE_OFFLINE_GUIDES,
        values,
-       KEY_SITE_NAME + " = ? AND " +
+       KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ? AND " +
        KEY_GUIDEID + " = ?",
-       new String[] {site.mName, user.getUserid() + "", guideid + ""}
+       new String[] {site.mSiteid + "", user.getUserid() + "", guideid + ""}
       );
       sendDataChangedBroadcast();
    }
