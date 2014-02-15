@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui.guide;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.dozuki.ifixit.R;
@@ -60,7 +61,7 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
    }
 
    @Override
-   public void onBitmapFailed() {
+   public void onBitmapFailed(Drawable drawable) {
       Picasso picasso = PicassoUtils.with(mContext);
       RequestCreator request;
 
@@ -72,5 +73,10 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
 
       request.error(R.drawable.no_image)
        .into((Target)this);
+   }
+
+   @Override
+   public void onPrepareLoad(Drawable drawable) {
+      // Do nothing.
    }
 }
