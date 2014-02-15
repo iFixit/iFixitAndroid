@@ -212,7 +212,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setSmallIcon(R.drawable.icon);
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
-      // TODO: Set the site so the app will open with the correct site.
       Intent intent = BaseActivity.addSite(
        OfflineGuidesActivity.view(MainApplication.get()), site);
       PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
@@ -355,9 +354,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          ApiEvent.UserFavorites favoritesEvent = apiCall(apiCall,
           ApiEvent.UserFavorites.class);
          ArrayList<GuideInfo> favorites = favoritesEvent.getResult();
-
-         // TODO: Get guide info from manually added offline guides (those not coming
-         // from favorites) and merge it with the favorite guides.
 
          Map<Integer, Double> modifiedDates = mDb.getGuideModifiedDates(mSite, mUser);
          ArrayList<GuideInfo> staleGuides = new ArrayList<GuideInfo>();
