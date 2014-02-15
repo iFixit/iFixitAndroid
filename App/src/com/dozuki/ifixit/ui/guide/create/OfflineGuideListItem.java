@@ -50,6 +50,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
       mProgressButton.setPinned(true);
+      mProgressButton.setCircleColor(getResources().getColor(R.color.progress_button_background));
 
       if (mGuideMedia.mTotalMedia == 0) {
          // It's valid for guides to have no images whatsoever so we must pretend that

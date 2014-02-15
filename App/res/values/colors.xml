@@ -34,6 +34,8 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="border">#FFCCCCCC</color>
     <color name="gainsboro">#FFDCDCDC</color>
 
+    <color name="progress_button_background">#FFBBBBBB</color>
+
     <!-- Theme Colors -->
     <color name="ifixit_blue">#FF336DA8</color>
     <color name="dozuki_red">#FFDD4124</color>
