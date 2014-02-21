@@ -1,18 +1,21 @@
 # Copy this file to gradle.properties and change values as necessary.
 
-devServer="www.ifixit.com"
+devServer=www.ifixit.com
 
-ifixitAppId="0123456789ABCDEF0123456789ABCDEF"
+ifixitAppId=0123456789ABCDEF0123456789ABCDEF
+ifixitGAPropertyId=GAPropertyId
 ifixitKeyAlias=keyalias
 ifixitStorePassword=storepassword
 ifixitKeyPassword=keypassword
 
-dozukiAppId="0123456789ABCDEF0123456789ABCDEF"
+dozukiAppId=0123456789ABCDEF0123456789ABCDEF
+dozukiGAPropertyId=GAPropertyId
 dozukiKeyAlias=keyalias
 dozukiStorePassword=storepassword
 dozukiKeyPassword=keypassword
 
-accustreamAppId="0123456789ABCDEF0123456789ABCDEF"
+accustreamAppId=0123456789ABCDEF0123456789ABCDEF
+accustreamGAPropertyId=GAPropertyId
 accustreamKeyAlias=keyalias
 accustreamStorePassword=storepassword
 accustreamKeyPassword=keypassword
