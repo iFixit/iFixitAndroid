@@ -93,7 +93,7 @@ public class IntentFilterActivity extends BaseActivity {
       String prefix = segments.get(0);
 
       try {
-         if (prefix.equalsIgnoreCase("guide")) {
+         if (prefix.equalsIgnoreCase("guide") || prefix.equalsIgnoreCase("teardown")) {
             if (segments.get(1).equalsIgnoreCase("search")) {
                String query = segments.get(2);
                intent = SearchActivity.viewSearch(this, query);
