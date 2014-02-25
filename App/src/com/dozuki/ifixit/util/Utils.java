@@ -1,17 +1,24 @@
 package com.dozuki.ifixit.util;
 
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.widget.ImageView;
+
 import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.squareup.okhttp.OkHttpClient;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
+
+import java.io.File;
+import java.security.GeneralSecurityException;
 
 import javax.net.ssl.SSLContext;
-import java.security.GeneralSecurityException;
 
 public class Utils {
 
@@ -35,6 +42,21 @@ public class Utils {
       }
 
       safeStripImageView(view);
+   }
+
+   /**
+    * Helper methods for displaying a (potentially) offline image.
+    */
+   public static RequestCreator displayImage(Context context, String url, boolean offline) {
+      return displayImage(PicassoUtils.with(context), url, offline);
+   }
+
+   public static RequestCreator displayImage(Picasso picasso, String url, boolean offline) {
+      if (offline) {
+         return picasso.load(new File(ApiSyncAdapter.getOfflineMediaPath(url)));
+      } else {
+         return picasso.load(url);
+      }
    }
 
    /**

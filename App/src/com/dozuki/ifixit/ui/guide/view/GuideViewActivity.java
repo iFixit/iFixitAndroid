@@ -98,8 +98,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       } else {
          fetchGuideFromApi(mGuideid);
       }
-
-      //initSpeechRecognizer();
    }
 
    private void extractExtras(Bundle extras) {

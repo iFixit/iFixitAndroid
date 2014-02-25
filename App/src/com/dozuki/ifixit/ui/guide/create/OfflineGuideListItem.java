@@ -15,13 +15,11 @@ import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
 import com.f2prateek.progressbutton.ProgressButton;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Transformation;
-
-import java.io.File;
 
 public class OfflineGuideListItem extends TouchableRelativeLayout implements
  View.OnClickListener {
@@ -66,15 +64,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       Image image = mGuideMedia.mGuide.getIntroImage();
 
       if (image != null) {
-         RequestCreator request;
-
-         if (displayLiveImages) {
-            request = picasso.load(image.getPath(ImageSizes.guideList));
-         } else {
-            request = picasso.load(new File(image.getPath(ImageSizes.guideList, true)));
-         }
-
-         request
+         Utils.displayImage(picasso, image.getPath(ImageSizes.guideList), displayLiveImages)
           .noFade()
           .fit()
           .transform(transform)

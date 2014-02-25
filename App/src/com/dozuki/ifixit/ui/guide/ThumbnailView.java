@@ -18,7 +18,6 @@ import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
-import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
@@ -287,17 +286,12 @@ public class ThumbnailView extends LinearLayout {
       if (url.startsWith("http")) {
          url = url + ImageSizes.stepMain;
 
-         if (mIsOfflineGuide) {
-            buildImage(mPicasso.load(new File(ApiSyncAdapter.getOfflineMediaPath(url))), mMainImage);
-         } else {
-            buildImage(mPicasso.load(url), mMainImage);
-         }
+         buildImage(Utils.displayImage(mPicasso, url, mIsOfflineGuide), mMainImage);
       } else {
          buildImage(mPicasso.load(new File(url))
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
           .centerCrop(), mMainImage);
       }
-
    }
 
    public void setCurrentThumb(File file) {

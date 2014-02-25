@@ -18,11 +18,7 @@ import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
-import com.squareup.picasso.Picasso;
-import com.squareup.picasso.RequestCreator;
-
-import java.io.File;
+import com.dozuki.ifixit.util.Utils;
 
 public class StepVideoFragment extends BaseFragment {
    private static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
@@ -79,17 +75,10 @@ public class StepVideoFragment extends BaseFragment {
       poster.setLayoutParams(params);
       playButtonContainer.setLayoutParams(params);
 
-      Picasso picasso = PicassoUtils.with(mContext);
-      RequestCreator request;
       String imageUrl = mVideoPoster.getPath(ImageSizes.stepMain, mIsOfflineGuide);
 
-      if (mIsOfflineGuide) {
-         request = picasso.load(new File(imageUrl));
-      } else {
-         request = picasso.load(imageUrl);
-      }
-
-      request.error(R.drawable.no_image)
+      Utils.displayImage(mContext, imageUrl, mIsOfflineGuide)
+       .error(R.drawable.no_image)
        .into(poster);
 
       final String videoUrl = mVideo.getEncodings().get(0).getURL();
