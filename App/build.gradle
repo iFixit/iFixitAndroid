@@ -36,10 +36,7 @@ dependencies {
    compile "com.f2prateek.progressbutton:progressbutton:2.0.2-SNAPSHOT@aar"
 }
 
-// List of sites. Used to create signingConfigs and sourceSets.
-// Ideally this would be used to create the productFlavors too but there are
-// enough differences between flavors that it would be challenging to make it
-// better.
+// List of sites used to create signingConfigs, sourceSets, and productFlavors.
 def sites = ["ifixit", "dozuki", "accustream"]
 
 android {
@@ -62,7 +59,7 @@ android {
 
    buildTypes {
       debug {
-         buildConfigField "String", "DEV_SERVER", devServer
+         buildConfigField "String", "DEV_SERVER", '"' + devServer + '"'
       }
 
       release {
@@ -73,49 +70,45 @@ android {
       }
    }
 
+   lintOptions {
+      /* Check release builds but don't abort on error. */
+      checkReleaseBuilds true
+      abortOnError false
+   }
+
+   /* Construct base product flavors. */
    productFlavors {
-      ifixit {
-         signingConfig signingConfigs.ifixit
-         packageName "com.dozuki.ifixit"
-         minSdkVersion 8
+      for (site in sites) {
+         "${site}" {
+            signingConfig signingConfigs."${site}"
+            packageName "com.dozuki.${site}"
 
-         buildConfigField "String", "GA_PROPERTY_ID", '"UA-30506-9"'
-         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.dozuki.ifixit.ui.search.SearchSuggestionProvider"'
-         buildConfigField "String", "SITE_NAME", '"ifixit"'
-         buildConfigField "String", "APP_ID", ifixitAppId
-      }
-
-      dozuki {
-         dependencies {
-            dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-            dozukiCompile 'com.google.zxing:core:2.2'
+            buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", "\"com.dozuki.${site}.ui.search.SearchSuggestionProvider\""
+            buildConfigField "String", "SITE_NAME", '"' + site + '"'
+            buildConfigField "String", "APP_ID", '"' + getProperty("${site}AppId") + '"'
+            buildConfigField "String", "GA_PROPERTY_ID", '"' + getProperty("${site}GAPropertyId") + '"'
          }
+      }
+   }
 
-         signingConfig signingConfigs.dozuki
-         packageName "com.dozuki.dozuki"
-         minSdkVersion 9
+   /* Add site-specific tweaks. */
 
-         buildConfigField "String", "GA_PROPERTY_ID", '"UA-30506-19"'
-         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.dozuki.dozuki.ui.search.SearchSuggestionProvider"'
-         buildConfigField "String", "SITE_NAME", '"dozuki"'
-         buildConfigField "String", "APP_ID", dozukiAppId
+   productFlavors.dozuki.ext {
+      dependencies {
+         accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+         accustreamCompile 'com.google.zxing:core:2.2'
       }
 
-      accustream {
-         dependencies {
-            accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-            accustreamCompile 'com.google.zxing:core:2.2'
-         }
+      minSdkVersion = 9
+   }
 
-         signingConfig signingConfigs.accustream
-         packageName "com.dozuki.accustream"
-         minSdkVersion 9
-
-         buildConfigField "String", "GA_PROPERTY_ID", '"UA-30506-19"'
-         buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", '"com.dozuki.accustream.ui.search.SearchSuggestionProvider"'
-         buildConfigField "String", "SITE_NAME", '"accustream"'
-         buildConfigField "String", "APP_ID", accustreamAppId
+   productFlavors.accustream.ext {
+      dependencies {
+         accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+         accustreamCompile 'com.google.zxing:core:2.2'
       }
+
+      minSdkVersion = 9
    }
 
    sourceSets {
