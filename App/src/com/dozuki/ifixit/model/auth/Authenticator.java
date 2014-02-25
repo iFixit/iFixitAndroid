@@ -71,7 +71,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
       }
 
       // Accounts cannot share the same name so we must prefix the username with the site
-      // name if this is the dozuki app. This makes each site have a different
+      // name if this is the dozuki app.
       String accountName = userName;
       if (BuildConfig.SITE_NAME.equals("dozuki")) {
          accountName = site.mTitle + ": " + userName;
