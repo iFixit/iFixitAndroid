@@ -64,7 +64,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       Image image = mGuideMedia.mGuide.getIntroImage();
 
       if (image != null) {
-         Utils.displayImage(picasso, image.getPath(ImageSizes.guideList), displayLiveImages)
+         Utils.displayImage(picasso, image.getPath(ImageSizes.guideList), !displayLiveImages)
           .noFade()
           .fit()
           .transform(transform)
