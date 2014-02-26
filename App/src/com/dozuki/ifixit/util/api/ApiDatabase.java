@@ -145,7 +145,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
        new String[] {site.mSiteid + "", user.getUserid() + ""},
        null,
        null,
-       null);
+       KEY_ID + " DESC");
 
       return getGuidesFromCursor(cursor, 0);
    }
