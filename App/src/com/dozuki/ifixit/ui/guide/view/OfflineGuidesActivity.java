@@ -265,6 +265,8 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    protected void updateTotalProgress(int progress, int total) {
+      mSyncProgressBar.setVisibility(View.VISIBLE);
+      mSyncProgressBar.setIndeterminate(false);
       mSyncProgressBar.setMax(total);
       mSyncProgressBar.setProgress(progress);
    }
@@ -291,8 +293,17 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          mIsSyncing = isSyncing;
 
          // TODO: Clean up strings/values/etc.
-         mSyncProgressBar.setMax(100);
-         mSyncProgressBar.setProgress(mIsSyncing ? 50 : 0);
+         if (mIsSyncing) {
+            // Display as indeterminate. This will be overridden in updateTotalProgress.
+            // TODO: We don't store the current progress at all across orientation changes
+            // so this changes to indeterminate until an image is downloaded to give us
+            // the current progress. This is a minor issue.
+            mSyncProgressBar.setIndeterminate(true);
+            mSyncProgressBar.setVisibility(View.VISIBLE);
+         } else {
+            // Hide it if we're not syncing.
+            mSyncProgressBar.setVisibility(View.INVISIBLE);
+         }
 
          long lastSyncTime = MainApplication.get().getLastSyncTime();
          CharSequence lastSyncTimeString;
