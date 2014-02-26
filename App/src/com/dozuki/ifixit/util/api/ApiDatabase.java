@@ -2,7 +2,6 @@ package com.dozuki.ifixit.util.api;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -22,8 +21,6 @@ import java.util.Set;
 
 public class ApiDatabase extends SQLiteOpenHelper {
    public static final String TAG = "ApiDatabase";
-   public static final String OFFLINE_GUIDE_DATA_CHANGED =
-    "com.dozuki.ifixit.util.api.offline_guide_data_changed";
    private static final int DATABASE_VERSION = 1;
    private static final String DATABASE_NAME = "api";
 
@@ -250,7 +247,6 @@ public class ApiDatabase extends SQLiteOpenHelper {
        where.toString(),
        params
       );
-      sendDataChangedBroadcast();
    }
 
    public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent, int imagesTotal,
@@ -272,7 +268,6 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
       db.insertWithOnConflict(TABLE_OFFLINE_GUIDES, null, values,
        SQLiteDatabase.CONFLICT_REPLACE);
-      sendDataChangedBroadcast();
    }
 
    public void updateGuideProgress(Site site, User user, int guideid, int imagesTotal,
@@ -289,15 +284,5 @@ public class ApiDatabase extends SQLiteOpenHelper {
        KEY_GUIDEID + " = ?",
        new String[] {site.mSiteid + "", user.getUserid() + "", guideid + ""}
       );
-      sendDataChangedBroadcast();
-   }
-
-   /**
-    * Notifies receivers that there was a change to offline guide data.
-    */
-   private void sendDataChangedBroadcast() {
-      Intent broadcast = new Intent();
-      broadcast.setAction(OFFLINE_GUIDE_DATA_CHANGED);
-      mContext.sendBroadcast(broadcast);
    }
 }

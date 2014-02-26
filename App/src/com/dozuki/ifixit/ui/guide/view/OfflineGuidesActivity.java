@@ -12,6 +12,7 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.text.format.DateUtils;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -31,6 +32,7 @@ import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.OfflineGuideListItem;
 import com.dozuki.ifixit.util.api.ApiContentProvider;
 import com.dozuki.ifixit.util.api.ApiDatabase;
+import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
 
 import java.util.Collections;
@@ -134,13 +136,17 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    protected TextView mSyncStatusText;
    protected ProgressBar mSyncProgressBar;
    protected boolean mIsSyncing;
+   protected BroadcastReceiver mNewGuideReceiver = new BroadcastReceiver() {
+      @Override
+      public void onReceive(Context context, Intent intent) {
+         getSupportLoaderManager().getLoader(R.id.offline_guide_loaderid).onContentChanged();
+      }
+   };
+
    protected BroadcastReceiver mGuideProgressReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-         // TODO: This forces a full refetch and parsing of data as well as
-         // a full UI redraw.
-         // TODO: Attach it to the Loader because it's the one that owns the data?
-         getSupportLoaderManager().getLoader(R.id.offline_guide_loaderid).onContentChanged();
+         Log.w(TAG, "PROGRESS");
       }
    };
 
@@ -208,8 +214,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    public void onResume() {
       super.onResume();
 
+      registerReceiver(mNewGuideReceiver, new IntentFilter(
+       ApiSyncAdapter.NEW_OFFLINE_GUIDE_ACTION));
       registerReceiver(mGuideProgressReceiver, new IntentFilter(
-       ApiDatabase.OFFLINE_GUIDE_DATA_CHANGED));
+       ApiSyncAdapter.GUIDE_PROGRESS_ACTION));
 
       mSyncObserverHandle = ContentResolver.addStatusChangeListener(
        ContentResolver.SYNC_OBSERVER_TYPE_ACTIVE | ContentResolver.SYNC_OBSERVER_TYPE_PENDING,
@@ -220,6 +228,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    public void onPause() {
       super.onPause();
 
+      unregisterReceiver(mNewGuideReceiver);
       unregisterReceiver(mGuideProgressReceiver);
 
       if (mSyncObserverHandle != null) {

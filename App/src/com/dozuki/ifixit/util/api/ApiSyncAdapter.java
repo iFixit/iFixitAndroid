@@ -38,6 +38,19 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
    public static final String RESTART_SYNC = "ApiSyncAdapter";
 
+   /**
+    * Constants for BroadcastReceiver updates.
+    */
+   public static final String NEW_OFFLINE_GUIDE_ACTION =
+    "com.dozuki.ifixit.util.api.new_offline_guide";
+   public static final String GUIDE_PROGRESS_ACTION =
+    "com.dozuki.ifixit.util.api.offline_guide_data_changed";
+   public static final String GUIDEID = "GUIDEID";
+   public static final String GUIDE_MEDIA_TOTAL = "GUIDE_MEDIA_TOTAL";
+   public static final String GUIDE_MEDIA_DOWNLOADED = "GUIDE_MEDIA_DOWNLOADED";
+   public static final String MEDIA_TOTAL = "MEDIA_TOTAL";
+   public static final String MEDIA_DOWNLOADED = "MEDIA_DOWNLOADED";
+
    private static class ApiSyncException extends RuntimeException {
       public static final int GENERAL_EXCEPTION = 0;
       public static final int AUTH_EXCEPTION = 1;
@@ -65,6 +78,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private NotificationCompat.Builder mNotificationBuilder;
    protected boolean mIsSyncCanceled;
    protected boolean mRestartSync;
+   protected Context mContext;
 
    protected BroadcastReceiver mRestartListener = new BroadcastReceiver() {
       @Override
@@ -76,11 +90,13 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
    public ApiSyncAdapter(Context context, boolean autoInitialize) {
       super(context, autoInitialize);
+      mContext = context;
    }
 
    public ApiSyncAdapter(Context context, boolean autoInitialize,
     boolean allowParallelSyncs) {
       super(context, autoInitialize, allowParallelSyncs);
+      mContext = context;
    }
 
    /**
@@ -418,6 +434,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
             mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, guideMedia.mTotalMedia,
              guideMedia.mMediaProgress);
+            sendNewGuideBroadcast();
 
             guides.add(guideMedia);
          }
@@ -427,6 +444,15 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
 
          return guides;
+      }
+
+      /**
+       * Notifies receivers that there was a new offline guide added.
+       */
+      private void sendNewGuideBroadcast() {
+         Intent broadcast = new Intent();
+         broadcast.setAction(NEW_OFFLINE_GUIDE_ACTION);
+         mContext.sendBroadcast(broadcast);
       }
 
       /**
@@ -461,6 +487,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                   }
                }
 
+               updateTotalProgress(guideMedia, totalMissingMedia, mediaDownloaded);
                updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
                updateGuideProgress(guideMedia, true);
             }
@@ -504,6 +531,23 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
 
          return true;
+      }
+
+      /**
+       * Sends out an update to BroadcastReceivers anytime guide progress is updated.
+       */
+      private void updateTotalProgress(GuideMediaProgress guide, int totalMissingMedia,
+       int mediaDownloaded) {
+         Intent broadcast = new Intent();
+         broadcast.setAction(GUIDE_PROGRESS_ACTION);
+
+         broadcast.putExtra(GUIDEID, guide.mGuide.getGuideid());
+         broadcast.putExtra(GUIDE_MEDIA_TOTAL, guide.mTotalMedia);
+         broadcast.putExtra(GUIDE_MEDIA_DOWNLOADED, guide.mMediaProgress);
+         broadcast.putExtra(MEDIA_TOTAL, totalMissingMedia);
+         broadcast.putExtra(MEDIA_DOWNLOADED, mediaDownloaded);
+
+         mContext.sendBroadcast(broadcast);
       }
 
       private void updateGuideProgress(GuideMediaProgress guide, boolean rateLimit) {
