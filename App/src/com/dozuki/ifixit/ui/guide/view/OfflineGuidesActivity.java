@@ -12,7 +12,6 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.text.format.DateUtils;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -146,7 +145,18 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    protected BroadcastReceiver mGuideProgressReceiver = new BroadcastReceiver() {
       @Override
       public void onReceive(Context context, Intent intent) {
-         Log.w(TAG, "PROGRESS");
+         Bundle extras = intent.getExtras();
+
+         updateGuideProgress(
+            extras.getInt(ApiSyncAdapter.GUIDEID),
+            extras.getInt(ApiSyncAdapter.GUIDE_MEDIA_DOWNLOADED),
+            extras.getInt(ApiSyncAdapter.GUIDE_MEDIA_TOTAL)
+         );
+
+         updateTotalProgress(
+            extras.getInt(ApiSyncAdapter.MEDIA_DOWNLOADED),
+            extras.getInt(ApiSyncAdapter.MEDIA_TOTAL)
+         );
       }
    };
 
@@ -251,6 +261,22 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
             return true;
          default:
             return super.onOptionsItemSelected(item);
+      }
+   }
+
+   protected void updateTotalProgress(int progress, int total) {
+      mSyncProgressBar.setMax(total);
+      mSyncProgressBar.setProgress(progress);
+   }
+
+   protected void updateGuideProgress(int guideid, int progress, int total) {
+      for (GuideMediaProgress guide : mGuides) {
+         if (guide.mGuide.getGuideid() == guideid) {
+            guide.mTotalMedia = total;
+            guide.mMediaProgress = progress;
+            mAdapter.notifyDataSetChanged();
+            return;
+         }
       }
    }
 
