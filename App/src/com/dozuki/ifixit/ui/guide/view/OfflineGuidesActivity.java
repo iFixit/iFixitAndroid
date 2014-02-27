@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SyncStatusObserver;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -160,6 +161,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
    };
 
+   private final int SYNC_TIME_REFRESH_INTERVAL = 60000;
+   private Handler mSyncTimeUpdateHandler;
+   private Runnable mSyncTimeUpdateRunnable;
+
    public static Intent view(Context context) {
       return new Intent(context, OfflineGuidesActivity.class);
    }
@@ -208,6 +213,49 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
 
       refreshSyncStatus(/* force */ true);
+      startSyncTimeUpdate();
+   }
+
+   @Override
+   public void onDestroy() {
+      super.onDestroy();
+
+      stopSyncTimeUpdate();
+   }
+
+   /**
+    * Sets up the repeating event to update the last sync time.
+    */
+   private void startSyncTimeUpdate() {
+      mSyncTimeUpdateHandler = new Handler();
+      mSyncTimeUpdateRunnable = new Runnable() {
+         @Override
+         public void run() {
+            updateLastSyncTime();
+            mSyncTimeUpdateHandler.postDelayed(mSyncTimeUpdateRunnable,
+             SYNC_TIME_REFRESH_INTERVAL);
+         }
+      };
+
+      mSyncTimeUpdateRunnable.run();
+   }
+
+   private void stopSyncTimeUpdate() {
+      mSyncTimeUpdateHandler.removeCallbacks(mSyncTimeUpdateRunnable);
+   }
+
+   private void updateLastSyncTime() {
+      long lastSyncTime = MainApplication.get().getLastSyncTime();
+      CharSequence lastSyncTimeString;
+
+      if (lastSyncTime == MainApplication.NEVER_SYNCED_VALUE) {
+         lastSyncTimeString = getString(R.string.sync_status_never);
+      } else {
+         lastSyncTimeString = Utils.getRelativeTime(this, lastSyncTime);
+      }
+
+      mSyncStatusText.setText(mIsSyncing ? getString(R.string.sync_status_syncing) :
+      getString(R.string.last_synced, lastSyncTimeString));
    }
 
    @Override
@@ -304,18 +352,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
             mSyncProgressBar.setVisibility(View.INVISIBLE);
          }
 
-         long lastSyncTime = MainApplication.get().getLastSyncTime();
-         CharSequence lastSyncTimeString;
-
-         if (lastSyncTime == MainApplication.NEVER_SYNCED_VALUE) {
-            lastSyncTimeString = getString(R.string.sync_status_never);
-         } else {
-            lastSyncTimeString = Utils.getRelativeTime(this, lastSyncTime);
-         }
-
-         mSyncStatusText.setText(mIsSyncing ? getString(R.string.sync_status_syncing) :
-          getString(R.string.last_synced, lastSyncTimeString));
-
+         updateLastSyncTime();
          mSyncButton.setText(mIsSyncing ? R.string.cancel : R.string.sync_now);
       }
    }
