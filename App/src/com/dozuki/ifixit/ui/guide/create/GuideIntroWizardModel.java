@@ -6,7 +6,8 @@ package com.dozuki.ifixit.ui.guide.create;
  */
 
 import android.content.Context;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.wizard.*;
@@ -23,7 +24,7 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
 
    @Override
    protected PageList onNewRootPageList() {
-      MainApplication app = MainApplication.get();
+      App app = App.get();
 
       String[] typesArr = new String[app.getSite().getGuideTypes().size()];
 
@@ -71,7 +72,7 @@ public class GuideIntroWizardModel extends AbstractWizardModel {
    }
 
    private String[] filterTypesForBranch(String[] types, boolean hasSubjectBranch) {
-      Site site = MainApplication.get().getSite();
+      Site site = App.get().getSite();
       ArrayList<String> result = new ArrayList<String>();
 
       for (int i = 0; i < types.length; i++) {

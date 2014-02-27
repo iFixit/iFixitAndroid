@@ -2,7 +2,8 @@ package com.dozuki.ifixit.util;
 
 import android.os.Environment;
 import android.util.Log;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.google.analytics.tracking.android.MapBuilder;
 
@@ -24,7 +25,7 @@ public class CaptureHelper {
             return null;
          }
       } else {
-         MainApplication.getGaTracker().send(MapBuilder.createException(
+         App.getGaTracker().send(MapBuilder.createException(
           "External storage is not mounted READ/WRITE", false).build());
       }
 
@@ -32,7 +33,7 @@ public class CaptureHelper {
    }
 
    private static String getDirectoryName() {
-      Site site = MainApplication.get().getSite();
+      Site site = App.get().getSite();
 
       return site.mTitle + "Images";
    }

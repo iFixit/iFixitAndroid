@@ -16,7 +16,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
@@ -67,7 +67,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
 
       ArrayList<String> searchTypes = new ArrayList<String>();
       searchTypes.add(GUIDES_POSITION, getString(R.string.guides));
-      searchTypes.add(TOPIC_POSITION, MainApplication.get().getSite().getObjectNamePlural());
+      searchTypes.add(TOPIC_POSITION, App.get().getSite().getObjectNamePlural());
 
       ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
        android.R.layout.simple_spinner_dropdown_item, searchTypes);

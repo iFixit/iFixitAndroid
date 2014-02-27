@@ -10,7 +10,7 @@ import android.view.View;
 import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -194,7 +194,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       switch (item.getItemId()) {
          case R.id.edit_guide:
             if (mGuide != null) {
-               MainApplication.getGaTracker().send(MapBuilder.createEvent("menu_action", "button_press",
+               App.getGaTracker().send(MapBuilder.createEvent("menu_action", "button_press",
                 "edit_guide", (long)mGuide.getGuideid()).build());
 
                Intent intent;
@@ -243,7 +243,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             Api.call(this, ApiCall.favoriteGuide(mGuideid, !favorited));
             supportInvalidateOptionsMenu();
 
-            if (MainApplication.get().isUserLoggedIn()) {
+            if (App.get().isUserLoggedIn()) {
                // Only Toast if the user is logged in. Otherwise it happens
                // in the login success event handler.
                toast(favorited ? R.string.unfavoriting :
@@ -331,7 +331,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       mGuide = guide;
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
 
       tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid());
       tracker.send(MapBuilder.createAppView().build());
@@ -424,7 +424,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mCurrentPage = currentPage;
 
       String label = mAdapter.getFragmentScreenLabel(currentPage);
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, label);
       tracker.send(MapBuilder.createAppView().build());
    }

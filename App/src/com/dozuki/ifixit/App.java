@@ -31,7 +31,7 @@ import com.squareup.otto.Bus;
 
 import java.net.URL;
 
-public class MainApplication extends Application {
+public class App extends Application {
    /*
     * Google Analytics configuration values.
     */
@@ -55,7 +55,7 @@ public class MainApplication extends Application {
    /**
     * Singleton reference.
     */
-   private static MainApplication sMainApplication;
+   private static App sMainApplication;
 
    /**
     * Singleton for Bus (Otto).
@@ -177,7 +177,7 @@ public class MainApplication extends Application {
    /**
     * Singleton getter.
     */
-   public static MainApplication get() {
+   public static App get() {
       return sMainApplication;
    }
 

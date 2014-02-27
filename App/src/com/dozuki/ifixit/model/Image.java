@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -100,7 +100,7 @@ public class Image implements Serializable {
 
    private String cleanPath(String path) {
 
-      if (MainApplication.inDebug() && path.length() != 0)
+      if (App.inDebug() && path.length() != 0)
          path = path.replaceFirst("https", "http");
 
       return path;
