@@ -5,10 +5,12 @@ import android.graphics.drawable.BitmapDrawable;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.format.DateUtils;
 import android.text.style.URLSpan;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.squareup.okhttp.OkHttpClient;
@@ -129,5 +131,14 @@ public class Utils {
       }
 
       return builder.toString();
+   }
+
+   public static CharSequence getRelativeTime(Context context, long timeInMs) {
+      final long MS_IN_MINUTE = 60000;
+      if (System.currentTimeMillis() - timeInMs < MS_IN_MINUTE) {
+         return context.getString(R.string.just_now);
+      } else {
+         return DateUtils.getRelativeTimeSpanString(timeInMs);
+      }
    }
 }

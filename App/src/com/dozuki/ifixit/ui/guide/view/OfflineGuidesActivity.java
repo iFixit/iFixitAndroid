@@ -11,7 +11,6 @@ import android.os.Bundle;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.text.format.DateUtils;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -29,6 +28,7 @@ import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.OfflineGuideListItem;
+import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.api.ApiContentProvider;
 import com.dozuki.ifixit.util.api.ApiDatabase;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
@@ -292,7 +292,6 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       if (forceUpdate || isSyncing != mIsSyncing) {
          mIsSyncing = isSyncing;
 
-         // TODO: Clean up strings/values/etc.
          if (mIsSyncing) {
             // Display as indeterminate. This will be overridden in updateTotalProgress.
             // TODO: We don't store the current progress at all across orientation changes
@@ -309,14 +308,15 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          CharSequence lastSyncTimeString;
 
          if (lastSyncTime == MainApplication.NEVER_SYNCED_VALUE) {
-            lastSyncTimeString = "Never";
+            lastSyncTimeString = getString(R.string.sync_status_never);
          } else {
-            lastSyncTimeString = DateUtils.getRelativeTimeSpanString(lastSyncTime);
+            lastSyncTimeString = Utils.getRelativeTime(this, lastSyncTime);
          }
 
-         mSyncStatusText.setText(mIsSyncing ? "Syncing" : "Last synced: " + lastSyncTimeString);
+         mSyncStatusText.setText(mIsSyncing ? getString(R.string.sync_status_syncing) :
+          getString(R.string.last_synced, lastSyncTimeString));
 
-         mSyncButton.setText(mIsSyncing ? "Cancel" : "Refresh");
+         mSyncButton.setText(mIsSyncing ? R.string.cancel : R.string.sync_now);
       }
    }
 
