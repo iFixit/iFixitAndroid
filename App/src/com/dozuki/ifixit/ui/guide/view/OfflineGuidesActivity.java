@@ -179,9 +179,12 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
+      final MainApplication app = MainApplication.get();
+      final boolean hasInternet = app.isConnected();
+
       setTitle(getString(R.string.offline_guides));
       setContentView(R.layout.offline_guides);
-      mAdapter = new OfflineGuideListAdapter(MainApplication.get().isConnected());
+      mAdapter = new OfflineGuideListAdapter(hasInternet);
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
       mSyncButton = (Button)findViewById(R.id.sync_button);
       mSyncStatusText = (TextView)findViewById(R.id.sync_status_text);
@@ -193,23 +196,31 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          @Override
          public void onClick(View v) {
             if (mIsSyncing) {
-               MainApplication.get().cancelSync();
+               app.cancelSync();
             } else {
-               MainApplication.get().requestSync();
+               app.requestSync();
             }
          }
       });
 
+      // TODO: Make sure this only runs the first time the Activity is opened.
+      // We don't want to log the user out every time the orientation is changed.
       if (getIntent().getBooleanExtra(REAUTHENTICATE, false)) {
          // The sync service indicates that the user is logged out so lets make sure
          // that we think that the user is so login can happen as normal.
-         MainApplication.get().shallowLogout(false);
+         app.shallowLogout(false);
       }
 
       if (!openLoginDialogIfLoggedOut()) {
          // Initialize the loader if the user is logged in. Otherwise this will
          // happen when the user logs in.
          initLoader();
+
+         // Initiate a sync the first time this Activity is opened if the user is logged
+         // in. Otherwise it will happen automatically upon login.
+         if (savedState == null && hasInternet) {
+            app.requestSync();
+         }
       }
 
       refreshSyncStatus(/* force */ true);
@@ -256,6 +267,9 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
       mSyncStatusText.setText(mIsSyncing ? getString(R.string.sync_status_syncing) :
       getString(R.string.last_synced, lastSyncTimeString));
+
+      // Disable the sync button if we don't have internet.
+      mSyncButton.setEnabled(MainApplication.get().isConnected());
    }
 
    @Override
