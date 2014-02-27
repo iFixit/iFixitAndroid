@@ -441,6 +441,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          if (guidesToDelete != null) {
             mDb.deleteGuides(mSite, mUser, guidesToDelete);
+            // Although not technically a new guide, this triggers an update of the UI.
+            sendNewGuideBroadcast();
          }
 
          return guides;
