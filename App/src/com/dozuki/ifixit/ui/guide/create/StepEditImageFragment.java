@@ -18,7 +18,7 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.Toast;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -67,7 +67,7 @@ public class StepEditImageFragment extends BaseFragment {
       mThumbs = (ThumbnailView) v.findViewById(R.id.thumbnail_viewer);
       DisplayMetrics metrics = new DisplayMetrics();
 
-      if (MainApplication.get().inPortraitMode()) {
+      if (App.get().inPortraitMode()) {
          ((LinearLayout) v).setOrientation(LinearLayout.HORIZONTAL);
       }
 
@@ -101,14 +101,14 @@ public class StepEditImageFragment extends BaseFragment {
 
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-            builder.setTitle(MainApplication.get().getString(R.string.step_edit_new_thumb_actions_title))
+            builder.setTitle(App.get().getString(R.string.step_edit_new_thumb_actions_title))
              .setItems(R.array.new_image_actions, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                    Intent intent;
                    switch (which) {
                       case CAPTURE_IMAGE:
-                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
+                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
                           "add_from_camera", null).build());
                          try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -133,7 +133,7 @@ public class StepEditImageFragment extends BaseFragment {
 
                          break;
                       case MEDIA_MANAGER:
-                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
+                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
                           "add_from_gallery", null).build());
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
@@ -160,26 +160,26 @@ public class StepEditImageFragment extends BaseFragment {
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
-                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
+                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
                           "copy_to_media_manager",
                           null).build());
                          Api.call(getActivity(),
                           ApiCall.copyImage(thumbImage.getId() + ""));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
-                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
+                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
                           "detach_to_media_manager",
                           null).build());
 
                          Api.call(getActivity(),
                           ApiCall.copyImage(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
-                         MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
+                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
                           "delete_from_step", null).build());
                          mThumbs.removeThumb(v);
                          mImages.remove(thumbImage);
 
-                         Bus bus = MainApplication.getBus();
+                         Bus bus = App.getBus();
                          bus.post(new StepImageDeleteEvent(thumbImage));
                          bus.post(new StepChangedEvent());
 
