@@ -5,7 +5,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;

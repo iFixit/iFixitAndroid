@@ -13,7 +13,7 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -124,7 +124,7 @@ public class StepReorderFragment extends BaseFragment {
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid() + "/step_reorder");
 
       tracker.send(MapBuilder.createAppView().build());

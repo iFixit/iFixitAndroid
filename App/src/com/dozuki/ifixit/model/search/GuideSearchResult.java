@@ -9,7 +9,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.RoundedTransformation;
@@ -47,7 +47,7 @@ public class GuideSearchResult implements SearchResult, Serializable {
 
       ((TextView)v.findViewById(R.id.guide_title)).setText(Html.fromHtml(mGuideInfo.mTitle));
       ((TextView)v.findViewById(R.id.guide_author)).setText(
-       MainApplication.get().getString(R.string.by_author, mGuideInfo.mAuthorName));
+       App.get().getString(R.string.by_author, mGuideInfo.mAuthorName));
 
       ImageView thumbnail = (ImageView)v.findViewById(R.id.guide_thumbnail);
 

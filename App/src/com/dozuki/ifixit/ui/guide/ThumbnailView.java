@@ -11,7 +11,7 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
@@ -88,7 +88,7 @@ public class ThumbnailView extends LinearLayout {
 
       mPicasso = PicassoUtils.with(getContext());
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          mPicasso.setDebugging(true);
       }
 
@@ -117,7 +117,7 @@ public class ThumbnailView extends LinearLayout {
       mMainImage = (FallbackImageView) mMainImageContainer.findViewById(R.id.main_image_view);
 
       mThumbs = new ArrayList<ViewHolder>();
-      setOrientation(MainApplication.get().inPortraitMode() ? HORIZONTAL : VERTICAL);
+      setOrientation(App.get().inPortraitMode() ? HORIZONTAL : VERTICAL);
    }
 
    private void init(Context context, AttributeSet attrs) {
@@ -321,7 +321,7 @@ public class ThumbnailView extends LinearLayout {
           (int) (mThumbnailHeight - .5f)
          );
 
-         if (!MainApplication.get().inPortraitMode()) {
+         if (!App.get().inPortraitMode()) {
             lp.gravity = Gravity.NO_GRAVITY;
             lp.setMargins(0, 0, mThumbnailSpacing, 0);
          } else {
@@ -354,7 +354,7 @@ public class ThumbnailView extends LinearLayout {
 
       LinearLayout.LayoutParams llp = new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT,
        LayoutParams.WRAP_CONTENT);
-      if (!MainApplication.get().inPortraitMode()) {
+      if (!App.get().inPortraitMode()) {
          llp.gravity = Gravity.NO_GRAVITY;
          llp.setMargins(0, 0, mThumbnailSpacing, 0);
       } else {
@@ -383,7 +383,7 @@ public class ThumbnailView extends LinearLayout {
    }
 
    private void getMainImageDimensions(boolean fullScreen) {
-      if (MainApplication.get().inPortraitMode()) {
+      if (App.get().inPortraitMode()) {
          float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f);
 
          // If we are hiding the thumbnails when there's 0 or 1 images on the step,
@@ -408,7 +408,7 @@ public class ThumbnailView extends LinearLayout {
    }
 
    private void getThumbnailDimensions() {
-      if (MainApplication.get().inPortraitMode()) {
+      if (App.get().inPortraitMode()) {
          float pagePadding = (getResources().getDimensionPixelSize(R.dimen.page_padding) * 2f)
           + getResources().getDimensionPixelSize(R.dimen.guide_image_spacing);
          // Screen height minus everything else that occupies horizontal space

@@ -13,7 +13,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.VideoThumbnail;
@@ -105,7 +105,7 @@ public class StepListItem extends TouchableRelativeLayout {
    }
 
    private void deleteStep() {
-      MainApplication.getGaTracker()
+      App.getGaTracker()
        .send(MapBuilder.createEvent("ui_action", "button_press", "delete_step", null).build());
 
       mPortalRef.createDeleteDialog(mStepObject).show();
@@ -115,7 +115,7 @@ public class StepListItem extends TouchableRelativeLayout {
       mStepObject = step;
       mStepPosition = position;
 
-      String stepText = MainApplication.get().getString(R.string.step_number, mStepPosition + 1);
+      String stepText = App.get().getString(R.string.step_number, mStepPosition + 1);
       if (mStepObject.getTitle().equals("")) {
          mStepsView.setText(stepText);
          mStepNumber.setVisibility(View.GONE);
@@ -133,7 +133,7 @@ public class StepListItem extends TouchableRelativeLayout {
    }
 
    private void editStep() {
-      MainApplication.getGaTracker()
+      App.getGaTracker()
        .send(MapBuilder.createEvent("ui_action", "button_press", "edit_step", null).build());
 
       mPortalRef.launchStepEdit(mStepPosition);

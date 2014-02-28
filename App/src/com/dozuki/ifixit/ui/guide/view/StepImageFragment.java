@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -54,7 +54,7 @@ public class StepImageFragment extends BaseFragment {
       mThumbs = (ThumbnailView) v.findViewById(R.id.thumbnail_viewer);
       DisplayMetrics metrics = new DisplayMetrics();
 
-      if (MainApplication.get().inPortraitMode()) {
+      if (App.get().inPortraitMode()) {
          ((LinearLayout) v).setOrientation(LinearLayout.HORIZONTAL);
       }
 

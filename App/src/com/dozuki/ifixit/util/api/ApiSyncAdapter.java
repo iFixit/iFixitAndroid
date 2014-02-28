@@ -15,7 +15,7 @@ import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -115,7 +115,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
-      MainApplication app = MainApplication.get();
+      App app = App.get();
       Site site = app.getSite();
 
       if (!site.mName.equals(user.mSiteName)) {
@@ -144,7 +144,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user);
                syncer.syncOfflineGuides();
                updateNotificationSuccess();
-               MainApplication.get().setLastSyncTime(site, user);
+               App.get().setLastSyncTime(site, user);
             } catch (ApiSyncException e) {
                Log.e(TAG, "Sync failed", e);
 
@@ -182,7 +182,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
     */
    private Site fetchSite(String siteName) {
       ApiEvent.Sites sites = performApiCall(ApiCall.sites(),
-       MainApplication.get().getSite(), null, ApiEvent.Sites.class);
+       App.get().getSite(), null, ApiEvent.Sites.class);
 
       for (Site site : sites.getResult()) {
          if (site.mName.equals(siteName)) {
@@ -216,9 +216,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    protected void initializeNotification(Site site) {
       if (mNotificationBuilder != null) return;
 
-      mNotificationManager = (NotificationManager)MainApplication.get().
+      mNotificationManager = (NotificationManager) App.get().
        getSystemService(Context.NOTIFICATION_SERVICE);
-      mNotificationBuilder = new NotificationCompat.Builder(MainApplication.get());
+      mNotificationBuilder = new NotificationCompat.Builder(App.get());
 
       // TODO: Update text and icon.
       // Play Music has "Keeping requested music...".
@@ -229,8 +229,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
       Intent intent = BaseActivity.addSite(
-       OfflineGuidesActivity.view(MainApplication.get()), site);
-      PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
+       OfflineGuidesActivity.view(App.get()), site);
+      PendingIntent pendingIntent = PendingIntent.getActivity(App.get(),
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
 
@@ -258,8 +258,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       initializeNotification(site);
 
       Intent intent = BaseActivity.addSite(
-       OfflineGuidesActivity.reauthenticate(MainApplication.get()), site);
-      PendingIntent pendingIntent = PendingIntent.getActivity(MainApplication.get(),
+       OfflineGuidesActivity.reauthenticate(App.get()), site);
+      PendingIntent pendingIntent = PendingIntent.getActivity(App.get(),
        /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
 
@@ -278,7 +278,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static String sBaseAppDirectory;
    private static String getBaseAppDirectory() {
       if (sBaseAppDirectory == null) {
-         sBaseAppDirectory = MainApplication.get().getFilesDir().getAbsolutePath();
+         sBaseAppDirectory = App.get().getFilesDir().getAbsolutePath();
       }
 
       return sBaseAppDirectory;
@@ -330,7 +330,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
          mUser = user;
-         mDb = ApiDatabase.get(MainApplication.get());
+         mDb = ApiDatabase.get(App.get());
          mLastProgressUpdate = 0;
       }
 

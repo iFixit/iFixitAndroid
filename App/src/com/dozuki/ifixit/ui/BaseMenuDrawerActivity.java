@@ -16,7 +16,7 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
@@ -75,7 +75,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
       buildSliderMenu();
 
-      if (!MainApplication.get().getSite().actionBarUsesIcon()) {
+      if (!App.get().getSite().actionBarUsesIcon()) {
          findViewById(R.id.menu_title_wrapper).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -137,7 +137,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
    private String getBarcodeScannerResult(int requestCode, int resultCode, Intent intent) {
       // The classes below might not exist if barcode scanning isn't enabled.
-      if (!MainApplication.get().getSite().barcodeScanningEnabled()) {
+      if (!App.get().getSite().barcodeScanningEnabled()) {
          return null;
       }
 
@@ -223,7 +223,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.isDozukiApp();
+            return App.isDozukiApp();
          }
 
          @Override
@@ -244,7 +244,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().barcodeScanningEnabled();
+            return App.get().getSite().barcodeScanningEnabled();
          }
 
          @Override
@@ -263,7 +263,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          @Override
          public String getTitle(Context context) {
             return context.getString(mTitle,
-             MainApplication.get().getSite().getObjectNamePlural());
+             App.get().getSite().getObjectNamePlural());
          }
       },
 
@@ -274,7 +274,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().isIfixit();
+            return App.get().getSite().isIfixit();
          }
       },
 
@@ -285,7 +285,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().isIfixit();
+            return App.get().getSite().isIfixit();
          }
       },
 
@@ -296,14 +296,14 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().isIfixit();
+            return App.get().getSite().isIfixit();
          }
       },
 
       ACCOUNT_MENU_SEPARATOR() {
          @Override
          public String getTitle(Context context) {
-            MainApplication app = MainApplication.get();
+            App app = App.get();
             boolean loggedIn = app.isUserLoggedIn();
 
             if (loggedIn) {
@@ -353,12 +353,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().isUserLoggedIn();
+            return App.get().isUserLoggedIn();
          }
 
          @Override
          public void performNavigation(BaseMenuDrawerActivity activity) {
-            MainApplication.get().logout(activity);
+            App.get().logout(activity);
          }
       },
 
@@ -367,7 +367,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().isIfixit();
+            return App.get().getSite().isIfixit();
          }
       },
 
@@ -378,7 +378,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().isIfixit();
+            return App.get().getSite().isIfixit();
          }
       },
 
@@ -389,7 +389,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().isIfixit();
+            return App.get().getSite().isIfixit();
          }
       },
 
@@ -400,7 +400,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       ) {
          @Override
          public boolean shouldDisplay() {
-            return MainApplication.get().getSite().isIfixit();
+            return App.get().getSite().isIfixit();
          }
       };
 
@@ -496,7 +496,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
        } else {
           mMenuDrawer.closeMenu();
 
-          MainApplication.getGaTracker().send(MapBuilder
+          App.getGaTracker().send(MapBuilder
            .createEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null)
            .build());
 

@@ -27,7 +27,7 @@ import android.widget.ImageButton;
 import android.widget.Toast;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -163,7 +163,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          initializeNewGuide();
       }
 
-      if (MainApplication.get().getSite().mGuideTypes == null) {
+      if (App.get().getSite().mGuideTypes == null) {
          Api.call(this, ApiCall.siteInfo());
       }
 
@@ -217,7 +217,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          @Override
          public void onPageSelected(int currentPage) {
             String label = mStepAdapter.getFragmentScreenLabel(currentPage);
-            Tracker tracker = MainApplication.getGaTracker();
+            Tracker tracker = App.getGaTracker();
             tracker.set(Fields.SCREEN_NAME, label);
             tracker.send(MapBuilder.createAppView().build());
          }
@@ -286,7 +286,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      MainApplication.getBus().register(this);
+      App.getBus().register(this);
 
       Image newThumb;
 
@@ -335,7 +335,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                   return;
                }
 
-               if (MainApplication.inDebug()) {
+               if (App.inDebug()) {
                   String debug = "";
 
                   for (String match : matches) {
@@ -355,7 +355,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                   handler.postDelayed(new Runnable() {
                      @Override
                      public void run() {
-                        MainApplication.getBus().post(new StepMicCompleteEvent(matches,
+                        App.getBus().post(new StepMicCompleteEvent(matches,
                          mGuide.getStep(mPagePosition).getStepid()));
                      }
 
@@ -526,7 +526,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    @Subscribe
    public void onSiteInfo(ApiEvent.SiteInfo event) {
       if (!event.hasError()) {
-         MainApplication.get().setSite(event.getResult());
+         App.get().setSite(event.getResult());
       }
    }
 
@@ -598,7 +598,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
                     dialog.dismiss();
 
                     if (error.mIndex != -1) {
-                       MainApplication.getBus().post(new StepLineValidationEvent(
+                       App.getBus().post(new StepLineValidationEvent(
                         mGuide.getStep(mSavePosition).getStepid(), error.mIndex));
                     }
                  }
@@ -768,7 +768,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public void onClick(View v) {
-      Tracker gaTracker = MainApplication.getGaTracker();
+      Tracker gaTracker = App.getGaTracker();
       switch (v.getId()) {
          case R.id.step_edit_delete_step:
             gaTracker.send(MapBuilder
@@ -1166,7 +1166,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          return;
       }
 
-      MainApplication.getGaTracker().send(MapBuilder
+      App.getGaTracker().send(MapBuilder
        .createEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid()).build());
 
       Intent intent = new Intent(this, GuideViewActivity.class);

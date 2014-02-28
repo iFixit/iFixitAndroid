@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.util;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 
 /**
@@ -15,7 +15,7 @@ public class ImageSizes {
    public static String topicMain;
    public static String logo;
 
-   public static void init(MainApplication app) {
+   public static void init(App app) {
       stepThumb = app.getString(R.string.is__guide_step_thumbnail);
       stepMain = app.getString(R.string.is__guide_step_main);
       stepFull = app.getString(R.string.is__guide_step_fullsize);

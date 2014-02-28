@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
 import com.actionbarsherlock.widget.SearchView;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -131,7 +131,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
    @Subscribe
    public void onSiteInfo(ApiEvent.SiteInfo event) {
       if (!event.hasError()) {
-         MainApplication.get().setSite(event.getResult());
+         App.get().setSite(event.getResult());
          Intent intent = new Intent(getActivity(), TopicActivity.class);
          startActivity(intent);
       } else {
@@ -174,7 +174,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
             showLoading();
-            MainApplication.get().setSite(siteListAdapter.getSiteList().get(position));
+            App.get().setSite(siteListAdapter.getSiteList().get(position));
             Api.call(getActivity(), ApiCall.siteInfo());
          }
       });

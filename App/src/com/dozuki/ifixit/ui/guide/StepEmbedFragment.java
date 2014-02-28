@@ -14,7 +14,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -153,7 +153,7 @@ public class StepEmbedFragment extends BaseFragment {
       float newHeight;
       float padding = 0f;
 
-      if (MainApplication.get().inPortraitMode()) {
+      if (App.get().inPortraitMode()) {
          padding = viewPadding(R.dimen.page_padding);
 
          newWidth = mMetrics.widthPixels - padding;

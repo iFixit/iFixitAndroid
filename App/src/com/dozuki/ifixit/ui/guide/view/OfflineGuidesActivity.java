@@ -22,7 +22,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -179,7 +179,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
-      final MainApplication app = MainApplication.get();
+      final App app = App.get();
       final boolean hasInternet = app.isConnected();
 
       setTitle(getString(R.string.offline_guides));
@@ -256,10 +256,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    private void updateLastSyncTime() {
-      long lastSyncTime = MainApplication.get().getLastSyncTime();
+      long lastSyncTime = App.get().getLastSyncTime();
       CharSequence lastSyncTimeString;
 
-      if (lastSyncTime == MainApplication.NEVER_SYNCED_VALUE) {
+      if (lastSyncTime == App.NEVER_SYNCED_VALUE) {
          lastSyncTimeString = getString(R.string.sync_status_never);
       } else {
          lastSyncTimeString = Utils.getRelativeTime(this, lastSyncTime);
@@ -269,7 +269,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       getString(R.string.last_synced, lastSyncTimeString));
 
       // Disable the sync button if we don't have internet.
-      mSyncButton.setEnabled(MainApplication.get().isConnected());
+      mSyncButton.setEnabled(App.get().isConnected());
    }
 
    @Override
@@ -319,7 +319,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId())  {
          case R.id.offline_guide_sync_now:
-            MainApplication.get().requestSync();
+            App.get().requestSync();
             return true;
          default:
             return super.onOptionsItemSelected(item);
@@ -346,7 +346,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    protected void refreshSyncStatus(boolean forceUpdate) {
       final String authority = ApiContentProvider.getAuthority();
-      final Account account = MainApplication.get().getUserAccount();
+      final Account account = App.get().getUserAccount();
       boolean isSyncing = ContentResolver.isSyncActive(account, authority) ||
        ContentResolver.isSyncPending(account, authority);
 
@@ -378,7 +378,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public Loader<List<GuideMediaProgress>> onCreateLoader(int i, Bundle bundle) {
-      MainApplication app = MainApplication.get();
+      App app = App.get();
       return new OfflineGuideLoader(this, app.getSite(), app.getUser());
    }
 

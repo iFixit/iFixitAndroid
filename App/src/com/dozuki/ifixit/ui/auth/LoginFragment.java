@@ -18,7 +18,8 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
@@ -60,7 +61,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    private void handleLogin(ApiEvent<User> event) {
       if (!event.hasError()) {
          User user = event.getResult();
-         ((MainApplication)getActivity().getApplication()).login(user, getEmail(),
+         ((App)getActivity().getApplication()).login(user, getEmail(),
           getPassword(), true);
 
          dismiss();
@@ -96,9 +97,9 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      MainApplication.get().setIsLoggingIn(true);
+      App.get().setIsLoggingIn(true);
 
-      Site site = MainApplication.get().getSite();
+      Site site = App.get().getSite();
       
       mHasRegisterBtn = site.mPublicRegistration;
 
@@ -149,7 +150,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, "/login");
 
       tracker.send(MapBuilder.createAppView().build());
@@ -265,7 +266,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          enable(false);
          mCurAPICall = ApiCall.userInfo(session);
          Api.call(getActivity(), mCurAPICall);
-      } else if (!MainApplication.get().getSite().mStandardAuth) {
+      } else if (!App.get().getSite().mStandardAuth) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need
           * to close the dialog. We can't do that here because onResume hasn't been
@@ -277,6 +278,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
    @Override
    public void onCancel(DialogInterface dialog) {
-      MainApplication.get().cancelLogin();
+      App.get().cancelLogin();
    }
 }

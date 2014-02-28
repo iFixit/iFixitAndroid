@@ -38,7 +38,7 @@ import com.squareup.otto.Bus;
 
 import java.net.URL;
 
-public class MainApplication extends Application {
+public class App extends Application {
    /*
     * Google Analytics configuration values.
     */
@@ -57,13 +57,13 @@ public class MainApplication extends Application {
     "FIRST_TIME_GALLERY_USER";
    private static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
    public static final long NEVER_SYNCED_VALUE = -1;
-   private static final String TAG = "MainApplication";
+   private static final String TAG = "App";
 
 
    /**
     * Singleton reference.
     */
-   private static MainApplication sMainApplication;
+   private static App sApp;
 
    /**
     * Singleton for Bus (Otto).
@@ -136,7 +136,7 @@ public class MainApplication extends Application {
       Api.init();
       ImageSizes.init(this);
 
-      sMainApplication = this;
+      sApp = this;
       setSite(getDefaultSite());
    }
 
@@ -186,8 +186,8 @@ public class MainApplication extends Application {
    /**
     * Singleton getter.
     */
-   public static MainApplication get() {
-      return sMainApplication;
+   public static App get() {
+      return sApp;
    }
 
    public Site getSite() {

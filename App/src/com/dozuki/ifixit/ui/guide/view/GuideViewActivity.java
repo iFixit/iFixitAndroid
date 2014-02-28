@@ -11,7 +11,7 @@ import android.widget.Toast;
 
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -163,7 +163,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       switch (item.getItemId()) {
          case R.id.edit_guide:
             if (mGuide != null) {
-               MainApplication.getGaTracker().send(MapBuilder.createEvent("menu_action",
+               App.getGaTracker().send(MapBuilder.createEvent("menu_action",
                 "button_press", "edit_guide", (long)mGuide.getGuideid()).build());
 
                Intent intent;
@@ -212,7 +212,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             Api.call(this, ApiCall.favoriteGuide(mGuideid, !favorited));
             supportInvalidateOptionsMenu();
 
-            if (MainApplication.get().isUserLoggedIn()) {
+            if (App.get().isUserLoggedIn()) {
                // Only Toast if the user is logged in. Otherwise it happens
                // in the login success event handler.
                toast(favorited ? R.string.unfavoriting :
@@ -230,7 +230,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Subscribe
    public void onGuide(ApiEvent.ViewGuide event) {
-      if (MainApplication.get().isUserLoggedIn() &&
+      if (App.get().isUserLoggedIn() &&
        (event.mStoredResponse || event.hasError())) {
          // Attempt to use an offline guide if it isn't a live response.
          fetchOfflineGuide(mGuideid, event);
@@ -280,7 +280,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
           Toast.LENGTH_SHORT);
 
          // Request a sync to make it show up in the offline guides list immediately.
-         MainApplication.get().requestSync();
+         App.get().requestSync();
       } else {
          Api.getErrorDialog(this, event).show();
       }
@@ -316,7 +316,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       mGuide = guide;
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
 
       tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid());
       tracker.send(MapBuilder.createAppView().build());
@@ -349,7 +349,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
     * Returns true if the guide is being fetched, false otherwise.
     */
    private void fetchOfflineGuide(final int guideid, final ApiEvent.ViewGuide event) {
-      final MainApplication app = MainApplication.get();
+      final App app = App.get();
       final User user = app.getUser();
 
       // Can't get offline guide if the user isn't logged in.
@@ -400,7 +400,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mCurrentPage = currentPage;
 
       String label = mAdapter.getFragmentScreenLabel(currentPage);
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, label);
       tracker.send(MapBuilder.createAppView().build());
    }

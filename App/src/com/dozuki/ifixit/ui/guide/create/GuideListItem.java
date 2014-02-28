@@ -18,7 +18,7 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.RoundedTransformation;
@@ -103,7 +103,7 @@ public class GuideListItem extends TouchableRelativeLayout {
                }
 
                // Disable deleting guides on iFixit for now.
-               if (MainApplication.get().getSite().isIfixit()) {
+               if (App.get().getSite().isIfixit()) {
                   menu.findItem(R.id.guide_create_item_delete).setVisible(false);
                }
 
@@ -111,7 +111,7 @@ public class GuideListItem extends TouchableRelativeLayout {
             } else {
                // PopupMenu was added in API 11, so let's use an AlertDialog instead.
                AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-               builder.setItems(MainApplication.get().getSite().isIfixit() ? R.array.guide_list_item_options
+               builder.setItems(App.get().getSite().isIfixit() ? R.array.guide_list_item_options
                 : R.array.guide_list_item_options_with_delete, new DialogInterface.OnClickListener() {
                   public void onClick(DialogInterface dialog, int which) {
                      switch (which) {
@@ -145,7 +145,7 @@ public class GuideListItem extends TouchableRelativeLayout {
    }
 
    private void publishGuide() {
-      MainApplication.getGaTracker()
+      App.getGaTracker()
        .send(MapBuilder.createEvent("ui_action", "button_press", "publish_guide",
         null).build());
 
@@ -168,7 +168,7 @@ public class GuideListItem extends TouchableRelativeLayout {
    }
 
    private void deleteGuide() {
-      MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+      App.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
        "delete_guide", null).build());
 
       ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
@@ -217,7 +217,7 @@ public class GuideListItem extends TouchableRelativeLayout {
    }
 
    private void editGuide() {
-      MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+      App.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
        "edit_guide", null).build());
 
       Intent intent = new Intent(mActivity, StepsActivity.class);

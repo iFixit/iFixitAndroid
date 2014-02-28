@@ -4,7 +4,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.view.View;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 
@@ -91,13 +92,13 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
    @Override
    public CharSequence getPageTitle(int position) {
       if (position == GUIDE_INTRO_POSITION) {
-         return MainApplication.get().getString(R.string.introduction);
+         return App.get().getString(R.string.introduction);
       } else if (position == mToolsPosition) {
-         return MainApplication.get().getString(R.string.requiredTools);
+         return App.get().getString(R.string.requiredTools);
       } else if (position == mPartsPosition) {
-         return MainApplication.get().getString(R.string.requiredParts);
+         return App.get().getString(R.string.requiredParts);
       } else {
-         return MainApplication.get().getString(R.string.step_number, (position - mStepOffset) + 1);
+         return App.get().getString(R.string.step_number, (position - mStepOffset) + 1);
       }
    }
 

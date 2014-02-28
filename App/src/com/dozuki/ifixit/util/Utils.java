@@ -9,7 +9,7 @@ import android.text.format.DateUtils;
 import android.text.style.URLSpan;
 import android.widget.ImageView;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
@@ -101,7 +101,7 @@ public class Utils {
          int end = spantext.getSpanEnd(span);
          int flags = spantext.getSpanFlags(span);
 
-         Site site = MainApplication.get().getSite();
+         Site site = App.get().getSite();
 
          if (span instanceof URLSpan) {
             URLSpan urlSpan = (URLSpan) span;
