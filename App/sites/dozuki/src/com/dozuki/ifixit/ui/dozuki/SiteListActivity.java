@@ -11,7 +11,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import com.actionbarsherlock.widget.SearchView;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -71,7 +71,7 @@ public class SiteListActivity extends BaseActivity
       mSiteListDialog = (SiteListDialogFragment)getSupportFragmentManager().
        findFragmentByTag(SITE_LIST_DIALOG);
 
-      MainApplication.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, "/sitelist").build());
+      App.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, "/sitelist").build());
    }
 
    @Override
@@ -83,13 +83,13 @@ public class SiteListActivity extends BaseActivity
 
    @Override
    public void onResume() {
-      if (!MainApplication.get().isLoggingIn()) {
+      if (!App.get().isLoggingIn()) {
          /**
           * Reset the current site to Dozuki anytime this Activity resumes
           * unless the user is logging in because the current site needs to be
           * set for login so the API call goes to the right site.
           */
-         MainApplication.get().setSite(Site.getSite("dozuki"));
+         App.get().setSite(Site.getSite("dozuki"));
       }
 
       super.onResume();
@@ -98,7 +98,7 @@ public class SiteListActivity extends BaseActivity
    @Override
    public void onCancelLogin(LoginEvent.Cancel event) {
       // Reset to Dozuki when login is cancelled.
-      MainApplication.get().setSite(Site.getSite("dozuki"));
+      App.get().setSite(Site.getSite("dozuki"));
    }
 
    @Override

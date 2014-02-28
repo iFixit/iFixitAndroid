@@ -1,7 +1,7 @@
 package com.dozuki.ifixit.ui;
 
 import com.actionbarsherlock.app.SherlockFragment;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 
 /**
  * Base class for Fragments. Handles bus registration and unregistration
@@ -13,13 +13,13 @@ public class BaseFragment extends SherlockFragment {
 
    @Override
    public void onResume() {
-      MainApplication.getBus().register(this);
+      App.getBus().register(this);
       super.onResume();
    }
 
    @Override
    public void onPause() {
-      MainApplication.getBus().unregister(this);
+      App.getBus().unregister(this);
       super.onPause();
    }
 }

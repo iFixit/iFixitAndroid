@@ -8,7 +8,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
@@ -68,7 +69,7 @@ public class TopicListFragment extends BaseFragment
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, "/category/" + mTopic.getName());
 
       tracker.send(MapBuilder.createAppView().build());
@@ -114,7 +115,7 @@ public class TopicListFragment extends BaseFragment
          mTopicAdapter.addSection(adapter);
       }
 
-      if (MainApplication.get().getSite().isIfixit()) {
+      if (App.get().getSite().isIfixit()) {
          if (nonLeaves.size() > 0) {
             adapter = new TopicListAdapter(mContext, mContext.getString(
              R.string.categories), nonLeaves);
@@ -123,7 +124,7 @@ public class TopicListFragment extends BaseFragment
          }
 
          if (leaves.size() > 0) {
-            MainApplication app = (MainApplication)getActivity().getApplication();
+            App app = (App)getActivity().getApplication();
 
             adapter = new TopicListAdapter(mContext, app.getSite().getObjectName(), leaves);
             adapter.setTopicSelectedListener(this);
@@ -131,7 +132,7 @@ public class TopicListFragment extends BaseFragment
          }
       } else {
          Collections.sort(mTopic.getChildren(), comparator);
-         adapter = new TopicListAdapter(mContext, MainApplication.get().getSite().getObjectNamePlural(),
+         adapter = new TopicListAdapter(mContext, App.get().getSite().getObjectNamePlural(),
           mTopic.getChildren());
          adapter.setTopicSelectedListener(this);
          mTopicAdapter.addSection(adapter);
@@ -172,7 +173,7 @@ public class TopicListFragment extends BaseFragment
       mTopic = topic;
 
       ((BaseActivity)getActivity()).setTitle(mTopic.getName().equals("ROOT") ?
-       MainApplication.get().getSite().mTitle :
+       App.get().getSite().mTitle :
        mTopic.getDisplayName());
 
       setupTopicAdapter();

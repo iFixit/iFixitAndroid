@@ -6,7 +6,8 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 
@@ -31,7 +32,7 @@ public class OpenIDActivity extends Activity {
       Bundle extras = getIntent().getExtras();
 
       mSingleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
-      mSite = ((MainApplication)getApplication()).getSite();
+      mSite = ((App)getApplication()).getSite();
 
       String loginUrl;
       if (mSingleSignOn) {
