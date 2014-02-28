@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 
 import java.io.Serializable;
@@ -84,7 +84,7 @@ public class ApiError implements Serializable {
    }
 
    public ApiError(int title, int message, Type type) {
-      this(MainApplication.get().getString(title), MainApplication.get().getString(message), type);
+      this(App.get().getString(title), App.get().getString(message), type);
    }
 
    public ApiError(String title, String message, Type type) {

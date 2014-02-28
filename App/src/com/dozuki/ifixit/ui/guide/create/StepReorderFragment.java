@@ -13,14 +13,13 @@ import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.PicassoUtils;
-import com.google.analytics.tracking.android.EasyTracker;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.Tracker;
@@ -124,7 +123,7 @@ public class StepReorderFragment extends BaseFragment {
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid() + "/step_reorder");
 
       tracker.send(MapBuilder.createAppView().build());
@@ -213,7 +212,7 @@ public class StepReorderFragment extends BaseFragment {
 
          if (step.hasVideo()) {
             PicassoUtils.with(getSherlockActivity())
-             .load(step.getVideo().getThumbnail().getPath(MainApplication.get().getImageSizes().getThumb()))
+             .load(step.getVideo().getThumbnail().getPath(App.get().getImageSizes().getThumb()))
              .error(R.drawable.no_image)
              .into(holder.mImageView);
 
@@ -238,7 +237,7 @@ public class StepReorderFragment extends BaseFragment {
       } else {
          for (Image imageInfo : imageList) {
             if (imageInfo.getId() > 0) {
-               url = imageInfo.getPath(MainApplication.get().getImageSizes().getThumb());
+               url = imageInfo.getPath(App.get().getImageSizes().getThumb());
                image.setTag(url);
                break;
             }

@@ -12,7 +12,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.VideoThumbnail;
@@ -74,7 +74,7 @@ public class StepVideoFragment extends BaseFragment {
       playButtonContainer.setLayoutParams(params);
 
       PicassoUtils.with(mContext)
-       .load(mVideoPoster.getPath(MainApplication.get().getImageSizes().getMain()))
+       .load(mVideoPoster.getPath(App.get().getImageSizes().getMain()))
        .error(R.drawable.no_image)
        .into(poster);
 
@@ -108,7 +108,7 @@ public class StepVideoFragment extends BaseFragment {
    private ViewGroup.LayoutParams fitToSpace(View view, float width, float height) {
       float newWidth, newHeight, padding = 0f;
 
-      if (MainApplication.get().inPortraitMode()) {
+      if (App.get().inPortraitMode()) {
          padding = viewPadding(R.dimen.page_padding);
 
          newWidth = mMetrics.widthPixels - padding;

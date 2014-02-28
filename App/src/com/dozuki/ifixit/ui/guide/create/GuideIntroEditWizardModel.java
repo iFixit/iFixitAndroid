@@ -6,7 +6,8 @@ package com.dozuki.ifixit.ui.guide.create;
  */
 
 import android.content.Context;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.*;
 
@@ -18,7 +19,7 @@ public class GuideIntroEditWizardModel extends GuideIntroWizardModel {
 
    @Override
    protected PageList onNewRootPageList() {
-      MainApplication app = MainApplication.get();
+      App app = App.get();
 
       String topicName = app.getTopicName();
 
