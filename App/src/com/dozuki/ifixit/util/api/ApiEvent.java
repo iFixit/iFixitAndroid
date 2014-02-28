@@ -86,6 +86,11 @@ public abstract class ApiEvent<T> {
    public ApiError mError;
    public int mCode;
 
+   /**
+    * True iff response came from the offline storage.
+    */
+   public boolean mStoredResponse;
+
    public ApiEvent<T> setResult(T result) {
       mResult = result;
       return this;
@@ -128,6 +133,11 @@ public abstract class ApiEvent<T> {
 
    public ApiEvent<T> setError(ApiError error) {
       mError = error;
+      return this;
+   }
+
+   public ApiEvent<T> setStoredResponse(boolean stored) {
+      mStoredResponse = stored;
       return this;
    }
 }

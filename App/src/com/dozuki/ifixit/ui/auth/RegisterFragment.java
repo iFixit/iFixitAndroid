@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.login;
+package com.dozuki.ifixit.ui.auth;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -33,7 +33,7 @@ import com.squareup.otto.Subscribe;
 public class RegisterFragment extends BaseDialogFragment implements OnClickListener {
    private Button mRegister;
    private Button mCancelRegister;
-   private EditText mLoginId;
+   private EditText mEmail;
    private EditText mPassword;
    private EditText mConfirmPassword;
    private EditText mName;
@@ -46,7 +46,8 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    public void onRegister(ApiEvent.Register event) {
       if (!event.hasError()) {
          User user = event.getResult();
-         ((App)getActivity().getApplication()).login(user);
+         ((App)getActivity().getApplication()).login(user, getEmail(),
+          getPassword(), true);
 
          dismiss();
       } else {
@@ -58,7 +59,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
          }
          mLoadingSpinner.setVisibility(View.GONE);
 
-         mLoginId.setVisibility(View.VISIBLE);
+         mEmail.setVisibility(View.VISIBLE);
          mPassword.setVisibility(View.VISIBLE);
          mConfirmPassword.setVisibility(View.VISIBLE);
          mName.setVisibility(View.VISIBLE);
@@ -86,7 +87,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.register_fragment, container, false);
 
-      mLoginId = (EditText)view.findViewById(R.id.edit_login_id);
+      mEmail = (EditText)view.findViewById(R.id.edit_login_id);
       mPassword = (EditText)view.findViewById(R.id.edit_password);
       mConfirmPassword = (EditText)view.findViewById(R.id.edit_confirm_password);
 
@@ -141,7 +142,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    }
 
    private void enable(boolean enabled) {
-      mLoginId.setEnabled(enabled);
+      mEmail.setEnabled(enabled);
       mPassword.setEnabled(enabled);
       mConfirmPassword.setEnabled(enabled);
       mRegister.setEnabled(enabled);
@@ -153,15 +154,15 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    public void onClick(View v) {
       switch (v.getId()) {
          case R.id.register_button:
-            String login = mLoginId.getText().toString();
+            String email = getEmail();
             String name = mName.getText().toString();
-            String password = mPassword.getText().toString();
+            String password = getPassword();
             String confirmPassword = mConfirmPassword.getText().toString();
 
-            if (password.equals(confirmPassword) && login.length() > 0 &&
+            if (password.equals(confirmPassword) && email.length() > 0 &&
              name.length() > 0 && (!App.get().getSite().isIfixit() || mTermsAgreeCheckBox.isChecked())) {
                enable(false);
-               mLoginId.setVisibility(View.GONE);
+               mEmail.setVisibility(View.GONE);
                mPassword.setVisibility(View.GONE);
                mConfirmPassword.setVisibility(View.GONE);
                mName.setVisibility(View.GONE);
@@ -171,11 +172,11 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);
                Api.call(getActivity(),
-                ApiCall.register(login, password, name));
+                ApiCall.register(email, password, name));
             } else {
-               if (login.length() <= 0) {
+               if (email.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);
-                  mLoginId.requestFocus();
+                  mEmail.requestFocus();
                   showKeyboard();
                } else if (password.length() <= 0) {
                   mErrorText.setText(R.string.empty_field_error);
@@ -207,6 +208,14 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
 
               break;
        }
+   }
+
+   private String getEmail() {
+      return mEmail.getText().toString();
+   }
+
+   private String getPassword() {
+      return mPassword.getText().toString();
    }
 
    @Override

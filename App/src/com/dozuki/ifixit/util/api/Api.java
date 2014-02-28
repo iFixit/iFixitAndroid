@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,8 +15,10 @@ import android.util.Log;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.util.FileCache;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.github.kevinsawicki.http.HttpRequest;
 import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
@@ -69,22 +72,23 @@ public class Api {
          Log.w("Api", "Missing activityid!", new Exception());
       }
 
+      apiCall.mSite = App.get().getSite();
+      User user = App.get().getUser();
+      apiCall.mUser = user;
+
+      if (apiCall.mAuthToken == null && user != null) {
+         // Set the auth token to the current user's auth token if one isn't
+         // explicitly set. Originally added for logout and user info because a
+         // user isn't associated with the auth token when the API call is performed.
+         apiCall.mAuthToken = user.getAuthToken();
+      }
+
       // User needs to be logged in for an authenticated endpoint with the exception of login.
       if (requireAuthentication(endpoint) && !App.get().isUserLoggedIn()) {
          App.getBus().post(getUnauthorizedEvent(apiCall));
       } else {
          performRequest(apiCall, new Responder() {
             public void setResult(ApiEvent<?> result) {
-               // Don't parse if we've erred already.
-               if (!result.hasError()) {
-                  result = parseResult(result, apiCall.mEndpoint);
-               }
-
-               // Don't save if there a parse error.
-               if (!result.hasError()) {
-                  saveResult(result, apiCall.mEndpoint.getTarget(), apiCall.mQuery);
-               }
-
                if (apiCall.mEndpoint.mPostResults) {
                   /**
                    * Always post the result despite any errors. This actually sends it off
@@ -106,7 +110,9 @@ public class Api {
       sPendingApiCall = apiCall;
 
       // We aren't logged in anymore so lets make sure we don't think we are.
-      App.get().shallowLogout();
+      // Note: This does _not_ remove the account from the AccountManager. The
+      // user still has a chance to reauthenticate and salvage the account.
+      App.get().shallowLogout(false);
 
       // The ApiError doesn't matter as long as one exists.
       return new ApiEvent.Unauthorized().
@@ -156,6 +162,7 @@ public class Api {
             event.mCode = code;
             event.mApiCall = result.mApiCall;
             event.mResponse = result.mResponse;
+            event.mStoredResponse = result.mStoredResponse;
          } catch (Exception e) {
             // This is meant to catch JSON and GSON parse exceptions but enumerating
             // all different types of Exceptions and putting error handling code
@@ -176,14 +183,6 @@ public class Api {
 
    private static boolean isSuccess(int code) {
       return code >= 200 && code < 300;
-   }
-
-   private static void saveResult(ApiEvent<?> result, int requestTarget,
-    String requestQuery) {
-      // Commented out because the DB code isn't ready yet.
-      // ApiDatabase db = new ApiDatabase(this);
-      // db.insertResult(result.getResponse(), requestTarget, requestQuery);
-      // db.close();
    }
 
    public static AlertDialog getErrorDialog(final Activity activity,
@@ -289,130 +288,10 @@ public class Api {
    }
 
    private static void performRequest(final ApiCall apiCall, final Responder responder) {
-      final ApiEndpoint endpoint = apiCall.mEndpoint;
-
-      if (!checkConnectivity(responder, endpoint, apiCall)) {
-         return;
-      }
-
-      final String url = endpoint.getUrl(App.get().getSite(), apiCall.mQuery);
-
-      if (App.inDebug()) {
-         Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
-         Log.i("Api", "Request body: " + apiCall.mRequestBody);
-      }
-
       AsyncTask<String, Void, ApiEvent<?>> as = new AsyncTask<String, Void, ApiEvent<?>>() {
          @Override
          protected ApiEvent<?> doInBackground(String... dummy) {
-            ApiEvent<?> event = endpoint.getEvent();
-            event.setApiCall(apiCall);
-
-            /**
-             * Unfortunately we must split the creation of the HttpRequest
-             * object and the appropriate actions to take for a GET vs. a POST
-             * request. The request headers and trustAllCerts calls must be
-             * made before any data is sent. However, we must have an HttpRequest
-             * object already.
-             */
-            HttpRequest request;
-
-            try {
-               long startTime = System.currentTimeMillis();
-
-               if (endpoint.mMethod.equals("GET")) {
-                  request = HttpRequest.get(url);
-               } else {
-                  /**
-                   * For all methods other than get we actually perform a POST but send
-                   * a header indicating the actual request we are performing. This is
-                   * because http-request's underlying HTTPRequest library doesn't
-                   * support PATCH requests.
-                   */
-                  request = HttpRequest.post(url);
-                  request.header("X-HTTP-Method-Override", endpoint.mMethod);
-               }
-
-               String authToken = null;
-
-               /**
-                * Get an appropriate auth token.
-                */
-               if (apiCall.mAuthToken != null) {
-                  // This auth token overrides all other requirements/auth tokens.
-                  authToken = apiCall.mAuthToken;
-               } else if (App.get().isUserLoggedIn()) {
-                  // Always include it if the user is logged in.
-                  User user = App.get().getUser();
-                  authToken = user.getAuthToken();
-               }
-
-               /**
-                * Send along the auth token if we found one.
-                */
-               if (authToken != null) {
-                  request.header("Authorization", "api " + authToken);
-               }
-
-               request.userAgent(App.get().getUserAgent());
-
-               request.header("X-App-Id", BuildConfig.APP_ID);
-
-               // Trust all certs and hosts in development
-               if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || App.inDebug()) {
-                  request.trustAllCerts();
-                  request.trustAllHosts();
-               }
-
-               request.followRedirects(false);
-
-               /**
-                * Continue with constructing the request body.
-                */
-               if (apiCall.mFilePath != null) {
-                  // POST the file if present.
-                  request.send(new File(apiCall.mFilePath));
-               } else if (apiCall.mRequestBody != null) {
-                  request.send(apiCall.mRequestBody);
-               }
-
-               /**
-                * The order is important here. If the code() is called first an IOException
-                * is thrown in some cases (invalid login for one, maybe more).
-                */
-               String responseBody = request.body();
-               int code = request.code();
-
-               if (App.inDebug()) {
-                  long endTime = System.currentTimeMillis();
-
-                  Log.d("Api", "Response code: " + code);
-                  Log.d("Api", "Response body: " + responseBody);
-                  Log.d("Api", "Request time: " + (endTime - startTime) + "ms");
-               }
-
-               /**
-                * If the server responds with a 401, the user is logged out even though we
-                * think that they are logged in. Return an Unauthorized event to prompt the
-                * user to log in. Don't do this if we are logging in because the login dialog
-                * will automatically handle these errors.
-                */
-               if (code == INVALID_LOGIN_CODE && !App.get().isLoggingIn()) {
-                  return getUnauthorizedEvent(apiCall);
-               } else {
-                  return event.setCode(code).setResponse(responseBody);
-               }
-            } catch (HttpRequestException e) {
-               if (e.getCause() != null) {
-                  e.getCause().printStackTrace();
-                  Log.e("Api", "IOException from request", e.getCause());
-               } else {
-                  e.printStackTrace();
-                  Log.e("Api", "API error", e);
-               }
-
-               return event.setError(new ApiError(ApiError.Type.PARSE));
-            }
+            return performAndParseApiCall(apiCall);
          }
 
          @Override
@@ -428,19 +307,224 @@ public class Api {
       }
    }
 
-   private static boolean checkConnectivity(Responder responder, ApiEndpoint endpoint,
-    ApiCall apiCall) {
+   private static ApiEvent<?> performAndParseApiCall(ApiCall apiCall) {
+      ApiEndpoint endpoint = apiCall.mEndpoint;
+      final String url = endpoint.getUrl(apiCall.mSite, apiCall.mQuery);
+      ApiEvent<?> event = endpoint.getEvent();
+      event.setApiCall(apiCall);
+
+      if (App.inDebug()) {
+         Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
+         Log.i("Api", "Request body: " + apiCall.mRequestBody);
+      }
+
+      try {
+         ApiEvent<?> response = getResponse(url, event, apiCall);
+
+         if (!response.hasError()) {
+            response = parseResult(response, endpoint);
+         }
+
+         if (!response.hasError() && endpoint.mMethod.equals("GET") &&
+          !response.mStoredResponse) {
+            storeResponse(url, apiCall, response.getResponse());
+         }
+
+         return response;
+      } catch (HttpRequestException e) {
+         Log.e("Api", "API error", e);
+
+         return event.setError(new ApiError(ApiError.Type.PARSE));
+      }
+   }
+
+   private static ApiEvent<?> getResponse(String url, ApiEvent<?> event, ApiCall apiCall) {
+      long startTime = System.currentTimeMillis();
+
+      if (!hasInternet()) {
+         if (apiCall.mEndpoint.mMethod.equals("GET")) {
+            String response = getStoredResponse(url, apiCall);
+            if (response != null) {
+               if (App.inDebug()) {
+                  Log.i("Api", "Using stored API response");
+               }
+               // All GETs will be 200's if they're valid.
+               return event.setCode(200).setResponse(response).setStoredResponse(true);
+            }
+         }
+
+         return event.setError(new ApiError(ApiError.Type.CONNECTION));
+      }
+
+      /**
+       * Unfortunately we must split the creation of the HttpRequest
+       * object and the appropriate actions to take for a GET vs. a POST
+       * request. The request headers and trustAllCerts calls must be
+       * made before any data is sent. However, we must have an HttpRequest
+       * object already.
+       */
+      HttpRequest request;
+
+      if (apiCall.mEndpoint.mMethod.equals("GET")) {
+         request = HttpRequest.get(url);
+      } else {
+         /**
+          * For all methods other than get we actually perform a POST but send
+          * a header indicating the actual request we are performing. This is
+          * because http-request's underlying HTTPRequest library doesn't
+          * support PATCH requests.
+          */
+         request = HttpRequest.post(url);
+         request.header("X-HTTP-Method-Override", apiCall.mEndpoint.mMethod);
+      }
+
+      /**
+       * Send along the auth token if we have one.
+       */
+      if (apiCall.mAuthToken != null) {
+         request.header("Authorization", "api " + apiCall.mAuthToken);
+      }
+
+      request.userAgent(App.get().getUserAgent());
+
+      request.header("X-App-Id", BuildConfig.APP_ID);
+
+      // Trust all certs and hosts in development
+      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || App.inDebug()) {
+         request.trustAllCerts();
+         request.trustAllHosts();
+      }
+
+      request.followRedirects(false);
+
+      /**
+       * Continue with constructing the request body.
+       */
+      if (apiCall.mFilePath != null) {
+         // POST the file if present.
+         request.send(new File(apiCall.mFilePath));
+      } else if (apiCall.mRequestBody != null) {
+         request.send(apiCall.mRequestBody);
+      }
+
+      /**
+       * The order is important here. If the code() is called first an IOException
+       * is thrown in some cases (invalid login for one, maybe more).
+       */
+      String responseBody = request.body();
+      int code = request.code();
+
+      if (App.inDebug()) {
+         long endTime = System.currentTimeMillis();
+
+         Log.d("Api", "Response code: " + code);
+         Log.d("Api", "Response body: " + responseBody);
+         Log.d("Api", "Request time: " + (endTime - startTime) + "ms");
+      }
+
+      /**
+       * If the server responds with a 401, the user is logged out even though we
+       * think that they are logged in. Return an Unauthorized event to prompt the
+       * user to log in. Don't do this if we are logging in because the login dialog
+       * will automatically handle these errors.
+       */
+      if (code == INVALID_LOGIN_CODE && !App.get().isLoggingIn()) {
+         String newAuthToken = null;
+
+         // If mAuthToken is null that means that this is resulting from reauthenticating
+         // in which case the user's password has expired. Fall through to presenting
+         // a login dialog so the user can reenter credentials. Upon success, the account
+         // will be updated. If the user doesn't sign in then it will eventually be
+         // removed.
+         if (apiCall.mAuthToken != null) {
+            newAuthToken = attemptReauthentication(apiCall);
+         }
+
+         if (newAuthToken != null) {
+            // Try again with the new auth token.
+            apiCall.mAuthToken = newAuthToken;
+            return getResponse(url, event, apiCall);
+         } else {
+            return getUnauthorizedEvent(apiCall);
+         }
+      } else {
+         return event.setCode(code).setResponse(responseBody);
+      }
+   }
+
+   /**
+    * Attempts to reauthenticate the user with the stored credentials. Returns
+    * a fresh authToken if successful, null otherwise.
+    */
+   private static String attemptReauthentication(ApiCall attemptedApiCall) {
+      Authenticator authenticator = new Authenticator(App.get());
+      Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);
+      authenticator.invalidateAuthToken(attemptedApiCall.mAuthToken);
+      String email = attemptedApiCall.mUser.mEmail;
+      String password = authenticator.getPassword(account);
+
+      ApiCall loginApiCall = ApiCall.login(email, password);
+      loginApiCall.mSite = attemptedApiCall.mSite;
+      ApiEvent<?> result = performAndParseApiCall(loginApiCall);
+
+      if (result.hasError()) {
+         Log.w("Api", "Reauthentication failed");
+         return null;
+      }
+
+      Object resultObject = result.getResult();
+      if (resultObject instanceof User) {
+         User user = (User)resultObject;
+
+         // Don't notify because this is on a different thread and Otto fails.
+         App.get().login(user, email, password, false);
+
+         return user.getAuthToken();
+      } else {
+         Log.w("Api", "Reauthentication result isn't a User");
+         return null;
+      }
+   }
+
+   private static String getStoredResponse(String url, ApiCall apiCall) {
+      long startTime = System.currentTimeMillis();
+
+      String response = FileCache.get(getCacheKey(url, apiCall.mUser));
+
+      if (App.inDebug()) {
+         long endTime = System.currentTimeMillis();
+         Log.i("Api", "Retrieved response in " + (endTime - startTime) + "ms");
+      }
+
+      return response;
+   }
+
+   private static void storeResponse(String url, ApiCall apiCall, String response) {
+      long startTime = System.currentTimeMillis();
+
+      FileCache.set(getCacheKey(url, apiCall.mUser), response);
+
+      if (App.inDebug()) {
+         long endTime = System.currentTimeMillis();
+         Log.i("Api", "Stored response in " + (endTime - startTime) + "ms");
+      }
+   }
+
+   private static String getCacheKey(String url, User user) {
+      String key = "api_responses_" + url;
+
+      if (user != null) {
+         key += user.getUserid();
+      }
+
+      return key;
+   }
+
+   private static boolean hasInternet() {
       ConnectivityManager cm = (ConnectivityManager)
        App.get().getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
-      if (netInfo == null || !netInfo.isConnected()) {
-         responder.setResult(endpoint.getEvent()
-          .setApiCall(apiCall)
-          .setError(new ApiError(ApiError.Type.CONNECTION)));
-         return false;
-      }
-
-      return true;
+      return netInfo != null && netInfo.isConnected();
    }
 }
