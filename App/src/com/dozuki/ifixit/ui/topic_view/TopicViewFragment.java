@@ -8,7 +8,8 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
@@ -52,7 +53,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       super.onCreate(savedInstanceState);
 
       if (mSite == null) {
-         mSite = ((MainApplication) getActivity().getApplication()).getSite();
+         mSite = ((App) getActivity().getApplication()).getSite();
       }
    }
 
@@ -157,7 +158,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
    @Override
    public void onPageSelected(int position) {
       String label = mPageAdapter.getFragmentScreenLabel(position);
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, label);
       tracker.send(MapBuilder.createAppView().build());
    }

@@ -2,12 +2,11 @@ package com.dozuki.ifixit.util;
 
 import android.util.Log;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.InputStream;
 import java.io.IOException;
 import java.util.Scanner;
 
@@ -68,7 +67,7 @@ public class FileCache {
    private static File sCacheDir;
    private static File getCacheDir() {
       if (sCacheDir == null) {
-         sCacheDir = MainApplication.get().getCacheDir();
+         sCacheDir = App.get().getCacheDir();
       }
 
       return sCacheDir;

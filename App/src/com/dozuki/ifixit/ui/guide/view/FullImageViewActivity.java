@@ -6,7 +6,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import com.actionbarsherlock.app.SherlockActivity;
 import com.actionbarsherlock.view.Window;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.guide.FullScreenImageView;
 import com.dozuki.ifixit.util.ImageSizes;
@@ -27,7 +27,7 @@ public class FullImageViewActivity extends SherlockActivity {
       requestWindowFeature((int) Window.FEATURE_NO_TITLE);
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
        WindowManager.LayoutParams.FLAG_FULLSCREEN);
-      ImageSizes sizes = MainApplication.get().getImageSizes();
+      ImageSizes sizes = App.get().getImageSizes();
 
       String url = (String) getIntent().getExtras().get(IMAGE_URL);
       Picasso picasso = PicassoUtils.with(this);

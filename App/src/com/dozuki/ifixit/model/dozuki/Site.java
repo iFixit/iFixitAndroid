@@ -3,7 +3,7 @@ package com.dozuki.ifixit.model.dozuki;
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import com.dozuki.ifixit.BuildConfig;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideType;
@@ -109,7 +109,7 @@ public class Site implements Serializable {
 
    public String getAPIDomain() {
       String domain;
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          if (isIfixit()) {
             domain = BuildConfig.DEV_SERVER;
          } else {
@@ -159,8 +159,8 @@ public class Site implements Serializable {
    // Used only for custom apps, where we don't have a call to get the site info.
    public static Site getSite(String siteName) {
       Site site = null;
-      Resources res = MainApplication.get().getResources();
-      String packageName = MainApplication.get().getPackageName();
+      Resources res = App.get().getResources();
+      String packageName = App.get().getPackageName();
 
       if (siteName.equals("ifixit")) {
          site = new Site(2);

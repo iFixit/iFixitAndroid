@@ -9,7 +9,8 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.WindowManager.LayoutParams;
 import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.google.analytics.tracking.android.Fields;
@@ -125,7 +126,7 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
    public void onClick(View v) {
       BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
 
       switch (v.getId()) {
          case R.id.bullet_dialog_color_black:
@@ -219,7 +220,7 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, "/guide/edit/" + ((StepEditActivity)
        getActivity()).getGuideId() + "/" + mStepIndex + "/bullet_dialog");
 

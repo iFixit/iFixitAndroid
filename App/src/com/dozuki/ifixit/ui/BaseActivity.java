@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
@@ -86,11 +86,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       public void onApiCall(ApiEvent.ActivityProxy activityProxy) {
          if (activityProxy.getActivityid() == mActivityid) {
             // Send the real event off to the real handler.
-            MainApplication.getBus().post(activityProxy.getApiEvent());
+            App.getBus().post(activityProxy.getApiEvent());
          } else {
             // Send the event back to Api so it can retry it for the
             // intended Activity.
-            MainApplication.getBus().post(new DeadEvent(MainApplication.getBus(),
+            App.getBus().post(new DeadEvent(App.getBus(),
              activityProxy.getApiEvent()));
          }
       }
@@ -111,21 +111,21 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          mUserid = savedState.getInt(USERID);
          mSite = (Site)savedState.getSerializable(SITE);
 
-         Site currentSite = MainApplication.get().getSite();
+         Site currentSite = App.get().getSite();
 
          // If the site associated with this Activity is different than the current site,
          // set it to the one this Activity wants. Don't always do this because of the
          // overhead of reading the user from SharedPreferences.
          if (mSite.mSiteid != currentSite.mSiteid) {
-            MainApplication.get().setSite(mSite);
+            App.get().setSite(mSite);
          }
       } else {
          mActivityid = generateActivityid();
          setUserid();
-         mSite = MainApplication.get().getSite();
+         mSite = App.get().getSite();
       }
 
-      MainApplication app = MainApplication.get();
+      App app = App.get();
       Site site = app.getSite();
       ActionBar ab = getSupportActionBar();
       ab.setDisplayHomeAsUpEnabled(true);
@@ -197,10 +197,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        * There is another register call in onResume but we also need it here for the onUnauthorized
        * call that is usually triggered in onCreate of derived Activities.
        */
-      MainApplication.getBus().register(this);
-      MainApplication.getBus().register(mBaseActivityListener);
+      App.getBus().register(this);
+      App.getBus().register(mBaseActivityListener);
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          ViewServer.get(this).addWindow(this);
       }
 
@@ -220,7 +220,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void setTitle(String title) {
-      if (MainApplication.get().getSite().actionBarUsesIcon()) {
+      if (App.get().getSite().actionBarUsesIcon()) {
          getSupportActionBar().setTitle(title);
       } else {
          TextView titleView = ((TextView)getSupportActionBar().getCustomView().
@@ -267,10 +267,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void onResume() {
       super.onResume();
 
-      MainApplication.getBus().register(this);
-      MainApplication.getBus().register(mBaseActivityListener);
+      App.getBus().register(this);
+      App.getBus().register(mBaseActivityListener);
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          ViewServer.get(this).setFocusedWindow(this);
       }
    }
@@ -291,7 +291,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void onDestroy() {
       super.onDestroy();
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          ViewServer.get(this).removeWindow(this);
       }
    }
@@ -300,12 +300,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void onPause() {
       super.onPause();
 
-      MainApplication.getBus().unregister(this);
-      MainApplication.getBus().unregister(mBaseActivityListener);
+      App.getBus().unregister(this);
+      App.getBus().unregister(mBaseActivityListener);
    }
 
    public void openLoginDialogIfLoggedOut() {
-      if (!MainApplication.get().isUserLoggedIn()) {
+      if (!App.get().isUserLoggedIn()) {
          LoginFragment.newInstance().show(getSupportFragmentManager(), "LoginFragment");
       }
    }
@@ -332,7 +332,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
     * Sets the userid to the currently logged in user's userid.
     */
    private void setUserid() {
-      User user = MainApplication.get().getUser();
+      User user = App.get().getUser();
       mUserid = user == null ? LOGGED_OUT_USERID : user.getUserid();
    }
 
@@ -340,7 +340,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
     * Finishes the Activity if the user should be logged in but isn't.
     */
    private void finishActivityIfPermissionDenied() {
-      MainApplication app = MainApplication.get();
+      App app = App.get();
       User user = app.getUser();
       int currentUserid = user == null ? LOGGED_OUT_USERID : user.getUserid();
 

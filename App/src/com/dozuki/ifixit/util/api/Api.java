@@ -12,8 +12,8 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.util.Log;
 
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
-import com.dozuki.ifixit.MainApplication;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.user.User;
@@ -56,7 +56,7 @@ public class Api {
     * Returns true if the the user needs to be authenticated for the given site and endpoint.
     */
    private static boolean requireAuthentication(ApiEndpoint endpoint) {
-      return (endpoint.mAuthenticated || !MainApplication.get().getSite().mPublic) &&
+      return (endpoint.mAuthenticated || !App.get().getSite().mPublic) &&
        !endpoint.mForcePublic;
    }
 
@@ -72,8 +72,8 @@ public class Api {
          Log.w("Api", "Missing activityid!", new Exception());
       }
 
-      apiCall.mSite = MainApplication.get().getSite();
-      User user = MainApplication.get().getUser();
+      apiCall.mSite = App.get().getSite();
+      User user = App.get().getUser();
       apiCall.mUser = user;
 
       if (apiCall.mAuthToken == null && user != null) {
@@ -84,8 +84,8 @@ public class Api {
       }
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
-      if (requireAuthentication(endpoint) && !MainApplication.get().isUserLoggedIn()) {
-         MainApplication.getBus().post(getUnauthorizedEvent(apiCall));
+      if (requireAuthentication(endpoint) && !App.get().isUserLoggedIn()) {
+         App.getBus().post(getUnauthorizedEvent(apiCall));
       } else {
          performRequest(apiCall, new Responder() {
             public void setResult(ApiEvent<?> result) {
@@ -95,7 +95,7 @@ public class Api {
                    * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
                    * was initiated by that Activity instance.
                    */
-                  MainApplication.getBus().post(new ApiEvent.ActivityProxy(result));
+                  App.getBus().post(new ApiEvent.ActivityProxy(result));
                }
             }
          });
@@ -112,7 +112,7 @@ public class Api {
       // We aren't logged in anymore so lets make sure we don't think we are.
       // Note: This does _not_ remove the account from the AccountManager. The
       // user still has a chance to reauthenticate and salvage the account.
-      MainApplication.get().shallowLogout(false);
+      App.get().shallowLogout(false);
 
       // The ApiError doesn't matter as long as one exists.
       return new ApiEvent.Unauthorized().
@@ -225,7 +225,7 @@ public class Api {
    public static void init() {
       sDeadApiEvents = new LinkedList<ApiEvent<?>>();
 
-      MainApplication.getBus().register(new Object() {
+      App.getBus().register(new Object() {
          @Subscribe
          public void onDeadEvent(DeadEvent deadEvent) {
             Object event = deadEvent.event;
@@ -271,7 +271,7 @@ public class Api {
                    apiEvent.getClass().getName());
                }
 
-               MainApplication.getBus().post(apiEvent);
+               App.getBus().post(apiEvent);
             } else {
                if (BuildConfig.DEBUG) {
                   Log.i("Api", "Adding dead event: " + apiEvent.getClass().toString());
@@ -313,7 +313,7 @@ public class Api {
       ApiEvent<?> event = endpoint.getEvent();
       event.setApiCall(apiCall);
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
          Log.i("Api", "Request body: " + apiCall.mRequestBody);
       }
@@ -345,7 +345,7 @@ public class Api {
          if (apiCall.mEndpoint.mMethod.equals("GET")) {
             String response = getStoredResponse(url, apiCall);
             if (response != null) {
-               if (MainApplication.inDebug()) {
+               if (App.inDebug()) {
                   Log.i("Api", "Using stored API response");
                }
                // All GETs will be 200's if they're valid.
@@ -385,12 +385,12 @@ public class Api {
          request.header("Authorization", "api " + apiCall.mAuthToken);
       }
 
-      request.userAgent(MainApplication.get().getUserAgent());
+      request.userAgent(App.get().getUserAgent());
 
       request.header("X-App-Id", BuildConfig.APP_ID);
 
       // Trust all certs and hosts in development
-      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || MainApplication.inDebug()) {
+      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || App.inDebug()) {
          request.trustAllCerts();
          request.trustAllHosts();
       }
@@ -414,7 +414,7 @@ public class Api {
       String responseBody = request.body();
       int code = request.code();
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
 
          Log.d("Api", "Response code: " + code);
@@ -428,7 +428,7 @@ public class Api {
        * user to log in. Don't do this if we are logging in because the login dialog
        * will automatically handle these errors.
        */
-      if (code == INVALID_LOGIN_CODE && !MainApplication.get().isLoggingIn()) {
+      if (code == INVALID_LOGIN_CODE && !App.get().isLoggingIn()) {
          String newAuthToken = null;
 
          // If mAuthToken is null that means that this is resulting from reauthenticating
@@ -457,7 +457,7 @@ public class Api {
     * a fresh authToken if successful, null otherwise.
     */
    private static String attemptReauthentication(ApiCall attemptedApiCall) {
-      Authenticator authenticator = new Authenticator(MainApplication.get());
+      Authenticator authenticator = new Authenticator(App.get());
       Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);
       authenticator.invalidateAuthToken(attemptedApiCall.mAuthToken);
       String email = attemptedApiCall.mUser.mEmail;
@@ -477,7 +477,7 @@ public class Api {
          User user = (User)resultObject;
 
          // Don't notify because this is on a different thread and Otto fails.
-         MainApplication.get().login(user, email, password, false);
+         App.get().login(user, email, password, false);
 
          return user.getAuthToken();
       } else {
@@ -491,7 +491,7 @@ public class Api {
 
       String response = FileCache.get(getCacheKey(url, apiCall.mUser));
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
          Log.i("Api", "Retrieved response in " + (endTime - startTime) + "ms");
       }
@@ -504,7 +504,7 @@ public class Api {
 
       FileCache.set(getCacheKey(url, apiCall.mUser), response);
 
-      if (MainApplication.inDebug()) {
+      if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
          Log.i("Api", "Stored response in " + (endTime - startTime) + "ms");
       }
@@ -522,7 +522,7 @@ public class Api {
 
    private static boolean hasInternet() {
       ConnectivityManager cm = (ConnectivityManager)
-       MainApplication.get().getSystemService(Context.CONNECTIVITY_SERVICE);
+       App.get().getSystemService(Context.CONNECTIVITY_SERVICE);
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       return netInfo != null && netInfo.isConnected();

@@ -13,7 +13,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
@@ -35,7 +35,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       }
 
       if (mSite == null) {
-         mSite = ((MainApplication) getActivity().getApplication()).getSite();
+         mSite = ((App) getActivity().getApplication()).getSite();
       }
 
       View view = inflater.inflate(R.layout.web_view_fragment, container, false);
@@ -129,7 +129,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       }
 
       protected void setSessionCookie(String url) {
-         User user = MainApplication.get().getUser();
+         User user = App.get().getUser();
 
          if (user != null) {
             String session = user.getAuthToken();
@@ -177,7 +177,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       public void onPageFinished(WebView view, String url) {
          mProgressBar.setVisibility(View.GONE);
 
-         if (MainApplication.get().getSite().isIfixit()) {
+         if (App.get().getSite().isIfixit()) {
             // Amazon app store doesn't like our footer links to other app stores in the iFixit app,
             // so we are forced to hide them
             view.loadUrl("javascript:(function() { " +

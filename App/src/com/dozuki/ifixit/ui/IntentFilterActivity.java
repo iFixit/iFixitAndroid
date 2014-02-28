@@ -6,7 +6,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
@@ -71,14 +71,14 @@ public class IntentFilterActivity extends BaseActivity {
       mUri = uri;
       List<String> segments = mUri.getPathSegments();
 
-      Site currentSite = MainApplication.get().getSite();
+      Site currentSite = App.get().getSite();
       mDomain = uri.getHost();
       if (currentSite.hostMatches(mDomain)) {
          handlePathNavigation();
-      } else if (MainApplication.isDozukiApp()) {
+      } else if (App.isDozukiApp()) {
          // Only switch to the other site in the Dozuki app.
          // Set site to dozuki before API call.
-         MainApplication.get().setSite(Site.getSite("dozuki"));
+         App.get().setSite(Site.getSite("dozuki"));
 
          Api.call(this, ApiCall.sites());
       } else {
@@ -108,7 +108,7 @@ public class IntentFilterActivity extends BaseActivity {
       } catch (Exception e) {
          Log.e("IntentFilterActivity", "Problem parsing Uri", e);
 
-         MainApplication.getGaTracker().send(MapBuilder.createException(
+         App.getGaTracker().send(MapBuilder.createException(
           new StandardExceptionParser(this, null).getDescription(
            Thread.currentThread().getName(), e), false).build());
 
@@ -136,14 +136,14 @@ public class IntentFilterActivity extends BaseActivity {
 
          if (selectedSite != null) {
             // Set the site and then fetch the guide.
-            MainApplication.get().setSite(selectedSite);
+            App.get().setSite(selectedSite);
 
             handlePathNavigation();
          } else {
             Exception e = new Exception();
             Log.e("GuideViewActivity", "Didn't find site!", e);
 
-            MainApplication.getGaTracker().send(MapBuilder.createException(
+            App.getGaTracker().send(MapBuilder.createException(
              new StandardExceptionParser(this, null).getDescription(
              Thread.currentThread().getName(), e), false).build());
 

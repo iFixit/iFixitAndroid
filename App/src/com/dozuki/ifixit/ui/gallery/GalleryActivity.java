@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -83,8 +83,8 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       titleIndicator.setViewPager(pager);
       pager.setCurrentItem(1);
 
-      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/media/images");
-      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
+      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/media/images");
+      App.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    @Override
@@ -95,7 +95,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
-      boolean isLoggedIn = ((MainApplication) getApplication()).isUserLoggedIn();
+      boolean isLoggedIn = ((App) getApplication()).isUserLoggedIn();
       switch (item.getItemId()) {
          case R.id.top_camera_button:
             if (!isLoggedIn) {
@@ -118,9 +118,9 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
    public void onLogin(LoginEvent.Login event) {
       super.onLogin(event);
 
-      if (MainApplication.get().isFirstTimeGalleryUser()) {
+      if (App.get().isFirstTimeGalleryUser()) {
          createHelpDialog().show();
-         MainApplication.get().setFirstTimeGalleryUser(false);
+         App.get().setFirstTimeGalleryUser(false);
       }
    }
 
@@ -183,7 +183,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
 
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.media_help_message,
-       MainApplication.get().getSite().mTitle))
+       App.get().getSite().mTitle))
          .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                dialog.cancel();
@@ -214,7 +214,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       @Override
       public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-         boolean isLoggedIn = ((MainApplication) getApplication()).isUserLoggedIn();
+         boolean isLoggedIn = ((App) getApplication()).isUserLoggedIn();
 
          if (!isLoggedIn) return false;
 
