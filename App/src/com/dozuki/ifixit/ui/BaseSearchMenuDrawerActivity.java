@@ -11,7 +11,7 @@ import android.widget.EditText;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.CheatSheet;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -26,10 +26,10 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
       searchItem.setOnActionExpandListener(new MenuItem.OnActionExpandListener() {
          @Override
          public boolean onMenuItemActionExpand(MenuItem item) {
-            String hint = getString(R.string.search_site_hint, MainApplication.get().getSite().mTitle);
+            String hint = getString(R.string.search_site_hint, App.get().getSite().mTitle);
             ((EditText) item.getActionView().findViewById(R.id.abs__search_src_text)).setHint(hint);
 
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "search", "action_bar_search",
+            App.getGaTracker().send(MapBuilder.createEvent("ui_action", "search", "action_bar_search",
              null).build());
 
             // Returns true to expand the menu item
@@ -99,7 +99,7 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
    public boolean onPrepareOptionsMenu(Menu menu) {
       // Only display barcode scanner menu item if it's enabled.
       menu.findItem(R.id.action_scan_barcode).setVisible(
-       MainApplication.get().getSite().barcodeScanningEnabled());
+       App.get().getSite().barcodeScanningEnabled());
 
       return super.onPrepareOptionsMenu(menu);
    }

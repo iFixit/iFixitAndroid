@@ -5,7 +5,8 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
@@ -42,8 +43,8 @@ public class FavoritesActivity extends BaseMenuDrawerActivity {
          Api.call(this, ApiCall.userFavorites(LIMIT, OFFSET));
       }
 
-      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/favorites");
-      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
+      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/favorites");
+      App.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    private void initGridView() {

@@ -4,7 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
 import com.actionbarsherlock.view.Menu;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
@@ -133,8 +133,8 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    public void onRetrievedGuide(ApiEvent.GuideForEdit event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
-         MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid());
-         MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
+         App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid());
+         App.getGaTracker().send(MapBuilder.createAppView().build());
 
          hideLoading();
       } else {

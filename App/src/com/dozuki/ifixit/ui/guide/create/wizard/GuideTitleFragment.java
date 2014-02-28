@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.*;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
@@ -88,7 +88,7 @@ public class GuideTitleFragment extends EditTextFragment {
        SingleFixedChoicePage.SIMPLE_DATA_KEY).toLowerCase();
 
       String guideTopic = getPageData(getString(R.string.guide_intro_wizard_guide_topic_title,
-       MainApplication.get().getTopicName()), TopicNamePage.TOPIC_DATA_KEY);
+       App.get().getTopicName()), TopicNamePage.TOPIC_DATA_KEY);
 
       if (guideType.equals("technique") || guideType.equals("maintenance") || guideType.equals("teardown")) {
          title = String.format("%s %s", guideTopic, guideType.substring(0, 1).toUpperCase() + guideType.substring(1));

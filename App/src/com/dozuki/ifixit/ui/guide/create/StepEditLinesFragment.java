@@ -28,7 +28,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -97,7 +97,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
                return;
             }
             mTitle = s.toString();
-            MainApplication.getBus().post(new StepTitleChangedEvent(mStepId, mTitle));
+            App.getBus().post(new StepTitleChangedEvent(mStepId, mTitle));
          }
 
          @Override
@@ -136,7 +136,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
       mNewBulletButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            MainApplication.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
+            App.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
              "new_bullet_button", null).build());
             mLines.add(new StepLine());
             View view = getView(mLines.get(mLines.size() - 1), mLines.size() - 1);
@@ -387,7 +387,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
                   mNewBulletButton.setVisibility(View.VISIBLE);
                }
 
-               MainApplication.getBus().post(new StepLinesChangedEvent(mStepId, mLines));
+               App.getBus().post(new StepLinesChangedEvent(mStepId, mLines));
             } else if (mLines.indexOf(line) == mLines.size() - 1) {
                mNewBulletButton.setVisibility(View.GONE);
             }
@@ -579,7 +579,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
    private void launchBulletReorder() {
       String screenLabel = "/guide/edit/" + ((StepEditActivity)getActivity()).getGuideId() + "/" + mStepId +
        "/line_reorder";
-      MainApplication.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, screenLabel).build());
+      App.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, screenLabel).build());
       FragmentManager fm = getActivity().getSupportFragmentManager();
       mReorderFragment = new BulletReorderFragment();
       mReorderFragment.setLines(mLines);
@@ -589,7 +589,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
    }
 
    private void setGuideDirty() {
-      MainApplication.getBus().post(new StepLinesChangedEvent(mStepId, mLines));
+      App.getBus().post(new StepLinesChangedEvent(mStepId, mLines));
    }
 
    public void removeBullets() {

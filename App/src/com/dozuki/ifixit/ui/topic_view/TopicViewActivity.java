@@ -7,7 +7,7 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
@@ -60,7 +60,7 @@ public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
       if (mTopicNode != null) {
          setTitle(mTopicNode.getDisplayName());
 
-         MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/category/" + mTopicNode.getName());
+         App.getGaTracker().set(Fields.SCREEN_NAME, "/category/" + mTopicNode.getName());
       }
    }
 

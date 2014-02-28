@@ -15,7 +15,8 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Image;
@@ -48,7 +49,7 @@ public class CommentView extends RelativeLayout {
 
       final boolean reply = comment.mParentid != NO_PARENT_ID;
 
-      User currentUser = MainApplication.get().getUser();
+      User currentUser = App.get().getUser();
 
       final boolean commentOwner = currentUser != null &&
        comment.mUser.getUserid() == currentUser.getUserid();
@@ -59,7 +60,7 @@ public class CommentView extends RelativeLayout {
 
       SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy");
       String commentDetails =
-       MainApplication.get().getString(R.string.by_on_comment_details, "<b>" + comment.mUser.getUsername() +
+       App.get().getString(R.string.by_on_comment_details, "<b>" + comment.mUser.getUsername() +
         "</b>", df.format(comment.mDate));
 
       TextView commentText = (TextView) findViewById(R.id.comment_text);
@@ -151,17 +152,17 @@ public class CommentView extends RelativeLayout {
    }
 
    private void editComment(Comment comment) {
-      MainApplication.getBus().post(new CommentEditEvent(comment));
+      App.getBus().post(new CommentEditEvent(comment));
    }
 
    private void deleteComment(Comment comment) {
       findViewById(R.id.comment_menu).setVisibility(View.GONE);
       ProgressBar progress = (ProgressBar)findViewById(R.id.comment_progress);
       progress.setVisibility(View.VISIBLE);
-      MainApplication.getBus().post(new CommentDeleteEvent(comment));
+      App.getBus().post(new CommentDeleteEvent(comment));
    }
 
    private void replyToComment(Comment parent) {
-      MainApplication.getBus().post(new CommentReplyingEvent(parent));
+      App.getBus().post(new CommentReplyingEvent(parent));
    }
 }

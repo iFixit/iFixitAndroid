@@ -16,7 +16,8 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
@@ -45,7 +46,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    public void onRegister(ApiEvent.Register event) {
       if (!event.hasError()) {
          User user = event.getResult();
-         ((MainApplication)getActivity().getApplication()).login(user);
+         ((App)getActivity().getApplication()).login(user);
 
          dismiss();
       } else {
@@ -104,7 +105,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
 
       mTermsAgreeCheckBox = (CheckBox)view.findViewById(R.id.login_agreement_terms_checkbox);
       mTermsAgreeText = (TextView)view.findViewById(R.id.login_agreement_terms_textview);
-      if (MainApplication.get().getSite().isIfixit()) {
+      if (App.get().getSite().isIfixit()) {
          mTermsAgreeText.setText(R.string.register_agreement);
          mTermsAgreeText.setMovementMethod(LinkMovementMethod.getInstance());
       } else {
@@ -125,7 +126,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = MainApplication.getGaTracker();
+      Tracker tracker = App.getGaTracker();
       tracker.set(Fields.SCREEN_NAME, "/register");
 
       tracker.send(MapBuilder.createAppView().build());
@@ -158,7 +159,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
             String confirmPassword = mConfirmPassword.getText().toString();
 
             if (password.equals(confirmPassword) && login.length() > 0 &&
-             name.length() > 0 && (!MainApplication.get().getSite().isIfixit() || mTermsAgreeCheckBox.isChecked())) {
+             name.length() > 0 && (!App.get().getSite().isIfixit() || mTermsAgreeCheckBox.isChecked())) {
                enable(false);
                mLoginId.setVisibility(View.GONE);
                mPassword.setVisibility(View.GONE);
@@ -210,6 +211,6 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
 
    @Override
    public void onCancel(DialogInterface dialog) {
-      MainApplication.get().cancelLogin();
+      App.get().cancelLogin();
    }
 }

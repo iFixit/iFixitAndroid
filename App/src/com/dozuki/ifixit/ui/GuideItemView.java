@@ -5,7 +5,7 @@ import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;
@@ -34,7 +34,7 @@ public class GuideItemView extends TouchableRelativeLayout {
    }
 
    public void setGuideItem(GuideInfo guide) {
-      ImageSizes imageSizes = MainApplication.get().getImageSizes();
+      ImageSizes imageSizes = App.get().getImageSizes();
 
       mTitleView.setText(mShortTitle && guide.hasSubject() ?
        guide.mSubject : Html.fromHtml(guide.mTitle));
