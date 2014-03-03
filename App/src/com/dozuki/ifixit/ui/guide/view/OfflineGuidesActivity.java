@@ -182,7 +182,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       final App app = App.get();
       final boolean hasInternet = app.isConnected();
 
-      setTitle(getString(R.string.offline_guides));
+      setTitle(R.string.favorites);
       setContentView(R.layout.offline_guides);
       mAdapter = new OfflineGuideListAdapter(hasInternet);
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
