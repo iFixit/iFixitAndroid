@@ -213,6 +213,8 @@
     <string name="sync_status_never">Never</string>
     <string name="sync_status_syncing">Syncing…</string>
     <string name="last_synced">Last synced %1$s.</string>
+    <string name="notification_syncing">Syncing favorite guides…</string>
+    <string name="notification_sync_complete">Favorite guides downloaded</string>
 
     <!-- Miscellaneous -->
     <string name="topic_background_description">Category background</string>

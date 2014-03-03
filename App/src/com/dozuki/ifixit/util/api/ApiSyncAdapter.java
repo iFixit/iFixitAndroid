@@ -220,11 +220,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        getSystemService(Context.NOTIFICATION_SERVICE);
       mNotificationBuilder = new NotificationCompat.Builder(App.get());
 
-      // TODO: Update text and icon.
-      // Play Music has "Keeping requested music...".
-      mNotificationBuilder.setContentTitle("Offline Sync");
-      // Play Music displays the percentage as text rather than content text.
-      mNotificationBuilder.setContentText("Syncing offline guides");
+      mNotificationBuilder.setContentTitle(mContext.getString(R.string.notification_syncing));
+      // TODO: Update icon.
       mNotificationBuilder.setSmallIcon(R.drawable.icon);
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
@@ -248,8 +245,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    protected void updateNotificationSuccess() {
       if (mNotificationBuilder == null) return;
 
-      // TODO: Update text.
-      mNotificationBuilder.setContentTitle("Offline Sync Complete");
+      mNotificationBuilder.setContentTitle(mContext.getString(R.string.notification_sync_complete));
       mNotificationBuilder.setOngoing(false);
       updateNotificationProgress(0, 0, false);
    }
