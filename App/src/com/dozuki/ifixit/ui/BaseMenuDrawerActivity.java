@@ -315,17 +315,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          }
       },
 
-      OFFLINE_GUIDES(
-         R.string.slide_menu_offline_guides,
-         // TODO: Update icon.
-         R.drawable.ic_menu_favorite_light,
-         OfflineGuidesActivity.class
-      ),
-
+      // Note: This doesn't use live data but rather displays guides stored
+      // offline.
       USER_FAVORITES(
          R.string.slide_menu_favorite_guides,
          R.drawable.ic_menu_favorite_light,
-         FavoritesActivity.class
+         OfflineGuidesActivity.class
       ),
 
       USER_GUIDES(
