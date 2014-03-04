@@ -221,8 +221,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder = new NotificationCompat.Builder(App.get());
 
       mNotificationBuilder.setContentTitle(mContext.getString(R.string.notification_syncing));
-      // TODO: Update icon.
-      mNotificationBuilder.setSmallIcon(R.drawable.icon);
+      // TODO: Move icon to site res directory and make them for other flavors.
+      mNotificationBuilder.setSmallIcon(R.drawable.ic_notification_icon);
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
       Intent intent = BaseActivity.addSite(
