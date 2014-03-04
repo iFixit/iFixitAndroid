@@ -985,7 +985,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               dialog.dismiss();
               switch (dialogType) {
                  case NEW_STEP:
-                    addNewStep(mPagePosition + 1);
                     mAddStepAfterSave = true;
                     break;
                  case NEXT_STEP:
