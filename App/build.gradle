@@ -93,8 +93,8 @@ android {
 
    productFlavors.dozuki.ext {
       dependencies {
-         accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-         accustreamCompile 'com.google.zxing:core:2.2'
+         dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+         dozukiCompile 'com.google.zxing:core:2.2'
       }
 
       minSdkVersion = 9
