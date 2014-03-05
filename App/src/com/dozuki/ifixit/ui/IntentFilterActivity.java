@@ -30,9 +30,11 @@ public class IntentFilterActivity extends BaseActivity {
    private static final String VIEW_URL = "VIEW_URL";
    private static final String URI_KEY = "URI_KEY";
    private static final String DOMAIN = "DOMAIN";
+   private static final String INTENT_FILTERED = "INTENT_FILTERED";
 
    private String mDomain;
    private Uri mUri;
+   private boolean mIntentFiltered;
 
    public static Intent viewUrl(Context context, String url) {
       Intent intent = new Intent(context, IntentFilterActivity.class);
@@ -51,6 +53,7 @@ public class IntentFilterActivity extends BaseActivity {
       if (savedState != null) {
          mDomain = savedState.getString(DOMAIN);
          mUri = savedState.getParcelable(URI_KEY);
+         mIntentFiltered = savedState.getBoolean(INTENT_FILTERED);
       } else if (Intent.ACTION_VIEW.equals(intent.getAction())) {
          handleUriView(intent.getData());
       } else {
@@ -60,11 +63,22 @@ public class IntentFilterActivity extends BaseActivity {
    }
 
    @Override
+   public void onResume() {
+      super.onResume();
+
+      if (mIntentFiltered) {
+         // Finish this empty Activity if the Intent has been dealt with.
+         finish();
+      }
+   }
+
+   @Override
    public void onSaveInstanceState(Bundle outState) {
       super.onSaveInstanceState(outState);
 
       outState.putString(DOMAIN, mDomain);
       outState.putParcelable(URI_KEY, mUri);
+      outState.putBoolean(INTENT_FILTERED, mIntentFiltered);
    }
 
    private void handleUriView(Uri uri) {
@@ -78,6 +92,8 @@ public class IntentFilterActivity extends BaseActivity {
       } else if (App.isDozukiApp()) {
          // Only switch to the other site in the Dozuki app.
          // Set site to dozuki before API call.
+         // TODO: Set the current site in the APICall rather than changing it
+         // globally.
          App.get().setSite(Site.getSite("dozuki"));
 
          Api.call(this, ApiCall.sites());
@@ -116,8 +132,13 @@ public class IntentFilterActivity extends BaseActivity {
       }
 
       if (intent != null) {
+         /**
+          * Don't call finish here. It results in some very very strange behavior
+          * with DeadEvents in the Activity being launched. This flag indicates
+          * that this Activity should be finished when it resumes.
+          */
+         mIntentFiltered = true;
          startActivity(intent);
-         finish();
       } else {
          displayNotFoundDialog();
       }
