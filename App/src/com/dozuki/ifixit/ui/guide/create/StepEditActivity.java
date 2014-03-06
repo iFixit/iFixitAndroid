@@ -12,7 +12,7 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -843,7 +843,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mPagePosition = position;
    }
 
-   private class StepAdapter extends FragmentStatePagerAdapter {
+   private class StepAdapter extends FixedFragmentStatePagerAdapter {
       private Map<Integer, String> mPageLabelMap;
 
       public StepAdapter(FragmentManager fm) {

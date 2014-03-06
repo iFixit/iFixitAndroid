@@ -5,7 +5,7 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
@@ -367,7 +367,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
    // ADAPTERS
    /////////////////////////////////////////////////////
 
-   public class FormWizardPagerAdapter extends FragmentStatePagerAdapter {
+   public class FormWizardPagerAdapter extends FixedFragmentStatePagerAdapter {
       private int mCutOffPage;
       private Fragment mPrimaryItem;
 
