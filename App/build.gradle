@@ -85,28 +85,24 @@ android {
             buildConfigField "String", "SITE_NAME", '"' + site + '"'
             buildConfigField "String", "APP_ID", '"' + getProperty("${site}AppId") + '"'
             buildConfigField "String", "GA_PROPERTY_ID", '"' + getProperty("${site}GAPropertyId") + '"'
+
+            if (site == 'dozuki') {
+               minSdkVersion 9
+
+               dependencies {
+                  dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+                  dozukiCompile 'com.google.zxing:core:2.2'
+               }
+            } else if (site == 'dozuki') {
+               minSdkVersion 9
+
+               dependencies {
+                  accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+                  accustreamCompile 'com.google.zxing:core:2.2'
+               }
+            }
          }
       }
-   }
-
-   /* Add site-specific tweaks. */
-
-   productFlavors.dozuki.ext {
-      dependencies {
-         dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-         dozukiCompile 'com.google.zxing:core:2.2'
-      }
-
-      minSdkVersion = 9
-   }
-
-   productFlavors.accustream.ext {
-      dependencies {
-         accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-         accustreamCompile 'com.google.zxing:core:2.2'
-      }
-
-      minSdkVersion = 9
    }
 
    sourceSets {
@@ -139,6 +135,7 @@ def createSiteSigningConfig(siteName) {
 
 def createSiteSourceSet(siteName) {
    if (siteName == 'dozuki') {
+      // Include all white label apps so we can use their themes.
       return {
          manifest.srcFile "sites/dozuki/AndroidManifest.xml"
          res.srcDirs = ["sites/dozuki/res", "sites/accustream/res", "sites/ifixit/res"]
