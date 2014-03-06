@@ -284,7 +284,7 @@ public abstract class MediaFragment extends BaseFragment
    private String getPath(Uri uri) {
       String[] projection = {MediaStore.Images.Media.DATA};
       Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-      if (cursor.moveToFirst()) {
+      if (cursor != null && cursor.moveToFirst()) {
          int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
          return cursor.getString(column_index);
       } else {
