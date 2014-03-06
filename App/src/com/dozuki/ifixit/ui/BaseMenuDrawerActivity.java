@@ -148,6 +148,11 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          Method parseResult = c.getDeclaredMethod("parseActivityResult", argTypes);
          Object intentResult = parseResult.invoke(null, requestCode, resultCode, intent);
 
+         // The request code didn't match.
+         if (intentResult == null) {
+            return null;
+         }
+
          // Call intentResult.getContents().
          c = Class.forName("com.google.zxing.integration.android.IntentResult");
          argTypes = new Class[]{};

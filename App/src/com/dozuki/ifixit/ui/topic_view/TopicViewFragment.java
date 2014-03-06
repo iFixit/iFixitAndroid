@@ -3,7 +3,7 @@ package com.dozuki.ifixit.ui.topic_view;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -199,7 +199,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       return mTopicNode;
    }
 
-   public class PageAdapter extends FragmentStatePagerAdapter {
+   public class PageAdapter extends FixedFragmentStatePagerAdapter {
       private Map<Integer, String> mPageLabelMap;
 
       public PageAdapter(FragmentManager fm) {

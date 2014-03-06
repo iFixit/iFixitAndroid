@@ -2,7 +2,7 @@ package com.dozuki.ifixit.ui.guide.view;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.view.View;
 
 import com.dozuki.ifixit.App;
@@ -12,7 +12,7 @@ import com.dozuki.ifixit.model.guide.Guide;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GuideViewAdapter extends FragmentStatePagerAdapter {
+public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    private static final int GUIDE_INTRO_POSITION = 0;
    private Map<Integer, String> mPageLabelMap;
 
