@@ -93,7 +93,7 @@ android {
                   dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
                   dozukiCompile 'com.google.zxing:core:2.2'
                }
-            } else if (site == 'dozuki') {
+            } else if (site == 'accustream') {
                minSdkVersion 9
 
                dependencies {
