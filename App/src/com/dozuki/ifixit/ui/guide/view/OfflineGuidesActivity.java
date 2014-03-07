@@ -246,6 +246,13 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       stopSyncTimeUpdate();
    }
 
+   @Override
+   public void onRestart() {
+      super.onRestart();
+
+      getSupportLoaderManager().getLoader(R.id.offline_guide_loaderid).onContentChanged();
+   }
+
    /**
     * Sets up the repeating event to update the last sync time.
     */
