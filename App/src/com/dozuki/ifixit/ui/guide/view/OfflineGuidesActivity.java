@@ -18,6 +18,7 @@ import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.actionbarsherlock.view.Menu;
@@ -132,8 +133,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    protected OfflineGuideListAdapter mAdapter;
    protected List<GuideMediaProgress> mGuides = Collections.emptyList();
    protected ListView mListView;
-   protected Button mSyncButton;
+   protected RelativeLayout mSyncBox;
+   protected TextView mSyncCommand;
    protected TextView mSyncStatusText;
+   protected Button mCancelButton;
    protected ProgressBar mSyncProgressBar;
    protected boolean mIsSyncing;
    protected BroadcastReceiver mNewGuideReceiver = new BroadcastReceiver() {
@@ -186,20 +189,29 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       setContentView(R.layout.offline_guides);
       mAdapter = new OfflineGuideListAdapter(hasInternet);
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
-      mSyncButton = (Button)findViewById(R.id.sync_button);
-      mSyncStatusText = (TextView)findViewById(R.id.sync_status_text);
+      mSyncBox = (RelativeLayout)findViewById(R.id.sync_box);
+      mSyncCommand = (TextView)findViewById(R.id.sync_status);
+      mSyncStatusText = (TextView)findViewById(R.id.last_sync_time);
+      mCancelButton = (Button)findViewById(R.id.sync_cancel_button);
       mSyncProgressBar = (ProgressBar)findViewById(R.id.sync_progress_bar);
       mListView.setAdapter(mAdapter);
       mListView.setEmptyView(findViewById(R.id.no_offline_guides_text));
 
-      mSyncButton.setOnClickListener(new View.OnClickListener() {
+      mSyncBox.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-            if (mIsSyncing) {
-               app.cancelSync();
-            } else {
+            if (!mIsSyncing) {
                app.requestSync();
+            } else {
+               // Cancel is handled by the cancel button.
             }
+         }
+      });
+
+      mCancelButton.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            app.cancelSync();
          }
       });
 
@@ -256,20 +268,28 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    private void updateLastSyncTime() {
+      if (mIsSyncing) {
+         mSyncStatusText.setVisibility(View.INVISIBLE);
+         return;
+      }
+
+      mSyncStatusText.setVisibility(View.VISIBLE);
+
       long lastSyncTime = App.get().getLastSyncTime();
       CharSequence lastSyncTimeString;
 
       if (lastSyncTime == App.NEVER_SYNCED_VALUE) {
+         // TODO: The phrasing of this doesn't make sense.
          lastSyncTimeString = getString(R.string.sync_status_never);
       } else {
          lastSyncTimeString = Utils.getRelativeTime(this, lastSyncTime);
       }
 
-      mSyncStatusText.setText(mIsSyncing ? getString(R.string.sync_status_syncing) :
-      getString(R.string.last_synced, lastSyncTimeString));
+      mSyncStatusText.setText(getString(R.string.last_synced, lastSyncTimeString));
 
+      // TODO: This doesn't work because it's not a button anymore.
       // Disable the sync button if we don't have internet.
-      mSyncButton.setEnabled(App.get().isConnected());
+      mSyncBox.setEnabled(App.get().isConnected());
    }
 
    @Override
@@ -327,6 +347,12 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    protected void updateTotalProgress(int progress, int total) {
+      // Don't update progress if we aren't syncing. This caused the progress bar to
+      // reappear after cancelling the sync even though the status has changed already.
+      if (!mIsSyncing) {
+         return;
+      }
+
       mSyncProgressBar.setVisibility(View.VISIBLE);
       mSyncProgressBar.setIndeterminate(false);
       mSyncProgressBar.setMax(total);
@@ -367,7 +393,12 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          }
 
          updateLastSyncTime();
-         mSyncButton.setText(mIsSyncing ? R.string.cancel : R.string.sync_now);
+         mSyncCommand.setText(mIsSyncing ? R.string.sync_status_syncing : R.string.sync_now);
+
+         mCancelButton.setVisibility(mIsSyncing ? View.VISIBLE : View.GONE);
+
+         int backgroundColor = mIsSyncing ? R.color.disabled_grey_bg : R.color.holo_blue_dark;
+         mSyncBox.setBackgroundColor(getResources().getColor(backgroundColor));
       }
    }
 

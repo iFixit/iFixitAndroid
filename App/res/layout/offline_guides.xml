@@ -4,34 +4,58 @@
    android:layout_height="match_parent"
    android:background="?attr/doz__background">
 
+   <RelativeLayout
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:id="@+id/sync_box"
+      android:paddingTop="6dp"
+      android:paddingBottom="6dp"
+      android:layout_alignParentBottom="true"
+      android:background="@color/holo_blue_dark">
+      <TextView
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_centerHorizontal="true"
+         style="@style/BodyText"
+         android:textSize="20dp"
+         android:textColor="@color/white"
+         android:id="@+id/sync_status"
+         android:text="@string/sync_now"
+         />
+      <TextView
+         android:id="@+id/last_sync_time"
+         android:layout_width="wrap_content"
+         android:layout_centerHorizontal="true"
+         android:layout_height="wrap_content"
+         android:layout_below="@id/sync_status"
+         android:textColor="@color/white"
+         android:textSize="12dp"
+         style="@style/BodyText"
+         android:text="@string/last_synced"
+         />
+      <Button
+         android:id="@+id/sync_cancel_button"
+         android:text="@string/cancel"
+         android:visibility="invisible"
+         android:layout_centerVertical="true"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:layout_alignParentRight="true" />
+   </RelativeLayout>
+
    <LinearLayout
       android:orientation="vertical"
       android:layout_width="match_parent"
-      android:layout_height="match_parent">
-      <RelativeLayout
+      android:layout_height="match_parent"
+      android:layout_above="@id/sync_box">
+      <ProgressBar
+         android:id="@+id/sync_progress_bar"
          android:layout_width="match_parent"
-         android:layout_height="wrap_content">
-         <ProgressBar
-            android:id="@+id/sync_progress_bar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="false"
-            style="?android:attr/progressBarStyleHorizontal"/>
-
-         <TextView
-            android:id="@+id/sync_status_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/sync_progress_bar"
-            style="@style/BodyText" />
-         <Button
-            android:id="@+id/sync_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_below="@id/sync_progress_bar"/>
-      </RelativeLayout>
-
+         android:layout_height="wrap_content"
+         android:layout_marginTop="-6dp"
+         android:layout_marginBottom="-4dp"
+         android:layout_alignParentTop="true"
+         style="?android:attr/progressBarStyleHorizontal"/>
 
       <ListView
          android:id="@+id/offline_guides_listview"

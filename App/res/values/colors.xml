@@ -44,4 +44,5 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_white">#FFCCCCCC</color>
     <color name="dozuki_grey">#F7777777</color>
 
+    <color name="holo_blue_dark">#FF0099cc</color>
 </resources>
