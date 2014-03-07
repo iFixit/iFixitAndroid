@@ -37,6 +37,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private static final String TAG = "GuideViewActivity";
    private static final String FAVORITING = "FAVORITING";
+   private static final String IS_OFFLINE_GUIDE = "IS_OFFLINE_GUIDE";
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String GUIDEID = "GUIDEID";
@@ -51,8 +52,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private TitlePageIndicator mIndicator;
    private int mInboundStepId = DEFAULT_INBOUND_STEPID;
    private GuideViewAdapter mAdapter;
-   private boolean mFavoriting = false;
-   private boolean mIsOfflineGuide = false;
+   private boolean mFavoriting;
+   private boolean mIsOfflineGuide;
    private Toast mToast;
 
    /////////////////////////////////////////////////////
@@ -77,6 +78,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(GUIDEID);
          mFavoriting = savedInstanceState.getBoolean(FAVORITING);
+         mIsOfflineGuide = savedInstanceState.getBoolean(IS_OFFLINE_GUIDE);
 
          if (savedInstanceState.containsKey(SAVED_GUIDE)) {
             mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
@@ -136,6 +138,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       state.putSerializable(SAVED_GUIDE, mGuide);
       state.putInt(CURRENT_PAGE, mCurrentPage);
       state.putBoolean(FAVORITING, mFavoriting);
+      state.putBoolean(IS_OFFLINE_GUIDE, mIsOfflineGuide);
    }
 
    @Override
@@ -146,14 +149,24 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
-      // TODO: Disable menu items if this is an offline guide.
       MenuItem favoriteGuide = menu.findItem(R.id.favorite_guide);
+      MenuItem reloadGuide = menu.findItem(R.id.reload_guide);
+      MenuItem editGuide = menu.findItem(R.id.edit_guide);
 
-      boolean favorited = mGuide != null ? mGuide.isFavorited() : false;
+      boolean favorited = mGuide != null && mGuide.isFavorited();
       favoriteGuide.setIcon(favorited ? R.drawable.ic_action_favorite_filled :
        R.drawable.ic_action_favorite_empty);
       favoriteGuide.setEnabled(!mFavoriting && mGuide != null);
       favoriteGuide.setTitle(favorited ? R.string.unfavorite_guide : R.string.favorite_guide);
+
+      reloadGuide.setEnabled(mGuide != null);
+      editGuide.setEnabled(mGuide != null);
+
+      if (mIsOfflineGuide) {
+         reloadGuide.setVisible(false);
+         editGuide.setVisible(false);
+         favoriteGuide.setVisible(false);
+      }
 
       return super.onPrepareOptionsMenu(menu);
    }
@@ -162,40 +175,37 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case R.id.edit_guide:
-            if (mGuide != null) {
-               App.getGaTracker().send(MapBuilder.createEvent("menu_action",
-                "button_press", "edit_guide", (long)mGuide.getGuideid()).build());
+            App.getGaTracker().send(MapBuilder.createEvent("menu_action",
+             "button_press", "edit_guide", (long)mGuide.getGuideid()).build());
 
-               Intent intent;
-               // If the user is on the introduction, take them to edit the introduction fields.
-               if (mCurrentPage == 0) {
-                  intent = new Intent(this, GuideIntroActivity.class);
-                  intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
-                  intent.putExtra(GuideIntroActivity.STATE_KEY, true);
-                  startActivity(intent);
-               } else {
-                  intent = new Intent(this, StepEditActivity.class);
-                  int stepNum = 0;
+            // If the user is on the introduction, take them to edit the introduction fields.
+            if (mCurrentPage == 0) {
+               Intent intent = new Intent(this, GuideIntroActivity.class);
+               intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+               intent.putExtra(GuideIntroActivity.STATE_KEY, true);
+               startActivity(intent);
+            } else {
+               Intent intent = new Intent(this, StepEditActivity.class);
+               int stepNum = 0;
 
-                  // Take into account the introduction, parts and tools page.
-                  if (mCurrentPage >= mAdapter.getStepOffset()) {
-                     stepNum = mCurrentPage - mAdapter.getStepOffset();
-                     // Account for array indexed starting at 1
-                     intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
-                  }
-
-                  int stepGuideid = mGuide.getStep(stepNum).getGuideid();
-                  // If the step is part of a prerequisite guide, store the parents
-                  // guideid so that we can get back from editing this prerequisite.
-                  if (stepGuideid != mGuide.getGuideid()) {
-                     intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
-                  }
-                  // We have to pass along the steps guideid to account for prerequisite guides.
-                  intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
-                  intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
-                  intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
-                  startActivity(intent);
+               // Take into account the introduction, parts and tools page.
+               if (mCurrentPage >= mAdapter.getStepOffset()) {
+                  stepNum = mCurrentPage - mAdapter.getStepOffset();
+                  // Account for array indexed starting at 1
+                  intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
                }
+
+               int stepGuideid = mGuide.getStep(stepNum).getGuideid();
+               // If the step is part of a prerequisite guide, store the parents
+               // guideid so that we can get back from editing this prerequisite.
+               if (stepGuideid != mGuide.getGuideid()) {
+                  intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
+               }
+               // We have to pass along the steps guideid to account for prerequisite guides.
+               intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
+               intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
+               intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
+               startActivity(intent);
             }
             return true;
          case R.id.reload_guide:
