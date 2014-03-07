@@ -398,14 +398,24 @@ public class App extends Application {
       getBus().post(new LoginEvent.Cancel());
    }
 
-   public void requestSync() {
+   /**
+    * Requests a sync for the current user. This operation does nothing if
+    * force is false and a sync is already in progress.
+    */
+   public void requestSync(boolean force) {
       if (!isUserLoggedIn()) {
          return;
       }
 
       String authority = ApiContentProvider.getAuthority();
+      boolean syncActive = ContentResolver.isSyncActive(mAccount, authority);
 
-      if (ContentResolver.isSyncActive(mAccount, authority)) {
+      if (syncActive && !force) {
+         // Do nothing if the sync is active and we don't want to force it.
+         return;
+      }
+
+      if (syncActive) {
          // Sync is already started so lets restart it.
          ApiSyncAdapter.restartSync(this);
       } else {

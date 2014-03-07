@@ -201,7 +201,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          @Override
          public void onClick(View v) {
             if (!mIsSyncing) {
-               app.requestSync();
+               app.requestSync(false);
             } else {
                // Cancel is handled by the cancel button.
             }
@@ -231,7 +231,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          // Initiate a sync the first time this Activity is opened if the user is logged
          // in. Otherwise it will happen automatically upon login.
          if (savedState == null && hasInternet) {
-            app.requestSync();
+            app.requestSync(false);
          }
       }
 
@@ -340,7 +340,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       // TODO: Remove when above menu is totally removed.
       switch (item.getItemId())  {
          case R.id.offline_guide_sync_now:
-            App.get().requestSync();
+            App.get().requestSync(false);
             return true;
          default:
             return super.onOptionsItemSelected(item);
