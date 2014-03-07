@@ -35,6 +35,7 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="gainsboro">#FFDCDCDC</color>
 
     <color name="progress_button_background">#FFBBBBBB</color>
+    <color name="progress_button_progress_disabled">#FF777777</color>
 
     <!-- Theme Colors -->
     <color name="ifixit_blue">#FF336DA8</color>

@@ -43,12 +43,18 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       setOnClickListener(this);
    }
 
-   public void setRowData(GuideMediaProgress guideMedia, boolean displayLiveImages) {
+   public void setRowData(GuideMediaProgress guideMedia, boolean displayLiveImages,
+    boolean isSyncing) {
       mGuideMedia = guideMedia;
 
       mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
       mProgressButton.setPinned(true);
-      mProgressButton.setCircleColor(getResources().getColor(R.color.progress_button_background));
+      mProgressButton.setCircleColor(getResources().getColor(
+       R.color.progress_button_background));
+
+      int progressColor = isSyncing || mGuideMedia.isComplete() ?
+       R.color.progress_default_progress_color : R.color.progress_button_progress_disabled;
+      mProgressButton.setProgressColor(getResources().getColor(progressColor));
 
       if (mGuideMedia.mTotalMedia == 0) {
          // It's valid for guides to have no images whatsoever so we must pretend that

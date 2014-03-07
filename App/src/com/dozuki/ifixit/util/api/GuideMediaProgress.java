@@ -74,4 +74,8 @@ public class GuideMediaProgress {
          mMissingMedia.add(imageUrl);
       }
    }
+
+   public boolean isComplete() {
+      return mTotalMedia == mMediaProgress;
+   }
 }

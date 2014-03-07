@@ -108,7 +108,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
             itemView = new OfflineGuideListItem(OfflineGuidesActivity.this);
          }
 
-         itemView.setRowData(currItem, mDisplayLiveImages);
+         itemView.setRowData(currItem, mDisplayLiveImages, mIsSyncing);
 
          return itemView;
       }
