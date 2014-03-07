@@ -35,7 +35,9 @@ import java.util.Set;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
-   public static final String RESTART_SYNC = "ApiSyncAdapter";
+   public static final String RESTART_SYNC = "RESTART_SYNC";
+   // The value doesn't actually matter as long as it's not 0.
+   private static final int INTENT_REQUEST_CODE = 1234;
 
    /**
     * Constants for BroadcastReceiver updates.
@@ -219,9 +221,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
       Intent intent = BaseActivity.addSite(
-       OfflineGuidesActivity.view(App.get()), site);
-      PendingIntent pendingIntent = PendingIntent.getActivity(App.get(),
-       /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+       OfflineGuidesActivity.view(mContext), site);
+      PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
+       INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
 
       // Set indeterminate progress and display it.
@@ -247,9 +249,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       initializeNotification(site);
 
       Intent intent = BaseActivity.addSite(
-       OfflineGuidesActivity.reauthenticate(App.get()), site);
-      PendingIntent pendingIntent = PendingIntent.getActivity(App.get(),
-       /* requestCode = */ 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+       OfflineGuidesActivity.reauthenticate(mContext), site);
+      PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
+       INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
 
       mNotificationBuilder.setContentTitle("Offline Sync Failed");
