@@ -337,6 +337,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
+      // TODO: Remove when above menu is totally removed.
       switch (item.getItemId())  {
          case R.id.offline_guide_sync_now:
             App.get().requestSync();

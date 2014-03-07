@@ -6,7 +6,6 @@ import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentProviderClient;
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -111,8 +110,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
     ContentProviderClient provider, SyncResult syncResult) {
-      boolean manualSync = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL);
-
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
       App app = App.get();
@@ -129,10 +126,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
 
          site = newSite;
-      }
-
-      if (manualSync) {
-         initializeNotification(site);
       }
 
       try {
