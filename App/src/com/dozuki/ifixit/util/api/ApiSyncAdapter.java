@@ -380,7 +380,11 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
 
          // Delete any guides that are currently in the DB but are no longer favorited.
-         mDb.deleteGuides(mSite, mUser, modifiedDates.keySet());
+         if (!modifiedDates.isEmpty()) {
+            mDb.deleteGuides(mSite, mUser, modifiedDates.keySet());
+            // Although not technically a "new guide", this triggers a UI refresh.
+            sendNewGuideBroadcast();
+         }
 
          return staleGuides;
       }
