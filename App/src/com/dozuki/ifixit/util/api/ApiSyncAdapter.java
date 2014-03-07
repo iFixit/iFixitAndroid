@@ -170,6 +170,12 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       } finally {
          app.unregisterReceiver(mRestartListener);
       }
+
+      // Reset notification objects. Otherwise performing a sync will trigger the
+      // notification success message because the builders aren't null. This means
+      // that the same ApiSyncAdapter instance is used across multiple syncs.
+      mNotificationBuilder = null;
+      mNotificationManager = null;
    }
 
    /**
@@ -254,6 +260,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
 
+      // TODO: Update text.
       mNotificationBuilder.setContentTitle("Offline Sync Failed");
       mNotificationBuilder.setContentText("Sign-in to resume offline guide sync.");
       mNotificationBuilder.setOngoing(false);
