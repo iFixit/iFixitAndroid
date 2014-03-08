@@ -88,10 +88,6 @@ public class ThumbnailView extends LinearLayout {
 
       mPicasso = PicassoUtils.with(getContext());
 
-      if (App.inDebug()) {
-         mPicasso.setDebugging(true);
-      }
-
       if (mCanEdit) {
          mAddThumbButton = (ImageView) findViewById(R.id.add_thumbnail_icon);
          mAddThumbButton.setVisibility(VISIBLE);
