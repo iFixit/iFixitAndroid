@@ -28,6 +28,7 @@ import com.github.kevinsawicki.http.HttpRequest;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -282,10 +283,16 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       return sBaseAppDirectory;
    }
 
-   public static String getOfflineMediaPath(String mediaUrl) {
-      String path = getBaseAppDirectory() + "/offline_guides/media/" + mediaUrl.hashCode();
+   private static String getOfflineMediaDirectory() {
+      return getBaseAppDirectory() + "/offline_guides/media/";
+   }
 
-      return path;
+   public static String getOfflineMediaPath(String mediaUrl) {
+      return getOfflineMediaDirectory() + getMediaFileName(mediaUrl);
+   }
+
+   private static String getMediaFileName(String mediaUrl) {
+      return Integer.toString(mediaUrl.hashCode());
    }
 
    /**
@@ -335,8 +342,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       /**
        * Does the heavy lifting for finding stale guides, updating their contents,
        * and downloading media.
-       *
-       * TODO: It would be nice to delete media that are no longer referenced.
        */
       protected void syncOfflineGuides() {
          ArrayList<GuideMediaProgress> uncompletedGuides = getUncompletedGuides();
@@ -347,13 +352,15 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          // their media.
          uncompletedGuides.addAll(updatedGuides);
          downloadMissingMedia(uncompletedGuides);
+
+         deleteUnreferencedMedia();
       }
 
       private ArrayList<GuideMediaProgress> getUncompletedGuides() {
          ArrayList<GuideMediaProgress> guideMedia = new ArrayList<GuideMediaProgress>();
 
          for (Guide guide : mDb.getUncompleteGuides(mSite, mUser)) {
-            guideMedia.add(new GuideMediaProgress(guide));
+            guideMedia.add(new GuideMediaProgress(guide, false));
          }
 
          return guideMedia;
@@ -535,6 +542,47 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
 
          return true;
+      }
+
+      /**
+       * Deletes all media that isn't referenced by any offine guides.
+       *
+       * TODO: This keeps guides that a logged out user had favorited.
+       * Perhaps we should delete a user's favorites upon logout.
+       */
+      private void deleteUnreferencedMedia() {
+         Set<String> allMedia = getAllStoredMedia();
+         ArrayList<Guide> allGuides = mDb.getAllGuides();
+
+         for (Guide guide : allGuides) {
+            GuideMediaProgress guideMedia = new GuideMediaProgress(guide,
+             /* addAllMedia */ true);
+
+            // mMissingMedia is a bit misleading... it contains all of the media
+            // due to the "addAllMedia = true" argument.
+            for (String mediaUrl : guideMedia.mMissingMedia) {
+               allMedia.remove(getMediaFileName(mediaUrl));
+            }
+         }
+
+         deleteMedia(allMedia);
+      }
+
+      private void deleteMedia(Set<String> mediaFileNames) {
+         File mediaDir = new File(getOfflineMediaDirectory());
+
+         Log.w(TAG, "Deleting " + mediaFileNames.size() + " files!");
+         Log.w(TAG, mediaFileNames.toString());
+
+         for (String mediaFileName : mediaFileNames) {
+            File media = new File(mediaDir, mediaFileName);
+            media.delete();
+         }
+      }
+
+      private Set<String> getAllStoredMedia() {
+         return new HashSet<String>(Arrays.asList(
+          new File(getOfflineMediaDirectory()).list()));
       }
 
       /**

@@ -114,6 +114,21 @@ public class ApiDatabase extends SQLiteOpenHelper {
       return guideMedia;
    }
 
+   public ArrayList<Guide> getAllGuides() {
+      final int GUIDE_JSON_INDEX = 0;
+      Cursor cursor = getReadableDatabase().query(
+       TABLE_OFFLINE_GUIDES,
+       new String[] {KEY_JSON, KEY_MEDIA_TOTAL, KEY_MEDIA_DOWNLOADED},
+       null,
+       new String[] {},
+       null,
+       null,
+       null
+      );
+
+      return getGuidesFromCursor(cursor, GUIDE_JSON_INDEX);
+   }
+
    public Guide getOfflineGuide(Site site, User user, int guideid) {
       Cursor cursor = getReadableDatabase().query(
        TABLE_OFFLINE_GUIDES,

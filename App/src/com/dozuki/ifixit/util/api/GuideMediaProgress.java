@@ -19,17 +19,19 @@ public class GuideMediaProgress {
    public Set<String> mMissingMedia;
    public int mTotalMedia;
    public int mMediaProgress;
+   private boolean mAddAllMedia;
 
    public GuideMediaProgress(ApiEvent.ViewGuide guideEvent) {
-      this(guideEvent.getResult());
+      this(guideEvent.getResult(), false);
 
       mGuideEvent = guideEvent;
    }
 
-   public GuideMediaProgress(Guide guide) {
+   public GuideMediaProgress(Guide guide, boolean addAllMedia) {
       mGuide = guide;
       mMissingMedia = new HashSet<String>();
       mTotalMedia = 0;
+      mAddAllMedia = addAllMedia;
 
       Image introImage = mGuide.getIntroImage();
       if (introImage.isValid()) {
@@ -69,8 +71,8 @@ public class GuideMediaProgress {
 
       mTotalMedia++;
 
-      File file = new File(ApiSyncAdapter.getOfflineMediaPath(imageUrl));
-      if (!file.exists()) {
+      if (mAddAllMedia ||
+       !new File(ApiSyncAdapter.getOfflineMediaPath(imageUrl)).exists()) {
          mMissingMedia.add(imageUrl);
       }
    }
