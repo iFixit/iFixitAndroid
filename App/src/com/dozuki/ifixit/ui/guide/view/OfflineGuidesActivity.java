@@ -273,24 +273,17 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    }
 
    private void updateLastSyncTime() {
-      if (mIsSyncing) {
+      long lastSyncTime = App.get().getLastSyncTime();
+
+      if (mIsSyncing || lastSyncTime == App.NEVER_SYNCED_VALUE) {
          mSyncStatusText.setVisibility(View.INVISIBLE);
          return;
       }
 
       mSyncStatusText.setVisibility(View.VISIBLE);
 
-      long lastSyncTime = App.get().getLastSyncTime();
-      CharSequence lastSyncTimeString;
-
-      if (lastSyncTime == App.NEVER_SYNCED_VALUE) {
-         // TODO: The phrasing of this doesn't make sense.
-         lastSyncTimeString = getString(R.string.sync_status_never);
-      } else {
-         lastSyncTimeString = Utils.getRelativeTime(this, lastSyncTime);
-      }
-
-      mSyncStatusText.setText(getString(R.string.last_synced, lastSyncTimeString));
+      mSyncStatusText.setText(getString(R.string.last_synced,
+       Utils.getRelativeTime(this, lastSyncTime)));
 
       // TODO: This doesn't work because it's not a button anymore.
       // Disable the sync button if we don't have internet.

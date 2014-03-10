@@ -211,7 +211,6 @@
     <string name="offline_guides">Offline Guides</string>
     <string name="sync_now">Sync Now</string>
     <string name="no_offline_guides_text">Favorite a guide to mark it for offline viewing so you can perform repairs everywhere!</string>
-    <string name="sync_status_never">Never</string>
     <string name="sync_status_syncing">Syncing…</string>
     <string name="last_synced">Last synced %1$s.</string>
     <string name="notification_syncing">Syncing favorite guides…</string>
