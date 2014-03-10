@@ -299,6 +299,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    public void onLogin(LoginEvent.Login event) {
+      super.onLogin(event);
+
       if (mFavoriting) {
          toast(mGuide.isFavorited() ? R.string.unfavoriting :
           R.string.favoriting, Toast.LENGTH_LONG);

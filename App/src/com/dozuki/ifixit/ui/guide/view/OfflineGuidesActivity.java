@@ -213,9 +213,9 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          }
       });
 
-      // TODO: Make sure this only runs the first time the Activity is opened.
-      // We don't want to log the user out every time the orientation is changed.
-      if (getIntent().getBooleanExtra(REAUTHENTICATE, false)) {
+      // Only check if this is the first onCreate. Otherwise the user will be logged out on
+      // every orientation change.
+      if (savedState == null && getIntent().getBooleanExtra(REAUTHENTICATE, false)) {
          // The sync service indicates that the user is logged out so lets make sure
          // that we think that the user is so login can happen as normal.
          app.shallowLogout(false);
@@ -299,7 +299,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public void onLogin(LoginEvent.Login loginEvent) {
+      super.onLogin(loginEvent);
+
       initLoader();
+      App.get().requestSync(false);
    }
 
    private void initLoader() {

@@ -468,8 +468,14 @@ public class Api {
     */
    private static String attemptReauthentication(ApiCall attemptedApiCall) {
       Authenticator authenticator = new Authenticator(App.get());
-      Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);
       authenticator.invalidateAuthToken(attemptedApiCall.mAuthToken);
+      Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);
+
+      // We can't reauthenticate if the account doesn't exist.
+      if (account == null) {
+         return null;
+      }
+
       String email = attemptedApiCall.mUser.mEmail;
       String password = authenticator.getPassword(account);
 

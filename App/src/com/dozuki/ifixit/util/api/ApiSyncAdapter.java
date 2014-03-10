@@ -226,6 +226,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       mNotificationBuilder.setSmallIcon(R.drawable.ic_notification_icon);
       mNotificationBuilder.setOngoing(true);
       mNotificationBuilder.setAutoCancel(true);
+
+      // TODO: The PendingIntent doesn't consistently work.
       Intent intent = BaseActivity.addSite(
        OfflineGuidesActivity.view(mContext), site);
       PendingIntent pendingIntent = PendingIntent.getActivity(mContext,
