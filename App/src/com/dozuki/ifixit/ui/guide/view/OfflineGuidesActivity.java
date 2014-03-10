@@ -369,9 +369,6 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
          if (mIsSyncing) {
             // Display as indeterminate. This will be overridden in updateTotalProgress.
-            // TODO: We don't store the current progress at all across orientation changes
-            // so this changes to indeterminate until an image is downloaded to give us
-            // the current progress. This is a minor issue.
             mSyncProgressBar.setIndeterminate(true);
             mSyncProgressBar.setVisibility(View.VISIBLE);
          } else {
@@ -407,6 +404,5 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public void onLoaderReset(Loader<List<GuideMediaProgress>> listLoader) {
-      // TODO: Reset view?
    }
 }
