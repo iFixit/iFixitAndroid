@@ -46,9 +46,7 @@ public class GuideMediaProgress {
          if (step.hasVideo()) {
             Video video = step.getVideo();
             addMediaIfMissing(video.getThumbnail().getPath(ImageSizes.stepMain));
-            // TODO: I don't think that the order of the encodings is reliable so
-            // we should pick one that we like and use that.
-            addMediaIfMissing(video.getEncodings().get(0).getURL());
+            addMediaIfMissing(video.getVideoUrl());
          }
       }
 

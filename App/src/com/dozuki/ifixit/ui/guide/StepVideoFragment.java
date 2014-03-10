@@ -81,7 +81,7 @@ public class StepVideoFragment extends BaseFragment {
        .error(R.drawable.no_image)
        .into(poster);
 
-      final String videoUrl = mVideo.getEncodings().get(0).getURL();
+      final String videoUrl = mVideo.getVideoUrl();
       playButton.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
