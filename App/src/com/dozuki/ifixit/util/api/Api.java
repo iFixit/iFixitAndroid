@@ -38,6 +38,7 @@ public class Api {
    }
 
    private static final int INVALID_LOGIN_CODE = 401;
+   private static final String TAG = "Api";
 
    /**
     * Pending API call. This is set when an authenticated request is performed
@@ -68,7 +69,7 @@ public class Api {
       if (activity != null) {
          apiCall.mActivityid = ((BaseActivity)activity).getActivityid();
       } else if (apiCall.mActivityid == -1) {
-         Log.w("Api", "Missing activityid!", new Exception());
+         Log.w(TAG, "Missing activityid!", new Exception());
       }
 
       apiCall.mSite = App.get().getSite();
@@ -166,7 +167,7 @@ public class Api {
             // This is meant to catch JSON and GSON parse exceptions but enumerating
             // all different types of Exceptions and putting error handling code
             // in one place is tedious.
-            Log.e("Api", "API parse error", e);
+            Log.e(TAG, "API parse error", e);
             result.setError(new ApiError(ApiError.Type.PARSE));
 
             event = result;
@@ -241,7 +242,7 @@ public class Api {
             Object event = deadEvent.event;
 
             if (BuildConfig.DEBUG) {
-               Log.i("Api", "onDeadEvent: " + event.getClass().getName());
+               Log.i(TAG, "onDeadEvent: " + event.getClass().getName());
             }
 
             if (event instanceof ApiEvent<?>) {
@@ -277,14 +278,14 @@ public class Api {
             // to the list of dead events so we can try it again later.
             if (activityid == apiEvent.mApiCall.mActivityid) {
                if (BuildConfig.DEBUG) {
-                  Log.i("Api", "Retrying dead event: " +
+                  Log.i(TAG, "Retrying dead event: " +
                    apiEvent.getClass().getName());
                }
 
                App.getBus().post(apiEvent);
             } else {
                if (BuildConfig.DEBUG) {
-                  Log.i("Api", "Adding dead event: " + apiEvent.getClass().toString());
+                  Log.i(TAG, "Adding dead event: " + apiEvent.getClass().toString());
                }
 
                sDeadApiEvents.add(apiEvent);
@@ -292,7 +293,7 @@ public class Api {
          }
 
          if (BuildConfig.DEBUG && sDeadApiEvents.size() > 0) {
-            Log.i("Api", "Skipped " + sDeadApiEvents.size() + " dead events");
+            Log.i(TAG, "Skipped " + sDeadApiEvents.size() + " dead events");
          }
       }
    }
@@ -324,8 +325,8 @@ public class Api {
       event.setApiCall(apiCall);
 
       if (App.inDebug()) {
-         Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
-         Log.i("Api", "Request body: " + apiCall.mRequestBody);
+         Log.i(TAG, "Performing API call: " + endpoint.mMethod + " " + url);
+         Log.i(TAG, "Request body: " + apiCall.mRequestBody);
       }
 
       try {
@@ -342,7 +343,7 @@ public class Api {
 
          return response;
       } catch (HttpRequestException e) {
-         Log.e("Api", "API error", e);
+         Log.e(TAG, "API error", e);
 
          return event.setError(new ApiError(ApiError.Type.PARSE));
       }
@@ -356,7 +357,7 @@ public class Api {
             String response = getStoredResponse(url, apiCall);
             if (response != null) {
                if (App.inDebug()) {
-                  Log.i("Api", "Using stored API response");
+                  Log.i(TAG, "Using stored API response");
                }
                // All GETs will be 200's if they're valid.
                return event.setCode(200).setResponse(response).setStoredResponse(true);
@@ -427,9 +428,9 @@ public class Api {
       if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
 
-         Log.d("Api", "Response code: " + code);
-         Log.d("Api", "Response body: " + responseBody);
-         Log.d("Api", "Request time: " + (endTime - startTime) + "ms");
+         Log.d(TAG, "Response code: " + code);
+         Log.d(TAG, "Response body: " + responseBody);
+         Log.d(TAG, "Request time: " + (endTime - startTime) + "ms");
       }
 
       /**
@@ -484,7 +485,7 @@ public class Api {
       ApiEvent<?> result = performAndParseApiCall(loginApiCall);
 
       if (result.hasError()) {
-         Log.w("Api", "Reauthentication failed");
+         Log.w(TAG, "Reauthentication failed");
          return null;
       }
 
@@ -497,7 +498,7 @@ public class Api {
 
          return user.getAuthToken();
       } else {
-         Log.w("Api", "Reauthentication result isn't a User");
+         Log.w(TAG, "Reauthentication result isn't a User");
          return null;
       }
    }
@@ -509,7 +510,7 @@ public class Api {
 
       if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
-         Log.i("Api", "Retrieved response in " + (endTime - startTime) + "ms");
+         Log.i(TAG, "Retrieved response in " + (endTime - startTime) + "ms");
       }
 
       return response;
@@ -522,7 +523,7 @@ public class Api {
 
       if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
-         Log.i("Api", "Stored response in " + (endTime - startTime) + "ms");
+         Log.i(TAG, "Stored response in " + (endTime - startTime) + "ms");
       }
    }
 
