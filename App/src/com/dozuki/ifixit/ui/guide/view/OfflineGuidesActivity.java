@@ -21,8 +21,6 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -332,25 +330,6 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
       if (mSyncObserverHandle != null) {
          ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
-      }
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      // TODO: Remove menu if nothing else is added to it.
-      //getSupportMenuInflater().inflate(R.menu.offline_guide_menu, menu);
-      return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      // TODO: Remove when above menu is totally removed.
-      switch (item.getItemId())  {
-         case R.id.offline_guide_sync_now:
-            App.get().requestSync(false);
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
       }
    }
 

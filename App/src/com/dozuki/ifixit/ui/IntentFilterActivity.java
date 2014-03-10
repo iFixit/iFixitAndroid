@@ -46,7 +46,8 @@ public class IntentFilterActivity extends BaseActivity {
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
-      // TODO: Show loading.
+      // TODO: Show loading. This is only important if we need to do the sites
+      // API call. Otherwise the URI parsing is pretty much instantaneous.
 
       Intent intent = getIntent();
 
