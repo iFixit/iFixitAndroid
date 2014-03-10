@@ -146,7 +146,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                switch (e.mExceptionType) {
                   case ApiSyncException.AUTH_EXCEPTION:
                      syncResult.stats.numAuthExceptions++;
-                     setAuthenticationNotification(site);
+                     setAuthenticationNotification(site, user);
                      break;
                   case ApiSyncException.CANCELED_EXCEPTION:
                      // Let the system use the default retry mechanism for canceled syncs.
@@ -251,7 +251,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       updateNotificationProgress(0, 0, false);
    }
 
-   protected void setAuthenticationNotification(Site site) {
+   protected void setAuthenticationNotification(Site site, User user) {
       initializeNotification(site);
 
       Intent intent = BaseActivity.addSite(
@@ -260,9 +260,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        INTENT_REQUEST_CODE, intent, PendingIntent.FLAG_UPDATE_CURRENT);
       mNotificationBuilder.setContentIntent(pendingIntent);
 
-      // TODO: Update text.
-      mNotificationBuilder.setContentTitle("Offline Sync Failed");
-      mNotificationBuilder.setContentText("Sign-in to resume offline guide sync.");
+      mNotificationBuilder.setContentTitle(mContext.getString(R.string.signin_error, user.mEmail));
       mNotificationBuilder.setOngoing(false);
       updateNotificationProgress(0, 0, false);
    }

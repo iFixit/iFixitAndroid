@@ -53,6 +53,7 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="signin_error">Sign in error for %1$s</string>
 
     <string name="try_again">Try again</string>
     <string name="register_agreement">I agree to <a
