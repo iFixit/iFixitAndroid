@@ -162,9 +162,9 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
    };
 
-   private final int SYNC_TIME_REFRESH_INTERVAL = 60000;
-   private Handler mSyncTimeUpdateHandler;
-   private Runnable mSyncTimeUpdateRunnable;
+   private final int SYNC_TIME_REFRESH_INTERVAL = 30000;
+   private Handler mSyncStatusUpdateHandler;
+   private Runnable mSyncStatusUpdateRunnable;
 
    public static Intent view(Context context) {
       return new Intent(context, OfflineGuidesActivity.class);
@@ -198,7 +198,8 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       mSyncBox.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-            if (!mIsSyncing) {
+            // Don't request a sync if there isn't any internet.
+            if (!mIsSyncing && App.get().isConnected()) {
                app.requestSync(false);
             } else {
                // Cancel is handled by the cancel button.
@@ -234,14 +235,14 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       }
 
       refreshSyncStatus(/* force */ true);
-      startSyncTimeUpdate();
+      startSyncStatusUpdate();
    }
 
    @Override
    public void onDestroy() {
       super.onDestroy();
 
-      stopSyncTimeUpdate();
+      stopSyncStatusUpdate();
    }
 
    @Override
@@ -254,40 +255,43 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    /**
     * Sets up the repeating event to update the last sync time.
     */
-   private void startSyncTimeUpdate() {
-      mSyncTimeUpdateHandler = new Handler();
-      mSyncTimeUpdateRunnable = new Runnable() {
+   private void startSyncStatusUpdate() {
+      mSyncStatusUpdateHandler = new Handler();
+      mSyncStatusUpdateRunnable = new Runnable() {
          @Override
          public void run() {
-            updateLastSyncTime();
-            mSyncTimeUpdateHandler.postDelayed(mSyncTimeUpdateRunnable,
+            updateSyncStatus();
+            mSyncStatusUpdateHandler.postDelayed(mSyncStatusUpdateRunnable,
              SYNC_TIME_REFRESH_INTERVAL);
          }
       };
 
-      mSyncTimeUpdateRunnable.run();
+      mSyncStatusUpdateRunnable.run();
    }
 
-   private void stopSyncTimeUpdate() {
-      mSyncTimeUpdateHandler.removeCallbacks(mSyncTimeUpdateRunnable);
+   private void stopSyncStatusUpdate() {
+      mSyncStatusUpdateHandler.removeCallbacks(mSyncStatusUpdateRunnable);
    }
 
-   private void updateLastSyncTime() {
-      long lastSyncTime = App.get().getLastSyncTime();
+   private void updateSyncStatus() {
+      long lastSyncStatus = App.get().getLastSyncTime();
+      boolean isConnected = App.get().isConnected();
 
-      if (mIsSyncing || lastSyncTime == App.NEVER_SYNCED_VALUE) {
+      if (mIsSyncing || lastSyncStatus == App.NEVER_SYNCED_VALUE) {
          mSyncStatusText.setVisibility(View.INVISIBLE);
-         return;
+      } else {
+         mSyncStatusText.setVisibility(View.VISIBLE);
+         mSyncStatusText.setText(getString(R.string.last_synced,
+          Utils.getRelativeTime(this, lastSyncStatus)));
       }
 
-      mSyncStatusText.setVisibility(View.VISIBLE);
+      mSyncCommand.setText(isConnected ?
+       (mIsSyncing ? R.string.sync_status_syncing : R.string.sync_now) :
+       R.string.no_connection);
 
-      mSyncStatusText.setText(getString(R.string.last_synced,
-       Utils.getRelativeTime(this, lastSyncTime)));
-
-      // TODO: This doesn't work because it's not a button anymore.
-      // Disable the sync button if we don't have internet.
-      mSyncBox.setEnabled(App.get().isConnected());
+      int backgroundColor = mIsSyncing || !isConnected ? R.color.disabled_grey_bg :
+       R.color.holo_blue_dark;
+      mSyncBox.setBackgroundColor(getResources().getColor(backgroundColor));
    }
 
    @Override
@@ -375,13 +379,9 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
             mSyncProgressBar.setVisibility(View.INVISIBLE);
          }
 
-         updateLastSyncTime();
-         mSyncCommand.setText(mIsSyncing ? R.string.sync_status_syncing : R.string.sync_now);
+         updateSyncStatus();
 
          mCancelButton.setVisibility(mIsSyncing ? View.VISIBLE : View.GONE);
-
-         int backgroundColor = mIsSyncing ? R.color.disabled_grey_bg : R.color.holo_blue_dark;
-         mSyncBox.setBackgroundColor(getResources().getColor(backgroundColor));
       }
    }
 
