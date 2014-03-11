@@ -48,7 +48,12 @@
             android:launchMode="singleTop"/>
         <activity android:name=".ui.guide.view.TeardownsActivity"/>
         <activity android:name=".ui.guide.view.FeaturedGuidesActivity"/>
-        <activity android:name=".ui.guide.view.OfflineGuidesActivity"/>
+
+        <!-- Export the activity so it can be launched via PendingIntent in
+             a Notification. -->
+        <activity
+            android:name=".ui.guide.view.OfflineGuidesActivity"
+            android:exported="true"/>
 
         <activity android:name=".ui.gallery.GalleryActivity"/>
         <activity
