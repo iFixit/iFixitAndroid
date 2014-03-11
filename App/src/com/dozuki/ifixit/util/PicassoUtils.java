@@ -1,17 +1,16 @@
 package com.dozuki.ifixit.util;
 
 import android.content.Context;
+
 import com.squareup.okhttp.HttpResponseCache;
 import com.squareup.okhttp.OkHttpClient;
 import com.squareup.picasso.OkHttpDownloader;
 import com.squareup.picasso.Picasso;
 
-import javax.net.ssl.SSLContext;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.security.GeneralSecurityException;
 
 public class PicassoUtils {
    private static Picasso singleton = null;
@@ -19,7 +18,7 @@ public class PicassoUtils {
    public static Picasso with(Context context) {
       // Mimicking Picasso's new OkHttpLoader(context), but with our custom OkHttpClient
       if (singleton == null) {
-         OkHttpClient client = createClient();
+         OkHttpClient client = Utils.createOkHttpClient();
          try {
             client.setResponseCache(createResponseCache(context));
          } catch (IOException ignored) {
@@ -29,21 +28,6 @@ public class PicassoUtils {
          singleton = new Picasso.Builder(context).downloader(new OkHttpDownloader(client)).build();
       }
       return singleton;
-   }
-
-   private static OkHttpClient createClient() {
-      OkHttpClient client = new OkHttpClient();
-
-      // Working around the libssl crash: https://github.com/square/okhttp/issues/184
-      SSLContext sslContext;
-      try {
-         sslContext = SSLContext.getInstance("TLS");
-         sslContext.init(null, null, null);
-      } catch (GeneralSecurityException e) {
-         throw new AssertionError(); // The system has no TLS. Just give up.
-      }
-      client.setSslSocketFactory(sslContext.getSocketFactory());
-      return client;
    }
 
    private static File createDefaultCacheDir(Context context) {

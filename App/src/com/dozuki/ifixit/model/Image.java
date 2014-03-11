@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.model;
 
-import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.google.gson.annotations.SerializedName;
 
@@ -30,13 +29,13 @@ public class Image implements Serializable {
 
    public Image(int id, String path) {
       mId = id;
-      mPath = cleanPath(path);
+      mPath = path;
       mLocalPath = "";
    }
 
    public void setLocalImage(String path) {
       mId = LOCAL_IMAGE_ID;
-      mPath = cleanPath(path);
+      mPath = path;
       mLocalPath = mPath;
    }
 
@@ -61,7 +60,7 @@ public class Image implements Serializable {
    }
 
    public void setPath(String path) {
-      mPath = cleanPath(path);
+      mPath = path;
    }
 
    public String getPath() {
@@ -119,13 +118,5 @@ public class Image implements Serializable {
       }
 
       return ((Image)obj).getId() == mId && ((Image)obj).getPath().equals(mPath);
-   }
-
-   private String cleanPath(String path) {
-
-      if (App.inDebug() && path.length() != 0)
-         path = path.replaceFirst("https", "http");
-
-      return path;
    }
 }

@@ -397,15 +397,7 @@ public class Api {
       }
 
       request.userAgent(App.get().getUserAgent());
-
       request.header("X-App-Id", BuildConfig.APP_ID);
-
-      // Trust all certs and hosts in development
-      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO || App.inDebug()) {
-         request.trustAllCerts();
-         request.trustAllHosts();
-      }
-
       request.followRedirects(false);
 
       /**

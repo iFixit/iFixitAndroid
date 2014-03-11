@@ -8,7 +8,7 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
-import com.dozuki.ifixit.App;
+
 import com.squareup.okhttp.OkHttpClient;
 
 import java.io.IOException;
@@ -104,10 +104,6 @@ public class UrlImageGetter implements Html.ImageGetter {
       }
 
       private InputStream fetch(String source) throws IOException {
-         if (App.inDebug()) {
-            source = source.replace("https", "http");
-         }
-
          OkHttpClient client = Utils.createOkHttpClient();
          HttpURLConnection connection = client.open(new URL(source));
          return connection.getInputStream();
