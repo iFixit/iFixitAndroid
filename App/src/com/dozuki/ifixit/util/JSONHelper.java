@@ -623,25 +623,6 @@ public class JSONHelper {
       return new ArrayList<GuideInfo>(guideList);
    }
 
-   /*
-   public static UserGuide parseUserGuideInfo(JSONObject json) throws JSONException {
-
-      GuideInfo guideInfo = new GuideInfo(json.getInt("guideid"));
-
-      guideInfo.mTopic = json.getString("category");
-      guideInfo.mTitle = json.getString("title");
-      guideInfo.setSubject(json.getString("subject"));
-      guideInfo.setType(json.getString("type"));
-      guideInfo.setPublished(json.getBoolean("public"));
-      guideInfo.setUserName(json.getString("username"));
-      guideInfo.setUserid(json.getInt("userid"));
-      guideInfo.setRevisionid(json.getInt("revisionid"));
-
-      guideInfo.setImage(parseImage(json, "image"));
-
-      return guideInfo;
-   }
-*/
    public static JSONArray createLineArray(ArrayList<StepLine> lines) throws JSONException {
 
       JSONArray array = new JSONArray();

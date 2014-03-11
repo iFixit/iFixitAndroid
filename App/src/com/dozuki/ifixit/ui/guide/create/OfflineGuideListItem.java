@@ -47,7 +47,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
     boolean isSyncing) {
       mGuideMedia = guideMedia;
 
-      mTitleView.setText(Html.fromHtml(mGuideMedia.mGuide.getTitle()));
+      mTitleView.setText(Html.fromHtml(mGuideMedia.mGuideInfo.mTitle));
       mProgressButton.setPinned(true);
       mProgressButton.setCircleColor(getResources().getColor(
        R.color.progress_button_background));
@@ -67,7 +67,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
 
       Picasso picasso = PicassoUtils.with(mActivity);
       Transformation transform = new RoundedTransformation(4, 0);
-      Image image = mGuideMedia.mGuide.getIntroImage();
+      Image image = mGuideMedia.mGuideInfo.mImage;
 
       if (image != null) {
          Utils.displayImage(picasso, image.getPath(ImageSizes.guideList), !displayLiveImages)
@@ -90,6 +90,6 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
    public void onClick(View view) {
       // TODO: Force offline mode? Send guide along?
       mActivity.startActivity(GuideViewActivity.viewGuideid(mActivity,
-       mGuideMedia.mGuide.getGuideid()));
+       mGuideMedia.mGuideInfo.mGuideid));
    }
 }

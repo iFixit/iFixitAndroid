@@ -104,6 +104,7 @@ public class UrlImageGetter implements Html.ImageGetter {
       }
 
       private InputStream fetch(String source) throws IOException {
+         // TODO: This can be simplified by using HttpRequest.
          OkHttpClient client = Utils.createOkHttpClient();
          HttpURLConnection connection = client.open(new URL(source));
          return connection.getInputStream();

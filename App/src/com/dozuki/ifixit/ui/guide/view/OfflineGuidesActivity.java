@@ -348,7 +348,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    protected void updateGuideProgress(int guideid, int progress, int total) {
       for (GuideMediaProgress guide : mGuides) {
-         if (guide.mGuide.getGuideid() == guideid) {
+         if (guide.mGuideInfo.mGuideid == guideid) {
             guide.mTotalMedia = total;
             guide.mMediaProgress = progress;
             mAdapter.notifyDataSetChanged();

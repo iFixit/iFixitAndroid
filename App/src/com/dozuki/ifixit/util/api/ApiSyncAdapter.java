@@ -434,8 +434,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
             GuideMediaProgress guideMedia = new GuideMediaProgress(fullGuide);
 
-            mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, guideMedia.mTotalMedia,
-             guideMedia.mMediaProgress);
+            mDb.saveGuide(mSite, mUser, guideMedia.mGuideEvent, staleGuide,
+             guideMedia.mTotalMedia, guideMedia.mMediaProgress);
             sendNewGuideBroadcast();
 
             guides.add(guideMedia);
@@ -516,6 +516,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
                file.createNewFile();
                HttpRequest request = HttpRequest.get(mediaUrl);
+
                request.receive(file);
 
                if (request.code() < 200 || request.code() >= 300) {

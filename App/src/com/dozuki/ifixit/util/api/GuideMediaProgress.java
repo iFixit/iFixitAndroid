@@ -3,6 +3,7 @@ package com.dozuki.ifixit.util.api;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.util.ImageSizes;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 public class GuideMediaProgress {
    public ApiEvent.ViewGuide mGuideEvent;
    public Guide mGuide;
+   public GuideInfo mGuideInfo;
    public Set<String> mMissingMedia;
    public int mTotalMedia;
    public int mMediaProgress;
@@ -53,8 +55,8 @@ public class GuideMediaProgress {
       mMediaProgress = mTotalMedia - mMissingMedia.size();
    }
 
-   public GuideMediaProgress(Guide guide, int totalMedia, int mediaProgress) {
-      mGuide = guide;
+   public GuideMediaProgress(GuideInfo guideInfo, int totalMedia, int mediaProgress) {
+      mGuideInfo = guideInfo;
       mTotalMedia = totalMedia;
       mMediaProgress = mediaProgress;
    }

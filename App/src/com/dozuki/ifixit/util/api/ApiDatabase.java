@@ -9,8 +9,10 @@ import android.util.Log;
 
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.JSONHelper;
+import com.google.gson.Gson;
 
 import org.json.JSONException;
 
@@ -67,7 +69,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
    private static final String KEY_MODIFIED_DATE = "modified_date";
    private static final String KEY_MEDIA_TOTAL = "media_total";
    private static final String KEY_MEDIA_DOWNLOADED = "media_downloaded";
-   private static final String KEY_JSON = "json";
+   private static final String KEY_GUIDE_INFO_JSON = "guide_info_json";
+   private static final String KEY_GUIDE_JSON = "guide_json";
 
    private static final String CREATE_API_RESULTS_TABLE =
     "CREATE TABLE " + TABLE_OFFLINE_GUIDES + "(" +
@@ -78,7 +81,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
        KEY_MODIFIED_DATE + " REAL, " +
        KEY_MEDIA_TOTAL + " INTEGER, " +
        KEY_MEDIA_DOWNLOADED + " INTEGER, " +
-       KEY_JSON + " TEXT, " +
+       KEY_GUIDE_JSON + " TEXT, " +
+       KEY_GUIDE_INFO_JSON + " TEXT, " +
        "UNIQUE (" +
           KEY_SITEID + ", " +
           KEY_USERID + ", " +
@@ -92,7 +96,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
       final int MEDIA_DOWNLOADED_INDEX = 2;
       Cursor cursor = getReadableDatabase().query(
        TABLE_OFFLINE_GUIDES,
-       new String[] {KEY_JSON, KEY_MEDIA_TOTAL, KEY_MEDIA_DOWNLOADED},
+       new String[] {KEY_GUIDE_INFO_JSON, KEY_MEDIA_TOTAL, KEY_MEDIA_DOWNLOADED},
        KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ?",
        new String[] {site.mSiteid + "", user.getUserid() + ""},
@@ -105,11 +109,13 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
       while (cursor.moveToNext()) {
          guideMedia.add(new GuideMediaProgress(
-            getGuideFromCursor(cursor, GUIDE_JSON_INDEX, false),
+            getGuideInfoFromCursor(cursor, GUIDE_JSON_INDEX, false),
             cursor.getInt(TOTAL_MEDIA_INDEX),
             cursor.getInt(MEDIA_DOWNLOADED_INDEX)
          ));
       }
+
+      cursor.close();
 
       return guideMedia;
    }
@@ -117,7 +123,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
    public Guide getOfflineGuide(Site site, User user, int guideid) {
       Cursor cursor = getReadableDatabase().query(
        TABLE_OFFLINE_GUIDES,
-       new String[] {KEY_JSON},
+       new String[] {KEY_GUIDE_JSON},
        KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ? AND " +
        KEY_GUIDEID + " = ? ",
@@ -138,7 +144,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
       Cursor cursor = db.query(
        TABLE_OFFLINE_GUIDES,
-       new String[] {KEY_JSON},
+       new String[] {KEY_GUIDE_JSON},
        KEY_SITEID + " = ? AND " +
        KEY_USERID + " = ? AND " +
        KEY_MEDIA_DOWNLOADED + " != " + KEY_MEDIA_TOTAL,
@@ -177,6 +183,27 @@ public class ApiDatabase extends SQLiteOpenHelper {
          String guideJson = cursor.getString(jsonIndex);
          return JSONHelper.parseGuide(guideJson);
       } catch (JSONException e) {
+         Log.e(TAG, "Cannot parse stored guide!", e);
+         return null;
+      } finally {
+         if (closeCursor) {
+            cursor.close();
+         }
+      }
+   }
+
+   /**
+    * Creates a GuideInfo from the cursor with JSON found at the provided index.
+    */
+   private GuideInfo getGuideInfoFromCursor(Cursor cursor, int jsonIndex, boolean closeCursor) {
+      try {
+         // Invalid cursor position.
+         if (cursor.isBeforeFirst() || cursor.isAfterLast()) {
+            return null;
+         }
+         String guideJson = cursor.getString(jsonIndex);
+         return new Gson().fromJson(guideJson, GuideInfo.class);
+      } catch (Exception e) {
          Log.e(TAG, "Cannot parse stored guide!", e);
          return null;
       } finally {
@@ -249,8 +276,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
       );
    }
 
-   public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent, int imagesTotal,
-    int imagesDownloaded) {
+   public void saveGuide(Site site, User user, ApiEvent<Guide> guideEvent,
+    GuideInfo guideInfo, int imagesTotal, int imagesDownloaded) {
       if (guideEvent == null) {
          throw new IllegalArgumentException("ApiEvent<Guide> guideEvent");
       }
@@ -264,7 +291,8 @@ public class ApiDatabase extends SQLiteOpenHelper {
       values.put(KEY_MODIFIED_DATE, guide.getAbsoluteModifiedDate());
       values.put(KEY_MEDIA_TOTAL, imagesTotal);
       values.put(KEY_MEDIA_DOWNLOADED, imagesDownloaded);
-      values.put(KEY_JSON, guideEvent.getResponse());
+      values.put(KEY_GUIDE_INFO_JSON, new Gson().toJson(guideInfo));
+      values.put(KEY_GUIDE_JSON, guideEvent.getResponse());
 
       db.insertWithOnConflict(TABLE_OFFLINE_GUIDES, null, values,
        SQLiteDatabase.CONFLICT_REPLACE);
