@@ -316,9 +316,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    }
 
    private class OfflineGuideSyncer {
-      // Update at most every 5 seconds so we don't spend all of our time updating
+      // Update at most every 10 seconds so we don't spend all of our time updating
       // values in the DB.
-      private static final int GUIDE_PROGRESS_INTERVAL_MS = 5000;
+      private static final int GUIDE_PROGRESS_INTERVAL_MS = 10000;
 
       private final Site mSite;
       private final User mUser;
