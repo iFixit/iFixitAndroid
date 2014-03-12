@@ -435,6 +435,24 @@ public class App extends Application {
       ContentResolver.cancelSync(mAccount, authority);
    }
 
+   public void setSyncAutomatically(boolean syncAutomatically) {
+      if (!isUserLoggedIn()) {
+         return;
+      }
+
+      ContentResolver.setSyncAutomatically(mAccount,
+       ApiContentProvider.getAuthority(), syncAutomatically);
+   }
+
+   public boolean getSyncAutomatically() {
+      if (!isUserLoggedIn()) {
+         return false;
+      }
+
+      return ContentResolver.getSyncAutomatically(mAccount,
+       ApiContentProvider.getAuthority());
+   }
+
    /**
     * Sets the last sync time for the given user to the current time.
     */

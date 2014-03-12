@@ -21,6 +21,8 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -330,6 +332,32 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
       if (mSyncObserverHandle != null) {
          ContentResolver.removeStatusChangeListener(mSyncObserverHandle);
+      }
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      getSupportMenuInflater().inflate(R.menu.offline_guides, menu);
+      return super.onCreateOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onPrepareOptionsMenu(Menu menu) {
+      MenuItem syncAutomatically = menu.findItem(R.id.sync_automatically);
+      syncAutomatically.setChecked(App.get().getSyncAutomatically());
+
+      return super.onPrepareOptionsMenu(menu);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case R.id.sync_automatically:
+            // The checked state is updated after this is called so we must negate it.
+            App.get().setSyncAutomatically(!item.isChecked());
+            return true;
+         default:
+            return super.onOptionsItemSelected(item);
       }
    }
 

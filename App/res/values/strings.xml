@@ -215,6 +215,7 @@
     <string name="last_synced">Last synced %1$s.</string>
     <string name="notification_syncing">Syncing favorite guides…</string>
     <string name="notification_sync_complete">Favorite guides downloaded</string>
+    <string name="sync_automatically">Sync automatically</string>
 
     <!-- Miscellaneous -->
     <string name="topic_background_description">Category background</string>
