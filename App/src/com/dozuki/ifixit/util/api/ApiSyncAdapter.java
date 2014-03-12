@@ -131,14 +131,23 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
 
       try {
+         // Always display the notification. We might remove it once we're done if
+         // we didn't download new content.
+         initializeNotification(site);
          app.registerReceiver(mRestartListener, new IntentFilter(RESTART_SYNC));
          boolean restart = false;
          do {
             try {
                restart = false;
                OfflineGuideSyncer syncer = new OfflineGuideSyncer(site, user);
-               syncer.syncOfflineGuides();
-               updateNotificationSuccess();
+               boolean newGuide = syncer.syncOfflineGuides();
+
+               if (newGuide) {
+                  updateNotificationSuccess();
+               } else {
+                  removeNotification();
+               }
+
                App.get().setLastSyncTime(site, user);
             } catch (ApiSyncException e) {
                Log.e(TAG, "Sync failed", e);
@@ -323,6 +332,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private final User mUser;
       private final ApiDatabase mDb;
       private long mLastProgressUpdate;
+      private boolean mNewGuide;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
@@ -337,7 +347,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        *
        * TODO: It would be nice to delete media that are no longer referenced.
        */
-      protected void syncOfflineGuides() {
+      protected boolean syncOfflineGuides() {
          ArrayList<GuideMediaProgress> uncompletedGuides = getUncompletedGuides();
          ArrayList<GuideInfo> staleGuides = getStaleGuides();
          ArrayList<GuideMediaProgress> updatedGuides = updateGuides(staleGuides);
@@ -346,6 +356,8 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          // their media.
          uncompletedGuides.addAll(updatedGuides);
          downloadMissingMedia(uncompletedGuides);
+
+         return mNewGuide;
       }
 
       private ArrayList<GuideMediaProgress> getUncompletedGuides() {
@@ -375,9 +387,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             Double modifiedDate = modifiedDates.get(guide.mGuideid);
             modifiedDates.remove(guide.mGuideid);
 
-            // Initialize the notification if there is a new guide being synced.
+            // Set mNewGuide as a flag to the caller that there was a new guide.
             if (modifiedDate == null) {
-               initializeNotification(mSite);
+               mNewGuide = true;
             }
 
             if (hasNewerModifiedDate(modifiedDate, guide.getAbsoluteModifiedDate())) {
