@@ -69,6 +69,10 @@ public class ApiCall {
       }
    }
 
+   public String getQuery() {
+      return mQuery;
+   }
+
    /**
     * ApiCall Factory methods.
     */

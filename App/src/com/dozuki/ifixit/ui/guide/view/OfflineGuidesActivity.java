@@ -31,12 +31,16 @@ import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.create.OfflineGuideListItem;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiContentProvider;
 import com.dozuki.ifixit.util.api.ApiDatabase;
+import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
+import com.squareup.otto.Subscribe;
 
 import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
 public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
@@ -407,6 +411,29 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          updateSyncStatus();
 
          mCancelButton.setVisibility(mIsSyncing ? View.VISIBLE : View.GONE);
+      }
+   }
+
+   @Subscribe
+   public void onGuideFavorited(ApiEvent.FavoriteGuide event) {
+      if (!event.hasError()) {
+         // Note: We assume that this is an unfavorite because that's the only
+         // thing you can do in this view currently.
+         int guideid = Integer.parseInt(event.mApiCall.getQuery());
+
+         for (Iterator<GuideMediaProgress> itr = mGuides.iterator(); itr.hasNext();) {
+            GuideMediaProgress guide = itr.next();
+
+            if (guide.mGuideInfo.mGuideid == guideid) {
+               // Remove the guide from the list and request a sync to actually remove it.
+               itr.remove();
+               App.get().requestSync(/* force */ true);
+               mAdapter.notifyDataSetChanged();
+               return;
+            }
+         }
+      } else {
+         Api.getErrorDialog(this, event).show();
       }
    }
 

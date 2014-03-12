@@ -216,6 +216,7 @@
     <string name="notification_syncing">Syncing favorite guides…</string>
     <string name="notification_sync_complete">Favorite guides downloaded</string>
     <string name="sync_automatically">Sync automatically</string>
+    <string name="unfavorite_confirmation">Are you sure you want to unfavorite this guide?</string>
 
     <!-- Miscellaneous -->
     <string name="topic_background_description">Category background</string>

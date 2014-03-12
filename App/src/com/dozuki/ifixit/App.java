@@ -49,7 +49,6 @@ public class App extends Application {
    // Key used to store a user's tracking preferences in SharedPreferences.
    private static final String TRACKING_PREF_KEY = "trackingPreference";
 
-   private static GoogleAnalytics mGa;
    private static Tracker mTracker;
 
    private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
@@ -145,14 +144,14 @@ public class App extends Application {
     * block as all Google Analytics work occurs off the main thread.
     */
    private void initializeGa() {
-      mGa = GoogleAnalytics.getInstance(this);
-      mTracker = mGa.getTracker(BuildConfig.GA_PROPERTY_ID);
+      GoogleAnalytics ga = GoogleAnalytics.getInstance(this);
+      mTracker = ga.getTracker(BuildConfig.GA_PROPERTY_ID);
 
       GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
 
       // Set dryRun to disable event dispatching.
-      mGa.setDryRun(BuildConfig.DEBUG);
-      mGa.getLogger().setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.INFO :
+      ga.setDryRun(BuildConfig.DEBUG);
+      ga.getLogger().setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.INFO :
        Logger.LogLevel.WARNING);
 
       // Set the opt out flag when user updates a tracking preference.
@@ -174,13 +173,6 @@ public class App extends Application {
     */
    public static Tracker getGaTracker() {
       return mTracker;
-   }
-
-   /*
-    * Returns the Google Analytics instance.
-    */
-   public static GoogleAnalytics getGaInstance() {
-      return mGa;
    }
 
    /**

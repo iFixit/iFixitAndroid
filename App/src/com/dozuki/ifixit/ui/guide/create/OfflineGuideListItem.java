@@ -1,7 +1,9 @@
 package com.dozuki.ifixit.ui.guide.create;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,6 +18,8 @@ import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.api.Api;
+import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
 import com.f2prateek.progressbutton.ProgressButton;
 import com.squareup.picasso.Picasso;
@@ -33,12 +37,49 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       super(activity);
       mActivity = activity;
 
-      LayoutInflater inflater = (LayoutInflater)activity.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+      LayoutInflater inflater = (LayoutInflater)activity.getSystemService(
+       Context.LAYOUT_INFLATER_SERVICE);
       inflater.inflate(R.layout.offline_guide_item, this, true);
 
       mTitleView = (TextView)findViewById(R.id.offline_guide_title);
       mProgressButton = (ProgressButton)findViewById(R.id.offline_guide_progress_button);
       mThumbnail = (ImageView)findViewById(R.id.offline_guide_thumbnail);
+
+      mProgressButton.setOnClickListener(new OnClickListener() {
+         @Override
+         public void onClick(View view) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+
+            builder
+             .setTitle(R.string.unfavorite_guide)
+             .setMessage(R.string.unfavorite_confirmation)
+             .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                   Api.call(mActivity, ApiCall.favoriteGuide(
+                    mGuideMedia.mGuideInfo.mGuideid, false));
+                   dialog.dismiss();
+                }
+             })
+             .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                   dialog.cancel();
+                }
+             })
+             .setOnCancelListener(new DialogInterface.OnCancelListener() {
+                @Override
+                public void onCancel(DialogInterface dialog) {
+                   mProgressButton.setPinned(true);
+                   mProgressButton.invalidate();
+                }
+             })
+             .setCancelable(true);
+
+            AlertDialog dialog = builder.create();
+            dialog.show();
+         }
+      });
 
       setOnClickListener(this);
    }
