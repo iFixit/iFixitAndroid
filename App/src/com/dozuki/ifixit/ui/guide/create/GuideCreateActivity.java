@@ -83,14 +83,12 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
          }
       });
 
-      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides");
+      App.sendScreenView("/user/guides");
    }
 
    @Override
    public void onStart() {
       super.onStart();
-
-      App.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    @Override

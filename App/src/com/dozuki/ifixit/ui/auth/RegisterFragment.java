@@ -126,10 +126,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, "/register");
-
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/register");
    }
 
    private void showKeyboard() {

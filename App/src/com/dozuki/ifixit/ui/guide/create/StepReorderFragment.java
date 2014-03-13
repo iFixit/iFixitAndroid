@@ -124,10 +124,7 @@ public class StepReorderFragment extends BaseFragment {
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid() + "/step_reorder");
-
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/guide/view/" + mGuide.getGuideid() + "/step_reorder");
    }
 
    public final class ContextualStepReorder implements ActionMode.Callback {

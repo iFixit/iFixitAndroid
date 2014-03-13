@@ -25,8 +25,8 @@ public class CaptureHelper {
             return null;
          }
       } else {
-         App.getGaTracker().send(MapBuilder.createException(
-          "External storage is not mounted READ/WRITE", false).build());
+         App.sendException("CaptureHelper",
+          "External storage is not mounted READ/WRITE", new Exception());
       }
 
       return storageDir;

@@ -30,9 +30,12 @@ import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiContentProvider;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.github.kevinsawicki.http.HttpRequest;
+import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Bus;
 
@@ -49,7 +52,7 @@ public class App extends Application {
    // Key used to store a user's tracking preferences in SharedPreferences.
    private static final String TRACKING_PREF_KEY = "trackingPreference";
 
-   private static Tracker mTracker;
+   private static Tracker mGaTracker;
 
    private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
@@ -139,13 +142,29 @@ public class App extends Application {
       setSite(getDefaultSite());
    }
 
+   public static void sendEvent(String category, String action, String label, Long value) {
+      mGaTracker.send(MapBuilder.createEvent(category, action, label, value).build());
+   }
+
+   public static void sendScreenView(String screenName) {
+      mGaTracker.send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, screenName).build());
+   }
+
+   public static void sendException(String tag, String message, Exception exception) {
+      Log.e(tag, message, exception);
+
+      mGaTracker.send(MapBuilder.createException(
+       new StandardExceptionParser(get(), null).getDescription(
+        Thread.currentThread().getName(), exception), false).build());
+   }
+
    /*
     * Method to handle basic Google Analytics initialization. This call will not
     * block as all Google Analytics work occurs off the main thread.
     */
    private void initializeGa() {
       GoogleAnalytics ga = GoogleAnalytics.getInstance(this);
-      mTracker = ga.getTracker(BuildConfig.GA_PROPERTY_ID);
+      mGaTracker = ga.getTracker(BuildConfig.GA_PROPERTY_ID);
 
       GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
 
@@ -166,13 +185,6 @@ public class App extends Application {
             }
          }
       });
-   }
-
-   /*
-    * Returns the Google Analytics tracker.
-    */
-   public static Tracker getGaTracker() {
-      return mTracker;
    }
 
    /**

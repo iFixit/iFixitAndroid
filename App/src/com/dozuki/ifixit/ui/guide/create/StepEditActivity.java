@@ -10,9 +10,9 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.DialogFragment;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -25,6 +25,7 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
@@ -36,15 +37,13 @@ import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.JSONHelper;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
-import com.dozuki.ifixit.util.JSONHelper;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -217,9 +216,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          @Override
          public void onPageSelected(int currentPage) {
             String label = mStepAdapter.getFragmentScreenLabel(currentPage);
-            Tracker tracker = App.getGaTracker();
-            tracker.set(Fields.SCREEN_NAME, label);
-            tracker.send(MapBuilder.createAppView().build());
+            App.sendScreenView(label);
          }
 
          @Override
@@ -768,26 +765,21 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public void onClick(View v) {
-      Tracker gaTracker = App.getGaTracker();
+      String label = null;
       switch (v.getId()) {
          case R.id.step_edit_delete_step:
-            gaTracker.send(MapBuilder
-             .createEvent("ui_action", "button_press", "step_edit_delete_step",
-              (long) mGuide.getStep(mPagePosition).getStepid()).build());
+            label = "step_edit_delete_step";
             if (!mGuide.getSteps().isEmpty()) {
                createDeleteDialog(StepEditActivity.this).show();
             }
             break;
          case R.id.step_edit_save:
-            gaTracker.send(MapBuilder
-             .createEvent("ui_action", "button_press", "step_edit_save_step",
-              (long) mGuide.getStep(mPagePosition).getStepid()).build());
+            label = "step_edit_save_step";
 
             save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
-            gaTracker.send(MapBuilder
-             .createEvent("ui_action", "button_press", "step_edit_add_step", null).build());
+            label = "step_edit_add_step";
 
             int newPosition = mPagePosition + 1;
 
@@ -802,8 +794,12 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             } else {
                addNewStep(newPosition);
             }
-
             break;
+      }
+
+      if (label != null) {
+         App.sendEvent("ui_action", "button_press", label,
+          (long)mGuide.getStep(mPagePosition).getStepid());
       }
    }
 
@@ -1173,8 +1169,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          return;
       }
 
-      App.getGaTracker().send(MapBuilder
-       .createEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid()).build());
+      App.sendEvent("menu_action", "button_press", "view_guide", (long)mGuide.getGuideid());
 
       Intent intent = new Intent(this, GuideViewActivity.class);
       if (mParentGuideId != NO_PARENT_GUIDE) {

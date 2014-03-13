@@ -105,8 +105,7 @@ public class StepListItem extends TouchableRelativeLayout {
    }
 
    private void deleteStep() {
-      App.getGaTracker()
-       .send(MapBuilder.createEvent("ui_action", "button_press", "delete_step", null).build());
+      App.sendEvent("ui_action", "button_press", "delete_step", null);
 
       mPortalRef.createDeleteDialog(mStepObject).show();
    }
@@ -133,8 +132,7 @@ public class StepListItem extends TouchableRelativeLayout {
    }
 
    private void editStep() {
-      App.getGaTracker()
-       .send(MapBuilder.createEvent("ui_action", "button_press", "edit_step", null).build());
+      App.sendEvent("ui_action", "button_press", "edit_step", null);
 
       mPortalRef.launchStepEdit(mStepPosition);
    }

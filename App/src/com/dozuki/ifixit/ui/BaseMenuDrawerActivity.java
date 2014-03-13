@@ -505,11 +505,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
        if (navigationDialog != null) {
           navigationDialog.show();
        } else {
-          mMenuDrawer.closeMenu();
+          App.sendEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null);
 
-          App.getGaTracker().send(MapBuilder
-           .createEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null)
-           .build());
+          mMenuDrawer.closeMenu();
 
           mActivePosition = position;
           mMenuDrawer.setActiveView(view, position);

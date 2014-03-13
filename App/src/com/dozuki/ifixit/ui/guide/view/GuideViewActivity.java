@@ -175,8 +175,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case R.id.edit_guide:
-            App.getGaTracker().send(MapBuilder.createEvent("menu_action",
-             "button_press", "edit_guide", (long)mGuide.getGuideid()).build());
+            App.sendEvent("menu_action", "button_press", "edit_guide", (long)mGuide.getGuideid());
 
             // If the user is on the introduction, take them to edit the introduction fields.
             if (mCurrentPage == 0) {
@@ -328,10 +327,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       mGuide = guide;
 
-      Tracker tracker = App.getGaTracker();
-
-      tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid());
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/guide/view/" + mGuide.getGuideid());
 
       String guideTitle = mGuide.getTitle();
       setTitle(guideTitle);
@@ -411,10 +407,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public void onPageSelected(int currentPage) {
       mCurrentPage = currentPage;
 
-      String label = mAdapter.getFragmentScreenLabel(currentPage);
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, label);
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView(mAdapter.getFragmentScreenLabel(currentPage));
    }
 
    @Override
