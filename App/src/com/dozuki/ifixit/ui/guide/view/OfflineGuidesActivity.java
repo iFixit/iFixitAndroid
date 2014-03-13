@@ -235,7 +235,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
          // Initiate a sync the first time this Activity is opened if the user is logged
          // in. Otherwise it will happen automatically upon login.
-         if (savedState == null && hasInternet) {
+         if (savedState == null && hasInternet && app.getSyncAutomatically()) {
             app.requestSync(false);
          }
       }
