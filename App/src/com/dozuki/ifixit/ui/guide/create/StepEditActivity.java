@@ -535,7 +535,11 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       hideLoading();
 
       // Re-enable the toggle view
-      findViewById(R.id.publish_toggle).setEnabled(true);
+      View publishToggle = findViewById(R.id.publish_toggle);
+
+      if (publishToggle != null) {
+         publishToggle.setEnabled(true);
+      }
 
       // Update guide even if there is a conflict.
       if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
