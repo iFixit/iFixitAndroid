@@ -131,7 +131,6 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
 
    @Override
    public void onClick(View view) {
-      // TODO: Force offline mode? Send guide along?
       mActivity.startActivity(GuideViewActivity.viewGuideid(mActivity,
        mGuideMedia.mGuideInfo.mGuideid));
    }
