@@ -24,9 +24,6 @@ import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiDatabase;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
 
@@ -281,6 +278,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (!event.hasError()) {
          boolean favorited = event.getResult();
 
+         App.sendEvent("ui_action", "button_press",
+          "guide_view_" + (favorited ? "" : "un") + "favorited", null);
+
          if (mGuide != null) {
             mGuide.setFavorited(favorited);
          }
@@ -374,10 +374,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          @Override
          protected void onPostExecute(Guide guide) {
             if (guide != null) {
+               App.sendEvent("ui_action", "button_press", "offline_guide_view", null);
                mIsOfflineGuide = true;
                mCurrentPage = calculateInitialPage(guide);
                setGuide(guide, mCurrentPage);
             } else {
+               App.sendEvent("ui_action", "button_press", "offline_guide_not_found", null);
                mCurrentPage = calculateInitialPage(event.getResult());
                setGuide(event.getResult(), mCurrentPage);
             }

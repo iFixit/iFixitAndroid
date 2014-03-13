@@ -10,6 +10,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.RoundedTransformation;
@@ -48,6 +49,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       mProgressButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View view) {
+            App.sendEvent("ui_action", "button_press", "offline_guides_unfavorite_click", null);
             AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
 
             builder

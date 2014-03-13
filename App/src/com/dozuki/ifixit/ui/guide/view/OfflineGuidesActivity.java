@@ -186,6 +186,8 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
+      App.sendScreenView("user/offline_guides");
+
       final App app = App.get();
       final boolean hasInternet = app.isConnected();
 
@@ -206,6 +208,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
          public void onClick(View v) {
             // Don't request a sync if there isn't any internet.
             if (!mIsSyncing && App.get().isConnected()) {
+               App.sendEvent("ui_action", "button_press", "offline_guides_sync_now", null);
                app.requestSync(false);
             } else {
                // Cancel is handled by the cancel button.
@@ -216,6 +219,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       mCancelButton.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
+            App.sendEvent("ui_action", "button_press", "offline_guides_cancel_sync", null);
             app.cancelSync();
          }
       });
@@ -223,6 +227,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       // Only check if this is the first onCreate. Otherwise the user will be logged out on
       // every orientation change.
       if (savedState == null && getIntent().getBooleanExtra(REAUTHENTICATE, false)) {
+         App.sendEvent("ui_action", "button_press", "offline_guides_reauthenticate", null);
          // The sync service indicates that the user is logged out so lets make sure
          // that we think that the user is so login can happen as normal.
          app.shallowLogout(false);
@@ -358,7 +363,10 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       switch (item.getItemId()) {
          case R.id.sync_automatically:
             // The checked state is updated after this is called so we must negate it.
-            App.get().setSyncAutomatically(!item.isChecked());
+            boolean enableSync = !item.isChecked();
+            App.sendEvent("ui_action", "button_press",
+             "offline_guides_auto_sync_" + (enableSync ? "on" : "off"), null);
+            App.get().setSyncAutomatically(enableSync);
             return true;
          default:
             return super.onOptionsItemSelected(item);
@@ -417,6 +425,8 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    @Subscribe
    public void onGuideFavorited(ApiEvent.FavoriteGuide event) {
       if (!event.hasError()) {
+         App.sendEvent("ui_action", "button_press", "offline_guides_unfavorite", null);
+
          // Note: We assume that this is an unfavorite because that's the only
          // thing you can do in this view currently.
          int guideid = Integer.parseInt(event.mApiCall.getQuery());
