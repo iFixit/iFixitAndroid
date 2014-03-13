@@ -36,7 +36,6 @@
     <string name="slide_menu_browse_content">Browse Content</string>
     <string name="slide_menu_browse_devices">Browse %1$s</string>
     <string name="slide_menu_favorite_guides">Favorite Guides</string>
-    <string name="slide_menu_offline_guides">Offline Guides</string>
     <string name="slide_menu_create_new_guide">Create New Guide</string>
     <string name="slide_menu_media_gallery">Media Manager</string>
     <string name="slide_menu_logout">Logout</string>
