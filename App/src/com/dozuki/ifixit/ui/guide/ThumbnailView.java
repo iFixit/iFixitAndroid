@@ -282,7 +282,7 @@ public class ThumbnailView extends LinearLayout {
       if (url.startsWith("http")) {
          url = url + ImageSizes.stepMain;
 
-         buildImage(Utils.displayImage(mPicasso, url, mIsOfflineGuide), mMainImage);
+         buildImage(PicassoUtils.displayImage(mPicasso, url, mIsOfflineGuide), mMainImage);
       } else {
          buildImage(mPicasso.load(new File(url))
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))

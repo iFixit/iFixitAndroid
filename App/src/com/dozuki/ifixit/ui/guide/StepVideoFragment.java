@@ -18,7 +18,7 @@ import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.PicassoUtils;
 
 public class StepVideoFragment extends BaseFragment {
    private static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
@@ -77,7 +77,7 @@ public class StepVideoFragment extends BaseFragment {
 
       String imageUrl = mVideoPoster.getPath(ImageSizes.stepMain, mIsOfflineGuide);
 
-      Utils.displayImage(mContext, imageUrl, mIsOfflineGuide)
+      PicassoUtils.displayImage(mContext, imageUrl, mIsOfflineGuide)
        .error(R.drawable.no_image)
        .into(poster);
 

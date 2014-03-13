@@ -8,7 +8,6 @@ import android.util.AttributeSet;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
-import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
@@ -34,7 +33,7 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
       if (url.startsWith("http")) {
          url += ImageSizes.stepFull;
 
-         Utils.displayImage(picasso, url, offline)
+         PicassoUtils.displayImage(picasso, url, offline)
           .error(R.drawable.no_image)
           .into((Target) this);
       } else if (url.startsWith("content://")) {
@@ -55,7 +54,7 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
 
    @Override
    public void onBitmapFailed(Drawable drawable) {
-      Utils.displayImage(mContext, mImageUrl, mOffline)
+      PicassoUtils.displayImage(mContext, mImageUrl, mOffline)
        .error(R.drawable.no_image)
        .into((Target)this);
    }

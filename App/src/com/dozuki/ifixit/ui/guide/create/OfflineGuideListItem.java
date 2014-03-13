@@ -18,7 +18,6 @@ import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
-import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
@@ -113,7 +112,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       Image image = mGuideMedia.mGuideInfo.mImage;
 
       if (image != null) {
-         Utils.displayImage(picasso, image.getPath(ImageSizes.guideList), !displayLiveImages)
+         PicassoUtils.displayImage(picasso, image.getPath(ImageSizes.guideList), !displayLiveImages)
           .noFade()
           .fit()
           .transform(transform)
