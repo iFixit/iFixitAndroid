@@ -46,7 +46,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
 
    @Override
    public void onCreate(SQLiteDatabase db) {
-      db.execSQL(CREATE_API_RESULTS_TABLE);
+      db.execSQL(CREATE_OFFLINE_GUIDES_TABLE);
    }
 
    @Override
@@ -72,7 +72,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
    private static final String KEY_GUIDE_INFO_JSON = "guide_info_json";
    private static final String KEY_GUIDE_JSON = "guide_json";
 
-   private static final String CREATE_API_RESULTS_TABLE =
+   private static final String CREATE_OFFLINE_GUIDES_TABLE =
     "CREATE TABLE " + TABLE_OFFLINE_GUIDES + "(" +
        KEY_ID + " INTEGER PRIMARY KEY, " +
        KEY_SITEID + " INTEGER, " +
