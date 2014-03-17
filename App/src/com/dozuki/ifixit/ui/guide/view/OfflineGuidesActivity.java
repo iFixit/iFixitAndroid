@@ -20,7 +20,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
@@ -300,8 +299,18 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
        (mIsSyncing ? R.string.sync_status_syncing : R.string.sync_now) :
        R.string.no_connection);
 
-      int backgroundColor = mIsSyncing || !isConnected ? R.color.disabled_grey_bg :
-       R.color.holo_blue_dark;
+      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mSyncCommand.getLayoutParams());
+      lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
+
+      if (mIsSyncing) {
+         lp.addRule(RelativeLayout.CENTER_VERTICAL);
+      } else {
+         lp.removeRule(RelativeLayout.CENTER_VERTICAL);
+      }
+
+      mSyncCommand.setLayoutParams(lp);
+
+      int backgroundColor = mIsSyncing || !isConnected ? R.color.disabled_grey_bg : R.color.emphasis;
       mSyncBox.setBackgroundColor(getResources().getColor(backgroundColor));
    }
 

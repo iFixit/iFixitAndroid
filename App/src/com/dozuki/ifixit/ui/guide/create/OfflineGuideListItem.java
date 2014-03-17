@@ -95,7 +95,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
        R.color.progress_button_background));
 
       int progressColor = isSyncing || mGuideMedia.isComplete() ?
-       R.color.progress_default_progress_color : R.color.progress_button_progress_disabled;
+       R.color.emphasis : R.color.progress_button_progress_disabled;
       mProgressButton.setProgressColor(getResources().getColor(progressColor));
 
       if (mGuideMedia.mTotalMedia == 0) {
