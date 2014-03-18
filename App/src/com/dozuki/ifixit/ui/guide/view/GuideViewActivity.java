@@ -354,7 +354,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    /**
-    * Returns true if the guide is being fetched, false otherwise.
+    * Retrieves the guide from the database and displays the result. The user must
+    * be logged in because offline guides are stored per user. The provided ApiEvent
+    * is used for display if the guide is not found. This will result in either a
+    * cached version of the API response or a guide not found dialog.
     */
    private void fetchOfflineGuide(final int guideid, final ApiEvent.ViewGuide event) {
       final App app = App.get();
