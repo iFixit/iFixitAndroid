@@ -6,7 +6,6 @@ package com.dozuki.ifixit.ui.guide.create;
  */
 
 import android.content.Context;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;

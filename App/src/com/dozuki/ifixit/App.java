@@ -55,7 +55,7 @@ public class App extends Application {
    /**
     * Singleton reference.
     */
-   private static App sMainApplication;
+   private static App sApp;
 
    /**
     * Singleton for Bus (Otto).
@@ -127,7 +127,7 @@ public class App extends Application {
       initializeGa();
       Api.init();
 
-      sMainApplication = this;
+      sApp = this;
       setSite(getDefaultSite());
    }
 
@@ -178,7 +178,7 @@ public class App extends Application {
     * Singleton getter.
     */
    public static App get() {
-      return sMainApplication;
+      return sApp;
    }
 
    public Site getSite() {
