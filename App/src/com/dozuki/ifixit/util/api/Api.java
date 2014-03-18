@@ -456,7 +456,7 @@ public class Api {
       String key = "api_responses_" + url;
 
       if (userid != null) {
-         key += userid;
+         key += "_" + userid;
       }
 
       return key;
