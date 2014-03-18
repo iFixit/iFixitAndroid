@@ -523,7 +523,7 @@ public class Api {
       String key = "api_responses_" + url;
 
       if (user != null) {
-         key += user.getUserid();
+         key += "_" + user.getUserid();
       }
 
       return key;

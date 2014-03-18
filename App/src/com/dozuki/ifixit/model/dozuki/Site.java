@@ -2,8 +2,9 @@ package com.dozuki.ifixit.model.dozuki;
 
 import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
-import com.dozuki.ifixit.BuildConfig;
+
 import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.GuideType;

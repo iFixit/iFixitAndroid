@@ -9,7 +9,6 @@ import android.text.Spanned;
 import android.text.format.DateUtils;
 import android.text.style.URLSpan;
 import android.widget.ImageView;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
