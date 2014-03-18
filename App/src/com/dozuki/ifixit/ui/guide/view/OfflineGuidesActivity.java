@@ -302,7 +302,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(mSyncCommand.getLayoutParams());
       lp.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
-      if (mIsSyncing) {
+      if (mIsSyncing || !isConnected) {
          lp.addRule(RelativeLayout.CENTER_VERTICAL);
       } else {
          lp.removeRule(RelativeLayout.CENTER_VERTICAL);
