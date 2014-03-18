@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-   <!-- TODO: Fill in useful info? -->
+   <!-- This can be used to display preferences on the Account page but we
+        don't have anything useful to display so it's blank for now. -->
 </PreferenceScreen>
