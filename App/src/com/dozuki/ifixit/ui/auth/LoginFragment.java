@@ -18,7 +18,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
