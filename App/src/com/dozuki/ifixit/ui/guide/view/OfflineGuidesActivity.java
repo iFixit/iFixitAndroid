@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SyncStatusObserver;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.LoaderManager;
@@ -305,7 +306,11 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
       if (mIsSyncing || !isConnected) {
          lp.addRule(RelativeLayout.CENTER_VERTICAL);
       } else {
-         lp.removeRule(RelativeLayout.CENTER_VERTICAL);
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN_MR1) {
+            lp.removeRule(RelativeLayout.CENTER_VERTICAL);
+         } else {
+            lp.addRule(RelativeLayout.CENTER_VERTICAL, 0);
+         }
       }
 
       mSyncCommand.setLayoutParams(lp);
