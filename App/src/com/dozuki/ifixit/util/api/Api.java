@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
+import android.accounts.Account;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
@@ -14,6 +15,7 @@ import android.util.Log;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.util.FileCache;
@@ -70,10 +72,15 @@ public class Api {
          Log.w("Api", "Missing activityid!", new Exception());
       }
 
-      if (apiCall.mAuthToken == null && App.get().isUserLoggedIn()) {
-         User user = App.get().getUser();
+      apiCall.mSite = App.get().getSite();
+      User user = App.get().getUser();
+      apiCall.mUser = user;
+
+      if (apiCall.mAuthToken == null && user != null) {
+         // Set the auth token to the current user's auth token if one isn't
+         // explicitly set. Originally added for logout and user info because a
+         // user isn't associated with the auth token when the API call is performed.
          apiCall.mAuthToken = user.getAuthToken();
-         apiCall.mUserid = user.getUserid();
       }
 
       // User needs to be logged in for an authenticated endpoint with the exception of login.
@@ -103,7 +110,9 @@ public class Api {
       sPendingApiCall = apiCall;
 
       // We aren't logged in anymore so lets make sure we don't think we are.
-      App.get().shallowLogout();
+      // Note: This does _not_ remove the account from the AccountManager. The
+      // user still has a chance to reauthenticate and salvage the account.
+      App.get().shallowLogout(false);
 
       // The ApiError doesn't matter as long as one exists.
       return new ApiEvent.Unauthorized().
@@ -282,40 +291,7 @@ public class Api {
       AsyncTask<String, Void, ApiEvent<?>> as = new AsyncTask<String, Void, ApiEvent<?>>() {
          @Override
          protected ApiEvent<?> doInBackground(String... dummy) {
-            ApiEndpoint endpoint = apiCall.mEndpoint;
-            final String url = endpoint.getUrl(App.get().getSite(), apiCall.mQuery);
-            ApiEvent<?> event = endpoint.getEvent();
-            event.setApiCall(apiCall);
-
-            if (App.inDebug()) {
-               Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
-               Log.i("Api", "Request body: " + apiCall.mRequestBody);
-            }
-
-            try {
-               ApiEvent<?> response = getResponse(url, event, apiCall);
-
-               if (!response.hasError()) {
-                  response = parseResult(response, endpoint);
-               }
-
-               if (!response.hasError() && endpoint.mMethod.equals("GET") &&
-                !response.mStoredResponse) {
-                  storeResponse(url, apiCall, response.getResponse());
-               }
-
-               return response;
-            } catch (HttpRequestException e) {
-               if (e.getCause() != null) {
-                  e.getCause().printStackTrace();
-                  Log.e("Api", "IOException from request", e.getCause());
-               } else {
-                  e.printStackTrace();
-                  Log.e("Api", "API error", e);
-               }
-
-               return event.setError(new ApiError(ApiError.Type.PARSE));
-            }
+            return performAndParseApiCall(apiCall);
          }
 
          @Override
@@ -328,6 +304,37 @@ public class Api {
          as.execute();
       } else {
          as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+      }
+   }
+
+   private static ApiEvent<?> performAndParseApiCall(ApiCall apiCall) {
+      ApiEndpoint endpoint = apiCall.mEndpoint;
+      final String url = endpoint.getUrl(apiCall.mSite, apiCall.mQuery);
+      ApiEvent<?> event = endpoint.getEvent();
+      event.setApiCall(apiCall);
+
+      if (App.inDebug()) {
+         Log.i("Api", "Performing API call: " + endpoint.mMethod + " " + url);
+         Log.i("Api", "Request body: " + apiCall.mRequestBody);
+      }
+
+      try {
+         ApiEvent<?> response = getResponse(url, event, apiCall);
+
+         if (!response.hasError()) {
+            response = parseResult(response, endpoint);
+         }
+
+         if (!response.hasError() && endpoint.mMethod.equals("GET") &&
+          !response.mStoredResponse) {
+            storeResponse(url, apiCall, response.getResponse());
+         }
+
+         return response;
+      } catch (HttpRequestException e) {
+         Log.e("Api", "API error", e);
+
+         return event.setError(new ApiError(ApiError.Type.PARSE));
       }
    }
 
@@ -422,16 +429,67 @@ public class Api {
        * will automatically handle these errors.
        */
       if (code == INVALID_LOGIN_CODE && !App.get().isLoggingIn()) {
-         return getUnauthorizedEvent(apiCall);
+         String newAuthToken = null;
+
+         // If mAuthToken is null that means that this is resulting from reauthenticating
+         // in which case the user's password has expired. Fall through to presenting
+         // a login dialog so the user can reenter credentials. Upon success, the account
+         // will be updated. If the user doesn't sign in then it will eventually be
+         // removed.
+         if (apiCall.mAuthToken != null) {
+            newAuthToken = attemptReauthentication(apiCall);
+         }
+
+         if (newAuthToken != null) {
+            // Try again with the new auth token.
+            apiCall.mAuthToken = newAuthToken;
+            return getResponse(url, event, apiCall);
+         } else {
+            return getUnauthorizedEvent(apiCall);
+         }
       } else {
          return event.setCode(code).setResponse(responseBody);
+      }
+   }
+
+   /**
+    * Attempts to reauthenticate the user with the stored credentials. Returns
+    * a fresh authToken if successful, null otherwise.
+    */
+   private static String attemptReauthentication(ApiCall attemptedApiCall) {
+      Authenticator authenticator = new Authenticator(App.get());
+      Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);
+      authenticator.invalidateAuthToken(attemptedApiCall.mAuthToken);
+      String email = attemptedApiCall.mUser.mEmail;
+      String password = authenticator.getPassword(account);
+
+      ApiCall loginApiCall = ApiCall.login(email, password);
+      loginApiCall.mSite = attemptedApiCall.mSite;
+      ApiEvent<?> result = performAndParseApiCall(loginApiCall);
+
+      if (result.hasError()) {
+         Log.w("Api", "Reauthentication failed");
+         return null;
+      }
+
+      Object resultObject = result.getResult();
+      if (resultObject instanceof User) {
+         User user = (User)resultObject;
+
+         // Don't notify because this is on a different thread and Otto fails.
+         App.get().login(user, email, password, false);
+
+         return user.getAuthToken();
+      } else {
+         Log.w("Api", "Reauthentication result isn't a User");
+         return null;
       }
    }
 
    private static String getStoredResponse(String url, ApiCall apiCall) {
       long startTime = System.currentTimeMillis();
 
-      String response = FileCache.get(getCacheKey(url, apiCall.mUserid));
+      String response = FileCache.get(getCacheKey(url, apiCall.mUser));
 
       if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
@@ -444,7 +502,7 @@ public class Api {
    private static void storeResponse(String url, ApiCall apiCall, String response) {
       long startTime = System.currentTimeMillis();
 
-      FileCache.set(getCacheKey(url, apiCall.mUserid), response);
+      FileCache.set(getCacheKey(url, apiCall.mUser), response);
 
       if (App.inDebug()) {
          long endTime = System.currentTimeMillis();
@@ -452,11 +510,11 @@ public class Api {
       }
    }
 
-   private static String getCacheKey(String url, Integer userid) {
+   private static String getCacheKey(String url, User user) {
       String key = "api_responses_" + url;
 
-      if (userid != null) {
-         key += "_" + userid;
+      if (user != null) {
+         key += "_" + user.getUserid();
       }
 
       return key;

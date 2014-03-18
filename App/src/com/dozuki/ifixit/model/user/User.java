@@ -23,6 +23,11 @@ public class User implements Serializable {
    @SerializedName("about_rendered") private String mAboutRendered;
    @SerializedName("authToken") private String mAuthToken;
 
+   /**
+    * Used for reauthentication. It isn't returned by the API but it's used internally.
+    */
+   public String mEmail;
+
    public User() {}
 
    public int getUserid() {
