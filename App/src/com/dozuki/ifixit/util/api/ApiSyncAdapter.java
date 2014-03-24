@@ -174,6 +174,13 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                      removeNotification();
                      break;
                }
+            } catch (Exception e) {
+               // Swallow all errors so the user isn't notified with a force close
+               // but report the Exception. Also remove the notification and indicate
+               // to the sync service that something went wrong.
+               App.sendException(TAG, "Sync failed", e);
+               syncResult.stats.numIoExceptions++;
+               removeNotification();
             }
          } while (restart);
       } finally {
