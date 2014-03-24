@@ -5,7 +5,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.view.ViewGroup;
 import com.actionbarsherlock.view.ActionMode;
@@ -139,7 +139,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
    /**
     * Why in the world is this class called StepAdapter?
     */
-   public class StepAdapter extends FragmentStatePagerAdapter {
+   public class StepAdapter extends FixedFragmentStatePagerAdapter {
 
       public StepAdapter(FragmentManager fm) {
          super(fm);

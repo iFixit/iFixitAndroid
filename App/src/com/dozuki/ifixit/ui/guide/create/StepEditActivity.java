@@ -12,7 +12,7 @@ import android.speech.RecognizerIntent;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -535,7 +535,11 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       hideLoading();
 
       // Re-enable the toggle view
-      findViewById(R.id.publish_toggle).setEnabled(true);
+      View publishToggle = findViewById(R.id.publish_toggle);
+
+      if (publishToggle != null) {
+         publishToggle.setEnabled(true);
+      }
 
       // Update guide even if there is a conflict.
       if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
@@ -783,28 +787,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
              .createEvent("ui_action", "button_press", "step_edit_save_step",
               (long) mGuide.getStep(mPagePosition).getStepid()).build());
 
-            if (mGuide.isNewGuide()) {
-               if (!stepHasLineContent(mGuide.getStep(mPagePosition).getLines())) {
-                  Toast.makeText(this, getResources().getString(R.string.guide_create_edit_step_media_cannot_add_step),
-                   Toast.LENGTH_SHORT).show();
-                  return;
-               }
-               // DialogFragment.show() will take care of adding the fragment
-               // in a transaction.  We also want to remove any currently showing
-               // dialog, so make our own transaction and take care of that here.
-               FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-               Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
-               if (prev != null) {
-                  ft.remove(prev);
-               }
-               ft.addToBackStack(null);
-
-               // Create and show the dialog.
-               DialogFragment newFragment = NewGuideDialogFragment.newInstance(mGuide);
-               newFragment.show(ft, "dialog");
-            } else {
-               save(mPagePosition);
-            }
+            save(mPagePosition);
             break;
          case R.id.step_edit_add_step:
             gaTracker.send(MapBuilder
@@ -864,7 +847,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mPagePosition = position;
    }
 
-   private class StepAdapter extends FragmentStatePagerAdapter {
+   private class StepAdapter extends FixedFragmentStatePagerAdapter {
       private Map<Integer, String> mPageLabelMap;
 
       public StepAdapter(FragmentManager fm) {
@@ -1006,7 +989,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
               dialog.dismiss();
               switch (dialogType) {
                  case NEW_STEP:
-                    addNewStep(mPagePosition + 1);
                     mAddStepAfterSave = true;
                     break;
                  case NEXT_STEP:
@@ -1079,10 +1061,39 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    /////////////////////////////////////////////////////
 
    protected void save(int savePosition) {
+      if (mGuide.isNewGuide()) {
+         createGuide();
+      } else {
+         saveStep(savePosition);
+      }
+   }
 
-      GuideStep obj = mGuide.getStep(savePosition);
+   private void createGuide() {
+      if (!stepHasLineContent(mGuide.getStep(mPagePosition).getLines())) {
+         Toast.makeText(this, getString(
+          R.string.guide_create_edit_step_media_cannot_add_step),
+          Toast.LENGTH_SHORT).show();
+         return;
+      }
+      // DialogFragment.show() will take care of adding the fragment
+      // in a transaction.  We also want to remove any currently showing
+      // dialog, so make our own transaction and take care of that here.
+      FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+      Fragment prev = getSupportFragmentManager().findFragmentByTag("dialog");
+      if (prev != null) {
+         ft.remove(prev);
+      }
+      ft.addToBackStack(null);
 
-      if (!stepHasLineContent(obj)) {
+      // Create and show the dialog.
+      DialogFragment newFragment = NewGuideDialogFragment.newInstance(mGuide);
+      newFragment.show(ft, "dialog");
+   }
+
+   private void saveStep(int savePosition) {
+      GuideStep step = mGuide.getStep(savePosition);
+
+      if (!stepHasLineContent(step)) {
          Toast.makeText(this, getResources().getString(R.string.guide_create_edit_must_add_line_content),
           Toast.LENGTH_SHORT).show();
          return;
@@ -1101,10 +1112,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       showLoading(mLoadingContainer, getString(R.string.saving));
       toggleSave(mIsStepDirty);
 
-      if (obj.getRevisionid() != null) {
-         Api.call(this, ApiCall.editStep(obj, mGuide.getGuideid()));
+      if (step.getRevisionid() != null) {
+         Api.call(this, ApiCall.editStep(step, mGuide.getGuideid()));
       } else {
-         Api.call(this, ApiCall.createStep(obj, mGuide.getGuideid(),
+         Api.call(this, ApiCall.createStep(step, mGuide.getGuideid(),
           mPagePosition + 1, mGuide.getRevisionid()));
       }
    }
