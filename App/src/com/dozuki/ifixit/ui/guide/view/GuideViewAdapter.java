@@ -2,16 +2,17 @@ package com.dozuki.ifixit.ui.guide.view;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.view.View;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class GuideViewAdapter extends FragmentStatePagerAdapter {
+public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    private static final int GUIDE_INTRO_POSITION = 0;
    private static final int GUIDE_CONCLUSION_OFFSET = 1;
    private Map<Integer, String> mPageLabelMap;
@@ -93,15 +94,15 @@ public class GuideViewAdapter extends FragmentStatePagerAdapter {
    @Override
    public CharSequence getPageTitle(int position) {
       if (position == GUIDE_INTRO_POSITION) {
-         return MainApplication.get().getString(R.string.introduction);
+         return App.get().getString(R.string.introduction);
       } else if (position == mToolsPosition) {
-         return MainApplication.get().getString(R.string.requiredTools);
+         return App.get().getString(R.string.requiredTools);
       } else if (position == mPartsPosition) {
-         return MainApplication.get().getString(R.string.requiredParts);
+         return App.get().getString(R.string.requiredParts);
       } else if (position == conclusionPosition()) {
-         return MainApplication.get().getString(R.string.conclusion);
+         return App.get().getString(R.string.conclusion);
       } else {
-         return MainApplication.get().getString(R.string.step_number, (position - mStepOffset) + 1);
+         return App.get().getString(R.string.step_number, (position - mStepOffset) + 1);
       }
    }
 

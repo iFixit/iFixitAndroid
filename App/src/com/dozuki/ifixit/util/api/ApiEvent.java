@@ -77,6 +77,7 @@ public abstract class ApiEvent<T> {
    public static class StepAdd extends ApiEvent<Guide> {}
    public static class StepRemove extends ApiEvent<Guide> {}
    public static class EditGuide extends ApiEvent<Guide> {}
+   public static class FavoriteGuide extends ApiEvent<Boolean> {}
 
    public static class Sites extends ApiEvent<ArrayList<Site>> {}
    public static class SiteInfo extends ApiEvent<Site> {}

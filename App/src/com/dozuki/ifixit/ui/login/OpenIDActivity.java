@@ -6,7 +6,7 @@ import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 
@@ -27,11 +27,12 @@ public class OpenIDActivity extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.open_id_view);
+      setTitle(R.string.login);
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
       Bundle extras = getIntent().getExtras();
 
       mSingleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
-      mSite = ((MainApplication)getApplication()).getSite();
+      mSite = ((App)getApplication()).getSite();
 
       String loginUrl;
       if (mSingleSignOn) {
@@ -49,25 +50,22 @@ public class OpenIDActivity extends Activity {
       CookieSyncManager.getInstance().sync();
       CookieManager.getInstance().removeAllCookie();
 
-      mWebView.loadUrl(loginUrl);
-      mWebView.getSettings().setJavaScriptEnabled(true);
+      WebSettings settings = mWebView.getSettings();
+      settings.setJavaScriptEnabled(true);
+      settings.setBuiltInZoomControls(true);
+      settings.setSupportZoom(true);
+      settings.setLoadWithOverviewMode(true);
+      settings.setUseWideViewPort(true);
+      settings.setAppCacheEnabled(true);
+      settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
-      mWebView.setWebChromeClient(new WebChromeClient() {
-         // Show loading progress in activity's title bar.
-         @Override
-         public void onProgressChanged(WebView view, int progress) {
-            setProgress(progress * 100);
-         }
-      });
       mWebView.setWebViewClient(new WebViewClient() {
          // When start to load page, show url in activity's title bar
          @Override
          public void onPageStarted(WebView view, String url, Bitmap favicon) {
             setTitle(url);
          }
-      });
 
-      mWebView.setWebViewClient(new WebViewClient() {
          @Override
          public void onPageFinished(WebView view, String url) {
             CookieSyncManager.getInstance().sync();
@@ -110,5 +108,7 @@ public class OpenIDActivity extends Activity {
             finish();
          }
       });
+
+      mWebView.loadUrl(loginUrl);
    }
 }

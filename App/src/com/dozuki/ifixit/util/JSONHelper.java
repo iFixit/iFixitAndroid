@@ -1,7 +1,8 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
 import com.dozuki.ifixit.model.Embed;
@@ -204,6 +205,7 @@ public class JSONHelper {
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
       guide.setConclusion(jGuide.getString("conclusion_rendered"));
       guide.setCompleted(jGuide.getBoolean("completed"));
+      guide.setFavorited(jGuide.getBoolean("favorited"));
 
       if (jGuide.has("can_edit")) {
          guide.setCanEdit(jGuide.getBoolean("can_edit"));
@@ -539,7 +541,7 @@ public class JSONHelper {
       ApiError error = null;
       String message, title;
       ApiError.Type type;
-      MainApplication app = MainApplication.get();
+      App app = App.get();
 
       try {
          JSONObject jError = new JSONObject(json);
@@ -579,7 +581,7 @@ public class JSONHelper {
             index = ((JSONObject)jErrors.get(i)).optInt("index", -1);
          }
          error = new ApiError(
-          MainApplication.get().getString(R.string.validation_error_title),
+          App.get().getString(R.string.validation_error_title),
           message,
           ApiError.Type.VALIDATION,
           index);

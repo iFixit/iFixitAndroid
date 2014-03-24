@@ -2,7 +2,7 @@ package com.dozuki.ifixit.util.api;
 
 import android.os.Bundle;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
@@ -182,9 +182,14 @@ public class ApiCall implements Serializable {
       return new ApiCall(ApiEndpoint.COMPLETE_GUIDE, guideid + "");
    }
 
+   public static ApiCall favoriteGuide(int guideid, boolean favorite) {
+      ApiEndpoint endpoint = favorite ? ApiEndpoint.FAVORITE_GUIDE : ApiEndpoint.UNFAVORITE_GUIDE;
+      return new ApiCall(endpoint, "" + guideid);
+   }
+
    private static JSONObject guideBundleToRequestBody(Bundle bundle) {
       JSONObject requestBody = new JSONObject();
-      MainApplication app = MainApplication.get();
+      App app = App.get();
       try {
          requestBody.put("type", bundle.getBundle(app.getString(R.string
           .guide_intro_wizard_guide_type_title)).getString(Page.SIMPLE_DATA_KEY).toLowerCase());

@@ -12,7 +12,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
@@ -85,14 +85,14 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
          }
       });
 
-      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides");
+      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides");
    }
 
    @Override
    public void onStart() {
       super.onStart();
 
-      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
+      App.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    @Override
@@ -103,7 +103,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       // bug that caused authenticated Activities to not finish even though they
       // should have been. This was caused by the user being logged out, the API
       // call triggering the Unauthorized ApiEvent which opened the LoginDialog
-      // so MainApplication thought that the user was logging in and decided
+      // so App thought that the user was logging in and decided
       // not to finish the Activity below this one on the stack.
       if (!isFinishing()) {
          // Perform the API call again because data may have changed in child Activities.

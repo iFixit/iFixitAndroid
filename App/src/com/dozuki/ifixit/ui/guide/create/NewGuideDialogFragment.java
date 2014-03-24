@@ -14,7 +14,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.util.api.ApiCall;
@@ -68,7 +68,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
     Bundle savedInstanceState) {
       getDialog().setTitle(getString(R.string.new_guide_details_title));
       View v = inflater.inflate(R.layout.new_guide_fragment_dialog, container, false);
-      final String topicName = MainApplication.get().getTopicName();
+      final String topicName = App.get().getTopicName();
 
       mTopic = (AutoCompleteTextView) v.findViewById(R.id.topic_name_field);
       mTopic.setHint(getString(R.string.guide_intro_wizard_guide_topic_hint, topicName));
@@ -111,7 +111,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
 
       // Create an ArrayAdapter using the string array and a default spinner layout
       ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,
-       MainApplication.get().getSite().getGuideTypesArray());
+       App.get().getSite().getGuideTypesArray());
 
       // Specify the layout to use when the list of choices appears
       adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -122,10 +122,10 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
       mType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
          @Override
          public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            String[] guideTypes = MainApplication.get().getSite().getGuideTypesArray();
+            String[] guideTypes = App.get().getSite().getGuideTypesArray();
             int visibility;
 
-            if (!MainApplication.get().getSite().hasSubject(guideTypes[position])) {
+            if (!App.get().getSite().hasSubject(guideTypes[position])) {
                visibility = View.GONE;
                mTopic.setImeOptions(EditorInfo.IME_ACTION_DONE);
             } else {
@@ -158,7 +158,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
             String type = (String) mType.getItemAtPosition(mType.getSelectedItemPosition());
             Editable topic = mTopic.getText();
 
-            if (MainApplication.get().getSite().hasSubject(type)) {
+            if (App.get().getSite().hasSubject(type)) {
                Editable subject = mSubject.getText();
 
                if (subject.length() == 0) {
@@ -178,7 +178,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
                mGuide.setType(type);
                mGuide.setTopic(topic.toString());
 
-               MainApplication.getBus().post(new GuideDetailsChangedEvent(mGuide));
+               App.getBus().post(new GuideDetailsChangedEvent(mGuide));
                getDialog().dismiss();
             }
          }

@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.Image;
 import com.google.gson.annotations.SerializedName;
 
@@ -64,7 +64,7 @@ public class GuideInfo implements Serializable {
       String path = "";
       if (mImage != null) {
          path = mImage.getPath(size);
-         if (MainApplication.inDebug() && path.startsWith("https")) {
+         if (App.inDebug() && path.startsWith("https")) {
             path = path.replace("https", "http");
          }
       }

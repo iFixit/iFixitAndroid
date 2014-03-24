@@ -5,13 +5,14 @@ import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import com.dozuki.ifixit.MainApplication;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -124,7 +125,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
       super.onCreate(savedInstanceState);
       setContentView(R.layout.guide_create_intro);
 
-      if (MainApplication.get().isScreenLarge()) {
+      if (App.get().isScreenLarge()) {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
       } else {
          setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
@@ -140,19 +141,19 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
          mWizardModelBundle = savedInstanceState.getBundle("model");
       }
 
-      if (MainApplication.get().getSite().mGuideTypes == null) {
+      if (App.get().getSite().mGuideTypes == null) {
          Api.call(this, ApiCall.siteInfo());
       } else {
          initWizard();
       }
 
-      MainApplication.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid() + "/details");
-      MainApplication.getGaTracker().send(MapBuilder.createAppView().build());
+      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid() + "/details");
+      App.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    private Bundle buildIntroBundle() {
       Bundle bundle = new Bundle();
-      MainApplication app = MainApplication.get();
+      App app = App.get();
       String type = mGuide.getType().toLowerCase();
       String subjectBundleKey;
 
@@ -305,7 +306,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
    @Subscribe
    public void onSiteInfo(ApiEvent.SiteInfo event) {
       if (!event.hasError()) {
-         MainApplication.get().setSite(event.getResult());
+         App.get().setSite(event.getResult());
 
          initWizard();
       } else {
@@ -366,7 +367,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
    // ADAPTERS
    /////////////////////////////////////////////////////
 
-   public class FormWizardPagerAdapter extends FragmentStatePagerAdapter {
+   public class FormWizardPagerAdapter extends FixedFragmentStatePagerAdapter {
       private int mCutOffPage;
       private Fragment mPrimaryItem;
 

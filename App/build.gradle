@@ -3,7 +3,7 @@ buildscript {
       mavenCentral()
    }
    dependencies {
-      classpath 'com.android.tools.build:gradle:0.6.3'
+      classpath 'com.android.tools.build:gradle:0.8.0'
    }
 }
 apply plugin: 'android'
@@ -34,19 +34,16 @@ dependencies {
    compile "com.mobeta.android.dslv:dslv:0.6.1"
 }
 
-// List of sites. Used to create signingConfigs and sourceSets.
-// Ideally this would be used to create the productFlavors too but there are
-// enough differences between flavors that it would be challenging to make it
-// better.
+// List of sites used to create signingConfigs, sourceSets, and productFlavors.
 def sites = ["ifixit", "dozuki", "accustream"]
 
 android {
    compileSdkVersion 19
-   buildToolsVersion "18.0.1"
+   buildToolsVersion "19.0.1"
 
    defaultConfig {
-      versionCode 44
-      versionName "2.3.0"
+      versionCode 47
+      versionName "2.4.1"
       minSdkVersion 8
       targetSdkVersion 19
       packageName "com.dozuki.ifixit"
@@ -60,50 +57,51 @@ android {
 
    buildTypes {
       debug {
-         buildConfig 'public static final String DEV_SERVER = ' + devServer + ';'
+         buildConfigField "String", "DEV_SERVER", '"' + devServer + '"'
       }
 
       release {
-         buildConfig 'public static final String DEV_SERVER = "";'
+         buildConfigField "String", "DEV_SERVER", '""'
 
          runProguard true
          proguardFile 'proguard.cfg'
       }
    }
 
+   lintOptions {
+      /* Check release builds but don't abort on error. */
+      checkReleaseBuilds true
+      abortOnError false
+   }
+
+   /* Construct base product flavors. */
    productFlavors {
-      ifixit {
-         signingConfig signingConfigs.ifixit
-         packageName "com.dozuki.ifixit"
-         minSdkVersion 8
+      for (site in sites) {
+         "${site}" {
+            signingConfig signingConfigs."${site}"
+            packageName "com.dozuki.${site}"
 
-         buildConfig createSiteBuildConfig("ifixit", "UA-30506-9")
-      }
+            buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", "\"com.dozuki.${site}.ui.search.SearchSuggestionProvider\""
+            buildConfigField "String", "SITE_NAME", '"' + site + '"'
+            buildConfigField "String", "APP_ID", '"' + getProperty("${site}AppId") + '"'
+            buildConfigField "String", "GA_PROPERTY_ID", '"' + getProperty("${site}GAPropertyId") + '"'
 
-      dozuki {
-         dependencies {
-            dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-            dozukiCompile 'com.google.zxing:core:2.2'
+            if (site == 'dozuki') {
+               minSdkVersion 9
+
+               dependencies {
+                  dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+                  dozukiCompile 'com.google.zxing:core:2.2'
+               }
+            } else if (site == 'accustream') {
+               minSdkVersion 9
+
+               dependencies {
+                  accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
+                  accustreamCompile 'com.google.zxing:core:2.2'
+               }
+            }
          }
-
-         signingConfig signingConfigs.dozuki
-         packageName "com.dozuki.dozuki"
-         minSdkVersion 9
-
-         buildConfig createSiteBuildConfig("dozuki", "UA-30506-19")
-      }
-
-      accustream {
-         dependencies {
-            accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-            accustreamCompile 'com.google.zxing:core:2.2'
-         }
-
-         signingConfig signingConfigs.accustream
-         packageName "com.dozuki.accustream"
-         minSdkVersion 9
-
-         buildConfig createSiteBuildConfig("accustream", "UA-30506-19")
       }
    }
 
@@ -137,6 +135,7 @@ def createSiteSigningConfig(siteName) {
 
 def createSiteSourceSet(siteName) {
    if (siteName == 'dozuki') {
+      // Include all white label apps so we can use their themes.
       return {
          manifest.srcFile "sites/dozuki/AndroidManifest.xml"
          res.srcDirs = ["sites/dozuki/res", "sites/accustream/res", "sites/ifixit/res"]
@@ -149,11 +148,4 @@ def createSiteSourceSet(siteName) {
          java.srcDirs = ["sites/${siteName}/src"]
       }
    }
-}
-
-def createSiteBuildConfig(siteName, gaPropertyId) {
-   return "public static final String GA_PROPERTY_ID = \"${gaPropertyId}\";" +
-          "public static final String SEARCH_PROVIDER_AUTHORITY = \"com.dozuki.${siteName}.ui.search.SearchSuggestionProvider\";" +
-          "public static final String SITE_NAME = \"${siteName}\";\n" +
-          'public static final String APP_ID = ' + getProperty("${siteName}AppId") + ';'
 }

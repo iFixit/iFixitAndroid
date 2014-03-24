@@ -21,7 +21,7 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.MainApplication;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
@@ -72,7 +72,7 @@ public abstract class MediaFragment extends BaseFragment
 
       setHasOptionsMenu(true);
 
-      mImageSizes = MainApplication.get().getImageSizes();
+      mImageSizes = App.get().getImageSizes();
       mMode = null;
 
       mGalleryAdapter = new MediaAdapter();
@@ -284,7 +284,7 @@ public abstract class MediaFragment extends BaseFragment
    private String getPath(Uri uri) {
       String[] projection = {MediaStore.Images.Media.DATA};
       Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-      if (cursor.moveToFirst()) {
+      if (cursor != null && cursor.moveToFirst()) {
          int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
          return cursor.getString(column_index);
       } else {
