@@ -15,6 +15,7 @@ import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.auth.Authenticator;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -123,7 +124,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          // default site.
          Site newSite = fetchSite(user.mSiteName);
          if (newSite == null) {
-            Log.e(TAG, "Can't find site '" + user.mSiteName + "'!");
+            App.sendException(TAG, "Can't find site '" + user.mSiteName + "'!", new Exception());
             return;
          }
 
@@ -150,7 +151,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
                App.get().setLastSyncTime(site, user);
             } catch (ApiSyncException e) {
-               Log.e(TAG, "Sync failed", e);
+               if (BuildConfig.DEBUG) {
+                  Log.w(TAG, "Sync failed", e);
+               }
 
                switch (e.mExceptionType) {
                   case ApiSyncException.AUTH_EXCEPTION:
@@ -438,7 +441,10 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
              ApiEvent.ViewGuide.class);
 
             if (fullGuide == null) {
-               Log.w(TAG, "Guide not found! Deleting..." + staleGuide.mGuideid);
+               if (BuildConfig.DEBUG) {
+                  Log.d(TAG, "Guide not found! Deleting..." + staleGuide.mGuideid);
+               }
+
                if (guidesToDelete == null) {
                   // Lazy initialization.
                   guidesToDelete = new HashSet<Integer>();
@@ -517,7 +523,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
             updateGuideProgress(guideMedia, false);
          }
 
-         Log.w(TAG, "Media: " + mediaDownloaded + "/" + totalMissingMedia);
+         if (BuildConfig.DEBUG) {
+            Log.d(TAG, mediaDownloaded + "/" + totalMissingMedia + " media downloaded.");
+         }
       }
 
       /**
@@ -529,7 +537,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
          if (!file.exists()) {
             try {
-               Log.d(TAG, "Downloading: " + mediaUrl);
+               if (BuildConfig.DEBUG) {
+                  Log.i(TAG, "Downloading: " + mediaUrl);
+               }
 
                file.createNewFile();
                HttpRequest request = HttpRequest.get(mediaUrl);
@@ -537,19 +547,28 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                request.receive(file);
 
                if (request.code() < 200 || request.code() >= 300) {
-                  Log.e(TAG, "MEDIA FAIL! " + mediaUrl);
+                  // This happens occasionally when downloading the .huge size for
+                  // images that don't have that size. The original is retried in
+                  // its place.
+                  if (BuildConfig.DEBUG) {
+                     Log.w(TAG, "MEDIA FAIL! " + mediaUrl);
+                  }
                   return false;
                }
             } catch (IOException e) {
-               Log.e(TAG, "Failed to download medium", e);
+               if (BuildConfig.DEBUG) {
+                  Log.e(TAG, "Failed to download medium", e);
+               }
                throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
             } catch (HttpRequest.HttpRequestException e) {
-               Log.e(TAG, "Failed to download medium", e);
+               if (BuildConfig.DEBUG) {
+                  Log.e(TAG, "Failed to download medium", e);
+               }
                throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
             }
-         } else {
-            Log.d(TAG, "Skipping: " + mediaUrl);
+         } else if (BuildConfig.DEBUG) {
             // Happens if guides share media.
+            Log.d(TAG, "Skipping: " + mediaUrl);
          }
 
          return true;
@@ -575,8 +594,9 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private void updateGuideProgress(GuideMediaProgress guide, boolean rateLimit) {
          if (!rateLimit || System.currentTimeMillis() > mLastProgressUpdate +
           GUIDE_PROGRESS_INTERVAL_MS) {
-
-            Log.w(TAG, "Updating progress: " + guide.mMediaProgress + "/" + guide.mTotalMedia);
+            if (BuildConfig.DEBUG) {
+               Log.d(TAG, "Updating progress: " + guide.mMediaProgress + "/" + guide.mTotalMedia);
+            }
 
             mDb.updateGuideProgress(mSite, mUser, guide.mGuide.getGuideid(), guide.mTotalMedia,
              guide.mMediaProgress);

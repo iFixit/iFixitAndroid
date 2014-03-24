@@ -7,6 +7,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
@@ -183,7 +184,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
          String guideJson = cursor.getString(jsonIndex);
          return JSONHelper.parseGuide(guideJson);
       } catch (JSONException e) {
-         Log.e(TAG, "Cannot parse stored guide!", e);
+         App.sendException(TAG, "Cannot parse stored guide!", e);
          return null;
       } finally {
          if (closeCursor) {
@@ -204,7 +205,7 @@ public class ApiDatabase extends SQLiteOpenHelper {
          String guideJson = cursor.getString(jsonIndex);
          return new Gson().fromJson(guideJson, GuideInfo.class);
       } catch (Exception e) {
-         Log.e(TAG, "Cannot parse stored guide!", e);
+         App.sendException(TAG, "Cannot parse stored guide!", e);
          return null;
       } finally {
          if (closeCursor) {
