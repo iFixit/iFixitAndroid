@@ -21,8 +21,6 @@ import com.marczych.androidsectionheaders.SectionHeadersAdapter;
 import com.marczych.androidsectionheaders.SectionListView;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 
 public class TopicListFragment extends BaseFragment
  implements TopicSelectedListener, OnItemClickListener {
@@ -92,18 +90,6 @@ public class TopicListFragment extends BaseFragment
          }
       }
 
-      // The sorting is necessary because JSON objects are inherently unorderd.
-      // The API returns them in the correct order but no JSON implementation
-      // will respect the order of the elements.
-      Comparator<TopicNode> comparator = new Comparator<TopicNode>() {
-         public int compare(TopicNode first, TopicNode second) {
-            return first.getName().compareToIgnoreCase(second.getName());
-         }
-      };
-
-      Collections.sort(nonLeaves, comparator);
-      Collections.sort(leaves, comparator);
-
       if (!mTopic.isRoot() && !((TopicActivity)getActivity()).isDualPane()) {
          TopicNode generalTopicNode = new TopicNode(mTopic.getName());
          generalTopicNode.setDisplayName(mTopic.getDisplayName());
@@ -131,7 +117,6 @@ public class TopicListFragment extends BaseFragment
             mTopicAdapter.addSection(adapter);
          }
       } else {
-         Collections.sort(mTopic.getChildren(), comparator);
          adapter = new TopicListAdapter(mContext, App.get().getSite().getObjectNamePlural(),
           mTopic.getChildren());
          adapter.setTopicSelectedListener(this);
