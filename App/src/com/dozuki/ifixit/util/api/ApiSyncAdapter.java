@@ -6,6 +6,7 @@ import android.app.PendingIntent;
 import android.content.AbstractThreadedSyncAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentProviderClient;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
@@ -113,6 +114,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
     ContentProviderClient provider, SyncResult syncResult) {
+      boolean manualSync = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL);
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
       App app = App.get();
@@ -132,9 +134,13 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       }
 
       try {
-         // Always display the notification. We might remove it once we're done if
-         // we didn't download new content.
-         initializeNotification(site);
+         // Always display the notification for manual syncs. It will also be initialized
+         // later if there is new content being synced. Also, we will remove it once the
+         // the sync is done if there wasn't new content synced.
+         if (manualSync) {
+            initializeNotification(site);
+         }
+
          app.registerReceiver(mRestartListener, new IntentFilter(RESTART_SYNC));
          boolean restart = false;
          do {
