@@ -460,6 +460,10 @@ public class Api {
     * a fresh authToken if successful, null otherwise.
     */
    private static String attemptReauthentication(ApiCall attemptedApiCall) {
+      if (!attemptedApiCall.mSite.reauthenticateOnLogout()) {
+         return null;
+      }
+
       Authenticator authenticator = new Authenticator(App.get());
       authenticator.invalidateAuthToken(attemptedApiCall.mAuthToken);
       Account account = authenticator.getAccountForSite(attemptedApiCall.mSite);

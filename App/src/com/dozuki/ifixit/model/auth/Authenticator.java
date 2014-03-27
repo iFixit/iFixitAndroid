@@ -57,6 +57,11 @@ public class Authenticator extends AbstractAccountAuthenticator {
     */
    public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
+      if (!site.reauthenticateOnLogout()) {
+         // Don't store the password if the user shouldn't be reauthenticated.
+         password = "";
+      }
+
       Bundle userData = getUserDataBundle(site, email, userName, userid);
 
       Account existingAccount = getAccountForSite(site);
