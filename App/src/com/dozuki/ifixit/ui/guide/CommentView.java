@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
 import android.text.Html;
+import android.text.Spanned;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -15,13 +16,13 @@ import android.widget.PopupMenu;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.transformations.CircleTransformation;
 
 import java.text.SimpleDateFormat;
@@ -64,7 +65,9 @@ public class CommentView extends RelativeLayout {
         "</b>", df.format(comment.mDate));
 
       TextView commentText = (TextView) findViewById(R.id.comment_text);
-      commentText.setText(Html.fromHtml(comment.mTextRendered));
+      Spanned commentHtml = Html.fromHtml(comment.mTextRendered);
+      commentText.setText(Utils.trim(commentHtml, 0, commentHtml.length()));
+
       ((TextView) findViewById(R.id.comment_details)).setText(Html.fromHtml(commentDetails));
 
       ImageView avatar = (ImageView) findViewById(R.id.comment_author);
