@@ -23,7 +23,7 @@
             android:id="@+id/android:empty"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:text="@string/empty_step_comments"
+            android:text="@string/empty_comments"
             style="@android:style/TextAppearance.Widget.TextView"
             android:layout_gravity="center_vertical|center_horizontal"/>
     </FrameLayout>

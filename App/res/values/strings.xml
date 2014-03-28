@@ -281,7 +281,7 @@
     <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
     <string name="create_new_guide">Create New Guide</string>
     <string name="new_guide">New Guide</string>
-    <string name="empty_step_comments">No step comments.</string>
+    <string name="empty_comments">No comments.</string>
     <string name="comments">Comments</string>
     <string name="step_comments">Step Comments</string>
     <string name="guide_comments">Guide Comments</string>
