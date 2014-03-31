@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;

@@ -8,7 +8,6 @@ import android.os.AsyncTask;
 import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
-
 import com.dozuki.ifixit.App;
 import com.squareup.okhttp.OkHttpClient;
 
