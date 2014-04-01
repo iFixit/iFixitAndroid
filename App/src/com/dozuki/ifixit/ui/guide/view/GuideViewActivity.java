@@ -354,7 +354,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    private int getStepIndex() {
-      return (mCurrentPage - (mStepOffset + 1));
+      return (mCurrentPage - mAdapter.getStepOffset());
    }
 
    /////////////////////////////////////////////////////
