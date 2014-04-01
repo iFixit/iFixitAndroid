@@ -14,6 +14,8 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="black">#FF333333</color>
     <color name="red">#FFFF0000</color>
     <color name="emphasis">#FF31B6E7</color>
+    <color name="emphasis_pressed">#ff1f7190</color>
+
     <color name="invisible">#00000000</color>
     <color name="disabled_grey_text">#FFEEEEEE</color>
     <color name="disabled_grey_bg">#FF666666</color>

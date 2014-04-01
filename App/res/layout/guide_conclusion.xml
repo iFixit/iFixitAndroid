@@ -16,6 +16,8 @@
         android:id="@+id/guide_completed_button"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button_background"
+        android:textColor="@color/white"
         android:text="@string/complete_this_guide"/>
 
 </LinearLayout>
