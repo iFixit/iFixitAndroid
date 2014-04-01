@@ -33,6 +33,7 @@ public class CommentsActivity extends BaseActivity {
    private static final String CONTEXT = "CONTEXT_KEY";
 
    private ArrayList<Comment> mComments;
+   private String mTitle;
    private CommentsAdapter mAdapter;
    private ListView mCommentsList;
    private EditText mAddCommentField;
@@ -64,20 +65,19 @@ public class CommentsActivity extends BaseActivity {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
       Bundle args = getIntent().getExtras();
-      String title;
 
       if (savedInstanceState != null) {
          mComments = (ArrayList<Comment>) savedInstanceState.getSerializable(COMMENTS_KEY);
          mCommentContext = savedInstanceState.getString(CONTEXT);
          mCommentContextId = savedInstanceState.getInt(CONTEXTID);
-         title = savedInstanceState.getString(TITLE_KEY);
+         mTitle = savedInstanceState.getString(TITLE_KEY);
       } else if (args != null) {
          mComments = (ArrayList<Comment>) args.getSerializable(COMMENTS_KEY);
          mCommentContext = args.getString(CONTEXT);
          mCommentContextId = args.getInt(CONTEXTID);
-         title = args.getString(TITLE_KEY);
+         mTitle = args.getString(TITLE_KEY);
       } else {
-         title = getString(R.string.comments);
+         mTitle = getString(R.string.comments);
       }
 
       mAddCommentField = (EditText) findViewById(R.id.add_comment_field);
@@ -108,7 +108,7 @@ public class CommentsActivity extends BaseActivity {
       mAdapter = new CommentsAdapter(this, mComments);
       mCommentsList.setAdapter(mAdapter);
 
-      setTitle(title);
+      setTitle(mTitle);
    }
 
    @Override
@@ -118,6 +118,7 @@ public class CommentsActivity extends BaseActivity {
       state.putSerializable(COMMENTS_KEY, mComments);
       state.putInt(CONTEXTID, mCommentContextId);
       state.putString(CONTEXT, mCommentContext);
+      state.putString(TITLE_KEY, mTitle);
    }
 
    @Override
