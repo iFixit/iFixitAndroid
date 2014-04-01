@@ -10,6 +10,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.GET_ACCOUNTS"/>
+    <uses-permission android:name="android.permission.MANAGE_ACCOUNTS"/>
 
     <application
         android:name=".App"
@@ -55,7 +58,7 @@
             android:name=".ui.guide.create.StepEditActivity"
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:launchMode="singleTop"/>
-        <activity android:name=".ui.login.OpenIDActivity"/>
+        <activity android:name=".ui.auth.OpenIDActivity"/>
         <activity android:name=".ui.topic_view.TopicViewActivity"/>
         <activity
             android:name=".ui.guide.view.FullImageViewActivity"
@@ -69,5 +72,13 @@
             android:name=".ui.guide.view.EmbedViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
+
+         <service android:name=".model.auth.AuthenticatorService">
+            <intent-filter>
+               <action android:name="android.accounts.AccountAuthenticator" />
+            </intent-filter>
+            <meta-data android:name="android.accounts.AccountAuthenticator"
+                       android:resource="@xml/authenticator" />
+         </service>
     </application>
 </manifest>

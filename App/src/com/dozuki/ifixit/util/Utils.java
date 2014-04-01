@@ -6,7 +6,6 @@ import android.text.Spannable;
 import android.text.Spanned;
 import android.text.style.URLSpan;
 import android.widget.ImageView;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.squareup.okhttp.OkHttpClient;

@@ -4,6 +4,7 @@ import android.os.Bundle;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -18,14 +19,12 @@ import com.dozuki.ifixit.util.JSONHelper;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.Serializable;
 import java.util.List;
 
 /**
  * Defines an ApiCall that can be performed using Api.call().
  */
-public class ApiCall implements Serializable {
-   private static final long serialVersionUID = 8782535908621394800L;
+public class ApiCall {
    private static final String NO_QUERY = "";
 
    protected ApiEndpoint mEndpoint;
@@ -34,6 +33,8 @@ public class ApiCall implements Serializable {
    protected String mExtraInfo;
    protected String mFilePath;
    protected String mAuthToken;
+   protected Site mSite;
+   protected User mUser;
    protected int mActivityid = -1;
 
    public ApiCall(ApiEndpoint endpoint, String query) {
@@ -56,6 +57,11 @@ public class ApiCall implements Serializable {
       mRequestBody = requestBody;
       mExtraInfo = extraInfo;
       mFilePath = filePath;
+   }
+
+   public void updateUser(User user) {
+      mUser = user;
+      mAuthToken = mUser.getAuthToken();
    }
 
    /**

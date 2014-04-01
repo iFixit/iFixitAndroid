@@ -285,6 +285,7 @@
     <string name="completed">Completed</string>
     <string name="guide_complete_error_message">Couldn\'t complete this guide. Make sure you are logged in and try again.</string>
     <string name="complete_this_guide">I Completed This Guide</string>
+    <string name="debug">Debug</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>

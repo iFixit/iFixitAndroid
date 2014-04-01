@@ -15,8 +15,10 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
@@ -27,6 +29,7 @@ import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.google.analytics.tracking.android.MapBuilder;
+
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
 
@@ -398,6 +401,14 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          @Override
          public boolean shouldDisplay() {
             return App.get().getSite().isIfixit();
+         }
+      },
+
+      // Display a separator so we know that the app is in debug mode.
+      DEBUG_SEPARATOR(R.string.debug) {
+         @Override
+         public boolean shouldDisplay() {
+            return BuildConfig.DEBUG;
          }
       };
 

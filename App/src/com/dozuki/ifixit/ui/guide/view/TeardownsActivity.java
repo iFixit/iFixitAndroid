@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 import android.os.Bundle;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.api.ApiCall;
