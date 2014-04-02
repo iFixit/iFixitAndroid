@@ -136,6 +136,7 @@
     <style name="EmptyText" parent="BodyText">
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
+        <item name="android:gravity">center</item>
         <item name="android:visibility">gone</item>
     </style>
 
