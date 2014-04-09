@@ -240,9 +240,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
        (event.mStoredResponse || event.hasError())) {
          // Attempt to use an offline guide if it isn't a live response.
          fetchOfflineGuide(mGuideid, event);
-         return;
+      } else {
+         displayApiEvent(event);
       }
+   }
 
+   private void displayApiEvent(ApiEvent.ViewGuide event) {
       if (!event.hasError()) {
          if (mGuide == null) {
             Guide guide = event.getResult();
@@ -383,8 +386,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                setGuide(guide, mCurrentPage);
             } else {
                App.sendEvent("ui_action", "button_press", "offline_guide_not_found", null);
-               mCurrentPage = calculateInitialPage(event.getResult());
-               setGuide(event.getResult(), mCurrentPage);
+               displayApiEvent(event);
             }
          }
       }.execute();
