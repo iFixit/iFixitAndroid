@@ -114,13 +114,16 @@ public class IntentFilterActivity extends BaseActivity {
             if (segments.get(1).equalsIgnoreCase("search")) {
                String query = segments.get(2);
                intent = SearchActivity.viewSearch(this, query);
+               App.sendEvent("ui_action", "intent_filter", "search", null);
             } else {
                int guideid = Integer.parseInt(segments.get(2).trim());
                intent = GuideViewActivity.viewGuideid(this, guideid);
+               App.sendEvent("ui_action", "intent_filter", "guide", null);
             }
          } else if (prefix.equalsIgnoreCase("c") || prefix.equalsIgnoreCase("device")) {
             String topicName = segments.get(1);
             intent = TopicViewActivity.viewTopic(this, topicName);
+            App.sendEvent("ui_action", "intent_filter", "category", null);
          }
       } catch (Exception e) {
          App.sendException("IntentFilterActivity", "Problem parsing Uri", e);
