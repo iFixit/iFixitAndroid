@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.util.ImageSizes;
@@ -34,8 +33,6 @@ public class GuideItemView extends TouchableRelativeLayout {
    }
 
    public void setGuideItem(GuideInfo guide) {
-      ImageSizes imageSizes = App.get().getImageSizes();
-
       mTitleView.setText(mShortTitle && guide.hasSubject() ?
        guide.mSubject : Html.fromHtml(guide.mTitle));
 
@@ -46,7 +43,7 @@ public class GuideItemView extends TouchableRelativeLayout {
          Utils.safeStripImageView(mThumbnail);
          mPicasso.cancelRequest(mThumbnail);
 
-         String url = guide.getImagePath(imageSizes.getGrid());
+         String url = guide.getImagePath(ImageSizes.guideList);
          mPicasso
           .load(url)
           .transform(transform)

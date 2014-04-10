@@ -12,9 +12,6 @@ import android.widget.TextView;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 
 public class ChooseBulletDialog extends BaseDialogFragment implements OnClickListener {
 
@@ -124,88 +121,76 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
    @Override
    public void onClick(View v) {
       BulletDialogListener frag = (BulletDialogListener) getTargetFragment();
-
-      Tracker tracker = App.getGaTracker();
+      String label = null;
 
       switch (v.getId()) {
          case R.id.bullet_dialog_color_black:
             frag.onFinishBulletDialog(mStepIndex, "black");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_black",
-             null).build());
-
+            label = "bullet_dialog_color_black";
             break;
          case R.id.bullet_dialog_color_red:
             frag.onFinishBulletDialog(mStepIndex, "red");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_red", null).build());
-
+            label = "bullet_dialog_color_red";
             break;
          case R.id.bullet_dialog_color_orange:
             frag.onFinishBulletDialog(mStepIndex, "orange");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_orange", null).build());
-
+            label = "bullet_dialog_color_orange";
             break;
          case R.id.bullet_dialog_color_yellow:
             frag.onFinishBulletDialog(mStepIndex, "yellow");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_yellow", null).build());
-
+            label = "bullet_dialog_color_yellow";
             break;
          case R.id.bullet_dialog_color_blue:
             frag.onFinishBulletDialog(mStepIndex, "blue");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_blue", null).build());
-
+            label = "bullet_dialog_color_blue";
             break;
          case R.id.bullet_dialog_color_purple:
             frag.onFinishBulletDialog(mStepIndex, "violet");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_purple", null).build());
-
+            label = "bullet_dialog_color_purple";
             break;
          case R.id.bullet_dialog_color_green:
             frag.onFinishBulletDialog(mStepIndex, "green");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_color_green", null).build());
-
+            label = "bullet_dialog_color_green";
             break;
          case R.id.bullet_dialog_caution:
             frag.onFinishBulletDialog(mStepIndex, "icon_caution");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_caution", null).build());
-
+            label = "bullet_dialog_caution";
             break;
          case R.id.bullet_dialog_note:
             frag.onFinishBulletDialog(mStepIndex, "icon_note");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_note", null).build());
-
+            label = "bullet_dialog_note";
             break;
          case R.id.bullet_dialog_reminder:
             frag.onFinishBulletDialog(mStepIndex, "icon_reminder");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_reminder", null).build());
-
+            label = "bullet_dialog_reminder";
             break;
          case R.id.bullet_dialog_indent:
             frag.onFinishBulletDialog(mStepIndex, "action_indent");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_indent", null).build());
-
+            label = "bullet_dialog_indent";
             break;
          case R.id.bullet_dialog_unindent:
             frag.onFinishBulletDialog(mStepIndex, "action_unindent");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_unindent", null).build());
-
+            label = "bullet_dialog_unindent";
             break;
          case R.id.bullet_dialog_rearrange:
             frag.onFinishBulletDialog(mStepIndex, "action_reorder");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_rearrange", null).build());
-
+            label = "bullet_dialog_rearrange";
             break;
          case R.id.bullet_dialog_delete:
             frag.onFinishBulletDialog(mStepIndex, "action_delete");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_delete", null).build());
-
+            label = "bullet_dialog_delete";
             break;
          case R.id.bullet_dialog_cancel:
             frag.onFinishBulletDialog(mStepIndex, "action_cancel");
-            tracker.send(MapBuilder.createEvent("ui_action", "button_click", "bullet_dialog_cancel", null).build());
-
+            label = "bullet_dialog_cancel";
             break;
       }
-      this.dismiss();
+
+      if (label != null) {
+         App.sendEvent("ui_action", "button_click", label, null);
+      }
+
+      dismiss();
    }
 
    @Override
@@ -219,11 +204,8 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, "/guide/edit/" + ((StepEditActivity)
-       getActivity()).getGuideId() + "/" + mStepIndex + "/bullet_dialog");
-
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/guide/edit/" + ((StepEditActivity)getActivity())
+       .getGuideId() + "/" + mStepIndex + "/bullet_dialog");
    }
 
    public void disableUnIndent() {

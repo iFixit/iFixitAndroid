@@ -71,7 +71,7 @@ public class SiteListActivity extends BaseActivity
       mSiteListDialog = (SiteListDialogFragment)getSupportFragmentManager().
        findFragmentByTag(SITE_LIST_DIALOG);
 
-      App.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, "/sitelist").build());
+      App.sendScreenView("/sitelist");
    }
 
    @Override

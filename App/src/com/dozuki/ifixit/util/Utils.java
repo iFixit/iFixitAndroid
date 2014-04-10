@@ -1,30 +1,78 @@
 package com.dozuki.ifixit.util;
 
+import android.content.Context;
 import android.graphics.drawable.BitmapDrawable;
+import android.os.Build;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
+import android.text.format.DateUtils;
 import android.text.style.URLSpan;
 import android.widget.ImageView;
 import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.BuildConfig;
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.squareup.okhttp.OkHttpClient;
 
-import javax.net.ssl.SSLContext;
 import java.security.GeneralSecurityException;
+import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.X509TrustManager;
 
 public class Utils {
-
    public static OkHttpClient createOkHttpClient() {
       OkHttpClient client = new OkHttpClient();
-      SSLContext sslContext;
+
       try {
+         // Working around the libssl crash: https://github.com/square/okhttp/issues/184
+         SSLContext sslContext;
          sslContext = SSLContext.getInstance("TLS");
-         sslContext.init(null, null, null);
+
+         if (BuildConfig.DEBUG || Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO) {
+            // Trust all certificates and hosts in debug mode.
+            sslContext.init(null, new TrustManager[] {
+             new X509TrustManager() {
+                @Override
+                public void checkClientTrusted(X509Certificate[] chain, String authType)
+                 throws CertificateException {
+                   // Do nothing.
+                }
+
+                @Override
+                public void checkServerTrusted(X509Certificate[] chain, String authType)
+                 throws CertificateException {
+                   // Do nothing.
+                }
+
+                @Override
+                public X509Certificate[] getAcceptedIssuers() {
+                   return null;
+                }
+             }
+            }, new SecureRandom());
+
+            client.setHostnameVerifier(new HostnameVerifier() {
+               @Override
+               public boolean verify(String hostname, SSLSession session) {
+                  // Trust all hosts.
+                  return true;
+               }
+            });
+         } else {
+            sslContext.init(null, null, null);
+         }
+
+         client.setSslSocketFactory(sslContext.getSocketFactory());
       } catch (GeneralSecurityException e) {
          throw new AssertionError(); // The system has no TLS. Just give up.
       }
-      client.setSslSocketFactory(sslContext.getSocketFactory());
 
       return client;
    }
@@ -107,5 +155,14 @@ public class Utils {
       }
 
       return builder.toString();
+   }
+
+   public static CharSequence getRelativeTime(Context context, long timeInMs) {
+      final long MS_IN_MINUTE = 60000;
+      if (System.currentTimeMillis() - timeInMs < MS_IN_MINUTE) {
+         return context.getString(R.string.just_now);
+      } else {
+         return DateUtils.getRelativeTimeSpanString(timeInMs);
+      }
    }
 }

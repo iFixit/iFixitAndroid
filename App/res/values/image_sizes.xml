@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Strings for image sizes that should not be translated which is why
+     they aren't in strings.xml. Tablet overrides are in values-large.  -->
+    <string name="is__guide_step_thumbnail">.medium</string>
+    <string name="is__guide_step_main">.medium</string>
+    <string name="is__guide_step_fullsize">.large</string>
+    <string name="is__step_list">.standard</string>
+    <string name="is__guide_list">.standard</string>
+    <string name="is__topic_main">.medium</string>
+    <string name="is__actionbar_logo">.thumbnail</string>
+</resources>

@@ -83,16 +83,12 @@ public class StepEditFragment extends BaseFragment {
           .add(R.id.guide_create_edit_bullet_fragment_container, mEditBulletFrag);
 
          if (mStepType.equals(VIDEO_TYPE)) {
-            Bundle videoArgs = new Bundle();
-
-            videoArgs.putSerializable(StepVideoFragment.GUIDE_VIDEO_KEY, mStepObject.getVideo());
-            mEditVideoFrag = new StepVideoFragment();
-            mEditVideoFrag.setArguments(videoArgs);
+            mEditVideoFrag = StepVideoFragment.newInstance(mStepObject.getVideo(), false);
 
             ft.add(R.id.guide_create_edit_media_fragment_container, mEditVideoFrag, STEP_VIDEO_FRAGMENT_TAG);
          } else if (mStepType.equals(EMBED_TYPE)) {
             ft.add(R.id.guide_create_edit_media_fragment_container,
-             StepEmbedFragment.newInstance(mStepObject.getEmbed()), STEP_EMBED_FRAGMENT_TAG);
+             StepEmbedFragment.newInstance(mStepObject.getEmbed(), false), STEP_EMBED_FRAGMENT_TAG);
          } else if (mStepType.equals(IMAGE_TYPE)) {
             mEditImageFrag = new StepEditImageFragment();
             ft.add(R.id.guide_create_edit_media_fragment_container, mEditImageFrag, STEP_IMAGE_FRAGMENT_TAG);

@@ -59,5 +59,10 @@
             android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
             android:authorities="com.dozuki.dozuki.ui.search.SearchSuggestionProvider"/>
 
+         <provider
+            android:name="com.dozuki.ifixit.util.api.ApiContentProvider"
+            android:authorities="com.dozuki.dozuki.provider"
+            android:exported="false"
+            android:syncable="true"/>
     </application>
 </manifest>

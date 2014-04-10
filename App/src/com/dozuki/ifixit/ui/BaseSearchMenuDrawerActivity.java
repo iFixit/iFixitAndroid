@@ -29,8 +29,7 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
             String hint = getString(R.string.search_site_hint, App.get().getSite().mTitle);
             ((EditText) item.getActionView().findViewById(R.id.abs__search_src_text)).setHint(hint);
 
-            App.getGaTracker().send(MapBuilder.createEvent("ui_action", "search", "action_bar_search",
-             null).build());
+            App.sendEvent("ui_action", "search", "action_bar_search", null);
 
             // Returns true to expand the menu item
             return true;

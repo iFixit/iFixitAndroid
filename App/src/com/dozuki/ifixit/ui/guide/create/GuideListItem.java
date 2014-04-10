@@ -24,10 +24,10 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.RoundedTransformation;
 import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.util.api.Api;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
@@ -144,9 +144,7 @@ public class GuideListItem extends TouchableRelativeLayout {
    }
 
    private void publishGuide() {
-      App.getGaTracker()
-       .send(MapBuilder.createEvent("ui_action", "button_press", "publish_guide",
-        null).build());
+      App.sendEvent("ui_action", "button_press", "publish_guide", (long)mGuideInfo.mGuideid);
 
       // Ignore button press if we are already (un)publishing the guide.
       if (mGuideInfo.mIsPublishing) {
@@ -167,8 +165,7 @@ public class GuideListItem extends TouchableRelativeLayout {
    }
 
    private void deleteGuide() {
-      App.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
-       "delete_guide", null).build());
+      App.sendEvent("ui_action", "button_press", "delete_guide", (long)mGuideInfo.mGuideid);
 
       ((GuideCreateActivity) mActivity).createDeleteDialog(mGuideInfo).show();
    }
@@ -186,7 +183,7 @@ public class GuideListItem extends TouchableRelativeLayout {
 
          if (mGuideInfo.hasImage()) {
             picasso
-             .load(mGuideInfo.getImagePath(".standard"))
+             .load(mGuideInfo.getImagePath(ImageSizes.guideList))
              .noFade()
              .fit()
              .transform(transform)
@@ -216,8 +213,7 @@ public class GuideListItem extends TouchableRelativeLayout {
    }
 
    private void editGuide() {
-      App.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
-       "edit_guide", null).build());
+      App.sendEvent("ui_action", "button_press", "edit_guide", (long)mGuideInfo.mGuideid);
 
       Intent intent = new Intent(mActivity, StepsActivity.class);
       intent.putExtra(StepsActivity.GUIDE_ID_KEY, mGuideInfo.mGuideid);

@@ -11,13 +11,11 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 public class FeaturedGuidesActivity extends GuideListActivity {
-
    @Override
    public void onCreate(Bundle state) {
       super.onCreate(state);
 
-      App.getGaTracker().set(Fields.SCREEN_NAME, "/guides/featured");
-      App.getGaTracker().send(MapBuilder.createAppView().build());
+      App.sendScreenView("/guides/featured");
    }
 
    @Override
