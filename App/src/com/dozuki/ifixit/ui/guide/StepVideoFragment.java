@@ -75,7 +75,7 @@ public class StepVideoFragment extends BaseFragment {
       poster.setLayoutParams(params);
       playButtonContainer.setLayoutParams(params);
 
-      String imageUrl = mVideoPoster.getPath(ImageSizes.stepMain, mIsOfflineGuide);
+      String imageUrl = mVideoPoster.getPath(ImageSizes.stepMain);
 
       PicassoUtils.displayImage(mContext, imageUrl, mIsOfflineGuide)
        .error(R.drawable.no_image)
