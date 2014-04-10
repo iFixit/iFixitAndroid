@@ -25,6 +25,7 @@ import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
+import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
@@ -322,10 +323,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          }
       },
 
+      // Note: This doesn't use live data but rather displays guides stored
+      // offline.
       USER_FAVORITES(
          R.string.slide_menu_favorite_guides,
          R.drawable.ic_menu_favorite_light,
-         FavoritesActivity.class
+         OfflineGuidesActivity.class
       ),
 
       USER_GUIDES(
@@ -502,11 +505,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
        if (navigationDialog != null) {
           navigationDialog.show();
        } else {
-          mMenuDrawer.closeMenu();
+          App.sendEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null);
 
-          App.getGaTracker().send(MapBuilder
-           .createEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null)
-           .build());
+          mMenuDrawer.closeMenu();
 
           mActivePosition = position;
           mMenuDrawer.setActiveView(view, position);

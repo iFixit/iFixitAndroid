@@ -1,6 +1,6 @@
 package com.dozuki.ifixit.model;
 
-import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -14,7 +14,6 @@ public class Image implements Serializable {
     */
    private static final int LOCAL_IMAGE_ID = -1;
    private static final String TAG = "Image";
-   //private final ImageSizes mSizes;
 
    @SerializedName("id") private int mId;
    @SerializedName("original") private String mPath;
@@ -30,13 +29,13 @@ public class Image implements Serializable {
 
    public Image(int id, String path) {
       mId = id;
-      mPath = cleanPath(path);
+      mPath = path;
       mLocalPath = "";
    }
 
    public void setLocalImage(String path) {
       mId = LOCAL_IMAGE_ID;
-      mPath = cleanPath(path);
+      mPath = path;
       mLocalPath = mPath;
    }
 
@@ -61,7 +60,7 @@ public class Image implements Serializable {
    }
 
    public void setPath(String path) {
-      mPath = cleanPath(path);
+      mPath = path;
    }
 
    public String getPath() {
@@ -69,11 +68,34 @@ public class Image implements Serializable {
    }
 
    public String getPath(String size) {
+      return getPath(size, false);
+   }
+
+   public String getPath(String size, boolean offline) {
       if (size.length() != 0 && !size.startsWith(".")) {
          size = "." + size;
       }
 
-      return mPath + size;
+      String path = mPath + size;
+
+      if (offline) {
+         return ApiSyncAdapter.getOfflineMediaPath(path);
+      } else {
+         return path;
+      }
+   }
+
+   public String getOfflinePath(String size) {
+      return ApiSyncAdapter.getOfflineMediaPath(getPath(size));
+   }
+
+   /**
+    * Return true if this is an actual image. Really this image shouldn't exist if
+    * it isn't valid but this is currently how the JSON parsing and guide creation code
+    * is currently setup.
+    */
+   public boolean isValid() {
+      return mId != LOCAL_IMAGE_ID;
    }
 
    public boolean isLocal() {
@@ -96,13 +118,5 @@ public class Image implements Serializable {
       }
 
       return ((Image)obj).getId() == mId && ((Image)obj).getPath().equals(mPath);
-   }
-
-   private String cleanPath(String path) {
-
-      if (App.inDebug() && path.length() != 0)
-         path = path.replaceFirst("https", "http");
-
-      return path;
    }
 }

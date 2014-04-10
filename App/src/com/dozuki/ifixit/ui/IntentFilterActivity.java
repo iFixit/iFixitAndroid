@@ -46,7 +46,8 @@ public class IntentFilterActivity extends BaseActivity {
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
-      // TODO: Show loading.
+      // TODO: Show loading. This is only important if we need to do the sites
+      // API call. Otherwise the URI parsing is pretty much instantaneous.
 
       Intent intent = getIntent();
 
@@ -122,11 +123,7 @@ public class IntentFilterActivity extends BaseActivity {
             intent = TopicViewActivity.viewTopic(this, topicName);
          }
       } catch (Exception e) {
-         Log.e("IntentFilterActivity", "Problem parsing Uri", e);
-
-         App.getGaTracker().send(MapBuilder.createException(
-          new StandardExceptionParser(this, null).getDescription(
-           Thread.currentThread().getName(), e), false).build());
+         App.sendException("IntentFilterActivity", "Problem parsing Uri", e);
 
          displayNotFoundDialog();
       }
@@ -161,12 +158,7 @@ public class IntentFilterActivity extends BaseActivity {
 
             handlePathNavigation();
          } else {
-            Exception e = new Exception();
-            Log.e("GuideViewActivity", "Didn't find site!", e);
-
-            App.getGaTracker().send(MapBuilder.createException(
-             new StandardExceptionParser(this, null).getDescription(
-             Thread.currentThread().getName(), e), false).build());
+            App.sendException("IntentFilterActivity", "Didn't find site!", new Exception());
 
             displayNotFoundDialog();
          }

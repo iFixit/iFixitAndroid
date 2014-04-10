@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui;
 
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -18,6 +19,7 @@ import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.auth.LoginFragment;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.dozuki.ifixit.util.api.Api;
@@ -37,6 +39,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    private static final String ACTIVITY_ID = "ACTIVITY_ID";
    private static final String USERID = "USERID";
    private static final String SITE = "SITE";
+   // If an Intent has a site argument it will change sites before displaying any content.
+   private static final String SITE_ARGUMENT = "SITE_ARGUMENT";
 
    private static final int LOGGED_OUT_USERID = -1;
 
@@ -106,26 +110,33 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
+      App app = App.get();
+      Site currentSite = app.getSite();
+
       if (savedState != null) {
          mActivityid = savedState.getInt(ACTIVITY_ID);
          mUserid = savedState.getInt(USERID);
          mSite = (Site)savedState.getSerializable(SITE);
 
-         Site currentSite = App.get().getSite();
-
          // If the site associated with this Activity is different than the current site,
          // set it to the one this Activity wants. Don't always do this because of the
          // overhead of reading the user from SharedPreferences.
          if (mSite.mSiteid != currentSite.mSiteid) {
-            App.get().setSite(mSite);
+            app.setSite(mSite);
          }
       } else {
          mActivityid = generateActivityid();
          setUserid();
-         mSite = App.get().getSite();
+
+         Site siteArgument = (Site)getIntent().getSerializableExtra(SITE_ARGUMENT);
+         if (siteArgument != null && siteArgument.mSiteid != currentSite.mSiteid) {
+            mSite = siteArgument;
+            app.setSite(mSite);
+         } else {
+            mSite = app.getSite();
+         }
       }
 
-      App app = App.get();
       Site site = app.getSite();
       ActionBar ab = getSupportActionBar();
       ab.setDisplayHomeAsUpEnabled(true);
@@ -177,7 +188,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          TextView siteTitle = (TextView) v.findViewById(R.id.custom_site_title);
          if (site.mLogo != null) {
             PicassoUtils.with(this)
-             .load(site.mLogo.getPath(app.getImageSizes().getLogo()))
+             .load(site.mLogo.getPath(ImageSizes.logo))
              .error(R.drawable.logo_dozuki)
              .into(customLogo);
             customLogo.setVisibility(View.VISIBLE);
@@ -304,9 +315,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       App.getBus().unregister(mBaseActivityListener);
    }
 
-   public void openLoginDialogIfLoggedOut() {
+   public boolean openLoginDialogIfLoggedOut() {
       if (!App.get().isUserLoggedIn()) {
          LoginFragment.newInstance().show(getSupportFragmentManager(), "LoginFragment");
+         return true;
+      } else {
+         return false;
       }
    }
 
@@ -390,9 +404,16 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    public void hideLoading() {
       Fragment loadingFragment = getSupportFragmentManager().findFragmentByTag(LOADING);
       if (loadingFragment != null) {
+         // Because this is only hiding the loading fragment, it's fine to
+         // commit with possible state loss.
          getSupportFragmentManager().beginTransaction()
           .remove(loadingFragment)
-          .commit();
+          .commitAllowingStateLoss();
       }
+   }
+
+   public static Intent addSite(Intent intent, Site site) {
+      intent.putExtra(SITE_ARGUMENT, site);
+      return intent;
    }
 }

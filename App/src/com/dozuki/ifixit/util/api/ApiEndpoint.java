@@ -346,7 +346,6 @@ public enum ApiEndpoint {
          }
 
          public ApiEvent<?> parse(String json) throws JSONException {
-            // TODO: Actually look at the response?
             return new ApiEvent.DeleteImage().setResult("");
          }
 

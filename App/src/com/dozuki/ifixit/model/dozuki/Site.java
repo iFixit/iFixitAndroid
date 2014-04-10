@@ -98,6 +98,14 @@ public class Site implements Serializable {
       return mBarcodeScanner;
    }
 
+   /**
+    * Returns true if the user should be automatically reauthenticated if their
+    * auth token expires.
+    */
+   public boolean reauthenticateOnLogout() {
+      return isIfixit();
+   }
+
    public boolean hasSubject(String type) {
       for (String t : hasSubject) {
          if (t.equals(type)) {

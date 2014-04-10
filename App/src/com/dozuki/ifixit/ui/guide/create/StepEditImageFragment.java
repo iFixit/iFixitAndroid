@@ -81,7 +81,7 @@ public class StepEditImageFragment extends BaseFragment {
 
       // Initialize the step thumbnails and set the main image to the first thumbnail if it exists
       if (mImages != null && mImages.size() > 0) {
-         mThumbs.setThumbs(mImages);
+         mThumbs.setThumbs(mImages, false);
       } else {
          mThumbs.setAddImageMain();
 
@@ -108,8 +108,7 @@ public class StepEditImageFragment extends BaseFragment {
                    Intent intent;
                    switch (which) {
                       case CAPTURE_IMAGE:
-                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
-                          "add_from_camera", null).build());
+                         App.sendEvent("ui_action", "add_image", "add_from_camera", null);
                          try {
                             Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
 
@@ -133,8 +132,7 @@ public class StepEditImageFragment extends BaseFragment {
 
                          break;
                       case MEDIA_MANAGER:
-                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "add_image",
-                          "add_from_gallery", null).build());
+                         App.sendEvent("ui_action", "add_image", "add_from_gallery", null);
                          intent = new Intent(mContext, GalleryActivity.class);
                          intent.putExtra(GalleryActivity.ACTIVITY_RETURN_MODE, 1);
                          intent.putExtra(GalleryActivity.ATTACHED_MEDIA_IDS, mImages);
@@ -160,22 +158,17 @@ public class StepEditImageFragment extends BaseFragment {
 
                    switch (which) {
                       case COPY_TO_MEDIA_MANAGER:
-                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
-                          "copy_to_media_manager",
-                          null).build());
+                         App.sendEvent("ui_action", "edit_image", "copy_to_media_manager", null);
                          Api.call(getActivity(),
                           ApiCall.copyImage(thumbImage.getId() + ""));
                          break;
                       case DETACH_TO_MEDIA_MANAGER:
-                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
-                          "detach_to_media_manager",
-                          null).build());
+                         App.sendEvent("ui_action", "edit_image", "detach_to_media_manager", null);
 
                          Api.call(getActivity(),
                           ApiCall.copyImage(thumbImage.getId() + ""));
                       case DELETE_FROM_STEP:
-                         App.getGaTracker().send(MapBuilder.createEvent("ui_action", "edit_image",
-                          "delete_from_step", null).build());
+                         App.sendEvent("ui_action", "edit_image", "delete_from_step", null);
                          mThumbs.removeThumb(v);
                          mImages.remove(thumbImage);
 
@@ -216,7 +209,7 @@ public class StepEditImageFragment extends BaseFragment {
       mImages = new ArrayList<Image>(images);
 
       if (mThumbs != null) {
-         mThumbs.setThumbs(mImages);
+         mThumbs.setThumbs(mImages, false);
       }
    }
 

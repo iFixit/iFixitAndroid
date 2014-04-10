@@ -21,7 +21,6 @@ import android.widget.AdapterView.OnItemLongClickListener;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
-import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
@@ -57,7 +56,6 @@ public abstract class MediaFragment extends BaseFragment
    protected boolean mNextPageRequestInProgress;
    protected ArrayList<Image> mAlreadyAttachedImages;
    private GridView mGridView;
-   private ImageSizes mImageSizes;
    private ActionMode mMode;
    private String mCameraTempFileName;
    private boolean mShowingDelete = false;
@@ -72,7 +70,6 @@ public abstract class MediaFragment extends BaseFragment
 
       setHasOptionsMenu(true);
 
-      mImageSizes = App.get().getImageSizes();
       mMode = null;
 
       mGalleryAdapter = new MediaAdapter();
@@ -232,9 +229,7 @@ public abstract class MediaFragment extends BaseFragment
             return;
          }
 
-         Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-         intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-         startActivity(intent);
+         startActivity(FullImageViewActivity.viewImage(getActivity(), url, false));
       }
    }
 
@@ -430,7 +425,7 @@ public abstract class MediaFragment extends BaseFragment
             }
 
          } else {
-            itemView.setImageItem(image.getPath(mImageSizes.getThumb()));
+            itemView.setImageItem(image.getPath(ImageSizes.stepThumb));
          }
 
          itemView.setTag(image.getPath());

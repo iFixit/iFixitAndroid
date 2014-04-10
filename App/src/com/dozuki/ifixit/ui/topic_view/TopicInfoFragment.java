@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.topic_view;
 
-import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
@@ -19,6 +18,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
@@ -27,7 +27,6 @@ import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 public class TopicInfoFragment extends BaseFragment {
 
    private static final float HEADER_SIZE = 1.3f;
-   private static final String IMAGE_SIZE = ".medium";
    private static final String TOPIC_KEY = "TOPIC_KEY";
 
    private TopicLeaf mTopic;
@@ -66,7 +65,7 @@ public class TopicInfoFragment extends BaseFragment {
       mContent.setMovementMethod(LinkMovementMethod.getInstance());
       mContent.setText(getStyledContent());
 
-      String url = mTopic.getImage().getPath(IMAGE_SIZE);
+      String url = mTopic.getImage().getPath(ImageSizes.topicMain);
 
       ImageView topicImage = (ImageView) v.findViewById(R.id.topic_info_image);
       topicImage.setTag(mTopic.getImage().getPath());
@@ -75,11 +74,11 @@ public class TopicInfoFragment extends BaseFragment {
          public void onClick(View v) {
             String url = (String) v.getTag();
 
-            if (url == null || (url.equals("") || url.startsWith("."))) return;
+            if (url == null || (url.equals("") || url.startsWith("."))) {
+               return;
+            }
 
-            Intent intent = new Intent(getActivity(), FullImageViewActivity.class);
-            intent.putExtra(FullImageViewActivity.IMAGE_URL, url);
-            startActivity(intent);
+            startActivity(FullImageViewActivity.viewImage(getActivity(), url, false));
          }
       });
 

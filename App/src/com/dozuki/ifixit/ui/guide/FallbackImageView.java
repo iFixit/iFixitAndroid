@@ -2,9 +2,11 @@ package com.dozuki.ifixit.ui.guide;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.widget.ImageView;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.util.PicassoUtils;
@@ -37,7 +39,7 @@ public class FallbackImageView extends ImageView implements Target {
    }
 
    @Override
-   public void onBitmapFailed() {
+   public void onBitmapFailed(Drawable drawable) {
       Picasso picasso = PicassoUtils.with(getContext());
       RequestCreator builder;
 
@@ -60,5 +62,10 @@ public class FallbackImageView extends ImageView implements Target {
       builder
        .error(R.drawable.no_image)
        .into((Target) this);
+   }
+
+   @Override
+   public void onPrepareLoad(Drawable drawable) {
+      // Do nothing.
    }
 }

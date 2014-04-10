@@ -83,8 +83,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       titleIndicator.setViewPager(pager);
       pager.setCurrentItem(1);
 
-      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/media/images");
-      App.getGaTracker().send(MapBuilder.createAppView().build());
+      App.sendScreenView("/user/media/images");
    }
 
    @Override
