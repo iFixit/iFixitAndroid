@@ -20,6 +20,7 @@ import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
@@ -139,7 +140,7 @@ public class StepListItem extends TouchableRelativeLayout {
 
    private void setStepThumbnail(ArrayList<Image> imageList, ImageView imageView) {
       if (imageList.size() == 0) {
-         Picasso
+         PicassoUtils
           .with(mContext)
           .load(R.drawable.no_image)
           .noFade()
@@ -167,7 +168,7 @@ public class StepListItem extends TouchableRelativeLayout {
    private void setStepThumbnail(String url, ImageView imageView) {
       imageView.setTag(url);
 
-      Picasso
+      PicassoUtils
        .with(mContext)
        .load(url)
        .noFade()
