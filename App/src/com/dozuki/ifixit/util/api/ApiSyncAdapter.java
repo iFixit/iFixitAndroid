@@ -120,20 +120,20 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       App app = App.get();
       Site site = app.getSite();
 
-      if (!site.mName.equals(user.mSiteName)) {
-         // This can only happen on Dozuki because there is exactly one site on
-         // every other app so it's guaranteed that the user will match the
-         // default site.
-         Site newSite = fetchSite(user.mSiteName);
-         if (newSite == null) {
-            App.sendException(TAG, "Can't find site '" + user.mSiteName + "'!", new Exception());
-            return;
+      try {
+         if (!site.mName.equals(user.mSiteName)) {
+            // This can only happen on Dozuki because there is exactly one site on
+            // every other app so it's guaranteed that the user will match the
+            // default site.
+            Site newSite = fetchSite(user.mSiteName);
+            if (newSite == null) {
+               App.sendException(TAG, "Can't find site '" + user.mSiteName + "'!", new Exception());
+               return;
+            }
+
+            site = newSite;
          }
 
-         site = newSite;
-      }
-
-      try {
          // Always display the notification for manual syncs. It will also be initialized
          // later if there is new content being synced. Also, we will remove it once the
          // the sync is done if there wasn't new content synced.
