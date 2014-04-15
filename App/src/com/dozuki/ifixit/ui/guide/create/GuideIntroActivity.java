@@ -147,8 +147,7 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
          initWizard();
       }
 
-      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid() + "/details");
-      App.getGaTracker().send(MapBuilder.createAppView().build());
+      App.sendScreenView("/user/guides/" + mGuide.getGuideid() + "/details");
    }
 
    private Bundle buildIntroBundle() {

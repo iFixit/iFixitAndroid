@@ -11,13 +11,11 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 public class TeardownsActivity extends GuideListActivity {
-
    @Override
    public void onCreate(Bundle state) {
       super.onCreate(state);
 
-      App.getGaTracker().set(Fields.SCREEN_NAME, "/guides/teardowns");
-      App.getGaTracker().send(MapBuilder.createAppView().build());
+      App.sendScreenView("/guides/teardowns");
    }
 
    @Override

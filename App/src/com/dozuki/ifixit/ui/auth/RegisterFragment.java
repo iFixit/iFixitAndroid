@@ -16,7 +16,6 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.user.User;
@@ -127,10 +126,7 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, "/register");
-
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/register");
    }
 
    private void showKeyboard() {

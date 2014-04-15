@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
@@ -13,21 +14,33 @@ import android.os.Bundle;
 import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
 import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 
 public class VideoViewActivity extends Activity {
+   private static final String VIDEO_URL = "VIDEO_URL";
+   private static final String IS_OFFLINE = "IS_OFFLINE";
 
-   public static final String VIDEO_URL = "VIDEO_URL";
    private VideoView mVideoView;
    private ProgressDialog mProgressDialog;
-   private Context mContext;
+
+   public static Intent viewVideo(Context context, String url, boolean offline) {
+      Intent intent = new Intent(context, VideoViewActivity.class);
+      intent.putExtra(VIDEO_URL, url);
+      intent.putExtra(IS_OFFLINE, offline);
+      return intent;
+   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      mContext = this;
+      Bundle extras = getIntent().getExtras();
+      String videoUrl = extras.getString(VIDEO_URL);
+      boolean isOffline = extras.getBoolean(IS_OFFLINE);
+
       requestWindowFeature((int) Window.FEATURE_NO_TITLE);
 
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -36,15 +49,16 @@ public class VideoViewActivity extends Activity {
 
       mVideoView = (VideoView) findViewById(R.id.video_view);
 
-      Bundle extras = getIntent().getExtras();
-      String videoUrl = (String) extras.get(VIDEO_URL);
-
       MediaController mc = new MediaController(this);
       mVideoView.setMediaController(mc);
 
-      mVideoView.setVideoURI(Uri.parse(videoUrl));
+      if (isOffline) {
+         mVideoView.setVideoPath(ApiSyncAdapter.getOfflineMediaPath(videoUrl));
+      } else {
+         mVideoView.setVideoURI(Uri.parse(videoUrl));
+      }
 
-      mProgressDialog = ProgressDialog.show(mContext,
+      mProgressDialog = ProgressDialog.show(this,
          getString(R.string.video_activity_progress_title),
          getString(R.string.video_activity_progress_body), true);
 
@@ -66,7 +80,7 @@ public class VideoViewActivity extends Activity {
          @Override
          public void onCompletion(MediaPlayer mp) {
             mMediaPlayer = mp;
-            AlertDialog.Builder restartDialog = new AlertDialog.Builder(mContext);
+            AlertDialog.Builder restartDialog = new AlertDialog.Builder(VideoViewActivity.this);
             restartDialog.setTitle(getString(R.string.restart_video));
             restartDialog
                .setMessage(getString(R.string.restart_video_message))

@@ -3,12 +3,16 @@ package com.dozuki.ifixit;
 import android.accounts.Account;
 import android.app.Activity;
 import android.app.Application;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
-import android.content.res.TypedArray;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,10 +27,15 @@ import com.dozuki.ifixit.util.OkConnectionFactory;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
+import com.dozuki.ifixit.util.api.ApiContentProvider;
+import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.github.kevinsawicki.http.HttpRequest;
+import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
 import com.google.analytics.tracking.android.Logger;
+import com.google.analytics.tracking.android.MapBuilder;
+import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Bus;
 
@@ -43,15 +52,15 @@ public class App extends Application {
    // Key used to store a user's tracking preferences in SharedPreferences.
    private static final String TRACKING_PREF_KEY = "trackingPreference";
 
-   private static GoogleAnalytics mGa;
-   private static Tracker mTracker;
+   private static Tracker mGaTracker;
 
    private static final String PREFERENCE_FILE = "PREFERENCE_FILE";
    private static final String FIRST_TIME_GALLERY_USER =
     "FIRST_TIME_GALLERY_USER";
-   private static final String AUTH_TOKEN_KEY = "AUTH_TOKEN_KEY";
-   private static final String USERNAME_KEY = "USERNAME_KEY";
-   private static final String USERID_KEY = "USERID_KEY";
+   private static final String LAST_SYNC_TIME = "LAST_SYNC_TIME";
+   public static final long NEVER_SYNCED_VALUE = -1;
+   private static final String TAG = "App";
+
 
    /**
     * Singleton reference.
@@ -62,11 +71,6 @@ public class App extends Application {
     * Singleton for Bus (Otto).
     */
    private static Bus sBus;
-
-   /**
-    * Singleton for ImageSizes.
-    */
-   private ImageSizes mImageSizes;
 
    /**
     * Currently logged in user or null if user is not logged in.
@@ -132,9 +136,26 @@ public class App extends Application {
       super.onCreate();
       initializeGa();
       Api.init();
+      ImageSizes.init(this);
 
       sApp = this;
       setSite(getDefaultSite());
+   }
+
+   public static void sendEvent(String category, String action, String label, Long value) {
+      mGaTracker.send(MapBuilder.createEvent(category, action, label, value).build());
+   }
+
+   public static void sendScreenView(String screenName) {
+      mGaTracker.send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, screenName).build());
+   }
+
+   public static void sendException(String tag, String message, Exception exception) {
+      Log.e(tag, message, exception);
+
+      mGaTracker.send(MapBuilder.createException(
+       new StandardExceptionParser(get(), null).getDescription(
+        Thread.currentThread().getName(), exception), false).build());
    }
 
    /*
@@ -142,14 +163,14 @@ public class App extends Application {
     * block as all Google Analytics work occurs off the main thread.
     */
    private void initializeGa() {
-      mGa = GoogleAnalytics.getInstance(this);
-      mTracker = mGa.getTracker(BuildConfig.GA_PROPERTY_ID);
+      GoogleAnalytics ga = GoogleAnalytics.getInstance(this);
+      mGaTracker = ga.getTracker(BuildConfig.GA_PROPERTY_ID);
 
       GAServiceManager.getInstance().setLocalDispatchPeriod(GA_DISPATCH_PERIOD);
 
       // Set dryRun to disable event dispatching.
-      mGa.setDryRun(BuildConfig.DEBUG);
-      mGa.getLogger().setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.INFO :
+      ga.setDryRun(BuildConfig.DEBUG);
+      ga.getLogger().setLogLevel(BuildConfig.DEBUG ? Logger.LogLevel.INFO :
        Logger.LogLevel.WARNING);
 
       // Set the opt out flag when user updates a tracking preference.
@@ -164,20 +185,6 @@ public class App extends Application {
             }
          }
       });
-   }
-
-   /*
-    * Returns the Google Analytics tracker.
-    */
-   public static Tracker getGaTracker() {
-      return mTracker;
-   }
-
-   /*
-    * Returns the Google Analytics instance.
-    */
-   public static GoogleAnalytics getGaInstance() {
-      return mGa;
    }
 
    /**
@@ -272,22 +279,12 @@ public class App extends Application {
       return sBus;
    }
 
-   public ImageSizes getImageSizes() {
-      if (mImageSizes == null) {
-         TypedArray imageSizes = getResources().obtainTypedArray(R.array.image_sizes);
-         mImageSizes = new ImageSizes(
-          imageSizes.getString(4),
-          imageSizes.getString(0),
-          imageSizes.getString(1),
-          imageSizes.getString(2),
-          imageSizes.getString(3));
-      }
-
-      return mImageSizes;
-   }
-
    public User getUser() {
       return mUser;
+   }
+
+   public Account getUserAccount() {
+      return mAccount;
    }
 
    private void setupLoggedInUser(Site site) {
@@ -405,10 +402,101 @@ public class App extends Application {
       getBus().post(new LoginEvent.Cancel());
    }
 
+   /**
+    * Requests a sync for the current user. This operation does nothing if
+    * force is false and a sync is already in progress.
+    */
+   public void requestSync(boolean force) {
+      if (!isUserLoggedIn()) {
+         return;
+      }
+
+      String authority = ApiContentProvider.getAuthority();
+      boolean syncActive = ContentResolver.isSyncActive(mAccount, authority);
+
+      if (syncActive && !force) {
+         // Do nothing if the sync is active and we don't want to force it.
+         return;
+      }
+
+      if (syncActive) {
+         // Sync is already started so lets restart it.
+         ApiSyncAdapter.restartSync(this);
+      } else {
+         Bundle bundle = new Bundle();
+         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+         bundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+         ContentResolver.requestSync(mAccount, authority, bundle);
+      }
+   }
+
+   public void cancelSync() {
+      if (!isUserLoggedIn()) {
+         return;
+      }
+
+      String authority = ApiContentProvider.getAuthority();
+      ContentResolver.cancelSync(mAccount, authority);
+   }
+
+   public void setSyncAutomatically(boolean syncAutomatically) {
+      if (!isUserLoggedIn()) {
+         return;
+      }
+
+      ContentResolver.setSyncAutomatically(mAccount,
+       ApiContentProvider.getAuthority(), syncAutomatically);
+   }
+
+   public boolean getSyncAutomatically() {
+      if (!isUserLoggedIn()) {
+         return false;
+      }
+
+      return ContentResolver.getSyncAutomatically(mAccount,
+       ApiContentProvider.getAuthority());
+   }
+
+   /**
+    * Sets the last sync time for the given user to the current time.
+    */
+   public void setLastSyncTime(Site site, User user) {
+      String lastSyncTimeKey = getLastSyncTimeKey(site, user);
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE | MODE_MULTI_PROCESS);
+      Editor editor = preferenceFile.edit();
+      editor.putLong(lastSyncTimeKey, System.currentTimeMillis());
+
+      editor.commit();
+   }
+
+   public long getLastSyncTime() {
+      if (!isUserLoggedIn()) {
+         return NEVER_SYNCED_VALUE;
+      }
+
+      String lastSyncTimeKey = getLastSyncTimeKey(mSite, mUser);
+      SharedPreferences preferenceFile = getSharedPreferences(PREFERENCE_FILE,
+       MODE_PRIVATE | MODE_MULTI_PROCESS);
+
+      return preferenceFile.getLong(lastSyncTimeKey, NEVER_SYNCED_VALUE);
+   }
+
+   private String getLastSyncTimeKey(Site site, User user) {
+      return LAST_SYNC_TIME + "_" + site.mSiteid + "_" + user.getUserid();
+   }
+
    public boolean isScreenLarge() {
       final int screenSize = getResources().getConfiguration().screenLayout &
        Configuration.SCREENLAYOUT_SIZE_MASK;
       return screenSize == Configuration.SCREENLAYOUT_SIZE_LARGE ||
        screenSize == Configuration.SCREENLAYOUT_SIZE_XLARGE;
+   }
+
+   public boolean isConnected() {
+      ConnectivityManager cm = (ConnectivityManager)getSystemService(Context.CONNECTIVITY_SERVICE);
+      NetworkInfo netInfo = cm.getActiveNetworkInfo();
+
+      return netInfo != null && netInfo.isConnected();
    }
 }

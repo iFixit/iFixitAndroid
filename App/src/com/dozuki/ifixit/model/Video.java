@@ -30,8 +30,9 @@ public class Video implements Serializable {
       return mThumbnail;
    }
 
-   public ArrayList<VideoEncoding> getEncodings() {
-      return mEncodings;
+   public String getVideoUrl() {
+      // For now just use the first encoding.
+      return mEncodings.get(0).getURL();
    }
 
    public int getHeight() {

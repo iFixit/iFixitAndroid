@@ -205,6 +205,8 @@ public class JSONHelper {
       guide.setConclusion(jGuide.getString("conclusion_rendered"));
       guide.setCompleted(jGuide.getBoolean("completed"));
       guide.setFavorited(jGuide.getBoolean("favorited"));
+      guide.setModifiedDate(jGuide.getDouble("modified_date"));
+      guide.setPrereqModifiedDate(jGuide.getDouble("prereq_modified_date"));
 
       if (jGuide.has("can_edit")) {
          guide.setCanEdit(jGuide.getBoolean("can_edit"));
@@ -317,7 +319,7 @@ public class JSONHelper {
       int width = jVideoThumb.getInt("width");
       int height = jVideoThumb.getInt("height");
 
-      return new VideoThumbnail(image.getId(), image.getPath(), ratio, width, height);
+      return new VideoThumbnail(image.getId(), image.getPath(), width, height);
    }
 
    private static VideoEncoding parseVideoEncoding(JSONObject jVideoEncoding) throws JSONException {
@@ -622,25 +624,6 @@ public class JSONHelper {
       return new ArrayList<GuideInfo>(guideList);
    }
 
-   /*
-   public static UserGuide parseUserGuideInfo(JSONObject json) throws JSONException {
-
-      GuideInfo guideInfo = new GuideInfo(json.getInt("guideid"));
-
-      guideInfo.mTopic = json.getString("category");
-      guideInfo.mTitle = json.getString("title");
-      guideInfo.setSubject(json.getString("subject"));
-      guideInfo.setType(json.getString("type"));
-      guideInfo.setPublished(json.getBoolean("public"));
-      guideInfo.setUserName(json.getString("username"));
-      guideInfo.setUserid(json.getInt("userid"));
-      guideInfo.setRevisionid(json.getInt("revisionid"));
-
-      guideInfo.setImage(parseImage(json, "image"));
-
-      return guideInfo;
-   }
-*/
    public static JSONArray createLineArray(ArrayList<StepLine> lines) throws JSONException {
 
       JSONArray array = new JSONArray();

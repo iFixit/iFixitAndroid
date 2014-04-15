@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.model.guide;
 
-import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.Image;
 import com.google.gson.annotations.SerializedName;
 
@@ -64,12 +63,16 @@ public class GuideInfo implements Serializable {
       String path = "";
       if (mImage != null) {
          path = mImage.getPath(size);
-         if (App.inDebug() && path.startsWith("https")) {
-            path = path.replace("https", "http");
-         }
       }
 
       return path;
+   }
+
+   /**
+    * Returns the guide's modified date including prereq changes.
+    */
+   public double getAbsoluteModifiedDate() {
+      return Math.max(mModifiedDate, mPrereqModifiedDate);
    }
 
    public String toString() {
