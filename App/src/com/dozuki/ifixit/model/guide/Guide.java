@@ -97,6 +97,8 @@ public class Guide implements Serializable {
       return mType;
    }
 
+   public boolean isTeardown() { return mType.equalsIgnoreCase("teardown"); }
+
    public void addPart(Item part) {
       mParts.add(part);
    }

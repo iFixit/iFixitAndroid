@@ -59,6 +59,8 @@ public class GuideConclusionFragment extends BaseFragment {
 
       setCompletedStatus(mGuide.getCompleted());
 
+      if (mGuide.isTeardown()) mButton.setVisibility(View.GONE);
+
       return view;
    }
 
