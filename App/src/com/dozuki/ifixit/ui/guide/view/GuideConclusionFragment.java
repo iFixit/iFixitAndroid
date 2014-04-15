@@ -10,6 +10,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
@@ -78,6 +79,11 @@ public class GuideConclusionFragment extends BaseFragment {
          setCompletedStatus(false);
          Toast.makeText(getActivity(), getString(R.string.guide_complete_error_message), Toast.LENGTH_LONG).show();
       }
+   }
+
+   @Subscribe
+   public void onCancelLogin(LoginEvent.Cancel event) {
+      setCompletedStatus(false);
    }
 
    private void setCompletedStatus(boolean completed) {
