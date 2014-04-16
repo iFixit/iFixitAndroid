@@ -55,7 +55,7 @@ public class GuideConclusionFragment extends BaseFragment {
          public void onClick(View v) {
             Api.call(getActivity(), ApiCall.completeGuide(mGuide.getGuideid()));
             mButton.setEnabled(false);
-            mButton.setText(getString(R.string.completing));
+            mButton.setText(R.string.completing);
          }
       });
 
@@ -81,7 +81,7 @@ public class GuideConclusionFragment extends BaseFragment {
       } else {
          mGuide.setCompleted(false);
          setCompletedStatus(false);
-         Toast.makeText(getActivity(), getString(R.string.guide_complete_error_message), Toast.LENGTH_LONG).show();
+         Toast.makeText(getActivity(), R.string.guide_complete_error_message, Toast.LENGTH_LONG).show();
       }
    }
 
@@ -92,7 +92,7 @@ public class GuideConclusionFragment extends BaseFragment {
 
    private void setCompletedStatus(boolean completed) {
       mButton.setEnabled(!completed);
-      mButton.setText(getString(completed ? R.string.completed :
-       (App.get().getSite().isIfixit() ? R.string.i_did_it_success : R.string.complete_this_guide)));
+      mButton.setText(completed ? R.string.completed :
+       (App.get().getSite().isIfixit() ? R.string.i_did_it_success : R.string.complete_this_guide));
    }
 }
