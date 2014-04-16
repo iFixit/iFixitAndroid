@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
@@ -91,6 +92,7 @@ public class GuideConclusionFragment extends BaseFragment {
 
    private void setCompletedStatus(boolean completed) {
       mButton.setEnabled(!completed);
-      mButton.setText(getString(completed ? R.string.completed : R.string.complete_this_guide));
+      mButton.setText(getString(completed ? R.string.completed :
+       (App.get().getSite().isIfixit() ? R.string.i_did_it_success : R.string.complete_this_guide)));
    }
 }
