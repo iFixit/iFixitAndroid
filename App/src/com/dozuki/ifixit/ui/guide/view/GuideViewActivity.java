@@ -70,7 +70,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       setContentView(R.layout.guide_main);
 
       mPager = (ViewPager) findViewById(R.id.guide_pager);
-      mPager.setSaveEnabled(false);
       mIndicator = (TitlePageIndicator) findViewById(R.id.guide_step_title_indicator);
 
       if (savedInstanceState != null) {
