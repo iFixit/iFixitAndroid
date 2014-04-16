@@ -54,6 +54,7 @@ public class GuideConclusionFragment extends BaseFragment {
          public void onClick(View v) {
             Api.call(getActivity(), ApiCall.completeGuide(mGuide.getGuideid()));
             mButton.setEnabled(false);
+            mButton.setText(getString(R.string.completing));
          }
       });
 

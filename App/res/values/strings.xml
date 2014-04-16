@@ -293,11 +293,12 @@
     <string name="create_new_guide">Create New Guide</string>
     <string name="new_guide">New Guide</string>
     <string name="conclusion">Conclusion</string>
-    <string name="completed">Completed</string>
+    <string name="completed">Completed!</string>
     <string name="guide_complete_error_message">Couldn\'t complete this guide. Make sure you are logged in and try again.</string>
-    <string name="complete_this_guide">I Completed This Guide</string>
+    <string name="complete_this_guide">Complete Guide</string>
     <string name="just_now">just now</string>
     <string name="debug">Debug</string>
+    <string name="completing">Completing...</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>
