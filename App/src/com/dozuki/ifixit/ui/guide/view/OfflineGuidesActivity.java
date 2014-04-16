@@ -260,7 +260,11 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    public void onRestart() {
       super.onRestart();
 
-      getSupportLoaderManager().getLoader(R.id.offline_guide_loaderid).onContentChanged();
+      Loader loader = getSupportLoaderManager().getLoader(R.id.offline_guide_loaderid);
+
+      if (loader != null) {
+         loader.onContentChanged();
+      }
    }
 
    /**
