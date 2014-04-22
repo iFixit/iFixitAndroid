@@ -135,24 +135,26 @@ public class GuideIntroViewFragment extends BaseFragment {
                   params.width = LinearLayout.LayoutParams.MATCH_PARENT;
                   params.height = LinearLayout.LayoutParams.WRAP_CONTENT;
                   webView.setLayoutParams(params);
-                  webView.getViewTreeObserver()
-                   .addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                      @Override
-                      public void onGlobalLayout() {
+                  ViewTreeObserver vto = webView.getViewTreeObserver();
 
-                         LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) webView.getLayoutParams();
-                         params.height = (int) (webView.getWidth() * (0.5625f));
-                         webView.setLayoutParams(params);
+                  if (vto != null) {
+                     vto.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
 
-                         ViewTreeObserver obs = webView.getViewTreeObserver();
+                           LinearLayout.LayoutParams params = (LinearLayout.LayoutParams) webView.getLayoutParams();
+                           params.height = (int) (webView.getWidth() * (0.5625f));
+                           webView.setLayoutParams(params);
 
-                         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                            obs.removeOnGlobalLayoutListener(this);
-                         } else {
-                            obs.removeGlobalOnLayoutListener(this);
-                         }
-                      }
-                   });
+                           ViewTreeObserver obs = webView.getViewTreeObserver();
+                           if (Build.VERSION.SDK_INT < Build.VERSION_CODES.JELLY_BEAN) {
+                              obs.removeGlobalOnLayoutListener(this);
+                           } else {
+                              obs.removeOnGlobalLayoutListener(this);
+                           }
+                        }
+                     });
+                  }
                }
             }
          }

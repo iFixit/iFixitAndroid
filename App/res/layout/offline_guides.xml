@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:id="@+id/sync_box"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="6dp"
+        android:layout_alignParentBottom="true"
+        android:clickable="true"
+        android:focusableInTouchMode="true"
+        android:background="@color/emphasis">
+
+        <TextView
+            android:id="@+id/sync_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:textSize="20sp"
+            android:textColor="@color/white"
+            android:text="@string/sync_now"
+            style="@style/BodyText"/>
+
+        <TextView
+            android:id="@+id/last_sync_time"
+            android:layout_width="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/sync_status"
+            android:textColor="@color/white"
+            android:textSize="12sp"
+            style="@style/BodyText"
+            android:text="@string/last_synced"/>
+
+        <Button
+            android:id="@+id/sync_cancel_button"
+            android:text="@string/cancel"
+            android:visibility="invisible"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/sync_box">
+
+        <ProgressBar
+            android:id="@+id/sync_progress_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-6dp"
+            android:layout_marginBottom="-4dp"
+            android:layout_alignParentTop="true"
+            style="?android:attr/progressBarStyleHorizontal"/>
+
+        <ListView
+            android:id="@+id/offline_guides_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            android:dividerHeight="4dp"
+            android:divider="@color/transparent"/>
+
+        <TextView
+            android:id="@+id/no_offline_guides_text"
+            style="@style/EmptyText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerHorizontal="true"
+            android:text="@string/no_offline_guides_text"/>
+
+    </RelativeLayout>
+
+    <FrameLayout
+        android:id="@+id/loading_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
+</RelativeLayout>

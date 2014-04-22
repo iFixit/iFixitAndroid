@@ -61,7 +61,16 @@ public class ApiCall {
 
    public void updateUser(User user) {
       mUser = user;
-      mAuthToken = mUser.getAuthToken();
+
+      if (mUser != null) {
+         mAuthToken = mUser.getAuthToken();
+      } else {
+         mAuthToken = null;
+      }
+   }
+
+   public String getQuery() {
+      return mQuery;
    }
 
    /**

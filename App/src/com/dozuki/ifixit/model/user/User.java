@@ -28,6 +28,12 @@ public class User implements Serializable {
     */
    public String mEmail;
 
+   /**
+    * Used for using the correct site for syncing the user's data. It isn't returned by
+    * the API but it's used internally.
+    */
+   public String mSiteName;
+
    public User() {}
 
    public int getUserid() {

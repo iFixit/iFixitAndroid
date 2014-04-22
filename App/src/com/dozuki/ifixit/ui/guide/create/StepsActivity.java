@@ -133,8 +133,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    public void onRetrievedGuide(ApiEvent.GuideForEdit event) {
       if (!event.hasError()) {
          mGuide = event.getResult();
-         App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides/" + mGuide.getGuideid());
-         App.getGaTracker().send(MapBuilder.createAppView().build());
+         App.sendScreenView("/user/guides/" + mGuide.getGuideid());
 
          hideLoading();
       } else {

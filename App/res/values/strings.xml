@@ -52,6 +52,7 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="signin_error">Sign in error for %1$s</string>
 
     <string name="try_again">Try again</string>
     <string name="register_agreement">I agree to <a
@@ -205,6 +206,16 @@
     <string name="reorder_bullets_title">Reorder Bullets</string>
     <string name="cancel_reorder_bullets">Cancel</string>
 
+    <!-- Offline Guides -->
+    <string name="offline_guides">Offline Guides</string>
+    <string name="sync_now">Sync Now</string>
+    <string name="no_offline_guides_text">Get started by favoriting a guide.\n\nYour Favorite guides will be saved for offline viewing.</string>
+    <string name="sync_status_syncing">Syncing…</string>
+    <string name="last_synced">Last synced %1$s.</string>
+    <string name="notification_syncing">Syncing favorite guides…</string>
+    <string name="notification_sync_complete">Favorite guides downloaded</string>
+    <string name="sync_automatically">Sync automatically</string>
+    <string name="unfavorite_confirmation">Are you sure you want to unfavorite this guide?</string>
 
     <!-- Miscellaneous -->
     <string name="topic_background_description">Category background</string>
@@ -293,6 +304,7 @@
     <string name="add_reply">Add reply...</string>
     <string name="error_deleting_comment">Error deleting comment. Try again.</string>
     <string name="failed_edit_comment">Comment edit failed. Try again.</string>
+    <string name="just_now">just now</string>
     <string name="debug">Debug</string>
 
     <string-array name="new_image_actions">

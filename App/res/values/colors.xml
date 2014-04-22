@@ -35,6 +35,9 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="border">#FFCCCCCC</color>
     <color name="gainsboro">#FFDCDCDC</color>
 
+    <color name="progress_button_background">#FFBBBBBB</color>
+    <color name="progress_button_progress_disabled">#FF777777</color>
+
     <!-- Theme Colors -->
     <color name="ifixit_blue">#FF336DA8</color>
     <color name="dozuki_red">#FFDD4124</color>
@@ -43,4 +46,5 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_white">#FFCCCCCC</color>
     <color name="dozuki_grey">#F7777777</color>
 
+    <color name="holo_blue_dark">#FF0099cc</color>
 </resources>

@@ -24,6 +24,7 @@ public class GuideStepViewFragment extends BaseFragment {
    private static final String EMBED_TYPE = "embed";
 
    private GuideStep mStep;
+   private boolean mIsOfflineGuide;
 
    private StepLinesFragment mLinesFrag;
    private StepVideoFragment mVideoFrag;
@@ -32,8 +33,9 @@ public class GuideStepViewFragment extends BaseFragment {
 
    public GuideStepViewFragment() { }
 
-   public GuideStepViewFragment(GuideStep step) {
+   public GuideStepViewFragment(GuideStep step, boolean isOfflineGuide) {
       mStep = step;
+      mIsOfflineGuide = isOfflineGuide;
    }
 
    @Override
@@ -70,18 +72,13 @@ public class GuideStepViewFragment extends BaseFragment {
           .add(R.id.guide_step_lines, mLinesFrag);
 
          if (stepType.equals(VIDEO_TYPE)) {
-            Bundle videoArgs = new Bundle();
-
-            videoArgs.putSerializable(StepVideoFragment.GUIDE_VIDEO_KEY, mStep.getVideo());
-            mVideoFrag = new StepVideoFragment();
-            mVideoFrag.setArguments(videoArgs);
-
+            mVideoFrag = StepVideoFragment.newInstance(mStep.getVideo(), mIsOfflineGuide);
             ft.add(MEDIA_CONTAINER, mVideoFrag, STEP_VIDEO_FRAGMENT_TAG);
          } else if (stepType.equals(EMBED_TYPE)) {
-            mEmbedFrag = StepEmbedFragment.newInstance(mStep.getEmbed());
+            mEmbedFrag = StepEmbedFragment.newInstance(mStep.getEmbed(), mIsOfflineGuide);
             ft.add(MEDIA_CONTAINER, mEmbedFrag, STEP_EMBED_FRAGMENT_TAG);
          } else if (stepType.equals(IMAGE_TYPE)) {
-            mImageFrag = new StepImageFragment(mStep.getImages());
+            mImageFrag = StepImageFragment.newInstance(mStep.getImages(), mIsOfflineGuide);
             ft.add(MEDIA_CONTAINER, mImageFrag, STEP_IMAGE_FRAGMENT_TAG);
          }
 

@@ -136,8 +136,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
       mNewBulletButton.setOnClickListener(new OnClickListener() {
          @Override
          public void onClick(View v) {
-            App.getGaTracker().send(MapBuilder.createEvent("ui_action", "button_press",
-             "new_bullet_button", null).build());
+            App.sendEvent("ui_action", "button_press", "new_bullet_button", null);
             mLines.add(new StepLine());
             View view = getView(mLines.get(mLines.size() - 1), mLines.size() - 1);
             mBulletContainer.addView(view, mLines.size() - 1);
@@ -577,9 +576,9 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
    }
 
    private void launchBulletReorder() {
-      String screenLabel = "/guide/edit/" + ((StepEditActivity)getActivity()).getGuideId() + "/" + mStepId +
-       "/line_reorder";
-      App.getGaTracker().send(MapBuilder.createAppView().set(Fields.SCREEN_NAME, screenLabel).build());
+      App.sendScreenView("/guide/edit/" + ((StepEditActivity)getActivity()).getGuideId() +
+       "/" + mStepId + "/line_reorder");
+
       FragmentManager fm = getActivity().getSupportFragmentManager();
       mReorderFragment = new BulletReorderFragment();
       mReorderFragment.setLines(mLines);

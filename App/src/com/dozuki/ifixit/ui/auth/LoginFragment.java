@@ -149,10 +149,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, "/login");
-
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/login");
    }
 
    @Override
