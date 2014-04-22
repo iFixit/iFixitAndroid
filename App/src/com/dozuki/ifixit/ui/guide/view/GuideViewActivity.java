@@ -58,7 +58,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private TitlePageIndicator mIndicator;
    private int mInboundStepId = DEFAULT_INBOUND_STEPID;
    private GuideViewAdapter mAdapter;
-   private String mDomain;
    private boolean mFavoriting = false;
    private boolean mIsOfflineGuide;
    private Toast mToast;
@@ -84,7 +83,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       if (savedInstanceState != null) {
          mGuideid = savedInstanceState.getInt(GUIDEID);
-         mDomain = savedInstanceState.getString(DOMAIN);
          mFavoriting = savedInstanceState.getBoolean(FAVORITING);
          mIsOfflineGuide = savedInstanceState.getBoolean(IS_OFFLINE_GUIDE);
 
