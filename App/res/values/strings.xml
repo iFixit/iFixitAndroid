@@ -306,6 +306,7 @@
     <string name="failed_edit_comment">Comment edit failed. Try again.</string>
     <string name="just_now">just now</string>
     <string name="debug">Debug</string>
+    <string name="view_comments">View Comments</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>

@@ -9,7 +9,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
@@ -23,10 +22,11 @@ import com.dozuki.ifixit.ui.guide.CommentsActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
+import com.dozuki.ifixit.util.CheatSheet;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
-import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiDatabase;
+import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -178,6 +178,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             }
          }
       });
+
+      CheatSheet.setup(item.getActionView(), R.string.view_comments);
 
       return super.onCreateOptionsMenu(menu);
    }
