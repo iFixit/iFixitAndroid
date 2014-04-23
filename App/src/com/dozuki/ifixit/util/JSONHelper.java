@@ -336,11 +336,9 @@ public class JSONHelper {
     * Topic hierarchy parsing
     */
    public static TopicNode parseTopics(String json) throws JSONException {
-      JSONObject jResponse = new JSONObject(json);
-      JSONObject jHierarchy = jResponse.getJSONObject("hierarchy");
-      JSONObject jDisplayNames = jResponse.getJSONObject("display_titles");
+      JSONArray jHierarchy = new JSONArray(json);
 
-      ArrayList<TopicNode> topics = parseTopicChildren(jHierarchy, jDisplayNames);
+      ArrayList<TopicNode> topics = parseTopicChildren(jHierarchy);
       TopicNode root = new TopicNode();
 
       root.setChildren(topics);
@@ -351,29 +349,22 @@ public class JSONHelper {
    /**
     * Reads through the given JSONObject and adds any topics to the given topic.
     */
-   private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic,
-    JSONObject jDisplayNames) throws JSONException {
-      @SuppressWarnings("unchecked")
-      Iterator<String> iterator = jTopic.keys();
-      String topicName;
+   private static ArrayList<TopicNode> parseTopicChildren(JSONArray jChildren) throws JSONException {
       ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
-      TopicNode currentTopic;
 
-      while (iterator.hasNext()) {
-         topicName = iterator.next();
+      for (int i = 0; i < jChildren.length(); i++) {
+         JSONObject jTopic = jChildren.getJSONObject(i);
+         TopicNode topic = new TopicNode(jTopic.getString("title"));
 
-         currentTopic = new TopicNode(topicName);
-
-         if (!jTopic.isNull(topicName)) {
-            currentTopic.setChildren(parseTopicChildren(jTopic.getJSONObject(topicName),
-             jDisplayNames));
+         if (jTopic.has("children")) {
+            topic.setChildren(parseTopicChildren(jTopic.getJSONArray("children")));
          }
 
-         if (jDisplayNames.has(topicName)) {
-            currentTopic.setDisplayName(jDisplayNames.getString(topicName));
+         if (jTopic.has("display_title")) {
+            topic.setDisplayName(jTopic.getString("display_title"));
          }
 
-         topics.add(currentTopic);
+         topics.add(topic);
       }
 
       return topics;
