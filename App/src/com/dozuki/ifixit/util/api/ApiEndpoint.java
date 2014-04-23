@@ -35,7 +35,7 @@ public enum ApiEndpoint {
    CATEGORIES(
       new Endpoint() {
          public String createUrl(String query) {
-            return "categories?withDisplayTitles";
+            return "wikis/CATEGORY?display=hierarchyOrder";
          }
 
          public ApiEvent<?> parse(String json) throws JSONException {
