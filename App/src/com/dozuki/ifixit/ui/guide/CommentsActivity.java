@@ -133,10 +133,9 @@ public class CommentsActivity extends BaseActivity {
 
       if (App.get().isUserLoggedIn()) {
          if (mCommentContext.equalsIgnoreCase("guide") || mCommentContext.equalsIgnoreCase("step")) {
-            Log.d("CommentsActivity", "fetching updated guide");
             Api.call(this, ApiCall.guide(mGuideid));
          } else {
-            // TODO: Get wiki comments once we add those endpoints
+            // TODO: Get wiki comments once we add those endpoints.
          }
       }
    }
