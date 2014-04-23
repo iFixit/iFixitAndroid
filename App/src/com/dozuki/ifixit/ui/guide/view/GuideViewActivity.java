@@ -173,8 +173,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                   title = getString(R.string.step_number_comments, stepIndex + 1);
                }
 
-               startActivityForResult(CommentsActivity.viewComments(getApplicationContext(), comments, title,
-                context, contextid), COMMENT_REQUEST);
+               startActivityForResult(CommentsActivity.viewGuideComments(getApplicationContext(), comments, title,
+                context, contextid, mGuide.getGuideid()), COMMENT_REQUEST);
             }
          }
       });

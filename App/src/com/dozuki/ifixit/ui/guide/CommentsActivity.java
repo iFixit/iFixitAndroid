@@ -13,8 +13,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 import com.actionbarsherlock.view.MenuItem;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
+import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
@@ -31,6 +33,7 @@ public class CommentsActivity extends BaseActivity {
    private static final String TITLE_KEY = "TITLE_FIELD";
    private static final String CONTEXTID = "CONTEXTID_KEY";
    private static final String CONTEXT = "CONTEXT_KEY";
+   private static final String GUIDEID_KEY = "GUIDEID_KEY";
 
    private ArrayList<Comment> mComments;
    private String mTitle;
@@ -40,6 +43,7 @@ public class CommentsActivity extends BaseActivity {
    private Comment mCommentToDelete = null;
    private String mCommentContext;
    private int mCommentContextId;
+   private int mGuideid;
 
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title,
     String commentContext, int contextid) {
@@ -50,6 +54,20 @@ public class CommentsActivity extends BaseActivity {
       intent.putExtra(CONTEXTID, contextid);
       intent.putExtra(CONTEXT, commentContext);
       intent.putExtra(COMMENTS_KEY, comments);
+
+      return intent;
+   }
+
+   public static Intent viewGuideComments(Context context, ArrayList<Comment> comments, String title,
+    String commentContext, int contextid, int guideid) {
+
+      Intent intent = new Intent(context, CommentsActivity.class);
+
+      intent.putExtra(TITLE_KEY, title);
+      intent.putExtra(CONTEXTID, contextid);
+      intent.putExtra(CONTEXT, commentContext);
+      intent.putExtra(COMMENTS_KEY, comments);
+      intent.putExtra(GUIDEID_KEY, guideid);
 
       return intent;
    }
@@ -71,11 +89,14 @@ public class CommentsActivity extends BaseActivity {
          mCommentContext = savedInstanceState.getString(CONTEXT);
          mCommentContextId = savedInstanceState.getInt(CONTEXTID);
          mTitle = savedInstanceState.getString(TITLE_KEY);
+         mGuideid = savedInstanceState.getInt(GUIDEID_KEY, 0);
+
       } else if (args != null) {
          mComments = (ArrayList<Comment>) args.getSerializable(COMMENTS_KEY);
          mCommentContext = args.getString(CONTEXT);
          mCommentContextId = args.getInt(CONTEXTID);
          mTitle = args.getString(TITLE_KEY);
+         mGuideid = args.getInt(GUIDEID_KEY, 0);
       } else {
          mTitle = getString(R.string.comments);
       }
@@ -109,6 +130,15 @@ public class CommentsActivity extends BaseActivity {
       mCommentsList.setAdapter(mAdapter);
 
       setTitle(mTitle);
+
+      if (App.get().isUserLoggedIn()) {
+         if (mCommentContext.equalsIgnoreCase("guide") || mCommentContext.equalsIgnoreCase("step")) {
+            Log.d("CommentsActivity", "fetching updated guide");
+            Api.call(this, ApiCall.guide(mGuideid));
+         } else {
+            // TODO: Get wiki comments once we add those endpoints
+         }
+      }
    }
 
    @Override
@@ -119,6 +149,7 @@ public class CommentsActivity extends BaseActivity {
       state.putInt(CONTEXTID, mCommentContextId);
       state.putString(CONTEXT, mCommentContext);
       state.putString(TITLE_KEY, mTitle);
+      state.putInt(GUIDEID_KEY, mGuideid);
    }
 
    @Override
@@ -147,6 +178,21 @@ public class CommentsActivity extends BaseActivity {
          getParent().setResult(Activity.RESULT_OK, data);
       }
       finish();
+   }
+
+   @Subscribe
+   public void onGuideGet(ApiEvent.ViewGuide event) {
+      if (!event.hasError()) {
+         Guide guide = event.getResult();
+         if (mCommentContext.equalsIgnoreCase("guide")) {
+            mComments = guide.getComments();
+         } else if (mCommentContext.equalsIgnoreCase("step")) {
+            mComments = guide.getStepById(mCommentContextId).getComments();
+         }
+
+         mAdapter.setComments(mComments);
+         mAdapter.notifyDataSetChanged();
+      }
    }
 
    @Subscribe
