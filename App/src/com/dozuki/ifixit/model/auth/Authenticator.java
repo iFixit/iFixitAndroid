@@ -12,6 +12,7 @@ import android.util.Log;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.util.api.ApiContentProvider;
 
 /**
  * This is the authenticator for accounts associated with this particular app.
@@ -56,6 +57,11 @@ public class Authenticator extends AbstractAccountAuthenticator {
     */
    public Account onAccountAuthenticated(Site site, String email, String userName,
     int userid, String password, String authToken) {
+      if (!site.reauthenticateOnLogout()) {
+         // Don't store the password if the user shouldn't be reauthenticated.
+         password = "";
+      }
+
       Bundle userData = getUserDataBundle(site, email, userName, userid);
 
       Account existingAccount = getAccountForSite(site);
@@ -69,10 +75,21 @@ public class Authenticator extends AbstractAccountAuthenticator {
          }
       }
 
-      Account newAccount = new Account(userName, getAccountType());
+      // Accounts cannot share the same name so we must prefix the username with the site
+      // name if this is the dozuki app.
+      String accountName = userName;
+      if (BuildConfig.SITE_NAME.equals("dozuki")) {
+         accountName = site.mTitle + ": " + userName;
+      }
+
+      Account newAccount = new Account(accountName, getAccountType());
 
       mAccountManager.addAccountExplicitly(newAccount, password, userData);
       mAccountManager.setAuthToken(newAccount, AUTH_TOKEN_TYPE_FULL_ACCESS, authToken);
+
+      // By default, automatically sync user's data.
+      mContext.getContentResolver().setSyncAutomatically(newAccount,
+       ApiContentProvider.getAuthority(), true);
 
       return newAccount;
    }
@@ -139,6 +156,7 @@ public class Authenticator extends AbstractAccountAuthenticator {
       user.setUsername(mAccountManager.getUserData(account, USER_DATA_USER_NAME));
       user.setUserid(Integer.parseInt(mAccountManager.getUserData(account, USER_DATA_USERID)));
       user.mEmail = mAccountManager.getUserData(account, USER_DATA_EMAIL);
+      user.mSiteName = mAccountManager.getUserData(account, USER_DATA_SITE_NAME);
 
       return user;
    }

@@ -12,7 +12,6 @@ public class VideoMediaFragment extends MediaFragment {
       if (!event.hasError()) {
          GalleryVideoList videoList = event.getResult();
          if (videoList.getItems().size() > 0) {
-            int oldImageSize = mMediaList.getItems().size();
             for (int i = 0; i < videoList.getItems().size(); i++) {
                mMediaList.addItem(videoList.getItems().get(i));
             }
@@ -27,7 +26,6 @@ public class VideoMediaFragment extends MediaFragment {
    @Override
    protected void retrieveUserMedia() {
       mNextPageRequestInProgress = true;
-      Api.call(getActivity(),
-       ApiCall.userVideos("?limit=" + IMAGE_PAGE_SIZE));
+      Api.call(getActivity(), ApiCall.userVideos("?limit=" + IMAGE_PAGE_SIZE));
    }
 }

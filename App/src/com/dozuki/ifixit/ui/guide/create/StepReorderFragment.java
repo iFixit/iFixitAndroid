@@ -19,6 +19,7 @@ import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
@@ -123,10 +124,7 @@ public class StepReorderFragment extends BaseFragment {
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, "/guide/view/" + mGuide.getGuideid() + "/step_reorder");
-
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/guide/view/" + mGuide.getGuideid() + "/step_reorder");
    }
 
    public final class ContextualStepReorder implements ActionMode.Callback {
@@ -212,7 +210,7 @@ public class StepReorderFragment extends BaseFragment {
 
          if (step.hasVideo()) {
             PicassoUtils.with(getSherlockActivity())
-             .load(step.getVideo().getThumbnail().getPath(App.get().getImageSizes().getThumb()))
+             .load(step.getVideo().getThumbnail().getPath(ImageSizes.stepThumb))
              .error(R.drawable.no_image)
              .into(holder.mImageView);
 
@@ -237,7 +235,7 @@ public class StepReorderFragment extends BaseFragment {
       } else {
          for (Image imageInfo : imageList) {
             if (imageInfo.getId() > 0) {
-               url = imageInfo.getPath(App.get().getImageSizes().getThumb());
+               url = imageInfo.getPath(ImageSizes.stepThumb);
                image.setTag(url);
                break;
             }

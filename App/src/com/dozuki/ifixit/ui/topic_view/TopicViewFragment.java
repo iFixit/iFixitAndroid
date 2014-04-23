@@ -157,10 +157,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
 
    @Override
    public void onPageSelected(int position) {
-      String label = mPageAdapter.getFragmentScreenLabel(position);
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, label);
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView(mPageAdapter.getFragmentScreenLabel(position));
    }
 
    @Override

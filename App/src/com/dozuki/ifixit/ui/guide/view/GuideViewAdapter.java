@@ -23,10 +23,12 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    private int mPartsPosition = -1;
 
    private Guide mGuide;
+   private boolean mIsOfflineGuide;
 
-   public GuideViewAdapter(FragmentManager fm, Guide guide) {
+   public GuideViewAdapter(FragmentManager fm, Guide guide, boolean isOfflineGuide) {
       super(fm);
       mGuide = guide;
+      mIsOfflineGuide = isOfflineGuide;
 
       mPageLabelMap = new HashMap<Integer, String>();
 
@@ -68,7 +70,7 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
          int stepNumber = (position - mStepOffset);
          label += "/" + (stepNumber + 1); // Step title # should be 1 indexed.
 
-         fragment = new GuideStepViewFragment(mGuide.getStep(stepNumber));
+         fragment = new GuideStepViewFragment(mGuide.getStep(stepNumber), mIsOfflineGuide);
       }
 
       mPageLabelMap.put(position, label);

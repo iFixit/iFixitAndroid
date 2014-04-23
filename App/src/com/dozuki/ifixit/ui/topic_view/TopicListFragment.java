@@ -67,10 +67,7 @@ public class TopicListFragment extends BaseFragment
    public void onStart() {
       super.onStart();
 
-      Tracker tracker = App.getGaTracker();
-      tracker.set(Fields.SCREEN_NAME, "/category/" + mTopic.getName());
-
-      tracker.send(MapBuilder.createAppView().build());
+      App.sendScreenView("/category/" + mTopic.getName());
    }
 
    private void setupTopicAdapter() {

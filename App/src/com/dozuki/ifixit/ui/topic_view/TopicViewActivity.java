@@ -60,7 +60,7 @@ public class TopicViewActivity extends BaseSearchMenuDrawerActivity {
       if (mTopicNode != null) {
          setTitle(mTopicNode.getDisplayName());
 
-         App.getGaTracker().set(Fields.SCREEN_NAME, "/category/" + mTopicNode.getName());
+         App.sendScreenView("/category/" + mTopicNode.getName());
       }
    }
 

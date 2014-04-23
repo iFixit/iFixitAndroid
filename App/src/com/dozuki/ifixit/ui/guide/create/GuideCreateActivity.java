@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.guide.create;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -10,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
@@ -17,16 +17,17 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
+import com.dozuki.ifixit.util.JSONHelper;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
-import com.dozuki.ifixit.util.JSONHelper;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
+
 import org.json.JSONException;
 
 import java.util.ArrayList;
@@ -48,7 +49,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    private GuideInfo mGuideForDelete;
    private PullToRefreshListView mGuideListView;
    private GuideCreateListAdapter mGuideListAdapter;
-   private Activity mActivity;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -57,8 +57,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       setTitle(getString(R.string.my_guides));
 
       setContentView(R.layout.guide_create);
-
-      mActivity = this;
 
       if (savedInstanceState != null) {
          mUserGuideList = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
@@ -81,18 +79,16 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       mGuideListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
          @Override
          public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-            Api.call(mActivity, ApiCall.userGuides());
+            Api.call(GuideCreateActivity.this, ApiCall.userGuides());
          }
       });
 
-      App.getGaTracker().set(Fields.SCREEN_NAME, "/user/guides");
+      App.sendScreenView("/user/guides");
    }
 
    @Override
    public void onStart() {
       super.onStart();
-
-      App.getGaTracker().send(MapBuilder.createAppView().build());
    }
 
    @Override
@@ -260,15 +256,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
          }
       });
 
-      AlertDialog dialog = builder.create();
-
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-         }
-      });
-
-      return dialog;
+      return builder.create();
    }
 
    public class GuideCreateListAdapter extends BaseAdapter {
@@ -296,7 +284,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
          if (convertView != null) {
             itemView = (GuideListItem) convertView;
          } else {
-            itemView = new GuideListItem(parent.getContext(), mActivity);
+            itemView = new GuideListItem(parent.getContext(), GuideCreateActivity.this);
          }
 
          itemView.setRowData(currItem);
