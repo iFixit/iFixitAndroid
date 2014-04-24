@@ -38,6 +38,15 @@
         android:background="@drawable/top_border_bg"
         android:weightSum="10">
 
+        <Button
+            android:id="@+id/exit_comment_reply_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:text="X"
+            style="@style/Base.Button.Borderless"/>
+
         <EditText
             android:id="@+id/add_comment_field"
             android:layout_width="0dp"
@@ -53,6 +62,15 @@
             android:layout_weight="2"
             android:src="@drawable/ic_action_send"
             android:background="@drawable/selectable_item_background_transparent"/>
+
+        <ProgressBar
+            android:id="@+id/add_comment_progress"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            style="@style/Widget.Sherlock.Light.ProgressBar" />
     </LinearLayout>
 
 </RelativeLayout>

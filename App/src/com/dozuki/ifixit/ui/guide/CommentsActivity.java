@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
 import com.actionbarsherlock.view.MenuItem;
@@ -44,6 +47,8 @@ public class CommentsActivity extends BaseActivity {
    private String mCommentContext;
    private int mCommentContextId;
    private int mGuideid;
+   private ImageButton mAddCommentButton;
+   private ProgressBar mAddCommentProgress;
 
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title,
     String commentContext, int contextid) {
@@ -102,9 +107,9 @@ public class CommentsActivity extends BaseActivity {
       }
 
       mAddCommentField = (EditText) findViewById(R.id.add_comment_field);
-
-      ImageButton addComment = (ImageButton) findViewById(R.id.add_comment_button);
-      addComment.setOnClickListener(new View.OnClickListener() {
+      mAddCommentProgress = (ProgressBar) findViewById(R.id.add_comment_progress);
+      mAddCommentButton = (ImageButton) findViewById(R.id.add_comment_button);
+      mAddCommentButton.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
             String commentText = String.valueOf(mAddCommentField.getText());
@@ -112,6 +117,8 @@ public class CommentsActivity extends BaseActivity {
 
             if (commentText.length() > 0) {
                mAddCommentField.setEnabled(false);
+               mAddCommentButton.setVisibility(View.GONE);
+               mAddCommentProgress.setVisibility(View.VISIBLE);
 
                if (parentid != null) {
                   Api.call(CommentsActivity.this, ApiCall.newComment(commentText, mCommentContext, mCommentContextId,
@@ -295,9 +302,21 @@ public class CommentsActivity extends BaseActivity {
       mAddCommentField.requestFocus();
 
       InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.showSoftInput(mAddCommentField, InputMethodManager.SHOW_IMPLICIT);
+      imm.toggleSoftInputFromWindow(mAddCommentField.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
 
       mAddCommentField.setTag(R.id.comment_parent_id, event.parent.mCommentid);
+
+      Button exitReply = (Button) findViewById(R.id.exit_comment_reply_button);
+      LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 7f);
+      mAddCommentField.setLayoutParams(params);
+      exitReply.setVisibility(View.VISIBLE);
+      exitReply.setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            resetCommentField();
+            v.setVisibility(View.GONE);
+         }
+      });
    }
 
    @Subscribe
@@ -322,14 +341,24 @@ public class CommentsActivity extends BaseActivity {
          mAdapter.setComments(mComments);
          mAdapter.notifyDataSetChanged();
          scrollCommentsToPosition(position);
-         mAddCommentField.setText("");
-         mAddCommentField.setHint(R.string.add_comment);
-         mAddCommentField.setTag(R.id.comment_parent_id, null);
+         resetCommentField();
       } else {
          Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }
 
       mAddCommentField.setEnabled(true);
+      mAddCommentButton.setVisibility(View.VISIBLE);
+      mAddCommentProgress.setVisibility(View.GONE);
+   }
+
+   private void resetCommentField() {
+      mAddCommentField.setText("");
+      mAddCommentField.setHint(R.string.add_comment);
+      mAddCommentField.setTag(R.id.comment_parent_id, null);
+      LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 8f);
+      mAddCommentField.setLayoutParams(params);
+      mAddCommentButton.setVisibility(View.VISIBLE);
+      mAddCommentProgress.setVisibility(View.GONE);
    }
 
    private void scrollCommentsToPosition(final int position) {
