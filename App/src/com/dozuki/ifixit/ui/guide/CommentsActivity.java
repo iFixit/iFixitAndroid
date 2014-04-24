@@ -304,7 +304,7 @@ public class CommentsActivity extends BaseActivity {
 
       showSoftKeyboard();
 
-      mAddCommentField.setTag(R.id.comment_parent_id, event.parent.mCommentid);
+      mAddCommentField.setTag(R.id.comment_parent_id, event.parentid);
 
       Button exitReply = (Button) findViewById(R.id.exit_comment_reply_button);
       LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 7f);
@@ -346,6 +346,7 @@ public class CommentsActivity extends BaseActivity {
          Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }
 
+      mAddCommentField.setEnabled(true);
       mAddCommentButton.setVisibility(View.VISIBLE);
       mAddCommentProgress.setVisibility(View.GONE);
    }

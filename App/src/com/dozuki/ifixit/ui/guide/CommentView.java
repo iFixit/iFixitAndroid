@@ -88,13 +88,8 @@ public class CommentView extends RelativeLayout {
 
       final View menuButton = findViewById(R.id.comment_menu);
 
-      // if there are options, show the menu button
-      if (reply && !commentOwner) {
-         menuButton.setVisibility(View.GONE);
-      }
-
       // Default progress to gone
-      findViewById(R.id.comment_menu).setVisibility(View.VISIBLE);
+      menuButton.setVisibility(View.VISIBLE);
       findViewById(R.id.comment_progress).setVisibility(View.GONE);
 
       menuButton.setOnClickListener(new View.OnClickListener() {
@@ -109,7 +104,7 @@ public class CommentView extends RelativeLayout {
                   public boolean onMenuItemClick(MenuItem item) {
                      switch (item.getItemId()) {
                         case R.id.comment_item_reply:
-                           replyToComment(comment);
+                           replyToComment(reply ? comment.mParentid : comment.mCommentid);
                            break;
                         case R.id.comment_item_edit:
                            editComment(comment);
@@ -128,7 +123,6 @@ public class CommentView extends RelativeLayout {
                menuInflater.inflate(R.menu.comment_item_popup, menu);
 
                // If the comment is areply, hide reply option
-               menu.findItem(R.id.comment_item_reply).setVisible(!reply);
                menu.findItem(R.id.comment_item_delete).setVisible(commentOwner);
                menu.findItem(R.id.comment_item_edit).setVisible(commentOwner);
 
@@ -141,7 +135,7 @@ public class CommentView extends RelativeLayout {
                   public void onClick(DialogInterface dialog, int which) {
                      switch (which) {
                         case REPLY_OPTION:
-                           replyToComment(comment);
+                           replyToComment(reply ? comment.mParentid : comment.mCommentid);
                            break;
                         case EDIT_OPTION:
                            editComment(comment);
@@ -170,7 +164,7 @@ public class CommentView extends RelativeLayout {
       App.getBus().post(new CommentDeleteEvent(comment));
    }
 
-   private void replyToComment(Comment parent) {
-      App.getBus().post(new CommentReplyingEvent(parent));
+   private void replyToComment(int parentid) {
+      App.getBus().post(new CommentReplyingEvent(parentid));
    }
 }

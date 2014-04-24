@@ -1,11 +1,9 @@
 package com.dozuki.ifixit.ui.guide;
 
-import com.dozuki.ifixit.model.Comment;
-
 public class CommentReplyingEvent {
-   public Comment parent;
+   public int parentid;
 
-   public CommentReplyingEvent(Comment parent) {
-      this.parent = parent;
+   public CommentReplyingEvent(int parentid) {
+      this.parentid = parentid;
    }
 }
