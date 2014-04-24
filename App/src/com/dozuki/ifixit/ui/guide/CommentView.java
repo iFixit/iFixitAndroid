@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.os.Build;
 import android.text.Html;
 import android.text.Spanned;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -67,6 +68,7 @@ public class CommentView extends RelativeLayout {
       TextView commentText = (TextView) findViewById(R.id.comment_text);
       Spanned commentHtml = Html.fromHtml(comment.mTextRendered);
       commentText.setText(Utils.trim(commentHtml, 0, commentHtml.length()));
+      commentText.setMovementMethod(LinkMovementMethod.getInstance());
 
       ((TextView) findViewById(R.id.comment_details)).setText(Html.fromHtml(commentDetails));
 
