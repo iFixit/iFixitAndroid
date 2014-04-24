@@ -7,25 +7,31 @@ import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
-
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
+import com.dozuki.ifixit.ui.guide.CommentsActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
 import com.dozuki.ifixit.ui.guide.create.StepsActivity;
+import com.dozuki.ifixit.util.CheatSheet;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiDatabase;
+import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
+
+import java.util.ArrayList;
 
 public class GuideViewActivity extends BaseMenuDrawerActivity implements
  ViewPager.OnPageChangeListener {
@@ -41,15 +47,18 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
+   public static final String COMMENTS_TAG = "COMMENTS_TAG";
+   private static final int COMMENT_REQUEST = 0;
 
    private int mGuideid;
    private Guide mGuide;
    private int mCurrentPage = -1;
+   private int mStepOffset = 1;
    private ViewPager mPager;
    private TitlePageIndicator mIndicator;
    private int mInboundStepId = DEFAULT_INBOUND_STEPID;
    private GuideViewAdapter mAdapter;
-   private boolean mFavoriting;
+   private boolean mFavoriting = false;
    private boolean mIsOfflineGuide;
    private Toast mToast;
 
@@ -141,14 +150,82 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
       getSupportMenuInflater().inflate(R.menu.guide_view_menu, menu);
+
+      MenuItem item = menu.findItem(R.id.comments);
+      item.getActionView().setOnClickListener(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            if (mGuide != null) {
+               ArrayList<Comment> comments;
+               int stepIndex = getStepIndex(), contextid;
+               String title, context;
+
+               // If we're in one of the introduction pages, show guide comments.
+               if (stepIndex < 0) {
+                  comments = mGuide.getComments();
+                  title = getString(R.string.guide_comments);
+                  context = "guide";
+                  contextid = mGuide.getGuideid();
+               } else {
+                  comments = mGuide.getStep(stepIndex).getComments();
+                  contextid = mGuide.getStep(stepIndex).getStepid();
+                  context = "step";
+                  title = getString(R.string.step_number_comments, stepIndex + 1);
+               }
+
+               startActivityForResult(CommentsActivity.viewGuideComments(getApplicationContext(), comments, title,
+                context, contextid, mGuide.getGuideid()), COMMENT_REQUEST);
+            }
+         }
+      });
+
+      CheatSheet.setup(item.getActionView(), R.string.view_comments);
+
       return super.onCreateOptionsMenu(menu);
    }
 
    @Override
+   protected void onActivityResult (int requestCode, int resultCode, Intent data) {
+      if (requestCode == COMMENT_REQUEST && resultCode == RESULT_OK) {
+         Bundle extras = data.getExtras();
+         if (extras != null) {
+            ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
+
+            if (getStepIndex() < 0) {
+               mGuide.setComments(comments);
+            } else {
+               mGuide.getStep(getStepIndex()).setComments(comments);
+            }
+
+            updateCommentCounts();
+         }
+      }
+   }
+
+
+   @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
+      MenuItem comments = menu.findItem(R.id.comments);
       MenuItem favoriteGuide = menu.findItem(R.id.favorite_guide);
       MenuItem reloadGuide = menu.findItem(R.id.reload_guide);
       MenuItem editGuide = menu.findItem(R.id.edit_guide);
+
+      TextView countView = ((TextView)comments.getActionView().findViewById(R.id.comment_count));
+
+      if (mGuide != null) {
+         int stepIndex = getStepIndex();
+
+         int commentCount = 0;
+         if (stepIndex < 0) {
+            commentCount = mGuide.getCommentCount();
+         } else {
+            commentCount = mGuide.getStep(stepIndex).getCommentCount();
+         }
+
+         if (countView != null) {
+            countView.setText(commentCount + "");
+         }
+      }
 
       boolean favorited = mGuide != null && mGuide.isFavorited();
       favoriteGuide.setIcon(favorited ? R.drawable.ic_action_favorite_filled :
@@ -172,36 +249,38 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
          case R.id.edit_guide:
-            App.sendEvent("menu_action", "button_press", "edit_guide", (long)mGuide.getGuideid());
+            if (mGuide != null) {
+               App.sendEvent("menu_action", "button_press", "edit_guide", (long)mGuide.getGuideid());
 
-            // If the user is on the introduction, take them to edit the introduction fields.
-            if (mCurrentPage == 0) {
-               Intent intent = new Intent(this, GuideIntroActivity.class);
-               intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
-               intent.putExtra(GuideIntroActivity.STATE_KEY, true);
-               startActivity(intent);
-            } else {
-               Intent intent = new Intent(this, StepEditActivity.class);
-               int stepNum = 0;
+               // If the user is on the introduction, take them to edit the introduction fields.
+               if (mCurrentPage == 0) {
+                  Intent intent = new Intent(this, GuideIntroActivity.class);
+                  intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
+                  intent.putExtra(GuideIntroActivity.STATE_KEY, true);
+                  startActivity(intent);
+               } else {
+                  Intent intent = new Intent(this, StepEditActivity.class);
+                  int stepNum = 0;
 
-               // Take into account the introduction, parts and tools page.
-               if (mCurrentPage >= mAdapter.getStepOffset()) {
-                  stepNum = mCurrentPage - mAdapter.getStepOffset();
-                  // Account for array indexed starting at 1
-                  intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
+                  // Take into account the introduction, parts and tools page.
+                  if (mCurrentPage >= mAdapter.getStepOffset()) {
+                     stepNum = mCurrentPage - mAdapter.getStepOffset();
+                     // Account for array indexed starting at 1
+                     intent.putExtra(StepEditActivity.GUIDE_STEP_NUM_KEY, stepNum + 1);
+                  }
+
+                  int stepGuideid = mGuide.getStep(stepNum).getGuideid();
+                  // If the step is part of a prerequisite guide, store the parents
+                  // guideid so that we can get back from editing this prerequisite.
+                  if (stepGuideid != mGuide.getGuideid()) {
+                     intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
+                  }
+                  // We have to pass along the steps guideid to account for prerequisite guides.
+                  intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
+                  intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
+                  intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
+                  startActivity(intent);
                }
-
-               int stepGuideid = mGuide.getStep(stepNum).getGuideid();
-               // If the step is part of a prerequisite guide, store the parents
-               // guideid so that we can get back from editing this prerequisite.
-               if (stepGuideid != mGuide.getGuideid()) {
-                  intent.putExtra(StepEditActivity.PARENT_GUIDE_ID_KEY, mGuide.getGuideid());
-               }
-               // We have to pass along the steps guideid to account for prerequisite guides.
-               intent.putExtra(StepEditActivity.GUIDE_ID_KEY, stepGuideid);
-               intent.putExtra(StepEditActivity.GUIDE_PUBLIC_KEY, mGuide.isPublic());
-               intent.putExtra(StepEditActivity.GUIDE_STEP_ID, mGuide.getStep(stepNum).getStepid());
-               startActivity(intent);
             }
             return true;
          case R.id.reload_guide:
@@ -210,6 +289,27 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             supportInvalidateOptionsMenu();
             fetchGuideFromApi(mGuideid);
             return true;
+         case R.id.comments:
+            ArrayList<Comment> comments;
+            int stepIndex = getStepIndex(), contextid;
+            String title, context;
+
+            // If we're in one of the introduction pages, show guide comments.
+            if (stepIndex < 0) {
+               comments = mGuide.getComments();
+               title = getString(R.string.guide_comments);
+               context = "guide";
+               contextid = mGuide.getGuideid();
+            } else {
+               comments = mGuide.getStep(stepIndex).getComments();
+               title = getString(R.string.step_number_comments, stepIndex + 1);
+               context = "step";
+               contextid = mGuide.getStep(stepIndex).getStepid();
+            }
+
+            startActivity(CommentsActivity.viewComments(this, comments, title, context,
+             contextid));
+
          case R.id.favorite_guide:
             // Current favorite state.
             boolean favorited = mGuide == null ? false : mGuide.isFavorited();
@@ -228,6 +328,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          default:
             return super.onOptionsItemSelected(item);
       }
+   }
+
+   private int getStepIndex() {
+      return (mCurrentPage - mAdapter.getStepOffset());
    }
 
    /////////////////////////////////////////////////////
@@ -348,7 +452,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mIndicator.setOnPageChangeListener(this);
       mIndicator.setCurrentItem(currentPage);
 
-      supportInvalidateOptionsMenu();
+      // Update the comment count
+      updateCommentCounts();
    }
 
    private void fetchGuideFromApi(int guideid) {
@@ -414,7 +519,15 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public void onPageSelected(int currentPage) {
       mCurrentPage = currentPage;
 
+      // Update comment count in the menu
+      supportInvalidateOptionsMenu();
       App.sendScreenView(mAdapter.getFragmentScreenLabel(currentPage));
+   }
+
+   private void displayGuideNotFoundDialog() {
+      Api.getErrorDialog(this, new ApiEvent.ViewGuide().
+       setCode(404).
+       setError(ApiError.getByStatusCode(404))).show();
    }
 
    @Override
@@ -435,5 +548,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (container != null) {
          container.setVisibility(View.GONE);
       }
+   }
+
+   // Update the comment count in the action bar
+   private void updateCommentCounts() {
+      supportInvalidateOptionsMenu();
    }
 }

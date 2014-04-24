@@ -86,6 +86,25 @@ public class Utils {
    }
 
    /**
+    * Trim off whitespace from the beginning and end of a given string.
+    * @param s
+    * @param start
+    * @param end
+    * @return the trimmed string
+    */
+   public static CharSequence trim(CharSequence s, int start, int end) {
+      while (start < end && Character.isWhitespace(s.charAt(start))) {
+         start++;
+      }
+
+      while (end > start && Character.isWhitespace(s.charAt(end - 1))) {
+         end--;
+      }
+
+      return s.subSequence(start, end);
+   }
+
+   /**
     * ImageView stripping without the "dangerous" bitmap recycle.
     *
     * @param view ImageView to clean memory

@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
@@ -75,6 +76,9 @@ public abstract class ApiEvent<T> {
    public static class StepAdd extends ApiEvent<Guide> {}
    public static class StepRemove extends ApiEvent<Guide> {}
    public static class EditGuide extends ApiEvent<Guide> {}
+   public static class AddComment extends ApiEvent<Comment> {}
+   public static class DeleteComment extends ApiEvent<String> {}
+   public static class EditComment extends ApiEvent<Comment> {}
    public static class FavoriteGuide extends ApiEvent<Boolean> {}
 
    public static class Sites extends ApiEvent<ArrayList<Site>> {}

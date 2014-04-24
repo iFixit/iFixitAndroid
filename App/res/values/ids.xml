@@ -2,6 +2,8 @@
 <resources>
 
     <item name="guide_step_view_video_url" type="id"/>
+    <item name="comment_parent_id" type="id"/>
+    <item name="commentid" type="id"/>
     <item name="guide_sync_notificationid" type="id"/>
     <item name="offline_guide_loaderid" type="id"/>
 

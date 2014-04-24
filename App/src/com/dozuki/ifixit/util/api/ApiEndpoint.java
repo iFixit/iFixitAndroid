@@ -1,9 +1,9 @@
 package com.dozuki.ifixit.util.api;
 
 import android.util.Log;
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.util.JSONHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -84,6 +84,60 @@ public enum ApiEndpoint {
       },
       false,
       "GET"
+   ),
+
+   ADD_COMMENT(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "comments" + query;
+       }
+
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.AddComment().setResult(new Comment(json));
+       }
+
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.AddComment();
+       }
+    },
+    true,
+    "POST"
+   ),
+
+   EDIT_COMMENT(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "comments" + query;
+       }
+
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.EditComment().setResult(new Comment(json));
+       }
+
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.EditComment();
+       }
+    },
+    true,
+    "PATCH"
+   ),
+
+   DELETE_COMMENT(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "comments" + query;
+       }
+
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.DeleteComment().setResult("");
+       }
+
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.DeleteComment();
+       }
+    },
+    true,
+    "DELETE"
    ),
 
    TOPIC(

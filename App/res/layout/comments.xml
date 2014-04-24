@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/add_comment_wrap">
+
+        <ListView
+            android:id="@+id/comment_list"
+            android:layout_height="match_parent"
+            android:layout_width="match_parent"
+            android:paddingTop="8dp"
+            android:layout_marginLeft="8dp"
+            android:layout_marginRight="8dp"
+            android:dividerHeight="8dp"
+            android:scrollbars="none"
+            android:divider="@color/transparent"/>
+
+        <TextView
+            android:id="@+id/android:empty"
+            android:layout_height="wrap_content"
+            android:layout_width="wrap_content"
+            android:text="@string/empty_comments"
+            style="@android:style/TextAppearance.Widget.TextView"
+            android:layout_gravity="center_vertical|center_horizontal"/>
+    </FrameLayout>
+
+    <LinearLayout
+        android:id="@+id/add_comment_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:minHeight="60dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/top_border_bg"
+        android:weightSum="10">
+
+        <Button
+            android:id="@+id/exit_comment_reply_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:visibility="gone"
+            android:layout_weight="1"
+            android:text="X"
+            style="@style/Base.Button.Borderless"/>
+
+        <EditText
+            android:id="@+id/add_comment_field"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:inputType="text|textMultiLine|textAutoCorrect|textCapSentences"
+            android:layout_weight="8"
+            android:hint="@string/add_comment"/>
+
+        <ImageButton
+            android:id="@+id/add_comment_button"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:src="@drawable/ic_action_send"
+            android:background="@drawable/selectable_item_background_transparent"/>
+
+        <ProgressBar
+            android:id="@+id/add_comment_progress"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            style="@style/Widget.Sherlock.Light.ProgressBar" />
+    </LinearLayout>
+
+</RelativeLayout>

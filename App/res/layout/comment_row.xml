@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/comment_row_wrap"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_card"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:paddingLeft="8dp"
+                android:paddingRight="8dp">
+
+    <RelativeLayout
+        android:id="@+id/comment_details_wrap"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/comment_author"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:padding="1dp"
+            android:layout_marginBottom="4dp"
+            android:scaleType="centerInside"
+            android:background="@drawable/image_background_circle"/>
+
+        <TextView
+            android:id="@+id/comment_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/comment_author"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="30dp"
+            android:layout_marginLeft="8dp"
+            android:textSize="14sp"
+            android:textColor="@android:color/secondary_text_light"/>
+
+        <ImageButton
+            android:id="@+id/comment_menu"
+            android:layout_alignParentRight="true"
+            style="@style/ItemMenuButton"/>
+
+        <ProgressBar
+            android:id="@+id/comment_progress"
+            android:layout_alignParentRight="true"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            style="@style/Widget.Sherlock.Light.ProgressBar" />
+
+    </RelativeLayout>
+
+    <ViewSwitcher
+        android:id="@+id/edit_comment_switcher"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/comment_details_wrap"
+        android:measureAllChildren="false">
+
+        <TextView
+            android:id="@+id/comment_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="4dp"
+            android:layout_marginBottom="12dp"
+            android:textSize="16sp"
+            android:includeFontPadding="false"
+            android:textColor="@android:color/primary_text_light"/>
+
+        <RelativeLayout
+            android:id="@+id/edit_comment_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:weightSum="10">
+
+            <EditText
+                android:id="@+id/edit_comment_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text|textMultiLine|textAutoCorrect|textCapSentences"/>
+
+            <Button
+                android:id="@+id/save_edit_comment_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/save"
+                android:layout_below="@+id/edit_comment_text"
+                android:layout_alignParentLeft="true"
+                style="@style/Base.Button"/>
+
+            <Button
+                android:id="@+id/exit_comment_edit_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="X"
+                android:layout_below="@+id/edit_comment_text"
+                android:layout_alignParentRight="true"
+                style="@style/Base.Button.Borderless"/>
+
+        </RelativeLayout>
+
+    </ViewSwitcher>
+
+    <LinearLayout
+        android:id="@+id/comment_replies"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/edit_comment_switcher"
+        android:layout_marginBottom="12dp"
+        android:layout_marginLeft="24dp"
+        android:orientation="vertical"
+        android:visibility="gone"/>
+
+</RelativeLayout>

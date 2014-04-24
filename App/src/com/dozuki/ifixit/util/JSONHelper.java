@@ -4,6 +4,7 @@ import android.util.Log;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
@@ -202,6 +203,7 @@ public class JSONHelper {
       guide.setPublic(jGuide.getBoolean("public"));
       guide.setType(jGuide.getString("type"));
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
+      guide.setComments(parseComments(jGuide.getJSONArray("comments")));
       guide.setFavorited(jGuide.getBoolean("favorited"));
       guide.setModifiedDate(jGuide.getDouble("modified_date"));
       guide.setPrereqModifiedDate(jGuide.getDouble("prereq_modified_date"));
@@ -223,6 +225,14 @@ public class JSONHelper {
       }
 
       return guide;
+   }
+
+   private static ArrayList<Comment> parseComments(JSONArray comments) throws JSONException {
+      ArrayList<Comment> result = new ArrayList<Comment>();
+      for (int i = 0; i < comments.length(); i++) {
+         result.add(new Comment(comments.getJSONObject(i)));
+      }
+      return result;
    }
 
    private static Item parsePart(JSONObject jPart) throws JSONException {
@@ -280,6 +290,8 @@ public class JSONHelper {
       for (int i = 0; i < jLines.length(); i++) {
          step.addLine(parseLine(jLines.getJSONObject(i)));
       }
+
+      step.setComments(parseComments(jStep.getJSONArray("comments")));
 
       return step;
    }
@@ -511,6 +523,19 @@ public class JSONHelper {
       return user;
    }
 
+   public static User parseUserLight(JSONObject jUser) throws JSONException {
+      User user = new User();
+      user.setUserid(jUser.getInt("userid"));
+      user.setUsername(jUser.getString("username"));
+      user.setAvatar(parseImage(jUser, "image"));
+
+      if (!jUser.isNull("join_date"))
+         user.setJoinDate(jUser.getInt("join_date"));
+
+      user.setReputation(jUser.getInt("reputation"));
+      return user;
+   }
+
    public static Badges parseBadges(JSONObject json) throws JSONException {
 
       int gold = json.getInt("gold");
@@ -680,4 +705,5 @@ public class JSONHelper {
          return new Image();
       }
    }
+
 }
