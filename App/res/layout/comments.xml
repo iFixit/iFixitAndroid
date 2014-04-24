@@ -17,6 +17,7 @@
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
             android:dividerHeight="8dp"
+            android:scrollbars="none"
             android:divider="@color/transparent"/>
 
         <TextView
