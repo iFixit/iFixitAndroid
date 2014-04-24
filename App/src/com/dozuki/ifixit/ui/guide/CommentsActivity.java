@@ -44,7 +44,6 @@ public class CommentsActivity extends BaseActivity {
    private CommentsAdapter mAdapter;
    private ListView mCommentsList;
    private EditText mAddCommentField;
-   private Comment mCommentToDelete = null;
    private String mCommentContext;
    private int mCommentContextId;
    private int mGuideid;
@@ -204,22 +203,22 @@ public class CommentsActivity extends BaseActivity {
 
    @Subscribe
    public void onCommentDelete(CommentDeleteEvent event) {
-      mCommentToDelete = event.comment;
       Api.call(this, ApiCall.deleteComment(event.comment.mCommentid));
    }
 
    @Subscribe
    public void onCommentDeleted(ApiEvent.DeleteComment event) {
       if (!event.hasError()) {
+         int commentIdToDelete = Integer.parseInt(event.getExtraInfo());
          for (Iterator<Comment> it = mComments.iterator(); it.hasNext(); ) {
             Comment comment = it.next();
-            if (comment.mCommentid == mCommentToDelete.mCommentid) {
+            if (comment.mCommentid == commentIdToDelete) {
                it.remove();
                break;
             } else {
                for (Iterator<Comment> rit = comment.mReplies.iterator(); rit.hasNext(); ) {
                   Comment reply = rit.next();
-                  if (reply.mCommentid == mCommentToDelete.mCommentid) {
+                  if (reply.mCommentid == commentIdToDelete) {
                      rit.remove();
                      break;
                   }
@@ -232,8 +231,6 @@ public class CommentsActivity extends BaseActivity {
       } else {
          Toast.makeText(getBaseContext(), R.string.error_deleting_comment, Toast.LENGTH_SHORT).show();
       }
-
-      mCommentToDelete = null;
    }
 
    @Subscribe

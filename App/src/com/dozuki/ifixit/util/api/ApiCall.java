@@ -400,6 +400,6 @@ public class ApiCall {
    }
 
    public static ApiCall deleteComment(int commentid) {
-      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + commentid);
+      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + commentid, null, commentid + "");
    }
 }
