@@ -20,6 +20,7 @@ import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
@@ -312,7 +313,7 @@ public class CommentsActivity extends BaseActivity {
       exitReply.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-            resetCommentField();
+            resetCommentField(false);
             v.setVisibility(View.GONE);
          }
       });
@@ -340,26 +341,33 @@ public class CommentsActivity extends BaseActivity {
          mAdapter.setComments(mComments);
          mAdapter.notifyDataSetChanged();
          scrollCommentsToPosition(position);
-         resetCommentField();
+         resetCommentField(false);
       } else {
          Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }
 
-      mAddCommentField.setEnabled(true);
       mAddCommentButton.setVisibility(View.VISIBLE);
       mAddCommentProgress.setVisibility(View.GONE);
    }
 
-   private void resetCommentField() {
-      mAddCommentField.setText("");
-      mAddCommentField.setHint(R.string.add_comment);
-      mAddCommentField.setTag(R.id.comment_parent_id, null);
+   @Subscribe
+   public void onCancelLogin(LoginEvent.Cancel event) {
+      resetCommentField(true);
+   }
+
+   private void resetCommentField(boolean keepText) {
+      if (!keepText) {
+         mAddCommentField.setText("");
+         mAddCommentField.setHint(R.string.add_comment);
+         mAddCommentField.setTag(R.id.comment_parent_id, null);
+         findViewById(R.id.exit_comment_reply_button).setVisibility(View.GONE);
+      }
+      mAddCommentField.setEnabled(true);
+
       LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 8f);
       mAddCommentField.setLayoutParams(params);
       mAddCommentButton.setVisibility(View.VISIBLE);
       mAddCommentProgress.setVisibility(View.GONE);
-
-      findViewById(R.id.exit_comment_reply_button).setVisibility(View.GONE);
    }
 
    private void scrollCommentsToPosition(final int position) {
