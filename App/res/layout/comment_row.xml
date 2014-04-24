@@ -78,7 +78,7 @@
                 android:id="@+id/edit_comment_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:inputType="text|textCapSentences|textMultiLine|textAutoComplete"/>
+                android:inputType="text|textMultiLine|textAutoCorrect|textCapSentences"/>
 
             <Button
                 android:id="@+id/save_edit_comment_button"
