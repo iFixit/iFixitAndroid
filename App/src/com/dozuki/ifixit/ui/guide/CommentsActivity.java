@@ -301,8 +301,7 @@ public class CommentsActivity extends BaseActivity {
       mAddCommentField.setHint(R.string.add_reply);
       mAddCommentField.requestFocus();
 
-      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.toggleSoftInputFromWindow(mAddCommentField.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
+      showSoftKeyboard();
 
       mAddCommentField.setTag(R.id.comment_parent_id, event.parent.mCommentid);
 
@@ -359,6 +358,8 @@ public class CommentsActivity extends BaseActivity {
       mAddCommentField.setLayoutParams(params);
       mAddCommentButton.setVisibility(View.VISIBLE);
       mAddCommentProgress.setVisibility(View.GONE);
+
+      findViewById(R.id.exit_comment_reply_button).setVisibility(View.GONE);
    }
 
    private void scrollCommentsToPosition(final int position) {
@@ -368,5 +369,10 @@ public class CommentsActivity extends BaseActivity {
             mCommentsList.setSelection(position);
          }
       });
+   }
+
+   private void showSoftKeyboard() {
+      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      imm.toggleSoftInputFromWindow(mAddCommentField.getApplicationWindowToken(), InputMethodManager.SHOW_FORCED, 0);
    }
 }
