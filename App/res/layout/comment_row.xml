@@ -5,6 +5,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_card"
+                android:layout_marginRight="@dimen/list_item_horizontal_margin"
+                android:layout_marginLeft="@dimen/list_item_horizontal_margin"
                 android:paddingTop="4dp"
                 android:paddingBottom="4dp"
                 android:paddingLeft="8dp"

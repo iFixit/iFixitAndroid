@@ -60,6 +60,7 @@ public class CommentView extends RelativeLayout {
 
       if (reply) {
          mContainer.setBackgroundResource(R.color.subtle_gray);
+         mContainer.setLayoutParams(getReplyLayoutParams());
       }
 
       String commentDetails =
@@ -170,5 +171,13 @@ public class CommentView extends RelativeLayout {
    private void replyToComment(int parentid) {
       App.getBus().post(new CommentReplyingEvent(parentid));
       App.sendEvent("ui_action", "button_press", "comment_reply", null);
+   }
+
+   private RelativeLayout.LayoutParams getReplyLayoutParams() {
+      RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
+       RelativeLayout.LayoutParams.WRAP_CONTENT);
+      lp.setMargins(0, 0, 0, 0);
+
+      return lp;
    }
 }
