@@ -223,7 +223,7 @@ public class CommentsActivity extends BaseActivity {
          mAdapter.setComments(mComments);
          mAdapter.notifyDataSetChanged();
       } else {
-         Toast.makeText(getBaseContext(), R.string.error_deleting_comment, Toast.LENGTH_SHORT).show();
+         Toast.makeText(this, R.string.error_deleting_comment, Toast.LENGTH_SHORT).show();
       }
    }
 
@@ -291,7 +291,7 @@ public class CommentsActivity extends BaseActivity {
 
          mAdapter.setComments(mComments);
       } else {
-         Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
+         Toast.makeText(this, event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }
 
       mAdapter.notifyDataSetChanged();
@@ -345,7 +345,7 @@ public class CommentsActivity extends BaseActivity {
          scrollCommentsToPosition(position);
          resetCommentField(false);
       } else {
-         Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
+         Toast.makeText(this, event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }
 
       mAddCommentField.setEnabled(true);
