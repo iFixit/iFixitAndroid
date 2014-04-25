@@ -39,7 +39,7 @@ public class CommentsActivity extends BaseActivity {
    private static final String CONTEXT = "CONTEXT_KEY";
    private static final String GUIDEID_KEY = "GUIDEID_KEY";
 
-   private ArrayList<Comment> mComments;
+   private ArrayList<Comment> mComments = new ArrayList<Comment>();
    private String mTitle;
    private CommentsAdapter mAdapter;
    private ListView mCommentsList;
@@ -70,10 +70,6 @@ public class CommentsActivity extends BaseActivity {
       intent.putExtra(GUIDEID_KEY, guideid);
 
       return intent;
-   }
-
-   public CommentsActivity() {
-      mComments = new ArrayList<Comment>();
    }
 
    @Override
