@@ -185,10 +185,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    @Override
-   protected void onActivityResult (int requestCode, int resultCode, Intent data) {
-      if (requestCode == COMMENT_REQUEST && resultCode == RESULT_OK) {
+   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+      if (requestCode == COMMENT_REQUEST) {
          Bundle extras = data.getExtras();
-         if (extras != null) {
+         if (resultCode == RESULT_OK && extras != null) {
             ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
 
             if (getStepIndex() < 0) {
@@ -199,9 +199,10 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
             updateCommentCounts();
          }
+      } else {
+         super.onActivityResult(requestCode, resultCode, data);
       }
    }
-
 
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
