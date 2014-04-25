@@ -157,15 +157,18 @@ public class CommentView extends RelativeLayout {
 
    private void editComment(Comment comment) {
       App.getBus().post(new CommentEditEvent(comment));
+      App.sendEvent("ui_action", "button_press", "comment_edit_start", null);
    }
 
    private void deleteComment(Comment comment) {
       findViewById(R.id.comment_menu).setVisibility(View.GONE);
       findViewById(R.id.comment_progress).setVisibility(View.VISIBLE);
       App.getBus().post(new CommentDeleteEvent(comment));
+      App.sendEvent("ui_action", "button_press", "comment_delete", null);
    }
 
    private void replyToComment(int parentid) {
       App.getBus().post(new CommentReplyingEvent(parentid));
+      App.sendEvent("ui_action", "button_press", "comment_reply", null);
    }
 }

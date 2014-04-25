@@ -116,9 +116,12 @@ public class CommentsActivity extends BaseActivity {
                mAddCommentProgress.setVisibility(View.VISIBLE);
 
                if (parentid != null) {
+                  App.sendEvent("ui_action", "button_press", "comment_add_reply", null);
                   Api.call(CommentsActivity.this, ApiCall.newComment(commentText, mCommentContext, mCommentContextId,
                    (Integer) parentid));
                } else {
+                  App.sendEvent("ui_action", "button_press", "comment_add_new", null);
+
                   Api.call(CommentsActivity.this, ApiCall.newComment(commentText, mCommentContext, mCommentContextId));
                }
             }
@@ -246,6 +249,8 @@ public class CommentsActivity extends BaseActivity {
             String updatedText = editCommentField.getText().toString();
             // Fire off the edit request only if the comment was changed
             if (!updatedText.equals(event.comment.mTextRaw)) {
+               App.sendEvent("ui_action", "button_press", "comment_edited", null);
+
                viewRoot.findViewById(R.id.comment_progress).setVisibility(View.VISIBLE);
                viewRoot.findViewById(R.id.comment_menu).setVisibility(View.GONE);
                v.setEnabled(false);
@@ -258,6 +263,8 @@ public class CommentsActivity extends BaseActivity {
       viewRoot.findViewById(R.id.exit_comment_edit_button).setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
+            App.sendEvent("ui_action", "button_press", "comment_exit_edit", null);
+
             switcher.showPrevious();
             editContainer.setVisibility(View.GONE);
             editCommentField.setText("");
@@ -310,6 +317,8 @@ public class CommentsActivity extends BaseActivity {
       exitReply.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
+            App.sendEvent("ui_action", "button_press", "comment_exit_reply", null);
+
             resetCommentField(false);
             v.setVisibility(View.GONE);
          }
