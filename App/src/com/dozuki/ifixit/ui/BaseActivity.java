@@ -199,6 +199,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
             customLogo.setVisibility(View.GONE);
          }
 
+         v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               finish();
+            }
+         });
+
          ab.setCustomView(v);
       }
 
