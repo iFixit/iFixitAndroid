@@ -77,15 +77,6 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       }
 
       buildSliderMenu();
-
-      if (!App.get().getSite().actionBarUsesIcon()) {
-         findViewById(R.id.menu_title_wrapper).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               mMenuDrawer.toggleMenu();
-            }
-         });
-      }
    }
 
    @Override
@@ -109,6 +100,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       }
 
       return super.onOptionsItemSelected(item);
+   }
+
+   @Override
+   protected void onCustomMenuTitleClick(View v) {
+      // Rather than finishing the Activity and going "up", toggle the menu drawer.
+      mMenuDrawer.toggleMenu();
    }
 
    @Override
