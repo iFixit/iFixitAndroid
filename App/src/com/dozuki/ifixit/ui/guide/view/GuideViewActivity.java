@@ -525,12 +525,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       App.sendScreenView(mAdapter.getFragmentScreenLabel(currentPage));
    }
 
-   private void displayGuideNotFoundDialog() {
-      Api.getErrorDialog(this, new ApiEvent.ViewGuide().
-       setCode(404).
-       setError(ApiError.getByStatusCode(404))).show();
-   }
-
    @Override
    public void showLoading(int id) {
       View container = findViewById(id);
