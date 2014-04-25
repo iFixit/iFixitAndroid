@@ -291,7 +291,9 @@ public class JSONHelper {
          step.addLine(parseLine(jLines.getJSONObject(i)));
       }
 
-      step.setComments(parseComments(jStep.getJSONArray("comments")));
+      if (jStep.has("comments")) {
+         step.setComments(parseComments(jStep.getJSONArray("comments")));
+      }
 
       return step;
    }
