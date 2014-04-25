@@ -80,7 +80,6 @@ public class CommentView extends RelativeLayout {
          PicassoUtils
           .with(mContext)
           .load(avatarImage.getPath("thumbnail"))
-          .error(R.drawable.no_image)
           .fit()
           .centerInside()
           .transform(new CircleTransformation())
