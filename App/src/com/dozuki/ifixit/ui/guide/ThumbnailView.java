@@ -219,12 +219,9 @@ public class ThumbnailView extends LinearLayout {
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
           .centerCrop(),
           mMainImage);
-      } else if (mIsOfflineGuide) {
-         File file = new File(image.getPath(ImageSizes.stepThumb, mIsOfflineGuide));
-         buildImage(mPicasso.load(file), thumb.image);
       } else {
-         String url = image.getPath(ImageSizes.stepThumb);
-         buildImage(mPicasso.load(url), thumb.image);
+         buildImage(PicassoUtils.displayImage(mPicasso, image.getPath(ImageSizes.stepThumb),
+          mIsOfflineGuide), thumb.image);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);

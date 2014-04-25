@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.model;
 
-import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -64,29 +63,11 @@ public class Image implements Serializable {
    }
 
    public String getPath() {
-      return getPath("");
+      return mPath;
    }
 
    public String getPath(String size) {
-      return getPath(size, false);
-   }
-
-   public String getPath(String size, boolean offline) {
-      if (size.length() != 0 && !size.startsWith(".")) {
-         size = "." + size;
-      }
-
-      String path = mPath + size;
-
-      if (offline) {
-         return ApiSyncAdapter.getOfflineMediaPath(path);
-      } else {
-         return path;
-      }
-   }
-
-   public String getOfflinePath(String size) {
-      return ApiSyncAdapter.getOfflineMediaPath(getPath(size));
+      return mPath + size;
    }
 
    /**
