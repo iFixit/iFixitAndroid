@@ -297,7 +297,7 @@ public class CommentsActivity extends BaseActivity {
       } else {
          Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }
-      
+
       mAdapter.notifyDataSetChanged();
    }
 
