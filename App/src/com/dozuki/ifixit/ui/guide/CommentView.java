@@ -22,6 +22,7 @@ import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.transformations.CircleTransformation;
 
@@ -79,7 +80,7 @@ public class CommentView extends RelativeLayout {
       if (avatarImage != null) {
          PicassoUtils
           .with(mContext)
-          .load(avatarImage.getPath("thumbnail"))
+          .load(avatarImage.getPath(ImageSizes.commentAvatar))
           .fit()
           .centerInside()
           .transform(new CircleTransformation())
