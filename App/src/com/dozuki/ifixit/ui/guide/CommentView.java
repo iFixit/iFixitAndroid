@@ -148,7 +148,6 @@ public class CommentView extends RelativeLayout {
                      }
                   }
                });
-               builder.create();
                builder.show();
             }
          }

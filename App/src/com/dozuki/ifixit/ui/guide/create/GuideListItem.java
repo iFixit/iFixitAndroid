@@ -129,7 +129,6 @@ public class GuideListItem extends TouchableRelativeLayout {
                      }
                   }
                });
-               builder.create();
                builder.show();
             }
          }

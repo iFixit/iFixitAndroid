@@ -97,7 +97,6 @@ public class StepListItem extends TouchableRelativeLayout {
                      }
                   }
                });
-               builder.create();
                builder.show();
             }
          }
