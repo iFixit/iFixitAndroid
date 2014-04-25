@@ -440,7 +440,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       String guideTitle = mGuide.getTitle();
       setTitle(guideTitle);
 
-      mAdapter = new GuideViewAdapter(this.getSupportFragmentManager(), mGuide,
+      mAdapter = new GuideViewAdapter(getSupportFragmentManager(), mGuide,
        mIsOfflineGuide);
 
       mPager.setAdapter(mAdapter);
@@ -453,8 +453,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mIndicator.setOnPageChangeListener(this);
       mIndicator.setCurrentItem(currentPage);
 
-      // Update the comment count
-      updateCommentCounts();
+      // Enable menu items and update comment count.
+      supportInvalidateOptionsMenu();
    }
 
    private void fetchGuideFromApi(int guideid) {
@@ -520,8 +520,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public void onPageSelected(int currentPage) {
       mCurrentPage = currentPage;
 
-      // Update comment count in the menu
-      supportInvalidateOptionsMenu();
+      updateCommentCounts();
       App.sendScreenView(mAdapter.getFragmentScreenLabel(currentPage));
    }
 
@@ -545,7 +544,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
    }
 
-   // Update the comment count in the action bar
+   /**
+    * Invalidates the menu to update the comment count.
+    */
    private void updateCommentCounts() {
       supportInvalidateOptionsMenu();
    }
