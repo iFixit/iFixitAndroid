@@ -339,8 +339,8 @@
 
     <string-array name="comment_owner_options">
         <item>@string/reply</item>
-        <item>@string/publish</item>
         <item>@string/edit</item>
+        <item>@string/action_delete</item>
     </string-array>
 
     <string-array name="comment_options">
