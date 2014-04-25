@@ -235,7 +235,7 @@ public class CommentsActivity extends BaseActivity {
 
    @Subscribe
    public void onCommentEditing(final CommentEditEvent event) {
-      View viewRoot = findViewById(event.comment.mCommentid);
+      final View viewRoot = findViewById(event.comment.mCommentid);
       final View editContainer = viewRoot.findViewById(R.id.edit_comment_container);
       final EditText editCommentField = (EditText) viewRoot.findViewById(R.id.edit_comment_text);
       final ViewSwitcher switcher = (ViewSwitcher) viewRoot.findViewById(R.id.edit_comment_switcher);
@@ -251,6 +251,10 @@ public class CommentsActivity extends BaseActivity {
             String updatedText = editCommentField.getText().toString();
             // Fire off the edit request only if the comment was changed
             if (!updatedText.equals(event.comment.mTextRaw)) {
+               viewRoot.findViewById(R.id.comment_progress).setVisibility(View.VISIBLE);
+               viewRoot.findViewById(R.id.comment_menu).setVisibility(View.GONE);
+               v.setEnabled(false);
+
                Api.call(CommentsActivity.this, ApiCall.editComment(updatedText, event.comment.mCommentid));
             }
          }
@@ -288,10 +292,11 @@ public class CommentsActivity extends BaseActivity {
          }
 
          mAdapter.setComments(mComments);
-         mAdapter.notifyDataSetChanged();
       } else {
          Toast.makeText(getBaseContext(), event.getError().mMessage, Toast.LENGTH_SHORT).show();
       }
+      
+      mAdapter.notifyDataSetChanged();
    }
 
    @Subscribe

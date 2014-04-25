@@ -91,6 +91,7 @@ public class CommentView extends RelativeLayout {
       // Default progress to gone
       menuButton.setVisibility(View.VISIBLE);
       findViewById(R.id.comment_progress).setVisibility(View.GONE);
+      findViewById(R.id.save_edit_comment_button).setEnabled(true);
 
       menuButton.setOnClickListener(new View.OnClickListener() {
          @Override
