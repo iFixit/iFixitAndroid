@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
@@ -379,9 +378,8 @@ public class ApiCall {
          if (parentid != -1) {
             requestBody.put("parentid", parentid);
          }
-
       } catch (JSONException e) {
-         Log.e("APIError", "New comment error", e);
+         return null;
       }
 
       return new ApiCall(ApiEndpoint.ADD_COMMENT, query, requestBody.toString());
@@ -393,7 +391,7 @@ public class ApiCall {
       try {
          requestBody.put("text", text);
       } catch (JSONException e) {
-         Log.e("APIError", "Edit comment error", e);
+         return null;
       }
 
       return new ApiCall(ApiEndpoint.EDIT_COMMENT, "/" + commentid, requestBody.toString());
