@@ -15,21 +15,21 @@ import java.net.URLEncoder;
  */
 public enum ApiEndpoint {
    SEARCH(
-    new Endpoint() {
-       public String createUrl(String query) {
-          return "search/" + query;
-       }
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "search/" + query;
+         }
 
-       public ApiEvent<?> parse(String json) throws JSONException {
-          return new ApiEvent.Search().setResult(JSONHelper.parseSearchResults(json));
-       }
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Search().setResult(JSONHelper.parseSearchResults(json));
+         }
 
-       public ApiEvent<?> getEvent() {
-          return new ApiEvent.Search();
-       }
-    },
-    false,
-    "GET"
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Search();
+         }
+      },
+      false,
+      "GET"
    ),
 
    CATEGORIES(
@@ -87,57 +87,57 @@ public enum ApiEndpoint {
    ),
 
    ADD_COMMENT(
-    new Endpoint() {
-       public String createUrl(String query) {
-          return "comments" + query;
-       }
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "comments" + query;
+         }
 
-       public ApiEvent<?> parse(String json) throws JSONException {
-          return new ApiEvent.AddComment().setResult(new Comment(json));
-       }
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.AddComment().setResult(new Comment(json));
+         }
 
-       public ApiEvent<?> getEvent() {
-          return new ApiEvent.AddComment();
-       }
-    },
-    true,
-    "POST"
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.AddComment();
+         }
+      },
+      true,
+      "POST"
    ),
 
    EDIT_COMMENT(
-    new Endpoint() {
-       public String createUrl(String query) {
-          return "comments" + query;
-       }
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "comments" + query;
+         }
 
-       public ApiEvent<?> parse(String json) throws JSONException {
-          return new ApiEvent.EditComment().setResult(new Comment(json));
-       }
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.EditComment().setResult(new Comment(json));
+         }
 
-       public ApiEvent<?> getEvent() {
-          return new ApiEvent.EditComment();
-       }
-    },
-    true,
-    "PATCH"
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.EditComment();
+         }
+      },
+      true,
+      "PATCH"
    ),
 
    DELETE_COMMENT(
-    new Endpoint() {
-       public String createUrl(String query) {
-          return "comments" + query;
-       }
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "comments" + query;
+         }
 
-       public ApiEvent<?> parse(String json) throws JSONException {
-          return new ApiEvent.DeleteComment().setResult("");
-       }
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.DeleteComment().setResult("");
+         }
 
-       public ApiEvent<?> getEvent() {
-          return new ApiEvent.DeleteComment();
-       }
-    },
-    true,
-    "DELETE"
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.DeleteComment();
+         }
+      },
+      true,
+      "DELETE"
    ),
 
    TOPIC(
