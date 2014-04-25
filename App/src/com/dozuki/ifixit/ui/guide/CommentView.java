@@ -34,6 +34,8 @@ public class CommentView extends RelativeLayout {
    private static final int DELETE_OPTION = 2;
    private RelativeLayout mContainer;
    private Context mContext;
+   static final SimpleDateFormat mDateFormat = new SimpleDateFormat("MMM d, yyyy");
+
 
    public CommentView(Context context) {
       super(context);
@@ -59,10 +61,9 @@ public class CommentView extends RelativeLayout {
          mContainer.setBackgroundResource(R.color.subtle_gray);
       }
 
-      SimpleDateFormat df = new SimpleDateFormat("MMM d, yyyy");
       String commentDetails =
        App.get().getString(R.string.by_on_comment_details, "<b>" + comment.mUser.getUsername() +
-        "</b>", df.format(comment.mDate));
+        "</b>", mDateFormat.format(comment.mDate));
 
       TextView commentText = (TextView) findViewById(R.id.comment_text);
       Spanned commentHtml = Html.fromHtml(comment.mTextRendered);
