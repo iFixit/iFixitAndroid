@@ -66,12 +66,7 @@ public class CommentsActivity extends BaseActivity {
    public static Intent viewGuideComments(Context context, ArrayList<Comment> comments, String title,
     String commentContext, int contextid, int guideid) {
 
-      Intent intent = new Intent(context, CommentsActivity.class);
-
-      intent.putExtra(TITLE_KEY, title);
-      intent.putExtra(CONTEXTID, contextid);
-      intent.putExtra(CONTEXT, commentContext);
-      intent.putExtra(COMMENTS_KEY, comments);
+      Intent intent = viewComments(context, comments, title, commentContext, contextid);
       intent.putExtra(GUIDEID_KEY, guideid);
 
       return intent;
