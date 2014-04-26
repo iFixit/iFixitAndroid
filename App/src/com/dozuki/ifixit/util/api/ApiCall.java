@@ -373,7 +373,7 @@ public class ApiCall {
       String query = "/" + context + "/" + contextid;
 
       try {
-         requestBody.put("text", comment);
+         requestBody.put("text", comment.trim());
 
          if (parentid != -1) {
             requestBody.put("parentid", parentid);
@@ -389,7 +389,7 @@ public class ApiCall {
       JSONObject requestBody = new JSONObject();
 
       try {
-         requestBody.put("text", text);
+         requestBody.put("text", text.trim());
       } catch (JSONException e) {
          return null;
       }
