@@ -57,8 +57,7 @@
             android:exported="true"/>
 
         <activity android:name=".ui.guide.CommentsActivity"
-                  android:windowSoftInputMode="adjustPan"
-                  android:configChanges="orientation|screenSize|keyboard"/>
+                  android:windowSoftInputMode="adjustPan"/>
 
         <activity android:name=".ui.gallery.GalleryActivity"/>
         <activity
