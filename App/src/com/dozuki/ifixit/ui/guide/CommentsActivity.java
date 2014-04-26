@@ -38,6 +38,7 @@ public class CommentsActivity extends BaseActivity {
    private static final String CONTEXTID = "CONTEXTID_KEY";
    private static final String CONTEXT = "CONTEXT_KEY";
    private static final String GUIDEID_KEY = "GUIDEID_KEY";
+   private static final String PARENTID_KEY = "PARENTID_KEY";
 
    private ArrayList<Comment> mComments = new ArrayList<Comment>();
    private String mTitle;
@@ -49,6 +50,7 @@ public class CommentsActivity extends BaseActivity {
    private int mGuideid;
    private ImageButton mAddCommentButton;
    private ProgressBar mAddCommentProgress;
+   private Integer mParentId;
 
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title,
     String commentContext, int contextid) {
@@ -86,7 +88,7 @@ public class CommentsActivity extends BaseActivity {
          mCommentContextId = savedInstanceState.getInt(CONTEXTID);
          mTitle = savedInstanceState.getString(TITLE_KEY);
          mGuideid = savedInstanceState.getInt(GUIDEID_KEY, 0);
-
+         mParentId = (Integer)savedInstanceState.getSerializable(PARENTID_KEY);
       } else if (args != null) {
          mComments = (ArrayList<Comment>) args.getSerializable(COMMENTS_KEY);
          mCommentContext = args.getString(CONTEXT);
@@ -139,6 +141,10 @@ public class CommentsActivity extends BaseActivity {
             // TODO: Get wiki comments once we add those endpoints.
          }
       }
+
+      if (mParentId != null) {
+         App.getBus().post(new CommentReplyingEvent(mParentId));
+      }
    }
 
    @Override
@@ -150,6 +156,7 @@ public class CommentsActivity extends BaseActivity {
       state.putString(CONTEXT, mCommentContext);
       state.putString(TITLE_KEY, mTitle);
       state.putInt(GUIDEID_KEY, mGuideid);
+      state.putSerializable(PARENTID_KEY, mParentId);
    }
 
    @Override
@@ -305,6 +312,7 @@ public class CommentsActivity extends BaseActivity {
       showSoftKeyboard();
 
       mAddCommentField.setTag(R.id.comment_parent_id, event.parentid);
+      mParentId = event.parentid;
 
       Button exitReply = (Button) findViewById(R.id.exit_comment_reply_button);
       LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.MATCH_PARENT, 7f);
@@ -363,6 +371,7 @@ public class CommentsActivity extends BaseActivity {
          mAddCommentField.setText("");
          mAddCommentField.setHint(R.string.add_comment);
          mAddCommentField.setTag(R.id.comment_parent_id, null);
+         mParentId = null;
          findViewById(R.id.exit_comment_reply_button).setVisibility(View.GONE);
       }
       mAddCommentField.setEnabled(true);
