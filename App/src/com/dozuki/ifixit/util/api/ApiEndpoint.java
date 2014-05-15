@@ -573,23 +573,28 @@ public enum ApiEndpoint {
     "PUT"
    ),
 
-   UNCOMPLETE_GUIDE(
-    new Endpoint() {
-       public String createUrl(String guideid) {
-          return "guides/" + guideid + "/completed";
-       }
+   /***
+    * Not currently used.
+    *
+      UNCOMPLETE_GUIDE(
+       new Endpoint() {
+          public String createUrl(String guideid) {
+             return "guides/" + guideid + "/completed";
+          }
 
-       public ApiEvent<?> parse(String json) throws JSONException {
-          return new ApiEvent.UncompleteGuide().setResult("");
-       }
+          public ApiEvent<?> parse(String json) throws JSONException {
+             return new ApiEvent.UncompleteGuide().setResult("");
+          }
 
-       public ApiEvent<?> getEvent() {
-          return new ApiEvent.UncompleteGuide();
-       }
-    },
-    true,
-    "DELETE"
-   ),
+          public ApiEvent<?> getEvent() {
+             return new ApiEvent.UncompleteGuide();
+          }
+       },
+       true,
+       "DELETE"
+      ),
+    *
+    ***/
 
    PUBLISH_GUIDE(
       new Endpoint() {
