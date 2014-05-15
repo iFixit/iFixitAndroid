@@ -56,6 +56,9 @@
             android:name=".ui.guide.view.OfflineGuidesActivity"
             android:exported="true"/>
 
+        <activity android:name=".ui.guide.CommentsActivity"
+                  android:windowSoftInputMode="adjustPan"/>
+
         <activity android:name=".ui.gallery.GalleryActivity"/>
         <activity
             android:name=".ui.guide.create.GuideIntroActivity"

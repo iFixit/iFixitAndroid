@@ -15,7 +15,6 @@ import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.dozuki.ifixit.util.JSONHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -367,5 +366,42 @@ public class ApiCall {
 
    public static ApiCall siteInfo() {
       return new ApiCall(ApiEndpoint.SITE_INFO, NO_QUERY);
+   }
+
+   public static ApiCall newComment(String comment, String context, int contextid) {
+      return newComment(comment, context, contextid, -1);
+   }
+
+   public static ApiCall newComment(String comment, String context, int contextid, int parentid) {
+      JSONObject requestBody = new JSONObject();
+      String query = "/" + context + "/" + contextid;
+
+      try {
+         requestBody.put("text", comment.trim());
+
+         if (parentid != -1) {
+            requestBody.put("parentid", parentid);
+         }
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new ApiCall(ApiEndpoint.ADD_COMMENT, query, requestBody.toString());
+   }
+
+   public static ApiCall editComment(String text, int commentid) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("text", text.trim());
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new ApiCall(ApiEndpoint.EDIT_COMMENT, "/" + commentid, requestBody.toString());
+   }
+
+   public static ApiCall deleteComment(int commentid) {
+      return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + commentid, null, commentid + "");
    }
 }

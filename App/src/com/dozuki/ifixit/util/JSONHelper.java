@@ -4,6 +4,7 @@ import android.util.Log;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
@@ -204,6 +205,7 @@ public class JSONHelper {
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
       guide.setConclusion(jGuide.getString("conclusion_rendered"));
       guide.setCompleted(jGuide.getBoolean("completed"));
+      guide.setComments(parseComments(jGuide.getJSONArray("comments")));
       guide.setFavorited(jGuide.getBoolean("favorited"));
       guide.setModifiedDate(jGuide.getDouble("modified_date"));
       guide.setPrereqModifiedDate(jGuide.getDouble("prereq_modified_date"));
@@ -225,6 +227,14 @@ public class JSONHelper {
       }
 
       return guide;
+   }
+
+   private static ArrayList<Comment> parseComments(JSONArray comments) throws JSONException {
+      ArrayList<Comment> result = new ArrayList<Comment>();
+      for (int i = 0; i < comments.length(); i++) {
+         result.add(new Comment(comments.getJSONObject(i)));
+      }
+      return result;
    }
 
    private static Item parsePart(JSONObject jPart) throws JSONException {
@@ -283,6 +293,10 @@ public class JSONHelper {
          step.addLine(parseLine(jLines.getJSONObject(i)));
       }
 
+      if (jStep.has("comments")) {
+         step.setComments(parseComments(jStep.getJSONArray("comments")));
+      }
+
       return step;
    }
 
@@ -338,11 +352,9 @@ public class JSONHelper {
     * Topic hierarchy parsing
     */
    public static TopicNode parseTopics(String json) throws JSONException {
-      JSONObject jResponse = new JSONObject(json);
-      JSONObject jHierarchy = jResponse.getJSONObject("hierarchy");
-      JSONObject jDisplayNames = jResponse.getJSONObject("display_titles");
+      JSONArray jHierarchy = new JSONArray(json);
 
-      ArrayList<TopicNode> topics = parseTopicChildren(jHierarchy, jDisplayNames);
+      ArrayList<TopicNode> topics = parseTopicChildren(jHierarchy);
       TopicNode root = new TopicNode();
 
       root.setChildren(topics);
@@ -353,29 +365,22 @@ public class JSONHelper {
    /**
     * Reads through the given JSONObject and adds any topics to the given topic.
     */
-   private static ArrayList<TopicNode> parseTopicChildren(JSONObject jTopic,
-    JSONObject jDisplayNames) throws JSONException {
-      @SuppressWarnings("unchecked")
-      Iterator<String> iterator = jTopic.keys();
-      String topicName;
+   private static ArrayList<TopicNode> parseTopicChildren(JSONArray jChildren) throws JSONException {
       ArrayList<TopicNode> topics = new ArrayList<TopicNode>();
-      TopicNode currentTopic;
 
-      while (iterator.hasNext()) {
-         topicName = iterator.next();
+      for (int i = 0; i < jChildren.length(); i++) {
+         JSONObject jTopic = jChildren.getJSONObject(i);
+         TopicNode topic = new TopicNode(jTopic.getString("title"));
 
-         currentTopic = new TopicNode(topicName);
-
-         if (!jTopic.isNull(topicName)) {
-            currentTopic.setChildren(parseTopicChildren(jTopic.getJSONObject(topicName),
-             jDisplayNames));
+         if (jTopic.has("children")) {
+            topic.setChildren(parseTopicChildren(jTopic.getJSONArray("children")));
          }
 
-         if (jDisplayNames.has(topicName)) {
-            currentTopic.setDisplayName(jDisplayNames.getString(topicName));
+         if (jTopic.has("display_title")) {
+            topic.setDisplayName(jTopic.getString("display_title"));
          }
 
-         topics.add(currentTopic);
+         topics.add(topic);
       }
 
       return topics;
@@ -519,6 +524,19 @@ public class JSONHelper {
       user.setCertificationCount(jUser.getInt("certification_count"));
       user.setAuthToken(jUser.getString("authToken"));
 
+      return user;
+   }
+
+   public static User parseUserLight(JSONObject jUser) throws JSONException {
+      User user = new User();
+      user.setUserid(jUser.getInt("userid"));
+      user.setUsername(jUser.getString("username"));
+      user.setAvatar(parseImage(jUser, "image"));
+
+      if (!jUser.isNull("join_date"))
+         user.setJoinDate(jUser.getInt("join_date"));
+
+      user.setReputation(jUser.getInt("reputation"));
       return user;
    }
 
@@ -691,4 +709,5 @@ public class JSONHelper {
          return new Image();
       }
    }
+
 }

@@ -59,6 +59,10 @@ public class UrlImageGetter implements Html.ImageGetter {
 
       @Override
       protected void onPostExecute(Drawable result) {
+         if (result == null) {
+            return;
+         }
+
          int width = result.getIntrinsicWidth();
          int height = (int) ((width * (3f/4f)) - 0.5f);
 

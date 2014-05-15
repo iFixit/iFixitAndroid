@@ -14,6 +14,7 @@ public class ImageSizes {
    public static String guideList;
    public static String topicMain;
    public static String logo;
+   public static String commentAvatar;
 
    public static void init(App app) {
       stepThumb = app.getString(R.string.is__guide_step_thumbnail);
@@ -23,5 +24,6 @@ public class ImageSizes {
       guideList = app.getString(R.string.is__guide_list);
       topicMain = app.getString(R.string.is__topic_main);
       logo = app.getString(R.string.is__actionbar_logo);
+      commentAvatar = app.getString(R.string.is__comment_avatar);
    }
 }

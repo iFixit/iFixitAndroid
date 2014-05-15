@@ -286,6 +286,11 @@
     <string name="result_count">%1$d Results</string>
     <string name="no_search_results">No search results.</string>
     <string name="creating_new_guide">Creating New Guide…</string>
+    <string name="empty_step_comments">No step comments.</string>
+    <string name="comments">Comments</string>
+    <string name="step_comments">Step Comments</string>
+    <string name="guide_comments">Guide Comments</string>
+    <string name="step_number_comments">Step %1$d Comments</string>
 
     <!-- Strings needing translations. -->
     <string name="slide_menu_barcode_scanner">Scan QR Code</string>
@@ -293,4 +298,8 @@
     <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
     <string name="create_new_guide">Create New Guide</string>
     <string name="new_guide">New Guide</string>
+    <string name="on_date">on %1$s</string>
+    <string name="by_on_comment_details">By %1$s on %2$s</string>
+    <string name="add_comment">Add comment...</string>
+    <string name="reply">Reply</string>
 </resources>

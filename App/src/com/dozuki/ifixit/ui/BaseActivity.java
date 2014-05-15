@@ -199,6 +199,13 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
             customLogo.setVisibility(View.GONE);
          }
 
+         v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               onCustomMenuTitleClick(v);
+            }
+         });
+
          ab.setCustomView(v);
       }
 
@@ -348,6 +355,15 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    private void setUserid() {
       User user = App.get().getUser();
       mUserid = user == null ? LOGGED_OUT_USERID : user.getUserid();
+   }
+
+   /**
+    * Called when the custom menu title is clicked. This is only applicable
+    * for Dozuki because of how the custom logo is displayed in the action bar.
+    */
+   protected void onCustomMenuTitleClick(View v) {
+      // Finish the Activity because this is the "up" action by default.
+      finish();
    }
 
    /**

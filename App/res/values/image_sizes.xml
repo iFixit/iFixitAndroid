@@ -9,4 +9,5 @@
     <string name="is__guide_list">.standard</string>
     <string name="is__topic_main">.medium</string>
     <string name="is__actionbar_logo">.thumbnail</string>
+    <string name="is__comment_avatar">.thumbnail</string>
 </resources>

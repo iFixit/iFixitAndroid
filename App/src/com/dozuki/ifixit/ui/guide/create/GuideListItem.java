@@ -21,7 +21,7 @@ import android.widget.TextView;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.ui.RoundedTransformation;
+import com.dozuki.ifixit.util.transformations.RoundedTransformation;
 import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
@@ -129,7 +129,6 @@ public class GuideListItem extends TouchableRelativeLayout {
                      }
                   }
                });
-               builder.create();
                builder.show();
             }
          }

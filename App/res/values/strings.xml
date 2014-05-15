@@ -298,8 +298,22 @@
     <string name="complete_this_guide">Complete Guide</string>
     <string name="i_did_it_success">I did it! Success!</string>
     <string name="just_now">just now</string>
-    <string name="debug">Debug</string>
     <string name="completing">Completing...</string>
+    <string name="empty_comments">No comments.</string>
+    <string name="comments">Comments</string>
+    <string name="step_comments">Step Comments</string>
+    <string name="guide_comments">Guide Comments</string>
+    <string name="step_number_comments">Step %1$d Comments</string>
+    <string name="on_date">on %1$s</string>
+    <string name="by_on_comment_details">%1$s on %2$s</string>
+    <string name="add_comment">Add comment...</string>
+    <string name="reply">Reply</string>
+    <string name="add_reply">Add reply...</string>
+    <string name="error_deleting_comment">Error deleting comment. Try again.</string>
+    <string name="failed_edit_comment">Comment edit failed. Try again.</string>
+    <string name="just_now">just now</string>
+    <string name="debug">Debug</string>
+    <string name="view_comments">View Comments</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>
@@ -330,4 +344,13 @@
         <item>@string/edit</item>
     </string-array>
 
+    <string-array name="comment_owner_options">
+        <item>@string/reply</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="comment_options">
+        <item>@string/reply</item>
+    </string-array>
 </resources>

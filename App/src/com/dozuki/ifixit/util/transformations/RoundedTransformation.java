@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui;
+package com.dozuki.ifixit.util.transformations;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapShader;

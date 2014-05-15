@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.model.guide;
 
+import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
 
@@ -7,7 +8,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 public class Guide implements Serializable {
-   private static final long serialVersionUID = -1965203088124961695L;
+   private static final long serialVersionUID = -1965203088124961396L;
    private static final int NEW_GUIDE_ID = -1;
 
    protected int mGuideid;
@@ -38,6 +39,11 @@ public class Guide implements Serializable {
    protected double mModifiedDate;
    protected double mPrereqModifiedDate;
 
+   /**
+    * Collection of general user comments on the guide
+    */
+   protected ArrayList<Comment> mComments;
+
    public Guide() {
       this(NEW_GUIDE_ID);
    }
@@ -47,6 +53,14 @@ public class Guide implements Serializable {
       mSteps = new ArrayList<GuideStep>();
       mTools = new ArrayList<Item>();
       mParts = new ArrayList<Item>();
+      mComments = new ArrayList<Comment>();
+   }
+
+   public ArrayList<Comment> getComments() {
+      return mComments;
+   }
+   public void setComments(ArrayList<Comment> comments) {
+      mComments = comments;
    }
 
    public void setConclusion(String conclusion) {
@@ -301,5 +315,15 @@ public class Guide implements Serializable {
 
    public boolean getCompleted() {
       return mCompleted;
+   }
+
+   public int getCommentCount() {
+      int count = mComments.size();
+
+      for (Comment comment : mComments) {
+         count += comment.mReplies.size();
+      }
+
+      return count;
    }
 }
