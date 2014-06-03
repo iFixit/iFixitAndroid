@@ -1,4 +1,4 @@
-Official iFixit Android App v2.0.0
+Official iFixit Android App v2.6.0
 ===========================
 
 This app is a native Android version of the iFixit website including:
@@ -6,9 +6,11 @@ This app is a native Android version of the iFixit website including:
 * Device hierarchy browsing
 * Answers and guide lists for devices
 * Guide view
+* Viewing and adding comments on guides
 * Media manager integration: viewing and uploading of images
 * Guide lists for favorites, featured, and teardowns
 * Guide creation and editing
+* Syncing guides for offline viewing
 
 ## Installation
 
@@ -73,7 +75,7 @@ you distribute the application.
 That is, the trademarks are protected, but the code itself is under an open license. You
 can use the trademarks individually, but not for any sort of distribution.
 
-Copyright (c) 2013 iFixit
+Copyright (c) 2012-2014 iFixit
 
 
  [cla]: https://docs.google.com/forms/d/1wrPw91REdDKbZQ4vrGeUo8s_TkddZTTxiur0rbUxahk/viewform
