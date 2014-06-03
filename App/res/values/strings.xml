@@ -311,7 +311,6 @@
     <string name="add_reply">Add reply...</string>
     <string name="error_deleting_comment">Error deleting comment. Try again.</string>
     <string name="failed_edit_comment">Comment edit failed. Try again.</string>
-    <string name="just_now">just now</string>
     <string name="debug">Debug</string>
     <string name="view_comments">View Comments</string>
 
