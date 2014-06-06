@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Main Application -->
     <string name="devices">Devices</string>
     <string name="device">Device</string>
@@ -12,7 +12,7 @@
     <string name="cancel">Cancel</string>
     <string name="confirm_delete_title">Confirm Delete</string>
     <string name="confirm_delete_body">Deleting a guide CANNOT be undone. Are you sure you want to delete
-        \"%1$s\"?</string>
+        <xliff:g id="confirm_delete_guide_name" example="Repairing iPhone 4 Guide">\"%1$s\"</xliff:g>?</string>
 
     <!-- Error Messages -->
     <string name="parse_error_title">Well, this is embarrassing</string>
@@ -30,19 +30,19 @@
 
     <!-- Navigation -->
     <string name="account_menu_title">Your Account</string>
-    <string name="account_username_title">Account (%1$s)</string>
+    <string name="account_username_title">Account <xliff:g id="account_username" example="Bob Jones">(%1$s)</xliff:g></string>
 
     <string name="slide_menu_my_guides">My Guides</string>
     <string name="slide_menu_browse_content">Browse Content</string>
-    <string name="slide_menu_browse_devices">Browse %1$s</string>
+    <string name="slide_menu_browse_devices">Browse <xliff:g id="topic_type_name" example="Topics">%1$s</xliff:g></string>
     <string name="slide_menu_favorite_guides">Favorite Guides</string>
     <string name="slide_menu_create_new_guide">Create New Guide</string>
     <string name="slide_menu_media_gallery">Media Manager</string>
     <string name="slide_menu_logout">Logout</string>
-    <string name="slide_menu_ifixit_everywhere">iFixit Everywhere</string>
-    <string name="slide_menu_youtube">Youtube Channel</string>
-    <string name="slide_menu_facebook">Facebook</string>
-    <string name="slide_menu_twitter">Twitter</string>
+    <string name="slide_menu_ifixit_everywhere"><xliff:g id="brand_name">iFixit</xliff:g> Everywhere</string>
+    <string name="slide_menu_youtube"><xliff:g id="youtube">Youtube</xliff:g> Channel</string>
+    <string name="slide_menu_facebook"><xliff:g id="facebook">Facebook</xliff:g></string>
+    <string name="slide_menu_twitter"><xliff:g id="twitter">Twitter</xliff:g></string>
     <string name="slide_menu_more_info">More Information</string>
     <string name="slide_menu_barcode_scanner">Scan QR Code</string>
     <string name="slide_menu_barcode_scanner_short">Scan</string>
@@ -52,11 +52,10 @@
     <string name="password">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
-    <string name="signin_error">Sign in error for %1$s</string>
+    <string name="signin_error">Sign in error for <xliff:g id="signin_error_email" example="example@example.com">%1$s</xliff:g></string>
 
     <string name="try_again">Try again</string>
-    <string name="register_agreement">I agree to <a
-        href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
+    <string name="register_agreement">I agree to <xliff:g><a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a></xliff:g>
         under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.</string>
     <string name="terms_unchecked_error">You must agree to the terms.</string>
     <string name="login_dialog_title">Login</string>
@@ -66,12 +65,12 @@
     <string name="password_confirm_hint">Confirm Password</string>
     <string name="email_hint">Email</string>
 
-    <string name="signin_description">Login to iFixit.com</string>
-    <string name="register_description">Register for iFixit.com</string>
+    <string name="signin_description">Login to <xliff:g id="brand_website">iFixit.com</xliff:g></string>
+    <string name="register_description">Register for <xliff:g id="brand_website">iFixit.com</xliff:g></string>
     <string name="cancel_register_description">Cancel Registration</string>
     <string name="cancel_register_button">Cancel</string>
-    <string name="google_signin_description">Sign-in with Google</string>
-    <string name="yahoo_signin_description">Sign-in with Yahoo!</string>
+    <string name="google_signin_description">Sign-in with <xliff:g id="google">Google</xliff:g></string>
+    <string name="yahoo_signin_description">Sign-in with <xliff:g id="yahoo">Yahoo!</xliff:g></string>
 
     <string name="empty_field_error">One or more fields are still empty.</string>
     <string name="passwords_do_not_match_error">Passwords do not match.</string>
@@ -79,8 +78,8 @@
     <!-- Gallery -->
     <string name="media_help_title">What\'s this?</string>
     <string name="media_help_message">
-        This media manager is linked directly to your %1$s account. Any pictures you
-        load into here will be available to you in your guide creation endeavors.</string>
+        This media manager is linked directly to your <xliff:g id="site_name" example="iFixit">%1$s</xliff:g> account. Any
+        pictures you load into here will be available to you in your guide creation endeavors.</string>
     <string name="media_help_confirm">Good to know!</string>
     <string name="gallery_tool_tip">Add Image</string>
     <string name="camera_tool_tip">Camera</string>
@@ -90,11 +89,11 @@
     <string name="images">images</string>
     <string name="non_image_error">Images must be at least 800x600 pixels and local to your device. Valid formats are
         .png, .jpg, .jpeg, and .gif.</string>
-    <string name="too_many_image_error">You can only upload 4 files at a time. Please wait for your current uploads to
-        finish to upload another file.</string>
-    <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the server.</string>
 
-    <string name="media_delete_body">Are you sure you want to delete %1$d %2$s?</string>
+    <string name="too_many_image_error">You can only upload four files at a time. Please wait for your current uploads to finish to upload another file.</string>
+    <string name="delete_loading_image_error">One or more images are still loading and will not be deleted from the server.</string>
+    <string name="media_delete_body">Are you sure you want to delete <xliff:g id="number_images_to_delete" example="5">%1$d</xliff:g>
+        <xliff:g id="media_type" example="images">%2$s</xliff:g>?</string>
 
     <!-- Topic List -->
     <string name="generalInformation">General Information</string>
@@ -115,8 +114,8 @@
     <!-- Guide View Steps -->
     <string name="no_guides">No guides</string>
     <string name="topic_guide_thumbnail">Guide section thumbnail</string>
-    <string name="thumbnail_desc">Thumbnail image</string>
-    <string name="topic_img_desc">Category image</string>
+    <string name="thumbnail_desc">Thumbnail Image</string>
+    <string name="topic_img_desc">Category Image</string>
 
     <string name="video_play_button_description">Video Play Button</string>
     <string name="video_activity_progress_title">Please Wait…</string>
@@ -129,7 +128,7 @@
     <string name="previous">Previous</string>
 
     <!-- Full Screen Image -->
-    <string name="close_full_screen_desc">Close full screen button</string>
+    <string name="close_full_screen_desc">Close full screen button.</string>
 
     <!-- Guide Edit List -->
     <string name="publish">Publish</string>
@@ -162,17 +161,26 @@
     <string name="guide_intro_wizard_guide_introduction_title">Introduction</string>
     <string name="guide_intro_wizard_guide_topic_title">%s Name</string>
     <string name="guide_intro_wizard_guide_introduction_description">What is this guide specifically about?
-        Describe the component, thing or idea that you are describing about this %1$s.</string>
+        Describe the component, thing or idea that you are describing about this
+        <xliff:g id="topic_name" example="Topic">%1$s</xliff:g>.
+    </string>
     <string name="guide_intro_wizard_guide_summary_description">In a sentence or two, describe what this guide is about.</string>
-    <string name="guide_intro_wizard_guide_title_description">Generated title from the type, %1$s and focus. Only edit
-        if you aren\'t happy with what\'s there.</string>
+    <string name="guide_intro_wizard_guide_title_description">
+        Generated title from the type, <xliff:g id="topic_type">%1$s</xliff:g> and focus. Only editif you aren\'t happy
+        with what\'s
+        there.
+    </string>
     <string name="guide_intro_wizard_guide_subject_description">What is this guide specifically about? Describe the
-        component, thing or idea that you are describing about this %1$s.</string>
-    <string name="guide_intro_wizard_guide_topic_description">What %1$s are you working on? For example, is it a
-        \"iPhone 4\" or a \"Kenmore Washing Machine\"? If the %2$s already exists, be sure to select it from the prepopulated list.</string>
+        component, thing or idea that you are describing about this <xliff:g id="topic_name" example="Topic">%1$s
+        </xliff:g>.</string>
+    <string name="guide_intro_wizard_guide_topic_description">
+        What <xliff:g id="topic_name" example="Topic">%1$s</xliff:g> are you working on? For example, is it a
+        \"iPhone 4\" or a \"Kenmore Washing Machine\"? If the <xliff:g id="topic_name">%2$s</xliff:g> already exists, be
+        sure to select it from the prepopulated list.
+    </string>
 
     <!-- Guide Step Edit -->
-    <string name="step_number">Step %1$d</string>
+    <string name="step_number">Step <xliff:g id="step_number" example="1">%1$d</xliff:g></string>
     <string name="step_delete_dialog_title">Delete Line</string>
     <string name="step_delete_dialog_body">Are you sure you want to delete this line?</string>
     <string name="guide_create_help">help text</string>
@@ -195,7 +203,7 @@
 
     <!-- Guide Step Bullet Context Menu -->
     <string name="bullet_desc">Guide step bullet</string>
-    <string name="bullet_icon_desc">Guide Step notice, important step</string>
+    <string name="bullet_icon_desc">Guide step notice, important step</string>
     <string name="indent_bullet">Indent bullet</string>
     <string name="unindent_bullet">Unindent bullet</string>
     <string name="rearrange_bullet">Rearrange bullets</string>
@@ -211,7 +219,7 @@
     <string name="sync_now">Sync Now</string>
     <string name="no_offline_guides_text">Get started by favoriting a guide.\n\nYour Favorite guides will be saved for offline viewing.</string>
     <string name="sync_status_syncing">Syncing…</string>
-    <string name="last_synced">Last synced %1$s.</string>
+    <string name="last_synced">Last synced <xliff:g id="sync_date">%1$s</xliff:g>.</string>
     <string name="notification_syncing">Syncing favorite guides…</string>
     <string name="notification_sync_complete">Favorite guides downloaded</string>
     <string name="sync_automatically">Sync automatically</string>
@@ -226,7 +234,7 @@
     <string name="guide_create_step_video_description">Guide step video</string>
     <string name="restart_video">Restart Video</string>
     <string name="restart_video_message">Play this video again?</string>
-    <string name="guide_intro_wizard_guide_topic_hint">%1$s Name</string>
+    <string name="guide_intro_wizard_guide_topic_hint"><xliff:g id="topic_name" example="Topic">%1$s</xliff:g> Name</string>
     <string name="guide_intro_wizard_guide_subject_hint">For example - Screen, Battery, Spark Plugs, etc</string>
     <string name="loading_image">Uploading Images…</string>
     <string name="black_bullet_description">Black bullet</string>
@@ -259,7 +267,7 @@
     <string name="favorites_empty_text">You haven\'t favorited any guides yet.</string>
     <string name="introduction">Introduction</string>
     <string name="empty_image_error">Image is empty, try a different image or upload a new one.</string>
-    <string name="link_to_item">Link to %1$s</string>
+    <string name="link_to_item">Link to <xliff:g id="item_name" example="Phillips Screwdriver">%1$s</xliff:g></string>
     <string name="no_items">No Items</string>
     <string name="view">View</string>
     <string name="save_changes_to_step">Save changes to this step?</string>
@@ -280,13 +288,13 @@
     <string name="guide_type">Guide Type</string>
     <string name="reload_guide">Reload Guide</string>
     <string name="back_to_site_list">Back to Site List</string>
-    <string name="loading_topic">Loading %1$s…</string>
+    <string name="loading_topic">Loading <xliff:g id="topic_name" example="iPhone 4">%1$s</xliff:g>…</string>
     <string name="search">Search</string>
-    <string name="search_hint">Search iFixit</string>
-    <string name="search_site_hint">Search %1$s</string>
+    <string name="search_hint">Search <xliff:g id="brand_name">iFixit</xliff:g></string>
+    <string name="search_site_hint">Search <xliff:g id="site_name">%1$s</xliff:g></string>
     <string name="guide_search_thumbnail_content_description">Thumbnail</string>
-    <string name="by_author">By %1$s</string>
-    <string name="result_count">%1$d Results</string>
+    <string name="by_author">By <xliff:g id="author_name" example="John Doe">%1$s</xliff:g></string>
+    <string name="result_count"><xliff:g id="number_results" example="42">%1$d</xliff:g> Results</string>
     <string name="no_search_results">No search results.</string>
     <string name="creating_new_guide">Creating New Guide…</string>
     <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
@@ -298,17 +306,18 @@
     <string name="complete_this_guide">Complete Guide</string>
     <string name="i_did_it_success">I did it! Success!</string>
     <string name="just_now">just now</string>
-    <string name="completing">Completing...</string>
+    <string name="completing">Completing…</string>
     <string name="empty_comments">No comments.</string>
     <string name="comments">Comments</string>
     <string name="step_comments">Step Comments</string>
     <string name="guide_comments">Guide Comments</string>
-    <string name="step_number_comments">Step %1$d Comments</string>
-    <string name="on_date">on %1$s</string>
-    <string name="by_on_comment_details">%1$s on %2$s</string>
-    <string name="add_comment">Add comment...</string>
+    <string name="step_number_comments">Step <xliff:g id="step_number">%1$d</xliff:g> Comments</string>
+    <string name="on_date">on <xliff:g id="comment_date">%1$s</xliff:g></string>
+    <string name="by_on_comment_details"><xliff:g id="comment_author" example="Bob Jones">%1$s</xliff:g> on
+        <xliff:g id="comment_date">%2$s</xliff:g></string>
+    <string name="add_comment">Add comment…</string>
     <string name="reply">Reply</string>
-    <string name="add_reply">Add reply...</string>
+    <string name="add_reply">Add reply…</string>
     <string name="error_deleting_comment">Error deleting comment. Try again.</string>
     <string name="failed_edit_comment">Comment edit failed. Try again.</string>
     <string name="debug">Debug</string>
