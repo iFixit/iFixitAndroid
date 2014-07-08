@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Main Application -->
+    <string name="devices">Dispositivi</string>
+    <string name="device">Dispositivo</string>
+
+    <!-- General -->
+    <string name="save">Salva</string>
+    <string name="error">Si è Verificato un Errore</string>
+    <string name="yes">Sì</string>
+    <string name="no">No</string>
+    <string name="cancel">Annulla</string>
+    <string name="confirm_delete_title">Conferma Eliminazione</string>
+    <string name="confirm_delete_body">Deleting a guide CANNOT be undone. Are you sure you want to delete
+        <xliff:g id="confirm_delete_guide_name" example="Repairing iPhone 4 Guide">\"%1$s\"</xliff:g>?</string>
+
+    <!-- Error Messages -->
+    <string name="parse_error_title">Bene, questo è imbarazzante</string>
+    <string name="parse_error_message">Si è verificato un errore nel tentativo di caricare contenuti dai nostri server.</string>
+    <string name="no_connection">Nessuna connessione</string>
+    <string name="no_connection_title">Errore di connessione</string>
+    <string name="invalid_revision_error_title">Conflitto modifica</string>
+    <string name="invalid_revision_error">Impossibile salvare i tuoi cambiamenti perché il contenuto che stai modificando è cambiato dall\'ultima volta che l\'hai aperto. Per favore rifai i cambiamenti e riprova.</string>
+    <string name="fatal_error_title">Errore Sconosciuto</string>
+    <string name="fatal_error">Sembra che si sia verificato un errore.</string>
+    <string name="forbidden_error">Non hai privilegi sufficienti per effettuare questa azione.</string>
+    <string name="login_error">Dati accesso non validi. Verifica che siano corretti il tuo indirizzo email e la tua password</string>
+    <string name="not_found_error">I dati necessari non esistono</string>
+    <string name="error_confirm">OK</string>
+
+    <!-- Navigation -->
+    <string name="account_menu_title">Il Tuo Account</string>
+    <string name="account_username_title">Account <xliff:g id="account_username" example="Bob Jones">(%1$s)</xliff:g></string>
+
+    <string name="slide_menu_my_guides">Le Mie Guide</string>
+    <string name="slide_menu_browse_content">Sfoglia Contenuto</string>
+    <string name="slide_menu_browse_devices">Browse <xliff:g id="topic_type_name" example="Topics">%1$s</xliff:g></string>
+    <string name="slide_menu_favorite_guides">Guide Preferite</string>
+    <string name="slide_menu_create_new_guide">Crea una Nuova Guida</string>
+    <string name="slide_menu_media_gallery">Media Manager</string>
+    <string name="slide_menu_logout">Disconnessione</string>
+    <string name="slide_menu_ifixit_everywhere"><xliff:g id="brand_name">iFixit</xliff:g> Everywhere</string>
+    <string name="slide_menu_youtube"><xliff:g id="youtube">Youtube</xliff:g> Channel</string>
+    <string name="slide_menu_facebook"><xliff:g id="facebook">Facebook</xliff:g></string>
+    <string name="slide_menu_twitter"><xliff:g id="twitter">Twitter</xliff:g></string>
+    <string name="slide_menu_more_info">Maggiori Informazioni</string>
+    <string name="slide_menu_barcode_scanner">Scan QR Code</string>
+    <string name="slide_menu_barcode_scanner_short">Scan</string>
+
+    <!-- Log-In / Log-Out -->
+    <string name="username">Nome Utente</string>
+    <string name="password">Password</string>
+    <string name="login">Accesso</string>
+    <string name="register">Iscrizione</string>
+    <string name="signin_error">Sign in error for <xliff:g id="signin_error_email" example="example@example.com">%1$s</xliff:g></string>
+
+    <string name="try_again">Prova di nuovo</string>
+    <string name="register_agreement">I agree to <xliff:g><a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a></xliff:g>
+        under <a href="http://www.ifixit.com/Info/Licensing">our open license</a>.</string>
+    <string name="terms_unchecked_error">Devi accettare i termini.</string>
+    <string name="login_dialog_title">Accesso</string>
+    <string name="register_dialog_title">Iscrizione</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_email_hint">Email</string>
+    <string name="password_confirm_hint">Conferma Password</string>
+    <string name="email_hint">Email</string>
+
+    <string name="signin_description">Login to <xliff:g id="brand_website">iFixit.com</xliff:g></string>
+    <string name="register_description">Register for <xliff:g id="brand_website">iFixit.com</xliff:g></string>
+    <string name="cancel_register_description">Annulla Iscrizione</string>
+    <string name="cancel_register_button">Annulla</string>
+    <string name="google_signin_description">Sign-in with <xliff:g id="google">Google</xliff:g></string>
+    <string name="yahoo_signin_description">Sign-in with <xliff:g id="yahoo">Yahoo!</xliff:g></string>
+
+    <string name="empty_field_error">Uno o più campi sono ancora vuoti.</string>
+    <string name="passwords_do_not_match_error">Le Password non coincidono.</string>
+
+    <!-- Gallery -->
+    <string name="media_help_title">Che cos\'è questo?</string>
+    <string name="media_help_message">
+        This media manager is linked directly to your <xliff:g id="site_name" example="iFixit">%1$s</xliff:g> account. Any
+        pictures you load into here will be available to you in your guide creation endeavors.</string>
+    <string name="media_help_confirm">E\' bene saperlo!</string>
+    <string name="gallery_tool_tip">Aggiungi Immagine</string>
+    <string name="camera_tool_tip">Fotocamera</string>
+    <string name="no_images_text">Nessuna immagine nel tuo Media Manager. Aggiungi immagini con le icone qui sopra!</string>
+    <string name="image_chooser_title">Seleziona Immagine</string>
+    <string name="image">immagine</string>
+    <string name="images">immagini</string>
+    <string name="non_image_error">Le immagini devono essere di almeno 800x600 pixel, salvate sul tuo dispositivo. I formati ammessi sono
+.png, .jpg, .jpeg, e .gif.</string>
+
+    <string name="too_many_image_error">You can only upload four files at a time. Please wait for your current uploads to finish to upload another file.</string>
+    <string name="delete_loading_image_error">Una o più immagini sono ancora in fase di caricamento e non saranno eliminate dal server.</string>
+    <string name="media_delete_body">Are you sure you want to delete <xliff:g id="number_images_to_delete" example="5">%1$d</xliff:g>
+        <xliff:g id="media_type" example="images">%2$s</xliff:g>?</string>
+
+    <!-- Topic List -->
+    <string name="generalInformation">Informazioni Generali</string>
+    <string name="categories">Categorie</string>
+    <string name="category">Categoria</string>
+
+    <!-- Topic View -->
+    <string name="guides">Guide</string>
+    <string name="answers">Risposte</string>
+    <string name="info">Info</string>
+
+    <!-- Guide View Introduction -->
+    <string name="difficulty">Difficoltà</string>
+    <string name="author">Autore</string>
+    <string name="requiredTools">Strumenti necessari</string>
+    <string name="requiredParts">Componenti Necessari</string>
+
+    <!-- Guide View Steps -->
+    <string name="no_guides">Nessuna guida</string>
+    <string name="topic_guide_thumbnail">Miniatura sezione Guida</string>
+    <string name="thumbnail_desc">Immagine Miniatura</string>
+    <string name="topic_img_desc">Category Image</string>
+
+    <string name="video_play_button_description">Pulsante Avvia Video</string>
+    <string name="video_activity_progress_title">Attendi, Per Favore...</string>
+    <string name="video_activity_progress_body">Caricamento Video...</string>
+
+    <!-- Guide View Menu -->
+    <string name="review">Recensione</string>
+    <string name="finish">Fine</string>
+    <string name="next">Avanti</string>
+    <string name="previous">Precedente</string>
+
+    <!-- Full Screen Image -->
+    <string name="close_full_screen_desc">Close full screen button.</string>
+
+    <!-- Guide Edit List -->
+    <string name="publish">Pubblica</string>
+    <string name="published">Pubblicato</string>
+    <string name="unpublish">Annulla Pubblicazione</string>
+    <string name="unpublished">Pubblicazione annullata</string>
+    <string name="action_delete">Elimina</string>
+    <string name="add_guide">Aggiungi guida</string>
+    <string name="no_guides_text">Sembra che tu non abbia ancora guide. Crea una guida premendo sull\'icona
+nella barra attività o nel box menu.</string>
+
+    <!-- Guide Steps Edit List -->
+    <string name="step_edit_confirm_delete_title">Elimina Passo</string>
+    <string name="step_edit_confirm_delete_message">Sei sicuro di voler eliminare il Passo %1$d?</string>
+    <string name="edit">Modifica</string>
+    <string name="edit_guide_details">Modifica Dettagli Guida</string>
+    <string name="add_step">Aggiungi Passo</string>
+    <string name="reorder_steps">Riordina Passi</string>
+    <string name="no_steps_text">Nessun passo guida.</string>
+
+    <!-- Guide Step Rearrange Dialog -->
+    <string name="step_rearrange_title">Ridisposizione Passi</string>
+
+    <!-- Guide Introduction Edit -->
+    <string name="default_title">Titolo di Default</string>
+    <string name="guide_intro_wizard_guide_type_title">Tipo Guida</string>
+    <string name="guide_intro_wizard_guide_subject_title">Soggetto Guida</string>
+    <string name="guide_intro_wizard_guide_title_title">Titolo Guida</string>
+    <string name="guide_intro_wizard_guide_summary_title">Sommario Guida</string>
+    <string name="guide_intro_wizard_guide_introduction_title">Introduzione</string>
+    <string name="guide_intro_wizard_guide_topic_title">Nome %s</string>
+    <string name="guide_intro_wizard_guide_introduction_description">What is this guide specifically about?
+        Describe the component, thing or idea that you are describing about this
+        <xliff:g id="topic_name" example="Topic">%1$s</xliff:g>.
+    </string>
+    <string name="guide_intro_wizard_guide_summary_description">Usando una o due frasi, descrivi di che cosa si occupa questa guida.</string>
+    <string name="guide_intro_wizard_guide_title_description">
+        Generated title from the type, <xliff:g id="topic_type">%1$s</xliff:g> and focus. Only editif you aren\'t happy
+        with what\'s
+        there.
+    </string>
+    <string name="guide_intro_wizard_guide_subject_description">What is this guide specifically about? Describe the
+        component, thing or idea that you are describing about this <xliff:g id="topic_name" example="Topic">%1$s
+        </xliff:g>.</string>
+    <string name="guide_intro_wizard_guide_topic_description">
+        What <xliff:g id="topic_name" example="Topic">%1$s</xliff:g> are you working on? For example, is it a
+        \"iPhone 4\" or a \"Kenmore Washing Machine\"? If the <xliff:g id="topic_name">%2$s</xliff:g> already exists, be
+        sure to select it from the prepopulated list.
+    </string>
+
+    <!-- Guide Step Edit -->
+    <string name="step_number">Step <xliff:g id="step_number" example="1">%1$d</xliff:g></string>
+    <string name="step_delete_dialog_title">Elimina Riga</string>
+    <string name="step_delete_dialog_body">Sei sicuro di voler eliminare questa riga?</string>
+    <string name="guide_create_help">testo aiuto</string>
+    <string name="guide_create_edit_steps_help">testo aiuto</string>
+    <string name="guide_create_edit_step_media_cannot_add_step">Add content to current step before creating a new step.</string>
+    <string name="guide_create_edit_must_add_line_content">Impossibile salvare il passo finché non viene aggiunto il contenuto della riga: </string>
+    <string name="guide_create_confirm_leave_without_save_title">Esci Senza Salvare?</string>
+    <string name="guide_create_confirm_leave_without_save_body">Uscendo si cancellerà ogni modifica che hai apportato.</string>
+    <string name="guide_create_confirm_leave_without_save_cancel">Annulla</string>
+    <string name="guide_create_step_edit_main_image_description">Modifica immagine del passo principale</string>
+    <string name="default_step_title">Passo senza titolo</string>
+    <string name="step_title_hint">Titolo Passo (facoltativo)</string>
+    <string name="step_text_default">Insert Wisdom Here</string>
+
+    <!-- Guide Step Edit Media -->
+    <string name="step_edit_new_thumb_actions_title">Allega Immagine</string>
+    <string name="step_edit_existing_image_actions_title">Azioni Immagine</string>
+    <string name="image_saved_to_media_manager_toast">Immagine salvata sul tuo media manager</string>
+
+
+    <!-- Guide Step Bullet Context Menu -->
+    <string name="bullet_desc">Pallino passo guida</string>
+    <string name="bullet_icon_desc">Guide step notice, important step</string>
+    <string name="indent_bullet">Rientro pallino</string>
+    <string name="unindent_bullet">Annulla rientro pallino</string>
+    <string name="rearrange_bullet">Riposiziona pallini </string>
+    <string name="delete_bullet">Cancella pallino</string>
+    <string name="indent_limit_below">Impossibile annullare altri rientri</string>
+    <string name="indent_limit_above">Impossibile ridurre ancora il rientro</string>
+    <string name="confirm_reorder_bullets">Conferma</string>
+    <string name="reorder_bullets_title">Riordina Pallini</string>
+    <string name="cancel_reorder_bullets">Annulla</string>
+
+    <!-- Offline Guides -->
+    <string name="offline_guides">Guide Offline</string>
+    <string name="sync_now">Sincronizza ora</string>
+    <string name="no_offline_guides_text">Inizia indicando una preferenza per una guida \n\nLe tue guide preferite saranno salvate per la visualizzazione offline.</string>
+    <string name="sync_status_syncing">Sincronizzazione...</string>
+    <string name="last_synced">Last synced <xliff:g id="sync_date">%1$s</xliff:g>.</string>
+    <string name="notification_syncing">Sincronizzazione guide preferite...</string>
+    <string name="notification_sync_complete">Guide preferite scaricate</string>
+    <string name="sync_automatically">Sincronizza automaticamente</string>
+    <string name="unfavorite_confirmation">Sei sicuro di voler indicare questa guida come non preferita?</string>
+
+    <!-- Miscellaneous -->
+    <string name="topic_background_description">Sfondo categoria</string>
+    <string name="fist_background_desc">Immagine sfondo pugno</string>
+    <string name="my_guides">Le mie Guide</string>
+    <string name="edit_guide">Modifica Guida</string>
+    <string name="view_guide">Visualizza Guida</string>
+    <string name="guide_create_step_video_description">Video passo Guida</string>
+    <string name="restart_video">Riavvia Video</string>
+    <string name="restart_video_message">Rivedere questo video?</string>
+    <string name="guide_intro_wizard_guide_topic_hint"><xliff:g id="topic_name" example="Topic">%1$s</xliff:g> Name</string>
+    <string name="guide_intro_wizard_guide_subject_hint">Per esempio - Schermo, Batteria, Candele, ecc</string>
+    <string name="loading_image">Caricamento Immagini...</string>
+    <string name="black_bullet_description">Pallino nero</string>
+    <string name="red_bullet_description">Pallino rosso</string>
+    <string name="orange_bullet_description">Pallino arancione</string>
+    <string name="yellow_bullet_description">Pallino giallo</string>
+    <string name="green_bullet_description">Pallino verde</string>
+    <string name="blue_bullet_description">Pallino blu</string>
+    <string name="purple_bullet_description">Pallino viola</string>
+    <string name="caution_bullet_description">Pallino Attenzione/Prudenza</string>
+    <string name="important_bullet_description">Pallino nota importante</string>
+    <string name="bullet_reorder_description">Pallino reminder</string>
+    <string name="default_step_number">Passo #</string>
+    <string name="loading">Caricamento...</string>
+    <string name="topic_info_image">Immagine categoria principale</string>
+    <string name="delete_step">Elimina passo</string>
+    <string name="deleting">Eliminazione...</string>
+    <string name="saving">Salva...</string>
+    <string name="gallery_image_content_description">Immagine Galleria</string>
+    <string name="optional">Facoltativo</string>
+    <string name="teardowns">Smontaggi</string>
+    <string name="featured_guides">Guide In Evidenza</string>
+    <string name="favorites">Preferiti</string>
+    <string name="favorite_guide">Guida Preferita</string>
+    <string name="unfavorite_guide">Guida Non Preferita</string>
+    <string name="favoriting">Favoriting guide…</string>
+    <string name="unfavoriting">Unfavoriting guide…</string>
+    <string name="favorited">Favorited!</string>
+    <string name="unfavorited">Unfavorited!</string>
+    <string name="favorites_empty_text">Non hai ancora guide favorite.</string>
+    <string name="introduction">Introduzione</string>
+    <string name="empty_image_error">L\'Immagine è vuota, prova un\'immagine diversa o caricane un\'altra.</string>
+    <string name="link_to_item">Link to <xliff:g id="item_name" example="Phillips Screwdriver">%1$s</xliff:g></string>
+    <string name="no_items">Nessun Elemento</string>
+    <string name="view">Visualizza</string>
+    <string name="save_changes_to_step">Salva le modifiche a questo passo?</string>
+    <string name="new_line">Nuova riga</string>
+    <string name="discard_changes">Scarta Modifiche</string>
+    <string name="validation_error_title">Errore Validazione</string>
+    <string name="validation_error_body">Validazione fallita</string>
+    <string name="unpublishing">Annulla Pubblicazione...</string>
+    <string name="publishing">Pubblicazione...</string>
+    <string name="voice_dictate_line_content_description">Contenuto linea dettatura vocale</string>
+    <string name="line_length_exceeded_error">Massimo 350 caratteri per linea</string>
+    <string name="new_guide_details_title">Nuovi Dettagli Guida</string>
+    <string name="device_invalid_characters_error_message">Il nome del dispositivo contiene caratteri non validi.</string>
+    <string name="guide_subject_required_error">Soggetto della Guida Obbligatorio</string>
+    <string name="topic_name_required_error">Nome %1$s Obbligatorio</string>
+    <string name="guide_subject_label">Soggetto Guida</string>
+    <string name="visibility">Visibilità</string>
+    <string name="guide_type">Tipo Guida</string>
+    <string name="reload_guide">Ricarica Guida</string>
+    <string name="back_to_site_list">Torna all\'Elenco Sito</string>
+    <string name="loading_topic">Loading <xliff:g id="topic_name" example="iPhone 4">%1$s</xliff:g>…</string>
+    <string name="search">Cerca</string>
+    <string name="search_hint">Search <xliff:g id="brand_name">iFixit</xliff:g></string>
+    <string name="search_site_hint">Search <xliff:g id="site_name">%1$s</xliff:g></string>
+    <string name="guide_search_thumbnail_content_description">Miniatura</string>
+    <string name="by_author">By <xliff:g id="author_name" example="John Doe">%1$s</xliff:g></string>
+    <string name="result_count"><xliff:g id="number_results" example="42">%1$d</xliff:g> Results</string>
+    <string name="no_search_results">Nessun risultato ricerca.</string>
+    <string name="creating_new_guide">Creating New Guide…</string>
+    <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
+    <string name="create_new_guide">Create New Guide</string>
+    <string name="new_guide">Nuova Guida</string>
+    <string name="conclusion">Conclusione</string>
+    <string name="completed">Completato!</string>
+    <string name="guide_complete_error_message">Couldn\'t complete this guide.</string>
+    <string name="complete_this_guide">Guida Completa</string>
+    <string name="i_did_it_success">Ce l\'ho fatta! Ci sono riuscito!</string>
+    <string name="just_now">proprio ora</string>
+    <string name="completing">Completing…</string>
+    <string name="empty_comments">Non ci sono commenti.</string>
+    <string name="comments">Commenti</string>
+    <string name="step_comments">Step Comments</string>
+    <string name="guide_comments">Guide Comments</string>
+    <string name="step_number_comments">Step <xliff:g id="step_number">%1$d</xliff:g> Comments</string>
+    <string name="on_date">on <xliff:g id="comment_date">%1$s</xliff:g></string>
+    <string name="by_on_comment_details"><xliff:g id="comment_author" example="Bob Jones">%1$s</xliff:g> on
+        <xliff:g id="comment_date">%2$s</xliff:g></string>
+    <string name="add_comment">Add comment…</string>
+    <string name="reply">Rispondi</string>
+    <string name="add_reply">Add reply…</string>
+    <string name="error_deleting_comment">Error deleting comment. Try again.</string>
+    <string name="failed_edit_comment">Comment edit failed. Try again.</string>
+    <string name="debug">Debug</string>
+    <string name="view_comments">View Comments</string>
+
+    <string-array name="new_image_actions">
+        <item>Fotocamera</item>
+        <item>Media Manager</item>
+    </string-array>
+
+    <string-array name="existing_image_actions">
+        <item>Copia su Media Manager</item>
+        <item>Stacca da Media Manager</item>
+        <item>Elimina</item>
+    </string-array>
+
+    <string-array name="step_list_item_options">
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="guide_list_item_options_with_delete">
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="guide_list_item_options">
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+    </string-array>
+
+    <string-array name="comment_owner_options">
+        <item>@string/reply</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="comment_options">
+        <item>@string/reply</item>
+    </string-array>
+</resources>
