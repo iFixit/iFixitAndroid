@@ -9,6 +9,7 @@ import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.search.SearchResults;
+import com.dozuki.ifixit.model.story.Story;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.user.User;
@@ -83,6 +84,8 @@ public abstract class ApiEvent<T> {
 
    public static class Sites extends ApiEvent<ArrayList<Site>> {}
    public static class SiteInfo extends ApiEvent<Site> {}
+
+   public static class Stories extends ApiEvent<ArrayList<Story>> {}
 
    public String mResponse;
    public T mResult;

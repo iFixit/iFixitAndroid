@@ -699,6 +699,24 @@ public enum ApiEndpoint {
       "GET"
    ),
 
+   STORIES(
+      new Endpoint() {
+         public String createUrl(String query) {
+            return "stories" + query;
+         }
+
+         public ApiEvent<?> parse(String json) throws JSONException {
+            return new ApiEvent.Stories().setResult(JSONHelper.parseStories(json));
+         }
+
+         public ApiEvent<?> getEvent() {
+            return new ApiEvent.Stories();
+         }
+      },
+      false,
+      "GET"
+   ),
+
    USER_INFO(
       new Endpoint() {
          public String createUrl(String query) {

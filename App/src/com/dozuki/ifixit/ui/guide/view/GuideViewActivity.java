@@ -9,12 +9,14 @@ import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.story.Story;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
@@ -26,7 +28,6 @@ import com.dozuki.ifixit.util.CheatSheet;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiDatabase;
-import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -60,7 +61,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private GuideViewAdapter mAdapter;
    private boolean mFavoriting = false;
    private boolean mIsOfflineGuide;
-   private Toast mToast;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -405,6 +405,17 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       supportInvalidateOptionsMenu();
    }
 
+   @Subscribe
+   public void onStories(ApiEvent.Stories event) {
+      if (!event.hasError()) {
+         ArrayList<Story> stories = event.getResult();
+
+         toast(stories.size() + "", Toast.LENGTH_SHORT);
+      } else {
+         Api.getErrorDialog(this, event).show();
+      }
+   }
+
    public void onLogin(LoginEvent.Login event) {
       super.onLogin(event);
 
@@ -455,6 +466,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       // Enable menu items and update comment count.
       supportInvalidateOptionsMenu();
+
+      fetchStories();
    }
 
    private void fetchGuideFromApi(int guideid) {
@@ -499,18 +512,13 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    /**
-    * Displays a toast with the given values and clears any existing Toasts
-    * if they exist.
+    * Retrieves stories for about the current guide if the current site has stories
+    * enabled and this isn't an offline guide.
     */
-   private void toast(int string, int duration) {
-      if (mToast == null) {
-         mToast = Toast.makeText(this, string, duration);
+   private void fetchStories() {
+      if (App.get().getSite().isIfixit() && !mIsOfflineGuide) {
+         Api.call(this, ApiCall.guideStories(mGuide.getGuideid()));
       }
-
-      mToast.setText(string);
-      mToast.setDuration(duration);
-
-      mToast.show();
    }
 
    public void onPageScrollStateChanged(int arg0) { }

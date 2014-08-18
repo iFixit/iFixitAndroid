@@ -364,6 +364,10 @@ public class ApiCall {
       return new ApiCall(ApiEndpoint.SITE_INFO, NO_QUERY);
    }
 
+   public static ApiCall guideStories(int guideid) {
+      return new ApiCall(ApiEndpoint.STORIES, "?guideid=" + guideid);
+   }
+
    public static ApiCall newComment(String comment, String context, int contextid) {
       return newComment(comment, context, contextid, -1);
    }

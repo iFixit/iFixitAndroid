@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
@@ -22,6 +23,7 @@ import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.model.search.GuideSearchResult;
 import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.model.search.TopicSearchResult;
+import com.dozuki.ifixit.model.story.Story;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.model.user.User;
@@ -29,6 +31,7 @@ import com.dozuki.ifixit.model.user.UserImage;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -689,6 +692,17 @@ public class JSONHelper {
       }
 
       return jSteps;
+   }
+
+   public static ArrayList<Story> parseStories(String json) throws JSONException {
+      JSONArray jStories = new JSONArray(json);
+      ArrayList<Story> stories = new ArrayList<Story>();
+
+      for (int i = 0; i < jStories.length(); i++) {
+         stories.add(new Story(jStories.getJSONObject(i)));
+      }
+
+      return stories;
    }
 
    public static Image parseImage(JSONObject image, String imageFieldName) {

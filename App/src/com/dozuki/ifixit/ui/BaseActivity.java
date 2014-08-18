@@ -9,6 +9,7 @@ import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.SherlockFragmentActivity;
@@ -47,6 +48,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    private int mActivityid;
    private int mUserid;
    private Site mSite;
+   private Toast mToast;
 
    /**
     * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
@@ -426,6 +428,24 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
           .remove(loadingFragment)
           .commitAllowingStateLoss();
       }
+   }
+
+   /**
+    * Displays a toast with the given values and clears any existing Toasts
+    * if they exist.
+    */
+   protected void toast(int string, int duration) {
+      toast(getString(string), duration);
+   }
+   protected void toast(String string, int duration) {
+      if (mToast == null) {
+         mToast = Toast.makeText(this, string, duration);
+      }
+
+      mToast.setText(string);
+      mToast.setDuration(duration);
+
+      mToast.show();
    }
 
    public static Intent addSite(Intent intent, Site site) {
