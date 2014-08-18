@@ -28,6 +28,7 @@ pom.xml.*
 /gradle.properties
 .gradle
 */build
+build
 keystore
 
 #Ant
