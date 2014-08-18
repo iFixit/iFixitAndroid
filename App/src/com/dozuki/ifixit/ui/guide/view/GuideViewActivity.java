@@ -520,7 +520,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
     * enabled and this isn't an offline guide.
     */
    private void fetchStories() {
-      if (mStories == null && App.get().getSite().isIfixit() && !mIsOfflineGuide) {
+      if (mStories == null && App.get().getSite().storiesEnabled() && !mIsOfflineGuide) {
          Api.call(this, ApiCall.guideStories(mGuide.getGuideid()));
       }
    }

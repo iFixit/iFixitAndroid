@@ -98,6 +98,10 @@ public class Site implements Serializable {
       return mBarcodeScanner;
    }
 
+   public boolean storiesEnabled() {
+      return isIfixit();
+   }
+
    /**
     * Returns true if the user should be automatically reauthenticated if their
     * auth token expires.
