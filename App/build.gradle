@@ -3,7 +3,7 @@ buildscript {
       mavenCentral()
    }
    dependencies {
-      classpath 'com.android.tools.build:gradle:0.9.+'
+      classpath 'com.android.tools.build:gradle:0.12.2'
    }
 }
 apply plugin: 'android'
@@ -40,14 +40,14 @@ def sites = ["ifixit", "dozuki", "accustream"]
 
 android {
    compileSdkVersion 19
-   buildToolsVersion "19.0.3"
+   buildToolsVersion "20"
 
    defaultConfig {
       versionCode 49
       versionName "2.6.0"
       minSdkVersion 8
       targetSdkVersion 19
-      packageName "com.dozuki.ifixit"
+      applicationId "com.dozuki.ifixit"
    }
 
    signingConfigs {
@@ -80,7 +80,7 @@ android {
       for (site in sites) {
          "${site}" {
             signingConfig signingConfigs."${site}"
-            packageName "com.dozuki.${site}"
+            applicationId "com.dozuki.${site}"
 
             buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", "\"com.dozuki.${site}.ui.search.SearchSuggestionProvider\""
             buildConfigField "String", "SITE_NAME", '"' + site + '"'
