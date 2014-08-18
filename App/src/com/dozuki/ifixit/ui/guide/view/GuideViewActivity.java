@@ -41,6 +41,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    private static final String TAG = "GuideViewActivity";
    private static final String FAVORITING = "FAVORITING";
+   private static final String STORIES_KEY = "STORIES_KEY";
    private static final String IS_OFFLINE_GUIDE = "IS_OFFLINE_GUIDE";
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
@@ -61,6 +62,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    private GuideViewAdapter mAdapter;
    private boolean mFavoriting = false;
    private boolean mIsOfflineGuide;
+   private ArrayList<Story> mStories;
 
    /////////////////////////////////////////////////////
    // LIFECYCLE
@@ -85,6 +87,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          mGuideid = savedInstanceState.getInt(GUIDEID);
          mFavoriting = savedInstanceState.getBoolean(FAVORITING);
          mIsOfflineGuide = savedInstanceState.getBoolean(IS_OFFLINE_GUIDE);
+         mStories = (ArrayList<Story>)savedInstanceState.getSerializable(STORIES_KEY);
 
          if (savedInstanceState.containsKey(SAVED_GUIDE)) {
             mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
@@ -145,6 +148,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       state.putInt(CURRENT_PAGE, mCurrentPage);
       state.putBoolean(FAVORITING, mFavoriting);
       state.putBoolean(IS_OFFLINE_GUIDE, mIsOfflineGuide);
+      state.putSerializable(STORIES_KEY, mStories);
    }
 
    @Override
@@ -408,9 +412,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    @Subscribe
    public void onStories(ApiEvent.Stories event) {
       if (!event.hasError()) {
-         ArrayList<Story> stories = event.getResult();
+         mStories = event.getResult();
 
-         toast(stories.size() + "", Toast.LENGTH_SHORT);
+         toast(mStories.size() + "", Toast.LENGTH_SHORT);
       } else {
          Api.getErrorDialog(this, event).show();
       }
@@ -516,7 +520,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
     * enabled and this isn't an offline guide.
     */
    private void fetchStories() {
-      if (App.get().getSite().isIfixit() && !mIsOfflineGuide) {
+      if (mStories == null && App.get().getSite().isIfixit() && !mIsOfflineGuide) {
          Api.call(this, ApiCall.guideStories(mGuide.getGuideid()));
       }
    }

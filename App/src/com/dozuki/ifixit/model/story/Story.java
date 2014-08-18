@@ -3,12 +3,14 @@ package com.dozuki.ifixit.model.story;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.Serializable;
+
 /**
  * Stub Story class.
  *
  * TODO: Fill in more fields.
  */
-public class Story {
+public class Story implements Serializable {
    public int mStoryid;
 
    public Story(String json) throws JSONException {
