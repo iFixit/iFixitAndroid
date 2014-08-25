@@ -26,7 +26,6 @@ import com.dozuki.ifixit.util.CheatSheet;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiDatabase;
-import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 import com.viewpagerindicator.TitlePageIndicator;
@@ -219,7 +218,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          int commentCount = 0;
          if (stepIndex < 0) {
             commentCount = mGuide.getCommentCount();
-         } else {
+         } else if (mGuide.getNumSteps() < stepIndex) {
             commentCount = mGuide.getStep(stepIndex).getCommentCount();
          }
 
