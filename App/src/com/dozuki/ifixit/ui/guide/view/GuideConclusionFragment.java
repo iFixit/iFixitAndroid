@@ -81,7 +81,7 @@ public class GuideConclusionFragment extends BaseFragment {
       } else {
          mGuide.setCompleted(false);
          setCompletedStatus(false);
-         Toast.makeText(getActivity(), R.string.guide_complete_error_message, Toast.LENGTH_LONG).show();
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
