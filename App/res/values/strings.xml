@@ -126,6 +126,8 @@
     <string name="finish">Finish</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
+    <string name="public_switch">Public</string>
+    <string name="private_switch">Private</string>
 
     <!-- Full Screen Image -->
     <string name="close_full_screen_desc">Close full screen button.</string>
