@@ -76,12 +76,13 @@ public class GuideConclusionFragment extends BaseFragment {
    @Subscribe
    public void onGuideComplete(ApiEvent.CompleteGuide event) {
       if (!event.hasError()) {
-         mGuide.setCompleted(true);
-         setCompletedStatus(true);
+         boolean completed = event.getResult();
+         mGuide.setCompleted(completed);
+         setCompletedStatus(completed);
       } else {
-         mGuide.setCompleted(false);
-         setCompletedStatus(false);
-         Toast.makeText(getActivity(), R.string.guide_complete_error_message, Toast.LENGTH_LONG).show();
+         // Reset the button to the current state.
+         setCompletedStatus(mGuide.getCompleted());
+         Api.getErrorDialog(getActivity(), event).show();
       }
    }
 
