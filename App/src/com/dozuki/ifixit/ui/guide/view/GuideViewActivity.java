@@ -253,8 +253,8 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                App.sendEvent("menu_action", "button_press", "edit_guide", (long)mGuide.getGuideid());
 
                // If the user is on the introduction, take them to edit the introduction fields.
-               // If the user is on the introduction, take them to edit the introduction fields.
-               if (mCurrentPage == 0 || (mCurrentPage - mAdapter.getStepOffset()) >= mGuide.getNumSteps()) {
+               if (mCurrentPage < mAdapter.getStepOffset() ||
+                (mCurrentPage - mAdapter.getStepOffset()) >= mGuide.getNumSteps()) {
                   Intent intent = new Intent(this, GuideIntroActivity.class);
                   intent.putExtra(StepsActivity.GUIDE_KEY, mGuide);
                   intent.putExtra(GuideIntroActivity.STATE_KEY, true);
