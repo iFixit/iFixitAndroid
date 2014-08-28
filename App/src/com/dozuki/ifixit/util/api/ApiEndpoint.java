@@ -562,7 +562,7 @@ public enum ApiEndpoint {
          }
 
          public ApiEvent<?> parse(String json) throws JSONException {
-            return new ApiEvent.CompleteGuide().setResult("");
+            return new ApiEvent.CompleteGuide().setResult(true);
          }
 
          public ApiEvent<?> getEvent() {
@@ -583,7 +583,7 @@ public enum ApiEndpoint {
             }
 
             public ApiEvent<?> parse(String json) throws JSONException {
-               return new ApiEvent.UncompleteGuide().setResult("");
+               return new ApiEvent.CompleteGuide().setResult(false);
             }
 
             public ApiEvent<?> getEvent() {

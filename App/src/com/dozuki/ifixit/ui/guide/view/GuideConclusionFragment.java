@@ -76,11 +76,12 @@ public class GuideConclusionFragment extends BaseFragment {
    @Subscribe
    public void onGuideComplete(ApiEvent.CompleteGuide event) {
       if (!event.hasError()) {
-         mGuide.setCompleted(true);
-         setCompletedStatus(true);
+         boolean completed = event.getResult();
+         mGuide.setCompleted(completed);
+         setCompletedStatus(completed);
       } else {
-         mGuide.setCompleted(false);
-         setCompletedStatus(false);
+         // Reset the button to the current state.
+         setCompletedStatus(mGuide.getCompleted());
          Api.getErrorDialog(getActivity(), event).show();
       }
    }
