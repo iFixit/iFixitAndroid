@@ -22,6 +22,7 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    // if the guide has tools and parts.
    private int mToolsPosition = -1;
    private int mPartsPosition = -1;
+   private int mConclusionPosition = -1;
 
    private Guide mGuide;
    private boolean mIsOfflineGuide;
@@ -42,12 +43,20 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
          mPartsPosition = mStepOffset;
          mStepOffset++;
       }
+
+      if (!mGuide.isTeardown()) {
+         mConclusionPosition = getCount() - 1;
+      }
    }
 
    @Override
    public int getCount() {
       if (mGuide != null) {
-         return mGuide.getNumSteps() + mStepOffset + GUIDE_CONCLUSION_OFFSET;
+         int count = mGuide.getNumSteps() + mStepOffset;
+         if (!mGuide.isTeardown()) {
+            count +=  GUIDE_CONCLUSION_OFFSET;
+         }
+         return count;
       } else {
          return 0;
       }
@@ -67,7 +76,7 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
       } else if (position == mPartsPosition) {
          label += "/parts";
          fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getParts());
-      } else if (position == conclusionPosition()) {
+      } else if (position == mConclusionPosition) {
          label += "/conclusion";
          fragment = GuideConclusionFragment.newInstance(mGuide);
       } else {
@@ -100,7 +109,7 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
          return App.get().getString(R.string.requiredTools);
       } else if (position == mPartsPosition) {
          return App.get().getString(R.string.requiredParts);
-      } else if (position == conclusionPosition()) {
+      } else if (position == mConclusionPosition) {
          return App.get().getString(R.string.conclusion);
       } else {
          return App.get().getString(R.string.step_number, (position - mStepOffset) + 1);
@@ -117,9 +126,5 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
 
    private boolean guideHasParts() {
       return mGuide.getNumParts() != 0;
-   }
-
-   private int conclusionPosition() {
-      return getCount() - GUIDE_CONCLUSION_OFFSET;
    }
 }
