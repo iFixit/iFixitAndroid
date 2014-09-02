@@ -203,6 +203,8 @@ public class JSONHelper {
       guide.setPublic(jGuide.getBoolean("public"));
       guide.setType(jGuide.getString("type"));
       guide.setPatrolThreshold(jGuide.getInt("patrol_threshold"));
+      guide.setConclusion(jGuide.getString("conclusion_rendered"));
+      guide.setCompleted(jGuide.getBoolean("completed"));
       guide.setComments(parseComments(jGuide.getJSONArray("comments")));
       guide.setFavorited(jGuide.getBoolean("favorited"));
       guide.setModifiedDate(jGuide.getDouble("modified_date"));
