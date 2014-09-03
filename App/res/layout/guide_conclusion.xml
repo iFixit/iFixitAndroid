@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="@dimen/page_padding">
+
+    <TextView
+        android:id="@+id/guide_conclusion_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/BodyText" />
+
+    <Button
+        android:id="@+id/guide_completed_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/rounded_button_background"
+        android:textColor="@color/white"
+        android:text="@string/complete_this_guide"/>
+
+</LinearLayout>

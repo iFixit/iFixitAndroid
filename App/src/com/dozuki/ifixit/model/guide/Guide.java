@@ -31,6 +31,8 @@ public class Guide implements Serializable {
    protected ArrayList<GuideStep> mSteps;
    protected ArrayList<Item> mTools;
    protected ArrayList<Item> mParts;
+   protected boolean mCompleted;
+   protected String mConclusion;
    protected boolean mCanEdit = true;
    protected int mPatrolThreshold = 0;
    protected boolean mFavorited = false;
@@ -59,6 +61,14 @@ public class Guide implements Serializable {
    }
    public void setComments(ArrayList<Comment> comments) {
       mComments = comments;
+   }
+
+   public void setConclusion(String conclusion) {
+      mConclusion = conclusion;
+   }
+
+   public String getConclusion() {
+      return mConclusion;
    }
 
    public void setGuideid(int guideid) {
@@ -100,6 +110,8 @@ public class Guide implements Serializable {
    public String getType() {
       return mType;
    }
+
+   public boolean isTeardown() { return mType.equalsIgnoreCase("teardown"); }
 
    public void addPart(Item part) {
       mParts.add(part);
@@ -295,6 +307,14 @@ public class Guide implements Serializable {
       return "{" + mGuideid + "\n" + mRevisionid + "\n" + mTitle + "\n" + mTopic + "\n" +
        mAuthor + "\n" + mTimeRequired + "\n" + mDifficulty + "\n" + mIntroductionRendered + "\n" +
        mSummary + "\n\n" + mSteps + "\n" + mSummary + "}";
+   }
+
+   public void setCompleted(boolean completed) {
+      mCompleted = completed;
+   }
+
+   public boolean getCompleted() {
+      return mCompleted;
    }
 
    public int getCommentCount() {
