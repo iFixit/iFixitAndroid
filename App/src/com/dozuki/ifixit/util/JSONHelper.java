@@ -715,11 +715,11 @@ public class JSONHelper {
             return new Image();
          }
 
-         return new Image(image.getInt("id"), image.getString("original"));
+         // Use optInt because product images have null imageids.
+         return new Image(image.optInt("id", -1), image.getString("original"));
       } catch (JSONException e) {
-         Log.w(TAG, "Image parsing", e);
+         Log.e(TAG, "Image parsing", e);
          return new Image();
       }
    }
-
 }
