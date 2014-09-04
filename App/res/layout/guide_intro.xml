@@ -50,6 +50,13 @@
             android:layout_width="match_parent"/>
 
         <TextView
+           android:id="@+id/guide_intro_stories"
+           android:visibility="gone"
+           style="@style/BodyText"
+           android:layout_width="match_parent"
+           android:layout_height="wrap_content" />
+
+        <TextView
             android:id="@+id/guide_intro_text"
             style="@style/BodyText"
             android:layout_width="match_parent"

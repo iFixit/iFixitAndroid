@@ -8,7 +8,6 @@ import android.os.Bundle;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -21,36 +20,45 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.story.Story;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GuideIntroViewFragment extends BaseFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
+   private static final String STORIES = "STORIES";
 
-   private TextView mTitle;
-   private TextView mIntro;
-   private TextView mDifficulty;
-   private TextView mAuthor;
    private Guide mGuide;
+   private ArrayList<Story> mStories;
 
-   public GuideIntroViewFragment() { }
-
-   public GuideIntroViewFragment(Guide guide) {
-      mGuide = guide;
+   public static GuideIntroViewFragment newInstance(Guide guide, ArrayList<Story> stories) {
+      GuideIntroViewFragment frag = new GuideIntroViewFragment();
+      Bundle args = new Bundle();
+      args.putSerializable(SAVED_GUIDE, guide);
+      args.putSerializable(STORIES, stories);
+      frag.setArguments(args);
+      return frag;
    }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      if (savedInstanceState != null && mGuide == null) {
+      Bundle arguments = getArguments();
+      if (arguments != null) {
+         mGuide = (Guide)arguments.getSerializable(SAVED_GUIDE);
+         mStories = (ArrayList<Story>)arguments.getSerializable(STORIES);
+      } else if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+         mStories = (ArrayList<Story>)savedInstanceState.getSerializable(STORIES);
       }
    }
 
@@ -66,10 +74,11 @@ public class GuideIntroViewFragment extends BaseFragment {
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_intro, container, false);
 
-      mTitle = (TextView) view.findViewById(R.id.guide_title);
-      mIntro = (TextView) view.findViewById(R.id.guide_intro_text);
-      mDifficulty = (TextView) view.findViewById(R.id.guide_difficulty);
-      mAuthor = (TextView) view.findViewById(R.id.guide_author);
+      TextView mTitle = (TextView) view.findViewById(R.id.guide_title);
+      TextView mIntro = (TextView) view.findViewById(R.id.guide_intro_text);
+      TextView mDifficulty = (TextView) view.findViewById(R.id.guide_difficulty);
+      TextView mAuthor = (TextView) view.findViewById(R.id.guide_author);
+      TextView mStoriesText = (TextView) view.findViewById(R.id.guide_intro_stories);
 
       MovementMethod method = LinkMovementMethod.getInstance();
 
@@ -89,7 +98,6 @@ public class GuideIntroViewFragment extends BaseFragment {
                for (int i = 1; i <= count; i++) {
                   final String iframeSrc = m.group(i); // Group 0 denotes the full pattern,
                   // so 1 is the actual capture group.
-                  Log.d("GuideIntroViewFragment", iframeSrc);
 
                   final Activity activity = getActivity();
 
@@ -173,7 +181,11 @@ public class GuideIntroViewFragment extends BaseFragment {
 
             mAuthor.setText(getActivity().getString(R.string.author) + ": " +
              Utils.correctLinkPaths(Html.fromHtml(mGuide.getAuthor())));
+         }
 
+         if (mStories != null && !mStories.isEmpty()) {
+            mStoriesText.setText(mStories.size() + " repair stories");
+            mStoriesText.setVisibility(View.VISIBLE);
          }
       }
       return view;

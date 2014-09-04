@@ -1,13 +1,16 @@
 package com.dozuki.ifixit.ui.guide.view;
 
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.view.View;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.model.story.Story;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -25,11 +28,14 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    private int mConclusionPosition = -1;
 
    private Guide mGuide;
+   private ArrayList<Story> mStories;
    private boolean mIsOfflineGuide;
 
-   public GuideViewAdapter(FragmentManager fm, Guide guide, boolean isOfflineGuide) {
+   public GuideViewAdapter(FragmentManager fm, Guide guide,
+    ArrayList<Story> stories, boolean isOfflineGuide) {
       super(fm);
       mGuide = guide;
+      mStories = stories;
       mIsOfflineGuide = isOfflineGuide;
 
       mPageLabelMap = new HashMap<Integer, String>();
@@ -69,7 +75,7 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
 
       if (position == GUIDE_INTRO_POSITION) {
          label += "/intro";
-         fragment = new GuideIntroViewFragment(mGuide);
+         fragment = GuideIntroViewFragment.newInstance(mGuide, mStories);
       } else if (position == mToolsPosition) {
          label += "/tools";
          fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getTools());

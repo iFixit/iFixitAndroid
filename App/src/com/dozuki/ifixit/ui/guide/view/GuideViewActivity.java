@@ -415,8 +415,11 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       if (!event.hasError()) {
          mStories = event.getResult();
 
-         toast(mStories.size() + "", Toast.LENGTH_SHORT);
+         // Invalidate the intro page.
+         setGuide(mGuide, mCurrentPage);
       } else {
+         // TODO: I don't think we really care about telling the user that
+         // the stories request failed so we should probably remove this...
          Api.getErrorDialog(this, event).show();
       }
    }
@@ -457,7 +460,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       setTitle(guideTitle);
 
       mAdapter = new GuideViewAdapter(getSupportFragmentManager(), mGuide,
-       mIsOfflineGuide);
+       mStories, mIsOfflineGuide);
 
       mPager.setAdapter(mAdapter);
       mPager.setVisibility(View.VISIBLE);
