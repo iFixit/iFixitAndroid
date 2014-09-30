@@ -160,7 +160,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                String title, context;
 
                // If we're in one of the introduction pages, show guide comments.
-               if (stepIndex < 0 || stepIndex >= mGuide.getNumSteps()) {
+               if (GuideViewActivity.this.notOnStep(stepIndex)) {
                   comments = mGuide.getComments();
                   title = getString(R.string.guide_comments);
                   context = "guide";
@@ -191,7 +191,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
             int stepIndex = getStepIndex();
 
-            if (this.notOnStep(stepIndex)) {
+            if (notOnStep(stepIndex)) {
                mGuide.setComments(comments);
             } else {
                mGuide.getStep(stepIndex).setComments(comments);
@@ -217,7 +217,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          int stepIndex = getStepIndex();
 
          int commentCount = 0;
-         if (this.notOnStep(stepIndex)) {
+         if (notOnStep(stepIndex)) {
             commentCount = mGuide.getCommentCount();
          } else if (mGuide.getNumSteps() < stepIndex) {
             commentCount = mGuide.getStep(stepIndex).getCommentCount();
@@ -297,7 +297,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             String title, context;
 
             // If we're in one of the introduction pages, show guide comments.
-            if (this.notOnStep(stepIndex)) {
+            if (notOnStep(stepIndex)) {
                comments = mGuide.getComments();
                title = getString(R.string.guide_comments);
                context = "guide";
