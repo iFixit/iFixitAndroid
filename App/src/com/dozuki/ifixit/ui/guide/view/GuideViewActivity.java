@@ -160,7 +160,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                String title, context;
 
                // If we're in one of the introduction pages, show guide comments.
-               if (stepIndex < 0) {
+               if (stepIndex < 0 || stepIndex >= mGuide.getNumSteps()) {
                   comments = mGuide.getComments();
                   title = getString(R.string.guide_comments);
                   context = "guide";
@@ -189,11 +189,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          Bundle extras = data.getExtras();
          if (resultCode == RESULT_OK && extras != null) {
             ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
+            int stepIndex = getStepIndex();
 
-            if (getStepIndex() < 0) {
+            if (this.notOnStep(stepIndex)) {
                mGuide.setComments(comments);
             } else {
-               mGuide.getStep(getStepIndex()).setComments(comments);
+               mGuide.getStep(stepIndex).setComments(comments);
             }
 
             updateCommentCounts();
@@ -216,7 +217,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
          int stepIndex = getStepIndex();
 
          int commentCount = 0;
-         if (stepIndex < 0) {
+         if (this.notOnStep(stepIndex)) {
             commentCount = mGuide.getCommentCount();
          } else if (mGuide.getNumSteps() < stepIndex) {
             commentCount = mGuide.getStep(stepIndex).getCommentCount();
@@ -296,7 +297,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
             String title, context;
 
             // If we're in one of the introduction pages, show guide comments.
-            if (stepIndex < 0) {
+            if (this.notOnStep(stepIndex)) {
                comments = mGuide.getComments();
                title = getString(R.string.guide_comments);
                context = "guide";
@@ -549,5 +550,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
     */
    private void updateCommentCounts() {
       supportInvalidateOptionsMenu();
+   }
+
+   private boolean notOnStep(int stepIndex) {
+      return stepIndex < 0 || stepIndex >= mGuide.getNumSteps();
    }
 }
