@@ -24,6 +24,7 @@
     <dimen name="guide_thumbnail_height">90dp</dimen>
     <dimen name="guide_thumbnail_spacing">6dp</dimen>
     <dimen name="step_bullet_padding">6dp</dimen>
+    <dimen name="step_bullet_diameter">16dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>
     <dimen name="step_icon_left_spacing">10dp</dimen>
 

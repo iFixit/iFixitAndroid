@@ -170,21 +170,21 @@ public class BulletReorderFragment extends BaseDialogFragment {
       int iconRes;
 
       if (color.equals("black")) {
-         iconRes = R.drawable.ic_dialog_bullet_black;
+         iconRes = R.drawable.bullet_black;
       } else if (color.equals("orange")) {
-         iconRes = R.drawable.ic_dialog_bullet_orange;
+         iconRes = R.drawable.bullet_orange;
       } else if (color.equals("blue")) {
-         iconRes = R.drawable.ic_dialog_bullet_blue;
+         iconRes = R.drawable.bullet_blue;
+      } else if (color.equals("light_blue")) {
+         iconRes = R.drawable.bullet_light_blue;
       } else if (color.equals("violet")) {
-         iconRes = R.drawable.ic_dialog_bullet_pink;
+         iconRes = R.drawable.bullet_violet;
       } else if (color.equals("red")) {
-         iconRes = R.drawable.ic_dialog_bullet_red;
+         iconRes = R.drawable.bullet_red;
       } else if (color.equals("green")) {
-         iconRes = R.drawable.ic_dialog_bullet_green;
-      } else if (color.equals("white")) {
-         iconRes = R.drawable.bullet_white;
+         iconRes = R.drawable.bullet_green;
       } else if (color.equals("yellow")) {
-         iconRes = R.drawable.ic_dialog_bullet_yellow;
+         iconRes = R.drawable.bullet_yellow;
       } else if (color.equals("icon_reminder")) {
          iconRes = R.drawable.ic_dialog_bullet_reminder_dark;
       } else if (color.equals("icon_caution")) {
@@ -192,7 +192,7 @@ public class BulletReorderFragment extends BaseDialogFragment {
       } else if (color.equals("icon_note")) {
          iconRes = R.drawable.ic_dialog_bullet_note_dark;
       } else {
-         iconRes = R.drawable.ic_dialog_bullet_black;
+         iconRes = R.drawable.bullet_black;
       }
       return iconRes;
    }

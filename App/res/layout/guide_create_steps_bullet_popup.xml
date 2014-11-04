@@ -22,7 +22,6 @@
                 android:layout_height="wrap_content">
 
                 <TableRow
-                    android:id="@+id/tableRow1"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -30,32 +29,31 @@
                         android:id="@+id/bullet_dialog_color_black"
                         style="@style/BulletIcon"
                         android:contentDescription="@string/black_bullet_description"
-                        android:src="@drawable/ic_dialog_bullet_black"/>
+                        android:src="@drawable/bullet_black"/>
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_red"
                         style="@style/BulletIcon"
                         android:contentDescription="@string/red_bullet_description"
-                        android:src="@drawable/ic_dialog_bullet_red"/>
+                        android:src="@drawable/bullet_red"/>
 
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_orange"
                         style="@style/BulletIcon"
                         android:contentDescription="@string/orange_bullet_description"
-                        android:src="@drawable/ic_dialog_bullet_orange"/>
+                        android:src="@drawable/bullet_orange"/>
 
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_yellow"
                         style="@style/BulletIcon"
                         android:contentDescription="@string/yellow_bullet_description"
-                        android:src="@drawable/ic_dialog_bullet_yellow"/>
+                        android:src="@drawable/bullet_yellow"/>
 
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/tableRow2"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
@@ -63,23 +61,28 @@
                         android:id="@+id/bullet_dialog_color_green"
                         style="@style/BulletIcon"
                         android:contentDescription="@string/green_bullet_description"
-                        android:src="@drawable/ic_dialog_bullet_green"/>
+                        android:src="@drawable/bullet_green"/>
+
+                    <ImageView
+                        android:id="@+id/bullet_dialog_color_light_blue"
+                        style="@style/BulletIcon"
+                        android:contentDescription="@string/light_blue_bullet_description"
+                        android:src="@drawable/bullet_light_blue"/>
 
                     <ImageView
                         android:id="@+id/bullet_dialog_color_blue"
                         style="@style/BulletIcon"
                         android:contentDescription="@string/blue_bullet_description"
-                        android:src="@drawable/ic_dialog_bullet_blue"/>
+                        android:src="@drawable/bullet_blue"/>
 
                     <ImageView
-                        android:id="@+id/bullet_dialog_color_purple"
+                        android:id="@+id/bullet_dialog_color_violet"
                         style="@style/BulletIcon"
-                        android:contentDescription="@string/purple_bullet_description"
-                        android:src="@drawable/ic_dialog_bullet_pink"/>
+                        android:contentDescription="@string/violet_bullet_description"
+                        android:src="@drawable/bullet_violet"/>
                 </TableRow>
 
                 <TableRow
-                    android:id="@+id/tableRow3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content">
 
