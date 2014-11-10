@@ -186,11 +186,11 @@ public class BulletReorderFragment extends BaseDialogFragment {
       } else if (color.equals("yellow")) {
          iconRes = R.drawable.bullet_yellow;
       } else if (color.equals("icon_reminder")) {
-         iconRes = R.drawable.ic_dialog_bullet_reminder_dark;
+         iconRes = R.drawable.ic_dialog_bullet_reminder_light;
       } else if (color.equals("icon_caution")) {
          iconRes = R.drawable.ic_dialog_bullet_caution;
       } else if (color.equals("icon_note")) {
-         iconRes = R.drawable.ic_dialog_bullet_note_dark;
+         iconRes = R.drawable.ic_dialog_bullet_note_light;
       } else {
          iconRes = R.drawable.bullet_black;
       }

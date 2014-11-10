@@ -35,8 +35,6 @@ import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.create.BulletReorderFragment.BulletRearrangeListener;
 import com.dozuki.ifixit.ui.guide.create.ChooseBulletDialog.BulletDialogListener;
 import com.dozuki.ifixit.util.Utils;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -502,11 +500,11 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
       } else if (color.equals("yellow")) {
          iconRes = R.drawable.bullet_yellow;
       } else if (color.equals("icon_reminder")) {
-         iconRes = R.drawable.ic_dialog_bullet_reminder_dark;
+         iconRes = R.drawable.ic_dialog_bullet_reminder_light;
       } else if (color.equals("icon_caution")) {
          iconRes = R.drawable.ic_dialog_bullet_caution;
       } else if (color.equals("icon_note")) {
-         iconRes = R.drawable.ic_dialog_bullet_note_dark;
+         iconRes = R.drawable.ic_dialog_bullet_note_light;
       } else {
          iconRes = R.drawable.bullet_black;
       }
