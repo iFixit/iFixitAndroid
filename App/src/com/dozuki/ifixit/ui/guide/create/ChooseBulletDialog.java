@@ -67,10 +67,9 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
       view.findViewById(R.id.bullet_dialog_color_orange).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_color_yellow).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_color_green).setOnClickListener(this);
+      view.findViewById(R.id.bullet_dialog_color_light_blue).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_color_blue).setOnClickListener(this);
-      view.findViewById(R.id.bullet_dialog_color_purple).setOnClickListener(this);
-      // view.findViewById(R.id.ic_dialog_bullet_pink).setOnClickListener(
-      // this);
+      view.findViewById(R.id.bullet_dialog_color_violet).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_caution).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_note).setOnClickListener(this);
       view.findViewById(R.id.bullet_dialog_reminder).setOnClickListener(this);
@@ -144,9 +143,13 @@ public class ChooseBulletDialog extends BaseDialogFragment implements OnClickLis
             frag.onFinishBulletDialog(mStepIndex, "blue");
             label = "bullet_dialog_color_blue";
             break;
-         case R.id.bullet_dialog_color_purple:
+         case R.id.bullet_dialog_color_light_blue:
+            frag.onFinishBulletDialog(mStepIndex, "light_blue");
+            label = "bullet_dialog_color_light_blue";
+            break;
+         case R.id.bullet_dialog_color_violet:
             frag.onFinishBulletDialog(mStepIndex, "violet");
-            label = "bullet_dialog_color_purple";
+            label = "bullet_dialog_color_violet";
             break;
          case R.id.bullet_dialog_color_green:
             frag.onFinishBulletDialog(mStepIndex, "green");
