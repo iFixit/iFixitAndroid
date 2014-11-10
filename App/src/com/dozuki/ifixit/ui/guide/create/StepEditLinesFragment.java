@@ -500,11 +500,11 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
       } else if (color.equals("yellow")) {
          iconRes = R.drawable.bullet_yellow;
       } else if (color.equals("icon_reminder")) {
-         iconRes = R.drawable.ic_dialog_bullet_reminder_light;
+         iconRes = R.drawable.ic_dialog_bullet_reminder_dark;
       } else if (color.equals("icon_caution")) {
          iconRes = R.drawable.ic_dialog_bullet_caution;
       } else if (color.equals("icon_note")) {
-         iconRes = R.drawable.ic_dialog_bullet_note_light;
+         iconRes = R.drawable.ic_dialog_bullet_note_dark;
       } else {
          iconRes = R.drawable.bullet_black;
       }
