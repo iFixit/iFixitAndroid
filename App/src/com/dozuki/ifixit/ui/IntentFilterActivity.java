@@ -4,19 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
-
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
+import com.dozuki.ifixit.ui.topic_view.TopicActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicViewActivity;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.squareup.otto.Subscribe;
 
 import java.util.List;
@@ -59,7 +56,8 @@ public class IntentFilterActivity extends BaseActivity {
          handleUriView(intent.getData());
       } else {
          Bundle extras = intent.getExtras();
-         handleUriView(Uri.parse(extras.getString(VIEW_URL, "")));
+         String url = (String) extras.get(VIEW_URL);
+         handleUriView(Uri.parse(url));
       }
    }
 
@@ -107,28 +105,34 @@ public class IntentFilterActivity extends BaseActivity {
    private void handlePathNavigation() {
       Intent intent = null;
       List<String> segments = mUri.getPathSegments();
-      String prefix = segments.get(0);
 
-      try {
-         if (prefix.equalsIgnoreCase("guide") || prefix.equalsIgnoreCase("teardown")) {
-            if (segments.get(1).equalsIgnoreCase("search")) {
-               String query = segments.get(2);
-               intent = SearchActivity.viewSearch(this, query);
-               App.sendEvent("ui_action", "intent_filter", "search", null);
-            } else {
-               int guideid = Integer.parseInt(segments.get(2).trim());
-               intent = GuideViewActivity.viewGuideid(this, guideid);
-               App.sendEvent("ui_action", "intent_filter", "guide", null);
+      if (segments.size() == 0) {
+         intent = new Intent(this, TopicActivity.class);
+         App.sendEvent("ui_action", "intent_filter", "category", null);
+      } else {
+         String prefix = segments.get(0);
+
+         try {
+            if (prefix.equalsIgnoreCase("guide") || prefix.equalsIgnoreCase("teardown")) {
+               if (segments.get(1).equalsIgnoreCase("search")) {
+                  String query = segments.get(2);
+                  intent = SearchActivity.viewSearch(this, query);
+                  App.sendEvent("ui_action", "intent_filter", "search", null);
+               } else {
+                  int guideid = Integer.parseInt(segments.get(2).trim());
+                  intent = GuideViewActivity.viewGuideid(this, guideid);
+                  App.sendEvent("ui_action", "intent_filter", "guide", null);
+               }
+            } else if (prefix.equalsIgnoreCase("c") || prefix.equalsIgnoreCase("device")) {
+               String topicName = segments.get(1);
+               intent = TopicViewActivity.viewTopic(this, topicName);
+               App.sendEvent("ui_action", "intent_filter", "category", null);
             }
-         } else if (prefix.equalsIgnoreCase("c") || prefix.equalsIgnoreCase("device")) {
-            String topicName = segments.get(1);
-            intent = TopicViewActivity.viewTopic(this, topicName);
-            App.sendEvent("ui_action", "intent_filter", "category", null);
-         }
-      } catch (Exception e) {
-         App.sendException("IntentFilterActivity", "Problem parsing Uri", e);
+         } catch (Exception e) {
+            App.sendException("IntentFilterActivity", "Problem parsing Uri", e);
 
-         displayNotFoundDialog();
+            displayNotFoundDialog();
+         }
       }
 
       if (intent != null) {
