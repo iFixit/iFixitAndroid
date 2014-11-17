@@ -418,8 +418,12 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    protected void refreshSyncStatus(boolean forceUpdate) {
       final String authority = ApiContentProvider.getAuthority();
       final Account account = App.get().getUserAccount();
-      boolean isSyncing = ContentResolver.isSyncActive(account, authority) ||
-       ContentResolver.isSyncPending(account, authority);
+      boolean isSyncing = false;
+
+      if (account != null) {
+         isSyncing = ContentResolver.isSyncActive(account, authority) ||
+          ContentResolver.isSyncPending(account, authority);
+      }
 
       // This gets called a lot so we only update the UI if there is a change.
       if (forceUpdate || isSyncing != mIsSyncing) {
