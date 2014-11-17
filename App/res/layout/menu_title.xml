@@ -29,6 +29,7 @@
             android:textSize="20sp"
             android:ellipsize="end"
             android:text="@string/app_name"
+            android:layout_gravity="center_vertical"
             android:textColor="@color/white"/>
     </FrameLayout>
 

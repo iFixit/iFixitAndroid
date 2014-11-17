@@ -15,14 +15,12 @@ public class OpenIDActivity extends Activity {
    public static String SESSION = "SESSION";
    public static String LOGIN_METHOD = "LOGIN_METHOD";
    public static String SINGLE_SIGN_ON = "SINGLE_SIGN_ON";
-
    public static String YAHOO_LOGIN = "yahoo";
    public static String GOOGLE_LOGIN = "google";
 
-   private WebView mWebView;
    private String mBaseUrl;
-   private Site mSite;
-   private boolean mSingleSignOn;
+   private String mDomain;
+   private String mCustomDomain;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -32,26 +30,29 @@ public class OpenIDActivity extends Activity {
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
       Bundle extras = getIntent().getExtras();
 
-      mSingleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
-      mSite = ((App)getApplication()).getSite();
+      boolean singleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
+      Site site = ((App) getApplication()).getSite();
+
+      mDomain = site.mDomain;
+      mCustomDomain = site.mCustomDomain;
 
       String loginUrl;
-      if (mSingleSignOn) {
-         loginUrl = mSite.mSsoUrl;
+      if (singleSignOn) {
+         loginUrl = site.mSsoUrl;
          mBaseUrl = loginUrl;
       } else {
-         mBaseUrl = mSite.getOpenIdLoginUrl();
+         mBaseUrl = site.getOpenIdLoginUrl();
          final String method = extras.getString(LOGIN_METHOD);
          loginUrl = mBaseUrl + method;
       }
 
-      mWebView = (WebView)findViewById(R.id.open_id_web_view);
+      WebView webView = (WebView) findViewById(R.id.open_id_web_view);
 
       CookieSyncManager.createInstance(this);
       CookieSyncManager.getInstance().sync();
       CookieManager.getInstance().removeAllCookie();
 
-      WebSettings settings = mWebView.getSettings();
+      WebSettings settings = webView.getSettings();
       settings.setJavaScriptEnabled(true);
       settings.setBuiltInZoomControls(true);
       settings.setSupportZoom(true);
@@ -60,7 +61,7 @@ public class OpenIDActivity extends Activity {
       settings.setAppCacheEnabled(true);
       settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
-      mWebView.setWebViewClient(new WebViewClient() {
+      webView.setWebViewClient(new WebViewClient() {
          // When start to load page, show url in activity's title bar
          @Override
          public void onPageStarted(WebView view, String url, Bitmap favicon) {
@@ -70,8 +71,13 @@ public class OpenIDActivity extends Activity {
          @Override
          public void onPageFinished(WebView view, String url) {
             CookieSyncManager.getInstance().sync();
+
             // Ignore page loads if it's on the openID site.
-            if (!url.contains(mSite.mName) || url.contains(mBaseUrl)) {
+            if (url.contains(mBaseUrl) ||
+             // OR if it's NOT on one of the sites domains
+             !(url.contains(mDomain) || url.contains(mCustomDomain)) ||
+             // OR if its NOT a google or yahoo domain
+             ((url.contains(YAHOO_LOGIN) || url.contains(GOOGLE_LOGIN) && !url.contains(mDomain)))) {
                return;
             }
 
@@ -90,8 +96,10 @@ public class OpenIDActivity extends Activity {
 
             // Cookie is a string like NAME=VALUE [; NAME=VALUE]
             String[] pairs = cookie.split(";");
-            for (int i = 0; i < pairs.length; i++) {
-               String[] parts = pairs[i].split("=", 2);
+
+            for (String pair : pairs) {
+               String[] parts = pair.split("=", 2);
+
                // If token is found, return it to the calling activity.
                if (parts.length == 2 && parts[0].trim().equalsIgnoreCase(sessionName)) {
                   Intent result = new Intent();
@@ -102,14 +110,13 @@ public class OpenIDActivity extends Activity {
                }
             }
 
-            Log.w("iFixit", "Couldn't find session in Cookie from OpenID login: " +
-             cookie);
+            Log.w("iFixit", "Couldn't find session in Cookie from OpenID login: " + cookie);
             Intent result = new Intent();
             setResult(RESULT_CANCELED, result);
             finish();
          }
       });
 
-      mWebView.loadUrl(loginUrl);
+      webView.loadUrl(loginUrl);
    }
 }
