@@ -32,6 +32,10 @@
 
                 <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/c/"/>
                 <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/c/"/>
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/Device/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/Device/"/>
+                <data android:scheme="http"  android:host="www.ifixit.com" android:pathPrefix="/device/"/>
+                <data android:scheme="https" android:host="www.ifixit.com" android:pathPrefix="/device/"/>
             </intent-filter>
         </activity>
 
