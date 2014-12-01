@@ -144,6 +144,8 @@ public class Site implements Serializable {
          return R.style.Theme_iFixit;
       } else if (isAccustream()) {
          return R.style.Theme_Accustream;
+      } else if (isMagnolia()) {
+         return R.style.Theme_Magnolia;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -232,6 +234,20 @@ public class Site implements Serializable {
          site.mBarcodeScanner = true;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
+      } else if (siteName.equals("magnoliamedical")) {
+         site = new Site(3245);
+         site.mName = "magnoliamedical";
+         site.mDomain = "magnoliamedical.dozuki.com";
+         site.mTitle = "Magnolia Medical";
+         site.mTheme = "black";
+         site.mPublic = false;
+         site.mAnswers = false;
+         site.mDescription = "SteriPath: The simple, all-in-one system designed to be the easiest and most effective method to reduce blood culture sample contamination.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       }
 
       return site;
@@ -246,7 +262,7 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit();
+      return isAccustream() || isIfixit() || isMagnolia();
    }
 
    public boolean isAccustream() {
@@ -263,5 +279,9 @@ public class Site implements Serializable {
 
    public Drawable getLogo() {
       return null;
+   }
+
+   public boolean isMagnolia() {
+      return mName.equals("magnoliamedical");
    }
 }

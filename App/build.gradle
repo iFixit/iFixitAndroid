@@ -36,7 +36,7 @@ dependencies {
 }
 
 // List of sites used to create signingConfigs, sourceSets, and productFlavors.
-def sites = ["ifixit", "dozuki", "accustream"]
+def sites = ["ifixit", "dozuki", "accustream", "magnoliamedical"]
 
 android {
    compileSdkVersion 19
@@ -139,8 +139,8 @@ def createSiteSourceSet(siteName) {
       // Include all white label apps so we can use their themes.
       return {
          manifest.srcFile "sites/dozuki/AndroidManifest.xml"
-         res.srcDirs = ["sites/dozuki/res", "sites/accustream/res", "sites/ifixit/res"]
-         java.srcDirs = ["sites/dozuki/src", "sites/accustream/src", "sites/ifixit/src"]
+         res.srcDirs = ["sites/dozuki/res", "sites/accustream/res", "sites/ifixit/res", "sites/magnoliamedical/res"]
+         java.srcDirs = ["sites/dozuki/src", "sites/accustream/src", "sites/ifixit/src", "sites/magnoliamedical/src"]
       }
    } else {
       return {
