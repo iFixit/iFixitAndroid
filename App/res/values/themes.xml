@@ -46,6 +46,8 @@
 
     <style name="Theme.Accustream" parent="Theme.Base"></style>
 
+    <style name="Theme.Magnolia" parent="Theme.Base"></style>
+
     <style name="Theme.Dozuki" parent="Theme.Base"></style>
 
     <style name="Theme.Dozuki.Green" parent="Theme.Base"></style>

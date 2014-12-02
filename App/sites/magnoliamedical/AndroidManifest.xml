@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <application>
+        <activity
+            android:name="com.dozuki.ifixit.ui.topic_view.TopicActivity"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name="com.dozuki.ifixit.ui.IntentFilterActivity"
+            android:exported="true" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+
+                <!-- We need to match:
+                        Guide and Teardown
+                        upper and lower case
+                        http and https
+                        dozuki and custom domain
+                -->
+                <data android:scheme="http"  android:host="magnoliamedical.dozuki.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="https" android:host="magnoliamedical.dozuki.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="http"  android:host="magnoliamedical.dozuki.com" android:pathPrefix="/Teardown/"/>
+                <data android:scheme="https" android:host="magnoliamedical.dozuki.com" android:pathPrefix="/Teardown/"/>
+
+                <data android:scheme="http"  android:host="magnoliamedical.dozuki.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="https" android:host="magnoliamedical.dozuki.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="http"  android:host="magnoliamedical.dozuki.com" android:pathPrefix="/teardown/"/>
+                <data android:scheme="https" android:host="magnoliamedical.dozuki.com" android:pathPrefix="/teardown/"/>
+
+                <data android:scheme="http"  android:host="magnoliamedical.dozuki.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="magnoliamedical.dozuki.com" android:pathPrefix="/c/"/>
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
+            android:authorities="com.dozuki.magnoliamedical.ui.search.SearchSuggestionProvider"/>
+
+         <provider
+            android:name="com.dozuki.ifixit.util.api.ApiContentProvider"
+            android:authorities="com.dozuki.magnoliamedical.provider"
+            android:exported="false"
+            android:syncable="true"/>
+    </application>
+</manifest>
