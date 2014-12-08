@@ -3,6 +3,12 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="Widget.Accustream"></style>
+
+    <style name="Widget.Accustream.TopicBackground" parent="Widget.Accustream">
+        <item name="android:visibility">gone</item>
+    </style>
+
     <style name="DropDownListView.Accustream" parent="Widget.Sherlock.Light.ListView.DropDown">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
     </style>

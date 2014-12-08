@@ -14,6 +14,7 @@
         <item name="doz__primaryHighlightColor">@color/magnolia_color</item>
         <item name="doz__sectionHeader">@drawable/magnolia_section_header</item>
         <item name="doz__spinnerBackground">@drawable/magnolia_spinner_background_holo_light</item>
+        <item name="doz__topicDefaultBackground">@style/Widget.Magnolia.TopicBackground</item>
         <item name="doz__editTextBackground">@drawable/magnolia_edit_text_holo_light</item>
         <item name="doz__buttonBackground">@drawable/magnolia_btn_default_holo_light</item>
         <item name="doz__checkboxBackground">@drawable/magnolia_btn_check_holo_light</item>

@@ -2,6 +2,11 @@
 
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="Widget.Magnolia"></style>
+
+    <style name="Widget.Magnolia.TopicBackground" parent="Widget.Magnolia">
+        <item name="android:visibility">gone</item>
+    </style>
 
     <style name="DropDownListView.Magnolia" parent="Widget.Sherlock.Light.ListView.DropDown">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
