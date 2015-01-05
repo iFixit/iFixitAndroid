@@ -19,3 +19,9 @@ accustreamGAPropertyId=GAPropertyId
 accustreamKeyAlias=keyalias
 accustreamStorePassword=storepassword
 accustreamKeyPassword=keypassword
+
+magnoliamedicalAppId=0123456789ABCDEF0123456789ABCDEF
+magnoliamedicalGAPropertyId=GAPropertyId
+magnoliamedicalKeyAlias=keyalias
+magnoliamedicalStorePassword=storepassword
+magnoliamedicalKeyPassword=keypassword
