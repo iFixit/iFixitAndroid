@@ -755,7 +755,8 @@ public enum ApiEndpoint {
          }
       },
       false,
-      "GET"
+      "GET",
+      true
    );
 
    /**
