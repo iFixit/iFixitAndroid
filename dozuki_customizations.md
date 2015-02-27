@@ -1,6 +1,6 @@
 
 White label your Dozuki App
---------------
+==============
 
 Here are the links to get you started.
 
@@ -15,7 +15,7 @@ https://github.com/iFixit/iFixitAndroid/blob/master/App/src/com/dozuki/ifixit/mo
 
 
 Site Customization
-=======
+--------------
 
 We use gradle for our build process, so you have to start first with getting
 your dev environment set up.
@@ -46,7 +46,7 @@ representative.
 
 
 Instructions
-=======
+--------------
 
 * Add your sites information to this file - https://github.com/iFixit/iFixitAndroid/blob/master/App/src/com/dozuki/ifixit/model/dozuki/Site.java#L235
    * You can find the necessary information on your dozuki site from https://<sitename>.dozuki.com/api/2.0/info
@@ -67,7 +67,7 @@ Instructions
 
 
 Gotchas
-========
+--------------
 
 All the activity:name attributes must be com.dozuki.ifixit, but the
 android:authority fields must be com.dozuki.sterling.  It’s an unfortunate side
