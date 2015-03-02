@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.DripAssist.Dark" parent="Theme.Sherlock.Light.DarkActionBar">
+        <!-- Action Bar Sherlock overrides -->
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.DripAssist</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.DripAssist</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.DripAssist</item>
+    </style>
+
+    <style name="Theme.DripAssist" parent="Theme.Base">
+        <item name="doz__primaryHighlightColor">@color/dripassist_color</item>
+        <item name="doz__sectionHeader">@drawable/dripassist_section_header</item>
+        <item name="doz__spinnerBackground">@drawable/dripassist_spinner_background_holo_light</item>
+        <item name="doz__editTextBackground">@drawable/dripassist_edit_text_holo_light</item>
+        <item name="doz__buttonBackground">@drawable/dripassist_btn_default_holo_light</item>
+        <item name="doz__checkboxBackground">@drawable/dripassist_btn_check_holo_light</item>
+
+        <!-- Action Bar theme -->
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarWidgetTheme">@style/Theme.DripAssist.Dark</item>
+
+        <item name="android:editTextBackground">@drawable/dripassist_edit_text_holo_light</item>
+
+        <item name="android:textColorHighlight">#991871a3</item>
+        <item name="android:textSelectHandleLeft">@drawable/dripassist_text_select_handle_left</item>
+        <item name="android:textSelectHandleRight">@drawable/dripassist_text_select_handle_right</item>
+        <item name="android:textSelectHandle">@drawable/dripassist_text_select_handle_middle</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewDripAssist</item>
+
+        <item name="android:listChoiceIndicatorMultiple">@drawable/dripassist_btn_check_holo_light</item>
+
+        <item name="android:listChoiceIndicatorSingle">@drawable/dripassist_btn_radio_holo_light</item>
+
+        <item name="android:buttonStyle">@style/ButtonDripAssist</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButtonDripAssist</item>
+
+        <item name="android:dropDownSpinnerStyle">@style/SpinnerDripAssist</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarDripAssist</item>
+
+        <item name="android:seekBarStyle">@style/SeekBarDripAssist</item>
+
+        <item name="android:ratingBarStyle">@style/RatingBarDripAssist</item>
+
+        <item name="android:ratingBarStyleIndicator">@style/RatingBarBigDripAssist</item>
+
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmallDripAssist</item>
+
+        <item name="android:buttonStyleToggle">@style/ToggleDripAssist</item>
+
+        <item name="android:listChoiceBackgroundIndicator">@drawable/dripassist_list_selector_holo_light</item>
+
+        <item name="android:activatedBackgroundIndicator">@drawable/dripassist_activated_background_holo_light</item>
+
+        <item name="android:fastScrollThumbDrawable">@drawable/dripassist_fastscroll_thumb_holo</item>
+
+    </style>
+
+</resources>

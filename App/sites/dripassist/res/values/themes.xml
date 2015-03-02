@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.DripAssist.Dark" parent="Theme.Sherlock.Light.DarkActionBar">
+        <!-- Action Bar Sherlock overrides -->
+        <item name="android:dropDownListViewStyle">@style/DropDownListView.DripAssist</item>
+        <item name="dropDownListViewStyle">@style/DropDownListView.DripAssist</item>
+        <item name="actionDropDownStyle">@style/DropDownNav.DripAssist</item>
+    </style>
+
+    <style name="Theme.DripAssist" parent="Theme.Base">
+        <item name="doz__primaryHighlightColor">@color/dripassist_color</item>
+        <item name="doz__sectionHeader">@drawable/dripassist_section_header</item>
+        <item name="doz__spinnerBackground">@drawable/dripassist_spinner_background_holo_light</item>
+        <item name="doz__topicDefaultBackground">@style/Widget.DripAssist.TopicBackground</item>
+        <item name="doz__editTextBackground">@drawable/dripassist_edit_text_holo_light</item>
+        <item name="doz__buttonBackground">@drawable/dripassist_btn_default_holo_light</item>
+        <item name="doz__checkboxBackground">@drawable/dripassist_btn_check_holo_light</item>
+
+        <!-- Action Bar theme -->
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
+        <item name="actionBarWidgetTheme">@style/Theme.DripAssist.Dark</item>
+
+        <item name="android:editTextStyle">@style/EditTextDripAssist</item>
+
+        <item name="android:textColorHighlight">#991871a3</item>
+
+        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewDripAssist</item>
+
+        <item name="android:checkboxStyle">@style/CheckBoxDripAssist</item>
+
+        <item name="android:radioButtonStyle">@style/RadioButtonDripAssist</item>
+
+        <item name="android:buttonStyle">@style/ButtonDripAssist</item>
+
+        <item name="android:imageButtonStyle">@style/ImageButtonDripAssist</item>
+
+        <item name="android:spinnerStyle">@style/SpinnerDripAssist</item>
+
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemDripAssist</item>
+
+        <item name="android:progressBarStyleHorizontal">@style/ProgressBarDripAssist</item>
+
+        <item name="android:seekBarStyle">@style/SeekBarDripAssist</item>
+
+        <item name="android:ratingBarStyle">@style/RatingBarDripAssist</item>
+
+        <item name="android:ratingBarStyleIndicator">@style/RatingBarBigDripAssist</item>
+
+        <item name="android:ratingBarStyleSmall">@style/RatingBarSmallDripAssist</item>
+
+        <item name="android:buttonStyleToggle">@style/ToggleDripAssist</item>
+
+        <item name="android:listViewStyle">@style/ListViewDripAssist</item>
+
+        <item name="android:listViewWhiteStyle">@style/ListViewDripAssist.White</item>
+
+        <item name="android:spinnerItemStyle">@style/SpinnerItemDripAssist</item>
+
+    </style>
+
+</resources>
