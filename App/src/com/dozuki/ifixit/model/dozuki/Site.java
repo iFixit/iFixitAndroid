@@ -147,7 +147,7 @@ public class Site implements Serializable {
       } else if (isMagnolia()) {
          return R.style.Theme_Magnolia;
       } else if (isDripAssist()) {
-          return R.style.Theme_DripAssist;
+          return R.style.DripAssist;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -278,7 +278,7 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit() || isMagnolia();
+      return isAccustream() || isIfixit() || isMagnolia() || isDripAssist();
    }
 
    public boolean isDripAssist() {
