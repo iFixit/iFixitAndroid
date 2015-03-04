@@ -76,7 +76,6 @@
 
             <Button
                 style="?buttonBarButtonStyle"
-                android:background="?doz__buttonBackground"
                 android:id="@+id/save"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

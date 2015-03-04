@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="dripassist_color">#6d6d6d</color>
+    <color name="emphasis">@color/dripassist_color</color>
+    <color name="emphasis_pressed">@color/step_pager_previous_tab_color</color>
+
+    <color name="step_pager_previous_tab_color">#ff144c6b</color>
+    <color name="step_pager_selected_tab_color">@color/dripassist_color</color>
+    <color name="step_pager_selected_last_tab_color">#ff19446f</color>
+    <color name="step_pager_next_tab_color">#10000000</color>
+</resources>

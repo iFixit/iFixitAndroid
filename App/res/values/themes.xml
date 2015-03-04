@@ -34,6 +34,7 @@
 
         <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
         <item name="mdMenuBackground">@color/menu_background</item>
+        <item name="android:buttonStyle">@style/Base.Button</item>
 
         <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:listViewWhiteStyle">@style/ListView.White</item>
@@ -47,6 +48,8 @@
     <style name="Theme.Accustream" parent="Theme.Base"></style>
 
     <style name="Theme.Magnolia" parent="Theme.Base"></style>
+
+    <style name="DripAssist" parent="Theme.Base"></style>
 
     <style name="Theme.Dozuki" parent="Theme.Base"></style>
 

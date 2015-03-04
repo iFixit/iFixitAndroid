@@ -146,6 +146,8 @@ public class Site implements Serializable {
          return R.style.Theme_Accustream;
       } else if (isMagnolia()) {
          return R.style.Theme_Magnolia;
+      } else if (isDripAssist()) {
+          return R.style.DripAssist;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -167,11 +169,11 @@ public class Site implements Serializable {
       return R.style.Theme_Dozuki;
    }
 
-   // Used only for custom apps, where we don't have a call to get the site info.
+
+    // Used only for custom apps, where we don't have a call to get the site info.
    public static Site getSite(String siteName) {
       Site site = null;
       Resources res = App.get().getResources();
-      String packageName = App.get().getPackageName();
 
       if (siteName.equals("ifixit")) {
          site = new Site(2);
@@ -248,6 +250,20 @@ public class Site implements Serializable {
          site.mPublicRegistration = false;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
+      } else if (siteName.equals("dripassist")) {
+          site = new Site(3366);
+          site.mName = "dripassist";
+          site.mDomain = "dripassist.dozuki.com";
+          site.mTitle = "DripAssist";
+          site.mTheme = "white";
+          site.mPublic = false;
+          site.mAnswers = false;
+          site.mDescription = "";
+          site.mStandardAuth = true;
+          site.mSsoUrl = null;
+          site.mPublicRegistration = false;
+          site.mObjectNamePlural = res.getString(R.string.categories);
+          site.mObjectNameSingular = res.getString(R.string.category);
       }
 
       return site;
@@ -262,7 +278,11 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit() || isMagnolia();
+      return isAccustream() || isIfixit() || isMagnolia() || isDripAssist();
+   }
+
+   public boolean isDripAssist() {
+      return mName.equals("dripassist");
    }
 
    public boolean isAccustream() {

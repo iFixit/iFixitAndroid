@@ -17,7 +17,6 @@
         <item name="doz__sectionHeader">@drawable/accustream__section_header</item>
         <item name="doz__spinnerBackground">@drawable/accustream__spinner_background_holo_light</item>
         <item name="doz__editTextBackground">@drawable/accustream__edit_text_holo_light</item>
-        <item name="doz__buttonBackground">@drawable/accustream__btn_default_holo_light</item>
         <item name="doz__checkboxBackground">@drawable/accustream__btn_check_holo_light</item>
 
         <!-- Action Bar theme -->
