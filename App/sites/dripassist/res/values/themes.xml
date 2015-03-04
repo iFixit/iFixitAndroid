@@ -3,20 +3,19 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.DripAssist.Dark" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="DripAssist.Dark" parent="Theme.Sherlock.Light.DarkActionBar">
         <!-- Action Bar Sherlock overrides -->
         <item name="android:dropDownListViewStyle">@style/DropDownListView.DripAssist</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.DripAssist</item>
         <item name="actionDropDownStyle">@style/DropDownNav.DripAssist</item>
     </style>
 
-    <style name="Theme.DripAssist" parent="Theme.Base">
+    <style name="DripAssist" parent="Theme.Sherlock.Light.DarkActionBar">
         <item name="doz__primaryHighlightColor">@color/dripassist_color</item>
         <item name="doz__sectionHeader">@drawable/dripassist_section_header</item>
         <item name="doz__spinnerBackground">@drawable/dripassist_spinner_background_holo_light</item>
         <item name="doz__topicDefaultBackground">@style/Widget.DripAssist.TopicBackground</item>
         <item name="doz__editTextBackground">@drawable/dripassist_edit_text_holo_light</item>
-        <item name="doz__buttonBackground">@drawable/dripassist_btn_default_holo_light</item>
         <item name="doz__checkboxBackground">@drawable/dripassist_btn_check_holo_light</item>
 
         <!-- Action Bar theme -->
@@ -33,8 +32,6 @@
         <item name="android:checkboxStyle">@style/CheckBoxDripAssist</item>
 
         <item name="android:radioButtonStyle">@style/RadioButtonDripAssist</item>
-
-        <item name="android:buttonStyle">@style/ButtonDripAssist</item>
 
         <item name="android:imageButtonStyle">@style/ImageButtonDripAssist</item>
 

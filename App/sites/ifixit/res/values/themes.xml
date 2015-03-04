@@ -16,7 +16,6 @@
         <item name="doz__sectionHeader">@drawable/ifixit__section_header</item>
         <item name="doz__spinnerBackground">@drawable/ifixit__spinner_background_holo_light</item>
         <item name="doz__editTextBackground">@drawable/ifixit__edit_text_holo_light</item>
-        <item name="doz__buttonBackground">@drawable/ifixit__btn_default_holo_light</item>
         <item name="doz__checkboxBackground">@drawable/ifixit__btn_check_holo_light</item>
 
         <!-- Action Bar theme -->

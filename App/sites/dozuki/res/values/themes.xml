@@ -35,7 +35,6 @@
         <item name="doz__sectionHeader">@drawable/orange__section_header</item>
         <item name="doz__spinnerBackground">@drawable/orange__spinner_background_holo_light</item>
         <item name="doz__editTextBackground">@drawable/orange__edit_text_holo_light</item>
-        <item name="doz__buttonBackground">@drawable/orange__btn_default_holo_light</item>
         <item name="doz__checkboxBackground">@drawable/orange__btn_check_holo_light</item>
 
         <!-- Action Bar theme -->

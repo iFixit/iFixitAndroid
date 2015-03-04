@@ -15,7 +15,6 @@
         <item name="doz__sectionHeader">@drawable/dripassist_section_header</item>
         <item name="doz__spinnerBackground">@drawable/dripassist_spinner_background_holo_light</item>
         <item name="doz__editTextBackground">@drawable/dripassist_edit_text_holo_light</item>
-        <item name="doz__buttonBackground">@drawable/dripassist_btn_default_holo_light</item>
         <item name="doz__checkboxBackground">@drawable/dripassist_btn_check_holo_light</item>
 
         <!-- Action Bar theme -->
