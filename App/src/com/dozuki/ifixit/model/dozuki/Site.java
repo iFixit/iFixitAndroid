@@ -256,7 +256,7 @@ public class Site implements Serializable {
           site.mDomain = "dripassist.dozuki.com";
           site.mTitle = "DripAssist";
           site.mTheme = "white";
-          site.mPublic = false;
+          site.mPublic = true;
           site.mAnswers = false;
           site.mDescription = "";
           site.mStandardAuth = true;
