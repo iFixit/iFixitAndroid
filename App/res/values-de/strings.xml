@@ -1,305 +1,299 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
-    <!-- Main Application -->
-    <string name="devices">Geräte</string>
-    <string name="device">Gerät</string>
-
-    <!-- General -->
-    <string name="save">Speichern</string>
-    <string name="yes">Ja</string>
-    <string name="no">Nein</string>
-    <string name="cancel">Abbrechen</string>
-    <string name="confirm_delete_title">Löschen bestätigen</string>
-    <string name="confirm_delete_body">Das Löschen einer Anleitung lässt sich NICHT widerrufen. Sind Sie sicher, dass
-        Sie \"%1$s\" löschen möchten?</string>
-
-    <!-- Error Messages -->
-    <string name="parse_error_title">Also das ist jetzt wirklich blamabel</string>
-    <string name="parse_error_message">Beim Versuch, Inhalte vom Server zu laden, ist ein Fehler aufgetreten.</string>
-    <string name="no_connection">Keine Verbindung</string>
-    <string name="no_connection_title">Verbindungsfehler</string>
-    <string name="error_confirm">OK</string>
-
-    <!-- Navigation -->
-    <string name="account_menu_title">Dein Benutzerkonto</string>
-    <string name="account_username_title">Benutzerkonto (%1$s)</string>
-
-    <string name="slide_menu_my_guides">Meine Anleitungen</string>
-    <string name="slide_menu_browse_content">Inhalte durchsuchen</string>
-    <string name="slide_menu_favorite_guides">Anleitungsfavoriten</string>
-    <string name="slide_menu_create_new_guide">Neue Anleitung erstellen</string>
-    <string name="slide_menu_media_gallery">Medienverwaltung</string>
-    <string name="slide_menu_logout">Ausloggen</string>
-    <string name="slide_menu_ifixit_everywhere">iFixit auf allen Kanälen</string>
-    <string name="slide_menu_youtube">Youtube Channel</string>
-    <string name="slide_menu_facebook">Facebook</string>
-    <string name="slide_menu_twitter">Twitter</string>
-    <string name="slide_menu_more_info">Mehr Info</string>
-
-    <!-- Log-In / Log-Out -->
-    <string name="username">Benutzername</string>
-    <string name="password">Passwort</string>
-    <string name="login">Anmelden</string>
-    <string name="register">Registrieren</string>
-
-    <string name="login_error">Hoppla! Ungültige Login-Informationen, bitte versuche es noch einmal.</string>
-    <string name="try_again">Nochmal versuchen</string>
-    <string name="register_agreement">Ich stimme zu, dass meine Beiträge unter unserer
-        <a href="http://www.ifixit.com/Info/Licensing">freien Lizenz</a>
-        <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">veröffentlicht werden</a>.</string>
-    <string name="terms_unchecked_error">Du musst den Bedingungen zustimmen.</string>
-    <string name="login_dialog_title">Anmelden</string>
-    <string name="register_dialog_title">Registrieren</string>
-    <string name="login_password_hint">Passwort</string>
-    <string name="login_email_hint">E-Mail</string>
-    <string name="password_confirm_hint">Passwort bestätigen</string>
-    <string name="email_hint">E-Mail</string>
-
-    <string name="signin_description">Bei iFixit.com anmelden</string>
-    <string name="register_description">Bei iFixit.com registrieren</string>
-    <string name="cancel_register_description">Registrierung abbrechen</string>
-    <string name="cancel_register_button">Abbrechen</string>
-    <string name="google_signin_description">Mit Google Benutzerdaten anmelden</string>
-    <string name="yahoo_signin_description">Mit Yahoo! Benutzerdaten anmelden</string>
-
-    <string name="empty_field_error">Eines oder mehrere Felder sind noch leer.</string>
-    <string name="passwords_do_not_match_error">Die Passwörter stimmen nicht überein.</string>
-
-    <!-- Gallery -->
-    <string name="media_help_title">Was ist das hier?</string>
-    <string name="media_help_message">Dieser Medienmanager ist direkt mit Deinem %1$s Benutzerkonto verbunden. Alle
-        Bilder, die Du hier hochlädst, stehen Dir für die Erstellung Deiner Anleitungen zur Verfügung.</string>
-    <string name="media_help_confirm">Gut zu wissen!</string>
-    <string name="gallery_tool_tip">Bild hinzufügen</string>
-    <string name="camera_tool_tip">Kamera</string>
-    <string name="no_images_text">Es befinden sich keine Bilder in Deinem Medienmanager. Fügen Bilder hinzu, indem Du
-        auf die Symbole oben klickst!</string>
-    <string name="image_chooser_title">Bild wählen</string>
-    <string name="image">Bild</string>
-    <string name="images">Bilder</string>
-    <string name="non_image_error">Bilder müssen eine Größe von mindestens 800x600 Pixel haben and lokal auf Deinem
-        Gerät gespeichert sein. Gültige Formate sind .png, .jpg, .jpeg, und .gif.</string>
-    <string name="too_many_image_error">Du kannst höchstens vier Dateien gleichzeitig hochladen. Warte bitte, bis der
-        Upload der aktuellen Dateien abgeschlossen ist, bevor Du weitere Dateien hochlädst.</string>
-    <string name="delete_loading_image_error">Eines oder mehrere Bilder laden noch und werden daher nicht vom Server gelöscht.</string>
-
-    <!-- HELP NEEDED FOR TRANSLATION: Please provide example content for these two variables -->
-    <string name="media_delete_body">Möchtest Du %1$d %2$s wirklich löschen?</string>
-
-    <!-- Topic List -->
-    <string name="generalInformation">Allgemeine Informationen</string>
-    <string name="categories">Kategorien</string>
-
-    <!-- Topic View -->
-    <string name="guides">Anleitungen</string>
-    <string name="answers">Antworten</string>
-    <string name="info">Info</string>
-
-    <!-- Guide View Introduction -->
-    <string name="difficulty">Schwierigkeitsgrad</string>
-    <string name="author">Author</string>
-    <string name="requiredTools">Benötigte Werkzeuge</string>
-    <string name="requiredParts">Benötigte Ersatzteile</string>
-
-    <!-- Guide View Steps -->
-    <string name="no_guides">Keine Anleitungen</string>
-    <string name="topic_guide_thumbnail">Vorschaubild des Anleitungsabschnitts</string>
-    <string name="thumbnail_desc">Vorschaubild</string>
-
-    <string name="video_play_button_description">Schaltfläche für Video</string>
-
-    <!-- Guide View Menu -->
-    <string name="review">Überarbeiten</string>
-    <string name="finish">Abschließen</string>
-    <string name="next">Weiter</string>
-    <string name="previous">Zurück</string>
-
-    <!-- Full Screen Image -->
-    <string name="close_full_screen_desc">Schaltfläche Vollbildmodus schließen</string>
-
-    <!-- Guide Edit List -->
-    <string name="publish">Veröffentlichen</string>
-    <string name="published">Veröffentlicht</string>
-    <string name="unpublish">Veröffentlichung widerrufen</string>
-    <string name="unpublished">Unveröffentlicht</string>
-    <string name="action_delete">Löschen</string>
-    <string name="add_guide">Anleitung hinzufügen</string>
-    <string name="no_guides_text">Du hast bisher noch keine Anleitungen erstellt. Tippe auf ein Symbol in der Action Bar
+<!--Generated by crowdin.com-->
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+  <string name="devices">Geräte</string>
+  <string name="device">Gerät</string>
+  <string name="save">Speichern</string>
+  <string name="error">Ein Fehler ist aufgetreten</string>
+  <string name="yes">Ja</string>
+  <string name="no">Nein</string>
+  <string name="cancel">Abbrechen</string>
+  <string name="confirm_delete_title">Löschen bestätigen</string>
+  <string name="confirm_delete_body">Das Löschen einer Anleitung lässt sich NICHT widerrufen. Bist du sicher, dass du
+        <xliff:g id="confirm_delete_guide_name" example="Repairing iPhone 4 Guide">\"%1$s\"</xliff:g> löschen möchtest?</string>
+  <string name="parse_error_title">Also das ist jetzt wirklich blamabel</string>
+  <string name="parse_error_message">Beim Versuch, Inhalte vom Server zu laden, ist ein Fehler aufgetreten.</string>
+  <string name="no_connection">Keine Verbindung</string>
+  <string name="no_connection_title">Verbindungsfehler</string>
+  <string name="invalid_revision_error_title">Änderungskonflikt bearbeiten</string>
+  <string name="invalid_revision_error">Deine Änderungen konnten nicht gespeichert werden, weil der bearbeitete Inhalt sich zwischenzeitig geändert hat. Bitte versuche es erneut und wiederhole deine Änderungen.</string>
+  <string name="fatal_error_title">Unbekannter Fehler</string>
+  <string name="fatal_error">Es scheint ein Fehler aufgetreten zu sein.</string>
+  <string name="forbidden_error">Du besitzt nicht die entsprechenden Rechte, um diese Aktion durchzuführen.</string>
+  <string name="login_error">Ungültige Login-Informationen, bitte versuche es noch einmal.</string>
+  <string name="not_found_error">Die angeforderten Daten existieren nicht.</string>
+  <string name="error_confirm">Ok</string>
+  <string name="account_menu_title">Dein Benutzerkonto</string>
+  <string name="account_username_title">Benutzerkonto <xliff:g id="account_username" example="Bob Jones">(%1$s)</xliff:g></string>
+  <string name="slide_menu_my_guides">Meine Anleitungen</string>
+  <string name="slide_menu_browse_content">Inhalte durchsuchen</string>
+  <string name="slide_menu_browse_devices">Durchsuche <xliff:g id="topic_type_name" example="Topics">%1$s</xliff:g></string>
+  <string name="slide_menu_favorite_guides">Favorisierte Anleitungen</string>
+  <string name="slide_menu_create_new_guide">Neue Anleitung erstellen</string>
+  <string name="slide_menu_media_gallery">Medienverwaltung</string>
+  <string name="slide_menu_logout">Ausloggen</string>
+  <string name="slide_menu_ifixit_everywhere"><xliff:g id="brand_name">iFixit</xliff:g> auf allen Kanälen</string>
+  <string name="slide_menu_youtube"><xliff:g id="youtube">Youtube</xliff:g> Kanal</string>
+  <string name="slide_menu_facebook"><xliff:g id="facebook">Facebook</xliff:g></string>
+  <string name="slide_menu_twitter"><xliff:g id="twitter">Twitter</xliff:g></string>
+  <string name="slide_menu_more_info">Weitere Informationen</string>
+  <string name="slide_menu_barcode_scanner">QR Code scannen</string>
+  <string name="slide_menu_barcode_scanner_short">Scannen</string>
+  <string name="username">Benutzername</string>
+  <string name="password">Passwort</string>
+  <string name="login">Anmelden</string>
+  <string name="register">Registrieren</string>
+  <string name="signin_error">Anmeldefehler für <xliff:g id="signin_error_email" example="example@example.com">%1$s</xliff:g></string>
+  <string name="try_again">Nochmal versuchen</string>
+  <string name="register_agreement">Ich stimme zu, dass meine Beiträge unter unserer <a href="http://www.ifixit.com/Info/Licensing">freien Lizenz</a> <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">veröffentlicht werden</a>.</string>
+  <string name="terms_unchecked_error">Du musst den Bedingungen zustimmen.</string>
+  <string name="login_dialog_title">Anmelden</string>
+  <string name="register_dialog_title">Registrieren</string>
+  <string name="login_password_hint">Passwort</string>
+  <string name="login_email_hint">E-Mail</string>
+  <string name="password_confirm_hint">Passwort bestätigen</string>
+  <string name="email_hint">E-Mail</string>
+  <string name="signin_description">Bei <xliff:g id="brand_website">iFixit.com</xliff:g> anmelden</string>
+  <string name="register_description">Bei <xliff:g id="brand_website">iFixit.com</xliff:g> registrieren</string>
+  <string name="cancel_register_description">Registrierung abbrechen</string>
+  <string name="cancel_register_button">Abbrechen</string>
+  <string name="google_signin_description">Mit <xliff:g id="google">Google</xliff:g>anmelden</string>
+  <string name="yahoo_signin_description">Mit <xliff:g id="yahoo">Yahoo!</xliff:g>anmelden</string>
+  <string name="empty_field_error">Eines oder mehrere Felder sind noch leer.</string>
+  <string name="passwords_do_not_match_error">Passwörter stimmen nicht überein.</string>
+  <string name="media_help_title">Was ist das?</string>
+  <string name="media_help_message">
+Dieser Medienmanager ist direkt mit deinem <xliff:g id="site_name" example="iFixit">%1$s</xliff:g> Benutzerkonto verbunden. Alle Bilder, die du hier hochlädst, stehen dir für die Erstellung deiner Anleitungen zur Verfügung.</string>
+  <string name="media_help_confirm">Gut zu wissen!</string>
+  <string name="gallery_tool_tip">Bild hinzufügen</string>
+  <string name="camera_tool_tip">Kamera</string>
+  <string name="no_images_text">Es befinden sich keine Bilder in deinem Medienmanager. Füge Bilder hinzu, indem du
+auf die Symbole oben klickst!</string>
+  <string name="image_chooser_title">Bild wählen</string>
+  <string name="image">Bild</string>
+  <string name="images">Bilder</string>
+  <string name="non_image_error">Bilder müssen eine Größe von mindestens 800x600 Pixeln haben und lokal auf deinem Gerät gespeichert sein. Gültige Formate sind .png, .jpg, .jpeg, und .gif.</string>
+  <string name="too_many_image_error">Du kannst höchstens vier Dateien gleichzeitig hochladen. Warte bitte, bis der Upload der aktuellen Dateien abgeschlossen ist, bevor du weitere Dateien hochlädst.</string>
+  <string name="delete_loading_image_error">Eines oder mehrere Bilder laden noch und werden daher nicht vom Server gelöscht.</string>
+  <string name="media_delete_body">Bist du sicher, dass du dies löschen möchtest <xliff:g id="number_images_to_delete" example="5">%1$d</xliff:g>        
+ <xliff:g id="media_type" example="images">%2$s</xliff:g>?</string>
+  <string name="generalInformation">Allgemeine Informationen</string>
+  <string name="categories">Kategorien</string>
+  <string name="category">Kategorie</string>
+  <string name="guides">Anleitungen</string>
+  <string name="answers">Antworten</string>
+  <string name="info">Info</string>
+  <string name="difficulty">Schwierigkeitsgrad</string>
+  <string name="author">Autor</string>
+  <string name="requiredTools">Benötigte Werkzeuge</string>
+  <string name="requiredParts">Benötigte Ersatzteile</string>
+  <string name="no_guides">Keine Anleitungen</string>
+  <string name="topic_guide_thumbnail">Vorschaubild des Anleitungsabschnitts</string>
+  <string name="thumbnail_desc">Miniaturansicht</string>
+  <string name="topic_img_desc">Kategoriebild</string>
+  <string name="video_play_button_description">Schaltfläche Video abspielen</string>
+  <string name="video_activity_progress_title">Bitte warten&#8230;</string>
+  <string name="video_activity_progress_body">Video wird geladen&#8230;</string>
+  <string name="review">Überarbeiten</string>
+  <string name="finish">Abschließen</string>
+  <string name="next">Nächstes</string>
+  <string name="previous">Vorheriges</string>
+  <string name="close_full_screen_desc">Schaltfläche Vollbildmodus schließen</string>
+  <string name="publish">Veröffentlichen</string>
+  <string name="published">Veröffentlicht</string>
+  <string name="unpublish">Veröffentlichung widerrufen</string>
+  <string name="unpublished">Unveröffentlicht</string>
+  <string name="action_delete">Löschen</string>
+  <string name="add_guide">Anleitung hinzufügen</string>
+  <string name="no_guides_text">Du hast bisher noch keine Anleitungen erstellt. Klicke auf ein Symbol in der Aktionsleiste
         oder im Menü, um eine Anleitung zu erstellen.</string>
-
-    <!-- Guide Steps Edit List -->
-    <string name="step_edit_confirm_delete_title">Schritt löschen</string>
-    <string name="step_edit_confirm_delete_message">Möchtest Du Schritt %1$d wirklich löschen?</string>
-    <string name="edit">Bearbeiten</string>
-    <string name="add_step">Schritt hinzufügen</string>
-    <string name="no_steps_text">Die Anleitung hat keine Schritte.</string>
-
-    <!-- Guide Step Rearrange Dialog -->
-    <string name="step_rearrange_title">Schritte neu anordnen</string>
-
-    <!-- Guide Introduction Edit -->
-    <string name="default_title">Standardtitel</string>
-    <string name="guide_intro_wizard_guide_type_title">Kategorie der Anleitung</string>
-    <string name="guide_intro_wizard_guide_subject_title">Thema der Anleitung</string>
-    <string name="guide_intro_wizard_guide_title_title">Titel der Anleitung</string>
-    <string name="guide_intro_wizard_guide_summary_title">Zusammenfassung der Anleitung</string>
-    <string name="guide_intro_wizard_guide_introduction_title">Einleitung</string>
-    <string name="guide_intro_wizard_guide_topic_title">%s Name</string>
-    <string name="guide_intro_wizard_guide_introduction_description">Worum genau geht es bei dieser Anleitung?
-        Beschreibe die Komponente, den Sachverhalt oder das Konzept im Zusammenhang mit diesem %1$s.</string>
-    <string name="guide_intro_wizard_guide_summary_description">Beschreibe in ein oder zwei Sätzen, worum es bei dieser Anleitung geht.</string>
-    <!-- Improve English - We've suggested a title for you. You are welcome to change it. -->
-    <string name="guide_intro_wizard_guide_title_description">Wir haben Dir einen Titel vorgeschlagen. Du kannst ihn aber gern ändern.</string>
-    <string name="guide_intro_wizard_guide_subject_description">Worum genau geht es bei dieser Anleitung? Beschreibe die
-        Komponente, den Sachverhalt oder das Konzept im Zusammenhang mit diesem %1$s.</string>
-    <string name="guide_intro_wizard_guide_topic_description">Welches %1$s bearbeitest Du? Ist es zum Beispiel ein
-        \"iPhone 4\" oder ein \"Dyson Staubsauger\"? Falls das %2$s schon existiert, gehe sicher, dass Du es aus der
-        vorausgefüllten Liste auswählst.</string>
-
-    <!-- Guide Step Edit -->
-    <string name="step_number">Schritt %1$d</string>
-    <string name="step_delete_dialog_title">Zeile löschen</string>
-    <string name="step_delete_dialog_body">Möchtest Du diese Zeile wirklich löschen?</string>
-    <string name="guide_create_help">Hilfetext</string>
-    <string name="guide_create_edit_steps_help">Hilfetext</string>
-    <string name="guide_create_edit_step_media_cannot_add_step">Füge in diesem Schritt erst Inhalte hinzu, bevor Du einen weiteren Schritt ergänzt.</string>
-    <!-- Improve English -->
-    <string name="guide_create_edit_must_add_line_content">Dieser Schritt kann erst gespeichert werden, nachdem eine Inhaltszeile hinzugefügt wurde.</string>
-    <string name="guide_create_confirm_leave_without_save_title">Verlassen ohne zu speichern?</string>
-    <string name="guide_create_confirm_leave_without_save_body">Deine Änderungen werden beim Verlassen des Bereichs verloren gehen.</string>
-    <string name="guide_create_step_edit_main_image_description">Hauptschritt Bild bearbeiten</string>
-    <string name="default_step_title">Schritt unbenannt</string>
-    <string name="step_title_hint">Titel des Schritts (optional)</string>
-    <string name="step_text_default">Hier Inhalte einfügen</string>
-
-    <!-- Guide Step Edit Media -->
-    <string name="step_edit_new_thumb_actions_title">Bild anhängen</string>
-    <string name="step_edit_existing_image_actions_title">Bildbearbeitungsfunktionen</string>
-    <string name="image_saved_to_media_manager_toast">Das Bild wurde im Medienmanager gespeichert.</string>
-
-
-    <!-- Guide Step Bullet Context Menu -->
-    <string name="bullet_desc">Aufzählungspunkt für Anleitungsschritte</string>
-    <string name="bullet_icon_desc">Anleitungsschritt Hinweis, wichtiger Schritt</string>
-    <string name="indent_bullet">Aufzählungsunkt einrücken</string>
-    <string name="unindent_bullet">Aufzählungspunkt ausrücken</string>
-    <string name="rearrange_bullet">Aufzählungspunkte umsortieren</string>
-    <string name="delete_bullet">Aufzählungspunkt löschen</string>
-    <string name="indent_limit_below">Weiter Einrücken nicht möglich.</string>
-    <string name="indent_limit_above">Weiter Einrücken nicht möglich.</string>
-    <string name="confirm_reorder_bullets">Bestätigen</string>
-    <string name="reorder_bullets_title">Aufzählungspunkte umsortieren</string>
-    <string name="cancel_reorder_bullets">Abbrechen</string>
-
-
-    <!-- Miscellaneous -->
-    <string name="fist_background_desc">Faust Hintergrundbild</string>
-    <string name="my_guides">Meine Anleitungen</string>
-    <string name="edit_guide">Anleitung bearbeiten</string>
-    <string name="view_guide">Anleitung anschauen</string>
-    <string name="guide_create_step_video_description">Video für Anleitungsschritt</string>
-    <string name="restart_video">Video erneut starten</string>
-    <string name="restart_video_message">Dieses Video noch einmal abspielen?</string>
-    <string name="guide_intro_wizard_guide_topic_hint">%1$s Name</string>
-    <string name="guide_intro_wizard_guide_subject_hint">Zum Beispiel: Bildschirm, Batterie, Zündkerzen, etc.</string>
-    <string name="loading_image">Wird geladen…</string>
-    <string name="black_bullet_description">Schwarzer Aufzählungspunkt</string>
-    <string name="red_bullet_description">Roter Aufzählungspunkt</string>
-    <string name="orange_bullet_description">Oranger Aufzählungspunkt</string>
-    <string name="yellow_bullet_description">Gelber Aufzählungspunkt</string>
-    <string name="green_bullet_description">Grüner Aufzählungspunkt</string>
-    <string name="blue_bullet_description">Blauer Aufzählungspunkt</string>
-    <string name="purple_bullet_description">Violetter Aufzählungspunkt</string>
-    <string name="caution_bullet_description">Aufzählungspunkt \"Warnung\" / \"Vorsicht\"</string>
-    <string name="important_bullet_description">Aufzählungspunkt \"Wichtiger Hinweis\"</string>
-    <string name="bullet_reorder_description">Aufzählungspunkt \"Erinnerung\"</string>
-    <string name="default_step_number">Schritt Nr.</string>
-    <string name="loading">Wird geladen…</string>
-    <string name="topic_info_image">Bild Hauptthema</string>
-    <string name="delete_step">Schritt löschen</string>
-    <string name="deleting">Wird gelöscht…</string>
-    <string name="saving">Wird gespeichert…</string>
-    <string name="gallery_image_content_description">Galleriebild</string>
-    <string name="optional">Optional</string>
-    <string name="featured_guides">Beachtenswerte Anleitungen</string>
-    <string name="favorites">Favorites</string>
-
-    <string-array name="new_image_actions">
-        <item>Kamera</item>
-        <item>Medienmanager</item>
-    </string-array>
-
-    <!-- Improve English - Add to my images / Remove from my images? -->
-    <string-array name="existing_image_actions">
-        <item>Zu meinen Bildern hinzufügen</item>
-        <item>Aus meiner Bildersammlung entfernen</item>
-        <item>Löschen</item>
-    </string-array>
-
-    <string name="favorites_empty_text">Du hast noch keine Favoriten von Anleitungen erstellt.</string>
-    <string name="empty_image_error">Das Bild hat keinen Inhalt, versuche es mit einer anderen Bilddatei oder lade eine neue hoch.</string>
-    <string name="link_to_item">Link zu %1$s</string>
-    <string name="no_items">Keine Items</string>
-    <string name="view">Anschauen</string>
-    <string name="save_changes_to_step">Änderungen zu diesem Schritt speichern?</string>
-    <string name="new_line">Neue Zeile</string>
-    <string name="discard_changes">Änderungen verwerfen</string>
-    <string name="error">Ein Fehler ist aufgetreten</string>
-    <string name="invalid_revision_error_title">Änderungskonflikt bearbeiten</string>
-    <string name="invalid_revision_error">Deine Änderungen konnten nicht gespeichert werden, weil der bearbeitete Inhalt sich zwischenzeitig geändert hat. Bitte versuche es erneut und wiederhole deine Änderungen.</string>
-    <string name="fatal_error_title">Unbekannter Fehler</string>
-    <string name="fatal_error">Es scheint ein Fehler aufgetreten zu sein.</string>
-    <string name="video_activity_progress_title">Bitte warten…</string>
-    <string name="video_activity_progress_body">Video wird geladen…</string>
-    <string name="not_found_error">Die angeforderten Daten existieren nicht.</string>
-    <string name="forbidden_error">Du besitzt nicht die entsprechenden Rechte, um diese Aktion durchzuführen.</string>
-    <string name="teardowns">Teardowns</string>
-    <string name="introduction">Einleitung</string>
-    <string name="validation_error_title">Validierungsfehler</string>
-    <string name="validation_error_body">Validierung fehlgeschlagen</string>
-    <string name="unpublishing">Veröffentlichung zurückziehen…</string>
-    <string name="publishing">Veröffentlichen…</string>
-    <string name="voice_dictate_line_content_description">Zeileninhalt diktieren</string>
-    <string name="line_length_exceeded_error">Maximal 350 Zeichen pro Zeile.</string>
-    <string name="new_guide_details_title">Neue Anleitung Details</string>
-    <string name="device_invalid_characters_error_message">Gerätename enthält ungültige Zeichen.</string>
-    <string name="guide_subject_required_error">Anleitungsthema wird benötigt</string>
-    <string name="topic_name_required_error">%1$s Name benötigt</string>
-    <string name="guide_subject_label">Titel der Anleitung</string>
-    <string name="visibility">Sichtbarkeit</string>
-    <string name="guide_type">Anleitungstyp</string>
-    <string name="reload_guide">Anleitung neu laden</string>
-    <string name="back_to_site_list">Zurück zur Website-Liste</string>
-    <string name="loading_topic">%1$s werden geladen…</string>
-    <string name="slide_menu_browse_devices">Durchsuche %1$s</string>
-    <string name="category">Kategorie</string>
-    <string name="topic_img_desc">Bild der Kategorie</string>
-    <string name="edit_guide_details">Details der Anleitung bearbeiten</string>
-    <string name="reorder_steps">Schritte neu anordnen</string>
-    <string name="guide_create_confirm_leave_without_save_cancel">Abbrechen</string>
-    <string name="topic_background_description">Hintergrund der Kategorie</string>
-    <string name="search">Search</string>
-    <string name="search_hint">Search iFixit</string>
-    <string name="search_site_hint">Search %1$s</string>
-    <string name="guide_search_thumbnail_content_description">Thumbnail</string>
-    <string name="by_author">By %1$s</string>
-    <string name="result_count">%1$d Results</string>
-    <string name="no_search_results">No search results.</string>
-    <string name="creating_new_guide">Creating New Guide…</string>
-    <string name="empty_step_comments">No step comments.</string>
-    <string name="comments">Comments</string>
-    <string name="step_comments">Step Comments</string>
-    <string name="guide_comments">Guide Comments</string>
-    <string name="step_number_comments">Step %1$d Comments</string>
-
-    <!-- Strings needing translations. -->
-    <string name="slide_menu_barcode_scanner">Scan QR Code</string>
-    <string name="slide_menu_barcode_scanner_short">Scan</string>
-    <string name="parts_and_tools"><![CDATA[Parts & Tools]]></string>
-    <string name="create_new_guide">Create New Guide</string>
-    <string name="new_guide">New Guide</string>
-    <string name="on_date">on %1$s</string>
-    <string name="by_on_comment_details">By %1$s on %2$s</string>
-    <string name="add_comment">Add comment...</string>
-    <string name="reply">Reply</string>
+  <string name="step_edit_confirm_delete_title">Schritt löschen</string>
+  <string name="step_edit_confirm_delete_message">Möchtest du Schritt %1$d wirklich löschen?</string>
+  <string name="edit">Bearbeiten</string>
+  <string name="edit_guide_details">Details der Anleitung bearbeiten</string>
+  <string name="add_step">Schritt hinzufügen</string>
+  <string name="reorder_steps">Schritte neu anordnen</string>
+  <string name="no_steps_text">Keine Schritte in Anleitung vorhanden.</string>
+  <string name="step_rearrange_title">Schritte umsortieren</string>
+  <string name="default_title">Standardtitel</string>
+  <string name="guide_intro_wizard_guide_type_title">Anleitungskategorie</string>
+  <string name="guide_intro_wizard_guide_subject_title">Thema der Anleitung</string>
+  <string name="guide_intro_wizard_guide_title_title">Titel der Anleitung</string>
+  <string name="guide_intro_wizard_guide_summary_title">Zusammenfassung der Anleitung</string>
+  <string name="guide_intro_wizard_guide_introduction_title">Einleitung</string>
+  <string name="guide_intro_wizard_guide_topic_title">%s Name</string>
+  <string name="guide_intro_wizard_guide_introduction_description">Worum genau geht es bei dieser Anleitung? Beschreibe die Komponente, den Sachverhalt oder das Konzept im Zusammenhang mit diesem <xliff:g id="topic_name" example="Topic">%1$s</xliff:g>.</string>
+  <string name="guide_intro_wizard_guide_summary_description">Beschreibe in ein oder zwei Sätzen, worum es bei dieser Anleitung geht.</string>
+  <string name="guide_intro_wizard_guide_title_description">              
+        Generierter Titel vom Typ <xliff:g id="topic_type">%1$s</xliff:g>und dem Fokus. Bearbeite ihn nur, wenn du nicht zufrieden mit dem bereits vorhandenen bist.</string>
+  <string name="guide_intro_wizard_guide_subject_description">Worum genau geht es bei dieser Anleitung? Beschreibe die Komponente, den Sachverhalt oder das Konzept, das du im Zusammenhang mit dem <xliff:g id="topic_name" example="Topic">%1$s        </xliff:g> gerade beschreibst.</string>
+  <string name="guide_intro_wizard_guide_topic_description">        An welchem <xliff:g id="topic_name" example="Topic">%1$s</xliff:g> arbeitest du gerade? Ist es zum Beispiel ein
+        \"iPhone 4\" oder eine \"Kenmore Washing Machine\"? Falls das <xliff:g id="topic_name">%2$s</xliff:g> bereits existiert, stelle 
+        sicher, dass du es von der vorausgefüllten Liste auswählst.   
+    </string>
+  <string name="step_number">Schritt <xliff:g id="step_number" example="1">%1$d</xliff:g></string>
+  <string name="step_delete_dialog_title">Zeile löschen</string>
+  <string name="step_delete_dialog_body">Möchtest du diese Zeile wirklich löschen?</string>
+  <string name="guide_create_help">Hilfetext</string>
+  <string name="guide_create_edit_steps_help">Hilfetext</string>
+  <string name="guide_create_edit_step_media_cannot_add_step">Füge diesem Schritt Inhalte hinzu, bevor du einen weiteren Schritt erstellst.</string>
+  <string name="guide_create_edit_must_add_line_content">Dieser Schritt kann erst gespeichert werden, nachdem der Zeile Inhalt hinzugefügt wurde.</string>
+  <string name="guide_create_confirm_leave_without_save_title">Verlassen ohne zu speichern?</string>
+  <string name="guide_create_confirm_leave_without_save_body">Deine Änderungen werden beim Verlassen des Bereichs verloren gehen.</string>
+  <string name="guide_create_confirm_leave_without_save_cancel">Abbrechen</string>
+  <string name="guide_create_step_edit_main_image_description">Hauptschritt Bild bearbeiten</string>
+  <string name="default_step_title">Unbenannter Schritt</string>
+  <string name="step_title_hint">Titel des Schritts (optional)</string>
+  <string name="step_text_default">Hier Inhalte einfügen</string>
+  <string name="step_edit_new_thumb_actions_title">Bild anhängen</string>
+  <string name="step_edit_existing_image_actions_title">Bildbearbeitungsfunktionen</string>
+  <string name="image_saved_to_media_manager_toast">Das Bild wurde in deinem Medienmanager gespeichert.</string>
+  <string name="bullet_desc">Aufzählungspunkt für Anleitungsschritte</string>
+  <string name="bullet_icon_desc">Hinweis zum Anleitungsschritt, wichtiger Schritt</string>
+  <string name="indent_bullet">Aufzählungspunkt einrücken</string>
+  <string name="unindent_bullet">Aufzählungspunkt ausrücken</string>
+  <string name="rearrange_bullet">Aufzählungspunkte umsortieren</string>
+  <string name="delete_bullet">Aufzählungspunkt löschen</string>
+  <string name="indent_limit_below">Weiter Ausrücken nicht möglich.</string>
+  <string name="indent_limit_above">Weiter Einrücken nicht möglich.</string>
+  <string name="confirm_reorder_bullets">Bestätigen</string>
+  <string name="reorder_bullets_title">Aufzählungspunkte umsortieren</string>
+  <string name="cancel_reorder_bullets">Abbrechen</string>
+  <string name="offline_guides">Offline-Anleitungen</string>
+  <string name="sync_now">Jetzt synchronisieren</string>
+  <string name="no_offline_guides_text">Beginne, indem du eine Anleitung favorisierst. \n\n Deine Lieblings-Anleitungen werden für die Offline-Ansicht gespeichert. </string>
+  <string name="sync_status_syncing">Wird synchronisiert...</string>
+  <string name="last_synced">Zuletzt sychronisiert <xliff:g id="sync_date">%1$s</xliff:g>.</string>
+  <string name="notification_syncing">Favorisierte Anleitungen werden synchronisiert...</string>
+  <string name="notification_sync_complete">Favorisierte Anleitungen wurden heruntergeladen</string>
+  <string name="sync_automatically">Automatisch synchronisieren</string>
+  <string name="unfavorite_confirmation">Bist du sicher, dass du diese Anleitung aus der Liste deiner Favoriten entfernen möchtest?</string>
+  <string name="topic_background_description">Hintergrund der Kategorie</string>
+  <string name="fist_background_desc">Erstes Hintergrundbild</string>
+  <string name="my_guides">Meine Anleitungen</string>
+  <string name="edit_guide">Anleitung bearbeiten</string>
+  <string name="view_guide">Anleitung anzeigen</string>
+  <string name="guide_create_step_video_description">Video für Anleitungsschritt</string>
+  <string name="restart_video">Video erneut starten</string>
+  <string name="restart_video_message">Dieses Video noch einmal abspielen?</string>
+  <string name="guide_intro_wizard_guide_topic_hint"><xliff:g id="topic_name" example="Topic">%1$s</xliff:g> Name</string>
+  <string name="guide_intro_wizard_guide_subject_hint">Zum Beispiel: Bildschirm, Batterie, Zündkerzen, etc.</string>
+  <string name="loading_image">Bilder werden hochgeladen&#8230;</string>
+  <string name="black_bullet_description">Schwarzer Aufzählungspunkt</string>
+  <string name="red_bullet_description">Roter Aufzählungspunkt</string>
+  <string name="orange_bullet_description">Oranger Aufzählungspunkt</string>
+  <string name="yellow_bullet_description">Gelber Aufzählungspunkt</string>
+  <string name="green_bullet_description">Grüner Aufzählungspunkt</string>
+  <string name="blue_bullet_description">Blauer Aufzählungspunkt</string>
+  <string name="violet_bullet_description">Violetter Aufzählungspunkt</string>
+  <string name="caution_bullet_description">Aufzählungspunkt \"Warnung\" / \"Vorsicht\"</string>
+  <string name="important_bullet_description">Aufzählungspunkt \"Wichtiger Hinweis\"</string>
+  <string name="bullet_reorder_description">Aufzählungszeichen \"Hinweis\"</string>
+  <string name="default_step_number">Schritt Nr.</string>
+  <string name="loading">Wird geladen&#8230;</string>
+  <string name="topic_info_image">Bild der Hauptkategorie</string>
+  <string name="delete_step">Schritt löschen</string>
+  <string name="deleting">Wird gelöscht&#8230;</string>
+  <string name="saving">Wird gespeichert&#8230;</string>
+  <string name="gallery_image_content_description">Galeriebild</string>
+  <string name="optional">Optional</string>
+  <string name="teardowns">Demontagen</string>
+  <string name="featured_guides">Empfohlene Anleitungen</string>
+  <string name="favorites">Favoriten</string>
+  <string name="favorite_guide">Anleitung den Favoriten hinzufügen</string>
+  <string name="unfavorite_guide">Anleitung aus den Favoriten entfernen</string>
+  <string name="favoriting">Anleitung wird der Favoritenliste hinzugefügt...</string>
+  <string name="unfavoriting">Anleitung wird aus der Favoritenliste entfernt&#8230;</string>
+  <string name="favorited">Zur Favoriten-Liste hinzugefügt!</string>
+  <string name="unfavorited">Aus Favoriten-Liste entfernt!</string>
+  <string name="favorites_empty_text">Du hast noch keine Anleitungen zu deinen Favoriten hinzugefügt.</string>
+  <string name="introduction">Einleitung</string>
+  <string name="empty_image_error">Das Bild hat keinen Inhalt, versuche es mit einer anderen Bilddatei oder lade ein Neues hoch.</string>
+  <string name="link_to_item">Link zu <xliff:g id="item_name" example="Kreuzschlitz-Schraubenzieher">%1$s</xliff:g></string>
+  <string name="no_items">Keine Items</string>
+  <string name="view">Anzeigen</string>
+  <string name="save_changes_to_step">Änderungen zu diesem Schritt speichern?</string>
+  <string name="new_line">Neue Zeile</string>
+  <string name="discard_changes">Änderungen verwerfen</string>
+  <string name="validation_error_title">Validierungsfehler</string>
+  <string name="validation_error_body">Validierung fehlgeschlagen</string>
+  <string name="unpublishing">Veröffentlichung zurückziehen&#8230;</string>
+  <string name="publishing">Wird veröffentlicht&#8230;</string>
+  <string name="voice_dictate_line_content_description">Zeileninhalt diktieren</string>
+  <string name="line_length_exceeded_error">Maximal 350 Zeichen pro Zeile.</string>
+  <string name="new_guide_details_title">Details der neuen Anleitung</string>
+  <string name="device_invalid_characters_error_message">Gerätename enthält ungültige Zeichen.</string>
+  <string name="guide_subject_required_error">Anleitungsthema erforderlich</string>
+  <string name="topic_name_required_error">%1$s Name erforderlich</string>
+  <string name="guide_subject_label">Thema der Anleitung</string>
+  <string name="visibility">Sichtbarkeit</string>
+  <string name="guide_type">Anleitungstyp</string>
+  <string name="reload_guide">Anleitung neu laden</string>
+  <string name="back_to_site_list">Zurück zu Website-Liste</string>
+  <string name="loading_topic">Lade <xliff:g id="topic_name" example="iPhone 4">%1$s</xliff:g>&#8230;</string>
+  <string name="search">Suche</string>
+  <string name="search_hint">Suche <xliff:g id="brand_name">iFixit</xliff:g></string>
+  <string name="search_site_hint">Suche <xliff:g id="site_name">%1$s</xliff:g></string>
+  <string name="guide_search_thumbnail_content_description">Miniaturansicht</string>
+  <string name="by_author">Von <xliff:g id="author_name" example="Max Mustermann">%1$s</xliff:g></string>
+  <string name="result_count"><xliff:g id="number_results" example="42">%1$d</xliff:g> Ergebnisse</string>
+  <string name="no_search_results">Keine Suchergebnisse.</string>
+  <string name="creating_new_guide">Neue Anleitung wird erstellt...</string>
+  <string name="parts_and_tools"><![CDATA[Werkzeug & Ersatzteile]]></string>
+  <string name="create_new_guide">Neue Anleitung erstellen</string>
+  <string name="new_guide">Neue Anleitung</string>
+  <string name="conclusion">Schluss</string>
+  <string name="completed">Fertig!</string>
+  <string name="guide_complete_error_message">Diese Anleitung konnte nicht vervollständigt werden.</string>
+  <string name="complete_this_guide">Vollständige Anleitung</string>
+  <string name="i_did_it_success">Ich hab\'s geschafft!</string>
+  <string name="just_now">gerade jetzt</string>
+  <string name="completing">Wird vervollständigt&#8230;</string>
+  <string name="empty_comments">Keine Kommentare.</string>
+  <string name="comments">Kommentare</string>
+  <string name="step_comments">Schritt-Kommentare</string>
+  <string name="guide_comments">Anleitungs-Kommentare</string>
+  <string name="step_number_comments">Kommentare zu Schritt <xliff:g id="step_number">%1$d</xliff:g></string>
+  <string name="on_date">am <xliff:g id="comment_date">%1$s</xliff:g></string>
+  <string name="by_on_comment_details"><xliff:g id="comment_author" example="Bob Jones">%1$s</xliff:g> am
+        <xliff:g id="comment_date">%2$s</xliff:g></string>
+  <string name="add_comment">Füge Kommentar hinzu&#8230;</string>
+  <string name="reply">Antwort</string>
+  <string name="add_reply">Füge Antwort hinzu&#8230;</string>
+  <string name="error_deleting_comment">Fehler beim Löschen des Kommentars. Versuche es erneut.</string>
+  <string name="failed_edit_comment">Bearbeitung des Kommentars fehlgeschlagen. Versuche es erneut.</string>
+  <string name="debug">Suche Fehler</string>
+  <string name="view_comments">Kommentare anzeigen</string>
+  <string-array name="new_image_actions">
+    <item>Kamera</item>
+    <item>Medienmanager</item>
+  </string-array>
+  <string-array name="existing_image_actions">
+    <item>Zu meinem Medienmanager hinzufügen</item>
+    <item>Abtrennen und zum Medien-Manager hinzufügen</item>
+    <item>Löschen</item>
+  </string-array>
+  <string-array name="step_list_item_options">
+    <item>@string/edit</item>
+    <item>@string/action_delete</item>
+  </string-array>
+  <string-array name="guide_list_item_options_with_delete">
+    <item>@string/view</item>
+    <item>@string/publish</item>
+    <item>@string/edit</item>
+    <item>@string/action_delete</item>
+  </string-array>
+  <string-array name="guide_list_item_options">
+    <item>@string/view</item>
+    <item>@string/publish</item>
+    <item>@string/edit</item>
+  </string-array>
+  <string-array name="comment_owner_options">
+    <item>@string/reply</item>
+    <item>@string/edit</item>
+    <item>@string/action_delete</item>
+  </string-array>
+  <string-array name="comment_options">
+    <item>@string/reply</item>
+  </string-array>
 </resources>
