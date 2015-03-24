@@ -44,8 +44,8 @@ android {
    buildToolsVersion "20"
 
    defaultConfig {
-      versionCode 56
-      versionName "2.7.4"
+      versionCode 57
+      versionName "2.8.0"
       minSdkVersion 8
       targetSdkVersion 19
       applicationId "com.dozuki.ifixit"
