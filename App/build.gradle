@@ -34,6 +34,7 @@ dependencies {
    compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
    compile "com.vandalsoftware.android:dslv:0.6.3"
    compile "com.f2prateek.progressbutton:progressbutton:2.1.0@aar"
+   compile "com.google.android.gms:play-services:7.0.0"
 }
 
 // List of sites used to create signingConfigs, sourceSets, and productFlavors.
@@ -46,7 +47,7 @@ android {
    defaultConfig {
       versionCode 57
       versionName "2.8.0"
-      minSdkVersion 8
+      minSdkVersion 9
       targetSdkVersion 19
       applicationId "com.dozuki.ifixit"
    }
@@ -89,15 +90,11 @@ android {
             buildConfigField "String", "GA_PROPERTY_ID", '"' + getProperty("${site}GAPropertyId") + '"'
 
             if (site == 'dozuki') {
-               minSdkVersion 9
-
                dependencies {
                   dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
                   dozukiCompile 'com.google.zxing:core:2.2'
                }
             } else if (site == 'accustream') {
-               minSdkVersion 9
-
                dependencies {
                   accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
                   accustreamCompile 'com.google.zxing:core:2.2'

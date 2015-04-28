@@ -4,10 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentSender;
 import android.graphics.Typeface;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -15,29 +18,39 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
+import com.google.android.gms.auth.GoogleAuthException;
+import com.google.android.gms.auth.GoogleAuthUtil;
+import com.google.android.gms.auth.UserRecoverableAuthException;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.SignInButton;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.Scope;
+import com.google.android.gms.plus.Plus;
 import com.squareup.otto.Subscribe;
 
-public class LoginFragment extends BaseDialogFragment implements OnClickListener {
-   private static final int OPEN_ID_RESULT_CODE = 4;
+import java.io.IOException;
+
+public class LoginFragment extends BaseDialogFragment implements OnClickListener,
+ GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+   private static final int OPEN_ID_REQUEST_CODE = 4;
+   private static final int GOOGLE_SIGN_IN_REQUEST_CODE = 0;
+   private static final String GOOGLE_OAUTH_SCOPES = "oauth2:server:client_id:<CLIENT_ID>:api_scope:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 
    private Button mLogin;
    private Button mRegister;
-   private ImageButton mGoogleLogin;
+   private SignInButton mGoogleLogin;
    //private ImageButton mYahooLogin;
    private EditText mEmail;
    private EditText mPassword;
@@ -46,6 +59,9 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    private ApiCall mCurAPICall;
    private boolean mHasRegisterBtn = true;
    private boolean mFailedSsoLogin = false;
+   private GoogleApiClient mGoogleApiClient;
+   private boolean mGoogleLoginInProgress = false;
+   private boolean mGoogleLoginClicked = false;
 
    @Subscribe
    public void onLogin(ApiEvent.Login event) {
@@ -102,10 +118,18 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       
       mHasRegisterBtn = site.mPublicRegistration;
 
+      mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+       .addConnectionCallbacks(this)
+       .addOnConnectionFailedListener(this)
+       .addApi(Plus.API)
+       .addScope(new Scope("email"))
+       .addScope(new Scope("profile"))
+       .build();
+
       if (!site.mStandardAuth) {
           Intent intent = new Intent(getActivity(), OpenIDActivity.class);
           intent.putExtra(OpenIDActivity.SINGLE_SIGN_ON, true);
-          startActivityForResult(intent, OPEN_ID_RESULT_CODE);
+          startActivityForResult(intent, OPEN_ID_REQUEST_CODE);
       }
    }
 
@@ -121,7 +145,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
       mLogin = (Button)view.findViewById(R.id.signin_button);
       mRegister = (Button)view.findViewById(R.id.register_button);      
-      mGoogleLogin = (ImageButton)view.findViewById(R.id.use_google_login_button);
+      mGoogleLogin = (SignInButton)view.findViewById(R.id.use_google_login_button);
       //mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
 
       mLogin.setOnClickListener(this);  
@@ -150,6 +174,13 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       super.onStart();
 
       App.sendScreenView("/login");
+   }
+
+   @Override
+   public void onStop() {
+      super.onStop();
+
+      mGoogleApiClient.disconnect();
    }
 
    @Override
@@ -220,15 +251,16 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       Intent intent;
       switch (v.getId()) {
           case R.id.use_google_login_button:
-             intent = new Intent(getActivity(), OpenIDActivity.class);
-             intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.GOOGLE_LOGIN);
-             startActivityForResult(intent, OPEN_ID_RESULT_CODE);
+             if (!mGoogleApiClient.isConnecting()) {
+                mGoogleLoginClicked = true;
+                mGoogleApiClient.connect();
+             }
              break;
     
           case R.id.use_yahoo_login_button:
              intent = new Intent(getActivity(), OpenIDActivity.class);
              intent.putExtra(OpenIDActivity.LOGIN_METHOD, OpenIDActivity.YAHOO_LOGIN);
-             startActivityForResult(intent, OPEN_ID_RESULT_CODE);
+             startActivityForResult(intent, OPEN_ID_REQUEST_CODE);
              break;
     
           case R.id.register_button:
@@ -256,12 +288,14 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
 
-      if (resultCode == Activity.RESULT_OK && data != null) {
+      if (requestCode == OPEN_ID_REQUEST_CODE && resultCode == Activity.RESULT_OK && data != null) {
          mLoadingSpinner.setVisibility(View.VISIBLE);
          String session = data.getStringExtra(OpenIDActivity.SESSION);
          enable(false);
          mCurAPICall = ApiCall.userInfo(session);
          Api.call(getActivity(), mCurAPICall);
+      } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+         mGoogleLoginInProgress = false;
       } else if (!App.get().getSite().mStandardAuth) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need
@@ -275,5 +309,80 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    @Override
    public void onCancel(DialogInterface dialog) {
       App.get().cancelLogin();
+   }
+
+   @Override
+   public void onConnected(Bundle connectionHint) {
+      // We've resolved any connection errors. mGoogleApiClient can be used to
+      // access Google APIs on behalf of the user.
+      mGoogleLoginClicked = false;
+
+      String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+      new RetrieveTokenTask().execute(accountName);
+   }
+
+   @Override
+   public void onConnectionSuspended(int cause) {
+      mGoogleApiClient.connect();
+   }
+
+   @Override
+   public void onConnectionFailed(ConnectionResult result) {
+      if (mGoogleLoginClicked && !mGoogleLoginInProgress && result.hasResolution()) {
+         try {
+            mGoogleLoginInProgress = true;
+            result.startResolutionForResult(getActivity(), GOOGLE_SIGN_IN_REQUEST_CODE);
+         } catch (IntentSender.SendIntentException e) {
+            // The intent was canceled before it was sent.  Return to the default
+            // state and attempt to connect to get an updated ConnectionResult.
+            mGoogleLoginInProgress = false;
+            mGoogleApiClient.connect();
+         }
+      }
+   }
+
+   @Subscribe
+   public void onTokenReceived(TokenEvent event) {
+      // TODO: Make OAuth API call instead.
+      mCurAPICall = ApiCall.userInfo(event.mToken);
+      Api.call(getActivity(), mCurAPICall);
+   }
+
+   private class TokenEvent {
+      public String mToken;
+
+      public TokenEvent(String token) {
+         mToken = token;
+      }
+   }
+
+   private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
+      @Override
+      protected String doInBackground(String... params) {
+         String accountName = params[0];
+         String token = null;
+
+         try {
+            token = GoogleAuthUtil.getToken(getActivity().getApplicationContext(),
+             accountName, GOOGLE_OAUTH_SCOPES);
+         } catch (IOException e) {
+            Log.e("LoginFragment", e.getMessage());
+         } catch (UserRecoverableAuthException e) {
+            startActivityForResult(e.getIntent(), GOOGLE_SIGN_IN_REQUEST_CODE);
+         } catch (GoogleAuthException e) {
+            Log.e("LoginFragment", e.getMessage());
+         }
+
+         return token;
+      }
+
+      @Override
+      protected void onPostExecute(String token) {
+         super.onPostExecute(token);
+
+         if (token != null) {
+            App.getBus().post(new TokenEvent(token));
+         }
+      }
    }
 }
