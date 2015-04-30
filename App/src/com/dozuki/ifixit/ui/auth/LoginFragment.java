@@ -296,6 +296,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          Api.call(getActivity(), mCurAPICall);
       } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
          mGoogleLoginInProgress = false;
+         String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+         new RetrieveGoogleOAuthCodeTask().execute(accountName);
       } else if (!App.get().getSite().mStandardAuth) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need
