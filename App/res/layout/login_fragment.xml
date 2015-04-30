@@ -102,7 +102,8 @@
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_text"
                 android:layout_centerHorizontal="true"
-                android:layout_marginBottom="4dp"/>
+                android:layout_marginBottom="4dp"
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/use_yahoo_login_button"

@@ -46,7 +46,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
  GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
    private static final int OPEN_ID_REQUEST_CODE = 4;
    private static final int GOOGLE_SIGN_IN_REQUEST_CODE = 0;
-   private static final String GOOGLE_OAUTH_SCOPES = "oauth2:server:client_id:<CLIENT_ID>:api_scope:https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/userinfo.email";
 
    private Button mLogin;
    private Button mRegister;
@@ -71,6 +70,17 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    @Subscribe
    public void onUserInfo(ApiEvent.UserInfo event) {
       handleLogin(event);
+   }
+
+   @Subscribe
+   public void onSiteInfo(ApiEvent.SiteInfo event) {
+      if (!event.hasError()) {
+         App.get().setSite(event.getResult());
+
+         initGoogleLoginButton();
+      } else {
+         Api.getErrorDialog(getActivity(), event).show();
+      }
    }
 
    private void handleLogin(ApiEvent<User> event) {
@@ -118,6 +128,11 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       
       mHasRegisterBtn = site.mPublicRegistration;
 
+      // Get the clientid so we can perform Google login.
+      if (site.mGoogleOAuth2Clientid == null) {
+         Api.call(getActivity(), ApiCall.siteInfo());
+      }
+
       mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
        .addConnectionCallbacks(this)
        .addOnConnectionFailedListener(this)
@@ -160,6 +175,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          //mYahooLogin.setVisibility(View.GONE);
       }
 
+      initGoogleLoginButton();
+
       mErrorText = (TextView)view.findViewById(R.id.login_error_text);
       mErrorText.setVisibility(View.GONE);
 
@@ -167,6 +184,13 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       mLoadingSpinner.setVisibility(View.GONE);
       
       return view;
+   }
+
+   private void initGoogleLoginButton() {
+      if (App.get().getSite().hasGoogleLogin()) {
+         // Display the Google Login button because we have a valid clientid.
+         mGoogleLogin.setVisibility(View.VISIBLE);
+      }
    }
 
    @Override
@@ -297,7 +321,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
          mGoogleLoginInProgress = false;
          String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-         new RetrieveGoogleOAuthCodeTask().execute(accountName);
+         String scopes = getGoogleOAuthScopes();
+         new RetrieveGoogleOAuthCodeTask().execute(accountName, scopes);
       } else if (!App.get().getSite().mStandardAuth) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need
@@ -320,7 +345,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       mGoogleLoginClicked = false;
 
       String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-      new RetrieveGoogleOAuthCodeTask().execute(accountName);
+      String scopes = getGoogleOAuthScopes();
+      new RetrieveGoogleOAuthCodeTask().execute(accountName, scopes);
    }
 
    @Override
@@ -343,6 +369,14 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       }
    }
 
+   private String getGoogleOAuthScopes() {
+      String clientId = App.get().getSite().mGoogleOAuth2Clientid;
+
+      return "oauth2:server:client_id:" + clientId + ":api_scope:" +
+       "https://www.googleapis.com/auth/userinfo.profile " +
+       "https://www.googleapis.com/auth/userinfo.email";
+   }
+
    @Subscribe
    public void onTokenReceived(GoogleOAuthCodeEvent event) {
       mCurAPICall = ApiCall.googleOauthLogin(event.mCode);
@@ -361,11 +395,12 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       @Override
       protected String doInBackground(String... params) {
          String accountName = params[0];
+         String scopes = params[1];
          String token = null;
 
          try {
             Context context = getActivity().getApplicationContext();
-            token = GoogleAuthUtil.getToken(context, accountName, GOOGLE_OAUTH_SCOPES);
+            token = GoogleAuthUtil.getToken(context, accountName, scopes);
 
             // We only use the token once so we need to clear it from the local cache
             // so we don't get the same one next time which would then be invalid.

@@ -129,6 +129,7 @@ public class JSONHelper {
       site.mObjectNamePlural = siteInfoObject.getString("object-name-plural");
       site.mObjectNameSingular = siteInfoObject.getString("object-name-singular");
       site.setBarcodeScanner(siteInfoObject.getBoolean("feature-mobile-scanner"));
+      site.mGoogleOAuth2Clientid = siteInfoObject.getString("google-oauth2-clientid");
 
       if (!siteInfoObject.isNull("logo")) {
          JSONObject logoImage = siteInfoObject.getJSONObject("logo").getJSONObject("image");
