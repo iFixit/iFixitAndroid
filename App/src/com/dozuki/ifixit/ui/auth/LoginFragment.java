@@ -364,8 +364,12 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          String token = null;
 
          try {
-            token = GoogleAuthUtil.getToken(getActivity().getApplicationContext(),
-             accountName, GOOGLE_OAUTH_SCOPES);
+            Context context = getActivity().getApplicationContext();
+            token = GoogleAuthUtil.getToken(context, accountName, GOOGLE_OAUTH_SCOPES);
+
+            // We only use the token once so we need to clear it from the local cache
+            // so we don't get the same one next time which would then be invalid.
+            GoogleAuthUtil.clearToken(context, token);
          } catch (IOException e) {
             Log.e("LoginFragment", e.getMessage());
          } catch (UserRecoverableAuthException e) {
