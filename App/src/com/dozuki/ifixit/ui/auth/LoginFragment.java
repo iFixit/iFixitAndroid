@@ -318,7 +318,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       mGoogleLoginClicked = false;
 
       String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-      new RetrieveTokenTask().execute(accountName);
+      new RetrieveGoogleOAuthCodeTask().execute(accountName);
    }
 
    @Override
@@ -342,21 +342,20 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    }
 
    @Subscribe
-   public void onTokenReceived(TokenEvent event) {
-      // TODO: Make OAuth API call instead.
-      mCurAPICall = ApiCall.userInfo(event.mToken);
+   public void onTokenReceived(GoogleOAuthCodeEvent event) {
+      mCurAPICall = ApiCall.googleOauthLogin(event.mCode);
       Api.call(getActivity(), mCurAPICall);
    }
 
-   private class TokenEvent {
-      public String mToken;
+   private class GoogleOAuthCodeEvent {
+      public String mCode;
 
-      public TokenEvent(String token) {
-         mToken = token;
+      public GoogleOAuthCodeEvent(String code) {
+         mCode = code;
       }
    }
 
-   private class RetrieveTokenTask extends AsyncTask<String, Void, String> {
+   private class RetrieveGoogleOAuthCodeTask extends AsyncTask<String, Void, String> {
       @Override
       protected String doInBackground(String... params) {
          String accountName = params[0];
@@ -381,7 +380,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          super.onPostExecute(token);
 
          if (token != null) {
-            App.getBus().post(new TokenEvent(token));
+            App.getBus().post(new GoogleOAuthCodeEvent(token));
          }
       }
    }

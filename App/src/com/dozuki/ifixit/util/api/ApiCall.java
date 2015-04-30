@@ -137,6 +137,18 @@ public class ApiCall {
       return new ApiCall(ApiEndpoint.LOGIN, NO_QUERY, requestBody.toString());
    }
 
+   public static ApiCall googleOauthLogin(String oauthCode) {
+      JSONObject requestBody = new JSONObject();
+
+      try {
+         requestBody.put("google_oauth_code", oauthCode);
+      } catch (JSONException e) {
+         return null;
+      }
+
+      return new ApiCall(ApiEndpoint.LOGIN, NO_QUERY, requestBody.toString());
+   }
+
    public static ApiCall logout(User user) {
       ApiCall apiCall = new ApiCall(ApiEndpoint.LOGOUT, NO_QUERY);
 
