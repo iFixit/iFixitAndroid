@@ -34,6 +34,7 @@ import com.google.android.gms.auth.GoogleAuthException;
 import com.google.android.gms.auth.GoogleAuthUtil;
 import com.google.android.gms.auth.UserRecoverableAuthException;
 import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.Scope;
@@ -277,7 +278,11 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
           case R.id.use_google_login_button:
              if (!mGoogleApiClient.isConnecting()) {
                 mGoogleLoginClicked = true;
-                mGoogleApiClient.connect();
+                if (mGoogleApiClient.isConnected()) {
+                   mGoogleApiClient.reconnect();
+                } else {
+                   mGoogleApiClient.connect();
+                }
              }
              break;
     
@@ -318,12 +323,17 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          enable(false);
          mCurAPICall = ApiCall.userInfo(session);
          Api.call(getActivity(), mCurAPICall);
-      } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
+      } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
          mGoogleLoginInProgress = false;
-         String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-         String scopes = getGoogleOAuthScopes();
-         new RetrieveGoogleOAuthCodeTask().execute(accountName, scopes);
-      } else if (!App.get().getSite().mStandardAuth) {
+
+         if (resultCode == Activity.RESULT_OK) {
+            String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+            String scopes = getGoogleOAuthScopes();
+            new RetrieveGoogleOAuthCodeTask().execute(accountName, scopes);
+         }
+      }
+
+      if (!App.get().getSite().mStandardAuth && resultCode != Activity.RESULT_OK) {
          /**
           * Single sign on failed. There aren't any login alternatives so we need
           * to close the dialog. We can't do that here because onResume hasn't been
@@ -356,6 +366,11 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
    @Override
    public void onConnectionFailed(ConnectionResult result) {
+      if (!result.hasResolution()) {
+         GooglePlayServicesUtil.getErrorDialog(result.getErrorCode(), getActivity(), 0).show();
+         return;
+      }
+
       if (mGoogleLoginClicked && !mGoogleLoginInProgress && result.hasResolution()) {
          try {
             mGoogleLoginInProgress = true;
