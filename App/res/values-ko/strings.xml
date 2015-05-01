@@ -69,8 +69,6 @@
     <xliff:g id="brand_website">iFixit.com</xliff:g>에 등록</string>
   <string name="cancel_register_description">등록 취소</string>
   <string name="cancel_register_button">취소</string>
-  <string name="google_signin_description">
-    <xliff:g id="google">Google</xliff:g>로 로그인</string>
   <string name="yahoo_signin_description">
     <xliff:g id="yahoo">Yahoo!</xliff:g>로 로그인</string>
   <string name="empty_field_error">하나 이상의 필드가 여전히 비어 있습니다.</string>

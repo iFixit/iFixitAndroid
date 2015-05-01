@@ -69,10 +69,7 @@
   </string>
   <string name="cancel_register_description">Cancelar registo</string>
   <string name="cancel_register_button">Cancelar</string>
-  <string name="google_signin_description">Entrar através do <xliff:g id="google">Google</xliff:g>
-  </string>
-  <string name="yahoo_signin_description">Entrar através do <xliff:g id="yahoo">Yahoo!</xliff:g>
-  </string>
+  <string name="yahoo_signin_description">Entrar através do <xliff:g id="yahoo">Yahoo!</xliff:g></string>
   <string name="empty_field_error">Um ou mais campos ainda estão vazios.</string>
   <string name="passwords_do_not_match_error">As senhas não coincidem.</string>
   <string name="media_help_title">O que é isto?</string>

@@ -58,7 +58,6 @@ in base alla <a href="http://www.ifixit.com/Info/Licensing">nostra licenza apert
   <string name="register_description">Iscriviti a <xliff:g id="brand_website">iFixit.com</xliff:g></string>
   <string name="cancel_register_description">Annulla Iscrizione</string>
   <string name="cancel_register_button">Annulla</string>
-  <string name="google_signin_description">Accedi con <xliff:g id="google">Google</xliff:g></string>
   <string name="yahoo_signin_description">Accedi con <xliff:g id="yahoo">Yahoo!</xliff:g></string>
   <string name="empty_field_error">Uno o più campi sono ancora vuoti.</string>
   <string name="passwords_do_not_match_error">Le Password non coincidono.</string>
