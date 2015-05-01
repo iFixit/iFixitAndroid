@@ -41,12 +41,15 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    private static final String SITE = "SITE";
    // If an Intent has a site argument it will change sites before displaying any content.
    private static final String SITE_ARGUMENT = "SITE_ARGUMENT";
+   public static final int GOOGLE_SIGN_IN_REQUEST_CODE = 8347;
+
 
    private static final int LOGGED_OUT_USERID = -1;
 
    private int mActivityid;
    private int mUserid;
    private Site mSite;
+   private LoginFragment.GoogleSignInActivityResult mPendingGoogleSigninResult;
 
    /**
     * This is incredibly hacky. The issue is that Otto does not search for @Subscribed
@@ -107,6 +110,19 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          setUserid();
       }
    };
+
+   @Override
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
+      super.onActivityResult(requestCode, resultCode, data);
+
+      // LoginFragment doesn't get all of the onActivityResults for google sign in
+      // so the activity needs to proxy them through but only after the LoginFragment has
+      // been registered with the event bus.
+      if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
+         mPendingGoogleSigninResult = new LoginFragment.GoogleSignInActivityResult(requestCode,
+          resultCode, data);
+      }
+   }
 
    @Override
    public void onCreate(Bundle savedState) {
@@ -303,6 +319,10 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
        * as well as returning to an already running Activity via the back button.
        */
       Api.retryDeadEvents(this);
+      if (mPendingGoogleSigninResult != null) {
+         App.getBus().post(mPendingGoogleSigninResult);
+         mPendingGoogleSigninResult = null;
+      }
    }
 
    @Override

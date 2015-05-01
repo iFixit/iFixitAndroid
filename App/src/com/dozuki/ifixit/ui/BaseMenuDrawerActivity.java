@@ -29,7 +29,6 @@ import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-import com.google.analytics.tracking.android.MapBuilder;
 
 import net.simonvt.menudrawer.MenuDrawer;
 import net.simonvt.menudrawer.Position;
@@ -125,7 +124,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
    }
 
    @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
+   public void onActivityResult(int requestCode, int resultCode, Intent intent) {
       String barcodeScannerResult = getBarcodeScannerResult(requestCode, resultCode, intent);
 
       if (barcodeScannerResult != null) {

@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+
 import com.actionbarsherlock.view.Menu;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
@@ -12,8 +13,6 @@ import com.dozuki.ifixit.ui.LoadingFragment;
 import com.dozuki.ifixit.ui.guide.create.StepReorderFragment.StepRearrangeListener;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.otto.Subscribe;
 
 public class StepsActivity extends BaseMenuDrawerActivity implements StepRearrangeListener {
@@ -95,7 +94,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    }
 
    @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
       super.onActivityResult(requestCode, resultCode, data);
 
       if (requestCode == GUIDE_EDIT_STEP_REQUEST && resultCode == RESULT_OK) {

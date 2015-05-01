@@ -25,6 +25,7 @@ import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
@@ -46,7 +47,6 @@ import java.io.IOException;
 public class LoginFragment extends BaseDialogFragment implements OnClickListener,
  GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
    private static final int OPEN_ID_REQUEST_CODE = 4;
-   private static final int GOOGLE_SIGN_IN_REQUEST_CODE = 0;
 
    private Button mLogin;
    private Button mRegister;
@@ -323,16 +323,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          enable(false);
          mCurAPICall = ApiCall.userInfo(session);
          Api.call(getActivity(), mCurAPICall);
-      } else if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
-         mGoogleLoginInProgress = false;
-
-         if (resultCode == Activity.RESULT_OK) {
-            mLoadingSpinner.setVisibility(View.VISIBLE);
-            enable(false);
-            String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
-            String scopes = getGoogleOAuthScopes();
-            new RetrieveGoogleOAuthCodeTask().execute(accountName, scopes);
-         }
+      } else if (requestCode == BaseActivity.GOOGLE_SIGN_IN_REQUEST_CODE) {
+         handleGoogleSignInActivityResult(requestCode, resultCode, data);
       }
 
       if (!App.get().getSite().mStandardAuth && resultCode != Activity.RESULT_OK) {
@@ -342,6 +334,35 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
           * called yet. This sets a flag which is used in onResume to kill the dialog.
           */
          mFailedSsoLogin = true;
+      }
+   }
+
+   @Subscribe
+   public void onGoogleSignInActivityResult(GoogleSignInActivityResult result) {
+      handleGoogleSignInActivityResult(result.mRequestCode, result.mResultCode,
+       result.mData);
+   }
+
+   private void handleGoogleSignInActivityResult(int requestCode, int resultCode,
+    Intent data) {
+      mGoogleLoginInProgress = false;
+
+      if (resultCode == Activity.RESULT_OK) {
+         mLoadingSpinner.setVisibility(View.VISIBLE);
+         enable(false);
+
+         // If the client isn't connected we need to do that before doing anything else.
+         // This will trigger the rest of the process.
+         if (!mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.connect();
+            return;
+         }
+
+         // Otherwise get the account name and request a token that we will use to
+         // make an auth token.
+         String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
+         String scopes = getGoogleOAuthScopes();
+         new RetrieveGoogleOAuthCodeTask().execute(accountName, scopes);
       }
    }
 
@@ -376,7 +397,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       if (mGoogleLoginClicked && !mGoogleLoginInProgress && result.hasResolution()) {
          try {
             mGoogleLoginInProgress = true;
-            result.startResolutionForResult(getActivity(), GOOGLE_SIGN_IN_REQUEST_CODE);
+            result.startResolutionForResult(getActivity(), BaseActivity.GOOGLE_SIGN_IN_REQUEST_CODE);
          } catch (IntentSender.SendIntentException e) {
             // The intent was canceled before it was sent.  Return to the default
             // state and attempt to connect to get an updated ConnectionResult.
@@ -400,11 +421,23 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       Api.call(getActivity(), mCurAPICall);
    }
 
-   private class GoogleOAuthCodeEvent {
+   private static class GoogleOAuthCodeEvent {
       public String mCode;
 
       public GoogleOAuthCodeEvent(String code) {
          mCode = code;
+      }
+   }
+
+   public static class GoogleSignInActivityResult {
+      public int mRequestCode;
+      public int mResultCode;
+      public Intent mData;
+
+      public GoogleSignInActivityResult(int requestCode, int resultCode, Intent data) {
+         mRequestCode = requestCode;
+         mResultCode = resultCode;
+         mData = data;
       }
    }
 
@@ -425,7 +458,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          } catch (IOException e) {
             Log.e("LoginFragment", e.getMessage());
          } catch (UserRecoverableAuthException e) {
-            startActivityForResult(e.getIntent(), GOOGLE_SIGN_IN_REQUEST_CODE);
+            startActivityForResult(e.getIntent(), BaseActivity.GOOGLE_SIGN_IN_REQUEST_CODE);
          } catch (GoogleAuthException e) {
             Log.e("LoginFragment", e.getMessage());
          }
