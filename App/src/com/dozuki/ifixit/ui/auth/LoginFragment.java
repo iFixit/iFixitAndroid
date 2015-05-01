@@ -327,6 +327,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
          mGoogleLoginInProgress = false;
 
          if (resultCode == Activity.RESULT_OK) {
+            mLoadingSpinner.setVisibility(View.VISIBLE);
+            enable(false);
             String accountName = Plus.AccountApi.getAccountName(mGoogleApiClient);
             String scopes = getGoogleOAuthScopes();
             new RetrieveGoogleOAuthCodeTask().execute(accountName, scopes);
