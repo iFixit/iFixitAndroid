@@ -65,7 +65,9 @@ public class Site implements Serializable {
    }
 
    public boolean hasGoogleLogin() {
-      return mGoogleOAuth2Clientid != null && mGoogleOAuth2Clientid.length() != 0;
+      // We can't support google login in the Dozuki app because the package name is
+      // tied to a client id in the same project as the site's project.
+      return !(isDozuki() || mGoogleOAuth2Clientid == null || mGoogleOAuth2Clientid.length() == 0);
    }
 
    /**
