@@ -34,6 +34,7 @@ public class Site implements Serializable {
 
    public String mObjectNameSingular;
    public String mObjectNamePlural;
+   public String mGoogleOAuth2Clientid;
 
    public String[] hasSubject = {"Repair", "Installation", "Replacement", "Disassembly"};
    public String[] noSubject = {"Technique", "How-to", "Maintenance", "Teardown"};
@@ -61,6 +62,12 @@ public class Site implements Serializable {
 
    public String getOpenIdLoginUrl() {
       return "https://" + getAPIDomain() + "/Guide/login/openid?host=";
+   }
+
+   public boolean hasGoogleLogin() {
+      // We can't support google login in the Dozuki app because the package name is
+      // tied to a client id in the same project as the site's project.
+      return !(isDozuki() || mGoogleOAuth2Clientid == null || mGoogleOAuth2Clientid.length() == 0);
    }
 
    /**

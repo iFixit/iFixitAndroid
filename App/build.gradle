@@ -34,20 +34,24 @@ dependencies {
    compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
    compile "com.vandalsoftware.android:dslv:0.6.3"
    compile "com.f2prateek.progressbutton:progressbutton:2.1.0@aar"
+   compile "com.google.android.gms:play-services-identity:7.0.0"
+   compile "com.google.android.gms:play-services-plus:7.0.0"
 }
 
 // List of sites used to create signingConfigs, sourceSets, and productFlavors.
 def sites = ["ifixit", "dozuki", "accustream", "dripassist", "magnoliamedical"]
 
 android {
-   compileSdkVersion 19
-   buildToolsVersion "20"
+   compileSdkVersion 21
+   // buildToolsVersion 22.0.1 causes getActionView to return null on an HTC
+   // Evo running Android 2.3.
+   buildToolsVersion "21.1.2"
 
    defaultConfig {
-      versionCode 57
-      versionName "2.8.0"
-      minSdkVersion 8
-      targetSdkVersion 19
+      versionCode 58
+      versionName "2.9.0"
+      minSdkVersion 9
+      targetSdkVersion 21
       applicationId "com.dozuki.ifixit"
    }
 
@@ -89,15 +93,11 @@ android {
             buildConfigField "String", "GA_PROPERTY_ID", '"' + getProperty("${site}GAPropertyId") + '"'
 
             if (site == 'dozuki') {
-               minSdkVersion 9
-
                dependencies {
                   dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
                   dozukiCompile 'com.google.zxing:core:2.2'
                }
             } else if (site == 'accustream') {
-               minSdkVersion 9
-
                dependencies {
                   accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
                   accustreamCompile 'com.google.zxing:core:2.2'

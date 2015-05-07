@@ -58,7 +58,6 @@
   <string name="register_description">Зарегистрироваться на <xliff:g id="brand_website">iFixit.com</xliff:g></string>
   <string name="cancel_register_description">Отменить регистрацию</string>
   <string name="cancel_register_button">Отмена</string>
-  <string name="google_signin_description">Войти через <xliff:g id="google">Google</xliff:g></string>
   <string name="yahoo_signin_description">Войти через <xliff:g id="yahoo">Yahoo!</xliff:g></string>
   <string name="empty_field_error">Одно или несколько полей не заполнены.</string>
   <string name="passwords_do_not_match_error">Пароли не совпадают.</string>

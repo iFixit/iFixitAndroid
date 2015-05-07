@@ -60,7 +60,6 @@ soient placées sous <a href="http://www.ifixit.com/Info/Licensing">licence libr
   <string name="register_description">S\'inscrire sur <xliff:g id="brand_website">iFixit.com</xliff:g></string>
   <string name="cancel_register_description">Annuler L\'enregistrement</string>
   <string name="cancel_register_button">Annuler</string>
-  <string name="google_signin_description">Connectez-vous avec <xliff:g id="google">Google</xliff:g></string>
   <string name="yahoo_signin_description">Connectez-vous avec <xliff:g id="yahoo">Yahoo!</xliff:g></string>
   <string name="empty_field_error">Un ou plusieurs domaines sont encore vides.</string>
   <string name="passwords_do_not_match_error">Les mots de passe ne correspondent pas.</string>

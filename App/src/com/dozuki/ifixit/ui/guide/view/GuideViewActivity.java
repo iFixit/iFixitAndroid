@@ -184,7 +184,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    }
 
    @Override
-   protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+   public void onActivityResult(int requestCode, int resultCode, Intent data) {
       if (requestCode == COMMENT_REQUEST) {
          Bundle extras = data.getExtras();
          if (resultCode == RESULT_OK && extras != null) {

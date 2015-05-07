@@ -96,15 +96,14 @@
                 </LinearLayout>
             </LinearLayout>
 
-            <ImageButton
+            <com.google.android.gms.common.SignInButton
                 android:id="@+id/use_google_login_button"
-                android:layout_width="wrap_content"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@+id/login_text"
                 android:layout_centerHorizontal="true"
                 android:layout_marginBottom="4dp"
-                android:background="@drawable/ic_btn_sign_in_google"
-                android:contentDescription="@string/google_signin_description"/>
+                android:visibility="gone"/>
 
             <ImageButton
                 android:id="@+id/use_yahoo_login_button"

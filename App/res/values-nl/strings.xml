@@ -79,10 +79,7 @@
   </string>
     <string name="cancel_register_description">Annuleren Registratie</string>
     <string name="cancel_register_button">Annuleer</string>
-    <string name="google_signin_description">Aanmelden met <xliff:g id="google">Google</xliff:g>
-  </string>
-    <string name="yahoo_signin_description">Aanmelden met <xliff:g id="yahoo">Yahoo!</xliff:g>
-  </string>
+    <string name="yahoo_signin_description">Aanmelden met <xliff:g id="yahoo">Yahoo!</xliff:g></string>
 
     <string name="empty_field_error">Een of meerdere velden zijn nog leeg.</string>
     <string name="passwords_do_not_match_error">Wachtwoorden komen niet overeen.</string>
