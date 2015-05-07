@@ -43,7 +43,9 @@ def sites = ["ifixit", "dozuki", "accustream", "dripassist", "magnoliamedical"]
 
 android {
    compileSdkVersion 21
-   buildToolsVersion "22.0.1"
+   // buildToolsVersion 22.0.1 causes getActionView to return null on an HTC
+   // Evo running Android 2.3.
+   buildToolsVersion "21.1.2"
 
    defaultConfig {
       versionCode 58
