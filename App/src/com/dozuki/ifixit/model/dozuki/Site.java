@@ -64,10 +64,16 @@ public class Site implements Serializable {
       return "https://" + getAPIDomain() + "/Guide/login/openid?host=";
    }
 
+   public boolean checkForGoogleLogin() {
+      // Google login is only supported for iFixit for now so we shouldn't
+      // check for it or even initialize the GoogleApiClient on any other site.
+      return isIfixit();
+   }
+
    public boolean hasGoogleLogin() {
       // We can't support google login in the Dozuki app because the package name is
       // tied to a client id in the same project as the site's project.
-      return !(isDozuki() || mGoogleOAuth2Clientid == null || mGoogleOAuth2Clientid.length() == 0);
+      return !(App.isDozukiApp() || mGoogleOAuth2Clientid == null || mGoogleOAuth2Clientid.length() == 0);
    }
 
    /**
