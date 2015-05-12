@@ -32,6 +32,7 @@
 
         <activity
             android:name="com.dozuki.ifixit.ui.IntentFilterActivity"
+            android:taskAffinity=""
             android:exported="true" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
