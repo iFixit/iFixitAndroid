@@ -129,18 +129,20 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       
       mHasRegisterBtn = site.mPublicRegistration;
 
-      // Get the clientid so we can perform Google login.
-      if (site.mGoogleOAuth2Clientid == null) {
-         Api.call(getActivity(), ApiCall.siteInfo());
-      }
+      if (site.checkForGoogleLogin()) {
+         // Get the clientid so we can perform Google login.
+         if (site.mGoogleOAuth2Clientid == null) {
+            Api.call(getActivity(), ApiCall.siteInfo());
+         }
 
-      mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
-       .addConnectionCallbacks(this)
-       .addOnConnectionFailedListener(this)
-       .addApi(Plus.API)
-       .addScope(new Scope("email"))
-       .addScope(new Scope("profile"))
-       .build();
+         mGoogleApiClient = new GoogleApiClient.Builder(getActivity())
+          .addConnectionCallbacks(this)
+          .addOnConnectionFailedListener(this)
+          .addApi(Plus.API)
+          .addScope(new Scope("email"))
+          .addScope(new Scope("profile"))
+          .build();
+      }
 
       if (!site.mStandardAuth) {
           Intent intent = new Intent(getActivity(), OpenIDActivity.class);
@@ -205,7 +207,9 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
    public void onStop() {
       super.onStop();
 
-      mGoogleApiClient.disconnect();
+      if (mGoogleApiClient != null) {
+         mGoogleApiClient.disconnect();
+      }
    }
 
    @Override
