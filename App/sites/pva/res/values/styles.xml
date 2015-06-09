@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+    <style name="Widget.PVA"></style>
+
+    <style name="Widget.PVA.TopicBackground" parent="Widget.PVA">
+        <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="DropDownListView.pva" parent="Widget.Sherlock.Light.ListView.DropDown">
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+    </style>
+
+    <style name="DropDownNav.pva" parent="Widget.Sherlock.Light.ListView.DropDown">
+        <item name="android:background">@drawable/pva_spinner_background_holo_light</item>
+        <item name="android:popupBackground">@drawable/item_background_holo_light</item>
+        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
+        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
+    </style>
+
+    <style name="DialogTheme.pva" parent="android:Theme.Dialog">
+        <item name="android:editTextBackground">@style/EditTextpva</item>
+    </style>
+
+
+  <style name="EditTextpva" parent="android:Widget.EditText">
+	  <item name="android:background">@drawable/pva_edit_text_holo_light</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="AutoCompleteTextViewpva" parent="android:Widget.AutoCompleteTextView">
+      <item name="android:dropDownSelector">@drawable/pva_list_selector_holo_light</item>
+	  <item name="android:background">@drawable/pva_edit_text_holo_light</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="CheckBoxpva" parent="android:Widget.CompoundButton.CheckBox">
+      <item name="android:button">@drawable/pva_btn_check_holo_light</item>
+  </style>
+
+  <style name="RadioButtonpva" parent="android:Widget.CompoundButton.RadioButton">
+      <item name="android:button">@drawable/pva_btn_radio_holo_light</item>
+  </style>
+
+  <style name="Buttonpva" parent="android:Widget.Button">
+	  <item name="android:background">@drawable/pva_btn_default_holo_light</item>
+	  <item name="android:minHeight">48dip</item>
+	  <item name="android:minWidth">64dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="ImageButtonpva" parent="android:Widget.ImageButton">
+	  <item name="android:background">@drawable/pva_btn_default_holo_light</item>
+  </style>
+
+  <style name="Spinnerpva" parent="android:Widget.Spinner">
+      <item name="android:background">@drawable/pva_spinner_background_holo_light</item>
+      <item name="android:dropDownSelector">@drawable/pva_list_selector_holo_light</item>
+  </style>
+
+  <style name="SpinnerDropDownItempva" parent="android:Widget.DropDownItem.Spinner">
+      <item name="android:checkMark">@drawable/pva_btn_radio_holo_light</item>
+  </style>
+  <style name="ProgressBarpva" parent="android:Widget.ProgressBar.Horizontal">
+      <item name="android:progressDrawable">@drawable/pva_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/pva_progress_indeterminate_horizontal_holo_light</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="SeekBarpva" parent="android:Widget.SeekBar">
+      <item name="android:progressDrawable">@drawable/pva_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/pva_scrubber_progress_horizontal_holo_light</item>
+      <item name="android:minHeight">13dip</item>
+      <item name="android:maxHeight">13dip</item>
+      <item name="android:thumb">@drawable/pva_scrubber_control_selector_holo_light</item>
+      <item name="android:thumbOffset">16dip</item>
+      <item name="android:paddingLeft">16dip</item>
+      <item name="android:paddingRight">16dip</item>
+  </style>
+
+  <style name="RatingBarpva" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/pva_ratingbar_full_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/pva_ratingbar_full_holo_light</item>
+  </style>
+
+  <style name="RatingBarBigpva" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/pva_ratingbar_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/pva_ratingbar_holo_light</item>
+      <item name="android:minHeight">35dip</item>
+      <item name="android:maxHeight">35dip</item>
+  </style>
+
+  <style name="RatingBarSmallpva" parent="android:Widget.RatingBar">
+      <item name="android:progressDrawable">@drawable/pva_ratingbar_small_holo_light</item>
+      <item name="android:indeterminateDrawable">@drawable/pva_ratingbar_small_holo_light</item>
+      <item name="android:minHeight">16dip</item>
+      <item name="android:maxHeight">16dip</item>
+  </style>
+
+  <style name="Togglepva" parent="android:Widget.Button.Toggle">
+      <item name="android:background">@drawable/pva_btn_toggle_holo_light</item>
+      <item name="android:minHeight">48dip</item>
+	  <item name="android:textColor">#000000</item>
+  </style>
+
+  <style name="ListViewpva" parent="android:Widget.ListView">
+      <item name="android:listSelector">@drawable/pva_list_selector_holo_light</item>
+  </style>
+
+  <style name="ListViewpva.White" parent="android:Widget.ListView.White">
+      <item name="android:listSelector">@drawable/pva_list_selector_holo_light</item>
+  </style>
+
+  <style name="SpinnerItempva" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
+      <item name="android:textColor">#000000</item>
+  </style>
+
+</resources>

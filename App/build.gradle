@@ -39,7 +39,7 @@ dependencies {
 }
 
 // List of sites used to create signingConfigs, sourceSets, and productFlavors.
-def sites = ["ifixit", "dozuki", "accustream", "dripassist", "magnoliamedical"]
+def sites = ["ifixit", "dozuki", "accustream", "dripassist", "magnoliamedical", "pva"]
 
 android {
    compileSdkVersion 21

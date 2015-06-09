@@ -160,7 +160,9 @@ public class Site implements Serializable {
       } else if (isMagnolia()) {
          return R.style.Theme_Magnolia;
       } else if (isDripAssist()) {
-          return R.style.DripAssist;
+          return R.style.Theme_DripAssist;
+      } else if (isPVA()) {
+         return R.style.Theme_PVA;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -263,6 +265,20 @@ public class Site implements Serializable {
          site.mPublicRegistration = false;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
+      } else if (siteName.equals("pva")) {
+         site = new Site(3366);
+         site.mName = "pva";
+         site.mDomain = "pva.dozuki.com";
+         site.mTitle = "PVA Support Hub";
+         site.mTheme = "white";
+         site.mPublic = true;
+         site.mAnswers = false;
+         site.mDescription = "Welcome to our electronic support portal. Below you will find an assortment of guides that will lead you step by step through various tasks associated with service, applications, maintenance, etc., for PVA equipment.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = true;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("dripassist")) {
           site = new Site(3366);
           site.mName = "dripassist";
@@ -291,7 +307,11 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit() || isMagnolia() || isDripAssist();
+      return isAccustream() || isIfixit() || isMagnolia() || isDripAssist() || isPVA();
+   }
+
+   public boolean isPVA() {
+      return mName.equals("pva");
    }
 
    public boolean isDripAssist() {
