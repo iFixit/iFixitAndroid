@@ -167,9 +167,8 @@
     </string>
     <string name="guide_intro_wizard_guide_summary_description">In a sentence or two, describe what this guide is about.</string>
     <string name="guide_intro_wizard_guide_title_description">
-        Generated title from the type, <xliff:g id="topic_type">%1$s</xliff:g> and focus. Only editif you aren\'t happy
-        with what\'s
-        there.
+        Generated title from the type, <xliff:g id="topic_type">%1$s</xliff:g> and focus. Only edit if you aren\'t happy
+        with what\'s there.
     </string>
     <string name="guide_intro_wizard_guide_subject_description">What is this guide specifically about? Describe the
         component, thing or idea that you are describing about this <xliff:g id="topic_name" example="Topic">%1$s
@@ -228,7 +227,7 @@
 
     <!-- Miscellaneous -->
     <string name="topic_background_description">Category background</string>
-    <string name="fist_background_desc">Fist background image</string>
+    <string name="fist_background_desc">iFixit Fist emblem</string>
     <string name="my_guides">My Guides</string>
     <string name="edit_guide">Edit Guide</string>
     <string name="view_guide">View Guide</string>
