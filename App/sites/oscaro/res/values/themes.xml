@@ -12,12 +12,12 @@
 
 
   <style name="Theme.Oscaro" parent="Theme.Sherlock.Light.DarkActionBar">
-    <item name="doz__primaryHighlightColor">@color/Oscaro_color</item>
-    <item name="doz__sectionHeader">@drawable/Oscaro_section_header</item>
-    <item name="doz__spinnerBackground">@drawable/Oscaro_spinner_background_holo_light</item>
+    <item name="doz__primaryHighlightColor">@color/oscaro_color</item>
+    <item name="doz__sectionHeader">@drawable/oscaro_section_header</item>
+    <item name="doz__spinnerBackground">@drawable/oscaro_spinner_background_holo_light</item>
     <item name="doz__topicDefaultBackground">@style/Widget.Oscaro.TopicBackground</item>
-    <item name="doz__editTextBackground">@drawable/Oscaro_edit_text_holo_light</item>
-    <item name="doz__checkboxBackground">@drawable/Oscaro_btn_check_holo_light</item>
+    <item name="doz__editTextBackground">@drawable/oscaro_edit_text_holo_light</item>
+    <item name="doz__checkboxBackground">@drawable/oscaro_btn_check_holo_light</item>
 
 
     <!-- Action Bar theme -->
@@ -27,7 +27,7 @@
 
     <item name="android:editTextStyle">@style/EditTextOscaro</item>
 
-    <item name="android:textColorHighlight">#99ed193f</item>
+    <item name="android:textColorHighlight">@color/oscaro_color</item>
 
     <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewOscaro</item>
 

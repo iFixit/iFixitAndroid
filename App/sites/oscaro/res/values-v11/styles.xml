@@ -10,6 +10,7 @@
 
   <style name="ButtonOscaro" parent="android:Widget.Holo.Light.Button">
 	  <item name="android:background">@drawable/oscaro_btn_default_holo_light</item>
+      <item name="android:textColor">#FFFFFF</item>
   </style>
 
   <style name="ImageButtonOscaro" parent="android:Widget.Holo.Light.ImageButton">
