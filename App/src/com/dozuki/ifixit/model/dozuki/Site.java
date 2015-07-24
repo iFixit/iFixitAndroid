@@ -163,6 +163,8 @@ public class Site implements Serializable {
           return R.style.Theme_DripAssist;
       } else if (isPVA()) {
          return R.style.Theme_PVA;
+      } else if (isOscaro()) {
+         return R.style.Theme_Oscaro;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -266,7 +268,7 @@ public class Site implements Serializable {
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("pva")) {
-         site = new Site(3366);
+         site = new Site(3335);
          site.mName = "pva";
          site.mDomain = "pva.dozuki.com";
          site.mTitle = "PVA Support Hub";
@@ -293,6 +295,21 @@ public class Site implements Serializable {
           site.mPublicRegistration = false;
           site.mObjectNamePlural = res.getString(R.string.categories);
           site.mObjectNameSingular = res.getString(R.string.category);
+      } else if (siteName.equals("oscaro")) {
+         site = new Site(3293);
+         site.mName = "oscaro";
+         site.mDomain = "oscaro.dozuki.com";
+         site.mCustomDomain = "tutoriels.oscaro.com";
+         site.mTitle = "Tutoriels Oscaro.com";
+         site.mTheme = "white";
+         site.mPublic = true;
+         site.mAnswers = false;
+         site.mDescription = "Des fiches pratiques en vidéos et photos pour l’entretien et la réparation de votre véhicule. Toutes marques auto, modèles de voitures et tous types de pièces.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       }
 
       return site;
@@ -307,7 +324,11 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit() || isMagnolia() || isDripAssist() || isPVA();
+      return isAccustream() || isIfixit() || isMagnolia() || isDripAssist() || isPVA() || isOscaro();
+   }
+
+   public boolean isOscaro() {
+      return mName.equals("oscaro");
    }
 
    public boolean isPVA() {
