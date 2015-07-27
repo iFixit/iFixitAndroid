@@ -51,6 +51,8 @@
 
     <style name="Theme.DripAssist" parent="Theme.Base"></style>
 
+    <style name="Theme.Oscaro" parent="Theme.Base"></style>
+
     <style name="Theme.PVA" parent="Theme.Base"></style>
 
     <style name="Theme.Dozuki" parent="Theme.Base"></style>
