@@ -581,7 +581,7 @@ public enum ApiEndpoint {
          }
 
          public ApiEvent<?> parse(String json) throws JSONException {
-            return new ApiEvent.UncompleteGuide().setResult(true);
+            return new ApiEvent.CompleteGuide().setResult(false);
          }
 
          public ApiEvent<?> getEvent() {

@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
-import android.widget.Toast;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -22,6 +22,7 @@ public class GuideConclusionFragment extends BaseFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
    private Guide mGuide;
    private Button mButton;
+   private Button mUncompleteButton;
 
    public static GuideConclusionFragment newInstance(Guide guide) {
       GuideConclusionFragment frag = new GuideConclusionFragment();
@@ -49,6 +50,16 @@ public class GuideConclusionFragment extends BaseFragment {
 
       ((TextView) view.findViewById(R.id.guide_conclusion_text)).setText(Html.fromHtml(mGuide.getConclusion()));
 
+      mUncompleteButton = (Button) view.findViewById(R.id.didnt_complete_guide);
+      mUncompleteButton.setOnClickListener(new View.OnClickListener() {
+
+         @Override
+         public void onClick(View v) {
+            Api.call(getActivity(), ApiCall.uncompleteGuide(mGuide.getGuideid()));
+            mUncompleteButton.setEnabled(false);
+            mUncompleteButton.setText(R.string.reverting);
+         }
+      });
       mButton = (Button) view.findViewById(R.id.guide_completed_button);
       mButton.setOnClickListener(new View.OnClickListener() {
          @Override
@@ -94,6 +105,15 @@ public class GuideConclusionFragment extends BaseFragment {
    private void setCompletedStatus(boolean completed) {
       mButton.setEnabled(!completed);
       mButton.setText(completed ? R.string.completed :
-       (App.get().getSite().isIfixit() ? R.string.i_did_it_success : R.string.complete_this_guide));
+              (App.get().getSite().isIfixit() ? R.string.i_did_it_success : R.string.complete_this_guide));
+      showUncompleteButton(completed, App.get().getSite().isIfixit());
+   }
+
+   private void showUncompleteButton(boolean completed, boolean isIfixit) {
+      if(completed && isIfixit) {
+         mUncompleteButton.setVisibility(View.VISIBLE);
+      } else {
+         mUncompleteButton.setVisibility(View.GONE);
+      }
    }
 }
