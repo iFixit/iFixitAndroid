@@ -173,7 +173,7 @@ public class GuideListItem extends TouchableRelativeLayout {
       mGuideInfo = guideInfo;
       setTag(mGuideInfo.mGuideid);
 
-      mTitleView.setText(Html.fromHtml(mGuideInfo.mTitle));
+      mTitleView.setText(mGuideInfo.mTitle);
 
       if (mThumbnail != null) {
          Picasso picasso = PicassoUtils.with(mContext);

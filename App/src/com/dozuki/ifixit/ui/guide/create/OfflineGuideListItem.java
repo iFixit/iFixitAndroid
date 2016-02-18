@@ -89,7 +89,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
     boolean isSyncing) {
       mGuideMedia = guideMedia;
 
-      mTitleView.setText(Html.fromHtml(mGuideMedia.mGuideInfo.mTitle));
+      mTitleView.setText(mGuideMedia.mGuideInfo.mTitle);
       mProgressButton.setPinned(true);
       mProgressButton.setCircleColor(getResources().getColor(
        R.color.progress_button_background));

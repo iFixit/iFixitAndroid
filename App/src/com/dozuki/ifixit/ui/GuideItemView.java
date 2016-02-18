@@ -34,8 +34,7 @@ public class GuideItemView extends TouchableRelativeLayout {
    }
 
    public void setGuideItem(GuideInfo guide) {
-      mTitleView.setText(mShortTitle && guide.hasSubject() ?
-       guide.mSubject : Html.fromHtml(guide.mTitle));
+      mTitleView.setText(mShortTitle && guide.hasSubject() ? guide.mSubject : guide.mTitle);
 
       Transformation transform = new RoundedTransformation(4, 0);
 

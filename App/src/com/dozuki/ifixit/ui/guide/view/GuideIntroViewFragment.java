@@ -76,7 +76,7 @@ public class GuideIntroViewFragment extends BaseFragment {
       mIntro.setMovementMethod(method);
 
       if (mGuide != null) {
-         mTitle.setText(Html.fromHtml(mGuide.getTitle()));
+         mTitle.setText(mGuide.getTitle());
 
          String introductionText = mGuide.getIntroductionRendered();
 
@@ -159,7 +159,11 @@ public class GuideIntroViewFragment extends BaseFragment {
             }
          }
 
-         mIntro.setText(Utils.correctLinkPaths(Html.fromHtml(introductionText, null, new WikiHtmlTagHandler())));
+         if (introductionText.length() > 0) {
+            mIntro.setText(Utils.correctLinkPaths(Html.fromHtml(introductionText, null, new WikiHtmlTagHandler())));
+         } else {
+            mIntro.setText(introductionText);
+         }
 
          // Authors and Difficulty are not relevant on teardowns.
          if (mGuide.getType().equalsIgnoreCase("teardown")) {

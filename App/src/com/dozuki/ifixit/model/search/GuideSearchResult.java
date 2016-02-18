@@ -45,7 +45,7 @@ public class GuideSearchResult implements SearchResult, Serializable {
          }
       });
 
-      ((TextView)v.findViewById(R.id.guide_title)).setText(Html.fromHtml(mGuideInfo.mTitle));
+      ((TextView)v.findViewById(R.id.guide_title)).setText(mGuideInfo.mTitle);
       ((TextView)v.findViewById(R.id.guide_author)).setText(
        App.get().getString(R.string.by_author, mGuideInfo.mAuthorName));
 
