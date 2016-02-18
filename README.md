@@ -75,7 +75,7 @@ you distribute the application.
 That is, the trademarks are protected, but the code itself is under an open license. You
 can use the trademarks individually, but not for any sort of distribution.
 
-Copyright (c) 2012-2014 iFixit
+Copyright (c) 2012-2016 iFixit
 
 
  [cla]: https://docs.google.com/forms/d/1wrPw91REdDKbZQ4vrGeUo8s_TkddZTTxiur0rbUxahk/viewform
