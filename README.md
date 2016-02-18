@@ -1,4 +1,4 @@
-Official iFixit Android App v2.6.0
+Official iFixit Android App v2.9.2
 ===========================
 
 This app is a native Android version of the iFixit website including:
