@@ -28,9 +28,7 @@ Then add the new site to the `build.gradle` file.
 https://github.com/iFixit/iFixitAndroid/blob/master/App/build.gradle#L39
 
 
-To build and install the APK, if the site-name you entered above is sterling,
-use:
-
+To build and install the APK, use:
 
    gradle assemble<SITENAME>Release install<SITENAME>Release
 
@@ -70,7 +68,7 @@ Gotchas
 --------------
 
 All the activity:name attributes must be com.dozuki.ifixit, but the
-android:authority fields must be com.dozuki.sterling.  It’s an unfortunate side
+android:authority fields must be com.dozuki.{SITENAME}.  It’s an unfortunate side
 effect of building multiple apps out of the same code base.  We wrestled with
 this for a long time when we were first adding this feature.
 
