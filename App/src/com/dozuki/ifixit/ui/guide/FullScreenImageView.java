@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.squareup.picasso.Picasso;
@@ -46,6 +47,10 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
           .into((Target)this);
       }
    }
+
+    public void loadImage(Image item) {
+        loadImage(item.isLocal()?item.getLocalPath():item.getPath(),item.isLocal());
+    }
 
    @Override
    public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
