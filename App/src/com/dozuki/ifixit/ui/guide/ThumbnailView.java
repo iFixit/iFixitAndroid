@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui.guide;
 
 import android.content.Context;
 import android.content.res.TypedArray;
+import android.text.TextUtils;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -14,6 +15,7 @@ import android.widget.LinearLayout;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.ui.guide.view.FullImagePagerViewActivity;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
@@ -29,6 +31,7 @@ import java.util.Iterator;
 public class ThumbnailView extends LinearLayout {
    private static final String TAG = "ThumbnailView";
    private ArrayList<ViewHolder> mThumbs;
+   private ArrayList<Image> mGallery;
    private FallbackImageView mMainImage;
    private ImageView mAddThumbButton;
    private boolean mShowSingle = false;
@@ -106,13 +109,18 @@ public class ThumbnailView extends LinearLayout {
             }
 
             Context context = getContext();
-            context.startActivity(FullImageViewActivity.viewImage(context, url, mIsOfflineGuide));
+
+            int position = getImagePosition(url);
+            context.startActivity(FullImagePagerViewActivity.viewImage(context,mGallery,position));
+
+           // context.startActivity(FullImageViewActivity.viewImage(context, url, mIsOfflineGuide));
          }
       });
 
       mMainImage = (FallbackImageView) mMainImageContainer.findViewById(R.id.main_image_view);
 
       mThumbs = new ArrayList<ViewHolder>();
+      mGallery = new ArrayList<>();
       setOrientation(App.get().inPortraitMode() ? HORIZONTAL : VERTICAL);
    }
 
@@ -130,6 +138,7 @@ public class ThumbnailView extends LinearLayout {
    public void setThumbs(ArrayList<Image> images, boolean isOfflineGuide) {
       boolean hideOnSingleThumb = (images.size() <= 1 && !mShowSingle);
       mIsOfflineGuide = isOfflineGuide;
+      mGallery = images;
 
       calculateDimensions(hideOnSingleThumb);
 
@@ -162,7 +171,7 @@ public class ThumbnailView extends LinearLayout {
 
       mPicasso.load(R.drawable.no_image)
        .fit()
-       .into((ImageView)mMainImage);
+       .into((ImageView) mMainImage);
    }
 
    public void setAddImageMain() {
@@ -413,5 +422,20 @@ public class ThumbnailView extends LinearLayout {
          mThumbnailHeight = (mDisplayMetrics.heightPixels - mMainHeight - mNavigationHeight);
          mThumbnailWidth = (mThumbnailHeight * (4f / 3f));
       }
+   }
+
+
+   private int getImagePosition(String url){
+
+      if ((mGallery!=null)&&(!TextUtils.isEmpty(url))){
+         for (int i=0; i<mGallery.size(); i++){
+            Image image = mGallery.get(i);
+            if (url.equals(image.getLocalPath())||url.equals(image.getPath())){
+               return i;
+            }
+         }
+      }
+      return 0;
+
    }
 }
