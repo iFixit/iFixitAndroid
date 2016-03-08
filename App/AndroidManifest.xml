@@ -80,6 +80,10 @@
             android:name=".ui.guide.view.FullImageViewActivity"
             android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
         <activity
+            android:name=".ui.guide.view.FullImagePagerViewActivity"
+            android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
+
+        <activity
             android:name=".ui.guide.view.VideoViewActivity"
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation|screenSize"

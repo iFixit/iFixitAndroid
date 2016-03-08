@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/gray" >
+
+    <ProgressBar
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:minHeight="@dimen/progress_bar_width_height"
+        android:minWidth="@dimen/progress_bar_width_height" />
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/multimediaPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/transparent"
+        />
+
+    <ImageView
+        android:id="@+id/full_screen_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@string/close_full_screen_desc"
+        android:src="@drawable/x_icon" />
+
+    <RelativeLayout
+        android:layout_width="@dimen/gallery_top_bar_height"
+        android:layout_height="@dimen/gallery_top_bar_height"
+        android:layout_gravity="bottom|right"
+        android:layout_margin="@dimen/list_item_horizontal_margin"
+        android:background="@drawable/bullet_black"
+        android:id="@+id/pageIndicator"
+        >
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:textColor="@color/white"
+            android:id="@+id/pageIndicatorText"
+            />
+
+    </RelativeLayout>
+
+</FrameLayout>
