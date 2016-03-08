@@ -109,11 +109,8 @@ public class ThumbnailView extends LinearLayout {
             }
 
             Context context = getContext();
-
             int position = getImagePosition(url);
             context.startActivity(FullImagePagerViewActivity.viewImage(context,mGallery,position));
-
-           // context.startActivity(FullImageViewActivity.viewImage(context, url, mIsOfflineGuide));
          }
       });
 
@@ -171,7 +168,7 @@ public class ThumbnailView extends LinearLayout {
 
       mPicasso.load(R.drawable.no_image)
        .fit()
-       .into((ImageView) mMainImage);
+       .into((ImageView)mMainImage);
    }
 
    public void setAddImageMain() {
