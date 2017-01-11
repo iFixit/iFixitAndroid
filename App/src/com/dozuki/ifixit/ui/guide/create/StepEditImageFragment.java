@@ -214,8 +214,7 @@ public class StepEditImageFragment extends BaseFragment {
    }
 
    protected float navigationHeight() {
-      int actionBarHeight = getResources().getDimensionPixelSize(
-       com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
+      int actionBarHeight = 48;
 
       int bottomBarHeight = getResources().getDimensionPixelSize(
        R.dimen.guide_create_step_edit_bottom_bar_height);

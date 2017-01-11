@@ -3,11 +3,11 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="DropDownListView.iFixit" parent="Widget.Sherlock.Light.ListView.DropDown">
+    <style name="DropDownListView.iFixit" parent="android:Widget.ListView.DropDown">
         <item name="android:listSelector">@drawable/list_selector_holo_light</item>
     </style>
 
-    <style name="DropDownNav.iFixit" parent="Widget.Sherlock.Light.ListView.DropDown">
+    <style name="DropDownNav.iFixit" parent="android:Widget.ListView.DropDown">
         <item name="android:background">@drawable/ifixit__spinner_background_holo_light</item>
         <item name="android:popupBackground">@drawable/item_background_holo_light</item>
         <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
@@ -31,6 +31,10 @@
 
     <style name="RadioButton.iFixit" parent="android:Widget.CompoundButton.RadioButton">
         <item name="android:button">@drawable/ifixit__btn_radio_holo_light</item>
+    </style>
+
+    <style name="ActionBar" parent="@style/Widget.AppCompat.ActionBar.Solid">
+        <item name="android:background">@color/menu_background</item>
     </style>
 
     <style name="Button.iFixit" parent="android:Widget.Button">

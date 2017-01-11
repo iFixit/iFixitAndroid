@@ -24,7 +24,7 @@ import java.util.ArrayList;
 
 public class TopicListFragment extends BaseFragment
  implements TopicSelectedListener, OnItemClickListener {
-   private static final String CURRENT_TOPIC = "CURRENT_TOPIC";
+   public static final String CURRENT_TOPIC = "CURRENT_TOPIC";
 
    private TopicSelectedListener topicSelectedListener;
    private TopicNode mTopic;
@@ -37,16 +37,16 @@ public class TopicListFragment extends BaseFragment
     */
    public TopicListFragment() {}
 
-   public TopicListFragment(TopicNode topic) {
-      mTopic = topic;
-   }
-
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      Bundle b = getArguments();
+
       if (savedInstanceState != null) {
          mTopic = (TopicNode)savedInstanceState.getSerializable(CURRENT_TOPIC);
+      } else if (b != null) {
+         mTopic = (TopicNode)b.getSerializable(CURRENT_TOPIC);
       }
    }
 

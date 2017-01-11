@@ -32,25 +32,22 @@ import java.util.regex.Pattern;
 
 public class GuideIntroViewFragment extends BaseFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
+   public static final String GUIDE_KEY = "GUIDE_KEY";
 
-   private TextView mTitle;
-   private TextView mIntro;
-   private TextView mDifficulty;
-   private TextView mAuthor;
    private Guide mGuide;
 
-   public GuideIntroViewFragment() { }
-
-   public GuideIntroViewFragment(Guide guide) {
-      mGuide = guide;
-   }
+   public GuideIntroViewFragment() {}
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      Bundle bundle = getArguments();
+
       if (savedInstanceState != null && mGuide == null) {
          mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+      } else if (bundle != null) {
+         mGuide = (Guide)bundle.getSerializable(GUIDE_KEY);
       }
    }
 
@@ -66,10 +63,10 @@ public class GuideIntroViewFragment extends BaseFragment {
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_intro, container, false);
 
-      mTitle = (TextView) view.findViewById(R.id.guide_title);
-      mIntro = (TextView) view.findViewById(R.id.guide_intro_text);
-      mDifficulty = (TextView) view.findViewById(R.id.guide_difficulty);
-      mAuthor = (TextView) view.findViewById(R.id.guide_author);
+      TextView mTitle = (TextView) view.findViewById(R.id.guide_title);
+      TextView mIntro = (TextView) view.findViewById(R.id.guide_intro_text);
+      TextView mDifficulty = (TextView) view.findViewById(R.id.guide_difficulty);
+      TextView mAuthor = (TextView) view.findViewById(R.id.guide_author);
 
       MovementMethod method = LinkMovementMethod.getInstance();
 
@@ -88,11 +85,7 @@ public class GuideIntroViewFragment extends BaseFragment {
             if (count > 0) {
                for (int i = 1; i <= count; i++) {
                   final String iframeSrc = m.group(i); // Group 0 denotes the full pattern,
-                  // so 1 is the actual capture group.
-                  Log.d("GuideIntroViewFragment", iframeSrc);
-
                   final Activity activity = getActivity();
-
                   final WebView webView = new WebView(activity);
                   WebSettings settings = webView.getSettings();
                   settings.setJavaScriptEnabled(true);

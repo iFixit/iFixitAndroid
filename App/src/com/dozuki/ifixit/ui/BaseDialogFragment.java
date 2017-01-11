@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui;
 
-import com.actionbarsherlock.app.SherlockDialogFragment;
+import android.support.v4.app.DialogFragment;
+
 import com.dozuki.ifixit.App;
 
 /**
@@ -9,7 +10,7 @@ import com.dozuki.ifixit.App;
  *
  * Note: This is basically a duplicate of other Base*Fragment classes.
  */
-public class BaseDialogFragment extends SherlockDialogFragment {
+public class BaseDialogFragment extends DialogFragment {
 
    @Override
    public void onResume() {

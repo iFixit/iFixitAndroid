@@ -14,9 +14,12 @@ import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -25,9 +28,6 @@ import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.ImageButton;
 import android.widget.Toast;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
@@ -439,9 +439,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.step_edit_menu, menu);
+      getMenuInflater().inflate(R.menu.step_edit_menu, menu);
       MenuItem item = menu.findItem(R.id.publish_guide);
-      CompoundButton toggle = (CompoundButton)item.getActionView().findViewById(R.id.publish_toggle);
+      CompoundButton toggle = (CompoundButton)MenuItemCompat.getActionView(item).findViewById(R.id.publish_toggle);
       toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {

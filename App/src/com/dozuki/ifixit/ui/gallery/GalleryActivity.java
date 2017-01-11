@@ -2,15 +2,16 @@ package com.dozuki.ifixit.ui.gallery;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
@@ -72,7 +73,9 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
          if (returnValue != -1) {
             getMediaItemForReturn = true;
          }
-         startActionMode(new ContextualMediaSelect());
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            startActionMode(new ContextualMediaSelect());
+         }
       }
 
       mCurrentMediaFragment.setForReturn(getMediaItemForReturn);
@@ -130,7 +133,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.gallery_menu, menu);
+      getMenuInflater().inflate(R.menu.gallery_menu, menu);
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -192,11 +195,11 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       return builder.create();
    }
 
-   public final class ContextualMediaSelect implements ActionMode.Callback {
+   public final class ContextualMediaSelect implements ActionMode.Callback, android.view.ActionMode.Callback {
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         getSupportMenuInflater().inflate(R.menu.gallery_menu, menu);
+         getMenuInflater().inflate(R.menu.gallery_menu, menu);
          return true;
       }
 
@@ -226,6 +229,26 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
                break;
          }
          return true;
+      }
+
+      @Override
+      public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+         return false;
+      }
+
+      @Override
+      public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
+         return false;
+      }
+
+      @Override
+      public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
+         return false;
+      }
+
+      @Override
+      public void onDestroyActionMode(android.view.ActionMode mode) {
+
       }
    }
 }

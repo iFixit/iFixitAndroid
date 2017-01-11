@@ -19,7 +19,7 @@ import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 public class TopicGuideListFragment extends BaseFragment {
 
    protected static final String SAVED_TOPIC = "SAVED_TOPIC";
-
+   public static final String TOPIC_LEAF_KEY = "TOPIC_LEAF_KEY";
    private TopicLeaf mTopicLeaf;
 
    /**
@@ -27,13 +27,11 @@ public class TopicGuideListFragment extends BaseFragment {
     */
    public TopicGuideListFragment() {}
 
-   public TopicGuideListFragment(TopicLeaf topicLeaf) {
-      mTopicLeaf = topicLeaf;
-   }
-
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
+
+      mTopicLeaf = (TopicLeaf)this.getArguments().getSerializable(TOPIC_LEAF_KEY);
 
       if (savedState != null && mTopicLeaf == null) {
          mTopicLeaf = (TopicLeaf)savedState.getSerializable(SAVED_TOPIC);
@@ -47,7 +45,7 @@ public class TopicGuideListFragment extends BaseFragment {
 
       GridView gridView = (GridView)view.findViewById(R.id.topic_guide_grid);
 
-      GuideListAdapter adapter = new GuideListAdapter(getSherlockActivity(),
+      GuideListAdapter adapter = new GuideListAdapter(getActivity(),
        mTopicLeaf.getGuides(), true);
 
       gridView.setAdapter(adapter);
@@ -56,7 +54,7 @@ public class TopicGuideListFragment extends BaseFragment {
          public void onItemClick(AdapterView<?> arg0, View view, int position,
           long id) {
             GuideInfo guide = mTopicLeaf.getGuides().get(position);
-            Intent intent = new Intent(getSherlockActivity(), GuideViewActivity.class);
+            Intent intent = new Intent(getActivity(), GuideViewActivity.class);
 
             intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
             startActivity(intent);

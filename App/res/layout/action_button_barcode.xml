@@ -5,8 +5,7 @@
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
    android:layout_width="wrap_content"
    android:layout_height="match_parent"
-   android:gravity="center"
-   style="@style/Widget.Sherlock.ActionButton"
+   android:gravity="center" style="@style/Widget.AppCompat.ActionButton"
    android:text="@string/slide_menu_barcode_scanner_short"
    android:drawableLeft="@drawable/ic_action_qr_code"
    android:background="?doz__itemSelector"
@@ -15,6 +14,4 @@
    android:textSize="12sp"
    android:textStyle="bold"
    android:textColor="?attr/actionMenuTextColor"
-   android:textAllCaps="@bool/abs__config_actionMenuItemAllCaps" />
-<!-- Note: The text attributes were copied from:
-     "@style/TextAppearance.Sherlock.Widget.ActionBar.Menu" -->
+   android:textAllCaps="true" />

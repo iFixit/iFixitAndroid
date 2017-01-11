@@ -6,14 +6,15 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
@@ -51,7 +52,7 @@ public class StepPortalFragment extends BaseFragment implements
       super.onCreate(savedInstanceState);
 
       int guideid = getArguments().getInt(StepsActivity.GUIDE_ID_KEY);
-      mActionBar = getSherlockActivity().getSupportActionBar();
+      mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
       setHasOptionsMenu(true);
       mSelf = this;
       mStepAdapter = new StepAdapter();

@@ -3,7 +3,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.DripAssist.Dark" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.DripAssist.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
         <!-- Action Bar Sherlock overrides -->
         <item name="android:dropDownListViewStyle">@style/DropDownListView.DripAssist</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.DripAssist</item>

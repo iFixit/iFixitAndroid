@@ -24,25 +24,21 @@ public class GuideStepViewFragment extends BaseFragment {
    private static final String EMBED_TYPE = "embed";
 
    private GuideStep mStep;
-   private boolean mIsOfflineGuide;
-
-   private StepLinesFragment mLinesFrag;
-   private StepVideoFragment mVideoFrag;
-   private StepEmbedFragment mEmbedFrag;
-   private StepImageFragment mImageFrag;
-
-   public GuideStepViewFragment() { }
-
-   public GuideStepViewFragment(GuideStep step, boolean isOfflineGuide) {
-      mStep = step;
-      mIsOfflineGuide = isOfflineGuide;
-   }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+      Bundle bundle = this.getArguments();
+
+      mStep = (GuideStep)bundle.getSerializable("STEP_KEY");
+      boolean mIsOfflineGuide = bundle.getBoolean("OFFLINE_KEY");
+
       View view = inflater.inflate(R.layout.guide_step, container, false);
 
+      StepImageFragment mImageFrag;
+      StepVideoFragment mVideoFrag;
+      StepEmbedFragment mEmbedFrag;
+      StepLinesFragment mLinesFrag;
       if (savedInstanceState != null) {
          mStep = (GuideStep) savedInstanceState.getSerializable(GUIDE_STEP_KEY);
          String stepType = mStep.type();

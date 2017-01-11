@@ -16,6 +16,6 @@
         android:layout_height="wrap_content"
         android:layout_toRightOf="@+id/search_result_thumbnail"
         android:layout_centerVertical="true"
-        style="@style/TextAppearance.Sherlock.Light.SearchResult.Title"/>
+        style="@style/TextAppearance.AppCompat.Light.SearchResult.Title"/>
 
 </RelativeLayout>

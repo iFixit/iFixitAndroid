@@ -243,13 +243,19 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
                if (mTopicLeaf.getGuides().size() == 0) {
                   selectedFragment = new NoGuidesFragment();
                } else {
-                  selectedFragment = new TopicGuideListFragment(mTopicLeaf);
+                  selectedFragment = new TopicGuideListFragment();
+                  Bundle args = new Bundle();
+                  args.putSerializable(TopicGuideListFragment.TOPIC_LEAF_KEY, mTopicLeaf);
+                  selectedFragment.setArguments(args);
                }
                mSelectedTab = GUIDES_TAB;
                label += "/guides";
                break;
             case MORE_INFO_TAB:
-               selectedFragment = new TopicInfoFragment(mTopicLeaf);
+               selectedFragment = new TopicInfoFragment();
+               Bundle args = new Bundle();
+               args.putSerializable(TopicInfoFragment.TOPIC_KEY, mTopicLeaf);
+               selectedFragment.setArguments(args);
                label += "/info";
 
                mSelectedTab = MORE_INFO_TAB;

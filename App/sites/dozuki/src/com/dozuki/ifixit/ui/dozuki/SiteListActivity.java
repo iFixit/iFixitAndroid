@@ -48,7 +48,7 @@ public class SiteListActivity extends BaseActivity
          Api.call(this, ApiCall.sites());
       }
 
-      setTheme(R.style.Theme_Sherlock_Light);
+      setTheme(R.style.Theme_AppCompat);
 
       setContentView(R.layout.site_list);
 

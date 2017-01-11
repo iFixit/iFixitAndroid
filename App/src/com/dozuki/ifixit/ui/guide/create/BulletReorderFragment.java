@@ -90,7 +90,7 @@ public class BulletReorderFragment extends BaseDialogFragment {
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
-      // mActionMode = (getSherlockActivity().startActionMode(new ContextualStepReorder()));
+      // mActionMode = (getActivity().startActionMode(new ContextualStepReorder()));
       getDialog().setTitle(getActivity().getResources().getString(R.string.reorder_bullets_title));
 
       if (savedInstanceState != null) {

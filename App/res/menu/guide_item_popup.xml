@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/guide_create_item_view"
         android:icon="@drawable/ic_action_book_dark"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/view"/>
     <item
         android:id="@+id/guide_create_item_publish"
         android:icon="@drawable/ic_list_item_publish"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/publish"/>
     <item
         android:id="@+id/guide_create_item_edit"
         android:icon="@drawable/ic_guide_edit"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/edit"/>
     <item
         android:id="@+id/guide_create_item_delete"
         android:icon="@drawable/ic_guide_delete"
-        android:showAsAction="ifRoom|withText"
+        app:showAsAction="ifRoom|withText"
         android:title="@string/action_delete"/>
 </menu>

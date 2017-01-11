@@ -9,11 +9,4 @@
         <item name="android:textAllCaps">true</item>
     </style>
 
-    <style name="ActionBar" parent="Widget.Sherlock.Light.ActionBar">
-        <item name="android:actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="android:selectableItemBackground">@drawable/item_background_holo_light</item>
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
-    </style>
-
 </resources>

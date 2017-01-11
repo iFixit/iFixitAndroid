@@ -8,8 +8,12 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -18,9 +22,6 @@ import android.view.animation.AnimationUtils;
 import android.widget.*;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
@@ -149,7 +150,7 @@ public abstract class MediaFragment extends BaseFragment
 
                return;
             }
-            
+
             File file = new File(path);
 
             if (file.length() == 0) {
@@ -165,7 +166,7 @@ public abstract class MediaFragment extends BaseFragment
             }
 
             String key = mGalleryAdapter.addUri(selectedImageUri);
-            Api.call(getSherlockActivity(), ApiCall.uploadImage(path, key));
+            Api.call(getActivity(), ApiCall.uploadImage(path, key));
          } else if (requestCode == CAMERA_PIC_REQUEST) {
             if (mCameraTempFileName == null) {
                Log.e("iFixit", "Error cameraTempFile is null!");
@@ -173,7 +174,7 @@ public abstract class MediaFragment extends BaseFragment
             }
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
-            Api.call(getSherlockActivity(), ApiCall.uploadImage(
+            Api.call(getActivity(), ApiCall.uploadImage(
              mCameraTempFileName, key));
          }
       }
@@ -212,8 +213,8 @@ public abstract class MediaFragment extends BaseFragment
 
          Intent selectResult = new Intent();
          selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY, mMediaList.get(position));
-         getSherlockActivity().setResult(Activity.RESULT_OK, selectResult);
-         getSherlockActivity().finish();
+         getActivity().setResult(Activity.RESULT_OK, selectResult);
+         getActivity().finish();
       } else if (mMode != null) {
          if (cell == null) {
             Log.i("iFixit", "Delete cell null!");
@@ -294,7 +295,7 @@ public abstract class MediaFragment extends BaseFragment
          if (mMediaList.get(i).isSelected()) {
 
             if (mMediaList.get(i).isLocal()) {
-               Toast.makeText(getSherlockActivity(), getString(R.string.delete_loading_image_error),
+               Toast.makeText(getActivity(), getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
             } else {
                deleteList.add(mMediaList.get(i).getId());
@@ -303,14 +304,14 @@ public abstract class MediaFragment extends BaseFragment
          }
       }
 
-      Api.call(getSherlockActivity(), ApiCall.deleteImage(deleteList));
+      Api.call(getActivity(), ApiCall.deleteImage(deleteList));
 
       mMode.finish();
    }
 
    private void setDeleteMode() {
       if (mMode == null) {
-         Animation animHide = AnimationUtils.loadAnimation(getSherlockActivity(),
+         Animation animHide = AnimationUtils.loadAnimation(getActivity(),
           R.anim.slide_out_bottom_slow);
          animHide.setAnimationListener(new AnimationListener() {
             @Override
@@ -322,7 +323,7 @@ public abstract class MediaFragment extends BaseFragment
             @Override
             public void onAnimationStart(Animation arg0) {}
          });
-         mMode = getSherlockActivity().startActionMode(new ModeCallback());
+         mMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ModeCallback());
       }
    }
 
@@ -331,7 +332,7 @@ public abstract class MediaFragment extends BaseFragment
 
       int selectedCount = mMediaList.countSelected();
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity());
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder
        .setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.media_delete_body, selectedCount,
@@ -402,7 +403,7 @@ public abstract class MediaFragment extends BaseFragment
          MediaViewItem itemView;
 
          if (convertView == null) {
-            itemView = new MediaViewItem(getSherlockActivity());
+            itemView = new MediaViewItem(getActivity());
          } else {
             itemView = (MediaViewItem) convertView;
          }
@@ -435,11 +436,11 @@ public abstract class MediaFragment extends BaseFragment
       }
    }
 
-   private final class ModeCallback implements ActionMode.Callback {
+   private class ModeCallback implements ActionMode.Callback {
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         getSherlockActivity().getSupportMenuInflater().inflate(R.menu.contextual_delete, menu);
+         getActivity().getMenuInflater().inflate(R.menu.contextual_delete, menu);
          return true;
       }
 

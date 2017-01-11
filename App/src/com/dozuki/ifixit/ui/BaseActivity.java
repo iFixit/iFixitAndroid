@@ -5,13 +5,13 @@ import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.AppCompatActivity;
 import android.util.TypedValue;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -34,7 +34,7 @@ import com.squareup.otto.Subscribe;
  * Registering for the event bus. Setting the current site's theme. Finishing
  * the Activity if the user logs out but the Activity requires authentication.
  */
-public abstract class BaseActivity extends SherlockFragmentActivity {
+public abstract class BaseActivity extends AppCompatActivity {
    protected static final String LOADING = "LOADING_FRAGMENT";
    private static final String ACTIVITY_ID = "ACTIVITY_ID";
    private static final String USERID = "USERID";
@@ -154,20 +154,25 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
       }
 
       Site site = app.getSite();
-      ActionBar ab = getSupportActionBar();
-      ab.setDisplayHomeAsUpEnabled(true);
-
       /**
        * Set the current site's theme. Must be before onCreate because of
        * inflating views.
        */
       setTheme(app.getSiteTheme());
 
+      super.onCreate(savedState);
+
+      ActionBar ab = getSupportActionBar();
+
+      if (ab != null) {
+         ab.setDisplayHomeAsUpEnabled(true);
+      }
+
       // This doesn't work on on versions below ICS.  Don't really care if the home button pressed state is the wrong
       // color on those devices so just ignore it.
       if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-         ((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
-          .item_background_holo_light);
+         //((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
+         // .item_background_holo_light);
       }
 
       if (site.actionBarUsesIcon()) {
@@ -176,11 +181,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          // Get the default action bar title resourceid
          int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-
-         // If it doesn't exist, use actionbarsherlocks
-         if (titleId == 0) {
-            titleId = com.actionbarsherlock.R.id.abs__action_bar_title;
-         }
 
          TextView title = (TextView) findViewById(titleId);
 
@@ -224,8 +224,6 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
          ab.setCustomView(v);
       }
-
-      super.onCreate(savedState);
 
       /**
        * There is another register call in onResume but we also need it here for the onUnauthorized
@@ -432,8 +430,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void showLoading(int container, String message) {
+      Bundle args = new Bundle();
+      args.putString(LoadingFragment.TEXT_KEY, message);
+      LoadingFragment frag = new LoadingFragment();
+      frag.setArguments(args);
       getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(message), LOADING)
+       .add(container, frag, LOADING)
        .commit();
    }
 

@@ -3,15 +3,16 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -132,7 +133,9 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    public boolean onCreateOptionsMenu(Menu menu) {
       MenuItem createGuideItem = menu.add(0, MENU_CREATE_GUIDE, 0, R.string.add_guide);
       createGuideItem.setIcon(R.drawable.ic_menu_add_guide);
-      createGuideItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
+         createGuideItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+      }
 
       return super.onCreateOptionsMenu(menu);
    }

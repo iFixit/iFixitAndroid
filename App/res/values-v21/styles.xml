@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-
     <!-- Holo Theme Overrides -->
     <style name="Base"/>
 
@@ -64,16 +63,6 @@
         <item name="android:layout_marginBottom">4dp</item>
         <item name="android:layout_marginLeft">4dp</item>
         <item name="android:background">@color/image_border</item>
-    </style>
-
-    <style name="ItemMenuButton">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:src">@drawable/ic_menu_moreoverflow_normal_holo_light</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_alignParentTop">true</item>
-        <item name="android:padding">8dp</item>
-        <item name="android:background">?attr/doz__itemSelector</item>
     </style>
 
     <style name="BulletIcon">

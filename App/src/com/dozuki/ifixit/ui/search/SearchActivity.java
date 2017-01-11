@@ -8,14 +8,13 @@ import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResults;
@@ -54,7 +53,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       super.onCreate(savedInstanceState);
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      setMenuDrawerSlideDrawable(R.drawable.abs__ic_ab_back_holo_dark);
+      //setMenuDrawerSlideDrawable(R.drawable.ic_back);
 
       setContentView(R.layout.search);
 

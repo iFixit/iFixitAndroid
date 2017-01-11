@@ -13,6 +13,8 @@ import android.os.Handler;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -21,8 +23,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -364,7 +364,7 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.offline_guides, menu);
+      getMenuInflater().inflate(R.menu.offline_guides, menu);
       return super.onCreateOptionsMenu(menu);
    }
 

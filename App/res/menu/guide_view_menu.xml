@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/favorite_guide"
         android:title="@string/favorite_guide"
         android:icon="@drawable/ic_action_favorite_empty"
-        android:showAsAction="always"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/comments"
         android:title="@string/comments"
-        android:actionLayout="@layout/comment_bubble"
-        android:showAsAction="always"/>
+        app:actionLayout="@layout/comment_bubble"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/edit_guide"
         android:title="@string/edit_guide"
         android:icon="@drawable/ic_action_edit"
-        android:showAsAction="ifRoom|withText"/>
+        app:showAsAction="ifRoom|withText"/>
     
     <item
         android:id="@+id/reload_guide"

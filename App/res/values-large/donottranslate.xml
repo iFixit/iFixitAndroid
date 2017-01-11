@@ -3,6 +3,6 @@
     <!-- Strings for tablet image sizes. -->
     <string name="is__guide_step_thumbnail">.large</string>
     <string name="is__guide_step_main">.large</string>
-    <string name="is__guide_step_fullsize">.huge</string>
+    <string name="is__guide_step_fullsize" translatable="false">.huge</string>
     <string name="is__guide_list">.medium</string>
 </resources>

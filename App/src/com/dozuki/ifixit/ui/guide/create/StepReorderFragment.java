@@ -2,17 +2,17 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.R.color;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
-
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuInflater;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
@@ -88,7 +88,7 @@ public class StepReorderFragment extends BaseFragment {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      getSherlockActivity().startActionMode(new ContextualStepReorder());
+      ((AppCompatActivity)getActivity()).startSupportActionMode(new ContextualStepReorder());
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.get(StepsActivity.GUIDE_KEY);
          mStepsCopy = (ArrayList<GuideStep>)savedInstanceState.get(STEP_LIST_ID);
@@ -132,7 +132,7 @@ public class StepReorderFragment extends BaseFragment {
 
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
-         MenuInflater inflater = getSherlockActivity().getSupportMenuInflater();
+         MenuInflater inflater = getActivity().getMenuInflater();
          inflater.inflate(R.menu.contextual_rearrange, menu);
          mode.setTitle(R.string.step_rearrange_title);
          return true;
@@ -209,7 +209,7 @@ public class StepReorderFragment extends BaseFragment {
          }
 
          if (step.hasVideo()) {
-            PicassoUtils.with(getSherlockActivity())
+            PicassoUtils.with(getActivity())
              .load(step.getVideo().getThumbnail().getPath(ImageSizes.stepThumb))
              .error(R.drawable.no_image)
              .into(holder.mImageView);
@@ -228,7 +228,7 @@ public class StepReorderFragment extends BaseFragment {
       String url = "";
       if (imageList.size() == 0) {
          PicassoUtils
-          .with(getSherlockActivity())
+          .with(getActivity())
           .load(R.drawable.no_image)
           .noFade()
           .into(image);
@@ -241,7 +241,7 @@ public class StepReorderFragment extends BaseFragment {
             }
          }
 
-         PicassoUtils.with(getSherlockActivity())
+         PicassoUtils.with(getActivity())
           .load(url)
           .error(R.drawable.no_image)
           .into(image);

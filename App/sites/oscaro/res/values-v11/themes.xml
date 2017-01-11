@@ -3,7 +3,7 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-  <style name="Theme.Oscaro.Dark" parent="Theme.Sherlock.Light.DarkActionBar">
+  <style name="Theme.Oscaro.Dark" parent="Theme.AppCompat.Light.DarkActionBar">
     <!-- Action Bar Sherlock overrides -->
     <item name="android:dropDownListViewStyle">@style/DropDownListView.Oscaro</item>
     <item name="dropDownListViewStyle">@style/DropDownListView.Oscaro</item>

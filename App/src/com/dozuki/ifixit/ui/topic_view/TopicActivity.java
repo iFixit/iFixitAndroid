@@ -158,7 +158,13 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
 
             mTopicView.setTopicNode(topic);
          }
-         changeTopicListView(new TopicListFragment(topic), !topic.isRoot());
+         TopicListFragment frag = new TopicListFragment();
+
+         Bundle args = new Bundle();
+         args.putSerializable(TopicListFragment.CURRENT_TOPIC, topic);
+         frag.setArguments(args);
+
+         changeTopicListView(frag, !topic.isRoot());
       }
    }
 
@@ -228,12 +234,16 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
    /////////////////////////////////////////////////////
 
    public void showTopicLoading(String topicName) {
+      Bundle args = new Bundle();
+      args.putString(LoadingFragment.TEXT_KEY, getString(R.string.loading_topic, topicName));
+      LoadingFragment frag = new LoadingFragment();
+      frag.setArguments(args);
+
       mTopicView = (TopicViewFragment) getSupportFragmentManager().findFragmentByTag(TOPIC_TAG);
       if (mTopicView != null) {
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
          ft.hide(mTopicView);
-         ft.add(R.id.topic_view_fragment_container,
-          new LoadingFragment(getString(R.string.loading_topic, topicName)), TOPIC_LOADING);
+         ft.add(R.id.topic_view_fragment_container, frag, TOPIC_LOADING);
          ft.commit();
       }
    }

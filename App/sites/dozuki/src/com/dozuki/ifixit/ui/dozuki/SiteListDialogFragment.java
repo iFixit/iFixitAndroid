@@ -14,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -52,7 +51,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
       mSiteListView = (ListView)view.findViewById(R.id.siteListView);
       mSiteListView.setEmptyView(view.findViewById(R.id.emptyView));
 
-      mSearchView = (SearchView)view.findViewById(R.id.dozuki_search_view);
+      mSearchView = (SearchView) MenuItemCompat.getActionView(view.findViewById(R.id.dozuki_search_view));
 
       return view;
    }
@@ -78,15 +77,6 @@ public class SiteListDialogFragment extends BaseDialogFragment {
        getActivity().getComponentName()));
       mSearchView.setOnQueryTextListener((SiteListActivity)getActivity());
       mSearchView.setIconifiedByDefault(false);
-
-      mSearchView.findViewById(R.id.abs__search_plate)
-       .setBackgroundResource(R.drawable.textfield_search_view_holo_light);
-
-      ((ImageView)mSearchView.findViewById(R.id.abs__search_close_btn))
-       .setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_exit));
-
-      ((ImageView)mSearchView.findViewById(R.id.abs__search_mag_icon))
-       .setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_dark));
    }
 
    public void showLoading() {

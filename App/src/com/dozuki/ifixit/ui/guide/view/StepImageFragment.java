@@ -85,8 +85,7 @@ public class StepImageFragment extends BaseFragment {
    /////////////////////////////////////////////////////
 
    protected float navigationHeight() {
-      int actionBarHeight = getResources().getDimensionPixelSize(
-       com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
+      int actionBarHeight = 48;
 
       int stepPagerBar = getActivity().getResources().getDimensionPixelSize(R.dimen.step_pager_bar_height);
 

@@ -29,7 +29,7 @@ public class GuidePartsToolsViewFragment extends BaseListFragment {
       mItems = (ArrayList<Item>)getArguments().getSerializable(ITEMS);
       View view = inflater.inflate(R.layout.guide_parts_tools, container, false);
 
-      setListAdapter(new PartsToolsAdapter(getSherlockActivity(), mItems));
+      setListAdapter(new PartsToolsAdapter(getActivity(), mItems));
 
       return view;
    }

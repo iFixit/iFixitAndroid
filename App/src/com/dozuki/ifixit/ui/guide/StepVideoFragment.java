@@ -124,10 +124,8 @@ public class StepVideoFragment extends BaseFragment {
    }
 
    private float navigationHeight() {
-      int actionBarHeight, indicatorHeight = 50;
-
-      actionBarHeight = mResources.getDimensionPixelSize(
-       com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
+      int actionBarHeight = 48,
+          indicatorHeight = 50;
 
       float pagePadding = viewPadding(R.dimen.page_padding);
 

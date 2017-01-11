@@ -2,9 +2,7 @@
 
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- actionWidgetTheme is used with a ContextThemeWrapper when using the DarkActionBar theme,
-         so we need to inherit from the the base Theme.Sherlock to override the overflow dropdown selector state. -->
-    <style name="Theme.Dozuki.Dark" parent="Theme.Sherlock">
+    <style name="Theme.Dozuki.Dark" parent="style/Theme.AppCompat">
         <!-- Action Bar Sherlock overrides -->
         <item name="android:dropDownListViewStyle">@style/DropDownListView.iFixit</item>
         <item name="dropDownListViewStyle">@style/DropDownListView.iFixit</item>

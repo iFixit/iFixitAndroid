@@ -78,16 +78,16 @@
         <activity android:name=".ui.topic_view.TopicViewActivity"/>
         <activity
             android:name=".ui.guide.view.FullImageViewActivity"
-            android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".ui.guide.view.VideoViewActivity"
             android:screenOrientation="landscape"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
         <activity
             android:name=".ui.guide.view.EmbedViewActivity"
             android:configChanges="keyboardHidden|orientation|screenSize"
-            android:theme="@style/Theme.Sherlock.Light.NoActionBar"/>
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
 
          <service android:name=".model.auth.AuthenticatorService">
             <intent-filter>

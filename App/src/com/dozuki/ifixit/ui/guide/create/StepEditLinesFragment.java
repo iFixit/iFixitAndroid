@@ -113,7 +113,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
       if (savedInstanceState != null) {
          mTitle = savedInstanceState.getString(TITLE_KEY);
 
-         FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
+         FragmentManager fm = getActivity().getSupportFragmentManager();
          mLines = (ArrayList<StepLine>) savedInstanceState.getSerializable(STEP_LIST_KEY);
          mOrderby = savedInstanceState.getInt(STEP_ORDERBY);
          mChooseBulletDialog =
@@ -158,7 +158,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
       savedInstanceState.putSerializable(STEP_ORDERBY, mOrderby);
 
       savedInstanceState.putString(TITLE_KEY, mTitle);
-      FragmentManager fm = getSherlockActivity().getSupportFragmentManager();
+      FragmentManager fm = getActivity().getSupportFragmentManager();
       if (mChooseBulletDialog != null && mShowingChooseBulletDialog) {
          fm.putFragment(savedInstanceState, BULLET_FRAG_ID, mChooseBulletDialog);
          savedInstanceState.putBoolean(SHOWING_BULLET_FRAG, mShowingChooseBulletDialog);

@@ -3,8 +3,8 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.Menu;
 
-import com.actionbarsherlock.view.Menu;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -119,7 +119,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.step_list_menu, menu);
+      getMenuInflater().inflate(R.menu.step_list_menu, menu);
 
       return super.onCreateOptionsMenu(menu);
    }

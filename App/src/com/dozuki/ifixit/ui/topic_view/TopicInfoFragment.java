@@ -27,7 +27,7 @@ import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 public class TopicInfoFragment extends BaseFragment {
 
    private static final float HEADER_SIZE = 1.3f;
-   private static final String TOPIC_KEY = "TOPIC_KEY";
+   public static final String TOPIC_KEY = "TOPIC_KEY";
 
    private TopicLeaf mTopic;
    private TextView mContent;
@@ -37,9 +37,6 @@ public class TopicInfoFragment extends BaseFragment {
     */
    public TopicInfoFragment() {}
 
-   public TopicInfoFragment(TopicLeaf topic) {
-      mTopic = topic;
-   }
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -82,7 +79,7 @@ public class TopicInfoFragment extends BaseFragment {
          }
       });
 
-      PicassoUtils.with(getSherlockActivity())
+      PicassoUtils.with(getActivity())
        .load(url)
        .error(R.drawable.no_image)
        .into(topicImage);

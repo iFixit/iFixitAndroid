@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.guide.view;
 
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FixedFragmentStatePagerAdapter;
@@ -69,7 +70,10 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
 
       if (position == GUIDE_INTRO_POSITION) {
          label += "/intro";
-         fragment = new GuideIntroViewFragment(mGuide);
+         fragment = new GuideIntroViewFragment();
+         Bundle args = new Bundle();
+         args.putSerializable(GuideIntroViewFragment.GUIDE_KEY, mGuide);
+         fragment.setArguments(args);
       } else if (position == mToolsPosition) {
          label += "/tools";
          fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getTools());
@@ -83,7 +87,12 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
          int stepNumber = (position - mStepOffset);
          label += "/" + (stepNumber + 1); // Step title # should be 1 indexed.
 
-         fragment = new GuideStepViewFragment(mGuide.getStep(stepNumber), mIsOfflineGuide);
+         Bundle args = new Bundle();
+         args.putSerializable("STEP_KEY", mGuide.getStep(stepNumber));
+         args.putBoolean("OFFLINE_KEY", mIsOfflineGuide);
+
+         fragment = new GuideStepViewFragment();
+         fragment.setArguments(args);
       }
 
       mPageLabelMap.put(position, label);
