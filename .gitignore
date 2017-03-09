@@ -42,3 +42,8 @@ proguard-project.txt
 tmp
 .*.swp
 scripts/assets/*
+
+# App Store Resources
+PlayStoreResources
+AmazonStoreResources
+captures
