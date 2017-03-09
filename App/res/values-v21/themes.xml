@@ -1,39 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-        <style name="Theme.Base" parent="Theme.AppCompat.Light.DarkActionBar">
-                <item name="doz__textColorPrimary">@color/black</item>
-                <item name="doz__textColorSecondary">@color/gray</item>
-                <item name="doz__background">@color/white</item>
-                <item name="doz__imageBorder">@color/image_border</item>
-                <item name="doz__topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
-                <item name="doz__itemSelector">@drawable/list_selector_holo_light</item>
-                <item name="doz__topicGuideList">@style/ListView</item>
-                <item name="doz__listViewStyle">@style/ListView</item>
-
-                <!-- Action Bar Logo -->
-                <item name="logo">@android:color/transparent</item>
-                <item name="android:logo">@android:color/transparent</item>
-                <item name="icon">@android:color/transparent</item>
-                <item name="android:icon">@android:color/transparent</item>
-
-                <!-- Holo Theme -->
-                <item name="dividerHorizontal">?android:listDivider</item>
-                <item name="dividerVertical">?android:listDivider</item>
-                <item name="listPreferredItemHeightSmall">48dp</item>
-                <item name="listPreferredItemPaddingLeft">8dp</item>
-                <item name="listPreferredItemPaddingRight">8dp</item>
-
-                <item name="android:colorBackground">?doz__background</item>
-                <item name="android:windowBackground">?doz__background</item>
-
-                <item name="buttonBarStyle">@style/Base.ButtonBar</item>
-                <item name="buttonBarButtonStyle">@style/Base.Button.Borderless</item>
-
-                <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
-                <item name="mdMenuBackground">@color/menu_background</item>
-
-                <item name="android:listViewStyle">@style/ListView</item>
-                <item name="android:listViewWhiteStyle">@style/ListView.White</item>
+        <style name="Theme.Base.TransparentActionBar" parent="Theme.Base">
+                <item name="colorPrimary">@android:color/transparent</item>
+                <item name="windowActionBarOverlay">true</item>
+                <item name="android:windowActionBarOverlay">true</item>
+                <item name="android:windowDrawsSystemBarBackgrounds">true</item>
+                <item name="android:statusBarColor">@android:color/transparent</item>
         </style>
 </resources>

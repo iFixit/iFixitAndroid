@@ -22,6 +22,7 @@ import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
@@ -31,7 +32,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class CommentsActivity extends BaseActivity {
+public class CommentsActivity extends BaseMenuDrawerActivity {
 
    private static final String COMMENTS_KEY = "COMMENTS_KEY";
    private static final String TITLE_KEY = "TITLE_FIELD";

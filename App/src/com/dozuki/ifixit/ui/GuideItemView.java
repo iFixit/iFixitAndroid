@@ -57,4 +57,5 @@ public class GuideItemView extends TouchableRelativeLayout {
           .into(mThumbnail);
       }
    }
+
 }

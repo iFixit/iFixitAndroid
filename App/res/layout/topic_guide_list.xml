@@ -1,10 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
 
-    <include
-        android:id="@+id/topic_guide_grid"
-        layout="@layout/guide_grid" />
+<android.support.v4.widget.NestedScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/doz__background">
+    <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-</FrameLayout>
+        <include android:id="@+id/topic_guide_grid"
+                 layout="@layout/guide_recycle_grid" />
+
+    </LinearLayout>
+</android.support.v4.widget.NestedScrollView>

@@ -39,7 +39,6 @@
                 android:textColor="@color/black"
                 android:imeOptions="actionDone"
                 style="@style/Base.FormField"
-                android:background="?doz__editTextBackground"
                 android:dropDownSelector="?doz__itemSelector"/>
 
             <TextView
@@ -63,7 +62,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 style="@style/Base.FormField"
-                android:background="?doz__editTextBackground"
                 android:imeOptions="actionDone"
                 android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences"/>
 

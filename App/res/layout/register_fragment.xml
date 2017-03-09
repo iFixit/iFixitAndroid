@@ -47,8 +47,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans"
                 android:hint="@string/email_hint"
-                android:inputType="textEmailAddress|textNoSuggestions"
-                android:background="?doz__editTextBackground">
+                android:inputType="textEmailAddress|textNoSuggestions">
 
                 <requestFocus/>
             </EditText>
@@ -60,8 +59,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans"
                 android:hint="@string/username"
-                android:inputType="textNoSuggestions"
-                android:background="?doz__editTextBackground"/>
+                android:inputType="textNoSuggestions"/>
 
             <EditText
                 android:id="@+id/edit_password"
@@ -70,8 +68,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans"
                 android:hint="@string/password"
-                android:inputType="textPassword"
-                android:background="?doz__editTextBackground"/>
+                android:inputType="textPassword"/>
 
             <EditText
                 android:id="@+id/edit_confirm_password"
@@ -80,8 +77,7 @@
                 android:layout_marginBottom="10dp"
                 android:fontFamily="sans"
                 android:hint="@string/password_confirm_hint"
-                android:inputType="textPassword"
-                android:background="?doz__editTextBackground"/>
+                android:inputType="textPassword"/>
 
             <LinearLayout
                 android:layout_width="match_parent"

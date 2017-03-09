@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui.topic;
 
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -11,15 +11,11 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
-import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
-import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
@@ -61,29 +57,6 @@ public class TopicInfoFragment extends BaseFragment {
       mContent = ((TextView) v.findViewById(R.id.topic_info_content));
       mContent.setMovementMethod(LinkMovementMethod.getInstance());
       mContent.setText(getStyledContent());
-
-      String url = mTopic.getImage().getPath(ImageSizes.topicMain);
-
-      ImageView topicImage = (ImageView) v.findViewById(R.id.topic_info_image);
-      topicImage.setTag(mTopic.getImage().getPath());
-      topicImage.setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            String url = (String) v.getTag();
-
-            if (url == null || (url.equals("") || url.startsWith("."))) {
-               return;
-            }
-
-            startActivity(FullImageViewActivity.viewImage(getActivity(), url, false));
-         }
-      });
-
-      PicassoUtils.with(getActivity())
-       .load(url)
-       .error(R.drawable.no_image)
-       .into(topicImage);
-
       return v;
    }
 

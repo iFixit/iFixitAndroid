@@ -51,11 +51,9 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      super.setDrawerContent(R.layout.search);
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-      //setMenuDrawerSlideDrawable(R.drawable.ic_back);
-
-      setContentView(R.layout.search);
 
       showLoading(R.id.search_results_container);
 

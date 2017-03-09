@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_back_to_site_list"
+                android:icon="@drawable/ic_action_list"
+                android:title="@string/back_to_site_list"
+                android:visible="false"/>
+        <item
+                android:id="@+id/nav_search"
+                android:icon="@drawable/ic_action_search"
+                android:title="@string/search" />
+        <item
+                android:id="@+id/nav_scan_barcode"
+                android:icon="@drawable/ic_action_qr_code"
+                android:title="@string/slide_menu_barcode_scanner"
+                android:visible="false" />
+    </group>
+
+    <item android:title="@string/slide_menu_browse_content">
+        <menu>
+            <item
+                    android:id="@+id/nav_browse_content"
+                    android:icon="@drawable/ic_action_list_2"
+                    android:title="@string/slide_menu_browse_devices" />
+            <item
+                    android:id="@+id/nav_parts_and_tools"
+                    android:icon="@drawable/ic_action_basket"
+                    android:title="@string/parts_and_tools"
+                    android:visible="false" />
+            <item
+                    android:id="@+id/nav_featured_guides"
+                    android:icon="@drawable/ic_action_star_10"
+                    android:title="@string/featured_guides" />
+            <item
+                    android:id="@+id/nav_teardowns"
+                    android:icon="@drawable/ic_menu_stack"
+                    android:title="@string/teardowns"
+                    android:visible="false" />
+
+        </menu>
+    </item>
+    <item  android:id="@+id/nav_social_section"
+            android:title="@string/slide_menu_ifixit_everywhere"
+          android:visible="false">
+        <menu>
+            <item
+                    android:id="@+id/nav_youtube"
+                    android:icon="@drawable/ic_action_youtube"
+                    android:title="@string/slide_menu_youtube" />
+            <item
+                    android:id="@+id/nav_facebook"
+                    android:icon="@drawable/ic_action_facebook"
+                    android:title="@string/slide_menu_facebook" />
+            <item
+                    android:id="@+id/nav_twitter"
+                    android:icon="@drawable/ic_action_twitter"
+                    android:title="@string/slide_menu_twitter" />
+        </menu>
+    </item>
+
+    <item android:id="@+id/nav_debug" android:title="@string/debug" android:visible="false"/>
+</menu>

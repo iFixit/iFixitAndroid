@@ -30,7 +30,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="2dp"
-        android:background="?doz__primaryHighlightColor"/>
+        android:background="?attr/colorPrimary"/>
 
     <FrameLayout
         android:id="@+id/search_results_container"

@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui.topic.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -8,6 +8,8 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.ui.topic.TopicListHeaderView;
+import com.dozuki.ifixit.ui.topic.TopicSelectedListener;
 import com.marczych.androidsectionheaders.Section;
 
 import java.util.ArrayList;

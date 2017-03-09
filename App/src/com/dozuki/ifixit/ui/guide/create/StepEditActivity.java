@@ -1102,8 +1102,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mSavePosition = savePosition;
       mIsStepDirty = false;
 
-      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+      //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
       showLoading(mLoadingContainer, getString(R.string.saving));
       toggleSave(mIsStepDirty);

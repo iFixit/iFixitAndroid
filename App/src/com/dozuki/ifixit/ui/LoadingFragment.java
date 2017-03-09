@@ -13,10 +13,11 @@ public class LoadingFragment extends BaseFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       Bundle args = this.getArguments();
-      String text = args.getString(TEXT_KEY);
-
-      if (text == null) {
-         text = getString(R.string.loading);
+      String text;
+      if (args != null) {
+         text = args.getString(TEXT_KEY);
+      } else {
+         text = "Loading";
       }
 
       View v = inflater.inflate(R.layout.loading_fragment, container, false);

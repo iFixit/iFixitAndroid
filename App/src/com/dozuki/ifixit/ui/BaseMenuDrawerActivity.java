@@ -4,22 +4,28 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.res.Configuration;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
-import android.widget.ListView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
@@ -28,59 +34,118 @@ import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.Position;
+import com.dozuki.ifixit.ui.topic.TopicActivity;
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
  * Base activity that displays the menu drawer.
  */
 public abstract class BaseMenuDrawerActivity extends BaseActivity
- implements AdapterView.OnItemClickListener {
+ implements AdapterView.OnItemClickListener, NavigationView.OnNavigationItemSelectedListener  {
    private static final String STATE_ACTIVE_POSITION =
     "com.dozuki.ifixit.ui.BaseMenuDrawerActivity.activePosition";
    private static final String PEEK_MENU = "PEEK_MENU_KEY";
    private static final String INTERFACE_STATE = "IFIXIT_INTERFACE_STATE";
 
-   /**
-    * Slide Out Menu Drawer
-    */
-   private MenuDrawer mMenuDrawer;
-
    private int mActivePosition = -1;
+   protected DrawerLayout mDrawer;
+   private NavigationView mDrawerList;
+   private String mTitle;
+   private String mDrawerTitle;
+   private ActionBarDrawerToggle mDrawerToggle;
 
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
+      setContentView(R.layout.base_layout);
+
+      mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+
+      mToolbar = (Toolbar) findViewById(R.id.toolbar);
+      mToolbar.setBackgroundColor(getResources().getColor(R.color.dark));
+
+      setSupportActionBar(mToolbar);
+
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
 
-      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY,
-       Position.LEFT, MenuDrawer.MENU_DRAG_CONTENT);
-      mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
-      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
-      mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
+      mTitle = (String)getTitle();
+      mDrawerTitle = (String) "Navigation";
+      mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+      mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
+
+      Site site = App.get().getSite();
+      Menu menu = mDrawerList.getMenu();
+      menu.findItem(R.id.nav_browse_content).setTitle(
+       this.getString(R.string.slide_menu_browse_devices, site.getObjectNamePlural()));
+
+      int[] ids;
+      if (site.isIfixit()) {
+         ids = new int[]{R.id.nav_parts_and_tools, R.id.nav_teardowns, R.id.nav_social_section};
+      } else if (site.isDozuki()) {
+         ids = new int[]{R.id.nav_back_to_site_list};
+      } else {
+         ids = new int[]{};
+      }
+
+      for (int id : ids) {
+         menu.findItem(id).setVisible(true);
+      }
+
+      if (site.barcodeScanningEnabled()) {
+         menu.findItem(R.id.nav_scan_barcode).setVisible(true);
+      }
+
+      if (BuildConfig.DEBUG) {
+         menu.findItem(R.id.nav_debug).setVisible(true);
+      }
+
+      mDrawerList.setNavigationItemSelectedListener(this);
+
+      mDrawerToggle = new ActionBarDrawerToggle(
+       this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+      ) {
+            /** Called when a drawer has settled in a completely closed state. */
+         public void onDrawerClosed(View view) {
+            super.onDrawerClosed(view);
+            getSupportActionBar().setTitle(mTitle);
+         }
+
+            /** Called when a drawer has settled in a completely open state. */
+         public void onDrawerOpened(View drawerView) {
+            super.onDrawerOpened(drawerView);
+         }
+      };
+
+      // Set the drawer toggle as the DrawerListener
+      mDrawer.setDrawerListener(mDrawerToggle);
+      mDrawerToggle.syncState();
+
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeButtonEnabled(true);
 
       SharedPreferences prefs = getSharedPreferences(INTERFACE_STATE, MODE_PRIVATE);
 
       if (!prefs.contains(PEEK_MENU)) {
          prefs.edit().putBoolean(PEEK_MENU, false).commit();
-         mMenuDrawer.openMenu();
+         mDrawer.openDrawer(mDrawerList);
       }
-
-      buildSliderMenu();
    }
 
    @Override
-   public void setContentView(int layoutResId) {
-      mMenuDrawer.setContentView(layoutResId);
+   protected void onPostCreate(Bundle savedInstanceState) {
+      super.onPostCreate(savedInstanceState);
+      mDrawerToggle.syncState();
+   }
+
+   @Override
+   public void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
+      mDrawerToggle.onConfigurationChanged(newConfig);
    }
 
    @Override
@@ -91,20 +156,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
    }
 
    @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            mMenuDrawer.toggleMenu();
-            return true;
-      }
-
-      return super.onOptionsItemSelected(item);
-   }
-
-   @Override
    protected void onCustomMenuTitleClick(View v) {
       // Rather than finishing the Activity and going "up", toggle the menu drawer.
-      mMenuDrawer.toggleMenu();
+      mDrawer.openDrawer(mDrawerList);
    }
 
    @Override
@@ -121,6 +175,15 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
       // Reload app to remove username and logout button from menu.
       buildSliderMenu();
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      if (mDrawerToggle.onOptionsItemSelected(item)) {
+         return true;
+      }
+
+      return super.onOptionsItemSelected(item);
    }
 
    @Override
@@ -168,7 +231,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
    private void buildSliderMenu() {
       // Add items to the menu.  The order Items are added is the order they appear in the menu.
-      List<NavigationItem> items = new ArrayList<NavigationItem>();
+      // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
+      // of the arrow indicator.
+
+     /* List<NavigationItem> items = new ArrayList<NavigationItem>();
 
       for (NavigationItem item : NavigationItem.values()) {
          if (item.shouldDisplay()) {
@@ -176,39 +242,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          }
       }
 
-      // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
-      // of the arrow indicator.
-      ListView menuList = new ListView(this);
       MenuAdapter adapter = new MenuAdapter(items);
-      menuList.setAdapter(adapter);
-      menuList.setOnItemClickListener(this);
-      menuList.setCacheColorHint(Color.TRANSPARENT);
-
-      mMenuDrawer.setMenuView(menuList);
-      mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
-      mMenuDrawer.setDrawerIndicatorEnabled(true);
-
-      mMenuDrawer.invalidate();
+      mDrawerList.setAdapter(adapter);
+      mDrawerList.setOnItemClickListener(this);
+      mDrawerList.setCacheColorHint(Color.TRANSPARENT);*/
    }
 
-   public void setMenuDrawerSlideDrawable(int drawable) {
-      mMenuDrawer.setSlideDrawable(drawable);
-   }
-
-   /**
-    * Close the menu drawer if back is pressed and the menu is open.
-    */
-   @Override
-   public void onBackPressed() {
-      final int drawerState = mMenuDrawer.getDrawerState();
-      if (drawerState == MenuDrawer.STATE_OPEN
-       || drawerState == MenuDrawer.STATE_OPENING) {
-         mMenuDrawer.closeMenu();
-         return;
-      }
-
-      super.onBackPressed();
-   }
 
    @Override
    protected void onSaveInstanceState(Bundle outState) {
@@ -493,7 +532,61 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       }
    }
 
-    @Override
+   @Override
+   public boolean onNavigationItemSelected(final MenuItem menuItem) {
+      switch(menuItem.getItemId()) {
+         case R.id.nav_search:
+            performActivityNavigation(SearchActivity.class);
+            break;
+         case R.id.nav_scan_barcode:
+            this.launchBarcodeScanner();
+            break;
+         case R.id.nav_teardowns:
+            performActivityNavigation(TeardownsActivity.class);
+            break;
+         case R.id.nav_browse_content:
+            performActivityNavigation(TopicActivity.class);
+            break;
+         case R.id.nav_parts_and_tools:
+            performUrlNavigation("https://ifixit.com/Store");
+            break;
+         case R.id.nav_featured_guides:
+            performActivityNavigation(FeaturedGuidesActivity.class);
+            break;
+         case R.id.nav_youtube:
+            performUrlNavigation("https://www.youtube.com/user/iFixitYourself");
+            break;
+         case R.id.nav_facebook:
+            performUrlNavigation("https://www.facebook.com/iFixit");
+            break;
+         case R.id.nav_twitter:
+            performUrlNavigation("https://twitter.com/iFixit");
+            break;
+
+      }
+      mDrawer.closeDrawers();
+      return true;
+   }
+
+   public void performActivityNavigation(Class<? extends BaseActivity> activityClass) {
+      Intent intent = new Intent(this, activityClass);
+      this.startActivity(intent);
+   }
+
+   public void performActivityNavigation(Class<? extends BaseActivity> activityClass, int intentFlags) {
+      Intent intent = new Intent(this, activityClass);
+      intent.setFlags(intentFlags);
+      this.startActivity(intent);
+   }
+
+   public void performUrlNavigation(String url) {
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setData(Uri.parse(url));
+      this.startActivity(intent);
+   }
+
+
+   @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
        NavigationItem item = (NavigationItem)view.getTag();
        AlertDialog navigationDialog = getNavigationAlertDialog(item);
@@ -503,11 +596,11 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
        } else {
           App.sendEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null);
 
-          mMenuDrawer.closeMenu();
 
           mActivePosition = position;
-          mMenuDrawer.setActiveView(view, position);
+          //mDrawerList.setItemChecked(position, true);
 
+          mDrawer.closeDrawer(mDrawerList);
           navigateMenuDrawer(item);
        }
     }
@@ -610,13 +703,6 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
             textView.setCompoundDrawablesWithIntrinsicBounds(item.mIcon, 0, 0, 0);
             textView.setTag(item);
          }
-
-         view.setTag(R.id.mdActiveViewPosition, position);
-
-         if (position == mActivePosition) {
-            mMenuDrawer.setActiveView(view, position);
-         }
-
          return view;
       }
    }

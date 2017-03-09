@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
         <activity
-            android:name="com.dozuki.ifixit.ui.topic_view.TopicActivity"
+            android:name="com.dozuki.ifixit.ui.topic.TopicActivity"
             android:launchMode="singleTop"/>
 
         <!-- This must be specified as com.dozuki.ifixit because changing the

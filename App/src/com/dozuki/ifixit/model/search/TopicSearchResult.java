@@ -12,7 +12,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.util.transformations.RoundedTransformation;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicViewActivity;
+import com.dozuki.ifixit.ui.topic.TopicViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 

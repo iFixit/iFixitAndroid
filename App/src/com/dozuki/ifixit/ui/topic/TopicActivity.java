@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui.topic;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -38,8 +38,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
-      setContentView(R.layout.topics);
+      super.setDrawerContent(R.layout.topics);
 
       FrameLayout topicViewContainer = (FrameLayout) findViewById(R.id.topic_view_fragment_container);
       mDualPane = topicViewContainer != null;
@@ -65,7 +64,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
       }
 
       if (mRootTopic == null) {
-         showLoading(R.id.topic_list_fragment);
+         showLoading(R.id.loading_container);
          Api.call(this, ApiCall.categories());
       }
 

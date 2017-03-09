@@ -1,9 +1,7 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui.topic;
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
+import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,19 +15,11 @@ import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.ui.guide.view.NoGuidesFragment;
-import com.dozuki.ifixit.ui.WebViewFragment;
+import com.dozuki.ifixit.ui.topic.adapters.TopicPageAdapter;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 import com.squareup.otto.Subscribe;
-import com.viewpagerindicator.TitlePageIndicator;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
    private static final int GUIDES_TAB = 0;
@@ -42,11 +32,11 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
    private Site mSite;
-   private PageAdapter mPageAdapter;
+   private TopicPageAdapter mPageAdapter;
    private ViewPager mPager;
-   private TitlePageIndicator mTitleIndicator;
 
    private int mSelectedTab = -1;
+   private TabLayout mTabs;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -64,8 +54,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       Bundle args = getArguments();
 
       mPager = (ViewPager) view.findViewById(R.id.topic_view_view_pager);
-      mTitleIndicator = (TitlePageIndicator) view.findViewById(R.id.topic_view_indicator);
-      mTitleIndicator.setOnPageChangeListener(this);
+      mTabs = (TabLayout) view.findViewById(R.id.topic_tab_layout);
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE, 0); // Default to Guide page
@@ -142,10 +131,9 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
          return;
       }
 
-      mTitleIndicator.setVisibility(View.VISIBLE);
-      mPageAdapter = new PageAdapter(getChildFragmentManager());
+      mPageAdapter = new TopicPageAdapter(getChildFragmentManager(), getActivity(), mTopicLeaf);
       mPager.setAdapter(mPageAdapter);
-      mTitleIndicator.setViewPager(mPager);
+      mTabs.setupWithViewPager(mPager);
       mPager.setOffscreenPageLimit(2);
       selectDefaultTab();
    }
@@ -174,9 +162,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       int defaultTab = noGuides ? MORE_INFO_TAB : GUIDES_TAB;
 
       mPager.setCurrentItem(defaultTab, false);
-      mTitleIndicator.setCurrentItem(defaultTab);
       mPager.invalidate();
-      mTitleIndicator.invalidate();
 
       ((BaseActivity) getActivity()).hideLoading();
    }
@@ -196,105 +182,4 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       return mTopicNode;
    }
 
-   public class PageAdapter extends FixedFragmentStatePagerAdapter {
-      private Map<Integer, String> mPageLabelMap;
-
-      public PageAdapter(FragmentManager fm) {
-         super(fm);
-
-         mPageLabelMap = new HashMap<Integer, String>();
-      }
-
-      @Override
-      public int getCount() {
-         if (mSite.mAnswers) {
-            return 3;
-         } else {
-            return 2;
-         }
-      }
-
-      @Override
-      public CharSequence getPageTitle(int position) {
-         switch (position) {
-            case GUIDES_TAB:
-               return getActivity().getString(R.string.guides);
-
-            case MORE_INFO_TAB:
-               return getActivity().getString(R.string.info);
-
-            case ANSWERS_TAB:
-               if (mSite.mAnswers) {
-                  return getActivity().getString(R.string.answers);
-               } else {
-                  return getActivity().getString(R.string.info);
-               }
-         }
-         return "";
-      }
-
-      @Override
-      public Fragment getItem(int position) {
-         String label = "/category/" + mTopicLeaf.getName();
-         Fragment selectedFragment;
-
-         switch (position) {
-            case GUIDES_TAB:
-               if (mTopicLeaf.getGuides().size() == 0) {
-                  selectedFragment = new NoGuidesFragment();
-               } else {
-                  selectedFragment = new TopicGuideListFragment();
-                  Bundle args = new Bundle();
-                  args.putSerializable(TopicGuideListFragment.TOPIC_LEAF_KEY, mTopicLeaf);
-                  selectedFragment.setArguments(args);
-               }
-               mSelectedTab = GUIDES_TAB;
-               label += "/guides";
-               break;
-            case MORE_INFO_TAB:
-               selectedFragment = new TopicInfoFragment();
-               Bundle args = new Bundle();
-               args.putSerializable(TopicInfoFragment.TOPIC_KEY, mTopicLeaf);
-               selectedFragment.setArguments(args);
-               label += "/info";
-
-               mSelectedTab = MORE_INFO_TAB;
-               break;
-            case ANSWERS_TAB:
-               WebViewFragment webView = new WebViewFragment();
-
-               label += "/answers";
-
-               webView.loadUrl(mTopicLeaf.getSolutionsUrl());
-
-               selectedFragment = webView;
-               mSelectedTab = ANSWERS_TAB;
-
-               break;
-            default:
-               return null;
-         }
-
-         mPageLabelMap.put(position, label);
-
-         return selectedFragment;
-      }
-
-      @Override
-      public void setPrimaryItem(ViewGroup container, int position, Object object) {
-         super.setPrimaryItem(container, position, object);
-         mSelectedTab = position;
-      }
-
-      public String getFragmentScreenLabel(int key) {
-         return mPageLabelMap.get(key);
-      }
-
-      @Override
-      public void destroyItem(View container, int position, Object object) {
-         super.destroyItem(container, position, object);
-
-         mPageLabelMap.remove(position);
-      }
-   }
 }

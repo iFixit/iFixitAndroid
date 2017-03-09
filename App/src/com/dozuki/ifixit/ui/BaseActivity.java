@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
@@ -7,8 +8,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.util.TypedValue;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -45,6 +49,8 @@ public abstract class BaseActivity extends AppCompatActivity {
 
 
    private static final int LOGGED_OUT_USERID = -1;
+   protected Toolbar mToolbar;
+   protected FrameLayout mContentFrame;
 
    private int mActivityid;
    private int mUserid;
@@ -162,69 +168,6 @@ public abstract class BaseActivity extends AppCompatActivity {
 
       super.onCreate(savedState);
 
-      ActionBar ab = getSupportActionBar();
-
-      if (ab != null) {
-         ab.setDisplayHomeAsUpEnabled(true);
-      }
-
-      // This doesn't work on on versions below ICS.  Don't really care if the home button pressed state is the wrong
-      // color on those devices so just ignore it.
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-         //((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
-         // .item_background_holo_light);
-      }
-
-      if (site.actionBarUsesIcon()) {
-         ab.setLogo(getResources().getIdentifier("icon", "drawable", getPackageName()));
-         ab.setDisplayUseLogoEnabled(true);
-
-         // Get the default action bar title resourceid
-         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-
-         TextView title = (TextView) findViewById(titleId);
-
-         // If we were able to get the title element, set it to multi-line and a bit smaller text size so that long
-         // site titles (i.e. Hypertherm Waterjet Mobile Assistant) and long guide titles fit nicely.
-         if (title != null) {
-            title.setSingleLine(false);
-            title.setMaxLines(2);
-            title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-         }
-
-      } else {
-         ab.setDisplayUseLogoEnabled(false);
-         ab.setDisplayShowTitleEnabled(false);
-         ab.setDisplayShowCustomEnabled(true);
-         ab.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-
-         View v = getLayoutInflater().inflate(R.layout.menu_title, null);
-
-         ImageView customLogo = (ImageView) v.findViewById(R.id.custom_logo);
-         TextView siteTitle = (TextView) v.findViewById(R.id.custom_site_title);
-         if (site.mLogo != null) {
-            PicassoUtils.with(this)
-             .load(site.mLogo.getPath(ImageSizes.logo))
-             .error(R.drawable.logo_dozuki)
-             .into(customLogo);
-            customLogo.setVisibility(View.VISIBLE);
-            siteTitle.setVisibility(View.GONE);
-         } else {
-            siteTitle.setText(site.mTitle);
-            siteTitle.setVisibility(View.VISIBLE);
-            customLogo.setVisibility(View.GONE);
-         }
-
-         v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               onCustomMenuTitleClick(v);
-            }
-         });
-
-         ab.setCustomView(v);
-      }
-
       /**
        * There is another register call in onResume but we also need it here for the onUnauthorized
        * call that is usually triggered in onCreate of derived Activities.
@@ -338,6 +281,14 @@ public abstract class BaseActivity extends AppCompatActivity {
 
       App.getBus().unregister(this);
       App.getBus().unregister(mBaseActivityListener);
+   }
+
+   public void setDrawerContent(int layoutid) {
+      LayoutInflater inflater = (LayoutInflater) this
+       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+      View v = inflater.inflate(layoutid, mContentFrame, false);
+      mContentFrame.addView(v);
    }
 
    public boolean openLoginDialogIfLoggedOut() {

@@ -1,12 +1,15 @@
 package com.dozuki.ifixit.ui;
 
+import android.app.Activity;
 import android.app.SearchManager;
+import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -27,35 +30,14 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
       getMenuInflater().inflate(R.menu.search_menu, menu);
 
       MenuItem searchItem =  menu.findItem(R.id.action_search);
-      MenuItemCompat.setOnActionExpandListener(searchItem, new MenuItemCompat.OnActionExpandListener() {
-          @Override
-          public boolean onMenuItemActionExpand(MenuItem item) {
-             //item.setHint(hint);
 
-             App.sendEvent("ui_action", "search", "action_bar_search", null);
-
-             // Returns true to expand the menu item
-             return true;
-          }
-
-          @Override
-          public boolean onMenuItemActionCollapse(MenuItem item) {
-             return true;
-          }
-       });
-
-
-      final SearchView searchView = (SearchView) searchItem.getActionView();
+      final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
       if (searchView != null) {
-
-         //applyThemeToSearchView(searchView);
-
-         SearchManager searchManager = (SearchManager) getSystemService(SEARCH_SERVICE);
+         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
          String hint = getString(R.string.search_site_hint, App.get().getSite().mTitle);
 
          searchView.setQueryHint(hint);
-
          searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
          searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
             @Override
@@ -114,20 +96,4 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
 
       return super.onPrepareOptionsMenu(menu);
    }
-
-   /**
-    * SearchView's AutoCompleteTextView and other elements are not styleable via XML,
-    * so we have to find the view by its ID and apply the style programmatically.
-    *
-    * Changes the color of the underline of the search edit text field.
-    * @param searchView
-    */
-   /*private void applyThemeToSearchView(SearchView searchView) {
-      View searchPlate = searchView.findViewById(R.id.abs__search_src_text);
-      searchView.findViewById(R.id.abs__search_plate).setBackgroundColor(Color.TRANSPARENT);
-      TypedValue typedValue = new TypedValue();
-      getTheme().resolveAttribute(R.attr.doz__editTextBackground, typedValue, true);
-
-      searchPlate.setBackgroundResource(typedValue.resourceId);
-   }*/
 }

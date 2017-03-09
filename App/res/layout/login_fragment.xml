@@ -57,8 +57,7 @@
                     android:layout_marginBottom="10dp"
                     android:fontFamily="sans"
                     android:hint="@string/login_email_hint"
-                    android:inputType="textEmailAddress|textNoSuggestions"
-                    android:background="?doz__editTextBackground">
+                    android:inputType="textEmailAddress|textNoSuggestions">
 
                     <requestFocus/>
                 </EditText>
@@ -70,8 +69,7 @@
                     android:layout_marginBottom="10dp"
                     android:fontFamily="sans"
                     android:hint="@string/login_password_hint"
-                    android:inputType="textPassword"
-                    android:background="?doz__editTextBackground"/>
+                    android:inputType="textPassword"/>
 
                 <LinearLayout
                     android:layout_width="match_parent"

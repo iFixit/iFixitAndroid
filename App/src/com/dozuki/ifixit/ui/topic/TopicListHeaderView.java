@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui.topic;
 
 import android.content.Context;
 import android.view.LayoutInflater;

@@ -6,7 +6,6 @@ Taken from @Lars from Stack Overflow - thanks!
 <resources>
 
     <color name="transparent">#00000000</color>
-
     <color name="menu_background">#FF555555</color>
     <color name="white">#FFFFFFFF</color>
     <color name="gray">#FFDDDDDD</color>
@@ -59,4 +58,5 @@ Taken from @Lars from Stack Overflow - thanks!
     <color name="dozuki_grey">#F7777777</color>
 
     <color name="holo_blue_dark">#FF0099cc</color>
+    <color name="black_alpha_40">#66000000</color>
 </resources>

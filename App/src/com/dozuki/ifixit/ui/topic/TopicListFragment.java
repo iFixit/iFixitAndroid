@@ -1,4 +1,4 @@
-package com.dozuki.ifixit.ui.topic_view;
+package com.dozuki.ifixit.ui.topic;
 
 import android.app.Activity;
 import android.content.Context;
@@ -14,9 +14,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
+import com.dozuki.ifixit.ui.topic.adapters.TopicListAdapter;
 import com.marczych.androidsectionheaders.SectionHeadersAdapter;
 import com.marczych.androidsectionheaders.SectionListView;
 
