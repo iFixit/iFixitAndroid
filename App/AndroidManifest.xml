@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-          package="com.dozuki.ifixit">
+          xmlns:tools="http://schemas.android.com/tools"
+          package="com.dozuki.ifixit"
+          tools:node="merge">
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -75,7 +77,13 @@
             android:windowSoftInputMode="adjustResize|stateHidden"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.auth.OpenIDActivity"/>
-        <activity android:name=".ui.topic_view.TopicViewActivity"/>
+        <activity android:name=".ui.topic.TopicViewActivity"
+                  android:parentActivityName=".ui.topic.TopicActivity">
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.topic.TopicActivity" />
+        </activity>
         <activity
             android:name=".ui.guide.view.FullImageViewActivity"
             android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
