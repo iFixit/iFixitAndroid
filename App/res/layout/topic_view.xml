@@ -31,6 +31,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
                     android:background="@color/background_material_light"
+                    android:foreground="@drawable/topic_image_gradient"
                     android:minHeight="250dp"
                     android:scaleType="centerCrop"
                     app:layout_collapseMode="parallax" />
@@ -50,7 +51,8 @@
                 android:id="@+id/tabLayout"
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
-                android:background="?attr/colorPrimary" />
+                android:background="@color/white"
+                app:tabIndicatorColor="?attr/colorAccent"/>
 
     </android.support.design.widget.AppBarLayout>
 
