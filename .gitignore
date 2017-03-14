@@ -47,3 +47,7 @@ scripts/assets/*
 PlayStoreResources
 AmazonStoreResources
 captures
+
+# hide certs from git
+*.crt
+certs/
