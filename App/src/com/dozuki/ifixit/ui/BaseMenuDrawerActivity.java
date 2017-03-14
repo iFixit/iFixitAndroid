@@ -264,8 +264,6 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          mMenu.findItem(R.id.nav_logout).setVisible(true);
       } else {
          header = getLayoutInflater().inflate(R.layout.navigation_header, null);
-         AppCompatTextView titleView = (AppCompatTextView)header.findViewById(R.id.navigation_site_name);
-         titleView.setText(app.getSite().mName);
       }
 
       if (mDrawerList.getHeaderCount() > 0) {
