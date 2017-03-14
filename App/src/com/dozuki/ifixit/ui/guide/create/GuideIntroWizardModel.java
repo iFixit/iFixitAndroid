@@ -6,10 +6,17 @@ package com.dozuki.ifixit.ui.guide.create;
  */
 
 import android.content.Context;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
-import com.dozuki.ifixit.model.guide.wizard.*;
+import com.dozuki.ifixit.model.guide.wizard.AbstractWizardModel;
+import com.dozuki.ifixit.model.guide.wizard.BranchPage;
+import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
+import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.PageList;
+import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 
 import java.util.ArrayList;
 

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
 
 public class TopicListHeaderView extends LinearLayout {

@@ -1,9 +1,11 @@
 package com.dozuki.ifixit.util.api;
 
 import android.util.Log;
+
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.util.JSONHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 

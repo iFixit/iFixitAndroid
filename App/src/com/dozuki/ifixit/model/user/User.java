@@ -135,4 +135,8 @@ public class User implements Serializable {
    public void setAuthToken(String mAuthToken) {
       this.mAuthToken = mAuthToken;
    }
+
+   public String getEmail() {
+      return mEmail;
+   }
 }

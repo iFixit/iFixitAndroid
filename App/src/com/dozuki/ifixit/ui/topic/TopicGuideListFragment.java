@@ -1,32 +1,24 @@
 package com.dozuki.ifixit.ui.topic;
 
-import android.content.Context;
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemClickListener;
-import android.widget.GridView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.EndlessRecyclerViewScrollListener;
-import com.dozuki.ifixit.ui.GuideListAdapter;
 import com.dozuki.ifixit.ui.GuideListRecyclerAdapter;
-import com.dozuki.ifixit.ui.guide.view.GuideListActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
-import com.dozuki.ifixit.util.api.Api;
 
 import java.util.ArrayList;
 
-public class TopicGuideListFragment extends BaseFragment implements GuideListRecyclerAdapter.ItemClickListener {
+public class TopicGuideListFragment extends BaseFragment {
 
    private static final int LIMIT = 20;
    private static final int OFFSET = 0;
@@ -65,8 +57,7 @@ public class TopicGuideListFragment extends BaseFragment implements GuideListRec
 
       mRecycleView.setLayoutManager(mLayoutManager);
 
-      mRecycleAdapter = new GuideListRecyclerAdapter(mTopicLeaf.getGuides(), false);
-      mRecycleAdapter.setClickListener(this);
+      mRecycleAdapter = new GuideListRecyclerAdapter(getContext(), mTopicLeaf.getGuides(), false);
 
       mRecycleView.setAdapter(mRecycleAdapter);
 
@@ -78,13 +69,5 @@ public class TopicGuideListFragment extends BaseFragment implements GuideListRec
       super.onSaveInstanceState(state);
 
       state.putSerializable(SAVED_TOPIC, mTopicLeaf);
-   }
-
-   @Override
-   public void onItemClick(View view, int position) {
-      GuideInfo guide = mTopicLeaf.getGuides().get(position);
-      Intent intent = new Intent(getContext(), GuideViewActivity.class);
-      intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
-      startActivity(intent);
    }
 }

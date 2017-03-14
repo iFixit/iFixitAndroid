@@ -19,14 +19,17 @@ import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.util.FileCache;
 import com.dozuki.ifixit.util.JSONHelper;
-import com.github.kevinsawicki.http.HttpRequest;
-import com.github.kevinsawicki.http.HttpRequest.HttpRequestException;
 import com.squareup.otto.DeadEvent;
 import com.squareup.otto.Subscribe;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 
 /**
  * Class that performs asynchronous API calls and posts the results to the
@@ -87,16 +90,14 @@ public class Api {
       if (requireAuthentication(endpoint) && !App.get().isUserLoggedIn()) {
          App.getBus().post(getUnauthorizedEvent(apiCall));
       } else {
-         performRequest(apiCall, new Responder() {
-            public void setResult(ApiEvent<?> result) {
-               if (apiCall.mEndpoint.mPostResults) {
-                  /**
-                   * Always post the result despite any errors. This actually sends it off
-                   * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
-                   * was initiated by that Activity instance.
-                   */
-                  App.getBus().post(new ApiEvent.ActivityProxy(result));
-               }
+         performRequest(apiCall, result -> {
+            if (apiCall.mEndpoint.mPostResults) {
+               /**
+                * Always post the result despite any errors. This actually sends it off
+                * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
+                * was initiated by that Activity instance.
+                */
+               App.getBus().post(new ApiEvent.ActivityProxy(result));
             }
          });
       }
@@ -342,14 +343,14 @@ public class Api {
          }
 
          return response;
-      } catch (HttpRequestException e) {
+      } catch (IOException e) {
          Log.e(TAG, "API error", e);
 
          return event.setError(new ApiError(ApiError.Type.PARSE));
       }
    }
 
-   private static ApiEvent<?> getResponse(String url, ApiEvent<?> event, ApiCall apiCall) {
+   private static ApiEvent<?> getResponse(String url, ApiEvent<?> event, ApiCall apiCall) throws IOException {
       long startTime = System.currentTimeMillis();
 
       if (!App.get().isConnected()) {
@@ -367,96 +368,76 @@ public class Api {
          return event.setError(new ApiError(ApiError.Type.CONNECTION));
       }
 
-      /**
-       * Unfortunately we must split the creation of the HttpRequest
-       * object and the appropriate actions to take for a GET vs. a POST
-       * request. The request headers and trustAllCerts calls must be
-       * made before any data is sent. However, we must have an HttpRequest
-       * object already.
-       */
-      HttpRequest request;
+      OkHttpClient client = App.getClient();
 
-      if (apiCall.mEndpoint.mMethod.equals("GET")) {
-         request = HttpRequest.get(url);
-      } else {
-         /**
-          * For all methods other than get we actually perform a POST but send
-          * a header indicating the actual request we are performing. This is
-          * because http-request's underlying HTTPRequest library doesn't
-          * support PATCH requests.
-          */
-         request = HttpRequest.post(url);
-         request.header("X-HTTP-Method-Override", apiCall.mEndpoint.mMethod);
-      }
+      Request.Builder requestBuilder = new Request.Builder()
+        .url(url)
+        .method(apiCall.mEndpoint.mMethod, apiCall.mRequestBody)
+        .header("User-Agent", App.get().getUserAgent())
+        .addHeader("X-App-Id", BuildConfig.APP_ID);
 
-      /**
-       * Send along the auth token if we have one.
+      /*
+        Send along the auth token if we have one.
        */
       if (apiCall.mAuthToken != null) {
-         request.header("Authorization", "api " + apiCall.mAuthToken);
+         requestBuilder.addHeader("Authorization", "api " + apiCall.mAuthToken);
       }
 
-      request.userAgent(App.get().getUserAgent());
-      request.header("X-App-Id", BuildConfig.APP_ID);
-      request.followRedirects(false);
+      Request request = requestBuilder.build();
 
-      /**
-       * Continue with constructing the request body.
-       */
-      if (apiCall.mFilePath != null) {
-         // POST the file if present.
-         request.send(new File(apiCall.mFilePath));
-      } else if (apiCall.mRequestBody != null) {
-         request.send(apiCall.mRequestBody);
-      }
+      try {
+         Response response = client.newCall(request).execute();
+         ResponseBody body = response.body();
+         String bodyString = body.string();
+         int code = response.code();
 
-      /**
-       * The order is important here. If the code() is called first an IOException
-       * is thrown in some cases (invalid login for one, maybe more).
-       */
-      String responseBody = request.body();
-      int code = request.code();
+         if (App.inDebug()) {
+            long endTime = System.currentTimeMillis();
 
-      if (App.inDebug()) {
-         long endTime = System.currentTimeMillis();
-
-         Log.d(TAG, "Response code: " + code);
-         Log.d(TAG, "Response body: " + responseBody);
-         Log.d(TAG, "Request time: " + (endTime - startTime) + "ms");
-      }
-
-      /**
-       * If the server responds with a 401, the user is logged out even though we
-       * think that they are logged in. Return an Unauthorized event to prompt the
-       * user to log in. Don't do this if we are logging in because the login dialog
-       * will automatically handle these errors.
-       */
-      if (code == INVALID_LOGIN_CODE && !App.get().isLoggingIn()) {
-         String newAuthToken = null;
-
-         // If mAuthToken is null that means that this is resulting from reauthenticating
-         // in which case the user's password has expired. Fall through to presenting
-         // a login dialog so the user can reenter credentials. Upon success, the account
-         // will be updated. If the user doesn't sign in then it will eventually be
-         // removed.
-         if (apiCall.mAuthToken != null) {
-            newAuthToken = attemptReauthentication(apiCall);
+            Log.d(TAG, "Response code: " + code);
+            Log.d(TAG, "Response body: " + bodyString);
+            Log.d(TAG, "Request time: " + (endTime - startTime) + "ms");
+            Log.d(TAG, "Response full: " + response.toString());
          }
 
-         if (newAuthToken != null) {
-            // Try again with the new auth token.
-            apiCall.mAuthToken = newAuthToken;
-            return getResponse(url, event, apiCall);
+         /*
+          * If the server responds with a 401, the user is logged out even though we
+          * think that they are logged in. Return an Unauthorized event to prompt the
+          * user to log in. Don't do this if we are logging in because the login dialog
+          * will automatically handle these errors.
+          */
+         if (code == INVALID_LOGIN_CODE && !App.get().isLoggingIn()) {
+            String newAuthToken = null;
+
+            // If mAuthToken is null that means that this is resulting from reauthenticating
+            // in which case the user's password has expired. Fall through to presenting
+            // a login dialog so the user can reenter credentials. Upon success, the account
+            // will be updated. If the user doesn't sign in then it will eventually be
+            // removed.
+            if (apiCall.mAuthToken != null) {
+               newAuthToken = attemptReauthentication(apiCall);
+            }
+
+            if (newAuthToken != null) {
+               // Try again with the new auth token.
+               apiCall.mAuthToken = newAuthToken;
+               return getResponse(url, event, apiCall);
+            } else {
+               return getUnauthorizedEvent(apiCall);
+            }
          } else {
-            return getUnauthorizedEvent(apiCall);
+            return event
+             .setCode(code)
+             .setResponse(bodyString);
          }
-      } else {
-         return event.setCode(code).setResponse(responseBody);
+      } catch (IOException e) {
+         e.printStackTrace();
+         throw new IOException("Unexpected code");
       }
    }
 
    /**
-    * Attempts to reauthenticate the user with the stored credentials. Returns
+    * Attempts to re-authenticate the user with the stored credentials. Returns
     * a fresh authToken if successful, null otherwise.
     */
    private static String attemptReauthentication(ApiCall attemptedApiCall) {

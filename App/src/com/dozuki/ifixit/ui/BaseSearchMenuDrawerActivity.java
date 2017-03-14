@@ -1,29 +1,20 @@
 package com.dozuki.ifixit.ui;
 
-import android.app.Activity;
 import android.app.SearchManager;
 import android.content.Context;
 import android.database.Cursor;
-import android.graphics.Color;
-import android.support.v4.view.MenuCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.CursorAdapter;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
-import android.util.TypedValue;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.util.CheatSheet;
-import com.google.analytics.tracking.android.MapBuilder;
 
 public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
+
+   private static final int MENU_BARCODE = Menu.FIRST + 1;
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
@@ -59,20 +50,23 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
 
       // Trigger onOptionsItemSelected for the custom menu item because it doesn't
       // happen automatically.
-      final MenuItem barcodeItem = menu.findItem(R.id.action_scan_barcode);
+    /*  final MenuItem barcodeItem = menu.findItem(R.id.action_scan_barcode);
 
-      TextView barcodeView = (TextView)barcodeItem.getActionView();
+      if (barcodeItem != null) {
+         TextView barcodeView = (TextView)barcodeItem.getActionView();
 
-      if (barcodeView != null) {
-         barcodeView.setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-               onOptionsItemSelected(barcodeItem);
-            }
-         });
+         if (barcodeView != null) {
+            barcodeView.setOnClickListener(new OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                  onOptionsItemSelected(barcodeItem);
+               }
+            });
 
-         CheatSheet.setup(barcodeView, R.string.slide_menu_barcode_scanner);
-      }
+            CheatSheet.setup(barcodeView, R.string.slide_menu_barcode_scanner);
+         }
+
+      }*/
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -80,7 +74,7 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
       switch (item.getItemId()) {
-         case R.id.action_scan_barcode:
+         case MENU_BARCODE:
             launchBarcodeScanner();
             return true;
          default:
@@ -91,8 +85,11 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
    @Override
    public boolean onPrepareOptionsMenu(Menu menu) {
       // Only display barcode scanner menu item if it's enabled.
-      menu.findItem(R.id.action_scan_barcode).setVisible(
-       App.get().getSite().barcodeScanningEnabled());
+      if (App.get().getSite().barcodeScanningEnabled()) {
+         menu
+          .add(0, MENU_BARCODE, Menu.NONE, R.string.slide_menu_barcode_scanner_short)
+          .setIcon(R.drawable.ic_action_qr_code);
+      }
 
       return super.onPrepareOptionsMenu(menu);
    }

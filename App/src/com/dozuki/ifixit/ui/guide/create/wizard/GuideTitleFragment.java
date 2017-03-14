@@ -11,7 +11,11 @@ import android.widget.EditText;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.wizard.*;
+import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.model.guide.wizard.GuideTitlePage;
+import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.SingleFixedChoicePage;
+import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 
 public class GuideTitleFragment extends EditTextFragment {

@@ -27,7 +27,7 @@
             android:id="@+id/new_guide_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            style="@style/Base.Button.Colored"
+            android:theme="@style/Base.Button"
             android:text="@string/create_new_guide"
             android:layout_marginTop="20dp"
             android:layout_centerHorizontal="true"

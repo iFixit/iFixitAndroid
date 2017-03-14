@@ -12,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
@@ -237,8 +238,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
 
       boolean favorited = mGuide != null && mGuide.isFavorited();
-      favoriteGuide.setIcon(favorited ? R.drawable.ic_action_favorite_filled :
-       R.drawable.ic_action_favorite_empty);
+      favoriteGuide.setIcon(favorited ?
+       R.drawable.ic_favorite_red_24dp :
+       R.drawable.ic_favorite_border_white_24dp);
       favoriteGuide.setEnabled(!mFavoriting && mGuide != null);
       favoriteGuide.setTitle(favorited ? R.string.unfavorite_guide : R.string.favorite_guide);
 
@@ -445,9 +447,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mGuide = guide;
 
       App.sendScreenView("/guide/view/" + mGuide.getGuideid());
-
-      String guideTitle = mGuide.getTitle();
-      setTitle(guideTitle);
+      getSupportActionBar().setTitle(mGuide.getTitle());
 
       mAdapter = new GuideViewAdapter(getSupportFragmentManager(), mGuide,
        mIsOfflineGuide);

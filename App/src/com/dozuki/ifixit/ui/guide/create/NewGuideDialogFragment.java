@@ -1,27 +1,27 @@
 package com.dozuki.ifixit.ui.guide.create;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.v7.widget.AppCompatAutoCompleteTextView;
+import android.support.v7.widget.AppCompatSpinner;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
-import android.widget.Spinner;
-import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.ui.BaseDialogFragment;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
-import com.dozuki.ifixit.ui.BaseDialogFragment;
 
 import java.util.ArrayList;
 import java.util.regex.Pattern;
@@ -31,15 +31,16 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
 
    private static final String GUIDE_KEY = "GUIDE_KEY";
    private static final String TOPIC_LIST_KEY = "TOPIC_LIST_KEY";
+   private static String mTopicName;
    private Guide mGuide;
-   private Spinner mType;
-   private EditText mSubject;
-   private AutoCompleteTextView mTopic;
-   private TextView mSubjectLabel;
+   private AppCompatSpinner mType;
+   private TextInputEditText mSubject;
+   private AppCompatAutoCompleteTextView mTopic;
    private ArrayList<String> mTopics;
    private ArrayAdapter<String> mAdapter;
 
    public static NewGuideDialogFragment newInstance(Guide guide) {
+      mTopicName = App.get().getTopicName();
       NewGuideDialogFragment frag = new NewGuideDialogFragment();
 
       Bundle bundle = new Bundle();
@@ -52,26 +53,58 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
    }
 
    @Override
-   public void onCreate(Bundle savedInstanceState) {
-      super.onCreate(savedInstanceState);
-
+   public Dialog onCreateDialog(Bundle savedInstanceState) {
       if (savedInstanceState != null) {
          mGuide = (Guide) savedInstanceState.getSerializable(GUIDE_KEY);
          mTopics = (ArrayList<String>) savedInstanceState.getSerializable(TOPIC_LIST_KEY);
       } else {
          mGuide = (Guide) getArguments().getSerializable(GUIDE_KEY);
       }
-   }
 
-   @Override
-   public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
-      getDialog().setTitle(getString(R.string.new_guide_details_title));
-      View v = inflater.inflate(R.layout.new_guide_fragment_dialog, container, false);
-      final String topicName = App.get().getTopicName();
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity(), R.style.Base_Dialog_Alert)
+       .setTitle(getResources().getString(R.string.new_guide_details_title))
+       .setPositiveButton(getResources().getString(R.string.done), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int whichButton) {
+             boolean error = false;
+             String type = (String) mType.getItemAtPosition(mType.getSelectedItemPosition());
+             Editable topic = mTopic.getText();
 
-      mTopic = (AutoCompleteTextView) v.findViewById(R.id.topic_name_field);
-      mTopic.setHint(getString(R.string.guide_intro_wizard_guide_topic_hint, topicName));
+             if (App.get().getSite().hasSubject(type)) {
+                Editable subject = mSubject.getText();
+
+                if (subject.length() == 0) {
+                   error = true;
+                   mSubject.setError(getString(R.string.guide_subject_required_error));
+                } else {
+                   mGuide.setSubject(subject.toString());
+                }
+             }
+
+             if (topic.length() == 0) {
+                error = true;
+                mTopic.setError(getString(R.string.topic_name_required_error, mTopicName));
+             }
+
+             if (!error) {
+                mGuide.setType(type);
+                mGuide.setTopic(topic.toString());
+
+                App.getBus().post(new GuideDetailsChangedEvent(mGuide));
+                getDialog().dismiss();
+             }
+          }
+       })
+       .setNegativeButton(getResources().getString(R.string.cancel), new DialogInterface.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+             dialog.dismiss();
+          }
+       });
+
+
+       View v = getActivity().getLayoutInflater().inflate(R.layout.new_guide_fragment_dialog, null);
+      mTopic = (AppCompatAutoCompleteTextView) v.findViewById(R.id.topic_name_field);
+      mTopic.setHint(getString(R.string.guide_intro_wizard_guide_topic_title, mTopicName));
       mTopic.addTextChangedListener(new TextWatcher() {
          @Override
          public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
@@ -98,16 +131,15 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
          Api.call(getActivity(), ApiCall.allTopics());
       }
 
-      mSubject = (EditText) v.findViewById(R.id.subject_field);
-      mSubject.setHint(getString(R.string.guide_intro_wizard_guide_subject_hint));
+      mSubject = (TextInputEditText) v.findViewById(R.id.subject_field);
+
       String subject = mGuide.getSubject();
 
       if (subject != null && subject.length() != 0) {
          mSubject.setText(subject);
       }
 
-      mSubjectLabel = (TextView) v.findViewById(R.id.subject_label);
-      mType = (Spinner) v.findViewById(R.id.guide_types_spinner);
+      mType = (AppCompatSpinner) v.findViewById(R.id.guide_types_spinner);
 
       // Create an ArrayAdapter using the string array and a default spinner layout
       ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item,
@@ -134,7 +166,6 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
             }
 
             mSubject.setVisibility(visibility);
-            mSubjectLabel.setVisibility(visibility);
          }
 
          @Override
@@ -148,45 +179,10 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
          mType.setSelection(adapter.getPosition(type));
       }
 
-      ((TextView) v.findViewById(R.id.topic_name_label)).setText(
-       getString(R.string.guide_intro_wizard_guide_topic_title, topicName));
+      builder.setView(v);
 
-      v.findViewById(R.id.save).setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            boolean error = false;
-            String type = (String) mType.getItemAtPosition(mType.getSelectedItemPosition());
-            Editable topic = mTopic.getText();
-
-            if (App.get().getSite().hasSubject(type)) {
-               Editable subject = mSubject.getText();
-
-               if (subject.length() == 0) {
-                  error = true;
-                  mSubject.setError(getString(R.string.guide_subject_required_error));
-               } else {
-                  mGuide.setSubject(subject.toString());
-               }
-            }
-
-            if (topic.length() == 0) {
-               error = true;
-               mTopic.setError(getString(R.string.topic_name_required_error, topicName));
-            }
-
-            if (!error) {
-               mGuide.setType(type);
-               mGuide.setTopic(topic.toString());
-
-               App.getBus().post(new GuideDetailsChangedEvent(mGuide));
-               getDialog().dismiss();
-            }
-         }
-      });
-
-      return v;
+       return builder.create();
    }
-
 
    @Override
    public void onSaveInstanceState(Bundle outState) {

@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
 
 public class LoadingFragment extends BaseFragment {

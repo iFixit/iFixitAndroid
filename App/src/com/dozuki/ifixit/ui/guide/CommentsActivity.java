@@ -16,12 +16,12 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
-import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
@@ -128,7 +128,7 @@ public class CommentsActivity extends BaseMenuDrawerActivity {
       });
 
       mCommentsList = (ListView) findViewById(R.id.comment_list);
-      mCommentsList.setEmptyView(findViewById(android.R.id.empty));
+      mCommentsList.setEmptyView(findViewById(R.id.comment_empty_text));
 
       mAdapter = new CommentsAdapter(this, mComments);
       mCommentsList.setAdapter(mAdapter);

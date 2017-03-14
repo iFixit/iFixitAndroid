@@ -13,6 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
@@ -20,12 +21,9 @@ import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
-import com.google.analytics.tracking.android.Tracker;
 import com.mobeta.android.dslv.DragSortController;
 import com.mobeta.android.dslv.DragSortListView;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -209,7 +207,7 @@ public class StepReorderFragment extends BaseFragment {
          }
 
          if (step.hasVideo()) {
-            PicassoUtils.with(getActivity())
+            Picasso.with(getActivity())
              .load(step.getVideo().getThumbnail().getPath(ImageSizes.stepThumb))
              .error(R.drawable.no_image)
              .into(holder.mImageView);
@@ -227,7 +225,7 @@ public class StepReorderFragment extends BaseFragment {
    private void setImageThumb(ArrayList<Image> imageList, ImageView image) {
       String url = "";
       if (imageList.size() == 0) {
-         PicassoUtils
+         Picasso
           .with(getActivity())
           .load(R.drawable.no_image)
           .noFade()
@@ -241,7 +239,7 @@ public class StepReorderFragment extends BaseFragment {
             }
          }
 
-         PicassoUtils.with(getActivity())
+         Picasso.with(getActivity())
           .load(url)
           .error(R.drawable.no_image)
           .into(image);

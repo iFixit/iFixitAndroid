@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui.guide.create;
 
 import android.content.Context;
 import android.util.AttributeSet;
+
 import com.viewpagerindicator.TitlePageIndicator;
 
 public class LockableTitlePageIndicator extends TitlePageIndicator {

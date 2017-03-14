@@ -279,7 +279,9 @@
   <string name="failed_edit_comment">Falha na edição do comentário. Tente novamente.</string>
   <string name="debug">Depurar</string>
   <string name="view_comments">Visualizar comentários</string>
-  <string-array name="new_image_actions">
+    <string name="media_manager_title">Media Manager</string>
+    <string name="media_storage_exception_toast_message">We\'re having problems accessing your storage, try again.</string>
+    <string-array name="new_image_actions">
     <item>Câmera</item>
     <item>Gerenciador de mídia</item>
   </string-array>

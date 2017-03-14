@@ -40,7 +40,7 @@
                 android:layout_marginBottom="5dp"
                 android:visibility="gone"/>
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_login_id"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -50,9 +50,9 @@
                 android:inputType="textEmailAddress|textNoSuggestions">
 
                 <requestFocus/>
-            </EditText>
+            </android.support.v7.widget.AppCompatEditText>
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_login_username"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -61,7 +61,7 @@
                 android:hint="@string/username"
                 android:inputType="textNoSuggestions"/>
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -70,7 +70,7 @@
                 android:hint="@string/password"
                 android:inputType="textPassword"/>
 
-            <EditText
+            <android.support.v7.widget.AppCompatEditText
                 android:id="@+id/edit_confirm_password"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -85,11 +85,10 @@
                 android:layout_marginBottom="20dp"
                 android:orientation="horizontal">
 
-                <CheckBox
+                <android.support.v7.widget.AppCompatCheckBox
                     android:id="@+id/login_agreement_terms_checkbox"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:button="?doz__checkboxBackground"/>
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/login_agreement_terms_textview"
@@ -105,7 +104,7 @@
                 android:layout_height="wrap_content"
                 android:weightSum="2">
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/cancel_register_button"
                     android:layout_width="0px"
                     android:layout_height="wrap_content"
@@ -113,7 +112,7 @@
                     android:contentDescription="@string/cancel_register_description"
                     android:text="@string/cancel_register_button"/>
 
-                <Button
+                <android.support.v7.widget.AppCompatButton
                     android:id="@+id/register_button"
                     android:layout_width="0px"
                     android:layout_height="wrap_content"

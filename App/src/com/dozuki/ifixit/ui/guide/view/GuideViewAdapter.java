@@ -1,10 +1,11 @@
 package com.dozuki.ifixit.ui.guide.view;
 
 import android.os.Bundle;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.view.View;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;

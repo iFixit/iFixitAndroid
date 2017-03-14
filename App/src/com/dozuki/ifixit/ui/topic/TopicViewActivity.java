@@ -4,9 +4,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
+import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
@@ -27,7 +28,6 @@ import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.topic.adapters.TopicPageAdapter;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
@@ -40,6 +40,7 @@ public class TopicViewActivity extends BaseActivity {
    private static final String TOPIC_VIEW_TAG = "TOPIC_VIEW_TAG";
 
    private TopicViewFragment mTopicView;
+   private AppBarLayout mAppBar;
    private TopicNode mTopicNode;
    private TopicLeaf mTopic;
    private ImageView mBackdropView;
@@ -64,10 +65,24 @@ public class TopicViewActivity extends BaseActivity {
 
       mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
 
+      mAppBar = (AppBarLayout) findViewById(R.id.appbar);
       mToolbar = (Toolbar) findViewById(R.id.toolbar);
+      mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
+
       mToolbar.setTitleTextColor(getResources().getColor(R.color.white));
 
       setSupportActionBar(mToolbar);
+
+      mAppBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
+         // Appbar is collapsed
+         if (verticalOffset == -mCollapsingToolbar.getHeight() + mToolbar.getHeight()) {
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+         } else {
+            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
+            getSupportActionBar().setHomeAsUpIndicator(upArrow);
+         }
+      });
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
@@ -83,23 +98,22 @@ public class TopicViewActivity extends BaseActivity {
 
       if (mTopicNode != null) {
          String topicName = mTopicNode.getDisplayName();
-         mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
          mCollapsingToolbar.setTitle(topicName);
          mCollapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
          App.sendScreenView("/category/" + mTopicNode.getName());
-
          Api.call(this, ApiCall.topic(topicName));
       }
    }
 
    private void loadTopicImage() {
       String url = mTopic.getImage().getPath(ImageSizes.topicMain);
-      PicassoUtils.with(this)
+      Picasso
+       .with(this)
        .load(url)
        .error(R.drawable.no_image)
        .into(new Target() {
           @Override
-          public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom from) {
+          public void onBitmapLoaded(Bitmap bitmap, com.squareup.picasso.Picasso.LoadedFrom from) {
              assert mBackdropView != null;
              mBackdropView.setImageBitmap(bitmap);
 

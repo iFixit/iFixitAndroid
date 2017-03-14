@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui.topic;
 
 import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -137,24 +138,40 @@ public class TopicListFragment extends BaseFragment
    }
 
    @Override
+   public void onAttach(Context context) {
+      super.onAttach(context);
+
+      try {
+         topicSelectedListener = (TopicSelectedListener)context;
+         mContext = context;
+      } catch (ClassCastException e) {
+         throw new ClassCastException(context.toString() + " must implement TopicSelectedListener");
+      }
+   }
+
+   @SuppressWarnings("deprecation")
+   @Override
    public void onAttach(Activity activity) {
       super.onAttach(activity);
 
-      try {
-         topicSelectedListener = (TopicSelectedListener)activity;
-         mContext = activity;
-      } catch (ClassCastException e) {
-         throw new ClassCastException(activity.toString() +
-          " must implement TopicSelectedListener");
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+         try {
+            topicSelectedListener = (TopicSelectedListener)activity;
+            mContext = activity;
+         } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString() + " must implement TopicSelectedListener");
+         }
       }
    }
 
    private void setTopic(TopicNode topic) {
       mTopic = topic;
 
-      ((BaseActivity)getActivity()).setTitle(mTopic.getName().equals("ROOT") ?
+      String pageTitle = mTopic.getName().equals("ROOT") ?
        App.get().getSite().mTitle :
-       mTopic.getDisplayName());
+       mTopic.getDisplayName();
+
+      ((BaseActivity)getActivity()).getSupportActionBar().setTitle(pageTitle);
 
       setupTopicAdapter();
       mListView.setAdapter(mTopicAdapter);

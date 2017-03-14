@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;

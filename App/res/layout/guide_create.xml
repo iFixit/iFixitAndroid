@@ -1,30 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout
+        android:id="@+id/guide_create_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+    <RelativeLayout
+            android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/doz__background">
+        <android.support.v4.widget.SwipeRefreshLayout
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/swipe_container"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="?attr/doz__background">
+                android:layout_height="match_parent">
 
-    <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/guide_create_listview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_margin="4dp"
-        android:dividerHeight="4dp"
-        android:divider="@color/transparent"/>
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/guide_create_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"/>
+        </android.support.v4.widget.SwipeRefreshLayout>
 
-    <TextView
-        android:id="@+id/no_guides_text"
-        style="@style/BodyText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/no_guides_text"
-        android:visibility="gone"/>
+        <TextView
+            android:id="@+id/no_guides_text"
+            style="@style/BodyText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/no_guides_text"
+            android:visibility="gone"/>
 
-    <FrameLayout
-        android:id="@+id/loading_container"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
-</RelativeLayout>
+        <FrameLayout
+            android:id="@+id/loading_container"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+    </RelativeLayout>
+
+    <android.support.design.widget.FloatingActionButton
+            android:id="@+id/add_guide_fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|right"
+            android:background="?attr/selectableItemBackground"
+            android:layout_margin="16dp"
+            app:srcCompat="@drawable/ic_add_white_24dp"
+            app:layout_anchor="@id/guide_create_listview"
+            app:layout_anchorGravity="bottom|right|end" />
+</android.support.design.widget.CoordinatorLayout>

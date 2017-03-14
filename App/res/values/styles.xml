@@ -4,6 +4,25 @@
     <!-- Holo Theme Overrides -->
     <style name="Base"/>
 
+    <style name="Base.Dialog" parent="Theme.AppCompat.Light.Dialog">
+
+    </style>
+
+    <style name="Base.Dialog.FullScreen" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">?attr/colorPrimary</item>
+        <item name="colorPrimaryDark">?attr/colorPrimaryDark</item>
+        <item name="colorAccent">?attr/colorAccent</item>
+
+        <item name="android:paddingRight">0dp</item>
+        <item name="android:paddingLeft">0dp</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:windowNoTitle">true</item>
+    </style>
+
+    <style name="Base.Dialog.Alert" parent="Theme.AppCompat.Light.Dialog.Alert">
+
+    </style>
+
     <style name="Base.ButtonBar">
         <item name="android:background">@null</item>
         <item name="android:divider">?android:dividerVertical</item>
@@ -102,14 +121,14 @@
         <item name="footerColor">?attr/colorPrimary</item>
     </style>
 
-    <style name="TitleText" parent="android:TextAppearance.Medium">
+    <style name="TitleText" parent="TextAppearance.AppCompat.Title">
         <item name="android:typeface">sans</item>
         <item name="android:textSize">@dimen/title_text_size</item>
         <item name="android:textColor">?attr/doz__textColorPrimary</item>
         <item name="android:textStyle">bold</item>
     </style>
 
-    <style name="BodyText">
+    <style name="BodyText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:textColor">?attr/doz__textColorPrimary</item>
         <item name="android:textSize">@dimen/body_text_size</item>
         <item name="android:layout_marginTop">@dimen/body_text_top_spacing</item>
@@ -126,7 +145,7 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="ListText" parent="android:TextAppearance.Medium">
+    <style name="ListText" parent="TextAppearance.AppCompat.Body1">
         <item name="android:paddingTop">16dp</item>
         <item name="android:paddingBottom">16dp</item>
 

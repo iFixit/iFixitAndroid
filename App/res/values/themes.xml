@@ -42,6 +42,7 @@
 
         <item name="windowNoTitle">true</item>
         <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">true</item>
 
         <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
@@ -71,4 +72,5 @@
 
     <style name="Theme.Dozuki.White" parent="Theme.Base"></style>
 
+    <color name="gunmetal">#FF212426</color>
 </resources>

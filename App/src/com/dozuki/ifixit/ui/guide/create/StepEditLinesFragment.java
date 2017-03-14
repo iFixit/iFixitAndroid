@@ -10,6 +10,8 @@ import android.os.Build;
 import android.os.Bundle;
 import android.speech.RecognizerIntent;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatEditText;
+import android.support.v7.widget.AppCompatImageButton;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.SpannableString;
@@ -23,11 +25,10 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
@@ -340,7 +341,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
    public View getView(final StepLine line, int index) {
       LayoutInflater vi = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
       View v = vi.inflate(R.layout.guide_create_step_edit_line, null);
-      ImageView bullet = (ImageView) v.findViewById(R.id.guide_step_item_bullet_thumbnail);
+      AppCompatImageButton bullet = (AppCompatImageButton) v.findViewById(R.id.guide_step_item_bullet_thumbnail);
 
       bullet.setOnClickListener(new OnClickListener() {
          @Override
@@ -360,7 +361,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
 
       params.setMargins(BULLET_INDENT * line.getLevel(), 0, 0, 0);
       bullet.setLayoutParams(params);
-      final EditText text = (EditText) v.findViewById(R.id.step_line_text_view);
+      AppCompatEditText text = (AppCompatEditText) v.findViewById(R.id.step_line_text_view);
       text.setText(line.getTextRaw());
       text.setId(index);
       text.addTextChangedListener(new TextWatcher() {
@@ -406,7 +407,7 @@ public class StepEditLinesFragment extends BaseFragment implements BulletDialogL
          }
       });
 
-      ImageButton mic = (ImageButton) v.findViewById(R.id.step_line_mic_button);
+      AppCompatImageButton mic = (AppCompatImageButton) v.findViewById(R.id.step_line_mic_button);
       mic.setTag(index);
       text.setTag(index + "text");
       mic.setOnClickListener(new OnClickListener() {

@@ -26,7 +26,7 @@ public class Guide implements Serializable {
    protected String mIntroductionRendered;
    protected String mIntroductionRaw;
    protected String mSubject;
-   protected Image mIntroImage;
+   protected Image mIntroImage = new Image();
    protected String mSummary;
    protected ArrayList<GuideStep> mSteps;
    protected ArrayList<Item> mTools;

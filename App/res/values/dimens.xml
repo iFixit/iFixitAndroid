@@ -27,6 +27,7 @@
     <dimen name="step_bullet_diameter">16dp</dimen>
     <dimen name="step_icon_top_spacing">5dp</dimen>
     <dimen name="step_icon_left_spacing">10dp</dimen>
+    <dimen name="step_bullet_icon_width">24dp</dimen>
 
     <!-- Used for calculating vertical height for thumbnail resizing -->
     <dimen name="landscape_navigation_height">40dp</dimen>
@@ -34,7 +35,7 @@
     <!-- Step Edit View -->
     <dimen name="step_pager_bar_height">30dp</dimen>
     <dimen name="step_edit_title_text_bottom_spacing">16dp</dimen>
-    <dimen name="step_edit_line_spacing">4dp</dimen>
+    <dimen name="step_edit_line_spacing">8dp</dimen>
     <dimen name="guide_create_step_edit_bottom_bar_height">48dp</dimen>
     <dimen name="guide_create_edit_button_dim">36dp</dimen>
     <dimen name="guide_create_edit_add_bullet_button_padding">16dp</dimen>
@@ -72,5 +73,6 @@
     <dimen name="list_item_horizontal_margin">4dp</dimen>
     <dimen name="guide_create_list_item_text_right_offset">42dp</dimen>
     <dimen name="detail_backdrop_height">256dp</dimen>
+    <dimen name="navdrawer_profile_image_size">40dp</dimen>
 
 </resources>

@@ -4,6 +4,7 @@ import com.dozuki.ifixit.model.Flag;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+
 import org.json.JSONArray;
 
 import java.io.Serializable;
@@ -14,17 +15,17 @@ public class TopicLeaf implements Serializable {
 
    private String mName;
    private String mTitle;
-   private String mLocale;
    private Image mImage;
-   private String mDescription;
+   private String mDescription = "";
    private ArrayList<Flag> mFlags;
    private ArrayList<GuideInfo> mGuides;
    private int mSolutions;
    private String mSolutionsUrl;
    private ArrayList<Item> mParts;
    private ArrayList<Item> mTools;
-   private String mContentsRaw;
    private String mContentsRendered;
+   private String mLocale;
+   private String mContentsRaw;
 
    public TopicLeaf(String name) {
       mName = name;

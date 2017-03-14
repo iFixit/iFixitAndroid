@@ -5,6 +5,9 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,13 +21,12 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
 import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.squareup.otto.Subscribe;
@@ -33,7 +35,7 @@ import org.json.JSONException;
 
 import java.util.ArrayList;
 
-public class GuideCreateActivity extends BaseMenuDrawerActivity {
+public class GuideCreateActivity extends BaseMenuDrawerActivity implements SwipeRefreshLayout.OnRefreshListener, GuideListItemListener {
    static final int GUIDE_STEP_LIST_REQUEST = 0;
    static int GUIDE_STEP_EDIT_REQUEST = 1;
    private static final int MENU_CREATE_GUIDE = 3;
@@ -48,16 +50,16 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    private ArrayList<GuideInfo> mUserGuideList = new ArrayList<GuideInfo>();
    private boolean mShowingHelp;
    private GuideInfo mGuideForDelete;
-   private PullToRefreshListView mGuideListView;
-   private GuideCreateListAdapter mGuideListAdapter;
+   private GuideCreateRecyclerListAdapter mGuideRecyclerListAdapter;
+   private RecyclerView mRecyclerListView;
+   private SwipeRefreshLayout mSwipeLayout;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      super.setDrawerContent(R.layout.guide_create);
 
-      setTitle(getString(R.string.my_guides));
-
-      setContentView(R.layout.guide_create);
+      getSupportActionBar().setTitle(getString(R.string.my_guides));
 
       if (savedInstanceState != null) {
          mUserGuideList = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
@@ -72,19 +74,26 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
          Api.call(this, ApiCall.userGuides());
       }
 
-      mGuideListAdapter = new GuideCreateListAdapter();
+      mGuideRecyclerListAdapter = new GuideCreateRecyclerListAdapter(mUserGuideList);
+      mGuideRecyclerListAdapter.setGuideListItemListener(this);
+      mSwipeLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+      mSwipeLayout.setOnRefreshListener(this);
 
-      mGuideListView = (PullToRefreshListView) findViewById(R.id.guide_create_listview);
-      mGuideListView.setAdapter(mGuideListAdapter);
+      mRecyclerListView = (RecyclerView)findViewById(R.id.guide_create_listview);
+      mRecyclerListView.setLayoutManager(new LinearLayoutManager(this));
+      mRecyclerListView.setAdapter(mGuideRecyclerListAdapter);
 
-      mGuideListView.setOnRefreshListener(new PullToRefreshBase.OnRefreshListener<ListView>() {
-         @Override
-         public void onRefresh(PullToRefreshBase<ListView> refreshView) {
-            Api.call(GuideCreateActivity.this, ApiCall.userGuides());
-         }
+      findViewById(R.id.add_guide_fab).setOnClickListener(v -> {
+         Intent intent = new Intent(this, StepEditActivity.class);
+         startActivity(intent);
       });
 
       App.sendScreenView("/user/guides");
+   }
+
+   @Override
+   public void onRefresh() {
+      Api.call(GuideCreateActivity.this, ApiCall.userGuides());
    }
 
    @Override
@@ -112,32 +121,8 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
    public void onContentChanged() {
       super.onContentChanged();
 
-      if (mGuideListView != null)
-         mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case MENU_CREATE_GUIDE:
-            Intent intent = new Intent(this, StepEditActivity.class);
-            startActivity(intent);
-            finish();
-            return true;
-         default:
-            return super.onOptionsItemSelected(item);
-      }
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      MenuItem createGuideItem = menu.add(0, MENU_CREATE_GUIDE, 0, R.string.add_guide);
-      createGuideItem.setIcon(R.drawable.ic_menu_add_guide);
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-         createGuideItem.setShowAsActionFlags(MenuItem.SHOW_AS_ACTION_ALWAYS|MenuItem.SHOW_AS_ACTION_WITH_TEXT);
-      }
-
-      return super.onCreateOptionsMenu(menu);
+      //if (mRecyclerListView != null)
+      //   mRecyclerListView.setEmptyView(findViewById(R.id.no_guides_text));
    }
 
    @Override
@@ -156,16 +141,15 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
 
    @Subscribe
    public void onUserGuides(ApiEvent.UserGuides event) {
+      hideLoading();
+      mSwipeLayout.setRefreshing(false);
       if (!event.hasError()) {
+         mGuideRecyclerListAdapter.clear();
          mUserGuideList.clear();
          mUserGuideList.addAll(event.getResult());
-
-         mGuideListAdapter.notifyDataSetChanged();
-
-         mGuideListView.onRefreshComplete();
-         mGuideListView.setEmptyView(findViewById(R.id.no_guides_text));
-
-         hideLoading();
+         Log.d("GuideCreateActivity", "Size: " + mUserGuideList.size());
+         mGuideRecyclerListAdapter.addAll(mUserGuideList);
+         mGuideRecyclerListAdapter.notifyDataSetChanged();
       } else {
          Api.getErrorDialog(this, event).show();
       }
@@ -194,16 +178,18 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
             guide.mIsPublishing = false;
          }
       }
-
-      mGuideListAdapter.notifyDataSetChanged();
+      mGuideRecyclerListAdapter.clear();
+      mGuideRecyclerListAdapter.addAll(mUserGuideList);
+      mGuideRecyclerListAdapter.notifyDataSetChanged();
    }
 
    @Subscribe
    public void onDeleteGuide(ApiEvent.DeleteGuide event) {
       if (!event.hasError()) {
          mUserGuideList.remove(mGuideForDelete);
-
-         mGuideListAdapter.notifyDataSetChanged();
+         mGuideRecyclerListAdapter.clear();
+         mGuideRecyclerListAdapter.addAll(mUserGuideList);
+         mGuideRecyclerListAdapter.notifyDataSetChanged();
       } else {
          // Try to update the guide's revisionid on a conflict.
          if (event.getError().mType == ApiError.Type.CONFLICT) {
@@ -224,21 +210,13 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_help))
-       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-
-          public void onClick(DialogInterface dialog, int id) {
-             mShowingHelp = false;
-             dialog.cancel();
-          }
+       .setPositiveButton(getString(R.string.media_help_confirm), (dialog, id) -> {
+          mShowingHelp = false;
+          dialog.cancel();
        });
 
       AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
-         @Override
-         public void onDismiss(DialogInterface dialog) {
-            mShowingHelp = false;
-         }
-      });
+      dialog.setOnDismissListener(dialog1 -> mShowingHelp = false);
 
       return dialog;
    }
@@ -248,51 +226,56 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity {
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.confirm_delete_body, item.mTitle))
-       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-             Api.call(GuideCreateActivity.this, ApiCall.deleteGuide(mGuideForDelete));
-             dialog.cancel();
-          }
-       }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-         public void onClick(DialogInterface dialog, int id) {
-            mGuideForDelete = null;
-         }
-      });
+       .setPositiveButton(getString(R.string.yes), (dialog, id) -> {
+          Api.call(GuideCreateActivity.this, ApiCall.deleteGuide(mGuideForDelete));
+          dialog.cancel();
+       }).setNegativeButton(getString(R.string.no), (dialog, id) -> mGuideForDelete = null);
 
       return builder.create();
    }
 
-   public class GuideCreateListAdapter extends BaseAdapter {
+   @Override
+   public void onEditItemClicked(GuideInfo guide) {
+      App.sendEvent("ui_action", "button_press", "edit_guide", (long)guide.mGuideid);
 
-      @Override
-      public int getCount() {
-         return mUserGuideList.size();
+      Intent intent = new Intent(this, StepsActivity.class);
+      intent.putExtra(StepsActivity.GUIDE_ID_KEY, guide.mGuideid);
+      intent.putExtra(StepsActivity.GUIDE_PUBLIC_KEY, guide.mPublic);
+      startActivityForResult(intent, GuideCreateActivity.GUIDE_STEP_LIST_REQUEST);
+   }
+
+   @Override
+   public void onPublishItemClicked(GuideInfo guide) {
+      App.sendEvent("ui_action", "button_press", "publish_guide", (long)guide.mGuideid);
+
+      // Ignore button press if we are already (un)publishing the guide.
+      if (guide.mIsPublishing) {
+         return;
       }
 
-      @Override
-      public Object getItem(int position) {
-         return mUserGuideList.get(position);
+      guide.mIsPublishing = true;
+
+      if (!guide.mPublic) {
+         Api.call(this,
+          ApiCall.publishGuide(guide.mGuideid, guide.mRevisionid));
+      } else {
+         Api.call(this,
+          ApiCall.unpublishGuide(guide.mGuideid, guide.mRevisionid));
       }
+   }
 
-      @Override
-      public long getItemId(int position) {
-         return position;
-      }
+   @Override
+   public void onViewItemClicked(GuideInfo guide) {
+      Intent intent = new Intent(this, GuideViewActivity.class);
+      intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
+      intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
+      startActivity(intent);
+   }
 
-      @Override
-      public View getView(int position, View convertView, ViewGroup parent) {
-         GuideListItem itemView;
-         GuideInfo currItem = (GuideInfo) getItem(position);
+   @Override
+   public void onDeleteItemClicked(GuideInfo guide) {
+      App.sendEvent("ui_action", "button_press", "delete_guide", (long)guide.mGuideid);
 
-         if (convertView != null) {
-            itemView = (GuideListItem) convertView;
-         } else {
-            itemView = new GuideListItem(parent.getContext(), GuideCreateActivity.this);
-         }
-
-         itemView.setRowData(currItem);
-
-         return itemView;
-      }
+      createDeleteDialog(guide).show();
    }
 }

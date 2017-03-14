@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui;
 
 import android.support.v4.app.Fragment;
+
 import com.dozuki.ifixit.App;
 
 /**

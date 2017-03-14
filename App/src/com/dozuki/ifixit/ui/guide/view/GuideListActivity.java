@@ -7,23 +7,20 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.GridView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.EndlessRecyclerViewScrollListener;
-import com.dozuki.ifixit.ui.EndlessScrollListener;
-import com.dozuki.ifixit.ui.GuideListAdapter;
 import com.dozuki.ifixit.ui.GuideListRecyclerAdapter;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
 
 import java.util.ArrayList;
 
-public abstract class GuideListActivity extends BaseMenuDrawerActivity implements GuideListRecyclerAdapter.ItemClickListener {
+public abstract class GuideListActivity extends BaseMenuDrawerActivity {
 
    private static final int LIMIT = 20;
    private static final String GRID_STATE = "GRID_STATE";
@@ -34,7 +31,6 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity implement
    private GridView mGridView;
 
    private EndlessRecyclerViewScrollListener mScrollListener;
-   private GuideListAdapter mAdapter;
    private RecyclerView mRecycleView;
    private GridLayoutManager mLayoutManager;
    private GuideListRecyclerAdapter mRecycleAdapter;
@@ -86,8 +82,7 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity implement
 
       mRecycleView.addOnScrollListener(mScrollListener);
 
-      mRecycleAdapter = new GuideListRecyclerAdapter(mGuides, false);
-      mRecycleAdapter.setClickListener(this);
+      mRecycleAdapter = new GuideListRecyclerAdapter(this, mGuides, false);
 
       mRecycleView.setAdapter(mRecycleAdapter);
    }
@@ -120,14 +115,5 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity implement
 
       if (mGuides != null)
          state.putSerializable(GUIDES_KEY, mGuides);
-   }
-
-   @Override
-   public void onItemClick(View view, int position) {
-      GuideInfo guide = (GuideInfo)mAdapter.getItem(position);
-      Intent intent = new Intent(GuideListActivity.this, GuideViewActivity.class);
-
-      intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
-      startActivity(intent);
    }
 }

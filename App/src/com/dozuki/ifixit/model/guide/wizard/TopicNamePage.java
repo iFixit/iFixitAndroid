@@ -17,6 +17,7 @@
 package com.dozuki.ifixit.model.guide.wizard;
 
 import android.support.v4.app.Fragment;
+
 import com.dozuki.ifixit.ui.guide.create.wizard.TopicNameFragment;
 
 public class TopicNamePage extends EditTextPage {

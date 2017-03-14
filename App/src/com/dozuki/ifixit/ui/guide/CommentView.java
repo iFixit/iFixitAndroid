@@ -16,15 +16,16 @@ import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.User;
-import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.transformations.CircleTransformation;
+import com.squareup.picasso.Picasso;
 
 import java.text.SimpleDateFormat;
 
@@ -59,7 +60,7 @@ public class CommentView extends RelativeLayout {
        comment.mUser.getUserid() == currentUser.getUserid();
 
       if (reply) {
-         mContainer.setBackgroundResource(R.color.subtle_gray);
+         mContainer.setBackgroundResource(R.color.gray_4);
          mContainer.setLayoutParams(getReplyLayoutParams());
       }
 
@@ -79,7 +80,7 @@ public class CommentView extends RelativeLayout {
       Image avatarImage = comment.mUser.getAvatar();
 
       if (avatarImage != null) {
-         PicassoUtils
+         Picasso
           .with(mContext)
           .load(avatarImage.getPath(ImageSizes.commentAvatar))
           .fit()

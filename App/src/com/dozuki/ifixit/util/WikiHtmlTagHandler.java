@@ -5,6 +5,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.style.BulletSpan;
 import android.text.style.StrikethroughSpan;
+
 import org.xml.sax.XMLReader;
 
 

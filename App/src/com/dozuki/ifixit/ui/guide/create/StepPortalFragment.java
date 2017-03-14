@@ -15,16 +15,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 public class StepPortalFragment extends BaseFragment implements
@@ -312,29 +313,31 @@ public class StepPortalFragment extends BaseFragment implements
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.step_edit_confirm_delete_message, mStepForDelete.getStepNum()))
-       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
-             mShowingDelete = false;
+       .setPositiveButton(getString(R.string.yes), (dialog, id) -> {
+          mShowingDelete = false;
 
-             ((StepsActivity) getActivity()).showLoading();
-             Api.call(getActivity(),
-              ApiCall.deleteStep(mGuide.getGuideid(), mStepForDelete));
-             dialog.cancel();
+          ((StepsActivity) getActivity()).showLoading();
+          Api.call(getActivity(),
+           ApiCall.deleteStep(mGuide.getGuideid(), mStepForDelete));
+          dialog.cancel();
 
-          }
-       }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-         public void onClick(DialogInterface dialog, int id) {
-            mShowingDelete = false;
-            mStepForDelete = null;
-         }
-      }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+       }).setNegativeButton(getString(R.string.no), (dialog, id) -> {
+          mShowingDelete = false;
+          mStepForDelete = null;
+       });
+
+      DialogInterface.OnDismissListener dialogDismissListener = new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingDelete = false;
          }
-      });
+      };
 
-      return builder.create();
+      AlertDialog dialog = builder.create();
+
+      dialog.setOnDismissListener(dialogDismissListener);
+
+      return dialog;
    }
 
    /////////////////////////////////////////////////////

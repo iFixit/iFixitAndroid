@@ -13,6 +13,7 @@ import android.content.res.Configuration;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.StatFs;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -23,13 +24,10 @@ import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.OkConnectionFactory;
-import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiContentProvider;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
-import com.github.kevinsawicki.http.HttpRequest;
 import com.google.analytics.tracking.android.Fields;
 import com.google.analytics.tracking.android.GAServiceManager;
 import com.google.analytics.tracking.android.GoogleAnalytics;
@@ -37,11 +35,32 @@ import com.google.analytics.tracking.android.Logger;
 import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.google.analytics.tracking.android.Tracker;
+import com.jakewharton.picasso.OkHttp3Downloader;
 import com.squareup.otto.Bus;
+import com.squareup.picasso.Picasso;
 
-import java.net.URL;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
+import java.security.cert.CertificateFactory;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManager;
+import javax.net.ssl.TrustManagerFactory;
+import javax.net.ssl.X509TrustManager;
+
+import okhttp3.Cache;
+import okhttp3.OkHttpClient;
 
 public class App extends Application {
+   private static final long MIN_DISK_CACHE_SIZE = 10 * 1024 * 1024; // 10 MB
+
    /*
     * Google Analytics configuration values.
     */
@@ -73,6 +92,11 @@ public class App extends Application {
    private static Bus sBus;
 
    /**
+    * Singleton for OkHttpClient (OkHttp3)
+    */
+   private static OkHttpClient sClient;
+
+   /**
     * Currently logged in user or null if user is not logged in.
     */
    private User mUser;
@@ -98,25 +122,10 @@ public class App extends Application {
     * User agent singleton.
     */
    private String mUserAgent = null;
-   private boolean mUrlStreamFactorySet = false;
    private boolean mConnectionFactorySet = false;
 
    @Override
    public void onCreate() {
-      // OkHttp changes the global SSL context, breaks other HTTP clients.  Google Analytics uses a different http
-      // client, which OkHttp doesn't handle well.
-      // https://github.com/square/okhttp/issues/184
-      if (!mUrlStreamFactorySet) {
-         URL.setURLStreamHandlerFactory(Utils.createOkHttpClient());
-         mUrlStreamFactorySet = true;
-      }
-
-      // Use OkHttp instead of HttpUrlConnection to handle HTTP requests, OkHttp supports 2.2 while HttpURLConnection
-      // is a bit buggy on froyo.
-      if (!mConnectionFactorySet) {
-         HttpRequest.setConnectionFactory(new OkConnectionFactory());
-         mConnectionFactorySet = true;
-      }
 
       if (false && inDebug()) {
          StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
@@ -140,6 +149,20 @@ public class App extends Application {
 
       sApp = this;
       setSite(getDefaultSite());
+
+      // Build our custom Picasso instance with the OkHttp3 Downloader
+      Picasso picasso = new Picasso.Builder(getApplicationContext())
+       .downloader(new OkHttp3Downloader(getClient()))
+       .build();
+
+      picasso.setIndicatorsEnabled(true);
+
+      try {
+         Picasso.setSingletonInstance(picasso);
+      } catch (IllegalStateException ignored) {
+         // Picasso instance was already set
+         // cannot set it after Picasso.with(Context) was already in use
+      }
    }
 
    public static void sendEvent(String category, String action, String label, Long value) {
@@ -192,6 +215,72 @@ public class App extends Application {
     */
    public static App get() {
       return sApp;
+   }
+
+   public static OkHttpClient getClient() {
+
+      if (sClient == null) {
+         File cache = App.get().getCacheDir();
+         if (!cache.exists()) {
+            //noinspection ResultOfMethodCallIgnored
+            cache.mkdirs();
+         }
+
+         OkHttpClient.Builder builder = new OkHttpClient.Builder()
+          .cache(new Cache(cache, getCacheSize(cache)));
+
+         // Trust all certs in Debug because some sites have untrusted certs in dev.  This should NOT be enabled live,
+         // that would be a very bad thing.
+         if (App.inDebug()) {
+            SSLContext sslContext = null;
+            TrustManager[] trustManagers = new TrustManager[0];
+            try {
+               KeyStore keyStore = KeyStore.getInstance(KeyStore.getDefaultType());
+               keyStore.load(null, null);
+               InputStream certInputStream = get().getApplicationContext().getAssets().open("certs/server.crt");
+               BufferedInputStream bis = new BufferedInputStream(certInputStream);
+               CertificateFactory certificateFactory = CertificateFactory.getInstance("X.509");
+               while (bis.available() > 0) {
+                  Certificate cert = certificateFactory.generateCertificate(bis);
+                  keyStore.setCertificateEntry(BuildConfig.DEV_SERVER, cert);
+               }
+               TrustManagerFactory trustManagerFactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
+               trustManagerFactory.init(keyStore);
+               trustManagers = trustManagerFactory.getTrustManagers();
+               sslContext = SSLContext.getInstance("TLS");
+               sslContext.init(null, trustManagers, null);
+            } catch (Exception e) {
+               e.printStackTrace();
+               // unhandled
+            }
+            builder.sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) trustManagers[0]);
+         }
+
+         sClient = builder.build();
+      }
+
+      return sClient;
+   }
+
+   private static long getCacheSize(File cache) {
+      long size = MIN_DISK_CACHE_SIZE;
+      try {
+         StatFs statFs = new StatFs(cache.getAbsolutePath());
+         long available;
+
+         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN_MR2) {
+            available = statFs.getBlockCountLong() * statFs.getBlockSizeLong();
+         } else {
+            available = ((long) statFs.getBlockCount()) * statFs.getBlockSize();
+         }
+
+         // Target around 10% of the total space available in the current external cache.
+         size = available / 10;
+         Log.i("iFixit Cache", "Cache Size: " + String.valueOf(size));
+      } catch (IllegalArgumentException ignored) {
+      }
+
+      return size;
    }
 
    public Site getSite() {
@@ -498,5 +587,13 @@ public class App extends Application {
       NetworkInfo netInfo = cm.getActiveNetworkInfo();
 
       return netInfo != null && netInfo.isConnected();
+   }
+
+   public File getCacheDirPath() {
+      return new File(getApplicationContext().getExternalCacheDir(), App.get().getCacheDirName());
+   }
+
+   public String getCacheDirName() {
+      return getSite().mName.toLowerCase().replace(" ", "-") + "-cache";
    }
 }

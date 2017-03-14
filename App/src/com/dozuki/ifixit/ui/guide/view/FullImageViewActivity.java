@@ -30,7 +30,6 @@ public class FullImageViewActivity extends AppCompatActivity {
       super.onCreate(savedInstanceState);
 
       String url = getIntent().getExtras().getString(IMAGE_URL);
-      boolean offline = getIntent().getExtras().getBoolean(OFFLINE);
 
       requestWindowFeature((int) Window.FEATURE_NO_TITLE);
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
@@ -40,7 +39,7 @@ public class FullImageViewActivity extends AppCompatActivity {
 
       final FullScreenImageView image = (FullScreenImageView)findViewById(R.id.image_zoom);
       image.setDisplayType(ImageViewTouchBase.DisplayType.FIT_TO_SCREEN);
-      image.loadImage(url, offline);
+      image.loadImage(url);
 
       findViewById(R.id.full_screen_close).setOnClickListener(new OnClickListener() {
          @Override

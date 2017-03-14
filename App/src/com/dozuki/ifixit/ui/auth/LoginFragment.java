@@ -10,14 +10,14 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -48,12 +48,12 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
  GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
    private static final int OPEN_ID_REQUEST_CODE = 4;
 
-   private Button mLogin;
-   private Button mRegister;
+   private AppCompatButton mLogin;
+   private AppCompatButton mRegister;
    private SignInButton mGoogleLogin;
    //private ImageButton mYahooLogin;
-   private EditText mEmail;
-   private EditText mPassword;
+   private AppCompatEditText mEmail;
+   private AppCompatEditText mPassword;
    private TextView mErrorText;
    private ProgressBar mLoadingSpinner;
    private ApiCall mCurAPICall;
@@ -157,12 +157,12 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       
       View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-      mEmail = (EditText)view.findViewById(R.id.edit_email);
-      mPassword = (EditText)view.findViewById(R.id.edit_password);
+      mEmail = (AppCompatEditText)view.findViewById(R.id.edit_email);
+      mPassword = (AppCompatEditText)view.findViewById(R.id.edit_password);
       mPassword.setTypeface(Typeface.DEFAULT);
 
-      mLogin = (Button)view.findViewById(R.id.signin_button);
-      mRegister = (Button)view.findViewById(R.id.register_button);      
+      mLogin = (AppCompatButton)view.findViewById(R.id.signin_button);
+      mRegister = (AppCompatButton)view.findViewById(R.id.register_button);
       mGoogleLogin = (SignInButton)view.findViewById(R.id.use_google_login_button);
       //mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
 

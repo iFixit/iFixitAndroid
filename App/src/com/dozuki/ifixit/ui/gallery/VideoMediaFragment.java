@@ -1,9 +1,9 @@
 package com.dozuki.ifixit.ui.gallery;
 
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 public class VideoMediaFragment extends MediaFragment {

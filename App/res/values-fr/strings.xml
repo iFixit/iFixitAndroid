@@ -268,7 +268,11 @@ dans la barre d\'action ou dans le tiroir de menu.</string>
   <string name="failed_edit_comment">La modification du commentaire a échoué. Réessayez.</string>
   <string name="debug">Déboguer</string>
   <string name="view_comments">Voir les commentaires</string>
-  <string-array name="new_image_actions">
+    <string name="done">Done</string>
+    <string name="slide_menu_login">Sign In</string>
+    <string name="media_manager_title">Media Manager</string>
+    <string name="media_storage_exception_toast_message">We\'re having problems accessing your storage, try again.</string>
+    <string-array name="new_image_actions">
     <item>Caméra</item>
     <item>Galerie des Médias</item>
   </string-array>

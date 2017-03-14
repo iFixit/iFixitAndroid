@@ -1,12 +1,7 @@
 package com.dozuki.ifixit.ui;
 
-import android.app.Activity;
-import android.net.http.SslError;
 import android.os.Bundle;
 import android.view.KeyEvent;
-import android.view.Window;
-import android.webkit.SslErrorHandler;
-import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -14,13 +9,13 @@ import android.webkit.WebViewClient;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 
-public class StoreWebViewActivity extends BaseMenuDrawerActivity {
+public class StoreWebViewActivity extends BaseSearchMenuDrawerActivity {
    private WebView mWebView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.store_web_view);
+      super.setDrawerContent(R.layout.store_web_view);
 
       mWebView = (WebView) findViewById(R.id.store_web_view);
 

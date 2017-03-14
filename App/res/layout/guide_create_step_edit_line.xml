@@ -1,22 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/step_edit_line_item"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="18dp">
 
-    <ImageView
+    <android.support.v7.widget.AppCompatImageButton
         android:id="@+id/guide_step_item_bullet_thumbnail"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_centerVertical="true"
         android:contentDescription="@string/topic_guide_thumbnail"
-        android:scaleType="center"
-        android:clickable="true"
+        style="@style/Base.Button.Icon"
         android:src="@drawable/bullet_black"/>
 
-    <EditText
+    <android.support.v7.widget.AppCompatEditText
         android:id="@+id/step_line_text_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -30,15 +30,14 @@
         android:imeOptions="actionDone"
         android:inputType="textMultiLine|textAutoCorrect|textCapSentences"/>
 
-    <ImageButton
-        android:id="@+id/step_line_mic_button"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:background="?attr/doz__itemSelector"
-        android:src="@drawable/ic_action_mic"
-        android:contentDescription="@string/voice_dictate_line_content_description"/>
+    <android.support.v7.widget.AppCompatImageButton
+            android:id="@+id/step_line_mic_button"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:srcCompat="@drawable/ic_mic_black_24dp"
+            style="@style/Base.Button.Icon"
+            android:contentDescription="@string/voice_dictate_line_content_description"/>
 
 </RelativeLayout>

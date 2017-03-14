@@ -1,35 +1,51 @@
 package com.dozuki.ifixit.ui;
 
+import android.content.Context;
+import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.ui.guide.view.GuideListActivity;
+import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.transformations.RoundedTransformation;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
 
 import java.util.ArrayList;
 
 
 public class GuideListRecyclerAdapter extends RecyclerView.Adapter<GuideListRecyclerAdapter.ViewHolder> {
 
+   private Context mContext;
    private ArrayList<GuideInfo> mGuides;
    private final boolean mShortTitle;
-   private ItemClickListener mClickListener;
 
-   public GuideListRecyclerAdapter(ArrayList<GuideInfo> guides, boolean shortTitle) {
+   public GuideListRecyclerAdapter(Context context, ArrayList<GuideInfo> guides, boolean shortTitle) {
       mGuides = guides;
       mShortTitle = shortTitle;
+      mContext = context;
    }
 
    @Override
    public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-      GuideItemView view = new GuideItemView(parent.getContext(), mShortTitle);
-      ViewHolder vh = new ViewHolder(view);
+
+      View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.guide_grid_item, parent, false);
+      ViewHolder vh = new ViewHolder(v);
       return vh;
    }
 
    @Override
    public void onBindViewHolder(ViewHolder holder, int position) {
-      holder.mItemView.setGuideItem(mGuides.get(position));
+      holder.setItem(mGuides.get(position));
    }
 
    @Override
@@ -45,29 +61,60 @@ public class GuideListRecyclerAdapter extends RecyclerView.Adapter<GuideListRecy
       mGuides.addAll(guides);
    }
 
-   public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+   public GuideInfo getItem(int position) {
+      return mGuides.get(position);
+   }
+
+   public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+      private final TextView mTitleView;
+      private final ImageView mThumbnail;
+      private final Picasso mPicasso;
+
       // each data item is just a string in this case
-      public GuideItemView mItemView;
-      public ViewHolder(GuideItemView v) {
+      public View mItemView;
+      private GuideInfo mGuide;
+
+      public ViewHolder(View v) {
          super(v);
          mItemView = v;
+         mItemView.setOnClickListener(this);
+         mTitleView = (TextView)v.findViewById(R.id.guide_grid_item_title);
+         mThumbnail = (ImageView)v.findViewById(R.id.guide_grid_item_thumbnail);
+         mPicasso = Picasso.with(v.getContext());
+      }
+
+      public void setItem(GuideInfo guide) {
+         mGuide = guide;
+         mTitleView.setText(mGuide.mTitle);
+         Transformation transform = new RoundedTransformation(4, 0);
+
+         if (guide.hasImage()) {
+            // Clear image before setting it to make sure the old image isn't the background while the new one is loading
+            Utils.safeStripImageView(mThumbnail);
+            mPicasso.cancelRequest(mThumbnail);
+
+            String url = mGuide.getImagePath(ImageSizes.guideList);
+            mPicasso
+             .load(url)
+             .transform(transform)
+             .error(R.drawable.no_image)
+             .into(mThumbnail);
+         } else {
+            mPicasso
+             .load(R.drawable.no_image)
+             .fit()
+             .transform(transform)
+             .into(mThumbnail);
+         }
       }
 
       @Override
       public void onClick(View view) {
-         if (mClickListener != null) {
-            mClickListener.onItemClick(view, getAdapterPosition());
-         }
+         Context context = view.getContext();
+         Log.d("GuideListRecycler", "onClick " + getAdapterPosition());
+         Intent intent = new Intent(context, GuideViewActivity.class);
+         intent.putExtra(GuideViewActivity.GUIDEID, mGuide.mGuideid);
+         context.startActivity(intent);
       }
-   }
-
-   // allows clicks events to be caught
-   public void setClickListener(ItemClickListener itemClickListener) {
-      this.mClickListener = itemClickListener;
-   }
-
-   // parent activity will implement this method to respond to click events
-   public interface ItemClickListener {
-      void onItemClick(View view, int position);
    }
 }

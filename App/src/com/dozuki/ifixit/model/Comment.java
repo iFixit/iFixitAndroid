@@ -2,6 +2,7 @@ package com.dozuki.ifixit.model;
 
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.util.JSONHelper;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;

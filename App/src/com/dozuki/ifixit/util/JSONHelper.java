@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
@@ -29,6 +30,7 @@ import com.dozuki.ifixit.model.user.UserImage;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -198,7 +200,9 @@ public class JSONHelper {
       guide.setDifficulty(jGuide.getString("difficulty"));
       guide.setIntroductionRaw(jGuide.getString("introduction_raw"));
       guide.setIntroductionRendered(jGuide.getString("introduction_rendered"));
-      guide.setIntroImage(parseImage(jGuide, "image"));
+      if (!jGuide.isNull("image")) {
+         guide.setIntroImage(parseImage(jGuide, "image"));
+      }
       guide.setSummary(jGuide.isNull("summary") ? "" : jGuide.getString("summary"));
       guide.setRevisionid(jGuide.getInt("revisionid"));
       guide.setPublic(jGuide.getBoolean("public"));
@@ -405,8 +409,17 @@ public class JSONHelper {
 
       topicLeaf.setNumSolutions(Integer.parseInt(jSolutions.getString("count")));
       topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
-      topicLeaf.setDescription(jTopic.getString("description"));
-      topicLeaf.setImage(parseImage(jTopic.getJSONObject("image"), null));
+
+      if (!jTopic.isNull("description")) {
+         topicLeaf.setDescription(jTopic.getString("description"));
+      }
+
+      if (jTopic.isNull("image")) {
+         topicLeaf.setImage(new Image());
+      } else {
+         topicLeaf.setImage(parseImage(jTopic.getJSONObject("image"), null));
+      }
+
       topicLeaf.setLocale(jTopic.getString("locale"));
       topicLeaf.setContentsRaw(jTopic.getString("contents_raw"));
       topicLeaf.setContentsRendered(jTopic.getString("contents_rendered"));
@@ -696,12 +709,12 @@ public class JSONHelper {
 
    public static Image parseImage(JSONObject image, String imageFieldName) {
       try {
-         if (imageFieldName != null) {
-            image = image.optJSONObject(imageFieldName);
-         }
-
          if (image == null) {
             return new Image();
+         }
+
+         if (imageFieldName != null) {
+            image = image.optJSONObject(imageFieldName);
          }
 
          return new Image(image.getInt("id"), image.getString("original"));

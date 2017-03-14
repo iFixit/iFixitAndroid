@@ -23,6 +23,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -185,14 +186,16 @@ public class OfflineGuidesActivity extends BaseMenuDrawerActivity implements
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
+      super.setDrawerContent(R.layout.offline_guides);
+
 
       App.sendScreenView("user/offline_guides");
 
       final App app = App.get();
       final boolean hasInternet = app.isConnected();
 
-      setTitle(R.string.favorites);
-      setContentView(R.layout.offline_guides);
+      getSupportActionBar().setTitle(getString(R.string.favorites));
+
       mAdapter = new OfflineGuideListAdapter(hasInternet);
       mListView = (ListView)findViewById(R.id.offline_guides_listview);
       mSyncBox = (RelativeLayout)findViewById(R.id.sync_box);

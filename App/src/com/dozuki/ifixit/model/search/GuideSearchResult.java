@@ -2,7 +2,6 @@ package com.dozuki.ifixit.model.search;
 
 import android.content.Context;
 import android.content.Intent;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +11,10 @@ import android.widget.TextView;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.util.transformations.RoundedTransformation;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
+import com.dozuki.ifixit.util.transformations.RoundedTransformation;
+import com.squareup.picasso.Picasso;
 
 import java.io.Serializable;
 
@@ -54,13 +53,13 @@ public class GuideSearchResult implements SearchResult, Serializable {
       if (mGuideInfo.hasImage()) {
          String imagePath = mGuideInfo.getImagePath(ImageSizes.stepThumb);
 
-         PicassoUtils.with(context)
+         Picasso.with(context)
           .load(imagePath)
           .transform(new RoundedTransformation(4, 0))
           .error(R.drawable.no_image)
           .into(thumbnail);
       } else {
-         PicassoUtils.with(context).load(R.drawable.no_image).into(thumbnail);
+         Picasso.with(context).load(R.drawable.no_image).into(thumbnail);
       }
 
       return v;

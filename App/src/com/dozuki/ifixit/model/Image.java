@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.model;
 
+import android.graphics.Bitmap;
+
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -17,6 +19,7 @@ public class Image implements Serializable {
    @SerializedName("id") private int mId;
    @SerializedName("original") private String mPath;
    private String mLocalPath;
+   private Bitmap mBitmap;
 
    public Image() {
       this(LOCAL_IMAGE_ID);
@@ -99,5 +102,13 @@ public class Image implements Serializable {
       }
 
       return ((Image)obj).getId() == mId && ((Image)obj).getPath().equals(mPath);
+   }
+
+   public void setBitmap(Bitmap bitmap) {
+      mBitmap = bitmap;
+   }
+
+   public Bitmap getBitmap() {
+      return mBitmap;
    }
 }

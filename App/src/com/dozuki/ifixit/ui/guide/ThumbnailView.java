@@ -16,7 +16,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -42,6 +41,10 @@ public class ThumbnailView extends LinearLayout {
    private int mThumbnailSpacing;
    private boolean mIsOfflineGuide;
 
+   public void setCanEdit(boolean canEdit) {
+      this.mCanEdit = canEdit;
+   }
+
    static class ViewHolder {
       FallbackImageView image;
       FrameLayout container;
@@ -49,7 +52,7 @@ public class ThumbnailView extends LinearLayout {
 
    private OnLongClickListener mLongClickListener;
    private OnClickListener mAddThumbListener;
-   private Picasso mPicasso;
+   private com.squareup.picasso.Picasso mPicasso;
    private LinearLayout mThumbnailContainer;
    private FrameLayout mMainImageContainer;
 
@@ -86,7 +89,7 @@ public class ThumbnailView extends LinearLayout {
 
       mThumbnailSpacing = getResources().getDimensionPixelSize(R.dimen.guide_thumbnail_spacing);
 
-      mPicasso = PicassoUtils.with(getContext());
+      mPicasso = Picasso.with(getContext());
 
       if (mCanEdit) {
          mAddThumbButton = (ImageView) findViewById(R.id.add_thumbnail_icon);
@@ -219,9 +222,11 @@ public class ThumbnailView extends LinearLayout {
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
           .centerCrop(),
           mMainImage);
-      } else {
-         buildImage(PicassoUtils.displayImage(mPicasso, image.getPath(ImageSizes.stepThumb),
-          mIsOfflineGuide), thumb.image);
+      } else if (image.getBitmap() != null) {
+         mMainImage.setImageBitmap(image.getBitmap());
+         thumb.image.setImageBitmap(image.getBitmap());
+      }  else {
+         buildImage(mPicasso.load(image.getPath(ImageSizes.stepThumb)), thumb.image);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
@@ -279,7 +284,7 @@ public class ThumbnailView extends LinearLayout {
       if (url.startsWith("http")) {
          url = url + ImageSizes.stepMain;
 
-         buildImage(PicassoUtils.displayImage(mPicasso, url, mIsOfflineGuide), mMainImage);
+         buildImage(mPicasso.load(url), mMainImage);
       } else {
          buildImage(mPicasso.load(new File(url))
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))

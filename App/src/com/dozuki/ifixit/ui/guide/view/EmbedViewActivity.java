@@ -7,6 +7,7 @@ import android.view.WindowManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
+
 import com.dozuki.ifixit.R;
 
 public class EmbedViewActivity extends AppCompatActivity {

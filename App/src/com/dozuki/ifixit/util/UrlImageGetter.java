@@ -9,16 +9,19 @@ import android.text.Html;
 import android.view.View;
 import android.widget.TextView;
 
-import com.squareup.okhttp.OkHttpClient;
+import com.dozuki.ifixit.App;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
 
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+
 public class UrlImageGetter implements Html.ImageGetter {
-   Context context;
-   View container;
+   private Context context;
+   private View container;
 
    /**
     * Construct the URLImageParser which will execute AsyncTask and refresh the container
@@ -108,10 +111,10 @@ public class UrlImageGetter implements Html.ImageGetter {
       }
 
       private InputStream fetch(String source) throws IOException {
-         // TODO: This can be simplified by using HttpRequest.
-         OkHttpClient client = Utils.createOkHttpClient();
-         HttpURLConnection connection = client.open(new URL(source));
-         return connection.getInputStream();
+         OkHttpClient client = App.getClient();
+         Request request = new Request.Builder().url(new URL(source)).build();
+         Response response = client.newCall(request).execute();
+         return response.body().byteStream();
       }
    }
 }

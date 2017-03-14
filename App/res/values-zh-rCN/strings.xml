@@ -278,7 +278,9 @@
   <string name="failed_edit_comment">编辑注释失败。请再试一次。</string>
   <string name="debug">调试</string>
   <string name="view_comments">查看评论</string>
-  <string-array name="new_image_actions">
+    <string name="media_manager_title">Media Manager</string>
+    <string name="media_storage_exception_toast_message">We\'re having problems accessing your storage, try again.</string>
+    <string-array name="new_image_actions">
     <item>相机</item>
     <item>媒体管理器</item>
   </string-array>
