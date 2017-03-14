@@ -7,10 +7,9 @@
    android:layout_height="match_parent"
    android:gravity="center" style="@style/Widget.AppCompat.ActionButton"
    android:text="@string/slide_menu_barcode_scanner_short"
-   android:drawableLeft="@drawable/ic_action_qr_code"
-   android:background="?doz__itemSelector"
+   android:drawableLeft="@drawable/ic_barcode"
+   android:background="?attr/selectableItemBackground"
    android:clickable="true"
-
    android:textSize="12sp"
    android:textStyle="bold"
    android:textColor="?attr/actionMenuTextColor"

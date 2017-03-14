@@ -3,26 +3,26 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/favorite_guide"
-        android:title="@string/favorite_guide"
-        android:icon="@drawable/ic_action_favorite_empty"
-        app:showAsAction="always"/>
+            android:id="@+id/favorite_guide"
+            android:title="@string/favorite_guide"
+            android:icon="@drawable/ic_favorite_border_white_24dp"
+            app:showAsAction="always"/>
 
     <item
-        android:id="@+id/comments"
-        android:title="@string/comments"
-        app:actionLayout="@layout/comment_bubble"
-        app:showAsAction="always"/>
+            android:id="@+id/comments"
+            android:title="@string/comments"
+            app:actionLayout="@layout/comment_bubble"
+            app:showAsAction="always"/>
 
     <item
-        android:id="@+id/edit_guide"
-        android:title="@string/edit_guide"
-        android:icon="@drawable/ic_action_edit"
-        app:showAsAction="ifRoom|withText"/>
-    
+            android:id="@+id/edit_guide"
+            android:title="@string/edit_guide"
+            android:icon="@drawable/ic_create_white_24dp"
+            app:showAsAction="ifRoom|withText"/>
+
     <item
-        android:id="@+id/reload_guide"
-        android:title="@string/reload_guide"
-        android:icon="@drawable/ic_action_refresh_dark"
-        android:showAsAction="never"/>
+            android:id="@+id/reload_guide"
+            android:title="@string/reload_guide"
+            android:icon="@drawable/ic_refresh_white_24dp"
+            android:showAsAction="never"/>
 </menu>

@@ -3,17 +3,17 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/comment_item_reply"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/reply"/>
+            android:id="@+id/comment_item_reply"
+            app:showAsAction="ifRoom|withText"
+            android:title="@string/reply"/>
 
     <item
-        android:id="@+id/comment_item_edit"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/edit"/>
+            android:id="@+id/comment_item_edit"
+            app:showAsAction="ifRoom|withText"
+            android:title="@string/edit"/>
 
     <item
-        android:id="@+id/comment_item_delete"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/action_delete"/>
+            android:id="@+id/comment_item_delete"
+            app:showAsAction="ifRoom|withText"
+            android:title="@string/action_delete"/>
 </menu>

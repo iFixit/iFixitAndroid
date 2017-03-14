@@ -53,6 +53,10 @@ android {
       minSdkVersion 11
       targetSdkVersion 23
       applicationId "com.dozuki.ifixit"
+      vectorDrawables.useSupportLibrary = true
+      jackOptions {
+          enabled true
+      }
    }
 
    signingConfigs {
@@ -122,6 +126,10 @@ android {
          "${site}" createSiteSourceSet(site)
       }
    }
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
 }
 
 /* Various functions to create DSL for a site. */

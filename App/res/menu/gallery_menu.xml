@@ -2,15 +2,15 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
       xmlns:app="http://schemas.android.com/apk/res-auto">
 
-     <item
-        android:id="@+id/top_camera_button"
-        android:icon="@drawable/ic_action_camera"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/camera_tool_tip"/>
     <item
-        android:id="@+id/top_gallery_button"
-        android:icon="@drawable/ic_action_picture_add"
-        app:showAsAction="ifRoom|withText"
-        android:title="@string/gallery_tool_tip"/>
+            android:id="@+id/top_camera_button"
+            android:icon="@drawable/ic_add_a_photo_white_24dp"
+            app:showAsAction="ifRoom|withText"
+            android:title="@string/camera_tool_tip"/>
+    <item
+            android:id="@+id/top_gallery_button"
+            android:icon="@drawable/ic_photo_library_white_24dp"
+            app:showAsAction="ifRoom|withText"
+            android:title="@string/gallery_tool_tip"/>
 
 </menu>

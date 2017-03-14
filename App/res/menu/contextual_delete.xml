@@ -3,7 +3,7 @@
       android:title="@string/cancel">
 
     <item
-        android:id="@+id/cab_action_delete"
-        android:title="@string/action_delete"/>
+            android:id="@+id/cab_action_delete"
+            android:title="@string/action_delete"/>
 
 </menu>
