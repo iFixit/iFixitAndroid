@@ -91,15 +91,39 @@ public class GuideIntroViewFragment extends BaseFragment {
                   settings.setJavaScriptEnabled(true);
 
                   webView.setOnTouchListener(new View.OnTouchListener() {
+                     private final static int TOUCH_RELEASED = 0;
+                     private final static int TOUCH_TOUCHED = 1;
+                     private final static int TOUCH_DRAGGING = 2;
+                     private final static int TOUCH_UNDEFINED = 3;
+                     private int previousState = TOUCH_RELEASED;
+
                      @Override
                      public boolean onTouch(View v, MotionEvent event) {
-                        if (event.getAction() == MotionEvent.ACTION_UP) {
-                           Intent intent = new Intent(Intent.ACTION_VIEW);
-                           intent.setData(Uri.parse(iframeSrc));
-                           startActivity(intent);
+                        switch (event.getAction()) {
+                           case MotionEvent.ACTION_DOWN:
+                              if (previousState == TOUCH_RELEASED) previousState = TOUCH_TOUCHED;
+                              else previousState = TOUCH_UNDEFINED;
+                              break;
+                           case MotionEvent.ACTION_UP:
+                              if (previousState != TOUCH_DRAGGING) {
+                                 previousState = TOUCH_RELEASED;
+
+                                 Intent intent = new Intent(Intent.ACTION_VIEW);
+                                 intent.setData(Uri.parse(iframeSrc));
+                                 startActivity(intent);
+                              } else if (previousState == TOUCH_DRAGGING) {
+                                 previousState = TOUCH_RELEASED;
+                              } else previousState = TOUCH_UNDEFINED;
+                              break;
+                           case MotionEvent.ACTION_MOVE:
+                              if (previousState == TOUCH_TOUCHED || previousState == TOUCH_DRAGGING) previousState = TOUCH_DRAGGING;
+                              else previousState = TOUCH_UNDEFINED;
+                              break;
+                           default:
+                              previousState = TOUCH_UNDEFINED;
                         }
 
-                        return true;
+                        return false;
                      }
                   });
 
