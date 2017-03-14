@@ -23,6 +23,7 @@
         android:id="@+id/bullet_icon"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:maxWidth="@dimen/step_bullet_icon_width"
         android:layout_gravity="right"
         android:layout_marginLeft="@dimen/step_icon_left_spacing"
         android:layout_marginTop="@dimen/step_icon_top_spacing"

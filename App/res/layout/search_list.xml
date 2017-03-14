@@ -9,7 +9,7 @@
         android:layout_height="match_parent"
         android:layout_margin="4dp"
         android:dividerHeight="4dp"
-        android:divider="@color/transparent"/>
+        android:divider="@android:color/transparent"/>
 
     <TextView
         android:id="@id/android:empty"

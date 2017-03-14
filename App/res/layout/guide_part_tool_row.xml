@@ -4,7 +4,8 @@
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="?attr/doz__itemSelector">
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:background="?attr/selectableItemBackground">
 
     <TextView
         android:id="@+id/item_quantity"
@@ -43,7 +44,7 @@
         android:paddingBottom="12dp"
         android:paddingLeft="8dp"
         android:paddingRight="8dp"
-        android:src="@drawable/ic_action_link"
+        app:srcCompat="@drawable/ic_link_black_24dp"
         android:contentDescription="@string/link_to_item"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"/>

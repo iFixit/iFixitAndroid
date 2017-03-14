@@ -13,50 +13,43 @@
         <item name="android:paddingTop">0dip</item>
     </style>
 
-    <style name="Base.Button">
-        <item name="android:clickable">true</item>
-        <item name="android:focusable">true</item>
-        <item name="android:gravity">center</item>
+    <style name="Base.Button" parent="Widget.AppCompat.Button"></style>
+
+    <style name="Base.Button.Borderless" parent="Widget.AppCompat.Button.Borderless"></style>
+
+    <style name="Base.Button.BottomBar" parent="Widget.AppCompat.Button">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_centerHorizontal">true</item>
+    </style>
+
+    <style name="Base.Button.Warning" parent="Base.Button">
+        <item name="colorAccent">@color/red_5</item>
+        <item name="colorControlActivated">@color/red_6</item>
+    </style>
+
+    <style name="Base.Button.Icon" parent="Base.Button.Borderless">
+        <item name="android:minWidth">48dip</item>
         <item name="android:minHeight">48dip</item>
-        <item name="android:minWidth">64dip</item>
-        <item name="android:textAppearance">?android:attr/textAppearanceMedium</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
     </style>
 
-    <style name="Base.Button.Colored" parent="Base.Button">
-        <item name="android:background">?attr/colorPrimary</item>
-        <item name="android:textColor">@color/white</item>
-    </style>
+    <style name="Base.Button.Colored" parent="Base.Button"></style>
 
-    <style name="Base.Button.Borderless">
-        <item name="android:paddingLeft">4dip</item>
-        <item name="android:paddingRight">4dip</item>
-    </style>
-
-    <style name="Base.FormLabel" parent="android:Widget.Holo.Light.TextView">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">4dp</item>
-        <item name="android:textAppearance">?android:textAppearanceMedium</item>
-        <item name="android:textColor">?android:textColorPrimary</item>
-        <item name="android:textStyle">bold</item>
-    </style>
-
-    <style name="Base.FormField" parent="android:Widget.Holo.Light.EditText">
+    <style name="Base.FormField" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginBottom">24dp</item>
     </style>
 
-    <style name="Base.BottomBar"/>
+    <style name="Base.Spinner" parent="Widget.AppCompat.Spinner.DropDown">
 
-    <style name="Base.BottomBar.Button">
-        <item name="android:paddingLeft">16dp</item>
-        <item name="android:paddingRight">16dp</item>
-        <item name="android:paddingBottom">8dp</item>
-        <item name="android:paddingTop">8dp</item>
-        <item name="android:background">?attr/doz__itemSelector</item>
-        <item name="android:layout_centerVertical">true</item>
+    </style>
+
+    <style name="TextErrorAppearance" parent="@android:style/TextAppearance">
+        <item name="android:textSize">10sp</item>
+    </style>
+
+    <style name="TextHintAppearance" parent="TextAppearance.AppCompat">
+        <item name="android:textSize">12sp</item>
     </style>
 
     <style name="DrawerArrowStyle" parent="Widget.AppCompat.DrawerArrowToggle">
@@ -81,21 +74,18 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:layout_alignParentTop">true</item>
         <item name="android:padding">8dp</item>
-        <item name="android:background">?attr/doz__itemSelector</item>
     </style>
 
-    <style name="BulletIcon">
+    <style name="BulletIcon" parent="Base.Button.Icon">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_gravity">center</item>
         <item name="android:padding">16dp</item>
-        <item name="android:background">?attr/doz__itemSelector</item>
     </style>
 
     <style name="BulletItem">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">48dp</item>
-        <item name="android:background">?attr/doz__itemSelector</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:drawablePadding">10dp</item>
         <item name="android:paddingLeft">16dp</item>
@@ -276,7 +266,6 @@
         <item name="android:paddingRight">32dp</item>
         <item name="android:paddingTop">8dp</item>
         <item name="android:paddingBottom">8dp</item>
-        <item name="android:background">?attr/doz__itemSelector</item>
 
         <item name="android:drawablePadding">16dp</item>
         <item name="android:gravity">center_vertical</item>
@@ -334,6 +323,11 @@
         <item name="android:src">@drawable/fist_default</item>
         <item name="android:contentDescription">@string/fist_background_desc</item>
         <item name="android:visibility">gone</item>
+    </style>
+
+    <style name="NavigationHeader">
+        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:padding">24dp</item>
     </style>
 
 </resources>

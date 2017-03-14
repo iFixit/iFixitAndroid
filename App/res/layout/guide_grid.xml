@@ -13,5 +13,5 @@
           android:horizontalSpacing="@dimen/topic_list_horizontal_spacing"
           android:numColumns="auto_fit"
           android:stretchMode="columnWidth"
-          android:listSelector="?doz__itemSelector"
+          android:listSelector="?attr/selectableItemBackground"
           android:verticalSpacing="@dimen/topic_list_vertical_spacing"/>

@@ -1,32 +1,71 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-Taken from @Lars from Stack Overflow - thanks!
-@link http://stackoverflow.com/questions/3769762/android-color-xml-resource-file
--->
 <resources>
 
-    <color name="transparent">#00000000</color>
-    <color name="menu_background">#FF555555</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="gray">#FFDDDDDD</color>
-    <color name="dark">#FF222222</color>
-    <color name="black">#FF333333</color>
-    <color name="red">#FFFF0000</color>
-    <color name="emphasis">#FF31B6E7</color>
-    <color name="emphasis_pressed">#ff1f7190</color>
+    <!--
+    - Universal color palate from the iFixit styleguide.  All other colors *should* be derived from
+    - these if at all possible.
+    -->
+    <color name="blue_1">#EBF4FB</color>
+    <color name="blue_2">#D6E8F7</color>
+    <color name="blue_3">#ADD2EF</color>
+    <color name="blue_4">#5CA4E0</color>
+    <color name="blue_5">#0071CE</color>
+    <color name="blue_6">#005091</color>
+    <color name="blue_7">#00325C</color>
 
-    <color name="invisible">#00000000</color>
-    <color name="disabled_grey_text">#FFEEEEEE</color>
-    <color name="disabled_grey_bg">#FF666666</color>
+    <color name="red_1">#FDEEEC</color>
+    <color name="red_2">#FBDED9</color>
+    <color name="red_3">#F8BDB4</color>
+    <color name="red_4">#F07B69</color>
+    <color name="red_5">#E83014</color>
+    <color name="red_6">#A11601</color>
+    <color name="red_7">#610B00</color>
 
-    <color name="topic_guide_title_background">#DD222222</color>
+    <color name="green_1">#F2F9ED</color>
+    <color name="green_2">#E4F3DC</color>
+    <color name="green_3">#C9E7B9</color>
+    <color name="green_4">#93D073</color>
+    <color name="green_5">#57B524</color>
+    <color name="green_6">#35820F</color>
+    <color name="green_7">#195103</color>
 
-    <color name="md__transparent">#00000000</color>
-    <color name="md__defaultBackground">#FF555555</color>
+    <color name="yellow_1">#FFFAEC</color>
+    <color name="yellow_2">#FEF5D9</color>
+    <color name="yellow_3">#FDECB3</color>
+    <color name="yellow_4">#FBD966</color>
+    <color name="yellow_5">#F9C310</color>
+    <color name="yellow_6">#C27E00</color>
+    <color name="yellow_7">#914400</color>
 
-    <color name="step_pager_previous_tab_color">#4433B5E5</color>
-    <color name="step_pager_selected_tab_color">#FF0099CC</color>
-    <color name="step_pager_selected_last_tab_color">#550099CC</color>
+    <color name="gray_1">#FAFAFA</color>
+    <color name="gray_2">#F5F5F5</color>
+    <color name="gray_3">#EEEEEE</color>
+    <color name="gray_4">#E1E1E2</color>
+    <color name="gray_5">#BDBEBF</color>
+    <color name="gray_6">#9E9FA0</color>
+    <color name="gray_7">#757778</color>
+    <color name="gray_8">#636567</color>
+    <color name="gray_9">#424446</color>
+    <color name="gray_10">#212426</color>
+
+    <color name="absolute_white">#FFFFFFFF</color>
+    <color name="white">@color/gray_1</color>
+    <color name="black">@color/gray_10</color>
+    <color name="absolute_black">#FF000000</color>
+    <color name="black_alpha_40">#66000000</color>
+
+    <!-- Legacy color support -->
+    <color name="navbar_header_text_color">#FFFFFFFF</color>
+
+    <color name="emphasis">@color/blue_5</color>
+    <color name="emphasis_pressed">@color/blue_6</color>
+
+    <color name="disabled_grey_text">@color/gray_2</color>
+    <color name="disabled_grey_bg">@color/gray_6</color>
+
+    <color name="step_pager_previous_tab_color">@color/blue_6</color>
+    <color name="step_pager_selected_tab_color">@color/blue_5</color>
+    <color name="step_pager_selected_last_tab_color">@color/blue_3</color>
     <color name="step_pager_next_tab_color">#10000000</color>
 
     <!-- Step bullet colors -->
@@ -41,22 +80,21 @@ Taken from @Lars from Stack Overflow - thanks!
 
     <color name="text_light">#66000000</color>
 
-    <color name="subtle_gray">#FFF0F0F0</color>
-    <color name="image_border">#FFF3F3F3</color>
-    <color name="border">#FFCCCCCC</color>
-    <color name="gainsboro">#FFDCDCDC</color>
+    <color name="image_background">@color/gray_1</color>
+    <color name="image_border">@color/gray_3</color>
+    <color name="border">@color/gray_5</color>
 
-    <color name="progress_button_background">#FFBBBBBB</color>
-    <color name="progress_button_progress_disabled">#FF777777</color>
+    <color name="progress_button_background">@color/gray_5</color>
+    <color name="progress_button_progress_disabled">@color/gray_7</color>
 
     <!-- Theme Colors -->
-    <color name="ifixit_blue">#FF336DA8</color>
-    <color name="dozuki_red">#FFDD4124</color>
-    <color name="dozuki_green">#FFAFC400</color>
+    <color name="ifixit_blue">@color/blue_5</color>
+    <color name="ifixit_blue_dark">@color/blue_6</color>
+    <color name="dozuki_red">@color/red_6</color>
+    <color name="dozuki_red_dark">@color/red_7</color>
+    <color name="dozuki_green">@color/green_5</color>
     <color name="dozuki_orange">#FFF25D07</color>
-    <color name="dozuki_white">#FFCCCCCC</color>
-    <color name="dozuki_grey">#F7777777</color>
+    <color name="dozuki_white">@color/gray_2</color>
+    <color name="dozuki_grey">@color/gray_7</color>
 
-    <color name="holo_blue_dark">#FF0099cc</color>
-    <color name="black_alpha_40">#66000000</color>
 </resources>

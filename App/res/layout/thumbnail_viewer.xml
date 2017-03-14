@@ -9,7 +9,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:clickable="true"
-        android:foreground="?attr/doz__itemSelector">
+        android:foreground="?attr/selectableItemBackground">
 
         <com.dozuki.ifixit.ui.guide.FallbackImageView
             android:id="@+id/main_image_view"

@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_marginBottom="8dp"
-        android:background="@color/gainsboro"/>
+        android:background="@color/border"/>
 
     <ListView
         android:id="@+id/siteListView"

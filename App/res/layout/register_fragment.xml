@@ -30,7 +30,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="5dp"
                 android:text="@string/login_error"
-                android:textColor="@color/red"/>
+                android:textColor="@color/red_5"/>
 
             <ProgressBar
                 android:id="@+id/login_loading_bar"
