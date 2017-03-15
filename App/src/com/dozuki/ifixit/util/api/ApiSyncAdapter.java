@@ -499,8 +499,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private void downloadMissingMedia(List<GuideMediaProgress> missingGuideMedia) {
          final int totalMissingMedia = getTotalMissingMedia(missingGuideMedia);
 
-         createMediaDirectories();
-
          for (final GuideMediaProgress guideMedia : missingGuideMedia) {
             for (String mediaUrl : guideMedia.mMissingMedia) {
                finishSyncIfCanceled();
@@ -525,7 +523,24 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                       // If the specified size doesn't work, try the original
                       Picasso.with(getContext())
                        .load(originalUrl)
-                       .fetch();
+                       .fetch(new Callback() {
+                          @Override
+                          public void onSuccess() {
+
+                             guideMedia.showProgress();
+                             mMediaDownloadedCount++;
+
+                             updateTotalProgress(guideMedia, totalMissingMedia, mMediaDownloadedCount);
+                             updateNotificationProgress(totalMissingMedia, mMediaDownloadedCount, false);
+                             updateGuideProgress(guideMedia, true);
+                          }
+
+                          @Override
+                          public void onError() {
+                             // No Image - nothing we can do.
+                             Log.d(TAG, "Couldn't find image - " + originalUrl);
+                          }
+                       });
                    }
                 });
 
@@ -568,18 +583,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
             mLastProgressUpdate = System.currentTimeMillis();
          }
-      }
-
-      /**
-       * Creates the necessary directories for storing media. This is purely so
-       * File.mkdirs() isn't called for every single medium downloaded. This makes it so
-       * it is called at most once per sync.
-       */
-      private void createMediaDirectories() {
-         // The ending file name doesn't matter as long as the parents are the same
-         // as a valid media path.
-         File testFile = new File(getOfflineMediaPath("test"));
-         testFile.mkdirs();
       }
 
       private int getTotalMissingMedia(List<GuideMediaProgress> guideMedia) {

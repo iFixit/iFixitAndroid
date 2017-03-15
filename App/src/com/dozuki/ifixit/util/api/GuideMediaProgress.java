@@ -8,10 +8,12 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.util.ImageSizes;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.function.Consumer;
 
 /**
  * Stores progress information about syncing guide media.
@@ -22,7 +24,7 @@ public class GuideMediaProgress {
    public GuideInfo mGuideInfo;
    public Set<String> mMissingMedia;
    public int mTotalMedia;
-   public int mMediaProgress;
+   public int mMediaProgress = 0;
 
    public GuideMediaProgress(ApiEvent.ViewGuide guideEvent) {
       this(guideEvent.getResult());
@@ -65,11 +67,18 @@ public class GuideMediaProgress {
 
       mTotalMedia = guideMedia.size();
 
-      cachedUrls.forEachRemaining(url -> {
+      Log.d("ApiSyncAdapter", "Total # of media to download : " + mTotalMedia);
+      int cachedUrlsCount = 0;
+      while (cachedUrls.hasNext()) {
+         String url = cachedUrls.next();
          if (guideMedia.contains(url)) {
             guideMedia.remove(url);
          }
-      });
+         cachedUrlsCount++;
+      }
+
+      mMediaProgress = mTotalMedia - guideMedia.size();
+      mMissingMedia = guideMedia;
 
       mMediaProgress = guideMedia.size() - guideMedia.size();
    }
