@@ -27,7 +27,7 @@ public class TopicSearchResult implements SearchResult, Serializable {
    public String mSummary;
    public String mUrl;
    public String mText;
-   public Image mImage;
+   public Image mImage = new Image();
 
 
    @Override

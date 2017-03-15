@@ -17,7 +17,7 @@ public class Image implements Serializable {
    private static final String TAG = "Image";
 
    @SerializedName("id") private int mId;
-   @SerializedName("original") private String mPath;
+   @SerializedName("original") private String mPath = "";
    private String mLocalPath;
    private Bitmap mBitmap;
 

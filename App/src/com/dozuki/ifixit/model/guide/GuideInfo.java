@@ -31,7 +31,7 @@ public class GuideInfo implements Serializable {
    @SerializedName("flags")
    public String[] mFlags;
    @SerializedName("image")
-   public Image mImage;
+   public Image mImage = new Image();
    @SerializedName("url")
    public String mUrl;
    @SerializedName("username")

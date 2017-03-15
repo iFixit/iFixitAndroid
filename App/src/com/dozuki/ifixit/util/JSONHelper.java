@@ -76,7 +76,9 @@ public class JSONHelper {
                tsr.mNamespace = result.getString("namespace");
                tsr.mSummary = result.getString("summary");
                tsr.mUrl = result.getString("url");
-               tsr.mImage = parseImage(result, "image");
+               if (!result.isNull("image")) {
+                  tsr.mImage = parseImage(result, "image");
+               }
 
                search.mResults.add(tsr);
             }
