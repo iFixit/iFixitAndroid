@@ -124,32 +124,45 @@ public class StepEditImageFragment extends BaseFragment {
    public void onActivityCreated(Bundle savedInstanceState) {
       super.onActivityCreated(savedInstanceState);
 
-      mThumbs.setAddThumbButtonOnClick(v -> {
+      mThumbs.setAddThumbButtonOnClick(new View.OnClickListener() {
+         @Override
+         public void onClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
-         AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+            builder.setTitle(App.get().getString(R.string.step_edit_new_thumb_actions_title))
+             .setItems(R.array.new_image_actions, (dialog, which) -> {
+                switch (which) {
+                   case CAPTURE_IMAGE:
+                      // Create the File where the photo should go
+                      File photoFile = null;
+                      try {
+                         photoFile = CaptureHelper.createImageFile(getActivity());
+                      } catch (IOException ex) {
+                         ex.printStackTrace();
+                      }
 
-         builder.setTitle(App.get().getString(R.string.step_edit_new_thumb_actions_title))
-          .setItems(R.array.new_image_actions, (dialog, which) -> {
-             switch (which) {
-                case CAPTURE_IMAGE:
-                   // Create the File where the photo should go
-                   File photoFile = null;
-                   try {
-                      photoFile = CaptureHelper.createImageFile(getActivity());
-                   } catch (IOException ex) {
-                      ex.printStackTrace();
-                   }
+                      mCurrentPhotoPath = photoFile.getAbsolutePath();
 
-                   mCurrentPhotoPath = photoFile.getAbsolutePath();
-
-                   CaptureHelper.dispatchTakePictureIntent(getActivity(), photoFile);
-                   break;
-                case MEDIA_MANAGER:
-                   dispatchAttachFromMediaManager();
-                   break;
-             }
-          });
-         builder.create().show();
+                      Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                      // Ensure that there's a camera activity to handle the intent
+                      if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+                         // Continue only if the File was successfully created
+                         if (photoFile != null) {
+                            Uri photoURI = FileProvider.getUriForFile(getContext(),
+                             "com.dozuki.ifixit.fileprovider",
+                             photoFile);
+                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                            startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
+                         }
+                      }
+                      break;
+                   case MEDIA_MANAGER:
+                      dispatchAttachFromMediaManager();
+                      break;
+                }
+             });
+            builder.create().show();
+         }
       });
 
       mThumbs.setThumbsOnLongClickListener(v -> {
@@ -203,9 +216,6 @@ public class StepEditImageFragment extends BaseFragment {
             }
             return;
          }
-
-         // other 'case' lines to check for other
-         // permissions this app might request
       }
    }
 

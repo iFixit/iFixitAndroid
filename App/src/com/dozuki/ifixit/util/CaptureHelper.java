@@ -29,21 +29,6 @@ public class CaptureHelper {
 
    public static final int CAMERA_REQUEST_CODE = 1888;
    public static final int PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-   public static void dispatchTakePictureIntent(Activity activity, File photoFile) {
-      Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-      // Ensure that there's a camera activity to handle the intent
-      if (takePictureIntent.resolveActivity(activity.getPackageManager()) != null) {
-
-         // Continue only if the File was successfully created
-         if (photoFile != null) {
-            Uri photoURI = FileProvider.getUriForFile(activity,
-             "com.dozuki.ifixit.fileprovider",
-             photoFile);
-            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-            activity.startActivityForResult(takePictureIntent, CAMERA_REQUEST_CODE);
-         }
-      }
-   }
 
    public static File createImageFile(Activity activity) throws IOException {
       // Create an image file name

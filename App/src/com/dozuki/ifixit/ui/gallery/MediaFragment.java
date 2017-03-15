@@ -14,6 +14,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.util.Log;
@@ -307,7 +308,19 @@ public abstract class MediaFragment extends BaseFragment
       try {
          file = CaptureHelper.createImageFile(getActivity());
          mCameraTempFileName = file.getAbsolutePath();
-         CaptureHelper.dispatchTakePictureIntent(getActivity(), file);
+         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+         // Ensure that there's a camera activity to handle the intent
+         if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+
+            // Continue only if the File was successfully created
+            if (file != null) {
+               Uri photoURI = FileProvider.getUriForFile(getContext(),
+                "com.dozuki.ifixit.fileprovider",
+                file);
+               takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+               startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
+            }
+         }
       } catch (IOException e) {
          Log.e("MediaFragment", "Launch camera", e);
          Toast.makeText(getActivity(), "We had a problem launching your camera.", Toast.LENGTH_SHORT).show();
