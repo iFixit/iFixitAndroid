@@ -36,6 +36,7 @@ import com.google.analytics.tracking.android.MapBuilder;
 import com.google.analytics.tracking.android.StandardExceptionParser;
 import com.google.analytics.tracking.android.Tracker;
 import com.jakewharton.picasso.OkHttp3Downloader;
+import com.squareup.leakcanary.LeakCanary;
 import com.squareup.otto.Bus;
 import com.squareup.picasso.Picasso;
 
@@ -127,9 +128,16 @@ public class App extends Application {
    @Override
    public void onCreate() {
 
-      if (false && inDebug()) {
+      // Install memory leak analyzer
+      if (LeakCanary.isInAnalyzerProcess(this)) {
+         // This process is dedicated to LeakCanary for heap analysis.
+         // You should not init your app in this process.
+         return;
+      }
+      LeakCanary.install(this);
+
+      if (inDebug()) {
          StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder()
-          .detectDiskReads()
           .detectDiskWrites()
           .detectNetwork()   // or .detectAll() for all detectable problems
           .penaltyLog()
@@ -150,7 +158,8 @@ public class App extends Application {
       sApp = this;
       setSite(getDefaultSite());
 
-      // Build our custom Picasso instance with the OkHttp3 Downloader
+      // Build our custom Picasso instance with the OkHttp3 Downloader,
+      // and set a singleton of it with Picasso so it's used everywhere
       Picasso picasso = new Picasso.Builder(getApplicationContext())
        .downloader(new OkHttp3Downloader(getClient()))
        .build();
@@ -218,7 +227,6 @@ public class App extends Application {
    }
 
    public static OkHttpClient getClient() {
-
       if (sClient == null) {
          File cache = App.get().getCacheDir();
          if (!cache.exists()) {
