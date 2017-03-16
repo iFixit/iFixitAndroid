@@ -77,9 +77,8 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
          case MENU_BARCODE:
             launchBarcodeScanner();
             return true;
-         default:
-            return super.onOptionsItemSelected(item);
       }
+      return super.onOptionsItemSelected(item);
    }
 
    @Override

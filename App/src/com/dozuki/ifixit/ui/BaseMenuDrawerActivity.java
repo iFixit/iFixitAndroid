@@ -82,17 +82,20 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       mDrawerList.setNavigationItemSelectedListener(this);
 
       mDrawerToggle = new ActionBarDrawerToggle(
-       this, mDrawer, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+       this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close
       ) {
             /** Called when a drawer has settled in a completely closed state. */
          public void onDrawerClosed(View view) {
             super.onDrawerClosed(view);
             getSupportActionBar().setTitle(mTitle);
+            syncActionBarArrowState();
+            invalidateOptionsMenu();
          }
 
             /** Called when a drawer has settled in a completely open state. */
          public void onDrawerOpened(View drawerView) {
-            super.onDrawerOpened(drawerView);
+             mDrawerToggle.setDrawerIndicatorEnabled(true);
+            invalidateOptionsMenu();
          }
       };
 
@@ -106,9 +109,22 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       SharedPreferences prefs = getSharedPreferences(INTERFACE_STATE, MODE_PRIVATE);
 
       if (!prefs.contains(PEEK_MENU)) {
-         prefs.edit().putBoolean(PEEK_MENU, false).commit();
+         prefs.edit().putBoolean(PEEK_MENU, false).apply();
          mDrawer.openDrawer(mDrawerList);
       }
+   }
+
+   public void syncActionBarArrowState() {
+      int backStackEntryCount =
+       getSupportFragmentManager().getBackStackEntryCount();
+      mDrawerToggle.setDrawerIndicatorEnabled(backStackEntryCount == 0);
+      if (backStackEntryCount > 0) {
+         mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+      }
+   }
+
+   public ActionBarDrawerToggle getDrawerToggle() {
+      return mDrawerToggle;
    }
 
    @Override
@@ -121,6 +137,17 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
    public void onConfigurationChanged(Configuration newConfig) {
       super.onConfigurationChanged(newConfig);
       mDrawerToggle.onConfigurationChanged(newConfig);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      // Pass the event to ActionBarDrawerToggle, if it returns
+      // true, then it has handled the app icon touch event
+      if (mDrawerToggle.onOptionsItemSelected(item)) {
+         return true;
+      }
+
+      return super.onOptionsItemSelected(item);
    }
 
    @Override
@@ -150,15 +177,6 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
       // Reload app to remove username and logout button from menu.
       rebuildSliderMenu();
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      if (mDrawerToggle.onOptionsItemSelected(item)) {
-         return true;
-      }
-
-      return super.onOptionsItemSelected(item);
    }
 
    @Override
