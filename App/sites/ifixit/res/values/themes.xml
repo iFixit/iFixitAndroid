@@ -5,6 +5,7 @@
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black_alpha_40</item>
         <item name="colorAccent">@color/ifixit_blue</item>
+        <item name="colorAccentDark">@color/blue_6</item>
         <item name="colorButtonNormal">@color/white</item>
 
         <!-- Theme Attributes -->

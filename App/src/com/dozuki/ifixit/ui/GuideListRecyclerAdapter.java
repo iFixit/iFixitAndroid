@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
@@ -77,10 +78,13 @@ public class GuideListRecyclerAdapter extends RecyclerView.Adapter<GuideListRecy
       public ViewHolder(View v) {
          super(v);
          mItemView = v;
-         mItemView.setOnClickListener(this);
+
          mTitleView = (TextView)v.findViewById(R.id.guide_grid_item_title);
          mThumbnail = (ImageView)v.findViewById(R.id.guide_grid_item_thumbnail);
          mPicasso = Picasso.with(v.getContext());
+
+         ((RelativeLayout)v.findViewById(R.id.guide_item_target)).setOnClickListener(this);
+         mItemView.setOnClickListener(this);
       }
 
       public void setItem(GuideInfo guide) {

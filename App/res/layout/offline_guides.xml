@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:clickable="true"
         android:focusableInTouchMode="true"
-        android:background="@color/emphasis">
+        android:background="@drawable/sync_box_ripple">
 
         <TextView
             android:id="@+id/sync_status"

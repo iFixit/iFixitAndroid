@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android">
+<resources xmlns:android="http://schemas.android.com/apk/res/android"
+           xmlns:card_view="http://schemas.android.com/apk/res-auto">
 
     <!-- Holo Theme Overrides -->
     <style name="Base"/>
@@ -347,6 +348,22 @@
     <style name="NavigationHeader">
         <item name="android:background">?attr/colorPrimary</item>
         <item name="android:padding">24dp</item>
+    </style>
+
+    <style name="CardListItem">
+        <item name="android:layout_marginTop">2dp</item>
+        <item name="android:layout_marginBottom">2dp</item>
+        <item name="android:layout_marginLeft">8dp</item>
+        <item name="android:layout_marginRight">8dp</item>
+        <item name="card_view:contentPadding">0dp</item>
+        <item name="card_view:cardUseCompatPadding">true</item>
+        <item name="card_view:cardCornerRadius">4dp</item>
+        <item name="card_view:cardElevation">2dp</item>
+    </style>
+
+    <style name="CardListItemInner">
+        <item name="android:clickable">true</item>
+        <item name="android:background">@drawable/list_item_ripple</item>
     </style>
 
 </resources>

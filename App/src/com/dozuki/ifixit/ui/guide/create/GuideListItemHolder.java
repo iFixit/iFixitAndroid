@@ -16,6 +16,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
@@ -51,7 +52,9 @@ public class GuideListItemHolder extends RecyclerView.ViewHolder implements View
       mPublishText = (TextView)  itemView.findViewById(R.id.guide_create_item_publish_status);
 
       itemView.setOnClickListener(this);
+      ((RelativeLayout)itemView.findViewById(R.id.guide_item_target)).setOnClickListener(this);
       itemView.setOnLongClickListener(this);
+      ((RelativeLayout)itemView.findViewById(R.id.guide_item_target)).setOnLongClickListener(this);
    }
 
    private void publishGuide() {

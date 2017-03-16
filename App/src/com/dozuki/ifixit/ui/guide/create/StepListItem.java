@@ -24,7 +24,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class StepListItem extends TouchableRelativeLayout {
+public class StepListItem extends TouchableRelativeLayout implements View.OnClickListener {
    private static final int EDIT_OPTION = 0;
    private static final int DELETE_OPTION = 1;
    private TextView mStepsView;
@@ -46,32 +46,10 @@ public class StepListItem extends TouchableRelativeLayout {
       mStepNumber = (TextView) findViewById(R.id.guide_create_step_item_number);
       mImageView = (ImageView) findViewById(R.id.guide_step_item_thumbnail);
 
-      //setOnClickListener(v -> editStep());
-
-      final View menuButton = findViewById(R.id.step_item_menu_button);
-
-      menuButton.setOnClickListener(v -> {
-         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-            PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
-
-            itemMenu.setOnMenuItemClickListener(item -> {
-               switch (item.getItemId()) {
-                  case R.id.step_create_item_edit:
-                     editStep();
-                     break;
-                  case R.id.step_create_item_delete:
-                     deleteStep();
-                     break;
-               }
-
-               return true;
-            });
-
-            MenuInflater menuInflater = itemMenu.getMenuInflater();
-            menuInflater.inflate(R.menu.step_item_popup, itemMenu.getMenu());
-            itemMenu.show();
-         } else {
+      setOnClickListener(this);
+      setOnLongClickListener(new View.OnLongClickListener() {
+         @Override
+         public boolean onLongClick(View v) {
             // PopupMenu was added in API 11, so let's use an AlertDialog instead.
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
             builder.setItems(R.array.step_list_item_options, (dialog, which) -> {
@@ -85,6 +63,7 @@ public class StepListItem extends TouchableRelativeLayout {
                }
             });
             builder.show();
+            return false;
          }
       });
    }
@@ -160,5 +139,10 @@ public class StepListItem extends TouchableRelativeLayout {
        .into(imageView);
 
       imageView.invalidate();
+   }
+
+   @Override
+   public void onClick(View v) {
+      editStep();
    }
 }

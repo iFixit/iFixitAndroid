@@ -4,28 +4,21 @@
         xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:id="@+id/card_view"
         android:clickable="true"
-        android:background="?android:attr/selectableItemBackground"
         android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginBottom="2dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="8dp"
-        card_view:contentPadding="0dp"
-        card_view:cardUseCompatPadding="true"
-        card_view:cardCornerRadius="4dp"
-        card_view:cardElevation="2dp">
+        style="@style/CardListItem">
 
     <RelativeLayout
             android:layout_centerVertical="true"
+            style="@style/CardListItemInner"
+            android:id="@+id/guide_item_target"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
         <ImageView
                 android:id="@+id/guide_grid_item_thumbnail"
                 style="@style/GuideGridItemThumbnail"
-
                 android:layout_width="@dimen/guide_thumbnail_width"
                 android:layout_height="@dimen/guide_thumbnail_height"
                 android:layout_alignParentLeft="true"
