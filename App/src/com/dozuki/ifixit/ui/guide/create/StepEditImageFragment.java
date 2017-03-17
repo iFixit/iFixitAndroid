@@ -180,34 +180,36 @@ public class StepEditImageFragment extends BaseFragment {
 
       mThumbs.setThumbsOnLongClickListener(new View.OnLongClickListener() {
          @Override
-         public boolean onLongClick(View v) {
+         public boolean onLongClick(final View v) {
             AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
             builder
              .setTitle(mContext.getString(R.string.step_edit_existing_image_actions_title))
-             .setItems(R.array.existing_image_actions, (dialog, which) -> {
-                Image thumbImage = (Image) v.getTag();
+             .setItems(R.array.existing_image_actions, new AlertDialog.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                   Image thumbImage = (Image) v.getTag();
 
-                switch (which) {
-                   case COPY_TO_MEDIA_MANAGER:
-                      App.sendEvent("ui_action", "edit_image", "copy_to_media_manager", null);
-                      Api.call(getActivity(),
-                       ApiCall.copyImage(thumbImage.getId() + ""));
-                      break;
-                   case DETACH_TO_MEDIA_MANAGER:
-                      App.sendEvent("ui_action", "edit_image", "detach_to_media_manager", null);
+                   switch (which) {
+                      case COPY_TO_MEDIA_MANAGER:
+                         App.sendEvent("ui_action", "edit_image", "copy_to_media_manager", null);
+                         Api.call(getActivity(),
+                          ApiCall.copyImage(thumbImage.getId() + ""));
+                         break;
+                      case DETACH_TO_MEDIA_MANAGER:
+                         App.sendEvent("ui_action", "edit_image", "detach_to_media_manager", null);
 
-                      Api.call(getActivity(),
-                       ApiCall.copyImage(thumbImage.getId() + ""));
-                   case DELETE_FROM_STEP:
-                      App.sendEvent("ui_action", "edit_image", "delete_from_step", null);
-                      mThumbs.removeThumb(v);
-                      mImages.remove(thumbImage);
+                         Api.call(getActivity(),
+                          ApiCall.copyImage(thumbImage.getId() + ""));
+                      case DELETE_FROM_STEP:
+                         App.sendEvent("ui_action", "edit_image", "delete_from_step", null);
+                         mThumbs.removeThumb(v);
+                         mImages.remove(thumbImage);
 
-                      Bus bus = App.getBus();
-                      bus.post(new StepImageDeleteEvent(thumbImage));
-                      bus.post(new StepChangedEvent());
+                         Bus bus = App.getBus();
+                         bus.post(new StepImageDeleteEvent(thumbImage));
+                         bus.post(new StepChangedEvent());
 
-                      break;
+                         break;
+                   }
                 }
              });
             builder.create().show();

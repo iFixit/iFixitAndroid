@@ -206,7 +206,7 @@ public class StepPortalFragment extends BaseFragment implements
 
    @Subscribe
    public void onStepReorder(ApiEvent.StepReorder event) {
-      ((StepsActivity)getActivity()).hideLoading();
+      ((StepsActivity) getActivity()).hideLoading();
 
       if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
          mGuide = event.getResult();
@@ -314,18 +314,21 @@ public class StepPortalFragment extends BaseFragment implements
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.step_edit_confirm_delete_message, mStepForDelete.getStepNum()))
-       .setPositiveButton(getString(R.string.yes), (dialog, id) -> {
-          mShowingDelete = false;
+       .setPositiveButton(getString(R.string.yes), new AlertDialog.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+             mShowingDelete = false;
 
-          ((StepsActivity) getActivity()).showLoading();
-          Api.call(getActivity(),
-           ApiCall.deleteStep(mGuide.getGuideid(), mStepForDelete));
-          dialog.cancel();
-
-       }).setNegativeButton(getString(R.string.no), (dialog, id) -> {
-          mShowingDelete = false;
-          mStepForDelete = null;
-       });
+             ((StepsActivity) getActivity()).showLoading();
+             Api.call(getActivity(),
+              ApiCall.deleteStep(mGuide.getGuideid(), mStepForDelete));
+             dialog.cancel();
+          }
+       }).setNegativeButton(getString(R.string.no), new AlertDialog.OnClickListener() {
+         public void onClick(DialogInterface dialog, int which) {
+            mShowingDelete = false;
+            mStepForDelete = null;
+         }
+      });
 
       DialogInterface.OnDismissListener dialogDismissListener = new DialogInterface.OnDismissListener() {
          @Override

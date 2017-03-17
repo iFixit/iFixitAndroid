@@ -162,6 +162,8 @@ public class Api {
             event = result;
          }
 
+
+
          if (!isSuccess(code)) {
             event.setError(ApiError.getByStatusCode(code));
          }

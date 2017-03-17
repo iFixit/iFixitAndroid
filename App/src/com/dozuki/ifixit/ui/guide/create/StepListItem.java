@@ -52,14 +52,16 @@ public class StepListItem extends TouchableRelativeLayout implements View.OnClic
          public boolean onLongClick(View v) {
             // PopupMenu was added in API 11, so let's use an AlertDialog instead.
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setItems(R.array.step_list_item_options, (dialog, which) -> {
-               switch (which) {
-                  case EDIT_OPTION:
-                     editStep();
-                     break;
-                  case DELETE_OPTION:
-                     deleteStep();
-                     break;
+            builder.setItems(R.array.step_list_item_options, new AlertDialog.OnClickListener() {
+               public void onClick(DialogInterface dialog, int which) {
+                  switch (which) {
+                     case EDIT_OPTION:
+                        editStep();
+                        break;
+                     case DELETE_OPTION:
+                        deleteStep();
+                        break;
+                  }
                }
             });
             builder.show();

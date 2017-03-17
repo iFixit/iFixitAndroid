@@ -75,13 +75,18 @@ public class TopicViewActivity extends BaseActivity {
 
       setSupportActionBar(mToolbar);
 
-      mAppBar.addOnOffsetChangedListener((appBarLayout, verticalOffset) -> {
-         // Appbar is collapsed
-         if (verticalOffset == -mCollapsingToolbar.getHeight() + mToolbar.getHeight()) {
-            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp);
-            getSupportActionBar().setHomeAsUpIndicator(upArrow);
-         } else {
-            final Drawable upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
+      mAppBar.addOnOffsetChangedListener(new AppBarLayout.OnOffsetChangedListener() {
+         @Override
+         public void onOffsetChanged(AppBarLayout appBarLayout, int verticalOffset) {
+            final Drawable upArrow;
+
+            // Appbar is collapsed
+            if (verticalOffset == -mCollapsingToolbar.getHeight() + mToolbar.getHeight()) {
+               upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp);
+            } else {
+               upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
+            }
+
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
          }
       });

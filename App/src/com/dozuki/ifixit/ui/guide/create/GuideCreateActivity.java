@@ -158,7 +158,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
          mUserGuideList.addAll(event.getResult());
          Log.d("GuideCreateActivity", "Size: " + mUserGuideList.size());
          mGuideRecyclerListAdapter.addAll(mUserGuideList);
-         mGuideRecyclerListAdapter.notifyDataSetChanged();
       } else {
          Api.getErrorDialog(this, event).show();
       }
@@ -187,9 +186,9 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
             guide.mIsPublishing = false;
          }
       }
+
       mGuideRecyclerListAdapter.clear();
       mGuideRecyclerListAdapter.addAll(mUserGuideList);
-      mGuideRecyclerListAdapter.notifyDataSetChanged();
    }
 
    @Subscribe
@@ -198,7 +197,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
          mUserGuideList.remove(mGuideForDelete);
          mGuideRecyclerListAdapter.clear();
          mGuideRecyclerListAdapter.addAll(mUserGuideList);
-         mGuideRecyclerListAdapter.notifyDataSetChanged();
       } else {
          // Try to update the guide's revisionid on a conflict.
          if (event.getError().mType == ApiError.Type.CONFLICT) {
@@ -219,13 +217,20 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
       mShowingHelp = true;
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.guide_create_help))
-       .setPositiveButton(getString(R.string.media_help_confirm), (dialog, id) -> {
-          mShowingHelp = false;
-          dialog.cancel();
+       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+             mShowingHelp = false;
+             dialog.cancel();
+          }
        });
 
       AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(dialog1 -> mShowingHelp = false);
+      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+         @Override
+         public void onDismiss(DialogInterface dialog) {
+            mShowingHelp = false;
+         }
+      });
 
       return dialog;
    }
@@ -235,10 +240,16 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.confirm_delete_body, item.mTitle))
-       .setPositiveButton(getString(R.string.yes), (dialog, id) -> {
-          Api.call(GuideCreateActivity.this, ApiCall.deleteGuide(mGuideForDelete));
-          dialog.cancel();
-       }).setNegativeButton(getString(R.string.no), (dialog, id) -> mGuideForDelete = null);
+       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+             Api.call(GuideCreateActivity.this, ApiCall.deleteGuide(mGuideForDelete));
+             dialog.cancel();
+          }
+       }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
+         public void onClick(DialogInterface dialog, int id) {
+            mGuideForDelete = null;
+         }
+      });
 
       return builder.create();
    }
@@ -263,6 +274,8 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
       }
 
       guide.mIsPublishing = true;
+
+      Log.d("Api", "Guide Revisionid before: " + guide.mRevisionid);
 
       if (!guide.mPublic) {
          Api.call(this,
