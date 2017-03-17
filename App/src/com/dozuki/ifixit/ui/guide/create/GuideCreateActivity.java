@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -53,6 +54,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
    private GuideCreateRecyclerListAdapter mGuideRecyclerListAdapter;
    private RecyclerView mRecyclerListView;
    private SwipeRefreshLayout mSwipeLayout;
+   private GuideCreateActivity mContext;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -62,7 +64,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
       getSupportActionBar().setTitle(getString(R.string.my_guides));
 
       if (savedInstanceState != null) {
-         mUserGuideList = (ArrayList<GuideInfo>)savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
+         mUserGuideList = (ArrayList<GuideInfo>) savedInstanceState.getSerializable(GUIDE_OBJECT_KEY);
          mShowingHelp = savedInstanceState.getBoolean(SHOWING_HELP);
          mGuideForDelete = (GuideInfo) savedInstanceState.getSerializable(GUIDE_FOR_DELETE);
 
@@ -76,17 +78,24 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
 
       mGuideRecyclerListAdapter = new GuideCreateRecyclerListAdapter(mUserGuideList);
       mGuideRecyclerListAdapter.setGuideListItemListener(this);
-      mSwipeLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+      mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
       mSwipeLayout.setOnRefreshListener(this);
 
-      mRecyclerListView = (RecyclerView)findViewById(R.id.guide_create_listview);
+      mRecyclerListView = (RecyclerView) findViewById(R.id.guide_create_listview);
       mRecyclerListView.setLayoutManager(new LinearLayoutManager(this));
       mRecyclerListView.setAdapter(mGuideRecyclerListAdapter);
 
-      findViewById(R.id.add_guide_fab).setOnClickListener(v -> {
-         Intent intent = new Intent(this, StepEditActivity.class);
-         startActivity(intent);
-      });
+      FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_guide_fab);
+      mContext = this;
+      if (fab != null) {
+         fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent = new Intent(mContext, StepEditActivity.class);
+               startActivity(intent);
+            }
+         });
+      }
 
       App.sendScreenView("/user/guides");
    }
@@ -236,7 +245,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
 
    @Override
    public void onEditItemClicked(GuideInfo guide) {
-      App.sendEvent("ui_action", "button_press", "edit_guide", (long)guide.mGuideid);
+      App.sendEvent("ui_action", "button_press", "edit_guide", (long) guide.mGuideid);
 
       Intent intent = new Intent(this, StepsActivity.class);
       intent.putExtra(StepsActivity.GUIDE_ID_KEY, guide.mGuideid);
@@ -246,7 +255,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
 
    @Override
    public void onPublishItemClicked(GuideInfo guide) {
-      App.sendEvent("ui_action", "button_press", "publish_guide", (long)guide.mGuideid);
+      App.sendEvent("ui_action", "button_press", "publish_guide", (long) guide.mGuideid);
 
       // Ignore button press if we are already (un)publishing the guide.
       if (guide.mIsPublishing) {
@@ -274,7 +283,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
 
    @Override
    public void onDeleteItemClicked(GuideInfo guide) {
-      App.sendEvent("ui_action", "button_press", "delete_guide", (long)guide.mGuideid);
+      App.sendEvent("ui_action", "button_press", "delete_guide", (long) guide.mGuideid);
 
       createDeleteDialog(guide).show();
    }
