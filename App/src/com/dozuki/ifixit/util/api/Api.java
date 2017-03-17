@@ -36,9 +36,6 @@ import okhttp3.ResponseBody;
  * event bus.
  */
 public class Api {
-   private interface Responder {
-      public void setResult(ApiEvent<?> result);
-   }
 
    private static final int INVALID_LOGIN_CODE = 401;
    private static final String TAG = "Api";
@@ -90,16 +87,7 @@ public class Api {
       if (requireAuthentication(endpoint) && !App.get().isUserLoggedIn()) {
          App.getBus().post(getUnauthorizedEvent(apiCall));
       } else {
-         performRequest(apiCall, result -> {
-            if (apiCall.mEndpoint.mPostResults) {
-               /**
-                * Always post the result despite any errors. This actually sends it off
-                * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
-                * was initiated by that Activity instance.
-                */
-               App.getBus().post(new ApiEvent.ActivityProxy(result));
-            }
-         });
+         performRequest(apiCall);
       }
    }
 
@@ -299,24 +287,27 @@ public class Api {
       }
    }
 
-   private static void performRequest(final ApiCall apiCall, final Responder responder) {
-      AsyncTask<String, Void, ApiEvent<?>> as = new AsyncTask<String, Void, ApiEvent<?>>() {
+   private static void performRequest(ApiCall apiCall) {
+      AsyncTask<ApiCall, Void, ApiEvent<?>> as = new AsyncTask<ApiCall, Void, ApiEvent<?>>() {
          @Override
-         protected ApiEvent<?> doInBackground(String... dummy) {
-            return performAndParseApiCall(apiCall);
+         protected ApiEvent<?> doInBackground(ApiCall... call) {
+            return performAndParseApiCall(call[0]);
          }
 
          @Override
          protected void onPostExecute(ApiEvent<?> result) {
-            responder.setResult(result);
+            if (result.mApiCall.mEndpoint.mPostResults) {
+               /**
+                * Always post the result despite any errors. This actually sends it off
+                * to BaseActivity which posts the underlying ApiEvent<?> if the ApiCall
+                * was initiated by that Activity instance.
+                */
+               App.getBus().post(new ApiEvent.ActivityProxy(result));
+            }
          }
       };
 
-      if (Build.VERSION.SDK_INT <= Build.VERSION_CODES.HONEYCOMB_MR1) {
-         as.execute();
-      } else {
-         as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-      }
+      as.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR, apiCall);
    }
 
    protected static ApiEvent<?> performAndParseApiCall(ApiCall apiCall) {

@@ -80,7 +80,7 @@ public class GuideMediaProgress {
       mMediaProgress = mTotalMedia - guideMedia.size();
       mMissingMedia = guideMedia;
 
-      mMediaProgress = guideMedia.size() - guideMedia.size();
+      Log.d("ApiSyncAdapter", "Progress: " + mMediaProgress);
    }
 
    public GuideMediaProgress(GuideInfo guideInfo, int totalMedia, int mediaProgress) {
