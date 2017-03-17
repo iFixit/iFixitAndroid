@@ -20,6 +20,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
@@ -53,7 +54,7 @@ public class StepPortalFragment extends BaseFragment implements
       super.onCreate(savedInstanceState);
 
       int guideid = getArguments().getInt(StepsActivity.GUIDE_ID_KEY);
-      mActionBar = ((AppCompatActivity) getActivity()).getSupportActionBar();
+      mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
       setHasOptionsMenu(true);
       mSelf = this;
       mStepAdapter = new StepAdapter();
@@ -67,7 +68,7 @@ public class StepPortalFragment extends BaseFragment implements
       if (mGuide == null) {
          ((StepsActivity) getActivity()).showLoading();
          Api.call(getActivity(), ApiCall.unpatrolledGuide(guideid));
-      } else {
+      } else if (mActionBar != null) {
          mActionBar.setTitle(mGuide.getTitle());
       }
    }
