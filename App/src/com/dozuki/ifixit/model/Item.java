@@ -1,6 +1,8 @@
 package com.dozuki.ifixit.model;
 
 
+import com.dozuki.ifixit.App;
+
 import java.io.Serializable;
 
 public class Item implements Serializable {
@@ -49,7 +51,13 @@ public class Item implements Serializable {
    }
 
    public String getUrl() {
-      return mUrl;
+      if (mUrl.startsWith("http")) {
+         return mUrl;
+      } else if (mUrl.startsWith("/")) {
+         return App.get().getSite().mDomain + mUrl;
+      } else {
+         return "";
+      }
    }
 
    public void setThumb(String thumb) {
