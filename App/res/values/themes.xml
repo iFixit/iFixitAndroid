@@ -54,8 +54,6 @@
 
     <style name="Theme.Accustream" parent="Theme.Base"></style>
 
-    <style name="Theme.Magnolia" parent="Theme.Base"></style>
-
     <style name="Theme.DripAssist" parent="Theme.Base"></style>
 
     <style name="Theme.Oscaro" parent="Theme.Base"></style>
