@@ -50,6 +50,7 @@
 
     <color name="absolute_white">#FFFFFFFF</color>
     <color name="white">@color/gray_1</color>
+    <color name="white_50">#AAFAFAFA</color>
     <color name="black">@color/gray_10</color>
     <color name="absolute_black">#FF000000</color>
     <color name="black_alpha_40">#66000000</color>
