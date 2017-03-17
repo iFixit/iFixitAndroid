@@ -34,7 +34,7 @@ public class CaptureHelper {
       // Create an image file name
       String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
       String imageFileName = "JPEG_" + timeStamp + "_";
-      File storageDir = activity.getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+      File storageDir = getAlbumDir(activity);
       File image = File.createTempFile(
        imageFileName,  /* prefix */
        ".jpg",         /* suffix */
@@ -44,12 +44,12 @@ public class CaptureHelper {
       return image;
    }
 
-   public static File getAlbumDir() {
+   private static File getAlbumDir(Activity activity) {
       String directoryName = getDirectoryName();
       File storageDir = null;
 
       if (Environment.MEDIA_MOUNTED.equals(Environment.getExternalStorageState())) {
-         storageDir = new File(Environment.getExternalStoragePublicDirectory(
+         storageDir = new File(activity.getExternalFilesDir(
           Environment.DIRECTORY_PICTURES), directoryName + "/");
 
          if (!storageDir.mkdirs() && !storageDir.exists()) {
