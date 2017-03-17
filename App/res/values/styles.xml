@@ -57,7 +57,6 @@
     <style name="Base.FormField" parent="Widget.AppCompat.EditText">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginBottom">24dp</item>
     </style>
 
     <style name="Base.Spinner" parent="Widget.AppCompat.Spinner.DropDown">

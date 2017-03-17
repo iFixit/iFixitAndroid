@@ -21,6 +21,7 @@ import com.dozuki.ifixit.ui.BaseDialogFragment;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.views.HelperTextInputLayout;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
    private AppCompatAutoCompleteTextView mTopic;
    private ArrayList<String> mTopics;
    private ArrayAdapter<String> mAdapter;
+   private HelperTextInputLayout mSubjectWrapper;
 
    public static NewGuideDialogFragment newInstance(Guide guide) {
       mTopicName = App.get().getTopicName();
@@ -102,15 +104,17 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
        });
 
 
-       View v = getActivity().getLayoutInflater().inflate(R.layout.new_guide_fragment_dialog, null);
+      View v = getActivity().getLayoutInflater().inflate(R.layout.new_guide_fragment_dialog, null);
       mTopic = (AppCompatAutoCompleteTextView) v.findViewById(R.id.topic_name_field);
       mTopic.setHint(getString(R.string.guide_intro_wizard_guide_topic_title, mTopicName));
       mTopic.addTextChangedListener(new TextWatcher() {
          @Override
-         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) { }
+         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+         }
 
          @Override
-         public void afterTextChanged(Editable editable) { }
+         public void afterTextChanged(Editable editable) {
+         }
 
          @Override
          public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -131,6 +135,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
          Api.call(getActivity(), ApiCall.allTopics());
       }
 
+      mSubjectWrapper = (HelperTextInputLayout) v.findViewById(R.id.subject_field_wrapper);
       mSubject = (TextInputEditText) v.findViewById(R.id.subject_field);
 
       String subject = mGuide.getSubject();
@@ -165,7 +170,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
                mTopic.setImeOptions(EditorInfo.IME_ACTION_NEXT);
             }
 
-            mSubject.setVisibility(visibility);
+            mSubjectWrapper.setVisibility(visibility);
          }
 
          @Override
@@ -181,7 +186,7 @@ public class NewGuideDialogFragment extends BaseDialogFragment {
 
       builder.setView(v);
 
-       return builder.create();
+      return builder.create();
    }
 
    @Override
