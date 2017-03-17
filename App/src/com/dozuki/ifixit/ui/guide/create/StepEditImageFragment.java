@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.net.Uri;
@@ -49,6 +50,7 @@ public class StepEditImageFragment extends BaseFragment {
    private static final int CAPTURE_IMAGE = 0;
    private static final int MEDIA_MANAGER = 1;
    private static final int REQUEST_TAKE_PHOTO = 2;
+   private static final String CAMERA_PATH = "STEP_EDIT_CAMERA_PATH";
 
    private Activity mContext;
 
@@ -75,20 +77,18 @@ public class StepEditImageFragment extends BaseFragment {
 
       mThumbs = (ThumbnailView) v.findViewById(R.id.thumbnail_viewer);
 
-      String[] permissions;
-      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
-         permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
-      } else {
-         permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
-      }
+      String[] permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
 
       if (ContextCompat.checkSelfPermission(getActivity(),
        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
        ContextCompat.checkSelfPermission(getActivity(),
-        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+        Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED ||
+       ContextCompat.checkSelfPermission(getActivity(),
+        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
          mThumbs.setCanEdit(false);
          ActivityCompat.requestPermissions(getActivity(),
           permissions, CaptureHelper.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
       } else {
          mThumbs.setCanEdit(true);
       }
@@ -101,6 +101,10 @@ public class StepEditImageFragment extends BaseFragment {
 
       if (savedInstanceState != null) {
          mImages = (ArrayList<Image>) savedInstanceState.getSerializable(IMAGES_KEY);
+
+         if (savedInstanceState.getString(CAMERA_PATH) != null) {
+            mCurrentPhotoPath = savedInstanceState.getString(CAMERA_PATH);
+         }
       }
 
       mContext.getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -130,74 +134,85 @@ public class StepEditImageFragment extends BaseFragment {
             AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
 
             builder.setTitle(App.get().getString(R.string.step_edit_new_thumb_actions_title))
-             .setItems(R.array.new_image_actions, (dialog, which) -> {
-                switch (which) {
-                   case CAPTURE_IMAGE:
-                      // Create the File where the photo should go
-                      File photoFile = null;
-                      try {
-                         photoFile = CaptureHelper.createImageFile(getActivity());
-                      } catch (IOException ex) {
-                         ex.printStackTrace();
-                      }
+             .setItems(R.array.new_image_actions, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                   switch (which) {
+                      case CAPTURE_IMAGE:
+                         try {
+                            // Create the File where the photo should go
+                            File photoFile = CaptureHelper.createImageFile(getActivity());
+                            Log.d("CaptureHelper", photoFile.getAbsolutePath());
 
-                      mCurrentPhotoPath = photoFile.getAbsolutePath();
+                            mCurrentPhotoPath = photoFile.getAbsolutePath();
 
-                      Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                      // Ensure that there's a camera activity to handle the intent
-                      if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
-                         // Continue only if the File was successfully created
-                         if (photoFile != null) {
-                            Uri photoURI = FileProvider.getUriForFile(getContext(),
-                             "com.dozuki.ifixit.fileprovider",
-                             photoFile);
-                            takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                            startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
+                            Log.d("CaptureHelper", mCurrentPhotoPath);
+                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                            // Ensure that there's a camera activity to handle the intent
+                            if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
+                               // Continue only if the File was successfully created
+                               if (photoFile != null) {
+                                  Uri photoURI = FileProvider.getUriForFile(mContext,
+                                   "com.dozuki.ifixit.fileprovider",
+                                   photoFile);
+                                  Log.d("CaptureHelper", photoURI.getPath());
+                                  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                  startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
+                               } else {
+                                  Log.d("CaptureHelper", "photo file is null");
+                               }
+                            }
+                         } catch (IOException e) {
+                            Log.e("StepEditImageFragment", "Launch camera", e);
+                            Toast.makeText(getActivity(), "We had a problem launching your camera.", Toast.LENGTH_SHORT).show();
                          }
-                      }
-                      break;
-                   case MEDIA_MANAGER:
-                      dispatchAttachFromMediaManager();
-                      break;
+
+                         break;
+                      case MEDIA_MANAGER:
+                         dispatchAttachFromMediaManager();
+                         break;
+                   }
                 }
              });
             builder.create().show();
          }
       });
 
-      mThumbs.setThumbsOnLongClickListener(v -> {
-         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-         builder
-          .setTitle(mContext.getString(R.string.step_edit_existing_image_actions_title))
-          .setItems(R.array.existing_image_actions, (dialog, which) -> {
-             Image thumbImage = (Image) v.getTag();
+      mThumbs.setThumbsOnLongClickListener(new View.OnLongClickListener() {
+         @Override
+         public boolean onLongClick(View v) {
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder
+             .setTitle(mContext.getString(R.string.step_edit_existing_image_actions_title))
+             .setItems(R.array.existing_image_actions, (dialog, which) -> {
+                Image thumbImage = (Image) v.getTag();
 
-             switch (which) {
-                case COPY_TO_MEDIA_MANAGER:
-                   App.sendEvent("ui_action", "edit_image", "copy_to_media_manager", null);
-                   Api.call(getActivity(),
-                    ApiCall.copyImage(thumbImage.getId() + ""));
-                   break;
-                case DETACH_TO_MEDIA_MANAGER:
-                   App.sendEvent("ui_action", "edit_image", "detach_to_media_manager", null);
+                switch (which) {
+                   case COPY_TO_MEDIA_MANAGER:
+                      App.sendEvent("ui_action", "edit_image", "copy_to_media_manager", null);
+                      Api.call(getActivity(),
+                       ApiCall.copyImage(thumbImage.getId() + ""));
+                      break;
+                   case DETACH_TO_MEDIA_MANAGER:
+                      App.sendEvent("ui_action", "edit_image", "detach_to_media_manager", null);
 
-                   Api.call(getActivity(),
-                    ApiCall.copyImage(thumbImage.getId() + ""));
-                case DELETE_FROM_STEP:
-                   App.sendEvent("ui_action", "edit_image", "delete_from_step", null);
-                   mThumbs.removeThumb(v);
-                   mImages.remove(thumbImage);
+                      Api.call(getActivity(),
+                       ApiCall.copyImage(thumbImage.getId() + ""));
+                   case DELETE_FROM_STEP:
+                      App.sendEvent("ui_action", "edit_image", "delete_from_step", null);
+                      mThumbs.removeThumb(v);
+                      mImages.remove(thumbImage);
 
-                   Bus bus = App.getBus();
-                   bus.post(new StepImageDeleteEvent(thumbImage));
-                   bus.post(new StepChangedEvent());
+                      Bus bus = App.getBus();
+                      bus.post(new StepImageDeleteEvent(thumbImage));
+                      bus.post(new StepChangedEvent());
 
-                   break;
-             }
-          });
-         builder.create().show();
-
-         return true;
+                      break;
+                }
+             });
+            builder.create().show();
+            return true;
+         }
       });
    }
 
@@ -251,7 +266,12 @@ public class StepEditImageFragment extends BaseFragment {
             break;
          case CaptureHelper.CAMERA_REQUEST_CODE:
             if (resultCode == Activity.RESULT_OK) {
-               Log.i("ImageFragment", "Result came back");
+               if (mCurrentPhotoPath == null) {
+                  Log.e("CaptureHelper", "Error mCurrentPhotoPath is null!");
+                  return;
+               }
+
+               Log.d("CaptureHelper", "Result came back");
 
                // Prevent a save from being called until the image uploads and returns with the imageid
                activity.lockSave();
@@ -272,6 +292,9 @@ public class StepEditImageFragment extends BaseFragment {
    public void onSaveInstanceState(Bundle savedInstanceState) {
       super.onSaveInstanceState(savedInstanceState);
 
+      if (mCurrentPhotoPath != null) {
+         savedInstanceState.putString(CAMERA_PATH, mCurrentPhotoPath);
+      }
       savedInstanceState.putSerializable(IMAGES_KEY, mImages);
    }
 
