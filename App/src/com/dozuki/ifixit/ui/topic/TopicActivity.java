@@ -7,6 +7,8 @@ import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -97,6 +99,22 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
       }
    }
 
+   @Override
+   public void onDestroy() {
+      getSupportFragmentManager().removeOnBackStackChangedListener(this);
+      super.onDestroy();
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      if (item.getItemId() == android.R.id.home &&
+       getSupportFragmentManager().popBackStackImmediate()) {
+         return true;
+      }
+
+      return super.onOptionsItemSelected(item);
+   }
+
    @Subscribe
    public void onCategories(ApiEvent.Categories event) {
       hideLoading();
@@ -132,6 +150,8 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
       }
 
       mBackStackSize = backStackSize;
+
+      syncActionBarArrowState();
    }
 
    @Override

@@ -6,6 +6,7 @@ import android.content.res.ColorStateList;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -14,6 +15,7 @@ import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -111,53 +113,18 @@ public class TopicViewActivity extends BaseActivity {
        .with(this)
        .load(url)
        .error(R.drawable.no_image)
-       .into(new Target() {
-          @Override
-          public void onBitmapLoaded(Bitmap bitmap, com.squareup.picasso.Picasso.LoadedFrom from) {
-             assert mBackdropView != null;
-             mBackdropView.setImageBitmap(bitmap);
-
-             Palette.from(bitmap).generate(new Palette.PaletteAsyncListener() {
-                @Override
-                public void onGenerated(Palette palette) {
-                   Palette.Swatch vibrant = palette.getVibrantSwatch();
-
-                   if (vibrant != null) {
-                      // If we have a vibrant color
-                      // update the title TextView
-                      //mCollapsingToolbar.setBackgroundColor(mutedColor);
-                      //  mutedColor = palette.getMutedColor(R.attr.colorPrimary);
-                      mCollapsingToolbar.setExpandedTitleTextColor(ColorStateList.valueOf(vibrant.getTitleTextColor()));
-
-                      //mCollapsingToolbar.setStatusBarScrimColor(palette.getDarkMutedColor(mutedColor));
-                      mCollapsingToolbar.setContentScrimColor(palette.getMutedColor(vibrant.getTitleTextColor()));
-                   }
-                }
-             });
-
-          }
-
-          @Override
-          public void onBitmapFailed(Drawable errorDrawable) {
-
-          }
-
-          @Override
-          public void onPrepareLoad(Drawable placeHolderDrawable) {
-
-          }
-       });
+       .into(mBackdropView);
 
       mBackdropView.setOnClickListener(new View.OnClickListener() {
          @Override
          public void onClick(View v) {
-            String url = (String) v.getTag();
+            String url1 = (String) v.getTag();
 
-            if (url == null || (url.equals("") || url.startsWith("."))) {
+            if (url1 == null || (url1.equals("") || url1.startsWith("."))) {
                return;
             }
 
-            startActivity(FullImageViewActivity.viewImage(getBaseContext(), url, false));
+            startActivity(FullImageViewActivity.viewImage(getBaseContext(), url1, false));
          }
       });
    }
