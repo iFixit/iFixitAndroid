@@ -54,7 +54,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
    private GuideCreateRecyclerListAdapter mGuideRecyclerListAdapter;
    private RecyclerView mRecyclerListView;
    private SwipeRefreshLayout mSwipeLayout;
-   private GuideCreateActivity mContext;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -86,12 +85,12 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
       mRecyclerListView.setAdapter(mGuideRecyclerListAdapter);
 
       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_guide_fab);
-      mContext = this;
+
       if (fab != null) {
          fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-               Intent intent = new Intent(mContext, StepEditActivity.class);
+               Intent intent = new Intent(v.getContext(), StepEditActivity.class);
                startActivity(intent);
             }
          });
