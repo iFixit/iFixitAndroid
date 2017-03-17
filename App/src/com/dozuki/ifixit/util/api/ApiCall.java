@@ -32,6 +32,7 @@ import okhttp3.RequestBody;
 public class ApiCall {
    private static final String NO_QUERY = "";
    public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+   public static final MediaType MEDIA = MediaType.parse("application/octet-stream");
 
    protected ApiEndpoint mEndpoint;
    protected String mQuery;
@@ -350,13 +351,13 @@ public class ApiCall {
 
    public static ApiCall uploadImage(String filePath, String extraInformation) {
       File file = new File(filePath);
-      return new ApiCall(ApiEndpoint.UPLOAD_IMAGE, filePath, RequestBody.create(MultipartBody.MIXED, file), extraInformation,
+      return new ApiCall(ApiEndpoint.UPLOAD_IMAGE, filePath, RequestBody.create(MEDIA, file), extraInformation,
        filePath);
    }
 
    public static ApiCall uploadImageToStep(String filePath) {
       File file = new File(filePath);
-      return new ApiCall(ApiEndpoint.UPLOAD_STEP_IMAGE, filePath, RequestBody.create(MultipartBody.MIXED, file), null,
+      return new ApiCall(ApiEndpoint.UPLOAD_STEP_IMAGE, filePath, RequestBody.create(MEDIA, file), null,
        filePath);
    }
 
