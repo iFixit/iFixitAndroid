@@ -41,8 +41,14 @@
             android:name=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
-            android:label="@string/search"
-            android:launchMode="singleTop">
+            android:parentActivityName=".ui.topic.TopicActivity"
+            android:label="@string/search">
+
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                    android:name="android.support.PARENT_ACTIVITY"
+                    android:value=".ui.topic.TopicActivity" />
+
             <intent-filter>
                 <action android:name="android.intent.action.SEARCH"/>
             </intent-filter>

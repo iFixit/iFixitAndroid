@@ -8,6 +8,7 @@ import android.provider.SearchRecentSuggestions;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -94,11 +95,11 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       switch (item.getItemId()) {
          // Respond to the action bar's Up/Home button
          case android.R.id.home:
-            finish();
+            NavUtils.navigateUpFromSameTask(this);
             return true;
-         default:
-            return super.onOptionsItemSelected(item);
       }
+
+      return super.onOptionsItemSelected(item);
    }
 
    @SuppressWarnings("unused")
