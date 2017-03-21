@@ -64,9 +64,9 @@
     <color name="disabled_grey_text">@color/gray_2</color>
     <color name="disabled_grey_bg">@color/gray_6</color>
 
-    <color name="step_pager_previous_tab_color">@color/blue_6</color>
+    <color name="step_pager_previous_tab_color">@color/blue_5</color>
     <color name="step_pager_selected_tab_color">@color/blue_5</color>
-    <color name="step_pager_selected_last_tab_color">@color/blue_3</color>
+    <color name="step_pager_selected_last_tab_color">@color/blue_5</color>
     <color name="step_pager_next_tab_color">#10000000</color>
 
     <!-- Step bullet colors -->
