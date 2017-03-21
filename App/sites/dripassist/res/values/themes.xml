@@ -4,13 +4,13 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.DripAssist" parent="Theme.Base">
-        <item name="colorPrimary">@color/black</item>
-        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorPrimary">@color/dripassist_accent_color</item>
+        <item name="colorPrimaryDark">@color/dripassist_accent_color_dark</item>
         <item name="colorAccent">@color/dripassist_accent_color</item>
         <item name="colorAccentDark">@color/dripassist_accent_color_dark</item>
         <item name="colorButtonNormal">@color/white</item>
 
-        <item name="doz__primaryHighlightColor">@color/dripassist_color</item>
+        <item name="doz__primaryHighlightColor">@color/dripassist_accent_color</item>
         <item name="doz__sectionHeader">@drawable/dripassist_section_header</item>
         <item name="doz__topicDefaultBackground">@style/Widget.DripAssist.TopicBackground</item>
     </style>
