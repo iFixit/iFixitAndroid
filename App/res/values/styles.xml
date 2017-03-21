@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:android="http://schemas.android.com/apk/res/android"
-           xmlns:card_view="http://schemas.android.com/apk/res-auto">
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <!-- Holo Theme Overrides -->
     <style name="Base"/>
@@ -9,6 +8,19 @@
 
     </style>
 
+    <style name="Base.Toolbar" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+
+    </style>
+    <style name="Base.Toolbar.Popup" parent="ThemeOverlay.AppCompat.Dark">
+
+    </style>
+
+    <style name="Base.Toolbar.Light" parent="ThemeOverlay.AppCompat.Light">
+
+    </style>
+    <style name="Base.Toolbar.Light.Popup" parent="ThemeOverlay.AppCompat.Light">
+
+    </style>
     <style name="Base.Dialog.FullScreen" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="colorPrimary">?attr/colorPrimary</item>
         <item name="colorPrimaryDark">?attr/colorPrimaryDark</item>
@@ -180,8 +192,7 @@
 
     </style>
 
-    <style name="ListView.White" parent="Widget.AppCompat.ListView">
-
+    <style name="ListView.White" parent="ListView">
     </style>
 
     <style name="SectionListView">
@@ -192,7 +203,7 @@
     <style name="TopicHeaderRow">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:textColor">?attr/colorPrimary</item>
+        <item name="android:textColor">@color/black</item>
         <item name="android:drawableBottom">?doz__sectionHeader</item>
         <item name="android:drawablePadding">4dp</item>
         <item name="android:paddingTop">8dp</item>

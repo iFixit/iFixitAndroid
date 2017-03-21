@@ -12,7 +12,7 @@
                 android:title="@string/search"/>
         <item
                 android:id="@+id/nav_scan_barcode"
-                android:icon="@drawable/ic_barcode"
+                android:icon="@drawable/ic_barcode_black"
                 android:title="@string/slide_menu_barcode_scanner"
                 android:visible="false"/>
     </group>

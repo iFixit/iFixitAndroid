@@ -152,7 +152,6 @@ public abstract class BaseActivity extends AppCompatActivity {
          }
       }
 
-      Site site = app.getSite();
       /**
        * Set the current site's theme. Must be before onCreate because of
        * inflating views.

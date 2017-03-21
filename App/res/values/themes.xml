@@ -8,6 +8,8 @@
     </style>
 
     <style name="Theme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="doz__toolbarStyle">@style/Base.Toolbar</item>
+        <item name="doz__toolbarPopupStyle">@style/Base.Toolbar.Popup</item>
         <item name="doz__textColorPrimary">@color/black</item>
         <item name="doz__textColorSecondary">@color/gray_7</item>
         <item name="doz__background">@color/white</item>

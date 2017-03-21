@@ -18,7 +18,12 @@ public class BaseSearchMenuDrawerActivity extends BaseMenuDrawerActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getMenuInflater().inflate(R.menu.search_menu, menu);
+
+      if (App.get().getSite().theme() == R.style.Theme_Dozuki_White) {
+         getMenuInflater().inflate(R.menu.search_menu_white, menu);
+      } else {
+         getMenuInflater().inflate(R.menu.search_menu, menu);
+      }
 
       MenuItem searchItem =  menu.findItem(R.id.action_search);
 

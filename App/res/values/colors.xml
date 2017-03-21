@@ -95,6 +95,7 @@
     <color name="dozuki_red_dark">@color/red_7</color>
     <color name="dozuki_green">@color/green_5</color>
     <color name="dozuki_orange">#FFF25D07</color>
+    <color name="dozuki_orange_dark">#FF9f3b02</color>
     <color name="dozuki_white">@color/gray_2</color>
     <color name="dozuki_grey">@color/gray_7</color>
 

@@ -6,11 +6,11 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
-import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -36,8 +36,6 @@ public class SiteListActivity extends BaseActivity
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
-      getSupportActionBar().hide();
-
       super.onCreate(savedInstanceState);
 
       if (savedInstanceState != null) {
@@ -48,7 +46,7 @@ public class SiteListActivity extends BaseActivity
          Api.call(this, ApiCall.sites());
       }
 
-      setTheme(R.style.Theme_AppCompat);
+      setTheme(R.style.Theme_AppCompat_NoActionBar);
 
       setContentView(R.layout.site_list);
 
