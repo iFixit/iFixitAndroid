@@ -11,6 +11,8 @@
     <attr name="doz__toolbarStyle" format="reference"/>
     <attr name="doz__toolbarPopupStyle" format="reference"/>
 
+    <attr name="doz__navHeaderLogo" format="reference|color"/>
+
     <attr name="doz__background" format="reference|color"/>
     <attr name="doz__imageBorder" format="reference|color"/>
 

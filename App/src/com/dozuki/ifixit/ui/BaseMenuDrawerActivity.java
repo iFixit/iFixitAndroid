@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
@@ -281,7 +282,16 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
          mMenu.findItem(R.id.nav_logout).setVisible(true);
       } else {
+         Image logo = site.getLogo();
          header = getLayoutInflater().inflate(R.layout.navigation_header, null);
+
+         if (logo != null) {
+            AppCompatImageView navLogoView = (AppCompatImageView) header.findViewById(R.id.navigation_site_logo);
+            Picasso.with(this)
+             .load(logo.getPath(ImageSizes.logo))
+             .centerInside()
+             .into(navLogoView);
+         }
       }
 
       if (mDrawerList.getHeaderCount() > 0) {

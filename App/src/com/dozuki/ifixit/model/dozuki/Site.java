@@ -335,7 +335,7 @@ public class Site implements Serializable {
       return mName.equals("dozuki");
    }
 
-   public Drawable getLogo() {
-      return null;
+   public Image getLogo() {
+      return mLogo;
    }
 }
