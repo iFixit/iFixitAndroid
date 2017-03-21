@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.util.api;
 
+import android.util.Log;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Video;
