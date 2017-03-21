@@ -2,7 +2,7 @@
 <resources>
     <color name="dripassist_color">#6d6d6d</color>
     <color name="dripassist_accent_color">#ff144c6b</color>
-    <color name="dripassist_accent_color_dark">#55144c6b</color>
+    <color name="dripassist_accent_color_dark">#0a3851</color>
     <color name="emphasis">@color/dripassist_color</color>
     <color name="emphasis_pressed">@color/dripassist_accent_color</color>
 
