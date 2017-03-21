@@ -443,16 +443,14 @@ public class GuideIntroActivity extends BaseMenuDrawerActivity implements
       if (position == mCurrentPageSequence.size()) {
          mNextButton.setText(R.string.finish);
          mNextButton.setBackgroundResource(R.drawable.wizard_finish_background);
-         mNextButton.setTextAppearance(this, R.style.WizardFinishTextAppearance);
+         mNextButton.setTextColor(getResources().getColor(R.color.white));
       } else {
          mNextButton.setText(mEditingAfterReview
           ? R.string.review
           : R.string.next);
          mNextButton.setBackgroundResource(R.drawable.wizard_selectable_item_background);
-         TypedValue v = new TypedValue();
-         getTheme().resolveAttribute(android.R.attr.textAppearanceMedium, v, true);
-         mNextButton.setTextAppearance(this, v.resourceId);
          mNextButton.setEnabled(position != mPagerAdapter.getCutOffPage());
+         mNextButton.setTextColor(getResources().getColor(R.color.black));
       }
 
       mPrevButton.setVisibility(position <= 0 ? View.INVISIBLE : View.VISIBLE);

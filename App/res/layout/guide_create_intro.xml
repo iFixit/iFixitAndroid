@@ -30,13 +30,13 @@
         android:layout_width="match_parent"/>
 
     <LinearLayout
-        style="?buttonBarStyle"
+        style="@style/GuideIntroButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            style="?buttonBarButtonStyle"
+            style="@style/GuideIntroButtonBarButton"
             android:background="?attr/selectableItemBackground"
             android:id="@+id/prev_button"
             android:layout_width="0dp"
@@ -45,7 +45,7 @@
             android:text="@string/previous"/>
 
         <Button
-            style="?buttonBarButtonStyle"
+            style="@style/GuideIntroButtonBarButton"
             android:background="?attr/selectableItemBackground"
             android:id="@+id/next_button"
             android:layout_width="0dp"
