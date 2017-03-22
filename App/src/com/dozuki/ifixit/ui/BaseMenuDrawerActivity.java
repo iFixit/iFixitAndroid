@@ -289,7 +289,6 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
             AppCompatImageView navLogoView = (AppCompatImageView) header.findViewById(R.id.navigation_site_logo);
             Picasso.with(this)
              .load(logo.getPath(ImageSizes.logo))
-             .centerInside()
              .into(navLogoView);
          }
       }
