@@ -60,7 +60,6 @@ public class CommentView extends RelativeLayout {
        comment.mUser.getUserid() == currentUser.getUserid();
 
       if (reply) {
-         mContainer.setBackgroundResource(R.color.gray_4);
          mContainer.setLayoutParams(getReplyLayoutParams());
       }
 
