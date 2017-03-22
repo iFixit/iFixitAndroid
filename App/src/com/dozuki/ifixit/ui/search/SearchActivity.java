@@ -44,7 +44,7 @@ import java.util.List;
 
 import static com.dozuki.ifixit.R.string.view;
 
-public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
    private static final int ALL_POSITION = 0;
    private static final int GUIDES_POSITION = 1;
    private static final int TOPIC_POSITION = 2;
@@ -71,6 +71,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
    private AppBarLayout mAppBar;
    private Handler mHandler;
    private Runnable mRunnable;
+   private SearchView mSearchView;
 
    public static Intent viewSearch(Context context, String query) {
       Intent intent = new Intent(context, SearchActivity.class);
@@ -174,8 +175,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
    @SuppressWarnings("unused")
    @Subscribe
    public void onSearchResults(ApiEvent.Search event) {
-      hideLoading();
-
       if (!event.hasError()) {
          SearchResults results = event.getResult();
 
@@ -226,13 +225,13 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
    private void handleSearch(String query) {
       if (query.length() == 0) {
-         hideLoading();
          focusSearch();
          return;
       }
 
-      Log.d("SearchFragment", "handling search for " + query);
-      showLoading(R.id.search_results_container);
+      mResultsList.clear();
+      mAdapter.clear();
+
       Api.call(this, ApiCall.search(query));
    }
 
@@ -285,7 +284,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
    @Override
    public boolean onQueryTextChange(final String query) {
-
       // Clear out any waiting Runnables, so we don't have old requests happening before the new ones
       mHandler.removeCallbacks(mRunnable);
 
@@ -303,6 +301,22 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
       mHandler.postDelayed(mRunnable, 300);
 
+      return false;
+   }
+
+   @Override
+   public boolean onSuggestionSelect(int position) {
+      return false;
+   }
+
+   @Override
+   public boolean onSuggestionClick(int position) {
+      mSearchView.getSuggestionsAdapter().getItem(position);
+      CursorAdapter cursorAdapter = mSearchView.getSuggestionsAdapter();
+      Cursor cursor = cursorAdapter.getCursor();
+      int suggestionIndex = cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY);
+      mSearchView.setQuery(cursor.getString(suggestionIndex), false);
+      mSearchView.clearFocus();
       return false;
    }
 
@@ -350,31 +364,16 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
 
       MenuItem searchItem = menu.findItem(R.id.action_search);
 
-      final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+      mSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
 
-      if (searchView != null) {
+      if (mSearchView != null) {
          SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
          String hint = getString(R.string.search_site_hint, App.get().getSite().mTitle);
 
-         searchView.setQueryHint(hint);
-         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
-         searchView.setOnQueryTextListener(this);
-         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
-            @Override
-            public boolean onSuggestionSelect(int position) {
-               return false;
-            }
-
-            @Override
-            public boolean onSuggestionClick(int position) {
-               CursorAdapter cursorAdapter = searchView.getSuggestionsAdapter();
-               Cursor cursor = cursorAdapter.getCursor();
-               int suggestionIndex = cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY);
-               searchView.setQuery(cursor.getString(suggestionIndex), false);
-               searchView.clearFocus();
-               return false;
-            }
-         });
+         mSearchView.setQueryHint(hint);
+         mSearchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+         mSearchView.setOnQueryTextListener(this);
+         mSearchView.setOnSuggestionListener(this);
       }
 
       return super.onCreateOptionsMenu(menu);
