@@ -2,8 +2,8 @@
 <resources>
 
     <!--
-    - Universal color palate from the iFixit styleguide.  All other colors *should* be derived from
-    - these if at all possible.
+    - Universal color palette from the iFixit styleguide.
+    - All other colors *should* be derived from these, if at all possible.
     -->
     <color name="blue_1">#EBF4FB</color>
     <color name="blue_2">#D6E8F7</color>
@@ -50,7 +50,7 @@
 
     <color name="absolute_white">#FFFFFFFF</color>
     <color name="white">@color/gray_1</color>
-    <color name="white_50">#AAFAFAFA</color>
+    <color name="white_50">#DDFAFAFA</color>
     <color name="black">@color/gray_10</color>
     <color name="absolute_black">#FF000000</color>
     <color name="black_alpha_40">#66000000</color>
@@ -94,6 +94,7 @@
     <color name="dozuki_red">@color/red_6</color>
     <color name="dozuki_red_dark">@color/red_7</color>
     <color name="dozuki_green">@color/green_5</color>
+    <color name="dozuki_green_dark">@color/green_6</color>
     <color name="dozuki_orange">#FFF25D07</color>
     <color name="dozuki_orange_dark">#FF9f3b02</color>
     <color name="dozuki_white">@color/gray_2</color>

@@ -326,6 +326,7 @@
     <string name="view_comments">Bekijk Commentaar</string>
     <string name="media_manager_title">Media Manager</string>
     <string name="media_storage_exception_toast_message">We\'re having problems accessing your storage, try again.</string>
+    <string name="all">All</string>
 
     <string-array name="new_image_actions">
     <item>Camera</item>

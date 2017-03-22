@@ -41,7 +41,7 @@
             android:name=".ui.search.SearchActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:hardwareAccelerated="true"
-            android:parentActivityName=".ui.topic.TopicActivity"
+            android:launchMode="singleTop"
             android:label="@string/search">
 
             <!-- Parent activity meta-data to support 4.0 and lower -->

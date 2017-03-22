@@ -164,8 +164,10 @@ public class App extends Application {
        .downloader(new OkHttp3Downloader(getClient()))
        .build();
 
-      picasso.setIndicatorsEnabled(true);
-
+      if (BuildConfig.DEBUG) {
+         picasso.setIndicatorsEnabled(true);
+      }
+      
       try {
          Picasso.setSingletonInstance(picasso);
       } catch (IllegalStateException ignored) {

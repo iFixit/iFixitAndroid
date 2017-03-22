@@ -2,20 +2,14 @@ package com.dozuki.ifixit.ui.topic;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.res.ColorStateList;
-import android.graphics.Bitmap;
-import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
-import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -27,7 +21,6 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
-import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.topic.adapters.TopicPageAdapter;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.api.Api;
@@ -35,13 +28,12 @@ import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Target;
 
 public class TopicViewActivity extends BaseActivity {
    public static final String TOPIC_KEY = "TOPIC";
+   public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    private static final String TOPIC_VIEW_TAG = "TOPIC_VIEW_TAG";
 
-   private TopicViewFragment mTopicView;
    private AppBarLayout mAppBar;
    private TopicNode mTopicNode;
    private TopicLeaf mTopic;
@@ -53,7 +45,7 @@ public class TopicViewActivity extends BaseActivity {
 
    public static Intent viewTopic(Context context, String topicName) {
       Intent intent = new Intent(context, TopicViewActivity.class);
-      intent.putExtra(GuideViewActivity.TOPIC_NAME_KEY, topicName);
+      intent.putExtra(TOPIC_NAME_KEY, topicName);
       return intent;
    }
 

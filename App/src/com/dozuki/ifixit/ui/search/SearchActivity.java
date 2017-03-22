@@ -3,14 +3,22 @@ package com.dozuki.ifixit.ui.search;
 import android.app.SearchManager;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.SearchRecentSuggestions;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.design.widget.AppBarLayout;
 import android.support.v4.app.NavUtils;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.widget.CursorAdapter;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -19,8 +27,11 @@ import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.search.SearchResult;
 import com.dozuki.ifixit.model.search.SearchResults;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
+import com.dozuki.ifixit.ui.EndlessRecyclerViewScrollListener;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
@@ -29,20 +40,37 @@ import com.squareup.otto.Subscribe;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
+import java.util.List;
 
-public class SearchActivity extends BaseSearchMenuDrawerActivity {
-   private static final int GUIDES_POSITION = 0;
-   private static final int TOPIC_POSITION = 1;
-   private static final String TOPIC_SEARCH_FRAGMENT = "TOPIC_SEARCH_FRAGMENT";
-   private static final String GUIDE_SEARCH_FRAGMENT = "GUIDE_SEARCH_FRAGMENT";
+import static com.dozuki.ifixit.R.string.view;
+
+public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener {
+   private static final int ALL_POSITION = 0;
+   private static final int GUIDES_POSITION = 1;
+   private static final int TOPIC_POSITION = 2;
+   public static final String TOPIC_SEARCH_FRAGMENT = "TOPIC_SEARCH_FRAGMENT";
+   public static final String GUIDE_SEARCH_FRAGMENT = "GUIDE_SEARCH_FRAGMENT";
    private static final String SEARCH_QUERY = "SEARCH_QUERY";
+
+   private static final int LIMIT = 20;
+   private static final String QUERY_KEY = "QUERY_KEY";
+   private int mOffset = 0;
 
    private String mQuery = "";
    private Spinner mSpinner;
-   private int mSpinnerPosition = 0;
    private String mCurrentTag;
    private TextView mResultCount;
    private boolean mFocusSearch = false;
+   private RecyclerView mListView;
+   private LinearLayoutManager mLayoutManager;
+   private SearchListRecyclerAdapter mAdapter;
+   private SearchResults mResults;
+   private ArrayList<SearchResult> mResultsList = new ArrayList<SearchResult>();
+   private TextView mEmptyText;
+   private EndlessRecyclerViewScrollListener mScrollListener;
+   private AppBarLayout mAppBar;
+   private Handler mHandler;
+   private Runnable mRunnable;
 
    public static Intent viewSearch(Context context, String query) {
       Intent intent = new Intent(context, SearchActivity.class);
@@ -52,36 +80,77 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
+      mHandler = new Handler();
       super.onCreate(savedInstanceState);
-      super.setDrawerContent(R.layout.search);
+      setContentView(R.layout.search);
+
+      setTheme(R.style.Theme_Base_TransparentActionBar);
+
+      mAppBar = (AppBarLayout) findViewById(R.id.appbar);
+      mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+      setSupportActionBar(mToolbar);
 
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeButtonEnabled(true);
 
-      showLoading(R.id.search_results_container);
 
-      handleIntent(getIntent(), false);
+      if (savedInstanceState != null) {
+         mQuery = savedInstanceState.getString(QUERY_KEY);
+      }
 
       mResultCount = (TextView) findViewById(R.id.search_result_count);
       mSpinner = (Spinner) findViewById(R.id.search_type_spinner);
 
+      mEmptyText = (TextView) findViewById(R.id.search_results_empty_text);
+
+      mListView = (RecyclerView) findViewById(R.id.search_results_list);
+
       ArrayList<String> searchTypes = new ArrayList<String>();
+      searchTypes.add(ALL_POSITION, getString(R.string.all));
       searchTypes.add(GUIDES_POSITION, getString(R.string.guides));
       searchTypes.add(TOPIC_POSITION, App.get().getSite().getObjectNamePlural());
 
       ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this,
        android.R.layout.simple_spinner_dropdown_item, searchTypes);
+
+      SearchSpinnerInteractionListener listener = new SearchSpinnerInteractionListener();
       mSpinner.setAdapter(spinnerAdapter);
+      mSpinner.setOnTouchListener(listener);
+      mSpinner.setOnItemSelectedListener(listener);
 
-      mSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+      mLayoutManager = new LinearLayoutManager(this);
+      mListView.setLayoutManager(mLayoutManager);
+
+      mOffset = 0;
+      mListView.addOnScrollListener(new EndlessRecyclerViewScrollListener(mLayoutManager) {
          @Override
-         public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-            mSpinnerPosition = position;
-            handleSearch(buildQuery(mQuery));
+         public void onLoadMore(int page, int totalItemsCount, RecyclerView view) {
+            if (totalItemsCount >= LIMIT - 3) { // We have to offset by 3 because some responses should have 20 results, but they often have less
+               mOffset += LIMIT;
+               Log.d("SearchFragment", "Loading more...");
+
+               String query = buildQuery(mQuery, mSpinner.getSelectedItemPosition());
+               query += "&limit=" + LIMIT + "&offset=" + mOffset;
+
+               Api.call(SearchActivity.this, ApiCall.search(query));
+            }
          }
-
-         @Override
-         public void onNothingSelected(AdapterView<?> parent) { }
       });
+
+      mAdapter = new SearchListRecyclerAdapter(this);
+      mListView.setAdapter(mAdapter);
+
+      handleIntent(getIntent(), false);
+   }
+
+   @Override
+   public void onSaveInstanceState(Bundle state) {
+      super.onSaveInstanceState(state);
+
+      if (mQuery != null) {
+         state.putString(QUERY_KEY, mQuery);
+      }
    }
 
    @Override
@@ -108,21 +177,13 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       hideLoading();
 
       if (!event.hasError()) {
-         SearchResults search = event.getResult();
+         SearchResults results = event.getResult();
 
-         mResultCount.setText(getString(R.string.result_count, search.mTotalResults));
+         mResultsList.addAll(results.mResults);
 
-         FragmentManager fm = getSupportFragmentManager();
-         FragmentTransaction ft = fm.beginTransaction();
+         mResults = results;
 
-         Fragment frag = fm.findFragmentByTag(mCurrentTag);
-
-         if (frag == null) {
-            frag = SearchFragment.newInstance(search);
-            ft.replace(R.id.search_results_container, frag, mCurrentTag).commit();
-         } else {
-            ((SearchFragment) frag).setSearchResults(search);
-         }
+         updateViewWithResults(mResultsList, mResults.mTotalResults);
       } else {
          Api.getErrorDialog(this, event).show();
       }
@@ -139,7 +200,7 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       return super.onPrepareOptionsMenu(menu);
    }
 
-   public String buildQuery(String query) {
+   public static String buildQuery(String query, int position) {
       if (query.length() > 0) {
          try {
             query = URLEncoder.encode(query, "UTF-8");
@@ -147,19 +208,19 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
             e.printStackTrace();
          }
 
-         switch (mSpinnerPosition) {
+         switch (position) {
+            case ALL_POSITION:
+               query += "?filter=guide,teardown,device";
+               break;
             case GUIDES_POSITION:
-               mCurrentTag = GUIDE_SEARCH_FRAGMENT;
                query += "?filter=guide,teardown";
-
                break;
             case TOPIC_POSITION:
-               mCurrentTag = TOPIC_SEARCH_FRAGMENT;
                query += "?filter=device";
-
                break;
          }
       }
+
       return query;
    }
 
@@ -170,8 +231,21 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
          return;
       }
 
+      Log.d("SearchFragment", "handling search for " + query);
       showLoading(R.id.search_results_container);
       Api.call(this, ApiCall.search(query));
+   }
+
+   private void updateViewWithResults(List<SearchResult> results, int numResults) {
+      mResultCount.setText(getString(R.string.result_count, numResults));
+
+      if (numResults == 0) {
+         mEmptyText.setVisibility(View.VISIBLE);
+      } else {
+         mEmptyText.setVisibility(View.GONE);
+      }
+
+      mAdapter.replaceAll(results);
    }
 
    private void focusSearch() {
@@ -198,7 +272,124 @@ public class SearchActivity extends BaseSearchMenuDrawerActivity {
       mQuery = query;
 
       if (sendQuery) {
-         handleSearch(buildQuery(mQuery));
+         handleSearch(buildQuery(mQuery, ALL_POSITION));
+      } else {
+         focusSearch();
       }
+   }
+
+   @Override
+   public boolean onQueryTextSubmit(String query) {
+      return false;
+   }
+
+   @Override
+   public boolean onQueryTextChange(final String query) {
+
+      // Clear out any waiting Runnables, so we don't have old requests happening before the new ones
+      mHandler.removeCallbacks(mRunnable);
+
+      mRunnable = new Runnable() {
+         @Override
+         public void run() {
+            mQuery = query;
+
+            mResultsList.clear();
+            mAdapter.clear();
+
+            Api.call(SearchActivity.this, ApiCall.search(buildQuery(query, mSpinner.getSelectedItemPosition())));
+         }
+      };
+
+      mHandler.postDelayed(mRunnable, 300);
+
+      return false;
+   }
+
+   public class SearchSpinnerInteractionListener implements AdapterView.OnItemSelectedListener, View.OnTouchListener {
+      private boolean userSelect = false;
+
+      @Override
+      public boolean onTouch(View v, MotionEvent event) {
+         userSelect = true;
+         return false;
+      }
+
+      @Override
+      public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+         if (userSelect) {
+            userSelect = false;
+            mResultsList.clear();
+            mAdapter.clear();
+            Api.call(SearchActivity.this, ApiCall.search(buildQuery(mQuery, position)));
+         }
+      }
+
+      @Override
+      public void onNothingSelected(AdapterView<?> parent) {
+
+      }
+   }
+
+   private String getTypeFromPosition(int position) {
+      if (position == GUIDES_POSITION) {
+         return "guide";
+      } else if (position == TOPIC_POSITION) {
+         return "device";
+      }
+      return "";
+   }
+
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      if (App.get().getSite().theme() == R.style.Theme_Dozuki_White) {
+         getMenuInflater().inflate(R.menu.search_menu_white, menu);
+      } else {
+         getMenuInflater().inflate(R.menu.search_menu, menu);
+      }
+
+      MenuItem searchItem = menu.findItem(R.id.action_search);
+
+      final SearchView searchView = (SearchView) MenuItemCompat.getActionView(searchItem);
+
+      if (searchView != null) {
+         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
+         String hint = getString(R.string.search_site_hint, App.get().getSite().mTitle);
+
+         searchView.setQueryHint(hint);
+         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
+         searchView.setOnQueryTextListener(this);
+         searchView.setOnSuggestionListener(new SearchView.OnSuggestionListener() {
+            @Override
+            public boolean onSuggestionSelect(int position) {
+               return false;
+            }
+
+            @Override
+            public boolean onSuggestionClick(int position) {
+               CursorAdapter cursorAdapter = searchView.getSuggestionsAdapter();
+               Cursor cursor = cursorAdapter.getCursor();
+               int suggestionIndex = cursor.getColumnIndex(SearchManager.SUGGEST_COLUMN_QUERY);
+               searchView.setQuery(cursor.getString(suggestionIndex), false);
+               searchView.clearFocus();
+               return false;
+            }
+         });
+      }
+
+      return super.onCreateOptionsMenu(menu);
+   }
+
+   private static List<SearchResult> filterByType(SearchResults results, String type) {
+      final List<SearchResult> filteredModelList = new ArrayList<>();
+      if (results != null && results.mResults != null) {
+         for (SearchResult result : results.mResults) {
+            if (result.getType().contains(type)) {
+               filteredModelList.add(result);
+            }
+         }
+      }
+
+      return filteredModelList;
    }
 }

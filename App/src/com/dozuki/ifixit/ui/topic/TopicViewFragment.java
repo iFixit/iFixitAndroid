@@ -14,7 +14,6 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
-import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.topic.adapters.TopicPageAdapter;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
@@ -67,8 +66,8 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
             getTopicLeaf(mTopicNode.getName());
          }
       } else if (args != null) {
-         if (args.containsKey(GuideViewActivity.TOPIC_NAME_KEY)) {
-            getTopicLeaf(args.getString(GuideViewActivity.TOPIC_NAME_KEY));
+         if (args.containsKey(TopicViewActivity.TOPIC_NAME_KEY)) {
+            getTopicLeaf(args.getString(TopicViewActivity.TOPIC_NAME_KEY));
          }
       }
       return view;

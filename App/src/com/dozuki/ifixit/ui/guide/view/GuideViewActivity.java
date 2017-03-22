@@ -45,7 +45,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String GUIDEID = "GUIDEID";
-   public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
    public static final String COMMENTS_TAG = "COMMENTS_TAG";
@@ -177,7 +176,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                      title = getString(R.string.step_number_comments, stepIndex + 1);
                   }
 
-                  startActivityForResult(CommentsActivity.viewGuideComments(getApplicationContext(), comments, title,
+                  startActivityForResult(CommentsActivity.viewGuideComments(v.getContext(), comments, title,
                    context, contextid, mGuide.getGuideid()), COMMENT_REQUEST);
                }
             }
