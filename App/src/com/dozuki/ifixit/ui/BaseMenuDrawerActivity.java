@@ -3,13 +3,11 @@ package com.dozuki.ifixit.ui;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.AppCompatImageView;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.Toolbar;
@@ -45,7 +43,7 @@ import java.lang.reflect.Method;
  * Base activity that displays the menu drawer.
  */
 public abstract class BaseMenuDrawerActivity extends BaseActivity
- implements NavigationView.OnNavigationItemSelectedListener  {
+ implements NavigationView.OnNavigationItemSelectedListener {
    private static final String STATE_ACTIVE_POSITION =
     "com.dozuki.ifixit.ui.BaseMenuDrawerActivity.activePosition";
    private static final String PEEK_MENU = "PEEK_MENU_KEY";
@@ -74,7 +72,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
 
-      mTitle = (String)getTitle();
+      mTitle = (String) getTitle();
       mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
       mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
 
@@ -85,7 +83,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       mDrawerToggle = new ActionBarDrawerToggle(
        this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close
       ) {
-            /** Called when a drawer has settled in a completely closed state. */
+         /** Called when a drawer has settled in a completely closed state. */
          public void onDrawerClosed(View view) {
             super.onDrawerClosed(view);
             getSupportActionBar().setTitle(mTitle);
@@ -93,9 +91,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
             invalidateOptionsMenu();
          }
 
-            /** Called when a drawer has settled in a completely open state. */
+         /** Called when a drawer has settled in a completely open state. */
          public void onDrawerOpened(View drawerView) {
-             mDrawerToggle.setDrawerIndicatorEnabled(true);
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
             invalidateOptionsMenu();
          }
       };
@@ -262,11 +260,11 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       if (app.isUserLoggedIn()) {
          header = getLayoutInflater().inflate(R.layout.navigation_header_logged_in, null);
          User user = app.getUser();
-         AppCompatTextView displayName = (AppCompatTextView)header.findViewById(R.id.navigation_display_name);
+         AppCompatTextView displayName = (AppCompatTextView) header.findViewById(R.id.navigation_display_name);
          displayName.setText(user.getUsername());
-         AppCompatTextView username = (AppCompatTextView)header.findViewById(R.id.navigation_username);
+         AppCompatTextView username = (AppCompatTextView) header.findViewById(R.id.navigation_username);
          username.setText(user.getEmail());
-         AppCompatImageView avatar = (AppCompatImageView)header.findViewById(R.id.navigation_avatar);
+         AppCompatImageView avatar = (AppCompatImageView) header.findViewById(R.id.navigation_avatar);
 
          Image avatarImage = user.getAvatar();
 
@@ -281,6 +279,13 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          }
 
          mMenu.findItem(R.id.nav_logout).setVisible(true);
+      } else if (App.get().getSite().isIfixit()) {
+         header = getLayoutInflater().inflate(R.layout.navigation_header, null);
+
+         AppCompatImageView navLogoView = (AppCompatImageView) header.findViewById(R.id.navigation_site_logo);
+         Picasso.with(this)
+          .load(R.drawable.ic_logo_header)
+          .into(navLogoView);
       } else {
          Image logo = site.getLogo();
          header = getLayoutInflater().inflate(R.layout.navigation_header, null);
@@ -309,7 +314,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
    @Override
    public boolean onNavigationItemSelected(final MenuItem menuItem) {
-      switch(menuItem.getItemId()) {
+      switch (menuItem.getItemId()) {
          case R.id.nav_back_to_site_list:
             returnToSiteList();
             break;

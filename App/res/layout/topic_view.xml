@@ -31,7 +31,7 @@
                     android:id="@+id/backdrop"
                     android:layout_width="match_parent"
                     android:layout_height="250dp"
-                    android:background="@color/background_material_light"
+                    android:background="@color/white"
                     android:foreground="@drawable/topic_image_gradient"
                     android:minHeight="250dp"
                     android:scaleType="centerCrop"

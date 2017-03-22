@@ -354,7 +354,6 @@
         <item>@string/reply</item>
     </string-array>
     <string name="slide_menu_login">Sign In</string>
-    <string name="public_switch">Public</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
 </resources>

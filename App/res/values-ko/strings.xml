@@ -190,16 +190,6 @@
     <xliff:g example="Topic" id="topic_name">%1$s</xliff:g> 이름</string>
   <string name="guide_intro_wizard_guide_subject_hint"> 예: 스크린, 배터리, 점화 플러그 등</string>
   <string name="loading_image">이미지 업로드 중...</string>
-  <string name="black_bullet_description">검정색 글 머리 기호</string>
-  <string name="red_bullet_description">빨간색 글 머리 기호</string>
-  <string name="orange_bullet_description">오렌지색 글 머리 기호</string>
-  <string name="yellow_bullet_description">노란색 글머리 기호</string>
-  <string name="green_bullet_description">녹색 글머리 기호</string>
-  <string name="blue_bullet_description">파란색 글머리 기호</string>
-  <string name="violet_bullet_description">보라색 글머리 기호</string>
-  <string name="caution_bullet_description">경고 /주의 글머리 기호</string>
-  <string name="important_bullet_description">중요 메모 글머리 기호</string>
-  <string name="bullet_reorder_description">알림 글 머리 기호</string>
   <string name="default_step_number">단계 #</string>
   <string name="loading">로드 중...</string>
   <string name="topic_info_image">주요 카테고리 이미지</string>
@@ -321,7 +311,6 @@
   <string-array name="comment_options">
     <item>@string/reply</item>
   </string-array>
-    <string name="public_switch">Public</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
 </resources>

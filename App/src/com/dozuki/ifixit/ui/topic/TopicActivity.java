@@ -15,6 +15,7 @@ import android.widget.FrameLayout;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicNode;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.ui.LoadingFragment;
 import com.dozuki.ifixit.util.api.Api;
@@ -22,7 +23,7 @@ import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 
-public class TopicActivity extends BaseSearchMenuDrawerActivity
+public class TopicActivity extends BaseMenuDrawerActivity
  implements TopicSelectedListener, FragmentManager.OnBackStackChangedListener {
    private static final String ROOT_TOPIC = "ROOT_TOPIC";
    private static final String TOPIC_LIST_VISIBLE = "TOPIC_LIST_VISIBLE";

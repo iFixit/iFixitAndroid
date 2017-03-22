@@ -40,6 +40,8 @@
     <color name="gray_1">#FAFAFA</color>
     <color name="gray_2">#F5F5F5</color>
     <color name="gray_3">#EEEEEE</color>
+    <color name="gray_3_20">#18EEEEEE</color>
+    <color name="gray_3_50">#AAEEEEEE</color>
     <color name="gray_4">#E1E1E2</color>
     <color name="gray_5">#BDBEBF</color>
     <color name="gray_6">#9E9FA0</color>

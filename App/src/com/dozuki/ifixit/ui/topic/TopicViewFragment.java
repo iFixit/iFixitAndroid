@@ -6,6 +6,7 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
@@ -14,11 +15,14 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.ui.topic.adapters.TopicPageAdapter;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
+import com.squareup.picasso.Picasso;
 
 public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
    private static final int GUIDES_TAB = 0;
@@ -36,6 +40,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
 
    private int mSelectedTab = -1;
    private TabLayout mTabs;
+   private ImageView mBackdrop;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +58,10 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       Bundle args = getArguments();
 
       mPager = (ViewPager) view.findViewById(R.id.topic_view_view_pager);
-      mTabs = (TabLayout) view.findViewById(R.id.topic_tab_layout);
+      mTabs = (TabLayout) view.findViewById(R.id.tabLayout);
+
+      mTabs.setTabGravity(TabLayout.GRAVITY_FILL);
+      mTabs.setVisibility(View.VISIBLE);
 
       if (savedInstanceState != null) {
          mSelectedTab = savedInstanceState.getInt(CURRENT_PAGE, 0); // Default to Guide page
@@ -114,27 +122,24 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
    public void setTopicLeaf(TopicLeaf topicLeaf) {
 
       if (topicLeaf != null) {
+         mTopicLeaf = topicLeaf;
          if (mTopicNode != null && !topicLeaf.getName().equals(mTopicNode.getName())) {
             // Not the most recently selected topic... wait for another.
             return;
          } else if (mTopicLeaf != null && mTopicLeaf.equals(topicLeaf)) {
-            selectDefaultTab();
+
+            mPageAdapter = new TopicPageAdapter(getFragmentManager(), getActivity(), mTopicLeaf);
+            mPager.setAdapter(mPageAdapter);
+            mTabs.setupWithViewPager(mPager);
+            //selectDefaultTab();
+
             return;
          }
       }
 
-      mTopicLeaf = topicLeaf;
+      // display error message
+      return;
 
-      if (mTopicLeaf == null) {
-         // display error message
-         return;
-      }
-
-      mPageAdapter = new TopicPageAdapter(getChildFragmentManager(), getActivity(), mTopicLeaf);
-      mPager.setAdapter(mPageAdapter);
-      mTabs.setupWithViewPager(mPager);
-      mPager.setOffscreenPageLimit(2);
-      selectDefaultTab();
    }
 
    @Override
@@ -156,12 +161,6 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       if (mTopicLeaf == null) {
          return;
       }
-
-      boolean noGuides = (mTopicLeaf.getGuides().size() == 0);
-      int defaultTab = noGuides ? MORE_INFO_TAB : GUIDES_TAB;
-
-      mPager.setCurrentItem(defaultTab, false);
-      mPager.invalidate();
 
       ((BaseActivity) getActivity()).hideLoading();
    }

@@ -371,17 +371,17 @@
     <style name="CardListItem">
         <item name="android:layout_marginTop">2dp</item>
         <item name="android:layout_marginBottom">2dp</item>
-        <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:layout_marginRight">8dp</item>
+        <item name="android:layout_marginLeft">@dimen/list_item_horizontal_margin</item>
+        <item name="android:layout_marginRight">@dimen/list_item_horizontal_margin</item>
         <item name="contentPadding">0dp</item>
         <item name="cardUseCompatPadding">true</item>
-        <item name="cardCornerRadius">4dp</item>
+        <item name="cardCornerRadius">@dimen/cardview_default_radius</item>
         <item name="cardElevation">2dp</item>
+        <item name="android:clickable">true</item>
+        <item name="android:foreground">@drawable/card_foreground</item>
     </style>
 
     <style name="CardListItemInner">
-        <item name="android:clickable">true</item>
-        <item name="android:background">@drawable/list_item_ripple</item>
     </style>
 
 </resources>

@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Build;
+import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.MenuInflater;
@@ -11,6 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
@@ -24,7 +26,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class StepListItem extends TouchableRelativeLayout implements View.OnClickListener {
+public class StepListItem extends CardView implements View.OnClickListener {
    private static final int EDIT_OPTION = 0;
    private static final int DELETE_OPTION = 1;
    private TextView mStepsView;
@@ -47,6 +49,7 @@ public class StepListItem extends TouchableRelativeLayout implements View.OnClic
       mImageView = (ImageView) findViewById(R.id.guide_step_item_thumbnail);
 
       setOnClickListener(this);
+      ((RelativeLayout)findViewById(R.id.step_item_target)).findViewById(R.id.step_create_item);
       setOnLongClickListener(new View.OnLongClickListener() {
          @Override
          public boolean onLongClick(View v) {

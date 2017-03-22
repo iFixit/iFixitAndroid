@@ -182,16 +182,6 @@
   <string name="guide_intro_wizard_guide_topic_hint"><xliff:g id="topic_name" example="Topic">%1$s</xliff:g> Имя</string>
   <string name="guide_intro_wizard_guide_subject_hint">Например, экран, батарея, свечи зажигания и т.п.</string>
   <string name="loading_image">Загрузка изображений...</string>
-  <string name="black_bullet_description">Черный маркер</string>
-  <string name="red_bullet_description">Красный маркер</string>
-  <string name="orange_bullet_description">Оранжевый маркер</string>
-  <string name="yellow_bullet_description">Желтый маркер</string>
-  <string name="green_bullet_description">Зеленый маркер</string>
-  <string name="blue_bullet_description">Синий маркер</string>
-  <string name="violet_bullet_description">Фиолетовый маркер</string>
-  <string name="caution_bullet_description">Маркер предостережения</string>
-  <string name="important_bullet_description">Маркер важной записи</string>
-  <string name="bullet_reorder_description">Маркер напоминания</string>
   <string name="default_step_number">Шаг #</string>
   <string name="loading">Загрузка...</string>
   <string name="topic_info_image">Основная категория изображения</string>

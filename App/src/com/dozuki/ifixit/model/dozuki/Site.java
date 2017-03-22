@@ -158,7 +158,7 @@ public class Site implements Serializable {
       } else if (isAccustream()) {
          return R.style.Theme_Accustream;
       } else if (isDripAssist()) {
-          return R.style.Theme_DripAssist;
+         return R.style.Theme_DripAssist;
       } else if (isPVA()) {
          return R.style.Theme_PVA;
       } else if (isOscaro()) {
@@ -185,7 +185,7 @@ public class Site implements Serializable {
    }
 
 
-    // Used only for custom apps, where we don't have a call to get the site info.
+   // Used only for custom apps, where we don't have a call to get the site info.
    public static Site getSite(String siteName) {
       Site site = null;
       Resources res = App.get().getResources();
@@ -266,19 +266,19 @@ public class Site implements Serializable {
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("dripassist")) {
-          site = new Site(3366);
-          site.mName = "dripassist";
-          site.mDomain = "dripassist.dozuki.com";
-          site.mTitle = "DripAssist";
-          site.mTheme = "white";
-          site.mPublic = true;
-          site.mAnswers = false;
-          site.mDescription = "";
-          site.mStandardAuth = true;
-          site.mSsoUrl = null;
-          site.mPublicRegistration = false;
-          site.mObjectNamePlural = res.getString(R.string.categories);
-          site.mObjectNameSingular = res.getString(R.string.category);
+         site = new Site(3366);
+         site.mName = "dripassist";
+         site.mDomain = "dripassist.dozuki.com";
+         site.mTitle = "DripAssist";
+         site.mTheme = "white";
+         site.mPublic = true;
+         site.mAnswers = false;
+         site.mDescription = "";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("oscaro")) {
          site = new Site(3293);
          site.mName = "oscaro";

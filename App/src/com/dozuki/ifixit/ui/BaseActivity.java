@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -125,6 +126,11 @@ public abstract class BaseActivity extends AppCompatActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
+
+      // Enable vector drawables (icons) on older devices.
+      // build.gradle also requires `vectorDrawables.useSupportLibrary = true` in the defaultConfig
+      AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
       App app = App.get();
       Site currentSite = app.getSite();
 
@@ -157,7 +163,6 @@ public abstract class BaseActivity extends AppCompatActivity {
        * inflating views.
        */
       setTheme(app.getSiteTheme());
-
       super.onCreate(savedState);
 
       /**

@@ -187,16 +187,6 @@
     <xliff:g example="Topic" id="topic_name">%1$s</xliff:g>名称</string>
   <string name="guide_intro_wizard_guide_subject_hint">例如 - 屏幕、电池、火花塞等</string>
   <string name="loading_image">上传图像中&#8230;&#8230;</string>
-  <string name="black_bullet_description">黑色着重号</string>
-  <string name="red_bullet_description">红色着重号</string>
-  <string name="orange_bullet_description">橘色着重号</string>
-  <string name="yellow_bullet_description">黄色着重号</string>
-  <string name="green_bullet_description">绿色着重号</string>
-  <string name="blue_bullet_description">蓝色着重号</string>
-  <string name="violet_bullet_description">紫色着重号</string>
-  <string name="caution_bullet_description">警告/提醒着重号</string>
-  <string name="important_bullet_description">重要注释着重号</string>
-  <string name="bullet_reorder_description">提醒项目符号</string>
   <string name="default_step_number">步骤 #</string>
   <string name="loading">载入中...</string>
   <string name="topic_info_image">主要类别的图片</string>

@@ -11,14 +11,18 @@ import android.text.style.RelativeSizeSpan;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
+import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
+import com.squareup.picasso.Picasso;
 
 public class TopicInfoFragment extends BaseFragment {
 
@@ -27,6 +31,7 @@ public class TopicInfoFragment extends BaseFragment {
 
    private TopicLeaf mTopic;
    private TextView mContent;
+   private ImageView mBackdrop;
 
    /**
     * Required for restoring fragments
@@ -54,6 +59,30 @@ public class TopicInfoFragment extends BaseFragment {
       Spanned title = Html.fromHtml(mTopic.getTitle());
       ((TextView) v.findViewById(R.id.topic_info_title)).setText(title);
       ((TextView) v.findViewById(R.id.topic_info_summary)).setText(mTopic.getDescription());
+      mBackdrop = (ImageView)v.findViewById(R.id.backdrop);
+
+      if (mBackdrop != null) {
+         String url = mTopic.getImage().getPath(ImageSizes.topicMain);
+         Picasso
+          .with(getContext())
+          .load(url)
+          .error(R.drawable.no_image)
+          .into(mBackdrop);
+
+         mBackdrop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               String url1 = (String) v.getTag();
+
+               if (url1 == null || (url1.equals("") || url1.startsWith("."))) {
+                  return;
+               }
+
+               startActivity(FullImageViewActivity.viewImage(getContext(), url1, false));
+            }
+         });
+      }
+
       mContent = ((TextView) v.findViewById(R.id.topic_info_content));
       mContent.setMovementMethod(LinkMovementMethod.getInstance());
       mContent.setText(getStyledContent());
