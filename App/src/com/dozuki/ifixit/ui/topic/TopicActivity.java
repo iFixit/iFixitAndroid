@@ -86,10 +86,12 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
       onBackStackChanged();
 
       if (mTopicViewOverlay != null) {
+         final boolean isDisplayTopic = mTopicView.isDisplayingTopic();
+
          mTopicViewOverlay.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
-               if (mTopicListVisible && mTopicView.isDisplayingTopic()) {
-                  hideTopicList();
+               if (mTopicListVisible && isDisplayTopic) {
+                  hideTopicList(v, false);
                   return true;
                } else {
                   return false;
@@ -193,11 +195,11 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
    }
 
    private void hideTopicList() {
-      hideTopicList(false);
+      hideTopicList(mTopicViewOverlay, false);
    }
 
-   private void hideTopicList(boolean delay) {
-      mTopicViewOverlay.setVisibility(View.INVISIBLE);
+   private void hideTopicList(View view, boolean delay) {
+      view.setVisibility(View.INVISIBLE);
       mTopicListVisible = false;
       changeTopicListView(new Fragment(), true, delay);
    }
@@ -206,7 +208,7 @@ public class TopicActivity extends BaseSearchMenuDrawerActivity
       // Delay this slightly to make sure the animation is played.
       new Handler().postAtTime(new Runnable() {
          public void run() {
-            hideTopicList(true);
+            hideTopicList(mTopicViewOverlay, true);
          }
       }, SystemClock.uptimeMillis() + TOPIC_LIST_HIDE_DELAY);
    }
