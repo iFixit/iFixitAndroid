@@ -9,7 +9,7 @@
             android:id="@+id/publish_toggle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textOn="@string/public_switch"
-            android:textOff="@string/private_switch"/>
+            android:textOn="@string/publish"
+            android:textOff="@string/unpublish"/>
 
 </RelativeLayout>

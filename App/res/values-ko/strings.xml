@@ -321,4 +321,7 @@
   <string-array name="comment_options">
     <item>@string/reply</item>
   </string-array>
+    <string name="public_switch">Public</string>
+    <string name="navigation_drawer_open">Open</string>
+    <string name="navigation_drawer_close">Close</string>
 </resources>
