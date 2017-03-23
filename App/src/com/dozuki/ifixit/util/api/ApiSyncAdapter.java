@@ -28,7 +28,6 @@ import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;

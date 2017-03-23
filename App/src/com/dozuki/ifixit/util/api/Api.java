@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.DialogInterface.OnCancelListener;
 import android.os.AsyncTask;
-import android.os.Build;
 import android.util.Log;
 
 import com.dozuki.ifixit.App;

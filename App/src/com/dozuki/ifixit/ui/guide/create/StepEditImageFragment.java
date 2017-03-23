@@ -31,15 +31,11 @@ import com.dozuki.ifixit.ui.guide.ThumbnailView;
 import com.dozuki.ifixit.util.CaptureHelper;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
-import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Bus;
-import com.squareup.otto.Subscribe;
 
 import java.io.File;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class StepEditImageFragment extends BaseFragment {
 

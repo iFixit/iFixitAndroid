@@ -1,10 +1,7 @@
 package com.dozuki.ifixit.model.search;
 
-import android.support.v7.util.SortedList;
-
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Comparator;
 
 public class SearchResults implements Serializable {
    private static final long serialVersionUID = -3423222443335L;

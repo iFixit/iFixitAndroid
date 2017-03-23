@@ -10,12 +10,10 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.util.ImageSizes;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.function.Consumer;
 
 /**
  * Stores progress information about syncing guide media.

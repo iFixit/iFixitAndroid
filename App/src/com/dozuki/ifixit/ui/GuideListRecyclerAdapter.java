@@ -13,7 +13,6 @@ import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideInfo;
-import com.dozuki.ifixit.ui.guide.view.GuideListActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.Utils;

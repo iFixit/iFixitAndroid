@@ -15,14 +15,11 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
-import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.ui.topic.adapters.TopicPageAdapter;
-import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
-import com.squareup.picasso.Picasso;
 
 public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
    private static final int GUIDES_TAB = 0;

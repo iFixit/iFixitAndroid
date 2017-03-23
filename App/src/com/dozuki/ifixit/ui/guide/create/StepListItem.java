@@ -3,15 +3,11 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
 import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -20,7 +16,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.squareup.picasso.Picasso;
 

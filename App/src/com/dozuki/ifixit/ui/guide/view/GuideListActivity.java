@@ -1,12 +1,10 @@
 package com.dozuki.ifixit.ui.guide.view;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Parcelable;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
 import android.widget.GridView;
 
 import com.dozuki.ifixit.R;

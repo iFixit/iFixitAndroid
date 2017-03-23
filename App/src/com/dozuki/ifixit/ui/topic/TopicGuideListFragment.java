@@ -1,6 +1,5 @@
 package com.dozuki.ifixit.ui.topic;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -14,7 +13,6 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.EndlessRecyclerViewScrollListener;
 import com.dozuki.ifixit.ui.GuideListRecyclerAdapter;
-import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 
 import java.util.ArrayList;
 

@@ -30,7 +30,6 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.search.SearchResult;
 import com.dozuki.ifixit.model.search.SearchResults;
 import com.dozuki.ifixit.ui.BaseActivity;
-import com.dozuki.ifixit.ui.BaseSearchMenuDrawerActivity;
 import com.dozuki.ifixit.ui.EndlessRecyclerViewScrollListener;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
@@ -41,8 +40,6 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-
-import static com.dozuki.ifixit.R.string.view;
 
 public class SearchActivity extends BaseActivity implements SearchView.OnQueryTextListener, SearchView.OnSuggestionListener {
    private static final int ALL_POSITION = 0;
