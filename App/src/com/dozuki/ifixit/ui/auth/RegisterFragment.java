@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatCheckBox;
@@ -30,10 +31,10 @@ import com.squareup.otto.Subscribe;
 public class RegisterFragment extends BaseDialogFragment implements OnClickListener {
    private AppCompatButton mRegister;
    private AppCompatButton mCancelRegister;
-   private AppCompatEditText mEmail;
-   private AppCompatEditText mPassword;
-   private AppCompatEditText mConfirmPassword;
-   private AppCompatEditText mName;
+   private TextInputEditText mEmail;
+   private TextInputEditText mPassword;
+   private TextInputEditText mConfirmPassword;
+   private TextInputEditText mName;
    private TextView mErrorText;
    private TextView mTermsAgreeText;
    private AppCompatCheckBox mTermsAgreeCheckBox;
@@ -56,13 +57,6 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
          }
          mLoadingSpinner.setVisibility(View.GONE);
 
-         mEmail.setVisibility(View.VISIBLE);
-         mPassword.setVisibility(View.VISIBLE);
-         mConfirmPassword.setVisibility(View.VISIBLE);
-         mName.setVisibility(View.VISIBLE);
-         mTermsAgreeText.setVisibility(View.VISIBLE);
-         mTermsAgreeCheckBox.setVisibility(View.VISIBLE);
-
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
       }
@@ -84,16 +78,16 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.register_fragment, container, false);
 
-      mEmail = (AppCompatEditText) view.findViewById(R.id.edit_login_id);
-      mPassword = (AppCompatEditText)view.findViewById(R.id.edit_password);
-      mConfirmPassword = (AppCompatEditText)view.findViewById(R.id.edit_confirm_password);
+      mEmail = (TextInputEditText) view.findViewById(R.id.edit_login_id);
+      mPassword = (TextInputEditText)view.findViewById(R.id.edit_password);
+      mConfirmPassword = (TextInputEditText)view.findViewById(R.id.edit_confirm_password);
 
       // Password fields default to a courier typeface (very annoying) and
       // setting the font-family in xml does nothing, so we have to set it
       // explicitly here
       mPassword.setTypeface(Typeface.DEFAULT);
       mConfirmPassword.setTypeface(Typeface.DEFAULT);
-      mName = (AppCompatEditText)view.findViewById(R.id.edit_login_username);
+      mName = (TextInputEditText)view.findViewById(R.id.edit_login_username);
 
       mRegister = (AppCompatButton)view.findViewById(R.id.register_button);
       mCancelRegister = (AppCompatButton)view.findViewById(R.id.cancel_register_button);
@@ -156,12 +150,6 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
             if (password.equals(confirmPassword) && email.length() > 0 &&
              name.length() > 0 && (!App.get().getSite().isIfixit() || mTermsAgreeCheckBox.isChecked())) {
                enable(false);
-               mEmail.setVisibility(View.GONE);
-               mPassword.setVisibility(View.GONE);
-               mConfirmPassword.setVisibility(View.GONE);
-               mName.setVisibility(View.GONE);
-               mTermsAgreeText.setVisibility(View.GONE);
-               mTermsAgreeCheckBox.setVisibility(View.GONE);
 
                mErrorText.setVisibility(View.GONE);
                mLoadingSpinner.setVisibility(View.VISIBLE);

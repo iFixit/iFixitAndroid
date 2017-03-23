@@ -79,6 +79,10 @@
         <item name="android:layout_height">wrap_content</item>
     </style>
 
+    <style name="Base.TextInputLayout" parent="@android:style/TextAppearance">
+        <item name="android:textColor">@color/colorAccent</item>
+    </style>
+
     <style name="Base.Spinner" parent="Widget.AppCompat.Spinner.DropDown">
 
     </style>

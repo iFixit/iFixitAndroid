@@ -5,13 +5,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Typeface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.AppCompatEditText;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -47,13 +46,14 @@ import java.io.IOException;
 public class LoginFragment extends BaseDialogFragment implements OnClickListener,
  GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
    private static final int OPEN_ID_REQUEST_CODE = 4;
+   private static final int REQUEST_CODE_ASK_PERMISSIONS = 1;
 
    private AppCompatButton mLogin;
    private AppCompatButton mRegister;
    private SignInButton mGoogleLogin;
    //private ImageButton mYahooLogin;
-   private AppCompatEditText mEmail;
-   private AppCompatEditText mPassword;
+   private TextInputEditText mEmail;
+   private TextInputEditText mPassword;
    private TextView mErrorText;
    private ProgressBar mLoadingSpinner;
    private ApiCall mCurAPICall;
@@ -130,6 +130,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       mHasRegisterBtn = site.mPublicRegistration;
 
       if (site.checkForGoogleLogin()) {
+
          // Get the clientid so we can perform Google login.
          if (site.mGoogleOAuth2Clientid == null) {
             Api.call(getActivity(), ApiCall.siteInfo());
@@ -157,9 +158,8 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       
       View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-      mEmail = (AppCompatEditText)view.findViewById(R.id.edit_email);
-      mPassword = (AppCompatEditText)view.findViewById(R.id.edit_password);
-      mPassword.setTypeface(Typeface.DEFAULT);
+      mEmail = (TextInputEditText)view.findViewById(R.id.edit_email);
+      mPassword = (TextInputEditText)view.findViewById(R.id.edit_password);
 
       mLogin = (AppCompatButton)view.findViewById(R.id.signin_button);
       mRegister = (AppCompatButton)view.findViewById(R.id.register_button);
@@ -275,19 +275,29 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       }
    }
 
+   public void onGoogleLoginClick() {
+      if (!mGoogleApiClient.isConnecting()) {
+         mGoogleLoginClicked = true;
+         if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.reconnect();
+         } else {
+            mGoogleApiClient.connect();
+         }
+      }
+   }
+
    @Override
    public void onClick(View v) {
       Intent intent;
       switch (v.getId()) {
           case R.id.use_google_login_button:
-             if (!mGoogleApiClient.isConnecting()) {
-                mGoogleLoginClicked = true;
-                if (mGoogleApiClient.isConnected()) {
-                   mGoogleApiClient.reconnect();
-                } else {
-                   mGoogleApiClient.connect();
-                }
+             int hasWriteContactsPermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_CONTACTS);
+             if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
+                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.WRITE_CONTACTS},
+                 REQUEST_CODE_ASK_PERMISSIONS);
+                return;
              }
+             onGoogleLoginClick();
              break;
     
           case R.id.use_yahoo_login_button:
@@ -314,6 +324,23 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
               InputMethodManager.HIDE_NOT_ALWAYS);
              login();
              break;
+      }
+   }
+
+   @Override
+   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+      switch (requestCode) {
+         case REQUEST_CODE_ASK_PERMISSIONS:
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+               // Permission Granted
+               onGoogleLoginClick();
+            } else {
+               // Permission Denied
+               Toast.makeText(getActivity(), "WRITE_CONTACTS Denied", Toast.LENGTH_SHORT).show();
+            }
+            break;
+         default:
+            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
       }
    }
 
