@@ -11,9 +11,13 @@ apply plugin: 'com.android.application'
 
 repositories {
     mavenCentral()
+    jcenter()
     mavenLocal() // Needed to pick up analytics from maven-android-sdk-deployer
     maven {
-        url 'https://raw.github.com/iFixit/ark/master/releases/'
+        url 'https://github.com/iFixit/ark/raw/master/releases/'
+    }
+    maven {
+        url 'https://dl.bintray.com/alexeydanilov/maven'
     }
 }
 
@@ -32,8 +36,7 @@ dependencies {
    compile "org.jsoup:jsoup:1.7.2"
    compile "com.google.code.gson:gson:2.4"
    compile "com.squareup.picasso:picasso:2.5.2"
-   compile "com.viewpagerindicator:viewpagerindicator:2.4.1"
-   compile "com.github.chrisbanes.pulltorefresh:pulltorefresh:2.1.2"
+   compile "com.viewpagerindicator:viewpagerindicator:2.4.3"
    compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
    compile "com.vandalsoftware.android:dslv:0.6.3"
    compile "com.f2prateek.progressbutton:progressbutton:2.1.0@aar"
@@ -75,7 +78,7 @@ android {
          buildConfigField "String", "DEV_SERVER", '""'
 
          minifyEnabled true
-         proguardFile 'proguard.cfg'
+         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
       }
    }
 
