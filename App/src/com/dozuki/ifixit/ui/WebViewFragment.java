@@ -2,6 +2,7 @@ package com.dozuki.ifixit.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -158,9 +160,9 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
                   return true;
                }
             } catch (ArrayIndexOutOfBoundsException e) {
-               Log.e("GuideWebView ArrayIndexOutOfBoundsException", e.toString());
+               Log.e("GuideWebView", "ArrayIndexOutOfBoundsException: " + e.toString());
             } catch (NumberFormatException e) {
-               Log.e("GuideWebView NumberFormatException", e.toString());
+               Log.e("GuideWebView", "NumberFormatException: " + e.toString());
             }
          }
 
@@ -184,6 +186,14 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
             view.loadUrl("javascript:(function() { " +
              "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
              "})()");
+         }
+      }
+
+      @Override
+      public void  onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+         // Ignore SSL certificate errors in debug
+         if (App.inDebug()) {
+            handler.proceed();
          }
       }
    }
