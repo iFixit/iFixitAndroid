@@ -36,7 +36,7 @@
                 android:clipToPadding="true"
                 android:contentDescription="@string/topic_background_description"
                 android:paddingTop="20dp"
-                android:scaleType="fitXY" />-->
+                android:scaleType="fitXY" />
 
         <FrameLayout
                 android:id="@+id/topic_view_fragment_container"
