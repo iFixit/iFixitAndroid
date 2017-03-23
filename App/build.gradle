@@ -103,13 +103,13 @@ android {
 
             if (site == 'dozuki') {
                dependencies {
-                  dozukiCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-                  dozukiCompile 'com.google.zxing:core:2.2'
+                  dozukiCompile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+                  dozukiCompile 'com.google.zxing:core:3.3.0'
                }
             } else if (site == 'accustream') {
                dependencies {
-                  accustreamCompile 'com.embarkmobile:zxing-android-minimal:1.1.4@aar'
-                  accustreamCompile 'com.google.zxing:core:2.2'
+                  accustreamCompile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
+                  accustreamCompile 'com.google.zxing:core:3.3.0'
                }
             }
          }
