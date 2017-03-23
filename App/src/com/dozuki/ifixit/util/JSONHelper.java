@@ -118,7 +118,7 @@ public class JSONHelper {
       site.mAnswers = jSite.getBoolean("answers");
       site.mStoreUrl = jSite.optString("store", "");
 
-      setAuthentication(site, jSite.getJSONObject("authentication"));
+      site = setAuthentication(site, jSite.getJSONObject("authentication"));
 
       return site;
    }
@@ -151,12 +151,13 @@ public class JSONHelper {
       return site;
    }
 
-   private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
+   private static Site setAuthentication(Site site, JSONObject jAuth) throws JSONException {
       site.mStandardAuth = jAuth.has("standard") && jAuth.getBoolean("standard");
 
       site.mSsoUrl = jAuth.has("sso") ? jAuth.getString("sso") : null;
 
       site.mPublicRegistration = jAuth.getBoolean("public-registration");
+      return site;
    }
 
    public static ArrayList<String> parseAllTopics(String json) {

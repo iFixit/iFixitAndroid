@@ -3,10 +3,13 @@ package com.dozuki.ifixit.ui.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.SslErrorHandler;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -14,8 +17,9 @@ import android.webkit.WebViewClient;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.ui.BaseActivity;
 
-public class OpenIDActivity extends Activity {
+public class OpenIDActivity extends BaseActivity {
    public static String SESSION = "SESSION";
    public static String LOGIN_METHOD = "LOGIN_METHOD";
    public static String SINGLE_SIGN_ON = "SINGLE_SIGN_ON";
@@ -30,15 +34,19 @@ public class OpenIDActivity extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.open_id_view);
-      setTitle(R.string.login);
+      setTheme(R.style.Theme_AppCompat_NoActionBar);
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
       Bundle extras = getIntent().getExtras();
 
       boolean singleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
+
       Site site = ((App) getApplication()).getSite();
 
       mDomain = site.mDomain;
       mCustomDomain = site.mCustomDomain;
+      if (mCustomDomain.length() == 0) {
+         mCustomDomain = mDomain;
+      }
 
       String loginUrl;
       if (singleSignOn) {
@@ -49,6 +57,7 @@ public class OpenIDActivity extends Activity {
          final String method = extras.getString(LOGIN_METHOD);
          loginUrl = mBaseUrl + method;
       }
+
 
       WebView webView = (WebView) findViewById(R.id.open_id_web_view);
 
@@ -69,19 +78,22 @@ public class OpenIDActivity extends Activity {
          // When start to load page, show url in activity's title bar
          @Override
          public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            setTitle(url);
+            //setTitle(url);
          }
 
          @Override
          public void onPageFinished(WebView view, String url) {
             CookieSyncManager.getInstance().sync();
 
-            // Ignore page loads if it's on the openID site.
-            if (url.contains(mBaseUrl) ||
+            String nakedUrl = url.replaceFirst("^(http://|https://)", "");
+            String nakedBaseUrl = mBaseUrl.replaceFirst("^(http://|https://)", "");
+
+            // Ignore page loads if it's on the openID / SAML site.
+            if (nakedUrl.startsWith(nakedBaseUrl) ||
              // OR if it's NOT on one of the sites domains
-             !(url.contains(mDomain) || url.contains(mCustomDomain)) ||
+             !(nakedUrl.startsWith(mDomain) || nakedUrl.startsWith(mCustomDomain)) ||
              // OR if its NOT a google or yahoo domain
-             ((url.contains(YAHOO_LOGIN) || url.contains(GOOGLE_LOGIN) && !url.contains(mDomain)))) {
+             ((url.contains(YAHOO_LOGIN) || url.contains(GOOGLE_LOGIN) && !nakedUrl.startsWith(mDomain)))) {
                return;
             }
 
@@ -119,6 +131,19 @@ public class OpenIDActivity extends Activity {
             setResult(RESULT_CANCELED, result);
             finish();
          }
+
+         @Override
+         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
+            Log.e("iFixit", "Error: " + description);
+         }
+
+         @Override
+         public void  onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            if (App.inDebug()) {
+               handler.proceed(); // Ignore SSL certificate errors
+            }
+         }
+
       });
 
       webView.loadUrl(loginUrl);
