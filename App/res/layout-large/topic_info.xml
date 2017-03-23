@@ -22,7 +22,7 @@
             style="@style/TitleText"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_toLeftOf="@+id/topic_info_image"
+            android:layout_toLeftOf="@+id/backdrop"
             android:layout_alignParentLeft="true"
             android:layout_marginLeft="16dp"
             android:layout_marginTop="16dp"/>
@@ -34,7 +34,7 @@
             android:layout_width="wrap_content"
             android:layout_below="@+id/topic_info_title"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@+id/topic_info_image"
+            android:layout_toLeftOf="@+id/backdrop"
             android:layout_marginLeft="16dp"/>
 
         <TextView
@@ -42,7 +42,7 @@
             style="@style/BodyText"
             android:layout_height="wrap_content"
             android:layout_width="wrap_content"
-            android:layout_below="@+id/topic_info_image"
+            android:layout_below="@+id/backdrop"
             android:layout_margin="16dp"
             android:paddingTop="24dp"/>
 
