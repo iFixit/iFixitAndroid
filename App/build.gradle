@@ -83,6 +83,7 @@ android {
       /* Check release builds but don't abort on error. */
       checkReleaseBuilds true
       abortOnError false
+      disable 'MissingTranslation'
    }
 
    /* Construct base product flavors. */
