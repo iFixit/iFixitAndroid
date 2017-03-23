@@ -21,7 +21,7 @@ import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class StepListItem extends CardView implements View.OnClickListener {
+public class StepListItem extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener {
    private static final int EDIT_OPTION = 0;
    private static final int DELETE_OPTION = 1;
    private TextView mStepsView;
@@ -42,30 +42,12 @@ public class StepListItem extends CardView implements View.OnClickListener {
       mStepsView = (TextView) findViewById(R.id.step_line_text_view);
       mStepNumber = (TextView) findViewById(R.id.guide_create_step_item_number);
       mImageView = (ImageView) findViewById(R.id.guide_step_item_thumbnail);
+      RelativeLayout stepItemTarget = (RelativeLayout)findViewById(R.id.step_item_target);
 
       setOnClickListener(this);
-      ((RelativeLayout)findViewById(R.id.step_item_target)).findViewById(R.id.step_create_item);
-      setOnLongClickListener(new View.OnLongClickListener() {
-         @Override
-         public boolean onLongClick(View v) {
-            // PopupMenu was added in API 11, so let's use an AlertDialog instead.
-            AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-            builder.setItems(R.array.step_list_item_options, new AlertDialog.OnClickListener() {
-               public void onClick(DialogInterface dialog, int which) {
-                  switch (which) {
-                     case EDIT_OPTION:
-                        editStep();
-                        break;
-                     case DELETE_OPTION:
-                        deleteStep();
-                        break;
-                  }
-               }
-            });
-            builder.show();
-            return false;
-         }
-      });
+      stepItemTarget.setOnClickListener(this);
+      setOnLongClickListener(this);
+      stepItemTarget.setOnLongClickListener(this);
    }
 
    private void deleteStep() {
@@ -144,5 +126,25 @@ public class StepListItem extends CardView implements View.OnClickListener {
    @Override
    public void onClick(View v) {
       editStep();
+   }
+
+   @Override
+   public boolean onLongClick(View v) {
+      // PopupMenu was added in API 11, so let's use an AlertDialog instead.
+      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+      builder.setItems(R.array.step_list_item_options, new AlertDialog.OnClickListener() {
+         public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+               case EDIT_OPTION:
+                  editStep();
+                  break;
+               case DELETE_OPTION:
+                  deleteStep();
+                  break;
+            }
+         }
+      });
+      builder.show();
+      return false;
    }
 }

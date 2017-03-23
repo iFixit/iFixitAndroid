@@ -80,7 +80,7 @@
     </style>
 
     <style name="Base.TextInputLayout" parent="@android:style/TextAppearance">
-        <item name="android:textColor">@color/colorAccent</item>
+        <item name="android:textColor">@color/gray_9</item>
     </style>
 
     <style name="Base.Spinner" parent="Widget.AppCompat.Spinner.DropDown">

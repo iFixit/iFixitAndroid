@@ -41,9 +41,9 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
          mSite = ((App) getActivity().getApplication()).getSite();
       }
 
-      View view = inflater.inflate(R.layout.web_view_fragment, container, false);
+      View view = inflater.inflate(R.layout.topic_answers, container, false);
       mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-      mWebView = (WebView) view.findViewById(R.id.web_view);
+      mWebView = (WebView) view.findViewById(R.id.topic_answers_webview);
 
       CookieSyncManager.createInstance(mWebView.getContext());
       CookieManager.getInstance().setAcceptCookie(true);
@@ -178,15 +178,18 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
 
       @Override
       public void onPageFinished(WebView view, String url) {
+         super.onPageFinished(view, url);
          mProgressBar.setVisibility(View.GONE);
 
-         if (App.get().getSite().isIfixit()) {
+         //if (App.get().getSite().isIfixit()) {
             // Amazon app store doesn't like our footer links to other app stores in the iFixit app,
             // so we are forced to hide them
             view.loadUrl("javascript:(function() { " +
              "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
+             "document.getElementById('mainHeader').style.display = 'none'; " +
+             "document.getElementById('page').style.paddingTop = '20px'; " +
              "})()");
-         }
+         //}
       }
 
       @Override

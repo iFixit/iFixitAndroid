@@ -7,6 +7,9 @@
         <item name="colorAccent">@color/ifixit_blue</item>
         <item name="colorAccentDark">@color/blue_6</item>
         <item name="colorButtonNormal">@color/white</item>
+        <item name="colorControlNormal">@color/gray_6</item>
+        <item name="colorControlActivated">@color/ifixit_blue</item>
+        <item name="colorControlHighlight">@color/ifixit_blue</item>
 
         <!-- Theme Attributes -->
         <item name="doz__primaryHighlightColor">@color/ifixit_blue</item>

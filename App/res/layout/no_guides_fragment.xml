@@ -9,29 +9,29 @@
 
     <RelativeLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="?attr/doz__background">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="?attr/doz__background">
 
         <TextView
-            android:id="@+id/no_guides_text"
-            style="@style/BodyText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:textAlignment="center"
-            android:text="@string/no_guides"
-            android:paddingTop="20dp" />
+                android:id="@+id/no_guides_text"
+                style="@style/BodyText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:textAlignment="center"
+                android:text="@string/no_guides"
+                android:paddingTop="20dp"/>
 
         <Button
-            android:id="@+id/new_guide_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:theme="@style/Base.Button"
-            android:text="@string/create_new_guide"
-            android:layout_marginTop="20dp"
-            android:layout_centerHorizontal="true"
-            android:layout_below="@+id/no_guides_text"/>
+                android:id="@+id/new_guide_button"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:theme="@style/Base.Button"
+                android:text="@string/create_new_guide"
+                android:layout_marginTop="20dp"
+                android:layout_centerHorizontal="true"
+                android:layout_below="@+id/no_guides_text"/>
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>
