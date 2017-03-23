@@ -291,12 +291,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       Intent intent;
       switch (v.getId()) {
           case R.id.use_google_login_button:
-             int hasWriteContactsPermission = ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_CONTACTS);
-             if (hasWriteContactsPermission != PackageManager.PERMISSION_GRANTED) {
-                ActivityCompat.requestPermissions(getActivity(), new String[] {Manifest.permission.WRITE_CONTACTS},
-                 REQUEST_CODE_ASK_PERMISSIONS);
-                return;
-             }
              onGoogleLoginClick();
              break;
     
@@ -324,23 +318,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
               InputMethodManager.HIDE_NOT_ALWAYS);
              login();
              break;
-      }
-   }
-
-   @Override
-   public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
-      switch (requestCode) {
-         case REQUEST_CODE_ASK_PERMISSIONS:
-            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-               // Permission Granted
-               onGoogleLoginClick();
-            } else {
-               // Permission Denied
-               Toast.makeText(getActivity(), "WRITE_CONTACTS Denied", Toast.LENGTH_SHORT).show();
-            }
-            break;
-         default:
-            super.onRequestPermissionsResult(requestCode, permissions, grantResults);
       }
    }
 
