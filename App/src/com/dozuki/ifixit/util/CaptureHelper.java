@@ -54,7 +54,11 @@ public class CaptureHelper {
    private static String getDirectoryName() {
       Site site = App.get().getSite();
 
-      return site.mTitle + "Images";
+      if (site.isIfixit()) {
+         return "iFixitImages";
+      } else {
+         return "DozukiImages";
+      }
    }
 
    public static String getFileName() {
