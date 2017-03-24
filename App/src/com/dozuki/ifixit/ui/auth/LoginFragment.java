@@ -97,10 +97,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
          mLoadingSpinner.setVisibility(View.GONE);
 
-         // Show input fields
-         mEmail.setVisibility(View.VISIBLE);
-         mPassword.setVisibility(View.VISIBLE);
-
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
       }
@@ -227,9 +223,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       String password = getPassword();
 
       if (email.length() > 0 && password.length() > 0 ) {
-         // Hide input fields
-         mEmail.setVisibility(View.GONE);
-         mPassword.setVisibility(View.GONE);
          
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);

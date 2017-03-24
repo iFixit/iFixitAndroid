@@ -11,36 +11,29 @@ import android.webkit.WebViewClient;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 
-public class StoreWebViewActivity extends BaseMenuDrawerActivity {
-   private static final String STORE_FRAGMENT_TAG = "STORE_FRAGMENT_TAG";
+public class AnswersWebViewActivity extends BaseMenuDrawerActivity {
+   private static final String FRAGMENT_TAG = "FRAGMENT_TAG";
    private WebViewFragment mWebView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      super.setDrawerContent(R.layout.store_web_view);
-      
-      mWebView = (WebViewFragment)getSupportFragmentManager()
-       .findFragmentByTag(STORE_FRAGMENT_TAG);
+      super.setDrawerContent(R.layout.answers_web_view);
 
-      getSupportActionBar().setTitle(getString(R.string.ifixit_store));
+      getSupportActionBar().setTitle(getString(R.string.answers_forum));
+      mWebView = (WebViewFragment)getSupportFragmentManager()
+       .findFragmentByTag(FRAGMENT_TAG);
+
       if (mWebView == null) {
          mWebView = new WebViewFragment();
          Bundle args = new Bundle();
-         args.putString(WebViewFragment.URL_KEY, "https://www.ifixit.com/Store");
+         args.putString(WebViewFragment.URL_KEY, "https://" + App.get().getSite().mDomain + "/Answers");
          mWebView.setArguments(args);
 
          getSupportFragmentManager().beginTransaction()
-          .add(R.id.store_web_view_container, mWebView, STORE_FRAGMENT_TAG)
+          .add(R.id.answers_webview_container, mWebView, FRAGMENT_TAG)
           .commit();
       }
-   }
-
-   @Override
-   public boolean onCreateOptionsMenu(Menu menu) {
-      getMenuInflater().inflate(R.menu.store_web_view_menu, menu);
-
-      return super.onCreateOptionsMenu(menu);
    }
 
    @Override
@@ -50,15 +43,5 @@ public class StoreWebViewActivity extends BaseMenuDrawerActivity {
          return true;
       }
       return super.onKeyDown(keyCode, event);
-   }
-
-   @Override
-   public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case R.id.cart_menu_item:
-            mWebView.loadUrl("https://www.ifixit.com/Cart");
-            return true;
-      }
-      return super.onOptionsItemSelected(item);
    }
 }

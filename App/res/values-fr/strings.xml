@@ -298,4 +298,5 @@ dans la barre d\'action ou dans le tiroir de menu.</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="cart">Cart</string>
+    <string name="ifixit_store">iFixit Store</string>
 </resources>

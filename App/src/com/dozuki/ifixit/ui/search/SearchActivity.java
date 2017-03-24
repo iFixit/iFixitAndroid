@@ -92,7 +92,6 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
 
-
       if (savedInstanceState != null) {
          mQuery = savedInstanceState.getString(QUERY_KEY);
       }
@@ -162,7 +161,7 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
       switch (item.getItemId()) {
          // Respond to the action bar's Up/Home button
          case android.R.id.home:
-            NavUtils.navigateUpFromSameTask(this);
+            finish();
             return true;
       }
 

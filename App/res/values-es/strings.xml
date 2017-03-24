@@ -298,4 +298,5 @@ asegúrate de seleccionarlo de la lista prepopulada. </string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="cart">Cart</string>
+    <string name="ifixit_store">iFixit Store</string>
 </resources>

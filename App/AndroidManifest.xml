@@ -61,6 +61,8 @@
             android:name=".ui.guide.view.GuideViewActivity"
             android:launchMode="singleTop"/>
         <activity android:name=".ui.guide.view.TeardownsActivity"/>
+
+        <activity android:name=".ui.AnswersWebViewActivity"/>
         <activity android:name=".ui.guide.view.FeaturedGuidesActivity"/>
 
         <!-- Export the activity so it can be launched via PendingIntent in

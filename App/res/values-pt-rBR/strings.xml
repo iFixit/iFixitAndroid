@@ -308,4 +308,5 @@
     <string name="slide_menu_login">Sign In</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
+    <string name="ifixit_store">iFixit Store</string>
 </resources>

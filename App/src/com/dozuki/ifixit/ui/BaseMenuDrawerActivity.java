@@ -252,6 +252,10 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          mMenu.findItem(R.id.nav_scan_barcode).setVisible(true);
       }
 
+      if (site.mAnswers) {
+         mMenu.findItem(R.id.nav_answers).setVisible(true);
+      }
+
       if (BuildConfig.DEBUG) {
          mMenu.findItem(R.id.nav_debug).setVisible(true);
       }
@@ -345,6 +349,9 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
             break;
          case R.id.nav_browse_content:
             performActivityNavigation(TopicActivity.class);
+            break;
+         case R.id.nav_answers:
+            performActivityNavigation(AnswersWebViewActivity.class);
             break;
          case R.id.nav_parts_and_tools:
             performActivityNavigation(StoreWebViewActivity.class);
