@@ -2,6 +2,8 @@ package com.dozuki.ifixit.ui;
 
 import android.os.Bundle;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -9,35 +11,35 @@ import android.webkit.WebViewClient;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 
-public class StoreWebViewActivity extends BaseSearchMenuDrawerActivity {
-   private WebView mWebView;
+public class StoreWebViewActivity extends BaseMenuDrawerActivity {
+   private static final String STORE_FRAGMENT_TAG = "STORE_FRAGMENT_TAG";
+   private WebViewFragment mWebView;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       super.setDrawerContent(R.layout.store_web_view);
+      
+      mWebView = (WebViewFragment)getSupportFragmentManager()
+       .findFragmentByTag(STORE_FRAGMENT_TAG);
 
-      mWebView = (WebView) findViewById(R.id.store_web_view);
+      if (mWebView == null) {
+         mWebView = new WebViewFragment();
+         Bundle args = new Bundle();
+         args.putString(WebViewFragment.URL_KEY, "https://www.ifixit.com/Store");
+         mWebView.setArguments(args);
 
-      WebSettings settings = mWebView.getSettings();
-      settings.setJavaScriptEnabled(true);
-      settings.setUseWideViewPort(true);
-      settings.setAppCacheEnabled(true);
-      settings.setDomStorageEnabled(true);
-      settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-      mWebView = new WebView(this);
-
-      mWebView.setWebViewClient(new WebViewClient());
-
-      if (savedInstanceState != null) {
-         mWebView.restoreState(savedInstanceState);
-      } else {
-         //mWebView.loadUrl("https://ifixit.com/Store?inApp=true");
-         mWebView.loadUrl(App.get().getSite().getAPIDomain() + "/Store?inApp=true");
+         getSupportFragmentManager().beginTransaction()
+          .add(R.id.store_web_view_container, mWebView, STORE_FRAGMENT_TAG)
+          .commit();
       }
+   }
 
-      this.setContentView(mWebView);
+   @Override
+   public boolean onCreateOptionsMenu(Menu menu) {
+      getMenuInflater().inflate(R.menu.store_web_view_menu, menu);
+
+      return super.onCreateOptionsMenu(menu);
    }
 
    @Override
@@ -47,5 +49,15 @@ public class StoreWebViewActivity extends BaseSearchMenuDrawerActivity {
          return true;
       }
       return super.onKeyDown(keyCode, event);
+   }
+
+   @Override
+   public boolean onOptionsItemSelected(MenuItem item) {
+      switch (item.getItemId()) {
+         case R.id.cart_menu_item:
+            mWebView.loadUrl("https://www.ifixit.com/Cart");
+            return true;
+      }
+      return super.onOptionsItemSelected(item);
    }
 }

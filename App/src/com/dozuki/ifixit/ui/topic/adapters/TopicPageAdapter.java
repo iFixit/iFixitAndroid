@@ -99,10 +99,11 @@ public class TopicPageAdapter extends FragmentStatePagerAdapter {
             break;
          case ANSWERS_TAB:
             WebViewFragment webView = new WebViewFragment();
+            args.putString(WebViewFragment.URL_KEY, mTopic.getSolutionsUrl());
+
+            webView.setArguments(args);
 
             label += "/answers";
-
-            webView.loadUrl(mTopic.getSolutionsUrl());
 
             selectedFragment = webView;
             mSelectedTab = ANSWERS_TAB;

@@ -69,7 +69,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       if (bundle != null) {
          int returnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
-         ArrayList<Image> alreadyAttachedImages = (ArrayList<Image>)bundle.getSerializable(ATTACHED_MEDIA_IDS);
+         ArrayList<Image> alreadyAttachedImages = (ArrayList<Image>) bundle.getSerializable(ATTACHED_MEDIA_IDS);
          mCurrentMediaFragment.setAlreadyAttachedImages(alreadyAttachedImages);
          if (returnValue != -1) {
             getMediaItemForReturn = true;
@@ -187,11 +187,11 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.media_help_message,
        App.get().getSite().mTitle))
-         .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               dialog.cancel();
-            }
-         });
+       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+             dialog.cancel();
+          }
+       });
 
       return builder.create();
    }

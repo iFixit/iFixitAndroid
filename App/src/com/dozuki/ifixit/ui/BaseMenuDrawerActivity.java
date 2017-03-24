@@ -347,7 +347,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
             performActivityNavigation(TopicActivity.class);
             break;
          case R.id.nav_parts_and_tools:
-            performUrlNavigation("https://ifixit.com/Store");
+            performActivityNavigation(StoreWebViewActivity.class);
             break;
          case R.id.nav_featured_guides:
             performActivityNavigation(FeaturedGuidesActivity.class);

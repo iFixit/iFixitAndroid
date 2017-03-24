@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="page_padding">16dp</dimen>
 
     <!-- Base -->
     <dimen name="title_text_size">32sp</dimen>

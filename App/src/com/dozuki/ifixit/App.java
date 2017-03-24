@@ -328,18 +328,8 @@ public class App extends Application {
 
    public String getUserAgent() {
       if (mUserAgent == null) {
-         int versionCode = -1;
-         String versionName = "";
-
-         try {
-            PackageInfo packageInfo;
-            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
-
-            versionCode = packageInfo.versionCode;
-            versionName = packageInfo.versionName;
-         } catch (PackageManager.NameNotFoundException e) {
-            Log.e("iFixit", "Can't get application version", e);
-         }
+         int versionCode = BuildConfig.VERSION_CODE;
+         String versionName = BuildConfig.VERSION_NAME;
 
          /**
           * Returns the Site that this app is "built" for. e.g. Dozuki even if the user

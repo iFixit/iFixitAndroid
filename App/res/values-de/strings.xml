@@ -292,4 +292,5 @@ auf die Symbole oben klickst!</string>
     <string name="navigation_drawer_open">Open</string>
     <string name="navigation_drawer_close">Close</string>
     <string name="default_step_number">That\'s just there on debug builds so I know it\'s a debug build</string>
+    <string name="cart">Cart</string>
 </resources>

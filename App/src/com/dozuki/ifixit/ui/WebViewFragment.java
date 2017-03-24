@@ -2,7 +2,9 @@ package com.dozuki.ifixit.ui;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.net.http.SslError;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,13 +19,17 @@ import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 
 import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 
+import okhttp3.HttpUrl;
+
 public class WebViewFragment extends BaseFragment implements OnViewGuideListener {
+   public static final String URL_KEY = "URL_KEY";
    private WebView mWebView;
    private String mUrl;
    private Site mSite;
@@ -33,6 +39,13 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+
+      Bundle args = getArguments();
+
+      if (args != null) {
+         mUrl = args.getString(URL_KEY);
+      }
+
       if (mWebView != null) {
          mWebView.destroy();
       }
@@ -50,6 +63,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
 
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
+      settings.setDomStorageEnabled(true);
       settings.setBuiltInZoomControls(true);
       settings.setSupportZoom(true);
       settings.setLoadWithOverviewMode(true);
@@ -104,12 +118,25 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
    }
 
    public void loadUrl(String url) {
-      mUrl = url;
+      HttpUrl base = HttpUrl.parse(url).newBuilder()
+       .addQueryParameter("utm_source", App.get().getSite().mName + "-android-" + BuildConfig.VERSION_NAME.replace(".", "-"))
+       .addQueryParameter("utm_medium", "android-app")
+       .build();
+
+      mUrl = base.toString();
 
       if (mWebView != null) {
          mWebViewClient.setSessionCookie(url);
          mWebView.loadUrl(mUrl);
       }
+   }
+
+   public boolean canGoBack() {
+      return mWebView.canGoBack();
+   }
+
+   public void goBack() {
+      mWebView.goBack();
    }
 
    public void onViewGuide(int guideid) {
@@ -147,8 +174,12 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
          String[] pieces = url.split("/");
          int guideid;
 
-         if (url.equals("http://" + mSite.mDomain + "/Guide/login")) {
+         if (url.startsWith("^(http|https)://" + mSite.mDomain + "/Guide/login")) {
             url = mUrl;
+         } else if (!Uri.parse(url).getHost().equals(mSite.mDomain)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+            return true;
          } else {
             try {
                if (pieces[GUIDE_POSITION + 1].equals("login")) {
@@ -166,13 +197,12 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
             }
          }
 
-         loadUrl(url);
-
-         return true;
+         return false;
       }
 
       @Override
       public void onPageStarted(WebView view, String url, Bitmap favicon) {
+         super.onPageStarted(view, url, favicon);
          mProgressBar.setVisibility(View.VISIBLE);
       }
 
@@ -181,15 +211,11 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
          super.onPageFinished(view, url);
          mProgressBar.setVisibility(View.GONE);
 
-         //if (App.get().getSite().isIfixit()) {
-            // Amazon app store doesn't like our footer links to other app stores in the iFixit app,
-            // so we are forced to hide them
-            view.loadUrl("javascript:(function() { " +
-             "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
-             "document.getElementById('mainHeader').style.display = 'none'; " +
-             "document.getElementById('page').style.paddingTop = '20px'; " +
-             "})()");
-         //}
+         view.loadUrl("javascript:(function() { " +
+          "if (document.getElementById('mainHeader')) document.getElementById('mainHeader').style.display = 'none'; " +
+          "if (document.getElementById('page')) document.getElementById('page').style.paddingTop = '20px'; " +
+          "})()");
+
       }
 
       @Override
