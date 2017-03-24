@@ -126,7 +126,7 @@ public class IntentFilterActivity extends BaseActivity {
                }
             } else if (prefix.equalsIgnoreCase("c") || prefix.equalsIgnoreCase("device")) {
                String topicName = segments.get(1);
-               intent = TopicViewActivity.viewTopic(this, topicName);
+               intent = TopicViewActivity.viewTopic(this, topicName.replaceAll("_", " "));
                App.sendEvent("ui_action", "intent_filter", "category", null);
             }
          } catch (Exception e) {
