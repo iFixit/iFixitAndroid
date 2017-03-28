@@ -13,7 +13,7 @@ repositories {
    mavenCentral()
    mavenLocal() // Needed to pick up analytics from maven-android-sdk-deployer
    maven {
-      url 'https://raw.github.com/iFixit/ark/master/releases/'
+      url 'https://github.com/iFixit/ark/raw/master/releases/'
    }
 }
 
@@ -48,8 +48,8 @@ android {
    buildToolsVersion "21.1.2"
 
    defaultConfig {
-      versionCode 60 
-      versionName "2.9.2"
+      versionCode 61
+      versionName "2.9.3"
       minSdkVersion 9
       targetSdkVersion 21
       applicationId "com.dozuki.ifixit"
