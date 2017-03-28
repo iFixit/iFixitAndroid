@@ -73,12 +73,6 @@ public class OpenIDActivity extends BaseActivity {
       settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
       webView.setWebViewClient(new WebViewClient() {
-         // When start to load page, show url in activity's title bar
-         @Override
-         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            //setTitle(url);
-         }
-
          @Override
          public void onPageFinished(WebView view, String url) {
             CookieSyncManager.getInstance().sync();

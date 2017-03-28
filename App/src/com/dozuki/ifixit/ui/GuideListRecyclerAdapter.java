@@ -113,9 +113,7 @@ public class GuideListRecyclerAdapter extends RecyclerView.Adapter<GuideListRecy
       @Override
       public void onClick(View view) {
          Context context = view.getContext();
-         Log.d("GuideListRecycler", "onClick " + getAdapterPosition());
-         Intent intent = new Intent(context, GuideViewActivity.class);
-         intent.putExtra(GuideViewActivity.GUIDEID, mGuide.mGuideid);
+         Intent intent = GuideViewActivity.viewGuideid(context, mGuide.mGuideid);
          context.startActivity(intent);
       }
    }

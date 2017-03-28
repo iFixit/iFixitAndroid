@@ -61,8 +61,7 @@ public class GuideSearchResult implements SearchResult, Serializable, View.OnCli
    }
    @Override
    public void onClick(View v) {
-      Intent intent = new Intent(v.getContext(), GuideViewActivity.class);
-      intent.putExtra(GuideViewActivity.GUIDEID, mGuideInfo.mGuideid);
+      Intent intent = GuideViewActivity.viewGuideid(v.getContext(), mGuideInfo.mGuideid);
       v.getContext().startActivity(intent);
    }
 

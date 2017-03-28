@@ -22,30 +22,21 @@ import com.dozuki.ifixit.util.api.ApiEvent;
 import com.squareup.otto.Subscribe;
 
 public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageChangeListener {
-   private static final int GUIDES_TAB = 0;
-   private static final int MORE_INFO_TAB = 1;
-   private static final int ANSWERS_TAB = 2;
    private static final String CURRENT_PAGE = "CURRENT_PAGE";
    private static final String CURRENT_TOPIC_LEAF = "CURRENT_TOPIC_LEAF";
    private static final String CURRENT_TOPIC_NODE = "CURRENT_TOPIC_NODE";
 
    private TopicNode mTopicNode;
    private TopicLeaf mTopicLeaf;
-   private Site mSite;
    private TopicPageAdapter mPageAdapter;
    private ViewPager mPager;
 
    private int mSelectedTab = -1;
    private TabLayout mTabs;
-   private ImageView mBackdrop;
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-
-      if (mSite == null) {
-         mSite = ((App) getActivity().getApplication()).getSite();
-      }
    }
 
    @Override

@@ -93,7 +93,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
 
    @Override
    public void onRefresh() {
-      Api.call(GuideCreateActivity.this, ApiCall.userGuides());
+      Api.call(this, ApiCall.userGuides());
    }
 
    @Override
@@ -120,9 +120,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
    @Override
    public void onContentChanged() {
       super.onContentChanged();
-
-      //if (mRecyclerListView != null)
-      //   mRecyclerListView.setEmptyView(findViewById(R.id.no_guides_text));
    }
 
    @Override
@@ -147,7 +144,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
          mGuideRecyclerListAdapter.clear();
          mUserGuideList.clear();
          mUserGuideList.addAll(event.getResult());
-         Log.d("GuideCreateActivity", "Size: " + mUserGuideList.size());
          mGuideRecyclerListAdapter.addAll(mUserGuideList);
       } else {
          Api.getErrorDialog(this, event).show();
@@ -266,8 +262,6 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
 
       guide.mIsPublishing = true;
 
-      Log.d("Api", "Guide Revisionid before: " + guide.mRevisionid);
-
       if (!guide.mPublic) {
          Api.call(this,
           ApiCall.publishGuide(guide.mGuideid, guide.mRevisionid));
@@ -279,8 +273,7 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
 
    @Override
    public void onViewItemClicked(GuideInfo guide) {
-      Intent intent = new Intent(this, GuideViewActivity.class);
-      intent.putExtra(GuideViewActivity.GUIDEID, guide.mGuideid);
+      Intent intent = GuideViewActivity.viewGuideid(this, guide.mGuideid);
       intent.putExtra(GuideViewActivity.CURRENT_PAGE, 0);
       startActivity(intent);
    }

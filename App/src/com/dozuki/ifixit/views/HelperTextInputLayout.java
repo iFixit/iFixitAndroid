@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.dozuki.ifixit.R;
 
 public class HelperTextInputLayout extends TextInputLayout {
-   private static final Interpolator FAST_OUT_SLOW_IN_INTERPOLATOR = new FastOutSlowInInterpolator();;
+   private static final Interpolator FAST_OUT_SLOW_IN_INTERPOLATOR = new FastOutSlowInInterpolator();
    private CharSequence mHelperText;
    private ColorStateList mHelperTextColor;
    private boolean mHelperTextEnabled = false;

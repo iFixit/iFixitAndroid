@@ -18,7 +18,7 @@ public class LoadingFragment extends BaseFragment {
       if (args != null) {
          text = args.getString(TEXT_KEY);
       } else {
-         text = "Loading";
+         text = getString(R.string.loading);
       }
 
       View v = inflater.inflate(R.layout.loading_fragment, container, false);
