@@ -337,4 +337,8 @@ public class Site implements Serializable {
    public Image getLogo() {
       return mLogo;
    }
+
+   public int getGuideListItemOptions() {
+      return isIfixit() ? R.array.guide_list_item_options : R.array.guide_list_item_options_with_delete;
+   }
 }

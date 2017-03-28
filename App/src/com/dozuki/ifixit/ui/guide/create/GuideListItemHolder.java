@@ -108,8 +108,7 @@ public class GuideListItemHolder extends RecyclerView.ViewHolder implements View
    @Override
    public boolean onLongClick(View v) {
       AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-      builder.setItems(App.get().getSite().isIfixit() ? R.array.guide_list_item_options
-       : R.array.guide_list_item_options_with_delete, new AlertDialog.OnClickListener() {
+      builder.setItems(App.get().getSite().getGuideListItemOptions(), new AlertDialog.OnClickListener() {
          public void onClick(DialogInterface dialog, int which) {
           switch (which) {
              case VIEW_OPTION:
