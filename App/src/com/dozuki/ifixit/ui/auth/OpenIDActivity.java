@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.auth;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
 import android.webkit.*;
@@ -35,6 +36,9 @@ public class OpenIDActivity extends Activity {
 
       mDomain = site.mDomain;
       mCustomDomain = site.mCustomDomain;
+      if (mCustomDomain.length() == 0) {
+         mCustomDomain = mDomain;
+      }
 
       String loginUrl;
       if (singleSignOn) {
@@ -72,12 +76,15 @@ public class OpenIDActivity extends Activity {
          public void onPageFinished(WebView view, String url) {
             CookieSyncManager.getInstance().sync();
 
-            // Ignore page loads if it's on the openID site.
-            if (url.contains(mBaseUrl) ||
+            String nakedUrl = url.replaceFirst("^(http://|https://)", "");
+            String nakedBaseUrl = mBaseUrl.replaceFirst("^(http://|https://)", "");
+
+            // Ignore page loads if it's on the openID / SAML site.
+            if (nakedUrl.startsWith(nakedBaseUrl) ||
              // OR if it's NOT on one of the sites domains
-             !(url.contains(mDomain) || url.contains(mCustomDomain)) ||
+             !(nakedUrl.startsWith(mDomain) || nakedUrl.startsWith(mCustomDomain)) ||
              // OR if its NOT a google or yahoo domain
-             ((url.contains(YAHOO_LOGIN) || url.contains(GOOGLE_LOGIN) && !url.contains(mDomain)))) {
+             ((url.contains(YAHOO_LOGIN) || url.contains(GOOGLE_LOGIN) && !nakedUrl.startsWith(mDomain)))) {
                return;
             }
 
@@ -114,6 +121,13 @@ public class OpenIDActivity extends Activity {
             Intent result = new Intent();
             setResult(RESULT_CANCELED, result);
             finish();
+         }
+
+         @Override
+         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+            if (App.inDebug()) {
+               handler.proceed(); // Ignore SSL certificate errors
+            }
          }
       });
 
