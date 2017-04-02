@@ -306,6 +306,7 @@
     <string name="guide_complete_error_message">Couldn\'t complete this guide.</string>
     <string name="complete_this_guide">Complete Guide</string>
     <string name="i_did_it_success">I did it! Success!</string>
+    <string name="oops_i_didnt_actually_complete_this_guide">Oops, I didn\'t actually complete this guide.</string>
     <string name="just_now">just now</string>
     <string name="completing">Completing…</string>
     <string name="empty_comments">No comments.</string>
@@ -323,6 +324,7 @@
     <string name="failed_edit_comment">Comment edit failed. Try again.</string>
     <string name="debug">Debug</string>
     <string name="view_comments">View Comments</string>
+    <string name="reverting">Reverting...</string>
 
     <string-array name="new_image_actions">
         <item>Camera</item>

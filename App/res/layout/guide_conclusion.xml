@@ -20,4 +20,14 @@
         android:textColor="@color/white"
         android:text="@string/complete_this_guide"/>
 
+    <Button
+        android:id="@+id/didnt_complete_guide"
+        android:visibility="invisible"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/rounded_button_background"
+        android:textColor="@color/white"
+        android:text="@string/oops_i_didnt_actually_complete_this_guide"/>
+
 </LinearLayout>

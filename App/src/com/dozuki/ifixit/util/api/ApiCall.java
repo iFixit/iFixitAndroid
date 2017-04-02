@@ -208,6 +208,10 @@ public class ApiCall {
       return new ApiCall(ApiEndpoint.COMPLETE_GUIDE, guideid + "");
    }
 
+   public static ApiCall uncompleteGuide(int guideid) {
+      return new ApiCall(ApiEndpoint.UNCOMPLETE_GUIDE, guideid + "");
+   }
+
    public static ApiCall favoriteGuide(int guideid, boolean favorite) {
       ApiEndpoint endpoint = favorite ? ApiEndpoint.FAVORITE_GUIDE : ApiEndpoint.UNFAVORITE_GUIDE;
       return new ApiCall(endpoint, "" + guideid);
