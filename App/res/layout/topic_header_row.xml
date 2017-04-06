@@ -2,5 +2,5 @@
 
 <TextView xmlns:android="http://schemas.android.com/apk/res/android"
           android:id="@+id/topic_header"
-          style="@style/TopicHeaderRow.Background.Compat"/>
+          style="@style/TopicHeaderRow.Background"/>
 
