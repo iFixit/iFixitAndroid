@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.CharlesSmith" parent="Theme.Base">
+        <item name="doz__primaryHighlightColor">@color/pepsi_color</item>
+        <item name="doz__sectionHeader">@drawable/charlessmith_section_header</item>
+        <item name="doz__topicDefaultBackground">@style/Widget.CharlesSmith.TopicBackground</item>
+        <item name="colorPrimary">@color/pepsi_color</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/pepsi_color</item>
+        <item name="colorAccentDark">@color/pepsi_color_dark</item>
+        <item name="colorButtonNormal">@color/white</item>
+    </style>
+
+</resources>
