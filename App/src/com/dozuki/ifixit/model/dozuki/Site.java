@@ -338,7 +338,11 @@ public class Site implements Serializable {
       return mLogo;
    }
 
-   public int getGuideListItemOptions() {
-      return isIfixit() ? R.array.guide_list_item_options : R.array.guide_list_item_options_with_delete;
+   public int getGuideListItemOptions(boolean isPublic) {
+      if (!isPublic) {
+         return isIfixit() ? R.array.guide_list_item_options : R.array.guide_list_item_options_with_delete;
+      } else {
+         return isIfixit() ? R.array.guide_list_item_options_unpublish : R.array.guide_list_item_options_with_delete_unpublish;
+      }
    }
 }

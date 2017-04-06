@@ -20,10 +20,6 @@ import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
 public class GuideListItemHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
-   private static final int DELETE_OPTION = 3;
-   private static final int EDIT_OPTION = 2;
-   private static final int PUBLISH_OPTION = 1;
-   private static final int VIEW_OPTION = 0;
    private Context mContext;
 
    private TextView mTitleView;
@@ -34,6 +30,7 @@ public class GuideListItemHolder extends RecyclerView.ViewHolder implements View
 
    public GuideListItemHolder(View itemView, GuideListItemListener listener) {
       super(itemView);
+
       mListener = listener;
       mContext = itemView.getContext();
       mTitleView = (TextView)  itemView.findViewById(R.id.guide_create_item_title);
@@ -107,25 +104,7 @@ public class GuideListItemHolder extends RecyclerView.ViewHolder implements View
 
    @Override
    public boolean onLongClick(View v) {
-      AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-      builder.setItems(App.get().getSite().getGuideListItemOptions(), new AlertDialog.OnClickListener() {
-         public void onClick(DialogInterface dialog, int which) {
-          switch (which) {
-             case VIEW_OPTION:
-                mListener.onViewItemClicked(mGuideInfo);
-                break;
-             case PUBLISH_OPTION:
-                publishGuide();
-                break;
-             case EDIT_OPTION:
-                mListener.onEditItemClicked(mGuideInfo);
-                break;
-             case DELETE_OPTION:
-                mListener.onDeleteItemClicked(mGuideInfo);
-                break;
-          }
-       }}).show();
-
+      mListener.onItemLongClick(mGuideInfo);
       return true;
    }
 }
