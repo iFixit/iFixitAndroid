@@ -6,7 +6,7 @@
         <item name="colorPrimaryDark">@color/black_alpha_40</item>
         <item name="colorAccent">@color/ifixit_blue</item>
         <item name="colorAccentDark">@color/blue_6</item>
-        <item name="colorButtonNormal">@color/white</item>
+        <item name="colorButtonNormal">@color/gray_3</item>
 
         <!-- Theme Attributes -->
         <item name="doz__primaryHighlightColor">@color/ifixit_blue</item>
