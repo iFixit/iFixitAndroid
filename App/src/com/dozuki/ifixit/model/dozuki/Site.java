@@ -150,6 +150,15 @@ public class Site implements Serializable {
       return mDomain.equals(host) || mCustomDomain.equals(host);
    }
 
+   public int transparentTheme() {
+      // If the site has a transparent theme, use that.
+      if (isIfixit()) {
+         return R.style.Theme_iFixit_TransparentActionBar;
+      }
+
+      return R.style.Theme_Base_TransparentActionBar;
+   }
+
    public int theme() {
       // Put custom site themes here.
       if (isIfixit()) {
