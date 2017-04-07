@@ -3,6 +3,13 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
+    <style name="Theme.CharlesSmith.TransparentActionBar" parent="Theme.CharlesSmith">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
     <style name="Theme.CharlesSmith" parent="Theme.Base">
         <item name="doz__primaryHighlightColor">@color/pepsi_color</item>
         <item name="doz__sectionHeader">@drawable/charlessmith_section_header</item>

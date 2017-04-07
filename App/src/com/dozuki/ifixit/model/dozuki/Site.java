@@ -154,6 +154,8 @@ public class Site implements Serializable {
       // If the site has a transparent theme, use that.
       if (isIfixit()) {
          return R.style.Theme_iFixit_TransparentActionBar;
+      } else if (isPepsi()) {
+         return R.style.Theme_CharlesSmith_TransparentActionBar;
       }
 
       return R.style.Theme_Base_TransparentActionBar;
