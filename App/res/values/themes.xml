@@ -59,6 +59,8 @@
 
     <style name="Theme.DripAssist" parent="Theme.Base"></style>
 
+    <style name="Theme.CharlesSmith" parent="Theme.Base"></style>
+
     <style name="Theme.Oscaro" parent="Theme.Base"></style>
 
     <style name="Theme.PVA" parent="Theme.Base"></style>
@@ -72,6 +74,8 @@
     <style name="Theme.Dozuki.Orange" parent="Theme.Base"></style>
 
     <style name="Theme.Dozuki.White" parent="Theme.Base"></style>
+
+    <style name="Theme.CharlesSmith.TransparentActionBar" parent="Theme.CharlesSmith"></style>
 
     <style name="Theme.iFixit.TransparentActionBar" parent="Theme.iFixit"></style>
 
