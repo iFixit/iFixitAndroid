@@ -7,17 +7,14 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 
 import java.util.ArrayList;
 
 class GuideCreateRecyclerListAdapter extends RecyclerView.Adapter<GuideListItemHolder> {
-   private ArrayList<GuideInfo> mGuides;
+   private ArrayList<GuideInfo> mGuides = new ArrayList<>();
    private GuideListItemListener mItemListener;
-
-   public GuideCreateRecyclerListAdapter(ArrayList<GuideInfo> guides) {
-      mGuides = guides;
-   }
 
    public void setGuideListItemListener(GuideListItemListener l) {
       mItemListener = l;
@@ -36,20 +33,56 @@ class GuideCreateRecyclerListAdapter extends RecyclerView.Adapter<GuideListItemH
       holder.setItem(mGuides.get(position));
    }
 
+   public void updateItem(Guide guide) {
+      for (int i = mGuides.size() - 1; i >= 0; i--) {
+         final GuideInfo userGuide = mGuides.get(i);
+         if (userGuide.mGuideid == guide.getGuideid()) {
+            userGuide.mTitle = guide.getTitle();
+            userGuide.mRevisionid = guide.getRevisionid();
+            userGuide.mPublic = guide.isPublic();
+            userGuide.mIsPublishing = false;
+            mGuides.set(i, userGuide);
+            break;
+         }
+      }
+
+      notifyDataSetChanged();
+   }
+
+   public void markAllAsFinished() {
+      for (GuideInfo guide : mGuides) {
+         guide.mIsPublishing = false;
+      }
+
+      notifyDataSetChanged();
+   }
+
    public ArrayList<GuideInfo> getAll() {
-      Log.d("GuideCreateActivity", "Getall");
       return mGuides;
    }
 
-   public void clear() {
+   public void remove(GuideInfo guide) {
+      mGuides.remove(guide);
+      notifyDataSetChanged();
+   }
 
-      Log.d("GuideCreateActivity", "Clearing");
+   public void removeAll() {
+      mGuides.clear();
+      notifyDataSetChanged();
+   }
+
+   public void clear() {
       mGuides.clear();
       notifyDataSetChanged();
    }
 
    public void addAll(ArrayList<GuideInfo> list) {
-      Log.d("GuideCreateActivity", "addall");
+      mGuides.addAll(list);
+      notifyDataSetChanged();
+   }
+
+   public void replaceAll(ArrayList<GuideInfo> list) {
+      mGuides.clear();
       mGuides.addAll(list);
       notifyDataSetChanged();
    }

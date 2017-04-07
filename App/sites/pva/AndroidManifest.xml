@@ -53,7 +53,15 @@
                 <data android:scheme="https" android:host="support.pva.net" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
-
+        <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="com.dozuki.pva.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths"/>
+        </provider>
         <provider
             android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
             android:authorities="com.dozuki.pva.ui.search.SearchSuggestionProvider"/>

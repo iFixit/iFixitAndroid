@@ -72,6 +72,4 @@
     <style name="Theme.Dozuki.Orange" parent="Theme.Base"></style>
 
     <style name="Theme.Dozuki.White" parent="Theme.Base"></style>
-
-    <color name="gunmetal">#FF212426</color>
 </resources>

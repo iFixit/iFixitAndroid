@@ -7,4 +7,5 @@ public interface GuideListItemListener {
    void onPublishItemClicked(GuideInfo guide);
    void onViewItemClicked(GuideInfo guide);
    void onDeleteItemClicked(GuideInfo guide);
+   void onItemLongClick(GuideInfo guide);
 }

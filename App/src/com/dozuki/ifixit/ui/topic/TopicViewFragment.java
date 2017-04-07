@@ -6,11 +6,9 @@ import android.support.v4.view.ViewPager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
@@ -46,7 +44,7 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
       Bundle args = getArguments();
 
       mPager = (ViewPager) view.findViewById(R.id.topic_view_view_pager);
-      mTabs = (TabLayout) view.findViewById(R.id.tabLayout);
+      mTabs = (TabLayout) view.findViewById(R.id.tab_layout);
 
       mTabs.setTabGravity(TabLayout.GRAVITY_FILL);
       mTabs.setVisibility(View.VISIBLE);

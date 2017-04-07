@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.TextInputEditText;
 import android.support.v4.app.DialogFragment;
@@ -109,8 +110,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
    public static LoginFragment newInstance() {
       LoginFragment frag = new LoginFragment();
-      frag.setStyle(DialogFragment.STYLE_NO_TITLE,
-       android.R.style.Theme_Holo_Light_Dialog);
 
       return frag;
    }

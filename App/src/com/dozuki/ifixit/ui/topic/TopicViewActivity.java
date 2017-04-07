@@ -53,7 +53,7 @@ public class TopicViewActivity extends BaseActivity {
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
-      setTheme(R.style.Theme_Base_TransparentActionBar);
+      setTheme(App.get().getTransparentSiteTheme());
 
       setContentView(R.layout.topic_view);
 
@@ -90,7 +90,7 @@ public class TopicViewActivity extends BaseActivity {
 
       mBackdropView = (ImageView) findViewById(R.id.backdrop);
       mPager = (ViewPager) findViewById(R.id.topic_viewpager);
-      mTabs = (TabLayout) findViewById(R.id.tabLayout);
+      mTabs = (TabLayout) findViewById(R.id.tab_layout);
       mTabs.setTabGravity(TabLayout.GRAVITY_FILL);
       mTabs.setVisibility(View.VISIBLE);
       mTopicNode = (TopicNode) getIntent().getSerializableExtra(TOPIC_KEY);

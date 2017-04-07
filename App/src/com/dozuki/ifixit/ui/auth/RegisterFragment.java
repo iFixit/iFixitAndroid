@@ -64,7 +64,6 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
 
    public static RegisterFragment newInstance() {
       RegisterFragment frag = new RegisterFragment();
-      frag.setStyle(STYLE_NO_TITLE, android.R.style.Theme_Holo_Light_Dialog);
       return frag;
    }
 

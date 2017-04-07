@@ -1,12 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.iFixit.TransparentActionBar" parent="Theme.iFixit">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
     <style name="Theme.iFixit" parent="Theme.Base">
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black_alpha_40</item>
         <item name="colorAccent">@color/ifixit_blue</item>
         <item name="colorAccentDark">@color/blue_6</item>
-        <item name="colorButtonNormal">@color/white</item>
+        <item name="colorButtonNormal">@color/gray_3</item>
 
         <!-- Theme Attributes -->
         <item name="doz__primaryHighlightColor">@color/ifixit_blue</item>

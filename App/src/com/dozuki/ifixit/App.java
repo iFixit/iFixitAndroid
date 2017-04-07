@@ -326,6 +326,10 @@ public class App extends Application {
       return mSite.theme();
    }
 
+   public int getTransparentSiteTheme() {
+      return mSite.transparentTheme();
+   }
+
    public String getUserAgent() {
       if (mUserAgent == null) {
          int versionCode = BuildConfig.VERSION_CODE;

@@ -150,6 +150,15 @@ public class Site implements Serializable {
       return mDomain.equals(host) || mCustomDomain.equals(host);
    }
 
+   public int transparentTheme() {
+      // If the site has a transparent theme, use that.
+      if (isIfixit()) {
+         return R.style.Theme_iFixit_TransparentActionBar;
+      }
+
+      return R.style.Theme_Base_TransparentActionBar;
+   }
+
    public int theme() {
       // Put custom site themes here.
       if (isIfixit()) {
@@ -358,7 +367,11 @@ public class Site implements Serializable {
       return mLogo;
    }
 
-   public int getGuideListItemOptions() {
-      return isIfixit() ? R.array.guide_list_item_options : R.array.guide_list_item_options_with_delete;
+   public int getGuideListItemOptions(boolean isPublic) {
+      if (!isPublic) {
+         return isIfixit() ? R.array.guide_list_item_options : R.array.guide_list_item_options_with_delete;
+      } else {
+         return isIfixit() ? R.array.guide_list_item_options_unpublish : R.array.guide_list_item_options_with_delete_unpublish;
+      }
    }
 }
