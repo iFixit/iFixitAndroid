@@ -167,7 +167,9 @@
         <item name="android:layout_marginLeft">16dp</item>
         <item name="android:layout_marginRight">16dp</item>
         <item name="android:gravity">center</item>
+        <item name="android:layout_centerVertical">true</item>
         <item name="android:visibility">gone</item>
+        <item name="android:textColor">@color/gray_8</item>
     </style>
 
     <style name="ListText" parent="TextAppearance.AppCompat.Body1">

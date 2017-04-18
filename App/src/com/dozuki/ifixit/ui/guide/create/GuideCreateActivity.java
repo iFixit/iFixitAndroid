@@ -10,6 +10,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
@@ -22,6 +23,7 @@ import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
+import com.dozuki.ifixit.views.EmptyRecyclerView;
 import com.squareup.otto.Subscribe;
 
 import org.json.JSONException;
@@ -74,9 +76,10 @@ public class GuideCreateActivity extends BaseMenuDrawerActivity implements Swipe
       mSwipeLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
       mSwipeLayout.setOnRefreshListener(this);
 
-      RecyclerView recyclerView = (RecyclerView) findViewById(R.id.guide_create_listview);
+      EmptyRecyclerView recyclerView = (EmptyRecyclerView) findViewById(R.id.guide_create_listview);
       recyclerView.setLayoutManager(new LinearLayoutManager(this));
       recyclerView.setAdapter(mGuideRecyclerListAdapter);
+      recyclerView.setEmptyView(findViewById(R.id.no_guides_text));
 
       FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_guide_fab);
 

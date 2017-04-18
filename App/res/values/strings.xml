@@ -136,8 +136,7 @@
     <string name="unpublished">Unpublished</string>
     <string name="action_delete">Delete</string>
     <string name="add_guide">Add guide</string>
-    <string name="no_guides_text">It looks like you don\'t have any guides. Create a guide by tapping the icon
-        in the action bar or in the menu drawer.</string>
+    <string name="no_guides_text">It looks like you don\'t have any guides. Get started by tapping the icon below!</string>
 
     <!-- Guide Steps Edit List -->
     <string name="step_edit_confirm_delete_title">Delete Step</string>
