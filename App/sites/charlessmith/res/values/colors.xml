@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="pepsi_color">#0085CA</color>
+
+    <color name="pepsi_color_dark">#016091</color>
+    <color name="emphasis">@color/pepsi_color</color>
+    <color name="emphasis_pressed">@color/pepsi_color_dark</color>
+
+    <color name="step_pager_previous_tab_color">@color/pepsi_color</color>
+    <color name="step_pager_selected_tab_color">@color/pepsi_color</color>
+    <color name="step_pager_selected_last_tab_color">@color/pepsi_color</color>
+    <color name="step_pager_next_tab_color">#10000000</color>
+
+</resources>

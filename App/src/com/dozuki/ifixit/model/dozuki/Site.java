@@ -154,6 +154,8 @@ public class Site implements Serializable {
       // If the site has a transparent theme, use that.
       if (isIfixit()) {
          return R.style.Theme_iFixit_TransparentActionBar;
+      } else if (isPepsi()) {
+         return R.style.Theme_CharlesSmith_TransparentActionBar;
       }
 
       return R.style.Theme_Base_TransparentActionBar;
@@ -171,6 +173,8 @@ public class Site implements Serializable {
          return R.style.Theme_PVA;
       } else if (isOscaro()) {
          return R.style.Theme_Oscaro;
+      } else if (isPepsi()) {
+         return R.style.Theme_CharlesSmith;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -302,6 +306,20 @@ public class Site implements Serializable {
          site.mPublicRegistration = false;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
+      } else if (siteName.equals("charlessmith")) {
+         site = new Site(3558);
+         site.mName = "charlessmith";
+         site.mDomain = "charlessmith.dozuki.com";
+         site.mTitle = "PepsiCo International";
+         site.mTheme = "custom";
+         site.mPublic = false;
+         site.mAnswers = false;
+         site.mDescription = "Operation & Maintenance of Your Postmix Dispenser";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       }
 
       return site;
@@ -316,7 +334,11 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit() || isDripAssist() || isPVA() || isOscaro();
+      return isAccustream() || isIfixit() || isDripAssist() || isPVA() || isOscaro() || isPepsi();
+   }
+
+   public boolean isPepsi() {
+      return mName.equals("charlessmith");
    }
 
    public boolean isOscaro() {

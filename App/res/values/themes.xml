@@ -59,6 +59,8 @@
 
     <style name="Theme.DripAssist" parent="Theme.Base"></style>
 
+    <style name="Theme.CharlesSmith" parent="Theme.Base"></style>
+
     <style name="Theme.Oscaro" parent="Theme.Base"></style>
 
     <style name="Theme.PVA" parent="Theme.Base"></style>
@@ -72,4 +74,27 @@
     <style name="Theme.Dozuki.Orange" parent="Theme.Base"></style>
 
     <style name="Theme.Dozuki.White" parent="Theme.Base"></style>
+
+    <style name="Theme.CharlesSmith.TransparentActionBar" parent="Theme.CharlesSmith"></style>
+
+    <style name="Theme.iFixit.TransparentActionBar" parent="Theme.iFixit"></style>
+
+    <style name="Theme.Accustream.TransparentActionBar" parent="Theme.Accustream"></style>
+
+    <style name="Theme.DripAssist.TransparentActionBar" parent="Theme.DripAssist"></style>
+
+    <style name="Theme.Oscaro.TransparentActionBar" parent="Theme.Oscaro"></style>
+
+    <style name="Theme.PVA.TransparentActionBar" parent="Theme.PVA"></style>
+
+    <style name="Theme.Dozuki.TransparentActionBar" parent="Theme.Dozuki"></style>
+
+    <style name="Theme.Dozuki.Green.TransparentActionBar" parent="Theme.Dozuki.Green"></style>
+
+    <style name="Theme.Dozuki.Black.TransparentActionBar" parent="Theme.Dozuki.Black"></style>
+
+    <style name="Theme.Dozuki.Orange.TransparentActionBar" parent="Theme.Dozuki.Orange"></style>
+
+    <style name="Theme.Dozuki.White.TransparentActionBar" parent="Theme.Dozuki.White"></style>
+
 </resources>
