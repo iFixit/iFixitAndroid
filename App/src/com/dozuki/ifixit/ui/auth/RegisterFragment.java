@@ -156,25 +156,24 @@ public class RegisterFragment extends BaseDialogFragment implements OnClickListe
                 ApiCall.register(email, password, name));
             } else {
                if (email.length() <= 0) {
-                  mErrorText.setText(R.string.empty_field_error);
+                  mEmail.setError("Email is required to register.");
                   mEmail.requestFocus();
-                  showKeyboard();
+                  //showKeyboard();
                } else if (password.length() <= 0) {
-                  mErrorText.setText(R.string.empty_field_error);
+                  mPassword.setError("Password required");
                   mPassword.requestFocus();
-                  showKeyboard();
+                  //showKeyboard();
                } else if (name.length() <= 0) {
-                  mErrorText.setText(R.string.empty_field_error);
+                  mName.setError("Username required");
                   mName.requestFocus();
-                  showKeyboard();
+                  //showKeyboard();
                } else if (!password.equals(confirmPassword)) {
-                  mErrorText.setText(R.string.passwords_do_not_match_error);
+                  mPassword.setError(getString(R.string.passwords_do_not_match_error));
+                  mPassword.requestFocus();
                } else if (!mTermsAgreeCheckBox.isChecked()) {
                   mErrorText.setText(R.string.terms_unchecked_error);
-                  mConfirmPassword.requestFocus();
-                  showKeyboard();
+                  mErrorText.setVisibility(View.VISIBLE);
                }
-               mErrorText.setVisibility(View.VISIBLE);
             }
             break;
 

@@ -124,6 +124,7 @@ public class ApiCall {
          requestBody.put("email", email);
          requestBody.put("password", password);
          requestBody.put("username", username);
+         requestBody.put("unique_username", username);
       } catch (JSONException e) {
          return null;
       }
