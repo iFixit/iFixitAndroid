@@ -125,17 +125,12 @@ public class OpenIDActivity extends BaseActivity {
          }
 
          @Override
-         public void onReceivedError(WebView view, int errorCode, String description, String failingUrl) {
-            Log.e("iFixit", "Error: " + description);
-         }
+         public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
 
-         @Override
-         public void  onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
             if (App.inDebug()) {
                handler.proceed(); // Ignore SSL certificate errors
             }
          }
-
       });
 
       webView.loadUrl(loginUrl);
