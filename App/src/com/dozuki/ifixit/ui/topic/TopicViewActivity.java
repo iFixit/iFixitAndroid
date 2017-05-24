@@ -57,8 +57,6 @@ public class TopicViewActivity extends BaseActivity {
 
       setContentView(R.layout.topic_view);
 
-      mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
-
       mAppBar = (AppBarLayout) findViewById(R.id.appbar);
       mToolbar = (Toolbar) findViewById(R.id.toolbar);
       mCollapsingToolbar = (CollapsingToolbarLayout) findViewById(R.id.collapsing_toolbar);
