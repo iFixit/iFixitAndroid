@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="brand_color">#022046</color>
+
+    <color name="brand_color_dark">#FF022046</color>
+    <color name="emphasis">@color/brand_color</color>
+    <color name="emphasis_pressed">@color/brand_color</color>
+
+    <color name="step_pager_previous_tab_color">@color/brand_color</color>
+    <color name="step_pager_selected_tab_color">@color/brand_color</color>
+    <color name="step_pager_selected_last_tab_color">@color/brand_color</color>
+    <color name="step_pager_next_tab_color">#10000000</color>
+
+</resources>

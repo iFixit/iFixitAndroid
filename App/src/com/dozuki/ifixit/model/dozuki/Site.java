@@ -156,6 +156,8 @@ public class Site implements Serializable {
          return R.style.Theme_iFixit_TransparentActionBar;
       } else if (isPepsi()) {
          return R.style.Theme_CharlesSmith_TransparentActionBar;
+      } else if (isAristocrat()) {
+         return R.style.Theme_AristocratGaming_TransparentActionBar;
       }
 
       return R.style.Theme_Base_TransparentActionBar;
@@ -175,6 +177,8 @@ public class Site implements Serializable {
          return R.style.Theme_Oscaro;
       } else if (isPepsi()) {
          return R.style.Theme_CharlesSmith;
+      } else if (isAristocrat()) {
+         return R.style.Theme_AristocratGaming;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -218,6 +222,21 @@ public class Site implements Serializable {
          site.mPublicRegistration = true;
          site.mObjectNamePlural = res.getString(R.string.devices);
          site.mObjectNameSingular = res.getString(R.string.device);
+      } else if (siteName.equals("aristocratgaming")) {
+         site = new Site(3865);
+         site.mName = "aristocratgaming";
+         site.mDomain = "aristocratgaming.dozuki.com";
+         site.mTitle = "Aristocrat Resource Center";
+         site.mTheme = "custom";
+         site.mPublic = false;
+         site.mAnswers = false;
+         site.mDescription = "";
+         site.mStandardAuth = false;
+         site.mBarcodeScanner = true;
+         site.mSsoUrl = "http://aristocratgaming.dozuki.com/Login";
+         site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("dozuki")) {
          site = new Site(5);
          site.mName = "dozuki";
@@ -334,7 +353,11 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit() || isDripAssist() || isPVA() || isOscaro() || isPepsi();
+      return isAccustream() || isIfixit() || isDripAssist() || isPVA() || isOscaro() || isPepsi() || isAristocrat();
+   }
+
+   public boolean isAristocrat() {
+      return mName.equals("aristocratgaming");
    }
 
    public boolean isPepsi() {

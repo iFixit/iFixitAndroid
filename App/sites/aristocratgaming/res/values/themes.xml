@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.AristocratGaming.TransparentActionBar" parent="Theme.AristocratGaming">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="Theme.AristocratGaming" parent="Theme.Base">
+        <item name="doz__primaryHighlightColor">@color/brand_color</item>
+        <item name="doz__sectionHeader">@drawable/aristocratgaming_section_header</item>
+        <item name="doz__topicDefaultBackground">@style/Widget.AristocratGaming.TopicBackground</item>
+        <item name="colorPrimary">@color/brand_color</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/brand_color</item>
+        <item name="colorAccentDark">@color/brand_color_dark</item>
+        <item name="colorButtonNormal">@color/white</item>
+    </style>
+
+</resources>
