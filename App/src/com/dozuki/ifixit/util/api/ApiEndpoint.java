@@ -52,6 +52,28 @@ public enum ApiEndpoint {
       "GET"
    ),
 
+   WIKI(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "wikis/WIKI/" + query;
+       }
+
+       public String createUrl(String query, String namespace) {
+          return "wikis/" + namespace + "/" + query;
+       }
+
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.ViewWiki().setResult(JSONHelper.parseWiki(json));
+       }
+
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.ViewGuide();
+       }
+    },
+    false,
+    "GET"
+   ),
+
    GUIDE(
       new Endpoint() {
          public String createUrl(String query) {
@@ -146,7 +168,7 @@ public enum ApiEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "categories/" + URLEncoder.encode(query.replace(".", ""), "UTF-8");
+               return "wikis/CATEGORY/" + URLEncoder.encode(query.replace(".", ""), "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;

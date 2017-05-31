@@ -12,6 +12,7 @@ import com.dozuki.ifixit.model.Item;
 import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.VideoEncoding;
 import com.dozuki.ifixit.model.VideoThumbnail;
+import com.dozuki.ifixit.model.Wiki;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
@@ -237,6 +238,10 @@ public class JSONHelper {
       return guide;
    }
 
+   public static Wiki parseWiki(String json) {
+      return new Gson().fromJson(json, Wiki.class);
+   }
+
    private static ArrayList<Comment> parseComments(JSONArray comments) throws JSONException {
       ArrayList<Comment> result = new ArrayList<Comment>();
       for (int i = 0; i < comments.length(); i++) {
@@ -398,11 +403,11 @@ public class JSONHelper {
     * Topic leaf parsing
     */
    public static TopicLeaf parseTopicLeaf(String json) throws JSONException {
+
       JSONObject jTopic = new JSONObject(json);
       JSONArray jGuides = jTopic.getJSONArray("guides");
-      JSONObject jSolutions = jTopic.getJSONObject("solutions");
-      JSONObject jInfo = jTopic.getJSONObject("topic_info");
-      TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
+      JSONArray jWikis = jTopic.getJSONArray("related_wikis");
+      TopicLeaf topicLeaf = new TopicLeaf(jTopic.getString("title"));
 
       for (int i = 0; i < jGuides.length(); i++) {
          String guideJson = jGuides.getJSONObject(i).toString();
@@ -410,8 +415,14 @@ public class JSONHelper {
          topicLeaf.addGuide(guide);
       }
 
-      topicLeaf.setNumSolutions(Integer.parseInt(jSolutions.getString("count")));
-      topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
+      for (int i = 0; i < jWikis.length(); i++) {
+         String wikiJson = jWikis.getJSONObject(i).toString();
+         Log.d("dozuki", wikiJson);
+         Wiki wiki = new Gson().fromJson(wikiJson, Wiki.class);
+         topicLeaf.addWiki(wiki);
+      }
+
+      topicLeaf.setSolutionsUrl(jTopic.getString("solutions_url"));
 
       if (!jTopic.isNull("description")) {
          topicLeaf.setDescription(jTopic.getString("description"));
@@ -423,7 +434,7 @@ public class JSONHelper {
          topicLeaf.setImage(parseImage(jTopic.getJSONObject("image"), null));
       }
 
-      topicLeaf.setLocale(jTopic.getString("locale"));
+      topicLeaf.setLocale(jTopic.getString("langid"));
       topicLeaf.setContentsRaw(jTopic.getString("contents_raw"));
       topicLeaf.setContentsRendered(jTopic.getString("contents_rendered"));
       topicLeaf.setTitle(jTopic.getString("display_title"));

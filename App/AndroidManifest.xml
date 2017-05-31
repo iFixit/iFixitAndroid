@@ -62,6 +62,7 @@
             android:launchMode="singleTop"/>
         <activity android:name=".ui.guide.view.TeardownsActivity"/>
 
+        <activity android:name=".ui.wiki.WikiViewActivity"/>
         <activity android:name=".ui.AnswersWebViewActivity"/>
         <activity android:name=".ui.guide.view.FeaturedGuidesActivity"/>
 

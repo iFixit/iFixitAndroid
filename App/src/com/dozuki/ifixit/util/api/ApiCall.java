@@ -117,6 +117,10 @@ public class ApiCall {
       return new ApiCall(ApiEndpoint.TOPIC, topicName);
    }
 
+   public static ApiCall wiki(String title) {
+      return new ApiCall(ApiEndpoint.WIKI, title);
+   }
+
    public static ApiCall register(String email, String password, String username) {
       JSONObject requestBody = new JSONObject();
 

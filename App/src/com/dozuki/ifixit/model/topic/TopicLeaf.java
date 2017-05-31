@@ -3,11 +3,13 @@ package com.dozuki.ifixit.model.topic;
 import com.dozuki.ifixit.model.Flag;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
+import com.dozuki.ifixit.model.Wiki;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 
 import org.json.JSONArray;
 
 import java.io.Serializable;
+import java.util.AbstractList;
 import java.util.ArrayList;
 
 public class TopicLeaf implements Serializable {
@@ -17,26 +19,26 @@ public class TopicLeaf implements Serializable {
    private String mTitle;
    private Image mImage;
    private String mDescription = "";
-   private ArrayList<Flag> mFlags;
-   private ArrayList<GuideInfo> mGuides;
-   private int mSolutions;
+   private ArrayList<Flag> mFlags = new ArrayList<>();
+   private ArrayList<GuideInfo> mGuides = new ArrayList<>();
    private String mSolutionsUrl;
-   private ArrayList<Item> mParts;
-   private ArrayList<Item> mTools;
+   private ArrayList<Item> mParts = new ArrayList<>();
+   private ArrayList<Item> mTools = new ArrayList<>();
    private String mContentsRendered;
    private String mLocale;
    private String mContentsRaw;
+   private ArrayList<Wiki> mWikis = new ArrayList<>();
 
    public TopicLeaf(String name) {
       mName = name;
-      mGuides = new ArrayList<GuideInfo>();
-      mParts = new ArrayList<Item>();
-      mTools = new ArrayList<Item>();
-      mFlags = new ArrayList<Flag>();
    }
 
    public void addGuide(GuideInfo guideInfo) {
       mGuides.add(guideInfo);
+   }
+
+   public void addWiki(Wiki wiki) {
+      mWikis.add(wiki);
    }
 
    public String getName() {
@@ -47,6 +49,10 @@ public class TopicLeaf implements Serializable {
       return mGuides;
    }
 
+   public ArrayList<Wiki> getRelatedWikis() {
+      return mWikis;
+   }
+
    public void setImage(Image image) {
       mImage = image;
    }
@@ -55,16 +61,8 @@ public class TopicLeaf implements Serializable {
       mSolutionsUrl = url;
    }
 
-   public void setNumSolutions(int solutions) {
-      mSolutions = solutions;
-   }
-
    public String getSolutionsUrl() {
       return mSolutionsUrl;
-   }
-
-   public int getNumSolutions() {
-      return mSolutions;
    }
 
    public void setDescription(String description) {

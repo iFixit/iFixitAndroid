@@ -2,6 +2,7 @@ package com.dozuki.ifixit.util.api;
 
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.model.Wiki;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
@@ -48,6 +49,8 @@ public abstract class ApiEvent<T> {
    public static class Categories extends ApiEvent<TopicNode> {}
    public static class Topic extends ApiEvent<TopicLeaf> {}
    public static class TopicList extends ApiEvent<ArrayList<String>> {}
+
+   public static class ViewWiki extends ApiEvent<Wiki> {}
 
    public static class Login extends ApiEvent<User> {}
    public static class Logout extends ApiEvent<String> {}

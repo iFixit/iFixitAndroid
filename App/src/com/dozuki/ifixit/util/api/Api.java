@@ -381,7 +381,7 @@ public class Api {
          String bodyString = body.string();
          int code = response.code();
 
-         if (App.inDebug()) {
+         if (true || App.inDebug()) {
             long endTime = System.currentTimeMillis();
 
             Log.d(TAG, "Response code: " + code);

@@ -59,6 +59,15 @@ public class Utils {
       return s;
    }
 
+   public static String cleanWikiHtml(String html) {
+
+      // Remove anchor elements from html
+      html = html.replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
+      html = html.replaceAll("<span class=\\\"editLink headerLink\\\".+?<\\/span>", "");
+
+      return html;
+   }
+
    /**
     * Removes relative link hrefs
     *

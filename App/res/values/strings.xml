@@ -371,4 +371,6 @@
     <string name="cart">Cart</string>
     <string name="answers_forum">Answers Forum</string>
     <string name="ifixit_store">iFixit Store</string>
+    <string name="item_thumbnail">Item Thumbnail</string>
+    <string name="related_pages">Related Pages</string>
 </resources>
