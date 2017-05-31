@@ -157,7 +157,7 @@ public class Site implements Serializable {
       } else if (isPepsi()) {
          return R.style.Theme_CharlesSmith_TransparentActionBar;
       } else if (isAristocrat()) {
-         return R.style.Theme_AristocratGaming_TransparentActionBar;
+         return R.style.Theme_Aristocrat_TransparentActionBar;
       }
 
       return R.style.Theme_Base_TransparentActionBar;
@@ -178,7 +178,7 @@ public class Site implements Serializable {
       } else if (isPepsi()) {
          return R.style.Theme_CharlesSmith;
       } else if (isAristocrat()) {
-         return R.style.Theme_AristocratGaming;
+         return R.style.Theme_Aristocrat;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -222,18 +222,18 @@ public class Site implements Serializable {
          site.mPublicRegistration = true;
          site.mObjectNamePlural = res.getString(R.string.devices);
          site.mObjectNameSingular = res.getString(R.string.device);
-      } else if (siteName.equals("aristocratgaming")) {
-         site = new Site(3865);
-         site.mName = "aristocratgaming";
-         site.mDomain = "aristocratgaming.dozuki.com";
+      } else if (siteName.equals("aristocrat")) {
+         site = new Site(3995);
+         site.mName = "aristocrat";
+         site.mDomain = "aristocrat.dozuki.com";
          site.mTitle = "Aristocrat Resource Center";
          site.mTheme = "custom";
          site.mPublic = false;
-         site.mAnswers = false;
+         site.mAnswers = true;
          site.mDescription = "";
-         site.mStandardAuth = false;
-         site.mBarcodeScanner = true;
-         site.mSsoUrl = "http://aristocratgaming.dozuki.com/Login";
+         site.mStandardAuth = true;
+         site.mBarcodeScanner = false;
+         site.mSsoUrl = null;
          site.mPublicRegistration = false;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
@@ -357,7 +357,7 @@ public class Site implements Serializable {
    }
 
    public boolean isAristocrat() {
-      return mName.equals("aristocratgaming");
+      return mName.equals("aristocrat");
    }
 
    public boolean isPepsi() {

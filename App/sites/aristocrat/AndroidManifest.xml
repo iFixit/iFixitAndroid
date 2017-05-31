@@ -26,34 +26,34 @@
                         http and https
                         dozuki and custom domain
                 -->
-                <data android:scheme="http"  android:host="aristocratgaming.dozuki.com" android:pathPrefix="/Guide/"/>
-                <data android:scheme="https" android:host="aristocratgaming.dozuki.com" android:pathPrefix="/Guide/"/>
-                <data android:scheme="http"  android:host="aristocratgaming.dozuki.com" android:pathPrefix="/Teardown/"/>
-                <data android:scheme="https" android:host="aristocratgaming.dozuki.com" android:pathPrefix="/Teardown/"/>
+                <data android:scheme="http"  android:host="aristocrat.dozuki.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="https" android:host="aristocrat.dozuki.com" android:pathPrefix="/Guide/"/>
+                <data android:scheme="http"  android:host="aristocrat.dozuki.com" android:pathPrefix="/Teardown/"/>
+                <data android:scheme="https" android:host="aristocrat.dozuki.com" android:pathPrefix="/Teardown/"/>
 
-                <data android:scheme="http"  android:host="aristocratgaming.dozuki.com" android:pathPrefix="/guide/"/>
-                <data android:scheme="https" android:host="aristocratgaming.dozuki.com" android:pathPrefix="/guide/"/>
-                <data android:scheme="http"  android:host="aristocratgaming.dozuki.com" android:pathPrefix="/teardown/"/>
-                <data android:scheme="https" android:host="aristocratgaming.dozuki.com" android:pathPrefix="/teardown/"/>
+                <data android:scheme="http"  android:host="aristocrat.dozuki.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="https" android:host="aristocrat.dozuki.com" android:pathPrefix="/guide/"/>
+                <data android:scheme="http"  android:host="aristocrat.dozuki.com" android:pathPrefix="/teardown/"/>
+                <data android:scheme="https" android:host="aristocrat.dozuki.com" android:pathPrefix="/teardown/"/>
 
-                <data android:scheme="http"  android:host="aristocratgaming.dozuki.com" android:pathPrefix="/c/"/>
-                <data android:scheme="https" android:host="aristocratgaming.dozuki.com" android:pathPrefix="/c/"/>
+                <data android:scheme="http"  android:host="aristocrat.dozuki.com" android:pathPrefix="/c/"/>
+                <data android:scheme="https" android:host="aristocrat.dozuki.com" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
 
         <provider
             android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"
-            android:authorities="com.dozuki.aristocratgaming.ui.search.SearchSuggestionProvider"/>
+            android:authorities="com.dozuki.aristocrat.ui.search.SearchSuggestionProvider"/>
 
          <provider
             android:name="com.dozuki.ifixit.util.api.ApiContentProvider"
-            android:authorities="com.dozuki.aristocratgaming.provider"
+            android:authorities="com.dozuki.aristocrat.provider"
             android:exported="false"
             android:syncable="true"/>
 
         <provider
                 android:name="android.support.v4.content.FileProvider"
-                android:authorities="com.dozuki.aristocratgaming.fileprovider"
+                android:authorities="com.dozuki.aristocrat.fileprovider"
                 android:exported="false"
                 android:grantUriPermissions="true">
             <meta-data
