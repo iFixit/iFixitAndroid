@@ -104,6 +104,7 @@ public class TopicViewActivity extends BaseActivity {
 
       if (!topicName.equals("")) {
          mCollapsingToolbar.setTitle(topicName);
+         mCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.TextAppearance_AppCompat_Title);
          mCollapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
          App.sendScreenView("/category/" + topicName);
          Api.call(this, ApiCall.topic(topicName));

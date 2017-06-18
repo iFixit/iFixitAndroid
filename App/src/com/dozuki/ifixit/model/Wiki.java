@@ -1,6 +1,11 @@
 package com.dozuki.ifixit.model;
 
+import android.text.Html;
+import android.text.Spanned;
+
 import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 import com.google.gson.annotations.SerializedName;
 
 import org.json.JSONArray;
@@ -42,6 +47,23 @@ public class Wiki implements Serializable {
 
    public boolean hasImage() {
       return image != null;
+   }
+
+   public Spanned getContentSpanned(Html.ImageGetter imgGetter) {
+      String html = Utils.cleanWikiHtml(contentsRendered);
+
+      Spanned htmlParsed;
+
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+         htmlParsed = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY, imgGetter, new WikiHtmlTagHandler());
+      } else {
+         htmlParsed = Html.fromHtml(contentsRendered, imgGetter, new WikiHtmlTagHandler());
+      }
+
+      htmlParsed = Utils.correctLinkPaths(htmlParsed);
+
+
+      return Utils.correctLinkPaths(htmlParsed);
    }
 
    public Image getImage() {

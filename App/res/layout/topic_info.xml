@@ -12,14 +12,6 @@
             android:orientation="vertical">
 
         <TextView
-                android:id="@+id/topic_info_title"
-                style="@style/TitleText"
-                android:layout_height="wrap_content"
-                android:layout_width="match_parent"
-                android:layout_marginRight="16dp"
-                android:layout_marginLeft="16dp"/>
-
-        <TextView
                 android:id="@+id/topic_info_summary"
                 style="@style/BodyText"
                 android:layout_height="wrap_content"

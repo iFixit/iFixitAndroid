@@ -11,6 +11,8 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.text.style.ImageSpan;
 import android.text.style.RelativeSizeSpan;
+import android.text.style.TextAppearanceSpan;
+import android.util.Log;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
@@ -18,6 +20,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Wiki;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.PicassoImageGetter;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
@@ -71,41 +74,12 @@ public class WikiViewActivity extends BaseMenuDrawerActivity {
 
       TextView wikiText = (TextView)findViewById(R.id.wiki_content);
       wikiTitle.setText(mWiki.displayTitle);
-      Html.ImageGetter imgGetter = new UrlImageGetter(wikiText, this);
-      String html = Utils.cleanWikiHtml(mWiki.contentsRendered);
-      Spanned htmlParsed;
-      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
-         htmlParsed = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY, imgGetter, new WikiHtmlTagHandler());
-      } else {
-         htmlParsed = Html.fromHtml(mWiki.contentsRendered, imgGetter, new WikiHtmlTagHandler());
-      }
+      Html.ImageGetter imgGetter = new PicassoImageGetter(wikiText, getResources());
 
-      Object[] spans = htmlParsed.getSpans(0, htmlParsed.length(), Object.class);
+      Spanned htmlParsed = mWiki.getContentSpanned(imgGetter);
 
-      for (int i = 0; i < spans.length; i++) {
-         int start = htmlParsed.getSpanStart(spans[i]);
-         int end = htmlParsed.getSpanEnd(spans[i]);
-
-         if (spans[i] instanceof RelativeSizeSpan) {
-            RelativeSizeSpan header = new RelativeSizeSpan(HEADER_SIZE);
-            ((SpannableStringBuilder) htmlParsed).setSpan(header, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-         } else if (spans[i] instanceof ImageSpan) {
-            Drawable drawable = ((ImageSpan) spans[i]).getDrawable();
-            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
-            ((SpannableStringBuilder) htmlParsed).removeSpan(spans[i]);
-            char[] result = new char[end-start];
-            ((SpannableStringBuilder) htmlParsed).getChars(start, end, result, 0);
-            ((SpannableStringBuilder) htmlParsed).delete(start, end);
-            ((SpannableStringBuilder) htmlParsed).append(result[0]);
-            ((SpannableStringBuilder) htmlParsed).setSpan(imageSpan, htmlParsed.length() - 1, htmlParsed.length(),
-             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-         }
-      }
-
-      wikiText.setText(Utils.correctLinkPaths(htmlParsed));
-
+      wikiText.setText(htmlParsed);
       wikiText.setMovementMethod(LinkMovementMethod.getInstance());
-
    }
 
    @Subscribe

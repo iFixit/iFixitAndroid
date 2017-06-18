@@ -1,10 +1,18 @@
 package com.dozuki.ifixit.model.topic;
 
+import android.content.res.Resources;
+import android.text.Html;
+import android.text.Spanned;
+import android.widget.TextView;
+
 import com.dozuki.ifixit.model.Flag;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
 import com.dozuki.ifixit.model.Wiki;
 import com.dozuki.ifixit.model.guide.GuideInfo;
+import com.dozuki.ifixit.util.PicassoImageGetter;
+import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 
 import org.json.JSONArray;
 
@@ -124,6 +132,23 @@ public class TopicLeaf implements Serializable {
 
    public String getContentRendered() {
       return mContentsRendered;
+   }
+
+   public Spanned getContentSpanned(Html.ImageGetter imgGetter) {
+      String html = Utils.cleanWikiHtml(mContentsRendered);
+
+      Spanned htmlParsed;
+
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.N) {
+         htmlParsed = Html.fromHtml(html, Html.FROM_HTML_MODE_LEGACY, imgGetter, new WikiHtmlTagHandler());
+      } else {
+         htmlParsed = Html.fromHtml(mContentsRendered, imgGetter, new WikiHtmlTagHandler());
+      }
+
+      htmlParsed = Utils.correctLinkPaths(htmlParsed);
+
+
+      return Utils.correctLinkPaths(htmlParsed);
    }
 
    public Image getImage() {

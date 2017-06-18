@@ -5,6 +5,7 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.style.BulletSpan;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
 
 import org.xml.sax.XMLReader;
 
@@ -18,14 +19,19 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
    private int level = 0;
 
    public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
+      Log.d("DOZUKI TAG", tag);
       if (tag.equalsIgnoreCase("strike") || tag.equalsIgnoreCase("s") || tag.equalsIgnoreCase("del")) {
          handleStrike(opening, output);
+      } else if (tag.equalsIgnoreCase("h1") || tag.equalsIgnoreCase("h2") || tag.equalsIgnoreCase("h3")) {
+         output.append(NEWLINE + NEWLINE);
+      } else if (tag.equalsIgnoreCase("h4") || tag.equalsIgnoreCase("h5") || tag.equalsIgnoreCase("h6")) {
+         output.append(NEWLINE);
       } else if (tag.equalsIgnoreCase("ul") || tag.equalsIgnoreCase("ol")) {
          handleList(opening, tag, output);
       } else if (tag.equalsIgnoreCase("li")) {
          handleListItem(opening, output);
       } else if (tag.equalsIgnoreCase("img")) {
-         output.append(NEWLINE);
+         output.append(NEWLINE + NEWLINE + NEWLINE);
       }
    }
 

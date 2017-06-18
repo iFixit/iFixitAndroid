@@ -19,6 +19,7 @@ import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.PicassoImageGetter;
 import com.dozuki.ifixit.util.UrlImageGetter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
@@ -56,8 +57,6 @@ public class TopicInfoFragment extends BaseFragment {
    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
       View v = inflater.inflate(R.layout.topic_info, container, false);
 
-      Spanned title = Html.fromHtml(mTopic.getTitle());
-      ((TextView) v.findViewById(R.id.topic_info_title)).setText(title);
       ((TextView) v.findViewById(R.id.topic_info_summary)).setText(mTopic.getDescription());
       mBackdrop = (ImageView)v.findViewById(R.id.backdrop);
 
@@ -97,43 +96,7 @@ public class TopicInfoFragment extends BaseFragment {
    }
 
    private Spanned getStyledContent() {
-      String topicContent = mTopic.getContentRendered();
-
-      // Remove anchor elements from html
-      topicContent = topicContent.replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
-      topicContent = topicContent.replaceAll("<span class=\\\"editLink headerLink\\\".+?<\\/span>", "");
-
-      Spanned topicHtml = Html.fromHtml(topicContent,
-       // Handle images in the wiki text
-       new UrlImageGetter(mContent, getActivity()),
-       // Handle list items, videos, and other html elements that Html.fromHtml does not handle and parse them into
-       // styled android views
-       new WikiHtmlTagHandler());
-
-      topicHtml = Utils.correctLinkPaths(topicHtml);
-
-      Object[] spans = topicHtml.getSpans(0, topicHtml.length(), Object.class);
-
-      for (int i = 0; i < spans.length; i++) {
-         int start = topicHtml.getSpanStart(spans[i]);
-         int end = topicHtml.getSpanEnd(spans[i]);
-
-         if (spans[i] instanceof RelativeSizeSpan) {
-            RelativeSizeSpan header = new RelativeSizeSpan(HEADER_SIZE);
-            ((SpannableStringBuilder) topicHtml).setSpan(header, start, end, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-         } else if (spans[i] instanceof ImageSpan) {
-            Drawable drawable = ((ImageSpan) spans[i]).getDrawable();
-            ImageSpan imageSpan = new ImageSpan(drawable, ImageSpan.ALIGN_BOTTOM);
-            ((SpannableStringBuilder) topicHtml).removeSpan(spans[i]);
-            char[] result = new char[end-start];
-            ((SpannableStringBuilder) topicHtml).getChars(start, end, result, 0);
-            ((SpannableStringBuilder) topicHtml).delete(start, end);
-            ((SpannableStringBuilder) topicHtml).append(result[0]);
-            ((SpannableStringBuilder) topicHtml).setSpan(imageSpan, topicHtml.length() - 1, topicHtml.length(),
-             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
-         }
-      }
-
-      return topicHtml;
+      PicassoImageGetter imgGetter = new PicassoImageGetter(mContent, getResources());
+      return mTopic.getContentSpanned(imgGetter);
    }
 }

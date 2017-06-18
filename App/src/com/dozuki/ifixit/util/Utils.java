@@ -5,7 +5,10 @@ import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.format.DateUtils;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.App;
@@ -65,6 +68,9 @@ public class Utils {
       html = html.replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
       html = html.replaceAll("<span class=\\\"editLink headerLink\\\".+?<\\/span>", "");
 
+      // Make the images bigger
+      html = html.replaceAll(".standard", ".large");
+
       return html;
    }
 
@@ -94,6 +100,24 @@ public class Utils {
             }
             ((Spannable) spantext).removeSpan(span);
             ((Spannable) spantext).setSpan(urlSpan, start, end, flags);
+         }
+      }
+
+      return spantext;
+   }
+
+   public static Spanned styleWikiHeaders(Context context, Spanned spantext) {
+      Object spans[] = spantext.getSpans(0, spantext.length(), Object.class);
+
+      for (Object span : spans) {
+         int start = spantext.getSpanStart(span);
+         int end = spantext.getSpanEnd(span);
+         int flags = spantext.getSpanFlags(span);
+
+         if (span instanceof RelativeSizeSpan) {
+            TextAppearanceSpan ta = new TextAppearanceSpan(context, R.style.WikiTextHeader);
+            ((Spannable) spantext).removeSpan(span);
+            ((Spannable) spantext).setSpan(ta + "\n", start, end, flags);
          }
       }
 

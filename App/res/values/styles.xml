@@ -389,12 +389,15 @@
         <item name="android:foreground">@drawable/card_foreground</item>
     </style>
 
-    <style name="CardListItemInner">
+    <style name="CardListItemInner"></style>
+
+    <style name="WikiTitle" parent="TextAppearance.AppCompat.Display1">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:layout_marginBottom">20dp</item>
     </style>
 
-
-    <style name="WikiTitle" parent="TextAppearance.AppCompat.Display2">
-        <item name="android:textColor">@color/black</item>
+    <style name="WikiTextHeader" parent="TextAppearance.AppCompat.Title">
+        <item name="android:layout_marginBottom">12dp</item>
     </style>
 
     <style name="WikiText" parent="TextAppearance.AppCompat.Body1">
