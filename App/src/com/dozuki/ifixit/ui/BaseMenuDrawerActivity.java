@@ -36,6 +36,7 @@ import com.dozuki.ifixit.ui.topic.TopicActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.transformations.CircleTransformation;
 import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 import java.lang.reflect.Method;
 
@@ -272,15 +273,19 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
          Image avatarImage = user.getAvatar();
 
-         if (avatarImage != null) {
-            Picasso
-             .with(this)
-             .load(avatarImage.getPath(ImageSizes.headerAvatar))
-             .fit()
-             .centerInside()
-             .transform(new CircleTransformation())
-             .into(avatar);
+         Picasso avatarPicasso = Picasso.with(this);
+         RequestCreator request;
+         if (avatarImage == null) {
+            request = avatarPicasso.load(R.drawable.default_user);
+         } else {
+            request = avatarPicasso.load(avatarImage.getPath(ImageSizes.headerAvatar));
          }
+
+         request
+          .fit()
+          .centerInside()
+          .transform(new CircleTransformation())
+          .into(avatar);
 
          mMenu.findItem(R.id.nav_logout).setVisible(true);
       } else if (App.get().getSite().isIfixit()) {
