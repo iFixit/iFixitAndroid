@@ -95,19 +95,23 @@ public class TopicViewActivity extends BaseActivity {
 
       Bundle bundle;
       String topicName = "";
+      String topicTitle = "";
+
 
       if (mTopicNode != null) {
          topicName = mTopicNode.getDisplayName();
+         topicTitle = mTopicNode.getName();
       } else if ((bundle = getIntent().getExtras()) != null) {
          topicName = bundle.getString(TOPIC_NAME_KEY);
+         topicTitle = bundle.getString(TOPIC_NAME_KEY);
       }
 
       if (!topicName.equals("")) {
          mCollapsingToolbar.setTitle(topicName);
          mCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.TextAppearance_AppCompat_Title);
          mCollapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
-         App.sendScreenView("/category/" + topicName);
-         Api.call(this, ApiCall.topic(topicName));
+         App.sendScreenView("/category/" + topicTitle);
+         Api.call(this, ApiCall.topic(topicTitle));
       }
    }
 
