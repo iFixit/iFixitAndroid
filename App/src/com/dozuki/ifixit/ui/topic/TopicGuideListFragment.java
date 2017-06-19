@@ -55,7 +55,7 @@ public class TopicGuideListFragment extends BaseFragment {
 
       mRecycleView.setLayoutManager(mLayoutManager);
 
-      mRecycleAdapter = new GuideListRecyclerAdapter(getContext(), mTopicLeaf.getGuides(), false);
+      mRecycleAdapter = new GuideListRecyclerAdapter(mTopicLeaf.getGuides(), false);
 
       mRecycleView.setAdapter(mRecycleAdapter);
 

@@ -25,14 +25,12 @@ import java.util.ArrayList;
 
 public class GuideListRecyclerAdapter extends RecyclerView.Adapter<GuideListRecyclerAdapter.ViewHolder> {
 
-   private Context mContext;
    private ArrayList<GuideInfo> mGuides;
    private final boolean mShortTitle;
 
-   public GuideListRecyclerAdapter(Context context, ArrayList<GuideInfo> guides, boolean shortTitle) {
+   public GuideListRecyclerAdapter(ArrayList<GuideInfo> guides, boolean shortTitle) {
       mGuides = guides;
       mShortTitle = shortTitle;
-      mContext = context;
    }
 
    @Override

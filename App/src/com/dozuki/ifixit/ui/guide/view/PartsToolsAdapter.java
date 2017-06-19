@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.text.Html;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -63,7 +64,7 @@ public class PartsToolsAdapter extends BaseAdapter {
          @Override
          public void onClick(View v) {
             Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(link));
+            intent.setDataAndType(Uri.parse(link), "text/html");
             mContext.startActivity(intent);
          }
       });

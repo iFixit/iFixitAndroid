@@ -19,6 +19,7 @@
         <item name="colorAccent">@color/brand_color</item>
         <item name="colorAccentDark">@color/brand_color_dark</item>
         <item name="colorButtonNormal">@color/white</item>
+        <item name="doz__guidePagerTitleBackground">@color/brand_color_light</item>
     </style>
 
 </resources>

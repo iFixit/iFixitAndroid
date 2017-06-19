@@ -141,8 +141,7 @@
     <style name="TitlePageIndicator">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:background">@color/black</item>
-
+        <item name="android:background">?attr/doz__guidePagerTitleBackground</item>
         <item name="footerColor">?attr/colorPrimary</item>
     </style>
 

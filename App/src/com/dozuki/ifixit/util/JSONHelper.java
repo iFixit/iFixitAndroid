@@ -6,6 +6,7 @@ import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
 import com.dozuki.ifixit.model.Comment;
+import com.dozuki.ifixit.model.Document;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
@@ -194,6 +195,7 @@ public class JSONHelper {
       JSONArray jTools = jGuide.getJSONArray("tools");
       JSONArray jParts = jGuide.getJSONArray("parts");
       JSONObject jAuthor = jGuide.getJSONObject("author");
+      JSONArray jDocuments = jGuide.getJSONArray("documents");
       Guide guide = new Guide(jGuide.getInt("guideid"));
 
       guide.setTitle(jGuide.getString("title"));
@@ -223,6 +225,8 @@ public class JSONHelper {
          guide.setCanEdit(jGuide.getBoolean("can_edit"));
       }
 
+      guide.setDocuments(parseDocuments(jDocuments));
+
       for (int i = 0; i < jSteps.length(); i++) {
          guide.addStep(parseStep(jSteps.getJSONObject(i), i + 1));
       }
@@ -240,6 +244,15 @@ public class JSONHelper {
 
    public static Wiki parseWiki(String json) {
       return new Gson().fromJson(json, Wiki.class);
+   }
+
+   private static ArrayList<Document> parseDocuments(JSONArray documents) throws JSONException {
+      ArrayList<Document> result = new ArrayList<>();
+      for (int i = 0; i < documents.length(); i++) {
+         result.add(new Gson().fromJson(documents.getJSONObject(i).toString(), Document.class));
+      }
+
+      return result;
    }
 
    private static ArrayList<Comment> parseComments(JSONArray comments) throws JSONException {

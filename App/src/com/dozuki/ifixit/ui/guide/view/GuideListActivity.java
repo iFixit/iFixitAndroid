@@ -80,7 +80,7 @@ public abstract class GuideListActivity extends BaseMenuDrawerActivity {
 
       mRecycleView.addOnScrollListener(mScrollListener);
 
-      mRecycleAdapter = new GuideListRecyclerAdapter(this, mGuides, false);
+      mRecycleAdapter = new GuideListRecyclerAdapter(mGuides, false);
 
       mRecycleView.setAdapter(mRecycleAdapter);
    }

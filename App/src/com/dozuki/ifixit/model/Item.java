@@ -54,7 +54,7 @@ public class Item implements Serializable {
       if (mUrl.startsWith("http")) {
          return mUrl;
       } else if (mUrl.startsWith("/")) {
-         return App.get().getSite().mDomain + mUrl;
+         return "https://" + App.get().getSite().mDomain + mUrl;
       } else {
          return "";
       }

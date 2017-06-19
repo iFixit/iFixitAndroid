@@ -46,6 +46,7 @@
     <string name="slide_menu_more_info">More Information</string>
     <string name="slide_menu_barcode_scanner">Scan QR Code</string>
     <string name="slide_menu_barcode_scanner_short">Scan</string>
+    <string name="view_documents">View Document</string>
 
     <!-- Log-In / Log-Out -->
     <string name="username">User Name</string>
@@ -373,4 +374,5 @@
     <string name="ifixit_store">iFixit Store</string>
     <string name="item_thumbnail">Item Thumbnail</string>
     <string name="related_pages">Related Pages</string>
+    <string name="documents">Documents</string>
 </resources>

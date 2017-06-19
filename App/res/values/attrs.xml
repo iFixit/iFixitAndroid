@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="doz__guidePagerTitleBackground" format="color"/>
     <attr name="colorAccentDark" format="color"/>
     <!-- Base Style Attributes -->
     <attr name="doz__textColorPrimary" format="color"/>

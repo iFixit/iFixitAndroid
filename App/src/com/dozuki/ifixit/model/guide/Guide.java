@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.model.guide;
 
 import com.dozuki.ifixit.model.Comment;
+import com.dozuki.ifixit.model.Document;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
 
@@ -28,9 +29,10 @@ public class Guide implements Serializable {
    protected String mSubject;
    protected Image mIntroImage = new Image();
    protected String mSummary;
-   protected ArrayList<GuideStep> mSteps;
-   protected ArrayList<Item> mTools;
-   protected ArrayList<Item> mParts;
+   protected ArrayList<GuideStep> mSteps = new ArrayList<>();
+   protected ArrayList<Item> mTools = new ArrayList<>();
+   protected ArrayList<Item> mParts = new ArrayList<>();
+   protected ArrayList<Document> mDocuments = new ArrayList<>();
    protected boolean mCompleted;
    protected String mConclusion;
    protected boolean mCanEdit = true;
@@ -50,10 +52,14 @@ public class Guide implements Serializable {
 
    public Guide(int guideid) {
       mGuideid = guideid;
-      mSteps = new ArrayList<GuideStep>();
-      mTools = new ArrayList<Item>();
-      mParts = new ArrayList<Item>();
-      mComments = new ArrayList<Comment>();
+   }
+
+   public ArrayList<Document> getDocuments() {
+      return mDocuments;
+   }
+
+   public void setDocuments(ArrayList<Document> documents) {
+      mDocuments = documents;
    }
 
    public ArrayList<Comment> getComments() {
