@@ -13,6 +13,6 @@ public class Document implements Serializable {
    @SerializedName("download_url")
    public String url;
    @SerializedName("documentid")
-   public String id;
+   public int id;
 
 }

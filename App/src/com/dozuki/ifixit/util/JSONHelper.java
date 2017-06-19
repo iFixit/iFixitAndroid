@@ -198,6 +198,7 @@ public class JSONHelper {
       JSONArray jDocuments = jGuide.getJSONArray("documents");
       Guide guide = new Guide(jGuide.getInt("guideid"));
 
+      guide.setFeaturedDocument(!jGuide.isNull("featured_documentid") ? jGuide.getInt("featured_documentid") : 0);
       guide.setTitle(jGuide.getString("title"));
       guide.setTopic(jGuide.getString("category"));
       guide.setSubject(jGuide.getString("subject"));

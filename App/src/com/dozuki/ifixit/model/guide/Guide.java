@@ -33,6 +33,7 @@ public class Guide implements Serializable {
    protected ArrayList<Item> mTools = new ArrayList<>();
    protected ArrayList<Item> mParts = new ArrayList<>();
    protected ArrayList<Document> mDocuments = new ArrayList<>();
+   protected int mFeaturedDocumentId;
    protected boolean mCompleted;
    protected String mConclusion;
    protected boolean mCanEdit = true;
@@ -331,5 +332,20 @@ public class Guide implements Serializable {
       }
 
       return count;
+   }
+
+   public void setFeaturedDocument(int documentid) {
+      mFeaturedDocumentId = documentid;
+   }
+
+   public Document getFeaturedDocument() {
+      Document result = null;
+
+      for (int i = 0; i < mDocuments.size(); i++) {
+         if (mDocuments.get(i).id == mFeaturedDocumentId) {
+            result = mDocuments.get(i);
+         }
+      }
+      return result;
    }
 }
