@@ -23,7 +23,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="20dp">
@@ -82,27 +81,31 @@
                         app:hintTextAppearance="@style/Base.TextInputLayout"/>
                 </com.dozuki.ifixit.views.HelperTextInputLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:weightSum="2">
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/register_button"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_toLeftOf="@+id/signin_button"
+                        android:theme="@style/FlatButton"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:contentDescription="@string/register_description"
                         android:text="@string/register"/>
 
                     <android.support.v7.widget.AppCompatButton
                         android:id="@+id/signin_button"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_alignParentRight="true"
+                        android:theme="@style/FlatButton"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:contentDescription="@string/signin_description"
                         android:text="@string/login" />
-                </LinearLayout>
+                </RelativeLayout>
             </LinearLayout>
 
             <com.google.android.gms.common.SignInButton

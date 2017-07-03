@@ -53,6 +53,10 @@
         <item name="android:paddingTop">0dip</item>
     </style>
 
+    <style name="FlatButton">
+        <item name="colorControlHighlight">?attr/colorAccent</item>
+    </style>
+
     <style name="Base.Button" parent="Widget.AppCompat.Button"></style>
 
     <style name="Base.Button.Borderless" parent="Widget.AppCompat.Button.Borderless"></style>
@@ -185,14 +189,13 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textSize">22sp</item>
-        <item name="android:textColor">@color/black</item>
         <item name="android:padding">16dp</item>
     </style>
 
     <style name="DialogTitleDivider">
         <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">2dip</item>
-        <item name="android:background">?attr/colorPrimary</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">?android:attr/dividerHorizontal</item>
     </style>
 
     <style name="ListView" parent="Widget.AppCompat.ListView">

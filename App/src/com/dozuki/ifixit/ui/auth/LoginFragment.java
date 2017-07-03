@@ -159,18 +159,15 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       mLogin = (AppCompatButton)view.findViewById(R.id.signin_button);
       mRegister = (AppCompatButton)view.findViewById(R.id.register_button);
       mGoogleLogin = (SignInButton)view.findViewById(R.id.use_google_login_button);
-      //mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
 
       mLogin.setOnClickListener(this);  
       
       if (mHasRegisterBtn) {
          mRegister.setOnClickListener(this);
          mGoogleLogin.setOnClickListener(this);
-         //mYahooLogin.setOnClickListener(this);
       } else {
          mRegister.setVisibility(View.GONE);
          mGoogleLogin.setVisibility(View.GONE);
-         //mYahooLogin.setVisibility(View.GONE);
       }
 
       initGoogleLoginButton();

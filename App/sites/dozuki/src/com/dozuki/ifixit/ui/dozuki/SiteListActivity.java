@@ -46,7 +46,7 @@ public class SiteListActivity extends BaseActivity
          Api.call(this, ApiCall.sites());
       }
 
-      setTheme(R.style.Theme_AppCompat_NoActionBar);
+      setTheme(R.style.Theme_Dozuki);
 
       setContentView(R.layout.site_list);
 

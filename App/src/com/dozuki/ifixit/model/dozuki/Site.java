@@ -158,6 +158,22 @@ public class Site implements Serializable {
          return R.style.Theme_CharlesSmith_TransparentActionBar;
       } else if (isAristocrat()) {
          return R.style.Theme_Aristocrat_TransparentActionBar;
+      } else {
+         // We don't have a custom theme for the site - check for generic theme.
+         if (mTheme.equals("custom")) {
+            // Site has a custom theme but we don't have one implemented yet.
+            return R.style.Theme_Dozuki_TransparentActionBar;
+         } else if (mTheme.equals("green")) {
+            return R.style.Theme_Dozuki_Green_TransparentActionBar;
+         } else if (mTheme.equals("blue")) {
+            return R.style.Theme_iFixit_TransparentActionBar;
+         } else if (mTheme.equals("white")) {
+            return R.style.Theme_Dozuki_White_TransparentActionBar;
+         } else if (mTheme.equals("orange")) {
+            return R.style.Theme_Dozuki_Orange_TransparentActionBar;
+         } else if (mTheme.equals("black")) {
+            return R.style.Theme_Dozuki_Black_TransparentActionBar;
+         }
       }
 
       return R.style.Theme_Base_TransparentActionBar;

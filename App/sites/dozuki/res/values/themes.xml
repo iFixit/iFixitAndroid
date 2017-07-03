@@ -2,11 +2,25 @@
 
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <style name="Theme.Dozuki.Dark" parent="style/Theme.AppCompat">
-    </style>
+    <style name="Theme.Dozuki.Dark" parent="Theme.iFixit"></style>
 
     <!-- Default to the iFixit theme -->
-    <style name="Theme.Dozuki" parent="Theme.iFixit"></style>
+    <style name="Theme.Dozuki" parent="Theme.Base">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/dozuki_red</item>
+        <item name="colorAccentDark">@color/dozuki_red_dark</item>
+        <item name="colorButtonNormal">@color/gray_3</item>
+
+        <!-- Theme Attributes -->
+        <item name="doz__primaryHighlightColor">@color/dozuki_red</item>
+        <item name="doz__sectionHeader">@drawable/ifixit__section_header</item>
+
+        <!-- Action Bar theme -->
+        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+
+        <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
+    </style>
 
     <style name="Theme.Dozuki.Green" parent="Theme.Dozuki">
         <item name="doz__primaryHighlightColor">@color/dozuki_green</item>
@@ -47,7 +61,6 @@
     </style>
 
     <style name="Theme.Dozuki.Orange" parent="Theme.Dozuki">
-
         <item name="colorPrimary">@color/dozuki_orange</item>
         <item name="colorPrimaryDark">@color/dozuki_orange_dark</item>
         <item name="colorAccent">@color/dozuki_orange</item>
@@ -60,6 +73,5 @@
 
         <!-- Action Bar theme -->
         <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
-
     </style>
 </resources>
