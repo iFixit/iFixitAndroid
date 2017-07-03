@@ -73,7 +73,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
 
-      mTitle = (String) getTitle();
+      mTitle = App.get().getSite().mTitle;
       mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
       mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
 
