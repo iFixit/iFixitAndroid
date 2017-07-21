@@ -22,7 +22,7 @@
         <item name="doz__navHeaderLogo">@drawable/ic_logo_header</item>
 
         <!-- Action Bar theme -->
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/selectable_item_background</item>
 
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
     </style>

@@ -33,7 +33,7 @@
             android:layout_width="@dimen/guide_thumbnail_width"
             android:layout_height="@dimen/guide_thumbnail_height"
             android:layout_gravity="right"
-            android:background="@drawable/image_background_selectable"
+            android:background="@drawable/selectable_item_background"
             android:src="@drawable/add_photos"
             android:focusable="true"
             android:clickable="true"

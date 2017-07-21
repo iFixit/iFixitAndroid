@@ -17,7 +17,7 @@
         <item name="doz__sectionHeader">@drawable/ifixit__section_header</item>
 
         <!-- Action Bar theme -->
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/selectable_item_background</item>
 
         <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
     </style>
@@ -72,6 +72,6 @@
         <item name="doz__sectionHeader">@drawable/orange__section_header</item>
 
         <!-- Action Bar theme -->
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
+        <item name="selectableItemBackground">@drawable/selectable_item_background</item>
     </style>
 </resources>

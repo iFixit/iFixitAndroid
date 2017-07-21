@@ -5,7 +5,7 @@
                 android:id="@+id/comment_row_wrap"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:background="@drawable/bg_card"
+                android:background="@drawable/card_foreground"
                 android:layout_marginRight="@dimen/list_item_horizontal_margin"
                 android:layout_marginLeft="@dimen/list_item_horizontal_margin"
                 android:paddingTop="4dp"
