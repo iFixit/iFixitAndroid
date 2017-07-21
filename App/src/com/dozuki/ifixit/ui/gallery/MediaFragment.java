@@ -207,7 +207,7 @@ public abstract class MediaFragment extends BaseFragment
                   return;
                }
 
-               String key = mGalleryAdapter.addUri(mArrayUri.get(i));
+               String key = mGalleryAdapter.addFile(path);
                Api.call(getActivity(), ApiCall.uploadImage(path, key));
             }
 
