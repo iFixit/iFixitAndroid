@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.ListViewCompat;
 import android.support.v7.widget.RecyclerView;
@@ -36,12 +37,14 @@ import com.dozuki.ifixit.ui.DocumentListAdapter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GuideIntroViewFragment extends BaseFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String GUIDE_KEY = "GUIDE_KEY";
+   private static final String mGoogleDocsUrl = "http://docs.google.com/viewer?url=";
 
    private Guide mGuide;
 
@@ -84,8 +87,23 @@ public class GuideIntroViewFragment extends BaseFragment {
 
       if (mGuide != null) {
          mTitle.setText(mGuide.getTitle());
+         ArrayList<Document> documents = mGuide.getDocuments();
+         final Document featuredDocument = mGuide.getFeaturedDocument();
+         if (featuredDocument != null) {
+            AppCompatButton featuredDocButton = (AppCompatButton) view.findViewById(R.id.featured_document);
+            documents.remove(featuredDocument);
+            featuredDocButton.setVisibility(View.VISIBLE);
+            featuredDocButton.setOnClickListener(new View.OnClickListener() {
+               @Override
+               public void onClick(View view) {
+                  Intent intent = new Intent(Intent.ACTION_VIEW);
+                  intent.setDataAndType(Uri.parse(mGoogleDocsUrl + featuredDocument.url), "text/html");
+                  startActivity(intent);
+               }
+            });
+         }
 
-         if (mGuide.getDocuments().size() > 0) {
+         if (documents.size() > 0) {
             RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
             docList.setLayoutManager(lm);
             DocumentListAdapter adapter = new DocumentListAdapter(mGuide.getDocuments());

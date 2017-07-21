@@ -38,7 +38,7 @@ public class FallbackImageView extends android.support.v7.widget.AppCompatImageV
 
    @Override
    public void onBitmapFailed(Drawable drawable) {
-      Picasso picasso = Picasso.with(getContext());
+      Picasso picasso = Picasso.with(getContext()); 
       RequestCreator builder;
 
       if (mImage == null) {
