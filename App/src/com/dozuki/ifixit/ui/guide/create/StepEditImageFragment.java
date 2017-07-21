@@ -268,9 +268,6 @@ public class StepEditImageFragment extends BaseFragment {
                   Log.e("CaptureHelper", "Error mCurrentPhotoPath is null!");
                   return;
                }
-
-               Log.d("CaptureHelper", "Result came back");
-
                // Prevent a save from being called until the image uploads and returns with the imageid
                activity.lockSave();
 
@@ -314,7 +311,7 @@ public class StepEditImageFragment extends BaseFragment {
    /////////////////////////////////////////////////////
 
    protected void setImages(ArrayList<Image> images) {
-      mImages = new ArrayList<Image>(images);
+      mImages = images;
 
       if (mThumbs != null) {
          mThumbs.setThumbs(mImages, false);

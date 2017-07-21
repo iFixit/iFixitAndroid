@@ -168,14 +168,11 @@ public abstract class MediaFragment extends BaseFragment
 
             Uri selectedImageUri = data.getData();
 
-            if (selectedImageUri == null) {
-               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && data.getClipData() != null) {
-                  ClipData mClipData = data.getClipData();
-                  for (int i = 0; i < mClipData.getItemCount(); i++) {
-                     ClipData.Item item = mClipData.getItemAt(i);
-                     mArrayUri.add(item.getUri());
-                  }
-                  Log.v("MediaFragment", "Selected Images" + mArrayUri.size());
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && data.getClipData() != null) {
+               ClipData mClipData = data.getClipData();
+               for (int i = 0; i < mClipData.getItemCount(); i++) {
+                  ClipData.Item item = mClipData.getItemAt(i);
+                  mArrayUri.add(item.getUri());
                }
             } else {
                mArrayUri.add(selectedImageUri);
@@ -183,9 +180,7 @@ public abstract class MediaFragment extends BaseFragment
 
             for (int i = 0; i < mArrayUri.size(); i++) {
                // check file type
-               String path = getPath(selectedImageUri);
-
-               Log.d("MediaFragment", "Image #" + i + " : " + path);
+               String path = getPath(mArrayUri.get(i));
 
                if (path == null) {
                   Toast.makeText(getActivity(), getString(R.string.non_image_error),
