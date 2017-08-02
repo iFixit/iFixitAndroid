@@ -53,6 +53,7 @@
             android:id="@+id/add_comment_field"
             android:layout_width="0dp"
             android:layout_height="match_parent"
+            android:layout_marginLeft="8dp"
             android:inputType="text|textMultiLine|textAutoCorrect|textCapSentences"
             android:layout_weight="8"
             android:hint="@string/add_comment"/>
