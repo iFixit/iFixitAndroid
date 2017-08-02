@@ -8,9 +8,12 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
@@ -46,11 +49,16 @@ import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public abstract class MediaFragment extends BaseFragment
  implements OnItemClickListener, OnItemLongClickListener {
+
+   private static final String GOOGLE_PHOTOS_URI = "content://com.google.android.apps.photos.contentprovider";
 
    protected static final int IMAGE_PAGE_SIZE = 1000;
    private static final String CAMERA_PATH = "CAMERA_PATH";
@@ -164,41 +172,28 @@ public abstract class MediaFragment extends BaseFragment
       if (resultCode == Activity.RESULT_OK) {
          if (requestCode == SELECT_PICTURE && data != null) {
 
-            ArrayList<Uri> mArrayUri = new ArrayList<Uri>();
+            ArrayList<Uri> selectedImages = new ArrayList<>();
 
-            Uri selectedImageUri = data.getData();
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && data.getClipData() != null) {
-               ClipData mClipData = data.getClipData();
-               for (int i = 0; i < mClipData.getItemCount(); i++) {
-                  ClipData.Item item = mClipData.getItemAt(i);
-                  mArrayUri.add(item.getUri());
-               }
+            if (this.hasClipData(data)) {
+               selectedImages = this.getUrisFromClipData(data.getClipData());
             } else {
-               mArrayUri.add(selectedImageUri);
+               selectedImages.add(data.getData());
             }
 
-            for (int i = 0; i < mArrayUri.size(); i++) {
+            for (int i = 0; i < selectedImages.size(); i++) {
+               Uri selectedImage = selectedImages.get(i);
+
                // check file type
-               String path = getPath(mArrayUri.get(i));
+               String path = getPath(selectedImage);
 
-               if (path == null) {
-                  Toast.makeText(getActivity(), getString(R.string.non_image_error),
-                   Toast.LENGTH_LONG).show();
-                  return;
+               if (selectedImage.toString().startsWith(GOOGLE_PHOTOS_URI) && (path == null || path.length() == 0)) {
+                  // Try downloading the image from google photos if it's there.
+                  Uri uri = this.downloadFileFromExternalSource(selectedImage);
+
+                  path = uri.getPath();
                }
 
-               File file = new File(path);
-
-               if (file.length() == 0) {
-                  Toast.makeText(getActivity(), getString(R.string.empty_image_error),
-                   Toast.LENGTH_LONG).show();
-                  return;
-               }
-
-               if (mMediaList.countUploadingImages() >= MAX_UPLOAD_COUNT) {
-                  Toast.makeText(getActivity(), getString(R.string.too_many_image_error),
-                   Toast.LENGTH_LONG).show();
+               if (!this.isImageValid(path)) {
                   return;
                }
 
@@ -243,9 +238,10 @@ public abstract class MediaFragment extends BaseFragment
     long id) {
       MediaViewItem cell = (MediaViewItem) view;
       if (mSelectForReturn) {
+         MediaViewItem itemView = (MediaViewItem) view;
          String url = (String) view.getTag();
 
-         if (url == null || (url.equals("") || url.indexOf(".") == 0)) {
+         if (url == null || (url.equals("") || url.indexOf(".") == 0) || itemView.getImage().isLocal()) {
             return;
          }
 
@@ -322,15 +318,94 @@ public abstract class MediaFragment extends BaseFragment
       }
    }
 
+   private boolean hasClipData(Intent data) {
+      return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && data.getClipData() != null;
+   }
+
+   private ArrayList<Uri> getUrisFromClipData(ClipData data) {
+      ArrayList<Uri> result = new ArrayList<>();
+
+      for (int i = 0; i < data.getItemCount(); i++) {
+         ClipData.Item item = data.getItemAt(i);
+
+         Uri uri = item.getUri();
+
+         result.add(uri);
+      }
+
+      return result;
+   }
+
+   private boolean isImageValid(String path) {
+      boolean result = true;
+      if (path == null) {
+         Toast.makeText(getActivity(), getString(R.string.non_image_error),
+          Toast.LENGTH_LONG).show();
+         result = false;
+      }
+
+      File file = new File(path);
+      if (file.length() == 0) {
+         Toast.makeText(getActivity(), getString(R.string.empty_image_error),
+          Toast.LENGTH_LONG).show();
+         result = false;
+      }
+
+      if (mMediaList.countUploadingImages() >= MAX_UPLOAD_COUNT) {
+         Toast.makeText(getActivity(), getString(R.string.too_many_image_error),
+          Toast.LENGTH_LONG).show();
+         result = false;
+      }
+
+      return result;
+   }
+
+   private Uri downloadFileFromExternalSource(Uri source) {
+      Uri result = null;
+      FileOutputStream fos = null;
+
+      try {
+         InputStream is = getActivity().getContentResolver().openInputStream(source);
+         if (is != null) {
+            File f = CaptureHelper.createImageFile(getActivity());
+
+            Bitmap bmp = BitmapFactory.decodeStream(is);
+            fos = new FileOutputStream(f);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+            result = Uri.fromFile(f);
+         }
+      } catch (FileNotFoundException e) {
+         Toast.makeText(getActivity(), R.string.google_photos_download_error,
+          Toast.LENGTH_LONG).show();
+
+         e.printStackTrace();
+      } catch (IOException e) {
+         e.printStackTrace();
+      } finally {
+         try {
+            if (fos != null) {
+               fos.close();
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+
+      return result;
+   }
+
    private String getPath(Uri uri) {
-      String[] projection = {MediaStore.Images.Media.DATA};
+      String[] projection = {MediaStore.MediaColumns.DATA};
 
       Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
+
+      String path = "";
 
       try {
          if (cursor != null && cursor.moveToFirst()) {
             int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            return cursor.getString(column_index);
+            path = cursor.getString(column_index);
          } else {
             return null;
          }
@@ -339,6 +414,8 @@ public abstract class MediaFragment extends BaseFragment
             cursor.close();
          }
       }
+
+      return path;
    }
 
    private void deleteSelectedPhotos() {
@@ -419,10 +496,6 @@ public abstract class MediaFragment extends BaseFragment
    }
 
    class MediaAdapter extends BaseAdapter {
-      public String addUri(Uri uri) {
-         return addFile(uri.toString());
-      }
-
       public String addFile(String path) {
          GalleryImage image = new GalleryImage();
          image.setLocalImage(path);
@@ -459,29 +532,11 @@ public abstract class MediaFragment extends BaseFragment
             itemView = new MediaViewItem(getActivity());
          } else {
             itemView = (MediaViewItem) convertView;
+            itemView.clearImage();
          }
 
          GalleryImage image = (GalleryImage) getItem(position);
-
-         itemView.clearImage();
-
-         // image was added from the local gallery or captured on the phone
-         if (image.isLocal()) {
-            Uri temp = Uri.parse(image.getPath());
-            image.setLocalImage(temp.toString());
-
-            if (image.fromMediaStore()) {
-               // Media Store image
-               itemView.setImageItem(temp.toString());
-            } else {
-               // image was added locally from camera
-               itemView.setImageItem(new File(temp.toString()));
-            }
-
-         } else {
-            itemView.setImageItem(image.getPath(ImageSizes.stepThumb));
-         }
-
+         itemView.setImage(image);
          itemView.setTag(image.getPath());
          itemView.setSelected(image.isSelected());
 

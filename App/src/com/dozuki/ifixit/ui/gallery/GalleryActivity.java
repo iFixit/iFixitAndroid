@@ -156,18 +156,6 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       @Override
       public CharSequence getPageTitle(int position) {
          return Utils.capitalize(getString(R.string.images));
-         /*
-          * switch (position) {
-          * case 0:
-          * return "Videos";
-          * case 1:
-          * return "Photos";
-          * case 2:
-          * return "Embeds";
-          * default:
-          * return "Photos";
-          * }
-          */
       }
 
       @Override
