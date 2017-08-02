@@ -84,7 +84,7 @@ public class TopicViewActivity extends BaseActivity {
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
 
-      //showLoading(R.id.loading_container);
+      showLoading(R.id.loading_container);
 
       mBackdropView = (ImageView) findViewById(R.id.backdrop);
       mPager = (ViewPager) findViewById(R.id.topic_viewpager);
@@ -150,7 +150,7 @@ public class TopicViewActivity extends BaseActivity {
 
    @Subscribe
    public void onTopic(ApiEvent.Topic event) {
-      //hideLoading();
+      hideLoading();
       if (!event.hasError()) {
          mTopic = event.getResult();
          mPageAdapter = new TopicPageAdapter(getSupportFragmentManager(), this, mTopic);
