@@ -29,6 +29,7 @@ public class TopicLeaf implements Serializable {
    private String mDescription = "";
    private ArrayList<Flag> mFlags = new ArrayList<>();
    private ArrayList<GuideInfo> mGuides = new ArrayList<>();
+   private ArrayList<GuideInfo> mFeaturedGuides = new ArrayList<>();
    private String mSolutionsUrl;
    private ArrayList<Item> mParts = new ArrayList<>();
    private ArrayList<Item> mTools = new ArrayList<>();
@@ -39,6 +40,14 @@ public class TopicLeaf implements Serializable {
 
    public TopicLeaf(String name) {
       mName = name;
+   }
+
+   public void addFeaturedGuide(GuideInfo guideInfo) {
+      mFeaturedGuides.add(guideInfo);
+   }
+
+   public ArrayList<GuideInfo> getFeaturedGuides() {
+      return mFeaturedGuides;
    }
 
    public void addGuide(GuideInfo guideInfo) {

@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -55,8 +56,18 @@ public class TopicGuideListFragment extends BaseFragment {
 
       mRecycleView.setLayoutManager(mLayoutManager);
 
-      mRecycleAdapter = new GuideListRecyclerAdapter(mTopicLeaf.getGuides(), false);
+      ArrayList<GuideInfo> guides = new ArrayList<>();
 
+      boolean hasFeaturedGuides = mTopicLeaf.getFeaturedGuides().size() > 0;
+      if (guides.size() == 0 && hasFeaturedGuides) {
+         guides = mTopicLeaf.getFeaturedGuides();
+      } else if (hasFeaturedGuides) {
+         guides.addAll(mTopicLeaf.getFeaturedGuides());
+      }
+
+      guides.addAll(mTopicLeaf.getGuides());
+
+      mRecycleAdapter = new GuideListRecyclerAdapter(guides, false);
       mRecycleView.setAdapter(mRecycleAdapter);
 
       return view;

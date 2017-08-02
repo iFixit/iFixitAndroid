@@ -422,6 +422,14 @@ public class JSONHelper {
       JSONArray jGuides = jTopic.getJSONArray("guides");
       JSONArray jWikis = jTopic.getJSONArray("related_wikis");
       TopicLeaf topicLeaf = new TopicLeaf(jTopic.getString("title"));
+      JSONArray jFeaturedGuides = jTopic.getJSONArray("featured_guides");
+
+      for (int i = 0; i < jFeaturedGuides.length(); i++) {
+         String guideJson = jFeaturedGuides.getJSONObject(i).toString();
+         GuideInfo guide = new Gson().fromJson(guideJson, GuideInfo.class);
+         topicLeaf.addFeaturedGuide(guide);
+      }
+
 
       for (int i = 0; i < jGuides.length(); i++) {
          String guideJson = jGuides.getJSONObject(i).toString();

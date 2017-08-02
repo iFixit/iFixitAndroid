@@ -71,7 +71,7 @@ public class GuideStep implements Serializable {
 
    /**
     * See the coment in Guide.java:setCommentCount for more information.
-    * 
+    *
     * @param count
     */
    public void setCommentCount(int count) {

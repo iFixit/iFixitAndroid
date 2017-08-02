@@ -19,7 +19,6 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
    private int level = 0;
 
    public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
-      Log.d("DOZUKI TAG", tag);
       if (tag.equalsIgnoreCase("strike") || tag.equalsIgnoreCase("s") || tag.equalsIgnoreCase("del")) {
          handleStrike(opening, output);
       } else if (tag.equalsIgnoreCase("h1") || tag.equalsIgnoreCase("h2") || tag.equalsIgnoreCase("h3")) {
