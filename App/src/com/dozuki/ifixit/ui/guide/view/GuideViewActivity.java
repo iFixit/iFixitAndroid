@@ -176,8 +176,7 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
                      title = getString(R.string.step_number_comments, stepIndex + 1);
                   }
 
-                  startActivityForResult(CommentsActivity.viewGuideComments(v.getContext(), comments, title,
-                   context, contextid, mGuide.getGuideid()), COMMENT_REQUEST);
+                  startActivityForResult(CommentsActivity.viewComments(getBaseContext(), context, contextid, mGuide.getGuideid(), title), COMMENT_REQUEST);
                }
             }
          });
@@ -186,27 +185,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       }
 
       return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == COMMENT_REQUEST) {
-         Bundle extras = data.getExtras();
-         if (resultCode == RESULT_OK && extras != null) {
-            ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
-            int stepIndex = getStepIndex();
-
-            if (notOnStep(stepIndex)) {
-               mGuide.setComments(comments);
-            } else {
-               mGuide.getStep(stepIndex).setComments(comments);
-            }
-
-            updateCommentCounts();
-         }
-      } else {
-         super.onActivityResult(requestCode, resultCode, data);
-      }
    }
 
    @Override

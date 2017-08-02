@@ -46,6 +46,7 @@ public class Guide implements Serializable {
     * Collection of general user comments on the guide
     */
    protected ArrayList<Comment> mComments;
+   private int mFakeCommentCount = -1;
 
    public Guide() {
       this(NEW_GUIDE_ID);
@@ -324,7 +325,26 @@ public class Guide implements Serializable {
       return mCompleted;
    }
 
+   /**
+    * Used only for overriding a stale comment list.  We need to do this because we:
+    * a) don't have a comments api endpoint
+    * b) we can't refetch the whole guide without wreaking havok on the layout, and on some guides
+    *    that is a lot of data.
+    * c) when new comments are added, we want to show the user their comments are counted.
+    * d) can't pass ArrayLists' of Comment objects like we used to do between CommentActivity and GuideViewActivity
+    *    because android 7+ will crash with a TransactionTooLargeException
+    *    So we have to fake the number.
+    * @param count
+    */
+   public void setCommentCount(int count) {
+      mFakeCommentCount = count;
+   }
+
    public int getCommentCount() {
+      if (mFakeCommentCount > 1) {
+         return mFakeCommentCount;
+      }
+
       int count = mComments.size();
 
       for (Comment comment : mComments) {

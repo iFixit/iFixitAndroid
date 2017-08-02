@@ -53,6 +53,17 @@ public class CommentsActivity extends BaseMenuDrawerActivity {
    private ProgressBar mAddCommentProgress;
    private Integer mParentId;
 
+   public static Intent viewComments(Context context, String commentContext, int contextid, int guideid, String title) {
+      Intent intent = new Intent(context, CommentsActivity.class);
+      intent.putExtra(GUIDEID_KEY, guideid);
+      intent.putExtra(TITLE_KEY, title);
+      intent.putExtra(CONTEXTID, contextid);
+      intent.putExtra(CONTEXT, commentContext);
+
+      return intent;
+
+   }
+
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title,
     String commentContext, int contextid) {
 
@@ -80,18 +91,17 @@ public class CommentsActivity extends BaseMenuDrawerActivity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.comments);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      showLoading(R.id.loading_container);
 
       Bundle args = getIntent().getExtras();
 
       if (savedInstanceState != null) {
-         mComments = (ArrayList<Comment>) savedInstanceState.getSerializable(COMMENTS_KEY);
          mCommentContext = savedInstanceState.getString(CONTEXT);
          mCommentContextId = savedInstanceState.getInt(CONTEXTID);
          mTitle = savedInstanceState.getString(TITLE_KEY);
          mGuideid = savedInstanceState.getInt(GUIDEID_KEY, 0);
          mParentId = (Integer)savedInstanceState.getSerializable(PARENTID_KEY);
       } else if (args != null) {
-         mComments = (ArrayList<Comment>) args.getSerializable(COMMENTS_KEY);
          mCommentContext = args.getString(CONTEXT);
          mCommentContextId = args.getInt(CONTEXTID);
          mTitle = args.getString(TITLE_KEY);
@@ -135,12 +145,10 @@ public class CommentsActivity extends BaseMenuDrawerActivity {
 
       setTitle(mTitle);
 
-      if (App.get().isUserLoggedIn()) {
-         if (mCommentContext.equalsIgnoreCase("guide") || mCommentContext.equalsIgnoreCase("step")) {
-            Api.call(this, ApiCall.guide(mGuideid));
-         } else {
-            // TODO: Get wiki comments once we add those endpoints.
-         }
+      if (mCommentContext.equalsIgnoreCase("guide") || mCommentContext.equalsIgnoreCase("step")) {
+         Api.call(this, ApiCall.guide(mGuideid));
+      } else {
+         // TODO: Get wiki comments once we add those endpoints.
       }
 
       if (mParentId != null) {
@@ -165,31 +173,16 @@ public class CommentsActivity extends BaseMenuDrawerActivity {
       switch (item.getItemId()) {
          // Respond to the action bar's Up/Home button
          case android.R.id.home:
-            finishCommentsActivity();
+            finish();
             return true;
          default:
             return super.onOptionsItemSelected(item);
       }
    }
 
-   @Override
-   public void onBackPressed() {
-      finishCommentsActivity();
-   }
-
-   private void finishCommentsActivity() {
-      Intent data = new Intent();
-      data.putExtra(GuideViewActivity.COMMENTS_TAG, mComments);
-      if (getParent() == null) {
-         setResult(Activity.RESULT_OK, data);
-      } else {
-         getParent().setResult(Activity.RESULT_OK, data);
-      }
-      finish();
-   }
-
    @Subscribe
    public void onGuideGet(ApiEvent.ViewGuide event) {
+      hideLoading();
       if (!event.hasError()) {
          Guide guide = event.getResult();
          if (mCommentContext.equalsIgnoreCase("guide")) {
