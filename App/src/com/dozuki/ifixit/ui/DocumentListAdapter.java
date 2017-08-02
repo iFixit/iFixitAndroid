@@ -17,7 +17,6 @@ import java.util.ArrayList;
 
 public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapter.ViewHolder> {
     private ArrayList<Document> mDocuments = new ArrayList<>();
-    private static final String mGoogleDocsUrl = "http://docs.google.com/viewer?url=";
     public DocumentListAdapter(ArrayList<Document> documents) {
         mDocuments = documents;
     }
@@ -39,9 +38,9 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(Intent.ACTION_VIEW);
-                intent.setDataAndType(Uri.parse(mGoogleDocsUrl + doc.url), "text/html");
-                context.startActivity(intent);
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW,
+                 Uri.parse(doc.getFullUrl()));
+                context.startActivity(browserIntent);
             }
         });
     }

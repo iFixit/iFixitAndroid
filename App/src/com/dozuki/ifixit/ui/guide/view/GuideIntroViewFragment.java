@@ -88,20 +88,6 @@ public class GuideIntroViewFragment extends BaseFragment {
       if (mGuide != null) {
          mTitle.setText(mGuide.getTitle());
          ArrayList<Document> documents = mGuide.getDocuments();
-         final Document featuredDocument = mGuide.getFeaturedDocument();
-         if (featuredDocument != null) {
-            AppCompatButton featuredDocButton = (AppCompatButton) view.findViewById(R.id.featured_document);
-            documents.remove(featuredDocument);
-            featuredDocButton.setVisibility(View.VISIBLE);
-            featuredDocButton.setOnClickListener(new View.OnClickListener() {
-               @Override
-               public void onClick(View view) {
-                  Intent intent = new Intent(Intent.ACTION_VIEW);
-                  intent.setDataAndType(Uri.parse(mGoogleDocsUrl + featuredDocument.url), "text/html");
-                  startActivity(intent);
-               }
-            });
-         }
 
          if (documents.size() > 0) {
             RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());

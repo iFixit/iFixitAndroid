@@ -1,5 +1,7 @@
 package com.dozuki.ifixit.model;
 
+import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
@@ -15,4 +17,9 @@ public class Document implements Serializable {
    @SerializedName("documentid")
    public int id;
 
+   public String getFullUrl() {
+      Site site = App.get().getSite();
+
+      return "https://" + site.mDomain + this.relativeUrl;
+   }
 }

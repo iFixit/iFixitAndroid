@@ -9,6 +9,7 @@ import android.view.View;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.ui.WebViewFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +26,7 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    private int mToolsPosition = -1;
    private int mPartsPosition = -1;
    private int mConclusionPosition = -1;
+   private int mFeaturedDocumentPosition = -1;
 
    private Guide mGuide;
    private boolean mIsOfflineGuide;
@@ -35,6 +37,11 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
       mIsOfflineGuide = isOfflineGuide;
 
       mPageLabelMap = new HashMap<Integer, String>();
+
+      if (mGuide.getFeaturedDocument() != null) {
+         mFeaturedDocumentPosition = mStepOffset;
+         mStepOffset++;
+      }
 
       if (guideHasTools()) {
          mToolsPosition = mStepOffset;
@@ -75,6 +82,10 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
          Bundle args = new Bundle();
          args.putSerializable(GuideIntroViewFragment.GUIDE_KEY, mGuide);
          fragment.setArguments(args);
+      } else if (position == mFeaturedDocumentPosition) {
+         label += "/featured-document";
+         fragment = new WebViewFragment();
+         ((WebViewFragment)fragment).loadUrl(mGuide.getFeaturedDocument().url);
       } else if (position == mToolsPosition) {
          label += "/tools";
          fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getTools());
@@ -115,6 +126,8 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    public CharSequence getPageTitle(int position) {
       if (position == GUIDE_INTRO_POSITION) {
          return App.get().getString(R.string.introduction);
+      } else if (position == mFeaturedDocumentPosition) {
+         return "Featured Documents";
       } else if (position == mToolsPosition) {
          return App.get().getString(R.string.requiredTools);
       } else if (position == mPartsPosition) {
