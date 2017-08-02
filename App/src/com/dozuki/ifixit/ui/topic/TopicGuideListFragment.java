@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.topic;
 
 import android.os.Bundle;
+import android.support.v4.view.ViewCompat;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -52,6 +53,8 @@ public class TopicGuideListFragment extends BaseFragment {
       View view = inflater.inflate(R.layout.topic_guide_list, container, false);
 
       mRecycleView = (RecyclerView)view.findViewById(R.id.topic_guide_grid);
+      ViewCompat.setNestedScrollingEnabled(mRecycleView, false);
+
       mLayoutManager = new GridLayoutManager(inflater.getContext(), 1);
 
       mRecycleView.setLayoutManager(mLayoutManager);
