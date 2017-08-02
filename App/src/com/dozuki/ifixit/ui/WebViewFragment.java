@@ -58,8 +58,14 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
       mWebView = (WebView) view.findViewById(R.id.topic_answers_webview);
 
-      CookieSyncManager.createInstance(mWebView.getContext());
-      CookieManager.getInstance().setAcceptCookie(true);
+      CookieManager cookieManager = CookieManager.getInstance();
+
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+         //noinspection deprecation
+         CookieSyncManager.createInstance(getContext());
+      }
+
+      cookieManager.setAcceptCookie(true);
 
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
