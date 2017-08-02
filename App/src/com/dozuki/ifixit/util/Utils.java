@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.util;
 
 import android.content.Context;
+import android.content.res.Resources;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
@@ -9,6 +10,7 @@ import android.text.style.RelativeSizeSpan;
 import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
 import android.util.Log;
+import android.util.TypedValue;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.App;
@@ -144,5 +146,26 @@ public class Utils {
       } else {
          return DateUtils.getRelativeTimeSpanString(timeInMs);
       }
+   }
+
+   /**
+    * From StackOverflow: https://stackoverflow.com/a/12147550
+    * @param context
+    * @param px
+    * @return
+    */
+
+   public static float dpFromPx(final Context context, final float px) {
+      return px / context.getResources().getDisplayMetrics().density;
+   }
+
+   /**
+    * From StackOverflow: https://stackoverflow.com/a/12147550
+    * @param context
+    * @param dp
+    * @return
+    */
+   public static float pxFromDp(final Context context, final float dp) {
+      return dp * context.getResources().getDisplayMetrics().density;
    }
 }

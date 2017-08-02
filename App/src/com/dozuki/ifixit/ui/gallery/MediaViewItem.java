@@ -17,16 +17,11 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.Utils;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
-import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
-
-import jp.wasabeef.picasso.transformations.BlurTransformation;
 
 public class MediaViewItem extends RelativeLayout {
    private final Context mContext;
@@ -94,10 +89,6 @@ public class MediaViewItem extends RelativeLayout {
    }
 
    public void setImageItem(File image) {
-      buildImage(Picasso.with(mContext).load(image));
-   }
-
-   public void setImageItem(Uri image) {
       buildImage(Picasso.with(mContext).load(image));
    }
 

@@ -1,34 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/bullet"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="3"
-        android:contentDescription="@string/bullet_desc"
-        android:cropToPadding="true"
-        android:paddingRight="@dimen/step_bullet_padding"
-        android:paddingTop="@dimen/step_bullet_padding" />
+    <RelativeLayout
+        android:id="@+id/bullet_container"
+        android:layout_width="36dp"
+        android:layout_height="36dp">
+
+        <ImageView
+            android:id="@+id/bullet"
+            android:layout_centerVertical="true"
+            android:layout_centerHorizontal="true"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:contentDescription="@string/bullet_desc"
+            android:cropToPadding="true"
+            android:adjustViewBounds="true"/>
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/step_text"
         style="@style/BodyText"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="97"
-        android:layout_margin="0dp" />
-
-    <ImageView
-        android:id="@+id/bullet_icon"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:maxWidth="@dimen/step_bullet_icon_width"
-        android:layout_gravity="right"
-        android:layout_marginLeft="@dimen/step_icon_left_spacing"
-        android:layout_marginTop="@dimen/step_icon_top_spacing"
-        android:layout_weight="0"
-        android:contentDescription="@string/bullet_icon_desc"
-        android:visibility="invisible" />
+        android:layout_marginLeft="8dp"
+        android:layout_toEndOf="@id/bullet_container"
+        android:layout_toRightOf="@id/bullet_container"/>
 
 </merge>
