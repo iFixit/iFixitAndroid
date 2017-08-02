@@ -61,10 +61,12 @@
             android:visibility="gone"
             android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
             <TextView
-                android:text="@string/documents"
+                android:text="@string/attached_documents"
                 style="@style/TopicHeaderRow.Background"/>
+
             <View
                 android:background="?dividerHorizontal"
                 android:layout_height="1dp"
