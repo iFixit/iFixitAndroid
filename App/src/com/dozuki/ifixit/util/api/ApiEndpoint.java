@@ -11,6 +11,10 @@ import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Defines all APIEndpoints.
@@ -811,6 +815,9 @@ public enum ApiEndpoint {
        */
       public ApiEvent<?> getEvent();
    }
+   public static Set<String> VALID_LANGIDS = new HashSet<String>(Arrays.asList(
+      new String[] {"en", "jp", "de", "fr", "es", "pt", "it", "nl", "tr", "zh", "ru"}
+   ));
 
    /**
     * Endpoint's functionality.
@@ -876,15 +883,21 @@ public enum ApiEndpoint {
       String domain;
       String protocol;
       String url;
+      String langid = Locale.getDefault().getLanguage();
+      String subdomain = "www";
+
+      if (VALID_LANGIDS.contains(langid)) {
+         subdomain = langid;
+      }
 
       if (site != null) {
          domain = site.getAPIDomain();
       } else {
-         domain = "www.ifixit.com";
+         domain = "ifixit.com";
       }
 
       protocol = "https";
-      url = String.format("%s://%s/api/%s/%s", protocol, domain, API_VERSION,
+      url = String.format("%s://%s.%s/api/%s/%s", protocol, subdomain, domain, API_VERSION,
        mEndpoint.createUrl(query));
 
       return url;
