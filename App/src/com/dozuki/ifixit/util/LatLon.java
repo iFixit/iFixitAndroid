@@ -5,13 +5,18 @@ public class LatLon {
    private double longitude;
 
    public LatLon(String latlon) {
-      if (latlon.length() != 0) {
-         String[] values = latlon.split(",");
-         this.latitude = Double.valueOf(values[0]);
-         this.longitude = Double.valueOf(values[1]);
-      } else {
+      if (latlon.length() == 0 || latlon == null) {
          this.latitude = 0.0;
          this.longitude = 0.0;
+      } else {
+         try {
+            String[] values = latlon.split(",");
+    	      this.latitude = Double.valueOf(values[0]);
+    	      this.longitude = Double.valueOf(values[1]);
+    	   } catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            this.latitude = 0.0;
+    	      this.longitude = 0.0;
+    	   }
       }
    }
 
