@@ -9,16 +9,14 @@ public class LatLon {
          this.latitude = 0.0;
          this.longitude = 0.0;
       } else {
-            try {
-               String[] values = latlon.split(",");
-    	       this.latitude = Double.valueOf(values[0]);
-    	       this.longitude = Double.valueOf(values[1]);
-    	    } catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {
-               this.latitude = 0.0;
-    	       this.longitude = 0.0;
-               // logging can be added here based upon your discretion
-               // this could be useful to determine the origin of exceptions		
-    	    }
+         try {
+            String[] values = latlon.split(",");
+    	      this.latitude = Double.valueOf(values[0]);
+    	      this.longitude = Double.valueOf(values[1]);
+    	   } catch(NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            this.latitude = 0.0;
+    	      this.longitude = 0.0;
+    	   }
       }
    }
 
