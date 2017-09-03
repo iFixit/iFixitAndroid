@@ -16,13 +16,9 @@
                 android:layout_height="match_parent"
                 android:visibility="visible"/>
 
-        <ProgressBar
-                android:id="@+id/progress_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerInParent="true"
-                android:minHeight="@dimen/progress_bar_width_height"
-                android:minWidth="@dimen/progress_bar_width_height" />
+        <include android:id="@+id/webview_progress"
+                 layout="@layout/loading_fragment" />
+
     </RelativeLayout>
 
 </android.support.v4.widget.NestedScrollView>

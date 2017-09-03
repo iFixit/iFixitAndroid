@@ -84,8 +84,11 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
          fragment.setArguments(args);
       } else if (position == mFeaturedDocumentPosition) {
          label += "/featured-document";
+
          fragment = new WebViewFragment();
-         ((WebViewFragment)fragment).loadUrl(mGuide.getFeaturedDocument().url);
+         Bundle args = new Bundle();
+         args.putString(WebViewFragment.URL_KEY, mGuide.getFeaturedDocument().getFullUrl().replace(".pdf", ""));
+         fragment.setArguments(args);
       } else if (position == mToolsPosition) {
          label += "/tools";
          fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getTools());

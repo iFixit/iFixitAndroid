@@ -3,6 +3,7 @@ package com.dozuki.ifixit.ui.topic;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
@@ -17,6 +18,7 @@ import android.widget.ImageView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.topic.TopicLeaf;
 import com.dozuki.ifixit.model.topic.TopicNode;
 import com.dozuki.ifixit.ui.BaseActivity;
@@ -42,6 +44,7 @@ public class TopicViewActivity extends BaseActivity {
    private TabLayout mTabs;
    private TopicPageAdapter mPageAdapter;
    private CollapsingToolbarLayout mCollapsingToolbar;
+   private Site mSite;
 
    public static Intent viewTopic(Context context, String topicName) {
       Intent intent = new Intent(context, TopicViewActivity.class);
@@ -54,6 +57,8 @@ public class TopicViewActivity extends BaseActivity {
       super.onCreate(savedState);
 
       setTheme(App.get().getTransparentSiteTheme());
+
+      mSite = App.get().getSite();
 
       setContentView(R.layout.topic_view);
 
@@ -110,6 +115,11 @@ public class TopicViewActivity extends BaseActivity {
          mCollapsingToolbar.setTitle(topicName);
          mCollapsingToolbar.setCollapsedTitleTextAppearance(R.style.TextAppearance_AppCompat_Title);
          mCollapsingToolbar.setCollapsedTitleTextColor(getResources().getColor(R.color.white));
+
+         if (mSite.mHasTitlePictures) {
+            mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.transparent));
+         }
+
          App.sendScreenView("/category/" + topicTitle);
          Api.call(this, ApiCall.topic(topicTitle));
       }
@@ -122,6 +132,14 @@ public class TopicViewActivity extends BaseActivity {
        .load(url)
        .error(R.drawable.no_image)
        .into(mBackdropView);
+
+      if (mSite.mHasTitlePictures && (url == null || (url.equals("") || url.startsWith(".")))) {
+         mCollapsingToolbar.setExpandedTitleColor(getResources().getColor(R.color.black));
+      } else if (mSite.mHasTitlePictures) {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            mBackdropView.setForeground(null);
+         }
+      }
 
       mBackdropView.setOnClickListener(new View.OnClickListener() {
          @Override

@@ -19,5 +19,5 @@
             android:layout_height="?actionBarSize"
             android:background="@color/white"
             app:tabBackground="@color/white"
-            app:tabIndicatorColor="?attr/colorAccent"/>
+            app:tabIndicatorColor="?attr/doz__tabIndicatorColor"/>
 </android.support.v4.widget.NestedScrollView>

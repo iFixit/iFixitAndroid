@@ -40,6 +40,7 @@ public class Site implements Serializable {
 
    public ArrayList<GuideType> mGuideTypes;
    private boolean mBarcodeScanner = false;
+   public boolean mHasTitlePictures = false;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -247,10 +248,11 @@ public class Site implements Serializable {
          site.mPublic = false;
          site.mAnswers = true;
          site.mDescription = "";
-         site.mStandardAuth = true;
+         site.mStandardAuth = false;
          site.mBarcodeScanner = false;
-         site.mSsoUrl = null;
+         site.mSsoUrl = "http://aristocrat.dozuki.com/Login";
          site.mPublicRegistration = false;
+         site.mHasTitlePictures = true;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("dozuki")) {

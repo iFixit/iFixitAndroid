@@ -17,6 +17,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
@@ -34,7 +35,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
    private String mUrl;
    private Site mSite;
    private GuideWebView mWebViewClient;
-   protected ProgressBar mProgressBar;
+   protected RelativeLayout mProgressBar;
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -55,7 +56,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       }
 
       View view = inflater.inflate(R.layout.topic_answers, container, false);
-      mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
+      mProgressBar = (RelativeLayout) view.findViewById(R.id.webview_progress);
       mWebView = (WebView) view.findViewById(R.id.topic_answers_webview);
 
       CookieManager cookieManager = CookieManager.getInstance();
@@ -221,7 +222,6 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
           "if (document.getElementById('mainHeader')) document.getElementById('mainHeader').style.display = 'none'; " +
           "if (document.getElementById('page')) document.getElementById('page').style.paddingTop = '20px'; " +
           "})()");
-
       }
 
       @Override

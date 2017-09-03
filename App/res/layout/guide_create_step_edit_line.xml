@@ -30,7 +30,7 @@
         android:layout_marginBottom="@dimen/step_edit_line_spacing"
         android:layout_marginLeft="@dimen/step_edit_line_spacing"
         android:layout_marginTop="@dimen/step_edit_line_spacing"
-        android:layout_toRightOf="@+id/guide_step_item_bullet_thumbnail"
+        android:layout_toRightOf="@+id/bullet_container"
         android:layout_toLeftOf="@+id/step_line_mic_button"
         android:hint="@string/step_text_default"
         android:imeOptions="actionDone"

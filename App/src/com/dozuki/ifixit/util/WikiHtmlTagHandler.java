@@ -12,7 +12,7 @@ import org.xml.sax.XMLReader;
 
 public class WikiHtmlTagHandler implements Html.TagHandler {
 
-   private static final String LIST_INDENT = "    ";
+   private static final String LIST_INDENT = "&nbsp;&nbsp;&nbsp;&nbsp;";
    private static final String BULLET = "\\u2022";
    private static final String NEWLINE = "\n";
 
@@ -47,7 +47,7 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
       int len = output.length();
 
       if (opening) {
-         output.setSpan(new BulletSpan(), len, len, Spannable.SPAN_MARK_MARK);
+         output.setSpan(new BulletSpan(15), len, len, Spannable.SPAN_MARK_MARK);
       } else {
          Object obj = getLast(output, BulletSpan.class);
          int where = output.getSpanStart(obj);
@@ -60,7 +60,7 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
                where += NEWLINE.length(); // so the margin and bullet are inserted after the newline
             }
 
-            output.insert(where, Utils.repeat(LIST_INDENT, level) + unescapeUnicode(BULLET) + "  ");
+            output.insert(where, Utils.repeat(LIST_INDENT, level) + unescapeUnicode(BULLET) + " &nbsp;&nbsp; ");
          }
       }
    }

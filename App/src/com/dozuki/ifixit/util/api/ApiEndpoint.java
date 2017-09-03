@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.util.api;
 
+import android.net.Uri;
 import android.util.Log;
 
 import com.dozuki.ifixit.model.Comment;
@@ -884,11 +885,6 @@ public enum ApiEndpoint {
       String protocol;
       String url;
       String langid = Locale.getDefault().getLanguage();
-      String subdomain = "www";
-
-      if (VALID_LANGIDS.contains(langid)) {
-         subdomain = langid;
-      }
 
       if (site != null) {
          domain = site.getAPIDomain();
@@ -897,8 +893,12 @@ public enum ApiEndpoint {
       }
 
       protocol = "https";
-      url = String.format("%s://%s.%s/api/%s/%s", protocol, subdomain, domain, API_VERSION,
+      url = String.format("%s://%s/api/%s/%s", protocol, domain, API_VERSION,
        mEndpoint.createUrl(query));
+
+      if (VALID_LANGIDS.contains(langid)) {
+         url = Uri.parse(url).buildUpon().appendQueryParameter("lang", langid).build().toString();
+      }
 
       return url;
    }

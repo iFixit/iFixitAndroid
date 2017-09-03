@@ -53,7 +53,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="?actionBarSize"
                 android:background="@color/white"
-                app:tabIndicatorColor="?attr/colorPrimary"/>
+                app:tabIndicatorColor="?attr/doz__tabIndicatorColor"/>
 
     </android.support.design.widget.AppBarLayout>
 

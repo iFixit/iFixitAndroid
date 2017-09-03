@@ -101,5 +101,6 @@
     <color name="dozuki_orange_dark">#FF9f3b02</color>
     <color name="dozuki_white">@color/gray_2</color>
     <color name="dozuki_grey">@color/gray_7</color>
+    <color name="transparent">#00000000</color>
 
 </resources>
