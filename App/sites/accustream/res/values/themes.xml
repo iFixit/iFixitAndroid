@@ -3,8 +3,12 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Accustream" parent="Theme.Base">
+    <style name="Theme.Transparent.Accustream" parent="Theme.Base.TransparentActionBar">
+        <item name="colorAccent">@color/accustream_primary</item>
+        <item name="colorAccentDark">@color/accustream_primary_dark</item>
+    </style>
 
+    <style name="Theme.Accustream" parent="Theme.Base">
         <item name="colorPrimary">@color/black</item>
         <item name="colorPrimaryDark">@color/black_alpha_40</item>
         <item name="colorAccent">@color/accustream_primary</item>

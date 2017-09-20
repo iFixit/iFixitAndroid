@@ -11,6 +11,9 @@
     <style name="Theme.Base" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="doz__guidePagerTitleBackground">@color/black</item>
         <item name="doz__guidePagerTitleTextColor">@color/white</item>
+        <item name="doz__guidePagerTitleFooterColor">?attr/colorPrimary</item>
+        <item name="doz__menuIconColor">@color/white</item>
+
         <item name="doz__tabIndicatorColor">@color/black</item>
 
         <item name="doz__toolbarStyle">@style/Base.Toolbar</item>

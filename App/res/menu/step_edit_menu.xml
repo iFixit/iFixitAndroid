@@ -10,11 +10,11 @@
     <item
             android:id="@+id/view_guide"
             android:title="@string/view_guide"
-            android:icon="@drawable/ic_action_book"
+            android:icon="@drawable/ic_pageview_24dp"
             app:showAsAction="never"/>
     <item
             android:id="@+id/discard_changes"
             android:title="@string/discard_changes"
-            android:icon="@drawable/ic_undo_white_24dp"
+            android:icon="@drawable/ic_undo_24dp"
             app:showAsAction="never"/>
 </menu>

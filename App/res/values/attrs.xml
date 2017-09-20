@@ -2,6 +2,8 @@
 <resources>
     <attr name="doz__guidePagerTitleTextColor" format="color"/>
     <attr name="doz__guidePagerTitleBackground" format="color"/>
+    <attr name="doz__guidePagerTitleFooterColor" format="color"/>
+    <attr name="doz__menuIconColor" format="color"/>
     <attr name="doz__tabIndicatorColor" format="color"/>
     <attr name="colorAccentDark" format="color"/>
     <!-- Base Style Attributes -->

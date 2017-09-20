@@ -43,7 +43,7 @@
             android:layout_gravity="bottom|right"
             android:background="?attr/selectableItemBackground"
             android:layout_margin="16dp"
-            app:srcCompat="@drawable/ic_add_white_24dp"
+            app:srcCompat="@drawable/ic_add_24dp"
             app:layout_anchor="@id/guide_create_listview"
             app:layout_anchorGravity="bottom|right|end" />
 </android.support.design.widget.CoordinatorLayout>
