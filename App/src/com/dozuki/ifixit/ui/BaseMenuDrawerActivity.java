@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.URLUtil;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
@@ -35,6 +36,8 @@ import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic.TopicActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.transformations.CircleTransformation;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 
@@ -184,7 +187,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       String barcodeScannerResult = getBarcodeScannerResult(requestCode, resultCode, intent);
 
       if (barcodeScannerResult != null) {
-         startActivity(IntentFilterActivity.viewUrl(this, barcodeScannerResult));
+         if (URLUtil.isValidUrl(barcodeScannerResult)) {
+            startActivity(IntentFilterActivity.viewUrl(this, barcodeScannerResult));
+         } else {
+            Toast.makeText(this, "The contents of that barcode / QR code were not a valid URL; This is what was read: " + barcodeScannerResult, Toast.LENGTH_LONG).show();
+            Log.e("BaseMenuDrawerActivity", "Cannot launch barcode scanner: " + barcodeScannerResult);
+         }
       } else {
          super.onActivityResult(requestCode, resultCode, intent);
       }
@@ -197,24 +205,13 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       }
 
       try {
-         // Call IntentIntegrator.parseResult(requestCode, resultCode, intent);
-         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
-         Class[] argTypes = new Class[]{Integer.TYPE, Integer.TYPE, Intent.class};
-         Method parseResult = c.getDeclaredMethod("parseActivityResult", argTypes);
-         Object intentResult = parseResult.invoke(null, requestCode, resultCode, intent);
+         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
-         // The request code didn't match.
-         if (intentResult == null) {
+         if (scanResult == null) {
             return null;
          }
 
-         // Call intentResult.getContents().
-         c = Class.forName("com.google.zxing.integration.android.IntentResult");
-         argTypes = new Class[]{};
-         Method getContents = c.getDeclaredMethod("getContents", argTypes);
-         Object contents = getContents.invoke(intentResult);
-
-         return (String) contents;
+         return scanResult.getContents();
       } catch (Exception e) {
          Toast.makeText(this, "Failed to parse result.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Failure parsing activity result", e);
@@ -416,10 +413,8 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       // We want to just call `IntentIntegrator.initiateScan(this);` but it doesn't
       // compile unless the dependency exists.
       try {
-         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
-         Class[] argTypes = new Class[]{android.app.Activity.class};
-         Method initiateScan = c.getDeclaredMethod("initiateScan", argTypes);
-         initiateScan.invoke(null, this);
+         IntentIntegrator integrator = new IntentIntegrator(this);
+         integrator.initiateScan();
       } catch (Exception e) {
          Toast.makeText(this, "Failed to launch QR code scanner.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Cannot launch barcode scanner", e);

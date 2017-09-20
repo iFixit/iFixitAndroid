@@ -104,13 +104,11 @@ android {
 
             if (site == 'dozuki') {
                dependencies {
-                  dozukiCompile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
-                  dozukiCompile 'com.google.zxing:core:3.3.0'
+                  dozukiCompile 'com.google.zxing:android-integration:3.3.0'
                }
             } else if (site == 'accustream') {
                dependencies {
-                  accustreamCompile 'com.journeyapps:zxing-android-embedded:3.2.0@aar'
-                  accustreamCompile 'com.google.zxing:core:3.3.0'
+                  accustreamCompile 'com.google.zxing:android-integration:3.3.0'
                }
             }
          }
