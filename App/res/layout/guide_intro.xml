@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/page_padding" >
+    android:paddingRight="@dimen/page_padding"
+    android:paddingLeft="@dimen/page_padding">
 
     <LinearLayout
         android:id="@+id/guide_intro_container"
