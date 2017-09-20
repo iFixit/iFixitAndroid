@@ -284,6 +284,7 @@ public class App extends Application {
          size = available / 10;
          Log.i("iFixit Cache", "Cache Size: " + String.valueOf(size));
       } catch (IllegalArgumentException ignored) {
+         throw new RuntimeException(ignored); // shouldn't happen
       }
 
       return size;
