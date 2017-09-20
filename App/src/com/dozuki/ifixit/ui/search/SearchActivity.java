@@ -254,6 +254,8 @@ public class SearchActivity extends BaseActivity implements SearchView.OnQueryTe
          search(extras.getString(SEARCH_QUERY), sendQuery);
       } else if (Intent.ACTION_SEARCH.equals(intent.getAction())) {
          search(intent.getStringExtra(SearchManager.QUERY), sendQuery);
+      } else {
+         focusSearch();
       }
    }
 
