@@ -265,7 +265,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          AppCompatTextView displayName = (AppCompatTextView) header.findViewById(R.id.navigation_display_name);
          displayName.setText(user.getUsername());
          AppCompatTextView username = (AppCompatTextView) header.findViewById(R.id.navigation_username);
-         username.setText(user.getEmail());
+         username.setText(user.getUniqueUsername());
          AppCompatImageView avatar = (AppCompatImageView) header.findViewById(R.id.navigation_avatar);
 
          Image avatarImage = user.getAvatar();

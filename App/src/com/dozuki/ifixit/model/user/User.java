@@ -12,6 +12,8 @@ public class User implements Serializable {
 
    @SerializedName("userid") private int mUserid;
    @SerializedName("username") private String mUsername;
+   @SerializedName("unique_username") private String mUniqueUsername;
+
    @SerializedName("image") private Image mAvatar;
    @SerializedName("reputation") private int mReputation;
    @SerializedName("join_date") private int mDate;
@@ -138,5 +140,13 @@ public class User implements Serializable {
 
    public String getEmail() {
       return mEmail;
+   }
+
+   public String getUniqueUsername() {
+      return mUniqueUsername;
+   }
+
+   public void setUniqueUsername(String mUniqueUsername) {
+      this.mUniqueUsername = mUniqueUsername;
    }
 }
