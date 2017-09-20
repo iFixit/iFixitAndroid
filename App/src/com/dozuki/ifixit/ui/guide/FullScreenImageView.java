@@ -7,6 +7,7 @@ import android.util.AttributeSet;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Target;
 
