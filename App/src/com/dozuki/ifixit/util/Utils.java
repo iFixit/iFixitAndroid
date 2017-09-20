@@ -73,6 +73,9 @@ public class Utils {
       // Make the images bigger
       html = html.replaceAll(".standard", ".large");
 
+      // Remove the /.pdf from Dozuki pdf document links.  PDF viewers on android error on them.
+      html = html.replaceAll("/.pdf", "");
+
       return html;
    }
 

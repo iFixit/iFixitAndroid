@@ -38,8 +38,12 @@ public class DocumentListAdapter extends RecyclerView.Adapter<DocumentListAdapte
         holder.title.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                // Remove the /.pdf from Dozuki pdf document links.
+                // PDF viewers on android error on them.
+                String docUrl = doc.getFullUrl().replaceAll("/.pdf", "");;
+
                 Intent browserIntent = new Intent(Intent.ACTION_VIEW,
-                 Uri.parse(doc.getFullUrl()));
+                 Uri.parse(docUrl));
                 context.startActivity(browserIntent);
             }
         });

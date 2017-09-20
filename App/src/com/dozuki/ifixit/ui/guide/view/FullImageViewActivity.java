@@ -9,6 +9,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.guide.FullScreenImageView;
 
@@ -28,6 +29,7 @@ public class FullImageViewActivity extends AppCompatActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      setTheme(App.get().getSiteTheme());
 
       String url = getIntent().getExtras().getString(IMAGE_URL);
 
