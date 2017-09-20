@@ -25,9 +25,9 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
-import com.squareup.picasso.Callback;
-import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -35,10 +35,12 @@ import java.util.Map;
 import java.util.Set;
 
 import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
-   private final OkHttpClient client = new OkHttpClient();
-
    private static final String TAG = "ApiSyncAdapter";
    public static final String RESTART_SYNC = "RESTART_SYNC";
    // The value doesn't actually matter as long as it's not 0.
@@ -100,7 +102,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    }
 
    public ApiSyncAdapter(Context context, boolean autoInitialize,
-    boolean allowParallelSyncs) {
+                         boolean allowParallelSyncs) {
       super(context, autoInitialize, allowParallelSyncs);
       mContext = context;
    }
@@ -116,7 +118,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
-    ContentProviderClient provider, SyncResult syncResult) {
+                             ContentProviderClient provider, SyncResult syncResult) {
       boolean manualSync = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL);
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
@@ -351,7 +353,6 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
       private final ApiDatabase mDb;
       private long mLastProgressUpdate;
       private boolean mNewGuide;
-      private int mMediaDownloadedCount = 0;
 
       public OfflineGuideSyncer(Site site, User user) {
          mSite = site;
@@ -496,53 +497,37 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * Downloads all new images contained in the guides.
        */
       private void downloadMissingMedia(List<GuideMediaProgress> missingGuideMedia) {
-         final int totalMissingMedia = getTotalMissingMedia(missingGuideMedia);
+         int totalMissingMedia = getTotalMissingMedia(missingGuideMedia);
+         int mediaDownloaded = 0;
 
-         for (final GuideMediaProgress guideMedia : missingGuideMedia) {
+         createMediaDirectories();
+
+         for (GuideMediaProgress guideMedia : missingGuideMedia) {
             for (String mediaUrl : guideMedia.mMissingMedia) {
                finishSyncIfCanceled();
 
-               final String originalUrl = mediaUrl.replace(".huge", "");
-               Picasso.with(getContext())
-                .load(mediaUrl)
-                .fetch(new Callback() {
-                   @Override
-                   public void onSuccess() {
-                      guideMedia.showProgress();
-                      mMediaDownloadedCount++;
+               if (downloadMedium(mediaUrl)) {
+                  mediaDownloaded++;
+                  guideMedia.mMediaProgress++;
+               } else if (mediaUrl.contains(".huge")) {
+                  // Download the original image instead because FullScreenImageView will
+                  // default to that one.
+                  String originalUrl = mediaUrl.replace(".huge", "");
+                  if (downloadMedium(originalUrl)) {
+                     mediaDownloaded++;
+                     guideMedia.mMediaProgress++;
+                  } else {
+                     // Continue on with the next medium. The progress won't be updated
+                     // because the medium wasn't successfully retrieved. Note that other
+                     // failures such as missing internet will throw an exception which
+                     // will cause the sync process to exit immediately.
+                     continue;
+                  }
+               }
 
-                      updateTotalProgress(guideMedia, totalMissingMedia, mMediaDownloadedCount);
-                      updateNotificationProgress(totalMissingMedia, mMediaDownloadedCount, false);
-                      updateGuideProgress(guideMedia, true);
-
-                   }
-
-                   @Override
-                   public void onError() {
-                      // If the specified size doesn't work, try the original
-                      Picasso.with(getContext())
-                       .load(originalUrl)
-                       .fetch(new Callback() {
-                          @Override
-                          public void onSuccess() {
-
-                             guideMedia.showProgress();
-                             mMediaDownloadedCount++;
-
-                             updateTotalProgress(guideMedia, totalMissingMedia, mMediaDownloadedCount);
-                             updateNotificationProgress(totalMissingMedia, mMediaDownloadedCount, false);
-                             updateGuideProgress(guideMedia, true);
-                          }
-
-                          @Override
-                          public void onError() {
-                             // No Image - nothing we can do.
-                             Log.d(TAG, "Couldn't find image - " + originalUrl);
-                          }
-                       });
-                   }
-                });
-
+               updateTotalProgress(guideMedia, totalMissingMedia, mediaDownloaded);
+               updateNotificationProgress(totalMissingMedia, mediaDownloaded, false);
+               updateGuideProgress(guideMedia, true);
             }
 
             // Make sure the guide is marked as complete.
@@ -550,14 +535,71 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          }
 
          if (BuildConfig.DEBUG) {
-            Log.d(TAG, mMediaDownloadedCount + "/" + totalMissingMedia + " media downloaded.");
+            Log.d(TAG, mediaDownloaded + "/" + totalMissingMedia + " media downloaded.");
          }
+      }
+
+      /**
+       * Downloads the medium to the persistent location. Returns true if the medium is
+       * persisted, false otherwise.
+       */
+      private boolean downloadMedium(String mediaUrl) {
+         File file = new File(getOfflineMediaPath(mediaUrl));
+
+         if (!file.exists()) {
+            try {
+               if (BuildConfig.DEBUG) {
+                  Log.i(TAG, "Downloading: " + mediaUrl);
+               }
+
+               file.createNewFile();
+
+               Request request = new Request.Builder()
+                .url(mediaUrl)
+                .build();
+
+
+               OkHttpClient client = new OkHttpClient();
+
+               Response response = client.newCall(request).execute();
+
+               if (!response.isSuccessful()) {
+                  // This happens occasionally when downloading the .huge size for
+                  // images that don't have that size. The original is retried in
+                  // its place.
+                  if (BuildConfig.DEBUG) {
+                     Log.w(TAG, "MEDIA FAIL! " + mediaUrl);
+                  }
+                  throw new IOException("Unexpected code " + response);
+               }
+
+               BufferedSink sink = Okio.buffer(Okio.sink(file));
+               sink.writeAll(response.body().source());
+               sink.close();
+            } catch (IOException e) {
+               if (BuildConfig.DEBUG) {
+                  Log.e(TAG, "Failed to download medium", e);
+               }
+               throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
+            } catch (Exception e) {
+               if (BuildConfig.DEBUG) {
+                  Log.e(TAG, "Failed to download medium", e);
+               }
+               throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
+            }
+         } else if (BuildConfig.DEBUG) {
+            // Happens if guides share media.
+            Log.d(TAG, "Skipping: " + mediaUrl);
+         }
+
+         return true;
       }
 
       /**
        * Sends out an update to BroadcastReceivers anytime guide progress is updated.
        */
-      private void updateTotalProgress(GuideMediaProgress guide, int totalMissingMedia, int mediaDownloadedCount) {
+      private void updateTotalProgress(GuideMediaProgress guide, int totalMissingMedia,
+                                       int mediaDownloaded) {
          Intent broadcast = new Intent();
          broadcast.setAction(GUIDE_PROGRESS_ACTION);
 
@@ -565,7 +607,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
          broadcast.putExtra(GUIDE_MEDIA_TOTAL, guide.mTotalMedia);
          broadcast.putExtra(GUIDE_MEDIA_DOWNLOADED, guide.mMediaProgress);
          broadcast.putExtra(MEDIA_TOTAL, totalMissingMedia);
-         broadcast.putExtra(MEDIA_DOWNLOADED, mediaDownloadedCount);
+         broadcast.putExtra(MEDIA_DOWNLOADED, mediaDownloaded);
 
          mContext.sendBroadcast(broadcast);
       }
@@ -582,6 +624,18 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
             mLastProgressUpdate = System.currentTimeMillis();
          }
+      }
+
+      /**
+       * Creates the necessary directories for storing media. This is purely so
+       * File.mkdirs() isn't called for every single medium downloaded. This makes it so
+       * it is called at most once per sync.
+       */
+      private void createMediaDirectories() {
+         // The ending file name doesn't matter as long as the parents are the same
+         // as a valid media path.
+         File testFile = new File(getOfflineMediaPath("test"));
+         testFile.mkdirs();
       }
 
       private int getTotalMissingMedia(List<GuideMediaProgress> guideMedia) {

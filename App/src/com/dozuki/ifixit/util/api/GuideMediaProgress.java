@@ -1,8 +1,5 @@
 package com.dozuki.ifixit.util.api;
 
-import android.util.Log;
-
-import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -10,9 +7,8 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.util.ImageSizes;
 
-import java.io.IOException;
+import java.io.File;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 /**
@@ -24,7 +20,7 @@ public class GuideMediaProgress {
    public GuideInfo mGuideInfo;
    public Set<String> mMissingMedia;
    public int mTotalMedia;
-   public int mMediaProgress = 0;
+   public int mMediaProgress;
 
    public GuideMediaProgress(ApiEvent.ViewGuide guideEvent) {
       this(guideEvent.getResult());
@@ -38,49 +34,25 @@ public class GuideMediaProgress {
       mTotalMedia = 0;
 
       Image introImage = mGuide.getIntroImage();
-      HashSet<String> guideMedia = new HashSet<>();
-
       if (introImage.isValid()) {
-         guideMedia.add(introImage.getPath(ImageSizes.guideList));
+         addMediaIfMissing(introImage.getPath(ImageSizes.guideList));
       }
 
       for (GuideStep step : mGuide.getSteps()) {
          for (Image image : step.getImages()) {
-            guideMedia.add(image.getPath(ImageSizes.stepThumb));
-            guideMedia.add(image.getPath(ImageSizes.stepMain));
-            guideMedia.add(image.getPath(ImageSizes.stepFull));
+            addMediaIfMissing(image.getPath(ImageSizes.stepThumb));
+            addMediaIfMissing(image.getPath(ImageSizes.stepMain));
+            addMediaIfMissing(image.getPath(ImageSizes.stepFull));
          }
 
          if (step.hasVideo()) {
             Video video = step.getVideo();
-            guideMedia.add(video.getThumbnail().getPath(ImageSizes.stepMain));
-            guideMedia.add(video.getVideoUrl());
+            addMediaIfMissing(video.getThumbnail().getPath(ImageSizes.stepMain));
+            addMediaIfMissing(video.getVideoUrl());
          }
       }
 
-      Iterator<String> cachedUrls = null;
-      try {
-         cachedUrls = App.getClient().cache().urls();
-      } catch (IOException e) {
-         e.printStackTrace();
-      }
-
-      mTotalMedia = guideMedia.size();
-
-      Log.d("ApiSyncAdapter", "Total # of media to download : " + mTotalMedia);
-      int cachedUrlsCount = 0;
-      while (cachedUrls.hasNext()) {
-         String url = cachedUrls.next();
-         if (guideMedia.contains(url)) {
-            guideMedia.remove(url);
-         }
-         cachedUrlsCount++;
-      }
-
-      mMediaProgress = mTotalMedia - guideMedia.size();
-      mMissingMedia = guideMedia;
-
-      Log.d("ApiSyncAdapter", "Progress: " + mMediaProgress);
+      mMediaProgress = mTotalMedia - mMissingMedia.size();
    }
 
    public GuideMediaProgress(GuideInfo guideInfo, int totalMedia, int mediaProgress) {
@@ -89,11 +61,21 @@ public class GuideMediaProgress {
       mMediaProgress = mediaProgress;
    }
 
-   public boolean isComplete() {
-      return mTotalMedia == mMediaProgress;
+   private void addMediaIfMissing(String imageUrl) {
+      if (mMissingMedia.contains(imageUrl)) {
+         // Don't acknowledge duplicates in the total.
+         return;
+      }
+
+      mTotalMedia++;
+
+      File file = new File(ApiSyncAdapter.getOfflineMediaPath(imageUrl));
+      if (!file.exists()) {
+         mMissingMedia.add(imageUrl);
+      }
    }
 
-   public void showProgress() {
-      mMediaProgress++;
+   public boolean isComplete() {
+      return mTotalMedia == mMediaProgress;
    }
 }
