@@ -16,6 +16,7 @@ import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.Utils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
@@ -215,18 +216,19 @@ public class ThumbnailView extends LinearLayout {
       if (image.hasLocalPath()) {
          File file = new File(image.getLocalPath());
          buildImage(mPicasso.load(file)
-          .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
-          .centerCrop(),
+           .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
+           .centerCrop(),
           thumb.image);
          buildImage(mPicasso.load(file)
-          .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
-          .centerCrop(),
+           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
+           .centerCrop(),
           mMainImage);
       } else if (image.getBitmap() != null) {
          mMainImage.setImageBitmap(image.getBitmap());
          thumb.image.setImageBitmap(image.getBitmap());
       }  else {
-         buildImage(mPicasso.load(image.getPath(ImageSizes.stepThumb)), thumb.image);
+         buildImage(PicassoUtils.displayImage(mPicasso, image.getPath(ImageSizes.stepThumb),
+          mIsOfflineGuide), thumb.image);
       }
 
       setThumbnailDimensions(thumb, mThumbnailHeight, mThumbnailWidth);
@@ -280,11 +282,10 @@ public class ThumbnailView extends LinearLayout {
       // FullImageView is passed a smaller version of the image.
       mMainImageContainer.setTag(url);
       mMainImage.setImageUrl(url);
-
       if (url.startsWith("http")) {
          url = url + ImageSizes.stepMain;
 
-         buildImage(mPicasso.load(url), mMainImage);
+         buildImage(PicassoUtils.displayImage(mPicasso, url, mIsOfflineGuide), mMainImage);
       } else {
          buildImage(mPicasso.load(new File(url))
           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))

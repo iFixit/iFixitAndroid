@@ -18,26 +18,26 @@ import it.sephiroth.android.library.imagezoom.ImageViewTouch;
 public class FullScreenImageView extends ImageViewTouch implements Target {
    private final Context mContext;
    private String mImageUrl;
+   private boolean mOffline;
 
    public FullScreenImageView(Context context, AttributeSet attrs) {
       super(context, attrs);
       mContext = context;
    }
 
-   public void loadImage(String url) {
+   public void loadImage(String url, boolean offline) {
       mImageUrl = url;
+      mOffline = offline;
       Picasso picasso = Picasso.with(mContext);
 
       if (url.startsWith("http")) {
          url += ImageSizes.stepFull;
-         mImageUrl = url;
-         picasso
-          .load(url)
+
+         PicassoUtils.displayImage(picasso, url, offline)
           .error(R.drawable.no_image)
           .into((Target) this);
       } else if (url.startsWith("content://")) {
-         picasso
-          .load(url)
+         picasso.load(url)
           .error(R.drawable.no_image)
           .into((Target)this);
       } else {
