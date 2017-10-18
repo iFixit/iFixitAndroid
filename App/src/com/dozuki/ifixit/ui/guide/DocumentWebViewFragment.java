@@ -1,10 +1,8 @@
-package com.dozuki.ifixit.ui;
+package com.dozuki.ifixit.ui.guide;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,7 +11,6 @@ import android.webkit.CookieSyncManager;
 import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.dozuki.ifixit.App;
@@ -21,21 +18,22 @@ import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
+import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.ui.BaseWebViewClient;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 
 import okhttp3.HttpUrl;
 
-public class WebViewFragment extends BaseFragment implements OnViewGuideListener {
+public class DocumentWebViewFragment extends BaseFragment implements OnViewGuideListener {
    public static final String URL_KEY = "URL_KEY";
    private WebView mWebView;
    private String mUrl;
    private Site mSite;
-   private GuideWebViewClient mWebViewClient;
-   protected RelativeLayout mProgressBar;
+   private BaseWebViewClient mWebViewClient;
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-    Bundle savedInstanceState) {
+                            Bundle savedInstanceState) {
 
       Bundle args = getArguments();
 
@@ -51,9 +49,9 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
          mSite = ((App) getActivity().getApplication()).getSite();
       }
 
-      View view = inflater.inflate(R.layout.topic_answers, container, false);
+      View view = inflater.inflate(R.layout.web_view_fragment, container, false);
       RelativeLayout progressBar = (RelativeLayout) view.findViewById(R.id.webview_progress);
-      mWebView = (WebView) view.findViewById(R.id.topic_answers_webview);
+      mWebView = (WebView) view.findViewById(R.id.web_view);
 
       CookieManager cookieManager = CookieManager.getInstance();
 
@@ -73,7 +71,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       settings.setUseWideViewPort(true);
       settings.setAppCacheEnabled(true);
       settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-      mWebViewClient = new GuideWebViewClient(progressBar, this);
+      mWebViewClient = new BaseWebViewClient(progressBar);
       mWebView.setWebViewClient(mWebViewClient);
       mWebView.setWebChromeClient(new WebChromeClient());
       mWebView.setVerticalScrollBarEnabled(true);
@@ -153,51 +151,5 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
 
       intent.putExtra(GuideViewActivity.GUIDEID, guideid);
       getActivity().startActivity(intent);
-   }
-
-   private class GuideWebViewClient extends BaseWebViewClient {
-      private static final int GUIDE_POSITION = 3;
-      private static final int GUIDEID_POSITION = 5;
-      private static final String GUIDE_URL = "Guide";
-      private static final String TEARDOWN_URL = "Teardown";
-
-      private OnViewGuideListener mGuideListener;
-
-      public GuideWebViewClient(RelativeLayout progressBar, OnViewGuideListener guideListener) {
-         super(progressBar);
-
-         mGuideListener = guideListener;
-      }
-
-      @Override
-      public boolean shouldOverrideUrlLoading(WebView view, String url) {
-         String[] pieces = url.split("/");
-         int guideid;
-
-         if (url.startsWith("^(http|https)://" + mSite.mDomain + "/Guide/login")) {
-            url = mUrl;
-         } else if (!Uri.parse(url).getHost().equals(mSite.mDomain)) {
-            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
-            startActivity(intent);
-            return true;
-         } else {
-            try {
-               if (pieces[GUIDE_POSITION + 1].equals("login")) {
-                  url = mUrl;
-               } else if (pieces[GUIDE_POSITION].equals(GUIDE_URL)
-                || pieces[GUIDE_POSITION].equals(TEARDOWN_URL)) {
-                  guideid = Integer.parseInt(pieces[GUIDEID_POSITION]);
-                  mGuideListener.onViewGuide(guideid);
-                  return true;
-               }
-            } catch (ArrayIndexOutOfBoundsException e) {
-               Log.e("GuideWebViewClient", "ArrayIndexOutOfBoundsException: " + e.toString());
-            } catch (NumberFormatException e) {
-               Log.e("GuideWebViewClient", "NumberFormatException: " + e.toString());
-            }
-         }
-
-         return false;
-      }
    }
 }

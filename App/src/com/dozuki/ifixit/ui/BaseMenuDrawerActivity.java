@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
@@ -15,6 +16,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.webkit.URLUtil;
 import android.widget.FrameLayout;
 import android.widget.Toast;
@@ -35,13 +37,12 @@ import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
 import com.dozuki.ifixit.ui.topic.TopicActivity;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.transformations.CircleTransformation;
 import com.google.zxing.integration.android.IntentIntegrator;
 import com.google.zxing.integration.android.IntentResult;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
-
-import java.lang.reflect.Method;
 
 /**
  * Base activity that displays the menu drawer.
@@ -109,6 +110,14 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
       getSupportActionBar().setHomeButtonEnabled(true);
 
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+         mDrawerToggle.setHomeAsUpIndicator(
+          getResources().getDrawable(R.drawable.ic_arrow_back_24dp, getTheme()));
+      } else {
+         mDrawerToggle.setHomeAsUpIndicator(
+          getResources().getDrawable(R.drawable.ic_arrow_back_24dp));
+      }
+
       SharedPreferences prefs = getSharedPreferences(INTERFACE_STATE, MODE_PRIVATE);
 
       if (!prefs.contains(PEEK_MENU)) {
@@ -122,7 +131,13 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
        getSupportFragmentManager().getBackStackEntryCount();
       mDrawerToggle.setDrawerIndicatorEnabled(backStackEntryCount == 0);
       if (backStackEntryCount > 0) {
-         mDrawerToggle.setHomeAsUpIndicator(getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp));
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mDrawerToggle.setHomeAsUpIndicator(
+             getResources().getDrawable(R.drawable.ic_arrow_back_24dp, getTheme()));
+         } else {
+            mDrawerToggle.setHomeAsUpIndicator(
+             getResources().getDrawable(R.drawable.ic_arrow_back_24dp));
+         }
       }
    }
 
@@ -265,7 +280,16 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          AppCompatTextView displayName = (AppCompatTextView) header.findViewById(R.id.navigation_display_name);
          displayName.setText(user.getUsername());
          AppCompatTextView username = (AppCompatTextView) header.findViewById(R.id.navigation_username);
-         username.setText(user.getUniqueUsername());
+         String uniqueUsername = user.getUniqueUsername();
+         if (uniqueUsername != null && uniqueUsername.length() > 0) {
+            username.setText(user.getUniqueUsername());
+            username.setVisibility(View.VISIBLE);
+         } else {
+            MarginLayoutParams marginParams = (MarginLayoutParams) displayName.getLayoutParams();
+
+            marginParams.setMargins(0, (int) Utils.pxFromDp(this, 20), 0 ,0);
+            displayName.setLayoutParams(marginParams);
+         }
          AppCompatImageView avatar = (AppCompatImageView) header.findViewById(R.id.navigation_avatar);
 
          Image avatarImage = user.getAvatar();

@@ -58,8 +58,6 @@
     <color name="black_alpha_40">#66000000</color>
 
     <!-- Legacy color support -->
-    <color name="navbar_header_text_color">#FFFFFFFF</color>
-
     <color name="emphasis">@color/blue_5</color>
     <color name="emphasis_pressed">@color/blue_6</color>
 

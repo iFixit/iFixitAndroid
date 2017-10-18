@@ -193,13 +193,7 @@ public abstract class BaseActivity extends AppCompatActivity {
    }
 
    public void setTitle(String title) {
-      if (App.get().getSite().actionBarUsesIcon()) {
-         getSupportActionBar().setTitle(title);
-      } else {
-         TextView titleView = ((TextView)getSupportActionBar().getCustomView().
-          findViewById(R.id.custom_page_title));
-         titleView.setText(title);
-      }
+      getSupportActionBar().setTitle(title);
    }
 
    @Override

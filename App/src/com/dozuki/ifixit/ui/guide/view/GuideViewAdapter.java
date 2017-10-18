@@ -10,6 +10,7 @@ import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.WebViewFragment;
+import com.dozuki.ifixit.ui.guide.DocumentWebViewFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,9 +86,9 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
       } else if (position == mFeaturedDocumentPosition) {
          label += "/featured-document";
 
-         fragment = new WebViewFragment();
+         fragment = new DocumentWebViewFragment();
          Bundle args = new Bundle();
-         args.putString(WebViewFragment.URL_KEY, mGuide.getFeaturedDocument().getFullUrl().replace(".pdf", ""));
+         args.putString(DocumentWebViewFragment.URL_KEY, mGuide.getFeaturedDocument().getFullUrl().replace(".pdf", ""));
          fragment.setArguments(args);
       } else if (position == mToolsPosition) {
          label += "/tools";

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -427,6 +428,12 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
       App.sendScreenView("/guide/view/" + mGuide.getGuideid());
       getSupportActionBar().setTitle(mGuide.getTitle());
+
+      if (mGuide.getFeaturedDocument() != null) {
+         getWindow().setFlags(
+          WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+          WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+      }
 
       mAdapter = new GuideViewAdapter(getSupportFragmentManager(), mGuide,
        mIsOfflineGuide);

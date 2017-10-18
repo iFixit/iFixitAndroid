@@ -13,7 +13,6 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.dozuki.ifixit.App;
@@ -77,9 +76,17 @@ public class TopicViewActivity extends BaseActivity {
 
             // Appbar is collapsed
             if (verticalOffset == -mCollapsingToolbar.getHeight() + mToolbar.getHeight()) {
-               upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp);
+               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                  upArrow =  getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp, getTheme());
+               } else {
+                  upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_white_24dp);
+               }
             } else {
-               upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
+               if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                  upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp, getTheme());
+               } else {
+                  upArrow = getResources().getDrawable(R.drawable.ic_arrow_back_black_24dp);
+               }
             }
 
             getSupportActionBar().setHomeAsUpIndicator(upArrow);
