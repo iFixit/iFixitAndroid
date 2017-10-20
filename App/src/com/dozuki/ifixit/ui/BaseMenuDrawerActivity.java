@@ -280,6 +280,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
          AppCompatTextView displayName = (AppCompatTextView) header.findViewById(R.id.navigation_display_name);
          displayName.setText(user.getUsername());
          AppCompatTextView username = (AppCompatTextView) header.findViewById(R.id.navigation_username);
+
          String uniqueUsername = user.getUniqueUsername();
          if (uniqueUsername != null && uniqueUsername.length() > 0) {
             username.setText(user.getUniqueUsername());
@@ -290,6 +291,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
             marginParams.setMargins(0, (int) Utils.pxFromDp(this, 20), 0 ,0);
             displayName.setLayoutParams(marginParams);
          }
+
          AppCompatImageView avatar = (AppCompatImageView) header.findViewById(R.id.navigation_avatar);
 
          Image avatarImage = user.getAvatar();

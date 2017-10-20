@@ -3,9 +3,9 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Transparent.Accustream" parent="Theme.Base.TransparentActionBar">
-        <item name="colorAccent">@color/accustream_primary</item>
-        <item name="colorAccentDark">@color/accustream_primary_dark</item>
+    <style name="Theme.Accustream.TransparentActionBar" parent="Theme.Accustream">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="Theme.Accustream" parent="Theme.Base">

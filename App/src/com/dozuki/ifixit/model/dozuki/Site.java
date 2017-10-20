@@ -159,6 +159,8 @@ public class Site implements Serializable {
          return R.style.Theme_CharlesSmith_TransparentActionBar;
       } else if (isAristocrat()) {
          return R.style.Theme_Aristocrat_TransparentActionBar;
+      } else if (isAccustream()) {
+         return R.style.Theme_Accustream_TransparentActionBar;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {

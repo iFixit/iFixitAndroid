@@ -232,7 +232,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       String password = getPassword();
 
       if (email.length() > 0 && password.length() > 0 ) {
-         
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
          mCurAPICall = ApiCall.login(email, password);
