@@ -555,7 +555,9 @@ public class JSONHelper {
       User user = new User();
       user.setUserid(jUser.getInt("userid"));
       user.setUsername(jUser.getString("username"));
-      user.setUniqueUsername(jUser.getString("unique_username"));
+
+      if (!jUser.isNull("unique_username"))
+         user.setUniqueUsername(jUser.getString("unique_username"));
 
       if (!jUser.isNull("image"))
          user.setAvatar(parseImage(jUser.getJSONObject("image"), null));
