@@ -312,7 +312,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
 
          mMenu.findItem(R.id.nav_logout).setVisible(true);
       } else if (App.get().getSite().isIfixit()) {
-         header = getLayoutInflater().inflate(R.layout.navigation_header, null);
+         header = getLayoutInflater().inflate(R.layout.navigation_header, mDrawerList, false);
 
          AppCompatImageView navLogoView = (AppCompatImageView) header.findViewById(R.id.navigation_site_logo);
          Picasso.with(this)
@@ -320,7 +320,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
           .into(navLogoView);
       } else {
          Image logo = site.getLogo();
-         header = getLayoutInflater().inflate(R.layout.navigation_header, null);
+         header = getLayoutInflater().inflate(R.layout.navigation_header, mDrawerList, false);
 
          if (logo != null) {
             AppCompatImageView navLogoView = (AppCompatImageView) header.findViewById(R.id.navigation_site_logo);
