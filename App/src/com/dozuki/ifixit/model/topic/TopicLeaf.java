@@ -156,7 +156,6 @@ public class TopicLeaf implements Serializable {
 
       htmlParsed = Utils.correctLinkPaths(htmlParsed);
 
-
       return Utils.correctLinkPaths(htmlParsed);
    }
 

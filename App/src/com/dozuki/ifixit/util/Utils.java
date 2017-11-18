@@ -17,6 +17,14 @@ import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 public class Utils {
    /**
     * Trim off whitespace from the beginning and end of a given string.
@@ -65,6 +73,21 @@ public class Utils {
    }
 
    public static String cleanWikiHtml(String html) {
+      Document doc = Jsoup.parse(html);
+
+      Elements videos = doc.select("video");
+
+      // replace all video elements with their posters and a link to the video source.
+      // we have to do this because android HTML.fromHtml doesn't support video tags.
+      for (Element video : videos) {
+         String posterSrc = video.attr("poster");
+         String videoSrc = video.getElementsByTag("source").first().attr("src");
+         Element posterLink = new Element("a").attr("href", videoSrc);
+         posterLink.appendElement("img").attr("src", posterSrc);
+         video.after(posterLink);
+         video.remove();
+         html = doc.body().html();
+      }
 
       // Remove anchor elements from html
       html = html.replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");

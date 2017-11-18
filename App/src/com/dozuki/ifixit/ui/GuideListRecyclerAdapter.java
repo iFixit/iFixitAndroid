@@ -8,7 +8,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.R;
@@ -79,7 +78,7 @@ public class GuideListRecyclerAdapter extends RecyclerView.Adapter<GuideListRecy
          mThumbnail = (ImageView)v.findViewById(R.id.guide_grid_item_thumbnail);
          mPicasso = Picasso.with(v.getContext());
 
-         ((RelativeLayout)v.findViewById(R.id.guide_item_target)).setOnClickListener(this);
+         v.findViewById(R.id.guide_item_target).setOnClickListener(this);
          mItemView.setOnClickListener(this);
       }
 
