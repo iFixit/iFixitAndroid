@@ -16,15 +16,18 @@ public class NoGuidesFragment extends BaseFragment {
     Bundle savedInstanceState) {
       View v = inflater.inflate(R.layout.no_guides_fragment, container, false);
 
-      v.findViewById(R.id.new_guide_button).setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            Intent intent = new Intent(getActivity(), StepEditActivity.class);
-            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
-            startActivity(intent);
-         }
-      });
+      View noGuidesButton = v.findViewById(R.id.new_guide_button);
 
+      if (noGuidesButton != null) {
+         noGuidesButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               Intent intent = new Intent(getActivity(), StepEditActivity.class);
+               intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+               startActivity(intent);
+            }
+         });
+      }
       return v;
    }
 }

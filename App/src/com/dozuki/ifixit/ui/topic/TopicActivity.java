@@ -263,6 +263,13 @@ public class TopicActivity extends BaseMenuDrawerActivity
       mTopicView = (TopicViewFragment) getSupportFragmentManager().findFragmentByTag(TOPIC_TAG);
       if (mTopicView != null) {
          FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+
+         Fragment loading = getSupportFragmentManager().findFragmentByTag(TOPIC_LOADING);
+
+         if (loading != null) {
+            ft.remove(loading);
+         }
+
          ft.hide(mTopicView);
          ft.add(R.id.topic_view_fragment_container, frag, TOPIC_LOADING);
          ft.commit();

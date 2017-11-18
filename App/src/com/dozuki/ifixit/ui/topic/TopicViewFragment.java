@@ -1,5 +1,6 @@
 package com.dozuki.ifixit.ui.topic;
 
+import android.app.ActionBar;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
@@ -107,13 +108,13 @@ public class TopicViewFragment extends BaseFragment implements ViewPager.OnPageC
    }
 
    public void setTopicLeaf(TopicLeaf topicLeaf) {
-
       if (topicLeaf != null) {
          mTopicLeaf = topicLeaf;
          if (mTopicNode != null && !topicLeaf.getName().equals(mTopicNode.getName())) {
             // Not the most recently selected topic... wait for another.
             return;
          } else if (mTopicLeaf != null && mTopicLeaf.equals(topicLeaf)) {
+            ((BaseActivity)getActivity()).getSupportActionBar().setTitle(mTopicNode.getName());
 
             mPageAdapter = new TopicPageAdapter(getFragmentManager(), getActivity(), mTopicLeaf);
             mPager.setAdapter(mPageAdapter);
