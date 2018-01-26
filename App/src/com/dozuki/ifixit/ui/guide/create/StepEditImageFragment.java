@@ -138,20 +138,15 @@ public class StepEditImageFragment extends BaseFragment {
                          try {
                             // Create the File where the photo should go
                             File photoFile = CaptureHelper.createImageFile(getActivity());
-                            Log.d("CaptureHelper", photoFile.getAbsolutePath());
-
                             mCurrentPhotoPath = photoFile.getAbsolutePath();
-
-                            Log.d("CaptureHelper", mCurrentPhotoPath);
                             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
                             // Ensure that there's a camera activity to handle the intent
                             if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
                                // Continue only if the File was successfully created
                                if (photoFile != null) {
                                   Uri photoURI = FileProvider.getUriForFile(mContext,
-                                   "com.dozuki.ifixit.fileprovider",
+                                   mContext.getPackageName() + ".fileprovider",
                                    photoFile);
-                                  Log.d("CaptureHelper", photoURI.getPath());
                                   takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                                   startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
                                } else {

@@ -4,6 +4,7 @@ import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -37,6 +38,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
@@ -305,8 +307,9 @@ public abstract class MediaFragment extends BaseFragment
 
             // Continue only if the File was successfully created
             if (file != null) {
-               Uri photoURI = FileProvider.getUriForFile(getContext(),
-                "com.dozuki.ifixit.fileprovider",
+               Context context = getContext();
+               Uri photoURI = FileProvider.getUriForFile(context,
+                context.getPackageName() + ".fileprovider",
                 file);
                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
