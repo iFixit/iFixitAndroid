@@ -6,6 +6,7 @@ import com.dozuki.ifixit.model.user.UserImage;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.ListIterator;
 
 public class GalleryMediaList implements Serializable {
    private static final long serialVersionUID = -771269428461585511L;
@@ -66,10 +67,12 @@ public class GalleryMediaList implements Serializable {
    }
 
    public void findAndReplaceByKey(String key, Image replacement) {
-      for (GalleryImage image : mImages) {
-         if (image.getPath().equals(key)) {
-            replacement.setPath(image.getPath());
-            replacement.setId(image.getId());
+      for (final ListIterator<GalleryImage> i = mImages.listIterator(); i.hasNext();) {
+         final GalleryImage img = i.next();
+         if (img.getPath().equals(key)) {
+            img.setId(replacement.getId());
+            img.setPath(replacement.getPath());
+            i.set(img);
             break;
          }
       }

@@ -1,21 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.Base" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.Base.TransparentActionBar" parent="Theme.Base">
+        <item name="colorPrimary">@android:color/transparent</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="Theme.Base" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="doz__guidePagerTitleBackground">@color/black</item>
+        <item name="doz__guidePagerTitleTextColor">@color/white</item>
+        <item name="doz__guidePagerTitleFooterColor">?attr/colorPrimary</item>
+        <item name="doz__menuIconColor">@color/white</item>
+
+        <item name="doz__tabIndicatorColor">@color/black</item>
+
+        <item name="doz__toolbarStyle">@style/Base.Toolbar</item>
+        <item name="doz__toolbarPopupStyle">@style/Base.Toolbar.Popup</item>
         <item name="doz__textColorPrimary">@color/black</item>
-        <item name="doz__textColorSecondary">@color/gray</item>
+        <item name="doz__textColorSecondary">@color/gray_7</item>
         <item name="doz__background">@color/white</item>
         <item name="doz__imageBorder">@color/image_border</item>
         <item name="doz__topicDefaultBackground">@style/Widget.iFixit.TopicBackground</item>
-        <item name="doz__itemSelector">@drawable/list_selector_holo_light</item>
         <item name="doz__topicGuideList">@style/ListView</item>
         <item name="doz__listViewStyle">@style/ListView</item>
 
         <!-- Action Bar Logo -->
         <item name="logo">@android:color/transparent</item>
-        <item name="android:logo">@android:color/transparent</item>
         <item name="icon">@android:color/transparent</item>
         <item name="android:icon">@android:color/transparent</item>
+
+        <item name="homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
+        <item name="android:homeAsUpIndicator">@drawable/ic_arrow_back_24dp</item>
 
         <!-- Holo Theme -->
         <item name="dividerHorizontal">?android:listDivider</item>
@@ -27,17 +44,18 @@
         <item name="android:colorBackground">?doz__background</item>
         <item name="android:windowBackground">?doz__background</item>
 
-        <item name="android:progressBarStyle">@style/Base.ProgressBar</item>
-
         <item name="buttonBarStyle">@style/Base.ButtonBar</item>
         <item name="buttonBarButtonStyle">@style/Base.Button.Borderless</item>
-
-        <item name="menuDrawerStyle">@style/MenuDrawer.Widget</item>
-        <item name="mdMenuBackground">@color/menu_background</item>
         <item name="android:buttonStyle">@style/Base.Button</item>
 
         <item name="android:listViewStyle">@style/ListView</item>
         <item name="android:listViewWhiteStyle">@style/ListView.White</item>
+
+        <item name="windowNoTitle">true</item>
+        <item name="windowActionBar">false</item>
+        <item name="windowActionModeOverlay">true</item>
+
+        <item name="drawerArrowStyle">@style/DrawerArrowStyle</item>
 
     </style>
 
@@ -47,9 +65,11 @@
 
     <style name="Theme.Accustream" parent="Theme.Base"></style>
 
-    <style name="Theme.Magnolia" parent="Theme.Base"></style>
+    <style name="Theme.Aristocrat" parent="Theme.Base"></style>
 
     <style name="Theme.DripAssist" parent="Theme.Base"></style>
+
+    <style name="Theme.CharlesSmith" parent="Theme.Base"></style>
 
     <style name="Theme.Oscaro" parent="Theme.Base"></style>
 
@@ -64,5 +84,29 @@
     <style name="Theme.Dozuki.Orange" parent="Theme.Base"></style>
 
     <style name="Theme.Dozuki.White" parent="Theme.Base"></style>
+
+    <style name="Theme.Aristocrat.TransparentActionBar" parent="Theme.CharlesSmith"></style>
+
+    <style name="Theme.CharlesSmith.TransparentActionBar" parent="Theme.CharlesSmith"></style>
+
+    <style name="Theme.iFixit.TransparentActionBar" parent="Theme.iFixit"></style>
+
+    <style name="Theme.Accustream.TransparentActionBar" parent="Theme.Accustream"></style>
+
+    <style name="Theme.DripAssist.TransparentActionBar" parent="Theme.DripAssist"></style>
+
+    <style name="Theme.Oscaro.TransparentActionBar" parent="Theme.Oscaro"></style>
+
+    <style name="Theme.PVA.TransparentActionBar" parent="Theme.PVA"></style>
+
+    <style name="Theme.Dozuki.TransparentActionBar" parent="Theme.Dozuki"></style>
+
+    <style name="Theme.Dozuki.Green.TransparentActionBar" parent="Theme.Dozuki.Green"></style>
+
+    <style name="Theme.Dozuki.Black.TransparentActionBar" parent="Theme.Dozuki.Black"></style>
+
+    <style name="Theme.Dozuki.Orange.TransparentActionBar" parent="Theme.Dozuki.Orange"></style>
+
+    <style name="Theme.Dozuki.White.TransparentActionBar" parent="Theme.Dozuki.White"></style>
 
 </resources>

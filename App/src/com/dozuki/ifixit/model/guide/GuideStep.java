@@ -52,6 +52,7 @@ public class GuideStep implements Serializable {
    protected Video mVideo;
    private Embed mEmbed;
    protected boolean mEditMode; // save state for edit drop down
+   private int mFakeCommentCount = -1;
 
    public GuideStep() {
       this(DEFAULT_STEP_NUMBER);
@@ -68,7 +69,20 @@ public class GuideStep implements Serializable {
       mRevisionid = null;
    }
 
+   /**
+    * See the coment in Guide.java:setCommentCount for more information.
+    *
+    * @param count
+    */
+   public void setCommentCount(int count) {
+      mFakeCommentCount = count;
+   }
+
    public int getCommentCount() {
+      if (mFakeCommentCount >= 0) {
+         return mFakeCommentCount;
+      }
+
       int count = mComments.size();
 
       for (Comment comment : mComments) {

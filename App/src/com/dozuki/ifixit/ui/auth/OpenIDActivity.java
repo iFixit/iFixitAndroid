@@ -1,18 +1,23 @@
 package com.dozuki.ifixit.ui.auth;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.http.SslError;
 import android.os.Bundle;
 import android.util.Log;
-import android.webkit.*;
+import android.webkit.CookieManager;
+import android.webkit.CookieSyncManager;
+import android.webkit.SslErrorHandler;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
+import com.dozuki.ifixit.ui.BaseActivity;
 
-public class OpenIDActivity extends Activity {
+public class OpenIDActivity extends BaseActivity {
    public static String SESSION = "SESSION";
    public static String LOGIN_METHOD = "LOGIN_METHOD";
    public static String SINGLE_SIGN_ON = "SINGLE_SIGN_ON";
@@ -27,11 +32,12 @@ public class OpenIDActivity extends Activity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.open_id_view);
-      setTitle(R.string.login);
+      setTheme(R.style.Theme_AppCompat_NoActionBar);
       overridePendingTransition(R.anim.slide_in_bottom, R.anim.slide_out_bottom);
       Bundle extras = getIntent().getExtras();
 
       boolean singleSignOn = extras.getBoolean(SINGLE_SIGN_ON, false);
+
       Site site = ((App) getApplication()).getSite();
 
       mDomain = site.mDomain;
@@ -50,6 +56,7 @@ public class OpenIDActivity extends Activity {
          loginUrl = mBaseUrl + method;
       }
 
+
       WebView webView = (WebView) findViewById(R.id.open_id_web_view);
 
       CookieSyncManager.createInstance(this);
@@ -66,12 +73,6 @@ public class OpenIDActivity extends Activity {
       settings.setCacheMode(WebSettings.LOAD_DEFAULT);
 
       webView.setWebViewClient(new WebViewClient() {
-         // When start to load page, show url in activity's title bar
-         @Override
-         public void onPageStarted(WebView view, String url, Bitmap favicon) {
-            setTitle(url);
-         }
-
          @Override
          public void onPageFinished(WebView view, String url) {
             CookieSyncManager.getInstance().sync();
@@ -125,6 +126,7 @@ public class OpenIDActivity extends Activity {
 
          @Override
          public void onReceivedSslError(WebView view, SslErrorHandler handler, SslError error) {
+
             if (App.inDebug()) {
                handler.proceed(); // Ignore SSL certificate errors
             }

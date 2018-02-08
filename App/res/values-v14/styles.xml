@@ -1,19 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="MenuDrawer.Widget.Category.Compat">
-        <item name="android:textAllCaps">true</item>
-    </style>
-
     <style name="TopicHeaderRow.Background.Compat">
         <item name="android:textAllCaps">true</item>
-    </style>
-
-    <style name="ActionBar" parent="Widget.Sherlock.Light.ActionBar">
-        <item name="android:actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="android:selectableItemBackground">@drawable/item_background_holo_light</item>
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
     </style>
 
 </resources>

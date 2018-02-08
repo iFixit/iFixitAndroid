@@ -1,41 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/step_create_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/list_item_horizontal_margin"
-                android:layout_marginLeft="@dimen/list_item_horizontal_margin"
-                android:background="@drawable/bg_card">
-
-    <ImageView
-        android:id="@+id/guide_step_item_thumbnail"
-        style="@style/ListItemThumbnail"
-        android:contentDescription="@string/topic_guide_thumbnail"/>
-
-    <TextView
-        android:id="@+id/step_line_text_view"
-        style="@android:style/TextAppearance.Medium"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/guide_step_item_thumbnail"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:scrollHorizontally="true"
-        android:text=""/>
-
-    <TextView
-        android:id="@+id/guide_create_step_item_number"
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/step_create_item"
+        android:clickable="true"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/step_line_text_view"
-        android:layout_toRightOf="@+id/guide_step_item_thumbnail"
-        android:text=""
-        android:textColor="@color/black"
-        android:textSize="12sp"
-        android:textStyle="italic"/>
+        style="@style/CardListItem">
 
-    <ImageButton
-        android:id="@+id/step_item_menu_button"
-        style="@style/ItemMenuButton"/>
+    <RelativeLayout
+            android:id="@+id/step_item_target"
+            style="@style/CardListItemInner"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
 
-</RelativeLayout>
+        <ImageView
+            android:id="@+id/guide_step_item_thumbnail"
+            style="@style/ListItemThumbnail"
+            android:contentDescription="@string/topic_guide_thumbnail"/>
+
+        <TextView
+            android:id="@+id/step_line_text_view"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/guide_step_item_thumbnail"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:scrollHorizontally="true"
+            android:text=""/>
+
+        <TextView
+            android:id="@+id/guide_create_step_item_number"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/step_line_text_view"
+            android:layout_toRightOf="@+id/guide_step_item_thumbnail"
+            android:text=""
+            android:textColor="@color/black"
+            android:textSize="12sp"
+            android:textStyle="italic"/>
+
+        <ImageButton
+            android:id="@+id/step_item_menu_button"
+            style="@style/ItemMenuButton"/>
+
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

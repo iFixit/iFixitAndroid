@@ -1,16 +1,19 @@
 package com.dozuki.ifixit.util;
 
 import android.util.Log;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Badges;
 import com.dozuki.ifixit.model.Comment;
+import com.dozuki.ifixit.model.Document;
 import com.dozuki.ifixit.model.Embed;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
 import com.dozuki.ifixit.model.Video;
 import com.dozuki.ifixit.model.VideoEncoding;
 import com.dozuki.ifixit.model.VideoThumbnail;
+import com.dozuki.ifixit.model.Wiki;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.gallery.GalleryEmbedList;
 import com.dozuki.ifixit.model.gallery.GalleryVideoList;
@@ -29,6 +32,7 @@ import com.dozuki.ifixit.model.user.UserImage;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -74,7 +78,9 @@ public class JSONHelper {
                tsr.mNamespace = result.getString("namespace");
                tsr.mSummary = result.getString("summary");
                tsr.mUrl = result.getString("url");
-               tsr.mImage = parseImage(result, "image");
+               if (!result.isNull("image")) {
+                  tsr.mImage = parseImage(result, "image");
+               }
 
                search.mResults.add(tsr);
             }
@@ -114,7 +120,7 @@ public class JSONHelper {
       site.mAnswers = jSite.getBoolean("answers");
       site.mStoreUrl = jSite.optString("store", "");
 
-      setAuthentication(site, jSite.getJSONObject("authentication"));
+      site = setAuthentication(site, jSite.getJSONObject("authentication"));
 
       return site;
    }
@@ -147,12 +153,13 @@ public class JSONHelper {
       return site;
    }
 
-   private static void setAuthentication(Site site, JSONObject jAuth) throws JSONException {
+   private static Site setAuthentication(Site site, JSONObject jAuth) throws JSONException {
       site.mStandardAuth = jAuth.has("standard") && jAuth.getBoolean("standard");
 
       site.mSsoUrl = jAuth.has("sso") ? jAuth.getString("sso") : null;
 
       site.mPublicRegistration = jAuth.getBoolean("public-registration");
+      return site;
    }
 
    public static ArrayList<String> parseAllTopics(String json) {
@@ -188,8 +195,10 @@ public class JSONHelper {
       JSONArray jTools = jGuide.getJSONArray("tools");
       JSONArray jParts = jGuide.getJSONArray("parts");
       JSONObject jAuthor = jGuide.getJSONObject("author");
+      JSONArray jDocuments = jGuide.getJSONArray("documents");
       Guide guide = new Guide(jGuide.getInt("guideid"));
 
+      guide.setFeaturedDocument(!jGuide.isNull("featured_documentid") ? jGuide.getInt("featured_documentid") : 0);
       guide.setTitle(jGuide.getString("title"));
       guide.setTopic(jGuide.getString("category"));
       guide.setSubject(jGuide.getString("subject"));
@@ -198,7 +207,9 @@ public class JSONHelper {
       guide.setDifficulty(jGuide.getString("difficulty"));
       guide.setIntroductionRaw(jGuide.getString("introduction_raw"));
       guide.setIntroductionRendered(jGuide.getString("introduction_rendered"));
-      guide.setIntroImage(parseImage(jGuide, "image"));
+      if (!jGuide.isNull("image")) {
+         guide.setIntroImage(parseImage(jGuide, "image"));
+      }
       guide.setSummary(jGuide.isNull("summary") ? "" : jGuide.getString("summary"));
       guide.setRevisionid(jGuide.getInt("revisionid"));
       guide.setPublic(jGuide.getBoolean("public"));
@@ -215,6 +226,8 @@ public class JSONHelper {
          guide.setCanEdit(jGuide.getBoolean("can_edit"));
       }
 
+      guide.setDocuments(parseDocuments(jDocuments));
+
       for (int i = 0; i < jSteps.length(); i++) {
          guide.addStep(parseStep(jSteps.getJSONObject(i), i + 1));
       }
@@ -228,6 +241,19 @@ public class JSONHelper {
       }
 
       return guide;
+   }
+
+   public static Wiki parseWiki(String json) {
+      return new Gson().fromJson(json, Wiki.class);
+   }
+
+   private static ArrayList<Document> parseDocuments(JSONArray documents) throws JSONException {
+      ArrayList<Document> result = new ArrayList<>();
+      for (int i = 0; i < documents.length(); i++) {
+         result.add(new Gson().fromJson(documents.getJSONObject(i).toString(), Document.class));
+      }
+
+      return result;
    }
 
    private static ArrayList<Comment> parseComments(JSONArray comments) throws JSONException {
@@ -391,11 +417,19 @@ public class JSONHelper {
     * Topic leaf parsing
     */
    public static TopicLeaf parseTopicLeaf(String json) throws JSONException {
+
       JSONObject jTopic = new JSONObject(json);
       JSONArray jGuides = jTopic.getJSONArray("guides");
-      JSONObject jSolutions = jTopic.getJSONObject("solutions");
-      JSONObject jInfo = jTopic.getJSONObject("topic_info");
-      TopicLeaf topicLeaf = new TopicLeaf(jInfo.getString("name"));
+      JSONArray jWikis = jTopic.getJSONArray("related_wikis");
+      TopicLeaf topicLeaf = new TopicLeaf(jTopic.getString("title"));
+      JSONArray jFeaturedGuides = jTopic.getJSONArray("featured_guides");
+
+      for (int i = 0; i < jFeaturedGuides.length(); i++) {
+         String guideJson = jFeaturedGuides.getJSONObject(i).toString();
+         GuideInfo guide = new Gson().fromJson(guideJson, GuideInfo.class);
+         topicLeaf.addFeaturedGuide(guide);
+      }
+
 
       for (int i = 0; i < jGuides.length(); i++) {
          String guideJson = jGuides.getJSONObject(i).toString();
@@ -403,11 +437,26 @@ public class JSONHelper {
          topicLeaf.addGuide(guide);
       }
 
-      topicLeaf.setNumSolutions(Integer.parseInt(jSolutions.getString("count")));
-      topicLeaf.setSolutionsUrl(jSolutions.getString("url"));
-      topicLeaf.setDescription(jTopic.getString("description"));
-      topicLeaf.setImage(parseImage(jTopic.getJSONObject("image"), null));
-      topicLeaf.setLocale(jTopic.getString("locale"));
+      for (int i = 0; i < jWikis.length(); i++) {
+         String wikiJson = jWikis.getJSONObject(i).toString();
+         Log.d("dozuki", wikiJson);
+         Wiki wiki = new Gson().fromJson(wikiJson, Wiki.class);
+         topicLeaf.addWiki(wiki);
+      }
+
+      topicLeaf.setSolutionsUrl(jTopic.getString("solutions_url"));
+
+      if (!jTopic.isNull("description")) {
+         topicLeaf.setDescription(jTopic.getString("description"));
+      }
+
+      if (jTopic.isNull("image")) {
+         topicLeaf.setImage(new Image());
+      } else {
+         topicLeaf.setImage(parseImage(jTopic.getJSONObject("image"), null));
+      }
+
+      topicLeaf.setLocale(jTopic.getString("langid"));
       topicLeaf.setContentsRaw(jTopic.getString("contents_raw"));
       topicLeaf.setContentsRendered(jTopic.getString("contents_rendered"));
       topicLeaf.setTitle(jTopic.getString("display_title"));
@@ -506,6 +555,9 @@ public class JSONHelper {
       User user = new User();
       user.setUserid(jUser.getInt("userid"));
       user.setUsername(jUser.getString("username"));
+
+      if (!jUser.isNull("unique_username"))
+         user.setUniqueUsername(jUser.getString("unique_username"));
 
       if (!jUser.isNull("image"))
          user.setAvatar(parseImage(jUser.getJSONObject("image"), null));
@@ -696,12 +748,12 @@ public class JSONHelper {
 
    public static Image parseImage(JSONObject image, String imageFieldName) {
       try {
-         if (imageFieldName != null) {
-            image = image.optJSONObject(imageFieldName);
-         }
-
          if (image == null) {
             return new Image();
+         }
+
+         if (imageFieldName != null) {
+            image = image.optJSONObject(imageFieldName);
          }
 
          return new Image(image.getInt("id"), image.getString("original"));

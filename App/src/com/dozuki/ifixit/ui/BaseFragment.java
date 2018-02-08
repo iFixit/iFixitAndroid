@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui;
 
-import com.actionbarsherlock.app.SherlockFragment;
+import android.support.v4.app.Fragment;
+
 import com.dozuki.ifixit.App;
 
 /**
@@ -9,7 +10,7 @@ import com.dozuki.ifixit.App;
  *
  * Note: This is basically a duplicate of other Base*Fragment classes.
  */
-public class BaseFragment extends SherlockFragment {
+public class BaseFragment extends Fragment {
 
    @Override
    public void onResume() {

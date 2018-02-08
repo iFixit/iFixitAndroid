@@ -21,38 +21,30 @@
     <RelativeLayout
         android:id="@+id/step_edit_bottom_bar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="48dp"
         android:layout_alignParentBottom="true"
         android:background="@color/black"
         android:clickable="true">
 
-        <ImageButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/step_edit_delete_step"
-            style="@style/Base.BottomBar.Button"
+            style="@style/Base.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:src="@drawable/ic_menu_bot_step_delete"
             android:contentDescription="@string/delete_step"/>
 
-        <Button
+        <android.support.v7.widget.AppCompatButton
             android:id="@+id/step_edit_save"
             android:layout_width="wrap_content"
-            android:layout_height="32dp"
-            android:paddingRight="18dp"
-            android:paddingLeft="18dp"
-            android:text="@string/save"
-            android:textSize="14sp"
-            android:textStyle="bold"
-            android:layout_margin="4dp"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textColor="@color/dark"
-            android:background="@color/emphasis"/>
+            android:layout_height="wrap_content"
+            style="@style/Base.Button.BottomBar"
+            android:text="@string/save"/>
 
-        <ImageButton
+        <android.support.v7.widget.AppCompatImageButton
             android:id="@+id/step_edit_add_step"
-            style="@style/Base.BottomBar.Button"
+            style="@style/Base.Button.Icon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"

@@ -1,4 +1,5 @@
-<?xml version="1.0" encoding="UTF-8"?><resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
     <!-- Main Application -->
     <string name="devices">Apparaten</string>
     <string name="device">Apparaat</string>
@@ -231,16 +232,6 @@
     <xliff:g example="Topic" id="topic_name">%1$s</xliff:g> Naam</string>
     <string name="guide_intro_wizard_guide_subject_hint">Bijvoorbeeld - Scherm, Batterij, Bougies, enz.</string>
     <string name="loading_image">Afbeeldingen aan het uploaden...</string>
-    <string name="black_bullet_description">Zwarte bullet</string>
-    <string name="red_bullet_description">Rode bullet</string>
-    <string name="orange_bullet_description">Oranje bullet</string>
-    <string name="yellow_bullet_description">Gele bullet</string>
-    <string name="green_bullet_description">Groene bullet</string>
-    <string name="blue_bullet_description">Blauwe bullet</string>
-    <string name="violet_bullet_description">Paarse bullet</string>
-    <string name="caution_bullet_description">Waarschuwing / Voorzichtig bullet</string>
-    <string name="important_bullet_description">Belangrijke opmerking bullet</string>
-    <string name="bullet_reorder_description">Herinnering bullet</string>
     <string name="default_step_number">Stap nr.</string>
     <string name="loading">Aan het laden...</string>
     <string name="topic_info_image">Afbeelding hoofdcategorie</string>
@@ -326,41 +317,41 @@
     <string name="view_comments">Bekijk Commentaar</string>
 
     <string-array name="new_image_actions">
-    <item>Camera</item>
-    <item>Media Manager</item>
-  </string-array>
+        <item>Camera</item>
+        <item>Media Manager</item>
+    </string-array>
 
     <string-array name="existing_image_actions">
-    <item>Kopie naar Media Manager</item>
-    <item>Maak los voor Media Manager</item>
-    <item>Verwijder</item>
-  </string-array>
+        <item>Kopie naar Media Manager</item>
+        <item>Maak los voor Media Manager</item>
+        <item>Verwijder</item>
+    </string-array>
 
     <string-array name="step_list_item_options">
-    <item>@string/edit</item>
-    <item>@string/action_delete</item>
-  </string-array>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
 
     <string-array name="guide_list_item_options_with_delete">
-    <item>@string/view</item>
-    <item>@string/publish</item>
-    <item>@string/edit</item>
-    <item>@string/action_delete</item>
-  </string-array>
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
 
     <string-array name="guide_list_item_options">
-    <item>@string/view</item>
-    <item>@string/publish</item>
-    <item>@string/edit</item>
-  </string-array>
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+    </string-array>
 
     <string-array name="comment_owner_options">
-    <item>@string/reply</item>
-    <item>@string/edit</item>
-    <item>@string/action_delete</item>
-  </string-array>
+        <item>@string/reply</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
 
     <string-array name="comment_options">
-    <item>@string/reply</item>
-  </string-array>
+        <item>@string/reply</item>
+    </string-array>
 </resources>

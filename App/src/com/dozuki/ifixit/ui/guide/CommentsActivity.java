@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -15,13 +16,13 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 import android.widget.ViewSwitcher;
-import com.actionbarsherlock.view.MenuItem;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.user.LoginEvent;
-import com.dozuki.ifixit.ui.BaseActivity;
+import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
@@ -31,7 +32,7 @@ import com.squareup.otto.Subscribe;
 import java.util.ArrayList;
 import java.util.Iterator;
 
-public class CommentsActivity extends BaseActivity {
+public class CommentsActivity extends BaseMenuDrawerActivity {
 
    private static final String COMMENTS_KEY = "COMMENTS_KEY";
    private static final String TITLE_KEY = "TITLE_FIELD";
@@ -51,6 +52,17 @@ public class CommentsActivity extends BaseActivity {
    private ImageButton mAddCommentButton;
    private ProgressBar mAddCommentProgress;
    private Integer mParentId;
+
+   public static Intent viewComments(Context context, String commentContext, int contextid, int guideid, String title) {
+      Intent intent = new Intent(context, CommentsActivity.class);
+      intent.putExtra(GUIDEID_KEY, guideid);
+      intent.putExtra(TITLE_KEY, title);
+      intent.putExtra(CONTEXTID, contextid);
+      intent.putExtra(CONTEXT, commentContext);
+
+      return intent;
+
+   }
 
    public static Intent viewComments(Context context, ArrayList<Comment> comments, String title,
     String commentContext, int contextid) {
@@ -79,18 +91,17 @@ public class CommentsActivity extends BaseActivity {
       super.onCreate(savedInstanceState);
       setContentView(R.layout.comments);
       getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      showLoading(R.id.loading_container);
 
       Bundle args = getIntent().getExtras();
 
       if (savedInstanceState != null) {
-         mComments = (ArrayList<Comment>) savedInstanceState.getSerializable(COMMENTS_KEY);
          mCommentContext = savedInstanceState.getString(CONTEXT);
          mCommentContextId = savedInstanceState.getInt(CONTEXTID);
          mTitle = savedInstanceState.getString(TITLE_KEY);
          mGuideid = savedInstanceState.getInt(GUIDEID_KEY, 0);
          mParentId = (Integer)savedInstanceState.getSerializable(PARENTID_KEY);
       } else if (args != null) {
-         mComments = (ArrayList<Comment>) args.getSerializable(COMMENTS_KEY);
          mCommentContext = args.getString(CONTEXT);
          mCommentContextId = args.getInt(CONTEXTID);
          mTitle = args.getString(TITLE_KEY);
@@ -127,19 +138,17 @@ public class CommentsActivity extends BaseActivity {
       });
 
       mCommentsList = (ListView) findViewById(R.id.comment_list);
-      mCommentsList.setEmptyView(findViewById(android.R.id.empty));
+      mCommentsList.setEmptyView(findViewById(R.id.comment_empty_text));
 
       mAdapter = new CommentsAdapter(this, mComments);
       mCommentsList.setAdapter(mAdapter);
 
       setTitle(mTitle);
 
-      if (App.get().isUserLoggedIn()) {
-         if (mCommentContext.equalsIgnoreCase("guide") || mCommentContext.equalsIgnoreCase("step")) {
-            Api.call(this, ApiCall.guide(mGuideid));
-         } else {
-            // TODO: Get wiki comments once we add those endpoints.
-         }
+      if (mCommentContext.equalsIgnoreCase("guide") || mCommentContext.equalsIgnoreCase("step")) {
+         Api.call(this, ApiCall.guide(mGuideid));
+      } else {
+         // TODO: Get wiki comments once we add those endpoints.
       }
 
       if (mParentId != null) {
@@ -164,31 +173,16 @@ public class CommentsActivity extends BaseActivity {
       switch (item.getItemId()) {
          // Respond to the action bar's Up/Home button
          case android.R.id.home:
-            finishCommentsActivity();
+            finish();
             return true;
          default:
             return super.onOptionsItemSelected(item);
       }
    }
 
-   @Override
-   public void onBackPressed() {
-      finishCommentsActivity();
-   }
-
-   private void finishCommentsActivity() {
-      Intent data = new Intent();
-      data.putExtra(GuideViewActivity.COMMENTS_TAG, mComments);
-      if (getParent() == null) {
-         setResult(Activity.RESULT_OK, data);
-      } else {
-         getParent().setResult(Activity.RESULT_OK, data);
-      }
-      finish();
-   }
-
    @Subscribe
    public void onGuideGet(ApiEvent.ViewGuide event) {
+      hideLoading();
       if (!event.hasError()) {
          Guide guide = event.getResult();
          if (mCommentContext.equalsIgnoreCase("guide")) {

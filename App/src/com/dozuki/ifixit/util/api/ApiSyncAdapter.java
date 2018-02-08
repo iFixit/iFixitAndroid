@@ -25,7 +25,6 @@ import com.dozuki.ifixit.model.guide.GuideInfo;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
-import com.github.kevinsawicki.http.HttpRequest;
 
 import java.io.File;
 import java.io.IOException;
@@ -34,6 +33,12 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import okio.BufferedSink;
+import okio.Okio;
 
 public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    private static final String TAG = "ApiSyncAdapter";
@@ -97,7 +102,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
    }
 
    public ApiSyncAdapter(Context context, boolean autoInitialize,
-    boolean allowParallelSyncs) {
+                         boolean allowParallelSyncs) {
       super(context, autoInitialize, allowParallelSyncs);
       mContext = context;
    }
@@ -113,7 +118,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
 
    @Override
    public void onPerformSync(Account account, Bundle extras, String authority,
-    ContentProviderClient provider, SyncResult syncResult) {
+                             ContentProviderClient provider, SyncResult syncResult) {
       boolean manualSync = extras.getBoolean(ContentResolver.SYNC_EXTRAS_MANUAL);
       Authenticator authenticator = new Authenticator(getContext());
       User user = authenticator.createUser(account);
@@ -548,25 +553,35 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
                }
 
                file.createNewFile();
-               HttpRequest request = HttpRequest.get(mediaUrl);
 
-               request.receive(file);
+               Request request = new Request.Builder()
+                .url(mediaUrl)
+                .build();
 
-               if (request.code() < 200 || request.code() >= 300) {
+
+               OkHttpClient client = new OkHttpClient();
+
+               Response response = client.newCall(request).execute();
+
+               if (!response.isSuccessful()) {
                   // This happens occasionally when downloading the .huge size for
                   // images that don't have that size. The original is retried in
                   // its place.
                   if (BuildConfig.DEBUG) {
                      Log.w(TAG, "MEDIA FAIL! " + mediaUrl);
                   }
-                  return false;
+                  throw new IOException("Unexpected code " + response);
                }
+
+               BufferedSink sink = Okio.buffer(Okio.sink(file));
+               sink.writeAll(response.body().source());
+               sink.close();
             } catch (IOException e) {
                if (BuildConfig.DEBUG) {
                   Log.e(TAG, "Failed to download medium", e);
                }
                throw new ApiSyncException(ApiSyncException.CONNECTION_EXCEPTION, e);
-            } catch (HttpRequest.HttpRequestException e) {
+            } catch (Exception e) {
                if (BuildConfig.DEBUG) {
                   Log.e(TAG, "Failed to download medium", e);
                }
@@ -584,7 +599,7 @@ public class ApiSyncAdapter extends AbstractThreadedSyncAdapter {
        * Sends out an update to BroadcastReceivers anytime guide progress is updated.
        */
       private void updateTotalProgress(GuideMediaProgress guide, int totalMissingMedia,
-       int mediaDownloaded) {
+                                       int mediaDownloaded) {
          Intent broadcast = new Intent();
          broadcast.setAction(GUIDE_PROGRESS_ACTION);
 

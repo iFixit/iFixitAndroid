@@ -2,10 +2,10 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="@dimen/gallery_grid_item_height"
-    android:foreground="?doz__itemSelector"
+    android:foreground="?attr/selectableItemBackground"
     android:background="@drawable/image_background">
 
-    <ImageView
+    <com.dozuki.ifixit.ui.gallery.GalleryFallbackImage
         android:id="@+id/media_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -20,10 +20,12 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:id="@+id/gallery_cell_progress_bar"
+        android:visibility="visible"
+        android:background="@color/black_alpha_40">
 
         <ProgressBar
-            android:id="@+id/gallery_cell_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"

@@ -24,7 +24,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.ViewDebug;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.lang.reflect.Method;
 import java.net.InetAddress;
 import java.net.ServerSocket;

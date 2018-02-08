@@ -5,6 +5,10 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.ListViewCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.text.method.MovementMethod;
@@ -19,38 +23,43 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.Document;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.ui.DocumentListAdapter;
 import com.dozuki.ifixit.util.Utils;
 import com.dozuki.ifixit.util.WikiHtmlTagHandler;
 
+import java.util.ArrayList;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class GuideIntroViewFragment extends BaseFragment {
    private static final String SAVED_GUIDE = "SAVED_GUIDE";
+   public static final String GUIDE_KEY = "GUIDE_KEY";
+   private static final String mGoogleDocsUrl = "http://docs.google.com/viewer?url=";
 
-   private TextView mTitle;
-   private TextView mIntro;
-   private TextView mDifficulty;
-   private TextView mAuthor;
    private Guide mGuide;
 
-   public GuideIntroViewFragment() { }
-
-   public GuideIntroViewFragment(Guide guide) {
-      mGuide = guide;
-   }
+   public GuideIntroViewFragment() {}
 
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
+      Bundle bundle = getArguments();
+
       if (savedInstanceState != null && mGuide == null) {
          mGuide = (Guide) savedInstanceState.getSerializable(SAVED_GUIDE);
+      } else if (bundle != null) {
+         mGuide = (Guide)bundle.getSerializable(GUIDE_KEY);
       }
    }
 
@@ -66,17 +75,27 @@ public class GuideIntroViewFragment extends BaseFragment {
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.guide_intro, container, false);
 
-      mTitle = (TextView) view.findViewById(R.id.guide_title);
-      mIntro = (TextView) view.findViewById(R.id.guide_intro_text);
-      mDifficulty = (TextView) view.findViewById(R.id.guide_difficulty);
-      mAuthor = (TextView) view.findViewById(R.id.guide_author);
+      TextView mTitle = (TextView) view.findViewById(R.id.guide_title);
+      TextView mIntro = (TextView) view.findViewById(R.id.guide_intro_text);
+      TextView mDifficulty = (TextView) view.findViewById(R.id.guide_difficulty);
+      TextView mAuthor = (TextView) view.findViewById(R.id.guide_author);
 
+      RecyclerView docList = (RecyclerView) view.findViewById(R.id.guide_documents);
       MovementMethod method = LinkMovementMethod.getInstance();
 
       mIntro.setMovementMethod(method);
 
       if (mGuide != null) {
          mTitle.setText(mGuide.getTitle());
+         ArrayList<Document> documents = mGuide.getDocuments();
+
+         if (documents.size() > 0) {
+            RecyclerView.LayoutManager lm = new LinearLayoutManager(getContext());
+            docList.setLayoutManager(lm);
+            DocumentListAdapter adapter = new DocumentListAdapter(mGuide.getDocuments());
+            docList.setAdapter(adapter);
+            view.findViewById(R.id.guide_documents_container).setVisibility(View.VISIBLE);
+         }
 
          String introductionText = mGuide.getIntroductionRendered();
 
@@ -88,25 +107,45 @@ public class GuideIntroViewFragment extends BaseFragment {
             if (count > 0) {
                for (int i = 1; i <= count; i++) {
                   final String iframeSrc = m.group(i); // Group 0 denotes the full pattern,
-                  // so 1 is the actual capture group.
-                  Log.d("GuideIntroViewFragment", iframeSrc);
-
                   final Activity activity = getActivity();
-
                   final WebView webView = new WebView(activity);
                   WebSettings settings = webView.getSettings();
                   settings.setJavaScriptEnabled(true);
 
                   webView.setOnTouchListener(new View.OnTouchListener() {
+                     private final static int TOUCH_RELEASED = 0;
+                     private final static int TOUCH_TOUCHED = 1;
+                     private final static int TOUCH_DRAGGING = 2;
+                     private final static int TOUCH_UNDEFINED = 3;
+                     private int previousState = TOUCH_RELEASED;
+
                      @Override
                      public boolean onTouch(View v, MotionEvent event) {
-                        if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                           Intent intent = new Intent(Intent.ACTION_VIEW);
-                           intent.setData(Uri.parse(iframeSrc));
-                           startActivity(intent);
+                        switch (event.getAction()) {
+                           case MotionEvent.ACTION_DOWN:
+                              if (previousState == TOUCH_RELEASED) previousState = TOUCH_TOUCHED;
+                              else previousState = TOUCH_UNDEFINED;
+                              break;
+                           case MotionEvent.ACTION_UP:
+                              if (previousState != TOUCH_DRAGGING) {
+                                 previousState = TOUCH_RELEASED;
+
+                                 Intent intent = new Intent(Intent.ACTION_VIEW);
+                                 intent.setData(Uri.parse(iframeSrc));
+                                 startActivity(intent);
+                              } else if (previousState == TOUCH_DRAGGING) {
+                                 previousState = TOUCH_RELEASED;
+                              } else previousState = TOUCH_UNDEFINED;
+                              break;
+                           case MotionEvent.ACTION_MOVE:
+                              if (previousState == TOUCH_TOUCHED || previousState == TOUCH_DRAGGING) previousState = TOUCH_DRAGGING;
+                              else previousState = TOUCH_UNDEFINED;
+                              break;
+                           default:
+                              previousState = TOUCH_UNDEFINED;
                         }
 
-                        return true;
+                        return false;
                      }
                   });
 

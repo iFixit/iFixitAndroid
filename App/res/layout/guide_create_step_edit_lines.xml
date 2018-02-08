@@ -18,7 +18,7 @@
             android:selectAllOnFocus="true"
             android:hint="@string/step_title_hint"
             android:layout_marginBottom="@dimen/step_edit_title_text_bottom_spacing"
-            android:singleLine="true"/>
+            android:maxLines="1"/>
 
         <LinearLayout
             android:id="@+id/edit_step_bullet_container"
@@ -30,11 +30,9 @@
                 android:id="@+id/add_new_bullet_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                style="@style/Base.Button.Borderless"
                 android:layout_gravity="center"
-                android:layout_marginTop="@dimen/guide_create_edit_add_bullet_button_margin_top"
-                android:padding="@dimen/guide_create_edit_add_bullet_button_padding"
-                android:text="@string/new_line"
-                android:contentDescription="@string/topic_guide_thumbnail"/>
+                android:text="@string/new_line" />
         </LinearLayout>
 
         <FrameLayout

@@ -1,14 +1,21 @@
 package com.dozuki.ifixit.util.api;
 
+import android.net.Uri;
 import android.util.Log;
+
 import com.dozuki.ifixit.model.Comment;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.util.JSONHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import java.util.Arrays;
+import java.util.HashSet;
+import java.util.Locale;
+import java.util.Set;
 
 /**
  * Defines all APIEndpoints.
@@ -48,6 +55,28 @@ public enum ApiEndpoint {
       },
       false,
       "GET"
+   ),
+
+   WIKI(
+    new Endpoint() {
+       public String createUrl(String query) {
+          return "wikis/WIKI/" + query;
+       }
+
+       public String createUrl(String query, String namespace) {
+          return "wikis/" + namespace + "/" + query;
+       }
+
+       public ApiEvent<?> parse(String json) throws JSONException {
+          return new ApiEvent.ViewWiki().setResult(JSONHelper.parseWiki(json));
+       }
+
+       public ApiEvent<?> getEvent() {
+          return new ApiEvent.ViewGuide();
+       }
+    },
+    false,
+    "GET"
    ),
 
    GUIDE(
@@ -144,7 +173,7 @@ public enum ApiEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "categories/" + URLEncoder.encode(query, "UTF-8");
+               return "wikis/CATEGORY/" + URLEncoder.encode(query.replace(".", ""), "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
@@ -787,6 +816,9 @@ public enum ApiEndpoint {
        */
       public ApiEvent<?> getEvent();
    }
+   public static Set<String> VALID_LANGIDS = new HashSet<String>(Arrays.asList(
+      new String[] {"en", "jp", "de", "fr", "es", "pt", "it", "nl", "tr", "zh", "ru"}
+   ));
 
    /**
     * Endpoint's functionality.
@@ -852,16 +884,21 @@ public enum ApiEndpoint {
       String domain;
       String protocol;
       String url;
+      String langid = Locale.getDefault().getLanguage();
 
       if (site != null) {
          domain = site.getAPIDomain();
       } else {
-         domain = "www.ifixit.com";
+         domain = "ifixit.com";
       }
 
       protocol = "https";
       url = String.format("%s://%s/api/%s/%s", protocol, domain, API_VERSION,
        mEndpoint.createUrl(query));
+
+      if (VALID_LANGIDS.contains(langid)) {
+         url = Uri.parse(url).buildUpon().appendQueryParameter("lang", langid).build().toString();
+      }
 
       return url;
    }

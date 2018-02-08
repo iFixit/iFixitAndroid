@@ -3,7 +3,7 @@
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:background="?attr/doz__background">
+              android:background="?attr/selectableItemBackground">
 
     <com.dozuki.ifixit.ui.guide.create.wizard.StepPagerStrip
         android:id="@+id/strip"
@@ -30,14 +30,14 @@
         android:layout_width="match_parent"/>
 
     <LinearLayout
-        style="?buttonBarStyle"
+        style="@style/GuideIntroButtonBar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal">
 
         <Button
-            style="?buttonBarButtonStyle"
-            android:background="?doz__itemSelector"
+            style="@style/GuideIntroButtonBarButton"
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/prev_button"
             android:layout_width="0dp"
             android:layout_weight="1"
@@ -45,8 +45,8 @@
             android:text="@string/previous"/>
 
         <Button
-            style="?buttonBarButtonStyle"
-            android:background="?doz__itemSelector"
+            style="@style/GuideIntroButtonBarButton"
+            android:background="?attr/selectableItemBackground"
             android:id="@+id/next_button"
             android:layout_width="0dp"
             android:layout_weight="1"

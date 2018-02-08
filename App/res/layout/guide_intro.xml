@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:padding="@dimen/page_padding" >
+    android:paddingRight="@dimen/page_padding"
+    android:paddingLeft="@dimen/page_padding">
 
     <LinearLayout
         android:id="@+id/guide_intro_container"
@@ -55,6 +56,41 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+
+        <LinearLayout
+            android:id="@+id/guide_documents_container"
+            android:visibility="gone"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp">
+            <TextView
+                android:text="@string/attached_documents"
+                style="@style/TopicHeaderRow.Background"/>
+
+            <View
+                android:background="?dividerHorizontal"
+                android:layout_height="1dp"
+                android:layout_width="match_parent"/>
+
+            <android.support.v7.widget.RecyclerView
+                android:scrollbars="vertical"
+                android:id="@+id/guide_documents"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingRight="16dp"
+                android:paddingLeft="16dp" />
+
+        </LinearLayout>
+
+        <android.support.v7.widget.AppCompatButton
+            android:visibility="gone"
+            android:id="@+id/featured_document"
+            style="@style/Base.Button.Colored"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/featured_document"
+        />
     </LinearLayout>
 
 </ScrollView>

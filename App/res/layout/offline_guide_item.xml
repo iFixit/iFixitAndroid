@@ -1,35 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:id="@+id/offline_guide_item"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginRight="@dimen/list_item_horizontal_margin"
-                android:layout_marginLeft="@dimen/list_item_horizontal_margin"
-                android:background="@drawable/bg_card">
-
-    <ImageView
-        android:id="@+id/offline_guide_thumbnail"
-        style="@style/ListItemThumbnail"
-        android:contentDescription="@string/topic_guide_thumbnail"/>
-
-    <TextView
-        android:id="@+id/offline_guide_title"
-        style="@android:style/TextAppearance.Medium"
+<android.support.v7.widget.CardView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:card_view="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/offline_guide_item"
+        android:clickable="true"
+        android:layout_gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="2dp"
-        android:layout_marginRight="@dimen/guide_create_list_item_text_right_offset"
-        android:layout_toRightOf="@+id/offline_guide_thumbnail"
-        android:ellipsize="end"
-        android:maxLines="2"
-        android:scrollHorizontally="true"
-        android:text="@string/default_title"/>
+        android:layout_height="wrap_content">
 
-    <com.f2prateek.progressbutton.ProgressButton
-        android:id="@+id/offline_guide_progress_button"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
-        android:layout_centerVertical="true"
-        android:checked="false"/>
-</RelativeLayout>
+    <RelativeLayout
+            android:layout_centerVertical="true"
+            style="@style/CardListItemInner"
+            android:id="@+id/guide_item_target"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <ImageView
+            android:id="@+id/offline_guide_thumbnail"
+            style="@style/ListItemThumbnail"
+            android:contentDescription="@string/topic_guide_thumbnail"/>
+
+        <TextView
+            android:id="@+id/offline_guide_title"
+            style="@android:style/TextAppearance.Medium"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="@dimen/guide_create_list_item_text_right_offset"
+            android:layout_toRightOf="@+id/offline_guide_thumbnail"
+            android:ellipsize="end"
+            android:maxLines="2"
+            android:scrollHorizontally="true"
+            android:text="@string/default_title"/>
+
+        <com.f2prateek.progressbutton.ProgressButton
+            android:id="@+id/offline_guide_progress_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:checked="false"/>
+    </RelativeLayout>
+</android.support.v7.widget.CardView>

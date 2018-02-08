@@ -2,6 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:fillViewport="true">
 
     <LinearLayout
@@ -22,7 +23,6 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingBottom="20dp"
             android:paddingLeft="16dp"
             android:paddingRight="16dp"
             android:paddingTop="20dp">
@@ -40,7 +40,7 @@
                     android:layout_height="wrap_content"
                     android:layout_marginBottom="5dp"
                     android:text="@string/login_error"
-                    android:textColor="@color/red"/>
+                    android:textColor="@color/red_5" />
 
                 <ProgressBar
                     android:id="@+id/login_loading_bar"
@@ -50,50 +50,62 @@
                     android:layout_marginBottom="5dp"
                     android:visibility="gone"/>
 
-                <EditText
-                    android:id="@+id/edit_email"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="sans"
-                    android:hint="@string/login_email_hint"
-                    android:inputType="textEmailAddress|textNoSuggestions"
-                    android:background="?doz__editTextBackground">
+                <com.dozuki.ifixit.views.HelperTextInputLayout
+                        android:id="@+id/edit_email_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="24dp">
 
-                    <requestFocus/>
-                </EditText>
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edit_email"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/login_email_hint"
+                        android:inputType="textEmailAddress|textNoSuggestions"
+                        app:hintTextAppearance="@style/Base.TextInputLayout">
+                        <requestFocus/>
+                    </android.support.design.widget.TextInputEditText>
+                </com.dozuki.ifixit.views.HelperTextInputLayout>
 
-                <EditText
-                    android:id="@+id/edit_password"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="10dp"
-                    android:fontFamily="sans"
-                    android:hint="@string/login_password_hint"
-                    android:inputType="textPassword"
-                    android:background="?doz__editTextBackground"/>
+                <com.dozuki.ifixit.views.HelperTextInputLayout
+                        android:id="@+id/password_wrapper"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="24dp">
+                    <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edit_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:hint="@string/login_password_hint"
+                        android:inputType="textPassword"
+                        app:hintTextAppearance="@style/Base.TextInputLayout"/>
+                </com.dozuki.ifixit.views.HelperTextInputLayout>
 
-                <LinearLayout
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:weightSum="2">
 
-                    <Button
+                    <android.support.v7.widget.AppCompatButton
                         android:id="@+id/register_button"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_toLeftOf="@+id/signin_button"
+                        android:theme="@style/FlatButton"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:contentDescription="@string/register_description"
                         android:text="@string/register"/>
 
-                    <Button
+                    <android.support.v7.widget.AppCompatButton
                         android:id="@+id/signin_button"
-                        android:layout_width="0dp"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_weight="1"
+                        android:layout_alignParentRight="true"
+                        android:theme="@style/FlatButton"
+                        style="@style/Widget.AppCompat.Button.Borderless"
                         android:contentDescription="@string/signin_description"
                         android:text="@string/login" />
-                </LinearLayout>
+                </RelativeLayout>
             </LinearLayout>
 
             <com.google.android.gms.common.SignInButton

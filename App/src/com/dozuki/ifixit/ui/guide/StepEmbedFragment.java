@@ -179,8 +179,7 @@ public class StepEmbedFragment extends BaseFragment {
 
    private float navigationHeight() {
       int indicatorHeight = 50;
-      int actionBarHeight = mResources.getDimensionPixelSize(
-       com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
+      int actionBarHeight = 48;
 
       float pagePadding = viewPadding(R.dimen.page_padding);
 

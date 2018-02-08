@@ -1,26 +1,33 @@
 package com.dozuki.ifixit.ui;
 
-import android.app.AlertDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
+import android.content.res.Configuration;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.NavigationView;
+import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
+import android.support.v7.widget.AppCompatImageView;
+import android.support.v7.widget.AppCompatTextView;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.BaseAdapter;
-import android.widget.ListView;
-import android.widget.TextView;
+import android.view.ViewGroup.MarginLayoutParams;
+import android.webkit.URLUtil;
+import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
+import com.dozuki.ifixit.model.Image;
+import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
+import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.create.GuideCreateActivity;
 import com.dozuki.ifixit.ui.guide.create.StepEditActivity;
@@ -28,83 +35,150 @@ import com.dozuki.ifixit.ui.guide.view.FeaturedGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.OfflineGuidesActivity;
 import com.dozuki.ifixit.ui.guide.view.TeardownsActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-
-import net.simonvt.menudrawer.MenuDrawer;
-import net.simonvt.menudrawer.Position;
-
-import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
+import com.dozuki.ifixit.ui.topic.TopicActivity;
+import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.Utils;
+import com.dozuki.ifixit.util.transformations.CircleTransformation;
+import com.google.zxing.integration.android.IntentIntegrator;
+import com.google.zxing.integration.android.IntentResult;
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.RequestCreator;
 
 /**
  * Base activity that displays the menu drawer.
  */
 public abstract class BaseMenuDrawerActivity extends BaseActivity
- implements AdapterView.OnItemClickListener {
+ implements NavigationView.OnNavigationItemSelectedListener {
    private static final String STATE_ACTIVE_POSITION =
     "com.dozuki.ifixit.ui.BaseMenuDrawerActivity.activePosition";
    private static final String PEEK_MENU = "PEEK_MENU_KEY";
    private static final String INTERFACE_STATE = "IFIXIT_INTERFACE_STATE";
 
-   /**
-    * Slide Out Menu Drawer
-    */
-   private MenuDrawer mMenuDrawer;
-
    private int mActivePosition = -1;
+   protected DrawerLayout mDrawer;
+   private NavigationView mDrawerList;
+   private String mTitle;
+   private ActionBarDrawerToggle mDrawerToggle;
+   private Menu mMenu;
 
    @Override
    public void onCreate(Bundle savedState) {
       super.onCreate(savedState);
 
+      setContentView(R.layout.base_layout);
+
+      mContentFrame = (FrameLayout) findViewById(R.id.content_frame);
+
+      mToolbar = (Toolbar) findViewById(R.id.toolbar);
+
+      setSupportActionBar(mToolbar);
+
       if (savedState != null) {
          mActivePosition = savedState.getInt(STATE_ACTIVE_POSITION);
       }
 
-      mMenuDrawer = MenuDrawer.attach(this, MenuDrawer.Type.OVERLAY,
-       Position.LEFT, MenuDrawer.MENU_DRAG_CONTENT);
-      mMenuDrawer.setMenuSize(getResources().getDimensionPixelSize(R.dimen.menu_size));
-      mMenuDrawer.setTouchMode(MenuDrawer.TOUCH_MODE_BEZEL);
-      mMenuDrawer.setTouchBezelSize(getResources().getDimensionPixelSize(R.dimen.menu_bezel_size));
+      mTitle = App.get().getSite().mTitle;
+      mDrawer = (DrawerLayout) findViewById(R.id.drawer_layout);
+      mDrawerList = (NavigationView) findViewById(R.id.left_drawer);
+
+      buildMenu();
+
+      mDrawerList.setNavigationItemSelectedListener(this);
+
+      mDrawerToggle = new ActionBarDrawerToggle(
+       this, mDrawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+      ) {
+         /** Called when a drawer has settled in a completely closed state. */
+         public void onDrawerClosed(View view) {
+            super.onDrawerClosed(view);
+            getSupportActionBar().setTitle(mTitle);
+            syncActionBarArrowState();
+            invalidateOptionsMenu();
+         }
+
+         /** Called when a drawer has settled in a completely open state. */
+         public void onDrawerOpened(View drawerView) {
+            mDrawerToggle.setDrawerIndicatorEnabled(true);
+            invalidateOptionsMenu();
+         }
+      };
+
+      // Set the drawer toggle as the DrawerListener
+      mDrawer.addDrawerListener(mDrawerToggle);
+      mDrawerToggle.syncState();
+
+      getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+      getSupportActionBar().setHomeButtonEnabled(true);
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+         mDrawerToggle.setHomeAsUpIndicator(
+          getResources().getDrawable(R.drawable.ic_arrow_back_24dp, getTheme()));
+      } else {
+         mDrawerToggle.setHomeAsUpIndicator(
+          getResources().getDrawable(R.drawable.ic_arrow_back_24dp));
+      }
 
       SharedPreferences prefs = getSharedPreferences(INTERFACE_STATE, MODE_PRIVATE);
 
       if (!prefs.contains(PEEK_MENU)) {
-         prefs.edit().putBoolean(PEEK_MENU, false).commit();
-         mMenuDrawer.openMenu();
+         prefs.edit().putBoolean(PEEK_MENU, false).apply();
+         mDrawer.openDrawer(mDrawerList);
       }
+   }
 
-      buildSliderMenu();
+   public void syncActionBarArrowState() {
+      int backStackEntryCount =
+       getSupportFragmentManager().getBackStackEntryCount();
+      mDrawerToggle.setDrawerIndicatorEnabled(backStackEntryCount == 0);
+      if (backStackEntryCount > 0) {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            mDrawerToggle.setHomeAsUpIndicator(
+             getResources().getDrawable(R.drawable.ic_arrow_back_24dp, getTheme()));
+         } else {
+            mDrawerToggle.setHomeAsUpIndicator(
+             getResources().getDrawable(R.drawable.ic_arrow_back_24dp));
+         }
+      }
+   }
+
+   public ActionBarDrawerToggle getDrawerToggle() {
+      return mDrawerToggle;
    }
 
    @Override
-   public void setContentView(int layoutResId) {
-      mMenuDrawer.setContentView(layoutResId);
+   protected void onPostCreate(Bundle savedInstanceState) {
+      super.onPostCreate(savedInstanceState);
+      mDrawerToggle.syncState();
    }
 
    @Override
-   public void onRestart() {
-      super.onRestart();
-      // Invalidate the options menu in case the user logged in/out in a child Activity.
-      buildSliderMenu();
+   public void onConfigurationChanged(Configuration newConfig) {
+      super.onConfigurationChanged(newConfig);
+      mDrawerToggle.onConfigurationChanged(newConfig);
    }
 
    @Override
    public boolean onOptionsItemSelected(MenuItem item) {
-      switch (item.getItemId()) {
-         case android.R.id.home:
-            mMenuDrawer.toggleMenu();
-            return true;
+      // Pass the event to ActionBarDrawerToggle, if it returns
+      // true, then it has handled the app icon touch event
+      if (mDrawerToggle.onOptionsItemSelected(item)) {
+         return true;
       }
 
       return super.onOptionsItemSelected(item);
    }
 
    @Override
+   public void onRestart() {
+      super.onRestart();
+      // Invalidate the options menu in case the user logged in/out in a child Activity.
+      rebuildSliderMenu();
+   }
+
+   @Override
    protected void onCustomMenuTitleClick(View v) {
       // Rather than finishing the Activity and going "up", toggle the menu drawer.
-      mMenuDrawer.toggleMenu();
+      mDrawer.openDrawer(mDrawerList);
    }
 
    @Override
@@ -112,7 +186,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       super.onLogin(event);
 
       // Reload app to update the menu to include the user name and logout button.
-      buildSliderMenu();
+      rebuildSliderMenu();
    }
 
    @Override
@@ -120,7 +194,7 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       super.onLogout(event);
 
       // Reload app to remove username and logout button from menu.
-      buildSliderMenu();
+      rebuildSliderMenu();
    }
 
    @Override
@@ -128,7 +202,12 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       String barcodeScannerResult = getBarcodeScannerResult(requestCode, resultCode, intent);
 
       if (barcodeScannerResult != null) {
-         startActivity(IntentFilterActivity.viewUrl(this, barcodeScannerResult));
+         if (URLUtil.isValidUrl(barcodeScannerResult)) {
+            startActivity(IntentFilterActivity.viewUrl(this, barcodeScannerResult));
+         } else {
+            Toast.makeText(this, "The contents of that barcode / QR code were not a valid URL; This is what was read: " + barcodeScannerResult, Toast.LENGTH_LONG).show();
+            Log.e("BaseMenuDrawerActivity", "Cannot launch barcode scanner: " + barcodeScannerResult);
+         }
       } else {
          super.onActivityResult(requestCode, resultCode, intent);
       }
@@ -141,24 +220,13 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       }
 
       try {
-         // Call IntentIntegrator.parseResult(requestCode, resultCode, intent);
-         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
-         Class[] argTypes = new Class[]{Integer.TYPE, Integer.TYPE, Intent.class};
-         Method parseResult = c.getDeclaredMethod("parseActivityResult", argTypes);
-         Object intentResult = parseResult.invoke(null, requestCode, resultCode, intent);
+         IntentResult scanResult = IntentIntegrator.parseActivityResult(requestCode, resultCode, intent);
 
-         // The request code didn't match.
-         if (intentResult == null) {
+         if (scanResult == null) {
             return null;
          }
 
-         // Call intentResult.getContents().
-         c = Class.forName("com.google.zxing.integration.android.IntentResult");
-         argTypes = new Class[]{};
-         Method getContents = c.getDeclaredMethod("getContents", argTypes);
-         Object contents = getContents.invoke(intentResult);
-
-         return (String) contents;
+         return scanResult.getContents();
       } catch (Exception e) {
          Toast.makeText(this, "Failed to parse result.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Failure parsing activity result", e);
@@ -166,49 +234,109 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       }
    }
 
-   private void buildSliderMenu() {
-      // Add items to the menu.  The order Items are added is the order they appear in the menu.
-      List<NavigationItem> items = new ArrayList<NavigationItem>();
+   private void rebuildSliderMenu() {
+      mDrawerList.getMenu().clear();
+      buildMenu();
+      mDrawerToggle.syncState();
+   }
 
-      for (NavigationItem item : NavigationItem.values()) {
-         if (item.shouldDisplay()) {
-            items.add(item);
+   private void buildMenu() {
+      App app = App.get();
+      Site site = app.getSite();
+      mDrawerList.inflateMenu(R.menu.drawer_view);
+      mMenu = mDrawerList.getMenu();
+      mMenu.findItem(R.id.nav_browse_content).setTitle(
+       this.getString(R.string.slide_menu_browse_devices, site.getObjectNamePlural()));
+
+      int[] ids;
+      if (site.isIfixit()) {
+         ids = new int[]{R.id.nav_parts_and_tools, R.id.nav_teardowns, R.id.nav_social_section};
+      } else if (site.isDozuki()) {
+         ids = new int[]{R.id.nav_back_to_site_list};
+      } else {
+         ids = new int[]{};
+      }
+
+      for (int id : ids) {
+         mMenu.findItem(id).setVisible(true);
+      }
+
+      if (site.barcodeScanningEnabled()) {
+         mMenu.findItem(R.id.nav_scan_barcode).setVisible(true);
+      }
+
+      if (site.mAnswers) {
+         mMenu.findItem(R.id.nav_answers).setVisible(true);
+      }
+
+      if (BuildConfig.DEBUG) {
+         mMenu.findItem(R.id.nav_debug).setVisible(true);
+      }
+
+      View header;
+      if (app.isUserLoggedIn()) {
+         header = getLayoutInflater().inflate(R.layout.navigation_header_logged_in, null);
+         User user = app.getUser();
+         AppCompatTextView displayName = (AppCompatTextView) header.findViewById(R.id.navigation_display_name);
+         displayName.setText(user.getUsername());
+         AppCompatTextView username = (AppCompatTextView) header.findViewById(R.id.navigation_username);
+
+         String uniqueUsername = user.getUniqueUsername();
+         if (uniqueUsername != null && uniqueUsername.length() > 0) {
+            username.setText(user.getUniqueUsername());
+            username.setVisibility(View.VISIBLE);
+         } else {
+            MarginLayoutParams marginParams = (MarginLayoutParams) displayName.getLayoutParams();
+
+            marginParams.setMargins(0, (int) Utils.pxFromDp(this, 20), 0 ,0);
+            displayName.setLayoutParams(marginParams);
+         }
+
+         AppCompatImageView avatar = (AppCompatImageView) header.findViewById(R.id.navigation_avatar);
+
+         Image avatarImage = user.getAvatar();
+
+         Picasso avatarPicasso = Picasso.with(this);
+         RequestCreator request;
+         if (avatarImage == null) {
+            request = avatarPicasso.load(R.drawable.default_user);
+         } else {
+            request = avatarPicasso.load(avatarImage.getPath(ImageSizes.headerAvatar));
+         }
+
+         request
+          .fit()
+          .centerInside()
+          .transform(new CircleTransformation())
+          .into(avatar);
+
+         mMenu.findItem(R.id.nav_logout).setVisible(true);
+      } else if (App.get().getSite().isIfixit()) {
+         header = getLayoutInflater().inflate(R.layout.navigation_header, mDrawerList, false);
+
+         AppCompatImageView navLogoView = (AppCompatImageView) header.findViewById(R.id.navigation_site_logo);
+         Picasso.with(this)
+          .load(R.drawable.ic_logo_header)
+          .into(navLogoView);
+      } else {
+         Image logo = site.getLogo();
+         header = getLayoutInflater().inflate(R.layout.navigation_header, mDrawerList, false);
+
+         if (logo != null) {
+            AppCompatImageView navLogoView = (AppCompatImageView) header.findViewById(R.id.navigation_site_logo);
+            Picasso.with(this)
+             .load(logo.getPath(ImageSizes.logo))
+             .into(navLogoView);
          }
       }
 
-      // A custom ListView is needed so the drawer can be notified when it's scrolled. This is to update the position
-      // of the arrow indicator.
-      ListView menuList = new ListView(this);
-      MenuAdapter adapter = new MenuAdapter(items);
-      menuList.setAdapter(adapter);
-      menuList.setOnItemClickListener(this);
-      menuList.setCacheColorHint(Color.TRANSPARENT);
-
-      mMenuDrawer.setMenuView(menuList);
-      mMenuDrawer.setSlideDrawable(R.drawable.ic_drawer);
-      mMenuDrawer.setDrawerIndicatorEnabled(true);
-
-      mMenuDrawer.invalidate();
-   }
-
-   public void setMenuDrawerSlideDrawable(int drawable) {
-      mMenuDrawer.setSlideDrawable(drawable);
-   }
-
-   /**
-    * Close the menu drawer if back is pressed and the menu is open.
-    */
-   @Override
-   public void onBackPressed() {
-      final int drawerState = mMenuDrawer.getDrawerState();
-      if (drawerState == MenuDrawer.STATE_OPEN
-       || drawerState == MenuDrawer.STATE_OPENING) {
-         mMenuDrawer.closeMenu();
-         return;
+      if (mDrawerList.getHeaderCount() > 0) {
+         mDrawerList.removeHeaderView(mDrawerList.getHeaderView(0));
       }
 
-      super.onBackPressed();
+      mDrawerList.addHeaderView(header);
    }
+
 
    @Override
    protected void onSaveInstanceState(Bundle outState) {
@@ -216,304 +344,79 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       outState.putInt(STATE_ACTIVE_POSITION, mActivePosition);
    }
 
-   /**
-    * Represents an item or separator in the navigation drawer. Items are displayed
-    * in the order that they are defined.
-    */
-   protected enum NavigationItem {
-      SITE_LIST(
-         R.string.back_to_site_list,
-         R.drawable.ic_action_list
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.isDozukiApp();
-         }
+   @Override
+   public boolean onNavigationItemSelected(final MenuItem menuItem) {
+      switch (menuItem.getItemId()) {
+         case R.id.nav_back_to_site_list:
+            returnToSiteList();
+            break;
+         case R.id.nav_favorites:
+            performActivityNavigation(OfflineGuidesActivity.class);
+            break;
+         case R.id.nav_new_guide:
+            performActivityNavigation(StepEditActivity.class,
+             Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+            break;
+         case R.id.nav_my_guides:
+            performActivityNavigation(GuideCreateActivity.class);
+            break;
+         case R.id.nav_media_manager:
+            performActivityNavigation(GalleryActivity.class);
+            break;
+         case R.id.nav_logout:
+            App.get().logout(this);
+            break;
+         case R.id.nav_search:
+            performActivityNavigation(SearchActivity.class);
+            break;
+         case R.id.nav_scan_barcode:
+            this.launchBarcodeScanner();
+            break;
+         case R.id.nav_teardowns:
+            performActivityNavigation(TeardownsActivity.class);
+            break;
+         case R.id.nav_browse_content:
+            performActivityNavigation(TopicActivity.class);
+            break;
+         case R.id.nav_answers:
+            performActivityNavigation(AnswersWebViewActivity.class);
+            break;
+         case R.id.nav_parts_and_tools:
+            performActivityNavigation(StoreWebViewActivity.class);
+            break;
+         case R.id.nav_featured_guides:
+            performActivityNavigation(FeaturedGuidesActivity.class);
+            break;
+         case R.id.nav_youtube:
+            performUrlNavigation("https://www.youtube.com/user/iFixitYourself");
+            break;
+         case R.id.nav_facebook:
+            performUrlNavigation("https://www.facebook.com/iFixit");
+            break;
+         case R.id.nav_twitter:
+            performUrlNavigation("https://twitter.com/iFixit");
+            break;
 
-         @Override
-         public void performNavigation(BaseMenuDrawerActivity activity) {
-            activity.returnToSiteList();
-         }
-      },
-
-      SEARCH(
-         R.string.search,
-         R.drawable.ic_action_search,
-         SearchActivity.class
-      ),
-
-      SCAN_BARCODE(
-         R.string.slide_menu_barcode_scanner,
-         R.drawable.ic_action_qr_code
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().barcodeScanningEnabled();
-         }
-
-         @Override
-         public void performNavigation(BaseMenuDrawerActivity activity) {
-            activity.launchBarcodeScanner();
-         }
-      },
-
-      BROWSE_CONTENT_SEPARATOR(R.string.slide_menu_browse_content),
-
-      BROWSE_TOPICS(
-         R.string.slide_menu_browse_devices,
-         R.drawable.ic_action_list_2,
-         TopicActivity.class
-      ) {
-         @Override
-         public String getTitle(Context context) {
-            return context.getString(mTitle,
-             App.get().getSite().getObjectNamePlural());
-         }
-      },
-
-      STORE(
-       R.string.parts_and_tools,
-       R.drawable.ic_action_basket,
-       "http://www.ifixit.com/Store"
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().isIfixit();
-         }
-      },
-
-      FEATURED_GUIDES(
-         R.string.featured_guides,
-         R.drawable.ic_action_star_10,
-         FeaturedGuidesActivity.class
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().isIfixit();
-         }
-      },
-
-      TEARDOWNS(
-         R.string.teardowns,
-         R.drawable.ic_menu_stack,
-         TeardownsActivity.class
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().isIfixit();
-         }
-      },
-
-      ACCOUNT_MENU_SEPARATOR() {
-         @Override
-         public String getTitle(Context context) {
-            App app = App.get();
-            boolean loggedIn = app.isUserLoggedIn();
-
-            if (loggedIn) {
-               String username = app.getUser().getUsername();
-               return context.getString(R.string.account_username_title, username);
-            } else {
-               return context.getString(R.string.account_menu_title);
-            }
-         }
-      },
-
-      // Note: This doesn't use live data but rather displays guides stored
-      // offline.
-      USER_FAVORITES(
-         R.string.slide_menu_favorite_guides,
-         R.drawable.ic_menu_favorite_light,
-         OfflineGuidesActivity.class
-      ),
-
-      USER_GUIDES(
-         R.string.slide_menu_my_guides,
-         R.drawable.ic_menu_spinner_guides,
-         GuideCreateActivity.class
-      ),
-
-      NEW_GUIDE(
-         R.string.slide_menu_create_new_guide,
-         R.drawable.ic_menu_add_guide,
-         StepEditActivity.class,
-         Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_SINGLE_TOP
-      ),
-
-      MEDIA_GALLERY(
-         R.string.slide_menu_media_gallery,
-         R.drawable.ic_menu_spinner_gallery,
-         GalleryActivity.class
-      ),
-
-      LOGOUT(
-         R.string.slide_menu_logout,
-         R.drawable.ic_action_exit
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().isUserLoggedIn();
-         }
-
-         @Override
-         public void performNavigation(BaseMenuDrawerActivity activity) {
-            App.get().logout(activity);
-         }
-      },
-
-      IFIXIT_EVERYWHERE_SEPARATOR(
-         R.string.slide_menu_ifixit_everywhere
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().isIfixit();
-         }
-      },
-
-      YOUTUBE(
-         R.string.slide_menu_youtube,
-         R.drawable.ic_action_youtube,
-         "https://www.youtube.com/user/iFixitYourself"
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().isIfixit();
-         }
-      },
-
-      FACEBOOK(
-         R.string.slide_menu_facebook,
-         R.drawable.ic_action_facebook,
-         "https://www.facebook.com/iFixit"
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().isIfixit();
-         }
-      },
-
-      TWITTER(
-         R.string.slide_menu_twitter,
-         R.drawable.ic_action_twitter,
-         "https://twitter.com/iFixit"
-      ) {
-         @Override
-         public boolean shouldDisplay() {
-            return App.get().getSite().isIfixit();
-         }
-      },
-
-      // Display a separator so we know that the app is in debug mode.
-      DEBUG_SEPARATOR(R.string.debug) {
-         @Override
-         public boolean shouldDisplay() {
-            return BuildConfig.DEBUG;
-         }
-      };
-
-      private static final int NO_RES = -1;
-      private static final int DEFAULT_FLAGS = Intent.FLAG_ACTIVITY_NO_ANIMATION;
-
-      /**
-       * Used for display.
-       */
-      public final boolean mSeparator;
-      public final int mTitle;
-      public final int mIcon;
-
-      /**
-       * Used for default navigation actions.
-       */
-      public final Class<? extends BaseActivity> mActivityClass;
-      public final int mIntentFlags;
-      public final String mUrl;
-
-      private NavigationItem() {
-         this(true, NO_RES, NO_RES, null, DEFAULT_FLAGS, null);
       }
-
-      private NavigationItem(int title) {
-         this(true, title, NO_RES, null, DEFAULT_FLAGS, null);
-      }
-
-      private NavigationItem(int title, int icon) {
-         this(false, title, icon, null, DEFAULT_FLAGS, null);
-      }
-
-      private NavigationItem(int title, int icon, Class activityClass) {
-         this(title, icon, activityClass, DEFAULT_FLAGS);
-      }
-
-      private NavigationItem(int title, int icon,
-       Class<? extends BaseActivity> activityClass, int intentFlags) {
-         this(false, title, icon, activityClass, intentFlags, null);
-      }
-
-      private NavigationItem(int title, int icon, String url) {
-         this(false, title, icon, null, DEFAULT_FLAGS, url);
-      }
-
-      private NavigationItem(boolean separator, int title, int icon,
-       Class<? extends BaseActivity>  activityClass, int intentFlags, String url) {
-         mSeparator = separator;
-         mTitle = title;
-         mIcon = icon;
-         mActivityClass = activityClass;
-         mIntentFlags = intentFlags;
-         mUrl = url;
-      }
-
-      /**
-       * Display all by default.
-       */
-      public boolean shouldDisplay() {
-         return true;
-      }
-
-      public String getTitle(Context context) {
-         return context.getString(mTitle);
-      }
-
-      /**
-       * Enums can override this to run arbitrary code when the item is selected.
-       */
-      public void performNavigation(BaseMenuDrawerActivity activity) {
-         if (mActivityClass != null) {
-            Intent intent = new Intent(activity, mActivityClass);
-            intent.setFlags(mIntentFlags);
-            activity.startActivity(intent);
-         } else if (mUrl != null) {
-            Intent intent = new Intent(Intent.ACTION_VIEW);
-            intent.setData(Uri.parse(mUrl));
-            activity.startActivity(intent);
-         } else {
-            Log.e("BaseMenuDrawerActivity",
-             "Could not take action on NavigationItem: " + toString());
-         }
-      }
+      mDrawer.closeDrawers();
+      return true;
    }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-       NavigationItem item = (NavigationItem)view.getTag();
-       AlertDialog navigationDialog = getNavigationAlertDialog(item);
+   public void performActivityNavigation(Class<? extends BaseActivity> activityClass) {
+      Intent intent = new Intent(this, activityClass);
+      this.startActivity(intent);
+   }
 
-       if (navigationDialog != null) {
-          navigationDialog.show();
-       } else {
-          App.sendEvent("menu_action", "drawer_item_click", item.toString().toLowerCase(), null);
+   public void performActivityNavigation(Class<? extends BaseActivity> activityClass, int intentFlags) {
+      Intent intent = new Intent(this, activityClass);
+      intent.setFlags(intentFlags);
+      this.startActivity(intent);
+   }
 
-          mMenuDrawer.closeMenu();
-
-          mActivePosition = position;
-          mMenuDrawer.setActiveView(view, position);
-
-          navigateMenuDrawer(item);
-       }
-    }
-
-   protected void navigateMenuDrawer(NavigationItem item) {
-      item.performNavigation(this);
+   public void performUrlNavigation(String url) {
+      Intent intent = new Intent(Intent.ACTION_VIEW);
+      intent.setData(Uri.parse(url));
+      this.startActivity(intent);
    }
 
    private void returnToSiteList() {
@@ -536,96 +439,11 @@ public abstract class BaseMenuDrawerActivity extends BaseActivity
       // We want to just call `IntentIntegrator.initiateScan(this);` but it doesn't
       // compile unless the dependency exists.
       try {
-         Class<?> c = Class.forName("com.google.zxing.integration.android.IntentIntegrator");
-         Class[] argTypes = new Class[]{android.app.Activity.class};
-         Method initiateScan = c.getDeclaredMethod("initiateScan", argTypes);
-         initiateScan.invoke(null, this);
+         IntentIntegrator integrator = new IntentIntegrator(this);
+         integrator.initiateScan();
       } catch (Exception e) {
          Toast.makeText(this, "Failed to launch QR code scanner.", Toast.LENGTH_SHORT).show();
          Log.e("BaseMenuDrawerActivity", "Cannot launch barcode scanner", e);
       }
-   }
-
-   private class MenuAdapter extends BaseAdapter {
-      private List<NavigationItem> mItems;
-      private static final int VIEW_TYPE_COUNT = 2;
-
-      public MenuAdapter(List<NavigationItem> items) {
-         mItems = items;
-      }
-
-      @Override
-      public int getCount() {
-         return mItems.size();
-      }
-
-      @Override
-      public Object getItem(int position) {
-         return mItems.get(position);
-      }
-
-      @Override
-      public long getItemId(int position) {
-         return position;
-      }
-
-      @Override
-      public int getItemViewType(int position) {
-         return mItems.get(position).mSeparator ? 0 : 1;
-      }
-
-      @Override
-      public int getViewTypeCount() {
-         return VIEW_TYPE_COUNT;
-      }
-
-      @Override
-      public boolean isEnabled(int position) {
-         return !mItems.get(position).mSeparator;
-      }
-
-      @Override
-      public boolean areAllItemsEnabled() {
-         return false;
-      }
-
-      @Override
-      public View getView(int position, View convertView, ViewGroup parent) {
-         View view = convertView;
-         NavigationItem item = mItems.get(position);
-
-         if (item.mSeparator) {
-            if (view == null) {
-               view = getLayoutInflater().inflate(R.layout.menu_row_category, parent, false);
-            }
-
-            ((TextView)view).setText(item.getTitle(BaseMenuDrawerActivity.this));
-         } else {
-            if (view == null) {
-               view = getLayoutInflater().inflate(R.layout.menu_row_item, parent, false);
-            }
-
-            TextView textView = (TextView)view;
-            textView.setText(item.getTitle(BaseMenuDrawerActivity.this));
-            textView.setCompoundDrawablesWithIntrinsicBounds(item.mIcon, 0, 0, 0);
-            textView.setTag(item);
-         }
-
-         view.setTag(R.id.mdActiveViewPosition, position);
-
-         if (position == mActivePosition) {
-            mMenuDrawer.setActiveView(view, position);
-         }
-
-         return view;
-      }
-   }
-
-   /**
-    * Returns an AlertDialog to warn the user before navigating away from the Activity.
-    * null is returned if the user shouldn't be warned.
-    */
-   public AlertDialog getNavigationAlertDialog(NavigationItem item) {
-      return null;
    }
 }

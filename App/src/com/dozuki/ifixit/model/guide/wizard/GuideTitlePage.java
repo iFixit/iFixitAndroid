@@ -3,6 +3,7 @@ package com.dozuki.ifixit.model.guide.wizard;
 
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
+
 import com.dozuki.ifixit.ui.guide.create.wizard.GuideTitleFragment;
 
 import java.util.ArrayList;

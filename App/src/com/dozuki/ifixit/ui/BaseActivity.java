@@ -1,17 +1,18 @@
 package com.dozuki.ifixit.ui;
 
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.TypedValue;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.widget.Toolbar;
+import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
@@ -19,8 +20,6 @@ import com.dozuki.ifixit.model.dozuki.SiteChangedEvent;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.auth.LoginFragment;
-import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.ViewServer;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiEvent;
@@ -34,7 +33,7 @@ import com.squareup.otto.Subscribe;
  * Registering for the event bus. Setting the current site's theme. Finishing
  * the Activity if the user logs out but the Activity requires authentication.
  */
-public abstract class BaseActivity extends SherlockFragmentActivity {
+public abstract class BaseActivity extends AppCompatActivity {
    protected static final String LOADING = "LOADING_FRAGMENT";
    private static final String ACTIVITY_ID = "ACTIVITY_ID";
    private static final String USERID = "USERID";
@@ -45,6 +44,8 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
 
    private static final int LOGGED_OUT_USERID = -1;
+   protected Toolbar mToolbar;
+   protected FrameLayout mContentFrame;
 
    private int mActivityid;
    private int mUserid;
@@ -126,6 +127,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
    @Override
    public void onCreate(Bundle savedState) {
+
+      // Enable vector drawables (icons) on older devices.
+      // build.gradle also requires `vectorDrawables.useSupportLibrary = true` in the defaultConfig
+      AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
+
       App app = App.get();
       Site currentSite = app.getSite();
 
@@ -153,78 +159,11 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
          }
       }
 
-      Site site = app.getSite();
-      ActionBar ab = getSupportActionBar();
-      ab.setDisplayHomeAsUpEnabled(true);
-
       /**
        * Set the current site's theme. Must be before onCreate because of
        * inflating views.
        */
       setTheme(app.getSiteTheme());
-
-      // This doesn't work on on versions below ICS.  Don't really care if the home button pressed state is the wrong
-      // color on those devices so just ignore it.
-      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.ICE_CREAM_SANDWICH) {
-         ((View)findViewById(android.R.id.home).getParent().getParent()).setBackgroundResource(R.drawable
-          .item_background_holo_light);
-      }
-
-      if (site.actionBarUsesIcon()) {
-         ab.setLogo(getResources().getIdentifier("icon", "drawable", getPackageName()));
-         ab.setDisplayUseLogoEnabled(true);
-
-         // Get the default action bar title resourceid
-         int titleId = getResources().getIdentifier("action_bar_title", "id", "android");
-
-         // If it doesn't exist, use actionbarsherlocks
-         if (titleId == 0) {
-            titleId = com.actionbarsherlock.R.id.abs__action_bar_title;
-         }
-
-         TextView title = (TextView) findViewById(titleId);
-
-         // If we were able to get the title element, set it to multi-line and a bit smaller text size so that long
-         // site titles (i.e. Hypertherm Waterjet Mobile Assistant) and long guide titles fit nicely.
-         if (title != null) {
-            title.setSingleLine(false);
-            title.setMaxLines(2);
-            title.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 16);
-         }
-
-      } else {
-         ab.setDisplayUseLogoEnabled(false);
-         ab.setDisplayShowTitleEnabled(false);
-         ab.setDisplayShowCustomEnabled(true);
-         ab.setIcon(new ColorDrawable(getResources().getColor(android.R.color.transparent)));
-
-         View v = getLayoutInflater().inflate(R.layout.menu_title, null);
-
-         ImageView customLogo = (ImageView) v.findViewById(R.id.custom_logo);
-         TextView siteTitle = (TextView) v.findViewById(R.id.custom_site_title);
-         if (site.mLogo != null) {
-            PicassoUtils.with(this)
-             .load(site.mLogo.getPath(ImageSizes.logo))
-             .error(R.drawable.logo_dozuki)
-             .into(customLogo);
-            customLogo.setVisibility(View.VISIBLE);
-            siteTitle.setVisibility(View.GONE);
-         } else {
-            siteTitle.setText(site.mTitle);
-            siteTitle.setVisibility(View.VISIBLE);
-            customLogo.setVisibility(View.GONE);
-         }
-
-         v.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-               onCustomMenuTitleClick(v);
-            }
-         });
-
-         ab.setCustomView(v);
-      }
-
       super.onCreate(savedState);
 
       /**
@@ -254,13 +193,7 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void setTitle(String title) {
-      if (App.get().getSite().actionBarUsesIcon()) {
-         getSupportActionBar().setTitle(title);
-      } else {
-         TextView titleView = ((TextView)getSupportActionBar().getCustomView().
-          findViewById(R.id.custom_page_title));
-         titleView.setText(title);
-      }
+      getSupportActionBar().setTitle(title);
    }
 
    @Override
@@ -340,6 +273,14 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
 
       App.getBus().unregister(this);
       App.getBus().unregister(mBaseActivityListener);
+   }
+
+   public void setDrawerContent(int layoutid) {
+      LayoutInflater inflater = (LayoutInflater) this
+       .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+      View v = inflater.inflate(layoutid, mContentFrame, false);
+      mContentFrame.addView(v);
    }
 
    public boolean openLoginDialogIfLoggedOut() {
@@ -432,8 +373,12 @@ public abstract class BaseActivity extends SherlockFragmentActivity {
    }
 
    public void showLoading(int container, String message) {
+      Bundle args = new Bundle();
+      args.putString(LoadingFragment.TEXT_KEY, message);
+      LoadingFragment frag = new LoadingFragment();
+      frag.setArguments(args);
       getSupportFragmentManager().beginTransaction()
-       .add(container, new LoadingFragment(message), LOADING)
+       .add(container, frag, LOADING)
        .commit();
    }
 

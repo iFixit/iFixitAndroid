@@ -32,9 +32,9 @@ import android.widget.TextView;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.ui.BaseFragment;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;

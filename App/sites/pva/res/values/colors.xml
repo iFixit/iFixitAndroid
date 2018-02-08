@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="pva_color">#ed193f</color>
-    <color name="emphasis">@color/pva_color</color>
-    <color name="emphasis_pressed">@color/step_pager_previous_tab_color</color>
 
-    <color name="step_pager_previous_tab_color">#ff144c6b</color>
+    <color name="pva_color_dark">#6b0719</color>
+    <color name="emphasis">@color/pva_color</color>
+    <color name="emphasis_pressed">@color/pva_color_dark</color>
+
+    <color name="step_pager_previous_tab_color">@color/pva_color</color>
     <color name="step_pager_selected_tab_color">@color/pva_color</color>
-    <color name="step_pager_selected_last_tab_color">#ff19446f</color>
+    <color name="step_pager_selected_last_tab_color">@color/pva_color</color>
     <color name="step_pager_next_tab_color">#10000000</color>
 
 </resources>

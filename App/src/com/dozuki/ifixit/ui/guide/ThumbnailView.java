@@ -42,6 +42,10 @@ public class ThumbnailView extends LinearLayout {
    private int mThumbnailSpacing;
    private boolean mIsOfflineGuide;
 
+   public void setCanEdit(boolean canEdit) {
+      this.mCanEdit = canEdit;
+   }
+
    static class ViewHolder {
       FallbackImageView image;
       FrameLayout container;
@@ -49,7 +53,7 @@ public class ThumbnailView extends LinearLayout {
 
    private OnLongClickListener mLongClickListener;
    private OnClickListener mAddThumbListener;
-   private Picasso mPicasso;
+   private com.squareup.picasso.Picasso mPicasso;
    private LinearLayout mThumbnailContainer;
    private FrameLayout mMainImageContainer;
 
@@ -86,7 +90,7 @@ public class ThumbnailView extends LinearLayout {
 
       mThumbnailSpacing = getResources().getDimensionPixelSize(R.dimen.guide_thumbnail_spacing);
 
-      mPicasso = PicassoUtils.with(getContext());
+      mPicasso = Picasso.with(getContext());
 
       if (mCanEdit) {
          mAddThumbButton = (ImageView) findViewById(R.id.add_thumbnail_icon);
@@ -212,14 +216,17 @@ public class ThumbnailView extends LinearLayout {
       if (image.hasLocalPath()) {
          File file = new File(image.getLocalPath());
          buildImage(mPicasso.load(file)
-          .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
-          .centerCrop(),
+           .resize((int) (mThumbnailWidth - 0.5f), (int) (mThumbnailHeight - 0.5f))
+           .centerCrop(),
           thumb.image);
          buildImage(mPicasso.load(file)
-          .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
-          .centerCrop(),
+           .resize((int) (mMainWidth - 0.5f), (int) (mMainHeight - 0.5f))
+           .centerCrop(),
           mMainImage);
-      } else {
+      } else if (image.getBitmap() != null) {
+         mMainImage.setImageBitmap(image.getBitmap());
+         thumb.image.setImageBitmap(image.getBitmap());
+      }  else {
          buildImage(PicassoUtils.displayImage(mPicasso, image.getPath(ImageSizes.stepThumb),
           mIsOfflineGuide), thumb.image);
       }
@@ -275,7 +282,6 @@ public class ThumbnailView extends LinearLayout {
       // FullImageView is passed a smaller version of the image.
       mMainImageContainer.setTag(url);
       mMainImage.setImageUrl(url);
-
       if (url.startsWith("http")) {
          url = url + ImageSizes.stepMain;
 

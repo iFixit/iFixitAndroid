@@ -28,7 +28,7 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
    public void loadImage(String url, boolean offline) {
       mImageUrl = url;
       mOffline = offline;
-      Picasso picasso = PicassoUtils.with(mContext);
+      Picasso picasso = Picasso.with(mContext);
 
       if (url.startsWith("http")) {
          url += ImageSizes.stepFull;
@@ -48,13 +48,14 @@ public class FullScreenImageView extends ImageViewTouch implements Target {
    }
 
    @Override
-   public void onBitmapLoaded(Bitmap bitmap, Picasso.LoadedFrom loadedFrom) {
+   public void onBitmapLoaded(Bitmap bitmap, com.squareup.picasso.Picasso.LoadedFrom loadedFrom) {
       setImageBitmap(bitmap);
    }
 
    @Override
    public void onBitmapFailed(Drawable drawable) {
-      PicassoUtils.displayImage(mContext, mImageUrl, mOffline)
+      Picasso.with(mContext)
+       .load(mImageUrl)
        .error(R.drawable.no_image)
        .into((Target)this);
    }

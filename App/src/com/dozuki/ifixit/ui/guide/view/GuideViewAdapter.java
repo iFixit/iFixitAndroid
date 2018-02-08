@@ -1,12 +1,16 @@
 package com.dozuki.ifixit.ui.guide.view;
 
+import android.os.Bundle;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.view.View;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
+import com.dozuki.ifixit.ui.WebViewFragment;
+import com.dozuki.ifixit.ui.guide.DocumentWebViewFragment;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,6 +27,7 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    private int mToolsPosition = -1;
    private int mPartsPosition = -1;
    private int mConclusionPosition = -1;
+   private int mFeaturedDocumentPosition = -1;
 
    private Guide mGuide;
    private boolean mIsOfflineGuide;
@@ -33,6 +38,11 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
       mIsOfflineGuide = isOfflineGuide;
 
       mPageLabelMap = new HashMap<Integer, String>();
+
+      if (mGuide.getFeaturedDocument() != null) {
+         mFeaturedDocumentPosition = mStepOffset;
+         mStepOffset++;
+      }
 
       if (guideHasTools()) {
          mToolsPosition = mStepOffset;
@@ -69,7 +79,17 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
 
       if (position == GUIDE_INTRO_POSITION) {
          label += "/intro";
-         fragment = new GuideIntroViewFragment(mGuide);
+         fragment = new GuideIntroViewFragment();
+         Bundle args = new Bundle();
+         args.putSerializable(GuideIntroViewFragment.GUIDE_KEY, mGuide);
+         fragment.setArguments(args);
+      } else if (position == mFeaturedDocumentPosition) {
+         label += "/featured-document";
+
+         fragment = new DocumentWebViewFragment();
+         Bundle args = new Bundle();
+         args.putString(DocumentWebViewFragment.URL_KEY, mGuide.getFeaturedDocument().getFullUrl().replace(".pdf", ""));
+         fragment.setArguments(args);
       } else if (position == mToolsPosition) {
          label += "/tools";
          fragment = GuidePartsToolsViewFragment.newInstance(mGuide.getTools());
@@ -83,7 +103,12 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
          int stepNumber = (position - mStepOffset);
          label += "/" + (stepNumber + 1); // Step title # should be 1 indexed.
 
-         fragment = new GuideStepViewFragment(mGuide.getStep(stepNumber), mIsOfflineGuide);
+         Bundle args = new Bundle();
+         args.putSerializable("STEP_KEY", mGuide.getStep(stepNumber));
+         args.putBoolean("OFFLINE_KEY", mIsOfflineGuide);
+
+         fragment = new GuideStepViewFragment();
+         fragment.setArguments(args);
       }
 
       mPageLabelMap.put(position, label);
@@ -105,6 +130,8 @@ public class GuideViewAdapter extends FixedFragmentStatePagerAdapter {
    public CharSequence getPageTitle(int position) {
       if (position == GUIDE_INTRO_POSITION) {
          return App.get().getString(R.string.introduction);
+      } else if (position == mFeaturedDocumentPosition) {
+         return "Featured Documents";
       } else if (position == mToolsPosition) {
          return App.get().getString(R.string.requiredTools);
       } else if (position == mPartsPosition) {

@@ -3,64 +3,15 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="Theme.PVA.Dark" parent="Theme.Sherlock.Light.DarkActionBar">
-        <!-- Action Bar Sherlock overrides -->
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.pva</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.pva</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.pva</item>
-    </style>
-
-
-  <style name="Theme.PVA" parent="Theme.Sherlock.Light.DarkActionBar">
+    <style name="Theme.PVA" parent="Theme.AppCompat.Light.DarkActionBar">
         <item name="doz__primaryHighlightColor">@color/pva_color</item>
         <item name="doz__sectionHeader">@drawable/pva_section_header</item>
-        <item name="doz__spinnerBackground">@drawable/pva_spinner_background_holo_light</item>
         <item name="doz__topicDefaultBackground">@style/Widget.PVA.TopicBackground</item>
-        <item name="doz__editTextBackground">@drawable/pva_edit_text_holo_light</item>
-        <item name="doz__checkboxBackground">@drawable/pva_btn_check_holo_light</item>
-
-
-        <!-- Action Bar theme -->
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarWidgetTheme">@style/Theme.PVA.Dark</item>
-
-    <item name="android:editTextStyle">@style/EditTextpva</item>
-
-    <item name="android:textColorHighlight">#99ed193f</item>
-
-    <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextViewpva</item>
-
-    <item name="android:checkboxStyle">@style/CheckBoxpva</item>
-
-    <item name="android:radioButtonStyle">@style/RadioButtonpva</item>
-
-    <item name="android:buttonStyle">@style/Buttonpva</item>
-
-    <item name="android:imageButtonStyle">@style/ImageButtonpva</item>
-
-    <item name="android:spinnerStyle">@style/Spinnerpva</item>
-
-    <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItempva</item>
-
-    <item name="android:progressBarStyleHorizontal">@style/ProgressBarpva</item>
-
-    <item name="android:seekBarStyle">@style/SeekBarpva</item>
-
-    <item name="android:ratingBarStyle">@style/RatingBarpva</item>
-
-    <item name="android:ratingBarStyleIndicator">@style/RatingBarBigpva</item>
-
-    <item name="android:ratingBarStyleSmall">@style/RatingBarSmallpva</item>
-
-    <item name="android:buttonStyleToggle">@style/Togglepva</item>
-
-    <item name="android:listViewStyle">@style/ListViewpva</item>
-
-    <item name="android:listViewWhiteStyle">@style/ListViewpva.White</item>
-
-    <item name="android:spinnerItemStyle">@style/SpinnerItempva</item>
-
-  </style>
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/pva_color</item>
+        <item name="colorAccentDark">@color/pva_color_dark</item>
+        <item name="colorButtonNormal">@color/white</item>
+    </style>
 
 </resources>

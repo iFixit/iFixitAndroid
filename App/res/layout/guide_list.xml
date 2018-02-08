@@ -4,10 +4,11 @@
               android:layout_height="match_parent"
               android:background="?attr/doz__background">
 
-    <include layout="@layout/guide_grid"/>
+    <include layout="@layout/guide_recycle_grid"/>
 
     <FrameLayout
         android:id="@+id/loading_container"
         android:layout_width="match_parent"
         android:layout_height="match_parent"/>
+
 </RelativeLayout>

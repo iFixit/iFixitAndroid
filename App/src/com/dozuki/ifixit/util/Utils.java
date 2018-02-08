@@ -1,90 +1,31 @@
 package com.dozuki.ifixit.util;
 
 import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.os.Build;
+import android.content.res.Resources;
 import android.text.Editable;
 import android.text.Spannable;
 import android.text.Spanned;
 import android.text.format.DateUtils;
+import android.text.style.RelativeSizeSpan;
+import android.text.style.TextAppearanceSpan;
 import android.text.style.URLSpan;
+import android.util.Log;
+import android.util.TypedValue;
 import android.widget.ImageView;
+
 import com.dozuki.ifixit.App;
-import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
-import com.squareup.okhttp.OkHttpClient;
 
-import java.security.GeneralSecurityException;
-import java.security.SecureRandom;
-import java.security.cert.CertificateException;
-import java.security.cert.X509Certificate;
+import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.X509TrustManager;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Utils {
-   public static OkHttpClient createOkHttpClient() {
-      OkHttpClient client = new OkHttpClient();
-
-      try {
-         // Working around the libssl crash: https://github.com/square/okhttp/issues/184
-         SSLContext sslContext;
-         sslContext = SSLContext.getInstance("TLS");
-
-         if (BuildConfig.DEBUG || Build.VERSION.SDK_INT <= Build.VERSION_CODES.FROYO) {
-            // Trust all certificates and hosts in debug mode.
-            sslContext.init(null, new TrustManager[] {
-             new X509TrustManager() {
-                @Override
-                public void checkClientTrusted(X509Certificate[] chain, String authType)
-                 throws CertificateException {
-                   // Do nothing.
-                }
-
-                @Override
-                public void checkServerTrusted(X509Certificate[] chain, String authType)
-                 throws CertificateException {
-                   // Do nothing.
-                }
-
-                @Override
-                public X509Certificate[] getAcceptedIssuers() {
-                   return null;
-                }
-             }
-            }, new SecureRandom());
-
-            client.setHostnameVerifier(new HostnameVerifier() {
-               @Override
-               public boolean verify(String hostname, SSLSession session) {
-                  // Trust all hosts.
-                  return true;
-               }
-            });
-         } else {
-            sslContext.init(null, null, null);
-         }
-
-         client.setSslSocketFactory(sslContext.getSocketFactory());
-      } catch (GeneralSecurityException e) {
-         throw new AssertionError(); // The system has no TLS. Just give up.
-      }
-
-      return client;
-   }
-
-   public static void stripImageView(ImageView view) {
-      if (view.getDrawable() instanceof BitmapDrawable) {
-         ((BitmapDrawable) view.getDrawable()).getBitmap().recycle();
-      }
-
-      safeStripImageView(view);
-   }
-
    /**
     * Trim off whitespace from the beginning and end of a given string.
     * @param s
@@ -131,6 +72,36 @@ public class Utils {
       return s;
    }
 
+   public static String cleanWikiHtml(String html) {
+      Document doc = Jsoup.parse(html);
+
+      Elements videos = doc.select("video");
+
+      // replace all video elements with their posters and a link to the video source.
+      // we have to do this because android HTML.fromHtml doesn't support video tags.
+      for (Element video : videos) {
+         String posterSrc = video.attr("poster");
+         String videoSrc = video.getElementsByTag("source").first().attr("src");
+         Element posterLink = new Element("a").attr("href", videoSrc);
+         posterLink.appendElement("img").attr("src", posterSrc);
+         video.after(posterLink);
+         video.remove();
+         html = doc.body().html();
+      }
+
+      // Remove anchor elements from html
+      html = html.replaceAll("<a class=\\\"anchor\\\".+?<\\/a>", "");
+      html = html.replaceAll("<span class=\\\"editLink headerLink\\\".+?<\\/span>", "");
+
+      // Make the images bigger
+      html = html.replaceAll(".standard", ".large");
+
+      // Remove the /.pdf from Dozuki pdf document links.  PDF viewers on android error on them.
+      html = html.replaceAll("/.pdf", "");
+
+      return html;
+   }
+
    /**
     * Removes relative link hrefs
     *
@@ -150,13 +121,31 @@ public class Utils {
             URLSpan urlSpan = (URLSpan) span;
             if (!urlSpan.getURL().startsWith("http")) {
                if (urlSpan.getURL().startsWith("/")) {
-                  urlSpan = new URLSpan("http://" + site.mDomain + urlSpan.getURL());
+                  urlSpan = new URLSpan("https://" + site.mDomain + urlSpan.getURL());
                } else {
-                  urlSpan = new URLSpan("http://" + site.mDomain + "/" + urlSpan.getURL());
+                  urlSpan = new URLSpan("https://" + site.mDomain + "/" + urlSpan.getURL());
                }
             }
             ((Spannable) spantext).removeSpan(span);
             ((Spannable) spantext).setSpan(urlSpan, start, end, flags);
+         }
+      }
+
+      return spantext;
+   }
+
+   public static Spanned styleWikiHeaders(Context context, Spanned spantext) {
+      Object spans[] = spantext.getSpans(0, spantext.length(), Object.class);
+
+      for (Object span : spans) {
+         int start = spantext.getSpanStart(span);
+         int end = spantext.getSpanEnd(span);
+         int flags = spantext.getSpanFlags(span);
+
+         if (span instanceof RelativeSizeSpan) {
+            TextAppearanceSpan ta = new TextAppearanceSpan(context, R.style.WikiTextHeader);
+            ((Spannable) spantext).removeSpan(span);
+            ((Spannable) spantext).setSpan(ta + "\n", start, end, flags);
          }
       }
 
@@ -183,5 +172,26 @@ public class Utils {
       } else {
          return DateUtils.getRelativeTimeSpanString(timeInMs);
       }
+   }
+
+   /**
+    * From StackOverflow: https://stackoverflow.com/a/12147550
+    * @param context
+    * @param px
+    * @return
+    */
+
+   public static float dpFromPx(final Context context, final float px) {
+      return px / context.getResources().getDisplayMetrics().density;
+   }
+
+   /**
+    * From StackOverflow: https://stackoverflow.com/a/12147550
+    * @param context
+    * @param dp
+    * @return
+    */
+   public static float pxFromDp(final Context context, final float dp) {
+      return dp * context.getResources().getDisplayMetrics().density;
    }
 }

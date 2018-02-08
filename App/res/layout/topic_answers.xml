@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<android.support.v4.widget.NestedScrollView
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/doz__background">
+    <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        <WebView
+                android:id="@+id/topic_answers_webview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible"/>
+
+        <include android:id="@+id/webview_progress"
+                 layout="@layout/loading_fragment" />
+
+    </RelativeLayout>
+
+</android.support.v4.widget.NestedScrollView>

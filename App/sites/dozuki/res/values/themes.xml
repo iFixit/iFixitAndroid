@@ -2,67 +2,79 @@
 
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- actionWidgetTheme is used with a ContextThemeWrapper when using the DarkActionBar theme,
-         so we need to inherit from the the base Theme.Sherlock to override the overflow dropdown selector state. -->
-    <style name="Theme.Dozuki.Dark" parent="Theme.Sherlock">
-        <!-- Action Bar Sherlock overrides -->
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.iFixit</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.iFixit</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.iFixit</item>
-    </style>
+    <style name="Theme.Dozuki.Dark" parent="Theme.iFixit"></style>
 
     <!-- Default to the iFixit theme -->
-    <style name="Theme.Dozuki" parent="Theme.iFixit"></style>
+    <style name="Theme.Dozuki" parent="Theme.Base">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/dozuki_red</item>
+        <item name="colorAccentDark">@color/dozuki_red_dark</item>
+        <item name="colorButtonNormal">@color/gray_3</item>
+
+        <!-- Theme Attributes -->
+        <item name="doz__primaryHighlightColor">@color/dozuki_red</item>
+        <item name="doz__sectionHeader">@drawable/ifixit__section_header</item>
+
+        <!-- Action Bar theme -->
+        <item name="selectableItemBackground">@drawable/selectable_item_background</item>
+
+        <item name="vpiTitlePageIndicatorStyle">@style/TitlePageIndicator</item>
+    </style>
 
     <style name="Theme.Dozuki.Green" parent="Theme.Dozuki">
         <item name="doz__primaryHighlightColor">@color/dozuki_green</item>
         <item name="doz__sectionHeader">@drawable/green__section_header</item>
+
+        <item name="colorPrimary">@color/dozuki_green</item>
+        <item name="colorPrimaryDark">@color/green_7</item>
+        <item name="colorAccent">@color/dozuki_green</item>
+        <item name="colorAccentDark">@color/green_7</item>
+        <item name="colorButtonNormal">@color/white</item>
     </style>
 
     <style name="Theme.Dozuki.White" parent="Theme.Dozuki">
-        <item name="doz__primaryHighlightColor">@color/dozuki_white</item>
+
+        <item name="doz__toolbarStyle">@style/Base.Toolbar.Light</item>
+        <item name="doz__toolbarPopupStyle">@style/Base.Toolbar.Light.Popup</item>
+        <item name="doz__primaryHighlightColor">@color/black</item>
         <item name="doz__sectionHeader">@drawable/white__section_header</item>
+        <item name="doz__guidePagerTitleBackground">@color/white</item>
+        <item name="doz__guidePagerTitleTextColor">@color/black</item>
+        <item name="doz__guidePagerTitleFooterColor">@color/black</item>
+        <item name="doz__menuIconColor">@color/black</item>
+
+        <item name="colorPrimary">@color/white</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/black</item>
+        <item name="colorAccentDark">@color/black</item>
+        <item name="colorButtonNormal">@color/white</item>
     </style>
 
     <style name="Theme.Dozuki.Black" parent="Theme.Dozuki">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/dozuki_grey</item>
+        <item name="colorAccentDark">@color/gray_9</item>
+        <item name="colorButtonNormal">@color/white</item>
+
+        <!-- Theme Attributes -->
         <item name="doz__primaryHighlightColor">@color/dozuki_grey</item>
-        <item name="doz__sectionHeader">@drawable/grey__section_header</item>
+        <item name="doz__sectionHeader">@drawable/ifixit__section_header</item>
     </style>
 
     <style name="Theme.Dozuki.Orange" parent="Theme.Dozuki">
+        <item name="colorPrimary">@color/dozuki_orange</item>
+        <item name="colorPrimaryDark">@color/dozuki_orange_dark</item>
+        <item name="colorAccent">@color/dozuki_orange</item>
+        <item name="colorAccentDark">@color/dozuki_orange_dark</item>
+        <item name="colorButtonNormal">@color/white</item>
+
         <!-- Theme Attributes -->
         <item name="doz__primaryHighlightColor">@color/dozuki_orange</item>
         <item name="doz__sectionHeader">@drawable/orange__section_header</item>
-        <item name="doz__spinnerBackground">@drawable/orange__spinner_background_holo_light</item>
-        <item name="doz__editTextBackground">@drawable/orange__edit_text_holo_light</item>
-        <item name="doz__checkboxBackground">@drawable/orange__btn_check_holo_light</item>
 
         <!-- Action Bar theme -->
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarWidgetTheme">@style/Theme.Dozuki.Dark</item>
-
-        <item name="android:editTextStyle">@style/EditText.Dozuki.Orange</item>
-
-        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.Dozuki.Orange</item>
-
-        <item name="android:checkboxStyle">@style/CheckBox.Dozuki.Orange</item>
-
-        <item name="android:radioButtonStyle">@style/RadioButton.Dozuki.Orange</item>
-
-        <item name="android:buttonStyle">@style/Button.Dozuki.Orange</item>
-
-        <item name="android:imageButtonStyle">@style/ImageButton.Dozuki.Orange</item>
-
-        <item name="android:spinnerStyle">@style/Spinner.Dozuki.Orange</item>
-
-        <item name="android:dropDownSpinnerStyle">@style/Spinner.Dozuki.Orange.DropDown</item>
-
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem.Dozuki.Orange</item>
-
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Dozuki.Orange</item>
-
-        <item name="android:buttonStyleToggle">@style/Toggle.Dozuki.Orange</item>
-
+        <item name="selectableItemBackground">@drawable/selectable_item_background</item>
     </style>
 </resources>

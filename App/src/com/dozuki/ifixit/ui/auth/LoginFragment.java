@@ -1,23 +1,27 @@
 package com.dozuki.ifixit.ui.auth;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentSender;
-import android.graphics.Typeface;
+import android.content.pm.PackageManager;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.design.widget.TextInputEditText;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -27,6 +31,7 @@ import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
+import com.dozuki.ifixit.util.CaptureHelper;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
@@ -47,13 +52,14 @@ import java.io.IOException;
 public class LoginFragment extends BaseDialogFragment implements OnClickListener,
  GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
    private static final int OPEN_ID_REQUEST_CODE = 4;
+   private static final int REQUEST_CODE_ASK_PERMISSIONS = 1;
 
-   private Button mLogin;
-   private Button mRegister;
+   private AppCompatButton mLogin;
+   private AppCompatButton mRegister;
    private SignInButton mGoogleLogin;
    //private ImageButton mYahooLogin;
-   private EditText mEmail;
-   private EditText mPassword;
+   private TextInputEditText mEmail;
+   private TextInputEditText mPassword;
    private TextView mErrorText;
    private ProgressBar mLoadingSpinner;
    private ApiCall mCurAPICall;
@@ -97,10 +103,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
          mLoadingSpinner.setVisibility(View.GONE);
 
-         // Show input fields
-         mEmail.setVisibility(View.VISIBLE);
-         mPassword.setVisibility(View.VISIBLE);
-
          mErrorText.setVisibility(View.VISIBLE);
          mErrorText.setText(error.mMessage);
       }
@@ -113,8 +115,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
 
    public static LoginFragment newInstance() {
       LoginFragment frag = new LoginFragment();
-      frag.setStyle(DialogFragment.STYLE_NO_TITLE,
-       android.R.style.Theme_Holo_Light_Dialog);
 
       return frag;
    }
@@ -130,6 +130,7 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       mHasRegisterBtn = site.mPublicRegistration;
 
       if (site.checkForGoogleLogin()) {
+
          // Get the clientid so we can perform Google login.
          if (site.mGoogleOAuth2Clientid == null) {
             Api.call(getActivity(), ApiCall.siteInfo());
@@ -157,25 +158,29 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       
       View view = inflater.inflate(R.layout.login_fragment, container, false);
 
-      mEmail = (EditText)view.findViewById(R.id.edit_email);
-      mPassword = (EditText)view.findViewById(R.id.edit_password);
-      mPassword.setTypeface(Typeface.DEFAULT);
+      String[] permissions = new String[]{Manifest.permission.GET_ACCOUNTS};
+      if (ContextCompat.checkSelfPermission(getActivity(),
+       Manifest.permission.GET_ACCOUNTS) != PackageManager.PERMISSION_GRANTED) {
+         ActivityCompat.requestPermissions(getActivity(),
+          permissions, REQUEST_CODE_ASK_PERMISSIONS);
+      }
 
-      mLogin = (Button)view.findViewById(R.id.signin_button);
-      mRegister = (Button)view.findViewById(R.id.register_button);      
+
+      mEmail = (TextInputEditText)view.findViewById(R.id.edit_email);
+      mPassword = (TextInputEditText)view.findViewById(R.id.edit_password);
+
+      mLogin = (AppCompatButton)view.findViewById(R.id.signin_button);
+      mRegister = (AppCompatButton)view.findViewById(R.id.register_button);
       mGoogleLogin = (SignInButton)view.findViewById(R.id.use_google_login_button);
-      //mYahooLogin = (ImageButton)view.findViewById(R.id.use_yahoo_login_button);
 
       mLogin.setOnClickListener(this);  
       
       if (mHasRegisterBtn) {
          mRegister.setOnClickListener(this);
          mGoogleLogin.setOnClickListener(this);
-         //mYahooLogin.setOnClickListener(this);
       } else {
          mRegister.setVisibility(View.GONE);
          mGoogleLogin.setVisibility(View.GONE);
-         //mYahooLogin.setVisibility(View.GONE);
       }
 
       initGoogleLoginButton();
@@ -227,10 +232,6 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       String password = getPassword();
 
       if (email.length() > 0 && password.length() > 0 ) {
-         // Hide input fields
-         mEmail.setVisibility(View.GONE);
-         mPassword.setVisibility(View.GONE);
-         
          mLoadingSpinner.setVisibility(View.VISIBLE);
          enable(false);
          mCurAPICall = ApiCall.login(email, password);
@@ -275,19 +276,23 @@ public class LoginFragment extends BaseDialogFragment implements OnClickListener
       }
    }
 
+   public void onGoogleLoginClick() {
+      if (!mGoogleApiClient.isConnecting()) {
+         mGoogleLoginClicked = true;
+         if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.reconnect();
+         } else {
+            mGoogleApiClient.connect();
+         }
+      }
+   }
+
    @Override
    public void onClick(View v) {
       Intent intent;
       switch (v.getId()) {
           case R.id.use_google_login_button:
-             if (!mGoogleApiClient.isConnecting()) {
-                mGoogleLoginClicked = true;
-                if (mGoogleApiClient.isConnected()) {
-                   mGoogleApiClient.reconnect();
-                } else {
-                   mGoogleApiClient.connect();
-                }
-             }
+             onGoogleLoginClick();
              break;
     
           case R.id.use_yahoo_login_button:

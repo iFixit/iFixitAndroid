@@ -1,24 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/add_step"
-        android:title="@string/add_step"
-        android:icon="@drawable/ic_action_add"
-        android:showAsAction="ifRoom|withText|collapseActionView"/>
+            android:id="@+id/add_step"
+            android:title="@string/add_step"
+            android:icon="@drawable/ic_add_24dp"
+            app:showAsAction="ifRoom|withText|collapseActionView"/>
     <item
-        android:id="@+id/edit_guide_details"
-        android:title="@string/edit_guide_details"
-        android:icon="@drawable/ic_action_edit"
-        android:showAsAction="ifRoom|withText"/>
+            android:id="@+id/edit_guide_details"
+            android:title="@string/edit_guide_details"
+            android:icon="@drawable/ic_mode_edit_24dp"
+            app:showAsAction="ifRoom|withText"/>
     <item
-        android:id="@+id/reorder_steps"
-        android:title="@string/reorder_steps"
-        android:icon="@drawable/ic_dialog_arrange_bullets_light"
-        android:showAsAction="ifRoom|withText"/>
+            android:id="@+id/reorder_steps"
+            android:title="@string/reorder_steps"
+            android:icon="@drawable/ic_reorder_24dp"
+            app:showAsAction="ifRoom|withText"/>
     <item
-        android:id="@+id/view_guide"
-        android:title="@string/view_guide"
-        android:icon="@drawable/ic_action_book"
-        android:showAsAction="ifRoom|withText"/>
+            android:id="@+id/view_guide"
+            android:title="@string/view_guide"
+            android:icon="@drawable/ic_pageview_24dp"
+            app:showAsAction="ifRoom|withText"/>
 </menu>

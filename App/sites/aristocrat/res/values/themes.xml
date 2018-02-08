@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<!-- Generated with http://android-holo-colors.com -->
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.Aristocrat.TransparentActionBar" parent="Theme.Aristocrat">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
+    </style>
+
+    <style name="Theme.Aristocrat" parent="Theme.Base">
+        <item name="doz__primaryHighlightColor">@color/brand_color</item>
+        <item name="doz__sectionHeader">@drawable/aristocrat_section_header</item>
+        <item name="doz__topicDefaultBackground">@style/Widget.Aristocrat.TopicBackground</item>
+        <item name="colorPrimary">@color/brand_color</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/brand_color</item>
+        <item name="colorAccentDark">@color/brand_color_dark</item>
+        <item name="colorButtonNormal">@color/white</item>
+        <item name="doz__guidePagerTitleBackground">@color/white</item>
+        <item name="doz__guidePagerTitleTextColor">@color/black</item>
+        <item name="doz__tabIndicatorColor">@color/brand_color</item>
+    </style>
+
+</resources>

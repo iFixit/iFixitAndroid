@@ -2,128 +2,154 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:fillViewport="true">
 
     <LinearLayout
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:orientation="vertical">
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:orientation="vertical">
 
         <TextView
-            style="@style/DialogTitle"
-            android:text="@string/register_dialog_title"/>
+                style="@style/DialogTitle"
+                android:text="@string/register_dialog_title"/>
 
         <View style="@style/DialogTitleDivider"/>
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="20dp"
-            android:paddingLeft="16dp"
-            android:paddingRight="16dp"
-            android:paddingTop="20dp">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingBottom="20dp"
+                android:paddingLeft="16dp"
+                android:paddingRight="16dp"
+                android:paddingTop="20dp">
 
             <TextView
-                android:id="@+id/login_error_text"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="5dp"
-                android:text="@string/login_error"
-                android:textColor="@color/red"/>
+                    android:id="@+id/login_error_text"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="5dp"
+                    android:text="@string/login_error"
+                    android:textColor="@color/red_5"/>
 
             <ProgressBar
-                android:id="@+id/login_loading_bar"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:layout_marginBottom="5dp"
-                android:visibility="gone"/>
+                    android:id="@+id/login_loading_bar"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginBottom="5dp"
+                    android:visibility="gone"/>
 
-            <EditText
-                android:id="@+id/edit_login_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="sans"
-                android:hint="@string/email_hint"
-                android:inputType="textEmailAddress|textNoSuggestions"
-                android:background="?doz__editTextBackground">
+            <com.dozuki.ifixit.views.HelperTextInputLayout
+                    android:id="@+id/login_id_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp">
 
-                <requestFocus/>
-            </EditText>
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edit_login_id"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans"
+                        android:hint="@string/email_hint"
+                        android:inputType="textEmailAddress|textNoSuggestions"
+                        app:hintTextAppearance="@style/Base.TextInputLayout">
 
-            <EditText
-                android:id="@+id/edit_login_username"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="sans"
-                android:hint="@string/username"
-                android:inputType="textNoSuggestions"
-                android:background="?doz__editTextBackground"/>
+                    <requestFocus/>
+                </android.support.design.widget.TextInputEditText>
+            </com.dozuki.ifixit.views.HelperTextInputLayout>
 
-            <EditText
-                android:id="@+id/edit_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="sans"
-                android:hint="@string/password"
-                android:inputType="textPassword"
-                android:background="?doz__editTextBackground"/>
+            <com.dozuki.ifixit.views.HelperTextInputLayout
+                    android:id="@+id/username_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp">
 
-            <EditText
-                android:id="@+id/edit_confirm_password"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="10dp"
-                android:fontFamily="sans"
-                android:hint="@string/password_confirm_hint"
-                android:inputType="textPassword"
-                android:background="?doz__editTextBackground"/>
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edit_login_username"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans"
+                        android:hint="@string/username"
+                        android:inputType="textNoSuggestions"
+                        app:hintTextAppearance="@style/Base.TextInputLayout"/>
+            </com.dozuki.ifixit.views.HelperTextInputLayout>
+
+            <com.dozuki.ifixit.views.HelperTextInputLayout
+                    android:id="@+id/password_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp">
+
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edit_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        app:hintTextAppearance="@style/Base.TextInputLayout"/>
+
+            </com.dozuki.ifixit.views.HelperTextInputLayout>
+
+            <com.dozuki.ifixit.views.HelperTextInputLayout
+                    android:id="@+id/confirm_password_wrapper"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp">
+
+                <android.support.design.widget.TextInputEditText
+                        android:id="@+id/edit_confirm_password"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:fontFamily="sans"
+                        android:hint="@string/password_confirm_hint"
+                        android:inputType="textPassword"
+                        app:hintTextAppearance="@style/Base.TextInputLayout"/>
+
+            </com.dozuki.ifixit.views.HelperTextInputLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="20dp"
-                android:orientation="horizontal">
-
-                <CheckBox
-                    android:id="@+id/login_agreement_terms_checkbox"
-                    android:layout_width="wrap_content"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:button="?doz__checkboxBackground"/>
+                    android:layout_marginBottom="20dp"
+                    android:orientation="horizontal">
+
+                <android.support.v7.widget.AppCompatCheckBox
+                        android:id="@+id/login_agreement_terms_checkbox"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:id="@+id/login_agreement_terms_textview"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="fill"
-                    android:fontFamily="sans"
-                    android:paddingTop="@dimen/login_agreement_text_top_padding"/>
+                        android:id="@+id/login_agreement_terms_textview"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="fill"
+                        android:fontFamily="sans"
+                        android:paddingTop="@dimen/login_agreement_text_top_padding"/>
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:weightSum="2">
-
-                <Button
-                    android:id="@+id/cancel_register_button"
-                    android:layout_width="0px"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/cancel_register_description"
-                    android:text="@string/cancel_register_button"/>
+                    android:weightSum="2">
 
-                <Button
-                    android:id="@+id/register_button"
-                    android:layout_width="0px"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:contentDescription="@string/register_description"
-                    android:text="@string/register"/>
+                <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/cancel_register_button"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/cancel_register_description"
+                        android:text="@string/cancel_register_button"/>
+
+                <android.support.v7.widget.AppCompatButton
+                        android:id="@+id/register_button"
+                        android:layout_width="0px"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:contentDescription="@string/register_description"
+                        android:text="@string/register"/>
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

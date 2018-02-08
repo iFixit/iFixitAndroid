@@ -3,29 +3,25 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.Build;
+import android.support.v7.widget.CardView;
 import android.text.Html;
 import android.view.LayoutInflater;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.VideoThumbnail;
 import com.dozuki.ifixit.model.guide.GuideStep;
-import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.util.ImageSizes;
-import com.dozuki.ifixit.util.PicassoUtils;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-public class StepListItem extends TouchableRelativeLayout {
+public class StepListItem extends RelativeLayout implements View.OnClickListener, View.OnLongClickListener {
    private static final int EDIT_OPTION = 0;
    private static final int DELETE_OPTION = 1;
    private TextView mStepsView;
@@ -46,61 +42,12 @@ public class StepListItem extends TouchableRelativeLayout {
       mStepsView = (TextView) findViewById(R.id.step_line_text_view);
       mStepNumber = (TextView) findViewById(R.id.guide_create_step_item_number);
       mImageView = (ImageView) findViewById(R.id.guide_step_item_thumbnail);
+      RelativeLayout stepItemTarget = (RelativeLayout)findViewById(R.id.step_item_target);
 
-      setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            editStep();
-         }
-      });
-
-      final View menuButton = findViewById(R.id.step_item_menu_button);
-
-      menuButton.setOnClickListener(new OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-
-               PopupMenu itemMenu = new PopupMenu(mContext, menuButton);
-
-               itemMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                  @Override
-                  public boolean onMenuItemClick(MenuItem item) {
-                     switch (item.getItemId()) {
-                        case R.id.step_create_item_edit:
-                           editStep();
-                           break;
-                        case R.id.step_create_item_delete:
-                           deleteStep();
-                           break;
-                     }
-
-                     return true;
-                  }
-               });
-
-               MenuInflater menuInflater = itemMenu.getMenuInflater();
-               menuInflater.inflate(R.menu.step_item_popup, itemMenu.getMenu());
-               itemMenu.show();
-            } else {
-               // PopupMenu was added in API 11, so let's use an AlertDialog instead.
-               AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
-               builder.setItems(R.array.step_list_item_options, new DialogInterface.OnClickListener() {
-                  public void onClick(DialogInterface dialog, int which) {
-                     switch (which) {
-                        case EDIT_OPTION:
-                           editStep();
-                           break;
-                        case DELETE_OPTION:
-                           deleteStep();
-                           break;
-                     }
-                  }
-               });
-               builder.show();
-            }
-         }
-      });
+      setOnClickListener(this);
+      stepItemTarget.setOnClickListener(this);
+      setOnLongClickListener(this);
+      stepItemTarget.setOnLongClickListener(this);
    }
 
    private void deleteStep() {
@@ -138,7 +85,7 @@ public class StepListItem extends TouchableRelativeLayout {
 
    private void setStepThumbnail(ArrayList<Image> imageList, ImageView imageView) {
       if (imageList.size() == 0) {
-         PicassoUtils
+         Picasso
           .with(mContext)
           .load(R.drawable.no_image)
           .noFade()
@@ -166,7 +113,7 @@ public class StepListItem extends TouchableRelativeLayout {
    private void setStepThumbnail(String url, ImageView imageView) {
       imageView.setTag(url);
 
-      PicassoUtils
+      Picasso
        .with(mContext)
        .load(url)
        .noFade()
@@ -174,5 +121,30 @@ public class StepListItem extends TouchableRelativeLayout {
        .into(imageView);
 
       imageView.invalidate();
+   }
+
+   @Override
+   public void onClick(View v) {
+      editStep();
+   }
+
+   @Override
+   public boolean onLongClick(View v) {
+      // PopupMenu was added in API 11, so let's use an AlertDialog instead.
+      AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+      builder.setItems(R.array.step_list_item_options, new AlertDialog.OnClickListener() {
+         public void onClick(DialogInterface dialog, int which) {
+            switch (which) {
+               case EDIT_OPTION:
+                  editStep();
+                  break;
+               case DELETE_OPTION:
+                  deleteStep();
+                  break;
+            }
+         }
+      });
+      builder.show();
+      return false;
    }
 }

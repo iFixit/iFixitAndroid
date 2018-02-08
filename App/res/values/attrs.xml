@@ -1,11 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <attr name="doz__guidePagerTitleTextColor" format="color"/>
+    <attr name="doz__guidePagerTitleBackground" format="color"/>
+    <attr name="doz__guidePagerTitleFooterColor" format="color"/>
+    <attr name="doz__menuIconColor" format="color"/>
+    <attr name="doz__tabIndicatorColor" format="color"/>
+    <attr name="colorAccentDark" format="color"/>
     <!-- Base Style Attributes -->
     <attr name="doz__textColorPrimary" format="color"/>
     <attr name="doz__textColorSecondary" format="color"/>
     <attr name="doz__textColorPrimaryEmphasis" format="color"/>
     <attr name="doz__textColorSecondaryEmphasis" format="color"/>
     <attr name="doz__primaryHighlightColor" format="color"/>
+
+    <attr name="doz__toolbarStyle" format="reference"/>
+    <attr name="doz__toolbarPopupStyle" format="reference"/>
+
+    <attr name="doz__navHeaderLogo" format="reference|color"/>
 
     <attr name="doz__background" format="reference|color"/>
     <attr name="doz__imageBorder" format="reference|color"/>
@@ -14,10 +25,6 @@
     <attr name="doz__listViewStyle" format="reference"/>
     <attr name="doz__topicGuideList" format="reference"/>
     <attr name="doz__topicDefaultBackground" format="reference|color"/>
-    <attr name="doz__itemSelector" format="reference|color"/>
-    <attr name="doz__spinnerBackground" format="reference|color"/>
-    <attr name="doz__editTextBackground" format="reference|color"/>
-    <attr name="doz__checkboxBackground" format="reference|color"/>
 
     <attr name="buttonBarButtonStyle" format="reference"/>
     <attr name="buttonBarStyle" format="reference"/>
@@ -31,4 +38,13 @@
         <attr name="add_thumbnail_icon" format="integer"/>
         <attr name="main_image" format="integer"/>
     </declare-styleable>
+
+    <declare-styleable name="HelperTextInputLayout">
+        <attr name="helperText" format="string"/>
+        <attr name="helperTextColor" format="color|reference"/>
+    </declare-styleable>
+
+    <style name="HelperTextAppearance" parent="TextAppearance.Design.Error">
+        <item name="android:textColor">#888888</item>
+    </style>
 </resources>

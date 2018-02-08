@@ -5,11 +5,12 @@
                 android:layout_height="match_parent"
                 android:padding="@dimen/action_bar_switch_padding">
 
-    <Switch
-        android:id="@+id/publish_toggle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textOn="@string/public_switch"
-        android:textOff="@string/private_switch"/>
+    <android.support.v7.widget.SwitchCompat
+            android:id="@+id/publish_toggle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="6dp"
+            android:textOn="@string/publish"
+            android:textOff="@string/unpublish"/>
 
 </RelativeLayout>

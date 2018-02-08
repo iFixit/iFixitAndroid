@@ -1,43 +1,66 @@
 package com.dozuki.ifixit.ui.gallery;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AppCompatActivity;
+import android.support.v7.view.ActionMode;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
-import android.widget.*;
+import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.gallery.GalleryImage;
 import com.dozuki.ifixit.model.gallery.GalleryMediaList;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.FullImageViewActivity;
-import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.CaptureHelper;
 import com.dozuki.ifixit.util.ImageSizes;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 public abstract class MediaFragment extends BaseFragment
  implements OnItemClickListener, OnItemLongClickListener {
+
+   private static final String GOOGLE_PHOTOS_URI = "content://com.google.android.apps.photos.contentprovider";
 
    protected static final int IMAGE_PAGE_SIZE = 1000;
    private static final String CAMERA_PATH = "CAMERA_PATH";
@@ -79,6 +102,20 @@ public abstract class MediaFragment extends BaseFragment
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
       View view = inflater.inflate(R.layout.gallery_view, container, false);
+
+      String[] permissions;
+      if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.JELLY_BEAN) {
+         permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE, Manifest.permission.READ_EXTERNAL_STORAGE};
+      } else {
+         permissions = new String[]{Manifest.permission.CAMERA, Manifest.permission.WRITE_EXTERNAL_STORAGE};
+      }
+
+      if (ContextCompat.checkSelfPermission(getActivity(),
+       Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED ||
+       ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.READ_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+         ActivityCompat.requestPermissions(getActivity(),
+          permissions, CaptureHelper.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+      }
 
       if (savedInstanceState != null) {
          mShowingDelete = savedInstanceState.getBoolean(SHOWING_DELETE_KEY);
@@ -134,47 +171,46 @@ public abstract class MediaFragment extends BaseFragment
 
    @Override
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      super.onActivityResult(requestCode, resultCode, data);
-
       if (resultCode == Activity.RESULT_OK) {
-         if (requestCode == SELECT_PICTURE) {
-            Uri selectedImageUri = data.getData();
+         if (requestCode == SELECT_PICTURE && data != null) {
 
-            // check file type
-            String path = getPath(selectedImageUri);
-            if (path == null || !(path.toLowerCase().contains(".jpeg") ||
-             path.toLowerCase().contains(".jpg") || path.toLowerCase().contains(".png"))) {
-               Toast.makeText(getActivity(), getString(R.string.non_image_error),
-                Toast.LENGTH_LONG).show();
+            ArrayList<Uri> selectedImages = new ArrayList<>();
 
-               return;
-            }
-            
-            File file = new File(path);
-
-            if (file.length() == 0) {
-               Toast.makeText(getActivity(), getString(R.string.empty_image_error),
-                Toast.LENGTH_LONG).show();
-               return;
+            if (this.hasClipData(data)) {
+               selectedImages = this.getUrisFromClipData(data.getClipData());
+            } else {
+               selectedImages.add(data.getData());
             }
 
-            if (mMediaList.countUploadingImages() >= MAX_UPLOAD_COUNT) {
-               Toast.makeText(getActivity(), getString(R.string.too_many_image_error),
-                Toast.LENGTH_LONG).show();
-               return;
+            for (int i = 0; i < selectedImages.size(); i++) {
+               Uri selectedImage = selectedImages.get(i);
+
+               // check file type
+               String path = getPath(selectedImage);
+
+               if (selectedImage.toString().startsWith(GOOGLE_PHOTOS_URI) && (path == null || path.length() == 0)) {
+                  // Try downloading the image from google photos if it's there.
+                  Uri uri = this.downloadFileFromExternalSource(selectedImage);
+
+                  path = uri.getPath();
+               }
+
+               if (!this.isImageValid(path)) {
+                  return;
+               }
+
+               String key = mGalleryAdapter.addFile(path);
+               Api.call(getActivity(), ApiCall.uploadImage(path, key));
             }
 
-            String key = mGalleryAdapter.addUri(selectedImageUri);
-            Api.call(getSherlockActivity(), ApiCall.uploadImage(path, key));
-         } else if (requestCode == CAMERA_PIC_REQUEST) {
+         } else if (requestCode == CaptureHelper.CAMERA_REQUEST_CODE) {
             if (mCameraTempFileName == null) {
                Log.e("iFixit", "Error cameraTempFile is null!");
                return;
             }
 
             String key = mGalleryAdapter.addFile(mCameraTempFileName);
-            Api.call(getSherlockActivity(), ApiCall.uploadImage(
-             mCameraTempFileName, key));
+            Api.call(getActivity(), ApiCall.uploadImage(mCameraTempFileName, key));
          }
       }
    }
@@ -204,16 +240,17 @@ public abstract class MediaFragment extends BaseFragment
     long id) {
       MediaViewItem cell = (MediaViewItem) view;
       if (mSelectForReturn) {
+         MediaViewItem itemView = (MediaViewItem) view;
          String url = (String) view.getTag();
 
-         if (url == null || (url.equals("") || url.indexOf(".") == 0)) {
+         if (url == null || (url.equals("") || url.indexOf(".") == 0) || itemView.getImage().isLocal()) {
             return;
          }
 
          Intent selectResult = new Intent();
          selectResult.putExtra(GalleryActivity.MEDIA_RETURN_KEY, mMediaList.get(position));
-         getSherlockActivity().setResult(Activity.RESULT_OK, selectResult);
-         getSherlockActivity().finish();
+         getActivity().setResult(Activity.RESULT_OK, selectResult);
+         getActivity().finish();
       } else if (mMode != null) {
          if (cell == null) {
             Log.i("iFixit", "Delete cell null!");
@@ -246,45 +283,142 @@ public abstract class MediaFragment extends BaseFragment
    }
 
    protected void launchImageChooser() {
-      Intent intent = new Intent();
-      intent.setType("image/*");
-      intent.setAction(Intent.ACTION_GET_CONTENT);
-      startActivityForResult(Intent.createChooser(intent,
-       getString(R.string.image_chooser_title)), SELECT_PICTURE);
+      if (Build.VERSION.SDK_INT <= 19) {
+         Intent intent = new Intent();
+         intent.setType("image/*");
+         intent.setAction(Intent.ACTION_GET_CONTENT);
+         startActivityForResult(Intent.createChooser(intent,
+          getString(R.string.image_chooser_title)), SELECT_PICTURE);
+      } else if (Build.VERSION.SDK_INT > 19) {
+         Intent intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+         startActivityForResult(intent, SELECT_PICTURE);
+      }
    }
 
    protected void launchCamera() {
-      Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
       File file;
       try {
-         file = createImageFile();
-         cameraIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
-          Uri.fromFile(file));
-         startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+         file = CaptureHelper.createImageFile(getActivity());
+         mCameraTempFileName = file.getAbsolutePath();
+         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+         // Ensure that there's a camera activity to handle the intent
+         if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+
+            // Continue only if the File was successfully created
+            if (file != null) {
+               Context context = getContext();
+               Uri photoURI = FileProvider.getUriForFile(context,
+                context.getPackageName() + ".fileprovider",
+                file);
+               takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+               startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
+            }
+         }
       } catch (IOException e) {
          Log.e("MediaFragment", "Launch camera", e);
-         Toast.makeText(getActivity(), "Please insert an SD card.", Toast.LENGTH_SHORT).show();
+         Toast.makeText(getActivity(), "We had a problem launching your camera.", Toast.LENGTH_SHORT).show();
       }
    }
 
-   private File createImageFile() throws IOException {
-      // Create an image file name
-      String imageFileName = CaptureHelper.getFileName();
-      File image = File.createTempFile(imageFileName, ".jpg", CaptureHelper.getAlbumDir());
+   private boolean hasClipData(Intent data) {
+      return Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN && data.getClipData() != null;
+   }
 
-      mCameraTempFileName = image.getAbsolutePath();
-      return image;
+   private ArrayList<Uri> getUrisFromClipData(ClipData data) {
+      ArrayList<Uri> result = new ArrayList<>();
+
+      for (int i = 0; i < data.getItemCount(); i++) {
+         ClipData.Item item = data.getItemAt(i);
+
+         Uri uri = item.getUri();
+
+         result.add(uri);
+      }
+
+      return result;
+   }
+
+   private boolean isImageValid(String path) {
+      boolean result = true;
+      if (path == null) {
+         Toast.makeText(getActivity(), getString(R.string.non_image_error),
+          Toast.LENGTH_LONG).show();
+         result = false;
+      }
+
+      File file = new File(path);
+      if (file.length() == 0) {
+         Toast.makeText(getActivity(), getString(R.string.empty_image_error),
+          Toast.LENGTH_LONG).show();
+         result = false;
+      }
+
+      if (mMediaList.countUploadingImages() >= MAX_UPLOAD_COUNT) {
+         Toast.makeText(getActivity(), getString(R.string.too_many_image_error),
+          Toast.LENGTH_LONG).show();
+         result = false;
+      }
+
+      return result;
+   }
+
+   private Uri downloadFileFromExternalSource(Uri source) {
+      Uri result = null;
+      FileOutputStream fos = null;
+
+      try {
+         InputStream is = getActivity().getContentResolver().openInputStream(source);
+         if (is != null) {
+            File f = CaptureHelper.createImageFile(getActivity());
+
+            Bitmap bmp = BitmapFactory.decodeStream(is);
+            fos = new FileOutputStream(f);
+            bmp.compress(Bitmap.CompressFormat.JPEG, 100, fos);
+
+            result = Uri.fromFile(f);
+         }
+      } catch (FileNotFoundException e) {
+         Toast.makeText(getActivity(), R.string.google_photos_download_error,
+          Toast.LENGTH_LONG).show();
+
+         e.printStackTrace();
+      } catch (IOException e) {
+         e.printStackTrace();
+      } finally {
+         try {
+            if (fos != null) {
+               fos.close();
+            }
+         } catch (IOException e) {
+            e.printStackTrace();
+         }
+      }
+
+      return result;
    }
 
    private String getPath(Uri uri) {
-      String[] projection = {MediaStore.Images.Media.DATA};
+      String[] projection = {MediaStore.MediaColumns.DATA};
+
       Cursor cursor = getActivity().getContentResolver().query(uri, projection, null, null, null);
-      if (cursor != null && cursor.moveToFirst()) {
-         int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-         return cursor.getString(column_index);
-      } else {
-         return null;
+
+      String path = "";
+
+      try {
+         if (cursor != null && cursor.moveToFirst()) {
+            int column_index = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
+            path = cursor.getString(column_index);
+         } else {
+            return null;
+         }
+      } finally {
+         if (cursor != null) {
+            cursor.close();
+         }
       }
+
+      return path;
    }
 
    private void deleteSelectedPhotos() {
@@ -294,7 +428,7 @@ public abstract class MediaFragment extends BaseFragment
          if (mMediaList.get(i).isSelected()) {
 
             if (mMediaList.get(i).isLocal()) {
-               Toast.makeText(getSherlockActivity(), getString(R.string.delete_loading_image_error),
+               Toast.makeText(getActivity(), getString(R.string.delete_loading_image_error),
                 Toast.LENGTH_LONG).show();
             } else {
                deleteList.add(mMediaList.get(i).getId());
@@ -303,14 +437,14 @@ public abstract class MediaFragment extends BaseFragment
          }
       }
 
-      Api.call(getSherlockActivity(), ApiCall.deleteImage(deleteList));
+      Api.call(getActivity(), ApiCall.deleteImage(deleteList));
 
       mMode.finish();
    }
 
    private void setDeleteMode() {
       if (mMode == null) {
-         Animation animHide = AnimationUtils.loadAnimation(getSherlockActivity(),
+         Animation animHide = AnimationUtils.loadAnimation(getActivity(),
           R.anim.slide_out_bottom_slow);
          animHide.setAnimationListener(new AnimationListener() {
             @Override
@@ -322,7 +456,7 @@ public abstract class MediaFragment extends BaseFragment
             @Override
             public void onAnimationStart(Animation arg0) {}
          });
-         mMode = getSherlockActivity().startActionMode(new ModeCallback());
+         mMode = ((AppCompatActivity) getActivity()).startSupportActionMode(new ModeCallback());
       }
    }
 
@@ -331,7 +465,7 @@ public abstract class MediaFragment extends BaseFragment
 
       int selectedCount = mMediaList.countSelected();
 
-      AlertDialog.Builder builder = new AlertDialog.Builder(getSherlockActivity());
+      AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder
        .setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.media_delete_body, selectedCount,
@@ -365,10 +499,6 @@ public abstract class MediaFragment extends BaseFragment
    }
 
    class MediaAdapter extends BaseAdapter {
-      public String addUri(Uri uri) {
-         return addFile(uri.toString());
-      }
-
       public String addFile(String path) {
          GalleryImage image = new GalleryImage();
          image.setLocalImage(path);
@@ -402,32 +532,14 @@ public abstract class MediaFragment extends BaseFragment
          MediaViewItem itemView;
 
          if (convertView == null) {
-            itemView = new MediaViewItem(getSherlockActivity());
+            itemView = new MediaViewItem(getActivity());
          } else {
             itemView = (MediaViewItem) convertView;
+            itemView.clearImage();
          }
 
          GalleryImage image = (GalleryImage) getItem(position);
-
-         itemView.clearImage();
-
-         // image was added from the local gallery or captured on the phone
-         if (image.isLocal()) {
-            Uri temp = Uri.parse(image.getPath());
-            image.setLocalImage(temp.toString());
-
-            if (image.fromMediaStore()) {
-               // Media Store image
-               itemView.setImageItem(temp.toString());
-            } else {
-               // image was added locally from camera
-               itemView.setImageItem(new File(temp.toString()));
-            }
-
-         } else {
-            itemView.setImageItem(image.getPath(ImageSizes.stepThumb));
-         }
-
+         itemView.setImage(image);
          itemView.setTag(image.getPath());
          itemView.setSelected(image.isSelected());
 
@@ -435,11 +547,11 @@ public abstract class MediaFragment extends BaseFragment
       }
    }
 
-   private final class ModeCallback implements ActionMode.Callback {
+   private class ModeCallback implements ActionMode.Callback {
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         getSherlockActivity().getSupportMenuInflater().inflate(R.menu.contextual_delete, menu);
+         getActivity().getMenuInflater().inflate(R.menu.contextual_delete, menu);
          return true;
       }
 

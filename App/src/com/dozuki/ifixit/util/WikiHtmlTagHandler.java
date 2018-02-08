@@ -5,6 +5,8 @@ import android.text.Html;
 import android.text.Spannable;
 import android.text.style.BulletSpan;
 import android.text.style.StrikethroughSpan;
+import android.util.Log;
+
 import org.xml.sax.XMLReader;
 
 
@@ -19,12 +21,16 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
    public void handleTag(boolean opening, String tag, Editable output, XMLReader xmlReader) {
       if (tag.equalsIgnoreCase("strike") || tag.equalsIgnoreCase("s") || tag.equalsIgnoreCase("del")) {
          handleStrike(opening, output);
+      } else if (tag.equalsIgnoreCase("h1") || tag.equalsIgnoreCase("h2") || tag.equalsIgnoreCase("h3")) {
+         output.append(NEWLINE + NEWLINE);
+      } else if (tag.equalsIgnoreCase("h4") || tag.equalsIgnoreCase("h5") || tag.equalsIgnoreCase("h6")) {
+         output.append(NEWLINE);
       } else if (tag.equalsIgnoreCase("ul") || tag.equalsIgnoreCase("ol")) {
          handleList(opening, tag, output);
       } else if (tag.equalsIgnoreCase("li")) {
          handleListItem(opening, output);
       } else if (tag.equalsIgnoreCase("img")) {
-         output.append(NEWLINE);
+         output.append(NEWLINE + NEWLINE + NEWLINE);
       }
    }
 
@@ -41,7 +47,7 @@ public class WikiHtmlTagHandler implements Html.TagHandler {
       int len = output.length();
 
       if (opening) {
-         output.setSpan(new BulletSpan(), len, len, Spannable.SPAN_MARK_MARK);
+         output.setSpan(new BulletSpan(15), len, len, Spannable.SPAN_MARK_MARK);
       } else {
          Object obj = getLast(output, BulletSpan.class);
          int where = output.getSpanStart(obj);

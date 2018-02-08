@@ -1,19 +1,20 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<menu xmlns:android="http://schemas.android.com/apk/res/android">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/publish_guide"
-        android:title="@string/visibility"
-        android:actionLayout="@layout/menu_publish_switch"
-        android:showAsAction="always"/>
+            android:id="@+id/publish_guide"
+            android:title="@string/visibility"
+            app:actionLayout="@layout/menu_publish_switch"
+            app:showAsAction="always"/>
     <item
-        android:id="@+id/view_guide"
-        android:title="@string/view_guide"
-        android:icon="@drawable/ic_action_book"
-        android:showAsAction="never"/>
+            android:id="@+id/view_guide"
+            android:title="@string/view_guide"
+            android:icon="@drawable/ic_pageview_24dp"
+            app:showAsAction="never"/>
     <item
-        android:id="@+id/discard_changes"
-        android:title="@string/discard_changes"
-        android:icon="@drawable/ic_action_undo"
-        android:showAsAction="never"/>
+            android:id="@+id/discard_changes"
+            android:title="@string/discard_changes"
+            android:icon="@drawable/ic_undo_24dp"
+            app:showAsAction="never"/>
 </menu>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Pre 21 color compat: You can't use reference attributes in drawables, so you have to use colors attributes. -->
+    <color name="colorPrimary">@color/black</color>
+    <color name="colorPrimaryDark">@color/black_alpha_40</color>
+    <color name="colorAccent">@color/ifixit_blue</color>
+    <color name="colorAccentDark">@color/blue_6</color>
+    <color name="colorButtonNormal">@color/white</color>
+    <color name="colorControlNormal">@color/gray_6</color>
+    <color name="colorControlActivated">@color/ifixit_blue</color>
+    <color name="colorControlHighlight">@color/ifixit_blue</color>
+
+</resources>

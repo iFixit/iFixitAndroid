@@ -1,87 +1,49 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-    <LinearLayout
-        android:layout_height="wrap_content"
+<LinearLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:orientation="vertical"
+        android:padding="24dip"
         android:layout_width="match_parent"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <TextView
-            style="@style/DialogTitle"
-            android:text="@string/new_guide_details_title"/>
-
-        <View style="@style/DialogTitleDivider"/>
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:paddingRight="16dp"
-            android:paddingLeft="16dp"
-            android:paddingTop="24dp"
-            android:paddingBottom="24dp"
-
+    <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp">
 
-            <TextView
-                style="@style/Base.FormLabel"
-                android:text="@string/guide_intro_wizard_guide_topic_title"
-                android:id="@+id/topic_name_label"/>
+        <android.support.v7.widget.AppCompatAutoCompleteTextView
+            android:id="@+id/topic_name_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:saveEnabled="false"
+            android:inputType="text|textCapWords"
+            android:maxLines="1"
+            android:textColor="@color/black"
+            android:imeOptions="actionDone"
+            android:dropDownSelector="?attr/selectableItemBackground"/>
+    </android.support.design.widget.TextInputLayout>
 
-            <AutoCompleteTextView
-                android:id="@+id/topic_name_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:saveEnabled="false"
-                android:inputType="text|textCapWords"
-                android:singleLine="true"
-                android:textColor="@color/black"
-                android:imeOptions="actionDone"
-                style="@style/Base.FormField"
-                android:background="?doz__editTextBackground"
-                android:dropDownSelector="?doz__itemSelector"/>
+    <android.support.v7.widget.AppCompatSpinner
+        android:id="@+id/guide_types_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        style="@style/Base.Spinner"/>
 
-            <TextView
-                style="@style/Base.FormLabel"
-                android:text="@string/guide_type"/>
+    <com.dozuki.ifixit.views.HelperTextInputLayout
+            android:id="@+id/subject_field_wrapper"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:helperText="@string/guide_intro_wizard_guide_subject_hint">
 
-            <Spinner
-                android:id="@+id/guide_types_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Base.FormField"
-                android:dropDownSelector="?doz__itemSelector"/>
-
-            <TextView
-                style="@style/Base.FormLabel"
-                android:id="@+id/subject_label"
-                android:text="@string/guide_subject_label"/>
-
-            <EditText
-                android:id="@+id/subject_field"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                style="@style/Base.FormField"
-                android:background="?doz__editTextBackground"
-                android:imeOptions="actionDone"
-                android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences"/>
-
-            <View
-                android:id="@+id/divider"
-                android:background="?dividerHorizontal"
-                android:layout_height="1dp"
-                android:layout_marginBottom="16dp"
-                android:layout_width="match_parent"/>
-
-            <Button
-                style="?buttonBarButtonStyle"
-                android:id="@+id/save"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:text="@string/save"/>
-
-        </LinearLayout>
-    </LinearLayout>
-</ScrollView>
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/subject_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:imeOptions="actionDone"
+            android:hint="@string/guide_subject_label"
+            android:inputType="text|textAutoComplete|textAutoCorrect|textCapSentences"/>
+    </com.dozuki.ifixit.views.HelperTextInputLayout>
+</LinearLayout>

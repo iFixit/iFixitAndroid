@@ -3,13 +3,13 @@
     <!-- border color -->
     <item>
         <shape>
-            <solid android:color="@color/gainsboro" />
+            <solid android:color="@color/image_border" />
         </shape>
     </item>
     <!-- background color-->
     <item android:bottom="1dp">
         <shape>
-            <solid android:color="#ffeeeeee" />
+            <solid android:color="@color/image_background" />
         </shape>
     </item>
 </layer-list>

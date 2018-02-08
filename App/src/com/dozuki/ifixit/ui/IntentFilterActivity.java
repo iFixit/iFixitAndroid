@@ -4,12 +4,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.ui.search.SearchActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicActivity;
-import com.dozuki.ifixit.ui.topic_view.TopicViewActivity;
+import com.dozuki.ifixit.ui.topic.TopicActivity;
+import com.dozuki.ifixit.ui.topic.TopicViewActivity;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
@@ -125,7 +126,7 @@ public class IntentFilterActivity extends BaseActivity {
                }
             } else if (prefix.equalsIgnoreCase("c") || prefix.equalsIgnoreCase("device")) {
                String topicName = segments.get(1);
-               intent = TopicViewActivity.viewTopic(this, topicName);
+               intent = TopicViewActivity.viewTopic(this, topicName.replaceAll("_", " "));
                App.sendEvent("ui_action", "intent_filter", "category", null);
             }
          } catch (Exception e) {

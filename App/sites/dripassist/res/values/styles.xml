@@ -8,114 +8,12 @@
         <item name="android:visibility">gone</item>
     </style>
 
-    <style name="DropDownListView.DripAssist" parent="Widget.Sherlock.Light.ListView.DropDown">
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-    </style>
 
-    <style name="DropDownNav.DripAssist" parent="Widget.Sherlock.Light.ListView.DropDown">
-        <item name="android:background">@drawable/dripassist_spinner_background_holo_light</item>
-        <item name="android:popupBackground">@drawable/item_background_holo_light</item>
-        <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
-        <item name="android:listSelector">@drawable/list_selector_holo_light</item>
-    </style>
+    <style name="TitlePageIndicator">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:background">@color/dripassist_accent_color_dark</item>
 
-    <style name="DialogTheme.DripAssist" parent="android:Theme.Dialog">
-        <item name="android:editTextBackground">@style/EditTextDripAssist</item>
+        <item name="footerColor">@color/white</item>
     </style>
-
-    <style name="EditTextDripAssist" parent="android:Widget.EditText">
-        <item name="android:background">@drawable/dripassist_edit_text_holo_light</item>
-        <item name="android:textColor">#000000</item>
-    </style>
-
-    <style name="AutoCompleteTextViewDripAssist" parent="android:Widget.AutoCompleteTextView">
-        <item name="android:dropDownSelector">@drawable/dripassist_list_selector_holo_light</item>
-        <item name="android:background">@drawable/dripassist_edit_text_holo_light</item>
-        <item name="android:textColor">#000000</item>
-    </style>
-
-    <style name="CheckBoxDripAssist" parent="android:Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/dripassist_btn_check_holo_light</item>
-    </style>
-
-    <style name="RadioButtonDripAssist" parent="android:Widget.CompoundButton.RadioButton">
-        <item name="android:button">@drawable/dripassist_btn_radio_holo_light</item>
-    </style>
-
-    <style name="ButtonDripAssist" parent="@android:style/Widget.Button">
-        <item name="android:background">@drawable/dripassist_btn_default_holo_light</item>
-        <item name="android:minHeight">48dip</item>
-        <item name="android:minWidth">64dip</item>
-        <item name="android:textColor">#FFFFFFFF</item>
-    </style>
-
-    <style name="ImageButtonDripAssist" parent="android:Widget.ImageButton">
-        <item name="android:background">@drawable/dripassist_btn_default_holo_light</item>
-    </style>
-
-    <style name="SpinnerDripAssist" parent="android:Widget.Spinner">
-        <item name="android:background">@drawable/dripassist_spinner_background_holo_light</item>
-        <item name="android:dropDownSelector">@drawable/dripassist_list_selector_holo_light</item>
-    </style>
-
-    <style name="SpinnerDropDownItemDripAssist" parent="android:Widget.DropDownItem.Spinner">
-        <item name="android:checkMark">@drawable/dripassist_btn_radio_holo_light</item>
-    </style>
-
-    <style name="ProgressBarDripAssist" parent="android:Widget.ProgressBar.Horizontal">
-        <item name="android:progressDrawable">@drawable/dripassist_progress_horizontal_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/dripassist_progress_indeterminate_horizontal_holo_light
-        </item>
-        <item name="android:minHeight">16dip</item>
-        <item name="android:maxHeight">16dip</item>
-    </style>
-
-    <style name="SeekBarDripAssist" parent="android:Widget.SeekBar">
-        <item name="android:progressDrawable">@drawable/dripassist_scrubber_progress_horizontal_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/dripassist_scrubber_progress_horizontal_holo_light</item>
-        <item name="android:minHeight">13dip</item>
-        <item name="android:maxHeight">13dip</item>
-        <item name="android:thumb">@drawable/dripassist_scrubber_control_selector_holo_light</item>
-        <item name="android:thumbOffset">16dip</item>
-        <item name="android:paddingLeft">16dip</item>
-        <item name="android:paddingRight">16dip</item>
-    </style>
-
-    <style name="RatingBarDripAssist" parent="android:Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/dripassist_ratingbar_full_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/dripassist_ratingbar_full_holo_light</item>
-    </style>
-
-    <style name="RatingBarBigDripAssist" parent="android:Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/dripassist_ratingbar_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/dripassist_ratingbar_holo_light</item>
-        <item name="android:minHeight">35dip</item>
-        <item name="android:maxHeight">35dip</item>
-    </style>
-
-    <style name="RatingBarSmallDripAssist" parent="android:Widget.RatingBar">
-        <item name="android:progressDrawable">@drawable/dripassist_ratingbar_small_holo_light</item>
-        <item name="android:indeterminateDrawable">@drawable/dripassist_ratingbar_small_holo_light</item>
-        <item name="android:minHeight">16dip</item>
-        <item name="android:maxHeight">16dip</item>
-    </style>
-
-    <style name="ToggleDripAssist" parent="android:Widget.Button.Toggle">
-        <item name="android:background">@drawable/dripassist_btn_toggle_holo_light</item>
-        <item name="android:minHeight">48dip</item>
-        <item name="android:textColor">#FFFFFF</item>
-    </style>
-
-    <style name="ListViewDripAssist" parent="android:Widget.ListView">
-        <item name="android:listSelector">@drawable/dripassist_list_selector_holo_light</item>
-    </style>
-
-    <style name="ListViewDripAssist.White" parent="android:Widget.ListView.White">
-        <item name="android:listSelector">@drawable/dripassist_list_selector_holo_light</item>
-    </style>
-
-    <style name="SpinnerItemDripAssist" parent="android:TextAppearance.Widget.TextView.SpinnerItem">
-        <item name="android:textColor">#000000</item>
-    </style>
-
 </resources>

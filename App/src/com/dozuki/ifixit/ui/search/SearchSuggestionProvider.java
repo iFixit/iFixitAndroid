@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.ui.search;
 
 import android.content.SearchRecentSuggestionsProvider;
+
 import com.dozuki.ifixit.BuildConfig;
 
 public class SearchSuggestionProvider extends SearchRecentSuggestionsProvider {

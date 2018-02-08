@@ -3,18 +3,19 @@ package com.dozuki.ifixit.ui.guide.view;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.WindowManager;
 
-import com.actionbarsherlock.app.SherlockActivity;
-import com.actionbarsherlock.view.Window;
+import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.ui.guide.FullScreenImageView;
 
 import it.sephiroth.android.library.imagezoom.ImageViewTouchBase;
 
-public class FullImageViewActivity extends SherlockActivity {
+public class FullImageViewActivity extends AppCompatActivity {
    private static final String IMAGE_URL = "IMAGE_URL";
    private static final String OFFLINE = "OFFLINE";
 
@@ -28,6 +29,7 @@ public class FullImageViewActivity extends SherlockActivity {
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
+      setTheme(App.get().getSiteTheme());
 
       String url = getIntent().getExtras().getString(IMAGE_URL);
       boolean offline = getIntent().getExtras().getBoolean(OFFLINE);

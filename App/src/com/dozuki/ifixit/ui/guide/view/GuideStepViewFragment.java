@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.ui.BaseFragment;
@@ -24,62 +25,58 @@ public class GuideStepViewFragment extends BaseFragment {
    private static final String EMBED_TYPE = "embed";
 
    private GuideStep mStep;
-   private boolean mIsOfflineGuide;
-
-   private StepLinesFragment mLinesFrag;
-   private StepVideoFragment mVideoFrag;
-   private StepEmbedFragment mEmbedFrag;
-   private StepImageFragment mImageFrag;
-
-   public GuideStepViewFragment() { }
-
-   public GuideStepViewFragment(GuideStep step, boolean isOfflineGuide) {
-      mStep = step;
-      mIsOfflineGuide = isOfflineGuide;
-   }
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+      Bundle bundle = this.getArguments();
+
+      mStep = (GuideStep)bundle.getSerializable("STEP_KEY");
+      boolean mIsOfflineGuide = bundle.getBoolean("OFFLINE_KEY");
+
       View view = inflater.inflate(R.layout.guide_step, container, false);
 
+      StepImageFragment imageFrag;
+      StepVideoFragment videoFrag;
+      StepEmbedFragment embedFrag;
+      StepLinesFragment linesFrag;
       if (savedInstanceState != null) {
          mStep = (GuideStep) savedInstanceState.getSerializable(GUIDE_STEP_KEY);
          String stepType = mStep.type();
 
          if (stepType.equals(VIDEO_TYPE)) {
-            mVideoFrag = (StepVideoFragment) getChildFragmentManager().findFragmentByTag(STEP_VIDEO_FRAGMENT_TAG);
+            videoFrag = (StepVideoFragment) getChildFragmentManager().findFragmentByTag(STEP_VIDEO_FRAGMENT_TAG);
          } else if (stepType.equals(EMBED_TYPE)) {
-            mEmbedFrag = (StepEmbedFragment) getChildFragmentManager().findFragmentByTag(STEP_EMBED_FRAGMENT_TAG);
+            embedFrag = (StepEmbedFragment) getChildFragmentManager().findFragmentByTag(STEP_EMBED_FRAGMENT_TAG);
          } else if (stepType.equals(IMAGE_TYPE)) {
-            mImageFrag = (StepImageFragment) getChildFragmentManager().findFragmentByTag(STEP_IMAGE_FRAGMENT_TAG);
+            imageFrag = (StepImageFragment) getChildFragmentManager().findFragmentByTag(STEP_IMAGE_FRAGMENT_TAG);
          }
 
-         mLinesFrag = (StepLinesFragment) getChildFragmentManager().findFragmentById(R.id.guide_step_lines);
+         linesFrag = (StepLinesFragment) getChildFragmentManager().findFragmentById(R.id.guide_step_lines);
 
       } else {
          String stepType = mStep.type();
-         mLinesFrag = new StepLinesFragment();
-         mLinesFrag.setRetainInstance(true);
+         linesFrag = new StepLinesFragment();
+         linesFrag.setRetainInstance(true);
          Bundle linesArgs = new Bundle();
 
          linesArgs.putSerializable(StepLinesFragment.GUIDE_STEP, mStep);
 
-         mLinesFrag.setArguments(linesArgs);
+         linesFrag.setArguments(linesArgs);
 
          FragmentTransaction ft = getChildFragmentManager()
           .beginTransaction()
-          .add(R.id.guide_step_lines, mLinesFrag);
+          .add(R.id.guide_step_lines, linesFrag);
 
          if (stepType.equals(VIDEO_TYPE)) {
-            mVideoFrag = StepVideoFragment.newInstance(mStep.getVideo(), mIsOfflineGuide);
-            ft.add(MEDIA_CONTAINER, mVideoFrag, STEP_VIDEO_FRAGMENT_TAG);
+            videoFrag = StepVideoFragment.newInstance(mStep.getVideo(), mIsOfflineGuide);
+            ft.add(MEDIA_CONTAINER, videoFrag, STEP_VIDEO_FRAGMENT_TAG);
          } else if (stepType.equals(EMBED_TYPE)) {
-            mEmbedFrag = StepEmbedFragment.newInstance(mStep.getEmbed(), mIsOfflineGuide);
-            ft.add(MEDIA_CONTAINER, mEmbedFrag, STEP_EMBED_FRAGMENT_TAG);
+            embedFrag = StepEmbedFragment.newInstance(mStep.getEmbed(), mIsOfflineGuide);
+            ft.add(MEDIA_CONTAINER, embedFrag, STEP_EMBED_FRAGMENT_TAG);
          } else if (stepType.equals(IMAGE_TYPE)) {
-            mImageFrag = StepImageFragment.newInstance(mStep.getImages(), mIsOfflineGuide);
-            ft.add(MEDIA_CONTAINER, mImageFrag, STEP_IMAGE_FRAGMENT_TAG);
+            imageFrag = StepImageFragment.newInstance(mStep.getImages(), mIsOfflineGuide);
+            ft.add(MEDIA_CONTAINER, imageFrag, STEP_IMAGE_FRAGMENT_TAG);
          }
 
          ft.commit();

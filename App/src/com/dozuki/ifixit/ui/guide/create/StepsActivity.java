@@ -3,8 +3,8 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentManager;
+import android.view.Menu;
 
-import com.actionbarsherlock.view.Menu;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
@@ -35,6 +35,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
       int guideid = 0;
 
       super.onCreate(savedInstanceState);
+      super.setDrawerContent(R.layout.guide_create_steps_root);
 
       if (savedInstanceState != null) {
          // to persist mGuide
@@ -50,8 +51,6 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
             guideid = mGuide.getGuideid();
          }
       }
-
-      setContentView(R.layout.guide_create_steps_root);
 
       if (findViewById(R.id.guide_create_fragment_steps_container) != null
        && getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG) == null) {
@@ -72,7 +71,11 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
       }
 
       if (mIsLoading) {
-         getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
+         getSupportFragmentManager()
+          .beginTransaction()
+          .hide(mStepPortalFragment)
+          .addToBackStack(null)
+          .commit();
       }
    }
 
@@ -108,7 +111,8 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
 
    @Override
    public void onReorderComplete(boolean reodered) {
-      ((StepRearrangeListener) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
+      ((StepRearrangeListener) getSupportFragmentManager()
+       .findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG))
        .onReorderComplete(reodered);
    }
 
@@ -119,7 +123,7 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.step_list_menu, menu);
+      getMenuInflater().inflate(R.menu.step_list_menu, menu);
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -161,12 +165,18 @@ public class StepsActivity extends BaseMenuDrawerActivity implements StepRearran
    @Override
    public void showLoading(int container) {
       mStepPortalFragment =
-       (StepPortalFragment) getSupportFragmentManager().findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
-      getSupportFragmentManager().beginTransaction()
+       (StepPortalFragment) getSupportFragmentManager()
+        .findFragmentByTag(GUIDE_STEPS_PORTAL_FRAG);
+      getSupportFragmentManager()
+       .beginTransaction()
        .add(container, new LoadingFragment(), LOADING).addToBackStack(LOADING)
        .commit();
       if (mStepPortalFragment != null) {
-         getSupportFragmentManager().beginTransaction().hide(mStepPortalFragment).addToBackStack(null).commit();
+         getSupportFragmentManager()
+          .beginTransaction()
+          .hide(mStepPortalFragment)
+          .addToBackStack(null)
+          .commit();
       }
       mIsLoading = true;
    }

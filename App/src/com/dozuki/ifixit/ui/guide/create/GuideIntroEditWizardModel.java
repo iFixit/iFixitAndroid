@@ -9,7 +9,9 @@ import android.content.Context;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
-import com.dozuki.ifixit.model.guide.wizard.*;
+import com.dozuki.ifixit.model.guide.wizard.EditTextPage;
+import com.dozuki.ifixit.model.guide.wizard.Page;
+import com.dozuki.ifixit.model.guide.wizard.PageList;
 
 public class GuideIntroEditWizardModel extends GuideIntroWizardModel {
 

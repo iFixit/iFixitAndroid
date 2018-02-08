@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.model.dozuki;
 
 import android.content.res.Resources;
-import android.graphics.drawable.Drawable;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.BuildConfig;
@@ -41,6 +40,7 @@ public class Site implements Serializable {
 
    public ArrayList<GuideType> mGuideTypes;
    private boolean mBarcodeScanner = false;
+   public boolean mHasTitlePictures = false;
 
    public Site(int siteid) {
       mSiteid = siteid;
@@ -151,20 +151,53 @@ public class Site implements Serializable {
       return mDomain.equals(host) || mCustomDomain.equals(host);
    }
 
+   public int transparentTheme() {
+      // If the site has a transparent theme, use that.
+      if (isIfixit()) {
+         return R.style.Theme_iFixit_TransparentActionBar;
+      } else if (isPepsi()) {
+         return R.style.Theme_CharlesSmith_TransparentActionBar;
+      } else if (isAristocrat()) {
+         return R.style.Theme_Aristocrat_TransparentActionBar;
+      } else if (isAccustream()) {
+         return R.style.Theme_Accustream_TransparentActionBar;
+      } else {
+         // We don't have a custom theme for the site - check for generic theme.
+         if (mTheme.equals("custom")) {
+            // Site has a custom theme but we don't have one implemented yet.
+            return R.style.Theme_Dozuki_TransparentActionBar;
+         } else if (mTheme.equals("green")) {
+            return R.style.Theme_Dozuki_Green_TransparentActionBar;
+         } else if (mTheme.equals("blue")) {
+            return R.style.Theme_iFixit_TransparentActionBar;
+         } else if (mTheme.equals("white")) {
+            return R.style.Theme_Dozuki_White_TransparentActionBar;
+         } else if (mTheme.equals("orange")) {
+            return R.style.Theme_Dozuki_Orange_TransparentActionBar;
+         } else if (mTheme.equals("black")) {
+            return R.style.Theme_Dozuki_Black_TransparentActionBar;
+         }
+      }
+
+      return R.style.Theme_Base_TransparentActionBar;
+   }
+
    public int theme() {
       // Put custom site themes here.
       if (isIfixit()) {
          return R.style.Theme_iFixit;
       } else if (isAccustream()) {
          return R.style.Theme_Accustream;
-      } else if (isMagnolia()) {
-         return R.style.Theme_Magnolia;
       } else if (isDripAssist()) {
-          return R.style.Theme_DripAssist;
+         return R.style.Theme_DripAssist;
       } else if (isPVA()) {
          return R.style.Theme_PVA;
       } else if (isOscaro()) {
          return R.style.Theme_Oscaro;
+      } else if (isPepsi()) {
+         return R.style.Theme_CharlesSmith;
+      } else if (isAristocrat()) {
+         return R.style.Theme_Aristocrat;
       } else {
          // We don't have a custom theme for the site - check for generic theme.
          if (mTheme.equals("custom")) {
@@ -187,7 +220,7 @@ public class Site implements Serializable {
    }
 
 
-    // Used only for custom apps, where we don't have a call to get the site info.
+   // Used only for custom apps, where we don't have a call to get the site info.
    public static Site getSite(String siteName) {
       Site site = null;
       Resources res = App.get().getResources();
@@ -208,6 +241,22 @@ public class Site implements Serializable {
          site.mPublicRegistration = true;
          site.mObjectNamePlural = res.getString(R.string.devices);
          site.mObjectNameSingular = res.getString(R.string.device);
+      } else if (siteName.equals("aristocrat")) {
+         site = new Site(3995);
+         site.mName = "aristocrat";
+         site.mDomain = "aristocrat.dozuki.com";
+         site.mTitle = "Aristocrat Resource Center";
+         site.mTheme = "custom";
+         site.mPublic = false;
+         site.mAnswers = true;
+         site.mDescription = "";
+         site.mStandardAuth = false;
+         site.mBarcodeScanner = false;
+         site.mSsoUrl = "http://aristocrat.dozuki.com/Login";
+         site.mPublicRegistration = false;
+         site.mHasTitlePictures = true;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("dozuki")) {
          site = new Site(5);
          site.mName = "dozuki";
@@ -253,20 +302,6 @@ public class Site implements Serializable {
          site.mBarcodeScanner = true;
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
-      } else if (siteName.equals("magnoliamedical")) {
-         site = new Site(3245);
-         site.mName = "magnoliamedical";
-         site.mDomain = "magnoliamedical.dozuki.com";
-         site.mTitle = "Magnolia Medical";
-         site.mTheme = "black";
-         site.mPublic = false;
-         site.mAnswers = false;
-         site.mDescription = "SteriPath: The simple, all-in-one system designed to be the easiest and most effective method to reduce blood culture sample contamination.";
-         site.mStandardAuth = true;
-         site.mSsoUrl = null;
-         site.mPublicRegistration = false;
-         site.mObjectNamePlural = res.getString(R.string.categories);
-         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("pva")) {
          site = new Site(3335);
          site.mName = "pva";
@@ -282,19 +317,19 @@ public class Site implements Serializable {
          site.mObjectNamePlural = res.getString(R.string.categories);
          site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("dripassist")) {
-          site = new Site(3366);
-          site.mName = "dripassist";
-          site.mDomain = "dripassist.dozuki.com";
-          site.mTitle = "DripAssist";
-          site.mTheme = "white";
-          site.mPublic = true;
-          site.mAnswers = false;
-          site.mDescription = "";
-          site.mStandardAuth = true;
-          site.mSsoUrl = null;
-          site.mPublicRegistration = false;
-          site.mObjectNamePlural = res.getString(R.string.categories);
-          site.mObjectNameSingular = res.getString(R.string.category);
+         site = new Site(3366);
+         site.mName = "dripassist";
+         site.mDomain = "dripassist.dozuki.com";
+         site.mTitle = "DripAssist";
+         site.mTheme = "white";
+         site.mPublic = true;
+         site.mAnswers = false;
+         site.mDescription = "";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
       } else if (siteName.equals("oscaro")) {
          site = new Site(3293);
          site.mName = "oscaro";
@@ -305,6 +340,20 @@ public class Site implements Serializable {
          site.mPublic = true;
          site.mAnswers = false;
          site.mDescription = "Des fiches pratiques en vidéos et photos pour l’entretien et la réparation de votre véhicule. Toutes marques auto, modèles de voitures et tous types de pièces.";
+         site.mStandardAuth = true;
+         site.mSsoUrl = null;
+         site.mPublicRegistration = false;
+         site.mObjectNamePlural = res.getString(R.string.categories);
+         site.mObjectNameSingular = res.getString(R.string.category);
+      } else if (siteName.equals("charlessmith")) {
+         site = new Site(3558);
+         site.mName = "charlessmith";
+         site.mDomain = "charlessmith.dozuki.com";
+         site.mTitle = "PepsiCo International";
+         site.mTheme = "custom";
+         site.mPublic = false;
+         site.mAnswers = false;
+         site.mDescription = "Operation & Maintenance of Your Postmix Dispenser";
          site.mStandardAuth = true;
          site.mSsoUrl = null;
          site.mPublicRegistration = false;
@@ -324,7 +373,15 @@ public class Site implements Serializable {
    }
 
    public boolean actionBarUsesIcon() {
-      return isAccustream() || isIfixit() || isMagnolia() || isDripAssist() || isPVA() || isOscaro();
+      return isAccustream() || isIfixit() || isDripAssist() || isPVA() || isOscaro() || isPepsi() || isAristocrat();
+   }
+
+   public boolean isAristocrat() {
+      return mName.equals("aristocrat");
+   }
+
+   public boolean isPepsi() {
+      return mName.equals("charlessmith");
    }
 
    public boolean isOscaro() {
@@ -351,11 +408,15 @@ public class Site implements Serializable {
       return mName.equals("dozuki");
    }
 
-   public Drawable getLogo() {
-      return null;
+   public Image getLogo() {
+      return mLogo;
    }
 
-   public boolean isMagnolia() {
-      return mName.equals("magnoliamedical");
+   public int getGuideListItemOptions(boolean isPublic) {
+      if (!isPublic) {
+         return isIfixit() ? R.array.guide_list_item_options : R.array.guide_list_item_options_with_delete;
+      } else {
+         return isIfixit() ? R.array.guide_list_item_options_unpublish : R.array.guide_list_item_options_with_delete_unpublish;
+      }
    }
 }

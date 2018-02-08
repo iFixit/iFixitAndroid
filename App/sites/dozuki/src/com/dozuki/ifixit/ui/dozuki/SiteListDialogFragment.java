@@ -6,21 +6,23 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnKeyListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.widget.SearchView;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import com.actionbarsherlock.widget.SearchView;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseDialogFragment;
-import com.dozuki.ifixit.ui.topic_view.TopicActivity;
+import com.dozuki.ifixit.ui.topic.TopicActivity;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
 import com.dozuki.ifixit.util.api.Api;
@@ -52,7 +54,7 @@ public class SiteListDialogFragment extends BaseDialogFragment {
       mSiteListView = (ListView)view.findViewById(R.id.siteListView);
       mSiteListView.setEmptyView(view.findViewById(R.id.emptyView));
 
-      mSearchView = (SearchView)view.findViewById(R.id.dozuki_search_view);
+      mSearchView = (SearchView) view.findViewById(R.id.dozuki_search_view);
 
       return view;
    }
@@ -78,15 +80,6 @@ public class SiteListDialogFragment extends BaseDialogFragment {
        getActivity().getComponentName()));
       mSearchView.setOnQueryTextListener((SiteListActivity)getActivity());
       mSearchView.setIconifiedByDefault(false);
-
-      mSearchView.findViewById(R.id.abs__search_plate)
-       .setBackgroundResource(R.drawable.textfield_search_view_holo_light);
-
-      ((ImageView)mSearchView.findViewById(R.id.abs__search_close_btn))
-       .setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_exit));
-
-      ((ImageView)mSearchView.findViewById(R.id.abs__search_mag_icon))
-       .setImageDrawable(getResources().getDrawable(R.drawable.ic_action_search_dark));
    }
 
    public void showLoading() {

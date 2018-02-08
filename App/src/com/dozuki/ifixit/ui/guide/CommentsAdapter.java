@@ -5,6 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.LinearLayout;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
 

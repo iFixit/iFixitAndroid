@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+                android:id="@+id/nav_back_to_site_list"
+                android:icon="@drawable/ic_arrow_back_black_24dp"
+                android:title="@string/back_to_site_list"
+                android:visible="false"/>
+        <item
+                android:id="@+id/nav_search"
+                android:icon="@drawable/ic_search_black_24dp"
+                android:title="@string/search"/>
+        <item
+                android:id="@+id/nav_scan_barcode"
+                android:icon="@drawable/ic_barcode_black"
+                android:title="@string/slide_menu_barcode_scanner"
+                android:visible="false"/>
+    </group>
+
+    <item
+            android:id="@+id/nav_user_actions"
+            android:title="@string/account_menu_title">
+        <menu>
+            <item
+                    android:id="@+id/nav_favorites"
+                    android:icon="@drawable/ic_favorite_24dp"
+                    android:title="@string/slide_menu_favorite_guides"/>
+
+            <item
+                    android:id="@+id/nav_new_guide"
+                    android:icon="@drawable/ic_create_black_24dp"
+                    android:title="@string/slide_menu_create_new_guide"/>
+
+            <item
+                    android:id="@+id/nav_my_guides"
+                    android:icon="@drawable/ic_guide_large"
+                    android:title="@string/slide_menu_my_guides"/>
+
+            <item
+                    android:id="@+id/nav_media_manager"
+                    android:icon="@drawable/ic_collections_black_24dp"
+                    android:title="@string/slide_menu_media_gallery"/>
+
+            <item
+                    android:id="@+id/nav_logout"
+                    android:icon="@drawable/ic_exit_to_app_black_24dp"
+                    android:title="@string/slide_menu_logout"
+                    android:visible="false"/>
+        </menu>
+    </item>
+
+    <item android:title="@string/slide_menu_browse_content">
+        <menu>
+            <item
+                    android:id="@+id/nav_browse_content"
+                    android:icon="@drawable/ic_device_large"
+                    android:title="@string/slide_menu_browse_devices"/>
+
+            <item
+                    android:id="@+id/nav_answers"
+                    android:icon="@drawable/ic_question_answer_black_24dp"
+                    android:title="@string/answers_forum"
+                    android:visible="false"/>
+
+            <item
+                    android:id="@+id/nav_teardowns"
+                    android:icon="@drawable/ic_teardown_large"
+                    android:title="@string/teardowns"
+                    android:visible="false"/>
+
+            <item
+                    android:id="@+id/nav_featured_guides"
+                    android:icon="@drawable/ic_stars_black_24dp"
+                    android:title="@string/featured_guides"/>
+
+            <item
+                    android:id="@+id/nav_parts_and_tools"
+                    android:icon="@drawable/ic_shopping_basket_black_24dp"
+                    android:title="@string/parts_and_tools"
+                    android:visible="false"/>
+
+        </menu>
+    </item>
+    <item
+            android:id="@+id/nav_social_section"
+            android:title="@string/slide_menu_ifixit_everywhere"
+            android:visible="false">
+        <menu>
+            <item
+                    android:id="@+id/nav_youtube"
+                    android:icon="@drawable/ic_youtube"
+                    android:title="@string/slide_menu_youtube"/>
+            <item
+                    android:id="@+id/nav_facebook"
+                    android:icon="@drawable/ic_facebook"
+                    android:title="@string/slide_menu_facebook"/>
+            <item
+                    android:id="@+id/nav_twitter"
+                    android:icon="@drawable/ic_twitter"
+                    android:title="@string/slide_menu_twitter"/>
+        </menu>
+    </item>
+
+    <item
+            android:id="@+id/nav_debug"
+            android:title="@string/debug"
+            android:visible="false"/>
+</menu>

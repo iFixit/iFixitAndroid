@@ -11,11 +11,11 @@ import android.media.MediaPlayer.OnCompletionListener;
 import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.Window;
 import android.view.WindowManager;
 import android.widget.MediaController;
 import android.widget.VideoView;
 
-import com.actionbarsherlock.view.Window;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.util.api.ApiSyncAdapter;
 
@@ -41,7 +41,7 @@ public class VideoViewActivity extends Activity {
       String videoUrl = extras.getString(VIDEO_URL);
       boolean isOffline = extras.getBoolean(IS_OFFLINE);
 
-      requestWindowFeature((int) Window.FEATURE_NO_TITLE);
+      requestWindowFeature(Window.FEATURE_NO_TITLE);
 
       getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 

@@ -19,6 +19,7 @@ import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.VideoViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
+import com.squareup.picasso.Picasso;
 
 public class StepVideoFragment extends BaseFragment {
    private static final String GUIDE_VIDEO_KEY = "GUIDE_VIDEO_KEY";
@@ -124,10 +125,8 @@ public class StepVideoFragment extends BaseFragment {
    }
 
    private float navigationHeight() {
-      int actionBarHeight, indicatorHeight = 50;
-
-      actionBarHeight = mResources.getDimensionPixelSize(
-       com.actionbarsherlock.R.dimen.abs__action_bar_default_height);
+      int actionBarHeight = 48,
+          indicatorHeight = 50;
 
       float pagePadding = viewPadding(R.dimen.page_padding);
 

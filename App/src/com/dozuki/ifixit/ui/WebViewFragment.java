@@ -1,7 +1,8 @@
 package com.dozuki.ifixit.ui;
 
 import android.content.Intent;
-import android.graphics.Bitmap;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,27 +10,39 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.CookieManager;
 import android.webkit.CookieSyncManager;
+import android.webkit.WebChromeClient;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
+
 import com.dozuki.ifixit.App;
+import com.dozuki.ifixit.BuildConfig;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.dozuki.Site;
 import com.dozuki.ifixit.model.guide.OnViewGuideListener;
-import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 
+import okhttp3.HttpUrl;
+
 public class WebViewFragment extends BaseFragment implements OnViewGuideListener {
+   public static final String URL_KEY = "URL_KEY";
    private WebView mWebView;
    private String mUrl;
    private Site mSite;
-   private GuideWebView mWebViewClient;
-   protected ProgressBar mProgressBar;
+   private GuideWebViewClient mWebViewClient;
+   protected RelativeLayout mProgressBar;
 
    @Override
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+
+      Bundle args = getArguments();
+
+      if (args != null) {
+         mUrl = args.getString(URL_KEY);
+      }
+
       if (mWebView != null) {
          mWebView.destroy();
       }
@@ -38,24 +51,33 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
          mSite = ((App) getActivity().getApplication()).getSite();
       }
 
-      View view = inflater.inflate(R.layout.web_view_fragment, container, false);
-      mProgressBar = (ProgressBar) view.findViewById(R.id.progress_bar);
-      mWebView = (WebView) view.findViewById(R.id.web_view);
+      View view = inflater.inflate(R.layout.topic_answers, container, false);
+      RelativeLayout progressBar = (RelativeLayout) view.findViewById(R.id.webview_progress);
+      mWebView = (WebView) view.findViewById(R.id.topic_answers_webview);
 
-      CookieSyncManager.createInstance(mWebView.getContext());
-      CookieManager.getInstance().setAcceptCookie(true);
+      CookieManager cookieManager = CookieManager.getInstance();
+
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+         //noinspection deprecation
+         CookieSyncManager.createInstance(getContext());
+      }
+
+      cookieManager.setAcceptCookie(true);
 
       WebSettings settings = mWebView.getSettings();
       settings.setJavaScriptEnabled(true);
+      settings.setDomStorageEnabled(true);
       settings.setBuiltInZoomControls(true);
       settings.setSupportZoom(true);
       settings.setLoadWithOverviewMode(true);
       settings.setUseWideViewPort(true);
       settings.setAppCacheEnabled(true);
       settings.setCacheMode(WebSettings.LOAD_DEFAULT);
-
-      mWebViewClient = new GuideWebView(this);
+      mWebViewClient = new GuideWebViewClient(progressBar, this);
       mWebView.setWebViewClient(mWebViewClient);
+      mWebView.setWebChromeClient(new WebChromeClient());
+      mWebView.setVerticalScrollBarEnabled(true);
+      mWebView.setHorizontalScrollBarEnabled(true);
 
       if (savedInstanceState != null) {
          mWebView.restoreState(savedInstanceState);
@@ -79,13 +101,17 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
    public void onPause() {
       super.onPause();
       mWebView.onPause();
-      CookieSyncManager.getInstance().stopSync();
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+         CookieSyncManager.getInstance().stopSync();
+      }
    }
 
    @Override
    public void onResume() {
       mWebView.onResume();
-      CookieSyncManager.getInstance().startSync();
+      if (Build.VERSION.SDK_INT < Build.VERSION_CODES.LOLLIPOP) {
+         CookieSyncManager.getInstance().startSync();
+      }
 
       super.onResume();
    }
@@ -101,12 +127,25 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
    }
 
    public void loadUrl(String url) {
-      mUrl = url;
+      HttpUrl base = HttpUrl.parse(url).newBuilder()
+       .addQueryParameter("utm_source", App.get().getSite().mName + "-android-" + BuildConfig.VERSION_NAME.replace(".", "-"))
+       .addQueryParameter("utm_medium", "android-app")
+       .build();
+
+      mUrl = base.toString();
 
       if (mWebView != null) {
          mWebViewClient.setSessionCookie(url);
          mWebView.loadUrl(mUrl);
       }
+   }
+
+   public boolean canGoBack() {
+      return mWebView.canGoBack();
+   }
+
+   public void goBack() {
+      mWebView.goBack();
    }
 
    public void onViewGuide(int guideid) {
@@ -116,7 +155,7 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
       getActivity().startActivity(intent);
    }
 
-   private class GuideWebView extends WebViewClient {
+   private class GuideWebViewClient extends BaseWebViewClient {
       private static final int GUIDE_POSITION = 3;
       private static final int GUIDEID_POSITION = 5;
       private static final String GUIDE_URL = "Guide";
@@ -124,19 +163,10 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
 
       private OnViewGuideListener mGuideListener;
 
-      public GuideWebView(OnViewGuideListener guideListener) {
+      public GuideWebViewClient(RelativeLayout progressBar, OnViewGuideListener guideListener) {
+         super(progressBar);
+
          mGuideListener = guideListener;
-      }
-
-      protected void setSessionCookie(String url) {
-         User user = App.get().getUser();
-
-         if (user != null) {
-            String session = user.getAuthToken();
-
-            CookieManager.getInstance().setCookie(url, "session=" + session);
-            CookieSyncManager.getInstance().sync();
-         }
       }
 
       @Override
@@ -144,8 +174,12 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
          String[] pieces = url.split("/");
          int guideid;
 
-         if (url.equals("http://" + mSite.mDomain + "/Guide/login")) {
+         if (url.startsWith("^(http|https)://" + mSite.mDomain + "/Guide/login")) {
             url = mUrl;
+         } else if (!Uri.parse(url).getHost().equals(mSite.mDomain)) {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            startActivity(intent);
+            return true;
          } else {
             try {
                if (pieces[GUIDE_POSITION + 1].equals("login")) {
@@ -157,33 +191,13 @@ public class WebViewFragment extends BaseFragment implements OnViewGuideListener
                   return true;
                }
             } catch (ArrayIndexOutOfBoundsException e) {
-               Log.e("GuideWebView ArrayIndexOutOfBoundsException", e.toString());
+               Log.e("GuideWebViewClient", "ArrayIndexOutOfBoundsException: " + e.toString());
             } catch (NumberFormatException e) {
-               Log.e("GuideWebView NumberFormatException", e.toString());
+               Log.e("GuideWebViewClient", "NumberFormatException: " + e.toString());
             }
          }
 
-         loadUrl(url);
-
-         return true;
-      }
-
-      @Override
-      public void onPageStarted(WebView view, String url, Bitmap favicon) {
-         mProgressBar.setVisibility(View.VISIBLE);
-      }
-
-      @Override
-      public void onPageFinished(WebView view, String url) {
-         mProgressBar.setVisibility(View.GONE);
-
-         if (App.get().getSite().isIfixit()) {
-            // Amazon app store doesn't like our footer links to other app stores in the iFixit app,
-            // so we are forced to hide them
-            view.loadUrl("javascript:(function() { " +
-             "document.getElementsByTagName('footer')[0].style.display = 'none'; " +
-             "})()");
-         }
+         return false;
       }
    }
 }

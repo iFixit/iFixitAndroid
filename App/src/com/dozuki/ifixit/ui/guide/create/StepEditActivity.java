@@ -1,7 +1,6 @@
 package com.dozuki.ifixit.ui.guide.create;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -14,20 +13,21 @@ import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatImageButton;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.inputmethod.InputMethodManager;
-import android.widget.Button;
 import android.widget.CompoundButton;
-import android.widget.ImageButton;
 import android.widget.Toast;
 
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
@@ -35,7 +35,6 @@ import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
-import com.dozuki.ifixit.ui.gallery.GalleryActivity;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.JSONHelper;
 import com.dozuki.ifixit.util.api.Api;
@@ -64,7 +63,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    public static final int GALLERY_REQUEST_CODE = 1;
-   public static final int CAMERA_REQUEST_CODE = 1888;
 
    public static final String TEMP_FILE_NAME_KEY = "TEMP_FILE_NAME_KEY";
    public static final String EXIT_CODE = "EXIT_CODE_KEY";
@@ -84,9 +82,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    private static final String LOCK_SAVE = "LOCK_SAVE";
 
    private Guide mGuide;
-   private ImageButton mAddStepButton;
-   private Button mSaveStep;
-   private ImageButton mDeleteStepButton;
+   private AppCompatImageButton mAddStepButton;
+   private AppCompatButton mSaveStep;
+   private AppCompatImageButton mDeleteStepButton;
    private StepAdapter mStepAdapter;
    private LockableViewPager mPager;
    private LockableTitlePageIndicator mTitleIndicator;
@@ -127,7 +125,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    @Override
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
-      setContentView(R.layout.guide_create_step_edit);
+      super.setDrawerContent(R.layout.guide_create_step_edit);
 
       mSharedPreferences = getSharedPreferences("com.dozuki.ifixit", Context.MODE_PRIVATE);
 
@@ -166,7 +164,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          Api.call(this, ApiCall.siteInfo());
       }
 
-      mSaveStep = (Button) findViewById(R.id.step_edit_save);
+      mSaveStep = (AppCompatButton) findViewById(R.id.step_edit_save);
 
       toggleSave(mIsStepDirty);
 
@@ -200,8 +198,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          getSupportActionBar().setTitle(guideTitle);
       }
 
-      mAddStepButton = (ImageButton) findViewById(R.id.step_edit_add_step);
-      mDeleteStepButton = (ImageButton) findViewById(R.id.step_edit_delete_step);
+      mAddStepButton = (AppCompatImageButton) findViewById(R.id.step_edit_add_step);
+      mDeleteStepButton = (AppCompatImageButton) findViewById(R.id.step_edit_delete_step);
 
       mPager = (LockableViewPager) findViewById(R.id.guide_edit_body_pager);
       initPager();
@@ -211,7 +209,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mTitleIndicator.setViewPager(mPager);
       mTitleIndicator.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
          @Override
-         public void onPageScrolled(int i, float v, int i2) {}
+         public void onPageScrolled(int i, float v, int i2) {
+         }
 
          @Override
          public void onPageSelected(int currentPage) {
@@ -220,7 +219,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          }
 
          @Override
-         public void onPageScrollStateChanged(int i) {}
+         public void onPageScrollStateChanged(int i) {
+         }
       });
 
       mSaveStep.setOnClickListener(this);
@@ -285,44 +285,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    public void onActivityResult(int requestCode, int resultCode, Intent data) {
       App.getBus().register(this);
 
-      Image newThumb;
-
       switch (requestCode) {
-         case GALLERY_REQUEST_CODE:
-            if (data != null) {
-               newThumb = (Image) data.getSerializableExtra(GalleryActivity.MEDIA_RETURN_KEY);
-               mGuide.getStep(mPagePosition).addImage(newThumb);
-               refreshView(mPagePosition);
-
-               onGuideChanged(null);
-            } else {
-               Log.e("StepEditActivity", "Error data is null!");
-               return;
-            }
-
-            break;
-         case CAMERA_REQUEST_CODE:
-            if (resultCode == Activity.RESULT_OK) {
-
-               String tempFileName = mSharedPreferences.getString(TEMP_FILE_NAME_KEY, null);
-
-               if (tempFileName == null) {
-                  Log.e("StepEditActivity", "Error cameraTempFile is null!");
-                  return;
-               }
-
-               // Prevent a save from being called until the image uploads and returns with the imageid
-               lockSave();
-
-               newThumb = new Image();
-               newThumb.setLocalImage(tempFileName);
-
-               mGuide.getStep(mPagePosition).addImage(newThumb);
-               refreshView(mPagePosition);
-
-               Api.call(this, ApiCall.uploadImageToStep(tempFileName));
-            }
-            break;
          case StepEditLinesFragment.MIC_REQUEST_CODE:
             if (resultCode == Activity.RESULT_OK) {
                // Populate the wordsList with the String values the recognition engine thought it heard
@@ -395,10 +358,10 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    }
 
    @Override
-   public AlertDialog getNavigationAlertDialog(final NavigationItem item) {
+   public boolean onNavigationItemSelected(final MenuItem menuItem) {
       if (!mIsStepDirty) {
          // Don't warn the user if the step is clean.
-         return null;
+         return super.onNavigationItemSelected(menuItem);
       }
 
       mShowingSave = true;
@@ -406,42 +369,36 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       builder
        .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
        .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
-       .setNegativeButton(getString(R.string.save),
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              mIsStepDirty = true;
-              save(mPagePosition);
-              dialog.dismiss();
-
-              navigateMenuDrawer(item);
-           }
-        })
-       .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel,
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              mIsStepDirty = false;
-              dialog.dismiss();
-
-              navigateMenuDrawer(item);
-           }
-        });
+       .setNegativeButton(getString(R.string.save), new AlertDialog.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+             mIsStepDirty = true;
+             save(mPagePosition);
+             dialog.dismiss();
+          }
+       })
+       .setPositiveButton(R.string.guide_create_confirm_leave_without_save_cancel, new AlertDialog.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
+             mIsStepDirty = false;
+             dialog.dismiss();
+          }
+       });
 
       AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingSave = false;
          }
       });
 
-      return dialog;
+      return false;
    }
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.step_edit_menu, menu);
+      getMenuInflater().inflate(R.menu.step_edit_menu, menu);
       MenuItem item = menu.findItem(R.id.publish_guide);
-      CompoundButton toggle = (CompoundButton)item.getActionView().findViewById(R.id.publish_toggle);
+      CompoundButton toggle = (CompoundButton) MenuItemCompat.getActionView(item).findViewById(R.id.publish_toggle);
       toggle.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
          @Override
          public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -463,7 +420,6 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             }
          }
       });
-
       return super.onCreateOptionsMenu(menu);
    }
 
@@ -474,20 +430,19 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       CompoundButton toggle = ((CompoundButton) visibilityToggle.getActionView().findViewById(R.id.publish_toggle));
       if (mGuide != null) {
          if (mGuide.getRevisionid() == null) {
-            viewGuide.setIcon(R.drawable.ic_action_book_dark);
-            viewGuide.setEnabled(false);
+            viewGuide.setVisible(false);
             toggle.setEnabled(false);
          } else {
-            viewGuide.setIcon(R.drawable.ic_action_book);
+            viewGuide.setVisible(true);
             viewGuide.setEnabled(true);
             toggle.setEnabled(true);
 
-            if (toggle.isChecked() != mGuide.isPublic())
+            if (toggle.isChecked() != mGuide.isPublic()) {
                toggle.setChecked(mGuide.isPublic());
+            }
          }
       } else {
-         viewGuide.setIcon(R.drawable.ic_action_book_dark);
-         viewGuide.setEnabled(false);
+         viewGuide.setVisible(false);
          toggle.setEnabled(false);
       }
       return super.onPrepareOptionsMenu(menu);
@@ -593,17 +548,17 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
             builder.setTitle(error.mTitle)
              .setMessage(error.mMessage)
-             .setPositiveButton(positiveButton,
-              new DialogInterface.OnClickListener() {
-                 public void onClick(DialogInterface dialog, int id) {
-                    dialog.dismiss();
+             .setPositiveButton(positiveButton, new AlertDialog.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                   dialog.dismiss();
 
-                    if (error.mIndex != -1) {
-                       App.getBus().post(new StepLineValidationEvent(
-                        mGuide.getStep(mSavePosition).getStepid(), error.mIndex));
-                    }
-                 }
-              });
+                   if (error.mIndex != -1) {
+                      App.getBus().post(new StepLineValidationEvent(
+                       mGuide.getStep(mSavePosition).getStepid(), error.mIndex));
+                   }
+                }
+             });
 
             builder.create().show();
          } else {
@@ -635,7 +590,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          mGuide.setAuthor(guide.getAuthor());
          mGuide.setPublic(false);
          mGuide.setTitle(guide.getTitle());
-         setTitle(guide.getTitle());
+         getSupportActionBar().setTitle(guide.getTitle());
          supportInvalidateOptionsMenu();
          save(mPagePosition);
       } else {
@@ -803,7 +758,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
 
       if (label != null) {
          App.sendEvent("ui_action", "button_press", label,
-          (long)mGuide.getStep(mPagePosition).getStepid());
+          (long) mGuide.getStep(mPagePosition).getStepid());
       }
    }
 
@@ -834,7 +789,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
    // ADAPTERS and PRIVATE CLASSES
    /////////////////////////////////////////////////////
 
-   private void refreshView(int position) {
+   public void refreshView(int position) {
       // The view pager does not recreate the item in the current position unless we force it to.
       initPager();
       mTitleIndicator.notifyDataSetChanged();
@@ -906,11 +861,14 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       }
    }
 
-   public void onPageScrollStateChanged(int arg0) { }
+   public void onPageScrollStateChanged(int arg0) {
+   }
 
-   public void onPageScrolled(int arg0, float arg1, int arg2) { }
+   public void onPageScrolled(int arg0, float arg1, int arg2) {
+   }
 
-   public void onPageSelected(int currentPage) { }
+   public void onPageSelected(int currentPage) {
+   }
 
    /////////////////////////////////////////////////////
    // DIALOGS
@@ -922,9 +880,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       builder
        .setTitle(context.getString(R.string.step_edit_confirm_delete_title))
        .setMessage(context.getString(R.string.step_edit_confirm_delete_message, mPagePosition + 1))
-       .setPositiveButton(context.getString(R.string.yes), new DialogInterface.OnClickListener() {
+       .setPositiveButton(context.getString(R.string.yes), new AlertDialog.OnClickListener() {
           @Override
-          public void onClick(DialogInterface dialog, int id) {
+          public void onClick(DialogInterface dialog, int which) {
              mConfirmDelete = false;
              mIsStepDirty = false;
 
@@ -940,7 +898,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
              }
              dialog.cancel();
           }
-       }).setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+       }).setNegativeButton(R.string.no, new AlertDialog.OnClickListener() {
          @Override
          public void onClick(DialogInterface dialog, int which) {
             mConfirmDelete = false;
@@ -949,7 +907,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       });
 
       AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             mConfirmDelete = false;
@@ -963,9 +921,9 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder.setTitle(getString(R.string.media_help_title))
        .setMessage(getString(R.string.guide_create_edit_steps_help))
-       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-
-          public void onClick(DialogInterface dialog, int id) {
+       .setPositiveButton(getString(R.string.media_help_confirm), new AlertDialog.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
              dialog.cancel();
           }
        });
@@ -978,30 +936,30 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       AlertDialog.Builder builder = new AlertDialog.Builder(this);
       builder
        .setTitle(getString(R.string.save_changes_to_step))
-       .setPositiveButton(getString(R.string.yes),
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              save(mPagePosition);
-              dialog.dismiss();
-              switch (dialogType) {
-                 case NEW_STEP:
-                    mAddStepAfterSave = true;
-                    break;
-                 case NEXT_STEP:
-                    break;
-              }
-           }
-        })
-       .setNegativeButton(getString(R.string.cancel),
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              mIsStepDirty = true;
-              dialog.dismiss();
-           }
-        });
+       .setPositiveButton(getString(R.string.yes), new AlertDialog.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+             save(mPagePosition);
+             dialog.dismiss();
+             switch (dialogType) {
+                case NEW_STEP:
+                   mAddStepAfterSave = true;
+                   break;
+                case NEXT_STEP:
+                   break;
+             }
+          }
+       })
+       .setNegativeButton(getString(R.string.cancel), new AlertDialog.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+             mIsStepDirty = true;
+             dialog.dismiss();
+          }
+       });
 
       AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingSave = false;
@@ -1018,31 +976,31 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       builder
        .setTitle(getString(R.string.guide_create_confirm_leave_without_save_title))
        .setMessage(getString(R.string.guide_create_confirm_leave_without_save_body))
-       .setPositiveButton(getString(R.string.save),
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              mIsStepDirty = true;
-              save(mPagePosition);
-              dialog.dismiss();
+       .setPositiveButton(getString(R.string.save), new AlertDialog.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+             mIsStepDirty = true;
+             save(mPagePosition);
+             dialog.dismiss();
 
-              if (mExitCode == STEP_VIEW) {
-                 navigateToStepView();
-              } else {
-                 navigateBack();
-              }
-           }
-        })
-       .setNegativeButton(R.string.guide_create_confirm_leave_without_save_cancel,
-        new DialogInterface.OnClickListener() {
-           public void onClick(DialogInterface dialog, int id) {
-              mIsStepDirty = false;
-              dialog.dismiss();
-              finishEdit(exitCode);
-           }
-        });
+             if (mExitCode == STEP_VIEW) {
+                navigateToStepView();
+             } else {
+                navigateBack();
+             }
+          }
+       })
+       .setNegativeButton(R.string.guide_create_confirm_leave_without_save_cancel, new AlertDialog.OnClickListener() {
+          @Override
+          public void onClick(DialogInterface dialog, int which) {
+             mIsStepDirty = false;
+             dialog.dismiss();
+             finishEdit(exitCode);
+          }
+       });
 
       AlertDialog dialog = builder.create();
-      dialog.setOnDismissListener(new DialogInterface.OnDismissListener() {
+      dialog.setOnDismissListener(new AlertDialog.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingSave = false;
@@ -1086,6 +1044,14 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       newFragment.show(ft, "dialog");
    }
 
+   public Guide getGuide() {
+      return mGuide;
+   }
+
+   public int getCurrentPosition() {
+      return mPagePosition;
+   }
+
    private void saveStep(int savePosition) {
       GuideStep step = mGuide.getStep(savePosition);
 
@@ -1102,8 +1068,8 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
       mSavePosition = savePosition;
       mIsStepDirty = false;
 
-      InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-      imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+      //InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+      //imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
 
       showLoading(mLoadingContainer, getString(R.string.saving));
       toggleSave(mIsStepDirty);
@@ -1173,7 +1139,7 @@ public class StepEditActivity extends BaseMenuDrawerActivity implements OnClickL
          return;
       }
 
-      App.sendEvent("menu_action", "button_press", "view_guide", (long)mGuide.getGuideid());
+      App.sendEvent("menu_action", "button_press", "view_guide", (long) mGuide.getGuideid());
 
       Intent intent = new Intent(this, GuideViewActivity.class);
       if (mParentGuideId != NO_PARENT_GUIDE) {

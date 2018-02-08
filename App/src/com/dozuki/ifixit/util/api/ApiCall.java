@@ -15,20 +15,27 @@ import com.dozuki.ifixit.model.guide.wizard.TopicNamePage;
 import com.dozuki.ifixit.model.user.User;
 import com.dozuki.ifixit.ui.guide.create.GuideIntroWizardModel;
 import com.dozuki.ifixit.util.JSONHelper;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.List;
+
+import okhttp3.MediaType;
+import okhttp3.RequestBody;
 
 /**
  * Defines an ApiCall that can be performed using Api.call().
  */
 public class ApiCall {
    private static final String NO_QUERY = "";
+   public static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
+   public static final MediaType MEDIA = MediaType.parse("application/octet-stream");
 
    protected ApiEndpoint mEndpoint;
    protected String mQuery;
-   protected String mRequestBody;
+   protected RequestBody mRequestBody;
    protected String mExtraInfo;
    protected String mFilePath;
    protected String mAuthToken;
@@ -40,16 +47,16 @@ public class ApiCall {
       this(endpoint, query, null);
    }
 
-   public ApiCall(ApiEndpoint endpoint, String query, String requestBody) {
+   public ApiCall(ApiEndpoint endpoint, String query, RequestBody requestBody) {
       this(endpoint, query, requestBody, null);
    }
 
-   public ApiCall(ApiEndpoint endpoint, String query, String requestBody,
+   public ApiCall(ApiEndpoint endpoint, String query, RequestBody requestBody,
     String extraInfo) {
       this(endpoint, query, requestBody, extraInfo, null);
    }
 
-   public ApiCall(ApiEndpoint endpoint, String query, String requestBody,
+   public ApiCall(ApiEndpoint endpoint, String query, RequestBody requestBody,
     String extraInfo, String filePath) {
       mEndpoint = endpoint;
       mQuery = query;
@@ -110,6 +117,10 @@ public class ApiCall {
       return new ApiCall(ApiEndpoint.TOPIC, topicName);
    }
 
+   public static ApiCall wiki(String title) {
+      return new ApiCall(ApiEndpoint.WIKI, title);
+   }
+
    public static ApiCall register(String email, String password, String username) {
       JSONObject requestBody = new JSONObject();
 
@@ -117,11 +128,12 @@ public class ApiCall {
          requestBody.put("email", email);
          requestBody.put("password", password);
          requestBody.put("username", username);
+         requestBody.put("unique_username", username);
       } catch (JSONException e) {
          return null;
       }
 
-      return new ApiCall(ApiEndpoint.REGISTER, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.REGISTER, NO_QUERY, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall login(String email, String password) {
@@ -134,7 +146,7 @@ public class ApiCall {
          return null;
       }
 
-      return new ApiCall(ApiEndpoint.LOGIN, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.LOGIN, NO_QUERY, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall googleOauthLogin(String oauthCode) {
@@ -146,7 +158,7 @@ public class ApiCall {
          return null;
       }
 
-      return new ApiCall(ApiEndpoint.LOGIN, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.LOGIN, NO_QUERY, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall logout(User user) {
@@ -172,7 +184,7 @@ public class ApiCall {
          return null;
       }
 
-      return new ApiCall(ApiEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.CREATE_GUIDE, NO_QUERY, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall createGuide(Guide guide) {
@@ -190,27 +202,27 @@ public class ApiCall {
          return null;
       }
 
-      return new ApiCall(ApiEndpoint.CREATE_GUIDE, NO_QUERY, requestBody.toString());
+      return new ApiCall(ApiEndpoint.CREATE_GUIDE, NO_QUERY, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall deleteGuide(GuideInfo guide) {
-      return new ApiCall(ApiEndpoint.DELETE_GUIDE, guide.mGuideid + "?revisionid=" + guide.mRevisionid, "");
+      return new ApiCall(ApiEndpoint.DELETE_GUIDE, guide.mGuideid + "?revisionid=" + guide.mRevisionid);
    }
 
    public static ApiCall editGuide(Bundle bundle, int guideid, int revisionid) {
       JSONObject requestBody = guideBundleToRequestBody(bundle);
 
       return new ApiCall(ApiEndpoint.EDIT_GUIDE, "" + guideid + "?revisionid="
-       + revisionid, requestBody.toString());
+       + revisionid, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall completeGuide(int guideid) {
-      return new ApiCall(ApiEndpoint.COMPLETE_GUIDE, guideid + "");
+      return new ApiCall(ApiEndpoint.COMPLETE_GUIDE, guideid + "", getRequestBody(new JSONObject().toString()));
    }
 
    public static ApiCall favoriteGuide(int guideid, boolean favorite) {
       ApiEndpoint endpoint = favorite ? ApiEndpoint.FAVORITE_GUIDE : ApiEndpoint.UNFAVORITE_GUIDE;
-      return new ApiCall(endpoint, "" + guideid);
+      return new ApiCall(endpoint, "" + guideid, getRequestBody(new JSONObject().toString()));
    }
 
    private static JSONObject guideBundleToRequestBody(Bundle bundle) {
@@ -249,12 +261,12 @@ public class ApiCall {
 
    public static ApiCall publishGuide(int guideid, int revisionid) {
       return new ApiCall(ApiEndpoint.PUBLISH_GUIDE,
-       guideid + "/public" + "?revisionid=" + revisionid, "");
+       guideid + "/public" + "?revisionid=" + revisionid, getRequestBody(new JSONObject().toString()));
    }
 
    public static ApiCall unpublishGuide(int guideid, int revisionid) {
       return new ApiCall(ApiEndpoint.UNPUBLISH_GUIDE,
-       guideid + "/public" + "?revisionid=" + revisionid, "");
+       guideid + "/public" + "?revisionid=" + revisionid, getRequestBody(new JSONObject().toString()));
    }
 
    public static ApiCall editStep(GuideStep step, int guideid) {
@@ -269,7 +281,7 @@ public class ApiCall {
       }
 
       return new ApiCall(ApiEndpoint.UPDATE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
-       + step.getRevisionid(), requestBody.toString());
+       + step.getRevisionid(), getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall createStep(GuideStep step, int guideid, int stepPosition, int revisionid) {
@@ -285,7 +297,7 @@ public class ApiCall {
       }
 
       return new ApiCall(ApiEndpoint.ADD_GUIDE_STEP, "" + guideid + "/steps" + "?revisionid=" + revisionid,
-       requestBody.toString());
+       getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall deleteStep(int guideid, GuideStep step) {
@@ -298,7 +310,7 @@ public class ApiCall {
       }
 
       return new ApiCall(ApiEndpoint.DELETE_GUIDE_STEP, "" + guideid + "/steps/" + step.getStepid() + "?revisionid="
-       + step.getRevisionid(), requestBody.toString());
+       + step.getRevisionid(), getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall reorderSteps(Guide guide) {
@@ -311,7 +323,7 @@ public class ApiCall {
       }
 
       return new ApiCall(ApiEndpoint.REORDER_GUIDE_STEPS, "" + guide.getGuideid() + "/steporder" + "?revisionid="
-       + guide.getRevisionid(), requestBody.toString());
+       + guide.getRevisionid(), getRequestBody(requestBody.toString()));
    }
 
    /**
@@ -342,12 +354,14 @@ public class ApiCall {
    }
 
    public static ApiCall uploadImage(String filePath, String extraInformation) {
-      return new ApiCall(ApiEndpoint.UPLOAD_IMAGE, filePath, null, extraInformation,
+      File file = new File(filePath);
+      return new ApiCall(ApiEndpoint.UPLOAD_IMAGE, filePath, RequestBody.create(MEDIA, file), extraInformation,
        filePath);
    }
 
    public static ApiCall uploadImageToStep(String filePath) {
-      return new ApiCall(ApiEndpoint.UPLOAD_STEP_IMAGE, filePath, null, null,
+      File file = new File(filePath);
+      return new ApiCall(ApiEndpoint.UPLOAD_STEP_IMAGE, filePath, RequestBody.create(MEDIA, file), null,
        filePath);
    }
 
@@ -357,9 +371,7 @@ public class ApiCall {
 
       stringBuilder.append("?imageids=");
 
-      /**
-       * Construct a string of imageids separated by comma's.
-       */
+      // Construct a string of imageids separated by comma's
       for (Integer imageid : deleteList) {
          stringBuilder.append(separator).append(imageid);
          separator = ",";
@@ -398,7 +410,7 @@ public class ApiCall {
          return null;
       }
 
-      return new ApiCall(ApiEndpoint.ADD_COMMENT, query, requestBody.toString());
+      return new ApiCall(ApiEndpoint.ADD_COMMENT, query, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall editComment(String text, int commentid) {
@@ -410,10 +422,14 @@ public class ApiCall {
          return null;
       }
 
-      return new ApiCall(ApiEndpoint.EDIT_COMMENT, "/" + commentid, requestBody.toString());
+      return new ApiCall(ApiEndpoint.EDIT_COMMENT, "/" + commentid, getRequestBody(requestBody.toString()));
    }
 
    public static ApiCall deleteComment(int commentid) {
       return new ApiCall(ApiEndpoint.DELETE_COMMENT, "/" + commentid, null, commentid + "");
+   }
+
+   private static RequestBody getRequestBody(String json) {
+      return RequestBody.create(JSON, json);
    }
 }

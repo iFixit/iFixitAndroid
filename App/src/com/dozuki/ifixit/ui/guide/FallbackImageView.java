@@ -5,18 +5,16 @@ import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
-import android.widget.ImageView;
 
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.util.PicassoUtils;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.RequestCreator;
 import com.squareup.picasso.Target;
 
 import java.io.File;
 
-public class FallbackImageView extends ImageView implements Target {
+public class FallbackImageView extends android.support.v7.widget.AppCompatImageView implements Target {
    private static final String TAG = "FallbackImageView";
    private String mImageUrl = "";
    private Image mImage;
@@ -40,7 +38,7 @@ public class FallbackImageView extends ImageView implements Target {
 
    @Override
    public void onBitmapFailed(Drawable drawable) {
-      Picasso picasso = PicassoUtils.with(getContext());
+      Picasso picasso = Picasso.with(getContext()); 
       RequestCreator builder;
 
       if (mImage == null) {

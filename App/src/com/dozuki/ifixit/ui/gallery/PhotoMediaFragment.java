@@ -3,9 +3,9 @@ package com.dozuki.ifixit.ui.gallery;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.UserImage;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 import java.util.ArrayList;
@@ -28,13 +28,11 @@ public class PhotoMediaFragment extends MediaFragment {
       if (!event.hasError()) {
          ArrayList<UserImage> imageList = new ArrayList<UserImage>(event.getResult());
          if (imageList.size() > 0) {
-
             mMediaList.setItems(imageList);
             if (mAlreadyAttachedImages != null) {
                mMediaList.removeImagesWithIds(mAlreadyAttachedImages);
             }
             mGalleryAdapter.notifyDataSetChanged();
-            mGalleryAdapter.invalidatedView();
          }
 
          mNextPageRequestInProgress = false;
@@ -50,9 +48,7 @@ public class PhotoMediaFragment extends MediaFragment {
          String key = event.getExtraInfo();
 
          mMediaList.findAndReplaceByKey(key, image);
-
          mGalleryAdapter.notifyDataSetChanged();
-         mGalleryAdapter.invalidatedView();
       } else {
          Api.getErrorDialog(getActivity(), event).show();
       }

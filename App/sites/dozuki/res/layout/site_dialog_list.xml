@@ -14,7 +14,7 @@
         style="@style/DialogTitleDivider"
         android:background="@color/dozuki_red"/>
 
-    <com.actionbarsherlock.widget.SearchView
+    <android.support.v7.widget.SearchView
         android:id="@+id/dozuki_search_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -28,7 +28,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dip"
         android:layout_marginBottom="8dp"
-        android:background="@color/gainsboro"/>
+        android:background="@color/border"/>
 
     <ListView
         android:id="@+id/siteListView"

@@ -3,58 +3,24 @@
 <!-- Generated with http://android-holo-colors.com -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- actionWidgetTheme is used with a ContextThemeWrapper when using the DarkActionBar theme,
-         so we need to inherit from the the base Theme.Sherlock to override the overflow dropdown selector state. -->
-    <style name="Theme.Accustream.Dark" parent="Theme.Sherlock">
-        <!-- Action Bar Sherlock overrides -->
-        <item name="android:dropDownListViewStyle">@style/DropDownListView.Accustream</item>
-        <item name="dropDownListViewStyle">@style/DropDownListView.Accustream</item>
-        <item name="actionDropDownStyle">@style/DropDownNav.Accustream</item>
+    <style name="Theme.Accustream.TransparentActionBar" parent="Theme.Accustream">
+        <item name="windowActionBarOverlay">true</item>
+        <item name="android:windowActionBarOverlay">true</item>
     </style>
 
     <style name="Theme.Accustream" parent="Theme.Base">
+        <item name="colorPrimary">@color/black</item>
+        <item name="colorPrimaryDark">@color/black_alpha_40</item>
+        <item name="colorAccent">@color/accustream_primary</item>
+        <item name="colorAccentDark">@color/accustream_primary_dark</item>
+        <item name="colorButtonNormal">@color/white</item>
+
         <!-- Theme Attributes -->
         <item name="doz__primaryHighlightColor">@color/accustream_primary</item>
         <item name="doz__sectionHeader">@drawable/accustream__section_header</item>
-        <item name="doz__spinnerBackground">@drawable/accustream__spinner_background_holo_light</item>
         <item name="doz__topicDefaultBackground">@style/Widget.Accustream.TopicBackground</item>
-        <item name="doz__editTextBackground">@drawable/accustream__edit_text_holo_light</item>
-        <item name="doz__checkboxBackground">@drawable/accustream__btn_check_holo_light</item>
 
-        <!-- Action Bar theme -->
-        <item name="selectableItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarItemBackground">@drawable/item_background_holo_light</item>
-        <item name="actionBarWidgetTheme">@style/Theme.Accustream.Dark</item>
-
-        <!-- Holo Theme Overrides -->
-        <item name="android:editTextStyle">@style/EditText.Accustream</item>
-
-        <item name="android:autoCompleteTextViewStyle">@style/AutoCompleteTextView.Accustream</item>
-
-        <item name="android:checkboxStyle">@style/CheckBox.Accustream</item>
-
-        <item name="android:radioButtonStyle">@style/RadioButton.Accustream</item>
-
-        <item name="android:buttonStyle">@style/Button.Accustream</item>
-
-        <item name="android:imageButtonStyle">@style/ImageButton.Accustream</item>
-
-        <item name="android:spinnerStyle">@style/Spinner.Accustream</item>
-
-        <item name="android:dropDownSpinnerStyle">@style/Spinner.Accustream.DropDown</item>
-
-        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItem.Accustream</item>
-
-        <item name="android:progressBarStyle">@style/ProgressBar.Accustream</item>
-
-        <item name="android:progressBarStyleHorizontal">@style/ProgressBar.Accustream</item>
-
-        <item name="android:seekBarStyle">@style/SeekBar.Accustream</item>
-
-        <item name="android:buttonStyleToggle">@style/Toggle.Accustream</item>
-
-        <item name="android:spinnerItemStyle">@style/SpinnerItem.Accustream</item>
-
+        <item name="doz__navHeaderLogo">@drawable/logo</item>
     </style>
 
 </resources>

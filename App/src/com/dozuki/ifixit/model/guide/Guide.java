@@ -1,6 +1,7 @@
 package com.dozuki.ifixit.model.guide;
 
 import com.dozuki.ifixit.model.Comment;
+import com.dozuki.ifixit.model.Document;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.Item;
 
@@ -26,11 +27,13 @@ public class Guide implements Serializable {
    protected String mIntroductionRendered;
    protected String mIntroductionRaw;
    protected String mSubject;
-   protected Image mIntroImage;
+   protected Image mIntroImage = new Image();
    protected String mSummary;
-   protected ArrayList<GuideStep> mSteps;
-   protected ArrayList<Item> mTools;
-   protected ArrayList<Item> mParts;
+   protected ArrayList<GuideStep> mSteps = new ArrayList<>();
+   protected ArrayList<Item> mTools = new ArrayList<>();
+   protected ArrayList<Item> mParts = new ArrayList<>();
+   protected ArrayList<Document> mDocuments = new ArrayList<>();
+   protected int mFeaturedDocumentId;
    protected boolean mCompleted;
    protected String mConclusion;
    protected boolean mCanEdit = true;
@@ -43,6 +46,7 @@ public class Guide implements Serializable {
     * Collection of general user comments on the guide
     */
    protected ArrayList<Comment> mComments;
+   private int mFakeCommentCount = -1;
 
    public Guide() {
       this(NEW_GUIDE_ID);
@@ -50,10 +54,14 @@ public class Guide implements Serializable {
 
    public Guide(int guideid) {
       mGuideid = guideid;
-      mSteps = new ArrayList<GuideStep>();
-      mTools = new ArrayList<Item>();
-      mParts = new ArrayList<Item>();
-      mComments = new ArrayList<Comment>();
+   }
+
+   public ArrayList<Document> getDocuments() {
+      return mDocuments;
+   }
+
+   public void setDocuments(ArrayList<Document> documents) {
+      mDocuments = documents;
    }
 
    public ArrayList<Comment> getComments() {
@@ -317,7 +325,26 @@ public class Guide implements Serializable {
       return mCompleted;
    }
 
+   /**
+    * Used only for overriding a stale comment list.  We need to do this because we:
+    * a) don't have a comments api endpoint
+    * b) we can't refetch the whole guide without wreaking havok on the layout, and on some guides
+    *    that is a lot of data.
+    * c) when new comments are added, we want to show the user their comments are counted.
+    * d) can't pass ArrayLists' of Comment objects like we used to do between CommentActivity and GuideViewActivity
+    *    because android 7+ will crash with a TransactionTooLargeException
+    *    So we have to fake the number.
+    * @param count
+    */
+   public void setCommentCount(int count) {
+      mFakeCommentCount = count;
+   }
+
    public int getCommentCount() {
+      if (mFakeCommentCount > 1) {
+         return mFakeCommentCount;
+      }
+
       int count = mComments.size();
 
       for (Comment comment : mComments) {
@@ -325,5 +352,20 @@ public class Guide implements Serializable {
       }
 
       return count;
+   }
+
+   public void setFeaturedDocument(int documentid) {
+      mFeaturedDocumentId = documentid;
+   }
+
+   public Document getFeaturedDocument() {
+      Document result = null;
+
+      for (int i = 0; i < mDocuments.size(); i++) {
+         if (mDocuments.get(i).id == mFeaturedDocumentId) {
+            result = mDocuments.get(i);
+         }
+      }
+      return result;
    }
 }

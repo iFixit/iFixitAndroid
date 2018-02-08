@@ -6,24 +6,26 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.ActionBar;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
-import com.actionbarsherlock.app.ActionBar;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.Guide;
 import com.dozuki.ifixit.model.guide.GuideStep;
 import com.dozuki.ifixit.model.guide.StepLine;
+import com.dozuki.ifixit.ui.BaseActivity;
 import com.dozuki.ifixit.ui.BaseFragment;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
+import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.ApiError;
 import com.dozuki.ifixit.util.api.ApiEvent;
-import com.dozuki.ifixit.util.api.Api;
 import com.squareup.otto.Subscribe;
 
 public class StepPortalFragment extends BaseFragment implements
@@ -51,7 +53,7 @@ public class StepPortalFragment extends BaseFragment implements
       super.onCreate(savedInstanceState);
 
       int guideid = getArguments().getInt(StepsActivity.GUIDE_ID_KEY);
-      mActionBar = getSherlockActivity().getSupportActionBar();
+      mActionBar = ((BaseActivity) getActivity()).getSupportActionBar();
       setHasOptionsMenu(true);
       mSelf = this;
       mStepAdapter = new StepAdapter();
@@ -65,7 +67,7 @@ public class StepPortalFragment extends BaseFragment implements
       if (mGuide == null) {
          ((StepsActivity) getActivity()).showLoading();
          Api.call(getActivity(), ApiCall.unpatrolledGuide(guideid));
-      } else {
+      } else if (mActionBar != null) {
          mActionBar.setTitle(mGuide.getTitle());
       }
    }
@@ -203,7 +205,7 @@ public class StepPortalFragment extends BaseFragment implements
 
    @Subscribe
    public void onStepReorder(ApiEvent.StepReorder event) {
-      ((StepsActivity)getActivity()).hideLoading();
+      ((StepsActivity) getActivity()).hideLoading();
 
       if (!event.hasError() || event.getError().mType == ApiError.Type.CONFLICT) {
          mGuide = event.getResult();
@@ -311,29 +313,34 @@ public class StepPortalFragment extends BaseFragment implements
       AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
       builder.setTitle(getString(R.string.confirm_delete_title))
        .setMessage(getString(R.string.step_edit_confirm_delete_message, mStepForDelete.getStepNum()))
-       .setPositiveButton(getString(R.string.yes), new DialogInterface.OnClickListener() {
-          public void onClick(DialogInterface dialog, int id) {
+       .setPositiveButton(getString(R.string.yes), new AlertDialog.OnClickListener() {
+          public void onClick(DialogInterface dialog, int which) {
              mShowingDelete = false;
 
              ((StepsActivity) getActivity()).showLoading();
              Api.call(getActivity(),
               ApiCall.deleteStep(mGuide.getGuideid(), mStepForDelete));
              dialog.cancel();
-
           }
-       }).setNegativeButton(getString(R.string.no), new DialogInterface.OnClickListener() {
-         public void onClick(DialogInterface dialog, int id) {
+       }).setNegativeButton(getString(R.string.no), new AlertDialog.OnClickListener() {
+         public void onClick(DialogInterface dialog, int which) {
             mShowingDelete = false;
             mStepForDelete = null;
          }
-      }).setOnDismissListener(new DialogInterface.OnDismissListener() {
+      });
+
+      DialogInterface.OnDismissListener dialogDismissListener = new DialogInterface.OnDismissListener() {
          @Override
          public void onDismiss(DialogInterface dialog) {
             mShowingDelete = false;
          }
-      });
+      };
 
-      return builder.create();
+      AlertDialog dialog = builder.create();
+
+      dialog.setOnDismissListener(dialogDismissListener);
+
+      return dialog;
    }
 
    /////////////////////////////////////////////////////

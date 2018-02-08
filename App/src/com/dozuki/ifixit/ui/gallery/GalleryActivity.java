@@ -2,23 +2,23 @@ package com.dozuki.ifixit.ui.gallery;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FixedFragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
+import android.support.v7.view.ActionMode;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.ViewGroup;
-import com.actionbarsherlock.view.ActionMode;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
 import com.dozuki.ifixit.model.user.LoginEvent;
 import com.dozuki.ifixit.ui.BaseMenuDrawerActivity;
 import com.dozuki.ifixit.util.Utils;
-import com.google.analytics.tracking.android.Fields;
-import com.google.analytics.tracking.android.MapBuilder;
 import com.viewpagerindicator.TitlePageIndicator;
 
 import java.util.ArrayList;
@@ -44,7 +44,9 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      setContentView(R.layout.gallery_root);
+      super.setDrawerContent(R.layout.gallery_root);
+
+      getSupportActionBar().setTitle(R.string.media_manager_title);
 
       mMediaCategoryFragments = new HashMap<String, MediaFragment>();
       mMediaCategoryFragments.put(MEDIA_FRAGMENT_PHOTOS, new PhotoMediaFragment());
@@ -67,12 +69,14 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       if (bundle != null) {
          int returnValue = bundle.getInt(ACTIVITY_RETURN_MODE, -1);
-         ArrayList<Image> alreadyAttachedImages = (ArrayList<Image>)bundle.getSerializable(ATTACHED_MEDIA_IDS);
+         ArrayList<Image> alreadyAttachedImages = (ArrayList<Image>) bundle.getSerializable(ATTACHED_MEDIA_IDS);
          mCurrentMediaFragment.setAlreadyAttachedImages(alreadyAttachedImages);
          if (returnValue != -1) {
             getMediaItemForReturn = true;
          }
-         startActionMode(new ContextualMediaSelect());
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            startActionMode(new ContextualMediaSelect());
+         }
       }
 
       mCurrentMediaFragment.setForReturn(getMediaItemForReturn);
@@ -130,7 +134,7 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.gallery_menu, menu);
+      getMenuInflater().inflate(R.menu.gallery_menu, menu);
 
       return super.onCreateOptionsMenu(menu);
    }
@@ -152,18 +156,6 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
       @Override
       public CharSequence getPageTitle(int position) {
          return Utils.capitalize(getString(R.string.images));
-         /*
-          * switch (position) {
-          * case 0:
-          * return "Videos";
-          * case 1:
-          * return "Photos";
-          * case 2:
-          * return "Embeds";
-          * default:
-          * return "Photos";
-          * }
-          */
       }
 
       @Override
@@ -183,20 +175,20 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
 
       builder.setTitle(getString(R.string.media_help_title)).setMessage(getString(R.string.media_help_message,
        App.get().getSite().mTitle))
-         .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-               dialog.cancel();
-            }
-         });
+       .setPositiveButton(getString(R.string.media_help_confirm), new DialogInterface.OnClickListener() {
+          public void onClick(DialogInterface dialog, int id) {
+             dialog.cancel();
+          }
+       });
 
       return builder.create();
    }
 
-   public final class ContextualMediaSelect implements ActionMode.Callback {
+   public final class ContextualMediaSelect implements ActionMode.Callback, android.view.ActionMode.Callback {
       @Override
       public boolean onCreateActionMode(ActionMode mode, Menu menu) {
          // Create the menu from the xml file
-         getSupportMenuInflater().inflate(R.menu.gallery_menu, menu);
+         getMenuInflater().inflate(R.menu.gallery_menu, menu);
          return true;
       }
 
@@ -226,6 +218,26 @@ public class GalleryActivity extends BaseMenuDrawerActivity {
                break;
          }
          return true;
+      }
+
+      @Override
+      public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
+         return false;
+      }
+
+      @Override
+      public boolean onPrepareActionMode(android.view.ActionMode mode, Menu menu) {
+         return false;
+      }
+
+      @Override
+      public boolean onActionItemClicked(android.view.ActionMode mode, MenuItem item) {
+         return false;
+      }
+
+      @Override
+      public void onDestroyActionMode(android.view.ActionMode mode) {
+
       }
    }
 }

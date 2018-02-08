@@ -7,7 +7,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.guide.StepLine;
 import com.dozuki.ifixit.util.Utils;
@@ -37,38 +39,26 @@ public class GuideStepLineView extends LinearLayout {
       stepText.setMovementMethod(LinkMovementMethod.getInstance());
 
       ImageView bullet = (ImageView)findViewById(R.id.bullet);
+
       bulletRes = getBulletResource(line.getColor());
       bullet.setImageResource(bulletRes);
-      bullet.setLayoutParams(new LinearLayout.LayoutParams(
-       LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-
-      ImageView icon = (ImageView) findViewById(R.id.bullet_icon);
-
-      if (line.hasIcon()) {
-         if (line.getColor().equals("icon_reminder")) {
-            iconRes = R.drawable.icon_reminder;
-         } else if (line.getColor().equals("icon_caution")) {
-            iconRes = R.drawable.icon_caution;
-         } else if (line.getColor().equals("icon_note")) {
-            iconRes = R.drawable.icon_note;
-         } else {
-            Log.e("GuideStepLineView", "Step icon resource not there");
-            iconRes = 0;
-         }
-
-         icon.setImageResource(iconRes);
-         icon.setVisibility(VISIBLE);
-         icon.setLayoutParams(new LinearLayout.LayoutParams(
-          LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT, 1));
-      } else {
-         icon.setVisibility(INVISIBLE);
+      if (!line.hasIcon()) {
+         int bulletSize = (int)Utils.pxFromDp(getContext(), 16);
+         bullet.getLayoutParams().width = bulletSize;
+         bullet.getLayoutParams().height = bulletSize;
       }
    }
 
    public int getBulletResource(String color) {
       int iconRes;
 
-      if (color.equals("black")) {
+      if (color.equals("icon_reminder")) {
+         iconRes = R.drawable.icon_reminder;
+      } else if (color.equals("icon_caution")) {
+         iconRes = R.drawable.icon_caution;
+      } else if (color.equals("icon_note")) {
+         iconRes = R.drawable.icon_note;
+      } else if (color.equals("black")) {
          iconRes = R.drawable.bullet_black;
       } else if (color.equals("orange")) {
          iconRes = R.drawable.bullet_orange;

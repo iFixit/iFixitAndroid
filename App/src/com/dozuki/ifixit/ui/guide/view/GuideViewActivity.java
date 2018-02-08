@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 import android.widget.Toast;
-import com.actionbarsherlock.view.Menu;
-import com.actionbarsherlock.view.MenuItem;
+
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Comment;
@@ -43,7 +46,6 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public static final String CURRENT_PAGE = "CURRENT_PAGE";
    public static final String SAVED_GUIDE = "SAVED_GUIDE";
    public static final String GUIDEID = "GUIDEID";
-   public static final String TOPIC_NAME_KEY = "TOPIC_NAME_KEY";
    public static final String FROM_EDIT = "FROM_EDIT_KEY";
    public static final String INBOUND_STEP_ID = "INBOUND_STEP_ID";
    public static final String COMMENTS_TAG = "COMMENTS_TAG";
@@ -75,7 +77,9 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
    public void onCreate(Bundle savedInstanceState) {
       super.onCreate(savedInstanceState);
 
-      setContentView(R.layout.guide_main);
+      super.setDrawerContent(R.layout.guide_main);
+
+      getSupportActionBar().setElevation(0);
 
       mPager = (ViewPager) findViewById(R.id.guide_pager);
       mIndicator = (TitlePageIndicator) findViewById(R.id.guide_step_title_indicator);
@@ -148,60 +152,42 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
 
    @Override
    public boolean onCreateOptionsMenu(Menu menu) {
-      getSupportMenuInflater().inflate(R.menu.guide_view_menu, menu);
+      getMenuInflater().inflate(R.menu.guide_view_menu, menu);
 
       MenuItem item = menu.findItem(R.id.comments);
-      item.getActionView().setOnClickListener(new View.OnClickListener() {
-         @Override
-         public void onClick(View v) {
-            if (mGuide != null) {
-               ArrayList<Comment> comments;
-               int stepIndex = getStepIndex(), contextid;
-               String title, context;
+      View commentsButtonView = MenuItemCompat.getActionView(item);
 
-               // If we're in one of the introduction pages, show guide comments.
-               if (GuideViewActivity.this.notOnStep(stepIndex)) {
-                  comments = mGuide.getComments();
-                  title = getString(R.string.guide_comments);
-                  context = "guide";
-                  contextid = mGuide.getGuideid();
-               } else {
-                  comments = mGuide.getStep(stepIndex).getComments();
-                  contextid = mGuide.getStep(stepIndex).getStepid();
-                  context = "step";
-                  title = getString(R.string.step_number_comments, stepIndex + 1);
+      if (commentsButtonView != null) {
+         commentsButtonView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+               if (mGuide != null) {
+                  ArrayList<Comment> comments;
+                  int stepIndex = getStepIndex(), contextid;
+                  String title, context;
+
+                  // If we're in one of the introduction pages, show guide comments.
+                  if (GuideViewActivity.this.notOnStep(stepIndex)) {
+                     comments = mGuide.getComments();
+                     title = getString(R.string.guide_comments);
+                     context = "guide";
+                     contextid = mGuide.getGuideid();
+                  } else {
+                     comments = mGuide.getStep(stepIndex).getComments();
+                     contextid = mGuide.getStep(stepIndex).getStepid();
+                     context = "step";
+                     title = getString(R.string.step_number_comments, stepIndex + 1);
+                  }
+
+                  startActivityForResult(CommentsActivity.viewComments(getBaseContext(), context, contextid, mGuide.getGuideid(), title), COMMENT_REQUEST);
                }
-
-               startActivityForResult(CommentsActivity.viewGuideComments(getApplicationContext(), comments, title,
-                context, contextid, mGuide.getGuideid()), COMMENT_REQUEST);
             }
-         }
-      });
+         });
 
-      CheatSheet.setup(item.getActionView(), R.string.view_comments);
+         CheatSheet.setup(commentsButtonView, R.string.view_comments);
+      }
 
       return super.onCreateOptionsMenu(menu);
-   }
-
-   @Override
-   public void onActivityResult(int requestCode, int resultCode, Intent data) {
-      if (requestCode == COMMENT_REQUEST) {
-         Bundle extras = data.getExtras();
-         if (resultCode == RESULT_OK && extras != null) {
-            ArrayList<Comment> comments = (ArrayList<Comment>)extras.getSerializable(COMMENTS_TAG);
-            int stepIndex = getStepIndex();
-
-            if (notOnStep(stepIndex)) {
-               mGuide.setComments(comments);
-            } else {
-               mGuide.getStep(stepIndex).setComments(comments);
-            }
-
-            updateCommentCounts();
-         }
-      } else {
-         super.onActivityResult(requestCode, resultCode, data);
-      }
    }
 
    @Override
@@ -211,26 +197,30 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       MenuItem reloadGuide = menu.findItem(R.id.reload_guide);
       MenuItem editGuide = menu.findItem(R.id.edit_guide);
 
-      TextView countView = ((TextView)comments.getActionView().findViewById(R.id.comment_count));
+      View commentsView = MenuItemCompat.getActionView(comments);
+      if (commentsView != null) {
+         TextView countView = ((TextView)commentsView.findViewById(R.id.comment_count));
 
-      if (mGuide != null) {
-         int stepIndex = getStepIndex();
+         if (mGuide != null) {
+            int stepIndex = getStepIndex();
 
-         int commentCount = 0;
-         if (notOnStep(stepIndex)) {
-            commentCount = mGuide.getCommentCount();
-         } else if (mGuide.getNumSteps() < stepIndex) {
-            commentCount = mGuide.getStep(stepIndex).getCommentCount();
-         }
+            int commentCount = 0;
+            if (notOnStep(stepIndex)) {
+               commentCount = mGuide.getCommentCount();
+            } else if (mGuide.getNumSteps() < stepIndex) {
+               commentCount = mGuide.getStep(stepIndex).getCommentCount();
+            }
 
-         if (countView != null) {
-            countView.setText(commentCount + "");
+            if (countView != null) {
+               countView.setText(commentCount + "");
+            }
          }
       }
 
       boolean favorited = mGuide != null && mGuide.isFavorited();
-      favoriteGuide.setIcon(favorited ? R.drawable.ic_action_favorite_filled :
-       R.drawable.ic_action_favorite_empty);
+      favoriteGuide.setIcon(favorited ?
+       R.drawable.ic_favorite_red_24dp :
+       R.drawable.ic_favorite_border_24dp);
       favoriteGuide.setEnabled(!mFavoriting && mGuide != null);
       favoriteGuide.setTitle(favorited ? R.string.unfavorite_guide : R.string.favorite_guide);
 
@@ -437,9 +427,13 @@ public class GuideViewActivity extends BaseMenuDrawerActivity implements
       mGuide = guide;
 
       App.sendScreenView("/guide/view/" + mGuide.getGuideid());
+      getSupportActionBar().setTitle(mGuide.getTitle());
 
-      String guideTitle = mGuide.getTitle();
-      setTitle(guideTitle);
+      if (mGuide.getFeaturedDocument() != null) {
+         getWindow().setFlags(
+          WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
+          WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);
+      }
 
       mAdapter = new GuideViewAdapter(getSupportFragmentManager(), mGuide,
        mIsOfflineGuide);

@@ -11,7 +11,7 @@
         android:layout_alignParentBottom="true"
         android:clickable="true"
         android:focusableInTouchMode="true"
-        android:background="@color/emphasis">
+        android:background="@drawable/sync_box_touch_selector">
 
         <TextView
             android:id="@+id/sync_status"
@@ -64,9 +64,7 @@
             android:id="@+id/offline_guides_listview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_margin="4dp"
-            android:dividerHeight="4dp"
-            android:divider="@color/transparent"/>
+            android:divider="@android:color/transparent"/>
 
         <TextView
             android:id="@+id/no_offline_guides_text"

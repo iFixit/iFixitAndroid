@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android">
     <application>
         <activity
-            android:name="com.dozuki.ifixit.ui.topic_view.TopicActivity"
+            android:name="com.dozuki.ifixit.ui.topic.TopicActivity"
             android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -54,6 +54,16 @@
                 <data android:scheme="https" android:host="accustream.dozuki.com" android:pathPrefix="/c/"/>
             </intent-filter>
         </activity>
+
+        <provider
+                android:name="android.support.v4.content.FileProvider"
+                android:authorities="com.dozuki.accustream.fileprovider"
+                android:exported="false"
+                android:grantUriPermissions="true">
+            <meta-data
+                    android:name="android.support.FILE_PROVIDER_PATHS"
+                    android:resource="@xml/file_paths"/>
+        </provider>
 
         <provider
             android:name="com.dozuki.ifixit.ui.search.SearchSuggestionProvider"

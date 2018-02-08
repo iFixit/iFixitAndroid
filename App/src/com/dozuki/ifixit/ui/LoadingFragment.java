@@ -5,25 +5,25 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.dozuki.ifixit.R;
 
 public class LoadingFragment extends BaseFragment {
-   private String mLoadingText;
-
-   public LoadingFragment() { }
-
-   public LoadingFragment(String text) {
-      mLoadingText = (text.length() == 0) ? getString(R.string.loading) : text;
-   }
+   public static String TEXT_KEY = "LOADING_TEXT_KEY";
 
    public View onCreateView(LayoutInflater inflater, ViewGroup container,
     Bundle savedInstanceState) {
+      Bundle args = this.getArguments();
+      String text;
+      if (args != null) {
+         text = args.getString(TEXT_KEY);
+      } else {
+         text = getString(R.string.loading);
+      }
 
       View v = inflater.inflate(R.layout.loading_fragment, container, false);
 
-      if (mLoadingText != null) {
-         ((TextView)v.findViewById(R.id.loading_text)).setText(mLoadingText);
-      }
+      ((TextView)v.findViewById(R.id.loading_text)).setText(text);
 
       return v;
    }

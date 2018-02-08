@@ -4,28 +4,28 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.text.Html;
+import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.dozuki.ifixit.App;
 import com.dozuki.ifixit.R;
 import com.dozuki.ifixit.model.Image;
-import com.dozuki.ifixit.util.transformations.RoundedTransformation;
-import com.dozuki.ifixit.ui.TouchableRelativeLayout;
 import com.dozuki.ifixit.ui.guide.view.GuideViewActivity;
 import com.dozuki.ifixit.util.ImageSizes;
 import com.dozuki.ifixit.util.PicassoUtils;
 import com.dozuki.ifixit.util.api.Api;
 import com.dozuki.ifixit.util.api.ApiCall;
 import com.dozuki.ifixit.util.api.GuideMediaProgress;
+import com.dozuki.ifixit.util.transformations.RoundedTransformation;
 import com.f2prateek.progressbutton.ProgressButton;
 import com.squareup.picasso.Picasso;
 import com.squareup.picasso.Transformation;
 
-public class OfflineGuideListItem extends TouchableRelativeLayout implements
+public class OfflineGuideListItem extends CardView implements
  View.OnClickListener {
    private TextView mTitleView;
    private ProgressButton mProgressButton;
@@ -83,6 +83,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
       });
 
       setOnClickListener(this);
+      ((RelativeLayout)findViewById(R.id.guide_item_target)).setOnClickListener(this);
    }
 
    public void setRowData(GuideMediaProgress guideMedia, boolean displayLiveImages,
@@ -107,7 +108,7 @@ public class OfflineGuideListItem extends TouchableRelativeLayout implements
          mProgressButton.setProgressAndMax(mGuideMedia.mMediaProgress, mGuideMedia.mTotalMedia);
       }
 
-      Picasso picasso = PicassoUtils.with(mActivity);
+      com.squareup.picasso.Picasso picasso = Picasso.with(mActivity);
       Transformation transform = new RoundedTransformation(4, 0);
       Image image = mGuideMedia.mGuideInfo.mImage;
 
