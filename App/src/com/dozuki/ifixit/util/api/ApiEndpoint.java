@@ -173,7 +173,7 @@ public enum ApiEndpoint {
       new Endpoint() {
          public String createUrl(String query) {
             try {
-               return "wikis/CATEGORY/" + URLEncoder.encode(query.replace(".", ""), "UTF-8");
+               return "wikis/CATEGORY/" + URLEncoder.encode(query, "UTF-8");
             } catch (Exception e) {
                Log.w("iFixit", "Encoding error: " + e.getMessage());
                return null;
