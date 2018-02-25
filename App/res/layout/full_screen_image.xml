@@ -11,11 +11,7 @@
         android:minHeight="@dimen/progress_bar_width_height"
         android:minWidth="@dimen/progress_bar_width_height" />
 
-    <com.dozuki.ifixit.ui.guide.FullScreenImageView
-        android:id="@+id/image_zoom"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="center"/>
+    <include layout="@layout/full_screen_image_item"/>
 
     <ImageView
         android:id="@+id/full_screen_close"
