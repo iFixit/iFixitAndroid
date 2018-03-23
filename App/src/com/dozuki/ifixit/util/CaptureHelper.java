@@ -1,7 +1,16 @@
 package com.dozuki.ifixit.util;
 
 import android.app.Activity;
+import android.content.ClipData;
+import android.content.Context;
+import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v4.content.FileProvider;
 import android.util.Log;
 
 import com.dozuki.ifixit.App;
@@ -11,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.List;
 
 public class CaptureHelper {
 
@@ -54,6 +64,37 @@ public class CaptureHelper {
    private static String getDirectoryName() {
       Site site = App.get().getSite();
       return site.mName + "Images";
+   }
+
+   public static Intent getCaptureIntent(Context context, File file) {
+      Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+      Uri photo = FileProvider.getUriForFile(context,
+       context.getPackageName() + ".fileprovider",
+       file);
+
+      if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+         i.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+         ClipData clip=
+          ClipData.newUri(context.getContentResolver(), "A photo", photo);
+
+         i.setClipData(clip);
+         i.addFlags(Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+      } else {
+         List<ResolveInfo> resInfoList=
+          context.getPackageManager()
+           .queryIntentActivities(i, PackageManager.MATCH_DEFAULT_ONLY);
+
+         for (ResolveInfo resolveInfo : resInfoList) {
+            String packageName = resolveInfo.activityInfo.packageName;
+            context.grantUriPermission(packageName, photo,
+             Intent.FLAG_GRANT_WRITE_URI_PERMISSION | Intent.FLAG_GRANT_READ_URI_PERMISSION);
+         }
+      }
+      i.putExtra(MediaStore.EXTRA_OUTPUT, photo);
+
+      return i;
    }
 
    public static String getFileName() {
