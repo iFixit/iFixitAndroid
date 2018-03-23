@@ -338,7 +338,7 @@ public class ApiCall {
    }
 
    public static ApiCall copyImage(String query) {
-      return new ApiCall(ApiEndpoint.COPY_IMAGE, query);
+      return new ApiCall(ApiEndpoint.COPY_IMAGE, query, RequestBody.create(JSON, ""));
    }
 
    public static ApiCall userImages(String query) {

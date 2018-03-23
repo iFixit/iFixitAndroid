@@ -301,20 +301,17 @@ public abstract class MediaFragment extends BaseFragment
       try {
          file = CaptureHelper.createImageFile(getActivity());
          mCameraTempFileName = file.getAbsolutePath();
-         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-         // Ensure that there's a camera activity to handle the intent
-         if (takePictureIntent.resolveActivity(getContext().getPackageManager()) != null) {
+         Context context = getContext();
+         Intent i = CaptureHelper.getCaptureIntent(context, file);
 
-            // Continue only if the File was successfully created
-            if (file != null) {
-               Context context = getContext();
-               Uri photoURI = FileProvider.getUriForFile(context,
-                context.getPackageName() + ".fileprovider",
-                file);
-               takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-               startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
-            }
+         // Ensure that there's a camera activity to handle the intent
+         if (i.resolveActivity(context.getPackageManager()) == null) {
+            Toast.makeText(getActivity(), "We had a problem launching your camera.", Toast.LENGTH_SHORT).show();
+            return;
          }
+
+         startActivityForResult(i, CaptureHelper.CAMERA_REQUEST_CODE);
+
       } catch (IOException e) {
          Log.e("MediaFragment", "Launch camera", e);
          Toast.makeText(getActivity(), "We had a problem launching your camera.", Toast.LENGTH_SHORT).show();

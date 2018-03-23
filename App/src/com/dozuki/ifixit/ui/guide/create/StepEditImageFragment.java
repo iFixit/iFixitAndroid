@@ -3,10 +3,13 @@ package com.dozuki.ifixit.ui.guide.create;
 import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -36,6 +39,7 @@ import com.squareup.otto.Bus;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 
 public class StepEditImageFragment extends BaseFragment {
 
@@ -84,7 +88,6 @@ public class StepEditImageFragment extends BaseFragment {
          mThumbs.setCanEdit(false);
          ActivityCompat.requestPermissions(getActivity(),
           permissions, CaptureHelper.PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-
       } else {
          mThumbs.setCanEdit(true);
       }
@@ -139,20 +142,17 @@ public class StepEditImageFragment extends BaseFragment {
                             // Create the File where the photo should go
                             File photoFile = CaptureHelper.createImageFile(getActivity());
                             mCurrentPhotoPath = photoFile.getAbsolutePath();
-                            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                            Intent i = CaptureHelper.getCaptureIntent(mContext, photoFile);
+
                             // Ensure that there's a camera activity to handle the intent
-                            if (takePictureIntent.resolveActivity(mContext.getPackageManager()) != null) {
-                               // Continue only if the File was successfully created
-                               if (photoFile != null) {
-                                  Uri photoURI = FileProvider.getUriForFile(mContext,
-                                   mContext.getPackageName() + ".fileprovider",
-                                   photoFile);
-                                  takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                                  startActivityForResult(takePictureIntent, CaptureHelper.CAMERA_REQUEST_CODE);
-                               } else {
-                                  Log.d("CaptureHelper", "photo file is null");
-                               }
+                            if (i.resolveActivity(mContext.getPackageManager()) == null) {
+                               Toast.makeText(getActivity(), "We had a problem launching your camera.", Toast.LENGTH_SHORT).show();
+                               break;
                             }
+
+                            startActivityForResult(i, CaptureHelper.CAMERA_REQUEST_CODE);
+
                          } catch (IOException e) {
                             Log.e("StepEditImageFragment", "Launch camera", e);
                             Toast.makeText(getActivity(), "We had a problem launching your camera.", Toast.LENGTH_SHORT).show();
