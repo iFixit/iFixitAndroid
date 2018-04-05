@@ -14,4 +14,7 @@
     <!-- Step Edit View -->
     <dimen name="step_edit_title_text_bottom_spacing">8dp</dimen>
 
+    <!-- Media List Items -->
+    <dimen name="list_item_horizontal_margin">8dp</dimen>
+
 </resources>

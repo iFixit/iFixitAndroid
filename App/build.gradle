@@ -1,11 +1,11 @@
 buildscript {
-   repositories {
-      jcenter()
-      mavenCentral()
-   }
-   dependencies {
-      classpath 'com.android.tools.build:gradle:2.3.3'
-   }
+    repositories {
+        jcenter()
+        mavenCentral()
+    }
+    dependencies {
+        classpath 'com.android.tools.build:gradle:2.3.3'
+    }
 }
 
 apply plugin: 'com.android.application'
@@ -15,6 +15,9 @@ repositories {
     jcenter()
     mavenLocal() // Needed to pick up analytics from maven-android-sdk-deployer
     maven {
+        url "https://maven.google.com"
+    }
+    maven {
         url 'https://github.com/iFixit/ark/raw/master/releases/'
     }
     maven {
@@ -23,132 +26,133 @@ repositories {
 }
 
 dependencies {
-   compile fileTree(dir: 'libs', include: '*.jar')
-   compile "com.android.support:appcompat-v7:25.3.1"
-   compile "com.android.support:support-v4:25.3.1"
-   compile "com.android.support:cardview-v7:25.3.1"
-   compile "com.android.support:design:25.3.1"
-   compile "com.android.support:recyclerview-v7:25.3.1"
-   compile "com.android.support:palette-v7:25.3.1"
-   compile 'com.squareup.okio:okio:1.13.0'
-   compile "com.squareup.okhttp3:okhttp:3.6.0"
-   compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0"
-   compile "com.marczych.androidsectionheaders:androidsectionheaders:1.0.0"
-   compile "com.squareup:otto:1.3.4"
-   compile "org.jsoup:jsoup:1.11.1"
-   compile "com.google.code.gson:gson:2.7"
-   compile "com.squareup.picasso:picasso:2.5.2"
-   compile "com.viewpagerindicator:viewpagerindicator:2.4.3"
-   compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
-   compile "com.vandalsoftware.android:dslv:0.6.3"
-   compile "com.f2prateek.progressbutton:progressbutton:2.1.0@aar"
-   compile "com.google.android.gms:play-services-identity:7.0.0"
-   compile "com.google.android.gms:play-services-plus:7.0.0"
-   compile 'com.google.zxing:android-integration:3.3.0'
+    compile fileTree(dir: 'libs', include: '*.jar')
+    compile "com.android.support:support-v4:27.1.0"
+    compile "com.android.support:appcompat-v7:27.1.0"
+    compile "com.android.support:cardview-v7:27.1.0"
+    compile "com.android.support:design:27.1.0"
+    compile "com.android.support:recyclerview-v7:27.1.0"
+    compile "com.android.support:palette-v7:27.1.0"
+    compile 'com.squareup.okio:okio:1.13.0'
+    compile "com.squareup.okhttp3:okhttp:3.6.0"
+    compile "com.jakewharton.picasso:picasso2-okhttp3-downloader:1.1.0"
+    compile "com.marczych.androidsectionheaders:androidsectionheaders:1.0.0"
+    compile "com.squareup:otto:1.3.4"
+    compile "org.jsoup:jsoup:1.11.1"
+    compile "com.google.code.gson:gson:2.7"
+    compile "com.squareup.picasso:picasso:2.5.2"
+    compile "com.viewpagerindicator:viewpagerindicator:2.4.3"
+    compile "it.sephiroth.android.library.imagezoom:imagezoom:1.0.0"
+    compile "com.vandalsoftware.android:dslv:0.6.3"
+    compile "com.f2prateek.progressbutton:progressbutton:2.1.0@aar"
+    compile "com.google.android.gms:play-services-identity:7.0.0"
+    compile "com.google.android.gms:play-services-plus:7.0.0"
+    compile 'com.google.zxing:android-integration:3.3.0'
+    compile 'com.stepstone.stepper:material-stepper:4.3.1'
 
-   debugCompile "com.squareup.leakcanary:leakcanary-android:1.5"
-   releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:1.5"
-   testCompile "com.squareup.leakcanary:leakcanary-android-no-op:1.5"
+    debugCompile "com.squareup.leakcanary:leakcanary-android:1.5"
+    releaseCompile "com.squareup.leakcanary:leakcanary-android-no-op:1.5"
+    testCompile "com.squareup.leakcanary:leakcanary-android-no-op:1.5"
 }
 
 // List of sites used to create signingConfigs, sourceSets, and productFlavors.
 def sites = ["ifixit", "dozuki", "accustream", "dripassist", "pva", "oscaro", "charlessmith", "aristocrat"]
 
 android {
-   compileSdkVersion 26
-   buildToolsVersion "25.0.2"
+    compileSdkVersion 27
+    buildToolsVersion "27.0.3"
 
-   defaultConfig {
-      versionCode 68
-      versionName "3.0.7"
-      minSdkVersion 14
-      targetSdkVersion 23
-      applicationId "com.dozuki.ifixit"
-      vectorDrawables.useSupportLibrary = true
-   }
+    defaultConfig {
+        versionCode 68
+        versionName "3.0.7"
+        minSdkVersion 14
+        targetSdkVersion 23
+        applicationId "com.dozuki.ifixit"
+        vectorDrawables.useSupportLibrary = true
+    }
 
-   signingConfigs {
-      for (site in sites) {
-         "${site}" createSiteSigningConfig(site)
-      }
-   }
+    signingConfigs {
+        for (site in sites) {
+            "${site}" createSiteSigningConfig(site)
+        }
+    }
 
-   buildTypes {
-      debug {
-         buildConfigField "String", "DEV_SERVER", '"' + devServer + '"'
-      }
+    buildTypes {
+        debug {
+            buildConfigField "String", "DEV_SERVER", '"' + devServer + '"'
+        }
 
-      release {
-         buildConfigField "String", "DEV_SERVER", '""'
+        release {
+            buildConfigField "String", "DEV_SERVER", '""'
 
-         minifyEnabled true
-         proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
-      }
-   }
+            minifyEnabled true
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard.cfg'
+        }
+    }
 
-   lintOptions {
-      /* Check release builds but don't abort on error. */
-      checkReleaseBuilds true
-      abortOnError false
-      disable 'MissingTranslation'
-   }
+    lintOptions {
+        /* Check release builds but don't abort on error. */
+        checkReleaseBuilds true
+        abortOnError false
+        disable 'MissingTranslation'
+    }
 
-   /* Construct base product flavors. */
-   productFlavors {
-      for (site in sites) {
-         "${site}" {
-            signingConfig signingConfigs."${site}"
-            applicationId "com.dozuki.${site}"
+    /* Construct base product flavors. */
+    productFlavors {
+        for (site in sites) {
+            "${site}" {
+                signingConfig signingConfigs."${site}"
+                applicationId "com.dozuki.${site}"
 
-            buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", "\"com.dozuki.${site}.ui.search.SearchSuggestionProvider\""
-            buildConfigField "String", "SITE_NAME", '"' + site + '"'
-            buildConfigField "String", "APP_ID", '"' + getProperty("${site}AppId") + '"'
-            buildConfigField "String", "GA_PROPERTY_ID", '"' + getProperty("${site}GAPropertyId") + '"'
-         }
-      }
-   }
+                buildConfigField "String", "SEARCH_PROVIDER_AUTHORITY", "\"com.dozuki.${site}.ui.search.SearchSuggestionProvider\""
+                buildConfigField "String", "SITE_NAME", '"' + site + '"'
+                buildConfigField "String", "APP_ID", '"' + getProperty("${site}AppId") + '"'
+                buildConfigField "String", "GA_PROPERTY_ID", '"' + getProperty("${site}GAPropertyId") + '"'
+            }
+        }
+    }
 
-   sourceSets {
-      main {
-         manifest.srcFile 'AndroidManifest.xml'
-         java.srcDirs = ['src']
-         resources.srcDirs = ['src']
-         aidl.srcDirs = ['src']
-         renderscript.srcDirs = ['src']
-         res.srcDirs = ['res']
-         assets.srcDirs = ['assets']
-      }
+    sourceSets {
+        main {
+            manifest.srcFile 'AndroidManifest.xml'
+            java.srcDirs = ['src']
+            resources.srcDirs = ['src']
+            aidl.srcDirs = ['src']
+            renderscript.srcDirs = ['src']
+            res.srcDirs = ['res']
+            assets.srcDirs = ['assets']
+        }
 
-      for (site in sites) {
-         "${site}" createSiteSourceSet(site)
-      }
-   }
+        for (site in sites) {
+            "${site}" createSiteSourceSet(site)
+        }
+    }
 }
 
 /* Various functions to create DSL for a site. */
 
 def createSiteSigningConfig(siteName) {
-   return {
-      storeFile file("sites/${siteName}/keystore")
-      keyAlias getProperty("${siteName}KeyAlias")
-      storePassword getProperty("${siteName}StorePassword")
-      keyPassword getProperty("${siteName}KeyPassword")
-   }
+    return {
+        storeFile file("sites/${siteName}/keystore")
+        keyAlias getProperty("${siteName}KeyAlias")
+        storePassword getProperty("${siteName}StorePassword")
+        keyPassword getProperty("${siteName}KeyPassword")
+    }
 }
 
 def createSiteSourceSet(siteName) {
-   if (siteName == 'dozuki') {
-      // Include all white label apps so we can use their themes.
-      return {
-         manifest.srcFile "sites/dozuki/AndroidManifest.xml"
-         res.srcDirs = ["sites/dozuki/res", "sites/ifixit/res"]
-         java.srcDirs = ["sites/dozuki/src", "sites/ifixit/src"]
-      }
-   } else {
-      return {
-         manifest.srcFile "sites/${siteName}/AndroidManifest.xml"
-         res.srcDirs = ["sites/${siteName}/res", "sites/${siteName}/site-res"]
-         java.srcDirs = ["sites/${siteName}/src"]
-      }
-   }
+    if (siteName == 'dozuki') {
+        // Include all white label apps so we can use their themes.
+        return {
+            manifest.srcFile "sites/dozuki/AndroidManifest.xml"
+            res.srcDirs = ["sites/dozuki/res", "sites/ifixit/res"]
+            java.srcDirs = ["sites/dozuki/src", "sites/ifixit/src"]
+        }
+    } else {
+        return {
+            manifest.srcFile "sites/${siteName}/AndroidManifest.xml"
+            res.srcDirs = ["sites/${siteName}/res", "sites/${siteName}/site-res"]
+            java.srcDirs = ["sites/${siteName}/src"]
+        }
+    }
 }
