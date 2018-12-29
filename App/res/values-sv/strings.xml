@@ -1,0 +1,357 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<resources xmlns:xliff="urn:oasis:names:tc:xliff:document:1.2">
+    <!-- Main Application -->
+    <string name="devices">Enheter</string>
+    <string name="device">Enhet</string>
+
+    <!-- General -->
+    <string name="save">Spara</string>
+    <string name="error">Fel</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nej</string>
+    <string name="cancel">Avbryt</string>
+    <string name="confirm_delete_title">Bekräfta borttagning</string>
+    <string name="confirm_delete_body">Att ta bort en guide går INTE att ångra. Är du säker på att du vill ta bort  <xliff:g example="Guide för reparation av iPhone 4" id="confirm_delete_guide_name">\"%1$s\"</xliff:g>?</string>
+
+    <!-- Error Messages -->
+    <string name="parse_error_title">Oei, dat is pijnlijk</string>
+    <string name="parse_error_message">Er is een fout opgetreden tijdens het laden van inhoud van onze servers.</string>
+    <string name="no_connection">Ingen anslutning</string>
+    <string name="no_connection_title">Ingen anslutning</string>
+    <string name="invalid_revision_error_title">Bewerk conflict</string>
+    <string name="invalid_revision_error">Uw wijzigingen konden niet opgeslagen worden aangezien de inhoud die u aan het bewerken bent is gewijzigd na de laatste keer dat u deze geopend heeft. Breng uw wijzigingen opnieuw aan en probeer opnieuw.</string>
+    <string name="fatal_error_title">Onbekende Fout</string>
+    <string name="fatal_error">Het ziet ernaar uit dat er een fout is opgetreden.</string>
+    <string name="forbidden_error">U heeft onvoldoende rechten om deze actie uit te voeren.</string>
+    <string name="login_error">Ongeldige inlogpoging. Controleer of uw e-mailadres en wachtwoord juist zijn.</string>
+    <string name="not_found_error">De gevraagde gegevens bestaan niet.</string>
+    <string name="error_confirm">OK</string>
+
+    <!-- Navigation -->
+    <string name="account_menu_title">Uw Account</string>
+    <string name="account_username_title">Konto <xliff:g example="Anders Andersson" id="account_username">(%1$s)</xliff:g>
+  </string>
+
+    <string name="slide_menu_my_guides">Mijn Gidsen</string>
+    <string name="slide_menu_browse_content">Blader door Inhoud</string>
+    <string name="slide_menu_browse_devices">Blader door <xliff:g example="Topics" id="topic_type_name">%1$s</xliff:g>
+  </string>
+    <string name="slide_menu_favorite_guides">Favoriete Gidsen</string>
+    <string name="slide_menu_create_new_guide">Maak Nieuwe Gids Aan</string>
+    <string name="slide_menu_media_gallery">Media Manager</string>
+    <string name="slide_menu_logout">Uitloggen</string>
+    <string name="slide_menu_ifixit_everywhere">
+    <xliff:g id="brand_name">iFixit</xliff:g> Overal</string>
+    <string name="slide_menu_youtube">
+    <xliff:g id="youtube">Youtube</xliff:g>-kanal</string>
+    <string name="slide_menu_facebook">
+    <xliff:g id="facebook">Facebook</xliff:g>
+  </string>
+    <string name="slide_menu_twitter">
+    <xliff:g id="twitter">Twitter</xliff:g>
+  </string>
+    <string name="slide_menu_more_info">Meer informatie</string>
+    <string name="slide_menu_barcode_scanner">Lees QR-code</string>
+    <string name="slide_menu_barcode_scanner_short">Lees</string>
+
+    <!-- Log-In / Log-Out -->
+    <string name="username">Användarnamn</string>
+    <string name="password">Lösenord</string>
+    <string name="login">Logga in</string>
+    <string name="register">Registrera</string>
+    <string name="signin_error">Aanmeldingsfout voor <xliff:g example="example@example.com" id="signin_error_email">%1$s</xliff:g>
+  </string>
+
+    <string name="try_again">Försök igen</string>
+    <string name="register_agreement">Ik ga akkoord met <xliff:g>
+      <a href="http://www.ifixit.com/Info/Terms_of_Use#Section_User_Submissions">release my contributions</a>
+    </xliff:g> onder <a href="http://www.ifixit.com/Info/Licensing"> onze open licentie </a>.</string>
+    <string name="terms_unchecked_error">U moet akkoord gaan met de voorwaarden.</string>
+    <string name="login_dialog_title">Inloggen</string>
+    <string name="register_dialog_title">Registreer</string>
+    <string name="login_password_hint">Wachtwoord</string>
+    <string name="login_email_hint">E-mail</string>
+    <string name="password_confirm_hint">Bevestig Wachtwoord</string>
+    <string name="email_hint">E-mail</string>
+
+    <string name="signin_description">Inloggen op ​​<xliff:g id="brand_website">iFixit.com</xliff:g>
+  </string>
+    <string name="register_description">Registreer voor <xliff:g id="brand_website">iFixit.com</xliff:g>
+  </string>
+    <string name="cancel_register_description">Annuleren Registratie</string>
+    <string name="cancel_register_button">Annuleer</string>
+    <string name="yahoo_signin_description">Aanmelden met <xliff:g id="yahoo">Yahoo!</xliff:g></string>
+
+    <string name="empty_field_error">Een of meerdere velden zijn nog leeg.</string>
+    <string name="passwords_do_not_match_error">Wachtwoorden komen niet overeen.</string>
+
+    <!-- Gallery -->
+    <string name="media_help_title">Wat is dit?</string>
+    <string name="media_help_message">Deze media manager is direct gekoppeld aan uw <xliff:g example="iFixit" id="site_name">%1$s</xliff:g> account. Foto\'s die u hier plaatst zijn voor u beschikbaar tijdens het creëren van uw gids.</string>
+    <string name="media_help_confirm">Goed om te weten!</string>
+    <string name="gallery_tool_tip">Voeg afbeelding toe</string>
+    <string name="camera_tool_tip">Camera</string>
+    <string name="no_images_text">Er zijn geen afbeeldingen in uw Media Manager. Voeg afbeeldingen toe met de bovenstaande icoontjes!</string>
+    <string name="image_chooser_title">Selecteer Foto</string>
+    <string name="image">afbeelding</string>
+    <string name="images">afbeeldingen</string>
+    <string name="non_image_error">Afbeelden moet minimaal 800x600 pixels en lokaal op uw apparaat zijn. Geldige formaten zijn: .png. .jpg, .jpeg en .gif.</string>
+
+    <string name="too_many_image_error">U kunt slechts vier bestanden per keer uploaden. Wacht tot uw huidige uploads zijn afgerond voordat u een ander bestand upload.</string>
+    <string name="delete_loading_image_error">Een of meer afbeeldingen worden geüpload en kunnen niet van de server verwijderd worden.</string>
+    <string name="media_delete_body">Weet u zeker dat u  <xliff:g example="5" id="number_images_to_delete">%1$d</xliff:g> <xliff:g example="images" id="media_type">%2$s</xliff:g> wilt verwijderen?</string>
+
+    <!-- Topic List -->
+    <string name="generalInformation">Algemene informatie</string>
+    <string name="categories">Kategorier</string>
+    <string name="category">Kategori</string>
+
+    <!-- Topic View -->
+    <string name="guides">Guider</string>
+    <string name="answers">Answers</string>
+    <string name="info">Info</string>
+
+    <!-- Guide View Introduction -->
+    <string name="difficulty">Svårighetsgrad</string>
+    <string name="author">Författare</string>
+    <string name="requiredTools">Verktyg som behövs</string>
+    <string name="requiredParts">Delar som behövs</string>
+
+    <!-- Guide View Steps -->
+    <string name="no_guides">Inga guider</string>
+    <string name="topic_guide_thumbnail">Gids sectie thumbnail</string>
+    <string name="thumbnail_desc">Thunbnail Afbeelding</string>
+    <string name="topic_img_desc">Categorie Afbeelding</string>
+
+    <string name="video_play_button_description">Knop Video Afspelen</string>
+    <string name="video_activity_progress_title">Een Ogenblik Geduld ...</string>
+    <string name="video_activity_progress_body">Video aan het laden...</string>
+
+    <!-- Guide View Menu -->
+    <string name="review">Förhandsgranska</string>
+    <string name="finish">Avsluta</string>
+    <string name="next">Nästa</string>
+    <string name="previous">Föregående</string>
+
+    <!-- Full Screen Image -->
+    <string name="close_full_screen_desc">Sluit volledig-scherm knop.</string>
+
+    <!-- Guide Edit List -->
+    <string name="publish">Publicera</string>
+    <string name="published">Publicerade</string>
+    <string name="unpublish">Publicera inte</string>
+    <string name="unpublished">Ännu inte publicerad</string>
+    <string name="action_delete">Ta bort</string>
+    <string name="add_guide">Lägg till guide</string>
+    <string name="no_guides_text">Het lijkt erop dat u geen gidsen heeft. Maak een gids aan door op het icoontje  in de actiebalk of in de menulade te tikken.</string>
+
+    <!-- Guide Steps Edit List -->
+    <string name="step_edit_confirm_delete_title">Verwijder Stap</string>
+    <string name="step_edit_confirm_delete_message">Weet u zeker dat u Stap %1$d wilt verwijderen?</string>
+    <string name="edit">Redigera</string>
+    <string name="edit_guide_details">Bewerk Gids Details</string>
+    <string name="add_step">Lägg till steg</string>
+    <string name="reorder_steps">Stappen opnieuw ordenen</string>
+    <string name="no_steps_text">Inga steg</string>
+
+    <!-- Guide Step Rearrange Dialog -->
+    <string name="step_rearrange_title">Stappen Herschikken</string>
+
+    <!-- Guide Introduction Edit -->
+    <string name="default_title">Standaard Titel</string>
+    <string name="guide_intro_wizard_guide_type_title">Gidstype</string>
+    <string name="guide_intro_wizard_guide_subject_title">Gids Onderwerp</string>
+    <string name="guide_intro_wizard_guide_title_title">Gids Titel</string>
+    <string name="guide_intro_wizard_guide_summary_title">Gids Samenvatting</string>
+    <string name="guide_intro_wizard_guide_introduction_title">Inleiding</string>
+    <string name="guide_intro_wizard_guide_topic_title">%s Naam</string>
+    <string name="guide_intro_wizard_guide_introduction_description">Waar gaat deze gids precies over? Beschrijf het onderdeel, object of idee dat u aan het beschrijven bent betreffende deze <xliff:g example="Topic" id="topic_name">%1$s</xliff:g>.</string>
+    <string name="guide_intro_wizard_guide_summary_description">Beschrijf in enkele zinnen waarover deze gids gaat.</string>
+    <string name="guide_intro_wizard_guide_title_description">Gegenereerde titel van het type, <xliff:g id="topic_type">%1$s</xliff:g> en focus. Bewerk alleen wanneer u ontevreden bent met wat is hier.</string>
+    <string name="guide_intro_wizard_guide_subject_description">Waar gaat deze gids over? Beschrijf het onderdeel, object of idee dat u aan het beschrijven bent betreffende <xliff:g example="Topic" id="topic_name">%1$s
+        </xliff:g>.</string>
+    <string name="guide_intro_wizard_guide_topic_description">Aan welk <xliff:g example="Topic" id="topic_name">%1$s</xliff:g> bent u aan het werken? Is het bijvoorbeeld, een \"iPhone 4\" of een \"Kenmore Wasmachine\"? Als de <xliff:g id="topic_name">%2$s</xliff:g> al bestaat, dient u deze in de vooraf ingevulde lijst te selecteren.</string>
+
+    <!-- Guide Step Edit -->
+    <string name="step_number">Steg <xliff:g example="1" id="step_number">%1$d</xliff:g>
+  </string>
+    <string name="step_delete_dialog_title">Ta bort steg</string>
+    <string name="step_delete_dialog_body">Är du säker på att du vill ta bort steget?</string>
+    <string name="guide_create_help">helptekst</string>
+    <string name="guide_create_edit_steps_help">helptekst</string>
+    <string name="guide_create_edit_step_media_cannot_add_step">Voeg inhoud aan de huidige stap toe voordat u een nieuwe stap creëert.</string>
+    <string name="guide_create_edit_must_add_line_content">Kan stap niet opslaan totdat lijn inhoud toegevoegd is.</string>
+    <string name="guide_create_confirm_leave_without_save_title">Verlaten Zonder Opslaan?</string>
+    <string name="guide_create_confirm_leave_without_save_body">Verlaten zal alle wijzigingen die u heeft gemaakt annuleren.</string>
+    <string name="guide_create_confirm_leave_without_save_cancel">Annuleer</string>
+    <string name="guide_create_step_edit_main_image_description">Belangrijkste stap afbeelding bewerken</string>
+    <string name="default_step_title">Stap zonder naam</string>
+    <string name="step_title_hint">Stap Titel (optioneel)</string>
+    <string name="step_text_default">Voeg Wijsheid Hier In</string>
+
+    <!-- Guide Step Edit Media -->
+    <string name="step_edit_new_thumb_actions_title">Voeg Afbeelding Toe</string>
+    <string name="step_edit_existing_image_actions_title">Afbeelding Acties</string>
+    <string name="image_saved_to_media_manager_toast">Afbeelding is opgeslagen in uw media manager.</string>
+
+
+    <!-- Guide Step Bullet Context Menu -->
+    <string name="bullet_desc">Gids stap bullet</string>
+    <string name="bullet_icon_desc">Gids stap mededeling, belangrijke stap</string>
+    <string name="indent_bullet">Bullet laten inspringen</string>
+    <string name="unindent_bullet">Bullet laten terugspringen</string>
+    <string name="rearrange_bullet">Bullets herschikken</string>
+    <string name="delete_bullet">Verwijder bullet</string>
+    <string name="indent_limit_below">Kan niet verder laten terugspringen.</string>
+    <string name="indent_limit_above">Kan niet verder laten inspringen.</string>
+    <string name="confirm_reorder_bullets">Bevestig</string>
+    <string name="reorder_bullets_title">Bullets opnieuw ordenen</string>
+    <string name="cancel_reorder_bullets">Annuleer</string>
+
+    <!-- Offline Guides -->
+    <string name="offline_guides">Offline Gidsen</string>
+    <string name="sync_now">Nu synchroniseren</string>
+    <string name="no_offline_guides_text">Ga aan de slag door een gids aan favorieten toe te voegen.\n\nUw Favoriete gidsen zullen worden opgeslagen voor offline bekijken.</string>
+    <string name="sync_status_syncing">Aan het synchroniseren...</string>
+    <string name="last_synced">Laatst gesynchroniseerd <xliff:g id="sync_date">%1$s</xliff:g>.</string>
+    <string name="notification_syncing">Synchroniseren van favoriete gidsen ...</string>
+    <string name="notification_sync_complete">Favoriete gidsen zijn gedownload</string>
+    <string name="sync_automatically">Synchroniseer automatisch</string>
+    <string name="unfavorite_confirmation">Weet u zeker dat u deze gids uit Favorieten wilt verwijderen?</string>
+
+    <!-- Miscellaneous -->
+    <string name="topic_background_description">Categorie achtergrond</string>
+    <string name="fist_background_desc">Vuist achtergrondafbeelding</string>
+    <string name="my_guides">Mijn Gidsen</string>
+    <string name="edit_guide">Bewerk Gids</string>
+    <string name="view_guide">Bekijk Gids</string>
+    <string name="guide_create_step_video_description">Gids stap video</string>
+    <string name="restart_video">Herstart Video</string>
+    <string name="restart_video_message">Deze video opnieuw afspelen?</string>
+    <string name="guide_intro_wizard_guide_topic_hint">
+    <xliff:g example="Topic" id="topic_name">%1$s</xliff:g> Naam</string>
+    <string name="guide_intro_wizard_guide_subject_hint">Bijvoorbeeld - Scherm, Batterij, Bougies, enz.</string>
+    <string name="loading_image">Afbeeldingen aan het uploaden...</string>
+    <string name="default_step_number">Stap nr.</string>
+    <string name="loading">Aan het laden...</string>
+    <string name="topic_info_image">Afbeelding hoofdcategorie</string>
+    <string name="delete_step">Verwijder stap</string>
+    <string name="deleting">Aan het verwijderen...</string>
+    <string name="saving">Aan het opslaan....</string>
+    <string name="gallery_image_content_description">Galerij Afbeelding</string>
+    <string name="optional">Optioneel</string>
+    <string name="teardowns">Demontages</string>
+    <string name="featured_guides">Aanbevolen Gidsen</string>
+    <string name="favorites">Favorieten</string>
+    <string name="favorite_guide">Voeg Gids toe aan Favorieten</string>
+    <string name="unfavorite_guide">Verwijder Gids uit Favorieten</string>
+    <string name="favoriting">Gids aan het toevoegen aan Favorieten...</string>
+    <string name="unfavoriting">Gids aan het verwijderen uit Favorieten...</string>
+    <string name="favorited">Toegevoegd aan Favorieten!</string>
+    <string name="unfavorited">Verwijderd uit Favorieten!</string>
+    <string name="favorites_empty_text">U  heeft nog geen gidsen toegevoegd aan Favorieten.</string>
+    <string name="introduction">Inleiding</string>
+    <string name="empty_image_error">Afbeelding is leeg, probeer een andere afbeelding of upload een nieuwe.</string>
+    <string name="link_to_item">Link naar <xliff:g example="Phillips Screwdriver" id="item_name">%1$s</xliff:g>
+  </string>
+    <string name="no_items">Inga objekt</string>
+    <string name="view">Visa</string>
+    <string name="save_changes_to_step">Wijzigingen in deze stap opslaan?</string>
+    <string name="new_line">Ny rad</string>
+    <string name="discard_changes">Wijzigingen ongedaan maken</string>
+    <string name="validation_error_title">Valideringsfel</string>
+    <string name="validation_error_body">Valideringen misslyckades</string>
+    <string name="unpublishing">Aan het depubliceren...</string>
+    <string name="publishing">Aan het publiceren...</string>
+    <string name="voice_dictate_line_content_description">Spraak dictaat lijn inhoud</string>
+    <string name="line_length_exceeded_error">Maximaal 350 karakters per regel.</string>
+    <string name="new_guide_details_title">Nieuwe Gids Details</string>
+    <string name="device_invalid_characters_error_message">Naam van het apparaat bevat ongeldige karakters.</string>
+    <string name="guide_subject_required_error">Onderwerp Gids is Vereist</string>
+    <string name="topic_name_required_error">%1$s Naam is Vereist</string>
+    <string name="guide_subject_label">Onderwerp Gids</string>
+    <string name="visibility">Synbarhet</string>
+    <string name="guide_type">Typ av guide</string>
+    <string name="reload_guide">Ladda om guiden</string>
+    <string name="back_to_site_list">Terug naar de Sitelijst</string>
+    <string name="loading_topic">
+    <xliff:g example="iPhone 4" id="topic_name">%1$s</xliff:g> aan het laden ...</string>
+    <string name="search">Sök</string>
+    <string name="search_hint">Sök på <xliff:g id="brand_name">iFixit</xliff:g>
+  </string>
+    <string name="search_site_hint">Zoek <xliff:g id="site_name">%1$s</xliff:g>
+  </string>
+    <string name="guide_search_thumbnail_content_description">Thumbnail</string>
+    <string name="by_author">Door <xliff:g example="John Doe" id="author_name">%1$s</xliff:g>
+  </string>
+    <string name="result_count">
+    <xliff:g example="42" id="number_results">%1$d</xliff:g> Resultaten</string>
+    <string name="no_search_results">Geen zoekresultaten.</string>
+    <string name="creating_new_guide">Nieuwe Gids aan het creëren...</string>
+    <string name="parts_and_tools">Onderdelen &amp; Gereedschap</string>
+    <string name="create_new_guide">Maak Nieuwe Gids aan</string>
+    <string name="new_guide">Ny guide</string>
+    <string name="conclusion">Conclusie</string>
+    <string name="completed">Färdig!</string>
+    <string name="guide_complete_error_message">Kan deze gids niet voltooien.</string>
+    <string name="complete_this_guide">Volledige Gids</string>
+    <string name="i_did_it_success">Ik heb het gedaan! Succes!</string>
+    <string name="just_now">daarnet</string>
+    <string name="completing">Aan het voltooien...</string>
+    <string name="empty_comments">Geen commentaar</string>
+    <string name="comments">Kommentarer</string>
+    <string name="step_comments">Commentaar Stap</string>
+    <string name="guide_comments">Commentaar Gids</string>
+    <string name="step_number_comments">Stap <xliff:g id="step_number">%1$d</xliff:g> Commentaar</string>
+    <string name="on_date">op <xliff:g id="comment_date">%1$s</xliff:g>
+  </string>
+    <string name="by_on_comment_details">
+    <xliff:g example="Anders Andersson" id="comment_author">%1$s</xliff:g> den <xliff:g id="comment_date">%2$s</xliff:g>
+  </string>
+    <string name="add_comment">Voeg commentaar toe..</string>
+    <string name="reply">Svara</string>
+    <string name="add_reply">Lägg till svar</string>
+    <string name="error_deleting_comment">Det uppstod ett fel när kommentaren skulle tas bort.</string>
+    <string name="failed_edit_comment">Redigering av kommentaren misslyckades</string>
+    <string name="debug">Avlusa</string>
+    <string name="view_comments">Visa kommentarer</string>
+
+    <string-array name="new_image_actions">
+        <item>Camera</item>
+        <item>Media Manager</item>
+    </string-array>
+
+    <string-array name="existing_image_actions">
+        <item>Kopie naar Media Manager</item>
+        <item>Maak los voor Media Manager</item>
+        <item>Verwijder</item>
+    </string-array>
+
+    <string-array name="step_list_item_options">
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="guide_list_item_options_with_delete">
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="guide_list_item_options">
+        <item>@string/view</item>
+        <item>@string/publish</item>
+        <item>@string/edit</item>
+    </string-array>
+
+    <string-array name="comment_owner_options">
+        <item>@string/reply</item>
+        <item>@string/edit</item>
+        <item>@string/action_delete</item>
+    </string-array>
+
+    <string-array name="comment_options">
+        <item>@string/reply</item>
+    </string-array>
+</resources>
