@@ -1,5 +1,7 @@
-Official iFixit Android App v2.9.2
+Legacy iFixit Android App v2.9.2
 ===========================
+
+This is a legacy iFixit app that is no longer maintained. The current iFixit app is in the Play Store: https://play.google.com/store/apps/details?id=com.ifixit.ifixitmobile
 
 This app is a native Android version of the iFixit website including:
 
